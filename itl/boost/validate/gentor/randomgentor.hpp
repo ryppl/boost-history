@@ -56,7 +56,7 @@ namespace boost{namespace itl
     class RandomGentor<itl::split_interval_set<DomainT> > :
         public SetGentorT<itl::split_interval_set<DomainT> > {};
 
-	// ----- tree --------------------------------------------------------------
+    // ----- tree --------------------------------------------------------------
 #ifdef USE_ITL_TREE
     template <class DomainT> 
     class RandomGentor<itl::tree<DomainT> > :
@@ -277,13 +277,13 @@ namespace boost{namespace itl
 
 
     //--------------------------------------------------------------------------
-	// itl::tree
+    // itl::tree
     //--------------------------------------------------------------------------
 #ifdef USE_ITL_TREE
     template <> 
-	struct Calibrater<itl::tree<int>, RandomGentor>
+    struct Calibrater<itl::tree<int>, RandomGentor>
     {
-		static void apply(RandomGentor<itl::tree<int> >& gentor) 
+        static void apply(RandomGentor<itl::tree<int> >& gentor) 
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
             ItvGentorT<int>* itvGentor = new ItvGentorT<int>;

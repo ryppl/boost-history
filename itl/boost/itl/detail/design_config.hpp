@@ -26,12 +26,12 @@ by setting defines in this file.
 //     template type parameter variants.
 
 #define ITL_USE_COMPARE_TEMPLATE_TEMPLATE
-#define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
-#define ITL_USE_SECTION_TEMPLATE_TEMPLATE
+//#define ITL_USE_COMBINE_TEMPLATE_TEMPLATE
+//#define ITL_USE_SECTION_TEMPLATE_TEMPLATE
 
 //#define ITL_USE_COMPARE_TEMPLATE_TYPE
-//#define ITL_USE_COMBINE_TEMPLATE_TYPE
-//#define ITL_USE_SECTION_TEMPLATE_TYPE
+#define ITL_USE_COMBINE_TEMPLATE_TYPE
+#define ITL_USE_SECTION_TEMPLATE_TYPE
 
 //------------------------------------------------------------------------------
 // template parameter Compare can not be a template type parameter as long as
@@ -54,11 +54,11 @@ by setting defines in this file.
 #ifdef ITL_USE_COMBINE_TEMPLATE_TEMPLATE
 #   define ITL_COMBINE template<class>class
 #   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine<codomain_type> 
-#   define ITL_COMBINE_INSTANCE(compare_instance,codomain_type) compare_instance
+#   define ITL_COMBINE_INSTANCE(combine_instance,codomain_type) combine_instance
 #else//ITL_USE_COMBINE_TEMPLATE_TYPE
 #   define ITL_COMBINE class
 #   define ITL_COMBINE_CODOMAIN(itl_combine, codomain_type) itl_combine 
-#   define ITL_COMBINE_INSTANCE(compare_instance,codomain_type) compare_instance<codomain_type>
+#   define ITL_COMBINE_INSTANCE(combine_instance,codomain_type) combine_instance<codomain_type>
 #endif
 
 //------------------------------------------------------------------------------

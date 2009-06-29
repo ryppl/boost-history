@@ -61,12 +61,12 @@ void test_LawValidater()
     //    Interval::Atomize, protonic_equal> TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-	//typedef Balance<itl::tree<int> >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef Balance<itl::tree<int> >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef InplaceDeMorgan
-	    <itl::interval_map<int, int> >  TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
+    typedef InplaceDeMorgan
+        <itl::interval_map<int, int> >  TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
     int test_count = 1000;

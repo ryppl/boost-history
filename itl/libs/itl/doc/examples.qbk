@@ -21,7 +21,7 @@
 	    [__itv__] [Intervals for integral and continuous instance types. 
 	               Closed and open interval borders]]
 	[[basic]   [[link boost_itl.examples.interval_container Interval container]]
-		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__]
+		[__itv_set__,\n__sep_itv_set__,\n__spl_itv_set__,\n__spl_itv_map__,\n__itv_map__]
 	                               [basic characteristics of interval container]]
 	[[basic]   [[link boost_itl.examples.overlap_counter Overlap counter]]
 	    [__itv_map__][The most simple application of an interval map: 
@@ -121,6 +121,7 @@ in the introductory [link boost_itl.introduction.interval_combining_styles Inter
 [import ../example/interval_container/interval_container.cpp]
 [example_interval_container]
 [endsect]
+
 
 [section Overlap counter]
 

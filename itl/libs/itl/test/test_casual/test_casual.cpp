@@ -40,9 +40,9 @@ BOOST_AUTO_TEST_CASE(casual_test)
     
     SplitIntervalSetT left;
     left.add(I_I(0,2)).add(I_I(3,3)).add(I_I(4,4)).add(I_I(5,5)).add(I_I(6,8));
-	cout << endl;
+    cout << endl;
 
-	left.add(I_I(1,7));
+    left.add(I_I(1,7));
 
 
     BOOST_CHECK_EQUAL(I_I(0,2).contains(I_I(0,2).lower()), true);

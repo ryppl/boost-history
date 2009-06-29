@@ -25,8 +25,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     user groups and the memebership dates of employees.
 
     Computing an intersection '&' shows the super users. The persons
-	that are members of both med_users and admin_users and the times
-	of the joint memberships.
+    that are members of both med_users and admin_users and the times
+    of the joint memberships.
     
     \include user_groups/user_groups.cpp
 */

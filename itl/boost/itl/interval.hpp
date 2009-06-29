@@ -143,17 +143,17 @@ public:
     bool contained_in(const interval& super)const ;
 
     /** <tt>sub</tt> is proper subset of <tt>*this</tt> and does not touch the borders of <tt>*this</tt> */
-	bool free_contains(const interval& sub)const;
+    bool free_contains(const interval& sub)const;
 
     /** <tt>sub</tt> is proper subset of <tt>*this</tt> */
-	bool proper_contains(const interval& sub)const;
+    bool proper_contains(const interval& sub)const;
 
     /**  <tt>*this</tt> and <tt>x2</tt> are disjoint; their intersection is empty */
     bool is_disjoint(const interval& x2)const
     { return exclusive_less(x2) || x2.exclusive_less(*this); }
 
     /**  <tt>*this</tt> and <tt>x2</tt> have a non empty intersection */
-	bool intersects(const interval& x2)const
+    bool intersects(const interval& x2)const
     { return !is_disjoint(x2); }
 
     //==========================================================================
@@ -197,11 +197,19 @@ public:
         maximum of upper bounds */
     interval& extend(const interval& x2);
 
-	interval& left_extend(const interval& x2);
-	interval& right_extend(const interval& x2);
+    /** Extend \c *this interval to the minimum of the lower bounds of 
+        \c this and \c left_extesion */
+    interval& left_extend(const interval& left_extesion);
 
-	interval& left_set(const interval& x2);
-	interval& right_set(const interval& x2);
+    /** Extend \c *this interval to the maximum of the upper bounds of 
+        \c this and \c right_extesion */
+    interval& right_extend(const interval& right_extesion);
+
+    /** Set the lower bound and bound type according to \c left */
+    interval& left_set(const interval& left);
+
+    /** Set the upper bound and bound type according to \c right */
+    interval& right_set(const interval& right);
 
     /** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
         Bordertypes according to the lower bound of \c *this and the upper bound of \c rhs.   */
@@ -302,7 +310,7 @@ interval.is_right(open_bounded);   //[x, y) or (x, y)
     bool exclusive_less(const interval& x2)const;
 
     /** Maximal element of <tt>*this</tt> is less than the minimal element of <tt>x2</tt> 
-	    and there is at least one element in between. */
+        and there is at least one element in between. */
     bool distant_less(const interval& x2)const;
 
     /** Set \c *this interval to from \c low to \c up with boundtype \c bounds */
@@ -380,8 +388,8 @@ private:
     BoundT upb_min(const interval& x2)const;
     BoundT upb_max(const interval& x2)const;
 
-    BoundT lwb_rightOf(const interval& x2)const;
-    BoundT upb_leftOf(const interval& x2)const;
+    BoundT lwb_right_of(const interval& x2)const;
+    BoundT upb_left_of(const interval& x2)const;
 
 private:
     DomainT _lwb;
@@ -425,7 +433,7 @@ struct discrete_type
 };
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::empty()const
+inline bool interval<DomainT,Compare>::empty()const
 {
     using namespace boost::mpl;
 
@@ -521,7 +529,7 @@ struct discrete_interval
 // NOTE structural similarities between empty and exclusive_less! 
 // emptieness can be defined as being exclusive less to oneself.
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::exclusive_less(const interval& x2)const
+inline bool interval<DomainT,Compare>::exclusive_less(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_right(closed_bounded) && x2.is_left(closed_bounded)) return domain_less(_upb, x2._lwb); //_upb < x2._lwb
@@ -538,14 +546,13 @@ bool interval<DomainT,Compare>::exclusive_less(const interval& x2)const
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::distant_less(const interval& x2)const
+inline bool interval<DomainT,Compare>::distant_less(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_right(open_bounded)   && x2.is_left(closed_bounded)) return domain_less(_upb, x2._lwb); //_upb < x2._lwb;
     if(is_right(closed_bounded) && x2.is_left(open_bounded) )  return domain_less(_upb, x2._lwb); //_upb < x2._lwb;
     if(is_right(open_bounded)   && x2.is_left(open_bounded) )  return domain_less_equal(_upb, x2._lwb); //_upb <= x2._lwb;
 
-    //CL if(is_right(closed_bounded) && x2.is_left(closed_bounded)) return domain_less(succ(_upb), x2._lwb); //succ(_upb) < x2._lwb
     return 
         if_<
             bool_<is_continuous<DomainT>::value>, 
@@ -557,7 +564,7 @@ bool interval<DomainT,Compare>::distant_less(const interval& x2)const
 
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::lower_less(const interval& x2)const
+inline bool interval<DomainT,Compare>::lower_less(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_left(closed_bounded) && x2.is_left(closed_bounded)) return domain_less(_lwb, x2._lwb);
@@ -575,7 +582,7 @@ bool interval<DomainT,Compare>::lower_less(const interval& x2)const
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::upper_less(const interval& x2)const
+inline bool interval<DomainT,Compare>::upper_less(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_right(closed_bounded) && x2.is_right(closed_bounded)) return domain_less(_upb, x2._upb);
@@ -594,7 +601,7 @@ bool interval<DomainT,Compare>::upper_less(const interval& x2)const
 
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::lower_less_equal(const interval& x2)const
+inline bool interval<DomainT,Compare>::lower_less_equal(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_left(closed_bounded) && x2.is_left(closed_bounded)) return domain_less_equal(_lwb, x2._lwb);
@@ -613,7 +620,7 @@ bool interval<DomainT,Compare>::lower_less_equal(const interval& x2)const
 
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::upper_less_equal(const interval& x2)const
+inline bool interval<DomainT,Compare>::upper_less_equal(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_right(closed_bounded) && x2.is_right(closed_bounded)) return domain_less_equal(_upb, x2._upb);
@@ -634,7 +641,7 @@ bool interval<DomainT,Compare>::upper_less_equal(const interval& x2)const
 //NOTE THINK: This implementation is rather interesting wrt. continuous value types.
 // An alternative implementation was x.lwb_equal(y)={return x.lower_less_equal(y) && y.lower_less_equal(x)}
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::lower_equal(const interval& x2)const
+inline bool interval<DomainT,Compare>::lower_equal(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_left(closed_bounded) && x2.is_left(closed_bounded)) return domain_equal(_lwb, x2._lwb);
@@ -652,7 +659,7 @@ bool interval<DomainT,Compare>::lower_equal(const interval& x2)const
 //NOTE THINK: This implementation is rather interesting wrt. continuous value types.
 // An alternative implementation was x.lwb_equal(y)={return x.lower_less_equal(y) && y.lower_less_equal(x)}
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::upper_equal(const interval& x2)const
+inline bool interval<DomainT,Compare>::upper_equal(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_right(closed_bounded) && x2.is_right(closed_bounded)) return domain_equal(_upb, x2._upb);
@@ -670,7 +677,7 @@ bool interval<DomainT,Compare>::upper_equal(const interval& x2)const
 
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_min(const interval& x2)const
+inline typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_min(const interval& x2)const
 {
     if( x2.lower_less(*this) )
         return BoundT(x2._lwb, x2.boundtype());
@@ -679,7 +686,7 @@ typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_min(co
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_max(const interval& x2)const
+inline typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_max(const interval& x2)const
 {
     if( upper_less(x2) )
         return BoundT(x2._upb, x2.boundtype());
@@ -689,7 +696,7 @@ typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_max(co
 
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_max(const interval& x2)const
+inline typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_max(const interval& x2)const
 {
     if( lower_less(x2) )
         return BoundT(x2._lwb, x2.boundtype());
@@ -698,7 +705,7 @@ typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_max(co
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_min(const interval& x2)const
+inline typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_min(const interval& x2)const
 {
     if( x2.upper_less(*this) )
         return BoundT(x2._upb, x2.boundtype());
@@ -708,13 +715,13 @@ typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_min(co
 
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_leftOf(const interval& x2)const
+inline typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::upb_left_of(const interval& x2)const
 {
     return BoundT(x2._lwb, x2.succession_bounds());
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_rightOf(const interval& x2)const
+inline typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_right_of(const interval& x2)const
 {
     return BoundT(x2._upb, x2.succession_bounds());
 }
@@ -722,7 +729,7 @@ typename interval<DomainT,Compare>::BoundT interval<DomainT,Compare>::lwb_rightO
 
 // NOTE non symmetric version: *this[upb].touches(x2[lwb])   
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::touches(const interval& x2)const
+inline bool interval<DomainT,Compare>::touches(const interval& x2)const
 {
     using namespace boost::mpl;
     if(is_right(open_bounded) && x2.is_left(closed_bounded)) return domain_equal(_upb, x2._lwb);
@@ -738,7 +745,7 @@ bool interval<DomainT,Compare>::touches(const interval& x2)const
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::contains(const DomainT& x)const
+inline bool interval<DomainT,Compare>::contains(const DomainT& x)const
 {
     if(is_right(closed_bounded) && is_left(closed_bounded)) return domain_less_equal(_lwb, x) && domain_less_equal(x, _upb);
     if(is_right(closed_bounded) && is_left(open_bounded)  ) return domain_less(_lwb, x)       && domain_less_equal(x, _upb);
@@ -747,30 +754,28 @@ bool interval<DomainT,Compare>::contains(const DomainT& x)const
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::contained_in(const interval& super)const
+inline bool interval<DomainT,Compare>::contained_in(const interval& super)const
 { return super.lower_less_equal(*this) && upper_less_equal(super); }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::contains(const interval& sub)const
+inline bool interval<DomainT,Compare>::contains(const interval& sub)const
 { return lower_less_equal(sub) && sub.upper_less_equal(*this); }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::free_contains(const interval& sub)const
+inline bool interval<DomainT,Compare>::free_contains(const interval& sub)const
 { return lower_less(sub) && sub.upper_less(*this); }
 
 template <class DomainT, ITL_COMPARE Compare>
-bool interval<DomainT,Compare>::proper_contains(const interval& sub)const
+inline bool interval<DomainT,Compare>::proper_contains(const interval& sub)const
 { return contains(sub) && (lower_less(sub) || sub.upper_less(*this)); }
 
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<DomainT,Compare>& x2)
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<DomainT,Compare>& x2)
 {
-    if(x2.empty()) return *this;
-    else if(empty())
-    {
-        *this = x2; 
+    if(x2.empty()) 
         return *this;
-    }
+    else if(empty())
+        return *this = x2; 
     else 
     {
         set_lwb(lwb_min(x2));
@@ -780,14 +785,12 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::extend(const interval<Doma
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare>& interval<DomainT,Compare>::left_extend(const interval<DomainT,Compare>& x2)
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::left_extend(const interval<DomainT,Compare>& x2)
 {
-    if(x2.empty()) return *this;
-    else if(empty())
-    {
-        *this = x2; 
+    if(x2.empty()) 
         return *this;
-    }
+    else if(empty())
+        return *this = x2; 
     else 
     {
         set_lwb(lwb_min(x2));
@@ -796,14 +799,12 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::left_extend(const interval
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare>& interval<DomainT,Compare>::right_extend(const interval<DomainT,Compare>& x2)
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_extend(const interval<DomainT,Compare>& x2)
 {
-    if(x2.empty()) return *this;
-    else if(empty())
-    {
-        *this = x2; 
+    if(x2.empty()) 
         return *this;
-    }
+    else if(empty())
+        return *this = x2; 
     else 
     {
         set_upb(upb_max(x2));
@@ -812,14 +813,12 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::right_extend(const interva
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare>& interval<DomainT,Compare>::left_set(const interval<DomainT,Compare>& x2)
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::left_set(const interval<DomainT,Compare>& x2)
 {
-    if(x2.empty()) return *this;
-    else if(empty())
-    {
-        *this = x2; 
+    if(x2.empty()) 
         return *this;
-    }
+    else if(empty())
+        return *this = x2; 
     else 
     {
         set_lwb(BoundT(x2._lwb, x2.boundtype()));
@@ -828,14 +827,12 @@ interval<DomainT,Compare>& interval<DomainT,Compare>::left_set(const interval<Do
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare>& interval<DomainT,Compare>::right_set(const interval<DomainT,Compare>& x2)
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_set(const interval<DomainT,Compare>& x2)
 {
-    if(x2.empty()) return *this;
-    else if(empty())
-    {
-        *this = x2; 
+    if(x2.empty()) 
         return *this;
-    }
+    else if(empty())
+        return *this = x2; 
     else 
     {
         set_upb(BoundT(x2._upb, x2.boundtype()));
@@ -860,33 +857,6 @@ inline interval<DomainT,Compare>& interval<DomainT,Compare>::right_subtract(cons
     return *this; 
 }
 
-/*CL
-template <class DomainT, ITL_COMPARE Compare>
-void interval<DomainT,Compare>::right_subtract(interval<DomainT,Compare>& lsur, const interval<DomainT,Compare>& x2)const
-{
-    if(lower_less(x2)) {
-        lsur.set_lwb( BoundT(_lwb,boundtype()) );
-        if(exclusive_less(x2))
-            lsur.set_upb( BoundT(_upb,boundtype()) );
-        else
-            lsur.set_upb( upb_leftOf(x2) );
-    }
-    else lsur.clear();
-}
-
-template <class DomainT, ITL_COMPARE Compare>
-void interval<DomainT,Compare>::left_subtract(interval<DomainT,Compare>& rsur, const interval<DomainT,Compare>& x2)const
-{
-    if(x2.upper_less(*this)) {
-        if(x2.exclusive_less(*this))
-            rsur.set_lwb( BoundT(_lwb,boundtype()) ); 
-        else
-            rsur.set_lwb(lwb_rightOf(x2)); 
-        rsur.set_upb( BoundT(_upb,boundtype()) );
-    }
-    else rsur.clear();
-}
-*/
 
 template <class DomainT, ITL_COMPARE Compare>
 const std::string interval<DomainT,Compare>::as_string()const
@@ -904,21 +874,21 @@ const std::string interval<DomainT,Compare>::as_string()const
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-DomainT interval<DomainT,Compare>::first()const
+inline DomainT interval<DomainT,Compare>::first()const
 {
     BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
     return is_left(closed_bounded) ? _lwb : succ(_lwb); 
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-DomainT interval<DomainT,Compare>::last()const
+inline DomainT interval<DomainT,Compare>::last()const
 { 
     BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
     return is_right(closed_bounded) ? _upb : pred(_upb); 
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::size_type interval<DomainT,Compare>::cardinality()const
+inline typename interval<DomainT,Compare>::size_type interval<DomainT,Compare>::cardinality()const
 {
     using namespace boost::mpl;
     return if_<
@@ -930,7 +900,7 @@ typename interval<DomainT,Compare>::size_type interval<DomainT,Compare>::cardina
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-typename interval<DomainT,Compare>::difference_type interval<DomainT,Compare>::length()const
+inline typename interval<DomainT,Compare>::difference_type interval<DomainT,Compare>::length()const
 {
     using namespace boost::mpl;
     return if_<
@@ -942,7 +912,7 @@ typename interval<DomainT,Compare>::difference_type interval<DomainT,Compare>::l
 }
 
 template <class DomainT, ITL_COMPARE Compare>
-interval<DomainT,Compare>& interval<DomainT,Compare>::as(bound_type bounded)
+inline interval<DomainT,Compare>& interval<DomainT,Compare>::as(bound_type bounded)
 { 
     switch(bounded)
     {
@@ -1003,7 +973,7 @@ struct exclusive_less {
 //==============================================================================
 
 /** subtract \c right_minuend from the \c left interval on it's right side. 
-    Return the difference: The part of \c left right of \c x2.
+    Return the difference: The part of \c left right of \c right_minuend.
 \code
 left_over = left - right_minuend; //on the right side.
 [a      ...  : left
@@ -1015,7 +985,7 @@ template <class DomainT, ITL_COMPARE Compare>
 inline interval<DomainT,Compare> right_subtract(interval<DomainT,Compare>  left, 
                                    const interval<DomainT,Compare>& right_minuend)
 {
-	return left.right_subtract(right_minuend);
+    return left.right_subtract(right_minuend);
 }
 
 /** subtract \c left_minuend from the \c right interval on it's left side. 
@@ -1031,7 +1001,7 @@ template <class DomainT, ITL_COMPARE Compare>
 inline interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right, 
                                          const interval<DomainT,Compare>& left_minuend)
 {
-	return right.left_subtract(left_minuend);
+    return right.left_subtract(left_minuend);
 }
 
 // ----------------------------------------------------------------------------
@@ -1039,7 +1009,7 @@ inline interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right,
 // ----------------------------------------------------------------------------
 template <class DomainT, ITL_COMPARE Compare>
 inline itl::interval<DomainT,Compare> operator & (const itl::interval<DomainT,Compare>& left, 
-                                           const itl::interval<DomainT,Compare>& right)
+                                                  const itl::interval<DomainT,Compare>& right)
 {
     return itl::interval<DomainT,Compare>(left) &= right;
 }

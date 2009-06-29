@@ -52,5 +52,14 @@ bool operator < (const Time& x1, const Time& x2) { return x1.asInt() < x2.asInt(
 bool operator == (const Time& x1, const Time& x2) { return x1.asInt() == x2.asInt(); } 
 bool operator <= (const Time& x1, const Time& x2) { return x1.asInt() <= x2.asInt(); } 
 
+
+template<class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits> &operator<<
+  (std::basic_ostream<CharType, CharTraits> &stream, Time const& value)
+{
+    return stream << value.as_string();
+}
+
+
 }} // namespace itl boost
 

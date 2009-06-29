@@ -12,16 +12,16 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 /** Example partys_tallest_guests.cpp \file partys_tallest_guests.cpp
 
     In partys_tallest_guests.cpp we use a different instantiation of
-	interval map templates to compute maxima of guest heights.
+    interval map templates to compute maxima of guest heights.
 
-	Instead of aggregating groups of people attending the party in time
-	we aggregate the maximum of guest height for the time intervals.
+    Instead of aggregating groups of people attending the party in time
+    we aggregate the maximum of guest height for the time intervals.
 
-	Using a joining interval_map results in a smaller map: All interval
-	value pairs are joined if the maximum does not change in time. Using
-	a split_interval_map results in a larger map: All splits of intervals
-	that occur due to entering and leaving of guests are preserved in 
-	the split_interval_map.
+    Using a joining interval_map results in a smaller map: All interval
+    value pairs are joined if the maximum does not change in time. Using
+    a split_interval_map results in a larger map: All splits of intervals
+    that occur due to entering and leaving of guests are preserved in 
+    the split_interval_map.
 
     \include partys_tallest_guests/partys_tallest_guests.cpp
 */
@@ -43,10 +43,10 @@ using namespace boost::itl;
 // A party's height shall be defined as the maximum height of all guests ;-)
 // The last parameter 'inplace_max' is a functor template that calls a max 
 // aggregation on overlap.
-typedef interval_map<ptime, int, partial_absorber, less, inplace_max> PartyHeightHistoryT;
+typedef interval_map<ptime, int, partial_absorber, less, inplace_max<int> > PartyHeightHistoryT;
 
 // Using a split_interval_map we preserve interval splittings that occured via insertion.
-typedef split_interval_map<ptime, int, partial_absorber, less, inplace_max> PartyHeightSplitHistoryT;
+typedef split_interval_map<ptime, int, partial_absorber, less, inplace_max<int> > PartyHeightSplitHistoryT;
 
 void partys_height()
 {
@@ -135,7 +135,7 @@ int main()
     cout << ">> Interval Template Library: Sample partys_tallest_guests.cpp  <<\n";
     cout << "------------------------------------------------------------------\n";
     partys_height();
-	partys_split_height();
+    partys_split_height();
     return 0;
 }
 

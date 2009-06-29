@@ -1,7 +1,7 @@
 [library Boost.Itl
     [quickbook 1.4]
     [authors [Faulhaber, Joachim]]
-    [copyright 2007-2008 Joachim Faulhaber]
+    [copyright 2007-2009 Joachim Faulhaber]
     [copyright 1999-2006 Cortex Software GmbH]
     [category container]
     [id optional]
@@ -126,11 +126,6 @@ Distributed under the Boost Software License, Version 1.0.
 [def __SPACE__ [$images/space.png]]
 [def __GO_TO__ [$images/callouts/R.png]]
 
-
-[/aggregate on overlap  aggrovering]
-[/aggregate on collide  aggrolliding]
-[/split on insertion sploning splonsing; split on addition splonadding, 
-  spladding, splinsertion, splinsoring; decomposition on insertion]
 
 [include introduction.qbk]
 [include examples.qbk]

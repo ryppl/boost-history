@@ -12,12 +12,12 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 /** Example partys_height_average.cpp \file partys_height_average.cpp
 
     In partys_height_average.cpp we compute yet another aggregation:
-	The average height of guests. This is done by defining a class
-	counted_sum that sums up heights and counts the numer of guests
-	via an operator +=.
-	
-	Based on the operator += we can aggregate counted sums on addition
-	of interval value pairs into an interval_map.
+    The average height of guests. This is done by defining a class
+    counted_sum that sums up heights and counts the numer of guests
+    via an operator +=.
+    
+    Based on the operator += we can aggregate counted sums on addition
+    of interval value pairs into an interval_map.
 
     \include partys_height_average/partys_height_average.cpp
 */
@@ -39,19 +39,19 @@ using namespace boost::itl;
 class counted_sum
 {
 public:
-	counted_sum():_sum(0),_count(0){}
-	counted_sum(int sum):_sum(sum),_count(1){}
+    counted_sum():_sum(0),_count(0){}
+    counted_sum(int sum):_sum(sum),_count(1){}
 
-	int sum()const  {return _sum;}
-	int count()const{return _count;}
-	double average()const{ return _count==0 ? 0.0 : _sum/static_cast<double>(_count); }
+    int sum()const  {return _sum;}
+    int count()const{return _count;}
+    double average()const{ return _count==0 ? 0.0 : _sum/static_cast<double>(_count); }
 
-	counted_sum& operator += (const counted_sum& right)
-	{ _sum += right.sum(); _count += right.count(); return *this; }
+    counted_sum& operator += (const counted_sum& right)
+    { _sum += right.sum(); _count += right.count(); return *this; }
 
 private:
-	int _sum;
-	int _count;
+    int _sum;
+    int _count;
 };
 
 bool operator == (const counted_sum& left, const counted_sum& right)
@@ -105,7 +105,7 @@ void partys_height_average()
 
         double height_average = (*height_sum_++).second.average();
         cout << setprecision(3)
-			 << "[" << when.first() << " - " << when.upper() << ")"
+             << "[" << when.first() << " - " << when.upper() << ")"
              << ": " << height_average <<" cm = " << height_average/30.48 << " ft" << endl;
     }
 }

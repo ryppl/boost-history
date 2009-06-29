@@ -223,7 +223,7 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
 
     interval_type right_itv = (*right_it);
     this->_set.erase(right_it);
-	const_cast<value_type&>(*left_it).extend(right_itv);
+    const_cast<value_type&>(*left_it).extend(right_itv);
 
     return left_it;
 }
@@ -249,13 +249,13 @@ void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend
         interval_type leftResid  = right_subtract(*fst_it, addend);
         interval_type rightResid =  left_subtract(*lst_it, addend);
 
-		this->_set.erase(snd_it, end_it);
+        this->_set.erase(snd_it, end_it);
 
         interval_type extended = addend;
         extended.extend(leftResid).extend(rightResid);
 
-		const_cast<value_type&>(*fst_it) = extended;
-		handle_neighbours(fst_it);
+        const_cast<value_type&>(*fst_it) = extended;
+        handle_neighbours(fst_it);
     }
 }
 
@@ -271,16 +271,16 @@ void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& m
 
     interval_type leftResid = right_subtract(*fst_it, minuend);
     interval_type rightResid; 
-	if(fst_it != end_it)
-		rightResid = left_subtract(*lst_it, minuend);
+    if(fst_it != end_it)
+        rightResid = left_subtract(*lst_it, minuend);
 
-	this->_set.erase(fst_it, end_it);
+    this->_set.erase(fst_it, end_it);
 
-	if(!leftResid.empty())
-		this->_set.insert(leftResid);
+    if(!leftResid.empty())
+        this->_set.insert(leftResid);
 
-	if(!rightResid.empty())
-		this->_set.insert(rightResid);
+    if(!rightResid.empty())
+        this->_set.insert(rightResid);
 }
 
 

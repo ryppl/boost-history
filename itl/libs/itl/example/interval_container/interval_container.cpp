@@ -77,7 +77,12 @@ void interval_container_basics()
     overlapCounter += make_pair(next_morning, 1); //touching
     overlapCounter += make_pair(next_evening, 1); //disjoint
 
-    cout << "Split times overlap counted:\n" << overlapCounter.as_string() << endl;
+    cout << "Split times overlap counted:\n" << overlapCounter << endl;
+
+    // An interval map joins touching intervals, if associated values are equal
+    interval_map<Time, int> joiningOverlapCounter;
+    joiningOverlapCounter = overlapCounter;
+    cout << "Times overlap counted:\n" << joiningOverlapCounter << endl;
 }
 
 int main()
@@ -95,10 +100,14 @@ int main()
 --------------------------------------------------------------
 Joined times  :[mon:20:00,wed:10:00)[wed:18:00,wed:21:00)
 Separate times:[mon:20:00,wed:07:00)[wed:07:00,wed:10:00)[wed:18:00,wed:21:00)
-Split times   :[mon:20:00,tue:07:00)[tue:07:00,tue:20:00)[tue:20:00,wed:07:00)
-               [wed:07:00,wed:10:00)[wed:18:00,wed:21:00)
+Split times   :
+[mon:20:00,tue:07:00)[tue:07:00,tue:20:00)[tue:20:00,wed:07:00)
+[wed:07:00,wed:10:00)[wed:18:00,wed:21:00)
 Split times overlap counted:
-([mon:20:00,tue:07:00),1)([tue:07:00,tue:20:00),2)([tue:20:00,wed:07:00),1)
-([wed:07:00,wed:10:00),1)([wed:18:00,wed:21:00),1)
+{([mon:20:00,tue:07:00)->1)([tue:07:00,tue:20:00)->2)([tue:20:00,wed:07:00)->1)
+([wed:07:00,wed:10:00)->1)([wed:18:00,wed:21:00)->1)}
+Times overlap counted:
+{([mon:20:00,tue:07:00)->1)([tue:07:00,tue:20:00)->2)([tue:20:00,wed:10:00)->1)
+([wed:18:00,wed:21:00)->1)}
 -----------------------------------------------------------------------------*/
 //]

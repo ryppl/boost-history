@@ -10,7 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 /** Example interval.cpp \file interval.cpp
 
-    Of course much of the library code deals with intervals which are implemented
+    Much of the library code deals with intervals which are implemented
     as class interval.
 
     This program gives a very short samlpe of different interval instances.

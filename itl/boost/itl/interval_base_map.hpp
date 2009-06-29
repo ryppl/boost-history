@@ -624,54 +624,54 @@ public:
 
 protected:
 
-	iterator prior(iterator it_)
-	{
-		if(it_ == this->_map.begin())
-			return this->_map.end();
-		else
-			return --it_;
-	}
+    iterator prior(iterator it_)
+    {
+        if(it_ == this->_map.begin())
+            return this->_map.end();
+        else
+            return --it_;
+    }
 
-	template <class Combiner>
-	bool combine(iterator& it_, const codomain_type& co_val)
-	{ 
-		Combiner()(it_->CONT_VALUE, co_val);
-		if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
-		{ this->_map.erase(it_); it_ = _map.end(); return false; }
-		return true;
-	}
+    template <class Combiner>
+    bool combine(iterator& it_, const codomain_type& co_val)
+    { 
+        Combiner()(it_->CONT_VALUE, co_val);
+        if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
+        { this->_map.erase(it_); it_ = _map.end(); return false; }
+        return true;
+    }
 
-	template <class Combiner>
-	std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
-	{
-	    if(Traits::is_total)
-		{
-			CodomainT added_val = Combiner::neutron();
-			Combiner()(added_val, co_val);
-			if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
-				return std::pair<iterator,bool>(this->_map.end(), false);
-			else
-				return this->_map.insert(value_type(inter_val, added_val));
-		}
-		else
-			return this->_map.insert(value_type(inter_val, co_val));
-	}
+    template <class Combiner>
+    std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
+    {
+        if(Traits::is_total)
+        {
+            CodomainT added_val = Combiner::neutron();
+            Combiner()(added_val, co_val);
+            if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
+                return std::pair<iterator,bool>(this->_map.end(), false);
+            else
+                return this->_map.insert(value_type(inter_val, added_val));
+        }
+        else
+            return this->_map.insert(value_type(inter_val, co_val));
+    }
 
-	template <class Combiner>
-	iterator map_insert(iterator& prior_, const interval_type& inter_val, const codomain_type& co_val)
-	{
-	    if(Traits::is_total)
-		{
-			CodomainT added_val = Combiner::neutron();
-			Combiner()(added_val, co_val);
-			if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
-				return this->_map.end();
-			else
-				return this->_map.insert(prior_, value_type(inter_val, added_val));
-		}
-		else
-			return this->_map.insert(prior_, value_type(inter_val, co_val));
-	}
+    template <class Combiner>
+    iterator map_insert(iterator& prior_, const interval_type& inter_val, const codomain_type& co_val)
+    {
+        if(Traits::is_total)
+        {
+            CodomainT added_val = Combiner::neutron();
+            Combiner()(added_val, co_val);
+            if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
+                return this->_map.end();
+            else
+                return this->_map.insert(prior_, value_type(inter_val, added_val));
+        }
+        else
+            return this->_map.insert(prior_, value_type(inter_val, co_val));
+    }
 
 protected:
     ImplMapT _map;
@@ -1083,46 +1083,46 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     ::erase(const interval_type& minuend)
 {
     if(minuend.empty()) 
-		return *that();
+        return *that();
 
     iterator fst_it = _map.lower_bound(minuend);
     if(fst_it==_map.end()) 
-		return *that();
+        return *that();
     iterator end_it = _map.upper_bound(minuend);
-	if(fst_it==end_it)
-		return *that();
+    if(fst_it==end_it)
+        return *that();
 
-	iterator lst_it = end_it; --lst_it;
+    iterator lst_it = end_it; --lst_it;
 
-	interval_type left_resid  = right_subtract(fst_it->KEY_VALUE, minuend);
+    interval_type left_resid  = right_subtract(fst_it->KEY_VALUE, minuend);
     interval_type right_resid =  left_subtract(lst_it->KEY_VALUE, minuend);
 
-	if(fst_it == lst_it)
-		if(!left_resid.empty())
-		{
-			const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
-			if(!right_resid.empty())
-				this->_map.insert(fst_it, value_type(right_resid, fst_it->CONT_VALUE));
-		}
-		else if(!right_resid.empty())
-			const_cast<interval_type&>(fst_it->KEY_VALUE).left_subtract(minuend);
-		else
-			this->_map.erase(fst_it);
-	else
-	{	//            [-------- minuend ---------)
-		// [left_resid   fst)   . . . .    [lst  right_resid)
-		iterator snd_it = fst_it; ++snd_it;
+    if(fst_it == lst_it)
+        if(!left_resid.empty())
+        {
+            const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
+            if(!right_resid.empty())
+                this->_map.insert(fst_it, value_type(right_resid, fst_it->CONT_VALUE));
+        }
+        else if(!right_resid.empty())
+            const_cast<interval_type&>(fst_it->KEY_VALUE).left_subtract(minuend);
+        else
+            this->_map.erase(fst_it);
+    else
+    {    //            [-------- minuend ---------)
+        // [left_resid   fst)   . . . .    [lst  right_resid)
+        iterator snd_it = fst_it; ++snd_it;
 
-		iterator start_ = left_resid.empty()? fst_it: snd_it;
-		iterator stop_  = right_resid.empty()? end_it: lst_it;
-		this->_map.erase(start_, stop_); //erase [start_, stop_)
+        iterator start_ = left_resid.empty()? fst_it: snd_it;
+        iterator stop_  = right_resid.empty()? end_it: lst_it;
+        this->_map.erase(start_, stop_); //erase [start_, stop_)
 
-		if(!left_resid.empty())
-			const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
+        if(!left_resid.empty())
+            const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
 
-		if(!right_resid.empty())
-			const_cast<interval_type&>(lst_it->KEY_VALUE).left_subtract(minuend);
-	}
+        if(!right_resid.empty())
+            const_cast<interval_type&>(lst_it->KEY_VALUE).left_subtract(minuend);
+    }
     return *that();
 }
 

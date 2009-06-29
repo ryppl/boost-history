@@ -139,12 +139,9 @@ private:
     bool join_right(iterator& it);
     void join_neighbours(iterator& it){ join_left(it); join_right(it); };
     bool joinable(const iterator& some, const iterator& next)const;
-	iterator join_on_left(iterator& some, const iterator& next);
-	iterator join_on_right(const iterator& some, iterator& next);
-	iterator join_segments(iterator& some, const iterator& next){ return join_on_left(some, next); };//JODO ausbauen
-
-    iterator fill_join_left(const value_type&);
-    iterator fill_join_both(const value_type&);
+    iterator join_on_left(iterator& some, const iterator& next);
+    iterator join_on_right(const iterator& some, iterator& next);
+    iterator join_segments(iterator& some, const iterator& next){ return join_on_left(some, next); };//JODO ausbauen
 
     template<class Combiner>
     void add_main(interval_type& inter_val, const CodomainT& co_val, 
@@ -210,7 +207,7 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
 
     interval_type right_interval = right_it->KEY_VALUE;
     this->_map.erase(right_it);
-	const_cast<interval_type&>(left_it->KEY_VALUE).extend(right_interval);
+    const_cast<interval_type&>(left_it->KEY_VALUE).extend(right_interval);
     
     return left_it;
 }
@@ -224,15 +221,15 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
     // both left and right are in the map and they are neighbours
     BOOST_ASSERT(joinable(left_it, right_it));
 
-	//JODO: This implementation does not work in very rare cases. Causes are not clear
-	//interval_type left_interval = left_it->KEY_VALUE;
-	//this->_map.erase(left_it);
-	//const_cast<interval_type&>(right_it->KEY_VALUE).extend(left_interval);
+    //JODO: This implementation does not work in very rare cases. Causes are not clear
+    //interval_type left_interval = left_it->KEY_VALUE;
+    //this->_map.erase(left_it);
+    //const_cast<interval_type&>(right_it->KEY_VALUE).extend(left_interval);
 
     interval_type right_interval = right_it->KEY_VALUE;
     this->_map.erase(right_it);
-	const_cast<interval_type&>(left_it->KEY_VALUE).extend(right_interval);
-	right_it = left_it;
+    const_cast<interval_type&>(left_it->KEY_VALUE).extend(right_interval);
+    right_it = left_it;
 
     return right_it;
 }
@@ -251,7 +248,7 @@ inline bool interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
 
     if(joinable(it_pred, it)) 
     {
-		join_on_right(it_pred, it); 
+        join_on_right(it_pred, it); 
         return true;
     }
 
@@ -296,7 +293,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         return;
 
     std::pair<iterator,bool> insertion 
-		= this->template map_insert<Combiner>(inter_val, co_val);
+        = this->template map_insert<Combiner>(inter_val, co_val);
 
     if(insertion.WAS_SUCCESSFUL)
         join_neighbours(insertion.ITERATOR);
@@ -307,12 +304,12 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
                  lst_it = insertion.ITERATOR;
         //assert(end_it == this->_map.upper_bound(inter_val));
 
-		iterator it_ = fst_it;
-		interval_type rest_interval = inter_val;
+        iterator it_ = fst_it;
+        interval_type rest_interval = inter_val;
 
-		add_front         (rest_interval, co_val, it_);
+        add_front         (rest_interval, co_val, it_);
         add_main<Combiner>(rest_interval, co_val, it_, lst_it);
-		add_rear<Combiner>(rest_interval, co_val, it_);
+        add_rear<Combiner>(rest_interval, co_val, it_);
     }
 }
 
@@ -321,25 +318,25 @@ template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compar
 inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_front(const interval_type& inter_val, const CodomainT& co_val, iterator& first_)
 {
-	// If the collision sequence has a right residual 'right_resid' is will
-	// be split, to provide a standardized start of algorithms:
-	// The addend interval 'inver_val' covers the beginning of the collision sequence.
+    // If the collision sequence has a right residual 'right_resid' is will
+    // be split, to provide a standardized start of algorithms:
+    // The addend interval 'inver_val' covers the beginning of the collision sequence.
 
     // only for the first there can be a left_resid: a part of *first_ left of inter_val
     interval_type left_resid = right_subtract(first_->KEY_VALUE, inter_val);
 
-	if(!left_resid.empty())
-	{   //                     [------------ . . .
-		// [prior)  [left_resid---fst_it --- . . .
-		iterator prior_ = this->prior(first_);
-		const_cast<interval_type&>(first_->KEY_VALUE).left_subtract(left_resid);
-		//NOTE: Only splitting
-		this->_map.insert(prior_, value_type(left_resid, first_->CONT_VALUE));
-	}
+    if(!left_resid.empty())
+    {   //                     [------------ . . .
+        // [prior)  [left_resid---fst_it --- . . .
+        iterator prior_ = this->prior(first_);
+        const_cast<interval_type&>(first_->KEY_VALUE).left_subtract(left_resid);
+        //NOTE: Only splitting
+        this->_map.insert(prior_, value_type(left_resid, first_->CONT_VALUE));
+    }
 
-	//POST:
-	// [----- inter_val ---- . . .
-	// ...[-- first_ --...
+    //POST:
+    // [----- inter_val ---- . . .
+    // ...[-- first_ --...
 }
 
 
@@ -348,11 +345,11 @@ template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compar
 inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_main(interval_type& x_rest, const CodomainT& co_val, iterator& it, const iterator& lst_it)
 {
-	interval_type cur_interval;
+    interval_type cur_interval;
     while(it!=lst_it)
     {
         cur_interval = it->KEY_VALUE ;
-		add_segment<Combiner>(x_rest, co_val, it);
+        add_segment<Combiner>(x_rest, co_val, it);
         // shrink interval
         x_rest.left_subtract(cur_interval);
     }
@@ -365,31 +362,31 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
     ::add_segment(const interval_type& inter_val, const CodomainT& co_val, iterator& it_)
 {
     interval_type lead_gap = right_subtract(inter_val, it_->KEY_VALUE);
-	if(!lead_gap.empty())
-	{
-		// [------ . . .
-		//     [-- it ...
-		iterator prior_ = it_; 
-		if(prior_ != this->_map.begin())
-		{
-			iterator inserted_ = this->template map_insert<Combiner>(--prior_, lead_gap, co_val);
-			if(joinable(prior_, inserted_))
-				join_on_right(prior_, inserted_);
-		}
-		else
-			this->template map_insert<Combiner>(lead_gap, co_val);
-	}
+    if(!lead_gap.empty())
+    {
+        // [------ . . .
+        //     [-- it ...
+        iterator prior_ = it_; 
+        if(prior_ != this->_map.begin())
+        {
+            iterator inserted_ = this->template map_insert<Combiner>(--prior_, lead_gap, co_val);
+            if(joinable(prior_, inserted_))
+                join_on_right(prior_, inserted_);
+        }
+        else
+            this->template map_insert<Combiner>(lead_gap, co_val);
+    }
 
-	// . . . --------- . . . addend interval
-	//      [-- it_ --)      has a common part with the first overval
-	Combiner()(it_->CONT_VALUE, co_val);
-	if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
-		this->_map.erase(it_++);
-	else
-	{
-		join_left(it_);
-		++it_;
-	}
+    // . . . --------- . . . addend interval
+    //      [-- it_ --)      has a common part with the first overval
+    Combiner()(it_->CONT_VALUE, co_val);
+    if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
+        this->_map.erase(it_++);
+    else
+    {
+        join_left(it_);
+        ++it_;
+    }
 }
 
 
@@ -399,74 +396,74 @@ template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compar
 inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it)
 {
-	iterator prior_ = this->prior(it);
+    iterator prior_ = this->prior(it);
     interval_type cur_itv = (*it).KEY_VALUE ;
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
-	if(!lead_gap.empty())
-	{	// [------ . . .
-		//     [-- it ...
-		iterator inserted_ = this->template map_insert<Combiner>(prior_, lead_gap, co_val);
-		if(prior_ != this->_map.end() && joinable(prior_, inserted_))
-			join_on_left(prior_, inserted_);
-	}
+    if(!lead_gap.empty())
+    {    // [------ . . .
+        //     [-- it ...
+        iterator inserted_ = this->template map_insert<Combiner>(prior_, lead_gap, co_val);
+        if(prior_ != this->_map.end() && joinable(prior_, inserted_))
+            join_on_left(prior_, inserted_);
+    }
 
     interval_type end_gap = left_subtract(inter_val, cur_itv);
-	if(!end_gap.empty())
-	{
-		// [-------------------)
-		//  . . . -- it --)
-		Combiner()(it->CONT_VALUE, co_val);
+    if(!end_gap.empty())
+    {
+        // [-------------------)
+        //  . . . -- it --)
+        Combiner()(it->CONT_VALUE, co_val);
 
         if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
-		{
+        {
             this->_map.erase(it);
-			iterator inserted_ = this->template map_insert<Combiner>(prior_, end_gap, co_val);
-			join_right(inserted_);
-		}
+            iterator inserted_ = this->template map_insert<Combiner>(prior_, end_gap, co_val);
+            join_right(inserted_);
+        }
         else
-		{
+        {
             join_left(it);
-			iterator inserted_ = this->template map_insert<Combiner>(it, end_gap, co_val);
-			join_neighbours(inserted_);
-		}
-	}
-	else
-	{
-		// only for the last there can be a right_resid: a part of *it right of x
-		interval_type right_resid = left_subtract(cur_itv, inter_val);
+            iterator inserted_ = this->template map_insert<Combiner>(it, end_gap, co_val);
+            join_neighbours(inserted_);
+        }
+    }
+    else
+    {
+        // only for the last there can be a right_resid: a part of *it right of x
+        interval_type right_resid = left_subtract(cur_itv, inter_val);
 
-		if(right_resid.empty())
-		{
-			// [---------------)
-			//      [-- it ----)
-			Combiner()(it->CONT_VALUE, co_val);
+        if(right_resid.empty())
+        {
+            // [---------------)
+            //      [-- it ----)
+            Combiner()(it->CONT_VALUE, co_val);
 
-			if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
-				this->_map.erase(it);
-			else
-				join_neighbours(it);
-		}
-		else
-		{
-			// [-------------)
-			//      [-- it ---right_resid)
-			const_cast<interval_type&>(it->KEY_VALUE).right_subtract(right_resid);
+            if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
+                this->_map.erase(it);
+            else
+                join_neighbours(it);
+        }
+        else
+        {
+            // [-------------)
+            //      [-- it ---right_resid)
+            const_cast<interval_type&>(it->KEY_VALUE).right_subtract(right_resid);
 
-			//NOTE: This is NOT an insertion that has to take care for correct application of
-			// the Combiner functor. It only reestablished that state after splitting the
-			// 'it' interval value pair. Using map_insert<Combiner> does not work here.
-			iterator insertion_ = this->_map.insert(it, value_type(right_resid, it->CONT_VALUE));
-			join_right(insertion_);
+            //NOTE: This is NOT an insertion that has to take care for correct application of
+            // the Combiner functor. It only reestablished that state after splitting the
+            // 'it' interval value pair. Using map_insert<Combiner> does not work here.
+            iterator insertion_ = this->_map.insert(it, value_type(right_resid, it->CONT_VALUE));
+            join_right(insertion_);
 
-			Combiner()(it->CONT_VALUE, co_val);
+            Combiner()(it->CONT_VALUE, co_val);
 
-			if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
-				this->_map.erase(it);
-			else
-				join_neighbours(it);
-		}
-	}
+            if(Traits::absorbs_neutrons && it->CONT_VALUE == Combiner::neutron())
+                this->_map.erase(it);
+            else
+                join_neighbours(it);
+        }
+    }
 }
 
 
@@ -489,16 +486,16 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
     iterator fst_it = this->_map.lower_bound(inter_val);
     if(fst_it==this->_map.end()) 
-		return;
+        return;
     iterator end_it = this->_map.upper_bound(inter_val);
     if(fst_it==end_it) 
-		return;
+        return;
 
-	iterator lst_it = end_it; --lst_it;
-	iterator it_    = fst_it;
-	subtract_front         (inter_val, co_val, it_);
+    iterator lst_it = end_it; --lst_it;
+    iterator it_    = fst_it;
+    subtract_front         (inter_val, co_val, it_);
     subtract_main<Combiner>(inter_val, co_val, it_, lst_it);
-	subtract_rear<Combiner>(inter_val, co_val, it_);
+    subtract_rear<Combiner>(inter_val, co_val, it_);
 }
 
 
@@ -511,9 +508,9 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
 
     if(!left_resid.empty())
     {
-		iterator prior_ = this->prior(it_);
-		const_cast<interval_type&>(it_->KEY_VALUE).left_subtract(left_resid);
-		this->_map.insert(prior_, value_type(left_resid, it_->CONT_VALUE));
+        iterator prior_ = this->prior(it_);
+        const_cast<interval_type&>(it_->KEY_VALUE).left_subtract(left_resid);
+        this->_map.insert(prior_, value_type(left_resid, it_->CONT_VALUE));
     }
 }
 
@@ -552,23 +549,23 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
         if(Traits::absorbs_neutrons && cur_val==Combiner::neutron())
             this->_map.erase(it);
         else
-			join_neighbours(it);
+            join_neighbours(it);
     }
     else
     {
-		const_cast<interval_type&>(it->KEY_VALUE).right_subtract(right_resid);
-		iterator next_ = this->_map.insert(it, value_type(right_resid, it->CONT_VALUE));
-		Combiner()(it->CONT_VALUE, co_val);
+        const_cast<interval_type&>(it->KEY_VALUE).right_subtract(right_resid);
+        iterator next_ = this->_map.insert(it, value_type(right_resid, it->CONT_VALUE));
+        Combiner()(it->CONT_VALUE, co_val);
         if(Traits::absorbs_neutrons && it->CONT_VALUE==Combiner::neutron())
-		{
+        {
             this->_map.erase(it);
-			join_right(next_);
-		}
-		else
-		{
-			join_left(it);
-			join_neighbours(next_);
-		}
+            join_right(next_);
+        }
+        else
+        {
+            join_left(it);
+            join_neighbours(next_);
+        }
     }
 }
 
@@ -599,8 +596,8 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
         iterator fst_it = this->_map.lower_bound(inter_val),
                  lst_it = insertion.ITERATOR;
         //assert((++lst_it) == this->_map.upper_bound(inter_val));
-		iterator it_ = fst_it;
-		insert_range(inter_val, co_val, it_, lst_it);
+        iterator it_ = fst_it;
+        insert_range(inter_val, co_val, it_, lst_it);
     }
 }
 
@@ -610,12 +607,12 @@ template <typename DomainT, typename CodomainT, class Traits,
 void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::insert_range(const interval_type& inter_val, const CodomainT& co_val, iterator& it, iterator& lst_it)
 {
-	iterator end_it = lst_it; ++end_it;
-	iterator prior_ = it, inserted_;
-	if(prior_ != this->_map.end())
-		--prior_;
+    iterator end_it = lst_it; ++end_it;
+    iterator prior_ = it, inserted_;
+    if(prior_ != this->_map.end())
+        --prior_;
     interval_type rest_interval = inter_val, left_gap, cur_itv;
-	interval_type last_interval = lst_it->KEY_VALUE;
+    interval_type last_interval = lst_it->KEY_VALUE;
 
     while(it != end_it)
     {
@@ -624,25 +621,25 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
         if(!left_gap.empty())
         {
-			inserted_ = this->_map.insert(prior_, value_type(left_gap, co_val));
-			join_left(inserted_);
+            inserted_ = this->_map.insert(prior_, value_type(left_gap, co_val));
+            join_left(inserted_);
             // after filling that gap there may be another joining opportunity
             join_left(it);
         }
 
         // shrink interval
         rest_interval.left_subtract(cur_itv);
-		prior_ = it;
-		++it;
+        prior_ = it;
+        ++it;
     }
 
     //insert_rear(rest_interval, co_val, lst_it):
     interval_type end_gap = left_subtract(rest_interval, last_interval);
-	if(!end_gap.empty())
-	{
-		inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
-		join_neighbours(inserted_);
-	}
+    if(!end_gap.empty())
+    {
+        inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
+        join_neighbours(inserted_);
+    }
 }
 
 
@@ -663,12 +660,12 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
     iterator fst_it = this->_map.lower_bound(inter_val);
     if(fst_it==this->_map.end()) 
-		return;
+        return;
     iterator end_it = this->_map.upper_bound(inter_val);
     if(fst_it==end_it) 
-		return;
+        return;
 
-	iterator lst_it = end_it; --lst_it;
+    iterator lst_it = end_it; --lst_it;
 
     iterator snd_it = fst_it; snd_it++;
     if(fst_it == lst_it) 
@@ -678,16 +675,16 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
 
         if(fst_it->CONT_VALUE == co_val)
         {
-			interval_type left_resid = right_subtract(fst_it->KEY_VALUE, inter_val);
-			if(!left_resid.empty())
-			{
-				const_cast<interval_type&>(fst_it->KEY_VALUE) = left_resid;
-				if(!right_resid.empty())
-					this->_map.insert(fst_it, value_type(right_resid, co_val));
-			}
-			else if(!right_resid.empty())
-				const_cast<interval_type&>(fst_it->KEY_VALUE) = right_resid;
-			else
+            interval_type left_resid = right_subtract(fst_it->KEY_VALUE, inter_val);
+            if(!left_resid.empty())
+            {
+                const_cast<interval_type&>(fst_it->KEY_VALUE) = left_resid;
+                if(!right_resid.empty())
+                    this->_map.insert(fst_it, value_type(right_resid, co_val));
+            }
+            else if(!right_resid.empty())
+                const_cast<interval_type&>(fst_it->KEY_VALUE) = right_resid;
+            else
                 this->_map.erase(fst_it);
         }
     }
@@ -695,13 +692,13 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     {
         // first AND NOT last
         if(fst_it->CONT_VALUE == co_val)
-		{
-			interval_type left_resid = right_subtract(fst_it->KEY_VALUE, inter_val);
-			if(left_resid.empty())
-				this->_map.erase(fst_it);
-			else
-				const_cast<interval_type&>(fst_it->KEY_VALUE) = left_resid;
-		}
+        {
+            interval_type left_resid = right_subtract(fst_it->KEY_VALUE, inter_val);
+            if(left_resid.empty())
+                this->_map.erase(fst_it);
+            else
+                const_cast<interval_type&>(fst_it->KEY_VALUE) = left_resid;
+        }
 
         erase_rest(inter_val, co_val, snd_it, lst_it);
     }
@@ -719,15 +716,15 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
             this->_map.erase(it_++); 
         else it_++;
 
-	//erase_rear:
+    //erase_rear:
     if(it_->CONT_VALUE == co_val)
-	{
+    {
         interval_type right_resid = left_subtract(it_->KEY_VALUE, inter_val);
-		if(right_resid.empty())
-			this->_map.erase(it_);
-		else
-			const_cast<interval_type&>(it_->KEY_VALUE) = right_resid;
-	}
+        if(right_resid.empty())
+            this->_map.erase(it_);
+        else
+            const_cast<interval_type&>(it_->KEY_VALUE) = right_resid;
+    }
 }
 
 

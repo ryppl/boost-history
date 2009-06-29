@@ -603,10 +603,10 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 {
     typedef itl::set<DomainT,Compare,Alloc> ObjectT;
     stream << "{";
-	typename ObjectT::const_iterator it = object.begin();
-	if(it != object.end())
-		stream << *it++;
-	while(it != object.end())
+    typename ObjectT::const_iterator it = object.begin();
+    if(it != object.end())
+        stream << *it++;
+    while(it != object.end())
         stream << " " << *it++;
 
     return stream << "}";

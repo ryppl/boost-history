@@ -167,41 +167,41 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value
                  end_it = insertion.ITERATOR; end_it++;
         //BOOST_ASSERT(end_it == this->_map.upper_bound(inter_val));
 
-		iterator pre_it = fst_it;
-		if(pre_it != this->_set.begin())
-			--pre_it;
+        iterator pre_it = fst_it;
+        if(pre_it != this->_set.begin())
+            --pre_it;
 
-		// handle the beginning of the sequence of intervals of *this
-		// overlapped by insertee inverval 'addend'
-		interval_type leadGap = right_subtract(addend, *fst_it);
+        // handle the beginning of the sequence of intervals of *this
+        // overlapped by insertee inverval 'addend'
+        interval_type leadGap = right_subtract(addend, *fst_it);
         // this is a new interval that is a gap in the current map
-		if(!leadGap.empty())
-			this->_set.insert(pre_it, leadGap);
-		else
-		{
-			interval_type leftResid = right_subtract(*fst_it, addend);
-			if(!leftResid.empty())
-			{
-				const_cast<value_type&>(*fst_it).left_subtract(leftResid);
-				this->_set.insert(pre_it, leftResid);
-			}
-		}
+        if(!leadGap.empty())
+            this->_set.insert(pre_it, leadGap);
+        else
+        {
+            interval_type leftResid = right_subtract(*fst_it, addend);
+            if(!leftResid.empty())
+            {
+                const_cast<value_type&>(*fst_it).left_subtract(leftResid);
+                this->_set.insert(pre_it, leftResid);
+            }
+        }
 
-		// handle the ending of the sequence of intervals of *this
-		// overlapped by insertee inverval 'addend'
-		interval_type endGap = left_subtract(addend, *lst_it);
+        // handle the ending of the sequence of intervals of *this
+        // overlapped by insertee inverval 'addend'
+        interval_type endGap = left_subtract(addend, *lst_it);
 
-		if(!endGap.empty())
-			this->_set.insert(lst_it, endGap);
-		else
-		{
-			interval_type rightResid = left_subtract(*lst_it, addend);
-			if(!rightResid.empty())
-			{
-				const_cast<value_type&>(*lst_it).right_subtract(rightResid);
-				this->_set.insert(lst_it, rightResid);
-			}
-		}
+        if(!endGap.empty())
+            this->_set.insert(lst_it, endGap);
+        else
+        {
+            interval_type rightResid = left_subtract(*lst_it, addend);
+            if(!rightResid.empty())
+            {
+                const_cast<value_type&>(*lst_it).right_subtract(rightResid);
+                this->_set.insert(lst_it, rightResid);
+            }
+        }
         
         iterator snd_it = fst_it; snd_it++;
         interval_type addend_rest = left_subtract(addend, *fst_it);
@@ -213,19 +213,19 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline void split_interval_set<DomainT,Compare,Interval,Alloc>::insert_rest(interval_type& addend, iterator& it, iterator& end_it)
 {//JODO add_rest
-	interval_type left_gap, cur_itv;
-	iterator pred_it = it; --pred_it;
-	while(it != end_it)
-	{
+    interval_type left_gap, cur_itv;
+    iterator pred_it = it; --pred_it;
+    while(it != end_it)
+    {
         cur_itv = *it;
-		left_gap = right_subtract(addend, cur_itv);
-		if(!left_gap.empty())
-			this->_set.insert(pred_it, left_gap);
+        left_gap = right_subtract(addend, cur_itv);
+        if(!left_gap.empty())
+            this->_set.insert(pred_it, left_gap);
 
-		pred_it = it;
-		addend.left_subtract(cur_itv);
-		++it;
-	}
+        pred_it = it;
+        addend.left_subtract(cur_itv);
+        ++it;
+    }
 }
 
 
@@ -241,16 +241,16 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const 
 
     interval_type leftResid = right_subtract(*fst_it, minuend);
     interval_type rightResid; 
-	if(fst_it != end_it)
-		rightResid = left_subtract(*lst_it, minuend);
+    if(fst_it != end_it)
+        rightResid = left_subtract(*lst_it, minuend);
 
-	this->_set.erase(fst_it, end_it);
-	
-	if(!leftResid.empty())
-		this->_set.insert(leftResid);
+    this->_set.erase(fst_it, end_it);
+    
+    if(!leftResid.empty())
+        this->_set.insert(leftResid);
 
-	if(!rightResid.empty())
-		this->_set.insert(rightResid);
+    if(!rightResid.empty())
+        this->_set.insert(rightResid);
 }
 
 

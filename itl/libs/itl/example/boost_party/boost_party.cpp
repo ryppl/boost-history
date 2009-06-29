@@ -75,7 +75,7 @@ void boost_party()
     GuestSetT peter; 
     peter.insert("Peter");
 
-	// A party is an interval map that maps time intervals to sets of guests
+    // A party is an interval map that maps time intervals to sets of guests
     interval_map<ptime, GuestSetT> party;
 
     party.add( // add and element
@@ -104,7 +104,7 @@ void boost_party()
     cout << "----- History of party guests -------------------------\n";
     while(it != party.end())
     {
-        interval<ptime> when = (*it).first;
+        interval<ptime> when = it->first;
         // Who is at the party within the time interval 'when' ?
         GuestSetT who = (*it++).second;
         cout << "[" << when.first() << " - " << when.upper() << ")"
