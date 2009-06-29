@@ -16,7 +16,7 @@
 #include "boost/config.hpp"
 #include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/is_reference.hpp>
-#include <boost/throw_exception.hp>p
+#include <boost/throw_exception.hpp>
 #include <boost/static_assert.hpp>
 
 namespace boost
@@ -26,50 +26,12 @@ namespace boost
     {
         typedef Alloc allocator_type;
         typedef any<allocator_type> any_type;
+        template <class T>
+        struct rebind 
+        {
+            typedef typename allocator_type::template rebind<T>::other type;
+        };
 
-        template <class U>
-        U *allocate_type()
-        {
-            typename allocator_type::template rebind<U>::other alloc(get_allocator());
-            return alloc.allocate(1);
-        }
-
-        template <class U>
-        U *construct_type()
-        {
-            typename allocator_type::template rebind<U>::other alloc(get_allocator());
-            U *ptr = alloc.allocate(1);
-            alloc.construct(ptr);
-            return ptr;
-        }
-        template <class U, class A0>
-        U *construct_type(A0 a0)
-        {
-            typename allocator_type::template rebind<U>::other alloc(get_allocator());
-            U *ptr = alloc.allocate(1);
-            new (ptr) U(a0);
-            return ptr;
-        }
-        template <class U, class A0, class A1>
-        U *construct_type(A0 a0, A1 a1)
-        {
-            typename allocator_type::template rebind<U>::other alloc(get_allocator());
-            U *ptr = alloc.allocate(1);
-            new (ptr) U(a0, a1);
-            return ptr;
-        }
-        template <class U>
-        void destroy_type(U *ptr)
-        {
-            typename allocator_type::template rebind<U>::other alloc(get_allocator());
-            alloc.destroy(ptr);
-        }
-        template <class U>
-        void deallocate_type(U *ptr)
-        {
-            typename allocator_type::template rebind<U>::other alloc(get_allocator());
-            alloc.deallocate(ptr, 1);
-        }
     public: // structors
 
         any()
@@ -197,14 +159,7 @@ namespace boost
 #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
     private: // representation
-        template <class U>
-        holder<U> *construct_holder(U const &init)
-        {
-            typename allocator_type::template rebind<holder<U> >::other alloc(get_allocator());
-            holder<U> *ptr = alloc.allocate(1);
-            new (ptr) holder<U>(init, *this);
-            return ptr;
-        }
+
 
         template<typename ValueType, class Al9>
         friend ValueType * any_cast(any<Al9> *);
@@ -221,6 +176,60 @@ namespace boost
         allocator_type alloc;
         placeholder * content;
 
+    private:
+
+        template <class U>
+        holder<U> *construct_holder(U const &init)
+        {
+            typename rebind<holder<U> >::type alloc(get_allocator());
+            holder<U> *ptr = alloc.allocate(1);
+            new (ptr) holder<U>(init, *this);
+            return ptr;
+        }
+
+        template <class U>
+        U *allocate_type()
+        {
+            typename rebind<U>::type alloc(get_allocator());
+            return alloc.allocate(1);
+        }
+
+        template <class U>
+        U *construct_type()
+        {
+            typename rebind<U>::type alloc(get_allocator());
+            U *ptr = alloc.allocate(1);
+            alloc.construct(ptr);
+            return ptr;
+        }
+        template <class U, class A0>
+        U *construct_type(A0 a0)
+        {
+            typename rebind<U>::type alloc(get_allocator());
+            U *ptr = alloc.allocate(1);
+            new (ptr) U(a0);
+            return ptr;
+        }
+        template <class U, class A0, class A1>
+        U *construct_type(A0 a0, A1 a1)
+        {
+            typename rebind<U>::type alloc(get_allocator());
+            U *ptr = alloc.allocate(1);
+            new (ptr) U(a0, a1);
+            return ptr;
+        }
+        template <class U>
+        void destroy_type(U *ptr)
+        {
+            typename rebind<U>::type alloc(get_allocator());
+            alloc.destroy(ptr);
+        }
+        template <class U>
+        void deallocate_type(U *ptr)
+        {
+            typename rebind<U>::type alloc(get_allocator());
+            alloc.deallocate(ptr, 1);
+        }
     };
 
     class bad_any_cast : public std::bad_cast
