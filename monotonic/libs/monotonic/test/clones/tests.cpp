@@ -173,11 +173,11 @@ struct T1 : heterogenous::base<T1, my_base>
 {
 };
 
-struct T2 : heterogenous::base<T0, my_base>
+struct T2 : heterogenous::base<T2, my_base>
 {
 };
 
-struct T3 : heterogenous::base<T1, my_base>
+struct T3 : heterogenous::base<T3, my_base>
 {
 };
 
