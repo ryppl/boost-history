@@ -13,6 +13,7 @@
 #include <boost/heterogenous/detail/prefix.hpp>
 #include <boost/heterogenous/base.hpp>
 #include <boost/heterogenous/make_clone_allocator.hpp>
+#include <boost/heterogenous/detail/allocation.hpp>
 
 namespace boost 
 {
@@ -38,7 +39,8 @@ namespace boost
 			vector()
 			{
 			}
-			vector(allocator_type a) 
+
+			vector(allocator_type &a) 
 				: impl(a)
 			{
 			}
@@ -173,53 +175,28 @@ namespace boost
 			template <class U>
 			void emplace_back()
 			{
-				U *ptr = construct_type<U>();
-				impl.emplace_back(ptr);
+				impl.push_back(detail::construct_type<U>(get_allocator()));
 			}
 			template <class U, class A0>
 			void emplace_back(A0 a0)
 			{
-				U *ptr = allocate_type<U>();
-				new (ptr) U(a0);
-				impl.push_back(ptr);
+				impl.push_back(detail::construct_type<U>(get_allocator(), a0));
 			}
 			template <class U, class A0, class A1>
 			void emplace_back(A0 a0, A1 a1)
 			{
-				U *ptr = allocate_type<U>();
-				new (ptr) U(a0, a1);
-				impl.push_back(ptr);
+				impl.push_back(detail::construct_type<U>(get_allocator(), a0,a1));
 			}
 			template <class U, class A0, class A1, class A2>
 			void emplace_back(A0 a0, A1 a1, A2 a2)
 			{
-				U *ptr = allocate_type<U>();
-				new (ptr) U(a0, a1, a2);
-				impl.push_back(ptr);
+				impl.push_back(detail::construct_type<U>(get_allocator(), a0,a1,a2));
 			}
 
 			typename implementation::allocator_type get_allocator()
 			{
 				return impl.get_allocator();
 			}
-
-		private:
-			template <class U>
-			U *allocate_type()
-			{
-				typename allocator_type::template rebind<U>::other alloc(get_allocator());
-				return alloc.allocate(1);
-			}
-
-			template <class U>
-			U *construct_type()
-			{
-				typename allocator_type::template rebind<U>::other alloc(get_allocator());
-				U *ptr = alloc.allocate(1);
-				alloc.construct(ptr);
-				return ptr;
-			}
-
 		};
 	
 	} // namespace heterogenous

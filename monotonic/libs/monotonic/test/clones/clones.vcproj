@@ -386,6 +386,10 @@
 					Name="detail"
 					>
 					<File
+						RelativePath="..\..\..\..\boost\heterogenous\detail\allocation.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\boost\heterogenous\detail\prefix.hpp"
 						>
 					</File>

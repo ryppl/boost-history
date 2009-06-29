@@ -30,9 +30,10 @@ namespace boost
 					size_t num_bytes;
 				};
 
-				abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
+				abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t /*alignment*/)
 				{
-					return 0;
+					CharAlloc alloc(*this);
+					return alloc.allocate(num_bytes);
 					//CharAlloc alloc(*this);
 					//header head;
 					//head.num_bytes = sizeof(header) + num_bytes + alignment;	// don't need this much, but will do for now
@@ -44,11 +45,12 @@ namespace boost
 					//return base;
 				}
 
-				void deallocate_bytes(abstract_allocator::pointer ptr, size_t alignment)
+				void deallocate_bytes(abstract_allocator::pointer ptr, size_t /*alignment*/)
 				{
 					CharAlloc alloc(*this);
-					header *head = reinterpret_cast<header *>(ptr - sizeof(head));
-					alloc.deallocate(head->allocated_ptr, head->num_bytes);
+					alloc.deallocate(ptr);
+					//header *head = reinterpret_cast<header *>(ptr - sizeof(head));
+					//alloc.deallocate(head->allocated_ptr, head->num_bytes);
 				}
 
 			};
