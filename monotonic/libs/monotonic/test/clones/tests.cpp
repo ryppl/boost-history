@@ -80,9 +80,9 @@ int main()
 
 		// type of thing to insert must be passed explicitly, and must derive from common_base.
 		// arguments to push_back are passed directly to ctor
-		bases.push_back<derived>(42);						
-		bases.push_back<derived2>("foo");
-		bases.push_back<derived3>(3.14f, -123, "spam");
+		bases.emplace_back<derived>(42);						
+		bases.emplace_back<derived2>("foo");
+		bases.emplace_back<derived3>(3.14f, -123, "spam");
 
 		// perform functor on each contained object of the given type
 		bases.for_each<derived3>(boost::bind(&derived3::print, _1));

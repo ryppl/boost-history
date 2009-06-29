@@ -170,27 +170,27 @@ namespace boost
 
 			// TODO: use variadic arguments or BOOST_PP to pass ctor args
 			template <class U>
-			void push_back()
+			void emplace_back()
 			{
 				U *ptr = construct_type<U>();
-				impl.push_back(ptr);
+				impl.emplace_back(ptr);
 			}
 			template <class U, class A0>
-			void push_back(A0 a0)
+			void emplace_back(A0 a0)
 			{
 				U *ptr = allocate_type<U>();
 				new (ptr) U(a0);
 				impl.push_back(ptr);
 			}
 			template <class U, class A0, class A1>
-			void push_back(A0 a0, A1 a1)
+			void emplace_back(A0 a0, A1 a1)
 			{
 				U *ptr = allocate_type<U>();
 				new (ptr) U(a0, a1);
 				impl.push_back(ptr);
 			}
 			template <class U, class A0, class A1, class A2>
-			void push_back(A0 a0, A1 a1, A2 a2)
+			void emplace_back(A0 a0, A1 a1, A2 a2)
 			{
 				U *ptr = allocate_type<U>();
 				new (ptr) U(a0, a1, a2);
