@@ -22,6 +22,7 @@ namespace boost
 		template <class Alloc = monotonic::allocator<int>, class Base = common_base >
 		struct vector
 		{
+			typedef Base base_type;
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;
 			typedef ptr_vector<Base, allocator, allocator_type> implementation;
 			typedef typename implementation::value_type value_type;
@@ -51,7 +52,7 @@ namespace boost
 			template <class Ty, class Fun>
 			Fun for_each(Fun fun)
 			{
-				BOOST_FOREACH(common_base &b, *this)
+				BOOST_FOREACH(base_type &b, *this)
 				{
 					if (Ty *ptr = dynamic_cast<Ty *>(&b))
 					{
@@ -64,7 +65,7 @@ namespace boost
 			template <class Ty, class Fun>
 			Fun for_each(Fun fun) const
 			{
-				BOOST_FOREACH(const common_base &base, *this)
+				BOOST_FOREACH(const base_type &base, *this)
 				{
 					if (Ty *ptr = dynamic_cast<Ty *>(&base))
 					{
