@@ -11,6 +11,7 @@
 #include <boost/heterogenous/vector.hpp>
 #include <boost/bind.hpp>
 #include <boost/any.hpp>
+#include <boost/variant.hpp>
 
 using namespace std;
 using namespace boost;
@@ -60,10 +61,12 @@ struct derived5 : derived4_impl, base<derived5>
 };
 
 void test_any();
+void test_variant();
 
 int main()
 {
 	test_any();
+	test_variant();
 
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<> vec;
@@ -128,7 +131,8 @@ void test_any()
 	typedef std::vector<any_type, monotonic::allocator<any_type> > vec;
 	vec v;
 
-	// an issue here is that instances are copy-constructed into the container
+	// an issue here is that instances are copy-constructed into the container.
+	// but, types added do not have to derive from anything in order for duplication to work.
 	v.push_back(derived(42));
 	v.push_back(derived2("foo"));
 
@@ -137,4 +141,16 @@ void test_any()
 	BOOST_ASSERT(any_cast<derived2 &>(v2[1]).str == "foo");
 }
 
+void test_variant()
+{
+	// need to declare all the possible types that could be used at the point of declaration
+	typedef variant<derived, derived2, derived3> var;
+	typedef std::vector<var, monotonic::allocator<var> > vec;
+	vec v0;
+	v0.push_back(derived(42));
+	v0.push_back(derived2("foo"));
+	vec v1 = v0;
+	BOOST_ASSERT(boost::get<derived2>(v1[1]).str == "foo");
+
+}
 //EOF
