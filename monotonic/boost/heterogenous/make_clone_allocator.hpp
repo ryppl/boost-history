@@ -26,26 +26,28 @@ namespace boost
 
 				struct header
 				{
-					header *allocated_ptr;
+					abstract_allocator::pointer allocated_ptr;
 					size_t num_bytes;
 				};
 
 				abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
 				{
-					CharAlloc alloc(*this);
-					header head;
-					head.num_bytes = sizeof(header) + num_bytes + alignment;	// don't need this much, but will do for now
-					head.allocated_ptr = (header *)alloc.allocate(head.num_bytes);
-					*head.allocated_ptr = head;
-					pointer base = head.allocated_ptr + sizeof(header);
-					base += calc_padding(base, alignment);
-					return base;
+					return 0;
+					//CharAlloc alloc(*this);
+					//header head;
+					//head.num_bytes = sizeof(header) + num_bytes + alignment;	// don't need this much, but will do for now
+					//abstract_allocator::pointer char_ptr = alloc.allocate(head.num_bytes);
+					//head.allocated_ptr = (header *)char_ptr;
+					//*head.allocated_ptr = head;
+					//abstract_allocator::pointer base = char_ptr + sizeof(header);
+					//base += calc_padding(base, alignment);
+					//return base;
 				}
 
 				void deallocate_bytes(abstract_allocator::pointer ptr, size_t alignment)
 				{
 					CharAlloc alloc(*this);
-					header *head = ptr - sizeof(head);
+					header *head = reinterpret_cast<header *>(ptr - sizeof(head));
 					alloc.deallocate(head->allocated_ptr, head->num_bytes);
 				}
 

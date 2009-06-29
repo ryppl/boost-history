@@ -242,10 +242,10 @@ namespace boost
         }
     };
 
-    template<typename ValueType, class Al2>
-    ValueType * any_cast(any<Al2> * operand)
+    template<typename ValueType, class Al>
+    ValueType * any_cast(any<Al> * operand)
     {
-        typedef any<Al2> any_type;
+        typedef any<Al> any_type;
         typedef typename any_type::template holder<ValueType> holder_type;
         return operand && operand->type() == typeid(ValueType)
                     ? &static_cast<holder_type *>
@@ -253,14 +253,14 @@ namespace boost
                     : 0;
     }
 
-    template<typename ValueType, class Al3>
-    inline const ValueType * any_cast(const any<Al3> * operand)
+    template<typename ValueType, class Al>
+    inline const ValueType * any_cast(const any<Al> * operand)
     {
-        return any_cast<ValueType>(const_cast<any<Al3> *>(operand));
+        return any_cast<ValueType>(const_cast<any<Al> *>(operand));
     }
 
-    template<typename ValueType, class Al4>
-    ValueType any_cast(any<Al4> & operand)
+    template<typename ValueType, class Al>
+    ValueType any_cast(any<Al> & operand)
     {
         typedef BOOST_DEDUCED_TYPENAME remove_reference<ValueType>::type nonref;
 
@@ -280,8 +280,8 @@ namespace boost
         return *result;
     }
 
-    template<typename ValueType, class Al5>
-    inline ValueType any_cast(const any<Al5> & operand)
+    template<typename ValueType, class Al>
+    inline ValueType any_cast(const any<Al> & operand)
     {
         typedef BOOST_DEDUCED_TYPENAME remove_reference<ValueType>::type nonref;
 
@@ -291,7 +291,7 @@ namespace boost
         BOOST_STATIC_ASSERT(!is_reference<nonref>::value);
 #endif
 
-        return any_cast<const nonref &>(const_cast<any<Al5> &>(operand));
+        return any_cast<const nonref &>(const_cast<any<Al> &>(operand));
     }
 
     // Note: The "unsafe" versions of any_cast are not part of the
@@ -299,16 +299,16 @@ namespace boost
     // required where we know what type is stored in the any and can't
     // use typeid() comparison, e.g., when our types may travel across
     // different shared libraries.
-    template<typename ValueType, class Al6>
-    inline ValueType * unsafe_any_cast(any<Al6> * operand)
+    template<typename ValueType, class Al>
+    inline ValueType * unsafe_any_cast(any<Al> * operand)
     {
-        return &static_cast<typename any<Al6>::template holder<ValueType> *>(operand->content)->held;
+        return &static_cast<typename any<Al>::template holder<ValueType> *>(operand->content)->held;
     }
 
-    template<typename ValueType, class Al7>
-    inline const ValueType * unsafe_any_cast(const any<Al7> * operand)
+    template<typename ValueType, class Al>
+    inline const ValueType * unsafe_any_cast(const any<Al> * operand)
     {
-        return unsafe_any_cast<ValueType>(const_cast<any<Al7> *>(operand));
+        return unsafe_any_cast<ValueType>(const_cast<any<Al> *>(operand));
     }
 }
 

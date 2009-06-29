@@ -49,7 +49,7 @@ namespace boost
 			*/
 
 			template <class Ty, class Fun>
-			Fun foreach(Fun fun)
+			Fun for_each(Fun fun)
 			{
 				BOOST_FOREACH(common_base &b, *this)
 				{
@@ -62,7 +62,7 @@ namespace boost
 			}
 
 			template <class Ty, class Fun>
-			Fun foreach(Fun fun) const
+			Fun for_each(Fun fun) const
 			{
 				BOOST_FOREACH(const common_base &base, *this)
 				{
@@ -197,7 +197,7 @@ namespace boost
 				impl.push_back(ptr);
 			}
 
-			allocator_type get_allocator()
+			typename implementation::allocator_type get_allocator()
 			{
 				return impl.get_allocator();
 			}

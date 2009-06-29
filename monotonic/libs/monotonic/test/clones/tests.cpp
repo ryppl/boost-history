@@ -81,7 +81,7 @@ int main()
 		bases.push_back<derived3>(3.14f, -123, "spam");
 
 		// perform functor on each contained object of the given type
-		bases.foreach<derived3>(boost::bind(&derived3::print, _1));
+		bases.for_each<derived3>(boost::bind(&derived3::print, _1));
 
 		BOOST_ASSERT(bases.size() == 3);
 
