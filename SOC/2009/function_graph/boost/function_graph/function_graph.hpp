@@ -265,14 +265,15 @@ Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
 
 /** in_edges(v, g) is part of the bidirectional graph concept. */
 
+#define FUNC_GRAPH \
+    function_graph<function<Result(Vertex, Vertex)>, Range
+
 template <typename Result, typename Vertex, typename Range>
-std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
-          Range>::in_edge_iterator,
-          typename function_graph<function<Result(Vertex, Vertex)>,
-          Range>::in_edge_iterator>
-in_edges(typename function_graph<function<Result(Vertex, Vertex)>,
-         Range>::vertex_descriptor const& v,
-         function_graph<function<Result(Vertex, Vertex)>, Range> const& g)
+std::pair<
+    typename FUNC_GRAPH::in_edge_iterator,
+    typename FUNC_GRAPH::in_edge_iterator
+>
+in_edges(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
 {
     typedef function_graph<function<Result(Vertex, Vertex)>, Range> Graph;
     typedef typename Graph::in_edge_iterator in_edge_iterator;
@@ -341,8 +342,6 @@ bind_edge(optional<OptType> const& r, Vertex u, Vertex v)
 }
 
 }   // detail namespace
-
-#define FUNC_GRAPH function_graph<function<Result(Vertex, Vertex)>, Range>
 
 template <typename Result, typename Vertex, typename Range>
 std::pair<typename FUNC_GRAPH::edge_descriptor, bool>
