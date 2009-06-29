@@ -173,6 +173,14 @@ struct T1 : heterogenous::base<T1, my_base>
 {
 };
 
+struct T2 : heterogenous::base<T0, my_base>
+{
+};
+
+struct T3 : heterogenous::base<T1, my_base>
+{
+};
+
 struct my_less
 {
 	bool operator()(my_base const *left, my_base const *right) const
@@ -185,7 +193,9 @@ void test_map()
 {
 	heterogenous::map<my_less, my_base> map;
 
-	map.key<T0>().value<T1>();
+	map .key<T0>().value<T1>()
+		.key<T2>().value<T3>()
+		;
 
 }
 

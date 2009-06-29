@@ -75,10 +75,11 @@ namespace boost
 						}
 
 						template <class U>
-						/*std::pair<iterator,bool> */void value()
+						this_type &value()
 						{
 							U *val = parent->construct_type<U>();
 							parent->insert(std::make_pair(key_instance, val));
+							return *parent;
 						}
 					};
 
