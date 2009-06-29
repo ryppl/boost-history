@@ -29,7 +29,7 @@ template
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     class LeftIntervalSet, class RightIntervalSet
 >
-bool is_element_equal
+inline bool is_element_equal
 (
     const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& left,
     const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& right
@@ -43,7 +43,7 @@ template
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     class LeftIntervalSet, class RightIntervalSet
 >
-bool is_element_less
+inline bool is_element_less
 (
     const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& left,
     const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& right
@@ -57,7 +57,7 @@ template
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     class LeftIntervalSet, class RightIntervalSet
 >
-bool is_element_greater
+inline bool is_element_greater
 (
     const interval_base_set<LeftIntervalSet, DomainT,Compare,Interval,Alloc>& left,
     const interval_base_set<RightIntervalSet,DomainT,Compare,Interval,Alloc>& right
@@ -74,7 +74,7 @@ template
     class ObjectT,
     class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-ObjectT& operator +=
+inline ObjectT& operator +=
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
@@ -95,7 +95,7 @@ template
     class ObjectT,
     class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-ObjectT& operator -=
+inline ObjectT& operator -=
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
@@ -116,7 +116,7 @@ template
     class ObjectT,
     class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-ObjectT& operator ^=
+inline ObjectT& operator ^=
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
@@ -172,7 +172,7 @@ template
     ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
+inline interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
 insert
 (
           interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
@@ -191,7 +191,7 @@ template
     ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
     template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
 >
-interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
+inline interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
 erase
 (
           interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
@@ -210,7 +210,7 @@ template
     class SubType, class DomainT, 
     ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::interval_type 
+inline typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::interval_type 
 enclosure(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object)
 {
     typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> IntervalSetT;

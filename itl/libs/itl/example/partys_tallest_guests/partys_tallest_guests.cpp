@@ -43,10 +43,12 @@ using namespace boost::itl;
 // A party's height shall be defined as the maximum height of all guests ;-)
 // The last parameter 'inplace_max' is a functor template that calls a max 
 // aggregation on overlap.
-typedef interval_map<ptime, int, partial_absorber, less, inplace_max<int> > PartyHeightHistoryT;
+typedef interval_map<ptime, int, partial_absorber, less, inplace_max> 
+    PartyHeightHistoryT;
 
 // Using a split_interval_map we preserve interval splittings that occured via insertion.
-typedef split_interval_map<ptime, int, partial_absorber, less, inplace_max<int> > PartyHeightSplitHistoryT;
+typedef split_interval_map<ptime, int, partial_absorber, less, inplace_max> 
+    PartyHeightSplitHistoryT;
 
 void partys_height()
 {
