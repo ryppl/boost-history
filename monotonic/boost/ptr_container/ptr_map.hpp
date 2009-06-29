@@ -31,10 +31,10 @@ namespace boost
         class Allocator      = std::allocator< std::pair<const Key,void*> >
     >
     class ptr_map : 
-        public ptr_map_adapter<T,std::map<Key,void*,
+        public ptr_map_adapter<T,std::map<Key *,void*,
                                Compare,Allocator>,CloneAllocator>
     {
-        typedef ptr_map_adapter<T,std::map<Key,void*,
+        typedef ptr_map_adapter<T,std::map<Key *,void*,
                                 Compare,Allocator>,CloneAllocator>
             base_type;
 

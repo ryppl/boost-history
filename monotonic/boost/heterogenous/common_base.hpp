@@ -18,10 +18,10 @@ namespace boost
 		{
 			virtual ~common_base() { }
 
-			virtual common_base *allocate(abstract_allocator &alloc) const = 0;
-			virtual void deallocate(common_base *, abstract_allocator &alloc) const = 0;
-			virtual common_base *create(abstract_allocator &alloc) const = 0;
-			virtual common_base *copy_construct(const common_base &original, abstract_allocator &alloc) const = 0;
+			virtual common_base *allocate(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
+			virtual void deallocate(common_base *, abstract_allocator &alloc) const /*= 0;*/ { }
+			virtual common_base *create(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
+			virtual common_base *copy_construct(const common_base &original, abstract_allocator &alloc) const /*= 0;*/ { return 0; }
 		};
 
 	} // namespace heterogenous

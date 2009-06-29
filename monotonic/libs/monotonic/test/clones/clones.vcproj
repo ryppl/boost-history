@@ -375,6 +375,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\heterogenous\map.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\heterogenous\vector.hpp"
 					>
 				</File>

@@ -9,6 +9,7 @@
 #include <string>
 #include <iostream>
 #include <boost/heterogenous/vector.hpp>
+#include <boost/heterogenous/map.hpp>
 #include <boost/bind.hpp>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
@@ -63,10 +64,13 @@ struct derived5 : derived4_impl, base<derived5>
 void test_any();
 void test_variant();
 
+void test_map();
+
 int main()
 {
 	test_any();
 	test_variant();
+	test_map();
 
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<> vec;
@@ -132,6 +136,7 @@ void test_any()
 	vec v;
 
 	// an issue here is that instances are copy-constructed into the container.
+	// another issue is that this is effectively typeless.
 	// but, types added do not have to derive from anything in order for duplication to work.
 	v.push_back(derived(42));
 	v.push_back(derived2("foo"));
@@ -153,4 +158,35 @@ void test_variant()
 	BOOST_ASSERT(boost::get<derived2>(v1[1]).str == "foo");
 
 }
+
+struct my_base : heterogenous::common_base
+{
+	int number;
+	my_base(int n = 0) : number(n) { }
+};
+
+struct T0 : heterogenous::base<T0, my_base>
+{
+};
+
+struct T1 : heterogenous::base<T1, my_base>
+{
+};
+
+struct my_less
+{
+	bool operator()(my_base const *left, my_base const *right) const
+	{
+		return left->number < right->number;
+	}
+};
+
+void test_map()
+{
+	heterogenous::map<my_less, my_base> map;
+
+	map.key<T0>().value<T1>();
+
+}
+
 //EOF
