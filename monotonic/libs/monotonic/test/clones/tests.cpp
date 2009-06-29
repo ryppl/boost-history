@@ -21,7 +21,7 @@ struct derived : base<derived>
 {
 	int num;
 	derived() : num(0) { }
-	explicit derived(int n) : num(n) { }
+	derived(int n) : num(n) { }
 };
 
 struct derived2 : base<derived2>
@@ -29,7 +29,7 @@ struct derived2 : base<derived2>
 	std::string str;
 
 	derived2() { }
-	explicit derived2(std::string const &n) : str(n) { }
+	derived2(std::string const &n) : str(n) { }
 };
 
 struct derived3 : base<derived3>
@@ -39,7 +39,7 @@ struct derived3 : base<derived3>
 	std::string str;
 
 	derived3() { }
-	explicit derived3(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
+	derived3(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
 
 	void print() const
 	{
