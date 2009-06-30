@@ -24,14 +24,14 @@ struct my_base
 	virtual ~my_base() { }
 };
 
-struct derived : base<derived, my_base>
+struct derived : cloneable<derived, my_base>
 {
 	int num;
 	derived() : num(0) { }
 	derived(int n) : num(n) { }
 };
 
-struct derived2 : base<derived2, my_base>
+struct derived2 : cloneable<derived2, my_base>
 {
 	std::string str;
 
@@ -39,7 +39,7 @@ struct derived2 : base<derived2, my_base>
 	derived2(std::string const &n) : str(n) { }
 };
 
-struct derived3 : base<derived3, my_base>
+struct derived3 : cloneable<derived3, my_base>
 {
 	float real;
 	int num;
@@ -59,11 +59,11 @@ struct derived4_impl
 {
 };
 
-struct derived4 : derived4_impl, base<derived4>
+struct derived4 : derived4_impl, cloneable<derived4>
 {
 };
 
-struct derived5 : derived4_impl, base<derived5>
+struct derived5 : derived4_impl, cloneable<derived5>
 {
 };
 
@@ -81,8 +81,8 @@ namespace test
 		virtual ~my_base() { }
 	};
 
-	struct T0 : base<T0, my_base> { };
-	struct T1 : base<T1, my_base> { };
+	struct T0 : cloneable<T0, my_base> { };
+	struct T1 : cloneable<T1, my_base> { };
 
 	void run()
 	{
@@ -105,7 +105,7 @@ struct ExternalType
 };
 
 /// make an adaptor type, which makes `ExternalType` heterogenous
-typedef heterogenous::adaptor<ExternalType, my_base> T4;
+typedef heterogenous::adaptor<ExternalType, my_base> ExternalType_;
 
 int main()
 {
@@ -126,7 +126,7 @@ int main()
 		bases.emplace_back<derived>(42);						
 		bases.emplace_back<derived2>("foo");
 		bases.emplace_back<derived3>(3.14f, -123, "spam");
-		bases.emplace_back<T4>("external");
+		bases.emplace_back<ExternalType_>("external");
 
 		// perform functor on each contained object of the given type
 		bases.for_each<derived3>(boost::bind(&derived3::print, _1));
@@ -152,7 +152,7 @@ int main()
 		BOOST_ASSERT(p1.num == 42);
 		BOOST_ASSERT(p2->str == "foo");
 		BOOST_ASSERT(p3->real == 3.14f);BOOST_ASSERT(p3->num == -123);BOOST_ASSERT(p3->str == "spam");
-		BOOST_ASSERT(copy.ref_at<T4>(3).text == "external");
+		BOOST_ASSERT(copy.ref_at<ExternalType_>(3).text == "external");
 
 		bool caught = false;
 		try
@@ -207,19 +207,19 @@ struct my_base2
 	virtual ~my_base2() { }
 };
 
-struct T0 : heterogenous::base<T0, my_base2>
+struct T0 : heterogenous::cloneable<T0, my_base2>
 {
 };
 
-struct T1 : heterogenous::base<T1, my_base2>
+struct T1 : heterogenous::cloneable<T1, my_base2>
 {
 };
 
-struct T2 : heterogenous::base<T2, my_base2>
+struct T2 : heterogenous::cloneable<T2, my_base2>
 {
 };
 
-struct T3 : heterogenous::base<T3, my_base2>
+struct T3 : heterogenous::cloneable<T3, my_base2>
 {
 };
 

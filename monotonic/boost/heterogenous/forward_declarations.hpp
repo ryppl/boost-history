@@ -25,7 +25,7 @@ namespace boost
 			class Derived
 			, class Base = default_base_type
 			, class AbstractBase = abstract_base<Base> >
-		struct base;
+		struct cloneable;
 
 		/// an adaptor for an existing class.
 		///

@@ -17,19 +17,19 @@ namespace boost
 		/// base for the given derived type, using the given base class
 		/// TODO: rename this - perhaps to 'cloneable'?
 		template <class Derived, class Base, class AbstractBase>
-		struct base : AbstractBase
+		struct cloneable : AbstractBase
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;
 			typedef AbstractBase abstract_base_type;
-			typedef base<Derived, Base, AbstractBase> this_type;
+			typedef cloneable<Derived, Base, AbstractBase> this_type;
 
 		private:
 			static size_t alignment;			///< required alignment for allocation
 			mutable derived_type *self_ptr;		///< pointer to derived object in this
 
 		public:
-			base() : self_ptr(0) { }
+			cloneable() : self_ptr(0) { }
 
 			virtual this_type *allocate(abstract_allocator &alloc) const 
 			{
@@ -62,7 +62,7 @@ namespace boost
 
 		/// ensure correct alignment when allocating derived instances
 		template <class Derived, class Base, class AbstractBase>
-		size_t base<Derived, Base, AbstractBase>::alignment = aligned_storage<sizeof(Derived)>::alignment;
+		size_t cloneable<Derived, Base, AbstractBase>::alignment = aligned_storage<sizeof(Derived)>::alignment;
 
 	} // namespace heterogenous
 
