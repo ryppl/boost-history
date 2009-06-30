@@ -16,6 +16,8 @@ namespace boost
 	{
 		namespace impl
 		{
+			/// adapts a given Alloc type, modelling a v1 std::allocator concept, to provide
+			/// services required by abstract_allocator
 			template <class Alloc>
 			struct clone_allocator : Alloc, abstract_allocator
 			{
@@ -34,6 +36,10 @@ namespace boost
 				{
 					CharAlloc alloc(*this);
 					return alloc.allocate(num_bytes);
+					
+					// TODO: do correct alignment, store padding information so dealloc 
+					// can retrieve the originally allocated pointer
+
 					//CharAlloc alloc(*this);
 					//header head;
 					//head.num_bytes = sizeof(header) + num_bytes + alignment;	// don't need this much, but will do for now
@@ -49,6 +55,9 @@ namespace boost
 				{
 					CharAlloc alloc(*this);
 					alloc.deallocate(ptr);
+					
+					// TODO: retreive the originally allocated pointer
+
 					//header *head = reinterpret_cast<header *>(ptr - sizeof(head));
 					//alloc.deallocate(head->allocated_ptr, head->num_bytes);
 				}
