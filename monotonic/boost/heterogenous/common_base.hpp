@@ -13,15 +13,28 @@ namespace boost
 {
 	namespace heterogenous
 	{
-		/// common base for all base types for hierachies
-		struct common_base
+		struct default_base_type
 		{
-			virtual ~common_base() { }
+			virtual ~default_base_type() { }
+		};
 
-			virtual common_base *allocate(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
-			virtual void deallocate(common_base *, abstract_allocator &alloc) const /*= 0;*/ { }
-			virtual common_base *create(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
-			virtual common_base *copy_construct(const common_base &original, abstract_allocator &alloc) const /*= 0;*/ { return 0; }
+		/// common base for all base types for hierachies
+		template <class Base = default_base_type>
+		struct abstract_base : Base
+		{
+			typedef Base base_type;
+			typedef abstract_base<Base> this_type;
+
+			//virtual base_type *allocate(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
+			//virtual void deallocate(base_type *, abstract_allocator &alloc) const /*= 0;*/ { }
+			//virtual base_type *create(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
+			//virtual base_type *copy_construct(const base_type &original, abstract_allocator &alloc) const /*= 0;*/ { return 0; }
+
+			virtual this_type *allocate(abstract_allocator &alloc) const = 0;
+			virtual void deallocate(base_type &, abstract_allocator &alloc) const = 0;
+
+			virtual this_type *create_new(abstract_allocator &alloc) const = 0;
+			virtual this_type *copy_construct(const base_type &original, abstract_allocator &alloc) const = 0;
 		};
 
 	} // namespace heterogenous

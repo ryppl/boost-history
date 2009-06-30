@@ -16,7 +16,7 @@ namespace boost
 	{
 		namespace impl
 		{
-			/// adapts a given Alloc type, modelling a v1 std::allocator concept, to provide
+			/// adapts a given Alloc type, modelling the v1 std::allocator concept, to provide
 			/// services required by abstract_allocator
 			template <class Alloc>
 			struct clone_allocator : Alloc, abstract_allocator

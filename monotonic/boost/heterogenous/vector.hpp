@@ -20,12 +20,12 @@ namespace boost
 	namespace heterogenous
 	{
 		/// a vector of heterogenous objects
-		template <class Alloc = monotonic::allocator<int>, class Base = common_base >
+		template <class Base = default_base_type, class Alloc = monotonic::allocator<int>, class AbstractBase = abstract_base<Base> >
 		struct vector
 		{
 			typedef Base base_type;
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;
-			typedef ptr_vector<Base, allocator, allocator_type> implementation;
+			typedef ptr_vector<AbstractBase, allocator, allocator_type> implementation;
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference;
 			typedef typename implementation::const_reference const_reference;

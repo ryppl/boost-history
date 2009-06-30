@@ -37,7 +37,9 @@ namespace boost
 			template <class Base, class Alloc>
 			static void deallocate_clone(const Base *object, Alloc &alloc )
 			{
-				object->deallocate(const_cast<Base *>(object), alloc);
+				if (!object)
+					return;
+				object->deallocate(const_cast<Base &>(*object), alloc);
 			}
 		};
 

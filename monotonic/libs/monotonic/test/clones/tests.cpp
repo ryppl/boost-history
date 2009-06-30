@@ -18,14 +18,19 @@ using namespace std;
 using namespace boost;
 using namespace heterogenous;
 
-struct derived : base<derived>
+struct my_base
+{
+	virtual ~my_base() { }
+};
+
+struct derived : base<derived, my_base>
 {
 	int num;
 	derived() : num(0) { }
 	derived(int n) : num(n) { }
 };
 
-struct derived2 : base<derived2>
+struct derived2 : base<derived2, my_base>
 {
 	std::string str;
 
@@ -33,7 +38,7 @@ struct derived2 : base<derived2>
 	derived2(std::string const &n) : str(n) { }
 };
 
-struct derived3 : base<derived3>
+struct derived3 : base<derived3, my_base>
 {
 	float real;
 	int num;
@@ -73,7 +78,7 @@ int main()
 	test_map();
 
 	// a 'heterogenous' container of objects of any type that derives from common_base
-	typedef heterogenous::vector<> vec;
+	typedef heterogenous::vector<my_base> vec;
 
 	{
 		vec bases;
@@ -94,10 +99,10 @@ int main()
 
 		BOOST_ASSERT(copy.size() == 3);
 
-		// each object in the container can be retrieved generically as a common_base
-		common_base &generic0 = copy[0];
-		common_base &generic1 = copy[1];
-		common_base &generic2 = copy[2];
+		// each object in the container can be retrieved generically as a default_base_type
+		my_base &generic0 = copy[0];
+		my_base &generic1 = copy[1];
+		my_base &generic2 = copy[2];
 
 		// get a reference; will throw bad_cast on type mismatch
 		derived &p1 = copy.ref_at<derived>(0);
@@ -116,7 +121,7 @@ int main()
 		bool caught = false;
 		try
 		{
-			common_base &base = copy.ref_at<derived2>(0);
+			my_base &base = copy.ref_at<derived2>(0);
 		}
 		catch (std::bad_cast)
 		{
@@ -159,31 +164,32 @@ void test_variant()
 
 }
 
-struct my_base : heterogenous::common_base
+struct my_base2
 {
 	int number;
-	my_base(int n = 0) : number(n) { }
+	my_base2(int n = 0) : number(n) { }
+	virtual ~my_base2() { }
 };
 
-struct T0 : heterogenous::base<T0, my_base>
+struct T0 : heterogenous::base<T0, my_base2>
 {
 };
 
-struct T1 : heterogenous::base<T1, my_base>
+struct T1 : heterogenous::base<T1, my_base2>
 {
 };
 
-struct T2 : heterogenous::base<T2, my_base>
+struct T2 : heterogenous::base<T2, my_base2>
 {
 };
 
-struct T3 : heterogenous::base<T3, my_base>
+struct T3 : heterogenous::base<T3, my_base2>
 {
 };
 
 struct my_less
 {
-	bool operator()(my_base const *left, my_base const *right) const
+	bool operator()(my_base2 const *left, my_base2 const *right) const
 	{
 		return left->number < right->number;
 	}
@@ -191,7 +197,7 @@ struct my_less
 
 void test_map()
 {
-	heterogenous::map<my_less, my_base> map;
+	heterogenous::map<my_less, my_base2> map;
 
 	map .key<T0>().value<T1>()
 		.key<T2>().value<T3>()
