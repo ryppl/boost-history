@@ -171,13 +171,17 @@ BOOST_AUTO_TEST_CASE(test_no_default_ctor)
 {
 	using namespace no_default_ctor_test;
 	T0 *p = new T0(10);
+
+	// ensure we can clone, even without a default ctor
 	T0 *q = p->clone_as<T0>();
 	BOOST_ASSERT(q && typeid(*q) == typeid(T0));
+
+	// ensure we fail to make a default-constructed new object
 	delete q;
 	bool caught = false;
 	try
 	{
-		T0 *r = dynamic_cast<T0 *>(p->create());
+		default_base_type *r = p->create();
 	}
 	catch (no_default_construction)
 	{
