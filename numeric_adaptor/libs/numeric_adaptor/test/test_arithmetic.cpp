@@ -56,6 +56,7 @@ void test_all()
     BOOST_CHECK_EQUAL((double)-n6, -2.0);
 
     BOOST_CHECK_EQUAL((double)abs(-n5), 56.0);
+    BOOST_CHECK_EQUAL((double)sqrt(n4), 2.0);
 }
 
 int test_main(int, char*[])
