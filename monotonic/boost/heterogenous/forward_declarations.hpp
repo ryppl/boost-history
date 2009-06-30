@@ -25,14 +25,14 @@ namespace boost
 
 		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
 		template <class Base>
-		struct abstract_base;
+		struct abstract_cloneable;
 
 		/// a structure derived from this, with type Derived, is correctly
 		/// cloneable from a base pointer, given an abstract_allocator.
 		template <
 			class Derived
 			, class Base = default_base_type
-			, class AbstractBase = abstract_base<Base> >
+			, class AbstractBase = abstract_cloneable<Base> >
 		struct cloneable;
 
 		/// an adaptor for an existing class.
@@ -42,14 +42,14 @@ namespace boost
 		template <
 			class T
 			, class Base = default_base_type
-			, class AbstractBase = abstract_base<Base> >
+			, class AbstractBase = abstract_cloneable<Base> >
 		struct adaptor;
 
 		/// a heterogenous vector of objects
 		template <
 			class Base = default_base_type
 			, class Alloc = monotonic::allocator<int>
-			, class AbstractBase = abstract_base<Base> >
+			, class AbstractBase = abstract_cloneable<Base> >
 		struct vector;
 
 		/// a mapping of heterogenous objects to heterogenous objects
@@ -57,7 +57,7 @@ namespace boost
 			class Base = default_base_type
 			, class Pred = std::less<Base>
 			, class Alloc = monotonic::allocator<int>
-			, class AbstractBase = abstract_base<Base> >
+			, class AbstractBase = abstract_cloneable<Base> >
 		struct map;
 
 	} // namespace heterogenous

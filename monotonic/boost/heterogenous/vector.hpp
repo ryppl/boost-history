@@ -11,7 +11,7 @@
 #include <boost/foreach.hpp>
 
 #include <boost/heterogenous/detail/prefix.hpp>
-#include <boost/heterogenous/base.hpp>
+#include <boost/heterogenous/cloneable.hpp>
 #include <boost/heterogenous/make_clone_allocator.hpp>
 #include <boost/heterogenous/detail/allocation.hpp>
 

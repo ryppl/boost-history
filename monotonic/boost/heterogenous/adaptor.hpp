@@ -7,7 +7,7 @@
 #define BOOST_HETEROGENOUS_ADAPTOR_HPP
 
 #include <boost/heterogenous/detail/prefix.hpp>
-#include <boost/heterogenous/base.hpp>
+#include <boost/heterogenous/cloneable.hpp>
 
 namespace boost
 {

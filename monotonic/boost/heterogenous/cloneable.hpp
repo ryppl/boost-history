@@ -15,7 +15,6 @@ namespace boost
 	namespace heterogenous
 	{
 		/// base for the given derived type, using the given base class
-		/// TODO: rename this - perhaps to 'cloneable'?
 		template <class Derived, class Base, class AbstractBase>
 		struct cloneable : AbstractBase
 		{
