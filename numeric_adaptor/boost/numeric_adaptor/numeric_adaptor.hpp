@@ -15,6 +15,7 @@
 
 #include <string>
 
+
 namespace boost { namespace numeric_adaptor {
 
 
@@ -28,10 +29,28 @@ struct enable_cast
 };
 
 
+template <typename> struct numeric_adaptor;
 
 
 template <typename Policy>
-struct numeric_adaptor :
+numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const&);
+template <typename Policy>
+numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const&);
+template <typename Policy>
+numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const&);
+template <typename Policy>
+numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const&);
+template <typename Policy>
+numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const&);
+template <typename Policy>
+numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const&);
+template <typename Policy>
+numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const&,
+                              numeric_adaptor<Policy> const&);
+
+
+template <typename Policy>
+struct numeric_adaptor:
     enable_cast<numeric_adaptor<Policy>, int>,
     enable_cast<numeric_adaptor<Policy>, unsigned int>,
     enable_cast<numeric_adaptor<Policy>, short int>,
@@ -198,68 +217,17 @@ struct numeric_adaptor :
         return numeric_adaptor<Policy>(r, true);
     }
 
-    // Functions
-    static inline numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const& v)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::abs(r, v.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-    static inline numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const& v)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::sqrt(r, v.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-    static inline numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const& v)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::cos(r, v.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-    static inline numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const& v)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::sin(r, v.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-    static inline numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const& v)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::tan(r, v.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-    static inline numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const& v)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::atan(r, v.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-
-    static inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
-                numeric_adaptor<Policy> const& b)
-    {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::hypot(r, a.value, b.value);
-        return numeric_adaptor<Policy>(r, true);
-    }
-
-
 private :
     typename Policy::value_type value;
+
+    friend numeric_adaptor<Policy> abs<Policy>(numeric_adaptor<Policy> const&);
+    friend numeric_adaptor<Policy> sqrt<Policy>(numeric_adaptor<Policy> const&);
+    friend numeric_adaptor<Policy> cos<Policy>(numeric_adaptor<Policy> const&);
+    friend numeric_adaptor<Policy> sin<Policy>(numeric_adaptor<Policy> const&);
+    friend numeric_adaptor<Policy> tan<Policy>(numeric_adaptor<Policy> const&);
+    friend numeric_adaptor<Policy> atan<Policy>(numeric_adaptor<Policy> const&);
+    friend numeric_adaptor<Policy> hypot<Policy>(numeric_adaptor<Policy> const&,
+                                                 numeric_adaptor<Policy> const&);
 
     // Construct from a policy-type. Bool (or any other signature changing parameter)
     // is necessary for cases where type == OtherType
@@ -269,6 +237,72 @@ private :
         Policy::copy(v, value);
     }
 };
+
+
+template <typename Policy>
+inline numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const& v)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::abs(r, v.value);
+    return numeric_adaptor<Policy>(r, true);
+}
+
+template <typename Policy>
+inline numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const& v)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::sqrt(r, v.value);
+    return numeric_adaptor<Policy>(r, true);
+}
+
+template <typename Policy>
+inline numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const& v)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::cos(r, v.value);
+    return numeric_adaptor<Policy>(r, true);
+}
+
+template <typename Policy>
+inline numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const& v)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::sin(r, v.value);
+    return numeric_adaptor<Policy>(r, true);
+}
+
+template <typename Policy>
+inline numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const& v)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::tan(r, v.value);
+    return numeric_adaptor<Policy>(r, true);
+}
+
+template <typename Policy>
+inline numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const& v)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::atan(r, v.value);
+    return numeric_adaptor<Policy>(r, true);
+}
+
+
+template <typename Policy>
+inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
+                                     numeric_adaptor<Policy> const& b)
+{
+    typename Policy::value_type r;
+    Policy::init(r);
+    Policy::hypot(r, a.value, b.value);
+    return numeric_adaptor<Policy>(r, true);
+}
 
 
 }} // namespace boost::numeric_adaptor

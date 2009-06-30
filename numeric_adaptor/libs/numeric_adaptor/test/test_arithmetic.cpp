@@ -54,6 +54,8 @@ void test_all()
     BOOST_CHECK_EQUAL((double)-n4, -4.0);
     BOOST_CHECK_EQUAL((double)-n5, -56.0);
     BOOST_CHECK_EQUAL((double)-n6, -2.0);
+
+    BOOST_CHECK_EQUAL((double)boost::numeric_adaptor::abs(-n5), 56.0);
 }
 
 int test_main(int, char*[])
