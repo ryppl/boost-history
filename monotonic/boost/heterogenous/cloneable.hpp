@@ -15,15 +15,16 @@ namespace boost
 	namespace heterogenous
 	{
 		/// base for the given derived type, using the given base class
-		template <class Derived, class Base, class AbstractBase>
-		struct cloneable : AbstractBase
+		template <class Derived, class Base>//, class AbstractBase>
+		struct cloneable : abstract_cloneable<Base>
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;
-			typedef AbstractBase abstract_base_type;
-			typedef cloneable<Derived, Base, AbstractBase> this_type;
+			//typedef AbstractBase abstract_base_type;
+			typedef abstract_cloneable<Base> abstract_base_type;
+			typedef cloneable<Derived, Base/*, AbstractBase*/> this_type;
 
-		private:
+		//private:
 			static size_t alignment;			///< required alignment for allocation
 			mutable derived_type *self_ptr;		///< pointer to derived object in this
 
@@ -38,30 +39,34 @@ namespace boost
 				return ptr;
 			}
 
-			void deallocate(base_type &object, abstract_allocator &alloc) const
+			void deallocate(abstract_allocator &alloc)
 			{
-				Derived *ptr = static_cast<Derived *>(&object);
+				Derived *ptr = dynamic_cast<Derived *>(this);
 				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(ptr), alignment);
 			}
 
 			virtual this_type *create_new(abstract_allocator &alloc) const 
 			{
-				this_type *ptr = allocate(alloc);
-				new (ptr->self_ptr) Derived();
+				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
+				Derived *ptr = reinterpret_cast<Derived *>(bytes);
+				ptr->this_type::self_ptr = ptr;
+				new (ptr->this_type::self_ptr) Derived();
 				return ptr;
 			}
 
-			virtual this_type *copy_construct(const base_type &original, abstract_allocator &alloc) const 
+			virtual this_type *copy_construct(abstract_allocator &alloc) const 
 			{ 
-				this_type *ptr = allocate(alloc);
-				new (ptr->self_ptr) Derived(static_cast<const Derived &>(original));
+				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
+				Derived *ptr = reinterpret_cast<Derived *>(bytes);
+				ptr->this_type::self_ptr = ptr;
+				new (ptr->this_type::self_ptr) Derived(static_cast<const Derived &>(*this));
 				return ptr;
 			}
 		};
 
 		/// ensure correct alignment when allocating derived instances
-		template <class Derived, class Base, class AbstractBase>
-		size_t cloneable<Derived, Base, AbstractBase>::alignment = aligned_storage<sizeof(Derived)>::alignment;
+		template <class Derived, class Base/*, class AbstractBase*/>
+		size_t cloneable<Derived, Base/*, AbstractBase*/>::alignment = aligned_storage<sizeof(Derived)>::alignment;
 
 	} // namespace heterogenous
 

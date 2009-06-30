@@ -18,8 +18,8 @@ namespace boost
 		/// this is a type that can be used in an homogenous container
 		///
 		/// ...this may or may not be a good idea...
-		template <class T, class Base, class AbstractBase>
-		struct adaptor : T, cloneable<adaptor<T, Base, AbstractBase>, Base, AbstractBase>
+		template <class T, class Base>//, class AbstractBase>
+		struct adaptor : T, cloneable<adaptor<T, Base/*, AbstractBase*/>, Base/*, AbstractBase*/>
 		{
 			adaptor() { }
 

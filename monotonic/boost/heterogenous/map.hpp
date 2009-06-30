@@ -17,12 +17,13 @@ namespace boost
 	namespace heterogenous
 	{
 		/// a vector of heterogenous objects
-		template <class Base, class Pred, class Alloc, class AbstractBase>
+		template <class Base, class Pred, class Alloc>//, class AbstractBase>
 		struct map
 		{
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;
 			typedef Base base_type;
 			//typedef ptr_map<Base, Base, Pred, allocator, allocator_type> implementation;
+			typedef abstract_cloneable<Base> abstract_base_type;
 
 			typedef std::map<Base *, Base *, Pred, allocator_type> implementation;
 
@@ -33,7 +34,7 @@ namespace boost
 			typedef typename implementation::const_iterator const_iterator;
 			typedef typename implementation::key_type key_type;
 			typedef typename implementation::mapped_type mapped_type;
-			typedef map<Base, Pred, Alloc, AbstractBase> this_type;
+			typedef map<Base, Pred, Alloc/*, AbstractBase*/> this_type;
 
 		private:
 			implementation impl;
@@ -64,7 +65,7 @@ namespace boost
 				template <class U>
 				this_type &value()
 				{
-					U *val = detail::construct_type<U>(parent->get_allocator());
+					U *val = detail::construct_type<U,base_type>(parent->get_allocator()).to_derived();;
 					parent->insert(std::make_pair(key_instance, val));
 					return *parent;
 				}
@@ -73,14 +74,14 @@ namespace boost
 				template <class U, class A0>
 				this_type &value(A0 a0)
 				{
-					U *val = detail::construct_type<U>(parent->get_allocator(), a0);
+					U *val = detail::construct_type<U,base_type>(parent->get_allocator(), a0).to_derived();;
 					parent->insert(std::make_pair(key_instance, val));
 					return *parent;
 				}
 				template <class U, class A0, class A1>
 				this_type &value(A0 a0, A1 a1)
 				{
-					U *val = detail::construct_type<U>(parent->get_allocator(), a0, a1);
+					U *val = detail::construct_type<U,base_type>(parent->get_allocator(), a0, a1).to_derived();;
 					parent->insert(std::make_pair(key_instance, val));
 					return *parent;
 				}
@@ -90,7 +91,7 @@ namespace boost
 			template <class U>
 			value_adder key()
 			{
-				U *key_instance = detail::construct_type<U>(get_allocator());
+				U *key_instance = detail::construct_type<U,base_type>(get_allocator()).to_derived();
 				return value_adder(*this, *key_instance);
 			}
 
@@ -98,19 +99,19 @@ namespace boost
 			template <class U, class A0>
 			value_adder key(A0 a0)
 			{
-				U *key_instance = detail::construct_type<U>(get_allocator(), a0);
+				U *key_instance = detail::construct_type<U,base_type>(get_allocator(), a0).to_derived();
 				return value_adder(*this, *key_instance);
 			}
 			template <class U, class A0, class A1>
 			value_adder key(A0 a0, A1 a1)
 			{
-				U *key_instance = detail::construct_type<U>(get_allocator(), a0, a1);
+				U *key_instance = detail::construct_type<U,base_type>(get_allocator(), a0, a1).to_derived();
 				return value_adder(*this, *key_instance);
 			}
 			template <class U, class A0, class A1, class A2>
 			value_adder key(A0 a0, A1 a1, A2 a2)
 			{
-				U *key_instance = detail::construct_type<U>(get_allocator(), a0, a1, a2);
+				U *key_instance = detail::construct_type<U,base_type>(get_allocator(), a0, a1, a2).to_derived();
 				return value_adder(*this, *key_instance);
 			}
 

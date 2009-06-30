@@ -20,12 +20,15 @@ namespace boost
 	namespace heterogenous
 	{
 		/// a vector of heterogenous objects
-		template <class Base, class Alloc, class AbstractBase>
+		template <class Base, class Alloc>//, class AbstractBase>
 		struct vector
 		{
 			typedef Base base_type;
+			//typedef AbstractBase abstract_base_type;
+			typedef abstract_cloneable<Base> abstract_base_type;
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;
-			typedef ptr_vector<AbstractBase, allocator, allocator_type> implementation;
+			typedef ptr_vector<abstract_base_type, allocator, allocator_type> implementation;
+			//typedef ptr_vector<Base, allocator, allocator_type> implementation;
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference;
 			typedef typename implementation::const_reference const_reference;
@@ -175,22 +178,22 @@ namespace boost
 			template <class U>
 			void emplace_back()
 			{
-				impl.push_back(detail::construct_type<U>(get_allocator()));
+				impl.push_back(detail::construct_type<U,base_type>(get_allocator()).to_abstract());
 			}
 			template <class U, class A0>
 			void emplace_back(A0 a0)
 			{
-				impl.push_back(detail::construct_type<U>(get_allocator(), a0));
+				impl.push_back(detail::construct_type<U,base_type>(get_allocator(), a0).to_abstract());
 			}
 			template <class U, class A0, class A1>
 			void emplace_back(A0 a0, A1 a1)
 			{
-				impl.push_back(detail::construct_type<U>(get_allocator(), a0,a1));
+				impl.push_back(detail::construct_type<U,base_type>(get_allocator(), a0,a1).to_abstract());
 			}
 			template <class U, class A0, class A1, class A2>
 			void emplace_back(A0 a0, A1 a1, A2 a2)
 			{
-				impl.push_back(detail::construct_type<U>(get_allocator(), a0,a1,a2));
+				impl.push_back(detail::construct_type<U,base_type>(get_allocator(), a0,a1,a2).to_abstract());
 			}
 
 			typename implementation::allocator_type get_allocator()

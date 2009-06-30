@@ -32,7 +32,7 @@ namespace boost
 		template <
 			class Derived
 			, class Base = default_base_type
-			, class AbstractBase = abstract_cloneable<Base> >
+			>// this is too much uncessary customisation:, class AbstractBase = abstract_cloneable<Base> >
 		struct cloneable;
 
 		/// an adaptor for an existing class.
@@ -42,14 +42,14 @@ namespace boost
 		template <
 			class T
 			, class Base = default_base_type
-			, class AbstractBase = abstract_cloneable<Base> >
+			>//, class AbstractBase = abstract_cloneable<Base> >
 		struct adaptor;
 
 		/// a heterogenous vector of objects
 		template <
 			class Base = default_base_type
 			, class Alloc = monotonic::allocator<int>
-			, class AbstractBase = abstract_cloneable<Base> >
+			>//, class AbstractBase = abstract_cloneable<Base> >
 		struct vector;
 
 		/// a mapping of heterogenous objects to heterogenous objects
@@ -57,7 +57,7 @@ namespace boost
 			class Base = default_base_type
 			, class Pred = std::less<Base>
 			, class Alloc = monotonic::allocator<int>
-			, class AbstractBase = abstract_cloneable<Base> >
+			>//, class AbstractBase = abstract_cloneable<Base> >
 		struct map;
 
 	} // namespace heterogenous

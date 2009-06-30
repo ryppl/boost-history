@@ -30,7 +30,7 @@ namespace boost
 			template <class Base, class Alloc>
 			static Base* allocate_clone(const Base& object, Alloc &alloc )
 			{
-				return object.make_copy(object, alloc);
+				return object.clone(alloc);
 			}
 
 			template <class Base, class Alloc>
@@ -38,7 +38,7 @@ namespace boost
 			{
 				if (!object)
 					return;
-				object->deallocate(const_cast<Base &>(*object), alloc);
+				const_cast<Base &>(*object).deallocate(alloc);
 			}
 		};
 

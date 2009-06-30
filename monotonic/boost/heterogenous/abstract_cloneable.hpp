@@ -23,35 +23,54 @@ namespace boost
 
 		/// root structure for the heterogenous object system
 		template <class Base>
-		struct abstract_cloneable : Base
+		struct abstract_cloneable : virtual Base
 		{
 			typedef Base base_type;
 			typedef abstract_cloneable<Base> this_type;
 
 			/// make storage for a new instance, but do not invoke any constructor
-			virtual this_type *allocate(abstract_allocator &alloc) const = 0;
+			virtual this_type *allocate(abstract_allocator &) const = 0;
 
 			/// free memory associated with the given instance
-			virtual void deallocate(base_type &, abstract_allocator &alloc) const = 0;
+			virtual void deallocate(abstract_allocator &) = 0;
 
 			/// create a new object of the derived type
-			virtual this_type *create_new(abstract_allocator &alloc) const = 0;
+			virtual this_type *create_new(abstract_allocator &) const = 0;
 
 			/// create a clone using copy-constructor. this is implemented in cloneable<>, but can
 			/// be overriden by the user in the derived type if required.
-			virtual this_type *copy_construct(const base_type &original, abstract_allocator &alloc) const = 0;
+			virtual this_type *copy_construct(abstract_allocator &) const = 0;
 
 			/// optional means to make a clone that does not use copy-construction.
 			/// user can overload this in their derived type to provide custom clone implementation.
-			virtual this_type *clone(const base_type &original, abstract_allocator &alloc) const { return 0; }
+			virtual this_type *make_copy(abstract_allocator &) const { return 0; }
 
 			/// make a copy of the given instance. try the custom clone method first, 
 			/// then default to using the copy-constructor method
-			this_type *make_copy(const base_type &original, abstract_allocator &alloc) const
+			this_type *clone(abstract_allocator &alloc) const
 			{
-				if (this_type *copy = clone(original, alloc))
+				if (this_type *copy = make_copy(alloc))
 					return copy;
-				return copy_construct(original, alloc);
+				return copy_construct(alloc);
+			}
+
+			/// for use with types that use multiple inheritance - select which sub-object to clone
+			template <class Ty>
+			this_type *clone_as(abstract_allocator &alloc) const
+			{
+				const cloneable<Ty, Base> *ptr = dynamic_cast<const cloneable<Ty, Base> *>(this);
+				if (ptr == 0)
+					throw std::bad_cast();
+				return ptr->clone(alloc);
+			}
+
+			/// make a copy of the given instance using the heap. caller should call delete
+			this_type *clone() const
+			{
+				return 0;
+				//if (this_type *copy = clone(original, alloc))
+				//	return copy;
+				//return copy_construct(original, alloc);
 			}
 		};
 

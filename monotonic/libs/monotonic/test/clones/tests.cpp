@@ -54,22 +54,56 @@ struct derived3 : cloneable<derived3, my_base>
 	}
 };
 
-// naive way of allowing reuse in derived types: factor out the implementation
-struct derived4_impl
+namespace mi_test
 {
-};
 
-struct derived4 : derived4_impl, cloneable<derived4>
-{
-};
+	struct Q0 : cloneable<Q0>
+	{
+		int num;
+		Q0(int n = 0) : num(n) { }
+	};
 
-struct derived5 : derived4_impl, cloneable<derived5>
+	struct Q1 : Q0, cloneable<Q1>
+	{
+		string s;
+		Q1() { }
+		Q1(string t) : s(t) { }
+	};
+
+}
+
+void test_multiple_inheritance()
 {
-};
+	using namespace mi_test;
+	typedef heterogenous::vector<> vec;
+	vec v;
+
+
+	Q0 *q0 = new Q0;
+	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
+	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(v.get_allocator()));
+	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
+
+	Q1 *q1 = new Q1();
+	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
+	//Q1 *q1_c  = dynamic_cast<Q1 *>(q1->cloneable<Q1>::clone(v.get_allocator()));
+	
+	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->cloneable<Q0>::abstract_base_type::clone(v.get_allocator()));
+	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
+
+	//Q1 *q1_c  = dynamic_cast<Q1 *>(q1->cloneable<Q1>::abstract_base_type::clone(v.get_allocator()));
+	Q1 *q1_c  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(v.get_allocator()));
+	BOOST_ASSERT(typeid(*q1_c) == typeid(Q1));
+
+	v.emplace_back<Q0>(42);
+	v.emplace_back<Q1>("foo");
+
+	vec v2 = v;
+	BOOST_ASSERT(v2.ref_at<Q1>(1).s == "foo");
+}
 
 void test_any();
 void test_variant();
-
 void test_map();
 
 
@@ -113,7 +147,8 @@ int main()
 
 	test_any();
 	test_variant();
-	test_map();
+//	test_map();
+	test_multiple_inheritance();
 
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<my_base> vec;
