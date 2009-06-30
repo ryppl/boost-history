@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iostream>
+#define BOOST_HETEROGENOUS
 #include <boost/monotonic/local.hpp>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/heterogenous/map.hpp>

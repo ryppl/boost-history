@@ -8,6 +8,7 @@
 
 #include <functional>
 // including monotonic/allocator.hpp is temporary; not needed after make_clone_allocator works properly
+#define BOOST_HETEROGENOUS
 #include <boost/monotonic/allocator.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
 

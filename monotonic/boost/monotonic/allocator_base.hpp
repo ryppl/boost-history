@@ -6,7 +6,9 @@
 #ifndef BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 #define BOOST_MONOTONIC_ALLOCATOR_BASE_HPP
 
+#ifdef BOOST_HETEROGENOUS
 #include <boost/heterogenous/abstract_allocator.hpp>
+#endif
 #include <boost/assert.hpp>
 #include <boost/monotonic/detail/prefix.hpp>
 #include <boost/type_traits/has_trivial_constructor.hpp>
@@ -28,7 +30,10 @@ namespace boost
 	{
 		/// common to other monotonic allocators for type T of type Derived
 		template <class T, class Derived>
-		struct allocator_base : heterogenous::abstract_allocator
+		struct allocator_base
+#ifdef BOOST_HETEROGENOUS
+			: heterogenous::abstract_allocator
+#endif
 		{
 			typedef size_t size_type;
 			typedef ptrdiff_t difference_type;
@@ -47,6 +52,7 @@ namespace boost
 		//private:
 			storage_base *storage;
 
+#ifdef BOOST_HETEROGENOUS
 			// override for abstract_allocator
 			virtual heterogenous::abstract_allocator::pointer allocate_bytes(size_t num_bytes, size_t alignment)
 			{
@@ -58,6 +64,7 @@ namespace boost
 			{
 				// do nothing
 			}
+#endif
 
 		public:
 			allocator_base(storage_base &store) throw() 
