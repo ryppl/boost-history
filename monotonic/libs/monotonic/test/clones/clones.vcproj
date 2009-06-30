@@ -361,15 +361,15 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\heterogenous\abstract_base.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\heterogenous\allocator.hpp"
 					>
 				</File>
 				<File
 					RelativePath="..\..\..\..\boost\heterogenous\base.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\..\boost\heterogenous\common_base.hpp"
 					>
 				</File>
 				<File

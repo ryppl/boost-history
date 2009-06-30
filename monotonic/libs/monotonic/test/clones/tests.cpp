@@ -71,11 +71,40 @@ void test_variant();
 
 void test_map();
 
+
+	namespace test
+	{
+        using namespace heterogenous;
+		struct my_base
+		{
+			virtual ~my_base() { }
+		};
+
+		struct T0 : base<T0, my_base> { };
+		struct T1 : base<T1, my_base> { };
+
+		void run()
+		{
+			typedef heterogenous::vector<my_base> vec;
+			vec v0;
+			v0.emplace_back<T0>();
+			v0.emplace_back<T1>();
+			vec v1 = v0;
+			my_base &whatever = v1[0];
+			assert(v1.ptr_at<T1>(1));
+		}
+	}
+
 int main()
 {
+	test::run();
+
 	test_any();
 	test_variant();
 	test_map();
+
+
+
 
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<my_base> vec;
