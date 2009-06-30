@@ -13,7 +13,8 @@ namespace boost
 {
 	namespace heterogenous
 	{
-		/// base class for (wrapped) allocators that may be used with heterogenous::common_base
+		/// base class for (wrapped) allocators to be used with heterogenous::cloneable<>
+		/// by heterogenous containers
 		struct abstract_allocator
 		{
 			typedef char *pointer;

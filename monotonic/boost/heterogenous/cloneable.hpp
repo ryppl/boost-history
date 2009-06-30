@@ -8,7 +8,7 @@
 
 #include <boost/aligned_storage.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
-#include <boost/heterogenous/abstract_base.hpp>
+#include <boost/heterogenous/abstract_cloneable.hpp>
 
 namespace boost
 {

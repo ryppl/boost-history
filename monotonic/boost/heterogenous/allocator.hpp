@@ -30,8 +30,7 @@ namespace boost
 			template <class Base, class Alloc>
 			static Base* allocate_clone(const Base& object, Alloc &alloc )
 			{
-				// calling copy_construct must be disabled at compile-time for types that are not boost::is_convertible<cloneable::base<U> *, U*>
-				return object.copy_construct(object, alloc);
+				return object.make_copy(object, alloc);
 			}
 
 			template <class Base, class Alloc>
