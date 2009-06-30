@@ -6,13 +6,12 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_SUPPORT_DEDUCE_SEQUENCE_HPP_INCLUDED)
-#define BOOST_FUSION_SUPPORT_DEDUCE_SEQUENCE_HPP_INCLUDED
+#ifndef BOOST_FUSION_SUPPORT_DEDUCE_SEQUENCE_HPP
+#define BOOST_FUSION_SUPPORT_DEDUCE_SEQUENCE_HPP
 
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/view/transform_view.hpp>
-
 
 namespace boost { namespace fusion { namespace traits
 {
@@ -41,4 +40,3 @@ namespace boost { namespace fusion { namespace traits
 }}}
 
 #endif
-

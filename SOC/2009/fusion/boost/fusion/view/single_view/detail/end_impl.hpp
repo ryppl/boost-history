@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_END_IMPL_05052005_0332)
-#define FUSION_END_IMPL_05052005_0332
+
+#ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_END_IMPL_HPP
 
 namespace boost { namespace fusion
 {
@@ -26,9 +27,9 @@ namespace boost { namespace fusion
             struct apply
             {
                 typedef single_view_iterator_end<Sequence> type;
-    
+
                 static type
-                call(Sequence&)
+                call(Sequence)
                 {
                     return type();
                 }
@@ -38,5 +39,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

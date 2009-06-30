@@ -6,18 +6,24 @@
 import os ;
 local BOOST_INCLUDES_PATH = [ os.environ BOOST_INCLUDES_PATH ] ;
 
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+#to compile with conceptgcc you have to add this line to your user-config.jam  !
+#using gcc : conceptgcc : c++ ;                                                !
+#!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+
 project
     : requirements <include>.
-                   <include>$(BOOST_INCLUDES_PATH)
                    <toolset>gcc-conceptgcc:<include>workaround/conceptgcc
+                   <include>$(BOOST_INCLUDES_PATH)
+                   <toolset>gcc:<cxxflags>-std=c++0x
     : build-dir ../bin
     : default-build debug <link>shared <runtime-link>shared <threading>multi
     ;
 
+#build-project workaround/conceptgcc/test/mini-fusion ;
+build-project libs/fusion/example/test ;
 
-build-project workaround/conceptgcc/test/mini-fusion ;
-
-build-project libs/fusion/doc ;
+#build-project libs/fusion/doc ;
 #build-project libs/fusion/example/extension ;
 #build-project libs/fusion/example/performance ;
-#build-project libs/fusion/test ;
+build-project libs/fusion/test ;

@@ -1,12 +1,14 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_END_IMPL_07162005_1028)
-#define FUSION_END_IMPL_07162005_1028
 
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_END_IMPL_HPP
+
+#include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
 
 namespace boost { namespace fusion
@@ -26,17 +28,25 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<transform_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename Sequence::last_type last_type;
-                typedef typename Sequence::transform_type transform_type;
-                typedef transform_view_iterator<last_type, transform_type> type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
+
+                typedef
+                    transform_view_iterator<
+                        typename result_of::end<typename seq::seq_type>::type
+                      , typename detail::result_of_forward_as<
+                            SeqRef
+                          , typename seq::transform_type
+                        >::type
+                    >
+                type;
 
                 static type
-                call(Sequence& s)
+                call(SeqRef s)
                 {
-                    return type(s.last(), s.f);
+                    return type(fusion::end(s.seq), s.f);
                 }
             };
         };
@@ -45,18 +55,26 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<transform_view2_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename Sequence::last1_type last1_type;
-                typedef typename Sequence::last2_type last2_type;
-                typedef typename Sequence::transform_type transform_type;
-                typedef transform_view_iterator2<last1_type, last2_type, transform_type> type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
+
+                typedef
+                    transform_view_iterator2<
+                        typename result_of::end<typename seq::seq1_type>::type
+                      , typename result_of::end<typename seq::seq2_type>::type
+                      , typename detail::result_of_forward_as<
+                            SeqRef
+                          , typename seq::transform_type
+                        >::type
+                    >
+                type;
 
                 static type
-                call(Sequence& s)
+                call(SeqRef s)
                 {
-                    return type(s.last1(), s.last2(), s.f);
+                    return type(fusion::end(s.seq1), fusion::end(s.seq2), s.f);
                 }
             };
         };
@@ -64,5 +82,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

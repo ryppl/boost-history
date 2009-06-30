@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -28,7 +28,7 @@ main()
     std::cout << tuple_delimiter(", ");
 
     {
-        vector0 empty;
+        vector<> empty;
         std::cout << as_map(make_list(make_pair<int>('X'), make_pair<double>("Men"))) << std::endl;
         std::cout << as_map(push_back(empty, make_pair<int>(999))) << std::endl;
     }
@@ -47,10 +47,10 @@ main()
         // test conversion
         typedef map<
             pair<int, char>
-          , pair<double, std::string> > 
+          , pair<double, std::string> >
         map_type;
 
-        map_type m(make_vector(make_pair<int>('X'), make_pair<double>("Men")));
+        map_type m(sequence_assign(make_vector(make_pair<int>('X'), make_pair<double>("Men"))));
         BOOST_TEST(as_vector(m) == make_vector(make_pair<int>('X'), make_pair<double>("Men")));
         m = (make_vector(make_pair<int>('X'), make_pair<double>("Men"))); // test assign
         BOOST_TEST(as_vector(m) == make_vector(make_pair<int>('X'), make_pair<double>("Men")));

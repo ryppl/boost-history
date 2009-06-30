@@ -87,7 +87,7 @@ namespace boost{namespace fusion{namespace gsoc{
             }
 
             vector_impl(vector_impl&& other_impl):
-                base(std::move(static_cast<base&>(other_impl))),
+                base(std::move(static_cast<base&&>(other_impl))),
                 _element(std::move(other_impl._element))
             {
             }
@@ -125,7 +125,7 @@ namespace boost{namespace fusion{namespace gsoc{
             void operator=(vector_impl&& other_impl)
             {
                 _element=std::move(other_impl._element);
-                static_cast<base&>(*this)=std::move(static_cast<base&>(other_impl));
+                static_cast<base&>(*this)=std::move(static_cast<base&&>(other_impl));
             }
 
             template<class OtherHead,class... OtherElements>void operator=(const vector_impl<OtherHead,OtherElements...>& other_impl)

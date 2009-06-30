@@ -2,37 +2,36 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2007 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_FIND_IF_05052005_1107)
-#define FUSION_FIND_IF_05052005_1107
 
+#ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_FIND_IF_HPP
+#define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_FIND_IF_HPP
+
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/iterator/value_of.hpp>
+#include <boost/fusion/iterator/equal_to.hpp>
+#include <boost/fusion/iterator/next.hpp>
+#include <boost/fusion/iterator/advance.hpp>
+#include <boost/fusion/iterator/distance.hpp>
+#include <boost/fusion/support/category_of.hpp>
+
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/iterator/equal_to.hpp>
-#include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/iterator/advance.hpp>
-#include <boost/fusion/iterator/distance.hpp>
-#include <boost/fusion/support/category_of.hpp>
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
 
-namespace boost { namespace fusion { 
+namespace boost { namespace fusion {
     struct random_access_traversal_tag;
 namespace detail
 {
-    template <typename Iterator, typename Pred>
+    template <typename It, typename Pred>
     struct apply_filter
+      : mpl::apply1<Pred, typename result_of::value_of<It>::type>::type
     {
-        typedef typename mpl::apply1<
-            Pred, typename result_of::value_of<Iterator>::type>::type type;
-        BOOST_STATIC_CONSTANT(int, value = type::value);
     };
 
     template <typename First, typename Last, typename Pred>
@@ -43,7 +42,9 @@ namespace detail
     {
         typedef typename
             main_find_if<
-                typename result_of::next<First>::type, Last, Pred
+                typename result_of::next<First>::type
+              , Last
+              , Pred
             >::type
         type;
     };
@@ -51,124 +52,145 @@ namespace detail
     template <typename First, typename Last, typename Pred>
     struct main_find_if
     {
-        typedef mpl::or_<
-            result_of::equal_to<First, Last>
-          , apply_filter<First, Pred> >
-        filter;
-
         typedef typename
             mpl::eval_if<
-                filter
+                mpl::or_<
+                    result_of::equal_to<First, Last>
+                  , apply_filter<First, Pred>
+                >
               , mpl::identity<First>
               , recursive_find_if<First, Last, Pred>
             >::type
         type;
     };
 
-    template<
-        typename First, typename Last, 
-        typename Pred, bool>
+    template<typename First, typename Last, typename Pred, bool>
     struct choose_find_if;
 
     template<typename First, typename Last, typename Pred>
     struct choose_find_if<First, Last, Pred, false>
-        : main_find_if<First, Last, Pred>
+      : main_find_if<First, Last, Pred>
     {};
 
-    template<typename Iter, typename Pred, int n, int unrolling>
+    template<typename It, typename Pred, int n, int unrolling>
     struct unroll_again;
 
-    template <typename Iter, typename Pred, int offset>
+    template <typename It, typename Pred, int offset>
     struct apply_offset_filter
-    {
-        typedef typename result_of::advance_c<Iter, offset>::type Shifted;
-        typedef typename
-            mpl::apply1<
-                Pred
-              , typename result_of::value_of<Shifted>::type
+      : mpl::apply1<
+            Pred
+          , typename result_of::value_of<
+                typename result_of::advance_c<It, offset>::type
             >::type
-        type;
-        BOOST_STATIC_CONSTANT(int, value = type::value);
+        >::type
+    {
     };
 
-    template<typename Iter, typename Pred, int n>
+    template<typename It, typename Pred, int n>
     struct unrolled_find_if
     {
-        typedef typename mpl::eval_if<
-            apply_filter<Iter, Pred>,
-            mpl::identity<Iter>,
+        typedef typename
             mpl::eval_if<
-              apply_offset_filter<Iter, Pred, 1>,
-              result_of::advance_c<Iter, 1>,
-              mpl::eval_if<
-                apply_offset_filter<Iter, Pred, 2>,
-                result_of::advance_c<Iter, 2>,
-                mpl::eval_if<
-                  apply_offset_filter<Iter, Pred, 3>,
-                  result_of::advance_c<Iter, 3>,
-                  unroll_again<
-                    Iter,
-                    Pred,
-                    n,
-                    4> > > > >::type type;
+                apply_filter<It, Pred>
+              , mpl::identity<It>
+              , mpl::eval_if<
+                    apply_offset_filter<It, Pred, 1>
+                  , result_of::advance_c<It, 1>
+                  , mpl::eval_if<
+                        apply_offset_filter<It, Pred, 2>
+                      , result_of::advance_c<It, 2>
+                      , mpl::eval_if<
+                            apply_offset_filter<It, Pred, 3>
+                          , result_of::advance_c<It, 3>
+                          , unroll_again<
+                                It
+                              , Pred
+                              , n
+                              , 4
+                            >
+                        >
+                    >
+                >
+            >::type
+        type;
     };
 
-    template<typename Iter, typename Pred>
-    struct unrolled_find_if<Iter, Pred, 3>
+    template<typename It, typename Pred>
+    struct unrolled_find_if<It, Pred, 3>
     {
-        typedef typename mpl::eval_if<
-            apply_filter<Iter, Pred>,
-            mpl::identity<Iter>,
+        typedef typename
             mpl::eval_if<
-              apply_offset_filter<Iter, Pred, 1>,
-              result_of::advance_c<Iter, 1>,
-              mpl::eval_if<
-                apply_offset_filter<Iter, Pred, 2>,
-                result_of::advance_c<Iter, 2>,
-                result_of::advance_c<Iter, 3> > > >::type type;
+                apply_filter<It, Pred>
+              , mpl::identity<It>
+              , mpl::eval_if<
+                    apply_offset_filter<It, Pred, 1>
+                  , result_of::advance_c<It, 1>
+                  , mpl::eval_if<
+                        apply_offset_filter<It, Pred, 2>
+                      , result_of::advance_c<It, 2>
+                      , result_of::advance_c<It, 3>
+                    >
+                >
+            >::type
+        type;
     };
 
-    template<typename Iter, typename Pred>
-    struct unrolled_find_if<Iter, Pred, 2>
+    template<typename It, typename Pred>
+    struct unrolled_find_if<It, Pred, 2>
     {
-        typedef typename mpl::eval_if<
-            apply_filter<Iter, Pred>,
-            mpl::identity<Iter>,
+        typedef typename
             mpl::eval_if<
-              apply_offset_filter<Iter, Pred, 1>,
-              result_of::advance_c<Iter, 1>,
-              result_of::advance_c<Iter, 2> > >::type type;
+                apply_filter<It, Pred>
+              , mpl::identity<It>
+              , mpl::eval_if<
+                    apply_offset_filter<It, Pred, 1>
+                  , result_of::advance_c<It, 1>
+                  , result_of::advance_c<It, 2>
+                >
+            >::type
+        type;
     };
 
-    template<typename Iter, typename Pred>
-    struct unrolled_find_if<Iter, Pred, 1>
+    template<typename It, typename Pred>
+    struct unrolled_find_if<It, Pred, 1>
     {
-        typedef typename mpl::eval_if<
-            apply_filter<Iter, Pred>,
-            mpl::identity<Iter>,
-            result_of::advance_c<Iter, 1> >::type type;
+        typedef typename
+            mpl::eval_if<
+                apply_filter<It, Pred>
+              , mpl::identity<It>
+              , result_of::advance_c<It, 1>
+            >::type
+        type;
     };
 
-    template<typename Iter, typename Pred, int n, int unrolling>
+    template<typename It, typename Pred, int n, int unrolling>
     struct unroll_again
     {
-        typedef typename unrolled_find_if<
-            typename result_of::advance_c<Iter, unrolling>::type,
-            Pred,
-            n-unrolling>::type type;
+        typedef typename
+            unrolled_find_if<
+                typename result_of::advance_c<It, unrolling>::type
+              , Pred
+              , n-unrolling
+            >::type
+        type;
     };
 
-    template<typename Iter, typename Pred>
-    struct unrolled_find_if<Iter, Pred, 0>
+    template<typename It, typename Pred>
+    struct unrolled_find_if<It, Pred, 0>
     {
-        typedef Iter type;
+        typedef It type;
     };
 
     template<typename First, typename Last, typename Pred>
     struct choose_find_if<First, Last, Pred, true>
     {
-        typedef typename result_of::distance<First, Last>::type N;
-        typedef typename unrolled_find_if<First, Pred, N::value>::type type;
+        typedef typename
+            unrolled_find_if<
+                First
+              , Pred
+              , result_of::distance<First, Last>::value
+            >::type
+        type;
     };
 
     template <typename First, typename Last, typename Pred>
@@ -179,72 +201,33 @@ namespace detail
                 First
               , Last
               , typename mpl::lambda<Pred>::type
-              , is_base_of<random_access_traversal_tag, typename traits::category_of<First>::type>::value
+              , is_base_of<
+                    random_access_traversal_tag
+                  , typename traits::category_of<First>::type
+                >::value
             >::type
         type;
 
-        template <typename Iterator>
+        template <typename It>
         static type
-        recursive_call(Iterator const& iter, mpl::true_)
+        call(It const& it)
         {
-            return iter;
-        }
-
-        template <typename Iterator>
-        static type
-        recursive_call(Iterator const& iter, mpl::false_)
-        {
-            return recursive_call(fusion::next(iter));
-        }
-
-        template <typename Iterator>
-        static type
-        recursive_call(Iterator const& iter)
-        {
-            typedef result_of::equal_to<Iterator, type> found;
-            return recursive_call(iter, found());
-        }
-
-        template <typename Iterator, typename Tag>
-        static type
-        choose_call(Iterator const& iter, Tag)
-        {
-            return recursive_call(iter);
-        }
-
-        template <typename Iterator>
-        static type
-        choose_call(Iterator const& iter, random_access_traversal_tag)
-        {
-            typedef typename result_of::distance<Iterator, type>::type N;
-            return fusion::advance<N>(iter);
-        }
-
-        template <typename Iterator>
-        static type
-        call(Iterator const& iter)
-        {
-            return choose_call(iter, typename traits::category_of<Iterator>::type());
+            typedef typename result_of::distance<It, type>::type N;
+            return fusion::advance<N>(it);
         }
     };
 
     template <typename First, typename Last, typename Pred>
-    struct static_seq_find_if : static_find_if<First, Last, Pred>
+    struct static_seq_find_if
+      : static_find_if<First, Last, Pred>
     {
-        typedef typename static_find_if<First, Last, Pred>::type type;
-
-        template <typename Sequence>
-        static type
-        call(Sequence const& seq)
+        template <typename Seq>
+        static typename static_find_if<First, Last, Pred>::type
+        call(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
-            return static_find_if<First, Last, Pred>::call(fusion::begin(seq));
-        }
+            typedef static_find_if<First, Last, Pred> gen;
 
-        template <typename Sequence>
-        static type
-        call(Sequence& seq)
-        {
-            return static_find_if<First, Last, Pred>::call(fusion::begin(seq));
+            return gen::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
         }
     };
 }}}

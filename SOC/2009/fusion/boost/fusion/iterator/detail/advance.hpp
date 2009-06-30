@@ -1,18 +1,19 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_ADVANCE_09172005_1149)
-#define FUSION_ADVANCE_09172005_1149
 
-#include <boost/mpl/int.hpp>
+#ifndef BOOST_FUSION_ITERATOR_DETAIL_ADVANCE_HPP
+#define BOOST_FUSION_ITERATOR_DETAIL_ADVANCE_HPP
+
+#include <boost/fusion/iterator/next.hpp>
+#include <boost/fusion/iterator/prior.hpp>
+
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/iterator/prior.hpp>
 
 namespace boost { namespace fusion { namespace advance_detail
 {
@@ -44,17 +45,17 @@ namespace boost { namespace fusion { namespace advance_detail
             >::type
         type;
 
-        static type const&
-        call(type const& i)
+        static type
+        call(type i)
         {
             return i;
         }
 
         template <typename I>
         static type
-        call(I const& i)
+        call(BOOST_FUSION_R_ELSE_CLREF(I) i)
         {
-            return call(fusion::next(i));
+            return call(fusion::next(BOOST_FUSION_FORWARD(I,i)));
         }
     };
 
@@ -83,17 +84,17 @@ namespace boost { namespace fusion { namespace advance_detail
             >::type
         type;
 
-        static type const&
-        call(type const& i)
+        static type
+        call(type i)
         {
             return i;
         }
 
         template <typename I>
         static type
-        call(I const& i)
+        call(BOOST_FUSION_R_ELSE_CLREF(I) i)
         {
-            return call(fusion::prior(i));
+            return call(fusion::prior(BOOST_FUSION_FORWARD(I,i)));
         }
     };
 

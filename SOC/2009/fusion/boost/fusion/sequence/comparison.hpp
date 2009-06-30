@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_SEQUENCE_COMPARISON_10022005_0615)
-#define FUSION_SEQUENCE_COMPARISON_10022005_0615
+
+#ifndef BOOST_FUSION_SEQUENCE_COMPARISON_HPP
+#define BOOST_FUSION_SEQUENCE_COMPARISON_HPP
 
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
 #include <boost/fusion/sequence/comparison/greater.hpp>

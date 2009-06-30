@@ -1,67 +1,88 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_LIST_07172005_1153)
-#define FUSION_LIST_07172005_1153
+
+#ifndef BOOST_FUSION_CONTAINER_LIST_LIST_HPP
+#define BOOST_FUSION_CONTAINER_LIST_LIST_HPP
 
 #include <boost/fusion/container/list/list_fwd.hpp>
-#include <boost/fusion/container/list/detail/list_to_cons.hpp>
+#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/ref.hpp>
+
+#include <boost/type_traits/is_convertible.hpp>
+
+#include <boost/fusion/container/list/detail/list/begin_impl.hpp>
+#include <boost/fusion/container/list/detail/list/end_impl.hpp>
+#include <boost/fusion/container/list/detail/list/at_impl.hpp>
+#include <boost/fusion/container/list/detail/list/value_at_impl.hpp>
 
 namespace boost { namespace fusion
 {
-    struct nil;
+    struct list_tag;
+    struct fusion_sequence_tag;
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
     struct void_;
+#endif
 
-    template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, typename T)>
-    struct list 
-        : detail::list_to_cons<BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, T)>::type
+    VARIADIC_TEMPLATE(FUSION_MAX_LIST_SIZE)
+    struct list
+      : sequence_base<list<EXPAND_ARGUMENTS(FUSION_MAX_LIST_SIZE)> >
     {
-    private:
-        typedef 
-            detail::list_to_cons<BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, T)>
-        list_to_cons;
+        typedef forward_traversal_tag category;
 
-    public:
-        typedef typename list_to_cons::type inherited_type;
+        typedef list_tag fusion_tag;
+        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef mpl::false_ is_view;
+
+        typedef vector<EXPAND_ARGUMENTS(FUSION_MAX_LIST_SIZE)> storage_type;
+        typedef typename storage_type::size size;
 
         list()
-            : inherited_type() {}
+          : data()
+        {}
 
-        template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, typename U)>
-        list(list<BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, U)> const& rhs)
-            : inherited_type(rhs) {}
-
-        template <typename Sequence>
-        list(Sequence const& rhs)
-            : inherited_type(rhs) {}
-
-        //  Expand a couple of forwarding constructors for arguments
-        //  of type (T0), (T0, T1), (T0, T1, T2) etc. Exanple:
-        //
-        //  list(
-        //      typename detail::call_param<T0>::type _0
-        //    , typename detail::call_param<T1>::type _1)
-        //    : inherited_type(list_to_cons::call(_0, _1)) {}
-        #include <boost/fusion/container/list/detail/list_forward_ctor.hpp>
-
-        template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, typename U)>
-        list&
-        operator=(list<BOOST_PP_ENUM_PARAMS(FUSION_MAX_LIST_SIZE, U)> const& rhs)
+        template<typename List>
+        list(BOOST_FUSION_R_ELSE_CLREF(List) list_,
+               typename enable_if<is_convertible<
+                   typename detail::remove_reference<List>::type*
+                 , list const volatile*> >::type* =NULL)
+          : data(BOOST_FUSION_FORWARD(List,list_).data)
         {
-            inherited_type::operator=(rhs);
-            return *this;
         }
+
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+        template <typename Arg>
+        list(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
+            : data(BOOST_FUSION_FORWARD(Arg,arg))
+        {}
+
+#   include <boost/fusion/container/list/detail/list/pp/list_forward_ctor.hpp>
+#else
+        template <typename... OtherArguments>
+        list(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
+            : data(BOOST_FUSION_FORWARD(OtherArguments,other_arguments)...)
+        {}
+#endif
 
         template <typename T>
         list&
-        operator=(T const& rhs)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(T) rhs)
         {
-            inherited_type::operator=(rhs);
+            data = BOOST_FUSION_FORWARD(T, rhs);
             return *this;
         }
+
+        storage_type& get_data() { return data; }
+        storage_type const& get_data() const { return data; }
+
+    private:
+
+        storage_type data;
     };
 }}
 

@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_DISTANCE_IMPL_09172005_0751)
-#define FUSION_DISTANCE_IMPL_09172005_0751
+
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_DISTANCE_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_DISTANCE_IMPL_HPP
 
 #include <boost/mpl/minus.hpp>
 
@@ -22,17 +23,14 @@ namespace boost { namespace fusion
         struct distance_impl<vector_iterator_tag>
         {
             template <typename First, typename Last>
-            struct apply : mpl::minus<typename Last::index, typename First::index>
-            {    
-                static typename mpl::minus<
-                    typename Last::index, typename First::index>::type
-                call(First const&, Last const&)
-                {
-                    typedef typename mpl::minus<
-                        typename Last::index, typename First::index>::type 
-                    result;
-                    return result();
-                }
+            struct apply
+            {
+                typedef typename
+                    mpl::minus<
+                        typename detail::remove_reference<Last>::type::index
+                      , typename detail::remove_reference<First>::type::index
+                    >::type
+                type;
             };
         };
     }

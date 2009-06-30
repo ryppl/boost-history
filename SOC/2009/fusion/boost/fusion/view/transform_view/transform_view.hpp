@@ -1,30 +1,37 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_TRANSFORM_VIEW_07162005_1037)
-#define FUSION_TRANSFORM_VIEW_07162005_1037
 
-#include <boost/static_assert.hpp>
-#include <boost/fusion/support/detail/access.hpp>
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_HPP
+
+#include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/view/detail/strictest_traversal.hpp>
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/vector/vector10.hpp>
+#else
+#   include <boost/fusion/container/vector/vector.hpp>
+#endif
+#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/view/transform_view/transform_view_iterator.hpp>
+
+#include <boost/mpl/bool.hpp>
+
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
+#include <boost/fusion/view/transform_view/transform_view_iterator.hpp>
 #include <boost/fusion/view/transform_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/end_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/at_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/value_at_impl.hpp>
-#include <boost/fusion/view/detail/strictest_traversal.hpp>
-#include <boost/fusion/container/vector/vector10.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/end.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
 {
@@ -34,74 +41,93 @@ namespace boost { namespace fusion
     struct fusion_sequence_tag;
 
     // Binary Version
-    template <typename Sequence1, typename Sequence2, typename F>
-    struct transform_view : sequence_base<transform_view<Sequence1, Sequence2, F> >
+    template <typename Seq1, typename Seq2, typename F>
+    struct transform_view
+      : sequence_base<transform_view<Seq1, Seq2, F> >
     {
-        BOOST_STATIC_ASSERT(result_of::size<Sequence1>::value == result_of::size<Sequence2>::value);
+        //BOOST_FUSION_MPL_ASSERT_RELATION(
+        //       result_of::size<Sequence1>,==,result_of::size<Sequence2>,
+        //       "both sequences must have the same length");
+
+        typedef typename
+            mpl::if_<
+                traits::is_view<Seq1>
+              , typename detail::remove_reference<Seq1>::type
+              , typename detail::add_lref<Seq1>::type
+            >::type
+        seq1_type;
+        typedef typename
+            mpl::if_<
+                traits::is_view<Seq2>
+              , typename detail::remove_reference<Seq2>::type
+              , typename detail::add_lref<Seq2>::type
+            >::type
+        seq2_type;
+        typedef F transform_type;
+
         typedef transform_view2_tag fusion_tag;
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::true_ is_view;
+        typedef typename
+            detail::strictest_traversal<
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+                fusion::vector2<seq1_type, seq2_type>
+#else
+                fusion::vector<seq1_type, seq2_type>
+#endif
+            >::type
+        category;
+        typedef typename result_of::size<seq1_type>::type size;
 
-        typedef typename traits::category_of<Sequence1>::type category1;
-        typedef typename traits::category_of<Sequence2>::type category2;
-        typedef typename detail::strictest_traversal<
-            fusion::vector2<Sequence1, Sequence2> >::type category;
-        typedef typename result_of::begin<Sequence1>::type first1_type;
-        typedef typename result_of::begin<Sequence2>::type first2_type;
-        typedef typename result_of::end<Sequence1>::type last1_type;
-        typedef typename result_of::end<Sequence2>::type last2_type;
-        typedef typename result_of::size<Sequence1>::type size;
-        typedef Sequence1 sequence1_type;
-        typedef Sequence2 sequence2_type;
-        typedef F transform_type;
-
-        transform_view(Sequence1& seq1, Sequence2& seq2, F const& binop)
-            : f(binop)
-            , seq1(seq1)
-            , seq2(seq2)
+        template<typename OtherSeq1, typename OtherSeq2,typename OtherF>
+        transform_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq1) seq1,
+                BOOST_FUSION_R_ELSE_LREF(OtherSeq2) seq2,
+                BOOST_FUSION_R_ELSE_LREF(OtherF) f)
+          : seq1(BOOST_FUSION_FORWARD(OtherSeq1,seq1))
+          , seq2(BOOST_FUSION_FORWARD(OtherSeq2,seq2))
+          , f(BOOST_FUSION_FORWARD(OtherF,f))
         {}
 
-        first1_type first1() const { return fusion::begin(seq1); }
-        first2_type first2() const { return fusion::begin(seq2); }
-        last1_type last1() const { return fusion::end(seq1); }
-        last2_type last2() const { return fusion::end(seq2); }
-
+        seq1_type seq1;
+        seq2_type seq2;
         transform_type f;
-        typename mpl::if_<traits::is_view<Sequence1>, Sequence1, Sequence1&>::type seq1;
-        typename mpl::if_<traits::is_view<Sequence2>, Sequence2, Sequence2&>::type seq2;
     };
 
     // Unary Version
-    template <typename Sequence, typename F>
+    template <typename Seq, typename F>
 #if defined(BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS)
-    struct transform_view<Sequence, F, void_> : sequence_base<transform_view<Sequence, F, void_> >
+    struct transform_view<Seq, F, void_>
+      : sequence_base<transform_view<Seq, F, void_> >
 #else
-    struct transform_view<Sequence, F> : sequence_base<transform_view<Sequence, F> >
+    struct transform_view<Seq, F>
+      : sequence_base<transform_view<Seq, F> >
 #endif
     {
+        typedef typename
+            mpl::if_<
+                traits::is_view<Seq>
+              , typename detail::remove_reference<Seq>::type
+              , typename detail::add_lref<Seq>::type
+            >::type
+        seq_type;
+        typedef typename traits::category_of<seq_type>::type category;
+        typedef typename result_of::size<seq_type>::type size;
+        typedef F transform_type;
+
         typedef transform_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::true_ is_view;
 
-        typedef typename traits::category_of<Sequence>::type category;
-        typedef typename result_of::begin<Sequence>::type first_type;
-        typedef typename result_of::end<Sequence>::type last_type;
-        typedef typename result_of::size<Sequence>::type size;
-        typedef Sequence sequence_type;
-        typedef F transform_type;
-
-        transform_view(Sequence& seq, F const& f)
-            : seq(seq)
-            , f(f)
+        template<typename OtherSeq, typename OtherF>
+        transform_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq) seq,
+                BOOST_FUSION_R_ELSE_LREF(OtherF) f)
+          : seq(BOOST_FUSION_FORWARD(OtherSeq,seq))
+          , f(BOOST_FUSION_FORWARD(OtherF,f))
         {}
 
-        first_type first() const { return fusion::begin(seq); }
-        last_type last() const { return fusion::end(seq); }
-        typename mpl::if_<traits::is_view<Sequence>, Sequence, Sequence&>::type seq;
+        seq_type seq;
         transform_type f;
     };
 }}
 
 #endif
-
-

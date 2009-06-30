@@ -2,11 +2,12 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_NEXT_IMPL_20060124_2006)
-#define FUSION_NEXT_IMPL_20060124_2006
+
+#ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_NEXT_IMPL_HPP
+#define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_NEXT_IMPL_HPP
 
 #include <boost/fusion/view/zip_view/zip_view_iterator_fwd.hpp>
 #include <boost/fusion/iterator/next.hpp>
@@ -15,13 +16,12 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
 namespace boost { namespace fusion {
 
     struct zip_view_iterator_tag;
-    
+
     namespace detail
     {
         struct poly_next
@@ -32,24 +32,26 @@ namespace boost { namespace fusion {
             template<typename It>
             struct result<poly_next(It)>
             {
-                typedef typename remove_const<
-                    typename remove_reference<It>::type>::type it;
-
-                typedef typename mpl::eval_if<is_same<it, unused_type>,
-                    mpl::identity<unused_type>,
-                    result_of::next<it> >::type type;
+                typedef typename
+                    mpl::eval_if<
+                        is_same<It, unused_type const&>
+                      , mpl::identity<unused_type const&>
+                      , result_of::next<It>
+                    >::type
+                type;
             };
 
             template<typename It>
-            typename result<poly_next(It)>::type
-            operator()(const It& it) const
+            typename result<poly_next(It const&)>::type
+            operator()(It const& it) const
             {
                 return fusion::next(it);
             }
 
-            unused_type operator()(unused_type const&) const
+            unused_type const&
+            operator()(unused_type const& unused) const
             {
-                return unused_type();
+                return unused;
             }
         };
     }
@@ -62,15 +64,22 @@ namespace boost { namespace fusion {
         template<>
         struct next_impl<zip_view_iterator_tag>
         {
-            template<typename Iterator>
+            template<typename ItRef>
             struct apply
             {
-                typedef fusion::zip_view_iterator<
-                    typename result_of::transform<typename Iterator::iterators, detail::poly_next>::type,
-                    typename Iterator::category> type;
+                typedef typename detail::remove_reference<ItRef>::type it;
+                typedef
+                    fusion::zip_view_iterator<
+                        typename result_of::transform<
+                            typename it::iterators
+                          , detail::poly_next
+                        >::type
+                      , typename it::category
+                    >
+                type;
 
                 static type
-                call(Iterator const& it)
+                call(ItRef it)
                 {
                     return type(
                         fusion::transform(it.iterators_, detail::poly_next()));

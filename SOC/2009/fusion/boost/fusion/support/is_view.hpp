@@ -1,23 +1,21 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_IS_VIEW_03202006_0015)
-#define FUSION_IS_VIEW_03202006_0015
+
+#ifndef BOOST_FUSION_SUPPORT_IS_VIEW_HPP
+#define BOOST_FUSION_SUPPORT_IS_VIEW_HPP
 
 #include <boost/fusion/support/detail/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
 {
     // Special tags:
     struct sequence_facade_tag;
-    struct boost_tuple_tag; // boost::tuples::tuple tag
-    struct array_tag; // boost::array tag
-    struct mpl_sequence_tag; // mpl sequence tag
-    struct std_pair_tag; // std::pair tag
 
     namespace extension
     {
@@ -34,27 +32,17 @@ namespace boost { namespace fusion
         struct is_view_impl<sequence_facade_tag>
         {
             template <typename Sequence>
-            struct apply : Sequence::is_view {};
+            struct apply
+                : detail::remove_reference<Sequence>::type::is_view
+            {};
         };
-
-        template <>
-        struct is_view_impl<boost_tuple_tag>;
-
-        template <>
-        struct is_view_impl<array_tag>;
-
-        template <>
-        struct is_view_impl<mpl_sequence_tag>;
-
-        template <>
-        struct is_view_impl<std_pair_tag>;
     }
 
     namespace traits
     {
         template <typename T>
         struct is_view :
-            extension::is_view_impl<typename fusion::detail::tag_of<T>::type>::
+            extension::is_view_impl<typename fusion::traits::tag_of<T>::type>::
                 template apply<T>::type
         {};
     }

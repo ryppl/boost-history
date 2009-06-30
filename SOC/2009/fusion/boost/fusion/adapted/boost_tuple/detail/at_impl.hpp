@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_AT_IMPL_09262006_1920)
-#define BOOST_FUSION_AT_IMPL_09262006_1920
+
+#ifndef BOOST_FUSION_ADAPTED_BOOST_TUPLE_DETAIL_AT_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_BOOST_TUPLE_DETAIL_AT_IMPL_HPP
 
 #include <boost/tuple/tuple.hpp>
 #include <boost/mpl/if.hpp>

@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VALUE_OF_IMPL_20060124_2147)
-#define FUSION_VALUE_OF_IMPL_20060124_2147
+
+#ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_VALUE_OF_IMPL_HPP
+#define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
@@ -28,11 +29,13 @@ namespace boost { namespace fusion
             template<typename T>
             struct result;
 
-            template<typename It>
-            struct result<poly_value_of(It)>
-                : mpl::eval_if<is_same<It, unused_type>,
-                               mpl::identity<unused_type>,
-                               result_of::value_of<It> >
+            template<typename ItRef>
+            struct result<poly_value_of(ItRef)>
+              : mpl::eval_if<
+                    is_same<ItRef, unused_type const&>
+                  , mpl::identity<unused_type const&>
+                  , result_of::value_of<ItRef>
+                >
             {};
         };
     }
@@ -45,12 +48,17 @@ namespace boost { namespace fusion
         template<>
         struct value_of_impl<zip_view_iterator_tag>
         {
-            template<typename Iterator>
+            template<typename ItRef>
             struct apply
             {
-                typedef typename result_of::transform<
-                    typename Iterator::iterators,
-                    detail::poly_value_of>::type values;
+                typedef typename
+                    result_of::transform<
+                        typename detail::remove_reference<
+                            ItRef
+                        >::type::iterators
+                      , detail::poly_value_of
+                    >::type
+                values;
 
                 typedef typename result_of::as_vector<values>::type type;
             };

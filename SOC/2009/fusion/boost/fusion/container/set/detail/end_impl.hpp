@@ -1,11 +1,10 @@
-/*=============================================================================
-    Copyright (c) 2001-2006 Joel de Guzman
+// Copyright Christopher Schmidt 2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-==============================================================================*/
-#if !defined(FUSION_END_IMPL_09162005_1121)
-#define FUSION_END_IMPL_09162005_1121
+#ifndef BOOST_FUSION_CONTAINER_SET_END_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_SET_END_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
@@ -22,28 +21,23 @@ namespace boost { namespace fusion
         struct end_impl<set_tag>
         {
             template <typename Sequence>
-            struct apply 
+            struct apply
             {
-                typedef typename 
-                    result_of::end<typename Sequence::storage_type>::type
-                iterator_type;
-
-                typedef typename 
-                    result_of::end<typename Sequence::storage_type const>::type
-                const_iterator_type;
-
-                typedef typename 
-                    mpl::eval_if<
-                        is_const<Sequence>
-                      , mpl::identity<const_iterator_type>
-                      , mpl::identity<iterator_type>
+                typedef typename
+                    detail::result_of_forward_as<Sequence
+                      , typename detail::remove_reference<Sequence>::type::storage_type
                     >::type
+                storage_type;
+
+                typedef typename
+                    result_of::end<storage_type>::type
                 type;
-    
+
                 static type
-                call(Sequence& s)
+                call(Sequence s)
                 {
-                    return fusion::end(s.get_data());
+                    return fusion::end(
+                            static_cast<storage_type>(s.get_data()));
                 }
             };
         };

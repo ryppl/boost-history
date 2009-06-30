@@ -1,27 +1,30 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_REPLACE_IF_08182005_0946)
-#define FUSION_REPLACE_IF_08182005_0946
 
-#include <boost/utility/enable_if.hpp>
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
+
 #include <boost/mpl/if.hpp>
-#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
+    //TODO cschmidt: update doc. according to real behavior!
     template <bool is_convertible>
     struct replacer_if_helper;
 
     template <>
     struct replacer_if_helper<false>
     {
-        template <typename U, typename F, typename T>
-        static U&
-        call(U& x, F&, T const&)
+        template <typename U, typename F, typename NewValue>
+        static BOOST_FUSION_R_ELSE_LREF(U)
+        call(BOOST_FUSION_R_ELSE_LREF(U) x,
+             BOOST_FUSION_R_ELSE_LREF(F),
+             BOOST_FUSION_R_ELSE_LREF(NewValue))
         {
             return x;
         }
@@ -30,44 +33,75 @@ namespace boost { namespace fusion { namespace detail
     template <>
     struct replacer_if_helper<true>
     {
-        template <typename U, typename F, typename T>
-        static U
-        call(U& x, F& f, T const& new_value)
+        template <typename U, typename F, typename NewValue>
+        static typename remove_reference<U>::type
+        call(BOOST_FUSION_R_ELSE_LREF(U) x,
+             BOOST_FUSION_R_ELSE_LREF(F) f,
+             BOOST_FUSION_R_ELSE_LREF(NewValue) new_value)
         {
-            return f(x) ? new_value : x;
+            return f(BOOST_FUSION_FORWARD(U,x)) ? new_value : x;
         }
     };
 
-    template <typename F, typename T>
+    template <typename F, typename NewValue>
     struct replacer_if
     {
-        replacer_if(F f, T const& new_value)
-            : f(f), new_value(new_value) {}
+        replacer_if(replacer_if&& replacer_if)
+          : f(replacer_if.f)
+          , new_value(replacer_if.new_value)
+        {}
+
+        template<typename F_, typename NewValue_>
+        replacer_if(BOOST_FUSION_R_ELSE_LREF(F_) f,
+                BOOST_FUSION_R_ELSE_LREF(NewValue_) new_value)
+          : f(f)
+          , new_value(new_value)
+        {}
 
         template<typename Params>
         struct result;
 
-        template <typename F1, typename T1, typename U>
-        struct result<replacer_if<F1, T1>(U)>
+        template <typename U>
+        struct result<replacer_if<F, NewValue>(U)>
         {
-            typedef typename remove_reference<U>::type value;
             typedef typename
-                mpl::if_<is_convertible<T, value>, value, value const&>::type
+                mpl::if_<
+                    is_convertible<
+                        NewValue
+                      , typename remove_reference<U>::type
+                    >
+                  , NewValue
+                  , U
+                >::type
             type;
         };
-    
+
+        //TODO cschmidt: template result in f?
         template <typename U>
         typename result<replacer_if(U)>::type
-        operator()(U const& x) const
+        operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
         {
-            return replacer_if_helper<is_convertible<T, U>::value>::
-                call(x, f, new_value);
+            typedef
+                replacer_if_helper<
+                    is_convertible<
+                        NewValue
+                      , typename remove_reference<U>::type
+                    >::value
+                >
+            gen;
+
+            //TODO ???
+            return gen::call(
+                    BOOST_FUSION_FORWARD(U, x),
+                    static_cast<F>(f),
+                    static_cast<NewValue>(new_value));
+                    //BOOST_FUSION_FORWARD(pred_type,f),
+                    //BOOST_FUSION_FORWARD(value_type,new_value));
         }
 
         F f;
-        T new_value;
+        NewValue new_value;
     };
 }}}
 
 #endif
-

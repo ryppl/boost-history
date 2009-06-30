@@ -2,15 +2,16 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_ADVANCE_IMPL_13122005_1906)
-#define FUSION_ADVANCE_IMPL_13122005_1906
+
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_ADVANCE_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_ADVANCE_IMPL_HPP
 
 #include <boost/fusion/iterator/advance.hpp>
 
-namespace boost { namespace fusion 
+namespace boost { namespace fusion
 {
     struct transform_view_iterator_tag;
     struct transform_view_iterator2_tag;
@@ -30,16 +31,25 @@ namespace boost { namespace fusion
         template<>
         struct advance_impl<transform_view_iterator_tag>
         {
-            template<typename Iterator, typename Dist>
+            template<typename ItRef, typename Dist>
             struct apply
             {
-                typedef typename Iterator::first_type first_type;
-                typedef typename result_of::advance<first_type, Dist>::type advanced_type;
-                typedef typename Iterator::transform_type transform_type;
-                typedef transform_view_iterator<advanced_type, transform_type> type;
+                typedef typename
+                    detail::remove_reference<ItRef>::type
+                it;
+
+                typedef
+                    transform_view_iterator<
+                        typename result_of::advance<
+                            typename it::first_type
+                          , Dist
+                        >::type
+                      , typename it::transform_type
+                    >
+                type;
 
                 static type
-                call(Iterator const& i)
+                call(ItRef i)
                 {
                     return type(boost::fusion::advance<Dist>(i.first), i.f);
                 }
@@ -50,22 +60,33 @@ namespace boost { namespace fusion
         template<>
         struct advance_impl<transform_view_iterator2_tag>
         {
-            template<typename Iterator, typename Dist>
+            template<typename ItRef, typename Dist>
             struct apply
             {
-                typedef typename Iterator::first1_type first1_type;
-                typedef typename Iterator::first2_type first2_type;
-                typedef typename result_of::advance<first1_type, Dist>::type advanced1_type;
-                typedef typename result_of::advance<first2_type, Dist>::type advanced2_type;
-                typedef typename Iterator::transform_type transform_type;
-                typedef transform_view_iterator2<advanced1_type, advanced2_type, transform_type> type;
+                typedef typename
+                    detail::remove_reference<ItRef>::type
+                it;
+
+                typedef
+                    transform_view_iterator2<
+                        typename result_of::advance<
+                            typename it::first1_type
+                          , Dist
+                        >::type
+                      , typename result_of::advance<
+                            typename it::first2_type
+                          , Dist
+                        >::type
+                      , typename it::transform_type
+                    >
+                type;
 
                 static type
-                call(Iterator const& i)
+                call(ItRef i)
                 {
-                    return type(
-                        boost::fusion::advance<Dist>(i.first1)
-                      , boost::fusion::advance<Dist>(i.first2), i.f);
+                    return type(boost::fusion::advance<Dist>(i.first1)
+                              , boost::fusion::advance<Dist>(i.first2)
+                              , i.f);
                 }
             };
         };

@@ -1,11 +1,14 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_END_IMPL_05062005_0906)
-#define FUSION_END_IMPL_05062005_0906
+
+#ifndef BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_END_IMPL_HPP
+
+#include <boost/fusion/sequence/intrinsic/end.hpp>
 
 namespace boost { namespace fusion
 {
@@ -22,17 +25,29 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<filter_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename Sequence::last_type last_type;
-                typedef typename Sequence::pred_type pred_type;
-                typedef filter_iterator<last_type, last_type, pred_type> type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
+                typedef typename
+                    detail::result_of_forward_as<
+                        SeqRef
+                      , typename seq::seq_type
+                    >::type
+                forwarded_seq;
+
+                typedef
+                    filter_iterator<
+                        typename result_of::end<forwarded_seq>::type
+                      , typename result_of::end<forwarded_seq>::type
+                      , typename seq::pred_type
+                    >
+                type;
 
                 static type
-                call(Sequence& s)
+                call(SeqRef s)
                 {
-                    return type(s.last());
+                    return type(fusion::end(s.seq));
                 }
             };
         };
@@ -40,5 +55,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

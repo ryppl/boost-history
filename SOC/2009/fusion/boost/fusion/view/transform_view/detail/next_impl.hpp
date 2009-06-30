@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_NEXT_IMPL_07162005_1029)
-#define FUSION_NEXT_IMPL_07162005_1029
+
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_NEXT_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_NEXT_IMPL_HPP
 
 #include <boost/fusion/iterator/next.hpp>
 
@@ -29,16 +30,22 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<transform_view_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename Iterator::first_type first_type;
-                typedef typename result_of::next<first_type>::type next_type;
-                typedef typename Iterator::transform_type transform_type;
-                typedef transform_view_iterator<next_type, transform_type> type;
+                typedef typename detail::remove_reference<ItRef>::type it;
+
+                typedef
+                    transform_view_iterator<
+                        typename result_of::next<
+                            typename it::first_type
+                        >::type
+                      , typename it::transform_type
+                    >
+                type;
 
                 static type
-                call(Iterator const& i)
+                call(ItRef i)
                 {
                     return type(fusion::next(i.first), i.f);
                 }
@@ -49,20 +56,29 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<transform_view_iterator2_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename Iterator::first1_type first1_type;
-                typedef typename Iterator::first2_type first2_type;
-                typedef typename result_of::next<first1_type>::type next1_type;
-                typedef typename result_of::next<first2_type>::type next2_type;
-                typedef typename Iterator::transform_type transform_type;
-                typedef transform_view_iterator2<next1_type, next2_type, transform_type> type;
+                typedef typename detail::remove_reference<ItRef>::type it;
+
+                typedef
+                    transform_view_iterator2<
+                        typename result_of::next<
+                            typename it::first1_type
+                        >::type
+                      , typename result_of::next<
+                            typename it::first2_type
+                        >::type
+                      , typename it::transform_type
+                    >
+                type;
 
                 static type
-                call(Iterator const& i)
+                call(ItRef i)
                 {
-                    return type(fusion::next(i.first1), fusion::next(i.first2), i.f);
+                    return type(fusion::next(i.first1),
+                            fusion::next(i.first2),
+                            i.f);
                 }
             };
         };
@@ -70,5 +86,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_PUSH_FRONT_07162005_0749)
-#define FUSION_PUSH_FRONT_07162005_0749
+
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_PUSH_FRONT_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_PUSH_FRONT_HPP
 
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/view/joint_view/joint_view.hpp>
@@ -36,4 +37,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

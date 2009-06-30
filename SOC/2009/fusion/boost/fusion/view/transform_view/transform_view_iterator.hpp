@@ -4,13 +4,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_TRANSFORM_VIEW_ITERATOR_07162005_1033)
-#define FUSION_TRANSFORM_VIEW_ITERATOR_07162005_1033
+
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_ITERATOR_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_ITERATOR_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/iterator/mpl/convert_iterator.hpp>
-#include <boost/fusion/adapted/mpl/mpl_iterator.hpp>
+
 #include <boost/fusion/view/transform_view/detail/deref_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/next_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/prior_impl.hpp>
@@ -24,18 +24,21 @@ namespace boost { namespace fusion
     // Unary Version
     struct transform_view_iterator_tag;
 
-    template <typename First, typename F>
+    template <typename First, typename FRef>
     struct transform_view_iterator
-        : iterator_base<transform_view_iterator<First, F> >
+        : iterator_base<transform_view_iterator<First, FRef> >
     {
-        typedef transform_view_iterator_tag fusion_tag;
-        typedef convert_iterator<First> converter;
-        typedef typename converter::type first_type;
-        typedef typename traits::category_of<first_type>::type category;
-        typedef F transform_type;
+        //TODO !!!
+        typedef FRef transform_type;
+        typedef First first_type;
 
-        transform_view_iterator(First const& first, F const& f)
-            : first(converter::call(first)), f(f) {}
+        typedef transform_view_iterator_tag fusion_tag;
+        typedef typename traits::category_of<first_type>::type category;
+
+        transform_view_iterator(First const& first, transform_type f)
+          : first(first)
+          , f(f)
+        {}
 
         first_type first;
         transform_type f;
@@ -44,20 +47,24 @@ namespace boost { namespace fusion
     // Binary Version
     struct transform_view_iterator2_tag;
 
-    template <typename First1, typename First2, typename F>
+    template <typename First1, typename First2, typename FRef>
     struct transform_view_iterator2
-        : iterator_base<transform_view_iterator2<First1, First2, F> >
+        : iterator_base<transform_view_iterator2<First1, First2, FRef> >
     {
-        typedef transform_view_iterator2_tag fusion_tag;
-        typedef convert_iterator<First1> converter1;
-        typedef convert_iterator<First2> converter2;
-        typedef typename converter1::type first1_type;
-        typedef typename converter2::type first2_type;
-        typedef typename traits::category_of<first1_type>::type category;
-        typedef F transform_type;
+        typedef First1 first1_type;
+        typedef First2 first2_type;
+        typedef FRef transform_type;
 
-        transform_view_iterator2(First1 const& first1, First2 const& first2, F const& f)
-            : first1(converter1::call(first1)), first2(converter2::call(first2)), f(f) {}
+        typedef transform_view_iterator2_tag fusion_tag;
+        typedef typename traits::category_of<first1_type>::type category;
+
+        transform_view_iterator2(First1 const& first1,
+                First2 const& first2,
+                FRef f)
+          : first1(first1)
+          , first2(first2)
+          , f(f)
+        {}
 
         first1_type first1;
         first2_type first2;
@@ -66,4 +73,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

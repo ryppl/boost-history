@@ -17,7 +17,7 @@ boostbook quickbook
         fusion.qbk
     :
         <xsl:param>boost.root=file:///$(BOOST_ROOT)
-        <xsl:param>boost.libraries=file:///$(BOOST_ROOT)/boostlibraries.htm
+        <xsl:param>boost.libraries=file:///$(BOOST_ROOT)/boost/libraries.htm
         <xsl:param>html.stylesheet=file:///$(BOOST_ROOT)/doc/html/boostbook.css
         <xsl:param>chunk.section.depth=4
         <xsl:param>chunk.first.sections=1

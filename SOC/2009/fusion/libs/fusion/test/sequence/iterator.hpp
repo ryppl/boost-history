@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <string>
@@ -30,7 +30,7 @@ void test()
         char const* s = "Hello";
         typedef FUSION_SEQUENCE<int, char, double, char const*> seq_type;
         seq_type v(1, 'x', 3.3, s);
-        result_of::begin<seq_type>::type i(v);
+        result_of::begin<seq_type>::type i(begin(v));
 
         BOOST_TEST(*i == 1);
         BOOST_TEST(*next(i) == 'x');
@@ -50,7 +50,7 @@ void test()
 
         *i = 3;
         BOOST_TEST(*i == 3);
-        BOOST_TEST(&*i == &at_c<0>(v));
+        BOOST_TEST(&*i == &deref(begin(v)));
 
         // prove that it is mutable
         *i = 987;
@@ -62,7 +62,7 @@ void test()
         char const* s = "Hello";
         typedef FUSION_SEQUENCE<int, char, double, char const*> const seq_type;
         seq_type t(1, 'x', 3.3, s);
-        result_of::begin<seq_type>::type i(t);
+        result_of::begin<seq_type>::type i(begin(t));
 
         BOOST_TEST(*i == 1);
         BOOST_TEST(*next(i) == 'x');
@@ -105,7 +105,7 @@ void test()
         char const* s = "Hello";
         typedef FUSION_SEQUENCE<int, char, double, char const*> seq_type;
         seq_type t(1, 'x', 3.3, s);
-        result_of::begin<seq_type>::type i(t);
+        result_of::begin<seq_type>::type i(begin(t));
 
         BOOST_TEST(*i == 1);
         BOOST_TEST(*next(i) == 'x');
@@ -113,7 +113,7 @@ void test()
         BOOST_TEST(*next(next(next(i))) == s);
 
         next(next(next(next(i)))); // end
-        
+
 #ifdef FUSION_TEST_FAIL
         next(next(next(next(next(i))))); // past the end: must not compile
 #endif
@@ -130,7 +130,7 @@ void test()
 
         *i = 3;
         BOOST_TEST(*i == 3);
-        BOOST_TEST(*i == at_c<0>(t));
+        BOOST_TEST(*i == *begin(t));
     }
 
     { // Testing distance
@@ -152,11 +152,14 @@ void test()
         typedef result_of::next<i0>::type i1;
         typedef result_of::next<result_of::begin<const seq_type>::type>::type i2;
 
+//value_at<>/at<>/... are valid for lists and cons!
+//#ifndef FUSION_NO_RANDOM_ACCESS_SEQUENCE
         BOOST_STATIC_ASSERT((
             is_same<result_of::value_at_c<seq_type, 0>::type, int>::value));
 
         BOOST_STATIC_ASSERT((
             is_same<result_of::value_at_c<seq_type, 1>::type, char&>::value));
+//#endif
 
         BOOST_STATIC_ASSERT((
             is_same<traits::category_of<i0>::type, FUSION_TRAVERSAL_TAG>::value));
@@ -168,6 +171,7 @@ void test()
         BOOST_STATIC_ASSERT((is_same<result_of::value_of<i1>::type, char&>::value));
     }
 
+//#ifndef FUSION_NO_RANDOM_ACCESS_SEQUENCE
     { // Testing advance
 
         typedef FUSION_SEQUENCE<int, char, double, char const*> seq_type;
@@ -190,6 +194,7 @@ void test()
         BOOST_TEST(&*advance_c<2>(begin(t)) == &at_c<2>(t));
         BOOST_TEST(&*advance_c<3>(begin(t)) == &at_c<3>(t));
     }
+//#endif
 }
 
 

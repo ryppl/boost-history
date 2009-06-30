@@ -1,12 +1,14 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_BEGIN_IMPL_07162005_1031)
-#define FUSION_BEGIN_IMPL_07162005_1031
 
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_BEGIN_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_BEGIN_IMPL_HPP
+
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
 
 namespace boost { namespace fusion
@@ -26,17 +28,27 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<transform_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename Sequence::first_type first_type;
-                typedef typename Sequence::transform_type transform_type;
-                typedef transform_view_iterator<first_type, transform_type> type;
+                typedef typename
+                    detail::remove_reference<SeqRef>::type
+                seq;
+
+                typedef
+                    transform_view_iterator<
+                        typename result_of::begin<typename seq::seq_type>::type
+                      , typename detail::result_of_forward_as<
+                            SeqRef
+                          , typename seq::transform_type
+                        >::type
+                    >
+                type;
 
                 static type
-                call(Sequence& s)
+                call(SeqRef s)
                 {
-                    return type(s.first(), s.f);
+                    return type(fusion::begin(s.seq), s.f);
                 }
             };
         };
@@ -45,18 +57,29 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<transform_view2_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename Sequence::first1_type first1_type;
-                typedef typename Sequence::first2_type first2_type;
-                typedef typename Sequence::transform_type transform_type;
-                typedef transform_view_iterator2<first1_type, first2_type, transform_type> type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
+
+                typedef
+                    transform_view_iterator2<
+                        typename result_of::begin<typename seq::seq1_type>::type
+                      , typename result_of::begin<typename seq::seq2_type>::type
+                      , typename detail::result_of_forward_as<
+                            SeqRef
+                          , typename seq::transform_type
+                        >::type
+                    >
+                type;
 
                 static type
-                call(Sequence& s)
+                call(SeqRef s)
                 {
-                    return type(s.first1(), s.first2(), s.f);
+                    return type(
+                            fusion::begin(s.seq1),
+                            fusion::begin(s.seq2),
+                            s.f);
                 }
             };
         };
@@ -64,5 +87,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

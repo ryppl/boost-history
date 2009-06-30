@@ -1,68 +1,75 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_COUNT_09162005_0158)
-#define FUSION_COUNT_09162005_0158
+
+#ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
+#define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_convertible.hpp>
-#include <boost/fusion/support/detail/access.hpp>
 
 namespace boost { namespace fusion { namespace detail
-{ 
+{
     template <bool is_convertible>
     struct compare_convertible;
 
     // T1 is convertible to T2 or vice versa
     template <>
-    struct compare_convertible<true> 
+    struct compare_convertible<true>
     {
         template <typename T1, typename T2>
         static bool
-        call(T1 const& x, T2 const& y)
+        call(BOOST_FUSION_R_ELSE_LREF(T1) x, BOOST_FUSION_R_ELSE_LREF(T2) y)
         {
-            return x == y;
+            return BOOST_FUSION_FORWARD(T1,x) == BOOST_FUSION_FORWARD(T2,y);
         }
     };
 
-    // T1 is NOT convertible to T2 NOR vice versa
+    // T1 is NEITHER convertible to T2 NOR vice versa
     template <>
     struct compare_convertible<false>
     {
         template <typename T1, typename T2>
         static bool
-        call(T1 const&, T2 const&)
+        call(BOOST_FUSION_R_ELSE_LREF(T1), BOOST_FUSION_R_ELSE_LREF(T2))
         {
             return false;
         }
     };
 
-    template <typename T1>
+    template <typename T1Ref>
     struct count_compare
     {
-        typedef typename detail::call_param<T1>::type param;
-        count_compare(param x)
-            : x(x) {}
+        count_compare(T1Ref x)
+          : x(x)
+        {}
 
         template <typename T2>
         bool
-        operator()(T2 const& y)
+        operator()(BOOST_FUSION_R_ELSE_LREF(T2) y)
         {
-            return 
+            typedef typename remove_reference<T1Ref>::type T1_nonref;
+            typedef typename remove_reference<T2>::type T2_nonref;
+
+            typedef
                 compare_convertible<
                     mpl::or_<
-                        is_convertible<T1, T2>
-                      , is_convertible<T2, T1> 
+                        is_convertible<T1_nonref, T2_nonref>
+                      , is_convertible<T2_nonref, T1_nonref>
                     >::value
-                >::call(x, y);
+                >
+            gen;
+
+            return gen::call(
+                    BOOST_FUSION_FORWARD(T1Ref,x),
+                    BOOST_FUSION_FORWARD(T2,y));
         }
 
-        param x;
+        T1Ref x;
     };
 }}}
 
 #endif
-

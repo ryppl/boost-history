@@ -2,17 +2,20 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_AT_IMPL_20061029_1946)
-#define BOOST_FUSION_AT_IMPL_20061029_1946
 
-#include <boost/mpl/apply.hpp>
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_AT_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_AT_IMPL_HPP
+
 #include <boost/fusion/view/transform_view/detail/apply_transform_result.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 
-namespace boost { namespace fusion {
+#include <boost/mpl/apply.hpp>
+
+namespace boost { namespace fusion
+{
     struct transform_view_tag;
     struct transform_view2_tag;
 
@@ -24,15 +27,25 @@ namespace boost { namespace fusion {
         template<>
         struct at_impl<transform_view_tag>
         {
-            template<typename Seq, typename N>
+            template<typename SeqRef, typename N>
             struct apply
             {
-                typedef typename Seq::transform_type F;
-                typedef detail::apply_transform_result<F> transform_type;
-                typedef typename boost::fusion::result_of::at<typename Seq::sequence_type, N>::type value_type;
-                typedef typename mpl::apply<transform_type, value_type>::type type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
 
-                static type call(Seq& seq)
+                typedef typename
+                    mpl::apply<
+                        detail::apply_transform_result<
+                            typename seq::transform_type
+                        >
+                      , typename result_of::at<
+                            typename seq::seq_type
+                          , N
+                        >::type
+                    >::type
+                type;
+
+                static type
+                call(SeqRef seq)
                 {
                     return seq.f(boost::fusion::at<N>(seq.seq));
                 }
@@ -42,18 +55,31 @@ namespace boost { namespace fusion {
         template<>
         struct at_impl<transform_view2_tag>
         {
-            template<typename Seq, typename N>
+            template<typename SeqRef, typename N>
             struct apply
             {
-                typedef typename Seq::transform_type F;
-                typedef detail::apply_transform_result<F> transform_type;
-                typedef typename boost::fusion::result_of::at<typename Seq::sequence1_type, N>::type value1_type;
-                typedef typename boost::fusion::result_of::at<typename Seq::sequence2_type, N>::type value2_type;
-                typedef typename mpl::apply<transform_type, value1_type, value2_type>::type type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
 
-                static type call(Seq& seq)
+                typedef typename
+                    mpl::apply<
+                        detail::apply_transform_result<
+                            typename seq::transform_type
+                        >
+                      , typename boost::fusion::result_of::at<
+                            typename seq::seq1_type
+                          , N
+                        >::type
+                      , typename boost::fusion::result_of::at<
+                            typename seq::seq2_type
+                          , N
+                        >::type
+                    >::type
+                type;
+
+                static type call(SeqRef seq)
                 {
-                    return seq.f(boost::fusion::at<N>(seq.seq1), boost::fusion::at<N>(seq.seq2));
+                    return seq.f(boost::fusion::at<N>(seq.seq1),
+                            boost::fusion::at<N>(seq.seq2));
                 }
             };
         };

@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_FRONT_10022005_1618)
-#define FUSION_FRONT_10022005_1618
+
+#ifndef BOOST_FUSION_MPL_FRONT_HPP
+#define BOOST_FUSION_MPL_FRONT_HPP
 
 #include <boost/mpl/front.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
@@ -20,8 +21,11 @@ namespace boost { namespace mpl
     struct front_impl<fusion::fusion_sequence_tag>
     {
         template <typename Sequence>
-        struct apply : 
-            fusion::result_of::value_of<typename fusion::result_of::begin<Sequence>::type> {};
+        struct apply
+          : fusion::result_of::value_of<
+                typename fusion::result_of::begin<Sequence>::type
+            >
+        {};
     };
 }}
 

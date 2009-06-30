@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_INCLUDE_IS_ITERATOR)
-#define FUSION_INCLUDE_IS_ITERATOR
+
+#ifndef BOOST_FUSION_INCLUDE_IS_ITERATOR_HPP
+#define BOOST_FUSION_INCLUDE_IS_ITERATOR_HPP
 
 #include <boost/fusion/support/is_iterator.hpp>
 

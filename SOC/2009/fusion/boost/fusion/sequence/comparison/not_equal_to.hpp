@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_NOT_EQUAL_TO_05052005_0431)
-#define FUSION_NOT_EQUAL_TO_05052005_0431
+
+#ifndef BOOST_FUSION_SEQUENCE_COMPARISON_NOT_EQUAL_TO_HPP
+#define BOOST_FUSION_SEQUENCE_COMPARISON_NOT_EQUAL_TO_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>

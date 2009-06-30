@@ -1,73 +1,32 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_REPLACE_08182005_0841)
-#define FUSION_REPLACE_08182005_0841
 
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/remove_reference.hpp>
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_HPP
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <bool is_convertible>
-    struct replacer_helper;
-
-    template <>
-    struct replacer_helper<false>
-    {
-        template <typename U, typename T>
-        static U&
-        call(U& x, T const&, T const&)
-        {
-            return x;
-        }
-    };
-
-    template <>
-    struct replacer_helper<true>
-    {
-        template <typename U, typename T>
-        static U
-        call(U& x, T const& old_value, T const& new_value)
-        {
-            return (x == old_value) ? new_value : x;
-        }
-    };
-
-    template <typename T>
+    template <typename OldValue>
     struct replacer
     {
-        replacer(T const& old_value, T const& new_value)
-            : old_value(old_value), new_value(new_value) {}
+        template <typename OldValue_>
+        replacer(BOOST_FUSION_R_ELSE_LREF(OldValue_) old_value,int)
+          : old_value(old_value)
+        {}
 
-        template<typename Sig>
-        struct result;
-
-        template <typename U1, typename U2>
-        struct result<replacer<U1>(U2)>
-        {
-            typedef typename remove_reference<U2>::type value;
-            typedef typename
-                mpl::if_<is_convertible<T, value>, value, value const&>::type
-            type;
-        };
-    
         template <typename U>
-        typename result<replacer(U)>::type
-        operator()(U const& x) const
+        bool
+        operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
         {
-            return replacer_helper<is_convertible<T, U>::value>::
-                call(x, old_value, new_value);
+            return x==old_value;
         }
 
-        T old_value;
-        T new_value;
+        OldValue old_value;
     };
 }}}
 
 #endif
-

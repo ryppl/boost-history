@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VALUE_AT_IMPL_05052005_0232)
-#define FUSION_VALUE_AT_IMPL_05052005_0232
+
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VALUE_AT_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VALUE_AT_IMPL_HPP
 
 #include <boost/mpl/at.hpp>
 
@@ -22,9 +23,13 @@ namespace boost { namespace fusion
         struct value_at_impl<vector_tag>
         {
             template <typename Sequence, typename N>
-            struct apply 
+            struct apply
             {
-                typedef typename mpl::at<typename Sequence::types, N>::type type;
+                typedef typename
+                    mpl::at<
+                        typename detail::remove_reference<Sequence>::type::types, N
+                    >::type
+                type;
             };
         };
     }

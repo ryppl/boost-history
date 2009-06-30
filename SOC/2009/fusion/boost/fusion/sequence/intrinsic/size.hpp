@@ -1,72 +1,60 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_SIZE_05052005_0214)
-#define FUSION_SIZE_05052005_0214
+
+#ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_SIZE_HPP
+#define BOOST_FUSION_SEQUENCE_INTRINSIC_SIZE_HPP
+
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 #include <boost/mpl/int.hpp>
-#include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion
 {
     // Special tags:
     struct sequence_facade_tag;
-    struct boost_tuple_tag; // boost::tuples::tuple tag
-    struct array_tag; // boost::array tag
-    struct mpl_sequence_tag; // mpl sequence tag
-    struct std_pair_tag; // std::pair tag
 
     namespace extension
     {
         template <typename Tag>
         struct size_impl
         {
-            template <typename Sequence>
-            struct apply : Sequence::size {};
+            template <typename SeqRef>
+            struct apply
+              : detail::remove_reference<SeqRef>::type::size
+            {};
         };
 
         template <>
         struct size_impl<sequence_facade_tag>
         {
-            template <typename Sequence>
-            struct apply : Sequence::template size<Sequence> {};
+            template <typename SeqRef>
+            struct apply
+              : detail::remove_reference<SeqRef>::type::
+                    template size<SeqRef>::type
+            {};
         };
- 
-        template <>
-        struct size_impl<boost_tuple_tag>;
- 
-        template <>
-        struct size_impl<array_tag>;
-
-        template <>
-        struct size_impl<mpl_sequence_tag>;
-
-        template <>
-        struct size_impl<std_pair_tag>;
     }
 
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct size
-            : extension::size_impl<typename detail::tag_of<Sequence>::type>::
-        template apply<Sequence>
-
+          : extension::size_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type>::type
         {
-            typedef typename extension::size_impl<typename detail::tag_of<Sequence>::type>::
-            template apply<Sequence>::type size_application;
-            BOOST_STATIC_CONSTANT(int, value = size_application::value);
         };
     }
 
     template <typename Sequence>
-    inline typename result_of::size<Sequence>::type
+    inline typename result_of::size<Sequence const&>::type
     size(Sequence const&)
     {
-        typedef typename result_of::size<Sequence>::type result;
+        typedef typename result_of::size<Sequence const&>::type result;
         return result();
     }
 }}

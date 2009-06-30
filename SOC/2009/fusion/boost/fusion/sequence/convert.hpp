@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CONVERT_10022005_1442)
-#define FUSION_CONVERT_10022005_1442
+
+#ifndef BOOST_FUSION_SEQUENCE_CONVERT_HPP
+#define BOOST_FUSION_SEQUENCE_CONVERT_HPP
 
 namespace boost { namespace fusion
 {
@@ -22,27 +23,25 @@ namespace boost { namespace fusion
         {
             typedef typename extension::convert_impl<Tag> gen;
 
-            typedef typename
-                gen::template apply<Sequence>::type
+            typedef typename gen::
+                template apply<typename detail::add_lref<Sequence>::type>::type
             type;
         };
     }
 
     template <typename Tag, typename Sequence>
-    inline typename result_of::convert<Tag, Sequence>::type
-    convert(Sequence& seq)
+    inline typename result_of::convert<
+        Tag
+      , BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
+    convert(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
     {
-        typedef typename result_of::convert<Tag, Sequence>::gen gen;
+        typedef typename result_of::convert<
+            Tag
+          , BOOST_FUSION_R_ELSE_CLREF(Sequence)>::gen
+        gen;
         return gen::call(seq);
     }
 
-    template <typename Tag, typename Sequence>
-    inline typename result_of::convert<Tag, Sequence const>::type
-    convert(Sequence const& seq)
-    {
-        typedef typename result_of::convert<Tag, Sequence const>::gen gen;
-        return gen::call(seq);
-    }
 }}
 
 #endif

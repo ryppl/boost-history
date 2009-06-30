@@ -5,13 +5,15 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_EQUAL_TO_05052005_1142)
-#define FUSION_EQUAL_TO_05052005_1142
 
-#include <boost/mpl/bool.hpp>
+#ifndef BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_EQUAL_TO_HPP
+#define BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_EQUAL_TO_HPP
+
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
+
+#include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -32,7 +34,7 @@ namespace boost { namespace fusion { namespace detail
         static bool
         call(I1 const& a, I2 const& b, mpl::false_)
         {
-            return *a == *b
+            return fusion::deref(a) == fusion::deref(b)
                 && call(fusion::next(a), fusion::next(b));
         }
 

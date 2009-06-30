@@ -4,14 +4,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CONVERT_09222005_1104)
-#define FUSION_CONVERT_09222005_1104
 
-#include <boost/fusion/container/vector/detail/as_vector.hpp>
-#include <boost/fusion/container/vector/detail/convert_impl.hpp>
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_CONVERT_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_CONVERT_HPP
+
 #include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/container/vector/detail/convert_impl.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
 {
@@ -20,28 +19,25 @@ namespace boost { namespace fusion
         template <typename Sequence>
         struct as_vector
         {
-            typedef typename detail::as_vector<result_of::size<Sequence>::value> gen;
-            typedef typename gen::
-                template apply<typename result_of::begin<Sequence>::type>::type
-            type;
+            typedef typename
+                extension::convert_impl<vector_tag>::
+                    template apply<typename detail::add_lref<Sequence>::type>
+            gen;
+
+            typedef typename gen::type type;
         };
     }
 
-    template <typename Sequence>
-    inline typename result_of::as_vector<Sequence>::type
-    as_vector(Sequence& seq)
+    template <typename Sequence> inline typename
+        result_of::as_vector<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
+    as_vector(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
     {
-        typedef typename result_of::as_vector<Sequence>::gen gen;
-        return gen::call(fusion::begin(seq));
+        typedef typename
+            result_of::as_vector<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::gen
+        gen;
+        return gen::call(seq);
     }
 
-    template <typename Sequence>
-    inline typename result_of::as_vector<Sequence const>::type
-    as_vector(Sequence const& seq)
-    {
-        typedef typename result_of::as_vector<Sequence const>::gen gen;
-        return gen::call(fusion::begin(seq));
-    }
 }}
 
 #endif

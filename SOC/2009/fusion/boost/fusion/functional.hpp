@@ -6,12 +6,11 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_HPP_INCLUDED)
-#define BOOST_FUSION_FUNCTIONAL_HPP_INCLUDED
+#ifndef BOOST_FUSION_FUNCTIONAL_HPP
+#define BOOST_FUSION_FUNCTIONAL_HPP
 
 #include <boost/fusion/functional/invocation.hpp>
 #include <boost/fusion/functional/adapter.hpp>
 #include <boost/fusion/functional/generation.hpp>
 
 #endif
-

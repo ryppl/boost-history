@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -10,6 +10,7 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
+#include <boost/fusion/sequence/io/out.hpp>
 
 #include <boost/fusion/container/vector/vector20.hpp>
 #include <boost/fusion/container/vector/vector30.hpp>
@@ -30,7 +31,8 @@ main()
 {
     using namespace boost::fusion;
     using namespace boost;
-    using namespace std;
+    using std::cout;
+    using std::endl;
 
     {
         vector0 vec;
@@ -70,7 +72,7 @@ main()
 
     {
         vector1<int> t1(123L); // try conversion from long to int
-        vector1<double> t2(t1); // try copy
+        vector1<double> t2(sequence_assign(t1)); // try copy
         (void)t2;
     }
 
@@ -96,7 +98,7 @@ main()
 
     {
         vector2<int, int> t1(123, 456);
-        vector2<double, float> t2(t1);
+        vector2<double, float> t2(sequence_assign(t1));
         (void)t2;
     }
 
@@ -172,7 +174,9 @@ main()
         cout << "vector20 of int: " << sizeof(vec) << endl;
     }
 
-    {
+    //TODO: Due to limitations in Boost.MPL vector only up to
+    //BOOST_MPL_LIMIT_VECTOR_SIZE
+    /*{
         typedef vector30<
             int, int, int, int, int, int, int, int, int, int
           , int, int, int, int, int, int, int, int, int, int
@@ -203,15 +207,17 @@ main()
 
         type vec; // compile check only
         cout << "vector50 of int: " << sizeof(vec) << endl;
-    }
-    
+    }*/
+
     {
         // testing copy and assign from a view
         vector0 empty;
-        fusion::vector2<int, long> v(fusion::push_back(fusion::push_back(empty, 123), 456));
+        fusion::vector2<int, long> v(sequence_assign(fusion::push_back(fusion::push_back(empty, 123), 456)));
+        cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
         v = fusion::push_back(fusion::push_back(empty, 123), 456); // test assign
+        cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
     }
@@ -219,10 +225,12 @@ main()
     {
         // testing copy and assign from a vector_c
         mpl::vector_c<int, 123, 456> vec_c;
-        fusion::vector2<int, long> v(vec_c);
+        fusion::vector2<int, long> v(sequence_assign(vec_c));
+        cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
         v = mpl::vector_c<int, 123, 456>(); // test assign
+        cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
     }

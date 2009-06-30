@@ -149,7 +149,7 @@ To understand how `value_of_impl` is used by the library we will look at the imp
 
     template <typename Iterator>
     struct __value_of__
-        : extension::value_of_impl<typename detail::tag_of<Iterator>::type>::
+        : extension::value_of_impl<typename traits::tag_of<Iterator>::type>::
             template apply<Iterator>
     {};
 
@@ -202,7 +202,7 @@ To see how `deref_impl` is used, lets have a look at the implementation of __der
     {
         template <typename Iterator>
         struct __deref__
-            : extension::deref_impl<typename detail::tag_of<Iterator>::type>::
+            : extension::deref_impl<typename traits::tag_of<Iterator>::type>::
                 template apply<Iterator>
         {};
     }

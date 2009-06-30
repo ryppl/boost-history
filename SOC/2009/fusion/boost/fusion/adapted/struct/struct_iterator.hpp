@@ -5,14 +5,16 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_STRUCT_ITERATOR_APRIL_2_2007_1008AM)
-#define FUSION_STRUCT_ITERATOR_APRIL_2_2007_1008AM
 
+#ifndef BOOST_FUSION_ADAPTED_STRUCT_STRUCT_ITERATOR_HPP
+#define BOOST_FUSION_ADAPTED_STRUCT_STRUCT_ITERATOR_HPP
+
+#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/adapted/struct/extension.hpp>
+
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
@@ -27,8 +29,7 @@ namespace boost { namespace fusion
     struct struct_iterator
         : iterator_facade<struct_iterator<Struct, N_>, random_access_traversal_tag>
     {
-        BOOST_MPL_ASSERT_RELATION(N_, >=, 0);
-        BOOST_MPL_ASSERT_RELATION(N_, <=, extension::struct_size<Struct>::value);
+        BOOST_FUSION_INDEX_CHECK(N,extension::struct_size<Struct>::value);
 
         typedef mpl::int_<N_> index;
         typedef Struct struct_type;
@@ -99,5 +100,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

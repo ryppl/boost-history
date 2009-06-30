@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_STD_PAIR_24122005_1744)
-#define BOOST_FUSION_STD_PAIR_24122005_1744
+
+#ifndef BOOST_FUSION_ADAPTED_STD_PAIR_HPP
+#define BOOST_FUSION_ADAPTED_STD_PAIR_HPP
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/adapted/struct.hpp>

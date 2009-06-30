@@ -2,26 +2,31 @@
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CONS_07172005_0843)
-#define FUSION_CONS_07172005_0843
 
-#include <boost/fusion/support/detail/access.hpp>
+#ifndef BOOST_FUSION_CONTAINER_LIST_CONS_HPP
+#define BOOST_FUSION_CONTAINER_LIST_CONS_HPP
+
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assign_tags.hpp>
+#include <boost/fusion/support/sequence_assign.hpp>
+
 #include <boost/fusion/container/list/cons_iterator.hpp>
-#include <boost/fusion/container/list/detail/begin_impl.hpp>
-#include <boost/fusion/container/list/detail/end_impl.hpp>
-#include <boost/fusion/container/list/detail/at_impl.hpp>
-#include <boost/fusion/container/list/detail/value_at_impl.hpp>
-#include <boost/fusion/container/list/detail/empty_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/begin_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/end_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/at_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/value_at_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/empty_impl.hpp>
+
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
@@ -33,7 +38,8 @@ namespace boost { namespace fusion
     struct forward_traversal_tag;
     struct fusion_sequence_tag;
 
-    struct nil : sequence_base<nil>
+    struct nil
+      : sequence_base<nil>
     {
         typedef mpl::int_<0> size;
         typedef cons_tag fusion_tag;
@@ -43,14 +49,41 @@ namespace boost { namespace fusion
         typedef void_ car_type;
         typedef void_ cdr_type;
 
-        nil() {}
-
-        template <typename Iterator>
-        nil(Iterator const& iter, mpl::true_ /*this_is_an_iterator*/)
+        nil()
         {}
 
-        template <typename Iterator>
-        void assign_from_iter(Iterator const& iter)
+        nil(const nil&)
+        {
+        }
+
+        template<typename Sequence>
+        nil(detail::sequence_assign_type<Sequence> const volatile&)
+        {
+            //TODO cschmidt: assert!
+        }
+
+        template<typename Sequence>
+        nil(detail::sequence_assign_type<Sequence> const volatile&&)
+        {
+            //TODO cschmidt: assert!
+        }
+
+        template<typename Iterator>
+        nil(detail::assign_by_deref,Iterator const&)
+        {
+        }
+
+        template<typename Sequence>
+        nil&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Sequence))
+        {
+            //TODO cschmidt: assert!
+            return *this;
+        }
+
+        template<typename Iterator>
+        void
+        assign(Iterator const&)
         {
         }
     };
@@ -67,71 +100,94 @@ namespace boost { namespace fusion
         typedef Cdr cdr_type;
 
         cons()
-            : car(), cdr() {}
+          : car()
+          , cdr()
+        {}
 
+        template<typename Cons>
+        cons(BOOST_FUSION_R_ELSE_CLREF(Cons) cons_,
+               typename enable_if<is_convertible<
+                   typename detail::remove_reference<Cons>::type*
+                 , cons const volatile*> >::type* =NULL)
+          //cschmidt: iterators so we do not have to deal with the cv-ness
+          //of cons_.car/cons_.cdr explicitly
+          : car(fusion::front(BOOST_FUSION_FORWARD(Cons,cons_)))
+          , cdr(detail::assign_by_deref(),
+                  fusion::next(
+                          fusion::begin(BOOST_FUSION_FORWARD(Cons,cons_))))
+        {
+        }
+
+        template<typename SequenceAssign>
+        cons(BOOST_FUSION_R_ELSE_CLREF(SequenceAssign) seq,
+             typename enable_if<
+                 is_sequence_assign<SequenceAssign> >::type* =NULL)
+          : car(fusion::front(seq.get()))
+          , cdr(detail::assign_by_deref(),
+                  fusion::next(fusion::begin(seq.get())))
+        {
+        }
+
+        //cschmidt: rvalue ref if possible, so this does not collide with
+        //cons(OtherCar&&,OtherCdr&&)
+        template<typename Iterator>
+        cons(detail::assign_by_deref,
+             BOOST_FUSION_R_ELSE_CLREF(Iterator) iterator)
+          : car(fusion::deref(iterator))
+          , cdr(detail::assign_by_deref(),fusion::next(iterator))
+        {
+        }
+
+        /*
+        template<typename Sequence>
+        vector(typename enable_if_c<sizeof...(Elements)!=1,
+                                BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type seq)
+          : base(detail::assign_by_deref(),
+                 fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)))
+        {
+        }
+        */
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
         explicit cons(typename detail::call_param<Car>::type car)
-            : car(car), cdr() {}
+          : car(car), cdr()
+        {}
 
-        cons(
-            typename detail::call_param<Car>::type car
-          , typename detail::call_param<Cdr>::type cdr)
-            : car(car), cdr(cdr) {}
-        
-        template <typename Car2, typename Cdr2>
-        cons(cons<Car2, Cdr2> const& rhs)
-            : car(rhs.car), cdr(rhs.cdr) {}
+        cons(typename detail::call_param<Car>::type car
+           , typename detail::call_param<Cdr>::type cdr)
+          : car(car), cdr(cdr)
+        {}
+#else
+        template<typename OtherCar>
+        explicit cons(OtherCar&& other_car,
+                typename disable_if<is_convertible<
+                    typename detail::remove_reference<OtherCar>::type*
+                  , cons const volatile*> >::type* =NULL)
+          : car(std::forward<OtherCar>(other_car))
+          , cdr()
+        {}
 
-        cons(cons const& rhs)
-            : car(rhs.car), cdr(rhs.cdr) {}
+        template<typename OtherCar,typename OtherCdr>
+        cons(OtherCar&& other_car,OtherCdr&& other_cdr)
+          : car(std::forward<OtherCar>(other_car))
+          , cdr(std::forward<OtherCdr>(other_cdr))
+        {}
+#endif
 
-        template <typename Sequence>
-        cons(
-            Sequence const& seq
-          , typename disable_if<
-                mpl::or_<
-                    is_convertible<Sequence, cons> // use copy ctor instead
-                  , is_convertible<Sequence, Car>  // use copy to car instead
-                > 
-            >::type* dummy = 0
-        )
-            : car(*fusion::begin(seq))
-            , cdr(fusion::next(fusion::begin(seq)), mpl::true_()) {}
-
-        template <typename Iterator>
-        cons(Iterator const& iter, mpl::true_ /*this_is_an_iterator*/)
-            : car(*iter)
-            , cdr(fusion::next(iter), mpl::true_()) {}
-
-        template <typename Car2, typename Cdr2>
-        cons& operator=(cons<Car2, Cdr2> const& rhs)
+        template<typename Sequence>
+        cons&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Sequence) sequence)
         {
-            car = rhs.car;
-            cdr = rhs.cdr;
+            assign(fusion::begin(BOOST_FUSION_FORWARD(Sequence,sequence)));
             return *this;
         }
 
-        cons& operator=(cons const& rhs)
+        template<typename Iterator>
+        void
+        assign(Iterator const& iterator)
         {
-            car = rhs.car;
-            cdr = rhs.cdr;
-            return *this;
-        }
-
-        template <typename Sequence>
-        typename disable_if<is_convertible<Sequence, Car>, cons&>::type
-        operator=(Sequence const& seq)
-        {
-            typedef typename result_of::begin<Sequence const>::type Iterator;
-            Iterator iter = fusion::begin(seq);
-            this->assign_from_iter(iter);
-            return *this;
-        }
-
-        template <typename Iterator>
-        void assign_from_iter(Iterator const& iter)
-        {
-            car = *iter;
-            cdr.assign_from_iter(fusion::next(iter));
+            car=fusion::deref(iterator);
+            cdr.assign(fusion::next(iterator));
         }
 
         car_type car;
@@ -140,4 +196,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

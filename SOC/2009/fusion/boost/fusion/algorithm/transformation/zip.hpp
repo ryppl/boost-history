@@ -5,9 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#ifndef BOOST_PP_IS_ITERATING
-#if !defined(FUSION_ZIP_HPP_20060125_2058)
-#define FUSION_ZIP_HPP_20060125_2058
+
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_ZIP_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_ZIP_HPP
 
 #include <boost/fusion/view/zip_view.hpp>
 #include <boost/fusion/adapted/mpl.hpp>

@@ -4,105 +4,143 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_ERASE_07232005_0534)
-#define FUSION_ERASE_07232005_0534
+
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_HPP
 
 #include <boost/fusion/iterator/equal_to.hpp>
-#include <boost/fusion/iterator/mpl/convert_iterator.hpp>
-#include <boost/fusion/container/vector/vector10.hpp>
 #include <boost/fusion/view/joint_view/joint_view.hpp>
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
-#include <boost/fusion/adapted/mpl/mpl_iterator.hpp>
+
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace fusion
 {
-    namespace result_of
+    namespace detail
     {
-        template <typename Sequence, typename First>
-        struct compute_erase_last // put this in detail!!!
+        template <typename Seq, typename FirstRef>
+        struct compute_erase_last
         {
-            typedef typename result_of::end<Sequence>::type seq_last_type;
-            typedef typename convert_iterator<First>::type first_type;
+            typedef typename result_of::end<Seq>::type last_type;
+
             typedef typename
-                mpl::if_<
-                    result_of::equal_to<first_type, seq_last_type>
-                  , first_type
-                  , typename result_of::next<first_type>::type
+                mpl::eval_if<
+                    result_of::equal_to<FirstRef, last_type>
+                  , mpl::identity<FirstRef>
+                  , result_of::next<FirstRef>
                 >::type
             type;
 
             static type
-            call(First const& first, mpl::false_)
+            call(FirstRef first, mpl::false_)
             {
-                return fusion::next(convert_iterator<First>::call(first));
+                return fusion::next(first);
             }
 
             static type
-            call(First const& first, mpl::true_)
+            call(FirstRef first, mpl::true_)
             {
-                return convert_iterator<First>::call(first);
+                return first;
             }
 
             static type
-            call(First const& first)
+            call(FirstRef first)
             {
-                return call(first, result_of::equal_to<first_type, seq_last_type>());
+                return call(first,
+                        result_of::equal_to<FirstRef, last_type>());
             }
         };
+    }
 
+    namespace result_of
+    {
         template <
-            typename Sequence
+            typename Seq
           , typename First
-          , typename Last = typename compute_erase_last<Sequence, First>::type>
+          , typename Last =
+                typename detail::compute_erase_last<
+                    Seq
+                  , typename detail::add_lref<First>::type
+                >::type
+        >
         struct erase
         {
-            typedef typename result_of::begin<Sequence>::type seq_first_type;
-            typedef typename result_of::end<Sequence>::type seq_last_type;
-            BOOST_STATIC_ASSERT((!result_of::equal_to<seq_first_type, seq_last_type>::value));
+            typedef typename result_of::begin<Seq>::type seq_first_type;
+            typedef typename result_of::end<Seq>::type seq_last_type;
 
-            typedef typename convert_iterator<First>::type first_type;
-            typedef typename convert_iterator<Last>::type last_type;
-            typedef iterator_range<seq_first_type, first_type> left_type;
-            typedef iterator_range<last_type, seq_last_type> right_type;
-            typedef joint_view<left_type, right_type> type;
+            //TODO cschmidt: !
+            //BOOST_FUSION_STATIC_ASSERT(
+            //     (!result_of::equal_to<seq_first_type, seq_last_type>::value),
+            //     "sequence empty");
+
+            typedef
+                iterator_range<
+                    seq_first_type
+                  , typename detail::identity<First>::type
+                >
+            left_type;
+            typedef
+                iterator_range<
+                    typename detail::identity<Last>::type
+                  , seq_last_type
+                >
+            right_type;
+
+            typedef
+                joint_view<left_type, right_type>
+            type;
         };
     }
 
-    template <typename Sequence, typename First>
-    typename result_of::erase<Sequence const, First>::type
-    erase(Sequence const& seq, First const& first)
+    template <typename Seq, typename First, typename Last>
+    typename result_of::erase<
+        BOOST_FUSION_R_ELSE_LREF(Seq)
+      , First const&
+      , Last const&
+    >::type
+    erase(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+            First const& first,
+            Last const& last)
     {
-        typedef result_of::erase<Sequence const, First> result_of;
+        typedef
+            result_of::erase<
+                BOOST_FUSION_R_ELSE_LREF(Seq)
+              , First const&
+              , Last const&
+            >
+        result_of;
         typedef typename result_of::left_type left_type;
         typedef typename result_of::right_type right_type;
         typedef typename result_of::type result_type;
 
-        left_type left(
-            fusion::begin(seq)
-          , convert_iterator<First>::call(first));
-        right_type right(
-            fusion::result_of::compute_erase_last<Sequence const, First>::call(first)
-          , fusion::end(seq));
-        return result_type(left, right);
+        return result_type(
+                left_type(
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
+                  , first
+                )
+              , right_type(
+                    last
+                  , fusion::end(BOOST_FUSION_FORWARD(Seq,seq))
+                ));
     }
 
-    template <typename Sequence, typename First, typename Last>
-    typename result_of::erase<Sequence const, First, Last>::type
-    erase(Sequence const& seq, First const& first, Last const& last)
+    template <typename Seq, typename First>
+    typename result_of::erase<BOOST_FUSION_R_ELSE_LREF(Seq), First const&>::type
+    erase(BOOST_FUSION_R_ELSE_LREF(Seq) seq, First const& first)
     {
-        typedef result_of::erase<Sequence const, First, Last> result_of;
-        typedef typename result_of::left_type left_type;
-        typedef typename result_of::right_type right_type;
-        typedef typename result_of::type result_type;
-
-        left_type left(fusion::begin(seq), first);
-        right_type right(last, fusion::end(seq));
-        return result_type(left, right);
+        return erase(
+                BOOST_FUSION_FORWARD(Seq,seq)
+              , first
+              , detail::compute_erase_last<
+                    BOOST_FUSION_R_ELSE_LREF(Seq)
+                  , First const&
+                >::call(first));
     }
 }}
 
 #endif
-

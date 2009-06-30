@@ -2,13 +2,14 @@
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/static_assert.hpp>
+
 #include <iostream>
 
 #if !defined(FUSION_AT)
@@ -36,7 +37,7 @@ test()
     double d = 2.7;
     A a;
     FUSION_SEQUENCE<int, double&, const A&, int> t(1, d, a, 2);
-    const FUSION_SEQUENCE<int, double&, const A, int> ct(t);
+    const FUSION_SEQUENCE<int, double&, const A, int> ct(sequence_assign(t));
 
     int i  = FUSION_AT<0>(t);
     int i2 = FUSION_AT<3>(t);
@@ -66,7 +67,7 @@ test()
 
     ++FUSION_AT<0>(t);
     BOOST_TEST(FUSION_AT<0>(t) == 6);
-    
+
     typedef FUSION_SEQUENCE<int, float> seq_type;
 
     BOOST_STATIC_ASSERT(!(

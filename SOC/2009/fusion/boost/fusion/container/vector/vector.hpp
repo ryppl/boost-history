@@ -4,10 +4,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VECTOR_07072005_1244)
-#define FUSION_VECTOR_07072005_1244
+
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_VECTOR_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_VECTOR_HPP
 
 #include <boost/fusion/container/vector/vector_fwd.hpp>
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#include <boost/fusion/container/vector/vector_iterator.hpp>
 #include <boost/fusion/container/vector/detail/vector_n_chooser.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/mpl/at.hpp>
@@ -147,5 +150,24 @@ namespace boost { namespace fusion
         vector_n vec;
     };
 }}
+#else
+#   include <boost/fusion/support/ref.hpp>
+#   include <boost/fusion/container/vector/vector_iterator.hpp>
+
+#   include <boost/fusion/container/vector/detail/at_impl.hpp>
+#   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
+#   include <boost/fusion/container/vector/detail/begin_impl.hpp>
+#   include <boost/fusion/container/vector/detail/end_impl.hpp>
+
+namespace boost { namespace fusion {
+
+struct vector_tag;
+struct fusion_sequence_tag;
+struct random_access_traversal_tag;
+
+}}
+
+#   include <boost/fusion/container/vector/detail/variadic_templates/vector_impl.hpp>
+#endif
 
 #endif

@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#ifndef BOOST_PP_IS_ITERATING
-#if !defined(FUSION_TUPLE_EXPAND_10032005_0815)
+
+#ifndef BOOST_FUSION_TUPLE_DETAIL_TUPLE_EXPAND_HPP
+#define BOOST_FUSION_TUPLE_DETAIL_TUPLE_EXPAND_HPP
 #define FUSION_TUPLE_EXPAND_10032005_0815
 
 #include <boost/preprocessor/iterate.hpp>
@@ -47,4 +48,3 @@
 
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)
-

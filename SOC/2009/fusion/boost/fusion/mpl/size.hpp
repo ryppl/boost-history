@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_SIZE_10022005_1617)
-#define FUSION_SIZE_10022005_1617
+
+#ifndef BOOST_FUSION_MPL_SIZE_HPP
+#define BOOST_FUSION_MPL_SIZE_HPP
 
 #include <boost/mpl/size.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
@@ -19,7 +20,9 @@ namespace boost { namespace mpl
     struct size_impl<fusion::fusion_sequence_tag>
     {
         template <typename Sequence>
-        struct apply : fusion::result_of::size<Sequence> {};
+        struct apply
+          : fusion::result_of::size<Sequence>
+        {};
     };
 }}
 

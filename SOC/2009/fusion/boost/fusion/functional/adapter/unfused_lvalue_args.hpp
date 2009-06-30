@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_LVALUE_ARGS_HPP_INCLUDED)
-#if !defined(BOOST_PP_IS_ITERATING)
+#ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_LVALUE_ARGS_HPP
+#define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_LVALUE_ARGS_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
@@ -133,4 +133,3 @@ namespace boost
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)
 #endif
-

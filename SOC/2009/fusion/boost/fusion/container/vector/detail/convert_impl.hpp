@@ -1,17 +1,18 @@
-/*=============================================================================
-    Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2005-2006 Dan Marsden
+// Copyright Christopher Schmidt 2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-==============================================================================*/
-#if !defined(FUSION_CONVERT_IMPL_09222005_1104)
-#define FUSION_CONVERT_IMPL_09222005_1104
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_CONVERT_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_CONVERT_IMPL_HPP
 
-#include <boost/fusion/container/vector/detail/as_vector.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/sequence/intrinsic/begin.hpp>
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#   include <boost/fusion/container/vector/detail/pp/as_vector.hpp>
+#else
+#   include <boost/fusion/container/vector/detail/variadic_templates/as_vector_impl.hpp>
+#endif
 
 namespace boost { namespace fusion
 {
@@ -28,15 +29,28 @@ namespace boost { namespace fusion
             template <typename Sequence>
             struct apply
             {
-                typedef typename detail::as_vector<result_of::size<Sequence>::value> gen;
-                typedef typename gen::
-                    template apply<typename result_of::begin<Sequence>::type>::type
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+                typedef typename
+                    detail::as_vector<result_of::size<Sequence>::value>
+                gen;
+                typedef typename gen::template apply<
+                    typename result_of::begin<Sequence>::type>::type
                 type;
 
-                static type call(Sequence& seq)
+                static type call(Sequence seq)
                 {
-                    return gen::call(fusion::begin(seq));
+                    return gen::call(
+                            fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)));
                 }
+#else
+                typedef typename detail::as_vector_impl<Sequence> gen;
+                typedef typename gen::apply::type type;
+
+                static type call(Sequence seq)
+                {
+                    return gen::call(seq);
+                }
+#endif
             };
         };
     }

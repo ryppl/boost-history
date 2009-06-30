@@ -1,17 +1,20 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_BEGIN_IMPL_07202005_0849)
-#define FUSION_BEGIN_IMPL_07202005_0849
+
+#ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_BEGIN_IMPL_HPP
+#define BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_BEGIN_IMPL_HPP
+
+#include <boost/fusion/sequence/intrinsic/end.hpp>
 
 namespace boost { namespace fusion
 {
     struct reverse_view_tag;
 
-    template <typename Iterator>
+    template <typename First>
     struct reverse_view_iterator;
 
     namespace extension
@@ -22,15 +25,23 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<reverse_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef reverse_view_iterator<typename Sequence::last_type> type;
-    
+                typedef
+                    reverse_view_iterator<
+                        typename result_of::end<
+                            typename detail::remove_reference<
+                                SeqRef
+                            >::type::seq_type
+                        >::type
+                    >
+                type;
+
                 static type
-                call(Sequence const& s)
+                call(SeqRef s)
                 {
-                    return type(s.last());
+                    return type(fusion::end(s.seq));
                 }
             };
         };
@@ -38,5 +49,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

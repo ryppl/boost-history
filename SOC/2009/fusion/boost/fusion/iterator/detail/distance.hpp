@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_DISTANCE_09172005_0730)
-#define FUSION_DISTANCE_09172005_0730
+
+#ifndef BOOST_FUSION_ITERATOR_DETAIL_DISTANCE_HPP
+#define BOOST_FUSION_ITERATOR_DETAIL_DISTANCE_HPP
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/if.hpp>
@@ -26,37 +27,24 @@ namespace boost { namespace fusion { namespace distance_detail
     template <typename First, typename Last>
     struct next_distance
     {
-        typedef typename 
+        typedef typename
             mpl::next<
                 typename linear_distance<
                     typename result_of::next<First>::type
                   , Last
                 >::type
-            >::type 
+            >::type
         type;
     };
 
     template <typename First, typename Last>
     struct linear_distance
-        : mpl::eval_if<
+      : mpl::eval_if<
             result_of::equal_to<First, Last>
           , mpl::identity<mpl::int_<0> >
           , next_distance<First, Last>
         >::type
     {
-        typedef typename
-            mpl::eval_if<
-                result_of::equal_to<First, Last>
-              , mpl::identity<mpl::int_<0> >
-              , next_distance<First, Last>
-            >::type
-        type;
-
-        static type
-        call(First const&, Last const&)
-        {
-            return type();
-        }
     };
 
 }}}

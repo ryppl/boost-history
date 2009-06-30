@@ -6,8 +6,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_IN_05052005_0121)
-#define FUSION_IN_05052005_0121
+
+#ifndef BOOST_FUSION_SEQUENCE_IO_DETAIL_IN_HPP
+#define BOOST_FUSION_SEQUENCE_IO_DETAIL_IN_HPP
 
 #include <istream>
 #include <boost/fusion/sequence/io/detail/manip.hpp>
@@ -58,7 +59,7 @@ namespace boost { namespace fusion { namespace detail
             >
             is_last;
 
-            is >> *first;
+            is >> fusion::deref(first);
             delimiter_in<tuple_delimiter_tag>::read(is, " ", is_last);
             call(is, fusion::next(first), last, is_last);
         }

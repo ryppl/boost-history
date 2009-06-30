@@ -2,20 +2,22 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_ARRAY_ITERATOR_26122005_2250)
-#define BOOST_FUSION_ARRAY_ITERATOR_26122005_2250
+
+#ifndef BOOST_FUSION_ADAPTED_ARRAY_ARRAY_ITERATOR_HPP
+#define BOOST_FUSION_ADAPTED_ARRAY_ARRAY_ITERATOR_HPP
+
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/iterator/iterator_facade.hpp>
 
 #include <cstddef>
 #include <boost/config.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/minus.hpp>
 #include <boost/type_traits/is_const.hpp>
-#include <boost/fusion/iterator/iterator_facade.hpp>
 
 namespace boost { namespace fusion
 {
@@ -25,8 +27,7 @@ namespace boost { namespace fusion
     struct array_iterator
         : iterator_facade<array_iterator<Array, Pos>, random_access_traversal_tag>
     {
-        BOOST_MPL_ASSERT_RELATION(Pos, >=, 0);
-        BOOST_MPL_ASSERT_RELATION(Pos, <=, Array::static_size);
+        BOOST_FUSION_INDEX_CHECK(Pos, Array::static_size+1);
 
         typedef mpl::int_<Pos> index;
         typedef Array array_type;
@@ -47,12 +48,12 @@ namespace boost { namespace fusion
         struct deref
         {
             typedef typename Iterator::array_type array_type;
-            typedef typename 
+            typedef typename
                 mpl::if_<
                     is_const<array_type>
                   , typename array_type::const_reference
                   , typename array_type::reference
-                >::type 
+                >::type
             type;
 
             static type
@@ -88,7 +89,7 @@ namespace boost { namespace fusion
             typedef typename
                 mpl::minus<
                     typename I2::index, typename I1::index
-                >::type 
+                >::type
             type;
 
             static type

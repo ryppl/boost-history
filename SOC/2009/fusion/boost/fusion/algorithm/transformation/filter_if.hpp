@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_FILTER_IF_07172005_0818)
-#define FUSION_FILTER_IF_07172005_0818
+
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_IF_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_IF_HPP
 
 #include <boost/fusion/view/filter_view/filter_view.hpp>
 
@@ -13,20 +14,20 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename Pred>
+        template <typename Seq, typename Pred>
         struct filter_if
         {
-            typedef filter_view<Sequence, Pred> type;
+            typedef filter_view<Seq, Pred> type;
         };
     }
     
-    template <typename Pred, typename Sequence>
-    inline typename result_of::filter_if<Sequence const, Pred>::type
-    filter_if(Sequence const& seq)
+    template <typename Pred, typename Seq>
+    inline typename
+        result_of::filter_if<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>::type
+    filter_if(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return filter_view<Sequence const, Pred>(seq);
+        return filter_view<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>(seq);
     }
 }}
 
 #endif
-

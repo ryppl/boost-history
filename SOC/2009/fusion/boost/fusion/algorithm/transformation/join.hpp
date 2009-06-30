@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_JOIN_200601222109)
-#define FUSION_JOIN_200601222109
+
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_JOIN_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_JOIN_HPP
 
 #include <boost/fusion/view/joint_view.hpp>
 
@@ -14,19 +15,32 @@ namespace boost { namespace fusion {
 
     namespace result_of
     {
-        template<typename LhSequence, typename RhSequence>
+        template<typename Lhs, typename Rhs>
         struct join
         {
-            typedef joint_view<LhSequence, RhSequence> type;
+            typedef joint_view<Lhs, Rhs> type;
         };
     }
 
-    template<typename LhSequence, typename RhSequence>
-    inline typename result_of::join<LhSequence const, RhSequence const>::type
-    join(LhSequence const& lhs, RhSequence const& rhs)
+    template<typename Lhs, typename Rhs>
+    inline typename
+        result_of::join<
+            BOOST_FUSION_R_ELSE_LREF(Lhs)
+          , BOOST_FUSION_R_ELSE_LREF(Rhs)
+        >::type
+    join(BOOST_FUSION_R_ELSE_LREF(Lhs) lhs,
+            BOOST_FUSION_R_ELSE_LREF(Rhs) rhs)
     {
-        return typename result_of::join<LhSequence const, RhSequence const>::type(
-            lhs, rhs);
+        typedef typename
+            result_of::join<
+                BOOST_FUSION_R_ELSE_LREF(Lhs)
+              , BOOST_FUSION_R_ELSE_LREF(Rhs)
+            >::type
+        type;
+
+        return type(
+                BOOST_FUSION_FORWARD(Lhs,lhs)
+              , BOOST_FUSION_FORWARD(Rhs,rhs));
     }
 }}
 

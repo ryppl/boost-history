@@ -4,14 +4,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CONVERT_09232005_1341)
-#define FUSION_CONVERT_09232005_1341
 
-#include <boost/fusion/container/set/detail/as_set.hpp>
-#include <boost/fusion/container/set/detail/convert_impl.hpp>
+#ifndef BOOST_FUSION_CONTAINER_SET_CONVERT_HPP
+#define BOOST_FUSION_CONTAINER_SET_CONVERT_HPP
+
 #include <boost/fusion/container/set/set.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/container/set/detail/convert_impl.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
 {
@@ -20,28 +19,26 @@ namespace boost { namespace fusion
         template <typename Sequence>
         struct as_set
         {
-            typedef typename detail::as_set<result_of::size<Sequence>::value> gen;
-            typedef typename gen::
-                template apply<typename result_of::begin<Sequence>::type>::type
-            type;
+            typedef typename
+                extension::convert_impl<set_tag>::
+                    template apply<typename detail::add_lref<Sequence>::type>
+            gen;
+
+            typedef typename gen::apply::type type;
         };
     }
 
     template <typename Sequence>
-    inline typename result_of::as_set<Sequence>::type
-    as_set(Sequence& seq)
+    inline typename result_of::as_set<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
+    as_set(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
     {
-        typedef typename result_of::as_set<Sequence>::gen gen;
-        return gen::call(fusion::begin(seq));
+        typedef typename
+            result_of::as_set<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::gen
+        gen;
+
+        return gen::call(BOOST_FUSION_FORWARD(Sequence,seq));
     }
 
-    template <typename Sequence>
-    inline typename result_of::as_set<Sequence const>::type
-    as_set(Sequence const& seq)
-    {
-        typedef typename result_of::as_set<Sequence const>::gen gen;
-        return gen::call(fusion::begin(seq));
-    }
 }}
 
 #endif

@@ -2,23 +2,21 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_AT_KEY_20060304_1755)
-#define BOOST_FUSION_AT_KEY_20060304_1755
+
+#ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_AT_KEY_HPP
+#define BOOST_FUSION_SEQUENCE_INTRINSIC_AT_KEY_HPP
+
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 #include <boost/type_traits/is_const.hpp>
-#include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/detail/access.hpp>
-
 namespace boost { namespace fusion
 {
     // Special tags:
     struct sequence_facade_tag;
-    struct array_tag; // boost::array tag
-    struct mpl_sequence_tag; // mpl sequence tag
-    struct std_pair_tag; // std::pair tag
 
     namespace extension
     {
@@ -33,45 +31,31 @@ namespace boost { namespace fusion
         struct at_key_impl<sequence_facade_tag>
         {
             template <typename Sequence, typename Key>
-            struct apply : Sequence::template at_key<Sequence, Key> {};
+            struct apply :
+                detail::remove_reference<Sequence>::type::template at_key<Sequence, Key>
+            {};
         };
-
-        template <>
-        struct at_key_impl<array_tag>;
-
-        template <>
-        struct at_key_impl<mpl_sequence_tag>;
-
-        template <>
-        struct at_key_impl<std_pair_tag>;
     }
 
     namespace result_of
     {
         template <typename Sequence, typename Key>
         struct at_key
-            : extension::at_key_impl<typename detail::tag_of<Sequence>::type>::
-                template apply<Sequence, Key>
+            : extension::at_key_impl<typename traits::tag_of<Sequence>::type>::
+                template apply<typename detail::add_lref<Sequence>::type, Key>
         {};
     }
 
     template <typename Key, typename Sequence>
-    inline typename 
-        lazy_disable_if<
-            is_const<Sequence>
-          , result_of::at_key<Sequence, Key>
-        >::type
-    at_key(Sequence& seq)
+    inline typename result_of::at_key<
+        BOOST_FUSION_R_ELSE_CLREF(Sequence)
+      , Key>::type
+    at_key(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
     {
-        return result_of::at_key<Sequence, Key>::call(seq);
+        return result_of::at_key<BOOST_FUSION_R_ELSE_CLREF(Sequence), Key>::call(
+                BOOST_FUSION_FORWARD(Sequence,seq));
     }
 
-    template <typename Key, typename Sequence>
-    inline typename result_of::at_key<Sequence const, Key>::type
-    at_key(Sequence const& seq)
-    {
-        return result_of::at_key<Sequence const, Key>::call(seq);
-    }
 }}
 
 #endif

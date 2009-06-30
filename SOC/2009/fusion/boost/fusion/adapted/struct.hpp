@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_STRUCT_24122005_1744)
-#define BOOST_FUSION_STRUCT_24122005_1744
+
+#ifndef BOOST_FUSION_ADAPTED_STRUCT_HPP
+#define BOOST_FUSION_ADAPTED_STRUCT_HPP
 
 #include <boost/fusion/adapted/struct/extension.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>

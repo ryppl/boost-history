@@ -27,8 +27,8 @@ struct test_seq_ctor
     typename deduce_sequence<Args>::type fsq_args;
 
     test_seq_ctor(Args const & args)
-        : fsq_args(args)
-    { }
+      : fsq_args(args)
+    {}
 };
 
 #define TEST_SAME_TYPE(a,b) BOOST_TEST(( is_same< a, b >::value ))

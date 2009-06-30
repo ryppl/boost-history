@@ -2,16 +2,16 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_ADVANCE_IMPL_20061024_2021)
-#define FUSION_ADVANCE_IMPL_20061024_2021
+
+#ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_ADVANCE_IMPL_HPP
+#define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_ADVANCE_IMPL_HPP
 
 #include <boost/fusion/view/zip_view/zip_view_iterator_fwd.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
-#include <boost/type_traits/remove_reference.hpp>
 
 namespace boost { namespace fusion {
 
@@ -28,13 +28,12 @@ namespace boost { namespace fusion {
             template<typename N1, typename It>
             struct result<poly_advance<N1>(It)>
             {
-                typedef typename remove_reference<It>::type it;
-                typedef typename result_of::advance<it,N>::type type;
+                typedef typename result_of::advance<It,N>::type type;
             };
 
             template<typename It>
-            typename result<poly_advance(It)>::type
-            operator()(const It& it) const
+            typename result_of::advance<It const&,N>::type
+            operator()(It const& it) const
             {
                 return fusion::advance<N>(it);
             }
@@ -49,17 +48,25 @@ namespace boost { namespace fusion {
         template<>
         struct advance_impl<zip_view_iterator_tag>
         {
-            template<typename It, typename N>
+            template<typename ItRef, typename N>
             struct apply
             {
-                typedef zip_view_iterator<
-                    typename result_of::transform<typename It::iterators, detail::poly_advance<N> >::type> type;
+                typedef
+                    zip_view_iterator<
+                        typename result_of::transform<
+                            typename detail::remove_reference<
+                                ItRef
+                            >::type::iterators
+                          , detail::poly_advance<N>
+                        >::type
+                    >
+                type;
 
                 static type
-                call(It const& it)
+                call(ItRef it)
                 {
-                    return type(
-                        fusion::transform(it.iterators_, detail::poly_advance<N>()));
+                    return type(fusion::transform(
+                            it.iterators_, detail::poly_advance<N>()));
                 }
             };
         };

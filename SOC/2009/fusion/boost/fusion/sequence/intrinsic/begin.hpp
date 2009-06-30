@@ -1,22 +1,20 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_BEGIN_04052005_1132)
-#define FUSION_BEGIN_04052005_1132
 
+#ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_BEGIN_HPP
+#define BOOST_FUSION_SEQUENCE_INTRINSIC_BEGIN_HPP
+
+#include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion
 {
     // Special tags:
     struct sequence_facade_tag; // iterator facade tag
-    struct boost_tuple_tag; // boost::tuples::tuple tag
-    struct array_tag; // boost::array tag
-    struct mpl_sequence_tag; // mpl sequence tag
-    struct std_pair_tag; // std::pair tag
 
     namespace extension
     {
@@ -31,44 +29,32 @@ namespace boost { namespace fusion
         struct begin_impl<sequence_facade_tag>
         {
             template <typename Sequence>
-            struct apply : Sequence::template begin<Sequence> {};
+            struct apply :
+                detail::remove_reference<Sequence>::type::template begin<Sequence>
+            {};
         };
-
-        template <>
-        struct begin_impl<boost_tuple_tag>;
-
-        template <>
-        struct begin_impl<array_tag>;
-
-        template <>
-        struct begin_impl<mpl_sequence_tag>;
-
-        template <>
-        struct begin_impl<std_pair_tag>;
     }
 
     namespace result_of
     {
         template <typename Sequence>
         struct begin
-            : extension::begin_impl<typename detail::tag_of<Sequence>::type>::
-                template apply<Sequence>
+            : extension::begin_impl<typename traits::tag_of<Sequence>::type>::
+                template apply<typename detail::add_lref<Sequence>::type>
         {};
     }
 
-    template <typename Sequence>
-    inline typename result_of::begin<Sequence>::type const
-    begin(Sequence& seq)
-    {
-        return result_of::begin<Sequence>::call(seq);
-    }
+    //TODO cschmidt: const retval?!
 
     template <typename Sequence>
-    inline typename result_of::begin<Sequence const>::type const
-    begin(Sequence const& seq)
+    inline typename
+        result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
+    begin(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
     {
-        return result_of::begin<Sequence const>::call(seq);
+        return result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::call(
+                BOOST_FUSION_FORWARD(Sequence,seq));
     }
+
 }}
 
 #endif

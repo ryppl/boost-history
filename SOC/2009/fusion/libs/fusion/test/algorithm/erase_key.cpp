@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -29,7 +29,7 @@ void test_set(Set const& set)
 {
     using namespace boost::fusion;
     std::cout << set << std::endl;
-    
+
     BOOST_STATIC_ASSERT(result_of::size<Set>::value == 3);
     BOOST_TEST((*find<int>(set) == 1));
     BOOST_TEST((*find<double>(set) == 1.5));
@@ -40,13 +40,13 @@ typedef boost::mpl::int_<1> _1;
 typedef boost::mpl::int_<2> _2;
 typedef boost::mpl::int_<3> _3;
 typedef boost::mpl::int_<4> _4;
- 
+
 template <typename Map>
 void test_map(Map const& map)
 {
     using namespace boost::fusion;
     std::cout << map << std::endl;
-    
+
     BOOST_STATIC_ASSERT(result_of::size<Map>::value == 3);
     BOOST_TEST(((*find<_1>(map)).second == 1));
     BOOST_TEST(((*find<_3>(map)).second == 1.5));

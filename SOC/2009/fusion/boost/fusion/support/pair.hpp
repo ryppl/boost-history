@@ -5,10 +5,11 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_PAIR_07222005_1203)
-#define FUSION_PAIR_07222005_1203
 
-#include <boost/fusion/support/detail/access.hpp>
+#ifndef BOOST_FUSION_SUPPORT_PAIR_HPP
+#define BOOST_FUSION_SUPPORT_PAIR_HPP
+
+#include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
@@ -18,14 +19,39 @@ namespace boost { namespace fusion
     struct pair
     {
         pair()
-            : second() {}
+          : second() {}
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
         pair(typename detail::call_param<Second>::type val)
-            : second(val) {}
+          : second(val) {}
+#elif defined(BOOST_NO_VARIADIC_TEMPLATES)
+        template<typename Arg>
+        pair(Arg&& arg)
+          : second(std::forward<Arg>(arg)) {}
+#else
+        template<typename Arg1,typename... Args>
+        pair(Arg1&& arg1, Args&&... args)
+          : second(std::forward<Arg1>(arg1),std::forward<Args>(args)...) {}
+#endif
 
         template <typename Second2>
         pair(pair<First, Second2> const& rhs)
-            : second(rhs.second) {}
+          : second(rhs.second) {}
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+        //TODO cschmidt: needed?
+        template <typename Second2>
+        pair(pair<First, Second2> const&& rhs)
+          : second(std::forward<const Second2>(rhs.second)) {}
+
+        template <typename Second2>
+        pair(pair<First, Second2>& rhs)
+          : second(rhs.second) {}
+
+        template <typename Second2>
+        pair(pair<First, Second2>&& rhs)
+          : second(std::forward<Second2>(rhs.second)) {}
+#endif
 
         template <typename Second2>
         pair& operator=(pair<First, Second2> const& rhs)
@@ -33,6 +59,15 @@ namespace boost { namespace fusion
             second = rhs.second;
             return *this;
         }
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+        template <typename Second2>
+        pair& operator=(pair<First, Second2>&& rhs)
+        {
+            second = std::forward<Second2>(rhs.second);
+            return *this;
+        }
+#endif
 
         typedef First first_type;
         typedef Second second_type;
@@ -62,10 +97,13 @@ namespace boost { namespace fusion
     }
 
     template <typename First, typename Second>
-    inline typename result_of::make_pair<First,Second>::type
-    make_pair(Second const& val)
+    inline typename
+        result_of::make_pair<First,BOOST_FUSION_R_ELSE_CLREF(Second)>::type
+    make_pair(BOOST_FUSION_R_ELSE_CLREF(Second) val)
     {
-        return pair<First, typename detail::as_fusion_element<Second>::type>(val);
+        return typename result_of::
+            make_pair<First,BOOST_FUSION_R_ELSE_CLREF(Second)>::type(
+                BOOST_FUSION_FORWARD(Second,val));
     }
 
     template <typename OStream, typename First, typename Second>
@@ -76,9 +114,10 @@ namespace boost { namespace fusion
         return os;
     }
 
+    //TODO cschmidt: rref?!
     template <typename IStream, typename First, typename Second>
     inline IStream&
-    operator>>(IStream& is, pair<First, Second>& p)
+    operator>>(IStream& is, pair<First, Second> p)
     {
         is >> p.second;
         return is;

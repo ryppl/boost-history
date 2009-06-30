@@ -5,14 +5,19 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_TAG_OF_FWD_31122005_1445)
-#define BOOST_FUSION_TAG_OF_FWD_31122005_1445
+
+#ifndef BOOST_FUSION_SUPPORT_TAG_OF_FWD_HPP
+#define BOOST_FUSION_SUPPORT_TAG_OF_FWD_HPP
+
+#include <boost/fusion/support/ref.hpp>
+
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost { namespace fusion
 {
     namespace traits
     {
-        template<typename T, typename Active = void>
+        template<typename Seq>
         struct tag_of;
     }
 }}

@@ -1,13 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_PRIOR_IMPL_05042005_1145)
-#define FUSION_PRIOR_IMPL_05042005_1145
 
-#include <boost/fusion/container/vector/vector_iterator.hpp>
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PRIOR_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PRIOR_IMPL_HPP
 
 namespace boost { namespace fusion
 {
@@ -24,16 +23,20 @@ namespace boost { namespace fusion
         struct prior_impl<vector_iterator_tag>
         {
             template <typename Iterator>
-            struct apply 
+            struct apply
             {
-                typedef typename Iterator::vector vector;
-                typedef typename Iterator::index index;
+                typedef typename
+                    detail::remove_reference<Iterator>::type::vector
+                vector;
+                typedef typename
+                    detail::remove_reference<Iterator>::type::index
+                index;
                 typedef vector_iterator<vector, index::value-1> type;
 
                 static type
-                call(Iterator const& i)
+                call(Iterator i)
                 {
-                    return type(i.vec);
+                    return type(BOOST_FUSION_FORWARD(vector,i.vec));
                 }
             };
         };

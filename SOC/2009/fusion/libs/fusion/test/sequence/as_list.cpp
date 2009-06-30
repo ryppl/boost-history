@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -26,8 +26,8 @@ main()
     std::cout << tuple_delimiter(", ");
 
     {
-        vector0 empty;
-        std::cout << as_list(make_vector(1, 1.23, "harru")) << std::endl; 
+        vector<> empty;
+        std::cout << as_list(make_vector(1, 1.23, "harru")) << std::endl;
         std::cout << as_list(push_back(empty, 999)) << std::endl;
 
         BOOST_TEST(as_list(make_vector(1, 1.23, "harru")) == make_vector(1, 1.23, std::string("harru")));
@@ -36,13 +36,13 @@ main()
 
     {
         std::cout << as_list(mpl::vector_c<int, 1, 2, 3, 4, 5>()) << std::endl;
-        BOOST_TEST((as_list(mpl::vector_c<int, 1, 2, 3, 4, 5>()) 
+        BOOST_TEST((as_list(mpl::vector_c<int, 1, 2, 3, 4, 5>())
             == mpl::vector_c<int, 1, 2, 3, 4, 5>()));
     }
 
     {
         // test conversion
-        list<int, std::string> l(make_vector(123, "harru"));
+        list<int, std::string> l(sequence_assign(make_vector(123, "harru")));
         BOOST_TEST(l == make_vector(123, "harru"));
         l = (make_vector(235, "hola")); // test assign
         BOOST_TEST(l == make_vector(235, "hola"));

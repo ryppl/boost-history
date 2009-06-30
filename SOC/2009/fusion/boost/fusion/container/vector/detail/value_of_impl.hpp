@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VALUE_OF_IMPL_05052005_1128)
-#define FUSION_VALUE_OF_IMPL_05052005_1128
+
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VALUE_OF_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VALUE_OF_IMPL_HPP
 
 #include <boost/mpl/at.hpp>
 
@@ -22,12 +23,19 @@ namespace boost { namespace fusion
         struct value_of_impl<vector_iterator_tag>
         {
             template <typename Iterator>
-            struct apply 
+            struct apply
             {
-                typedef typename Iterator::vector vector;
-                typedef typename Iterator::index index;
-                typedef typename mpl::at<
-                    typename vector::types, index>::type
+                typedef typename
+                    detail::remove_reference<Iterator>::type::vector
+                vector;
+                typedef typename
+                    detail::remove_reference<Iterator>::type::index
+                index;
+                typedef typename
+                    mpl::at<
+                        typename detail::remove_reference<vector>::type::types
+                      , index
+                    >::type
                 type;
             };
         };

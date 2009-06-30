@@ -4,15 +4,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CONVERT_09232005_1215)
-#define FUSION_CONVERT_09232005_1215
 
-#include <boost/fusion/container/list/cons.hpp>
-#include <boost/fusion/container/list/detail/build_cons.hpp>
-#include <boost/fusion/container/list/detail/convert_impl.hpp>
-#include <boost/fusion/sequence/intrinsic/empty.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/end.hpp>
+#ifndef BOOST_FUSION_CONTAINER_LIST_CONVERT_HPP
+#define BOOST_FUSION_CONTAINER_LIST_CONVERT_HPP
+
+#include <boost/fusion/container/list/list.hpp>
+#include <boost/fusion/container/list/detail/list/convert_impl.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
 {
@@ -22,35 +20,26 @@ namespace boost { namespace fusion
         struct as_list
         {
             typedef typename
-                detail::build_cons<
-                    typename result_of::begin<Sequence>::type
-                  , typename result_of::end<Sequence>::type
-                >
-            build_cons;
+                extension::convert_impl<list_tag>::
+                    template apply<typename detail::add_lref<Sequence>::type>
+            gen;
 
-            typedef typename build_cons::type type;
-
-            static type
-            call(Sequence& seq)
-            {
-                return build_cons::call(fusion::begin(seq), fusion::end(seq));
-            }
+            typedef typename gen::type type;
         };
     }
 
     template <typename Sequence>
-    inline typename result_of::as_list<Sequence>::type
-    as_list(Sequence& seq)
+    inline typename
+        result_of::as_list<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
+    as_list(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
     {
-        return result_of::as_list<Sequence>::call(seq);
+        typedef typename
+            result_of::as_list<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::gen
+        gen;
+        return gen::call(seq);
     }
 
-    template <typename Sequence>
-    inline typename result_of::as_list<Sequence const>::type
-    as_list(Sequence const& seq)
-    {
-        return result_of::as_list<Sequence const>::call(seq);
-    }
 }}
+
 
 #endif

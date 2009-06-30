@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_TAG_OF_09262006_1900)
-#define BOOST_FUSION_TAG_OF_09262006_1900
+
+#ifndef BOOST_FUSION_ADAPTED_BOOST_TUPLE_TAG_OF_HPP
+#define BOOST_FUSION_ADAPTED_BOOST_TUPLE_TAG_OF_HPP
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 

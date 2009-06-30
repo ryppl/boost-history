@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_UNKNOWN_KEY_09242005_1219)
-#define FUSION_UNKNOWN_KEY_09242005_1219
+
+#ifndef BOOST_FUSION_SUPPORT_DETAIL_UNKNOWN_KEY_HPP
+#define BOOST_FUSION_SUPPORT_DETAIL_UNKNOWN_KEY_HPP
 
 namespace boost { namespace fusion { namespace detail
 {

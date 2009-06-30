@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_GENERATION_MAKE_UNFUSED_LVALUE_ARGS_HPP_INCLUDED)
-#define BOOST_FUSION_FUNCTIONAL_GENERATION_MAKE_UNFUSED_LVALUE_ARGS_HPP_INCLUDED
+#ifndef BOOST_FUSION_FUNCTIONAL_GENERATION_MAKE_UNFUSED_LVALUE_ARGS_HPP
+#define BOOST_FUSION_FUNCTIONAL_GENERATION_MAKE_UNFUSED_LVALUE_ARGS_HPP
 
 #include <boost/fusion/functional/adapter/unfused_lvalue_args.hpp>
 
@@ -15,4 +15,3 @@
 #include <boost/fusion/functional/generation/detail/gen_make_adapter.hpp>
 
 #endif
-

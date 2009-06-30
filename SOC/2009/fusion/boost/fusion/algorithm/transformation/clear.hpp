@@ -4,10 +4,16 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CLEAR_09172005_1127)
-#define FUSION_CLEAR_09172005_1127
 
-#include <boost/fusion/container/vector/vector10.hpp>
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_CLEAR_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_CLEAR_HPP
+
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/vector/vector.hpp>
+#else
+#   include <boost/fusion/container/vector/vector10.hpp>
+#endif
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
 {
@@ -16,17 +22,20 @@ namespace boost { namespace fusion
         template <typename Sequence>
         struct clear
         {
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
             typedef vector0 type;
+#else
+            typedef vector<> type;
+#endif
         };
     }
 
-    template <typename Sequence>
-    inline typename result_of::clear<Sequence const>::type
-    clear(Sequence const& seq)
+    template <typename Seq>
+    inline typename result_of::clear<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
+    clear(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return vector0();
+        return typename result_of::clear<BOOST_FUSION_R_ELSE_LREF(Seq)>::type();
     }
 }}
 
 #endif
-

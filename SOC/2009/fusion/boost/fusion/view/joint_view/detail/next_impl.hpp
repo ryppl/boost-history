@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_NEXT_IMPL_07162005_0136)
-#define FUSION_NEXT_IMPL_07162005_0136
+
+#ifndef BOOST_FUSION_VIEW_JOINT_VIEW_DETAIL_NEXT_IMPL_HPP
+#define BOOST_FUSION_VIEW_JOINT_VIEW_DETAIL_NEXT_IMPL_HPP
 
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
@@ -26,12 +27,13 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<joint_view_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename Iterator::first_type first_type;
-                typedef typename Iterator::last_type last_type;
-                typedef typename Iterator::concat_type concat_type;
+                typedef typename detail::remove_reference<ItRef>::type it;
+                typedef typename it::first_type first_type;
+                typedef typename it::last_type last_type;
+                typedef typename it::concat_type concat_type;
                 typedef typename result_of::next<first_type>::type next_type;
                 typedef result_of::equal_to<next_type, last_type> equal_to;
 
@@ -44,19 +46,19 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(Iterator const& i, mpl::true_)
+                call(ItRef i, mpl::true_)
                 {
                     return i.concat;
                 }
 
                 static type
-                call(Iterator const& i, mpl::false_)
+                call(ItRef i, mpl::false_)
                 {
                     return type(fusion::next(i.first), i.concat);
                 }
 
                 static type
-                call(Iterator const& i)
+                call(ItRef i)
                 {
                     return call(i, equal_to());
                 }
@@ -66,5 +68,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

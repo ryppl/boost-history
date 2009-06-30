@@ -4,11 +4,12 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_FILTER_VIEW_ITERATOR_05062005_0849)
-#define FUSION_FILTER_VIEW_ITERATOR_05062005_0849
 
-#include <boost/fusion/iterator/mpl/convert_iterator.hpp>
-#include <boost/fusion/adapted/mpl/mpl_iterator.hpp>
+#ifndef BOOST_FUSION_VIEW_FILTER_VIEW_FILTER_VIEW_ITERATOR_HPP
+#define BOOST_FUSION_VIEW_FILTER_VIEW_FILTER_VIEW_ITERATOR_HPP
+
+#include <boost/fusion/support/ref.hpp>
+
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/view/filter_view/detail/deref_impl.hpp>
 #include <boost/fusion/view/filter_view/detail/next_impl.hpp>
@@ -22,27 +23,22 @@ namespace boost { namespace fusion
     struct forward_traversal_tag;
 
     template <typename First, typename Last, typename Pred>
-    struct filter_iterator : iterator_base<filter_iterator<First, Last, Pred> >
+    struct filter_iterator
+      : iterator_base<filter_iterator<First, Last, Pred> >
     {
-        typedef convert_iterator<First> first_converter;
-        typedef typename first_converter::type first_iter;
-        typedef convert_iterator<Last> last_converter;
-        typedef typename last_converter::type last_iter;
-
         typedef filter_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
-        typedef detail::static_find_if<first_iter, last_iter, Pred> filter;
+        typedef detail::static_find_if<First, Last, Pred> filter;
         typedef typename filter::type first_type;
-        typedef last_iter last_type;
+        typedef Last last_type;
         typedef Pred pred_type;
 
         filter_iterator(First const& first)
-            : first(filter::call(first_converter::call(first))) {}
+          : first(filter::call(first))
+        {}
 
         first_type first;
     };
 }}
 
 #endif
-
-

@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_ADAPT_STRUCT_APRIL_2_2007_1158AM)
-#define BOOST_FUSION_ADAPT_STRUCT_APRIL_2_2007_1158AM
+
+#ifndef BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
+#define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_STRUCT_HPP
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/adapted/struct/extension.hpp>

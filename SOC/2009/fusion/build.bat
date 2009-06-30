@@ -7,7 +7,7 @@ rem http://www.boost.org/LICENSE_1_0.txt)
 rem (re-)set environment variables
 rem bjam does not like backslahes!
 set BOOST_ROOT=d:/projekte/libs/boost
-set BOOST_INCLUDES_PATH=%BOOST_ROOT%/include/boost-1_39
+set BOOST_INCLUDES_PATH=%BOOST_ROOT%/include/boost-1_40
 
 rem call toolset specific procedure
 if "%1" == "conceptgcc" (
@@ -20,7 +20,7 @@ if "%1" == "conceptgcc" (
             call :msvc
         ) else (
             if "%1" == "" (
-                call :conceptgcc
+                call :gcc
             ) else (
                 echo Unknown toolset '%1'
                 goto :eof
@@ -35,7 +35,7 @@ goto :eof
 
 :conceptgcc
 rem ConceptGCC needs a cygwin path
-set BOOST_INCLUDES_PATH=/cygdrive/d/projekte/libs/boost/include/boost-1_39
+set BOOST_INCLUDES_PATH=/cygdrive/d/projekte/libs/boost/include/boost-1_40
 
 set PATH=C:\cygwin\opt\conceptgcc-4.3.0-alpha-7\bin;C:\cygwin\bin;%PATH%
 set TOOLSET=gcc-conceptgcc

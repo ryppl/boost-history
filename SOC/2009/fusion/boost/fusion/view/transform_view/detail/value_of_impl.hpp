@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VALUE_OF_IMPL_07162005_1030)
-#define FUSION_VALUE_OF_IMPL_07162005_1030
+
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_VALUE_OF_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 
 #include <boost/mpl/apply.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
@@ -25,15 +26,21 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<transform_view_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename
-                    result_of::value_of<typename Iterator::first_type>::type
-                value_type;
+                typedef typename detail::remove_reference<ItRef>::type it;
 
-                typedef detail::apply_transform_result<typename Iterator::transform_type> transform_type;
-                typedef typename mpl::apply<transform_type, value_type>::type type;
+                typedef typename
+                    mpl::apply<
+                        detail::apply_transform_result<
+                            typename it::transform_type
+                        >
+                      , typename result_of::value_of<
+                            typename it::first_type
+                        >::type
+                    >::type
+                type;
             };
         };
 
@@ -41,23 +48,27 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<transform_view_iterator2_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename
-                    result_of::value_of<typename Iterator::first1_type>::type
-                value1_type;
-                typedef typename
-                    result_of::value_of<typename Iterator::first2_type>::type
-                value2_type;
+                typedef typename detail::remove_reference<ItRef>::type it;
 
-                typedef detail::apply_transform_result<typename Iterator::transform_type> transform_type;
-                typedef typename mpl::apply<transform_type, value1_type, value2_type>::type type;
+                typedef typename
+                    mpl::apply<
+                        detail::apply_transform_result<
+                            typename it::transform_type
+                        >
+                      , typename result_of::value_of<
+                            typename it::first1_type
+                        >::type
+                      , typename result_of::value_of<
+                            typename it::first2_type
+                        >::type
+                    >::type
+                type;
             };
         };
     }
 }}
 
 #endif
-
-

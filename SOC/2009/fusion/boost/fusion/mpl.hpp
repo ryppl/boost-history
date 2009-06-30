@@ -4,14 +4,10 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_MPL_09172006_2049)
-#define FUSION_MPL_09172006_2049
 
-// The fusion <--> MPL link headers
-#include <boost/fusion/iterator/mpl.hpp>
-#include <boost/fusion/adapted/mpl.hpp>
+#ifndef BOOST_FUSION_MPL_HPP
+#define BOOST_FUSION_MPL_HPP
 
-#include <boost/fusion/mpl/at.hpp>
 #include <boost/fusion/mpl/back.hpp>
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/clear.hpp>

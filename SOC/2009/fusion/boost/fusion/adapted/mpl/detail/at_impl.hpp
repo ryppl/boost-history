@@ -2,15 +2,16 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_AT_IMPL_31122005_1642)
-#define BOOST_FUSION_AT_IMPL_31122005_1642
+
+#ifndef BOOST_FUSION_ADAPTED_MPL_DETAIL_AT_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_MPL_DETAIL_AT_IMPL_HPP
 
 #include <boost/mpl/at.hpp>
 
-namespace boost { namespace fusion 
+namespace boost { namespace fusion
 {
     struct mpl_sequence_tag;
 
@@ -22,13 +23,15 @@ namespace boost { namespace fusion
         template <>
         struct at_impl<mpl_sequence_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
             {
-                typedef typename mpl::at<Sequence, N>::type type;
-                
+                typedef typename
+                    mpl::at<typename detail::identity<SeqRef>::type, N>::type
+                type;
+
                 static type
-                call(Sequence)
+                call(SeqRef)
                 {
                     return type();
                 }

@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_INSERT_RANGE_10022005_1838)
-#define FUSION_INSERT_RANGE_10022005_1838
+
+#ifndef BOOST_FUSION_MPL_INSERT_RANGE_HPP
+#define BOOST_FUSION_MPL_INSERT_RANGE_HPP
 
 #include <boost/mpl/insert_range.hpp>
 #include <boost/fusion/support/tag_of.hpp>
@@ -29,11 +30,11 @@ namespace boost { namespace mpl
 
             typedef typename
                 fusion::result_of::convert<
-                    typename fusion::detail::tag_of<Sequence>::type, result>::type
+                    typename fusion::traits::tag_of<Sequence>::type, result
+                >::type
             type;
         };
     };
 }}
 
 #endif
-

@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_ADAPTER_HPP_INCLUDED)
-#define BOOST_FUSION_FUNCTIONAL_ADAPTER_HPP_INCLUDED
+#ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_HPP
+#define BOOST_FUSION_FUNCTIONAL_ADAPTER_HPP
 #include <boost/fusion/functional/adapter/fused.hpp>
 #include <boost/fusion/functional/adapter/fused_procedure.hpp>
 #include <boost/fusion/functional/adapter/fused_function_object.hpp>

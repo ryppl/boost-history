@@ -2,26 +2,25 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_END_IMPL_20060123_2208)
-#define FUSION_END_IMPL_20060123_2208
 
-#include <boost/fusion/view/zip_view/zip_view_iterator_fwd.hpp>
+#ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_END_IMPL_HPP
+
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
-#include <boost/type_traits/remove_reference.hpp>
-#include <boost/type_traits/is_reference.hpp>
-#include <boost/mpl/assert.hpp>
-#include <boost/mpl/min.hpp>
+#include <boost/fusion/support/assert.hpp>
 
+#include <boost/mpl/min.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion {
@@ -30,12 +29,12 @@ namespace boost { namespace fusion {
 
     namespace detail
     {
-        template<typename SeqRef, typename M>
+        template<typename Seq, typename M>
         struct get_endpoint
         {
-            typedef typename remove_reference<SeqRef>::type Seq;
             typedef typename result_of::begin<Seq>::type begin;
-            typedef typename result_of::advance<begin, M>::type type;            
+
+            typedef typename result_of::advance<begin, M>::type type;
         };
 
         template<typename M>
@@ -46,30 +45,26 @@ namespace boost { namespace fusion {
 
             template<typename M1, typename SeqRef>
             struct result<endpoints<M1>(SeqRef)>
-                : mpl::eval_if<is_same<SeqRef, unused_type const&>,
-                               mpl::identity<unused_type>,
-                               get_endpoint<SeqRef, M> >
+              : mpl::eval_if<is_same<SeqRef, unused_type const&>
+                           , mpl::identity<unused_type const&>
+                           , get_endpoint<SeqRef, M>
+                >
             {
                 BOOST_MPL_ASSERT((is_reference<SeqRef>));
             };
 
             template<typename Seq>
-            typename result<endpoints(Seq&)>::type
-            operator()(Seq& seq) const
+            typename result<endpoints(BOOST_FUSION_R_ELSE_LREF(Seq))>::type
+            operator()(BOOST_FUSION_R_ELSE_LREF(Seq) seq) const
             {
-                return fusion::advance<M>(fusion::begin(seq));
+                return fusion::advance<M>(
+                        fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             }
 
-            template<typename Seq>
-            typename result<endpoints(Seq const&)>::type
-            operator()(Seq const& seq)
+            unused_type const&
+            operator()(unused_type const& unused) const
             {
-                return fusion::advance<M>(fusion::begin(seq));
-            }
-
-            unused_type operator()(unused_type const&) const
-            {
-                return unused_type();
+                return unused;
             }
         };
     }
@@ -82,18 +77,27 @@ namespace boost { namespace fusion {
         template<>
         struct end_impl<zip_view_tag>
         {
-            template<typename Sequence>
+            template<typename SeqRef>
             struct apply
             {
-                typedef zip_view_iterator<
-                    typename result_of::transform<typename Sequence::sequences, detail::endpoints<typename Sequence::size> >::type,
-                    typename Sequence::category> type;
+                typedef typename detail::remove_reference<SeqRef>::type seq;
+
+                typedef
+                    zip_view_iterator<
+                        typename result_of::transform<
+                            typename seq::seqs_type
+                          , detail::endpoints<typename seq::size>
+                        >::type
+                      , typename seq::category
+                    >
+                type;
 
                 static type
-                call(Sequence& sequence)
+                call(SeqRef seq)
                 {
-                    return type(
-                        fusion::transform(sequence.sequences_, detail::endpoints<typename Sequence::size>()));
+                    return type(fusion::transform(
+                            seq.seqs,
+                            detail::endpoints<typename seq::size>()));
                 }
             };
         };

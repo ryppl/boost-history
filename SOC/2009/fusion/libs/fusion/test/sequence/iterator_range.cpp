@@ -1,16 +1,18 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/container/generation/make_vector.hpp>
-#include <boost/fusion/view/iterator_range/iterator_range.hpp>
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/view/iterator_range/iterator_range.hpp>
+#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/container/generation/make_vector.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
+
 #include <boost/mpl/vector_c.hpp>
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/next.hpp>
@@ -31,11 +33,11 @@ main()
         vector_type vec(1, 'x', 3.3, s);
 
         {
-            typedef vector_iterator<vector_type, 1> i1t;
-            typedef vector_iterator<vector_type, 3> i3t;
+            typedef result_of::next<result_of::begin<vector_type>::type>::type i1t;
+            typedef result_of::prior<result_of::end<vector_type>::type>::type i3t;
 
-            i1t i1(vec);
-            i3t i3(vec);
+            i1t i1(next(begin(vec)));
+            i3t i3(prior(end(vec)));
 
             typedef iterator_range<i1t, i3t> slice_t;
             slice_t slice(i1, i3);
@@ -45,11 +47,11 @@ main()
         }
 
         {
-            typedef vector_iterator<vector_type, 0> i1t;
-            typedef vector_iterator<vector_type, 0> i3t;
+            typedef result_of::begin<vector_type>::type i1t;
+            typedef result_of::begin<vector_type>::type i3t;
 
-            i1t i1(vec);
-            i3t i3(vec);
+            i1t i1(begin(vec));
+            i3t i3(begin(vec));
 
             typedef iterator_range<i1t, i3t> slice_t;
             slice_t slice(i1, i3);
@@ -68,7 +70,7 @@ main()
 
         it1 f;
         it3 l;
-        
+
         typedef iterator_range<it1, it3> slice_t;
         slice_t slice(f, l);
         std::cout << slice << std::endl;

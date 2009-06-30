@@ -1,13 +1,13 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_DEREF_IMPL_05052005_0258)
-#define FUSION_DEREF_IMPL_05052005_0258
 
-#include <boost/fusion/support/detail/access.hpp>
+#ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_DEREF_IMPL_HPP
+#define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_DEREF_IMPL_HPP
+
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_const.hpp>
 
@@ -26,12 +26,14 @@ namespace boost { namespace fusion
             template <typename Iterator>
             struct apply
             {
-                typedef typename Iterator::value_type type;
-    
+                typedef typename
+                    detail::remove_reference<Iterator>::type::value_type
+                type;
+
                 static type
                 call(Iterator const& i)
                 {
-                    return i.val;
+                    return i.view.val;
                 }
             };
         };
@@ -39,5 +41,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

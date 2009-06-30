@@ -2,11 +2,12 @@
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_LESS_05052005_1141)
-#define FUSION_LESS_05052005_1141
+
+#ifndef BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_LESS_HPP
+#define BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_LESS_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/fusion/iterator/deref.hpp>
@@ -32,9 +33,9 @@ namespace boost { namespace fusion { namespace detail
         static bool
         call(I1 const& a, I2 const& b, mpl::false_)
         {
-            return *a < *b
-                || !(*b < *a)
-                && call(fusion::next(a), fusion::next(b));
+            return fusion::deref(a) < fusion::deref(b)
+                || (!(fusion::deref(b) < fusion::deref(a))
+                        && call(fusion::next(a), fusion::next(b)));
         }
 
         template <typename I1, typename I2>

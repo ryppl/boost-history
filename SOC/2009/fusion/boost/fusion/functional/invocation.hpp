@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_INVOCATION_HPP_INCLUDED)
-#define BOOST_FUSION_FUNCTIONAL_INVOCATION_HPP_INCLUDED
+#ifndef BOOST_FUSION_FUNCTIONAL_INVOCATION_HPP
+#define BOOST_FUSION_FUNCTIONAL_INVOCATION_HPP
 
 #include <boost/fusion/functional/invocation/invoke.hpp>
 #include <boost/fusion/functional/invocation/invoke_procedure.hpp>

@@ -2,13 +2,17 @@
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_AS_FUSION_ELEMENT_05052005_0338)
-#define FUSION_AS_FUSION_ELEMENT_05052005_0338
+
+#ifndef BOOST_FUSION_SUPPORT_DETAIL_AS_FUSION_ELEMENT_HPP
+#define BOOST_FUSION_SUPPORT_DETAIL_AS_FUSION_ELEMENT_HPP
+
+//TODO cschmidt: rref
 
 #include <boost/ref.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -19,7 +23,39 @@ namespace boost { namespace fusion { namespace detail
     };
 
     template <typename T>
+    struct as_fusion_element<T&>
+        : as_fusion_element<T>
+    {
+    };
+
+    template <typename T>
+    struct as_fusion_element<const T&>
+        : as_fusion_element<T>
+    {
+    };
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    template <typename T>
+    struct as_fusion_element<T&&>
+        : as_fusion_element<T>
+    {
+    };
+
+    template <typename T>
+    struct as_fusion_element<const T&&>
+        : as_fusion_element<T>
+    {
+    };
+#endif
+
+    template <typename T>
     struct as_fusion_element<reference_wrapper<T> >
+    {
+        typedef T& type;
+    };
+
+    template <typename T>
+    struct as_fusion_element<const reference_wrapper<T> >
     {
         typedef T& type;
     };
@@ -42,6 +78,25 @@ namespace boost { namespace fusion { namespace detail
         typedef const volatile T(&type)[N];
     };
 
+    template <typename T>
+    struct as_fusion_element_lref
+    {
+        typedef typename
+            add_lref<typename as_fusion_element<T>::type>::type
+        type;
+    };
+
+    template <typename T>
+    struct as_fusion_element_lref<const T&>
+      : as_fusion_element_lref<const T>
+    {
+    };
+
+    template <typename T>
+    struct as_fusion_element_lref<const T&&>
+      : as_fusion_element_lref<const T>
+    {
+    };
 }}}
 
 #endif

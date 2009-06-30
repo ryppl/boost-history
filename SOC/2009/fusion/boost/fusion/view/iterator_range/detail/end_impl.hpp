@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_END_IMPL_05062005_1226)
-#define FUSION_END_IMPL_05062005_1226
+
+#ifndef BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_END_IMPL_HPP
 
 namespace boost { namespace fusion
 {
@@ -19,13 +20,15 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<iterator_range_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename Sequence::end_type type;
+                typedef typename
+                    detail::remove_reference<SeqRef>::type::end_type
+                type;
 
                 static type
-                call(Sequence& s)
+                call(SeqRef s)
                 {
                     return s.last;
                 }
@@ -35,5 +38,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_SIZE_IMPL_24122005_1759)
-#define BOOST_FUSION_SIZE_IMPL_24122005_1759
+
+#ifndef BOOST_FUSION_ADAPTED_STD_PAIR_DETAIL_SIZE_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_STD_PAIR_DETAIL_SIZE_IMPL_HPP
 
 #include <boost/mpl/int.hpp>
 

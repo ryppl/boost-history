@@ -5,11 +5,13 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_AT_IMPL_24122005_1807)
-#define BOOST_FUSION_AT_IMPL_24122005_1807
 
+#ifndef BOOST_FUSION_ADAPTED_STRUCT_DETAIL_AT_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_STRUCT_DETAIL_AT_IMPL_HPP
+
+#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/support/detail/access.hpp>
-#include <boost/mpl/assert.hpp>
+
 #include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion
@@ -34,8 +36,8 @@ namespace boost { namespace fusion
             struct apply
             {
                 static int const n_value = N::value;
-                BOOST_MPL_ASSERT_RELATION(
-                    n_value, <=, extension::struct_size<Sequence>::value);
+                BOOST_FUSION_INDEX_CHECK(n_value,
+                    extension::struct_size<Sequence>::value);
 
                 typedef typename
                     extension::struct_member<Sequence, N::value>

@@ -1,11 +1,12 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_SIZE_IMPL_09232005_1058)
-#define FUSION_SIZE_IMPL_09232005_1058
+
+#ifndef BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_SIZE_IMPL_HPP
+#define BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_SIZE_IMPL_HPP
 
 #include <boost/fusion/iterator/distance.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
@@ -23,16 +24,15 @@ namespace boost { namespace fusion
         template <>
         struct size_impl<filter_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
-                : result_of::distance<
-                    typename result_of::begin<Sequence>::type
-                  , typename result_of::end<Sequence>::type>
+              : result_of::distance<
+                    typename result_of::begin<SeqRef>::type
+                  , typename result_of::end<SeqRef>::type
+                >
             {};
         };
     }
 }}
 
 #endif
-
-

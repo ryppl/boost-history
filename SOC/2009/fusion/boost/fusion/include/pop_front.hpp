@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_INCLUDE_POP_FRONT)
-#define FUSION_INCLUDE_POP_FRONT
+
+#ifndef BOOST_FUSION_INCLUDE_POP_FRONT_HPP
+#define BOOST_FUSION_INCLUDE_POP_FRONT_HPP
 
 #include <boost/fusion/algorithm/transformation/pop_front.hpp>
 

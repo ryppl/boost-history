@@ -1,13 +1,14 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VALUE_OF_IMPL_05062005_0857)
-#define FUSION_VALUE_OF_IMPL_05062005_0857
 
-#include <boost/fusion/iterator/detail/adapt_value_traits.hpp>
+#ifndef BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_VALUE_OF_IMPL_HPP
+#define BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_VALUE_OF_IMPL_HPP
+
+#include <boost/fusion/iterator/value_of.hpp>
 
 namespace boost { namespace fusion
 {
@@ -20,10 +21,16 @@ namespace boost { namespace fusion
 
         template <>
         struct value_of_impl<filter_view_iterator_tag>
-            : detail::adapt_value_traits {};
+        {
+            template <typename ItRef>
+            struct apply
+              : result_of::value_of<
+                    typename detail::remove_reference<ItRef>::type::first_type
+                >
+            {
+            };
+        };
     }
 }}
 
 #endif
-
-

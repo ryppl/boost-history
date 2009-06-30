@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_HAS_KEY_IMPL_20070508_2231)
-#define BOOST_FUSION_HAS_KEY_IMPL_20070508_2231
+
+#ifndef BOOST_FUSION_ADAPTED_STRUCT_DETAIL_HAS_KEY_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_STRUCT_DETAIL_HAS_KEY_IMPL_HPP
 
 #include <boost/type_traits/is_same.hpp>
 #include <boost/mpl/not.hpp>

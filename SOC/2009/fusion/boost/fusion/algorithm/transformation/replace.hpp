@@ -1,35 +1,94 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_REPLACE_08182005_0830)
-#define FUSION_REPLACE_08182005_0830
+
+#ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
+#define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
+#include <boost/fusion/algorithm/transformation/replace_if.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/detail/as_fusion_element.hpp>
+
 #include <boost/fusion/algorithm/transformation/detail/replace.hpp>
 
 namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename T>
+    //TODO New arg?!
+        template <typename Seq, typename OldValue, typename NewValue>
         struct replace
+          : replace_if<
+                Seq
+              , BOOST_FUSION_R_ELSE_CLREF(
+                    detail::replacer<
+                        typename detail::as_fusion_element<OldValue>::type
+                    >)
+              , NewValue
+            >
         {
-            typedef transform_view<Sequence, detail::replacer<T> > type;
         };
     }
 
-    template <typename Sequence, typename T>
-    inline typename result_of::replace<Sequence const, T>::type
-    replace(Sequence const& seq, T const& old_value, T const& new_value)
+    //TODO cschmidt: Assert compatibility Old-/NewValue!
+    template <typename Seq, typename OldValue, typename NewValue>
+    inline typename
+        result_of::replace<
+            BOOST_FUSION_R_ELSE_LREF(Seq)
+          , BOOST_FUSION_R_ELSE_LREF(OldValue)
+          , BOOST_FUSION_R_ELSE_LREF(NewValue)
+        >::type
+    replace(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+            BOOST_FUSION_R_ELSE_LREF(OldValue) old_value,
+            BOOST_FUSION_R_ELSE_LREF(NewValue) new_value)
     {
-        typedef typename result_of::replace<Sequence const, T>::type result;
-        detail::replacer<T> f(old_value, new_value);
-        return result(seq, f);
+        typedef typename
+            result_of::replace<
+                BOOST_FUSION_R_ELSE_LREF(Seq)
+              , BOOST_FUSION_R_ELSE_LREF(OldValue)
+              , BOOST_FUSION_R_ELSE_LREF(NewValue)
+            >::type
+        type;
+        typedef
+            detail::replacer<
+                typename detail::as_fusion_element<
+                    BOOST_FUSION_R_ELSE_LREF(OldValue)
+                >::type
+            >
+        replacer;
+
+        return replace_if(
+                    BOOST_FUSION_FORWARD(Seq,seq)
+                  , replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0)
+                  , BOOST_FUSION_FORWARD(NewValue,new_value));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename OldValue, typename NewValue>
+    inline typename result_of::replace<Seq&, T>::type
+    replace(Seq& seq,
+            OldValue const& old_value,
+            NewValue const& new_value)
+    {
+        typedef typename
+            result_of::replace<
+                Seq&
+              , NewValue const&
+            >::type
+        type;
+        typedef
+            detail::replacer<
+                typename detail::as_fusion_element<OldValue const&>::type
+            >
+        replacer;
+
+        return replace_if(seq,replacer(old_value,0),new_value);
+    }
+#endif
 }}
 
 #endif
-

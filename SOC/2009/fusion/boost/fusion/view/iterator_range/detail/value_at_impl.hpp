@@ -5,8 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_ITERATOR_RANGE_VALUE_AT_IMPL_HPP_INCLUDED)
-#define BOOST_FUSION_ITERATOR_RANGE_VALUE_AT_IMPL_HPP_INCLUDED
+#ifndef BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_VALUE_AT_IMPL_HPP
+#define BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_VALUE_AT_IMPL_HPP
 
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
@@ -23,11 +23,16 @@ namespace boost { namespace fusion
         template <>
         struct value_at_impl<iterator_range_tag>
         {
-            template <typename Seq, typename N>
+            template <typename SeqRef, typename N>
             struct apply
             {
-                typedef typename Seq::begin_type begin_type;
-                typedef typename result_of::advance<begin_type,N>::type pos;
+                typedef typename
+                    detail::remove_reference<SeqRef>::type::begin_type
+                begin_type;
+                typedef typename
+                    result_of::advance<begin_type,N>::type
+                pos;
+
                 typedef typename result_of::value_of<pos>::type type;
             };
         };
@@ -35,4 +40,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_ADAPTED_30122005_1420)
-#define BOOST_FUSION_ADAPTED_30122005_1420
+
+#ifndef BOOST_FUSION_ADAPTED_HPP
+#define BOOST_FUSION_ADAPTED_HPP
 
 #include <boost/fusion/adapted/boost_tuple.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>

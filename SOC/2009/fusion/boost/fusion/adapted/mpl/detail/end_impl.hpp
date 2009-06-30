@@ -2,15 +2,16 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_FUSION_END_IMPL_31122005_1237)
-#define BOOST_FUSION_END_IMPL_31122005_1237
 
-#include <boost/fusion/adapted/mpl/mpl_iterator.hpp>
+#ifndef BOOST_FUSION_ADAPTED_MPL_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_MPL_DETAIL_END_IMPL_HPP
+
+#include <boost/fusion/adapted/mpl/detail/mpl_iterator.hpp>
+
 #include <boost/mpl/end.hpp>
-#include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace fusion
 {
@@ -24,16 +25,19 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<mpl_sequence_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename mpl::end<
-                    typename remove_const<Sequence>::type
-                >::type iterator;
-                typedef mpl_iterator<iterator> type;
-                
+                typedef
+                    mpl_iterator<
+                        typename mpl::end<
+                            typename detail::identity<SeqRef>::type
+                        >::type
+                    >
+                type;
+
                 static type
-                call(Sequence)
+                call(SeqRef)
                 {
                     return type();
                 }

@@ -854,7 +854,10 @@ Performs an element by element swap of the elements in 2 sequences.
 
 [*Semantics]: Calls `swap(a1, b1)` for corresponding elements in `seq1` and `seq2`.
 
-/sequence/intrinsic/swap.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/swap.hpp>
+    #include <boost/fusion/include/swap.hpp>
 
 [heading Example]
     __vector__<int, std::string> v1(1, "hello"), v2(2, "world");
@@ -892,7 +895,10 @@ Returns the result type of __begin__.
 
 [*Semantics]: Returns the type of an iterator to the first element of `Seq`.
 
-/sequence/intrinsic/begin.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/begin.hpp>
+    #include <boost/fusion/include/begin.hpp>
 
 [heading Example]
     typedef __vector__<int> vec;
@@ -925,7 +931,10 @@ Returns the result type of __end__.
 
 [*Semantics]: Returns the type of an iterator one past the end of `Seq`.
 
-/sequence/intrinsic/end.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/end.hpp>
+    #include <boost/fusion/include/end.hpp>
 
 [heading Example]
     typedef __vector__<int> vec;
@@ -958,7 +967,10 @@ Returns the result type of __empty__.
 
 [*Semantics]: Returns `mpl::true_` if `Seq` has zero elements, `mpl::false_` otherwise.
 
-/sequence/intrinsic/empty.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/empty.hpp>
+    #include <boost/fusion/include/empty.hpp>
 
 [heading Example]
     typedef __vector__<> empty_vec;
@@ -993,7 +1005,10 @@ Returns the result type of __front__.
 
 [*Semantics]: The type returned by dereferencing an iterator to the first element in `Seq`. Equivalent to `__result_of_deref__<__result_of_begin__<Seq>::type>::type`.
 
-/sequence/intrinsic/front.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/front.hpp>
+    #include <boost/fusion/include/front.hpp>
 
 [heading Example]
     typedef __vector__<int,char> vec;
@@ -1025,7 +1040,10 @@ Returns the result type of __back__.
 
 [*Semantics]: The type returned by dereferencing an iterator to the last element in the sequence. Equivalent to `__result_of_deref__<__result_of_prior__<__result_of_end__<Seq>::type>::type>::type`.
 
-/sequence/intrinsic/back.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/back.hpp>
+    #include <boost/fusion/include/back.hpp>
 
 [heading Example]
     typedef __vector__<int,char> vec;
@@ -1057,7 +1075,10 @@ Returns the result type of __size__.
 
 [*Semantics]: Returns the number of elements in `Seq`.
 
-/sequence/intrinsic/size.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/size.hpp>
+    #include <boost/fusion/include/size.hpp>
 
 [heading Example]
     typedef __vector__<int,float,char> vec;
@@ -1097,7 +1118,10 @@ the actual element type, use __result_of_value_at__].
 
 [*Semantics]: Returns the result type of using __at__ to access the `N`th element of `Seq`.
 
-/sequence/intrinsic/at.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/at.hpp>
+    #include <boost/fusion/include/at.hpp>
 
 [heading Example]
     typedef __vector__<int,float,char> vec;
@@ -1136,7 +1160,10 @@ get the actual element type, use __result_of_value_at_c__].
 
 [*Semantics]: Returns the result type of using __at_c__ to access the `M`th element of `Seq`.
 
-/sequence/intrinsic/at.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/at_c.hpp>
+    #include <boost/fusion/include/at_c.hpp>
 
 [heading Example]
     typedef __vector__<int,float,char> vec;
@@ -1172,7 +1199,10 @@ Returns the actual type at a given index from the __sequence__.
 
 [*Semantics]: Returns the actual type at the `N`th element of `Seq`.
 
-/sequence/intrinsic/value_at.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/value_at.hpp>
+    #include <boost/fusion/include/value_at.hpp>
 
 [heading Example]
     typedef __vector__<int,float,char> vec;
@@ -1208,7 +1238,10 @@ Returns the actual type at a given index from the __sequence__.
 
 [*Semantics]: Returns the actual type at the `M`th element of `Seq`.
 
-/sequence/intrinsic/value_at.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/value_at_c.hpp>
+    #include <boost/fusion/include/value_at_c.hpp>
 
 [heading Example]
     typedef __vector__<int,float,char> vec;
@@ -1243,7 +1276,10 @@ Returns the result type of __has_key__.
 
 [*Semantics]: Returns `mpl::true_` if `Seq` contains an element with key type `Key`, returns `mpl::false_` otherwise.
 
-/sequence/intrinsic/has_key.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/has_key.hpp>
+    #include <boost/fusion/include/has_key.hpp>
 
 [heading Example]
     typedef __map__<__pair__<int, char>, __pair__<char, char>, __pair__<double, char> > mymap;
@@ -1283,7 +1319,10 @@ you want to get the actual element type, use __result_of_value_at_key__].
 
 [*Semantics]: Returns the result of using __at_key__ to access the element with key type `Key` in `Seq`.
 
-/sequence/intrinsic/at_key.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/at_key.hpp>
+    #include <boost/fusion/include/at_key.hpp>
 
 [heading Example]
     typedef __map__<__pair__<int, char>, __pair__<char, char>, __pair__<double, char> > mymap;
@@ -1319,7 +1358,10 @@ Returns the actual element type associated with a Key from the __sequence__.
 [*Semantics]: Returns the actual element type associated with key type
 `Key` in `Seq`.
 
-/sequence/intrinsic/value_at_key.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
+    #include <boost/fusion/include/value_at_key.hpp>
 
 [heading Example]
     typedef __map__<__pair__<int, char>, __pair__<char, char>, __pair__<double, char> > mymap;
@@ -1351,7 +1393,10 @@ Returns the return type of swap.
 
 [*Semantics]: Always returns `void`.
 
-/sequence/intrinsic/swap.hpp>
+[heading Header]
+
+    #include <boost/fusion/sequence/intrinsic/swap.hpp>
+    #include <boost/fusion/include/swap.hpp>
 
 [endsect]
 

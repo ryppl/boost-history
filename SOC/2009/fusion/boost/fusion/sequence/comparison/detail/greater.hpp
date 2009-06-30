@@ -5,8 +5,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_GREATER_05052005_1142)
-#define FUSION_GREATER_05052005_1142
+
+#ifndef BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_GREATER_HPP
+#define BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_GREATER_HPP
 
 #include <boost/mpl/bool.hpp>
 #include <boost/fusion/iterator/deref.hpp>
@@ -32,8 +33,8 @@ namespace boost { namespace fusion { namespace detail
         static bool
         call(I1 const& a, I2 const& b, mpl::false_)
         {
-            return *a > *b
-                || !(*b > *a)
+            return fusion::deref(a) > fusion::deref(b)
+                || !(fusion::deref(b) > fusion::deref(a))
                 && call(fusion::next(a), fusion::next(b));
         }
 

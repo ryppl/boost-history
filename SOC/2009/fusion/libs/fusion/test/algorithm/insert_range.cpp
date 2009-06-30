@@ -1,7 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
@@ -37,7 +37,10 @@ main()
         char const* s = "Ruby";
         typedef vector<int, char, double, char const*> vector_type;
         vector_type t1(1, 'x', 3.3, s);
-        vector_iterator<vector_type, 2> pos(t1);
+        typedef
+            result_of::advance_c<result_of::begin<vector_type>::type,2>::type
+        it;
+        it pos(advance_c<2>(boost::fusion::begin(t1)));
 
         typedef vector<int, char> vector_type2;
         vector_type2 t2(999, 'z');

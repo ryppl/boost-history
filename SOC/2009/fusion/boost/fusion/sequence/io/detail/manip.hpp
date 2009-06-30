@@ -6,8 +6,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_MANIP_05052005_1200)
-#define FUSION_MANIP_05052005_1200
+
+#ifndef BOOST_FUSION_SEQUENCE_IO_DETAIL_MANIP_HPP
+#define BOOST_FUSION_SEQUENCE_IO_DETAIL_MANIP_HPP
 
 #include <boost/config.hpp>
 #include <string>

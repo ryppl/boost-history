@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying 
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_SEQUENCE_FACADE_09252006_1044)
-#define FUSION_SEQUENCE_FACADE_09252006_1044
+
+#ifndef BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
+#define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/mpl/bool.hpp>

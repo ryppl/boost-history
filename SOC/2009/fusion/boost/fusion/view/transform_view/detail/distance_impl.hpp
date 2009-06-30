@@ -2,16 +2,17 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2005-2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_DISTANCE_IMPL_13122005_2139)
-#define FUSION_DISTANCE_IMPL_13122005_2139
+
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_DISTANCE_IMPL_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_DISTANCE_IMPL_HPP
 
 #include <boost/fusion/iterator/distance.hpp>
 
 namespace boost { namespace fusion {
-    
+
     struct transform_view_iterator_tag;
     struct transform_view_iterator2_tag;
 
@@ -26,14 +27,11 @@ namespace boost { namespace fusion {
         {
             template<typename First, typename Last>
             struct apply
-                : result_of::distance<typename First::first_type, typename Last::first_type>
+              : result_of::distance<
+                    typename detail::remove_reference<First>::type::first_type
+                  , typename detail::remove_reference<Last>::type::first_type
+                >
             {
-                static 
-                typename result_of::distance<typename First::first_type, typename Last::first_type>::type
-                call(First const& first, Last const& last)
-                {
-                    return boost::fusion::distance(first.first, last.first);
-                }
             };
         };
 
@@ -43,14 +41,11 @@ namespace boost { namespace fusion {
         {
             template<typename First, typename Last>
             struct apply
-                : result_of::distance<typename First::first1_type, typename Last::first1_type>
+              : result_of::distance<
+                    typename detail::remove_reference<First>::type::first1_type
+                  , typename detail::remove_reference<Last>::type::first1_type
+                >
             {
-                static 
-                typename result_of::distance<typename First::first1_type, typename Last::first1_type>::type
-                call(First const& first, Last const& last)
-                {
-                    return boost::fusion::distance(first.first1, last.first1);
-                }
             };
         };
     }

@@ -1,23 +1,31 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VECTOR10_05042005_0257)
-#define FUSION_VECTOR10_05042005_0257
 
-#include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/detail/access.hpp>
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_VECTOR10_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_VECTOR10_HPP
+
+#include <boost/config.hpp>
+
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/vector/vector.hpp>
+#endif
+
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/ref.hpp>
+
 #include <boost/fusion/container/vector/detail/at_impl.hpp>
 #include <boost/fusion/container/vector/detail/value_at_impl.hpp>
 #include <boost/fusion/container/vector/detail/begin_impl.hpp>
 #include <boost/fusion/container/vector/detail/end_impl.hpp>
 
-#include <boost/mpl/void.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/at.hpp>
@@ -35,6 +43,7 @@
 
 namespace boost { namespace fusion
 {
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
     struct vector_tag;
     struct fusion_sequence_tag;
     struct random_access_traversal_tag;
@@ -55,12 +64,19 @@ namespace boost { namespace fusion
         {}
     };
 
-// expand vector1 to vector10
-#define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/vector_n.hpp>
-#define BOOST_PP_ITERATION_LIMITS (1, 10)
-#include BOOST_PP_ITERATE()
-
-}}
-
+#   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/vector_n.hpp>
+#   define BOOST_PP_ITERATION_LIMITS (1, 10)
+#else
+#   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/variadic_templates/vector_n.hpp>
+#   define BOOST_PP_ITERATION_LIMITS (0, 10)
 #endif
 
+// expand vector1 to vector10
+#   include BOOST_PP_ITERATE()
+
+}}
+#else
+#   include <boost/fusion/container/vector/vector.hpp>
+#endif
+
+#endif

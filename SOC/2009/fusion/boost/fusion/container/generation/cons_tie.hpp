@@ -1,11 +1,14 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_CONS_TIE_07182005_0854)
-#define FUSION_CONS_TIE_07182005_0854
+
+#ifndef BOOST_FUSION_CONTAINER_GENERATION_CONS_TIE_HPP
+#define BOOST_FUSION_CONTAINER_GENERATION_CONS_TIE_HPP
+
+//TODO cschmidt: ?!
 
 #include <boost/fusion/container/list/cons.hpp>
 
@@ -18,26 +21,50 @@ namespace boost { namespace fusion
         template <typename Car, typename Cdr = nil>
         struct cons_tie
         {
-            typedef cons<Car&, Cdr> type;
+            typedef
+                cons<typename detail::add_lref<
+                        typename detail::as_fusion_element<Car>::type
+                     >::type
+                   , typename detail::as_fusion_element<Cdr>::type>
+            type;
         };
     }
 
     // $$$ do we really want a cons_tie? $$$
     template <typename Car>
-    inline cons<Car&>
-    cons_tie(Car& car)
+    inline typename result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car)>::type
+    cons_tie(BOOST_FUSION_R_ELSE_LREF(Car) car)
     {
-        return cons<Car&>(car);
+        typedef typename
+            result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car)>::type
+        type;
+        return type(BOOST_FUSION_FORWARD(Car,car));
     }
 
-    // $$$ do we really want a cons_tie? $$$
     template <typename Car, typename Cdr>
-    inline cons<Car&, Cdr>
-    cons_tie(Car& car, Cdr const& cdr)
+    inline typename result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car)
+                                      , BOOST_FUSION_R_ELSE_LREF(Cdr)>::type
+    cons_tie(BOOST_FUSION_R_ELSE_LREF(Car) car
+           , BOOST_FUSION_R_ELSE_LREF(Cdr) cdr)
     {
-        return cons<Car&, Cdr>(car, cdr);
+        typedef typename
+            result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car)
+                              , BOOST_FUSION_R_ELSE_LREF(Cdr)>::type
+        type;
+        return type(BOOST_FUSION_FORWARD(Car,car)
+                  , BOOST_FUSION_FORWARD(Cdr,cdr));
+    }
+
+    template <typename Car, typename Cdr>
+    inline typename result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car)
+                                      , Cdr const&>::type
+    cons_tie(BOOST_FUSION_R_ELSE_LREF(Car) car, Cdr const& cdr)
+    {
+        typedef typename
+            result_of::cons_tie<BOOST_FUSION_R_ELSE_LREF(Car), Cdr const&>::type
+        type;
+        return type(BOOST_FUSION_FORWARD(Car,car), cdr);
     }
 }}
 
 #endif
-

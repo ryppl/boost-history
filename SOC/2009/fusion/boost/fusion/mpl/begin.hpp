@@ -1,16 +1,18 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_BEGIN_10022005_1620)
-#define FUSION_BEGIN_10022005_1620
 
-#include <boost/mpl/begin_end.hpp>
+#ifndef BOOST_FUSION_MPL_BEGIN_HPP
+#define BOOST_FUSION_MPL_BEGIN_HPP
+
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/adapted/mpl/detail/begin_impl.hpp>
-#include <boost/fusion/iterator/mpl/fusion_iterator.hpp>
+#include <boost/fusion/mpl/detail/fusion_iterator.hpp>
+
+#include <boost/mpl/begin.hpp>
 
 namespace boost { namespace mpl
 {
@@ -20,10 +22,14 @@ namespace boost { namespace mpl
     template <>
     struct begin_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename SeqRef>
         struct apply
         {
-            typedef fusion_iterator<typename fusion::result_of::begin<Sequence>::type> type;
+            typedef
+                fusion_iterator<
+                    typename fusion::result_of::begin<SeqRef>::type
+                >
+            type;
         };
     };
 }}

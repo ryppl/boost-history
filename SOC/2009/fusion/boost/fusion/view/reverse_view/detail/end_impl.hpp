@@ -1,17 +1,22 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_END_IMPL_07202005_0851)
-#define FUSION_END_IMPL_07202005_0851
+
+#ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_END_IMPL_HPP
+#define BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_END_IMPL_HPP
+
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+
+//TODO: Forward view cv qualifiers?
 
 namespace boost { namespace fusion
 {
     struct reverse_view_tag;
 
-    template <typename Iterator>
+    template <typename First>
     struct reverse_view_iterator;
 
     namespace extension
@@ -22,15 +27,23 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<reverse_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef reverse_view_iterator<typename Sequence::first_type> type;
-    
+                typedef
+                    reverse_view_iterator<
+                        typename result_of::begin<
+                            typename detail::remove_reference<
+                                SeqRef
+                            >::type::seq_type
+                        >::type
+                     >
+                type;
+
                 static type
-                call(Sequence const& s)
+                call(SeqRef s)
                 {
-                    return type(s.first());
+                    return type(fusion::begin(s.seq));
                 }
             };
         };
@@ -38,5 +51,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_INCLUDE_MPL)
-#define FUSION_INCLUDE_MPL
+
+#ifndef BOOST_FUSION_INCLUDE_MPL_HPP
+#define BOOST_FUSION_INCLUDE_MPL_HPP
 
 #include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/mpl.hpp>

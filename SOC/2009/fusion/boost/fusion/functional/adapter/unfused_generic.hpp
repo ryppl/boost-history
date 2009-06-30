@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_GENERIC_HPP_INCLUDED)
-#if !defined(BOOST_PP_IS_ITERATING)
+#ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_GENERIC_HPP
+#define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_GENERIC_HPP
 
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp>
@@ -172,4 +172,3 @@ namespace boost
 
 #endif // defined(BOOST_PP_IS_ITERATING)
 #endif
-

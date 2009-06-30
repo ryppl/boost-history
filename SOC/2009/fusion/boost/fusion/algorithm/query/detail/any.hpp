@@ -1,15 +1,16 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
-    Copyright (c) 2005 Eric Niebler
     Copyright (c) 2007 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_ANY_05052005_1229)
-#define FUSION_ANY_05052005_1229
 
-#include <boost/mpl/bool.hpp>
+#ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
+#define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
+
+#include <boost/fusion/sequence/intrinsic/empty.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/advance.hpp>
@@ -18,54 +19,54 @@
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/distance.hpp>
 
-namespace boost { namespace fusion { 
-    struct random_access_traversal_tag;
-namespace detail
+#include <boost/mpl/bool.hpp>
+
+//TODO code based on fold!!!
+
+namespace boost { namespace fusion { namespace detail
 {
-    template <typename First, typename Last, typename F>
+    template <typename SeqRef, typename First, typename F>
     inline bool
-    linear_any(First const&, Last const&, F const&, mpl::true_)
+    linear_any(First const&, BOOST_FUSION_R_ELSE_LREF(F), mpl::true_)
     {
-        return false;
+        return true;
     }
 
-    template <typename First, typename Last, typename F>
+    template <typename SeqRef,typename First, typename F>
     inline bool
-    linear_any(First const& first, Last const& last, F& f, mpl::false_)
+    linear_any(First const& first, BOOST_FUSION_R_ELSE_LREF(F) f, mpl::false_)
     {
-        typename result_of::deref<First>::type x = *first;
-        return f(x) || 
+        return f(fusion::deref(first)) ||
             detail::linear_any(
-                fusion::next(first)
-              , last
-              , f
-              , result_of::equal_to<typename result_of::next<First>::type, Last>());
+                    fusion::next(first)
+                  , BOOST_FUSION_FORWARD(F,f)
+                  , result_of::equal_to<
+                        typename result_of::next<First>::type,
+                        typename result_of::end<SeqRef>::type
+                    >::type());
     }
 
-    template <typename Sequence, typename F, typename Tag>
+    template <typename Seq, typename F, typename Tag>
     inline bool
-    any(Sequence const& seq, F f, Tag)
+    any(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(F) f, Tag)
     {
-        return detail::linear_any(
-                fusion::begin(seq)
-              , fusion::end(seq)
-              , f
-              , result_of::equal_to<
-                    typename result_of::begin<Sequence>::type
-                  , typename result_of::end<Sequence>::type>());
+        return detail::linear_any<BOOST_FUSION_R_ELSE_LREF(Seq)>(
+                fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
+              , BOOST_FUSION_FORWARD(F,f)
+              , result_of::empty<BOOST_FUSION_R_ELSE_LREF(Seq)>::type());
     }
 
     template<int N>
     struct unrolled_any
     {
         template <typename It, typename F>
-        static bool call(It const& it, F f)
+        static bool call(It const& it, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            return 
-                f(*it) || 
-                f(*fusion::advance_c<1>(it))||
-                f(*fusion::advance_c<2>(it)) ||
-                f(*fusion::advance_c<3>(it)) ||
+            return
+                f(fusion::deref(it)) ||
+                f(fusion::deref(fusion::advance_c<1>(it)))||
+                f(fusion::deref(fusion::advance_c<2>(it))) ||
+                f(fusion::deref(fusion::advance_c<3>(it))) ||
                 detail::unrolled_any<N-4>::call(fusion::advance_c<4>(it), f);
         }
     };
@@ -74,12 +75,12 @@ namespace detail
     struct unrolled_any<3>
     {
         template <typename It, typename F>
-        static bool call(It const& it, F f)
+        static bool call(It const& it, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            return 
-                f(*it) || 
-                f(*fusion::advance_c<1>(it)) ||
-                f(*fusion::advance_c<2>(it));
+            return
+                f(fusion::deref(it)) ||
+                f(fusion::deref(fusion::advance_c<1>(it))) ||
+                f(fusion::deref(fusion::advance_c<2>(it)));
         }
     };
 
@@ -87,11 +88,11 @@ namespace detail
     struct unrolled_any<2>
     {
         template <typename It, typename F>
-        static bool call(It const& it, F f)
+        static bool call(It const& it, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            return 
-                f(*it) || 
-                f(*fusion::advance_c<1>(it));
+            return
+                f(fusion::deref(it)) ||
+                f(fusion::deref(fusion::advance_c<1>(it)));
         }
     };
 
@@ -99,9 +100,9 @@ namespace detail
     struct unrolled_any<1>
     {
         template <typename It, typename F>
-        static bool call(It const& it, F f)
+        static bool call(It const& it, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            return f(*it);
+            return f(fusion::deref(it));
         }
     };
 
@@ -109,22 +110,28 @@ namespace detail
     struct unrolled_any<0>
     {
         template <typename It, typename F>
-        static bool call(It const& it, F f)
+        static bool call(It const& it, F const& f)
         {
             return false;
         }
     };
 
-    template <typename Sequence, typename F>
+    template <typename Seq, typename F>
     inline bool
-    any(Sequence const& seq, F f, random_access_traversal_tag)
+    any(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+            BOOST_FUSION_R_ELSE_LREF(F) f,
+            random_access_traversal_tag)
     {
-        typedef typename result_of::begin<Sequence>::type begin;
-        typedef typename result_of::end<Sequence>::type end;
-        return detail::unrolled_any<result_of::distance<begin, end>::type::value>::call(
-            fusion::begin(seq), f);
+        typedef
+            detail::unrolled_any<
+                result_of::size<BOOST_FUSION_R_ELSE_LREF(Seq)>::value
+            >
+        gen;
+
+        return gen::call(
+                fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
+                BOOST_FUSION_FORWARD(F,f));
     }
 }}}
 
 #endif
-

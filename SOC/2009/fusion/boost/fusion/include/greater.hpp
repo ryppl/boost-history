@@ -4,8 +4,9 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_INCLUDE_NOT_GREATER)
-#define FUSION_INCLUDE_NOT_GREATER
+
+#ifndef BOOST_FUSION_INCLUDE_GREATER_HPP
+#define BOOST_FUSION_INCLUDE_GREATER_HPP
 
 #include <boost/fusion/sequence/comparison/greater.hpp>
 

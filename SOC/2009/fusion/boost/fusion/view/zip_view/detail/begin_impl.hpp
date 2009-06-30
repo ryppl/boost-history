@@ -2,22 +2,23 @@
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_BEGIN_IMPL_20060123_2147)
-#define FUSION_BEGIN_IMPL_20060123_2147
+
+#ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_BEGIN_IMPL_HPP
+#define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_BEGIN_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/view/zip_view/zip_view_iterator_fwd.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
-#include <boost/type_traits/remove_reference.hpp>
+#include <boost/fusion/support/unused.hpp>
+#include <boost/fusion/support/assert.hpp>
+
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
-#include <boost/mpl/assert.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/fusion/support/unused.hpp>
 
 namespace boost { namespace fusion {
 
@@ -32,30 +33,26 @@ namespace boost { namespace fusion {
 
             template<typename SeqRef>
             struct result<poly_begin(SeqRef)>
-                : mpl::eval_if<is_same<SeqRef, unused_type const&>,
-                               mpl::identity<unused_type>,
-                               result_of::begin<typename remove_reference<SeqRef>::type> >
+              : mpl::eval_if<is_same<SeqRef, unused_type const&>
+                           , mpl::identity<unused_type const&>
+                           , result_of::begin<SeqRef>
+                >
             {
+                //TODO cschmidt: !!!
                 BOOST_MPL_ASSERT((is_reference<SeqRef>));
             };
 
             template<typename Seq>
-            typename result<poly_begin(Seq&)>::type
-            operator()(Seq& seq) const
+            typename result<poly_begin(BOOST_FUSION_R_ELSE_LREF(Seq))>::type
+            operator()(BOOST_FUSION_R_ELSE_LREF(Seq) seq) const
             {
-                return fusion::begin(seq);
+                return fusion::begin(BOOST_FUSION_FORWARD(Seq,seq));
             }
 
-            template<typename Seq>
-            typename result<poly_begin(Seq const&)>::type
-            operator()(Seq const& seq) const
+            unused_type const&
+            operator()(unused_type const& unused) const
             {
-                return fusion::begin(seq);
-            }
-
-            unused_type operator()(unused_type const&) const
-            {
-                return unused_type();
+                return unused;
             }
         };
     }
@@ -68,23 +65,30 @@ namespace boost { namespace fusion {
         template<>
         struct begin_impl<zip_view_tag>
         {
-            template<typename Sequence>
+            template<typename SeqRef>
             struct apply
             {
-                typedef zip_view_iterator<
-                    typename result_of::transform<typename Sequence::sequences, detail::poly_begin>::type,
-                    typename Sequence::category> type;
+                typedef typename
+                    detail::remove_reference<SeqRef>::type
+                seq;
+
+                typedef
+                    zip_view_iterator<
+                        typename result_of::transform<
+                            typename seq::seqs_type
+                          , detail::poly_begin
+                        >::type
+                      , typename seq::category
+                    >
+                type;
 
                 static type
-                call(Sequence& sequence)
+                call(SeqRef seq)
                 {
-                    return type(
-                        fusion::transform(sequence.sequences_, detail::poly_begin()));
+                    return type(fusion::transform(
+                            seq.seqs, detail::poly_begin()));
                 }
             };
-
-
-            
         };
     }
 }}

@@ -1,20 +1,20 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_NEXT_IMPL_07202005_0856)
-#define FUSION_NEXT_IMPL_07202005_0856
 
-#include <boost/fusion/iterator/next.hpp>
+#ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_NEXT_IMPL_HPP
+#define BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_NEXT_IMPL_HPP
+
 #include <boost/fusion/iterator/prior.hpp>
 
 namespace boost { namespace fusion
 {
     struct reverse_view_iterator_tag;
 
-    template <typename Iterator>
+    template <typename First>
     struct reverse_view_iterator;
 
     namespace extension
@@ -22,20 +22,23 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<reverse_view_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename Iterator::first_type first_type;
-                typedef typename prior_impl<typename first_type::fusion_tag>::
-                    template apply<first_type>
-                wrapped;
-    
-                typedef reverse_view_iterator<typename wrapped::type> type;
-    
+                typedef typename
+                    detail::remove_reference<ItRef>::type::first_type
+                first_type;
+
+                typedef
+                    reverse_view_iterator<
+                        typename result_of::prior<first_type>::type
+                    >
+                type;
+
                 static type
-                call(Iterator const& i)
+                call(ItRef i)
                 {
-                    return type(wrapped::call(i.first));
+                    return type(fusion::prior(i.first));
                 }
             };
         };
@@ -43,5 +46,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

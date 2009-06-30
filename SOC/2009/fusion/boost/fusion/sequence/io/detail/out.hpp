@@ -3,11 +3,12 @@
     Copyright (c) 1999-2003 Jeremiah Willcock
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_OUT_05052005_0121)
-#define FUSION_OUT_05052005_0121
+
+#ifndef BOOST_FUSION_SEQUENCE_IO_DETAIL_OUT_HPP
+#define BOOST_FUSION_SEQUENCE_IO_DETAIL_OUT_HPP
 
 #include <ostream>
 #include <boost/fusion/sequence/io/detail/manip.hpp>
@@ -52,15 +53,16 @@ namespace boost { namespace fusion { namespace detail
         static void
         call(OS& os, First const& first, Last const& last, mpl::false_)
         {
-            result_of::equal_to<
-                typename result_of::next<First>::type
-              , Last
-            >
+            typedef typename
+                result_of::equal_to<
+                    typename result_of::next<First>::type
+                  , Last
+                >::type
             is_last;
 
-            os << *first;
-            delimiter_out<tuple_delimiter_tag>::print(os, " ", is_last);
-            call(os, fusion::next(first), last, is_last);
+            os << fusion::deref(first);
+            delimiter_out<tuple_delimiter_tag>::print(os, " ", is_last());
+            call(os, fusion::next(first), last, is_last());
         }
 
         template <typename OS, typename First, typename Last>

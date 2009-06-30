@@ -1,23 +1,30 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying 
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(FUSION_VECTOR20_05052005_0205)
-#define FUSION_VECTOR20_05052005_0205
 
-#include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/detail/access.hpp>
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_VECTOR20_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_VECTOR20_HPP
+
+#include <boost/config.hpp>
+
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/vector/vector.hpp>
+#endif
+
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/ref.hpp>
+
 #include <boost/fusion/container/vector/detail/at_impl.hpp>
 #include <boost/fusion/container/vector/detail/value_at_impl.hpp>
 #include <boost/fusion/container/vector/detail/begin_impl.hpp>
 #include <boost/fusion/container/vector/detail/end_impl.hpp>
-
-#include <boost/mpl/void.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/bool.hpp>
@@ -40,11 +47,16 @@ namespace boost { namespace fusion
     struct random_access_traversal_tag;
 
 // expand vector11 to vector20
-#define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/vector_n.hpp>
-#define BOOST_PP_ITERATION_LIMITS (11, 20)
-#include BOOST_PP_ITERATE()
+#   ifdef BOOST_NO_VARIADIC_TEMPLATES
+#       define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/vector_n.hpp>
+#   else
+#       define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/variadic_templates/vector_n.hpp>
+#   endif
+#   define BOOST_PP_ITERATION_LIMITS (11, 20)
+#   include BOOST_PP_ITERATE()
 
 }}
-
+#else
+#   include <boost/fusion/container/vector/vector.hpp>
 #endif
-
+#endif
