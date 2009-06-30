@@ -7,12 +7,15 @@
 #define BOOST_CLONEABLE_FORWARD_DECLARATIONS_HPP
 
 #include <functional>
+#include <memory>
 #include <boost/cloneable/detail/prefix.hpp>
 
 namespace boost
 {
 	namespace cloneable
 	{
+		typedef std::allocator<char> default_allocator;
+
 		/// an abstract interface for an allocator that can allocate and de-allocate
 		/// byte sequences
 		struct abstract_allocator;

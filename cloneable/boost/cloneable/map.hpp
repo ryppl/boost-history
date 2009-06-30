@@ -206,7 +206,7 @@ namespace boost
 
 } // namespace boost
 
-#include <boost/heterogenous/detail/suffix.hpp>
+#include <boost/cloneable/detail/suffix.hpp>
 
 #endif // BOOST_HETEROGENOUS_MAP_HPP
 

@@ -56,7 +56,7 @@ namespace boost
 					void deallocate_bytes(abstract_allocator::pointer ptr, size_t /*alignment*/)
 					{
 						CharAlloc alloc(*this);
-						alloc.deallocate(ptr);
+						alloc.deallocate(ptr, 1);
 						
 						// TODO: retreive the originally allocated pointer
 
@@ -88,6 +88,8 @@ namespace boost
 			};
 
 		} // namespace detail
+
+		using detail::make_clone_allocator;
 
 	} // namespace cloneable
 

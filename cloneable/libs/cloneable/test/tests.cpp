@@ -32,6 +32,61 @@ using namespace std;
 using namespace boost;
 using namespace cloneable;
 
+namespace basic_test
+{
+	struct my_base { virtual ~my_base() { } };
+	struct T0 : cloneable::base<T0, my_base> {};
+	struct T1 : cloneable::base<T1, my_base> {};
+	struct T2 : cloneable::base<T2, my_base> {};
+	struct T3 : cloneable::base<T3, my_base> {};
+
+	template <class T>
+	T *clone(const my_base &base)
+	{
+		return dynamic_cast<const abstract_base<my_base> &>(base).clone_as<T>();
+	}
+}
+
+template <class T, class Base>
+T *clone(const cloneable::abstract_base<Base> &base)
+{
+	return base.clone_as<T>();
+}
+
+BOOST_AUTO_TEST_CASE(test_basic)
+{
+	using namespace basic_test;
+
+	// basic cloning
+	T0 *t0 = new T0();
+	T0 *t0_clone = dynamic_cast<T0 *>(t0->clone());
+	BOOST_ASSERT(typeid(*t0_clone) == typeid(T0));
+
+	// cloning from an abstract_base_type, and also using clone_as
+	T1::abstract_base_type *t1_base = new T1();
+	T1 *t1_clone = t1_base->clone_as<T1>();
+	BOOST_ASSERT(typeid(*t1_clone) == typeid(T1));
+
+	// use a free-function from a generalised abstract_base
+	T2 *t2 = new T2;
+	T2 *t2_clone = clone<T2>(*t2);
+	BOOST_ASSERT(typeid(*t2_clone) == typeid(T2));
+
+	// use a free-function from a specific base
+	my_base *t3 = new T3;
+	T3 *t3_clone = basic_test::clone<T3>(*t3);
+	BOOST_ASSERT(typeid(*t3_clone) == typeid(T3));
+
+	delete t0;
+	delete t0_clone;
+	delete t1_base;
+	delete t1_clone;
+	delete t2;
+	delete t2_clone;
+	delete t3;
+	delete t3_clone;
+}
+
 namespace mulitple_inheritance_test
 {
 	struct Q0 : base<Q0>
@@ -54,42 +109,73 @@ namespace mulitple_inheritance_test
 BOOST_AUTO_TEST_CASE(test_clones)
 {
 	using namespace mulitple_inheritance_test;
+
+	// just for spice, use a regionalised monotonic allocator for creating
+	// originals, and producing clones.
+	// at least this way we don't have to free anything...
 	monotonic::local<my_region> local;
 	monotonic::allocator<int,my_region> alloc = local.make_allocator<int>();
 
 	Q0 *q0 = create<Q0>(alloc);
 	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
 
-	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(alloc));
+	Q0 *q0_c = q0->clone_as<Q0>(alloc);
 	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
 
 	Q1 *q1 = create<Q1>(alloc);
 	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
 
-	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->clone_as<Q0>(alloc));
+	Q0 *q1_c0  = q1->clone_as<Q0>(alloc);
 	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
 
-	Q1 *q1_c1  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
+	Q1 *q1_c1  = q1->clone_as<Q1>(alloc);
 	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
 }	
-
-
-BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
-{
-	using namespace mulitple_inheritance_test;
-	typedef cloneable::vector<> vec;
-	vec v;
-	v.emplace_back<Q0>(42);
-	v.emplace_back<Q1>("foo");
-	vec v2 = v;
-	BOOST_ASSERT(v2.ref_at<Q0>(0).num == 42);
-	BOOST_ASSERT(v2.ref_at<Q1>(1).str == "foo");
-}
 
 struct my_base
 {
 	virtual ~my_base() { }
 };
+
+/// some external type that we cannot change
+struct external_type
+{
+	std::string text;
+	external_type() { }
+	external_type(const char *T) : text(T) { }
+};
+
+/// make an adaptor type, which makes `external_type` cloneable
+typedef cloneable::adaptor<external_type, my_base> cloneable_external_type;
+
+BOOST_AUTO_TEST_CASE(test_external_types)
+{
+	//  for spice, use stack for storage
+	monotonic::storage<> storage;
+	monotonic::allocator<int> alloc(storage);
+
+	cloneable_external_type *ext = create<cloneable_external_type>(alloc);
+	BOOST_ASSERT(typeid(*ext) == typeid(cloneable_external_type));
+
+	cloneable_external_type *clone = ext->clone_as<cloneable_external_type>(alloc);
+	BOOST_ASSERT(typeid(*clone) == typeid(cloneable_external_type));
+
+}
+BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)
+{
+	using namespace mulitple_inheritance_test;
+	typedef cloneable::vector<> vec;
+	
+	vec v;
+	v.emplace_back<Q0>(42);
+	v.emplace_back<Q1>("foo");
+
+	// ensure duplication of types with multiple cloneable sub-objects works correctly
+	vec v2 = v;
+	
+	BOOST_ASSERT(v2.ref_at<Q0>(0).num == 42);
+	BOOST_ASSERT(v2.ref_at<Q1>(1).str == "foo");
+}
 
 struct T0 : base<T0, my_base>
 {
@@ -121,30 +207,6 @@ struct T2 : base<T2, my_base>
 	}
 };
 
-/// some external type that we cannot change
-struct ExternalType
-{
-	std::string text;
-	ExternalType() { }
-	ExternalType(const char *T) : text(T) { }
-};
-
-/// make an adaptor type, which makes `ExternalType` cloneable
-typedef cloneable::adaptor<ExternalType, my_base> ExternalType_;
-
-BOOST_AUTO_TEST_CASE(test_external_types)
-{
-	monotonic::local<> local;
-	monotonic::allocator<int> alloc = local.make_allocator<int>();
-
-	ExternalType_ *ext = create<ExternalType_>(alloc);
-	BOOST_ASSERT(typeid(*ext) == typeid(ExternalType_));
-
-	ExternalType_ *clone = dynamic_cast<ExternalType_ *>(ext->clone(alloc));
-	BOOST_ASSERT(typeid(*clone) == typeid(ExternalType_));
-
-}
-
 BOOST_AUTO_TEST_CASE(test_vector)
 {
 	// this uses the base type for the contained elements as a region tag for a monotonic allocator.
@@ -162,7 +224,7 @@ BOOST_AUTO_TEST_CASE(test_vector)
 		bases.emplace_back<T0>(42);						
 		bases.emplace_back<T1>("foo");
 		bases.emplace_back<T2>(3.14f, -123, "spam");
-		bases.emplace_back<ExternalType_>("external");
+		bases.emplace_back<cloneable_external_type>("external");
 
 		// perform functor on each contained object of the given type
 		bases.for_each<T2>(boost::bind(&T2::print, _1));
@@ -187,8 +249,10 @@ BOOST_AUTO_TEST_CASE(test_vector)
 		
 		BOOST_ASSERT(p1.num == 42);
 		BOOST_ASSERT(p2->str == "foo");
-		BOOST_ASSERT(p3->real == 3.14f);BOOST_ASSERT(p3->num == -123);BOOST_ASSERT(p3->str == "spam");
-		BOOST_ASSERT(copy.ref_at<ExternalType_>(3).text == "external");
+		BOOST_ASSERT(p3->real == 3.14f);
+		BOOST_ASSERT(p3->num == -123);
+		BOOST_ASSERT(p3->str == "spam");
+		BOOST_ASSERT(copy.ref_at<cloneable_external_type>(3).text == "external");
 
 		bool caught = false;
 		try

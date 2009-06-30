@@ -198,14 +198,6 @@
 					RelativePath="..\..\..\boost\cloneable\forward_declarations.hpp"
 					>
 				</File>
-				<File
-					RelativePath="..\..\..\boost\cloneable\map.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\..\boost\cloneable\vector.hpp"
-					>
-				</File>
 				<Filter
 					Name="detail"
 					>
@@ -233,6 +225,14 @@
 				<Filter
 					Name="containers"
 					>
+					<File
+						RelativePath="..\..\..\boost\cloneable\map.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\cloneable\vector.hpp"
+						>
+					</File>
 				</Filter>
 			</Filter>
 		</Filter>

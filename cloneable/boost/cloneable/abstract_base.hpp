@@ -10,6 +10,7 @@
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
 #include <boost/cloneable/abstract_allocator.hpp>
+#include <boost/cloneable/detail/make_clone_allocator.hpp>
 
 namespace boost
 {
@@ -58,21 +59,26 @@ namespace boost
 
 			/// for use with types that use multiple inheritance - select which sub-object to clone
 			template <class Ty>
-			this_type *clone_as(abstract_allocator &alloc) const
+			Ty *clone_as(abstract_allocator &alloc) const
 			{
 				const base<Ty, Base> *ptr = dynamic_cast<const base<Ty, Base> *>(this);
 				if (ptr == 0)
 					throw std::bad_cast();
-				return ptr->clone(alloc);
+				this_type *cloned = ptr->clone(alloc);
+				return dynamic_cast<Ty *>(cloned);
 			}
 
 			/// make a copy of the given instance using the heap. caller should call delete
 			this_type *clone() const
 			{
-				return 0;
-				//if (this_type *copy = clone(original, alloc))
-				//	return copy;
-				//return copy_construct(original, alloc);
+				make_clone_allocator<default_allocator>::type alloc;
+				return clone(alloc);
+			}
+			template <class Ty>
+			Ty *clone_as() const
+			{
+				make_clone_allocator<default_allocator>::type alloc;
+				return clone_as<Ty>(alloc);
 			}
 
 			/// overridable hash function
