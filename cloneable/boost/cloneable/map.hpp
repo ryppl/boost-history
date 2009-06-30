@@ -3,8 +3,8 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_HETEROGENOUS_MAP_HPP
-#define BOOST_HETEROGENOUS_MAP_HPP
+#ifndef BOOST_CLONEABLE_MAP_HPP
+#define BOOST_CLONEABLE_MAP_HPP
 
 #include <boost/ptr_container/ptr_map.hpp>
 #include <boost/foreach.hpp>
@@ -13,16 +13,17 @@
 
 namespace boost 
 {
-	namespace heterogenous
+	namespace cloneable
 	{
 		/// a vector of heterogenous objects
+		// TODO: move to boost/heterogenous/map
 		template <class Base, class Pred, class Alloc>//, class AbstractBase>
 		struct map
 		{
-			typedef typename make_clone_allocator<Alloc>::type allocator_type;
+			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
 			typedef Base base_type;
 			//typedef ptr_map<Base, Base, Pred, allocator, allocator_type> implementation;
-			typedef abstract_cloneable<Base> abstract_base_type;
+			typedef abstract_base<Base> abstract_base_type;
 
 			typedef std::map<Base *, Base *, Pred, allocator_type> implementation;
 

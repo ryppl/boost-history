@@ -7,4 +7,8 @@
 #	include <boost/config.hpp>
 #endif
 
+#ifndef BOOST_CLONEABLE_FORWARD_DECLARATIONS_HPP
+#	include <boost/cloneable/forward_declarations.hpp>
+#endif
+
 //EOF

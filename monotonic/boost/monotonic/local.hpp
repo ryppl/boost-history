@@ -8,6 +8,7 @@
 
 #include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/storage.hpp>
+#include <boost/monotonic/static_storage.hpp>
 
 namespace boost
 {

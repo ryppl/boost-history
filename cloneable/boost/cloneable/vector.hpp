@@ -3,33 +3,31 @@
 //  Distributed under the Boost Software License, Version 1.0. (See accompanying 
 //  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_HETEROGENOUS_VECTOR_HPP
-#define BOOST_HETEROGENOUS_VECTOR_HPP
+#ifndef BOOST_CLONEABLE_VECTOR_HPP
+#define BOOST_CLONEABLE_VECTOR_HPP
 
 #include <boost/ptr_container/ptr_vector.hpp>
-#include <boost/monotonic/allocator.hpp>
 #include <boost/foreach.hpp>
 
-#include <boost/cloneable/cloneable.hpp>
+#include <boost/cloneable/detail/prefix.hpp>
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
+#include <boost/cloneable/base.hpp>
 #include <boost/cloneable/detail/allocation.hpp>
 
 namespace boost 
 {
-	namespace heterogenous
+	namespace cloneable
 	{
-		using namespace cloneable;
-
 		/// a vector of heterogenous objects
+		// TODO: move to boost/heterogenous/vector
 		template <class Base, class Alloc>//, class AbstractBase>
 		struct vector
 		{
 			typedef Base base_type;
 			//typedef AbstractBase abstract_base_type;
-			typedef abstract_cloneable<Base> abstract_base_type;
-			typedef typename make_clone_allocator<Alloc>::type allocator_type;
+			typedef abstract_base<Base> abstract_base_type;
+			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
 			typedef ptr_vector<abstract_base_type, allocator, allocator_type> implementation;
-			//typedef ptr_vector<Base, allocator, allocator_type> implementation;
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference;
 			typedef typename implementation::const_reference const_reference;
@@ -49,11 +47,10 @@ namespace boost
 			{
 			}
 
-			/* purposefully elided
-			template <class II>
-			vector(II F, II L, allocator_type a = allocator_type());
-			vector(size_t reserved);
-			*/
+			//purposefully elided
+			//template <class II>
+			//vector(II F, II L, allocator_type a = allocator_type());
+			//vector(size_t reserved);
 
 			template <class Ty, class Fun>
 			Fun for_each(Fun fun)
@@ -203,12 +200,12 @@ namespace boost
 			}
 		};
 	
-	} // namespace heterogenous
+	} // namespace cloneable
 
 } // namespace boost
 
-#include <boost/heterogenous/detail/suffix.hpp>
+#include <boost/cloneable/detail/suffix.hpp>
 
-#endif // BOOST_HETEROGENOUS_VECTOR_HPP
+#endif // BOOST_CLONEABLE_VECTOR_HPP
 
 //EOF

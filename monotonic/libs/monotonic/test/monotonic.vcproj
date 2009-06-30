@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="$(ProjectDir)/../../..;C:\Lib\tbb21_20080605oss\include"
+				AdditionalIncludeDirectories="$(ProjectDir)/../../..;C:\Lib\tbb21_20080605oss\include;c:/source/boost/sandbox/cloneable;"
 				PreprocessorDefinitions="WIN32;_DEBUG;_CONSOLE"
 				MinimalRebuild="true"
 				ExceptionHandling="2"

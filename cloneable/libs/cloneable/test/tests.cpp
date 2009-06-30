@@ -16,8 +16,8 @@
 #include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/local.hpp>
 
-//#include <boost/heterogenous/vector.hpp>
-//#include <boost/heterogenous/map.hpp>
+#include <boost/cloneable/vector.hpp>
+#include <boost/cloneable/map.hpp>
 #include <boost/cloneable/adaptor.hpp>
 #include <boost/cloneable/allocator.hpp>
 #include <boost/bind.hpp>
@@ -72,18 +72,19 @@ BOOST_AUTO_TEST_CASE(test_clones)
 	Q1 *q1_c1  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
 	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
 }	
-//
-//BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
-//{
-//	using namespace mulitple_inheritance_test;
-//	typedef cloneable::vector<> vec;
-//	vec v;
-//	v.emplace_back<Q0>(42);
-//	v.emplace_back<Q1>("foo");
-//	vec v2 = v;
-//	BOOST_ASSERT(v2.ref_at<Q0>(0).num == 42);
-//	BOOST_ASSERT(v2.ref_at<Q1>(1).str == "foo");
-//}
+
+
+BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
+{
+	using namespace mulitple_inheritance_test;
+	typedef cloneable::vector<> vec;
+	vec v;
+	v.emplace_back<Q0>(42);
+	v.emplace_back<Q1>("foo");
+	vec v2 = v;
+	BOOST_ASSERT(v2.ref_at<Q0>(0).num == 42);
+	BOOST_ASSERT(v2.ref_at<Q1>(1).str == "foo");
+}
 
 struct my_base
 {
@@ -131,155 +132,168 @@ struct ExternalType
 /// make an adaptor type, which makes `ExternalType` cloneable
 typedef cloneable::adaptor<ExternalType, my_base> ExternalType_;
 
-//BOOST_AUTO_TEST_CASE(test_vector)
-//{
-//	// this uses the base type for the contained elements as a region tag for a monotonic allocator.
-//	// totally unnecessary, could just use a std::allocator, but this way gives more control
-//	typedef cloneable::vector<my_base, monotonic::allocator<my_base, my_base> > vec;
-//
-//	// use a local scoped object to automatically release resources used by the my_base monotonic 
-//	// storage region on function exit.
-//	monotonic::local<my_base> local;
-//	{
-//		vec bases;
-//
-//		// type of thing to insert must be passed explicitly, and must derive from common_base.
-//		// arguments to push_back are passed directly to ctor
-//		bases.emplace_back<T0>(42);						
-//		bases.emplace_back<T1>("foo");
-//		bases.emplace_back<T2>(3.14f, -123, "spam");
-//		bases.emplace_back<ExternalType_>("external");
-//
-//		// perform functor on each contained object of the given type
-//		bases.for_each<T2>(boost::bind(&T2::print, _1));
-//
-//		// does a deep copy, preserving concrete types
-//		vec copy = bases;
-//
-//		// each object in the container can be retrieved generically as a default_base_type
-//		my_base &generic0 = copy[0];
-//		my_base &generic1 = copy[1];
-//		my_base &generic2 = copy[2];
-//
-//		// get a reference; will throw bad_cast on type mismatch
-//		T0 &p1 = copy.ref_at<T0>(0);
-//
-//		// get a pointer; returns null on type mismatch
-//		T1 *p2 = copy.ptr_at<T1>(1);
-//		T2 *p3 = copy.ptr_at<T2>(2);
-//		
-//		BOOST_ASSERT(p2);
-//		BOOST_ASSERT(p3);
-//		
-//		BOOST_ASSERT(p1.num == 42);
-//		BOOST_ASSERT(p2->str == "foo");
-//		BOOST_ASSERT(p3->real == 3.14f);BOOST_ASSERT(p3->num == -123);BOOST_ASSERT(p3->str == "spam");
-//		BOOST_ASSERT(copy.ref_at<ExternalType_>(3).text == "external");
-//
-//		bool caught = false;
-//		try
-//		{
-//			my_base &base = copy.ref_at<T1>(0);
-//		}
-//		catch (std::bad_cast)
-//		{
-//			caught = true;
-//		}
-//		BOOST_ASSERT(caught);
-//
-//	}
-//}
-//
-//namespace map_test
-//{
-//	struct my_base
-//	{
-//		int number;
-//		my_base(int n = 0) : number(n) { }
-//		virtual ~my_base() { }
-//	};
-//
-//	struct M0 : base<M0, my_base>
-//	{
-//		M0(int n = 0) : my_base(n) {}
-//	};
-//
-//	struct M1 : base<M1, my_base>
-//	{
-//		string str;
-//		M1() { }
-//		M1(const char *s) : str(s) { }
-//	};
-//
-//	struct M2 : base<M2, my_base>
-//	{
-//	};
-//
-//	struct M3 : base<M3, my_base>
-//	{
-//	};
-//
-//	struct my_less
-//	{
-//		bool operator()(my_base const *left, my_base const *right) const
-//		{
-//			return left->number < right->number;
-//		}
-//	};
-//}
-//
-//BOOST_AUTO_TEST_CASE(test_map)
-//{
-//	using namespace map_test;
-//	typedef cloneable::map<map_test::my_base,my_less> map_type;
-//	map_type map;
-//	map .key<M0>(42).value<M1>("foo")
-//		.key<M2>().value<M3>()
-//		;
-//	M0 *m0 = create<M0>(map.get_allocator(), 42);
-//	map_type::iterator iter = map.find(m0);
-//	BOOST_ASSERT(iter!= map.end());
-//	M1 *m1 = dynamic_cast<M1 *>(iter->second);
-//	BOOST_ASSERT(m1 != 0);
-//	BOOST_ASSERT(m1->str == "foo");
-//}
-//
-//BOOST_AUTO_TEST_CASE(test_hash)
-//{
-//	using namespace map_test;
-//	M0 a, b;
-//	BOOST_ASSERT(a.hash() != b.hash());
-//}
-//
-//
-//BOOST_AUTO_TEST_CASE(test_any)
-//{
-//	// this works, after changing boost::any<> to take an allocator type argument
-//	typedef any<monotonic::allocator<char> > any_type;
-//	typedef std::vector<any_type, monotonic::allocator<any_type> > vec;
-//	vec v;
-//
-//	// an issue here is that instances are copy-constructed into the container.
-//	// another issue is that this is effectively typeless.
-//	// but, types added do not have to derive from anything in order for duplication to work.
-//	v.push_back(T0(42));
-//	v.push_back(T1("foo"));
-//
-//	vec v2 = v;
-//
-//	BOOST_ASSERT(any_cast<T1 &>(v2[1]).str == "foo");
-//}
-//
-//BOOST_AUTO_TEST_CASE(test_variant)
-//{
-//	// need to declare all the possible types that could be used at the point of declaration
-//	typedef variant<T0, T1, T2> var;
-//	typedef std::vector<var, monotonic::allocator<var> > vec;
-//	vec v0;
-//	v0.push_back(T0(42));
-//	v0.push_back(T1("foo"));
-//	vec v1 = v0;
-//	BOOST_ASSERT(boost::get<T1>(v1[1]).str == "foo");
-//}
-//
+BOOST_AUTO_TEST_CASE(test_external_types)
+{
+	monotonic::local<> local;
+	monotonic::allocator<int> alloc = local.make_allocator<int>();
+
+	ExternalType_ *ext = create<ExternalType_>(alloc);
+	BOOST_ASSERT(typeid(*ext) == typeid(ExternalType_));
+
+	ExternalType_ *clone = dynamic_cast<ExternalType_ *>(ext->clone(alloc));
+	BOOST_ASSERT(typeid(*clone) == typeid(ExternalType_));
+
+}
+
+BOOST_AUTO_TEST_CASE(test_vector)
+{
+	// this uses the base type for the contained elements as a region tag for a monotonic allocator.
+	// totally unnecessary, could just use a std::allocator, but this way gives more control
+	typedef cloneable::vector<my_base, monotonic::allocator<my_base, my_base> > vec;
+
+	// use a local scoped object to automatically release resources used by the my_base monotonic 
+	// storage region on function exit.
+	monotonic::local<my_base> local;
+	{
+		vec bases;
+
+		// type of thing to insert must be passed explicitly, and must derive from common_base.
+		// arguments to push_back are passed directly to ctor
+		bases.emplace_back<T0>(42);						
+		bases.emplace_back<T1>("foo");
+		bases.emplace_back<T2>(3.14f, -123, "spam");
+		bases.emplace_back<ExternalType_>("external");
+
+		// perform functor on each contained object of the given type
+		bases.for_each<T2>(boost::bind(&T2::print, _1));
+
+		// does a deep copy, preserving concrete types
+		vec copy = bases;
+
+		// each object in the container can be retrieved generically as a default_base_type
+		my_base &generic0 = copy[0];
+		my_base &generic1 = copy[1];
+		my_base &generic2 = copy[2];
+
+		// get a reference; will throw bad_cast on type mismatch
+		T0 &p1 = copy.ref_at<T0>(0);
+
+		// get a pointer; returns null on type mismatch
+		T1 *p2 = copy.ptr_at<T1>(1);
+		T2 *p3 = copy.ptr_at<T2>(2);
+		
+		BOOST_ASSERT(p2);
+		BOOST_ASSERT(p3);
+		
+		BOOST_ASSERT(p1.num == 42);
+		BOOST_ASSERT(p2->str == "foo");
+		BOOST_ASSERT(p3->real == 3.14f);BOOST_ASSERT(p3->num == -123);BOOST_ASSERT(p3->str == "spam");
+		BOOST_ASSERT(copy.ref_at<ExternalType_>(3).text == "external");
+
+		bool caught = false;
+		try
+		{
+			my_base &base = copy.ref_at<T1>(0);
+		}
+		catch (std::bad_cast)
+		{
+			caught = true;
+		}
+		BOOST_ASSERT(caught);
+
+	}
+}
+
+namespace map_test
+{
+	struct my_base
+	{
+		int number;
+		my_base(int n = 0) : number(n) { }
+		virtual ~my_base() { }
+	};
+
+	struct M0 : base<M0, my_base>
+	{
+		M0(int n = 0) : my_base(n) {}
+	};
+
+	struct M1 : base<M1, my_base>
+	{
+		string str;
+		M1() { }
+		M1(const char *s) : str(s) { }
+	};
+
+	struct M2 : base<M2, my_base>
+	{
+	};
+
+	struct M3 : base<M3, my_base>
+	{
+	};
+
+	struct my_less
+	{
+		bool operator()(my_base const *left, my_base const *right) const
+		{
+			return left->number < right->number;
+		}
+	};
+}
+
+BOOST_AUTO_TEST_CASE(test_map)
+{
+	using namespace map_test;
+	typedef cloneable::map<map_test::my_base,my_less> map_type;
+	map_type map;
+	map .key<M0>(42).value<M1>("foo")
+		.key<M2>().value<M3>()
+		;
+	M0 *m0 = create<M0>(map.get_allocator(), 42);
+	map_type::iterator iter = map.find(m0);
+	BOOST_ASSERT(iter!= map.end());
+	M1 *m1 = dynamic_cast<M1 *>(iter->second);
+	BOOST_ASSERT(m1 != 0);
+	BOOST_ASSERT(m1->str == "foo");
+}
+
+BOOST_AUTO_TEST_CASE(test_hash)
+{
+	using namespace map_test;
+	M0 a, b;
+	BOOST_ASSERT(a.hash() != b.hash());
+}
+
+
+BOOST_AUTO_TEST_CASE(test_any)
+{
+	// this works, after changing boost::any<> to take an allocator type argument
+	typedef any<monotonic::allocator<char> > any_type;
+	typedef std::vector<any_type, monotonic::allocator<any_type> > vec;
+	vec v;
+
+	// an issue here is that instances are copy-constructed into the container.
+	// another issue is that this is effectively typeless.
+	// but, types added do not have to derive from anything in order for duplication to work.
+	v.push_back(T0(42));
+	v.push_back(T1("foo"));
+
+	vec v2 = v;
+
+	BOOST_ASSERT(any_cast<T1 &>(v2[1]).str == "foo");
+}
+
+BOOST_AUTO_TEST_CASE(test_variant)
+{
+	// need to declare all the possible types that could be used at the point of declaration
+	typedef variant<T0, T1, T2> var;
+	typedef std::vector<var, monotonic::allocator<var> > vec;
+	vec v0;
+	v0.push_back(T0(42));
+	v0.push_back(T1("foo"));
+	vec v1 = v0;
+	BOOST_ASSERT(boost::get<T1>(v1[1]).str == "foo");
+}
+
 //EOF

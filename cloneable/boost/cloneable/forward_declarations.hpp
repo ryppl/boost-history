@@ -43,7 +43,7 @@ namespace boost
 			>//, class AbstractBase = abstract_cloneable<Base> >
 		struct adaptor;
 
-		/* TODO: move to boost/heterogenous/foward
+		// TODO: move to boost/heterogenous/foward
 		/// a heterogenous vector of objects
 		template <
 			class Base = default_base_type
@@ -58,7 +58,6 @@ namespace boost
 			, class Alloc = monotonic::allocator<int>
 			>//, class AbstractBase = abstract_cloneable<Base> >
 		struct map;
-		*/
 
 	} // namespace cloneable
 
