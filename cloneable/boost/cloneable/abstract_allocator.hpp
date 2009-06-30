@@ -8,6 +8,7 @@
 
 #include <boost/cloneable/detail/prefix.hpp>
 #include <boost/cloneable/forward_declarations.hpp>
+//#include <boost/cloneable/allocation.hpp>
 
 namespace boost
 {
@@ -31,6 +32,23 @@ namespace boost
 					extra = alignment - extra;
 				return extra;
 			}
+
+			// TODO
+			//template <class T>
+			//T *create()
+			//{
+			//	return cloneable::create<T>(*this);
+			//}
+			//template <class T, class A0>
+			//T *create(A0 a0)
+			//{
+			//	return cloneable::create<T>(*this, a0);
+			//}
+			//template <class T, class A0, class A1>
+			//T *create(A0 a0, A1 a1)
+			//{
+			//	return cloneable::create<T>(*this, a0, a1);
+			//}
 		};
 
 	} // namespace cloneable

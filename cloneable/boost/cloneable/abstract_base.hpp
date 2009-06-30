@@ -34,7 +34,8 @@ namespace boost
 			/// make storage for a new instance, but do not invoke any constructor
 			virtual this_type *allocate(abstract_allocator &) const = 0;
 
-			/// free memory associated with the given instance
+			/// free memory associated with this instance. 
+			/// this is effectively 'delete this', but without a call to the destructor
 			virtual void deallocate(abstract_allocator &) = 0;
 
 			/// create a new object of the derived type
@@ -57,7 +58,9 @@ namespace boost
 				return copy_construct(alloc);
 			}
 
-			/// for use with types that use multiple inheritance - select which sub-object to clone
+			/// for use with types that use multiple inheritance - select which sub-object to clone.
+			/// can also be used when there is just one cloneable sub-object to avoid having to
+			/// dynamic cast the result.
 			template <class Ty>
 			Ty *clone_as(abstract_allocator &alloc) const
 			{
@@ -68,12 +71,44 @@ namespace boost
 				return dynamic_cast<Ty *>(cloned);
 			}
 
-			/// make a copy of the given instance using the heap. caller should call delete
+			/// non-virtual method that allocates using default allocator
+			this_type *allocate() const
+			{
+				make_clone_allocator<default_allocator>::type alloc;
+				return allocate(alloc);
+			}
+
+			/// non-virtual method that deallocates using default allocator
+			void deallocate() const
+			{
+				make_clone_allocator<default_allocator>::type alloc;
+				return deallocate(alloc);
+			}
+
+			/// non-virtual method that creates a new instance of derived type using default allocator
+			this_type *create_new() const
+			{
+				make_clone_allocator<default_allocator>::type alloc;
+				return create_new(alloc);
+			}
+
+			/// non-virtual method that creates a new instance of derived type from this instance,
+			/// using copy-constructor and default allocator
+			this_type *copy_construct() const
+			{
+				make_clone_allocator<default_allocator>::type alloc;
+				return copy_construct(alloc);
+			}
+
+			/// make a copy of this instance using default allocator
 			this_type *clone() const
 			{
 				make_clone_allocator<default_allocator>::type alloc;
 				return clone(alloc);
 			}
+
+			/// make a copy of this instance using default allocator, 
+			/// selecting sub-object to clone
 			template <class Ty>
 			Ty *clone_as() const
 			{
@@ -81,7 +116,10 @@ namespace boost
 				return clone_as<Ty>(alloc);
 			}
 
-			/// overridable hash function
+			/// overridable to-string function, for utility
+			virtual std::string to_string() const { return "cloneable"; }
+
+			/// overridable hash function, for utility
 			virtual size_t hash_value() const { return 0; }
 
 			/// return a hash value for the object. try the virtual method first, otherwise just use pointer value
@@ -92,7 +130,6 @@ namespace boost
 				return ptrdiff_t(reinterpret_cast<const char *>(this) - 0);
 			}
 
-			virtual std::string to_string() const { return "cloneable"; }
 		};
 
 	} // namespace cloneable

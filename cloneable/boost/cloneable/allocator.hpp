@@ -19,13 +19,17 @@ namespace boost
 			template <class Base>
 			static Base* allocate_clone( const Base& object )
 			{
-				throw;
+				// use default allocator
+				return object.clone();
 			}
 
 			template <class Base>
 			static void deallocate_clone( const Base* clone )
 			{
-				throw;
+				if (!object)
+					return;
+				// use default allocator
+				return const_cast<Base *>(object->deallocate());
 			}
 
 			template <class Base, class Alloc>
@@ -52,12 +56,42 @@ namespace boost
 			return ptr;
 		}
 
+		template <class T>
+		T *create(abstract_allocator &alloc)
+		{
+			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			new (ptr) T();
+			return reinterpret_cast<T *>(ptr);
+		}
+		template <class T, class A0>
+		T *create(abstract_allocator &alloc, A0 a0)
+		{
+			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			new (ptr) T(a0);
+			return reinterpret_cast<T *>(ptr);
+		}
+		template <class T, class A0, class A1>
+		T *create(abstract_allocator &alloc, A0 a0,  A1 a1)
+		{
+			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			new (ptr) T(a0, a1);
+			return reinterpret_cast<T *>(ptr);
+		}
+
 		template <class T, class Alloc, class A0>
 		T *create(Alloc &alloc, A0 a0)
 		{
 			typename Alloc::template rebind<T>::other al(alloc);
 			T *ptr = al.allocate(1);
 			new (ptr) T(a0);
+			return ptr;
+		}
+		template <class T, class Alloc, class A0, class A1>
+		T *create(Alloc &alloc, A0 a0, A1 a1)
+		{
+			typename Alloc::template rebind<T>::other al(alloc);
+			T *ptr = al.allocate(1);
+			new (ptr) T(a0, a1);
 			return ptr;
 		}
 		template <class T, class Alloc>

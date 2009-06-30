@@ -15,20 +15,22 @@ namespace boost
 	namespace cloneable
 	{
 		/// base for the given derived type, using the given base class
-		template <class Derived, class Base>//, class AbstractBase>
+		template <class Derived, class Base>
 		struct base : abstract_base<Base>
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;
-			//typedef AbstractBase abstract_base_type;
 			typedef abstract_base<Base> abstract_base_type;
-			typedef base<Derived, Base/*, AbstractBase*/> this_type;
+			typedef base<Derived, Base> this_type;
 
-			static const size_t alignment;			///< required alignment for allocation
+			static const size_t alignment;		///< required alignment for allocation
 			mutable derived_type *self_ptr;		///< pointer to derived object in this
 
 		public:
-			base() { self_ptr = static_cast<Derived *>(this); }
+			base() 
+			{ 
+				self_ptr = static_cast<Derived *>(this); 
+			}
 
 			virtual this_type *allocate(abstract_allocator &alloc) const 
 			{

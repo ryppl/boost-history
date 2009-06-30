@@ -15,6 +15,8 @@ namespace boost
 	{
 		namespace detail
 		{
+			/// a pointer store that can retrieve pointers from up and down 
+			/// the inheritance tree.
 			template <class U, class B>
 			struct pointer
 			{
@@ -44,6 +46,8 @@ namespace boost
 				}
 				derived_type *to_derived() const
 				{
+					if (!ptr)
+						return 0;
 					return ptr->cloneable_type::self_ptr;
 				}
 			};

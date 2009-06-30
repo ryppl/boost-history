@@ -132,6 +132,33 @@ BOOST_AUTO_TEST_CASE(test_clones)
 	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
 }	
 
+namespace custom_clone_test
+{
+	struct T0 : base<T0>
+	{
+		bool custom_cloned;
+		T0() : custom_cloned(false) { }
+
+		/// override the means to create a copy from abstract_base<>
+		T0 *make_copy(abstract_allocator &alloc) const
+		{
+			T0 *ptr = create<T0>(alloc);
+			ptr->custom_cloned = true;
+			return ptr;
+		}
+	};
+}
+
+BOOST_AUTO_TEST_CASE(test_custom_clone)
+{
+	using namespace custom_clone_test;
+	T0 *p = new T0;
+	T0 *q = p->clone_as<T0>();
+	BOOST_ASSERT(q && q->custom_cloned);
+	delete p;
+	delete q;
+}
+
 struct my_base
 {
 	virtual ~my_base() { }
@@ -159,8 +186,25 @@ BOOST_AUTO_TEST_CASE(test_external_types)
 
 	cloneable_external_type *clone = ext->clone_as<cloneable_external_type>(alloc);
 	BOOST_ASSERT(typeid(*clone) == typeid(cloneable_external_type));
-
 }
+
+//struct custom_external_cloneable : adaptor<external_type, my_base>
+//{
+//	custom_external_cloneable *clone(abstract_allocator &alloc) const
+//	{
+//		custom_external_cloneable *ptr = create<custom_external_cloneable>(alloc);
+//		ptr->text = "custom_cloned";
+//		return ptr;
+//	}
+//};
+//
+//BOOST_AUTO_TEST_CASE(test_custom_external_clone)
+//{
+//	custom_external_cloneable *p = new custom_external_cloneable;
+//	custom_external_cloneable *q = p->clone_as<custom_external_cloneable>();
+//	BOOST_ASSERT(typeid(*q) == typeid(custom_external_cloneable));
+//}
+
 BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)
 {
 	using namespace mulitple_inheritance_test;
