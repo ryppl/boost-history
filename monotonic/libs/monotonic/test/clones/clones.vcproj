@@ -365,6 +365,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\heterogenous\adaptor.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\heterogenous\allocator.hpp"
 					>
 				</File>

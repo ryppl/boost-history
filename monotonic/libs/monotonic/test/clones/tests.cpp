@@ -10,6 +10,7 @@
 #include <iostream>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/heterogenous/map.hpp>
+#include <boost/heterogenous/adaptor.hpp>
 #include <boost/bind.hpp>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
@@ -95,14 +96,16 @@ namespace test
 	}
 }
 
-namespace boost
+/// some external type that we cannot change
+struct ExternalType
 {
-	namespace heterogenous
-	{
-		//template <class T, template <class> class Base = base, class AbstractBase = abstract_base>
-		//struct adaptor : 
-	}
-}
+	std::string text;
+	ExternalType() { }
+	ExternalType(const char *T) : text(T) { }
+};
+
+/// make an adaptor type, which makes `ExternalType` heterogenous
+typedef heterogenous::adaptor<ExternalType, my_base> T4;
 
 int main()
 {
@@ -111,9 +114,6 @@ int main()
 	test_any();
 	test_variant();
 	test_map();
-
-
-
 
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<my_base> vec;
@@ -126,16 +126,13 @@ int main()
 		bases.emplace_back<derived>(42);						
 		bases.emplace_back<derived2>("foo");
 		bases.emplace_back<derived3>(3.14f, -123, "spam");
+		bases.emplace_back<T4>("external");
 
 		// perform functor on each contained object of the given type
 		bases.for_each<derived3>(boost::bind(&derived3::print, _1));
 
-		BOOST_ASSERT(bases.size() == 3);
-
 		// does a deep copy, preserving concrete types
 		vec copy = bases;
-
-		BOOST_ASSERT(copy.size() == 3);
 
 		// each object in the container can be retrieved generically as a default_base_type
 		my_base &generic0 = copy[0];
@@ -155,6 +152,7 @@ int main()
 		BOOST_ASSERT(p1.num == 42);
 		BOOST_ASSERT(p2->str == "foo");
 		BOOST_ASSERT(p3->real == 3.14f);BOOST_ASSERT(p3->num == -123);BOOST_ASSERT(p3->str == "spam");
+		BOOST_ASSERT(copy.ref_at<T4>(3).text == "external");
 
 		bool caught = false;
 		try

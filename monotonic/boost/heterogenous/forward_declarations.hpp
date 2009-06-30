@@ -27,6 +27,16 @@ namespace boost
 			, class AbstractBase = abstract_base<Base> >
 		struct base;
 
+		/// an adaptor for an existing class.
+		///
+		/// this is a type that can be used correctly in an homogenous container,
+		/// of effective type T, where T does not inherit from heterogenous::base.
+		template <
+			class T
+			, class Base = default_base_type
+			, class AbstractBase = abstract_base<Base> >
+		struct adaptor;
+
 		template <
 			class Base = default_base_type
 			, class Alloc = monotonic::allocator<int>
