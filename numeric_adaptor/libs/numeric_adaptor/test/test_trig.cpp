@@ -31,11 +31,11 @@ void test_all()
 
     num n1 = 123.0;
     num n2 = 456.0;
-    BOOST_CHECK_CLOSE((double)boost::numeric_adaptor::cos(n1), ::cos(123.0), epsilon);
-    BOOST_CHECK_CLOSE((double)boost::numeric_adaptor::sin(n1), ::sin(123.0), epsilon);
-    BOOST_CHECK_CLOSE((double)boost::numeric_adaptor::tan(n1), ::tan(123.0), epsilon);
-    BOOST_CHECK_CLOSE((double)boost::numeric_adaptor::atan(n1), ::atan(123.0), epsilon);
-    BOOST_CHECK_CLOSE((double)boost::numeric_adaptor::hypot(n1, n2), ::hypot(123.0, 456.0), epsilon);
+    BOOST_CHECK_CLOSE((double)cos(n1), ::cos(123.0), epsilon);
+    BOOST_CHECK_CLOSE((double)sin(n1), ::sin(123.0), epsilon);
+    BOOST_CHECK_CLOSE((double)tan(n1), ::tan(123.0), epsilon);
+    BOOST_CHECK_CLOSE((double)atan(n1), ::atan(123.0), epsilon);
+    BOOST_CHECK_CLOSE((double)hypot(n1, n2), ::hypot(123.0, 456.0), epsilon);
 }
 
 int test_main(int, char*[])

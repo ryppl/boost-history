@@ -30,7 +30,7 @@ double heron()
     num b = 0.000023;
     num c = 31622.77661;
     num s((a + b + c) / num(2.0));
-    return boost::numeric_adaptor::sqrt(s * (s - a) * (s - b) * (s - c));
+    return sqrt(s * (s - a) * (s - b) * (s - c));
 }
 
 int test_main(int, char*[])
