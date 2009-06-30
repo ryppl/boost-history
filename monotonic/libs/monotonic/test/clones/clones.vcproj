@@ -88,6 +88,8 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
+				Description="Running tests"
+				CommandLine="$(OutDir)\$(ProjectName).exe"
 			/>
 		</Configuration>
 		<Configuration

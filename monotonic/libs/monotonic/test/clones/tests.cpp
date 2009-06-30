@@ -6,6 +6,9 @@
 // documentation at https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/doc/index.html
 // sandbox at https://svn.boost.org/svn/boost/sandbox/monotonic/
 
+#define BOOST_TEST_DYN_LINK
+#define BOOST_TEST_MAIN
+
 #include <string>
 #include <iostream>
 #include <boost/heterogenous/vector.hpp>
@@ -14,6 +17,10 @@
 #include <boost/bind.hpp>
 #include <boost/any.hpp>
 #include <boost/variant.hpp>
+
+#define BOOST_TEST_MODULE basic_test test
+#include <boost/test/unit_test.hpp>
+#include <boost/timer.hpp>
 
 using namespace std;
 using namespace boost;
@@ -24,29 +31,29 @@ struct my_base
 	virtual ~my_base() { }
 };
 
-struct derived : cloneable<derived, my_base>
+struct T0 : cloneable<T0, my_base>
 {
 	int num;
-	derived() : num(0) { }
-	derived(int n) : num(n) { }
+	T0() : num(0) { }
+	T0(int n) : num(n) { }
 };
 
-struct derived2 : cloneable<derived2, my_base>
+struct T1 : cloneable<T1, my_base>
 {
 	std::string str;
 
-	derived2() { }
-	derived2(std::string const &n) : str(n) { }
+	T1() { }
+	T1(std::string const &n) : str(n) { }
 };
 
-struct derived3 : cloneable<derived3, my_base>
+struct T2 : cloneable<T2, my_base>
 {
 	float real;
 	int num;
 	std::string str;
 
-	derived3() { }
-	derived3(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
+	T2() { }
+	T2(float f, int n, std::string const &s) : real(f), num(n), str(s) { }
 
 	void print() const
 	{
@@ -72,7 +79,7 @@ namespace mi_test
 
 }
 
-void test_multiple_inheritance()
+BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
 {
 	using namespace mi_test;
 	typedef heterogenous::vector<> vec;
@@ -101,11 +108,6 @@ void test_multiple_inheritance()
 	vec v2 = v;
 	BOOST_ASSERT(v2.ref_at<Q1>(1).s == "foo");
 }
-
-void test_any();
-void test_variant();
-void test_map();
-
 
 namespace test
 {
@@ -141,15 +143,8 @@ struct ExternalType
 /// make an adaptor type, which makes `ExternalType` heterogenous
 typedef heterogenous::adaptor<ExternalType, my_base> ExternalType_;
 
-int main()
+BOOST_AUTO_TEST_CASE(test_vector)
 {
-	test::run();
-
-	test_any();
-	test_variant();
-	test_map();
-	test_multiple_inheritance();
-
 	// a 'heterogenous' container of objects of any type that derives from common_base
 	typedef heterogenous::vector<my_base> vec;
 
@@ -158,13 +153,13 @@ int main()
 
 		// type of thing to insert must be passed explicitly, and must derive from common_base.
 		// arguments to push_back are passed directly to ctor
-		bases.emplace_back<derived>(42);						
-		bases.emplace_back<derived2>("foo");
-		bases.emplace_back<derived3>(3.14f, -123, "spam");
+		bases.emplace_back<T0>(42);						
+		bases.emplace_back<T1>("foo");
+		bases.emplace_back<T2>(3.14f, -123, "spam");
 		bases.emplace_back<ExternalType_>("external");
 
 		// perform functor on each contained object of the given type
-		bases.for_each<derived3>(boost::bind(&derived3::print, _1));
+		bases.for_each<T2>(boost::bind(&T2::print, _1));
 
 		// does a deep copy, preserving concrete types
 		vec copy = bases;
@@ -175,11 +170,11 @@ int main()
 		my_base &generic2 = copy[2];
 
 		// get a reference; will throw bad_cast on type mismatch
-		derived &p1 = copy.ref_at<derived>(0);
+		T0 &p1 = copy.ref_at<T0>(0);
 
 		// get a pointer; returns null on type mismatch
-		derived2 *p2 = copy.ptr_at<derived2>(1);
-		derived3 *p3 = copy.ptr_at<derived3>(2);
+		T1 *p2 = copy.ptr_at<T1>(1);
+		T2 *p3 = copy.ptr_at<T2>(2);
 		
 		BOOST_ASSERT(p2);
 		BOOST_ASSERT(p3);
@@ -192,7 +187,7 @@ int main()
 		bool caught = false;
 		try
 		{
-			my_base &base = copy.ref_at<derived2>(0);
+			my_base &base = copy.ref_at<T1>(0);
 		}
 		catch (std::bad_cast)
 		{
@@ -201,10 +196,9 @@ int main()
 		BOOST_ASSERT(caught);
 
 	}
-	return 0;
 }
 
-void test_any()
+BOOST_AUTO_TEST_CASE(test_any)
 {
 	// this works, after changing boost::any<> to take an allocator type argument
 	typedef any<monotonic::allocator<char> > any_type;
@@ -214,25 +208,24 @@ void test_any()
 	// an issue here is that instances are copy-constructed into the container.
 	// another issue is that this is effectively typeless.
 	// but, types added do not have to derive from anything in order for duplication to work.
-	v.push_back(derived(42));
-	v.push_back(derived2("foo"));
+	v.push_back(T0(42));
+	v.push_back(T1("foo"));
 
 	vec v2 = v;
 
-	BOOST_ASSERT(any_cast<derived2 &>(v2[1]).str == "foo");
+	BOOST_ASSERT(any_cast<T1 &>(v2[1]).str == "foo");
 }
 
-void test_variant()
+BOOST_AUTO_TEST_CASE(test_variant)
 {
 	// need to declare all the possible types that could be used at the point of declaration
-	typedef variant<derived, derived2, derived3> var;
+	typedef variant<T0, T1, T2> var;
 	typedef std::vector<var, monotonic::allocator<var> > vec;
 	vec v0;
-	v0.push_back(derived(42));
-	v0.push_back(derived2("foo"));
+	v0.push_back(T0(42));
+	v0.push_back(T1("foo"));
 	vec v1 = v0;
-	BOOST_ASSERT(boost::get<derived2>(v1[1]).str == "foo");
-
+	BOOST_ASSERT(boost::get<T1>(v1[1]).str == "foo");
 }
 
 struct my_base2
@@ -242,19 +235,19 @@ struct my_base2
 	virtual ~my_base2() { }
 };
 
-struct T0 : heterogenous::cloneable<T0, my_base2>
+struct M0 : heterogenous::cloneable<M0, my_base2>
 {
 };
 
-struct T1 : heterogenous::cloneable<T1, my_base2>
+struct M1 : heterogenous::cloneable<M1, my_base2>
 {
 };
 
-struct T2 : heterogenous::cloneable<T2, my_base2>
+struct M2 : heterogenous::cloneable<M2, my_base2>
 {
 };
 
-struct T3 : heterogenous::cloneable<T3, my_base2>
+struct M3 : heterogenous::cloneable<M3, my_base2>
 {
 };
 
@@ -266,12 +259,12 @@ struct my_less
 	}
 };
 
-void test_map()
+BOOST_AUTO_TEST_CASE(test_map)
 {
 	heterogenous::map<my_base2,my_less> map;
 
-	map .key<T0>().value<T1>()
-		.key<T2>().value<T3>()
+	map .key<M0>().value<M1>()
+		.key<M2>().value<M3>()
 		;
 
 }
