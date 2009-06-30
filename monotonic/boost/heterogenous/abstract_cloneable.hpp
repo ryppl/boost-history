@@ -13,31 +13,46 @@ namespace boost
 {
 	namespace heterogenous
 	{
+		/// default base type used for object hierarchies to be stored in a given
+		/// container or containers. the user can supply their own when using 
+		/// cloneable<Derived, Base> this will be used by default.
 		struct default_base_type
 		{
 			virtual ~default_base_type() { }
 		};
 
-		/// common base for all base types for hierachies
+		/// root structure for the heterogenous object system
 		template <class Base>
-		struct abstract_base : Base
+		struct abstract_cloneable : Base
 		{
 			typedef Base base_type;
-			typedef abstract_base<Base> this_type;
+			typedef abstract_cloneable<Base> this_type;
 
-			//virtual base_type *allocate(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
-			//virtual void deallocate(base_type *, abstract_allocator &alloc) const /*= 0;*/ { }
-			//virtual base_type *create(abstract_allocator &alloc) const /*= 0;*/ { return 0; }
-			//virtual base_type *copy_construct(const base_type &original, abstract_allocator &alloc) const /*= 0;*/ { return 0; }
-
+			/// make storage for a new instance, but do not invoke any constructor
 			virtual this_type *allocate(abstract_allocator &alloc) const = 0;
+
+			/// free memory associated with the given instance
 			virtual void deallocate(base_type &, abstract_allocator &alloc) const = 0;
 
+			/// create a new object of the derived type
 			virtual this_type *create_new(abstract_allocator &alloc) const = 0;
+
+			/// create a clone using copy-constructor. this is implemented in cloneable<>, but can
+			/// be overriden by the user in the derived type if required.
 			virtual this_type *copy_construct(const base_type &original, abstract_allocator &alloc) const = 0;
 
-			/// optional means to make a clone that does not use copy-construction
+			/// optional means to make a clone that does not use copy-construction.
+			/// user can overload this in their derived type to provide custom clone implementation.
 			virtual this_type *clone(const base_type &original, abstract_allocator &alloc) const { return 0; }
+
+			/// make a copy of the given instance. try the custom clone method first, 
+			/// then default to using the copy-constructor method
+			this_type *make_copy(const base_type &original, abstract_allocator &alloc) const
+			{
+				if (this_type *copy = clone(original, alloc))
+					return copy;
+				return copy_construct(original, alloc);
+			}
 		};
 
 	} // namespace heterogenous
