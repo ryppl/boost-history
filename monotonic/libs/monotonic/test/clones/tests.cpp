@@ -27,6 +27,60 @@ using namespace std;
 using namespace boost;
 using namespace heterogenous;
 
+namespace mi_test
+{
+
+	struct Q0 : cloneable<Q0>
+	{
+		int num;
+		Q0(int n = 0) : num(n) { }
+	};
+
+	/// derive from Q1, which is also cloneable<>
+	struct Q1 : Q0, cloneable<Q1>
+	{
+		string str;
+		Q1() { }
+		Q1(const char * t) : str(t) { }
+	};
+	
+	struct my_region { };
+}
+
+BOOST_AUTO_TEST_CASE(test_clones)
+{
+	using namespace mi_test;
+	monotonic::local<my_region> local;
+	monotonic::allocator<int,my_region> alloc = local.make_allocator<int>();
+
+	Q0 *q0 = create<Q0>(alloc);
+	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
+
+	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(alloc));
+	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
+
+	Q1 *q1 = create<Q1>(alloc);
+	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
+
+	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->clone_as<Q0>(alloc));
+	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
+
+	Q1 *q1_c1  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
+	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
+}	
+
+BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
+{
+	using namespace mi_test;
+	typedef heterogenous::vector<> vec;
+	vec v;
+	v.emplace_back<Q0>(42);
+	v.emplace_back<Q1>("foo");
+	vec v2 = v;
+	BOOST_ASSERT(v2.ref_at<Q0>(0).num == 42);
+	BOOST_ASSERT(v2.ref_at<Q1>(1).str == "foo");
+}
+
 struct my_base
 {
 	virtual ~my_base() { }
@@ -61,89 +115,6 @@ struct T2 : cloneable<T2, my_base>
 		cout << "derived3: " << real << ", " << num << ", " << str << endl;
 	}
 };
-
-namespace mi_test
-{
-
-	struct Q0 : cloneable<Q0>
-	{
-		int num;
-		Q0(int n = 0) : num(n) { }
-	};
-
-	/// derive from Q1, which is also cloneable<>
-	struct Q1 : Q0, cloneable<Q1>
-	{
-		string s;
-		Q1() { }
-		Q1(string t) : s(t) { }
-	};
-	
-	struct my_region { };
-
-}
-
-
-BOOST_AUTO_TEST_CASE(test_clones)
-{
-	using namespace mi_test;
-	
-	monotonic::local<my_region> local;
-	monotonic::allocator<int,my_region> alloc = local.make_allocator<int>();
-
-	Q0 *q0 = create<Q0>(alloc);
-	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
-
-	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(alloc));
-	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
-
-	Q1 *q1 = create<Q1>(alloc);
-	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
-
-	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->clone_as<Q0>(alloc));
-	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
-
-	Q1 *q1_c1  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
-	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
-
-}	
-
-BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
-{
-	using namespace mi_test;
-	typedef heterogenous::vector<> vec;
-	vec v;
-
-	v.emplace_back<Q0>(42);
-	v.emplace_back<Q1>("foo");
-
-	vec v2 = v;
-	BOOST_ASSERT(v2.ref_at<Q1>(1).s == "foo");
-
-}
-
-namespace test
-{
-    using namespace heterogenous;
-	struct my_base
-	{
-		virtual ~my_base() { }
-	};
-
-	struct T0 : cloneable<T0, my_base> { };
-	struct T1 : cloneable<T1, my_base> { };
-
-	void run()
-	{
-		typedef heterogenous::vector<my_base> vec;
-		vec v0;
-		v0.emplace_back<T0>();
-		v0.emplace_back<T1>();
-		vec v1 = v0;
-		my_base &whatever = v1[0];
-		assert(v1.ptr_at<T1>(1));
-	}
-}
 
 /// some external type that we cannot change
 struct ExternalType
@@ -211,6 +182,63 @@ BOOST_AUTO_TEST_CASE(test_vector)
 	}
 }
 
+struct my_base2
+{
+	int number;
+	my_base2(int n = 0) : number(n) { }
+	virtual ~my_base2() { }
+};
+
+struct M0 : cloneable<M0, my_base2>
+{
+	M0(int n = 0) : my_base2(n) {}
+};
+
+struct M1 : cloneable<M1, my_base2>
+{
+	string str;
+	M1() { }
+	M1(const char *s) : str(s) { }
+};
+
+struct M2 : cloneable<M2, my_base2>
+{
+};
+
+struct M3 : cloneable<M3, my_base2>
+{
+};
+
+struct my_less
+{
+	bool operator()(my_base2 const *left, my_base2 const *right) const
+	{
+		return left->number < right->number;
+	}
+};
+
+BOOST_AUTO_TEST_CASE(test_map)
+{
+	typedef heterogenous::map<my_base2,my_less> map_type;
+	map_type map;
+	map .key<M0>(42).value<M1>("foo")
+		.key<M2>().value<M3>()
+		;
+	M0 *m0 = create<M0>(map.get_allocator(), 42);
+	map_type::iterator iter = map.find(m0);
+	BOOST_ASSERT(iter!= map.end());
+	M1 *m1 = dynamic_cast<M1 *>(iter->second);
+	BOOST_ASSERT(m1 != 0);
+	BOOST_ASSERT(m1->str == "foo");
+}
+
+BOOST_AUTO_TEST_CASE(test_hash)
+{
+	M0 a, b;
+	BOOST_ASSERT(a.hash() != b.hash());
+}
+
+
 BOOST_AUTO_TEST_CASE(test_any)
 {
 	// this works, after changing boost::any<> to take an allocator type argument
@@ -239,47 +267,6 @@ BOOST_AUTO_TEST_CASE(test_variant)
 	v0.push_back(T1("foo"));
 	vec v1 = v0;
 	BOOST_ASSERT(boost::get<T1>(v1[1]).str == "foo");
-}
-
-struct my_base2
-{
-	int number;
-	my_base2(int n = 0) : number(n) { }
-	virtual ~my_base2() { }
-};
-
-struct M0 : heterogenous::cloneable<M0, my_base2>
-{
-};
-
-struct M1 : heterogenous::cloneable<M1, my_base2>
-{
-};
-
-struct M2 : heterogenous::cloneable<M2, my_base2>
-{
-};
-
-struct M3 : heterogenous::cloneable<M3, my_base2>
-{
-};
-
-struct my_less
-{
-	bool operator()(my_base2 const *left, my_base2 const *right) const
-	{
-		return left->number < right->number;
-	}
-};
-
-BOOST_AUTO_TEST_CASE(test_map)
-{
-	heterogenous::map<my_base2,my_less> map;
-
-	map .key<M0>().value<M1>()
-		.key<M2>().value<M3>()
-		;
-
 }
 
 //EOF

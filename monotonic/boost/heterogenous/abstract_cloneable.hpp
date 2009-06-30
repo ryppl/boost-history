@@ -6,6 +6,8 @@
 #ifndef BOOST_HETEROGENOUS_COMMON_BASE_HPP
 #define BOOST_HETEROGENOUS_COMMON_BASE_HPP
 
+#include <string>
+#include <boost/functional/hash_fwd.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
 #include <boost/heterogenous/abstract_allocator.hpp>
 
@@ -72,9 +74,32 @@ namespace boost
 				//	return copy;
 				//return copy_construct(original, alloc);
 			}
+
+			/// overridable hash function
+			virtual size_t hash_value() const { return 0; }
+
+			/// return a hash value for the object. try the virtual method first, otherwise just use pointer value
+			size_t hash() const 
+			{ 
+				if (size_t value = hash_value())
+					return value;
+				return ptrdiff_t(reinterpret_cast<const char *>(this) - 0);
+			}
+
+			virtual std::string to_string() const { return "cloneable"; }
 		};
 
 	} // namespace heterogenous
+
+
+	template <class B>
+	struct hash<heterogenous::abstract_cloneable<B> >
+	{
+		size_t operator()(heterogenous::abstract_cloneable<B> const &base) const
+		{
+			return base.hash();
+		}
+	};
 
 } // namespace boost
 

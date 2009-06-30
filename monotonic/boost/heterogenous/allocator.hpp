@@ -52,6 +52,14 @@ namespace boost
 			return ptr;
 		}
 
+		template <class T, class Alloc, class A0>
+		T *create(Alloc &alloc, A0 a0)
+		{
+			typename Alloc::template rebind<T>::other al(alloc);
+			T *ptr = al.allocate(1);
+			new (ptr) T(a0);
+			return ptr;
+		}
 		template <class T, class Alloc>
 		void release(T *ptr, Alloc &alloc)
 		{

@@ -182,6 +182,11 @@ namespace boost
 				return impl.end();
 			}
 
+			iterator find(key_type const &key)
+			{
+				return impl.find(key);
+			}
+
 			//reference operator[](key_type const &key)
 			//{
 			//	return impl[n];
