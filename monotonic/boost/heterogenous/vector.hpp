@@ -178,22 +178,22 @@ namespace boost
 			template <class U>
 			void emplace_back()
 			{
-				impl.push_back(detail::construct_type<U,base_type>(get_allocator()).to_abstract());
+				impl.push_back(detail::construct<U,base_type>(get_allocator()).to_abstract());
 			}
 			template <class U, class A0>
 			void emplace_back(A0 a0)
 			{
-				impl.push_back(detail::construct_type<U,base_type>(get_allocator(), a0).to_abstract());
+				impl.push_back(detail::construct<U,base_type>(get_allocator(), a0).to_abstract());
 			}
 			template <class U, class A0, class A1>
 			void emplace_back(A0 a0, A1 a1)
 			{
-				impl.push_back(detail::construct_type<U,base_type>(get_allocator(), a0,a1).to_abstract());
+				impl.push_back(detail::construct<U,base_type>(get_allocator(), a0,a1).to_abstract());
 			}
 			template <class U, class A0, class A1, class A2>
 			void emplace_back(A0 a0, A1 a1, A2 a2)
 			{
-				impl.push_back(detail::construct_type<U,base_type>(get_allocator(), a0,a1,a2).to_abstract());
+				impl.push_back(detail::construct<U,base_type>(get_allocator(), a0,a1,a2).to_abstract());
 			}
 
 			typename implementation::allocator_type get_allocator()

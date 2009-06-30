@@ -147,7 +147,7 @@ int main()
 
 	test_any();
 	test_variant();
-//	test_map();
+	test_map();
 	test_multiple_inheritance();
 
 	// a 'heterogenous' container of objects of any type that derives from common_base

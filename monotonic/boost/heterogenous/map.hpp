@@ -65,7 +65,7 @@ namespace boost
 				template <class U>
 				this_type &value()
 				{
-					U *val = detail::construct_type<U,base_type>(parent->get_allocator()).to_derived();;
+					base_type *val = detail::construct<U,base_type>(parent->get_allocator()).to_base();
 					parent->insert(std::make_pair(key_instance, val));
 					return *parent;
 				}
@@ -74,14 +74,14 @@ namespace boost
 				template <class U, class A0>
 				this_type &value(A0 a0)
 				{
-					U *val = detail::construct_type<U,base_type>(parent->get_allocator(), a0).to_derived();;
+					base_type *val = detail::construct<U,base_type>(parent->get_allocator(), a0).to_base();
 					parent->insert(std::make_pair(key_instance, val));
 					return *parent;
 				}
 				template <class U, class A0, class A1>
 				this_type &value(A0 a0, A1 a1)
 				{
-					U *val = detail::construct_type<U,base_type>(parent->get_allocator(), a0, a1).to_derived();;
+					base_type *val = detail::construct<U,base_type>(parent->get_allocator(), a0, a1).to_base();
 					parent->insert(std::make_pair(key_instance, val));
 					return *parent;
 				}
@@ -91,7 +91,7 @@ namespace boost
 			template <class U>
 			value_adder key()
 			{
-				U *key_instance = detail::construct_type<U,base_type>(get_allocator()).to_derived();
+				base_type *key_instance = detail::construct<U,base_type>(get_allocator()).to_base();
 				return value_adder(*this, *key_instance);
 			}
 
@@ -99,19 +99,19 @@ namespace boost
 			template <class U, class A0>
 			value_adder key(A0 a0)
 			{
-				U *key_instance = detail::construct_type<U,base_type>(get_allocator(), a0).to_derived();
+				base_type *key_instance = detail::construct<U,base_type>(get_allocator(), a0).to_base();
 				return value_adder(*this, *key_instance);
 			}
 			template <class U, class A0, class A1>
 			value_adder key(A0 a0, A1 a1)
 			{
-				U *key_instance = detail::construct_type<U,base_type>(get_allocator(), a0, a1).to_derived();
+				base_type *key_instance = detail::construct<U,base_type>(get_allocator(), a0, a1).to_base();
 				return value_adder(*this, *key_instance);
 			}
 			template <class U, class A0, class A1, class A2>
 			value_adder key(A0 a0, A1 a1, A2 a2)
 			{
-				U *key_instance = detail::construct_type<U,base_type>(get_allocator(), a0, a1, a2).to_derived();
+				base_type *key_instance = detail::construct<U,base_type>(get_allocator(), a0, a1, a2).to_base();
 				return value_adder(*this, *key_instance);
 			}
 

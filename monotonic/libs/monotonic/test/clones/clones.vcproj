@@ -400,6 +400,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\..\boost\heterogenous\detail\pointer.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\..\boost\heterogenous\detail\prefix.hpp"
 						>
 					</File>
