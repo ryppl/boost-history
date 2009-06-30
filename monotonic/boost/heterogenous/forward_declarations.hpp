@@ -7,6 +7,7 @@
 #define BOOST_HETEROGENOUS_FORWARD_DECLARATIONS_HPP
 
 #include <functional>
+// including monotonic/allocator.hpp is temporary; not needed after make_clone_allocator works properly
 #include <boost/monotonic/allocator.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
 
@@ -14,13 +15,20 @@ namespace boost
 {
 	namespace heterogenous
 	{
+		/// an abstract interface for an allocator that can allocate and de-allocate
+		/// byte sequences
 		struct abstract_allocator;
 
+		/// empty structure with a virtual destructor used if the user does not
+		/// wish to use a custom base type
 		struct default_base_type;
 
+		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
 		template <class Base>
 		struct abstract_base;
 
+		/// a structure derived from this, with type Derived, is correctly
+		/// cloneable from a base pointer, given an abstract_allocator.
 		template <
 			class Derived
 			, class Base = default_base_type
@@ -37,12 +45,14 @@ namespace boost
 			, class AbstractBase = abstract_base<Base> >
 		struct adaptor;
 
+		/// a heterogenous vector of objects
 		template <
 			class Base = default_base_type
 			, class Alloc = monotonic::allocator<int>
 			, class AbstractBase = abstract_base<Base> >
 		struct vector;
 
+		/// a mapping of heterogenous objects to heterogenous objects
 		template <
 			class Base = default_base_type
 			, class Pred = std::less<Base>
