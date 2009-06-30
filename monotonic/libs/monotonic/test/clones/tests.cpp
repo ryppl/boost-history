@@ -76,8 +76,36 @@ namespace mi_test
 		Q1() { }
 		Q1(string t) : s(t) { }
 	};
+	
+	struct my_region { };
 
 }
+
+
+BOOST_AUTO_TEST_CASE(test_clones)
+{
+	using namespace mi_test;
+	monotonic::allocator<int, my_region> alloc;
+
+	Q0 *q0 = new Q0;
+	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
+	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(alloc));
+	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
+
+	Q1 *q1 = new Q1();
+	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
+
+	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->clone_as<Q0>(alloc));
+	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
+
+	Q1 *q1_c  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
+	BOOST_ASSERT(typeid(*q1_c) == typeid(Q1));
+
+	delete q0;
+	delete q1;
+
+	monotonic::static_storage<my_region>::release();
+}	
 
 BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
 {
@@ -85,28 +113,12 @@ BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
 	typedef heterogenous::vector<> vec;
 	vec v;
 
-
-	Q0 *q0 = new Q0;
-	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
-	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(v.get_allocator()));
-	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
-
-	Q1 *q1 = new Q1();
-	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
-	//Q1 *q1_c  = dynamic_cast<Q1 *>(q1->cloneable<Q1>::clone(v.get_allocator()));
-	
-	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->cloneable<Q0>::abstract_base_type::clone(v.get_allocator()));
-	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
-
-	//Q1 *q1_c  = dynamic_cast<Q1 *>(q1->cloneable<Q1>::abstract_base_type::clone(v.get_allocator()));
-	Q1 *q1_c  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(v.get_allocator()));
-	BOOST_ASSERT(typeid(*q1_c) == typeid(Q1));
-
 	v.emplace_back<Q0>(42);
 	v.emplace_back<Q1>("foo");
 
 	vec v2 = v;
 	BOOST_ASSERT(v2.ref_at<Q1>(1).s == "foo");
+
 }
 
 namespace test
