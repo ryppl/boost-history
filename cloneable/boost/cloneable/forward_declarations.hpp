@@ -24,8 +24,11 @@ namespace boost
 		/// wish to use a custom base type
 		struct default_base_type;
 
+		struct default_construction {};
+		struct no_default_construction {};
+
 		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
-		template <class Base>
+		template <class Base = default_base_type, class DefaultCtor = default_construction>
 		struct abstract_base;
 
 		/// a structure derived from this, with type Derived, is correctly
@@ -33,7 +36,7 @@ namespace boost
 		template <
 			class Derived
 			, class Base = default_base_type
-			>// this is too much uncessary customisation:, class AbstractBase = abstract_cloneable<Base> >
+			, class Ctor = default_construction>
 		struct base;
 
 		/// an adaptor for an existing class.

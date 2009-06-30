@@ -139,10 +139,10 @@ namespace custom_clone_test
 		bool custom_cloned;
 		T0() : custom_cloned(false) { }
 
-		/// override the means to create a copy from abstract_base<>
+		/// override the means to create a copy of this
 		T0 *make_copy(abstract_allocator &alloc) const
 		{
-			T0 *ptr = create<T0>(alloc);
+			T0 *ptr = cloneable::create<T0>(alloc);
 			ptr->custom_cloned = true;
 			return ptr;
 		}
@@ -152,11 +152,39 @@ namespace custom_clone_test
 BOOST_AUTO_TEST_CASE(test_custom_clone)
 {
 	using namespace custom_clone_test;
-	T0 *p = new T0;
+	abstract_base<> *p = new T0();
 	T0 *q = p->clone_as<T0>();
 	BOOST_ASSERT(q && q->custom_cloned);
 	delete p;
 	delete q;
+}
+
+namespace no_default_ctor_test
+{
+	struct T0 : base<T0, default_base_type, no_default_construction>
+	{
+		T0(int) { }
+	};
+}
+
+BOOST_AUTO_TEST_CASE(test_no_default_ctor)
+{
+	using namespace no_default_ctor_test;
+	T0 *p = new T0(10);
+	T0 *q = p->clone_as<T0>();
+	BOOST_ASSERT(q && typeid(*q) == typeid(T0));
+	delete q;
+	bool caught = false;
+	try
+	{
+		T0 *r = dynamic_cast<T0 *>(p->create());
+	}
+	catch (no_default_construction)
+	{
+		caught = true;
+	}
+	BOOST_ASSERT(caught);
+	delete p;
 }
 
 struct my_base

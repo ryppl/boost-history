@@ -25,11 +25,11 @@ namespace boost
 		};
 
 		/// root structure for the cloneable object system
-		template <class Base>
+		template <class Base, class DefaultCtor>
 		struct abstract_base : virtual Base
 		{
 			typedef Base base_type;
-			typedef abstract_base<Base> this_type;
+			typedef abstract_base<Base,DefaultCtor> this_type;
 
 			/// make storage for a new instance, but do not invoke any constructor
 			virtual this_type *allocate(abstract_allocator &) const = 0;
@@ -64,7 +64,7 @@ namespace boost
 			template <class Ty>
 			Ty *clone_as(abstract_allocator &alloc) const
 			{
-				const base<Ty, Base> *ptr = dynamic_cast<const base<Ty, Base> *>(this);
+				const base<Ty, Base, DefaultCtor> *ptr = dynamic_cast<const base<Ty, Base,DefaultCtor> *>(this);
 				if (ptr == 0)
 					throw std::bad_cast();
 				this_type *cloned = ptr->clone(alloc);
@@ -86,7 +86,7 @@ namespace boost
 			}
 
 			/// non-virtual method that creates a new instance of derived type using default allocator
-			this_type *create_new() const
+			this_type *create() const
 			{
 				make_clone_allocator<default_allocator>::type alloc;
 				return create_new(alloc);

@@ -14,14 +14,40 @@ namespace boost
 {
 	namespace cloneable
 	{
+		namespace detail
+		{
+			template <class Derived, class HasDefaultCtor>
+			struct create_new
+			{
+				template <class Self, class Alloc>
+				static Derived *given(Self *self, Alloc &alloc, size_t alignment)
+				{
+					abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(Derived), alignment);
+					Derived *ptr = reinterpret_cast<Derived *>(bytes);
+					ptr->Self::self_ptr = ptr;
+					new (ptr->Self::self_ptr) Derived();
+					return ptr;
+				}
+			};
+			template <class Derived>
+			struct create_new<Derived, no_default_construction>
+			{
+				template <class Ty, class Alloc>
+				static Derived *given(Ty *self, Alloc &alloc, size_t alignment)
+				{
+					throw no_default_construction();
+				}
+			};
+		}
+
 		/// base for the given derived type, using the given base class
-		template <class Derived, class Base>
-		struct base : abstract_base<Base>
+		template <class Derived, class Base, class HasDefaultCtor>
+		struct base : abstract_base<Base,HasDefaultCtor>
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;
-			typedef abstract_base<Base> abstract_base_type;
-			typedef base<Derived, Base> this_type;
+			typedef abstract_base<Base,HasDefaultCtor> abstract_base_type;
+			typedef base<Derived, Base,HasDefaultCtor> this_type;
 
 			static const size_t alignment;		///< required alignment for allocation
 			mutable derived_type *self_ptr;		///< pointer to derived object in this
@@ -48,11 +74,7 @@ namespace boost
 
 			virtual this_type *create_new(abstract_allocator &alloc) const 
 			{
-				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
-				Derived *ptr = reinterpret_cast<Derived *>(bytes);
-				ptr->this_type::self_ptr = ptr;
-				new (ptr->this_type::self_ptr) Derived();
-				return ptr;
+				return detail::create_new<Derived,HasDefaultCtor>::given(this, alloc, alignment);
 			}
 
 			virtual this_type *copy_construct(abstract_allocator &alloc) const 
@@ -66,8 +88,8 @@ namespace boost
 		};
 
 		/// ensure correct alignment when allocating derived instances
-		template <class Derived, class Base/*, class AbstractBase*/>
-		const size_t base<Derived, Base/*, AbstractBase*/>::alignment = aligned_storage<sizeof(Derived)>::alignment;
+		template <class Derived, class Base, class HasDefaultCtor>
+		const size_t base<Derived, Base, HasDefaultCtor>::alignment = aligned_storage<sizeof(Derived)>::alignment;
 
 	} // namespace cloneable
 
