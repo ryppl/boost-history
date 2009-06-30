@@ -27,16 +27,15 @@ using namespace std;
 using namespace boost;
 using namespace heterogenous;
 
-namespace mi_test
+namespace mulitple_inheritance_test
 {
-
 	struct Q0 : cloneable<Q0>
 	{
 		int num;
 		Q0(int n = 0) : num(n) { }
 	};
 
-	/// derive from Q1, which is also cloneable<>
+	/// derive from Q0, which is also cloneable<>
 	struct Q1 : Q0, cloneable<Q1>
 	{
 		string str;
@@ -49,7 +48,7 @@ namespace mi_test
 
 BOOST_AUTO_TEST_CASE(test_clones)
 {
-	using namespace mi_test;
+	using namespace mulitple_inheritance_test;
 	monotonic::local<my_region> local;
 	monotonic::allocator<int,my_region> alloc = local.make_allocator<int>();
 
@@ -71,7 +70,7 @@ BOOST_AUTO_TEST_CASE(test_clones)
 
 BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
 {
-	using namespace mi_test;
+	using namespace mulitple_inheritance_test;
 	typedef heterogenous::vector<> vec;
 	vec v;
 	v.emplace_back<Q0>(42);
@@ -129,9 +128,13 @@ typedef heterogenous::adaptor<ExternalType, my_base> ExternalType_;
 
 BOOST_AUTO_TEST_CASE(test_vector)
 {
-	// a 'heterogenous' container of objects of any type that derives from common_base
-	typedef heterogenous::vector<my_base> vec;
+	// this uses the base type for the contained elements as a region tag for a monotonic allocator.
+	// totally unnecessary, could just use a std::allocator, but this way gives more control
+	typedef heterogenous::vector<my_base, monotonic::allocator<my_base, my_base> > vec;
 
+	// use a local scoped object to automatically release resources used by the my_base monotonic 
+	// storage region on function exit.
+	monotonic::local<my_base> local;
 	{
 		vec bases;
 
@@ -182,44 +185,48 @@ BOOST_AUTO_TEST_CASE(test_vector)
 	}
 }
 
-struct my_base2
+namespace map_test
 {
-	int number;
-	my_base2(int n = 0) : number(n) { }
-	virtual ~my_base2() { }
-};
-
-struct M0 : cloneable<M0, my_base2>
-{
-	M0(int n = 0) : my_base2(n) {}
-};
-
-struct M1 : cloneable<M1, my_base2>
-{
-	string str;
-	M1() { }
-	M1(const char *s) : str(s) { }
-};
-
-struct M2 : cloneable<M2, my_base2>
-{
-};
-
-struct M3 : cloneable<M3, my_base2>
-{
-};
-
-struct my_less
-{
-	bool operator()(my_base2 const *left, my_base2 const *right) const
+	struct my_base
 	{
-		return left->number < right->number;
-	}
-};
+		int number;
+		my_base(int n = 0) : number(n) { }
+		virtual ~my_base() { }
+	};
+
+	struct M0 : cloneable<M0, my_base>
+	{
+		M0(int n = 0) : my_base(n) {}
+	};
+
+	struct M1 : cloneable<M1, my_base>
+	{
+		string str;
+		M1() { }
+		M1(const char *s) : str(s) { }
+	};
+
+	struct M2 : cloneable<M2, my_base>
+	{
+	};
+
+	struct M3 : cloneable<M3, my_base>
+	{
+	};
+
+	struct my_less
+	{
+		bool operator()(my_base const *left, my_base const *right) const
+		{
+			return left->number < right->number;
+		}
+	};
+}
 
 BOOST_AUTO_TEST_CASE(test_map)
 {
-	typedef heterogenous::map<my_base2,my_less> map_type;
+	using namespace map_test;
+	typedef heterogenous::map<map_test::my_base,my_less> map_type;
 	map_type map;
 	map .key<M0>(42).value<M1>("foo")
 		.key<M2>().value<M3>()
@@ -234,6 +241,7 @@ BOOST_AUTO_TEST_CASE(test_map)
 
 BOOST_AUTO_TEST_CASE(test_hash)
 {
+	using namespace map_test;
 	M0 a, b;
 	BOOST_ASSERT(a.hash() != b.hash());
 }
