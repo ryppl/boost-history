@@ -7,7 +7,6 @@
 #define BOOST_HETEROGENOUS_MAP_HPP
 
 #include <boost/ptr_container/ptr_map.hpp>
-#include <boost/monotonic/allocator.hpp>
 #include <boost/foreach.hpp>
 
 #include <boost/heterogenous/detail/prefix.hpp>
@@ -19,7 +18,7 @@ namespace boost
 	namespace heterogenous
 	{
 		/// a vector of heterogenous objects
-		template <class Pred, class Base = common_base, class Alloc = monotonic::allocator<int> >
+		template <class Base, class Pred, class Alloc, class AbstractBase>
 		struct map
 		{
 			typedef typename make_clone_allocator<Alloc>::type allocator_type;
@@ -35,7 +34,7 @@ namespace boost
 			typedef typename implementation::const_iterator const_iterator;
 			typedef typename implementation::key_type key_type;
 			typedef typename implementation::mapped_type mapped_type;
-			typedef map<Pred,Base,Alloc> this_type;
+			typedef map<Base, Pred, Alloc, AbstractBase> this_type;
 
 		private:
 			implementation impl;

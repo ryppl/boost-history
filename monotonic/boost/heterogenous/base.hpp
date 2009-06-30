@@ -8,14 +8,15 @@
 
 #include <boost/aligned_storage.hpp>
 #include <boost/heterogenous/detail/prefix.hpp>
-#include <boost/heterogenous/common_base.hpp>
+#include <boost/heterogenous/abstract_base.hpp>
 
 namespace boost
 {
 	namespace heterogenous
 	{
-		/// base for the given derived type
-		template <class Derived, class Base = default_base_type, class AbstractBase = abstract_base<Base> >
+		/// base for the given derived type, using the given base class
+		/// TODO: rename this - perhaps to 'cloneable'?
+		template <class Derived, class Base, class AbstractBase>
 		struct base : AbstractBase
 		{
 			typedef Derived derived_type;

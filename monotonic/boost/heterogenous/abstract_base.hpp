@@ -19,7 +19,7 @@ namespace boost
 		};
 
 		/// common base for all base types for hierachies
-		template <class Base = default_base_type>
+		template <class Base>
 		struct abstract_base : Base
 		{
 			typedef Base base_type;
@@ -35,6 +35,9 @@ namespace boost
 
 			virtual this_type *create_new(abstract_allocator &alloc) const = 0;
 			virtual this_type *copy_construct(const base_type &original, abstract_allocator &alloc) const = 0;
+
+			/// optional means to make a clone that does not use copy-construction
+			virtual this_type *clone(const base_type &original, abstract_allocator &alloc) const { return 0; }
 		};
 
 	} // namespace heterogenous

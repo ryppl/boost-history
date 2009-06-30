@@ -373,6 +373,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\..\boost\heterogenous\forward_declarations.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\..\boost\heterogenous\make_clone_allocator.hpp"
 					>
 				</File>

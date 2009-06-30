@@ -7,6 +7,7 @@
 #define BOOST_HETEROGENOUS_ABSTRACT_ALLOCATOR_HPP
 
 #include <boost/heterogenous/detail/prefix.hpp>
+#include <boost/heterogenous/forward_declarations.hpp>
 
 namespace boost
 {
