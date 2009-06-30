@@ -7,6 +7,7 @@
 #define BOOST_HETEROGENOUS_ALLOCATOR_HPP
 
 #include <boost/heterogenous/detail/prefix.hpp>
+#include <boost/heterogenous/detail/allocation.hpp>
 
 namespace boost
 {
@@ -41,6 +42,24 @@ namespace boost
 				const_cast<Base &>(*object).deallocate(alloc);
 			}
 		};
+
+		template <class T, class Alloc>
+		T *create(Alloc &alloc)
+		{
+			typename Alloc::template rebind<T>::other al(alloc);
+			T *ptr = al.allocate(1);
+			al.construct(ptr);
+			return ptr;
+		}
+
+		template <class T, class Alloc>
+		void release(T *ptr, Alloc &alloc)
+		{
+			typename Alloc::template rebind<T>::other al(alloc);
+			al.destroy(ptr);
+			al.deallocate(ptr, 1);
+			return ptr;
+		}
 
 	} // namespace heterogenous
 

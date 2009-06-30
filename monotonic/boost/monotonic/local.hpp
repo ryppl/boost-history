@@ -41,6 +41,13 @@ namespace boost
 			{
 				reset();
 			}
+
+			template <class T>
+			static monotonic::allocator<T,Region,Access> make_allocator()
+			{
+				return monotonic::allocator<T,Region,Access>();
+			}
+
 			static typename StaticStorage::StorageType &get_storage()
 			{
 				return StaticStorage::get_storage();

@@ -11,6 +11,7 @@
 
 #include <string>
 #include <iostream>
+#include <boost/monotonic/local.hpp>
 #include <boost/heterogenous/vector.hpp>
 #include <boost/heterogenous/map.hpp>
 #include <boost/heterogenous/adaptor.hpp>
@@ -70,6 +71,7 @@ namespace mi_test
 		Q0(int n = 0) : num(n) { }
 	};
 
+	/// derive from Q1, which is also cloneable<>
 	struct Q1 : Q0, cloneable<Q1>
 	{
 		string s;
@@ -85,26 +87,25 @@ namespace mi_test
 BOOST_AUTO_TEST_CASE(test_clones)
 {
 	using namespace mi_test;
-	monotonic::allocator<int, my_region> alloc;
+	
+	monotonic::local<my_region> local;
+	monotonic::allocator<int,my_region> alloc = local.make_allocator<int>();
 
-	Q0 *q0 = new Q0;
+	Q0 *q0 = create<Q0>(alloc);
 	BOOST_ASSERT(typeid(*q0) == typeid(Q0));
+
 	Q0 *q0_c = dynamic_cast<Q0 *>(q0->clone(alloc));
 	BOOST_ASSERT(typeid(*q0_c) == typeid(Q0));
 
-	Q1 *q1 = new Q1();
+	Q1 *q1 = create<Q1>(alloc);
 	BOOST_ASSERT(typeid(*q1) == typeid(Q1));
 
 	Q0 *q1_c0  = dynamic_cast<Q0 *>(q1->clone_as<Q0>(alloc));
 	BOOST_ASSERT(typeid(*q1_c0) == typeid(Q0));
 
-	Q1 *q1_c  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
-	BOOST_ASSERT(typeid(*q1_c) == typeid(Q1));
+	Q1 *q1_c1  = dynamic_cast<Q1 *>(q1->clone_as<Q1>(alloc));
+	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
 
-	delete q0;
-	delete q1;
-
-	monotonic::static_storage<my_region>::release();
 }	
 
 BOOST_AUTO_TEST_CASE(test_multiple_inheritance)

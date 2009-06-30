@@ -24,12 +24,11 @@ namespace boost
 			typedef abstract_cloneable<Base> abstract_base_type;
 			typedef cloneable<Derived, Base/*, AbstractBase*/> this_type;
 
-		//private:
-			static size_t alignment;			///< required alignment for allocation
+			static const size_t alignment;			///< required alignment for allocation
 			mutable derived_type *self_ptr;		///< pointer to derived object in this
 
 		public:
-			cloneable() : self_ptr(0) { }
+			cloneable() { self_ptr = static_cast<Derived *>(this); }
 
 			virtual this_type *allocate(abstract_allocator &alloc) const 
 			{
@@ -66,7 +65,7 @@ namespace boost
 
 		/// ensure correct alignment when allocating derived instances
 		template <class Derived, class Base/*, class AbstractBase*/>
-		size_t cloneable<Derived, Base/*, AbstractBase*/>::alignment = aligned_storage<sizeof(Derived)>::alignment;
+		const size_t cloneable<Derived, Base/*, AbstractBase*/>::alignment = aligned_storage<sizeof(Derived)>::alignment;
 
 	} // namespace heterogenous
 
