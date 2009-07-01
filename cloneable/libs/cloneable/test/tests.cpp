@@ -23,6 +23,7 @@
 
 #include <boost/cloneable/clone.hpp>
 #include <boost/cloneable/vector.hpp>
+#include <boost/cloneable/list.hpp>
 #include <boost/cloneable/map.hpp>
 #include <boost/cloneable/set.hpp>
 
@@ -404,6 +405,22 @@ BOOST_AUTO_TEST_CASE(test_vector)
 	}
 }
 
+BOOST_AUTO_TEST_CASE(test_list)
+{
+	typedef cloneable::list<my_base> list;
+	list l0;
+	l0.emplace_back<T0>(42);						
+	l0.emplace_back<T1>("foo");
+	l0.emplace_back<T2>(3.14f, -123, "spam");
+	l0.emplace_back<cloneable_external_type>("external");
+	list l1 = l0;
+	list::iterator iter = l1.begin();
+	BOOST_ASSERT(typeid(*iter++) == typeid(T0));
+	BOOST_ASSERT(typeid(*iter++) == typeid(T1));
+	BOOST_ASSERT(typeid(*iter++) == typeid(T2));
+	BOOST_ASSERT(typeid(*iter++) == typeid(cloneable_external_type));
+}
+
 namespace map_test
 {
 	struct my_base
@@ -555,6 +572,7 @@ BOOST_AUTO_TEST_CASE(test_set)
 
 	BOOST_ASSERT(set.find<S0>(1) != set.end());
 }
+
 
 //EOF
  

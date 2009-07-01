@@ -8,10 +8,19 @@
 
 #include <functional>
 #include <memory>
+#include <boost/scope_exit.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
+
+#define BOOST_CLONEABLE_SCOPE_EXIT(locals)	\
+		this_type *self = this;			\
+		BOOST_SCOPE_EXIT(locals(self))
+
+#define BOOST_CLONEABLE_SCOPE_EXIT_END \
+		BOOST_SCOPE_EXIT_END
 
 namespace boost
 {
+
 	namespace cloneable
 	{
 		typedef std::allocator<char> default_allocator;
@@ -60,6 +69,14 @@ namespace boost
 			, class Alloc = monotonic::allocator<int>
 		>
 		struct vector;
+
+		/// a heterogenous list of objects
+		template 
+		<
+			class Base = default_base_type
+			, class Alloc = monotonic::allocator<int>
+		>
+		struct list;
 
 		/// a mapping of heterogenous objects to heterogenous objects
 		template 

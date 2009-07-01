@@ -10,13 +10,14 @@
 #include <boost/foreach.hpp>
 
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
+#include <boost/cloneable/allocator.hpp>
 
 namespace boost 
 {
 	namespace cloneable
 	{
 		/// a vector of heterogenous objects
-		// TODO: move to boost/heterogenous/map
+		// TODO: move to boost/heterogenous/set.hpp, or boost/cloneable/containers/set.hpp
 		template <class Base, class Pred, class Alloc>
 		struct set
 		{
@@ -32,7 +33,7 @@ namespace boost
 			typedef typename implementation::const_reference const_reference;
 			typedef typename implementation::iterator iterator;
 			typedef typename implementation::const_iterator const_iterator;
-			typedef map<Base, Pred, Alloc/*, AbstractBase*/> this_type;
+			typedef set<Base, Pred, Alloc> this_type;
 
 		private:
 			implementation impl;
@@ -55,7 +56,7 @@ namespace boost
 		public:
 			typedef std::pair<iterator, bool> emplace_result;
 			template <class U>
-			emplace_result emplace()
+			emplace_result emplace_insert()
 			{
 				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator()).to_abstract();
 				return impl.insert(instance);
@@ -63,19 +64,19 @@ namespace boost
 
 			// TODO: use variadic arguments or BOOST_PP to pass ctor args
 			template <class U, class A0>
-			emplace_result emplace(A0 a0)
+			emplace_result emplace_insert(A0 a0)
 			{
 				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator(), a0).to_abstract();
 				return impl.insert(instance);
 			}
 			template <class U, class A0, class A1>
-			emplace_result emplace(A0 a0, A1 a1)
+			emplace_result emplace_insert(A0 a0, A1 a1)
 			{
 				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator(), a0, a1).to_abstract();
 				return impl.insert(instance);
 			}
 			template <class U, class A0, class A1, class A2>
-			emplace_result emplace(A0 a0, A1 a1, A2 a2)
+			emplace_result emplace_insert(A0 a0, A1 a1, A2 a2)
 			{
 				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator(), a0, a1, a2).to_abstract();
 				return impl.insert(instance);
@@ -116,9 +117,17 @@ namespace boost
 				return impl.end();
 			}
 
-			iterator find(value_type const &key)
+			template <class U, class A0>
+			iterator find(A0 a0) // strong
 			{
-				return impl.find(key);
+				abstract_base_type *instance = 0;
+				instance = detail::construct<U,base_type>(get_allocator(), a0).to_abstract();
+				BOOST_CLONEABLE_SCOPE_EXIT((instance))
+				{
+					cloneable::release(instance, self->get_allocator());
+				}
+				BOOST_CLONEABLE_SCOPE_EXIT_END
+				return impl.find(*instance);
 			}
 
 			typename implementation::allocator_type get_allocator()

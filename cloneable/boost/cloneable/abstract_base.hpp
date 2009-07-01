@@ -16,12 +16,42 @@ namespace boost
 {
 	namespace cloneable
 	{
-		/// default base type used for object hierarchies to be stored in a given
-		/// container or containers. the user can supply their own when using 
-		/// cloneable<Derived, Base> this will be used by default.
-		struct default_base_type
+		template <class T>
+		struct abstract_object
+		{
+			typedef abstract_object<T> abstract_object_type;
+
+			virtual std::string to_string() const { return "abstract_object<T>"; }
+			virtual size_t hash_value() const { return 0; }
+			virtual bool less(const abstract_object_type& other) const { return false; }
+			virtual bool equiv(const abstract_object_type& other) const
+			{
+				return !less(other) && !other.less(static_cast<const T&>(*this));
+			}
+		};
+
+		template <class T>
+		inline bool operator<(const abstract_object<T>& left, const abstract_object<T>& right)
+		{
+			return left.less(right);
+		}
+
+		template <class T>
+		inline bool operator==(const abstract_object<T>& left, const abstract_object<T>& right)
+		{
+			return left.equiv(right);
+		}
+
+		/// default base type used for object hierarchies. the user can supply their own when using 
+		/// cloneable<Derived, Base>.
+		/// this will be used as a base by default.
+		struct default_base_type : abstract_object<default_base_type>
 		{
 			virtual ~default_base_type() { }
+
+			std::string to_string() const { return "default_base_type"; }
+			size_t hash_value() const { return 0; }
+			bool less(const default_base_type &other) const { return false; }
 		};
 
 		/// root structure for the cloneable object system
@@ -119,15 +149,10 @@ namespace boost
 			/// overridable to-string function, for utility
 			virtual std::string to_string() const { return "cloneable"; }
 
-			/// overridable hash function, for utility
-			virtual size_t hash_value() const { return 0; }
-
 			/// return a hash value for the object
 			size_t hash() const 
 			{ 
-				if (size_t value = hash_value())
-					return value;
-				return 0;//ptrdiff_t(reinterpret_cast<const char *>(this) - 0);
+				return base_type::hash_value();
 			}
 
 		};

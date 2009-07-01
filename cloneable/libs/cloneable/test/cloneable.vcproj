@@ -234,6 +234,10 @@
 					Name="containers"
 					>
 					<File
+						RelativePath="..\..\..\boost\cloneable\list.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\cloneable\map.hpp"
 						>
 					</File>

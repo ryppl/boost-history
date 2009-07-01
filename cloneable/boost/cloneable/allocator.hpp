@@ -100,7 +100,6 @@ namespace boost
 			typename Alloc::template rebind<T>::other al(alloc);
 			al.destroy(ptr);
 			al.deallocate(ptr, 1);
-			return ptr;
 		}
 
 	} // namespace cloneable

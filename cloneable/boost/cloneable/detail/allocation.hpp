@@ -20,7 +20,10 @@ namespace boost
 			U *allocate(Alloc &al)
 			{
 				typename Alloc::template rebind<U>::other alloc(al);
-				return alloc.allocate(1);
+				U *ptr = alloc.allocate(1);
+				if (ptr == 0)
+					throw std::bad_alloc();
+				return ptr;
 			}
 
 			// TODO: use variadic template arguments, or BOOST_PP
