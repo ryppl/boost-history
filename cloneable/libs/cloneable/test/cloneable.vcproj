@@ -195,6 +195,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\cloneable\clone.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\cloneable\forward_declarations.hpp"
 					>
 				</File>

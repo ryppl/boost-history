@@ -16,7 +16,7 @@
 #include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/local.hpp>
 
-#include <boost/cloneable/traits.hpp>
+#include <boost/cloneable/clone.hpp>
 #include <boost/cloneable/vector.hpp>
 #include <boost/cloneable/map.hpp>
 #include <boost/cloneable/adaptor.hpp>
@@ -241,6 +241,40 @@ BOOST_AUTO_TEST_CASE(test_traits)
 	
 	BOOST_STATIC_ASSERT(!is_cloneable<T2>::value);
 	BOOST_STATIC_ASSERT(!is_default_constructable<T2>::value);
+}
+
+namespace free_clone_test
+{
+	struct T0 { };
+	struct T1 : base<T1> 
+	{ 
+		bool copy_constructed;
+		T1() : copy_constructed(false) { }
+		T1(T1 const &) : copy_constructed(true) { }
+	};
+}
+
+BOOST_AUTO_TEST_CASE(test_free_clone)
+{
+	using namespace free_clone_test;
+	T0 *t0 = new T0();
+	T1 *t1 = new T1();
+
+	// test cloning on a type that does not derive from cloneable::base<>
+	// this will use new T0(orig);
+	T0 *t0_clone = clone(*t0);
+
+	// clone using cloneable system
+	T1 *t1_clone = clone(*t1);
+
+	BOOST_ASSERT(t0_clone);
+	BOOST_ASSERT(t1_clone);
+	BOOST_ASSERT(t1_clone->copy_constructed);
+
+	delete t0;
+	delete t1;
+	delete t0_clone;
+	delete t1_clone;
 }
 
 //struct custom_external_cloneable : adaptor<external_type, my_base>
