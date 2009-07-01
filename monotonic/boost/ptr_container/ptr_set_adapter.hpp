@@ -405,7 +405,7 @@ namespace ptr_container_detail
         {       
             this->enforce_null_policy( x, "Null pointer in 'ptr_set::insert()'" );
             
-            auto_type ptr( x );                                
+            auto_type ptr( x, get_allocator() );                                
             std::pair<BOOST_DEDUCED_TYPENAME base_type::ptr_iterator,bool>
                  res = this->base().insert( x );       
             if( res.second )                                                 

@@ -17,6 +17,7 @@
 #endif
 
 #include <boost/config.hpp>
+#include <boost/utility/result_of.hpp>
 
 #ifdef BOOST_NO_SFINAE
 #else
@@ -85,7 +86,7 @@ namespace boost
         class Fun, 
         class Arg1, 
         class Arg2 = Arg1 
-#ifdef BOOST_NO_SFINAE
+#if 1//def BOOST_NO_SFINAE
       , class Result = bool   
 #endif           
     >
@@ -99,7 +100,7 @@ namespace boost
 
         void_ptr_indirect_fun( Fun f ) : fun(f)
         { }
-#ifdef BOOST_NO_SFINAE
+#if 1//def BOOST_NO_SFINAE
         Result    
 #else            
         BOOST_DEDUCED_TYPENAME result_of< Fun( Arg1 ) >::type 
@@ -110,7 +111,7 @@ namespace boost
             return fun( * static_cast<const Arg1*>( r ) );
         }
 
-#ifdef BOOST_NO_SFINAE
+#if 1//def BOOST_NO_SFINAE
         Result    
 #else                    
         BOOST_DEDUCED_TYPENAME result_of< Fun( Arg1, Arg2 ) >::type 

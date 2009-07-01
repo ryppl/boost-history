@@ -54,19 +54,30 @@ namespace boost
 
 		// TODO: move to boost/heterogenous/foward
 		/// a heterogenous vector of objects
-		template <
+		template 
+		<
 			class Base = default_base_type
 			, class Alloc = monotonic::allocator<int>
-			>//, class AbstractBase = abstract_cloneable<Base> >
+		>
 		struct vector;
 
 		/// a mapping of heterogenous objects to heterogenous objects
-		template <
+		template 
+		<
 			class Base = default_base_type
 			, class Pred = std::less<Base>
 			, class Alloc = monotonic::allocator<int>
-			>//, class AbstractBase = abstract_cloneable<Base> >
+		>
 		struct map;
+
+		/// a set of heterogenous objects
+		template 
+		<
+			class Base = default_base_type
+			, class Pred = std::less<Base>
+			, class Alloc = monotonic::allocator<int>
+		>
+		struct set;
 
 	} // namespace cloneable
 

@@ -12,6 +12,11 @@
 #include <string>
 #include <iostream>
 
+#include <boost/bind.hpp>
+#include <boost/any.hpp>
+#include <boost/variant.hpp>
+#include <boost/function.hpp>
+
 #define BOOST_HETEROGENOUS
 #include <boost/monotonic/allocator.hpp>
 #include <boost/monotonic/local.hpp>
@@ -19,11 +24,9 @@
 #include <boost/cloneable/clone.hpp>
 #include <boost/cloneable/vector.hpp>
 #include <boost/cloneable/map.hpp>
+#include <boost/cloneable/set.hpp>
+
 #include <boost/cloneable/adaptor.hpp>
-#include <boost/cloneable/allocator.hpp>
-#include <boost/bind.hpp>
-#include <boost/any.hpp>
-#include <boost/variant.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
 #include <boost/test/unit_test.hpp>
@@ -493,4 +496,43 @@ BOOST_AUTO_TEST_CASE(test_variant)
 	BOOST_ASSERT(boost::get<T1>(v1[1]).str == "foo");
 }
 
+namespace set_test
+{
+	struct S0 : base<S0> { };
+	struct S1 : base<S1> { };
+	struct S2 : base<S2> { };
+
+	struct set_less 
+		//: std::binary_function<default_base_type const &,default_base_type const &,bool>
+		: boost::function<bool (default_base_type const &,default_base_type const &)>
+	{
+		bool operator()(default_base_type const &a, default_base_type const &b) const
+		{
+			return &a < &b;
+		}
+	};
+}
+
+namespace boost
+{
+	namespace cloneable
+	{
+		// hax due to result_of<> issue with ptr_set and predicates
+		bool operator<(default_base_type const &a, default_base_type const &b)
+		{
+			return &a < &b;
+		}
+	}
+}
+
+BOOST_AUTO_TEST_CASE(test_set)
+{
+	using namespace set_test;
+	cloneable::set<> set;
+	set.emplace<S0>();
+	set.emplace<S1>();
+	set.emplace<S2>();
+}
+
 //EOF
+ 

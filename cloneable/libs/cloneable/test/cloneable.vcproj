@@ -238,6 +238,10 @@
 						>
 					</File>
 					<File
+						RelativePath="..\..\..\boost\cloneable\set.hpp"
+						>
+					</File>
+					<File
 						RelativePath="..\..\..\boost\cloneable\vector.hpp"
 						>
 					</File>
