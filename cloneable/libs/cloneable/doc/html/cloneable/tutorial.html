@@ -26,16 +26,16 @@
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="cloneable.tutorial"></a>Tutorial</h2></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="tutorial.html#id687528">Overview</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#id687539">Basic Cloning</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#id687567">Simple Hierarchical Cloning</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#id687645">Using External Types</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#id687668">Customising the Cloning Process</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#id687694">Using Custom Allocators</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id642746">Overview</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id642756">Basic Cloning</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id642784">Simple Hierarchical Cloning</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id642875">Using External Types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id642898">Customising the Cloning Process</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id642924">Using Custom Allocators</a></span></dt>
 </dl></div>
 <div class="section" title="Overview">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id687528"></a>Overview</h3></div></div></div>
+<a name="id642746"></a>Overview</h3></div></div></div>
 <p>This tutorial progresses through the basic usage of the library, 
 	    demonstrating how to make a new Cloneable type, how to make
 	    an exsiting, external type Cloneable, and how to deal with
@@ -43,7 +43,7 @@
 </div>
 <div class="section" title="Basic Cloning">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id687539"></a>Basic Cloning</h3></div></div></div>
+<a name="id642756"></a>Basic Cloning</h3></div></div></div>
 <p>
 The following is a very quick introduction to Boost.Cloneable:
 </p>
@@ -68,7 +68,7 @@ int main()
 </div>
 <div class="section" title="Simple Hierarchical Cloning">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id687567"></a>Simple Hierarchical Cloning</h3></div></div></div>
+<a name="id642784"></a>Simple Hierarchical Cloning</h3></div></div></div>
 <pre class="programlisting">
 #include &lt;string&gt;
 #include &lt;boost/cloneable.hpp&gt;
@@ -137,7 +137,9 @@ int main()
 </pre>
 <p>
 Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador. 
-When cloning this class, we specify which sub-object we wish to duplicate.
+When cloning this class, we specify which sub-object we wish to duplicate. Note that when using <code class="computeroutput">clone_as&lt;T&gt;</code>, we actually are making a type of T, rather than making another type and casting up.
+</p>
+<p>
 We can also use the Cloneable library to make a new instance, without duplication:
 </p>
 <pre class="programlisting">
@@ -155,12 +157,12 @@ int main()
 }
 </pre>
 <p>
-	This will create a new derived animal type (not a new base), and return a pointer to the base.  Note that we used <code class="computeroutput">abstract_base&lt;Animal&gt;</code>, rather than just <code class="computeroutput">Animal</code>, as the base type argument for the <code class="computeroutput">MakeNew</code> function. This is because the base class we provided, <code class="computeroutput">Animal</code>, does not derive from anything and does not have any clone-related methods. These methods are added by the <code class="computeroutput">abstract_base&lt;&gt;</code> mixin, which all derived <code class="computeroutput">Animal</code>s are implicitly convertible to.
+    This will create a new derived animal type (not a new base), and return a pointer to the base. Here we used a free-function to make the new object, to show how to use the <code class="computeroutput">abstract_base</code> template. We used <code class="computeroutput">abstract_base&lt;Animal&gt;</code>, rather than just <code class="computeroutput">Animal</code>, as the base type argument for the <code class="computeroutput">MakeNew</code> function. This is because the base class we provided, <code class="computeroutput">Animal</code>, does not derive from anything and does not have any clone-related methods. These methods are added by the <code class="computeroutput">abstract_base&lt;&gt;</code> mixin, which all derived <code class="computeroutput">Animal</code>s are implicitly convertible to.
 </p>
 </div>
 <div class="section" title="Using External Types">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id687645"></a>Using External Types</h3></div></div></div>
+<a name="id642875"></a>Using External Types</h3></div></div></div>
 <p>
 		Quite often we find ourselves using classes that are defined in an external library. These are not open to be changed, but we would still like them to be Cloneable. To address this issue, we can use the <code class="computeroutput">cloneable::adaptor&lt;Type,Base&gt;</code> structure:
 	</p>
@@ -184,7 +186,7 @@ Alternatively of course, we could just make a new structure which either derives
 </div>
 <div class="section" title="Customising the Cloning Process">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id687668"></a>Customising the Cloning Process</h3></div></div></div>
+<a name="id642898"></a>Customising the Cloning Process</h3></div></div></div>
 <p>
 So far, we have been making clones using the default cloning process. This uses the copy-constructor of the given type to generate the clone. However, quite often we will want to have greater control over this process, and sometimes we don't want to or cannot use a copy constructor at all.
 </p>
@@ -208,9 +210,35 @@ class Foo : public cloneable::base&lt;Foo&gt;
 </div>
 <div class="section" title="Using Custom Allocators">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="id687694"></a>Using Custom Allocators</h3></div></div></div>
+<a name="id642924"></a>Using Custom Allocators</h3></div></div></div>
 <p>
+	The entire <span class="emphasis"><em>Cloneable</em></span> system was designed to support general allocators. This is to ensure they work well in containers. When making a new object or sub-object or clone or sub-clone, the abstract_base is given a reference to an <code class="computeroutput">abstract_allocator</code>. This is an abstract interface (containing only pure virtual methods) that is used to expose a specialised <code class="computeroutput">allocator&lt;T&gt;</code> to the non-specific <code class="computeroutput">abstract_base</code>. This is much easier to understand with some examples:
     </p>
+<pre class="programlisting">
+	int main()
+	{
+	    std::allocator&lt;int&gt; alloc;
+	    Cat *cat = cloneable::create&lt;Cat&gt;(alloc); // create a Cat using the allocator
+	    Cat *dupe = cat-&gt;clone_as&lt;Cat&gt;(alloc); // clone using the same allocator
+	}
+    </pre>
+<p>
+	As you can see, most of the internals can be safely ignored. However, if you write a clone override, you should do so for the method that takes an <code class="computeroutput">abstract_allocator &amp;</code>, rather than just always use the heap:
+    </p>
+<pre class="programlisting">
+class Foo : public cloneable::base&lt;Foo&gt;
+{
+    // over-ride the make_copy method, providing our own means to make a clone
+    Foo *make_copy(cloneable::abstract_allocator &amp;alloc) const
+    {
+	//Foo *copy = new Foo();
+	Foo *copy = cloneable::create&lt;Foo&gt;(alloc);
+	 // write values to copy from this
+	 return copy;
+    }
+};
+	
+    </pre>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

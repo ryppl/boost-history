@@ -108,7 +108,9 @@ int main()
 </programlisting>
 <para>
 Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador. 
-When cloning this class, we specify which sub-object we wish to duplicate.
+When cloning this class, we specify which sub-object we wish to duplicate. Note that when using <code>clone_as&lt;T&gt;</code>, we actually are making a type of T, rather than making another type and casting up.
+</para>
+<para>
 We can also use the Cloneable library to make a new instance, without duplication:
 </para>
 <programlisting>
@@ -126,7 +128,7 @@ int main()
 }
 </programlisting>
 <para>
-	This will create a new derived animal type (not a new base), and return a pointer to the base.  Note that we used <code>abstract_base&lt;Animal&gt;</code>, rather than just <code>Animal</code>, as the base type argument for the <code>MakeNew</code> function. This is because the base class we provided, <code>Animal</code>, does not derive from anything and does not have any clone-related methods. These methods are added by the <code>abstract_base&lt;&gt;</code> mixin, which all derived <code>Animal</code>s are implicitly convertible to.
+    This will create a new derived animal type (not a new base), and return a pointer to the base. Here we used a free-function to make the new object, to show how to use the <code>abstract_base</code> template. We used <code>abstract_base&lt;Animal&gt;</code>, rather than just <code>Animal</code>, as the base type argument for the <code>MakeNew</code> function. This is because the base class we provided, <code>Animal</code>, does not derive from anything and does not have any clone-related methods. These methods are added by the <code>abstract_base&lt;&gt;</code> mixin, which all derived <code>Animal</code>s are implicitly convertible to.
 </para>
 </section>
 <section><title>Using External Types</title>
@@ -176,8 +178,33 @@ class Foo : public cloneable::base&lt;Foo&gt;
 <section>
     <title>Using Custom Allocators</title>
     <para>
+	The entire <emphasis>Cloneable</emphasis> system was designed to support general allocators. This is to ensure they work well in containers. When making a new object or sub-object or clone or sub-clone, the abstract_base is given a reference to an <code>abstract_allocator</code>. This is an abstract interface (containing only pure virtual methods) that is used to expose a specialised <code>allocator&lt;T&gt;</code> to the non-specific <code>abstract_base</code>. This is much easier to understand with some examples:
     </para>
-
+    <programlisting>
+	int main()
+	{
+	    std::allocator&lt;int&gt; alloc;
+	    Cat *cat = cloneable::create&lt;Cat&gt;(alloc); // create a Cat using the allocator
+	    Cat *dupe = cat->clone_as&lt;Cat&gt;(alloc); // clone using the same allocator
+	}
+    </programlisting>
+    <para>
+	As you can see, most of the internals can be safely ignored. However, if you write a clone override, you should do so for the method that takes an <code>abstract_allocator &amp;</code>, rather than just always use the heap:
+    </para>
+    <programlisting>
+class Foo : public cloneable::base&lt;Foo&gt;
+{
+    // over-ride the make_copy method, providing our own means to make a clone
+    Foo *make_copy(cloneable::abstract_allocator &amp;alloc) const
+    {
+	//Foo *copy = new Foo();
+	Foo *copy = cloneable::create&lt;Foo&gt;(alloc);
+	 // write values to copy from this
+	 return copy;
+    }
+};
+	
+    </programlisting>
 </section>
 </section>
 
