@@ -39,5 +39,8 @@ Rationale: The new interface makes it easier to pass custom translators to
 
 - find
 find() returns an assoc_iterator.
-Impact: If you use find, you may have to change your code.
-Rationale: equal_range() also returns assoc_iterators.
+Impact: If you use find, you may have to change your code. Most importantly,
+        you need to compare against not_found() instead of end().
+Rationale: equal_range() also returns assoc_iterators. equal_range() cannot
+           return normal iterators, since the conversion would not preserve
+	   the equal range or even the range property.
