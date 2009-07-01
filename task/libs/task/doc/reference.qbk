@@ -14,6 +14,7 @@
 [include ref_own_thread.qbk]
 [include ref_new_thread.qbk]
 [include ref_static_pool.qbk]
+[include ref_as_sub_task.qbk]
 [include ref_utility.qbk]
 [include ref_meta.qbk]
 [include ref_poolsize.qbk]

@@ -38,18 +38,20 @@ int parallel_fib_( int n, int cutof)
 	else
 	{
 		BOOST_ASSERT( boost::this_task::runs_in_pool() );
-		tsk::task< int > t1(
-			parallel_fib_,
-			n - 1,
-			cutof);
-		tsk::task< int > t2(
-			parallel_fib_,
-			n - 2,
-			cutof);
 		tsk::handle< int > h1(
-			tsk::async( boost::move( t1), tsk::as_sub_task() ) );
+			tsk::async(
+				tsk::make_task(
+					parallel_fib_,
+					n - 1,
+					cutof),
+				tsk::as_sub_task() ) );
 		tsk::handle< int > h2(
-			tsk::async( boost::move( t2), tsk::as_sub_task() ) );
+			tsk::async(
+				tsk::make_task(
+					parallel_fib_,
+					n - 2,
+					cutof),
+				tsk::as_sub_task() ) );
 		return h1.get() + h2.get();
 	}
 }
@@ -67,14 +69,11 @@ int main( int argc, char *argv[])
 		pool_type pool( tsk::poolsize( 5) );
 		
 		for ( int i = 0; i < 10; ++i)
-		{
-			tsk::task< void > t(
-				& parallel_fib,
-				i);
 			tsk::async(
-				boost::move( t),
+				tsk::make_task(
+					parallel_fib,
+					i),
 				pool);
-		}
 
 		return EXIT_SUCCESS;
 	}

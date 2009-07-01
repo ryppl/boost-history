@@ -52,28 +52,28 @@ thrd_()
 void
 interrupter::impl::set( shared_ptr< thread > const& thrd)
 {
-	unique_lock< mutex > lk( mtx_);
+	lock_guard< mutex > lk( mtx_);
 	set_( thrd);
 }
 
 void
 interrupter::impl::reset()
 {
-	unique_lock< mutex > lk( mtx_);
+	lock_guard< mutex > lk( mtx_);
 	reset_();
 }
 
 void
 interrupter::impl::interrupt()
 {
-	unique_lock< mutex > lk( mtx_);
+	lock_guard< mutex > lk( mtx_);
 	interrupt_();
 }
 
 bool
 interrupter::impl::interruption_requested()
 {
-	unique_lock< mutex > lk( mtx_);
+	lock_guard< mutex > lk( mtx_);
 	return interruption_requested_;
 }
 

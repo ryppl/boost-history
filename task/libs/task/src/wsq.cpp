@@ -44,7 +44,7 @@ wsq::put( callable const& ca)
 	}
 	else
 	{
-		unique_lock< recursive_mutex > lk( mtx_);
+		lock_guard< recursive_mutex > lk( mtx_);
 		uint32_t head( head_idx_);
 		int count( size() );
 
@@ -79,7 +79,7 @@ wsq::try_take( callable & ca)
 	}
 	else
 	{
-		unique_lock< recursive_mutex > lk( mtx_);
+		lock_guard< recursive_mutex > lk( mtx_);
 		if ( head_idx_ <= tail)
 		{
 			ca = array_[tail & mask_];

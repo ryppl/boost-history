@@ -255,31 +255,28 @@ public:
 	}
 # endif
 
-# ifndef BOOST_TASK_MAKE_TASK_MAX_ARITY
-#   define BOOST_TASK_MAKE_TASK_MAX_ARITY 10
+# ifndef BOOST_TASK_MAX_ARITY
+#   define BOOST_TASK_MAX_ARITY 10
 # endif
 
-# define BOOST_TASK_MAKE_TASK_FUNC_ARG(z, n, unused) \
+# define BOOST_TASK_ARG(z, n, unused) \
    BOOST_PP_CAT(A, n) BOOST_PP_CAT(a, n)
-# define BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASK_MAKE_TASK_FUNC_ARG, ~)
+# define BOOST_ENUM_TASK_ARGS(n) BOOST_PP_ENUM(n, BOOST_TASK_ARG, ~)
 
-# define BOOST_TASK_MAKE_TASK_FUNCTION(z, n, unused)	\
-template<												\
-	typename Fn,										\
-	BOOST_PP_ENUM_PARAMS(n, typename A)					\
->														\
-explicit task( Fn fn, BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS(n))	\
-	: task_( new detail::task_wrapper<							\
-			typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type,	\
-			function< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type() >	\
-		>( bind( fn, BOOST_PP_ENUM_PARAMS(n, a)) ) )	\
+# define BOOST_TASK_CTOR(z, n, unused)	\
+template<								\
+	typename Fn,						\
+	BOOST_PP_ENUM_PARAMS(n, typename A)	\
+>										\
+explicit task( Fn fn, BOOST_ENUM_TASK_ARGS(n))	\
+	: task_(									\
+			new detail::task_wrapper< R, function< R() > >(	\
+				bind( fn, BOOST_PP_ENUM_PARAMS(n, a)) ) )	\
 	{}
 
-BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAKE_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK_FUNCTION, ~)
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAX_ARITY, BOOST_TASK_CTOR, ~)
 
-# undef BOOST_TASK_MAKE_TASK_FUNCTION
-# undef BOOST_TASK_MAKE_TASK_FUNC_ARG
-# undef BOOST_ENUM_TASK_MAKE_TASK_FUNC_ARGS
+# undef BOOST_TASK_CTOR
 
 	unique_future< R > get_future()
 	{
@@ -314,6 +311,27 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAKE_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK
 	void swap( task & other) // throw()
 	{ task_.swap( other.task_); }
 };
+
+template< typename Fn >
+task< typename result_of< Fn() >::type > make_task( Fn fn)
+{ return task< typename boost::result_of< Fn() >::type >( fn); }
+
+# define BOOST_TASK_MAKE_TASK_FUNCTION(z, n, unused)	\
+template<												\
+	typename Fn,										\
+	BOOST_PP_ENUM_PARAMS(n, typename A)					\
+>														\
+task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >		\
+make_task( Fn fn, BOOST_ENUM_TASK_ARGS(n))				\
+{ return task< typename result_of< Fn( BOOST_PP_ENUM_PARAMS(n, A)) >::type >( fn, BOOST_PP_ENUM_PARAMS(n, a)); }
+
+BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAX_ARITY, BOOST_TASK_MAKE_TASK_FUNCTION, ~)
+
+# undef BOOST_TASK_MAKE_TASK_FUNCTION
+# undef BOOST_ENUM_TASK_ARGS
+# undef BOOST_TASK_ARG
+# undef BOOST_TASK_MAX_ARITY
+
 }
 
 template< typename R >
@@ -329,6 +347,7 @@ template< typename R >
 task::task< R > move( boost::detail::thread_move_t< task::task< R > > t)
 { return task::task< R >( t); }
 # endif
+
 }
 
 #include <boost/config/abi_suffix.hpp>

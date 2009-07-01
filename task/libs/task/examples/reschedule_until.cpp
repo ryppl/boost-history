@@ -57,18 +57,20 @@ int parallel_fib_( int n, int cutof)
 	else
 	{
 		BOOST_ASSERT( boost::this_task::runs_in_pool() );
-		tsk::task< int > t1(
-			parallel_fib_,
-			n - 1,
-			cutof);
-		tsk::task< int > t2(
-			parallel_fib_,
-			n - 2,
-			cutof);
 		tsk::handle< int > h1(
-			tsk::async( boost::move( t1), tsk::as_sub_task() ) );
+			tsk::async(
+				tsk::make_task(
+					parallel_fib_,
+					n - 1,
+					cutof),
+				tsk::as_sub_task() ) );
 		tsk::handle< int > h2(
-			tsk::async( boost::move( t2), tsk::as_sub_task() ) );
+			tsk::async(
+				tsk::make_task(
+					parallel_fib_,
+					n - 2,
+					cutof),
+				tsk::as_sub_task() ) );
 		return h1.get() + h2.get();
 	}
 }
@@ -149,22 +151,17 @@ int main( int argc, char *argv[])
 		int fd[2];
 		create_sockets( fd);
 
-		tsk::task< void > t1( do_read, fd[0]);
-
 		tsk::async(
-			boost::move( t1),
+			tsk::make_task( do_read, fd[0]),
 			pool);
 
 		do_write( fd[1], "Hello ");
 		boost::this_thread::sleep( pt::seconds( 1) );
 
 		for ( int i = 0; i < 10; ++i)
-		{
-			tsk::task< void > t( parallel_fib, i);
 			tsk::async(
-				boost::move( t),
+				tsk::make_task( parallel_fib, i),
 				pool);
-		}
 
 		do_write( fd[1], "World!");
 

@@ -43,6 +43,14 @@
 		operator unspecified_bool_type() const;
 		bool operator!() const;
 	};
+
+	template< typename Fn >
+	task< R > make_task( Fn fn);
+	template< typename Fn, typename A0 >
+	task< R > make_task( Fn fn, A0 a0);
+	template< typename Fn, typename A0, typename A1 >
+	task< R > make_task( Fn fn, A0 a0, A1 a1);
+	...
 ``
 
 [heading Default constructor]
@@ -177,6 +185,22 @@
 
 [variablelist
 [[Effects:] [is task invalid == task does not have ownership]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Non-member function `make_task()`]
+
+	template< typename Fn >
+	task< R > make_task( Fn fn);
+	template< typename Fn, typename A0 >
+	task< R > make_task( Fn fn, A0 a0);
+	template< typename Fn, typename A0, typename A1 >
+	task< R > make_task( Fn fn, A0 a0, A1 a1);
+	...
+
+[variablelist
+[[Effects:] [constructs a `boost::task::task< R >` from a function object and its arguments]]
 [[Throws:] [Nothing]]
 ]
 

@@ -46,17 +46,15 @@ int main( int argc, char *argv[])
 	{
 		pool_type pool( tsk::poolsize( 5) );
 		
-		tsk::task< void > t1( long_running_fn);
-		tsk::task< int > t2( fibonacci_fn, 10);
 		tsk::async(
-			boost::move( t1),
+			tsk::make_task( long_running_fn),
 			pool);
 		std::cout << "poolsize == " << pool.size() << std::endl;
 		std::cout << "idle threads == " << pool.idle() << std::endl;
 		std::cout << "active threads == " << pool.active() << std::endl;
 		tsk::handle< int > h(
 			tsk::async(
-				boost::move( t2),
+				tsk::make_task( fibonacci_fn, 10),
 				pool) );
 		h.interrupt();
 		std::cout << h.get() << std::endl;

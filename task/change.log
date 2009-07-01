@@ -5,6 +5,11 @@
   allowing correct move-semantics
 - worker_group removes all worker-threads in join_all()
   static_pool< R > does contain zero worker-threads after shutdown() or shutdown_now()
+- reintroduction of make_task()
+- internal refactoring/rework
+- documentation updated
+- tests updated
+- examples updated
 
 
 * boost.task-0.2.1:

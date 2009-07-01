@@ -6,12 +6,12 @@
 ]
 
 
-[section:new_thread Class `new_thread`]
+[section:as_sub_task Class `as_sub_task`]
 
 ``
-	#include <boost/task/async.hpp>
+	#include <boost/task/as_sub_task.hpp>
 
-	struct new_thread
+	struct as_sub_task
 	{
 		template< typename R >
 		handle< R > operator()( task< R >);
@@ -24,7 +24,7 @@
 	handle< R > operator()( task< R > t)
 
 [variablelist
-[[Effects:] [moves task in a new thread an returns an handle associated with the task]]
+[[Effects:] [moves task in a new thread or thread-pool and returns an handle associated with the task]]
 [[Throws:] [`boost::thread_resource_error`]]
 ]
 

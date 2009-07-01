@@ -59,6 +59,7 @@
 [def __task_interrupted__ `boost::task::task_interrupted`]
 [def __unbounded_channel__ `boost::task::unbounded_channel`]
 
+[def __make_task__ `boost::task::make_task()`]
 [def __waitfor_all__ `boost::task::waitfor_all()`]
 [def __waitfor_any__ `boost::task::waitfor_any()`]
 

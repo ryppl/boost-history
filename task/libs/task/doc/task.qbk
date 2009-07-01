@@ -12,7 +12,36 @@ A task is a chunk of code that can be executed independently.
 
 __task__ represents a __callable__ (provides __fn_operator__) object containing the unit of code to be execute by a __ep__.
 Function __fn_get_future__ returns a __act__ allowing to wait for the completion of the computation of the task, for
-getting the result of a computation or for transfering exceptions. __task__ supports move semantics (moving ownership).
+getting the result of a computation or for transfering exceptions.
+
+__task__ supports move semantics (moving ownership).
+
+``
+	boost::task::task< int > t1( parallel_fib, 10);
+	boost::task::task< int > t2;
+	t2 = boost::move( t1);
+``
+
+__boost_task__ provides the helper function __make_task__ in order to create __task__.
+
+``
+	void echo( std::string const& msg)
+	{ fprintf( stderr, "%s\n", msg.c_str() ); }
+
+	void main()
+	{
+		// execute task asynchron
+		// move task ownership to executor
+		boost::task::handle< void > h(
+			boost::task::async(
+				boost::task::make_task( echo, "hello world"),
+				boost::task::new_thread() ) );
+
+		// wait for task completion
+		std::cout << h.wait() << std::endl;
+	}
+
+``
 
 [/
 [heading Creation]

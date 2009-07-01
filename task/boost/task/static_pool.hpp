@@ -53,7 +53,7 @@ private:
 
 	friend class detail::worker;
 
-# if defined(BOOST_MSVC) && (BOOST_MSVC < 1500) // < MSVC 9.0
+# if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300) // <= MSVC 7.1
 	template< typename Pool >
 	friend class detail::worker::impl_pool;
 # endif
@@ -69,7 +69,7 @@ private:
 	private:
 		friend class detail::worker;
 
-# if defined(BOOST_MSVC) && (BOOST_MSVC < 1500) // < MSVC 9.0
+# if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300) // <= MSVC 7.1
 		template< typename Pool >
 		friend class detail::worker::impl_pool;
 # endif
@@ -146,8 +146,8 @@ private:
 		bool closed_() const
 		{ return state_ > 0; }
 
-		unsigned int close_()
-		{ return detail::atomic_fetch_add( & state_, 1); }
+		bool close_()
+		{ return detail::atomic_fetch_add( & state_, 1) > 1; }
 
 	public:
 		explicit pool_base(
@@ -165,10 +165,9 @@ private:
 			if ( asleep.is_special() || asleep.is_negative() )
 				throw invalid_timeduration();
 			channel_.activate();
-			unique_lock< shared_mutex > lk( mtx_wg_);
+			lock_guard< shared_mutex > lk( mtx_wg_);
 			for ( std::size_t i( 0); i < psize; ++i)
 				create_worker_( psize, asleep, max_scns);
-			lk.unlock();
 		}
 
 		explicit pool_base(
@@ -190,10 +189,9 @@ private:
 			if ( asleep.is_special() || asleep.is_negative() )
 				throw invalid_timeduration();
 			channel_.activate();
-			unique_lock< shared_mutex > lk( mtx_wg_);
+			lock_guard< shared_mutex > lk( mtx_wg_);
 			for ( std::size_t i( 0); i < psize; ++i)
 				create_worker_( psize, asleep, max_scns);
-			lk.unlock();
 		}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
@@ -213,10 +211,9 @@ private:
 			poolsize psize( thread::hardware_concurrency() );
 			BOOST_ASSERT( psize > 0);
 			channel_.activate();
-			unique_lock< shared_mutex > lk( mtx_wg_);
+			lock_guard< shared_mutex > lk( mtx_wg_);
 			for ( std::size_t i( 0); i < psize; ++i)
 				create_worker_( psize, asleep, max_scns, i);
-			lk.unlock();
 		}
 
 		explicit pool_base(
@@ -239,10 +236,9 @@ private:
 			poolsize psize( thread::hardware_concurrency() );
 			BOOST_ASSERT( psize > 0);
 			channel_.activate();
-			unique_lock< shared_mutex > lk( mtx_wg_);
+			lock_guard< shared_mutex > lk( mtx_wg_);
 			for ( std::size_t i( 0); i < psize; ++i)
 				create_worker_( psize, asleep, max_scns, i);
-			lk.unlock();
 		}
 # endif
 
@@ -271,7 +267,7 @@ private:
 
 		void shutdown()
 		{
-			if ( closed_() || close_() > 1) return;
+			if ( closed_() || close_() ) return;
 
 			channel_.deactivate();
 			shared_lock< shared_mutex > lk( mtx_wg_);
@@ -281,7 +277,7 @@ private:
 
 		const void shutdown_now()
 		{
-			if ( closed_() || close_() > 1) return;
+			if ( closed_() || close_() ) return;
 
 			channel_.deactivate_now();
 			shared_lock< shared_mutex > lk( mtx_wg_);

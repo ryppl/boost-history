@@ -348,10 +348,10 @@
 ]
 
 
-[heading Member function `submit( task< R > &&)`]
+[heading Member function `submit( task< R >)`]
 
 	template< typename R >
-	handle< R > submit( task< R > && t)
+	handle< R > submit( task< R > t)
 
 [variablelist
 [[Preconditions:] [has_attribute< pool >::value == false && ! closed()]]
@@ -360,10 +360,10 @@
 ]
 
 
-[heading Member function `submit( task< R > &&, Attr const& attr)`]
+[heading Member function `submit( task< R >, Attr const& attr)`]
 
 	template< typename R, typename Attr >
-	handle< R > submit( task< R > && t, Attr const& attr)
+	handle< R > submit( task< R > t, Attr const& attr)
 
 [variablelist
 [[Preconditions:] [has_attribute< pool >::value == true && ! closed()]]

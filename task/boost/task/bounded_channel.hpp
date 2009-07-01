@@ -273,19 +273,19 @@ public:
 
 	bool active()
 	{
-		shared_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return active_();
 	}
 
 	void activate()
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		activate_();
 	}
 
 	void clear()
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		clear_();
 	}
 
@@ -294,61 +294,61 @@ public:
 
 	void deactivate()
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		deactivate_();
 	}
 
 	void deactivate_now()
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		deactivate_now_();
 	}
 
 	const std::vector< detail::callable > drain()
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return drain_();
 	}
 
 	bool empty()
 	{ 
-		shared_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return empty_();
 	}
 
 	bool full()
 	{
-		shared_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return full_();
 	}
 
 	std::size_t upper_bound()
 	{
-		shared_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return hwm_;
 	}
 
 	void upper_bound( std::size_t hwm)
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		upper_bound_( hwm);
 	}
 
 	std::size_t lower_bound()
 	{
-		shared_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return lwm_;
 	}
 
 	void lower_bound( std::size_t lwm)
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		lower_bound_( lwm);
 	}
 
 	std::size_t size()
 	{ 
-		shared_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return size_();
 	}
 
@@ -384,7 +384,7 @@ public:
 
 	bool try_take( detail::callable & ca)
 	{
-		unique_lock< shared_mutex > lk( mtx_);
+		lock_guard< shared_mutex > lk( mtx_);
 		return try_take_( ca);
 	}
 };

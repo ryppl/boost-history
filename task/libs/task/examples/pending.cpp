@@ -47,14 +47,12 @@ int main( int argc, char *argv[])
 	{
 		pool_type pool( tsk::poolsize( 5) );
 
-		tsk::task< void > t1( long_running_fn);
 		tsk::async(
-			boost::move( t1),
+			tsk::make_task( long_running_fn),
 			pool);
-		tsk::task< int > t2( fibonacci_fn, 10);
 		tsk::handle< int > h(
 			tsk::async(
-				boost::move( t2),
+				tsk::make_task( fibonacci_fn, 10),
 				pool) );
 		std::cout << "pending tasks == " << pool.pending() << std::endl;
 		std::cout << h.get() << std::endl;

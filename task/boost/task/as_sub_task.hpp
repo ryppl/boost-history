@@ -46,7 +46,7 @@ struct as_sub_task
 			return handle< R >( fut, intr);
 		}
 		else
-			return new_thread()( t);
+			return new_thread()( boost::move( t) );
 	}
 };
 } }
