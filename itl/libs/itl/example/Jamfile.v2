@@ -5,7 +5,7 @@
 # Examples that do not use boost_date_time
 exe interval
     :
-        interval/interval.cpp
+        interval_/interval.cpp
     :
         <include>../../..
         <include>$(BOOST_ROOT)
@@ -13,7 +13,7 @@ exe interval
 
 exe interval_container
     :
-        interval_container/interval_container.cpp
+        interval_container_/interval_container.cpp
     :
         <include>../../..
         <include>$(BOOST_ROOT)
@@ -21,7 +21,7 @@ exe interval_container
 
 exe overlap_counter
     :
-        overlap_counter/overlap_counter.cpp
+        overlap_counter_/overlap_counter.cpp
     :
         <include>../../..
         <include>$(BOOST_ROOT)
@@ -29,7 +29,7 @@ exe overlap_counter
 
 exe party
     :
-        party/party.cpp
+        party_/party.cpp
     :
         <include>../../..
         <include>$(BOOST_ROOT)
@@ -38,7 +38,7 @@ exe party
 # Examples using boost_date_time
 exe boost_party
     :
-        boost_party/boost_party.cpp
+        boost_party_/boost_party.cpp
 		/boost/date_time//boost_date_time
     :
         <include>../../..
@@ -47,7 +47,7 @@ exe boost_party
 
 exe partys_height_average
     :
-        partys_height_average/partys_height_average.cpp
+        partys_height_average_/partys_height_average.cpp
 		/boost/date_time//boost_date_time
     :
         <include>../../..
@@ -56,7 +56,7 @@ exe partys_height_average
 
 exe partys_tallest_guests
     :
-        partys_tallest_guests/partys_tallest_guests.cpp
+        partys_tallest_guests_/partys_tallest_guests.cpp
 		/boost/date_time//boost_date_time
     :
         <include>../../..
@@ -65,7 +65,7 @@ exe partys_tallest_guests
 
 exe man_power
     :
-        man_power/man_power.cpp
+        man_power_/man_power.cpp
 		/boost/date_time//boost_date_time
     :
         <include>../../..
@@ -74,7 +74,7 @@ exe man_power
 
 exe month_and_week_grid
     :
-        month_and_week_grid/month_and_week_grid.cpp
+        month_and_week_grid_/month_and_week_grid.cpp
 		/boost/date_time//boost_date_time
     :
         <include>../../..
@@ -83,7 +83,7 @@ exe month_and_week_grid
 
 exe user_groups
     :
-        user_groups/user_groups.cpp
+        user_groups_/user_groups.cpp
 		/boost/date_time//boost_date_time
     :
         <include>../../..
@@ -92,7 +92,7 @@ exe user_groups
 
 exe itvset_shell
     :
-        itvset_shell/itvset_shell.cpp
+        itvset_shell_/itvset_shell.cpp
     :
         <include>../../..
         <include>$(BOOST_ROOT)
@@ -100,7 +100,7 @@ exe itvset_shell
 
 exe splititvmap_shell
     :
-        splititvmap_shell/splititvmap_shell.cpp
+        splititvmap_shell_/splititvmap_shell.cpp
     :
         <include>../../..
         <include>$(BOOST_ROOT)

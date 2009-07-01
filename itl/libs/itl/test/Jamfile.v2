@@ -17,36 +17,36 @@ project
 test-suite "itl"
     : 
       # interval
-      [ run test_itl_interval/test_itl_interval.cpp ]
+      [ run test_itl_interval_/test_itl_interval.cpp ]
       
       # sets
-      [ run test_interval_set/test_interval_set.cpp ]
-      [ run test_interval_set_infix/test_interval_set_infix.cpp ]
+      [ run test_interval_set_/test_interval_set.cpp ]
+      [ run test_interval_set_infix_/test_interval_set_infix.cpp ]
       
-      [ run test_separate_interval_set/test_separate_interval_set.cpp ]
-      [ run test_separate_interval_set_infix/test_separate_interval_set_infix.cpp ]
+      [ run test_separate_interval_set_/test_separate_interval_set.cpp ]
+      [ run test_separate_interval_set_infix_/test_separate_interval_set_infix.cpp ]
       
-      [ run test_split_interval_set/test_split_interval_set.cpp ]
-      [ run test_split_interval_set_infix/test_split_interval_set_infix.cpp ]
+      [ run test_split_interval_set_/test_split_interval_set.cpp ]
+      [ run test_split_interval_set_infix_/test_split_interval_set_infix.cpp ]
             
-      [ run test_interval_set_mixed/test_interval_set_mixed.cpp ]
+      [ run test_interval_set_mixed_/test_interval_set_mixed.cpp ]
       
       # maps
-      [ run test_interval_map/test_interval_map.cpp ]
-      [ run test_interval_map_infix/test_interval_map_infix.cpp ]
-      [ run test_split_interval_map/test_split_interval_map.cpp ]
-      [ run test_split_interval_map_infix/test_split_interval_map_infix.cpp ]
-      [ run test_interval_map_mixed/test_interval_map_mixed.cpp ]
-      [ run test_interval_map_mixed2/test_interval_map_mixed2.cpp ]
-      [ run test_interval_map_infix_mixed/test_interval_map_infix_mixed.cpp ]
-      [ run test_itl_map/test_itl_map.cpp ]
+      [ run test_interval_map_/test_interval_map.cpp ]
+      [ run test_interval_map_infix_/test_interval_map_infix.cpp ]
+      [ run test_split_interval_map_/test_split_interval_map.cpp ]
+      [ run test_split_interval_map_infix_/test_split_interval_map_infix.cpp ]
+      [ run test_interval_map_mixed_/test_interval_map_mixed.cpp ]
+      [ run test_interval_map_mixed2_/test_interval_map_mixed2.cpp ]
+      [ run test_interval_map_infix_mixed_/test_interval_map_infix_mixed.cpp ]
+      [ run test_itl_map_/test_itl_map.cpp ]
 
       # handcoded tests using laws (not LaBatea) -------------------------------
       # Concept Set
-      [ run test_set_inerval_set/test_set_interval_set.cpp ]
-      [ run test_set_itl_set/test_set_itl_set.cpp ]
+      [ run test_set_interval_set_/test_set_interval_set.cpp ]
+      [ run test_set_itl_set_/test_set_itl_set.cpp ]
       
       # Concept Map 
-      [ run test_partial_interval_quantifier/test_partial_interval_quantifier.cpp ]
-      [ run test_total_interval_quantifier/test_total_interval_quantifier.cpp ]            
+      [ run test_partial_interval_quantifier_/test_partial_interval_quantifier.cpp ]
+      [ run test_total_interval_quantifier_/test_total_interval_quantifier.cpp ]            
     ;

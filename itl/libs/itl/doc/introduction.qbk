@@ -112,8 +112,8 @@ time interval `[20:00,22:00)`. Harry enters later. He stays within `[21:00,23:00
 ``
 typedef itl::set<string> guests;
 interval_map<time, guests> party; 
-party += make_pair(interval<time>::rightopen(20:00, 22:00), guests("Mary"));
-party += make_pair(interval<time>::rightopen(21:00, 23:00), guests("Harry")); 
+party += make_pair(interval<time>::rightopen(time("20:00"), time("22:00")), guests("Mary"));
+party += make_pair(interval<time>::rightopen(time("21:00"), time("23:00")), guests("Harry")); 
 // party now contains
 [20:00, 21:00)->{"Mary"} 
 [21:00, 22:00)->{"Harry","Mary"} //guest sets aggregated on overlap
@@ -152,9 +152,9 @@ class templates provided by the *itl*.
 [table Synopsis over the itl's class templates
 [[granularity][style]     [sets]           [maps]           ]
 [[interval]   []          [__itv__]        []               ]            
-[[]           [joining]   [__itv_set__]    [__itv_set__]    ]
+[[]           [joining]   [__itv_set__]    [__itv_map__]    ]
 [[]           [separating][__sep_itv_set__][]               ]
-[[]           [splitting] [__spl_itv_set__][__spl_itv_set__]]
+[[]           [splitting] [__spl_itv_set__][__spl_itv_map__]]
 [[element]    []          [__ele_set__]    [__ele_map__]    ]
 ]                                   
 
