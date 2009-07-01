@@ -12,7 +12,6 @@
 #include "function_graph.hpp"
 #include <boost/range.hpp>
 
-
 // print an edge
 template<typename Result, typename Vertex>
 void print_edge(boost::detail::func_graph_edge<Result, Vertex> const& e)
@@ -30,6 +29,8 @@ int main()
     typedef std::pair<std::vector<unsigned int>::iterator,
                       std::vector<unsigned int>::iterator> iterator_range;
     typedef boost::function_graph<boolean_function, iterator_range> FuncGraph;
+    typedef boost::function_graph<boolean_function> FuncGraph2;
+    FuncGraph2 graph2(std::less<int>());
 
     ////////
     // Create vertices and function_graph
@@ -47,11 +48,11 @@ int main()
 
     ////////
     // Check iteration
-    print_edge((*graphIterator));
+    print_edge(*graphIterator);
     ++graphIterator;
-    print_edge((*graphIterator));
+    print_edge(*graphIterator);
     ++graphIterator;
-    print_edge((*graphIterator));
+    print_edge(*graphIterator);
 
     return 0;
 }

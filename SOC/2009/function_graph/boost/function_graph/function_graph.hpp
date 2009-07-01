@@ -20,9 +20,20 @@
 
 namespace boost {
 
+/** @name Domain Tags
+ * @description Traits that identify the function_graph as either having a
+ * finite domain, a range, or having an infinite domain, no range.
+ */
+
+struct finite_domain_tag { };
+struct infinite_domain_tag { };
+
+
+
+/** @name Edge Descriptor */
+
 namespace detail {
 
-/** Edge type */
 template <typename Result, typename Vertex>
 struct func_graph_edge {
     typedef Result result_type;
@@ -41,11 +52,15 @@ struct func_graph_edge {
 
 }   // detail namespace
 
-/**
- * function_graph_base handles the edge function. A user can define the function
- * as a boost::function, but the user may only have access to this function
- * through the function graph via edge().
+
+
+/** @name Function Graph Base
+ * @description function_graph_base handles the edge function. A user can
+ * define the function as a boost::function, but the user may only have access
+ * to this function through the function graph via edge().
  */
+
+//@{
 template <typename Func>
 struct function_graph_base {
 
@@ -67,18 +82,35 @@ struct function_graph_base {
     function_type edge_;
 };
 
-/** @name no_domain
- * A trait of function_graph used to declare a function_graph with no domain. 
- * @note is there somewhere else I could put this? Perhaps a traits file?
- */
+template <typename Func, typename Rng>
+struct function_graph_base_range {
 
-struct no_domain { };
+    typedef Func function_type;
+    typedef typename function_type::first_argument_type vertex_type;
+    typedef typename function_type::result_type result_type;
+    typedef typename detail::func_graph_edge<result_type,
+                                             vertex_type> edge_type;
+    typedef Rng vertex_iterator_range;
+
+    /** Constructors to allow for initialization of edge */
+    function_graph_base_range(function_type const& f,
+                              vertex_iterator_range const& r)
+        : edge_(f), range_(r)
+    { }
+
+    // Allow access to the function edge_ holds, not edge_ itself.
+    result_type edge (vertex_type v1, vertex_type v2) const
+    { return edge_(v1, v2); }
+
+    function_type edge_;
+    vertex_iterator_range range_;
+};
+//@}
 
 
 
-/** @name function_graph_in_edge_iterator
- * Iterates through the in edges of a vertex.
- * @note The name of this data type is 31 characters long. I need some brevity.
+/** @name In-Edge Iterator
+ * @description Iterates through the in edges of a vertex.
  */
 
 template<typename Function, typename Edge, typename Range>
@@ -94,19 +126,14 @@ public:
     typedef Function function_type;
 
     /** Iterator traits */
-    typedef std::bidirectional_iterator_tag iterator_category;
+    typedef std::input_iterator_tag iterator_category;
     typedef edge_descriptor value_type;
     typedef std::size_t different_type;
     typedef value_type* pointer;
     typedef value_type& reference;
 
-    /** Constructors */
+    /** @internal Constructors */
     //@{
-    /*function_graph_in_edge_iterator(function_type const& f,
-                                    vertex_iterator const& v)
-        : edge_(f), vertex_(v), range_()
-    { };*/
-
     function_graph_in_edge_iterator(function_type const& f,
                                     vertex_iterator const& v,
                                     vertex_iterator const& v_begin,
@@ -117,6 +144,7 @@ public:
           vertex_end_(v_end)
     { };
 
+    // Copy constructor
     function_graph_in_edge_iterator(This const& cp)
         : edge_(cp.edge_),
           vertex_(cp.vertex_),
@@ -125,7 +153,7 @@ public:
     { };
     //@}
 
-    /** Bidirectional Iterator operator overloads */
+    /** Input Iterator operator overloads */
     function_graph_in_edge_iterator& operator++()
     {
         // Cycle through the range until an edge is found,
@@ -136,19 +164,14 @@ public:
               !edge_(*vertex_begin_, *vertex_));
 
         return *this;
-    };
-
-    function_graph_in_edge_iterator& operator--()
-    {
-        return *this;
-    };
+    }
 
     edge_descriptor operator*()
     {
         return edge_descriptor(edge_(*vertex_begin_, *vertex_),
                                *vertex_begin_,
                                *vertex_);
-    };
+    }
 
     function_type edge_;
     vertex_iterator vertex_;
@@ -158,12 +181,85 @@ public:
 
 
 
-/**
- * Empty function graph prevents instantiations such as function_graph<int> and
- * function_graph<bool (int, int)>.
+/** @name Out-Edge Iterator
+ * @description Iterates through the in edges of a vertex.
  */
 
-template <typename T, typename U = no_domain> struct function_graph { };
+template<typename Function, typename Edge, typename Range>
+struct function_graph_out_edge_iterator {
+private:
+    typedef function_graph_out_edge_iterator<Function, Edge, Range> This;
+
+public:
+    typedef Range vertex_iterator_range;
+    typedef typename range_iterator<vertex_iterator_range>::type
+            vertex_iterator;
+    typedef Edge edge_descriptor;
+    typedef Function function_type;
+
+    /** Iterator traits */
+    typedef std::input_iterator_tag iterator_category;
+    typedef edge_descriptor value_type;
+    typedef std::size_t different_type;
+    typedef value_type* pointer;
+    typedef value_type& reference;
+
+    /** @internal Constructors */
+    //@{
+    function_graph_out_edge_iterator(function_type const& f,
+                                     vertex_iterator const& v,
+                                     vertex_iterator const& v_begin,
+                                     vertex_iterator const& v_end)
+        : edge_(f),
+          vertex_(v),
+          vertex_begin_(v_begin),
+          vertex_end_(v_end)
+    { };
+
+    // Copy constructor
+    function_graph_out_edge_iterator(This const& cp)
+        : edge_(cp.edge_),
+          vertex_(cp.vertex_),
+          vertex_begin_(cp.vertex_begin_),
+          vertex_end_(cp.vertex_end_)
+    { };
+    //@}
+
+    /** Input Iterator operator overloads */
+    function_graph_out_edge_iterator& operator++()
+    {
+        // Cycle through the range until an edge is found,
+        // or the end of the list is found
+        do {
+            ++vertex_begin_;
+        } while((vertex_begin_ != vertex_end_) &&
+              !edge_(*vertex_, *vertex_begin_));
+
+        return *this;
+    }
+
+    edge_descriptor operator*()
+    {
+        return edge_descriptor(edge_(*vertex_, *vertex_begin_),
+                               *vertex_begin_,
+                               *vertex_);
+    }
+
+    function_type edge_;
+    vertex_iterator vertex_;
+    vertex_iterator vertex_begin_;
+    vertex_iterator vertex_end_;
+};
+
+
+/** @name Function Graph
+ * @description function_graph is a data structure that implements implicit
+ * graphs and more.
+ * @note This is a trap for poor template parameters
+ */
+
+template <typename Function, typename Range = infinite_domain_tag>
+struct function_graph;
 
 
 
@@ -178,11 +274,14 @@ template <typename T, typename U = no_domain> struct function_graph { };
 
 template <typename Result, typename Vertex, typename Range>
 struct function_graph<function<Result(Vertex, Vertex)>, Range>
-    : public function_graph_base<function<Result(Vertex, Vertex)> >
+    : private function_graph_base_range<function<Result(Vertex, Vertex)>, Range>
 {
 private:
-    typedef function_graph_base<function<Result(Vertex, Vertex)> > Base;
-    typedef function_graph<function<Result(Vertex, Vertex)> > This;
+    typedef function_graph_base_range<
+                function<Result(Vertex, Vertex)>,
+                Range
+            > Base;
+    typedef function_graph<function<Result(Vertex, Vertex)>, Range > This;
 
 public:
     typedef typename Base::function_type function_type;
@@ -195,20 +294,38 @@ public:
     typedef Range vertex_iterator_range;
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
-    typedef function_graph_in_edge_iterator<function_type, edge_descriptor,
-            vertex_iterator_range> in_edge_iterator;
+    typedef function_graph_in_edge_iterator<
+                function_type,
+                edge_descriptor,
+                vertex_iterator_range
+            > in_edge_iterator;
+    typedef function_graph_out_edge_iterator<
+                function_type,
+                edge_descriptor,
+                vertex_iterator_range
+            > out_edge_iterator;
+    typedef finite_domain_tag domain_category;
 
     /** Constructor: takes a functor and range */
     function_graph(function_type const& f, vertex_iterator_range const& r)
-        : Base(f), range_(r)
+        : Base(f, r)
     { }
 
-    Range range_;
+    using Base::edge_;
+    using Base::range_;
 };
 
-// Specialization: function_graph without range
+/** @internal Allow a template function parameter without wrapping it with
+ * boost::function.
+ */
+template <typename Result, typename Vertex, typename Range>
+struct function_graph<Result(Vertex, Vertex), Range>
+    : public function_graph<function<Result(Vertex, Vertex)>, Range>
+{ };
+
+// Specialization of function_graph without range
 template <typename Result, typename Vertex>
-struct function_graph<function<Result(Vertex, Vertex)>, no_domain>
+struct function_graph<function<Result(Vertex, Vertex)>, infinite_domain_tag>
     : public function_graph_base<function<Result(Vertex, Vertex)> >
 {
 private:
@@ -223,6 +340,7 @@ public:
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef adjacency_matrix_tag traversal_category;
+    typedef infinite_domain_tag domain_category;
 
     /** Constructor: takes a boost::function or functor */
     function_graph(function_type const& f)
@@ -231,17 +349,11 @@ public:
 };
 
 
-
-/**
- * @note This specialization will match any function of the form E(V,V) and
- * generates the graph over an adapted boost function. Note that functions of
- * the form E(U,V) will match the empty class causing compiler errors.
- */
-
 template <typename Result, typename Vertex>
-struct function_graph <Result(Vertex, Vertex)>
-    : private function_graph_base <function<Result(Vertex, Vertex)> >
+struct function_graph<Result(Vertex, Vertex), infinite_domain_tag>
+    : public function_graph<function<Result(Vertex, Vertex)> >
 { };
+
 
 
 
@@ -250,23 +362,19 @@ struct function_graph <Result(Vertex, Vertex)>
 template <typename Result, typename Vertex, typename Range>
 Vertex source(detail::func_graph_edge<Result, Vertex> const& e,
               function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
-{
-    return e.source_;
-}
+{ return e.source_; }
 
 template <typename Result, typename Vertex, typename Range>
 Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
               function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
-{
-    return e.target_;
-}
+{ return e.target_; }
 
 
 
 /** in_edges(v, g) is part of the bidirectional graph concept. */
 
 #define FUNC_GRAPH \
-    function_graph<function<Result(Vertex, Vertex)>, Range
+    function_graph<function<Result(Vertex, Vertex)>, Range>
 
 template <typename Result, typename Vertex, typename Range>
 std::pair<
@@ -295,13 +403,12 @@ in_edges(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
 /** vertices(g) is part of the vertex list concept. */
 
 template <typename Result, typename Vertex, typename Range>
-std::pair<typename function_graph<function<Result(Vertex, Vertex)>,
-          Range>::vertex_iterator,
-          typename function_graph<function<Result(Vertex, Vertex)>,
-          Range>::vertex_iterator>
-vertices(function_graph<function<Result(Vertex, Vertex)>, Range> const& g) {
-    return std::make_pair(begin(g.range_), end(g.range_));
-}
+std::pair<
+    typename FUNC_GRAPH::vertex_iterator,
+    typename FUNC_GRAPH::vertex_iterator
+>
+vertices(function_graph<function<Result(Vertex, Vertex)>, Range> const& g)
+{ return std::make_pair(begin(g.range_), end(g.range_)); }
 
 
 
@@ -326,8 +433,9 @@ template <typename Vertex>
 std::pair<detail::func_graph_edge<bool, Vertex>, bool>
 bind_edge(bool r, Vertex u, Vertex v)
 {
-    return std::make_pair(typename detail::func_graph_edge
-                              <bool, Vertex>(r, u, v),
+    return std::make_pair(typename detail::func_graph_edge<
+                              bool, Vertex
+                          >(r, u, v),
                           r);
 }
 
@@ -336,8 +444,9 @@ template <typename OptType, typename Vertex>
 std::pair<detail::func_graph_edge<optional<OptType>, Vertex>, bool>
 bind_edge(optional<OptType> const& r, Vertex u, Vertex v)
 {
-    return std::make_pair(detail::func_graph_edge
-                              <optional<OptType>, Vertex>(r, u, v),
+    return std::make_pair(detail::func_graph_edge<
+                              optional<OptType>, Vertex
+                          >(r, u, v),
                           (bool)r);
 }
 
