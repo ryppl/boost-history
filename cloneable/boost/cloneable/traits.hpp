@@ -9,7 +9,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
-#include <boost/cloneable/base.hpp>
 
 namespace boost
 {
@@ -20,12 +19,13 @@ namespace boost
 			template <class T, bool>
 			struct traits
 			{
-				BOOST_STATIC_CONSTANT(bool, is_cloneable = false);
-				BOOST_STATIC_CONSTANT(bool, has_default_ctor = false);	// this really should be ternary: yes, no or unknown
 				typedef T derived_type;
 				typedef T base_type;
 				typedef unknown_construction default_constructable_type;
 				typedef T abstract_base_type;
+
+				BOOST_STATIC_CONSTANT(bool, is_cloneable = false);
+				BOOST_STATIC_CONSTANT(bool, has_default_ctor = false);	// this really should be ternary: yes, no or unknown
 			};
 
 			template <class T>
@@ -43,7 +43,8 @@ namespace boost
 
 			template <class T>
 			struct get_traits : traits<T, is_convertible<T *, is_cloneable_tag *>::value> { };
-		}
+
+		} // namespace impl
 
 		template <class T>
 		struct traits : impl::get_traits<T> { };

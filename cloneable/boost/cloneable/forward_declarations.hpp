@@ -32,6 +32,8 @@ namespace boost
 		template <class Base = default_base_type, class DefaultCtor = default_construction>
 		struct abstract_base;
 
+		struct is_cloneable_tag { };
+
 		/// a structure derived from this, with type Derived, is correctly
 		/// cloneable from a base pointer, given an abstract_allocator.
 		template <

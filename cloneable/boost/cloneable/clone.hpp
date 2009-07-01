@@ -43,14 +43,17 @@ namespace boost
 					return original.clone_as<T>(alloc);
 				}
 			};
-		}
 
+		} // namespace impl
+
+		/// free-function clone that works for cloneable and also default types
 		template <class T>
 		T *clone(const T &original)
 		{
 			return impl::clone<is_cloneable<T>::value>::given(original);
 		}
 
+		/// free-function clone that works for cloneable and also default types, given allocator
 		template <class T, class Alloc>
 		T *clone(const T &original, Alloc &alloc)
 		{

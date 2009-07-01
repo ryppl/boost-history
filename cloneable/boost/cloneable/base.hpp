@@ -14,7 +14,7 @@ namespace boost
 {
 	namespace cloneable
 	{
-		namespace detail
+		namespace impl
 		{
 			template <class Derived, class HasDefaultCtor>
 			struct create_new
@@ -32,15 +32,14 @@ namespace boost
 			template <class Derived>
 			struct create_new<Derived, no_default_construction>
 			{
-				template <class Ty, class Alloc>
-				static Derived *given(Ty *self, Alloc &alloc, size_t alignment)
+				template <class Self, class Alloc>
+				static Derived *given(Self *self, Alloc &alloc, size_t alignment)
 				{
 					throw no_default_construction();
 				}
 			};
-		}
 
-		struct is_cloneable_tag { };
+		} // namespace impl
 
 		/// base for the given derived type, using the given base class
 		template <class Derived, class Base, class DefaultCtor>
@@ -78,7 +77,7 @@ namespace boost
 
 			virtual this_type *create_new(abstract_allocator &alloc) const 
 			{
-				return detail::create_new<Derived, DefaultCtor>::given(this, alloc, alignment);
+				return impl::create_new<Derived, DefaultCtor>::given(this, alloc, alignment);
 			}
 
 			virtual this_type *copy_construct(abstract_allocator &alloc) const 
