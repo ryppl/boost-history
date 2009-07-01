@@ -40,14 +40,18 @@ namespace boost
 			};
 		}
 
+		struct is_cloneable_tag { };
+
 		/// base for the given derived type, using the given base class
-		template <class Derived, class Base, class HasDefaultCtor>
-		struct base : abstract_base<Base,HasDefaultCtor>
+		template <class Derived, class Base, class DefaultCtor>
+		struct base : abstract_base<Base, DefaultCtor>, is_cloneable_tag
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;
-			typedef abstract_base<Base,HasDefaultCtor> abstract_base_type;
-			typedef base<Derived, Base,HasDefaultCtor> this_type;
+			typedef DefaultCtor default_constructable_type;
+
+			typedef abstract_base<base_type, default_constructable_type> abstract_base_type;
+			typedef base<derived_type, base_type, default_constructable_type> this_type;
 
 			static const size_t alignment;		///< required alignment for allocation
 			mutable derived_type *self_ptr;		///< pointer to derived object in this
@@ -74,7 +78,7 @@ namespace boost
 
 			virtual this_type *create_new(abstract_allocator &alloc) const 
 			{
-				return detail::create_new<Derived,HasDefaultCtor>::given(this, alloc, alignment);
+				return detail::create_new<Derived, DefaultCtor>::given(this, alloc, alignment);
 			}
 
 			virtual this_type *copy_construct(abstract_allocator &alloc) const 
@@ -88,8 +92,8 @@ namespace boost
 		};
 
 		/// ensure correct alignment when allocating derived instances
-		template <class Derived, class Base, class HasDefaultCtor>
-		const size_t base<Derived, Base, HasDefaultCtor>::alignment = aligned_storage<sizeof(Derived)>::alignment;
+		template <class Derived, class Base, class DefaultCtor>
+		const size_t base<Derived, Base, DefaultCtor>::alignment = aligned_storage<sizeof(Derived)>::alignment;
 
 	} // namespace cloneable
 

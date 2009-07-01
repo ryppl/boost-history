@@ -198,6 +198,10 @@
 					RelativePath="..\..\..\boost\cloneable\forward_declarations.hpp"
 					>
 				</File>
+				<File
+					RelativePath="..\..\..\boost\cloneable\traits.hpp"
+					>
+				</File>
 				<Filter
 					Name="detail"
 					>

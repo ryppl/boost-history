@@ -26,6 +26,7 @@ namespace boost
 
 		struct default_construction {};
 		struct no_default_construction {};
+		struct unknown_construction {};
 
 		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
 		template <class Base = default_base_type, class DefaultCtor = default_construction>
