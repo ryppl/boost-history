@@ -122,12 +122,12 @@ namespace boost
 			/// overridable hash function, for utility
 			virtual size_t hash_value() const { return 0; }
 
-			/// return a hash value for the object. try the virtual method first, otherwise just use pointer value
+			/// return a hash value for the object
 			size_t hash() const 
 			{ 
 				if (size_t value = hash_value())
 					return value;
-				return ptrdiff_t(reinterpret_cast<const char *>(this) - 0);
+				return 0;//ptrdiff_t(reinterpret_cast<const char *>(this) - 0);
 			}
 
 		};
