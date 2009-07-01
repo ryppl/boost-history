@@ -61,7 +61,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itl_set", "..\..\
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_labat_itl_morphic", "..\..\..\validate\example\labat_itl_morphic_\vc9_labat_itl_morphic.vcproj", "{612A0CA2-9206-4D24-8C34-D1E48D5FEC6E}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_set_interval_set", "..\..\test\test_set_inerval_set_\vc9_test_set_interval_set.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE3529}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_set_interval_set", "..\..\test\test_set_interval_set_\vc9_test_set_interval_set.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE3529}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_set_itl_set", "..\..\test\test_set_itl_set_\vc9_test_set_itl_set.vcproj", "{DD9C9854-3882-42B9-BFA1-C6CEBFCE352A}"
 EndProject
@@ -90,8 +90,6 @@ EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_interval_map_infix_mixed", "..\..\test\test_interval_map_infix_mixed_\vc9_test_interval_map_infix_mixed.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B8D5A9F9F}"
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_interval_map_mixed2", "..\..\test\test_interval_map_mixed2_\vc9_test_interval_map_mixed2.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B8D3B9F9F}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_perform", "..\..\..\itl_xt\test\perform_\vc9_perform.vcproj", "{EF64A2C7-DE78-46C2-953F-C4685A5D6A98}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -279,10 +277,6 @@ Global
 		{EE61B7EF-EC45-4165-8B49-FD5B8D3B9F9F}.Debug|Win32.Build.0 = Debug|Win32
 		{EE61B7EF-EC45-4165-8B49-FD5B8D3B9F9F}.Release|Win32.ActiveCfg = Release|Win32
 		{EE61B7EF-EC45-4165-8B49-FD5B8D3B9F9F}.Release|Win32.Build.0 = Release|Win32
-		{EF64A2C7-DE78-46C2-953F-C4685A5D6A98}.Debug|Win32.ActiveCfg = Debug|Win32
-		{EF64A2C7-DE78-46C2-953F-C4685A5D6A98}.Debug|Win32.Build.0 = Debug|Win32
-		{EF64A2C7-DE78-46C2-953F-C4685A5D6A98}.Release|Win32.ActiveCfg = Release|Win32
-		{EF64A2C7-DE78-46C2-953F-C4685A5D6A98}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
