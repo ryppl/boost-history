@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section last-revision="$Date: 2007-11-25 13:38:02 -0500 (Sun, 25 Nov 2007) $">
+  <title>Introduction</title>
+
+<para>
+The Boost.Cloneable library provides a means for creating
+and duplicating instances of objects that are defined
+in a class hierarchy. 
+Cloneable objects can create clones of derived types from base types, 
+can do so given any general allocator, and support multiple clone type targets.
+Cloneable objects can be used in containers-of-pointers, producing a 'heterogenous' container system with emplace semantics, also contained in this library.
+</para>
+
+<para>
+Cloneable types are able to override the default cloning process, which
+uses copy construction. Cloneable types can derive from other cloneable
+types, in which case the user of the class can specify which
+subobject to duplicate when making a new clone or new object.
+Via an 'adaptor' mechanism, existing classes which cannot be
+modified are able to be used by Boost.Cloneable, and types
+that are not default-constructible are supported.
+</para>
+
+<para>
+While there is a requirement that Cloneable types must either
+derive from a mixin template, or use the Cloneable adaptor,
+the user is able to specify which base class to use for
+each class hierarchy in the application.
+</para>
+
+</section>

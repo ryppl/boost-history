@@ -1,0 +1,97 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Chapter 1. Boost.Cloneable</title>
+<link rel="stylesheet" href="boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<link rel="home" href="index.html" title="Chapter 1. Boost.Cloneable">
+<link rel="next" href="cloneable/tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../boost.png"></td>
+<td align="center"><a href="../../index.html">Home</a></td>
+<td align="center"><a href="libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="cloneable/tutorial.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="chapter" title="Chapter 1. Boost.Cloneable">
+<div class="titlepage"><div>
+<div><h2 class="title">
+<a name="cloneable"></a>Chapter 1. Boost.Cloneable</h2></div>
+<div><div class="author">
+<h3 class="author">
+<span class="firstname">Christian</span> <span class="surname">Schladetsch</span>
+</h3>
+<code class="email">&lt;<a class="email" href="mailto:christian.schladetsch@gmail.com">christian.schladetsch@gmail.com</a>&gt;</code>
+</div></div>
+<div><p class="copyright">Copyright © 2009 Christian Schladetsch</p></div>
+<div><div class="legalnotice" title="Legal Notice">
+<a name="id641056"></a><p>Use, modification and distribution is subject to the Boost
+    Software License, Version 1.0. (See accompanying file
+    <code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)</p>
+</div></div>
+</div></div>
+<div class="toc">
+<p><b>Table of Contents</b></p>
+<dl>
+<dt><span class="section"><a href="index.html#id641076">Introduction</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html">Tutorial</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="cloneable/tutorial.html#id641104">Overview</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id641115">Basic Cloning</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id641138">Simple Hierarchical Cloning</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id641216">Using External Types</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id641238">Customising the Cloning Process</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="cloneable/containers.html">Heterogenous Containers</a></span></dt>
+<dd><dl><dt><span class="section"><a href="cloneable/containers.html#id641274">Overview</a></span></dt></dl></dd>
+<dt><span class="section"><a href="index/s04.html">Frequently Asked Questions</a></span></dt>
+<dt><span class="section"><a href="index/s05.html">Design Overview</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="index/s05.html#id641328">Class Hierachy</a></span></dt>
+<dt><span class="section"><a href="index/s05.html#id641336">Abstract Allocator</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="cloneable/tests.html">Testsuite</a></span></dt>
+<dd><dl><dt><span class="section"><a href="cloneable/tests.html#id641349">Acceptance tests</a></span></dt></dl></dd>
+</dl>
+</div>
+<div class="section" title="Introduction">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="id641076"></a>Introduction</h2></div></div></div>
+<p>
+The Boost.Cloneable library provides a means for creating
+and duplicating instances of objects that are defined
+in a class hierarchy. 
+Cloneable objects can create clones of derived types from base types, 
+can do so given any general allocator, and support multiple clone type targets.
+Cloneable objects can be used in containers-of-pointers, producing a 'heterogenous' container system with emplace semantics, also contained in this library.
+</p>
+<p>
+Cloneable types are able to override the default cloning process, which
+uses copy construction. Cloneable types can derive from other cloneable
+types, in which case the user of the class can specify which
+subobject to duplicate when making a new clone or new object.
+Via an 'adaptor' mechanism, existing classes which cannot be
+modified are able to be used by Boost.Cloneable, and types
+that are not default-constructible are supported.
+</p>
+<p>
+While there is a requirement that Cloneable types must either
+derive from a mixin template, or use the Cloneable adaptor,
+the user is able to specify which base class to use for
+each class hierarchy in the application.
+</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised: June , 2009 at  </small></p></td>
+<td align="right"><div class="copyright-footer"></div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav"><a accesskey="n" href="cloneable/tutorial.html"><img src="../../doc/html/images/next.png" alt="Next"></a></div>
+</body>
+</html>

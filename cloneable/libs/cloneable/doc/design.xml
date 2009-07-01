@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section last-revision="$Date:$">
+  <title>Design Overview</title>
+
+  <using-namespace name="boost"/>
+  <using-namespace name="boost::cloneable"/>
+
+  <section>
+    <title>Class Hierachy</title>
+    </section>
+  <section>
+    <title>Abstract Allocator</title>
+    </section>
+    </section>

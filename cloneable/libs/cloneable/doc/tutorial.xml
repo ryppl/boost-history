@@ -1,0 +1,179 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section last-revision="$Date:$" id="cloneable.tutorial">
+  <title>Tutorial</title>
+
+  <using-namespace name="boost"/>
+  <using-namespace name="boost::cloneable"/>
+  <using-class name="boost::signalN"/>
+
+  <section>
+    <title>Overview</title>
+    <para>This tutorial progresses through the basic usage of the library, 
+	    demonstrating how to make a new Cloneable type, how to make
+	    an exsiting, external type Cloneable, and how to deal with
+	    multiple inheritance in type hierarchies.</para>
+</section>
+
+<section><title>Basic Cloning</title>
+<para>
+The following is a very quick introduction to Boost.Cloneable:
+</para>
+<programlisting>
+#include &lt;boost/cloneable.hpp&gt;
+
+using namespace boost;
+
+class Foo : cloneable::base&lt;Foo&gt; { };
+
+int main()
+{
+     Foo *foo = new Foo();
+     cloneable::default_base_type *cloned = foo-&gt;clone();
+     assert(typeid(*cloned) == typeid(Foo));
+     return 0;
+}
+</programlisting>
+<para>
+	Here we have made a class and derived from <code>cloneable::base</code>, passing the type of thing to clone as a type parameter. This is the Curiously Recurring Template Pattern, or CRTP. Because we didn't supply a base type to use, we were given the default base type. Although it is fine to use the default base class, we shall see that in general it is better to provide our own base classes as this gives us much flexibility when it comes to associative containers and resource management. But we'll get to that later. For now, let's move on to some slightly less trivial examples.
+</para>
+</section>
+<section><title>Simple Hierarchical Cloning</title>
+<programlisting>
+#include &lt;string&gt;
+#include &lt;boost/cloneable.hpp&gt;
+
+using namespace boost;
+using namespace std;
+
+class Animal
+{
+    virtual ~Animal() { }
+    virtual string get_name() const = 0;
+};
+
+class Cat : public cloneable::base&lt;Cat, Animal&gt;
+{
+    string name;
+public:
+    Cat() {}
+    Cat(string n) : name(n) { }
+    string get_name() const { return name; }
+};
+
+int main()
+{
+    Cat *cat = new Cat("sam");
+
+    // clone the cat. returns a pointer to the base class
+    Animal *animal = cat-&gt;clone();
+    assert(typeid(*animal) == typeid(Cat));
+
+    // downcast to our derived type
+    Cat *cloned = dynamic_cast&lt;Cat *&gt;(animal);
+    assert(cloned-&gt;get_name() == "sam");
+
+    return 0;
+};
+</programlisting>
+<para>
+	In this example, we note that the <code>clone()</code> method returns
+	a pointer to the base class of the type hierarchy. If you know
+	the derived type that you wish to be cloned, you can use the 
+	<code>clone_as&lt;T&gt;()</code> method instead and save some typing:
+</para>
+<programlisting>
+Cat *cloned = cat-&gt;clone_as&lt;Cat&gt;();
+</programlisting>
+
+<para>
+We now add other animals to the hierachy, including the use of multiple inheritance:
+</para>
+<programlisting>
+class Dog : public cloneable::base&lt;Dog, Animal&gt;
+{
+};
+
+class Labrador : public Dog, public cloneable::base&lt;Labrador, Animal&gt;
+{
+};
+
+int main()
+{
+    Labrador *lab = new Labrador();
+    Dog *dog = lab-&gt;clone_as&lt;Dog&gt;();
+    Labrador *cloned_lab = lab-&gt;clone_as&lt;Labrador&gt;();
+    return 0;
+}
+</programlisting>
+<para>
+Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador. 
+When cloning this class, we specify which sub-object we wish to duplicate.
+We can also use the Cloneable library to make a new instance, without duplication:
+</para>
+<programlisting>
+Animal *MakeNew(const cloneable::abstract_base&lt;Animal&gt; &amp;animal)
+{
+    return animal.create_new();
+}
+
+int main()
+{
+    Cat *cat = new Cat();
+    Animal *new_animal = MakeNew(*cat);
+    assert(typeid(*new_animal) == typeid(Cat));
+    return 0;
+}
+</programlisting>
+<para>
+	This will create a new derived animal type (not a new base), and return a pointer to the base.  Note that we used <code>abstract_base&lt;Animal&gt;</code>, rather than just <code>Animal</code>, as the base type argument for the <code>MakeNew</code> function. This is because the base class we provided, <code>Animal</code>, does not derive from anything and does not have any clone-related methods. These methods are added by the <code>abstract_base&lt;&gt;</code> mixin, which all derived <code>Animal</code>s are implicitly convertible to.
+</para>
+</section>
+<section><title>Using External Types</title>
+	<para>
+		Quite often we find ourselves using classes that are defined in an external library. These are not open to be changed, but we would still like them to be Cloneable. To address this issue, we can use the <code>cloneable::adaptor&lt;Type,Base&gt;</code> structure:
+	
+	</para>
+	<programlisting>
+class External { }; // cannot be modified
+
+class MyBase { virtual ~MyBase() { } };
+
+class MyExternal : cloneable::adaptor&lt;External, MyBase&gt; { };
+
+int main()
+{
+    MyExternal *ex = new MyExternal();
+    MyExternal *cloned = ex->clone_as&lt;MyExternal&gt;();
+    return 0;
+}
+	</programlisting>
+<para>
+The only difference is that we use cloneable::adaptor&lt;&gt; mixin template as the base, rather than cloneable::base&lt;&gt;.
+</para>
+</section>
+<section><title>Customising the Cloning Process</title>
+<para>
+So far, we have been making clones using the default cloning process. This uses the copy-constructor of the given type to generate the clone. However, quite often we will want to have greater control over this process, and sometimes we don't want to or cannot use a copy constructor at all.
+</para>
+<para>
+	To customise the cloning process, it is a simple matter of providing a <code>make_copy</code> method overload in your derived class:
+</para>
+<programlisting>
+class Foo : public cloneable::base&lt;Foo&gt;
+{
+    // over-ride the make_copy method, providing our own means to make a clone
+    Foo *make_copy() const
+    {
+         Foo *copy = new Foo();
+	 // write values to copy from this
+	 return copy;
+    }
+};
+</programlisting>
+<para>
+</para>
+</section>
+</section>
+

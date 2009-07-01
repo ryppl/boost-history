@@ -1,0 +1,222 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Tutorial</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<link rel="home" href="../index.html" title="Chapter 1. Boost.Cloneable">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Cloneable">
+<link rel="prev" href="../index.html" title="Chapter 1. Boost.Cloneable">
+<link rel="next" href="containers.html" title="Heterogenous Containers">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
+<td align="center"><a href="../../../index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Tutorial">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="cloneable.tutorial"></a>Tutorial</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#id641104">Overview</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id641115">Basic Cloning</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id641138">Simple Hierarchical Cloning</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id641216">Using External Types</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#id641238">Customising the Cloning Process</a></span></dt>
+</dl></div>
+<div class="section" title="Overview">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id641104"></a>Overview</h3></div></div></div>
+<p>This tutorial progresses through the basic usage of the library, 
+	    demonstrating how to make a new Cloneable type, how to make
+	    an exsiting, external type Cloneable, and how to deal with
+	    multiple inheritance in type hierarchies.</p>
+</div>
+<div class="section" title="Basic Cloning">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id641115"></a>Basic Cloning</h3></div></div></div>
+<p>
+The following is a very quick introduction to Boost.Cloneable:
+</p>
+<pre class="programlisting">
+#include &lt;boost/cloneable.hpp&gt;
+
+using namespace boost;
+
+class Foo : cloneable::base&lt;Foo&gt; { };
+
+int main()
+{
+     Foo *foo = new Foo();
+     cloneable::default_base_type *cloned = foo-&gt;clone();
+     assert(typeid(*cloned) == typeid(Foo));
+     return 0;
+}
+</pre>
+<p>
+	Here we have made a class and derived from <code class="computeroutput">cloneable::base</code>, passing the type of thing to clone as a type parameter. This is the Curiously Recurring Template Pattern, or CRTP. Because we didn't supply a base type to use, we were given the default base type. Although it is fine to use the default base class, we shall see that in general it is better to provide our own base classes as this gives us much flexibility when it comes to associative containers and resource management. But we'll get to that later. For now, let's move on to some slightly less trivial examples.
+</p>
+</div>
+<div class="section" title="Simple Hierarchical Cloning">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id641138"></a>Simple Hierarchical Cloning</h3></div></div></div>
+<pre class="programlisting">
+#include &lt;string&gt;
+#include &lt;boost/cloneable.hpp&gt;
+
+using namespace boost;
+using namespace std;
+
+class Animal
+{
+    virtual ~Animal() { }
+    virtual string get_name() const = 0;
+};
+
+class Cat : public cloneable::base&lt;Cat, Animal&gt;
+{
+    string name;
+public:
+    Cat() {}
+    Cat(string n) : name(n) { }
+    string get_name() const { return name; }
+};
+
+int main()
+{
+    Cat *cat = new Cat("sam");
+
+    // clone the cat. returns a pointer to the base class
+    Animal *animal = cat-&gt;clone();
+    assert(typeid(*animal) == typeid(Cat));
+
+    // downcast to our derived type
+    Cat *cloned = dynamic_cast&lt;Cat *&gt;(animal);
+    assert(cloned-&gt;get_name() == "sam");
+
+    return 0;
+};
+</pre>
+<p>
+	In this example, we note that the <code class="computeroutput">clone()</code> method returns
+	a pointer to the base class of the type hierarchy. If you know
+	the derived type that you wish to be cloned, you can use the 
+	<code class="computeroutput">clone_as&lt;T&gt;()</code> method instead and save some typing:
+</p>
+<pre class="programlisting">
+Cat *cloned = cat-&gt;clone_as&lt;Cat&gt;();
+</pre>
+<p>
+We now add other animals to the hierachy, including the use of multiple inheritance:
+</p>
+<pre class="programlisting">
+class Dog : public cloneable::base&lt;Dog, Animal&gt;
+{
+};
+
+class Labrador : public Dog, public cloneable::base&lt;Labrador, Animal&gt;
+{
+};
+
+int main()
+{
+    Labrador *lab = new Labrador();
+    Dog *dog = lab-&gt;clone_as&lt;Dog&gt;();
+    Labrador *cloned_lab = lab-&gt;clone_as&lt;Labrador&gt;();
+    return 0;
+}
+</pre>
+<p>
+Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador. 
+When cloning this class, we specify which sub-object we wish to duplicate.
+We can also use the Cloneable library to make a new instance, without duplication:
+</p>
+<pre class="programlisting">
+Animal *MakeNew(const cloneable::abstract_base&lt;Animal&gt; &amp;animal)
+{
+    return animal.create_new();
+}
+
+int main()
+{
+    Cat *cat = new Cat();
+    Animal *new_animal = MakeNew(*cat);
+    assert(typeid(*new_animal) == typeid(Cat));
+    return 0;
+}
+</pre>
+<p>
+	This will create a new derived animal type (not a new base), and return a pointer to the base.  Note that we used <code class="computeroutput">abstract_base&lt;Animal&gt;</code>, rather than just <code class="computeroutput">Animal</code>, as the base type argument for the <code class="computeroutput">MakeNew</code> function. This is because the base class we provided, <code class="computeroutput">Animal</code>, does not derive from anything and does not have any clone-related methods. These methods are added by the <code class="computeroutput">abstract_base&lt;&gt;</code> mixin, which all derived <code class="computeroutput">Animal</code>s are implicitly convertible to.
+</p>
+</div>
+<div class="section" title="Using External Types">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id641216"></a>Using External Types</h3></div></div></div>
+<p>
+		Quite often we find ourselves using classes that are defined in an external library. These are not open to be changed, but we would still like them to be Cloneable. To address this issue, we can use the <code class="computeroutput">cloneable::adaptor&lt;Type,Base&gt;</code> structure:
+	
+	</p>
+<pre class="programlisting">
+class External { }; // cannot be modified
+
+class MyBase { virtual ~MyBase() { } };
+
+class MyExternal : cloneable::adaptor&lt;External, MyBase&gt; { };
+
+int main()
+{
+    MyExternal *ex = new MyExternal();
+    MyExternal *cloned = ex-&gt;clone_as&lt;MyExternal&gt;();
+    return 0;
+}
+	</pre>
+<p>
+The only difference is that we use cloneable::adaptor&lt;&gt; mixin template as the base, rather than cloneable::base&lt;&gt;.
+</p>
+</div>
+<div class="section" title="Customising the Cloning Process">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="id641238"></a>Customising the Cloning Process</h3></div></div></div>
+<p>
+So far, we have been making clones using the default cloning process. This uses the copy-constructor of the given type to generate the clone. However, quite often we will want to have greater control over this process, and sometimes we don't want to or cannot use a copy constructor at all.
+</p>
+<p>
+	To customise the cloning process, it is a simple matter of providing a <code class="computeroutput">make_copy</code> method overload in your derived class:
+</p>
+<pre class="programlisting">
+class Foo : public cloneable::base&lt;Foo&gt;
+{
+    // over-ride the make_copy method, providing our own means to make a clone
+    Foo *make_copy() const
+    {
+         Foo *copy = new Foo();
+	 // write values to copy from this
+	 return copy;
+    }
+};
+</pre>
+<p>
+</p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"><p><small>Last revised:  ,  at  </small></p></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christian Schladetsch<p>Use, modification and distribution is subject to the Boost
+    Software License, Version 1.0. (See accompanying file
+    <code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)</p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
