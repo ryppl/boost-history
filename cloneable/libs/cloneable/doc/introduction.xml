@@ -5,29 +5,32 @@
   <title>Introduction</title>
 
 <para>
-The Boost.Cloneable library provides a means for creating
-and duplicating instances of objects that are defined
-in a class hierarchy. 
+The <emphasis>Boost.Cloneable</emphasis> library provides a means for creating, 
+duplicating, and querying instances of object types that are specified in class hierarchies, and a set of containers* for those objects.
+</para>
+
+<para>
 Cloneable objects can create clones of derived types from base types, 
-can do so given any general allocator, and support multiple clone type targets.
-Cloneable objects can be used in containers-of-pointers, producing a 'heterogenous' container system with emplace semantics, also contained in this library.
+can do so given any STL-compliant allocator, and support multiple clone type targets.
 </para>
 
 <para>
-Cloneable types are able to override the default cloning process, which
-uses copy construction. Cloneable types can derive from other cloneable
-types, in which case the user of the class can specify which
-subobject to duplicate when making a new clone or new object.
-Via an 'adaptor' mechanism, existing classes which cannot be
-modified are able to be used by Boost.Cloneable, and types
-that are not default-constructible are supported.
+The user of the libray is able to override the default cloning process, 
+ and may supply custom allocators. Cloneable types can derive from other cloneable
+types, in which case the user can specify which subobject type to duplicate or create when 
+making a new clone or new object from an existing instance.
 </para>
 
 <para>
-While there is a requirement that Cloneable types must either
-derive from a mixin template, or use the Cloneable adaptor,
-the user is able to specify which base class to use for
-each class hierarchy in the application.
+You can use Boost.Cloneable with existing, external types without modification to those types by using the supplied <emphasis>adaptor</emphasis> mechanism. Boost.Cloneable also supports types that are not default-constructable.
 </para>
 
+<para>
+There is a fundamental requirement that a common base class type is shared for each type in a given class hierarchy. The user can supply their own base classes, or sensible defaults are
+generated.
+</para>
+
+<para>
+* Cloneable objects can be used in containers-of-pointers (based on a modified Boost.PtrContainer implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
+</para>
 </section>

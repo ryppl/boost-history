@@ -3,7 +3,6 @@
   "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section last-revision="$Date:$" id="cloneable.tutorial">
   <title>Tutorial</title>
-
   <using-namespace name="boost"/>
   <using-namespace name="boost::cloneable"/>
   <using-class name="boost::signalN"/>
@@ -36,7 +35,7 @@ int main()
 }
 </programlisting>
 <para>
-	Here we have made a class and derived from <code>cloneable::base</code>, passing the type of thing to clone as a type parameter. This is the Curiously Recurring Template Pattern, or CRTP. Because we didn't supply a base type to use, we were given the default base type. Although it is fine to use the default base class, we shall see that in general it is better to provide our own base classes as this gives us much flexibility when it comes to associative containers and resource management. But we'll get to that later. For now, let's move on to some slightly less trivial examples.
+    Here we have made a class and derived from <code>cloneable::base</code>, passing the type of thing to clone as a type parameter. Because we didn't supply a base type to use, we were given <code>default_base_type</code>. Although it is fine to use this default base class, we shall see that in general it is better to provide our own base classes as this gives us much flexibility when it comes to associative containers and resource management. But we'll get to that later. For now, let's move on to some slightly less trivial examples.
 </para>
 </section>
 <section><title>Simple Hierarchical Cloning</title>
@@ -133,14 +132,13 @@ int main()
 <section><title>Using External Types</title>
 	<para>
 		Quite often we find ourselves using classes that are defined in an external library. These are not open to be changed, but we would still like them to be Cloneable. To address this issue, we can use the <code>cloneable::adaptor&lt;Type,Base&gt;</code> structure:
-	
 	</para>
 	<programlisting>
 class External { }; // cannot be modified
 
 class MyBase { virtual ~MyBase() { } };
 
-class MyExternal : cloneable::adaptor&lt;External, MyBase&gt; { };
+typedef cloneable::adaptor&lt;External, MyBase&gt; MyExternal;
 
 int main()
 {
@@ -150,7 +148,7 @@ int main()
 }
 	</programlisting>
 <para>
-The only difference is that we use cloneable::adaptor&lt;&gt; mixin template as the base, rather than cloneable::base&lt;&gt;.
+Alternatively of course, we could just make a new structure which either derives from or encapsulates the external class. This will be necessary if you wish to pass construction arguments to the external type, or provide a custom clone method for it.
 </para>
 </section>
 <section><title>Customising the Cloning Process</title>
@@ -174,6 +172,12 @@ class Foo : public cloneable::base&lt;Foo&gt;
 </programlisting>
 <para>
 </para>
+</section>
+<section>
+    <title>Using Custom Allocators</title>
+    <para>
+    </para>
+
 </section>
 </section>
 

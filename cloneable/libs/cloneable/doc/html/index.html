@@ -30,7 +30,7 @@
 </div></div>
 <div><p class="copyright">Copyright © 2009 Christian Schladetsch</p></div>
 <div><div class="legalnotice" title="Legal Notice">
-<a name="id641056"></a><p>Use, modification and distribution is subject to the Boost
+<a name="id687462"></a><p>Use, modification and distribution is subject to the Boost
     Software License, Version 1.0. (See accompanying file
     <code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)</p>
 </div></div>
@@ -38,52 +38,54 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="index.html#id641076">Introduction</a></span></dt>
+<dt><span class="section"><a href="index.html#id687483">Introduction</a></span></dt>
 <dt><span class="section"><a href="cloneable/tutorial.html">Tutorial</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="cloneable/tutorial.html#id641104">Overview</a></span></dt>
-<dt><span class="section"><a href="cloneable/tutorial.html#id641115">Basic Cloning</a></span></dt>
-<dt><span class="section"><a href="cloneable/tutorial.html#id641138">Simple Hierarchical Cloning</a></span></dt>
-<dt><span class="section"><a href="cloneable/tutorial.html#id641216">Using External Types</a></span></dt>
-<dt><span class="section"><a href="cloneable/tutorial.html#id641238">Customising the Cloning Process</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id687528">Overview</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id687539">Basic Cloning</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id687567">Simple Hierarchical Cloning</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id687645">Using External Types</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id687668">Customising the Cloning Process</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial.html#id687694">Using Custom Allocators</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="cloneable/containers.html">Heterogenous Containers</a></span></dt>
-<dd><dl><dt><span class="section"><a href="cloneable/containers.html#id641274">Overview</a></span></dt></dl></dd>
+<dd><dl><dt><span class="section"><a href="cloneable/containers.html#id687714">Overview</a></span></dt></dl></dd>
 <dt><span class="section"><a href="index/s04.html">Frequently Asked Questions</a></span></dt>
 <dt><span class="section"><a href="index/s05.html">Design Overview</a></span></dt>
 <dd><dl>
-<dt><span class="section"><a href="index/s05.html#id641328">Class Hierachy</a></span></dt>
-<dt><span class="section"><a href="index/s05.html#id641336">Abstract Allocator</a></span></dt>
+<dt><span class="section"><a href="index/s05.html#id687768">Class Hierachy</a></span></dt>
+<dt><span class="section"><a href="index/s05.html#id687776">Abstract Allocator</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="cloneable/tests.html">Testsuite</a></span></dt>
-<dd><dl><dt><span class="section"><a href="cloneable/tests.html#id641349">Acceptance tests</a></span></dt></dl></dd>
+<dd><dl><dt><span class="section"><a href="cloneable/tests.html#id687789">Acceptance tests</a></span></dt></dl></dd>
 </dl>
 </div>
 <div class="section" title="Introduction">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="id641076"></a>Introduction</h2></div></div></div>
+<a name="id687483"></a>Introduction</h2></div></div></div>
 <p>
-The Boost.Cloneable library provides a means for creating
-and duplicating instances of objects that are defined
-in a class hierarchy. 
+The <span class="emphasis"><em>Boost.Cloneable</em></span> library provides a means for creating, 
+duplicating, and querying instances of object types that are specified in class hierarchies, and a set of containers* for those objects.
+</p>
+<p>
 Cloneable objects can create clones of derived types from base types, 
-can do so given any general allocator, and support multiple clone type targets.
-Cloneable objects can be used in containers-of-pointers, producing a 'heterogenous' container system with emplace semantics, also contained in this library.
+can do so given any STL-compliant allocator, and support multiple clone type targets.
 </p>
 <p>
-Cloneable types are able to override the default cloning process, which
-uses copy construction. Cloneable types can derive from other cloneable
-types, in which case the user of the class can specify which
-subobject to duplicate when making a new clone or new object.
-Via an 'adaptor' mechanism, existing classes which cannot be
-modified are able to be used by Boost.Cloneable, and types
-that are not default-constructible are supported.
+The user of the libray is able to override the default cloning process, 
+ and may supply custom allocators. Cloneable types can derive from other cloneable
+types, in which case the user can specify which subobject type to duplicate or create when 
+making a new clone or new object from an existing instance.
 </p>
 <p>
-While there is a requirement that Cloneable types must either
-derive from a mixin template, or use the Cloneable adaptor,
-the user is able to specify which base class to use for
-each class hierarchy in the application.
+You can use Boost.Cloneable with existing, external types without modification to those types by using the supplied <span class="emphasis"><em>adaptor</em></span> mechanism. Boost.Cloneable also supports types that are not default-constructable.
+</p>
+<p>
+There is a fundamental requirement that a common base class type is shared for each type in a given class hierarchy. The user can supply their own base classes, or sensible defaults are
+generated.
+</p>
+<p>
+* Cloneable objects can be used in containers-of-pointers (based on a modified Boost.PtrContainer implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
 </p>
 </div>
 </div>
