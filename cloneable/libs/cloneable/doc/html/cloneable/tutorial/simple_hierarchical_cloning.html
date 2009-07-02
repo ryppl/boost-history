@@ -28,6 +28,13 @@
       Hierarchical Cloning</a>
 </h3></div></div></div>
 <p>
+        In the previous example, we did not supply a base class, so our Cloneable
+        type was given the <code class="computeroutput"><span class="identifier">default_base_type</span></code>.
+        Below, we prepare our own base type <code class="computeroutput"><span class="identifier">Animal</span></code>,
+        which of course has a virtual destructor, as well as a means to get a member
+        variable from a derived type:
+      </p>
+<p>
         
 </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">string</span><span class="special">&gt;</span>
@@ -71,8 +78,12 @@
       </p>
 <p>
         In this example, we note that the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code> method returns a pointer to the base class
-        of the type hierarchy. If you know the derived type that you wish to be cloned,
-        you can use the <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
+        of the type hierarchy - in this case, <code class="computeroutput"><span class="identifier">Animal</span></code>.
+        We had to use a dynamic cast to down-cast to our derived type.
+      </p>
+<p>
+        If you know the derived type that you wish to be cloned, you can use the
+        <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
         method instead and save some typing:
       </p>
 <p>
@@ -83,7 +94,12 @@
 <p>
       </p>
 <p>
-        We now add other animals to the hierachy, including the use of multiple inheritance:
+        As we shall soon see, this is also handy when we have choices of which sub-object
+        to clone.
+      </p>
+<p>
+        We now add other animals to the hierachy, including one that uses multiple
+        inheritance:
       </p>
 <p>
         
@@ -101,6 +117,10 @@
     <span class="identifier">Labrador</span> <span class="special">*</span><span class="identifier">lab</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Labrador</span><span class="special">();</span>
     <span class="identifier">Dog</span> <span class="special">*</span><span class="identifier">dog</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;();</span>
     <span class="identifier">Labrador</span> <span class="special">*</span><span class="identifier">cloned_lab</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;();</span>
+    
+    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">dog</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Dog</span><span class="special">));</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">cloned_lab</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Labrador</span><span class="special">));</span>
+    
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -114,7 +134,7 @@
         up.
       </p>
 <p>
-        We can also use the Cloneable library to make a new instance, without duplication:
+        We can also use the Cloneable library to make a new instance, with no duplication:
       </p>
 <p>
         
@@ -138,11 +158,16 @@
         This will create a new derived animal type (not a new base), and return a
         pointer to the base. Here we used a free-function to make the new object,
         to show how to use the <code class="computeroutput"><span class="identifier">abstract_base</span></code>
-        template. We used <code class="computeroutput"><span class="identifier">abstract_base</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;</span></code>, rather than just <code class="computeroutput"><span class="identifier">Animal</span></code>,
+        template structure. We used <code class="computeroutput"><span class="identifier">abstract_base</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;</span></code>, rather than just <code class="computeroutput"><span class="identifier">Animal</span></code>,
         as the base type argument for the <code class="computeroutput"><span class="identifier">MakeNew</span></code>
         function. This is because the base class we provided, <code class="computeroutput"><span class="identifier">Animal</span></code>,
         does not derive from anything and does not have any clone-related methods.
-        These methods are added by the <code class="computeroutput"><span class="identifier">abstract_base</span><span class="special">&lt;&gt;</span></code> mixin, which all derived <code class="computeroutput"><span class="identifier">Animal</span></code>s are implicitly convertible to.
+        These methods are added by the <code class="computeroutput"><span class="identifier">abstract_base</span><span class="special">&lt;&gt;</span></code> mix-in, which all derived <code class="computeroutput"><span class="identifier">Animal</span></code>s are implicitly convertible to.
+      </p>
+<p>
+        This is the basics of the cloneability side of the library. But there are
+        a few more details and use-cases to cover before we get to the containers.
+        The first of which is dealing with types that we can't change.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

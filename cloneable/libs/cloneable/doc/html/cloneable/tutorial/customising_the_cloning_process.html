@@ -29,12 +29,12 @@
 </h3></div></div></div>
 <p>
         So far, we have been making clones using the default cloning process. This
-        uses the copy-constructor of the given type to generate the clone. However,
+        uses the copy-constructor of a given type T to generate the clone. However,
         quite often we will want to have greater control over this process, and sometimes
         we don't want to or cannot use a copy constructor at all.
       </p>
 <p>
-        To customise the cloning process, it is a simple matter of providing a <code class="computeroutput"><span class="identifier">make_copy</span></code> method overload in your derived
+        Customising the cloning process is a simple matter of providing a <code class="computeroutput"><span class="identifier">make_copy</span></code> method overload in your derived
         class:
       </p>
 <p>
@@ -45,9 +45,9 @@
     <span class="comment">// over-ride the make_copy method, providing our own means to make a clone
 </span>    <span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">make_copy</span><span class="special">()</span> <span class="keyword">const</span>
     <span class="special">{</span>
-         <span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">copy</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Foo</span><span class="special">();</span>
-     <span class="comment">// write values to copy from this
-</span>     <span class="keyword">return</span> <span class="identifier">copy</span><span class="special">;</span>
+        <span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">copy</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Foo</span><span class="special">();</span>
+        <span class="comment">// TODO: write values to copy from this
+</span>        <span class="keyword">return</span> <span class="identifier">copy</span><span class="special">;</span>
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
@@ -56,9 +56,14 @@
 <p>
         Please ensure that you override the <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span></code> method correctly. It must return a type
         that is co-variant with the base you used for the derived type, and must
-        be <code class="computeroutput"><span class="keyword">const</span></code>. This example uses
-        the heap to make clones; now we will see how to make clones using any standard-compliant
-        allocator type.
+        be <code class="computeroutput"><span class="keyword">const</span></code>. If you make a mistake
+        on the return type, the compiler will complain. But if you forget to make
+        the method const, it will not be invoked when needed and there will be no
+        warning or error.
+      </p>
+<p>
+        This example uses the heap to make clones; we will next see how to make clones
+        using any standard-compliant allocator type.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

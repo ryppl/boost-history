@@ -36,7 +36,7 @@
 <p>
         
 </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">External</span> <span class="special">{</span> <span class="special">};</span> <span class="comment">// cannot be modified
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">External</span> <span class="special">{</span> <span class="comment">/* hidden impl */</span> <span class="special">};</span> <span class="comment">// for whatever reason, this cannot be modified
 </span>
 <span class="keyword">class</span> <span class="identifier">MyBase</span> <span class="special">{</span> <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">MyBase</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span> <span class="special">};</span>
 
@@ -52,10 +52,40 @@
 <p>
       </p>
 <p>
+        By using the <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">adaptor</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">,</span> <span class="identifier">Base</span><span class="special">&gt;</span></code>
+        structure, we create a new type that is cloneable and can be used correctly
+        in heterogenous containers.
+      </p>
+<p>
         Alternatively of course, we could just make a new structure which either
         derives from or encapsulates the external class. This will be necessary if
         you wish to pass construction arguments to the external type, or provide
-        a custom clone method for it.
+        a custom clone method for it. For example:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">Wrapper</span> <span class="special">:</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Wrapper</span><span class="special">,</span> <span class="identifier">Base</span><span class="special">&gt;</span>
+<span class="special">{</span>
+    <span class="identifier">External</span> <span class="special">*</span><span class="identifier">impl</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">Wrapper</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">impl</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+    <span class="identifier">Wrapper</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">Wrapper</span> <span class="special">&amp;</span><span class="identifier">other</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">impl</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Wrapper</span><span class="special">(*</span><span class="identifier">other</span><span class="special">.</span><span class="identifier">impl</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+      </p>
+<p>
+        There are of courswe many ways to do this, and how you do it will depend
+        on many factors. Just bare in mind that <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">adaptor</span><span class="special">&lt;&gt;</span></code> is there if you need it.
+      </p>
+<p>
+        Next, we look at how to customise the cloning operation itself, and how we
+        can use our own or other allocators. This is important to understand before
+        we finally get to the heterogenous containers.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
