@@ -1,0 +1,78 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<link rel="home" href="../index.html" title="Cloneable 0.1">
+<link rel="up" href="../index.html" title="Cloneable 0.1">
+<link rel="prev" href="../index.html" title="Cloneable 0.1">
+<link rel="next" href="change_log.html" title="Change Log">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="change_log.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="Introduction">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="cloneable.intro"></a><a class="link" href="intro.html" title="Introduction"> Introduction</a>
+</h2></div></div></div>
+<p>
+      The <span class="bold"><strong>Boost.Cloneable</strong></span> library provides a means
+      for creating, duplicating, and querying instances of object types that are
+      specified in class hierarchies, and a set of containers[1] for those objects.
+    </p>
+<p>
+      Cloneable objects can create clones of derived types from base types, can do
+      so given any STL-compliant allocator, and support multiple clone type targets.
+    </p>
+<p>
+      The user of the libray is able to override the default cloning process, and
+      may supply custom allocators. Cloneable types can derive from other cloneable
+      types, in which case the user can specify which subobject type to duplicate
+      or create when making a new clone or new object from an existing instance.
+    </p>
+<p>
+      You can use <span class="bold"><strong>Boost.Cloneable</strong></span> with existing,
+      external types without modification to those types by using the supplied <span class="emphasis"><em>adaptor</em></span>
+      mechanism. <span class="bold"><strong>Boost.Cloneable</strong></span> also supports types
+      that are not default-constructable.
+    </p>
+<p>
+      There is a fundamental requirement that a common base class type is shared
+      for each type in a given class hierarchy. The user can supply their own base
+      classes, or sensible defaults are generated.
+    </p>
+<p>
+      [1] Cloneable objects can be used in containers-of-pointers (based on a modified
+      &lt;emphasis&gt;Boost.PtrContainer&lt;/emphasis&gt; implementation), producing
+      a 'heterogenous' container system with value semantics for comparison and copying,
+      and emplace semantics for insertion. These containers are currently a part
+      of the proposal as well, however it is intended that they eventually form a
+      distinct library. This proposal will focus mostly on the single-object aspect
+      of the system.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christian Schladetsch<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="change_log.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

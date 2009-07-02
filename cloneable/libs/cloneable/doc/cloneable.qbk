@@ -1,0 +1,314 @@
+[article Cloneable
+    [quickbook 1.4]
+    [version 0.1]
+    [authors [Schladetsch, Christian]]
+    [copyright 2009 Christian Schladetsch]
+    [purpose /WikiWiki/ Generalised cloning system for hierachical objects]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ QuickBook Document version 1.4 ]
+[/ Sept 24, 2002 ]
+[/ Sept 2, 2004 ]
+[/ Feb 14, 2005 ]
+[/ Sept 13, 2005 ]
+
+[/ Some links]
+
+[def __note__       [$images/note.png]]
+[def __alert__      [$images/alert.png]]
+[def __tip__        [$images/tip.png]]
+[def :-)            [$images/smiley.png]]
+[def __spirit__     [@http://spirit.sourceforge.net Spirit]]
+[def __boostbook__  [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
+[def __docbook__    [@http://www.docbook.org/ DocBook]]
+
+[section:intro Introduction]
+
+The [*Boost.Cloneable] library provides a means for creating, 
+duplicating, and querying instances of object types that are specified 
+in class hierarchies, and a set of containers[1] for those objects.
+
+Cloneable objects can create clones of derived types from base types, 
+can do so given any STL-compliant allocator, and support multiple clone type targets.
+
+The user of the libray is able to override the default cloning process, 
+ and may supply custom allocators. Cloneable types can derive from other cloneable
+types, in which case the user can specify which subobject type to duplicate or create when 
+making a new clone or new object from an existing instance.
+
+You can use [*Boost.Cloneable] with existing, external types without modification 
+to those types by using the supplied ['adaptor] mechanism. [*Boost.Cloneable] also 
+supports types that are not default-constructable.
+
+There is a fundamental requirement that a common base class type is shared for 
+each type in a given class hierarchy. The user can supply their own base classes, 
+or sensible defaults are generated.
+
+[1] Cloneable objects can be used in containers-of-pointers (based on a modified <emphasis>Boost.PtrContainer</emphasis> implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
+
+[endsect]
+
+[section:change_log Change Log]
+
+[h3 Version 0.1]
+
+* Created
+
+[endsect]
+
+[section:tutorial Basic Usage]
+
+This tutorial progresses through the basic usage of the library, demonstrating how 
+to make a new Cloneable type, how to make an exsiting, external type Cloneable, 
+and how to deal with multiple inheritance in type hierarchies.
+
+The following is a very quick introduction to [*Boost.Cloneable]:
+
+``
+#include <boost/cloneable.hpp>;
+
+using namespace boost;
+
+class Foo : cloneable::base<Foo> { };
+
+int main()
+{
+     Foo *foo = new Foo();
+     cloneable::default_base_type *cloned = foo->clone();
+     assert(typeid(*cloned) == typeid(Foo));
+     return 0;
+}
+``
+
+Here we have made a class and derived from `cloneable::base`, passing the 
+type of thing to clone as a type parameter. Because we didn't supply a base
+type to use, we were given `default_base_type`. Although it is fine to use 
+this default base class, we shall see that in general it is better to provide 
+our own base classes as this gives us much flexibility when it comes to 
+associative containers and resource management. 
+ 
+But we'll get to that later. For now, let's move on to some slightly less trivial examples.
+
+[section Simple Hierarchical Cloning]
+
+``
+#include <string>
+#include <boost/cloneable.hpp>
+
+using namespace boost;
+using namespace std;
+
+class Animal
+{
+    virtual ~Animal() { }
+    virtual string get_name() const = 0;
+};
+
+class Cat : public cloneable::base<Cat, Animal>
+{
+    string name;
+    
+public:
+    Cat() {}
+    Cat(string n) : name(n) { }
+    string get_name() const { return name; }
+};
+
+int main()
+{
+    Cat *cat = new Cat("sam");
+
+    // clone the cat. returns a pointer to the base class
+    Animal *animal = cat->clone();
+    assert(typeid(*animal) == typeid(Cat));
+
+    // downcast to our derived type
+    Cat *cloned = dynamic_cast<Cat *>(animal);
+    assert(cloned->get_name() == "sam");
+
+    return 0;
+};
+``
+
+In this example, we note that the `clone()` method returns
+a pointer to the base class of the type hierarchy. If you know
+the derived type that you wish to be cloned, you can use the 
+`clone_as<T>()` method instead and save some typing:
+
+``
+Cat *cloned = cat->clone_as<Cat>();
+``
+
+We now add other animals to the hierachy, including the use of multiple inheritance:
+
+``
+class Dog : public cloneable::base<Dog, Animal>
+{
+};
+
+class Labrador : public Dog, public cloneable::base<Labrador, Animal>
+{
+};
+
+int main()
+{
+    Labrador *lab = new Labrador();
+    Dog *dog = lab->clone_as<Dog>();
+    Labrador *cloned_lab = lab->clone_as<Labrador>();
+    return 0;
+}
+``
+
+Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador. 
+When cloning this class, we specify which sub-object we wish to duplicate. Note that when using `clone_as<T>`, we actually are making a type of T, rather than making another type and casting up.
+
+We can also use the Cloneable library to make a new instance, without duplication:
+
+``
+Animal *MakeNew(const cloneable::abstract_base<Animal> &animal)
+{
+    return animal.create_new();
+}
+
+int main()
+{
+    Cat *cat = new Cat();
+    Animal *new_animal = MakeNew(*cat);
+    assert(typeid(*new_animal) == typeid(Cat));
+    return 0;
+}
+``
+
+This will create a new derived animal type (not a new base), and return a pointer 
+to the base. Here we used a free-function to make the new object, to show how 
+to use the `abstract_base` template. We used `abstract_base<Animal>`, rather than 
+just `Animal`, as the base type argument for the `MakeNew` function. This is because 
+the base class we provided, `Animal`, does not derive from anything and does not 
+have any clone-related methods. These methods are added by the `abstract_base<>` mixin, 
+which all derived `Animal`s are implicitly convertible to.
+
+[endsect]
+
+[section Using External Types]
+
+Quite often we find ourselves using classes that are defined in an external library. 
+These are not open to be changed, but we would still like them to be Cloneable. 
+To address this issue, we can use the `cloneable::adaptor<Type,Base>` structure:
+
+``
+class External { }; // cannot be modified
+
+class MyBase { virtual ~MyBase() { } };
+
+typedef cloneable::adaptor<External, MyBase> MyExternal;
+
+int main()
+{
+    MyExternal *ex = new MyExternal();
+    MyExternal *cloned = ex->clone_as<MyExternal>();
+    return 0;
+}
+``
+
+Alternatively of course, we could just make a new structure which either derives 
+from or encapsulates the external class. This will be necessary if you wish to
+pass construction arguments to the external type, or provide a custom clone 
+method for it.
+
+[endsect]
+
+[section Customising the Cloning Process]
+
+So far, we have been making clones using the default cloning process. 
+This uses the copy-constructor of the given type to generate the clone. 
+However, quite often we will want to have greater control over this process, 
+and sometimes we don't want to or cannot use a copy constructor at all.
+
+To customise the cloning process, it is a simple matter of providing a `make_copy`
+method overload in your derived class:
+
+``
+class Foo : public cloneable::base<Foo>
+{
+    // over-ride the make_copy method, providing our own means to make a clone
+    Foo *make_copy() const
+    {
+         Foo *copy = new Foo();
+     // write values to copy from this
+     return copy;
+    }
+};
+``
+
+Please ensure that you override the `make_copy()` method correctly. It must return 
+a type that is co-variant with the base you used for the derived type, and must be 
+`const`. This example uses the heap to make clones; now we will see how to make 
+clones using any standard-compliant allocator type.
+
+[endsect]
+
+[section Using Custom Allocators]
+
+The entire ['Cloneable] system was designed to support general allocators. This provides 
+more fine-tuned control for the cloning and creation operations, and ensures Cloneable 
+types work well in containers. When making a new object or sub-object or clone or sub-clone, 
+the underlying `abstract_base` is given a reference to an `abstract_allocator`. This is 
+an interface (containing only pure virtual methods) that is used to expose a specialised 
+`allocator<T>` to the non-specific `abstract_base`. This process is easy to understand with some examples:
+
+``
+int main()
+{
+    std::allocator<int> alloc;
+    Cat *cat = cloneable::create<Cat>(alloc);   // create a Cat using the allocator
+    Cat *dupe = cat->clone_as<Cat>(alloc);      // clone using the same allocator
+    
+    my_allocator<int> my_alloc;
+    Cat *dup2 = cat->clone_as<Cat>(my_alloc);   // clone using another allocator
+    return 0;
+}
+``
+
+As you can see, most of the internals can be safely ignored. From this, it becomes clear 
+that if you write a clone override, you should do so for the method that takes an `abstract_allocator &`, 
+rather than just always use the heap:
+
+``
+class Foo : public cloneable::base<Foo>
+{
+    // over-ride the make_copy method, providing our own means to make a clone
+    Foo *make_copy(cloneable::abstract_allocator &amp;alloc) const
+    {
+        Foo *copy = cloneable::create<Foo>(alloc);
+        
+        // write values to copy from this; use alloc for any further required allocations
+        
+        return copy;
+    }
+};
+``
+
+Recall that if your class can be correctly copy-constructed, you do not need to 
+provide a custom clone override at all. If your class members that have value 
+semantics and can be copy-constructed (including `std::containers`, and heterogenous::containers), 
+then you do not need to provide any customisation. 
+
+However, if your class containers pointers of any description, or references, 
+then you will in general have to provide a sensible copy-constructor, or provide a custom clone override.
+
+In summary, there are three stages of customisation:
+
+* If your class has types with value semantics, the compiler-generated default copy constructor will suffice.
+* If your class has types that need explicit construction, making a copy-constructor for your class will suffice to make clones.
+* If your class has members that contain references, or require allocation, then you should override `make_copy` and construct the members in the copy instance, using the supplied abstract_allocator.
+
+[endsect]
+
+
+[endsect]
+
