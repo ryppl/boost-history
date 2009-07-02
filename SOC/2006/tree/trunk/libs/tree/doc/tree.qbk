@@ -79,20 +79,6 @@ my place) on to Dubai, UAE, so it could catch some sun first.
 
 [endsect] [/Acknowledgements]
 
-[section References]
-
-* [#austern] Austern, Matthew H.; Stroustrup, Bjarne; Thorup, Mikkel; Wilikinson, John. Untangling the Balancing and 
-Searching of Balanced Binary Search Trees, Software: Practice and Experience 33(13): 1273-1298 (2003)
-	* [#austern_app] [@http://www.research.att.com/~bs/tree-appendix.pdf Electronic appendix]
-* Knuth, Donald E. The Art of Computer Programming
-	* [#taocp1] Volume 1: Fundamental Algorithms. Third Edition (Reading, Massachusetts: Addison-Wesley, 1997)
-	* [#taocp3] Volume 3: Sorting and Searching. Second Edition (Reading, Massachusetts: Addison-Wesley, 1998)
-* [#clrs] Cormen, Thomas H.; Leiserson, Charles E.; Rivest, Ronald L.; Stein, Clifford. Algorithmen - Eine
-Einführung (Oldenbourg, 2004) (German translation of Introduction to Algorithms. Second Edition 
-(MIT Press, 2001)
-
-[endsect] [/References]
-
 [endsect] [/Introduction]
 
 [include overview.qbk]
@@ -101,7 +87,9 @@ Einführung (Oldenbourg, 2004) (German translation of Introduction to Algorithms
 [include concepts.qbk]
 [include algorithms.qbk]
 
+[include proposal.qbk]
 [include implementation.qbk]
 [include glossary.qbk]
+[include references.qbk]
 [include ../../../TODO]
 [xinclude autodoc.xml]

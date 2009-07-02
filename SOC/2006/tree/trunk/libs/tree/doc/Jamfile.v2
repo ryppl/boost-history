@@ -15,12 +15,19 @@ if ! $(BOOST_ROOT)
 doxygen autodoc
 	:
 		[ glob ../../../boost/tree/*.hpp ]
-		[ glob ../../../boost/tree/detail/augmentors/*.hpp ]
-		[ glob ../../../boost/tree/detail/balancers/*.hpp ]
+		#[ glob ../../../boost/tree/detail/augmentors/*.hpp ]
+		#[ glob ../../../boost/tree/detail/balancers/*.hpp ]
 	:
 		<doxygen:param>"PREDEFINED=\"BOOST_PROCESS_DOXYGEN\""
-		<xsl:param>boost.doxygen.detailns=documenteverything
+		
+		# Include documentation for the code in the detail namespace?
+		#<xsl:param>boost.doxygen.detailns=documenteverything
 	;
+
+#doxygen proposal
+#	:
+#		<dependency>autodoc
+#	;
 
 xml tree
 	:
@@ -30,6 +37,7 @@ xml tree
 boostbook standalone
 	:
 		tree
+		#proposal
 	:
 		<dependency>autodoc
 		<xsl:param>boost.libraries=$(BOOST_ROOT)/libs/libraries.htm

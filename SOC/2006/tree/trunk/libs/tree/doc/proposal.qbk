@@ -31,7 +31,7 @@ Existing efforts concerning C++ tree designs and implementations mostly try eith
 STL-compatible iterator-like types and tree classes for mapping the latter kind of external or "explicit" 
 structures (ref); or, on the other hand, untangle balancing mechanisms from key search and other 
 additional features (which are referred to as "augmenting" here, using the terminology from 
-[link cormen Cormen ['et al.]]). 
+[link clrs CLRS]). 
 At the time of this writing, no efforts are known to the author that would cater for both cases; and, as 
 an aspect of this fact, there are presently no efforts that try in turn to separate the underlying tree 
 structure or "topology" from searching, balancing and augmenting and open up its hierarchical interface.

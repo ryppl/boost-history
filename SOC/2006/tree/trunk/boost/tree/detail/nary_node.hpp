@@ -89,14 +89,10 @@ public:
     typedef self_type* base_pointer;
     typedef self_type const* const_base_pointer;
         
-    node_base() : node_with_parent_base(), node_with_children_base()
-    {
-    }
+    node_base() : node_with_parent_base(), node_with_children_base() {}
 
     node_base(node_with_parent_base* p)
-    : node_with_parent_base(p), node_with_children_base()
-    {
-    }
+    : node_with_parent_base(p), node_with_children_base() {}
     
     // Binary specific
     
@@ -160,7 +156,7 @@ class descending_node_base
 
 template <typename T>
 class ascending_node : public node_base {
- public:
+public:
     typedef T value_type;
 
     typedef ascending_node<value_type> node_type;

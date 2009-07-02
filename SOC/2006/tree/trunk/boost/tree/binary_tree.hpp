@@ -63,14 +63,12 @@ public:
     };
     
     explicit binary_tree (allocator_type const& alloc = allocator_type())
-    : m_header(), m_node_alloc(alloc)
-    {
-    }
+    : m_header(), m_node_alloc(alloc) {}
 
     template <class InputCursor>
-        binary_tree (InputCursor subtree,
-            allocator_type const& alloc = allocator_type())
-            : m_header(), m_node_alloc(alloc)
+    binary_tree(InputCursor subtree, 
+                allocator_type const& alloc = allocator_type())
+    : m_header(), m_node_alloc(alloc)
     {
         insert(root(), subtree);
     }
@@ -264,14 +262,10 @@ public:
 
             m_node_alloc.destroy(pos_node);
             m_node_alloc.deallocate(pos_node, 1);
+            
+            if (position == root())
+                m_header.m_children[0] = 0;
         }
-
-         if (position == root()) {
-            m_header.m_parent = &m_header;
-            m_header.m_children[0] = 0;
-            m_header.m_children[1] = &m_header;
-         }
-
          return position;
     }     
 
