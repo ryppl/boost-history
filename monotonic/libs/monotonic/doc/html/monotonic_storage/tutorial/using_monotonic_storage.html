@@ -31,30 +31,28 @@
         directly and wherever we want efficient resource management.
       </p>
 <p>
-        <code class="computeroutput"></code> int main() { <span class="emphasis"><em>/ define local storage of 4k on the
-        stack. /</em></span> allocations will use the heap after the inline stack-based
-        storage // has been exhausted. monotonic::storage&lt;4*1024&gt; storage;
-        { int &amp;amp;num = storage.create&lt;int&gt;(); std::string &amp;amp;str
-        = storage.create&lt;std::string&gt;(); char *bytes = storage.allocate_bytes(3000);
-      </p>
-<pre class="programlisting"><span class="comment">// use num, str, bytes as needed
+        
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="comment">// define local storage of 4k on the stack.
+</span>    <span class="comment">// allocations will use the heap after the inline stack-based storage
+</span>    <span class="comment">// has been exhausted.
+</span>    <span class="identifier">monotonic</span><span class="special">::</span><span class="identifier">storage</span><span class="special">&lt;</span><span class="number">4</span><span class="special">*</span><span class="number">1024</span><span class="special">&gt;</span> <span class="identifier">storage</span><span class="special">;</span>
+    <span class="special">{</span>
+		<span class="keyword">int</span> <span class="special">&amp;</span><span class="identifier">amp</span><span class="special">;</span><span class="identifier">num</span> <span class="special">=</span> <span class="identifier">storage</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
+		<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="special">&amp;</span><span class="identifier">amp</span><span class="special">;</span><span class="identifier">str</span> <span class="special">=</span> <span class="identifier">storage</span><span class="special">.</span><span class="identifier">create</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;();</span>
+		<span class="keyword">char</span> <span class="special">*</span><span class="identifier">bytes</span> <span class="special">=</span> <span class="identifier">storage</span><span class="special">.</span><span class="identifier">allocate_bytes</span><span class="special">(</span><span class="number">3000</span><span class="special">);</span>     
+
+		<span class="comment">// use num, str, bytes as needed
 </span>
-<span class="comment">// call std::string's destructor directly, or use storage.destroy
-</span><span class="identifier">storage</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">(</span><span class="identifier">str</span><span class="special">);</span>
-  <span class="special">}</span>
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+		<span class="comment">// call std::string's destructor directly, or use storage.destroy
+</span>		<span class="identifier">storage</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">(</span><span class="identifier">str</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
 </pre>
 <p>
-        // use num, str, bytes as needed
-      </p>
-<pre class="programlisting"><span class="comment">// call std::string's destructor directly, or use storage.destroy
-</span><span class="identifier">storage</span><span class="special">.</span><span class="identifier">destroy</span><span class="special">(</span><span class="identifier">str</span><span class="special">);</span>
-  <span class="special">}</span>
-  <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
-</pre>
-<p>
-        // call std::string's destructor directly, or use storage.destroy storage.destroy(str);
-        } return 0; }
       </p>
 <p>
         Of course, we could have just made <code class="computeroutput"><span class="identifier">num</span></code>,

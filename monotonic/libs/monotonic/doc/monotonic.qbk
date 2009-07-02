@@ -90,6 +90,7 @@ By making deallocation a no-op, allocation of memory resources is extremely fast
 In general, the programmer is required to release storage used at an appropriate time, 
 however local scoping systems are provided by the library for the most common use cases.
 
+
 Features include:
 
 * fast allocation from the stack
@@ -289,6 +290,7 @@ int main()
     }
     return 0;
 }
+``
 
 Of course, we could have just made `num`, `str` and `bytes` on the stack by declaring them as 
 local variables and be done with it - well, except for having a dynamically-sized array of bytes
