@@ -11,6 +11,7 @@
 
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
 #include <boost/cloneable/allocator.hpp>
+#include <boost/cloneable/adaptor.hpp>
 
 namespace boost 
 {
@@ -35,7 +36,7 @@ namespace boost
 			typedef typename implementation::const_iterator const_iterator;
 			typedef set<Base, Pred, Alloc> this_type;
 
-		private:
+		//private:
 			implementation impl;
 
 		public:
@@ -117,17 +118,72 @@ namespace boost
 				return impl.end();
 			}
 
-			template <class U, class A0>
-			iterator find(A0 a0) // strong
+			struct impl
 			{
-				abstract_base_type *instance = 0;
-				instance = detail::construct<U,base_type>(get_allocator(), a0).to_abstract();
-				BOOST_CLONEABLE_SCOPE_EXIT((instance))
+				template <class U>
+				struct find
 				{
-					cloneable::release(instance, self->get_allocator());
-				}
-				BOOST_CLONEABLE_SCOPE_EXIT_END
-				return impl.find(*instance);
+					template <class A0>
+					static iterator given(this_type *cont, A0 a0)
+					{
+						abstract_base_type *instance = 0;
+						instance = detail::construct<U,base_type>(cont->get_allocator(), a0).to_abstract();
+						BOOST_SCOPE_EXIT((instance)(cont))
+						{
+							cloneable::release(instance, cont->get_allocator());
+						}
+						BOOST_SCOPE_EXIT_END
+						return cont->find_instance<U>(instance);
+					}
+					template <class A0, class A1>
+					static iterator given(this_type *cont, A0 a0, A1 a1)
+					{
+						abstract_base_type *instance = 0;
+						instance = detail::construct<U,base_type>(cont->get_allocator(), a0, a1).to_abstract();
+						BOOST_SCOPE_EXIT((instance)(cont))
+						{
+							cloneable::release(instance, cont->get_allocator());
+						}
+						BOOST_SCOPE_EXIT_END
+						return cont->find_instance<U>(instance);
+					}
+				};
+				struct default_key : base<default_key, base_type>
+				{
+					default_key() { }
+					default_key(base_type const &X) : base<default_key, base_type>::base_type(X) { }
+				};
+
+				template <>
+				struct find<base_type>
+				{
+					template <class A0>
+					static iterator given(this_type *cont, A0 a0)
+					{
+						return cont->impl.find(default_key(base_type(a0)));
+					}
+					template <class A0, class A1>
+					static iterator given(this_type *cont, A0 a0, A1 a1)
+					{
+						return cont->impl.find(default_key(base_type(a0, a1)));
+					}
+				};
+			};
+			template <class U>
+			iterator find_instance(value_type instance)
+			{
+				iterator found = impl.find(*instance);
+				if (found == impl.end())
+					return found;
+				if (U *ptr = dynamic_cast<U *>(&*found))
+					return found;
+				return impl.end();
+			}
+
+			template <class U, class A0>
+			iterator find(A0 a0)
+			{
+				return impl::find<U>::given(this, a0);
 			}
 
 			typename implementation::allocator_type get_allocator()

@@ -515,62 +515,42 @@ BOOST_AUTO_TEST_CASE(test_variant)
 
 namespace set_test
 {
-	struct my_base : abstract_object<my_base>
+	struct set_base
 	{
 		int number;
-		my_base(int n = 0) : number(n) { }
-		bool less(const my_base &other) const
+		set_base(int n = 0) : number(n) { }
+		bool operator<(const set_base &other) const
 		{
 			return number < other.number;
 		}
 	};
-	struct S0 : base<S0, my_base> 
+	struct S0 : base<S0, set_base> 
 	{ 
-		S0(int n = 0) : my_base(n) { }
+		S0(int n = 0) : set_base(n) { }
 	};
-	struct S1 : base<S1, my_base>
+	struct S1 : base<S1, set_base>
 	{ 
-		S1(int n = 0) : my_base(n) { }
-	};
-
-	struct S2 : base<S2, my_base>
-	{ 
-		S2(int n = 0) : my_base(n) { }
+		S1(int n = 0) : set_base(n) { }
 	};
 
-	//struct set_less 
-	//	//: std::binary_function<default_base_type const &,default_base_type const &,bool>
-	//	: boost::function<bool (default_base_type const &,default_base_type const &)>
-	//{
-	//	bool operator()(default_base_type const &a, default_base_type const &b) const
-	//	{
-	//		return &a < &b;
-	//	}
-	//};
+	struct S2 : base<S2, set_base>
+	{ 
+		S2(int n = 0) : set_base(n) { }
+	};
 }
-
-//namespace boost
-//{
-//	namespace cloneable
-//	{
-//		// hax due to result_of<> issue with ptr_set and predicates
-//		bool operator<(default_base_type const &a, default_base_type const &b)
-//		{
-//			return &a < &b;
-//		}
-//	}
-//}
 
 BOOST_AUTO_TEST_CASE(test_set)
 {
 	using namespace set_test;
-	cloneable::set<set_test::my_base> set;
+	cloneable::set<set_base> set;
 	set.emplace_insert<S0>(1);
 	set.emplace_insert<S1>(2);
 	set.emplace_insert<S2>(3);
 	set.emplace_insert<S2>(4);
 
+	BOOST_ASSERT(set.size() == 4);
 	BOOST_ASSERT(set.find<S0>(1) != set.end());
+	BOOST_ASSERT(set.find<set_base>(2) != set.end());
 }
 
 

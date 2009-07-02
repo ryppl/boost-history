@@ -18,6 +18,7 @@ namespace boost
 		struct adaptor : T, base<adaptor<T, Base>, Base>
 		{
 			adaptor() { }
+			adaptor(const adaptor &X) : T(X), base<adaptor<T,Base>,Base>(X) { }
 
 			template <class A0>
 			adaptor(A0 a0) : T(a0)

@@ -475,6 +475,10 @@
 				RelativePath="..\doc\index.html"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\libs\monotonic\doc\monotonic.qbk"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="results"

@@ -252,6 +252,14 @@
 				</Filter>
 			</Filter>
 		</Filter>
+		<Filter
+			Name="doc"
+			>
+			<File
+				RelativePath="..\..\..\..\..\..\..\Lib\boost_1_39_0\libs\cloneable\doc\cloneable.qbk"
+				>
+			</File>
+		</Filter>
 		<File
 			RelativePath=".\tests.cpp"
 			>
