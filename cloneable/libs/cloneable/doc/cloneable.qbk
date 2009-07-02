@@ -49,7 +49,7 @@ There is a fundamental requirement that a common base class type is shared for
 each type in a given class hierarchy. The user can supply their own base classes, 
 or sensible defaults are generated.
 
-[1] Cloneable objects can be used in containers-of-pointers (based on a modified <emphasis>Boost.PtrContainer</emphasis> implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
+[1] Cloneable objects can be used in containers-of-pointers (based on a modified [*Boost.PtrContainer] implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
 
 [endsect]
 
@@ -254,8 +254,8 @@ public:
 };
 ``
 
-There are of courswe many ways to do this, and how you do it will depend on many factors. 
-Just bare in mind that `cloneable::adaptor<>` is there if you need it.
+There are of course many ways to do this, and how you do it will depend on many factors. 
+Just bear in mind that `cloneable::adaptor<>` is there if you need it.
 
 Next, we look at how to customise the cloning operation itself, and how we can 
 use our own or other allocators. This is important to understand before we
@@ -299,10 +299,12 @@ clones using any standard-compliant allocator type.
 
 [section Using Custom Allocators]
 
-The entire ['Cloneable] system was designed to support general allocators. This provides 
-more fine-tuned control for the cloning and creation operations, and ensures Cloneable 
-types work well in containers. When making a new object or sub-object or clone or sub-clone, 
-the underlying `abstract_base` is given a reference to an `abstract_allocator`. This is 
+The entire Cloneable system was designed to support general allocators. This provides 
+more fine-tuned control over cloning and creation operations, and ensures Cloneable 
+types work well in containers. 
+
+When making a new object, sub-object, clone or sub-clone, the underlying `abstract_base` 
+is given a reference to an `abstract_allocator`. This is 
 an interface (containing only pure virtual methods) that is used to expose a specialised 
 `allocator<T>` to the non-specific `abstract_base`. This process is easy to understand with some examples:
 
@@ -339,11 +341,11 @@ class Foo : public cloneable::base<Foo>
 ``
 
 Recall that if your class can be correctly copy-constructed, you do not need to 
-provide a custom clone override at all. If your class members that have value 
-semantics and can be copy-constructed (including `std::containers`, and heterogenous::containers), 
+provide a custom clone override at all. If your class only members that have value 
+semantics and can in turn be copy-constructed (including `std::containers`, and heterogenous::containers), 
 then you do not need to provide any customisation. 
 
-However, if your class containers pointers of any description, or references, 
+However, if your class contains pointers of any description, or references, 
 then you will in general have to provide a sensible copy-constructor, or provide a custom clone override.
 
 In summary, there are three stages of customisation:
