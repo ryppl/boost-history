@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section last-revision="$Date:$" id="monotonic.tutorial">
+  <title>Tutorial</title>
+  <using-namespace name="boost"/>
+  <using-namespace name="boost::monotonic"/>
+
+  <section>
+    <title>Overview</title>
+<para>This tutorial progresses through the basic usage of the library, demonstrating how to use a monotonic allocator with STL containers, how to use monotonic storage directly without an allocator, how to use regions and access tags, and finally demonstrates the use of the supplied container library with stack-based local storage.
+</para>
+
+</section>
+
+<section><title>Basic Usage</title>
+<para>
+The following is a very quick introduction to Boost.Monotonic:
+</para>
+<programlisting>
+#include &lt;boost/monotonic/allocator.hpp&gt;
+
+using namespace boost;
+
+int main()
+{
+    {
+	std::list&lt;int, monotonic::allocator&lt;int&gt; &gt; list;
+	for (size_t n = 0; n &lt; 1000; ++n)
+	    list.push_back(n);
+    }
+    monotonic::static_storage&lt;&gt;::release();
+    return 0;
+}
+</programlisting>
+<para>
+Here we have created a std::list using a monotonic allocator. While we add new elements to the list in the for-loop, allocation is coming from monotonic storage in the default region with default access. The first 32k of allocation will come from the BSS segment embedded in the application image (the amount of such storage is configurable), then one that local storage is exhausted, later allocation requests will be serviced from the heap. Since de-allocation does nothing in a monotonic allocator, we must manually release the resources once we are finished, as shown above.
+</para>
+<para>
+The above example is clearly trivial, but if you were to benchmark it against using a default std::allocator you will find that monotonic is much faster[1]. This is the main reason for using this library; to provide efficient storage and allocation for temporary containers. We shall now move on to some more interesting examples, including how to use multiple containers that share the same strorage, using regions, using local stack-based storage, and dealing with threading issues.
+</para>
+</section>
+<section><title>Using Multiple Containers</title>
+<programlisting>
+int main()
+{
+    {
+	typedef std::vector&lt;int, monotonic::allocator&lt;int&gt; &gt; Vector;
+	typedef std::map&lt;int, Vector, std::less&lt;int&gt;, monotonic::allocator&lt;Vector&gt; &gt; Map;
+	Map map;
+	for (size_t n = 0; n &lt; 10000; ++n)
+	{
+            map[rand()].push_back(n);
+	}
+    }
+    monotonic::static_storage&lt;&gt;::release();
+    return 0;
+};
+</programlisting>
+<para>
+    In this admittedly contrived example, we create a map of ints to vectors of ints, which each container using a monotonic allocator. Again, storage will only ever increase, so we must release it after we have finished using it. Again as well, benchmarking the performance of this against other allocation schemes[2] show that monotonic allocation is extremely fast and efficient.
+</para>
+</section>
+<section><title>Notes</title>
+[1] See further discussion on efficiency at xxx
+[2] See performance results at yyy
+</section>
+</section>
+

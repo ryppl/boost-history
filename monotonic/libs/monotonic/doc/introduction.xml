@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
+  "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
+<section last-revision="$Date: 2009-06-02 13:38:02$">
+  <title>Introduction</title>
+
+<para>
+The <emphasis>Boost.Monotonic</emphasis> library provides storage, allocation and container types for use in high-performance and real-time applications.
+</para>
+<para>
+The library provides a means for allocation to come from the stack, or the heap, or a combination of both the stack and the heap. Allocation is fast, because de-allocation does nothing. As such, the amount of storage used by a <emphasis>monotonic allocator</emphasis> can only ever increase - hence the name of the library.
+</para>
+
+<para>
+    Allocation can be <emphasis>regionalised</emphasis> by application of user-supplied 'tag types' to specify a logical storage region. A second tag may be used to specify the <emphasis>access type</emphasis> for the region - which can be either global, guarded by a mutex, or using thread-local storage.
+</para>
+
+<para>
+Boost.Monotonic is generally used where performace matters most. By making deallocation a no-op, allocation of memory resources is extremely fast. In genreal, the programmer is required to release storage used at an appropriate time, however local scoping systems are provided by the library for the most common use cases.
+</para>
+
+</section>
