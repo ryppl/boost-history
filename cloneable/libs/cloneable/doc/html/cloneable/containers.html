@@ -1,48 +1,117 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Heterogenous Containers</title>
+<title>Containers</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
-<link rel="home" href="../index.html" title="Chapter 1. Boost.Cloneable">
-<link rel="up" href="../index.html" title="Chapter 1. Boost.Cloneable">
-<link rel="prev" href="tutorial.html" title="Tutorial">
-<link rel="next" href="../index/s04.html" title="Frequently Asked Questions">
+<link rel="home" href="../index.html" title="Cloneable 0.1">
+<link rel="up" href="../index.html" title="Cloneable 0.1">
+<link rel="prev" href="tutorial/using_custom_allocators.html" title="Using Custom Allocators">
+<link rel="next" href="containers/list.html" title="List">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
-<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../boost.png"></td>
-<td align="center"><a href="../../../index.html">Home</a></td>
-<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
 <td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
 <td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
-<td align="center"><a href="../../../more/index.htm">More</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../index/s04.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial/using_custom_allocators.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers/list.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
-<div class="section" title="Heterogenous Containers">
+<div class="section" title="Containers">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
-<a name="cloneable.containers"></a>Heterogenous Containers</h2></div></div></div>
-<div class="toc"><dl><dt><span class="section"><a href="containers.html#id667056">Overview</a></span></dt></dl></div>
-<div class="section" title="Overview">
-<div class="titlepage"><div><div><h3 class="title">
-<a name="id667056"></a>Overview</h3></div></div></div>
-<p>This tutorial demonstrates the use of the <span class="emphasis"><em>heterogenous</em></span> container system provided in the Cloneable library.
-	    </p>
-</div>
+<a name="cloneable.containers"></a><a class="link" href="containers.html" title="Containers">Containers</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="containers/list.html">List</a></span></dt>
+<dt><span class="section"><a href="containers/vector.html">Vector</a></span></dt>
+<dt><span class="section"><a href="containers/set.html">Set</a></span></dt>
+<dt><span class="section"><a href="containers/map.html">Map</a></span></dt>
+<dt><span class="section"><a href="containers/hashmap_and_hashset.html">HashMap and
+      HashSet</a></span></dt>
+</dl></div>
+<p>
+      This section of the tutorial presents the first glimpse of the so-called <span class="emphasis"><em>heterogenous
+      containers</em></span> provided by the Cloneable library. These are:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem"><code class="computeroutput"><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">hash_map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">hash_set</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+</ul></div>
+<p>
+      All of these containers store pointers to objects. However, they each expose
+      their contained objects using value semantics. If this seems similar to Boost.PtrContainer,
+      that is not coincidental, as these containers are based on a modified implementation
+      of that library.
+    </p>
+<p>
+      You will have noted that each container is specialised over a Base type, rather
+      than a concrete derived type. This is because they are intended to store base
+      pointers. It may be surprising that <code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;&gt;</span></code> takes only one type - the Base type
+      - of object to store, rather than the more familiar key and mapped types. This
+      is because a heterogenous map provides an association between objects with
+      the same base type.
+    </p>
+<p>
+      These containers will be presented in order, with some motivational examples
+      which combines them. First, we shall extend our little Animal hierarchy to
+      include an age member, and a comparison operator:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">Animal</span>
+<span class="special">{</span>
+	<span class="keyword">double</span> <span class="identifier">age</span><span class="special">;</span>
+	<span class="identifier">Animal</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">years_old</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">age</span><span class="special">(</span><span class="identifier">years_old</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+	
+	<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">Animal</span> <span class="special">&amp;</span><span class="identifier">other</span><span class="special">)</span> <span class="keyword">const</span>
+	<span class="special">{</span>
+		<span class="keyword">return</span> <span class="identifier">age</span> <span class="special">&lt;</span> <span class="identifier">other</span><span class="special">.</span><span class="identifier">age</span><span class="special">;</span>
+	<span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">Cat</span> <span class="special">:</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
+<span class="special">{</span>
+	<span class="identifier">Cat</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">Dog</span> <span class="special">:</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
+<span class="special">{</span>
+	<span class="identifier">Dog</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">struct</span> <span class="identifier">Labrador</span> <span class="special">:</span> <span class="identifier">Dog</span><span class="special">,</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
+<span class="special">{</span>
+	<span class="identifier">Labrador</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
+<span class="special">};</span>
+
+</pre>
+<p>
+    </p>
+<p>
+      With this in mind, let's visit the first container: the faithful list.
+    </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised:  ,  at  </small></p></td>
-<td align="right"><div class="copyright-footer">Copyright © 2009 Christian Schladetsch<p>Use, modification and distribution is subject to the Boost
-    Software License, Version 1.0. (See accompanying file
-    <code class="filename">LICENSE_1_0.txt</code> or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)</p>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christian Schladetsch<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
 </div></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial.html"><img src="../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../index/s04.html"><img src="../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial/using_custom_allocators.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers/list.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
