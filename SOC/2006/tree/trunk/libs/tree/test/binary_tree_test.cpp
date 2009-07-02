@@ -282,10 +282,37 @@ BOOST_AUTO_TEST_CASE( erase_right_leaf_node_test )
 
 //BOOST_AUTO_TEST_SUITE_END()
 
+BOOST_AUTO_TEST_CASE( clear_subtree_test )
+{
+    binary_tree<int>::size_type sz = size(bt.root());
+    binary_tree<int>::cursor c = bt.root().begin();
+    BOOST_CHECK(!c.is_leaf());
+    sz -= size(c);
+
+    BOOST_CHECK(!c.is_leaf());
+    c = bt.clear(c);
+    BOOST_CHECK(c == bt.root().begin());
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK_EQUAL(*c, 8);
+    BOOST_CHECK_EQUAL(sz, size(bt.root()));
+}
+
+BOOST_AUTO_TEST_CASE( clear_root_test )
+{
+    binary_tree<int>::cursor c = bt.root();
+
+    BOOST_CHECK(!c.is_leaf());
+    c = bt.clear(c);
+    BOOST_CHECK(c.is_leaf());
+    BOOST_CHECK(c == bt.root());
+    BOOST_CHECK(bt.empty());
+}
+
 BOOST_AUTO_TEST_CASE( clear_test )
 {
     bt.clear();    
     BOOST_CHECK(bt.empty());
+    BOOST_CHECK(bt.root().is_leaf());
 }
 
 BOOST_AUTO_TEST_CASE( swap_binary_tree_test )

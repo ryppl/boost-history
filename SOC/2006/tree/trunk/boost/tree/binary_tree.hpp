@@ -91,7 +91,7 @@ public:
     
     ~binary_tree()
     {
-        clear();
+        this->clear();
     }
     
     /**
@@ -240,7 +240,7 @@ public:
       * @param c    Cursor pointing to the node to be removed.
       */
      // TODO: Take care of header-pointers
-    void clear(cursor position) 
+    cursor clear(cursor position) 
     {
 //    return cursor(boost::tree::for_each(boost::tree::postorder()
 //                , direct_cursor(position)
@@ -250,19 +250,49 @@ public:
         if (!position.is_leaf()) {
             node_pointer pos_node = 
                 static_cast<node_pointer>(
+                    position.base_node()->m_children[position.m_pos]
+                );
+
+            size_type parent_idx = index(position.parent());
+            
+            // recurse
+            _clear(position.begin());
+            _clear(position.end());
+
+            // Make this node a leaf
+            static_cast<node_base_pointer>(pos_node->m_parent)->m_children[parent_idx] = 0;
+
+            m_node_alloc.destroy(pos_node);
+            m_node_alloc.deallocate(pos_node, 1);
+        }
+
+         if (position == root()) {
+            m_header.m_parent = &m_header;
+            m_header.m_children[0] = 0;
+            m_header.m_children[1] = &m_header;
+         }
+
+         return position;
+    }     
+
+private:    
+    void _clear(cursor position) {
+        if (!position.is_leaf()) {
+            node_pointer pos_node = 
+                static_cast<node_pointer>(
                      position.base_node()->m_children[position.m_pos]
                 );
 
             // recurse
-             clear(position.begin());
-             clear(position.end());
-             
-             // delete the node position points to
+            _clear(position.begin());
+            _clear(position.end());
+
             m_node_alloc.destroy(pos_node);
             m_node_alloc.deallocate(pos_node, 1);
          }
-    }     
-     
+    }
+
+public:
     void rotate(cursor& pos)
     {
         //TODO: Take care of inorder_first pointer!
@@ -325,9 +355,6 @@ public:
      void clear()
      {
         clear(this->root());
-        m_header.m_parent = &m_header;
-        m_header.m_children[0] = 0;
-        m_header.m_children[1] = &m_header;
      }
      
     // splice operations

@@ -83,7 +83,6 @@ BOOST_AUTO_TEST_SUITE( basic_forest_test )
 BOOST_AUTO_TEST_CASE( constructors_test )
 {
     forest<int> ft0;
-    //BOOST_CHECK_EQUAL(*ft0.root(), 0);
     BOOST_CHECK(ft0.empty());
     BOOST_CHECK(ft0.begin() == ft0.end());
 }
