@@ -1,0 +1,314 @@
+[article Monotonic Storage
+    [quickbook 1.4]
+    [version 0.3]
+    [authors [Schladetsch, Christian]]
+    [copyright 2009 Christian Schladetsch]
+    [purpose /WikiWiki/ Fast resource management]
+    [license
+        Distributed under the Boost Software License, Version 1.0.
+        (See accompanying file LICENSE_1_0.txt or copy at
+        [@http://www.boost.org/LICENSE_1_0.txt])
+    ]
+]
+
+[/ QuickBook Document version 1.4 ]
+[/ Sept 24, 2002 ]
+[/ Sept 2, 2004 ]
+[/ Feb 14, 2005 ]
+[/ Sept 13, 2005 ]
+
+[/ Some links]
+
+[def __note__       [$images/note.png]]
+[def __alert__      [$images/alert.png]]
+[def __tip__        [$images/tip.png]]
+[def :-)            [$images/smiley.png]]
+[def __spirit__     [@http://spirit.sourceforge.net Spirit]]
+[def __boostbook__  [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
+[def __docbook__    [@http://www.docbook.org/ DocBook]]
+
+[def __comments__ [link monotonic.syntax.comments Comments]]
+
+[def __font_styles__ [link monotonic.syntax.phrase.font_styles Font Styles]]
+[def __quotations__         [link monotonic.syntax.phrase.quotations Quotations]]
+[def __replaceable__        [link monotonic.syntax.phrase.replaceable Replaceble]]
+[def __simple_formatting__  [link monotonic.syntax.phrase.simple_formatting Simple formatting]]
+[def __inline_code__        [link monotonic.syntax.phrase.inline_code Inline code]]
+[def __code_blocks__        [link monotonic.syntax.phrase.code_blocks Code blocks]]
+[def __source_mode__        [link monotonic.syntax.phrase.source_mode Source Mode]]
+[def __line_break__         [link monotonic.syntax.phrase.line_break line-break]]
+[def __anchors__            [link monotonic.syntax.phrase.anchors Anchors]]
+[def __links__              [link monotonic.syntax.phrase.links Links]]
+[def __anchor_links__       [link monotonic.syntax.phrase.anchor_links Anchor links]]
+[def __refentry_links__     [link monotonic.syntax.phrase.refentry_links refentry links]]
+[def __code_links__         [link monotonic.syntax.phrase.code_links function, class, member, enum, macro, concept or header links]]
+[def __escape__             [link monotonic.syntax.phrase.escape Escape]]
+[def __single_char_escape__ [link monotonic.syntax.phrase.single_char_escape Single char escape]]
+[def __images__             [link monotonic.syntax.phrase.images Images]]
+[def __cond__               [link monotonic.syntax.phrase.cond Conditional Generation]]
+
+[def __document__           [link monotonic.syntax.block.document Document]]
+[def __section__            [link monotonic.syntax.block.section Section]]
+[def __xinclude__           [link monotonic.syntax.block.xinclude  xinclude]]
+[def __paragraphs__         [link monotonic.syntax.block.paragraphs Paragraphs]]
+[def __ordered_lists__      [link monotonic.syntax.block.lists.ordered_lists Ordered lists]]
+[def __list_hierarchies__   [link monotonic.syntax.block.lists.list_hierarchies List Hierarchies]]
+[def __long_list_lines__    [link monotonic.syntax.block.lists.long_list_lines Long List Lines]]
+[def __unordered_lists__    [link monotonic.syntax.block.lists.unordered_lists Unordered lists]]
+[def __mixed_lists__        [link monotonic.syntax.block.lists.mixed_lists Mixed lists]]
+[def __code__               [link monotonic.syntax.block.code Code]]
+[def __escape_back__        [link monotonic.syntax.block.escape_back Escaping Back To QuickBook]]
+[def __preformatted__       [link monotonic.syntax.block.preformatted Preformatted]]
+[def __blockquote__         [link monotonic.syntax.block.blockquote Blockquote]]
+[def __heading__            [link monotonic.syntax.block.headings Heading]]
+[def __macros__             [link monotonic.syntax.block.macros Macros]]
+[def __templates__          [link monotonic.syntax.block.templates Templates]]
+[def __predefined_macros__  [link monotonic.syntax.block.predefined_macros Predefined Macros]]
+[def __blurbs__             [link monotonic.syntax.block.blurbs Blurbs]]
+[def __admonitions__        [link monotonic.syntax.block.admonitions Admonitions]]
+[def __tables__             [link monotonic.syntax.block.tables Tables]]
+[def __variable_lists__     [link monotonic.syntax.block.variable_lists Variable Lists]]
+[def __include__            [link monotonic.syntax.block.include Include]]
+[def __import__             [link monotonic.syntax.block.import Import]]
+
+[section:intro Introduction]
+
+The [*Boost.Monotonic] library provides storage, allocation and container types for use 
+in high-performance and real-time applications.
+
+The library provides a means for allocation to come from the stack, or the heap, or a combination of
+ both the stack and the heap. Allocation is fast, because de-allocation does nothing. 
+ As such, the amount of storage used by a monotonic allocator can only ever increase 
+ - hence the name of the library.
+
+Allocation can be ['regionalised] by application of user-supplied 'tag types' to specify a 
+logical storage region. A second tag may be used to specify the 
+['access type] for the region - which can be either global, guarded by a mutex, or using thread-local storage.
+
+[*Boost.Monotonic] is generally used where performace is a key concern. 
+By making deallocation a no-op, allocation of memory resources is extremely fast. 
+In general, the programmer is required to release storage used at an appropriate time, 
+however local scoping systems are provided by the library for the most common use cases.
+
+Features include:
+
+* fast allocation from the stack
+* automatic extension to the heap as needed
+* storage can be segmented into independant regions
+* support for thread-safe storage, and thread-local storage
+* storage can be accessed directly, providing a 'first-class stack' system
+* containers that can use storage from the stack, from the heap, or both the stack and the heap
+
+[endsect]
+
+[section:change_log Change Log]
+
+[h3 Version 0.4]
+
+* Added reclaimable storage
+
+[h3 Version 0.3]
+
+* Added region- and access-tags.
+
+[endsect]
+
+[section:tutorial Tutorial]
+
+This tutorial progresses through the basic usage of the library, 
+demonstrating how to use a monotonic allocator with STL containers, 
+how to use monotonic storage directly without an allocator, how to use 
+regions and access tags, and finally demonstrates the use of the 
+supplied container library with stack-based local storage.
+
+[section Basic Usage]
+
+The following is a very quick introduction to [*Boost.Monotonic]:
+
+``
+#include <boost/monotonic/allocator.hpp>
+
+using namespace boost;
+
+int main()
+{
+    {
+        std::list<int, monotonic::allocator<int> > list;
+        for (size_t n = 0; n < 1000; ++n)
+            list.push_back(n);
+    }
+    monotonic::static_storage<>::release();
+    return 0;
+}
+``
+
+Here we have created a `std::list` using a monotonic allocator. 
+While we add new elements to the list in the for-loop, allocation is coming 
+from storage in the default region with default access. The first 32k of allocation 
+will come from the BSS segment embedded in the application image (the amount 
+of such storage is configurable), then once that local storage is exhausted, 
+later allocation requests will be serviced from the heap. Since de-allocation 
+does nothing in a monotonic allocator, we must manually release the resources 
+once we are finished, as shown above.
+
+While this example is trivial, if you were to benchmark it against using 
+a default `std::allocator` you will find that monotonic allocation is much faster[1]. 
+
+This is one of the main reasons for using this library; to provide efficient storage 
+and allocation for temporary containers.
+
+We shall now move on to some more interesting examples, including how to use 
+multiple containers that share the same strorage, using regions, using local 
+stack-based storage, and dealing with threading issues.
+
+[endsect]
+
+[section Using Multiple Containers]
+
+In this example, we create a map of ints to vectors of ints, 
+with each container using a monotonic allocator:
+
+``
+int main()
+{
+    {
+	typedef std::vector<int, monotonic::allocator<int> > Vector;
+	typedef std::map<int, Vector, std::less<int>, monotonic::allocator<Vector> > Map;
+	Map map;
+	for (size_t n = 0; n < 10000; ++n)
+	{
+            map[rand()%100].push_back(n);
+	}
+    }
+    monotonic::static_storage<>::release();
+    return 0;
+};
+``
+
+Again, storage will only ever increase, so we must release it after we have finished using it. 
+
+Benchmarking the performance of this against other allocation schemes[2] show that 
+monotonic allocation is extremely fast and efficient.
+
+The key point here is that you can use a `monotonic::allocator` anywhere that 
+you would otherwise use a `std::allocator` or any other STL-compliant custom 
+allocator. Monotonic allocators of the same type are effectively stateless, 
+and may be default-constructed, used, and discarded as needed. 
+
+We will deal with stateful monotonic allocators that can use local stack-based storage in a later section.
+
+[endsect]
+
+[section Using Regions]
+
+While it can be useful to have one storage area for all allocations, 
+at times will will want to segment our memory usage into different ['regions]. 
+This is done by passing a user-supplied ['region tag type] to the type signature 
+of a `monotonic::allocator`, as shown here:
+
+``
+struct my_region_A { };
+struct my_region_B { };
+
+int main()
+{
+    {
+        std::list<int, monotonic::allocator<int, my_region_A> > A_list;
+        A_list.push_back(1);
+        {
+             std::list<int, monotonic::allocator<int, my_region_B> > B_list;
+             B_list.push_back(2);
+        }
+        monotonic::static_storage<my_region_B>::release();
+        A_list.push_back(3);
+    }
+    monotonic::static_storage<my_region_A>::release();
+    return 0;
+}
+``
+
+Here, we have defined two storage regions, designated with the type-tags `my_region_A` 
+and `my_region_B`. These are passed as the second type argument to a `monotonic::allocator`
+in order to segment out the storage used. These regions are independant of each other;
+releasing storage for `B_list` does not effect the storage for `A_list`.
+ 
+Using segmented storage systems helps with logical seperation of resource usage 
+amoung different sub-systems within an application. It also helps with ensuring 
+privacy when using local storage, as demonstrated below:
+
+``
+class System
+{
+    struct region {};
+    typedef std::vector<Object, monotonic::allocator<Object, region> > Objects;
+
+public:
+    void update()
+    {
+		{
+			Objects objects;
+			GatherRelevant(objects);
+			Process(objects);
+			Update(objects);
+		}
+		// reset storage, ready for next update
+		monotonic::static_storage<region>::reset();
+    }
+};
+``
+
+We have used a private region-tag `region` to guarantee that storage used 
+by local containers such as `Objects` is not shared with any other system. 
+
+Note that this is a typical use-case for monotonic allocation, as it uses a locally 
+defined container which is populated, used and discarded regularly.
+
+[endsect]
+
+[section Using Monotonic Storage]
+
+While monotonic allocators use monotonic storage, we can also use this storage 
+directly and wherever we want efficient resource management.
+
+``
+int main()
+{
+    // define local storage of 4k on the stack.
+    // allocations will use the heap after the inline stack-based storage
+    // has been exhausted.
+    monotonic::storage<4*1024> storage;
+    {
+		int &amp;num = storage.create<int>();
+		std::string &amp;str = storage.create<std::string>();
+		char *bytes = storage.allocate_bytes(3000);     
+
+		// use num, str, bytes as needed
+
+		// call std::string's destructor directly, or use storage.destroy
+		storage.destroy(str);
+    }
+    return 0;
+}
+
+Of course, we could have just made `num`, `str` and `bytes` on the stack by declaring them as 
+local variables and be done with it - well, except for having a dynamically-sized array of bytes
+on the stack. There is no other functional difference in this case, except that you are 
+responsible for invoking object destructors. So how is this at all useful?
+
+We can use `monotonic::storage` as a form of "first-class scope" which can be created, 
+manipulated, passed as as argument, returned as a value or reference, and destroyed as needed. 
+
+In this sense, `monotonic::storage` is just like your very own C++ stack which you can share 
+between objects and functions and even across process boundaries, independantly of the 
+underlying machine-based stack.
+
+Also unlike the stack, storage will use the heap when its local inline stack-based buffer is exhuasted. 
+This makes it ideal for using things like local buffers and containers that generally will be small 
+enough to fit onto the stack, but with the fallback safety of transparently using the heap to 
+service later requests for the cases where that inline buffer is not large enough.
+
+[endsect]
+
+
+[endsect]
+
