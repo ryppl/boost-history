@@ -24,7 +24,7 @@
 #include <boost/cloneable/clone.hpp>
 #include <boost/cloneable/vector.hpp>
 #include <boost/cloneable/list.hpp>
-#include <boost/cloneable/map.hpp>
+//#include <boost/cloneable/map.hpp>
 #include <boost/cloneable/set.hpp>
 
 #include <boost/cloneable/adaptor.hpp>
@@ -307,11 +307,14 @@ BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)
 	v.emplace_back<Q0>(42);
 	v.emplace_back<Q1>("foo");
 
+	Q0 &q0 = v.as<Q0>(0);
+	Q1 &q1 = v.as<Q1>(1);
+
 	// ensure duplication of types with multiple cloneable sub-objects works correctly
 	vec v2 = v;
 	
-	BOOST_ASSERT(v2.ref_at<Q0>(0).num == 42);
-	BOOST_ASSERT(v2.ref_at<Q1>(1).str == "foo");
+	BOOST_ASSERT(v2.as<Q0>(0).num == 42);
+	BOOST_ASSERT(v2.as<Q1>(1).str == "foo");
 }
 
 struct T0 : base<T0, my_base>
@@ -375,11 +378,11 @@ BOOST_AUTO_TEST_CASE(test_vector)
 		my_base &generic2 = copy[2];
 
 		// get a reference; will throw bad_cast on type mismatch
-		T0 &p1 = copy.ref_at<T0>(0);
+		T0 &p1 = copy.as<T0>(0);
 
 		// get a pointer; returns null on type mismatch
-		T1 *p2 = copy.ptr_at<T1>(1);
-		T2 *p3 = copy.ptr_at<T2>(2);
+		T1 *p2 = copy.pointer<T1>(1);
+		T2 *p3 = copy.pointer<T2>(2);
 		
 		BOOST_ASSERT(p2);
 		BOOST_ASSERT(p3);
@@ -389,12 +392,12 @@ BOOST_AUTO_TEST_CASE(test_vector)
 		BOOST_ASSERT(p3->real == 3.14f);
 		BOOST_ASSERT(p3->num == -123);
 		BOOST_ASSERT(p3->str == "spam");
-		BOOST_ASSERT(copy.ref_at<cloneable_external_type>(3).text == "external");
+		BOOST_ASSERT(copy.as<cloneable_external_type>(3).text == "external");
 
 		bool caught = false;
 		try
 		{
-			my_base &base = copy.ref_at<T1>(0);
+			my_base &base = copy.as<T1>(0);
 		}
 		catch (std::bad_cast)
 		{
@@ -428,6 +431,10 @@ namespace map_test
 		int number;
 		my_base(int n = 0) : number(n) { }
 		virtual ~my_base() { }
+		bool operator<(my_base const &other)
+		{
+			return number < other.number;
+		}
 	};
 
 	struct M0 : base<M0, my_base>
@@ -450,19 +457,13 @@ namespace map_test
 	{
 	};
 
-	struct my_less
-	{
-		bool operator()(my_base const *left, my_base const *right) const
-		{
-			return left->number < right->number;
-		}
-	};
 }
 
 BOOST_AUTO_TEST_CASE(test_map)
 {
+	/*
 	using namespace map_test;
-	typedef cloneable::map<map_test::my_base,my_less> map_type;
+	typedef cloneable::map<map_test::my_base> map_type;
 	map_type map;
 	map .key<M0>(42).value<M1>("foo")
 		.key<M2>().value<M3>()
@@ -473,6 +474,7 @@ BOOST_AUTO_TEST_CASE(test_map)
 	M1 *m1 = dynamic_cast<M1 *>(iter->second);
 	BOOST_ASSERT(m1 != 0);
 	BOOST_ASSERT(m1->str == "foo");
+	*/
 }
 
 BOOST_AUTO_TEST_CASE(test_hash)
@@ -542,15 +544,25 @@ namespace set_test
 BOOST_AUTO_TEST_CASE(test_set)
 {
 	using namespace set_test;
-	cloneable::set<set_base> set;
-	set.emplace_insert<S0>(1);
-	set.emplace_insert<S1>(2);
-	set.emplace_insert<S2>(3);
-	set.emplace_insert<S2>(4);
+	typedef cloneable::set<set_base> Set;
+	Set set;
+	const S0 *s0 = &*set.emplace<S0>(1).value;
+	set.emplace<S1>(2);
+	set.emplace<S2>(3);
+	set.emplace<S2>(4);
+
+	Set copy = set;
+
+//	BOOST_ASSERT(copy == set);
 
 	BOOST_ASSERT(set.size() == 4);
 	BOOST_ASSERT(set.find<S0>(1) != set.end());
 	BOOST_ASSERT(set.find<set_base>(2) != set.end());
+
+	Set::iterator found;
+	found = set.find<set_base>(1);
+	BOOST_ASSERT(found != set.end());
+	BOOST_ASSERT(&*found == s0);
 }
 
 

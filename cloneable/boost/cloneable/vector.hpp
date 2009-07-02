@@ -12,7 +12,7 @@
 #include <boost/cloneable/detail/prefix.hpp>
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
 #include <boost/cloneable/base.hpp>
-#include <boost/cloneable/detail/allocation.hpp>
+#include <boost/cloneable/instance.hpp>
 
 namespace boost 
 {
@@ -20,11 +20,10 @@ namespace boost
 	{
 		/// a vector of heterogenous objects
 		// TODO: move to boost/heterogenous/vector
-		template <class Base, class Alloc>//, class AbstractBase>
+		template <class Base, class Alloc>
 		struct vector
 		{
 			typedef Base base_type;
-			//typedef AbstractBase abstract_base_type;
 			typedef abstract_base<Base> abstract_base_type;
 			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
 			typedef ptr_vector<abstract_base_type, allocator, allocator_type> implementation;
@@ -145,29 +144,29 @@ namespace boost
 			}
 			
 			template <class Other>
-			Other &ref_at(size_t n)
+			Other &as(size_t n)
 			{
-				Other *ptr = ptr_at<Other>(n);
+				Other *ptr = pointer<Other>(n);
 				if (ptr == 0)
 					throw std::bad_cast();
 				return *ptr;
 			}
 			template <class Other>
-			const Other &ref_at(size_t n) const
+			const Other &as(size_t n) const
 			{
-				const Other *ptr = ptr_at<const Other>(n);
+				const Other *ptr = pointer<const Other>(n);
 				if (ptr == 0)
 					throw std::bad_cast();
 				return *ptr;
 			}
 
 			template <class Other>
-			Other *ptr_at(size_t n)
+			Other *pointer(size_t n)
 			{
 				return dynamic_cast<Other *>(&at(n));
 			}
 			template <class Other>
-			const Other *ptr_at(size_t n) const
+			const Other *ptr(size_t n) const
 			{
 				return dynamic_cast<const Other *>(&at(n));
 			}
@@ -176,25 +175,26 @@ namespace boost
 			template <class U>
 			void emplace_back()
 			{
-				impl.push_back(detail::construct<U,base_type>(get_allocator()).to_abstract());
+				impl.push_back(instance<U,base_type,allocator_type>(get_allocator()).to_abstract());
 			}
 			template <class U, class A0>
 			void emplace_back(A0 a0)
 			{
-				impl.push_back(detail::construct<U,base_type>(get_allocator(), a0).to_abstract());
+				impl.push_back(instance<U,base_type,allocator_type>(get_allocator(), a0).to_abstract());
 			}
 			template <class U, class A0, class A1>
 			void emplace_back(A0 a0, A1 a1)
 			{
-				impl.push_back(detail::construct<U,base_type>(get_allocator(), a0,a1).to_abstract());
+				impl.push_back(instance<U,base_type,allocator_type>(get_allocator(), a0,a1).to_abstract());
 			}
 			template <class U, class A0, class A1, class A2>
 			void emplace_back(A0 a0, A1 a1, A2 a2)
 			{
-				impl.push_back(detail::construct<U,base_type>(get_allocator(), a0,a1,a2).to_abstract());
+				impl.push_back(instance<U,base_type,allocator_type>(get_allocator(), a0,a1,a2).to_abstract());
 			}
 
-			typename implementation::allocator_type get_allocator()
+			// TODO: this should return a reference
+			typename allocator_type get_allocator()
 			{
 				return impl.get_allocator();
 			}

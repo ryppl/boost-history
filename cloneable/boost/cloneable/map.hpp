@@ -10,6 +10,7 @@
 #include <boost/foreach.hpp>
 
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
+#include <boost/cloneable/instance.hpp>
 
 namespace boost 
 {

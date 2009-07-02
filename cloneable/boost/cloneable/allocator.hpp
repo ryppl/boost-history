@@ -48,6 +48,20 @@ namespace boost
 		};
 
 		template <class T, class Alloc>
+		T *allocate(Alloc &alloc)
+		{
+			typename Alloc::template rebind<T>::other al(alloc);
+			return al.allocate(1);
+		}
+
+		template <class T>
+		T *allocate(abstract_allocator &alloc)
+		{
+			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			return reinterpret_cast<T *>(ptr);
+		}
+
+		template <class T, class Alloc>
 		T *create(Alloc &alloc)
 		{
 			typename Alloc::template rebind<T>::other al(alloc);
@@ -59,23 +73,23 @@ namespace boost
 		template <class T>
 		T *create(abstract_allocator &alloc)
 		{
-			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			T *ptr = allocate<T>(alloc);
 			new (ptr) T();
-			return reinterpret_cast<T *>(ptr);
+			return ptr;
 		}
 		template <class T, class A0>
 		T *create(abstract_allocator &alloc, A0 a0)
 		{
-			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			T *ptr = allocate<T>(alloc);
 			new (ptr) T(a0);
-			return reinterpret_cast<T *>(ptr);
+			return ptr;
 		}
 		template <class T, class A0, class A1>
 		T *create(abstract_allocator &alloc, A0 a0,  A1 a1)
 		{
-			abstract_allocator::pointer ptr = alloc.allocate_bytes(sizeof(T), aligned_storage<sizeof(T)>::alignment);
+			T *ptr = allocate<T>(alloc);
 			new (ptr) T(a0, a1);
-			return reinterpret_cast<T *>(ptr);
+			return ptr;
 		}
 
 		template <class T, class Alloc, class A0>

@@ -12,6 +12,7 @@
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
 #include <boost/cloneable/allocator.hpp>
 #include <boost/cloneable/adaptor.hpp>
+#include <boost/cloneable/instance.hpp>
 
 namespace boost 
 {
@@ -55,32 +56,49 @@ namespace boost
 
 
 		public:
-			typedef std::pair<iterator, bool> emplace_result;
+			typedef std::pair<iterator, bool> insert_result;
+
 			template <class U>
-			emplace_result emplace_insert()
+			struct emplace_result
 			{
-				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator()).to_abstract();
-				return impl.insert(instance);
+				typedef instance<U, base_type,allocator_type> instance_type;
+				instance_type value;
+				bool inserted;
+				iterator where;
+				emplace_result() : inserted(false) { }
+				emplace_result(instance_type ins, const insert_result &result)
+					: value(ins), inserted(result.second), where(result.first) { }
+			};
+
+			template <class U>
+			emplace_result<U> emplace(instance<U,base_type,allocator_type> value)
+			{
+				insert_result result = impl.insert(value.to_abstract());
+				if (!result.second)
+					value.release();
+				return emplace_result<U>(value, result);
 			}
 
-			// TODO: use variadic arguments or BOOST_PP to pass ctor args
-			template <class U, class A0>
-			emplace_result emplace_insert(A0 a0)
+			template <class U>
+			emplace_result<U> emplace()
 			{
-				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator(), a0).to_abstract();
-				return impl.insert(instance);
+				return emplace(instance<U, base_type,allocator_type>(get_allocator()));
+			}
+
+			template <class U, class A0>
+			emplace_result<U> emplace(A0 a0)
+			{
+				return emplace(instance<U, base_type,allocator_type>(get_allocator(), a0));
 			}
 			template <class U, class A0, class A1>
-			emplace_result emplace_insert(A0 a0, A1 a1)
+			emplace_result<U> emplace(A0 a0, A1 a1)
 			{
-				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator(), a0, a1).to_abstract();
-				return impl.insert(instance);
+				return emplace(instance<U, base_type,allocator_type>(get_allocator(), a0, a1));
 			}
 			template <class U, class A0, class A1, class A2>
-			emplace_result emplace_insert(A0 a0, A1 a1, A2 a2)
+			emplace_result<U> emplace(A0 a0, A1 a1, A2 a2)
 			{
-				abstract_base_type *instance = detail::construct<U,base_type>(get_allocator(), a0, a1, a2).to_abstract();
-				return impl.insert(instance);
+				return emplace(instance<U, base_type,allocator_type>(get_allocator(), a0, a1, a2));
 			}
 
 			template <class Fun>
@@ -126,26 +144,24 @@ namespace boost
 					template <class A0>
 					static iterator given(this_type *cont, A0 a0)
 					{
-						abstract_base_type *instance = 0;
-						instance = detail::construct<U,base_type>(cont->get_allocator(), a0).to_abstract();
-						BOOST_SCOPE_EXIT((instance)(cont))
+						instance<U,base_type,allocator_type> value(cont->get_allocator(), a0);
+						BOOST_SCOPE_EXIT((value))
 						{
-							cloneable::release(instance, cont->get_allocator());
+							value.release();
 						}
 						BOOST_SCOPE_EXIT_END
-						return cont->find_instance<U>(instance);
+						return cont->find_instance<U>(value);
 					}
 					template <class A0, class A1>
 					static iterator given(this_type *cont, A0 a0, A1 a1)
 					{
-						abstract_base_type *instance = 0;
-						instance = detail::construct<U,base_type>(cont->get_allocator(), a0, a1).to_abstract();
-						BOOST_SCOPE_EXIT((instance)(cont))
+						instance<U,base_type,allocator_type> value(cont->get_allocator(), a0, a1);
+						BOOST_SCOPE_EXIT((value))
 						{
-							cloneable::release(instance, cont->get_allocator());
+							value.release();
 						}
 						BOOST_SCOPE_EXIT_END
-						return cont->find_instance<U>(instance);
+						return cont->find_instance<U>(value);
 					}
 				};
 				struct default_key : base<default_key, base_type>
@@ -170,12 +186,12 @@ namespace boost
 				};
 			};
 			template <class U>
-			iterator find_instance(value_type instance)
+			iterator find_instance(instance<U,base_type,allocator_type> value)
 			{
-				iterator found = impl.find(*instance);
+				iterator found = impl.find(value.to_abstract());
 				if (found == impl.end())
 					return found;
-				if (U *ptr = dynamic_cast<U *>(&*found))
+				if (typeid(&*found) == typeid(U))
 					return found;
 				return impl.end();
 			}
@@ -186,7 +202,7 @@ namespace boost
 				return impl::find<U>::given(this, a0);
 			}
 
-			typename implementation::allocator_type get_allocator()
+			allocator_type get_allocator()
 			{
 				return impl.get_allocator();
 			}
