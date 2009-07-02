@@ -2,22 +2,21 @@
 <!DOCTYPE section PUBLIC "-//Boost//DTD BoostBook XML V1.0//EN"
   "http://www.boost.org/tools/boostbook/dtd/boostbook.dtd">
 <section last-revision="$Date:$" id="monotonic.tutorial">
-  <title>Tutorial</title>
-  <using-namespace name="boost"/>
-  <using-namespace name="boost::monotonic"/>
+    <title><emphasis>Boost.Monotonic</emphasis> Tutorial</title>
+    <using-namespace name="boost"/>
+    <using-namespace name="boost::monotonic"/>
 
-  <section>
-    <title>Overview</title>
-<para>This tutorial progresses through the basic usage of the library, demonstrating how to use a monotonic allocator with STL containers, how to use monotonic storage directly without an allocator, how to use regions and access tags, and finally demonstrates the use of the supplied container library with stack-based local storage.
-</para>
+    <section>
+	<title>Overview</title>
+	<para>This tutorial progresses through the basic usage of the library, demonstrating how to use a monotonic allocator with STL containers, how to use monotonic storage directly without an allocator, how to use regions and access tags, and finally demonstrates the use of the supplied container library with stack-based local storage.
+	</para>
+    </section>
 
-</section>
-
-<section><title>Basic Usage</title>
-<para>
-The following is a very quick introduction to Boost.Monotonic:
-</para>
-<programlisting>
+    <section><title>Basic Usage</title>
+	<para>
+    The following is a very quick introduction to <emphasis>Boost.Monotonic</emphasis>:
+	</para>
+	<programlisting>
 #include &lt;boost/monotonic/allocator.hpp&gt;
 
 using namespace boost;
@@ -32,15 +31,18 @@ int main()
     monotonic::static_storage&lt;&gt;::release();
     return 0;
 }
-</programlisting>
-<para>
-Here we have created a std::list using a monotonic allocator. While we add new elements to the list in the for-loop, allocation is coming from monotonic storage in the default region with default access. The first 32k of allocation will come from the BSS segment embedded in the application image (the amount of such storage is configurable), then one that local storage is exhausted, later allocation requests will be serviced from the heap. Since de-allocation does nothing in a monotonic allocator, we must manually release the resources once we are finished, as shown above.
-</para>
-<para>
-The above example is clearly trivial, but if you were to benchmark it against using a default std::allocator you will find that monotonic is much faster[1]. This is the main reason for using this library; to provide efficient storage and allocation for temporary containers. We shall now move on to some more interesting examples, including how to use multiple containers that share the same strorage, using regions, using local stack-based storage, and dealing with threading issues.
-</para>
-</section>
-<section><title>Using Multiple Containers</title>
+	</programlisting>
+	<para>
+Here we have created a <code>std::list</code> using a monotonic allocator. While we add new elements to the list in the for-loop, allocation is coming from storage in the default region with default access. The first 32k of allocation will come from the BSS segment embedded in the application image (the amount of such storage is configurable), then once that local storage is exhausted, later allocation requests will be serviced from the heap. Since de-allocation does nothing in a monotonic allocator, we must manually release the resources once we are finished, as shown above.
+	</para>
+	<para>
+    While example is trivial, if you were to benchmark it against using a default std::allocator you will find that monotonic allocation is much faster[1]. This is one of the main reasons for using this library; to provide efficient storage and allocation for temporary containers.
+	</para>
+	<para>
+    We shall now move on to some more interesting examples, including how to use multiple containers that share the same strorage, using regions, using local stack-based storage, and dealing with threading issues.
+	</para>
+    </section>
+    <section><title>Using Multiple Containers</title>
 <programlisting>
 int main()
 {
@@ -50,20 +52,112 @@ int main()
 	Map map;
 	for (size_t n = 0; n &lt; 10000; ++n)
 	{
-            map[rand()].push_back(n);
+            map[rand()%100].push_back(n);
 	}
     }
     monotonic::static_storage&lt;&gt;::release();
     return 0;
 };
+	</programlisting>
+	<para>
+    In this admittedly contrived example, we create a map of ints to vectors of ints, which each container using a monotonic allocator. Again, storage will only ever increase, so we must release it after we have finished using it. Benchmarking the performance of this against other allocation schemes[2] show that monotonic allocation is extremely fast and efficient.
+	</para>
+	<para>
+    The key point here is that you can use a <code>monotonic::allocator</code> anywhere that you would otherwise use a <code>std::allocator</code> or any other STL-compliant custom allocator. Monotonic allocators of the same type are effectively stateless, and may be default-constructed, used, and discarded as needed. We will deal with stateful monotonic allocators that can use local stack-based storage in a later section.
+	</para>
+    </section>
+    <section><title>Using Regions</title>
+	<para>
+    While it can be useful to have one storage area for all allocations, at times will will want to segment our memory usage into different <emphasis>regions</emphasis>. This is done by passing a user-supplied <emphasis>region tag type</emphasis> to the type signature of a <code>monotonic::allocator</code>, as shown here:
+	</para>
+	<programlisting>
+struct my_region_A { };
+struct my_region_B { };
+
+int main()
+{
+    {
+	std::list&lt;int, monotonic::allocator&lt;int, my_region_A&gt; &gt; A_list;
+	std::list&lt;int, monotonic::allocator&lt;int, my_region_B&gt; &gt; B_list;
+	// use A_list and B_list
+    }
+    monotonic::static_storage&lt;my_region_A&gt;::release();
+    monotonic::static_storage&lt;my_region_B&gt;::release();
+    return 0;
+}
+    </programlisting>
+<para>
+    Here, we have defined two storage regions, designated with the type-tags <code>my_region_A</code> and <code>my_region_B</code>. These are passed as the second type argument to a <code>monotonic::allocator</code> in order to segment out the storage used.
+</para>
+<para>
+Using segmented storage systems helps with logical seperation of resource usage amoung different sub-systems within an application. It also helps with ensuring privacy when using local storage, as demonstrated below:
+</para>
+<programlisting>
+class System
+{
+    struct region {};
+    typedef std::vector&lt;Object, monotonic::allocator&lt;Object, region&gt; &gt; Objects;
+
+public:
+    void update()
+    {
+	{
+	    Objects objects;
+	    // populate and use objects container
+	    //...
+	}
+	// reset storage, ready for next update
+	monotonic::static_storage&lt;region&gt;::reset();
+    }
+};
 </programlisting>
 <para>
-    In this admittedly contrived example, we create a map of ints to vectors of ints, which each container using a monotonic allocator. Again, storage will only ever increase, so we must release it after we have finished using it. Again as well, benchmarking the performance of this against other allocation schemes[2] show that monotonic allocation is extremely fast and efficient.
+Here we have used a private region-tag <code>region</code> to guarantee that storage used by local containers such as <code>Objects</code> is not shared with any other system. Note that this is a typical use-case for monotonic allocation, as it uses a locally defined container which is populated, used and discarded regularly.
+</para>
+</section>
+<section>
+    <title>
+	Using Monotonic Storage
+    </title>
+    <para>
+	While monotonic allocators use monotonic storage, we can also use this storage directly and wherever we want efficient resource management.
+    </para>
+    <programlisting>
+int main()
+{
+    // define local storage of 4k on the stack.
+    // allocations will use the heap after the inline stack-based storage
+    // has been exhausted.
+    monotonic::storage&lt;4*1024&gt; storage;
+    {
+	int &amp;num = storage.create&lt;int&gt;();
+	std::string &amp;str = storage.create&lt;std::string&gt;();
+	char *bytes = storage.allocate_bytes&lt;3000&gt;();
+
+	// use num, str, bytes as needed
+
+	// call std::string's destructor directly, or use storage.destroy
+	storage.destroy(str);
+    }
+    return 0;
+}
+</programlisting>
+<para>
+    Of course, we could have just made <code>num</code>, <code>str</code> and <code>bytes</code> on the stack by declaring them as local variables and be done with it. There is no functional difference in this case, except that you are responsible for invoking object destructors. So how is this at all useful?
+ </para>
+ <para>We can use <code>monotonic::storage</code> as a form of "first-class scope" which can be created, manipulated, passed as as argument, returned as a value or reference, and destroyed as needed. In this sense, <code>monotonic::storage</code> is just like your very own C++ stack which you can share between objects and functions and even across process boundaries, independantly of the underlying machine-based stack.
+</para>
+<para>
+Also unlike the stack, storage will use the heap when its local inline stack-based buffer is exhuasted. This makes it ideal for using things like local buffers and containers that generally will be small enough to fit onto the stack, but with the fallback safety of transparently using the heap to service later requests for the cases where that inline buffer is not large enough.
 </para>
 </section>
 <section><title>Notes</title>
+<para>
 [1] See further discussion on efficiency at xxx
-[2] See performance results at yyy
+</para>
+<para>
+    [2] See the performance <ulink url="https://svn.boost.org/svn/boost/sandbox/monotonic/libs/monotonic/test/results">results</ulink>, comparing monotonic allocation with Boost.PoolAllocator, Boost.FastPoolAllocator, std::allocator and Intel's TBB allocation system.
+</para>
 </section>
 </section>
 
