@@ -5,7 +5,7 @@ using quickbook ;
 
 xml cloneable : cloneable.qbk ;
 
-path-constant images : . ;
+path-constant images : html/images ;
 
 boostbook standalone
     :
