@@ -7,6 +7,10 @@
  *
  */
 
+/** @todo Rethink the edge handling mechanism. The need to call a version of
+ * bind edge or edge(u,v,g)
+ */
+
 #ifndef FUNCTION_GRAPH_HPP_
 #define FUNCTION_GRAPH_HPP_
 
@@ -288,6 +292,8 @@ public:
     typedef typename Base::vertex_type vertex_descriptor;
     typedef typename Base::edge_type edge_descriptor;
     typedef typename Base::result_type result_type;
+    typedef std::size_t degree_size_type;
+    typedef std::size_t vertices_size_type;
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef adjacency_matrix_tag traversal_category;
@@ -337,6 +343,8 @@ public:
     typedef typename Base::vertex_type vertex_descriptor;
     typedef typename Base::edge_type edge_descriptor;
     typedef typename Base::result_type result_type;
+    typedef std::size_t degree_size_type;
+    typedef std::size_t vertices_size_type;
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef adjacency_matrix_tag traversal_category;
@@ -371,7 +379,10 @@ Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
 
 
 
-/** in_edges(v, g) is part of the bidirectional graph concept. */
+/** in_edges(v, g) and out_edges(u, g)
+ * @note This is a rough draft for testing purposes and readability. There will
+ * be improvements later.
+ */
 
 #define FUNC_GRAPH \
     function_graph<function<Result(Vertex, Vertex)>, Range>
@@ -398,6 +409,75 @@ in_edges(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
     return std::make_pair(in_edge_begin, in_edge_end);
 }
 
+template <typename Result, typename Vertex, typename Range>
+std::pair<
+    typename FUNC_GRAPH::out_edge_iterator,
+    typename FUNC_GRAPH::out_edge_iterator
+>
+out_edges(typename FUNC_GRAPH::vertex_descriptor const& u, FUNC_GRAPH const& g)
+{
+    typedef FUNC_GRAPH Graph;
+    typedef typename Graph::out_edge_iterator out_edge_iterator;
+    typedef typename Graph::vertex_iterator vertex_iterator;
+    typedef std::pair<out_edge_iterator, out_edge_iterator> iter_range;
+
+    vertex_iterator first_vertex_pair = begin(g.range_);
+    vertex_iterator vertex_end = end(g.range_);
+    while((first_vertex_pair != vertex_end) || !g.edge_(first_vertex_pair, u))
+    { ++first_vertex_pair; }
+    out_edge_iterator out_edge_begin(first_vertex_pair, u);
+    out_edge_iterator out_edge_end(vertex_end, u);
+
+    return std::make_pair(out_edge_begin, out_edge_end);
+}
+
+
+
+/** Degree functions */
+
+template<typename Result, typename Vertex, typename Range>
+typename FUNC_GRAPH::degree_size_type
+out_degree(typename FUNC_GRAPH::vertex_descriptor const& u, FUNC_GRAPH const& g)
+{
+    typedef FUNC_GRAPH Graph;
+    typedef typename Graph::vertex_iterator vertex_iterator;
+    typedef typename FUNC_GRAPH::degree_size_type degree_size_type;
+
+    degree_size_type out_edges();
+    vertex_iterator vertex_at(begin(g.range_));
+    vertex_iterator vertex_end(end(g.range_));
+    for(;vertex_at != vertex_end; ++vertex_at)
+    {
+        if(g.edge_(u, *vertex_at)) ++out_edges;
+    }
+
+    return out_edges;
+}
+
+template<typename Result, typename Vertex, typename Range>
+typename FUNC_GRAPH::degree_size_type
+in_degree(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
+{
+    typedef FUNC_GRAPH Graph;
+    typedef typename Graph::vertex_iterator vertex_iterator;
+    typedef typename FUNC_GRAPH::degree_size_type degree_size_type;
+
+    degree_size_type in_edges();
+    vertex_iterator vertex_at(begin(g.range_));
+    vertex_iterator vertex_end(end(g.range_));
+    for(;vertex_at != vertex_end; ++vertex_at)
+    {
+        if(g.edge_(*vertex_at, v)) ++in_edges;
+    }
+
+    return in_edges;
+}
+
+template<typename Result, typename Vertex, typename Range>
+typename FUNC_GRAPH::degree_size_type
+degree(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
+{ return in_degree(v, g) + out_degree(v, g); }
+
 
 
 /** vertices(g) is part of the vertex list concept. */
@@ -409,6 +489,18 @@ std::pair<
 >
 vertices(function_graph<function<Result(Vertex, Vertex)>, Range> const& g)
 { return std::make_pair(begin(g.range_), end(g.range_)); }
+
+
+
+/** num_vertices(g) is part of the vertex list concept.
+ * @note Uses boost::size() from the iterator_range concept.
+ */
+template<typename Result, typename Vertex, typename Range>
+typename FUNC_GRAPH::vertices_size_type
+num_vertices(FUNC_GRAPH const& g)
+{
+    return size(g.range_);
+}
 
 
 

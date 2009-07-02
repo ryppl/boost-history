@@ -29,8 +29,6 @@ int main()
     typedef std::pair<std::vector<unsigned int>::iterator,
                       std::vector<unsigned int>::iterator> iterator_range;
     typedef boost::function_graph<boolean_function, iterator_range> FuncGraph;
-    typedef boost::function_graph<boolean_function> FuncGraph2;
-    FuncGraph2 graph2(std::less<int>());
 
     ////////
     // Create vertices and function_graph
