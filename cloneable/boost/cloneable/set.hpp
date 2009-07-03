@@ -21,38 +21,52 @@ namespace boost
 		// TODO: move to boost/heterogenous/set.hpp, or boost/cloneable/containers/set.hpp
 		template <class Base, class Pred, class Alloc>
 		struct set
-			: detail::container_base<Base, Alloc>
+			: detail::associative_container_base<
+				ptr_set<
+					abstract_base<Base>
+					, Pred
+					, allocator
+					, typename detail::make_clone_allocator<Alloc>::type>
+				, Pred
+				, Base
+				, Alloc>
 		{
-			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef detail::associative_container_base<
+					ptr_set<
+						abstract_base<Base>
+						, Pred
+						, allocator
+						, typename detail::make_clone_allocator<Alloc>::type>
+					, Pred
+					, Base
+					, Alloc>
+				parent_type;
+
+			typedef typename parent_type::container_type container_type;
 			typedef typename parent_type::base_type base_type;
 			typedef typename parent_type::abstract_base_type abstract_base_type;
 			typedef typename parent_type::allocator_type allocator_type;
-			using parent_type::validate;
+			typedef typename parent_type::value_type value_type;
+			typedef typename parent_type::reference reference;
+			typedef typename parent_type::const_reference const_reference;
+			typedef typename parent_type::iterator iterator;
+			typedef typename parent_type::const_iterator const_iterator;
+
 			using parent_type::new_instance;
+			using parent_type::validate;
 
-			typedef Pred predicate_type;
-			typedef ptr_set<abstract_base_type, predicate_type, allocator, allocator_type> implementation;
-
-			typedef typename implementation::value_type value_type;
-			typedef typename implementation::reference reference;
-			typedef typename implementation::const_reference const_reference;
-			typedef typename implementation::iterator iterator;
-			typedef typename implementation::const_iterator const_iterator;
 			typedef set<Base, Pred, Alloc> this_type;
-
-		private:
-			implementation impl;
 
 		public:
 			set() 
-				: impl(predicate_type(), get_allocator())
 			{
 			}
 			set(allocator_type &a) 
-				: parent_type(a), impl(predicate_type(), get_allocator())
+				: parent_type(a)
 			{
 			}
 
+			/*
 			template <class II>
 			set(II F, II L)
 				: impl(F, L, get_allocator())
@@ -64,6 +78,7 @@ namespace boost
 				: parent_type(a), impl(F, L, get_allocator())
 			{
 			}
+			*/
 
 		public:
 			typedef std::pair<iterator, bool> insert_result;
@@ -83,7 +98,7 @@ namespace boost
 			template <class U>
 			emplace_result<U> emplace(instance<U> value)
 			{
-				insert_result result = impl.insert(value.to_abstract());
+				insert_result result = impl().insert(value.to_abstract());
 				if (!result.second)
 					value.release();
 				return emplace_result<U>(value, result);
@@ -120,33 +135,7 @@ namespace boost
 				}
 			}
 
-			size_t size() const
-			{
-				return impl.size();
-			}
-			bool empty() const
-			{
-				return impl.empty();
-			}
-
-			iterator begin()
-			{
-				return impl.begin();
-			}
-			iterator end()
-			{
-				return impl.end();
-			}
-			const_iterator begin() const
-			{
-				return impl.begin();
-			}
-			const_iterator end() const
-			{
-				return impl.end();
-			}
-
-			struct impl
+			struct detail
 			{
 				template <class U>
 				struct find
@@ -190,12 +179,12 @@ namespace boost
 					template <class A0>
 					static iterator given(this_type *cont, A0 a0)
 					{
-						return cont->impl.find(default_key(base_type(a0)));
+						return cont->impl().find(default_key(base_type(a0)));
 					}
 					template <class A0, class A1>
 					static iterator given(this_type *cont, A0 a0, A1 a1)
 					{
-						return cont->impl.find(default_key(base_type(a0, a1)));
+						return cont->impl().find(default_key(base_type(a0, a1)));
 					}
 				};
 			};
@@ -204,19 +193,19 @@ namespace boost
 			{
 				if (!value.exists())
 					return end();
-				iterator found = impl.find(*value.to_abstract());
-				if (found == impl.end())
+				iterator found = impl().find(*value.to_abstract());
+				if (found == impl().end())
 					return found;
 				std::type_info const &found_type = found->get_type();
 				if (found_type == typeid(U))
 					return found;
-				return impl.end();
+				return impl().end();
 			}
 
 			template <class U, class A0>
 			iterator find(A0 a0)
 			{
-				return impl::find<U>::given(this, a0);
+				return detail::find<U>::given(this, a0);
 			}
 
 		};

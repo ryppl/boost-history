@@ -9,10 +9,8 @@
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/foreach.hpp>
 
-#include <boost/cloneable/detail/container_base.hpp>
-#include <boost/cloneable/base.hpp>
-#include <boost/cloneable/instance.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
+#include <boost/cloneable/detail/sequence_container_base.hpp>
 
 namespace boost 
 {
@@ -38,16 +36,16 @@ namespace boost
 					, Base
 					, Alloc> 
 				parent_type;
-			typedef typename parent_type::base_type base_type;
-			typedef typename parent_type::abstract_base_type abstract_base_type;
-			typedef typename parent_type::allocator_type allocator_type;
+			using parent_type::base_type;
+			using parent_type::abstract_base_type;
+			using parent_type::allocator_type;
 			using parent_type::validate;
 			using parent_type::new_instance;
-			typedef typename parent_type::value_type value_type;
-			typedef typename parent_type::reference reference;
-			typedef typename parent_type::const_reference const_reference;
-			typedef typename parent_type::iterator iterator;
-			typedef typename parent_type::const_iterator const_iterator;
+			using parent_type::value_type;
+			using parent_type::reference;
+			using parent_type::const_reference;
+			using parent_type::iterator;
+			using parent_type::const_iterator;
 
 		public:
 			list()

@@ -335,7 +335,15 @@
 						Name="detail"
 						>
 						<File
+							RelativePath="..\..\..\boost\cloneable\detail\associative_container_base.hpp"
+							>
+						</File>
+						<File
 							RelativePath="..\..\..\boost\cloneable\detail\container_base.hpp"
+							>
+						</File>
+						<File
+							RelativePath="..\..\..\boost\cloneable\detail\sequence_container_base.hpp"
 							>
 						</File>
 					</Filter>

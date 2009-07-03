@@ -10,7 +10,7 @@
 #include <boost/foreach.hpp>
 
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
-#include <boost/cloneable/detail/container_base.hpp>
+#include <boost/cloneable/detail/associative_container_base.hpp>
 
 namespace boost 
 {
@@ -20,51 +20,66 @@ namespace boost
 		// TODO: move to boost/heterogenous/map
 		template <class Base, class Pred, class Alloc>
 		struct map
-			: detail::container_base<Base, Alloc>
+			: detail::associative_container_base<
+				ptr_map<
+					abstract_base<Base>
+					, abstract_base<Base>
+					, Pred
+					, allocator
+					, typename detail::make_clone_allocator<Alloc>::type>
+				, Pred
+				, Base
+				, Alloc>
 		{
-			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef detail::associative_container_base<
+					ptr_map<
+						abstract_base<Base>
+						, abstract_base<Base>
+						, Pred
+						, allocator
+						, typename detail::make_clone_allocator<Alloc>::type>
+					, Pred
+					, Base
+					, Alloc>
+				parent_type;
+			
+			typedef typename parent_type::container_type container_type;
 			typedef typename parent_type::base_type base_type;
 			typedef typename parent_type::abstract_base_type abstract_base_type;
 			typedef typename parent_type::allocator_type allocator_type;
-			using parent_type::validate;
+			typedef typename parent_type::value_type value_type;
+			typedef typename parent_type::reference reference;
+			typedef typename parent_type::const_reference const_reference;
+			typedef typename parent_type::iterator iterator;
+			typedef typename parent_type::const_iterator const_iterator;
+
 			using parent_type::new_instance;
+			using parent_type::validate;
 
-			typedef Pred predicate_type;
-			typedef ptr_map<abstract_base_type, abstract_base_type, Pred, allocator, allocator_type> implementation;
-
-			typedef typename implementation::value_type value_type;
-			typedef typename implementation::reference reference;
-			typedef typename implementation::const_reference const_reference;
-			typedef typename implementation::iterator iterator;
-			typedef typename implementation::const_iterator const_iterator;
-			typedef typename implementation::key_type key_type;
-			typedef typename implementation::mapped_type mapped_type;
+			typedef typename container_type::key_type key_type;
+			typedef typename container_type::mapped_type mapped_type;
 
 			typedef map<Base, Pred, Alloc> this_type;
 
-		private:
-			implementation impl;
-
 		public:
 			map() 
-				: impl(predicate_type(), get_allocator())
 			{
 			}
 			map(allocator_type &a) 
-				: parent_type(a), impl(predicate_type(), get_allocator())
+				: parent_type(a)
 			{
 			}
 
-			template <class II>
-			map(II F, II L)
-				: impl(F,L, get_allocator())
-			{
-			}
-			template <class II>
-			map(II F, II L, allocator_type &a)
-				: parent_type(a), impl(F,L, get_allocator())
-			{
-			}
+			//template <class II>
+			//map(II F, II L)
+			//	: impl(F,L, get_allocator())
+			//{
+			//}
+			//template <class II>
+			//map(II F, II L, allocator_type &a)
+			//	: parent_type(a), impl(F,L, get_allocator())
+			//{
+			//}
 
 		private:
 			typedef std::pair<iterator, bool> map_insert_result;
@@ -133,11 +148,11 @@ namespace boost
 			template <class A, class B>
 			map_insert_result insert(A a, B b)
 			{
-				return map_insert_result();// impl.insert(std::make_pair(a, b));
+				return map_insert_result();// impl().insert(std::make_pair(a, b));
 			}
 			void insert(value_type x)
 			{
-				impl.insert(x);
+				impl().insert(x);
 			}
 
 		public:
@@ -199,32 +214,6 @@ namespace boost
 				return fun;
 			}
 
-			size_t size() const
-			{
-				return impl.size();
-			}
-			bool empty() const
-			{
-				return impl.empty();
-			}
-
-			iterator begin()
-			{
-				return impl.begin();
-			}
-			iterator end()
-			{
-				return impl.end();
-			}
-			const_iterator begin() const
-			{
-				return impl.begin();
-			}
-			const_iterator end() const
-			{
-				return impl.end();
-			}
-
 			template <class K>
 			iterator find()
 			{
@@ -234,7 +223,7 @@ namespace boost
 					k.release();
 				}
 				BOOST_SCOPE_EXIT_END
-				return impl.find(k.to_abstract());
+				return impl().find(k.to_abstract());
 			}
 
 			template <class K, class A0>
@@ -246,7 +235,7 @@ namespace boost
 					k.release();
 				}
 				BOOST_SCOPE_EXIT_END
-				return impl.find(k.to_abstract());
+				return impl().find(k.to_abstract());
 			}
 
 			//reference operator[](key_type const &key)
