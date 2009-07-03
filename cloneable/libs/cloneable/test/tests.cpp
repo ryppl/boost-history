@@ -24,7 +24,7 @@
 #include <boost/cloneable/clone.hpp>
 #include <boost/cloneable/vector.hpp>
 #include <boost/cloneable/list.hpp>
-//#include <boost/cloneable/map.hpp>
+#include <boost/cloneable/map.hpp>
 #include <boost/cloneable/set.hpp>
 
 #include <boost/cloneable/adaptor.hpp>
@@ -459,22 +459,30 @@ namespace map_test
 
 }
 
+struct wtf_less
+{
+	template <class A, class B>
+	bool operator()(A const &a, B const &b) const
+	{
+		return a->number < b->number;
+	}
+};
+
 BOOST_AUTO_TEST_CASE(test_map)
 {
-	/*
 	using namespace map_test;
-	typedef cloneable::map<map_test::my_base> map_type;
+	typedef cloneable::map<map_test::my_base, wtf_less> map_type;
 	map_type map;
-	map .key<M0>(42).value<M1>("foo")
-		.key<M2>().value<M3>()
-		;
-	M0 *m0 = create<M0>(map.get_allocator(), 42);
-	map_type::iterator iter = map.find(m0);
+	map.key<M0>(42).value<M1>("foo");
+	map.key<M2>().value<M3>();
+
+	//M0 *m0 = create<M0>(map.get_allocator(), 42);
+	map_type::iterator iter = map.find<M0>(42);
+
 	BOOST_ASSERT(iter!= map.end());
 	M1 *m1 = dynamic_cast<M1 *>(iter->second);
 	BOOST_ASSERT(m1 != 0);
 	BOOST_ASSERT(m1->str == "foo");
-	*/
 }
 
 BOOST_AUTO_TEST_CASE(test_hash)
@@ -546,16 +554,11 @@ BOOST_AUTO_TEST_CASE(test_set)
 	using namespace set_test;
 	typedef cloneable::set<set_base> Set;
 	Set set;
-	const S0 *s0 = &*set.emplace<S0>(1).value;
+	const S0 *s0 = set.emplace<S0>(1).value.to_derived();
 	set.emplace<S1>(2);
 	set.emplace<S2>(3);
 	set.emplace<S2>(4);
-	/*
-	BOOST_FOREACH(Set::value_type const &val, set)
-	{
-		BOOST_ASSERT(val != 0);
-	}
-	*/
+
 	Set::const_iterator A = set.begin(), B = set.end();
 	for (; A != B; ++A)
 	{
@@ -565,11 +568,12 @@ BOOST_AUTO_TEST_CASE(test_set)
 
 	BOOST_ASSERT(set.size() == 4);
 	BOOST_ASSERT(set.find<S0>(1) != set.end());
+	BOOST_ASSERT(&*set.find<S0>(1) == s0);
 	BOOST_ASSERT(set.find<set_base>(2) != set.end());
+	BOOST_ASSERT(set.find<S1>(1) == set.end());
+	BOOST_ASSERT(set.find<set_base>(1) != set.end());
 
 	Set copy = set;
-
-//	BOOST_ASSERT(copy == set);
 
 	BOOST_ASSERT(copy.size() == 4);
 	BOOST_ASSERT(copy.find<S0>(1) != copy.end());

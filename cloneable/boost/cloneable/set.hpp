@@ -141,27 +141,31 @@ namespace boost
 				template <class U>
 				struct find
 				{
-					template <class A0>
-					static iterator given(this_type *cont, A0 a0)
+					template <class Instance>
+					static iterator search(this_type *cont, Instance &value)
 					{
-						instance<U,base_type,allocator_type> value(cont->get_allocator(), a0);
-						BOOST_SCOPE_EXIT((value))
+						BOOST_SCOPE_EXIT((&value))
 						{
 							value.release();
 						}
 						BOOST_SCOPE_EXIT_END
 						return cont->find_instance<U>(value);
 					}
+
+					static iterator given(this_type *cont)
+					{
+						return search(cont, instance<U,base_type,allocator_type>(cont->get_allocator()));
+					}
+
+					template <class A0>
+					static iterator given(this_type *cont, A0 a0)
+					{
+						return search(cont, instance<U,base_type,allocator_type>(cont->get_allocator(), a0));
+					}
 					template <class A0, class A1>
 					static iterator given(this_type *cont, A0 a0, A1 a1)
 					{
-						instance<U,base_type,allocator_type> value(cont->get_allocator(), a0, a1);
-						BOOST_SCOPE_EXIT((value))
-						{
-							value.release();
-						}
-						BOOST_SCOPE_EXIT_END
-						return cont->find_instance<U>(value);
+						return search(cont, instance<U,base_type,allocator_type>(cont->get_allocator(), a0, a1));
 					}
 				};
 				struct default_key : base<default_key, base_type>

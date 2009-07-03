@@ -522,7 +522,7 @@ namespace ptr_container_detail
         std::pair<iterator,bool> insert_impl( const key_type& key, mapped_type x ) // strong
         {
             this->enforce_null_policy( x, "Null pointer in ptr_map_adapter::insert()" );
-            auto_type ptr( x );                                         // nothrow
+            auto_type ptr( x, get_allocator() );                                         // nothrow
 
             std::pair<BOOST_DEDUCED_TYPENAME base_type::ptr_iterator,bool>
                  res = this->base().insert( std::make_pair( key, x ) ); // strong, commit      
