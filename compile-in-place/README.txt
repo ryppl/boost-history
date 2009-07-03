@@ -4,10 +4,104 @@ Note: below is a copy of a mail from 2008-04-29 which started this feature
 branch. This is intended as information for people that want to try this
 feature. Further information follows.
 
+FAQ:
+-----
+
+Q: Why not let the user add the sources to a library into their project
+instead?
+A: A single, separate file can remain constant between library releases even
+if the internal organisation of the library changes. It thus isolates the user
+from the implementation.
+
+Q: Why use #include to compile the library sourcecode instead of letting
+people add the library sourcecode to their project?
+A: In order to use Boost, you must at the very least adjust the path to the
+includes. Exploiting this mechanism allows compiling in the libraries without
+any further adjustments [barring necessary compiler switches].
+
+Q: Why include a .cpp file? You should only include .hpp files!
+A: A .hpp file is a header file that declares an interface. In addition, it
+can contain implementations inline. In any case, it can be included more than
+once, both in each translation unit and the overall program. Similarly, using
+.inl as extension is out, because the file doesn't contain inline code
+definitions. Instead, the file (indirectly) includes plain implementation
+code, which must only be compiled once per binary. If someone is puzzled by
+this, that is actually good, because that means that they will first think and
+do some research before making any conclusions. The idea is that it is better
+to be not understood than to be misunderstood.
+
+
+Comparison between different forms of linking:
+-----------------------------------------------
+
+There are basically four different ways to use a library in a program:
+1. Using inline (template) code.
+2. Using an in-place compiled library.
+3. Using a statically linked library.
+4. Using a shared library (.so/.dll).
+
+The order of these is BTW not incidental. Rather, the in-place compiled
+library can be placed between a completely inline library and a statically
+compiled library.
+
+
+The inline (template) code has following characteristics:
+- The code is compiled into the binary, so it is fixed at compile time.
+- No separate compilation is necessary.
+- All code is inline, which can lead to a bloated size of the resulting binary
+and increased compile time.
+- Using the library only requires the user to include header files and, in
+rare cases, to configure the compiler (compiler flags).
+
+
+The in-place compiled code has following characteristics:
+- The code is compiled into the binary, so it is fixed at compile time.
+- No separate compilation is necessary.
+- The whole library code is compiled into the program. This means that you
+need the time for compiling the code and that you then rely on your toolchain
+to remove unused parts or live with the bloat.
+- In order to use the library, the user needs to include header files, in rare
+cases to configure the compiler (compiler flags) and include a source file in
+exactly one translation unit.
+- Adjusting compiler flags is often only necessary for the library sources,
+which have to be repeated in the using project.
+
+
+The static library has following characteristics:
+- The code is compiled when the library is created, the used implementation is
+selected when the program is linked.
+- The library needs to be compiled separately.
+- The whole library code is linked into the program. You have the advantage in
+speed of having precompiled code. You still rely on the toolchain to remove
+parts you don't actually need.
+- In order to use the library, the user needs to include header files, in rare
+cases to configure the compiler (compiler flags) and add a library file to the
+linker input.
+- Adjusting compiler flags is often only necessary for the library sources,
+which is already done by the library maintainer.
+
+
+The shared library has following characteristics:
+- The code is compiled when the library is created, the used implementation is
+selected when the program is started.
+- The library needs to be compiled separately.
+- The program only contains references into the shared library, so the library
+doesn't add much to the program size. At runtime, the whole code is loaded,
+though it can be shared with other programs using the library.
+- In order to use the library, the user needs to include header files, in rare
+cases to configure the compiler (compiler flags) and add a library file to the
+linker input.
+- Adjusting compiler flags is often only necessary for the library sources,
+which is already done by the library maintainer.
+
+
+
 Notes:
 -------
 
 - Compiling often generates a large amount of warnings, but they can be ignored.
+
+- This is recorded in TRAC ticket #3103.
 
 
 TODO:
