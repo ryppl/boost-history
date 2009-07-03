@@ -56,11 +56,12 @@ namespace boost
 		};
 
 		/// root structure for the cloneable object system
-		template <class Base, class DefaultCtor>
+		template <class Base>
 		struct abstract_base : virtual Base
 		{
+			typedef Base element_type;
 			typedef Base base_type;
-			typedef abstract_base<Base,DefaultCtor> this_type;
+			typedef abstract_base<Base> this_type;
 
 			virtual const std::type_info &get_type() const = 0;
 
@@ -89,19 +90,6 @@ namespace boost
 				if (this_type *copy = make_copy(alloc))
 					return copy;
 				return copy_construct(alloc);
-			}
-
-			/// for use with types that use multiple inheritance - select which sub-object to clone.
-			/// can also be used when there is just one cloneable sub-object to avoid having to
-			/// dynamic cast the result.
-			template <class Ty>
-			Ty *clone_as(abstract_allocator &alloc) const
-			{
-				const base<Ty, Base, DefaultCtor> *ptr = dynamic_cast<const base<Ty, Base,DefaultCtor> *>(this);
-				if (ptr == 0)
-					throw std::bad_cast();
-				this_type *cloned = ptr->clone(alloc);
-				return dynamic_cast<Ty *>(cloned);
 			}
 
 			/// non-virtual method that allocates using default allocator
@@ -140,28 +128,28 @@ namespace boost
 				return clone(alloc);
 			}
 
-			/// make a copy of this instance using default allocator, 
-			/// selecting sub-object to clone
-			template <class Ty>
-			Ty *clone_as() const
-			{
-				make_clone_allocator<default_allocator>::type alloc;
-				return clone_as<Ty>(alloc);
-			}
-
 			/// overridable to-string function, for utility
 			virtual std::string to_string() const { return "cloneable"; }
 
 			/// return a hash value for the object
+			/*
 			size_t hash() const 
 			{ 
 				return base_type::hash_value();
 			}
+			*/
 
 		};
 
+
+		template <class Base>
+		bool operator<(const abstract_base<Base> &left, const abstract_base<Base> &right)
+		{
+			return static_cast<const Base &>(left) == static_cast<const Base &>(right);
+		}
 	} // namespace cloneable
 
+	/*
 	template <class B>
 	struct hash<cloneable::abstract_base<B> >
 	{
@@ -170,6 +158,7 @@ namespace boost
 			return base.hash();
 		}
 	};
+	*/
 
 } // namespace boost
 

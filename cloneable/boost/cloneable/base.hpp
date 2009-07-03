@@ -14,7 +14,7 @@ namespace boost
 {
 	namespace cloneable
 	{
-		namespace impl
+		namespace detail
 		{
 			template <class Derived, class HasDefaultCtor>
 			struct create_new
@@ -41,24 +41,65 @@ namespace boost
 
 		} // namespace impl
 
-		/// base for the given derived type, using the given base class
-		template <class Derived, class Base, class DefaultCtor>
-		struct base : abstract_base<Base, DefaultCtor>, virtual is_cloneable_tag, virtual DefaultCtor
+		template <class Derived, class Base>
+		struct is_derived 
+			: abstract_base<Base> 
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;
-			typedef DefaultCtor default_constructable_type;
+			typedef abstract_base<base_type> abstract_base_type;
+			typedef is_derived<derived_type, base_type> this_type;
+			using abstract_base_type::clone;
 
-			typedef abstract_base<base_type, default_constructable_type> abstract_base_type;
+			mutable Derived *self_ptr;		///< pointer to derived object in this
+
+			is_derived()
+			{
+				self_ptr = static_cast<derived_type *>(this); 
+			}
+
+			/// for use with types that use multiple inheritance - select which sub-object to clone.
+			/// can also be used when there is just one cloneable sub-object to avoid having to
+			/// dynamic cast the result.
+			template <class Ty>
+			Ty *clone_as(abstract_allocator &alloc) const
+			{
+				const is_derived<Ty,Base> *ptr = dynamic_cast<const is_derived<Ty,Base> *>(this);
+				if (ptr == 0)
+					throw std::bad_cast();
+				abstract_base_type *cloned = ptr->clone(alloc);
+				return dynamic_cast<Ty *>(cloned);
+			}
+
+			/// make a copy of this instance using default allocator, 
+			/// selecting sub-object to clone
+			template <class Ty>
+			Ty *clone_as() const
+			{
+				make_clone_allocator<default_allocator>::type alloc;
+				return clone_as<Ty>(alloc);
+			}
+		};
+
+		/// base for the given derived type, using the given base class and default construction tag
+		template <class Derived, class Base, class DefaultCtorTag>
+		struct base 
+			: is_derived<Derived, Base>
+			, virtual is_cloneable_tag
+			, virtual DefaultCtorTag
+		{
+			typedef Derived derived_type;
+			typedef Base base_type;
+			typedef DefaultCtorTag default_constructable_type;
+
 			typedef base<derived_type, base_type, default_constructable_type> this_type;
+			typedef is_derived<Derived,Base> is_derived_type;
 
 			static const size_t alignment;		///< required alignment for allocation
-			mutable derived_type *self_ptr;		///< pointer to derived object in this
 
 		public:
 			base() 
 			{ 
-				self_ptr = static_cast<Derived *>(this); 
 			}
 
 			const std::type_info &get_type() const
@@ -70,29 +111,31 @@ namespace boost
 			{
 				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
 				Derived *ptr = reinterpret_cast<Derived *>(bytes);
-				ptr->this_type::self_ptr = ptr;
+				ptr->is_derived_type::self_ptr = ptr;
 				return ptr;
 			}
 
 			void deallocate(abstract_allocator &alloc)
 			{
-				Derived *ptr = dynamic_cast<Derived *>(this);
+				Derived *ptr = is_derived_type::self_ptr;
 				alloc.deallocate_bytes(reinterpret_cast<abstract_allocator::pointer>(ptr), alignment);
 			}
 
 			virtual this_type *create_new(abstract_allocator &alloc) const 
 			{
-				return impl::create_new<Derived, DefaultCtor>::given(this, alloc, alignment);
+				return detail::create_new<Derived, DefaultCtorTag>::given(this, alloc, alignment);
 			}
 
 			virtual this_type *copy_construct(abstract_allocator &alloc) const 
 			{ 
 				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);
 				Derived *ptr = reinterpret_cast<Derived *>(bytes);
-				ptr->this_type::self_ptr = ptr;
-				new (ptr->this_type::self_ptr) Derived(static_cast<const Derived &>(*this));
+				ptr->is_derived_type::self_ptr = ptr;
+				new (ptr->is_derived_type::self_ptr) Derived(static_cast<const Derived &>(*this));
 				return ptr;
 			}
+
+
 		};
 
 		/// ensure correct alignment when allocating derived instances

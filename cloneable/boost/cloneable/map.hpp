@@ -133,7 +133,7 @@ namespace boost
 			template <class A, class B>
 			map_insert_result insert(A a, B b)
 			{
-				return impl.insert(a, b);
+				return map_insert_result();// impl.insert(std::make_pair(a, b));
 			}
 			void insert(value_type x)
 			{

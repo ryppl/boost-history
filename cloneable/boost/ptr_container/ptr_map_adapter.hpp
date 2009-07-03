@@ -425,7 +425,7 @@ namespace ptr_container_detail
                 if( this->find( first->first ) == this->end() )
                 {
                     const_reference p = *first.base();     // nothrow                    
-                    auto_type ptr( this->null_policy_allocate_clone( p.second ) ); 
+                    auto_type ptr( this->null_policy_allocate_clone( p.second ), get_allocator() ); 
                                                            // strong 
                     this->safe_insert( p.first, 
                                        boost::ptr_container::move( ptr ) );

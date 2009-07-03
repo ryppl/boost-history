@@ -9,10 +9,10 @@
 #include <boost/ptr_container/ptr_list.hpp>
 #include <boost/foreach.hpp>
 
-#include <boost/cloneable/detail/prefix.hpp>
 #include <boost/cloneable/detail/container_base.hpp>
 #include <boost/cloneable/base.hpp>
 #include <boost/cloneable/instance.hpp>
+#include <boost/cloneable/detail/prefix.hpp>
 
 namespace boost 
 {
@@ -192,6 +192,12 @@ namespace boost
 			}
 		};
 	
+		template <class Base, class Alloc>
+		bool operator==(const list<Base,Alloc> &left, const list<Base,Alloc> &right)
+		{
+			return left.size() == right.size() 
+				&& std::equal(left.begin(), left.end(), right.begin(), std::equal_to<abstract_base<Base> >());
+		}
 	} // namespace cloneable
 
 } // namespace boost

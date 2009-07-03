@@ -43,11 +43,11 @@ namespace boost
 				};
 
 				/// an instance of the given derived type U suitable for this container
-				template <class U>
+				template <class Derived>
 				struct instance 
-					: cloneable::instance<U, Base, Alloc>
+					: cloneable::instance<Derived, Base, Alloc, typename traits<Derived>::construction_tag>
 				{
-					typedef cloneable::instance<U, Base, Alloc> parent_type;
+					typedef cloneable::instance<Derived, Base, Alloc, typename traits<Derived>::construction_tag> parent_type;
 					instance(allocator_type &a) : parent_type(a) { }
 					template <class A0>
 					instance(allocator_type &a, A0 a0) : parent_type(a, a0) { }

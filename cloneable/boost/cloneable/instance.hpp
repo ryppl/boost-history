@@ -48,55 +48,24 @@ namespace boost
 			virtual void release() = 0;
 		};
 
-		/// a pointer store that can retrieve pointers from up and down 
-		/// the inheritance tree. stores the allocator that made it.
-		template <class Derived, class Base, class Alloc>
-		struct instance : instance_base<Base, Alloc>
+		template <class Abstract, class Derived, class Base, class Alloc>
+		struct instance_common : instance_base<Base,Alloc>
 		{
 			typedef instance_base<Base,Alloc> parent_type;
 			using parent_type::base_type;
 			using parent_type::allocator_type;
+			using parent_type::set_allocator;
 
+			typedef Abstract abstract_type;
 			typedef Derived derived_type;
-			typedef base<derived_type, base_type> cloneable_type;
-			typedef typename cloneable_type::abstract_base_type abstract_base_type;
+			typedef is_derived<derived_type, base_type> is_derived_type;
 
-		private:
-			cloneable_type *ptr;
+		protected:
+			derived_type *ptr;
 
 		public:
-			instance() : ptr(0), alloc(0) { }
-
-			template <class Other>
-			instance(const instance<Other,base_type,allocator_type> &other) 
-				: ptr(dynamic_cast<cloneable_type *>(other.to_base()))
-			{
-				if (other.has_allocator())
-					parent_type::set_allocator(other.get_allocator());
-			}
-			instance(allocator_type &al) : parent_type(&al), ptr(0)
-			{
-				allocate();
-				new (to_derived()) derived_type();
-			}
-			template <class A0>
-			instance(allocator_type &al, A0 a0) : parent_type(&al), ptr(0)
-			{
-				allocate();
-				new (to_derived()) derived_type(a0);
-			}
-			template <class A0, class A1>
-			instance(allocator_type &al, A0 a0, A1 a1) : parent_type(&al), ptr(0)
-			{
-				allocate();
-				new (to_derived()) derived_type(a0, a1);
-			}
-			template <class A0, class A1, class A2>
-			instance(allocator_type &al, A0 a0, A1 a1, A2 a2) : parent_type(&al), ptr(0)
-			{
-				allocate();
-				new (to_derived()) derived_type(a0, a1, a2);
-			}
+			instance_common(derived_type *p = 0) : ptr(p) { }
+			instance_common(allocator_type &a, derived_type *p = 0) : parent_type(&a), ptr(p) { }
 
 			void allocate()
 			{
@@ -105,7 +74,7 @@ namespace boost
 				if (exists())
 					release();
 				derived_type *derived = cloneable::allocate<derived_type>(get_allocator());
-				derived->cloneable_type::self_ptr = derived;
+				derived->is_derived_type::self_ptr = derived;
 				ptr = derived;
 			}
 			void release()
@@ -124,15 +93,12 @@ namespace boost
 			{
 				return ptr != 0;
 			}
-			abstract_base_type *to_abstract() const
-			{
-				return ptr;
-			}
+
 			base_type *to_base() const
 			{
 				return ptr;
 			}
-			cloneable_type *to_cloneable() const
+			abstract_type *to_abstract() const
 			{
 				return ptr;
 			}
@@ -140,8 +106,52 @@ namespace boost
 			{
 				if (!ptr)
 					return 0;
-				return ptr->cloneable_type::self_ptr;
+				return ptr;//->is_derived_type::self_ptr;
 			}
+		};
+
+		/// a pointer store that can retrieve pointers from up and down 
+		/// the inheritance tree. stores the allocator that made it.
+		template <class Derived, class Base, class Alloc, class Ctor>
+		struct instance : instance_common<base<Derived,Base,Ctor>, Derived, Base, Alloc>
+		{
+			typedef base<Derived,Base,Ctor> abstract_type;
+			typedef instance_common<abstract_type, Derived, Base, Alloc> parent_type;
+
+		public:
+			instance() { }
+
+			template <class Other, class Ctor2>
+			instance(const instance<Other,Base,Alloc,Ctor2> &other) 
+				: parent_type(dynamic_cast<derived_type *>(other.to_base()))
+			{
+				if (other.has_allocator())
+					parent_type::set_allocator(other.get_allocator());
+			}
+			instance(allocator_type &al) 
+				: parent_type(al
+					, detail::create_new<Derived, Ctor>::given(to_abstract(), get_allocator(), abstract_type::alignment))
+			{
+			}
+			template <class A0>
+			instance(allocator_type &al, A0 a0) : parent_type(al)
+			{
+				allocate();
+				new (to_derived()) derived_type(a0);
+			}
+			template <class A0, class A1>
+			instance(allocator_type &al, A0 a0, A1 a1) : parent_type(al)
+			{
+				allocate();
+				new (to_derived()) derived_type(a0, a1);
+			}
+			template <class A0, class A1, class A2>
+			instance(allocator_type &al, A0 a0, A1 a1, A2 a2) : parent_type(al)
+			{
+				allocate();
+				new (to_derived()) derived_type(a0, a1, a2);
+			}
+
 		};
 
 	} // namespace cloneable

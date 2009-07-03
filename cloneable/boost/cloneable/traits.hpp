@@ -19,30 +19,26 @@ namespace boost
 			template <class T, bool>
 			struct traits
 			{
-				/*
-				typedef T derived_type;
-				typedef T base_type;
-				typedef unknown_construction default_constructable_type;
-				typedef T abstract_base_type;
-				*/
-
 				BOOST_STATIC_CONSTANT(bool, is_cloneable = false);
 				BOOST_STATIC_CONSTANT(bool, has_default_ctor = false);	// this really should be ternary: yes, no or unknown
+				typedef void construction_tag_type;
 			};
 
 			template <class T>
 			struct traits<T, true>
 			{
-				/*
-				typedef typename T::derived_type derived_type;
-				typedef typename T::base_type base_type;
-				typedef typename T::default_constructable_type default_constructable_type;
-				typedef typename T::abstract_base_type abstract_base_type;
-				*/
-
 				BOOST_STATIC_CONSTANT(bool, is_cloneable = true);
 				typedef is_convertible<T *, default_construction *> has_default_ctor_type;
-				BOOST_STATIC_CONSTANT(bool, has_default_ctor = has_default_ctor_type::value);
+				typedef is_convertible<T *, no_default_construction *> has_no_default_ctor_type;
+				// T is default constructable only if it is convertibel to def_constr and 
+				// it is also not convertible to no_def_constr. This ensures that a type
+				// that inherits from a type that is not default constructible, is also not
+				// default constructible no matter what.
+				BOOST_STATIC_CONSTANT(bool, has_default_ctor = has_default_ctor_type::value || !has_no_default_ctor_type::value);
+				typedef typename mpl::if_<mpl::bool_<has_default_ctor>
+						, default_construction
+						, no_default_construction>
+					::type construction_tag;
 			};
 
 			template <class T>

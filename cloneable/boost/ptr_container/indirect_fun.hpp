@@ -33,6 +33,7 @@ namespace boost
 {
 
 
+		// CJS: why does this take one or two arguments?
     template
     < 
               class Fun
