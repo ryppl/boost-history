@@ -19,10 +19,12 @@ namespace boost
 			template <class T, bool>
 			struct traits
 			{
+				/*
 				typedef T derived_type;
 				typedef T base_type;
 				typedef unknown_construction default_constructable_type;
 				typedef T abstract_base_type;
+				*/
 
 				BOOST_STATIC_CONSTANT(bool, is_cloneable = false);
 				BOOST_STATIC_CONSTANT(bool, has_default_ctor = false);	// this really should be ternary: yes, no or unknown
@@ -31,14 +33,16 @@ namespace boost
 			template <class T>
 			struct traits<T, true>
 			{
+				/*
 				typedef typename T::derived_type derived_type;
 				typedef typename T::base_type base_type;
 				typedef typename T::default_constructable_type default_constructable_type;
 				typedef typename T::abstract_base_type abstract_base_type;
+				*/
 
 				BOOST_STATIC_CONSTANT(bool, is_cloneable = true);
-				typedef is_same<default_constructable_type, default_construction> same_type;
-				BOOST_STATIC_CONSTANT(bool, has_default_ctor = same_type::value);
+				typedef is_convertible<T *, default_construction *> has_default_ctor_type;
+				BOOST_STATIC_CONSTANT(bool, has_default_ctor = has_default_ctor_type::value);
 			};
 
 			template <class T>

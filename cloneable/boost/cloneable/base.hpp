@@ -43,7 +43,7 @@ namespace boost
 
 		/// base for the given derived type, using the given base class
 		template <class Derived, class Base, class DefaultCtor>
-		struct base : abstract_base<Base, DefaultCtor>, is_cloneable_tag
+		struct base : abstract_base<Base, DefaultCtor>, virtual is_cloneable_tag, virtual DefaultCtor
 		{
 			typedef Derived derived_type;
 			typedef Base base_type;

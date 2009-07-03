@@ -10,9 +10,8 @@
 #include <boost/foreach.hpp>
 
 #include <boost/cloneable/detail/prefix.hpp>
-#include <boost/cloneable/detail/make_clone_allocator.hpp>
+#include <boost/cloneable/detail/container_base.hpp>
 #include <boost/cloneable/base.hpp>
-#include <boost/cloneable/traits.hpp>
 #include <boost/cloneable/instance.hpp>
 
 namespace boost 
@@ -20,46 +19,38 @@ namespace boost
 	namespace cloneable
 	{
 		/// a list of heterogenous objects
+		// TODO: derive from sequence<ptr_list>
 		// TODO: move to boost/heterogenous/list
 		template <class Base, class Alloc>
 		struct list
+			: detail::container_base<Base, Alloc>
 		{
-			typedef Base base_type;
-			typedef abstract_base<Base> abstract_base_type;
-			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
+			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef typename parent_type::base_type base_type;
+			typedef typename parent_type::abstract_base_type abstract_base_type;
+			typedef typename parent_type::allocator_type allocator_type;
+			using parent_type::validate;
+			using parent_type::new_instance;
+
 			typedef ptr_list<abstract_base_type, allocator, allocator_type> implementation;
+
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference;
 			typedef typename implementation::const_reference const_reference;
 			typedef typename implementation::iterator iterator;
 			typedef typename implementation::const_iterator const_iterator;
 
-			// this provides better information from errors than otherwise
-			template <class T>
-			struct validate
-			{
-				// can only add cloneable things to a heterogenous container
-				BOOST_STATIC_ASSERT(is_cloneable<T>::value);
-
-				typedef is_same<typename traits<T>::abstract_base_type, abstract_base_type> same_type;
-
-				// you must ensure that base-types for objects that you add to a container
-				// is the same base used by the container
-				BOOST_STATIC_ASSERT(same_type::value);
-
-				typedef typename traits<T>::derived_type type;
-			};
-
 		private:
 			implementation impl;
 
 		public:
 			list()
+				: impl(get_allocator())
 			{
 			}
 
 			list(allocator_type &a) 
-				: impl(a)
+				: parent_type(a), impl(get_allocator())
 			{
 			}
 
@@ -149,6 +140,7 @@ namespace boost
 			template <class Other>
 			Other &front_as()
 			{
+				BOOST_STATIC_ASSERT(is_cloneable<Other>::value);
 				Other *ptr = dynamic_cast<Other *>(front());
 				if (ptr == 0)
 					throw std::bad_cast();
@@ -157,58 +149,46 @@ namespace boost
 
 			// TODO: use variadic arguments or BOOST_PP to pass ctor args
 			template <class U>
-			void emplace_back()
+			void push_back()
 			{
-				typedef typename validate<U>::type value;
-				impl.push_back(instance<value,base_type,allocator_type>(get_allocator()).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>().to_abstract());
 			}
 			template <class U, class A0>
-			void emplace_back(A0 a0)
+			void push_back(A0 a0)
 			{
-				typedef typename validate<U>::type value;
-				impl.push_back(instance<value,base_type,allocator_type>(get_allocator(), a0).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>(a0).to_abstract());
 			}
 			template <class U, class A0, class A1>
-			void emplace_back(A0 a0, A1 a1)
+			void push_back(A0 a0, A1 a1)
 			{
-				typedef validate<U>::type value;
-				impl.push_back(instance<value,base_type,allocator_type>(get_allocator(), a0,a1).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>(a0,a1).to_abstract());
 			}
 			template <class U, class A0, class A1, class A2>
-			void emplace_back(A0 a0, A1 a1, A2 a2)
+			void push_back(A0 a0, A1 a1, A2 a2)
 			{
-				typedef typename validate<U>::type value;
-				impl.push_back(instance<value,base_type,allocator_type>(get_allocator(), a0,a1,a2).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>(a0,a1,a2).to_abstract());
 			}
+
 
 			template <class U>
-			void emplace_front()
+			void push_front()
 			{
-				typedef typename validate<U>::type value;
-				impl.push_front(instance<value,base_type,allocator_type>(get_allocator()).to_abstract());
+				impl.push_front(new_instance<typename validate<U>::type>().to_abstract());
 			}
 			template <class U, class A0>
-			void emplace_front(A0 a0)
+			void push_front(A0 a0)
 			{
-				typedef typename validate<U>::type value;
-				impl.push_front(instance<value,base_type,allocator_type>(get_allocator(), a0).to_abstract());
+				impl.push_front(new_instance<typename validate<U>::type>(a0).to_abstract());
 			}
 			template <class U, class A0, class A1>
-			void emplace_front(A0 a0, A1 a1)
+			void push_front(A0 a0, A1 a1)
 			{
-				typedef typename validate<U>::type value;
-				impl.push_front(instance<value,base_type,allocator_type>(get_allocator(), a0,a1).to_abstract());
+				impl.push_front(new_instance<typename validate<U>::type>(a0,a1).to_abstract());
 			}
 			template <class U, class A0, class A1, class A2>
-			void emplace_front(A0 a0, A1 a1, A2 a2)
+			void push_front(A0 a0, A1 a1, A2 a2)
 			{
-				typedef typename validate<U>::type value;
-				impl.push_front(instance<value,base_type,allocator_type>(get_allocator(), a0,a1,a2).to_abstract());
-			}
-
-			typename allocator_type get_allocator()
-			{
-				return impl.get_allocator();
+				impl.push_front(new_instance<typename validate<U>::type>(a0,a1,a2).to_abstract());
 			}
 		};
 	

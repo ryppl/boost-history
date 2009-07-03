@@ -10,7 +10,7 @@
 #include <boost/foreach.hpp>
 
 #include <boost/cloneable/detail/make_clone_allocator.hpp>
-#include <boost/cloneable/instance.hpp>
+#include <boost/cloneable/detail/container_base.hpp>
 
 namespace boost 
 {
@@ -20,15 +20,17 @@ namespace boost
 		// TODO: move to boost/heterogenous/map
 		template <class Base, class Pred, class Alloc>
 		struct map
+			: detail::container_base<Base, Alloc>
 		{
-			typedef Base base_type;
-			typedef Pred predicate_type;
-			typedef abstract_base<base_type> abstract_base_type;
-			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
-			typedef instance_base<base_type, allocator_type> instance_base_type;
-			typedef ptr_map<abstract_base_type, abstract_base_type, Pred, allocator, allocator_type> implementation;
+			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef typename parent_type::base_type base_type;
+			typedef typename parent_type::abstract_base_type abstract_base_type;
+			typedef typename parent_type::allocator_type allocator_type;
+			using parent_type::validate;
+			using parent_type::new_instance;
 
-			//typedef std::map<abstract_base_type *, abstract_base_type *, Pred, allocator_type> implementation;
+			typedef Pred predicate_type;
+			typedef ptr_map<abstract_base_type, abstract_base_type, Pred, allocator, allocator_type> implementation;
 
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference;
@@ -37,24 +39,32 @@ namespace boost
 			typedef typename implementation::const_iterator const_iterator;
 			typedef typename implementation::key_type key_type;
 			typedef typename implementation::mapped_type mapped_type;
+
 			typedef map<Base, Pred, Alloc> this_type;
 
 		private:
 			implementation impl;
 
 		public:
-			map()
+			map() 
+				: impl(predicate_type(), get_allocator())
 			{
 			}
-			map(allocator_type a) 
-				: impl(a)
+			map(allocator_type &a) 
+				: parent_type(a), impl(predicate_type(), get_allocator())
 			{
 			}
 
-			/* purposefully elided
 			template <class II>
-			map(II F, II L, allocator_type a = allocator_type());
-			*/
+			map(II F, II L)
+				: impl(F,L, get_allocator())
+			{
+			}
+			template <class II>
+			map(II F, II L, allocator_type &a)
+				: parent_type(a), impl(F,L, get_allocator())
+			{
+			}
 
 		private:
 			typedef std::pair<iterator, bool> map_insert_result;
@@ -62,9 +72,9 @@ namespace boost
 			template <class K, class V>
 			struct insert_result
 			{
-				//TODO: typedef const_instance<K,base_type,allocator_type> key_type;
-				typedef instance<K,base_type,allocator_type> key_type;
-				typedef instance<V,base_type,allocator_type> value_type;
+				//TODO: typedef const_instance<K> key_type;
+				typedef instance<K> key_type;
+				typedef instance<V> value_type;
 
 				key_type key;
 				value_type value;
@@ -79,80 +89,45 @@ namespace boost
 			template <class K>
 			struct value_adder
 			{
-				typedef instance<K,base_type,allocator_type> key_type;
+			private:
+				typedef instance<K> key_type;
 				this_type *parent;
 				key_type key;
 
+			public:
 				value_adder(this_type &P, const key_type &K)
 					: parent(&P), key(K) { }
 
 				template <class V>
 				insert_result<K,V> value()
 				{
-					instance<V,base_type,allocator_type> val(parent->get_allocator());
-					map_insert_result result = parent->insert(key.to_abstract(), val.to_abstract());
-					if (!result.second)
-					{
-						key.release();
-						val.release();
-					}
-					return insert_result<K,V>(key, val, result);
+					return insert(parent->new_instance<V>());
 				}
 
 				template <class V, class A0>
 				insert_result<K,V> value(A0 a0)
 				{
-					instance<V,base_type,allocator_type> val(parent->get_allocator(), a0);
-					map_insert_result result = parent->insert(key.to_abstract(), val.to_abstract());
-					if (!result.second)
-					{
-						key.release();
-						val.release();
-					}
-					return insert_result<K,V>(key, val, result);
+					return insert(parent->new_instance<V>(a0));
 				}
 				template <class V, class A0, class A1>
 				insert_result<K,V> value(A0 a0, A1 a1)
 				{
-					instance<V,base_type,allocator_type> val(parent->get_allocator(), a0, a1);
-					map_insert_result result = parent->insert(key.to_abstract(), val.to_abstract());
+					return insert(parent->new_instance<V>(a0,a1));
+				}
+
+			private:
+				template <class V>
+				insert_result<K,V> insert(instance<V> &value)
+				{
+					map_insert_result result = parent->insert(key.to_abstract(), value.to_abstract());
 					if (!result.second)
 					{
 						key.release();
-						val.release();
+						value.release();
 					}
-					return insert_result<K,V>(key, val, result);
+					return insert_result<K,V>(key, value, result);
 				}
 			};
-
-		public:
-			template <class K>
-			value_adder<K> key()
-			{
-				instance<K,base_type,allocator_type> key_instance(get_allocator());
-				return value_adder<K>(*this, key_instance);
-			}
-
-			// TODO: use variadic arguments or BOOST_PP to pass ctor args
-			template <class K, class A0>
-			value_adder<K> key(A0 a0)
-			{
-				instance<K,base_type,allocator_type> key_instance(get_allocator(), a0);
-				return value_adder<K>(*this, key_instance);
-			}
-			template <class K, class A0, class A1>
-			value_adder<K> key(A0 a0, A1 a1)
-			{
-				instance<K,base_type,allocator_type> key_instance(get_allocator(), a0, a1);
-				return value_adder<K>(*this, key_instance);
-			}
-			template <class K, class A0, class A1, class A2>
-			value_adder<K> key(A0 a0, A1 a1, A2 a2)
-			{
-				throw;
-				//base_type *key_instance = detail::construct<U,base_type>(get_allocator(), a0, a1, a2).to_base();
-				//return value_adder(*this, *key_instance);
-			}
 
 			// TODO: make this private
 			template <class A, class B>
@@ -163,6 +138,30 @@ namespace boost
 			void insert(value_type x)
 			{
 				impl.insert(x);
+			}
+
+		public:
+			template <class K>
+			value_adder<K> key()
+			{
+				return value_adder<K>(*this, new_instance<K>());
+			}
+
+			// TODO: use variadic arguments or BOOST_PP to pass ctor args
+			template <class K, class A0>
+			value_adder<K> key(A0 a0)
+			{
+				return value_adder<K>(*this, new_instance<K>(a0));
+			}
+			template <class K, class A0, class A1>
+			value_adder<K> key(A0 a0, A1 a1)
+			{
+				return value_adder<K>(*this, new_instance<K>(a0,a1));
+			}
+			template <class K, class A0, class A1, class A2>
+			value_adder<K> key(A0 a0, A1 a1, A2 a2)
+			{
+				return value_adder<K>(*this, new_instance<K>(a0,a1,a2));
 			}
 
 			template <class Fun>
@@ -229,7 +228,7 @@ namespace boost
 			template <class K>
 			iterator find()
 			{
-				instance<K,base_type,allocator_type> k(get_allocator());
+				instance<K> k(get_allocator());
 				BOOST_SCOPE_EXIT((k))
 				{
 					k.release();
@@ -241,7 +240,7 @@ namespace boost
 			template <class K, class A0>
 			iterator find(A0 a0)
 			{
-				instance<K,base_type,allocator_type> k(get_allocator(), a0);
+				instance<K> k(get_allocator(), a0);
 				BOOST_SCOPE_EXIT((k))
 				{
 					k.release();
@@ -259,10 +258,6 @@ namespace boost
 			//	return impl[n];
 			//}
 
-			typename allocator_type get_allocator()
-			{
-				return impl.get_allocator();
-			}
 		};
 	
 	} // namespace heterogenous

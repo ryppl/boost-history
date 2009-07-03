@@ -257,6 +257,14 @@
 						RelativePath="..\..\..\boost\cloneable\vector.hpp"
 						>
 					</File>
+					<Filter
+						Name="detail"
+						>
+						<File
+							RelativePath="..\..\..\boost\cloneable\detail\container_base.hpp"
+							>
+						</File>
+					</Filter>
 				</Filter>
 			</Filter>
 			<Filter

@@ -10,9 +10,8 @@
 #include <boost/foreach.hpp>
 
 #include <boost/cloneable/detail/prefix.hpp>
-#include <boost/cloneable/detail/make_clone_allocator.hpp>
+#include <boost/cloneable/detail/container_base.hpp>
 #include <boost/cloneable/base.hpp>
-#include <boost/cloneable/instance.hpp>
 
 namespace boost 
 {
@@ -22,11 +21,17 @@ namespace boost
 		// TODO: move to boost/heterogenous/vector
 		template <class Base, class Alloc>
 		struct vector
+			: detail::container_base<Base, Alloc>
 		{
-			typedef Base base_type;
-			typedef abstract_base<Base> abstract_base_type;
-			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
+			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef typename parent_type::base_type base_type;
+			typedef typename parent_type::abstract_base_type abstract_base_type;
+			typedef typename parent_type::allocator_type allocator_type;
+			using parent_type::validate;
+			using parent_type::new_instance;
+
 			typedef ptr_vector<abstract_base_type, allocator, allocator_type> implementation;
+
 			typedef typename implementation::value_type value_type;
 			typedef typename implementation::reference reference;
 			typedef typename implementation::const_reference const_reference;
@@ -37,19 +42,23 @@ namespace boost
 			implementation impl;
 
 		public:
-			vector()
+			vector() : impl(get_allocator())
 			{
 			}
 
 			vector(allocator_type &a) 
-				: impl(a)
+				: parent_type(a), impl(a)
 			{
 			}
 
-			//purposefully elided
-			//template <class II>
-			//vector(II F, II L, allocator_type a = allocator_type());
-			//vector(size_t reserved);
+			/*
+			template <class II>
+			vector(II F, II L, allocator_type a = allocator_type());
+			vector(size_t reserved)
+				: impl(alloc)
+			{
+			}
+			*/
 
 			template <class Ty, class Fun>
 			Fun for_each(Fun fun)
@@ -166,7 +175,7 @@ namespace boost
 				return dynamic_cast<Other *>(&at(n));
 			}
 			template <class Other>
-			const Other *ptr(size_t n) const
+			const Other *pointer(size_t n) const
 			{
 				return dynamic_cast<const Other *>(&at(n));
 			}
@@ -175,29 +184,24 @@ namespace boost
 			template <class U>
 			void emplace_back()
 			{
-				impl.push_back(instance<U,base_type,allocator_type>(get_allocator()).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>().to_abstract());
 			}
 			template <class U, class A0>
 			void emplace_back(A0 a0)
 			{
-				impl.push_back(instance<U,base_type,allocator_type>(get_allocator(), a0).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>(a0).to_abstract());
 			}
 			template <class U, class A0, class A1>
 			void emplace_back(A0 a0, A1 a1)
 			{
-				impl.push_back(instance<U,base_type,allocator_type>(get_allocator(), a0,a1).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>(a0,a1).to_abstract());
 			}
 			template <class U, class A0, class A1, class A2>
 			void emplace_back(A0 a0, A1 a1, A2 a2)
 			{
-				impl.push_back(instance<U,base_type,allocator_type>(get_allocator(), a0,a1,a2).to_abstract());
+				impl.push_back(new_instance<typename validate<U>::type>(a0,a1,a2).to_abstract());
 			}
 
-			// TODO: this should return a reference
-			typename allocator_type get_allocator()
-			{
-				return impl.get_allocator();
-			}
 		};
 	
 	} // namespace cloneable

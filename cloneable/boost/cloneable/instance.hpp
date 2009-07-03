@@ -77,6 +77,7 @@ namespace boost
 			instance(allocator_type &al) : parent_type(&al), ptr(0)
 			{
 				allocate();
+				new (to_derived()) derived_type();
 			}
 			template <class A0>
 			instance(allocator_type &al, A0 a0) : parent_type(&al), ptr(0)

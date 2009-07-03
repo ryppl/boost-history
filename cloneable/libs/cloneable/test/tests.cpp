@@ -412,10 +412,10 @@ BOOST_AUTO_TEST_CASE(test_list)
 {
 	typedef cloneable::list<my_base> list;
 	list l0;
-	l0.emplace_back<T0>(42);						
-	l0.emplace_back<T1>("foo");
-	l0.emplace_back<T2>(3.14f, -123, "spam");
-	l0.emplace_back<cloneable_external_type>("external");
+	l0.push_back<T0>(42);						
+	l0.push_back<T1>("foo");
+	l0.push_back<T2>(3.14f, -123, "spam");
+	l0.push_back<cloneable_external_type>("external");
 	list l1 = l0;
 	list::iterator iter = l1.begin();
 	BOOST_ASSERT(typeid(*iter++) == typeid(T0));
@@ -473,6 +473,9 @@ BOOST_AUTO_TEST_CASE(test_map)
 	using namespace map_test;
 	typedef cloneable::map<map_test::my_base, wtf_less> map_type;
 	map_type map;
+	map.key<M2>().value<M3>();
+	map_type::iterator a = map.find<M2>();
+
 	map.key<M0>(42).value<M1>("foo");
 	map.key<M2>().value<M3>();
 

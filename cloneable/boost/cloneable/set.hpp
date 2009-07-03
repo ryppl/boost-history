@@ -9,10 +9,9 @@
 #include <boost/ptr_container/ptr_set.hpp>
 #include <boost/foreach.hpp>
 
-#include <boost/cloneable/detail/make_clone_allocator.hpp>
-#include <boost/cloneable/allocator.hpp>
+#include <boost/cloneable/detail/prefix.hpp>
+#include <boost/cloneable/detail/container_base.hpp>
 #include <boost/cloneable/adaptor.hpp>
-#include <boost/cloneable/instance.hpp>
 
 namespace boost 
 {
@@ -22,12 +21,16 @@ namespace boost
 		// TODO: move to boost/heterogenous/set.hpp, or boost/cloneable/containers/set.hpp
 		template <class Base, class Pred, class Alloc>
 		struct set
+			: detail::container_base<Base, Alloc>
 		{
-			typedef Base base_type;
-			typedef Pred predicate_type;
-			typedef abstract_base<Base> abstract_base_type;
-			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
+			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef typename parent_type::base_type base_type;
+			typedef typename parent_type::abstract_base_type abstract_base_type;
+			typedef typename parent_type::allocator_type allocator_type;
+			using parent_type::validate;
+			using parent_type::new_instance;
 
+			typedef Pred predicate_type;
 			typedef ptr_set<abstract_base_type, predicate_type, allocator, allocator_type> implementation;
 
 			typedef typename implementation::value_type value_type;
@@ -37,23 +40,30 @@ namespace boost
 			typedef typename implementation::const_iterator const_iterator;
 			typedef set<Base, Pred, Alloc> this_type;
 
-		//private:
+		private:
 			implementation impl;
 
 		public:
-			set()
+			set() 
+				: impl(predicate_type(), get_allocator())
 			{
 			}
-			set(allocator_type a) 
-				: impl(a)
+			set(allocator_type &a) 
+				: parent_type(a), impl(predicate_type(), get_allocator())
 			{
 			}
 
-			/* purposefully elided
 			template <class II>
-			set(II F, II L, allocator_type a = allocator_type());
-			*/
+			set(II F, II L)
+				: impl(F, L, get_allocator())
+			{
+			}
 
+			template <class II>
+			set(II F, II L, allocator_type &a)
+				: parent_type(a), impl(F, L, get_allocator())
+			{
+			}
 
 		public:
 			typedef std::pair<iterator, bool> insert_result;
@@ -61,7 +71,7 @@ namespace boost
 			template <class U>
 			struct emplace_result
 			{
-				typedef instance<U, base_type,allocator_type> instance_type;
+				typedef instance<U> instance_type;
 				instance_type value;
 				bool inserted;
 				iterator where;
@@ -71,7 +81,7 @@ namespace boost
 			};
 
 			template <class U>
-			emplace_result<U> emplace(instance<U,base_type,allocator_type> value)
+			emplace_result<U> emplace(instance<U> value)
 			{
 				insert_result result = impl.insert(value.to_abstract());
 				if (!result.second)
@@ -82,23 +92,23 @@ namespace boost
 			template <class U>
 			emplace_result<U> emplace()
 			{
-				return emplace(instance<U, base_type,allocator_type>(get_allocator()));
+				return emplace(new_instance<U>());
 			}
 
 			template <class U, class A0>
 			emplace_result<U> emplace(A0 a0)
 			{
-				return emplace(instance<U, base_type,allocator_type>(get_allocator(), a0));
+				return emplace(new_instance<U>(a0));
 			}
 			template <class U, class A0, class A1>
 			emplace_result<U> emplace(A0 a0, A1 a1)
 			{
-				return emplace(instance<U, base_type,allocator_type>(get_allocator(), a0, a1));
+				return emplace(new_instance<U>(a0, a1));
 			}
 			template <class U, class A0, class A1, class A2>
 			emplace_result<U> emplace(A0 a0, A1 a1, A2 a2)
 			{
-				return emplace(instance<U, base_type,allocator_type>(get_allocator(), a0, a1, a2));
+				return emplace(new_instance<U>(a0, a1, a2));
 			}
 
 			template <class Fun>
@@ -154,18 +164,18 @@ namespace boost
 
 					static iterator given(this_type *cont)
 					{
-						return search(cont, instance<U,base_type,allocator_type>(cont->get_allocator()));
+						return search(cont, cont->new_instance<U>());
 					}
 
 					template <class A0>
 					static iterator given(this_type *cont, A0 a0)
 					{
-						return search(cont, instance<U,base_type,allocator_type>(cont->get_allocator(), a0));
+						return search(cont, cont->new_instance<U>(a0));
 					}
 					template <class A0, class A1>
 					static iterator given(this_type *cont, A0 a0, A1 a1)
 					{
-						return search(cont, instance<U,base_type,allocator_type>(cont->get_allocator(), a0, a1));
+						return search(cont, cont->new_instance<U>(a0, a1));
 					}
 				};
 				struct default_key : base<default_key, base_type>
@@ -190,7 +200,7 @@ namespace boost
 				};
 			};
 			template <class U>
-			iterator find_instance(instance<U,base_type,allocator_type> value)
+			iterator find_instance(instance<U> value)
 			{
 				if (!value.exists())
 					return end();
@@ -209,10 +219,6 @@ namespace boost
 				return impl::find<U>::given(this, a0);
 			}
 
-			allocator_type get_allocator()
-			{
-				return impl.get_allocator();
-			}
 		};
 	
 	} // namespace heterogenous
