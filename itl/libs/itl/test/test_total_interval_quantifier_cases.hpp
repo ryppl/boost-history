@@ -5,7 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef __itl_test_total_interval_quantifier_cases_hpp_JOFA_090701__
+#define __itl_test_total_interval_quantifier_cases_hpp_JOFA_090701__
 
 //------------------------------------------------------------------------------
 // total_absorber
@@ -58,4 +59,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 //            absorber      enricher
 // partial    x - x == 0    x - x =p= 0   partiality of subtraction   
 // total    (-x)+ x == 0  (-x)+ x =p= 0   totality   of subtraction
+
+#endif // __itl_test_total_interval_quantifier_cases_hpp_JOFA_090701__
 

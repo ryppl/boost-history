@@ -5,7 +5,9 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef __itl_test_interval_map_cases_hpp_JOFA_090701__
+#define __itl_test_interval_map_cases_hpp_JOFA_090701__
+
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_interval_map_fundamentals_4_ordered_types, T, ordered_types)
 {         interval_map_fundamentals_4_ordered_types<INTERVAL_MAP, T, int>();}
@@ -60,4 +62,6 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_interval_map_set_4_bicremental_types, T, bicremental_types)
 {         interval_map_set_4_bicremental_types<INTERVAL_MAP, T, int>();}
+
+#endif // __itl_test_interval_map_cases_hpp_JOFA_090701__
 

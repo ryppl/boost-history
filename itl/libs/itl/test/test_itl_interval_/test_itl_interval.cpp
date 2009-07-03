@@ -23,8 +23,59 @@ using namespace unit_test;
 using namespace boost::itl;
 
 
+#include "../test_itl_interval.hpp"
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_ctor_4_ordered_types, T, ordered_types)
+{            interval_ctor_4_ordered_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_ctor_4_bicremental_types, T, bicremental_types)
+{            interval_ctor_4_bicremental_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_ctor_4_integral_types, T, integral_types)
+{            interval_ctor_4_integral_types<T>(); }
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_ctor_specific)
+{            interval_ctor_specific(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_equal_4_integral_types, T, integral_types)
+{            interval_equal_4_integral_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_less_4_integral_types, T, integral_types)
+{            interval_less_4_integral_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_equal_4_bicremental_continuous_types, T, bicremental_continuous_types)
+{            interval_equal_4_bicremental_continuous_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_touches_4_bicremental_types, T, bicremental_types)
+{            interval_touches_4_bicremental_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_touches_4_integral_types, T, integral_types)
+{            interval_touches_4_integral_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_inplace_intersect_4_bicremental_types, T, bicremental_types)
+{            interval_inplace_intersect_4_bicremental_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_infix_intersect_4_bicremental_types, T, bicremental_types)
+{            interval_infix_intersect_4_bicremental_types<T>(); }
+
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(fastest_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
+{            interval_subtract_4_bicremental_types<T>(); }
+
+/*
 // Most general, largest set of types
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_ordered_types, T, ordered_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_ctor_4_ordered_types, T, ordered_types)
 {
     // An empty interval is defined as the closed interval [1,0]
     BOOST_CHECK_EQUAL(interval<T>().empty(), true);
@@ -39,7 +90,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_ordered_types, T, ordered
 
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_bicremental_types, T, bicremental_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_ctor_4_bicremental_types, T, bicremental_types)
 {
     BOOST_CHECK_EQUAL( T(), pred(succ(T())));
     BOOST_CHECK_EQUAL( itl::neutron<T>::value(), pred(succ(itl::neutron<T>::value()))       );
@@ -111,7 +162,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_bicremental_types, T, bic
     BOOST_CHECK_EQUAL( interval<T>::open(v2, v4).is_right(open_bounded),       true );    
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_integral_types, T, integral_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_ctor_4_integral_types, T, integral_types)
 {
     BOOST_CHECK_EQUAL(interval<T>().first(),  itl::unon<T>::value());
     BOOST_CHECK_EQUAL(interval<T>().last(),   itl::neutron<T>::value());
@@ -120,7 +171,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_4_integral_types, T, integr
     BOOST_CHECK_EQUAL(interval<T>(0,0).length(), itl::unon<typename interval<T>::difference_type>::value());
 }
 
-BOOST_AUTO_TEST_CASE(test_itl_interval_ctor_specific)
+BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_ctor_specific)
 {
     BOOST_CHECK_EQUAL(interval<double>().length(), 0.0);
     BOOST_CHECK_EQUAL(interval<double>(5.0,5.0).cardinality(), 1);
@@ -129,7 +180,7 @@ BOOST_AUTO_TEST_CASE(test_itl_interval_ctor_specific)
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_integral_types, T, integral_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_equal_4_integral_types, T, integral_types)
 {
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -161,7 +212,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_integral_types, T, integ
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_less_4_integral_types, T, integral_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_less_4_integral_types, T, integral_types)
 {
     T v2 = make<T>(2);
     T v3 = make<T>(3);
@@ -204,7 +255,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_less_4_integral_types, T, integr
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_bicremental_continuous_types, T, bicremental_continuous_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_equal_4_bicremental_continuous_types, T, bicremental_continuous_types)
 {
     T v3 = make<T>(3);
     T v7 = make<T>(7);
@@ -238,7 +289,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_equal_4_bicremental_continuous_t
     BOOST_CHECK_EQUAL( C3_7D,   C3_7D  );    
 } 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_touches_4_bicremental_types, T, bicremental_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_touches_4_bicremental_types, T, bicremental_types)
 {
     T v3 = make<T>(3);
     T v7 = make<T>(7);
@@ -256,7 +307,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_touches_4_bicremental_types, T, 
     BOOST_CHECK_EQUAL( I3_7I.touches(I7_9I), false );    
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_touches_4_integral_types, T, integral_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_touches_4_integral_types, T, integral_types)
 {
     T v3 = make<T>(3);
     T v6 = make<T>(6);
@@ -273,7 +324,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_touches_4_integral_types, T, int
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_inplace_intersect_4_bicremental_types, T, bicremental_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_inplace_intersect_4_bicremental_types, T, bicremental_types)
 {
     T v0 = make<T>(0);
     T v3 = make<T>(3);
@@ -319,7 +370,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_inplace_intersect_4_bicremental_
     BOOST_CHECK_EQUAL( section.empty(), true );
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_infix_intersect_4_bicremental_types, T, bicremental_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_infix_intersect_4_bicremental_types, T, bicremental_types)
 {
     T v0 = make<T>(0);
     T v3 = make<T>(3);
@@ -365,7 +416,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_infix_intersect_4_bicremental_ty
     BOOST_CHECK_EQUAL( section.empty(), true );
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T, bicremental_types)
 {
     T v0 = make<T>(0);
     T v2 = make<T>(2);
@@ -408,3 +459,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(test_itl_interval_subtract_4_bicremental_types, T,
     diff_2.left_subtract(I0_3D);
     BOOST_CHECK_EQUAL( diff_2, I4_7D );
 }
+*/
+
