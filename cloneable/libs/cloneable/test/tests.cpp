@@ -550,14 +550,30 @@ BOOST_AUTO_TEST_CASE(test_set)
 	set.emplace<S1>(2);
 	set.emplace<S2>(3);
 	set.emplace<S2>(4);
+	/*
+	BOOST_FOREACH(Set::value_type const &val, set)
+	{
+		BOOST_ASSERT(val != 0);
+	}
+	*/
+	Set::const_iterator A = set.begin(), B = set.end();
+	for (; A != B; ++A)
+	{
+		const set_base *base = &*A;
+		BOOST_ASSERT(base);
+	}
+
+	BOOST_ASSERT(set.size() == 4);
+	BOOST_ASSERT(set.find<S0>(1) != set.end());
+	BOOST_ASSERT(set.find<set_base>(2) != set.end());
 
 	Set copy = set;
 
 //	BOOST_ASSERT(copy == set);
 
-	BOOST_ASSERT(set.size() == 4);
-	BOOST_ASSERT(set.find<S0>(1) != set.end());
-	BOOST_ASSERT(set.find<set_base>(2) != set.end());
+	BOOST_ASSERT(copy.size() == 4);
+	BOOST_ASSERT(copy.find<S0>(1) != copy.end());
+	BOOST_ASSERT(copy.find<set_base>(2) != copy.end());
 
 	Set::iterator found;
 	found = set.find<set_base>(1);

@@ -61,6 +61,11 @@ namespace boost
 				self_ptr = static_cast<Derived *>(this); 
 			}
 
+			const std::type_info &get_type() const
+			{
+				return typeid(derived_type);
+			}
+
 			virtual this_type *allocate(abstract_allocator &alloc) const 
 			{
 				abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(derived_type), alignment);

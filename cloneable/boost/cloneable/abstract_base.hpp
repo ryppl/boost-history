@@ -7,6 +7,7 @@
 #define BOOST_CLONEABLE_COMMON_BASE_HPP
 
 #include <string>
+#include <typeinfo>
 #include <boost/functional/hash_fwd.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
 #include <boost/cloneable/abstract_allocator.hpp>
@@ -60,6 +61,8 @@ namespace boost
 		{
 			typedef Base base_type;
 			typedef abstract_base<Base,DefaultCtor> this_type;
+
+			virtual const std::type_info &get_type() const = 0;
 
 			/// make storage for a new instance, but do not invoke any constructor
 			virtual this_type *allocate(abstract_allocator &) const = 0;

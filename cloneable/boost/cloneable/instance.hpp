@@ -19,8 +19,8 @@ namespace boost
 		template <class U, class B, class Alloc>
 		struct instance
 		{
-			typedef U derived_type;
 			typedef B base_type;
+			typedef U derived_type;
 			typedef Alloc allocator_type;
 			typedef base<derived_type, base_type> cloneable_type;
 			typedef typename cloneable_type::abstract_base_type abstract_base_type;
@@ -52,14 +52,25 @@ namespace boost
 			instance(allocator_type &al, A0 a0, A1 a1, A2 a2) : ptr(0), alloc(&al)
 			{
 				allocate();
-				new (to_derived()) U(a0, a1);
+				new (to_derived()) U(a0, a1, a2);
+			}
+
+			operator derived_type *()
+			{
+				return to_derived();
+			}
+			operator const derived_type *() const
+			{
+				return to_derived();
 			}
 
 			void allocate()
 			{
 				if (!alloc)
 					return;
-				ptr = cloneable::allocate<U>(*alloc);
+				U *u_ptr = cloneable::allocate<U>(*alloc);
+				u_ptr->cloneable_type::self_ptr = u_ptr;
+				ptr = u_ptr;
 			}
 			void release()
 			{
@@ -67,6 +78,11 @@ namespace boost
 					return;
 				cloneable::release(ptr, *alloc);
 				ptr = 0;
+			}
+
+			bool exists() const
+			{
+				return ptr != 0;
 			}
 			abstract_base_type *to_abstract() const
 			{

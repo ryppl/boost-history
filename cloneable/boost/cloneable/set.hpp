@@ -23,10 +23,10 @@ namespace boost
 		template <class Base, class Pred, class Alloc>
 		struct set
 		{
-			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
 			typedef Base base_type;
 			typedef Pred predicate_type;
 			typedef abstract_base<Base> abstract_base_type;
+			typedef typename detail::make_clone_allocator<Alloc>::type allocator_type;
 
 			typedef ptr_set<abstract_base_type, predicate_type, allocator, allocator_type> implementation;
 
@@ -188,10 +188,13 @@ namespace boost
 			template <class U>
 			iterator find_instance(instance<U,base_type,allocator_type> value)
 			{
-				iterator found = impl.find(value.to_abstract());
+				if (!value.exists())
+					return end();
+				iterator found = impl.find(*value.to_abstract());
 				if (found == impl.end())
 					return found;
-				if (typeid(&*found) == typeid(U))
+				std::type_info const &found_type = found->get_type();
+				if (found_type == typeid(U))
 					return found;
 				return impl.end();
 			}

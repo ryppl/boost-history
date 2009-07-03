@@ -60,7 +60,6 @@ namespace boost
             }
 
 
-            
             template< class InputIterator, class Alloc2 >
             scoped_deleter ( InputIterator first, InputIterator last,  Alloc2 &a ) // strong
                 : ptrs_( new T*[ std::distance(first,last) ] ),
@@ -71,7 +70,6 @@ namespace boost
                     add( CloneAllocator::allocate_clone_from_iterator( first, alloc ) );
                 BOOST_ASSERT( stored_ > 0 );
             }
-
             
             
             ~scoped_deleter()

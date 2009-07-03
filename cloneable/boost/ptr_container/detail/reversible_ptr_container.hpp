@@ -336,7 +336,7 @@ namespace ptr_container_detail
             if( first == last )
                 return;
 
-            scoped_deleter sd( first, last );
+            scoped_deleter sd( first, last, get_allocator() );
             insert_clones_and_release( sd );             
         }
 
