@@ -61,7 +61,7 @@ or sensible defaults are generated.
 
 [endsect]
 
-[section:tutorial Basic Usage]
+[section:tutorial Tutorial]
 
 This tutorial progresses through the basic usage of the library, demonstrating how 
 to make a new Cloneable type, how to make an exsiting, external type Cloneable, 
@@ -70,7 +70,7 @@ and how to deal with multiple inheritance in type hierarchies.
 The following is a very quick introduction to [*Boost.Cloneable]:
 
 ``
-#include <boost/cloneable.hpp>;
+#include <boost/cloneable.hpp>
 
 using namespace boost;
 
@@ -86,8 +86,13 @@ int main()
 ``
 
 Here we have made a class and derived from `cloneable::base`, passing the 
-type of thing to clone as a type parameter. Because we didn't supply a base
-type to use, we were given `default_base_type`. Although it is fine to use 
+type of thing to clone as a parameter. 
+
+Because we didn't supply a base
+type to use, we were given `default_base_type`, which is the return type of the clone
+method. 
+
+Although it is fine to use 
 this default base class, we shall see that in general it is better to provide 
 our own base classes as this gives us much flexibility when it comes to 
 associative containers and resource management. 
@@ -422,9 +427,9 @@ TODO
 typedef heterogenous::list<Animal> List;
 
 List list;
-list.push_back<Cat>("sam", 12);
-list.push_back<Dog>("spot", 8);
-list.push_back<Labrador>("max", 14);
+list.emplace_back<Cat>("sam", 12);
+list.emplace_back<Dog>("spot", 8);
+list.emplace_back<Labrador>("max", 14);
 
 List copy = list;
 
@@ -455,9 +460,9 @@ TODO
 ``
 typedef heterogenous::vector<Animal> Vector;
 Vector vector;
-vector.push_back<Cat>("sam");
-vector.push_back<Dog>("spot");
-vector.push_back<Labrador>("max", 14);
+vector.emplace_back<Cat>("sam");
+vector.emplace_back<Dog>("spot");
+vector.emplace_back<Labrador>("max", 14);
 
 Vector copy = vector;
 
@@ -479,9 +484,9 @@ int main()
 	typedef heterogenous::set<Animal> Set;
 	Set set;
 	
-	Cat &sam = set.insert<Cat>("sam", 1.5);
-	Dog &spot = set.insert<Dog>("spot", 3);
-	Labrador &max = set.insert<Labrador>("max", 14);
+	Cat &sam = set.emplace<Cat>("sam", 1.5);
+	Dog &spot = set.emplace<Dog>("spot", 3);
+	Labrador &max = set.emplace<Labrador>("max", 14);
 
 	Set copy = set;
 
