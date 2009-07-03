@@ -186,7 +186,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\labat_itl_morphic\labat_itl_morphic.cpp"
+				RelativePath="..\labat_itl_morphic_\labat_itl_morphic.cpp"
 				>
 			</File>
 		</Filter>

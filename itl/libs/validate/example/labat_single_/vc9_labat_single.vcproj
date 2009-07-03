@@ -185,7 +185,7 @@
 				>
 			</File>
 			<File
-				RelativePath="..\labat_single\labat_single.cpp"
+				RelativePath="..\labat_single_\labat_single.cpp"
 				>
 			</File>
 		</Filter>
