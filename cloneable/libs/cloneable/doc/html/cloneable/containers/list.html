@@ -1,0 +1,87 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>List</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
+<link rel="home" href="../../index.html" title="Cloneable 0.1">
+<link rel="up" href="../containers.html" title="Containers">
+<link rel="prev" href="../containers.html" title="Containers">
+<link rel="next" href="vector.html" title="Vector">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../containers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../containers.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="vector.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" title="List">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="cloneable.containers.list"></a><a class="link" href="list.html" title="List">List</a>
+</h3></div></div></div>
+<p>
+        TODO
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">heterogenous</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;</span> <span class="identifier">List</span><span class="special">;</span>
+
+<span class="identifier">List</span> <span class="identifier">list</span><span class="special">;</span>
+<span class="identifier">list</span><span class="special">.</span><span class="identifier">emplace_back</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"sam"</span><span class="special">,</span> <span class="number">12</span><span class="special">);</span>
+<span class="identifier">list</span><span class="special">.</span><span class="identifier">emplace_back</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="string">"spot"</span><span class="special">,</span> <span class="number">8</span><span class="special">);</span>
+<span class="identifier">list</span><span class="special">.</span><span class="identifier">emplace_back</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;(</span><span class="string">"max"</span><span class="special">,</span> <span class="number">14</span><span class="special">);</span>
+
+<span class="identifier">List</span> <span class="identifier">copy</span> <span class="special">=</span> <span class="identifier">list</span><span class="special">;</span>
+
+<span class="keyword">const</span> <span class="identifier">Labrador</span> <span class="special">&amp;</span><span class="identifier">lab</span> <span class="special">=</span> <span class="identifier">list</span><span class="special">.</span><span class="identifier">back_as</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;();</span>
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">lab</span><span class="special">.</span><span class="identifier">name</span> <span class="special">==</span> <span class="string">"max"</span> <span class="special">&amp;&amp;</span> <span class="identifier">lab</span><span class="special">.</span><span class="identifier">age</span> <span class="special">==</span> <span class="number">14</span><span class="special">);</span>
+</pre>
+<p>
+      </p>
+<p>
+        The first thing you may notice is the strange way we add new items to a list.
+        All heterogenous containers use <span class="emphasis"><em>emplace</em></span> semantics for
+        adding or querying objects.
+      </p>
+<p>
+        This means that the container creates the objects 'in place', in storage
+        created by the containers allocator. As such, to add a new object to a heterogenous
+        container, you provide the type and the construction arguments.
+      </p>
+<p>
+        Clones are created using the same allocator as that used to make the original
+        objects; this is why it is important that you overload <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">(</span><span class="identifier">abstract_allocator</span>
+        <span class="special">&amp;)</span> <span class="keyword">const</span></code>,
+        rather than the <code class="computeroutput"><span class="identifier">make_copy</span></code>
+        method that does not take an allocator. Indeed, there is a good case to be
+        made for removing this second method from the library completely.
+      </p>
+<p>
+        For now, it will be enough to absorb the emplace syntax, and to note that
+        the cloned list called <code class="computeroutput"><span class="identifier">copy</span></code>
+        made a deep copy of the list; the underlying base pointers were not just
+        copied - they were cloned.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Christian Schladetsch<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../containers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../containers.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="vector.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
