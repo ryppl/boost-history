@@ -118,8 +118,8 @@ BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)
 	typedef cloneable::vector<> vec;
 	
 	vec v;
-	v.emplace_back<Q0>(42);
-	v.emplace_back<Q1>("foo");
+	v.push_back<Q0>(42);
+	v.push_back<Q1>("foo");
 
 	Q0 &q0 = v.as<Q0>(0);
 	Q1 &q1 = v.as<Q1>(1);
@@ -363,10 +363,10 @@ BOOST_AUTO_TEST_CASE(test_vector)
 
 		// type of thing to insert must be passed explicitly, and must derive from common_base.
 		// arguments to push_back are passed directly to ctor
-		bases.emplace_back<T0>(42);						
-		bases.emplace_back<T1>("foo");
-		bases.emplace_back<T2>(3.14f, -123, "spam");
-		bases.emplace_back<cloneable_external_type>("external");
+		bases.push_back<T0>(42);						
+		bases.push_back<T1>("foo");
+		bases.push_back<T2>(3.14f, -123, "spam");
+		bases.push_back<cloneable_external_type>("external");
 
 		// perform functor on each contained object of the given type
 		bases.for_each<T2>(boost::bind(&T2::print, _1));
@@ -416,13 +416,13 @@ namespace list_test
 	{
 		int num;
 		list_test_base(int n = 0) : num(n) { }
-		bool operator<(list_test_base const &other)
+		friend bool operator<(list_test::list_test_base const &left, list_test::list_test_base const &right)
 		{
-			return num < other.num;
+			return left.num < right.num;
 		}
-		bool operator==(list_test_base const &other)
+		friend bool operator==(list_test::list_test_base const &left, list_test::list_test_base const &right)
 		{
-			return num == other.num;
+			return left.num == right.num;
 		}
 	};
 
@@ -440,6 +440,7 @@ namespace list_test
 	};
 }
 
+
 BOOST_AUTO_TEST_CASE(test_list)
 {
 	using namespace list_test;
@@ -450,7 +451,13 @@ BOOST_AUTO_TEST_CASE(test_list)
 	l0.push_back<L2>(3.14f, -123, "spam");
 
 	list l1 = l0;
-	//BOOST_ASSERT(l0 == l1);
+	bool b = l0.front() == l0.back();
+	BOOST_ASSERT(l0 == l1);
+	BOOST_ASSERT(!(l0 < l1));
+	BOOST_ASSERT(!(l1 < l0));
+	list::reference e = l1.front();
+	e.num = 41;
+	BOOST_ASSERT(l1 < l0);
 
 	list::iterator iter = l1.begin();
 	BOOST_ASSERT(typeid(*iter++) == typeid(L0));

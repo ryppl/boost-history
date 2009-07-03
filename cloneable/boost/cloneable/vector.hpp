@@ -17,133 +17,60 @@ namespace boost
 {
 	namespace cloneable
 	{
-		/// a vector of heterogenous objects
-		// TODO: move to boost/heterogenous/vector
 		template <class Base, class Alloc>
 		struct vector
-			: detail::container_base<Base, Alloc>
+			: detail::sequence_container_base<
+				ptr_vector<
+					abstract_base<Base>
+					, allocator
+					, typename detail::make_clone_allocator<Alloc>::type >
+				, Base
+				, Alloc>
 		{
-			typedef detail::container_base<Base,Alloc> parent_type;
+			typedef detail::sequence_container_base<
+					ptr_vector<abstract_base<Base>
+						, allocator
+						, typename detail::make_clone_allocator<Alloc>::type >
+					, Base
+					, Alloc> 
+				parent_type;
 			typedef typename parent_type::base_type base_type;
 			typedef typename parent_type::abstract_base_type abstract_base_type;
 			typedef typename parent_type::allocator_type allocator_type;
 			using parent_type::validate;
 			using parent_type::new_instance;
-
-			typedef ptr_vector<abstract_base_type, allocator, allocator_type> implementation;
-
-			typedef typename implementation::value_type value_type;
-			typedef typename implementation::reference reference;
-			typedef typename implementation::const_reference const_reference;
-			typedef typename implementation::iterator iterator;
-			typedef typename implementation::const_iterator const_iterator;
-
-		private:
-			implementation impl;
+			typedef typename parent_type::value_type value_type;
+			typedef typename parent_type::reference reference;
+			typedef typename parent_type::const_reference const_reference;
+			typedef typename parent_type::iterator iterator;
+			typedef typename parent_type::const_iterator const_iterator;
 
 		public:
-			vector() : impl(get_allocator())
+
+			vector()
 			{
 			}
 
 			vector(allocator_type &a) 
-				: parent_type(a), impl(a)
+				: parent_type(a)
 			{
-			}
-
-			/*
-			template <class II>
-			vector(II F, II L, allocator_type a = allocator_type());
-			vector(size_t reserved)
-				: impl(alloc)
-			{
-			}
-			*/
-
-			template <class Ty, class Fun>
-			Fun for_each(Fun fun)
-			{
-				BOOST_FOREACH(base_type &b, *this)
-				{
-					if (Ty *ptr = dynamic_cast<Ty *>(&b))
-					{
-						fun(*ptr);
-					}
-				}
-				return fun;
-			}
-
-			template <class Ty, class Fun>
-			Fun for_each(Fun fun) const
-			{
-				BOOST_FOREACH(const base_type &base, *this)
-				{
-					if (Ty *ptr = dynamic_cast<Ty *>(&base))
-					{
-						fun(*ptr);
-					}
-				}
-				return fun;
-			}
-
-			size_t size() const
-			{
-				return impl.size();
-			}
-			bool empty() const
-			{
-				return impl.empty();
-			}
-
-			iterator begin()
-			{
-				return impl.begin();
-			}
-			iterator end()
-			{
-				return impl.end();
-			}
-			const_iterator begin() const
-			{
-				return impl.begin();
-			}
-			const_iterator end() const
-			{
-				return impl.end();
-			}
-
-			value_type &back()
-			{
-				return impl.back();
-			}
-			const value_type &back() const
-			{
-				return impl.back();
-			}
-			value_type &front()
-			{
-				return impl.front();
-			}
-			const value_type &front() const
-			{
-				return impl.front();
 			}
 
 			reference at(size_t n)
 			{
-				return impl.at(n);
+				return impl().at(n);
 			}
 			const_reference at(size_t n) const
 			{
-				return impl.at(n);
+				return impl().at(n);
 			}
 			reference operator[](size_t n)
 			{
-				return impl[n];
+				return impl()[n];
 			}
 			const_reference operator[](size_t n) const
 			{
-				return impl[n];
+				return impl()[n];
 			}
 
 			template <class Other>
@@ -178,28 +105,6 @@ namespace boost
 			const Other *pointer(size_t n) const
 			{
 				return dynamic_cast<const Other *>(&at(n));
-			}
-
-			// TODO: use variadic arguments or BOOST_PP to pass ctor args
-			template <class U>
-			void emplace_back()
-			{
-				impl.push_back(new_instance<typename validate<U>::type>().to_abstract());
-			}
-			template <class U, class A0>
-			void emplace_back(A0 a0)
-			{
-				impl.push_back(new_instance<typename validate<U>::type>(a0).to_abstract());
-			}
-			template <class U, class A0, class A1>
-			void emplace_back(A0 a0, A1 a1)
-			{
-				impl.push_back(new_instance<typename validate<U>::type>(a0,a1).to_abstract());
-			}
-			template <class U, class A0, class A1, class A2>
-			void emplace_back(A0 a0, A1 a1, A2 a2)
-			{
-				impl.push_back(new_instance<typename validate<U>::type>(a0,a1,a2).to_abstract());
 			}
 
 		};

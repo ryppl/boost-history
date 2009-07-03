@@ -59,7 +59,6 @@ namespace boost
 		template <class Base>
 		struct abstract_base : virtual Base
 		{
-			typedef Base element_type;
 			typedef Base base_type;
 			typedef abstract_base<Base> this_type;
 
@@ -139,14 +138,16 @@ namespace boost
 			}
 			*/
 
+			friend bool operator==(const abstract_base &left, const abstract_base &right)
+			{
+				return static_cast<const base_type &>(left) == static_cast<const base_type &>(right);
+			}
+			friend bool operator<(const abstract_base &left, const abstract_base &right)
+			{
+				return static_cast<const base_type &>(left) < static_cast<const base_type &>(right);
+			}
 		};
 
-
-		template <class Base>
-		bool operator<(const abstract_base<Base> &left, const abstract_base<Base> &right)
-		{
-			return static_cast<const Base &>(left) == static_cast<const Base &>(right);
-		}
 	} // namespace cloneable
 
 	/*
