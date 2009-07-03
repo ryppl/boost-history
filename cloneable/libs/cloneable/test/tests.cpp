@@ -582,9 +582,13 @@ namespace set_test
 	{
 		int number;
 		set_base(int n = 0) : number(n) { }
-		bool operator<(const set_base &other) const
+		friend bool operator==(const set_base &left, const set_base &right)
 		{
-			return number < other.number;
+			return left.number == right.number;
+		}
+		friend bool operator<(const set_base &left, const set_base &right)
+		{
+			return left.number < right.number;
 		}
 	};
 	struct S0 : base<S0, set_base> 
@@ -627,6 +631,7 @@ BOOST_AUTO_TEST_CASE(test_set)
 	BOOST_ASSERT(set.find<set_base>(1) != set.end());
 
 	Set copy = set;
+	BOOST_ASSERT(copy == set);
 
 	BOOST_ASSERT(copy.size() == 4);
 	BOOST_ASSERT(copy.find<S0>(1) != copy.end());
@@ -638,8 +643,6 @@ BOOST_AUTO_TEST_CASE(test_set)
 	BOOST_ASSERT(&*found == s0);
 }
 
-
 //EOF
-
 
  

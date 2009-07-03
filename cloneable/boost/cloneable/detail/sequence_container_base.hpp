@@ -16,6 +16,7 @@ namespace boost
 	{
 		namespace detail
 		{
+			/// common base for sequence containers
 			template <class Cont, class Base, class Alloc>
 			struct sequence_container_base : container_base<Cont,Base,Alloc>
 			{
@@ -56,11 +57,6 @@ namespace boost
 				{
 				}
 
-				size_t size() const
-				{
-					return container.size();
-				}
-
 				template <class Ty, class Fun>
 				Fun for_each(Fun fun)
 				{
@@ -85,6 +81,11 @@ namespace boost
 						}
 					}
 					return fun;
+				}
+
+				size_t size() const
+				{
+					return container.size();
 				}
 
 				bool empty() const
@@ -190,7 +191,6 @@ namespace boost
 				}
 			};
 
-
 			template <class Cont, class Base, class Alloc>
 			bool operator==(const sequence_container_base<Cont,Base,Alloc> &left, const sequence_container_base<Cont,Base,Alloc> &right)
 			{
@@ -202,6 +202,7 @@ namespace boost
 			{
 				return std::lexicographical_compare(left.begin(), left.end(), right.begin(), right.end());
 			}
+
 		} // namespace detail
 
 	} // namespace cloneable

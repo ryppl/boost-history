@@ -16,6 +16,7 @@ namespace boost
 	{
 		namespace detail
 		{
+			/// common base for associative containers
 			template <class Cont, class Pred, class Base, class Alloc>
 			struct associative_container_base 
 				: container_base<Cont,Base,Alloc>
@@ -95,6 +96,18 @@ namespace boost
 				}
 
 			};
+
+			template <class Cont, class Pred, class Base, class Alloc>
+			bool operator==(const associative_container_base<Cont,Pred,Base,Alloc> &left, const associative_container_base<Cont,Pred,Base,Alloc> &right)
+			{
+				return left.size() == right.size() && std::equal(left.begin(), left.end(), right.begin());
+			}
+
+			template <class Cont, class Pred, class Base, class Alloc>
+			bool operator<(const associative_container_base<Cont,Pred,Base,Alloc> &left, const associative_container_base<Cont,Pred,Base,Alloc> &right)
+			{
+				return std::lexicographical_compare(left.begin(), left.end(), right.begin(), right.end());
+			}
 
 		} // namespace detail
 

@@ -55,11 +55,15 @@ namespace boost
 					: cloneable::instance<Derived, Base, Alloc, typename traits<Derived>::construction_tag>
 				{
 					typedef cloneable::instance<Derived, Base, Alloc, typename traits<Derived>::construction_tag> parent_type;
+					
 					instance(allocator_type &a) : parent_type(a) { }
+					
 					template <class A0>
 					instance(allocator_type &a, A0 a0) : parent_type(a, a0) { }
+					
 					template <class A0, class A1>
 					instance(allocator_type &a, A0 a0, A1 a1) : parent_type(a, a0, a1) { }
+					
 					template <class A0, class A1, class A2>
 					instance(allocator_type &a, A0 a0, A1 a1, A2 a2) : parent_type(a, a0, a1, a2) { }
 				};
@@ -68,7 +72,6 @@ namespace boost
 				allocator_type alloc;
 
 			protected:
-
 				template <class U>
 				instance<U> new_instance()
 				{
@@ -91,9 +94,13 @@ namespace boost
 				}
 
 			public:
-				container_base() { }
+				container_base() 
+				{ 
+				}
 				container_base(allocator_type &a)
-					: alloc(a) { }
+					: alloc(a) 
+				{ 
+				}
 
 				const allocator_type &get_allocator() const
 				{
@@ -105,7 +112,6 @@ namespace boost
 				}
 
 			};
-
 
 		} // namespace detail
 
