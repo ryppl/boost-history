@@ -314,9 +314,9 @@ finally get to the heterogenous containers.
 
 [endsect]
 
-[section Dealing with Muliple SubObjects]
+[section Dealing with Muliple Sub-Objects]
 
-When dealing with types that have multiple cloneable sub-objects, we must use the 
+When working with types that have multiple cloneable sub-objects, we must use the 
 `clone_as<T>` and `create_as<T>` methods to disambiguate which sub-type to clone
 or create.
 
@@ -352,8 +352,6 @@ Note that if a sub-type S in type T is not default-constructabe, an exception of
 no_default_construction will be thrown if you attempt to default-create a new S instance
 from a T instance. 
 
-However, it is always safe to clone types that are not default constructable. 
-
 [endsect]
 
 [section Customising the Cloning Process]
@@ -387,33 +385,6 @@ will be no warning or error.
 
 This example uses the heap to make clones; we will next see how to make 
 clones using any standard-compliant allocator type.
-
-[endsect]
-
-[section Cloneable Traits]
-
-This is mostly relevant to library maintainers and is not important otherwise.
-
-To assist with dealing with cloneable objects in other systems, the following
-traits are provided:
-
-``
-class Base { virtual ~Base() { } };
-struct T : base<T, Base> { };
-struct U : base<T, Base, no_default_construction> { };
-struct V { };
-
-BOOST_STATIC_ASSERT(cloneable::is_cloneable<T>::value);
-BOOST_STATIC_ASSERT(cloneable::is_cloneable<U>::value);
-BOOST_STATIC_ASSERT(!cloneable::is_cloneable<V>::value);
-BOOST_STATIC_ASSERT(cloneable::has_base<T,Base>::value);
-
-//BOOST_STATIC_ASSERT(cloneable::is_default_constructable<V>::value); compile-time error: no traits
-BOOST_STATIC_ASSERT(cloneable::is_default_constructable<T>::value);
-BOOST_STATIC_ASSERT(!cloneable::is_default_constructable<T>::value);
-``
-
-More details are in the `clonable::traits<T>` structure.
 
 [endsect]
 
@@ -476,75 +447,228 @@ In summary, there are three stages of customisation:
 
 [endsect]
 
+[section Cloneable Traits]
+
+This is mostly relevant to library maintainers and is not important otherwise.
+
+To assist with dealing with cloneable objects in other systems, the following
+traits are provided:
+
+``
+class Base { virtual ~Base() { } };
+struct T : base<T, Base> { };
+struct U : base<T, Base, no_default_construction> { };
+struct V { };
+
+BOOST_STATIC_ASSERT(cloneable::is_cloneable<T>::value);
+BOOST_STATIC_ASSERT(cloneable::is_cloneable<U>::value);
+BOOST_STATIC_ASSERT(!cloneable::is_cloneable<V>::value);
+BOOST_STATIC_ASSERT(cloneable::has_base<T,Base>::value);
+
+//BOOST_STATIC_ASSERT(cloneable::is_default_constructable<V>::value); compile-time error: no traits
+BOOST_STATIC_ASSERT(cloneable::is_default_constructable<T>::value);
+BOOST_STATIC_ASSERT(!cloneable::is_default_constructable<T>::value);
+``
+
+More details are in the `clonable::traits<T>` structure.
 
 [endsect]
 
-[section Containers]
+
+[endsect]
+
+[section Heterogenous Containers]
 
 This section of the tutorial presents the first glimpse of the so-called ['heterogenous containers] 
 provided by the Cloneable library. These are:
 
 * `list<Base, Allocator>`
 * `vector<Base, Allocator>`
+* `deque<Base, Allocator>`
+* `chain<Base, LinkLength, Allocator>`
 * `map<Base, Predicate, Allocator>`
 * `set<Base, Predicate, Allocator>`
+* `multimap<Base, Pred, Alloc>`
+* `multiset<Base, Pred, Alloc>`
 * `hash_map<Base, Predicate, Hash, Allocator>`
 * `hash_set<Base, Predicate, Hash, Allocator>`
+* `hash_multimap<Base, Pred, Hash, Alloc>`.
+* `hash_multiset<Base, Pred, Hash, Alloc>`
 
 All of these containers store pointers to objects. However, they each expose their contained objects using value semantics.
-If this seems similar to Boost.PtrContainer, that is not coincidental, as these containers are based on a modified implementation
+If this seems similar to [*Boost.PtrContainer], that is not coincidental, as these containers are based on a modified implementation
 of that library.
 
-You will have noted that each container is specialised over a Base type, rather than a concrete derived type. This is 
-because they are intended to store base pointers. It may be surprising that `map<>` takes only one type - the Base type - of
-object to store, rather than the more familiar key and mapped types. This is because a heterogenous map provides
+You will have noted that each container is specialised over a `Base` type, rather than a concrete derived type. This is 
+because they are intended to store base pointers. 
+
+It may be surprising that `map<>` takes only one type - the `Base` type - of
+objects to store, rather than the more familiar ['key] and ['mapped] types. This is because a heterogenous map provides
 an association between objects with the same base type.
 
+All heterogenous containers create objects to be added 'in place', in storage created by the containers allocator. 
+As such, to add a new object to a heterogenous container, you provide the type and the construction arguments. Allocation
+and construction is dealt with by the container, and, importantly, ['objects are not copied into the container]:
+
+``
+container.add_method<Type>(construction args..);
+``
+
+This means, for instance, that you can use non-default-constructable objects in heterogenous vectors. 
+
+It also means that you can use objects that do not or cannot have assignment defined. 
+
+Basically, as long as you can construct the object at all, you can use it in a heterogenous container. 
+
+Importantly, clones are guaranteed to be created using the same allocator as that used to make the original objects.
+
+This is why it is
+important that you overload `make_copy(abstract_allocator &) const`, rather than the `make_copy() const` method that
+does not take an allocator. (['Indeed, there is a good case to be made for removing this second method from the library
+completely - CJS]).
+
 These containers will be presented in order, with some motivational examples which combines them. First, we shall
-extend our little Animal hierarchy to include an age member, and a comparison operator:
+extend our little Animal hierarchy to include an age member, and comparison operators.
+
+[section Extended Object Hierarhcy]
+
+This is the definitions we will use in the following examples. First, let's look at a slightly
+extended base type for our Animal hierarchy:
 
 ``
 struct Animal
 {
 	double age;
-	Animal(double years_old = 0) : age(years_old) { }
+	string name;
 	
-	bool operator<(const Animal &other) const
+	Animal(double years_old = 0) : age(years_old) { }
+	Animal(string n, double years_old = 0) : age(years_old), name(n) { }
+	
+	friend bool operator==(const Animal &left, const Animal &right) const
 	{
-		return age < other.age;
+		return left.age == right.age;
 	}
+	friend bool operator<(const Animal &left, const Animal &right) const
+	{
+		return left.age < right.age;
+	}
+	struct CompareNames
+	{
+		friend bool operator<(const Animal &left, const Animal &right) const
+		{
+			return left.name < right.name;
+		}
+	};
 };
+``
 
+This is just a little more elaborate than the previous example hierarchy we used earlier in the tutorial.
+We have added an `age` field for all animals, which is how old it is in years. Animals have relational
+operators for testing equivalence and sorting. Another functor named `CompareNames` is provided, which
+sorts by the name field of animals rather than age.
+
+You are aware that getting your base class right is very important to the strength and efficacy of the 
+hierarchy as a whole. At a minimum, you must of course use a virtual destructor. Getting the comparison
+operators right is very important as well, but of course we can always add more sorting predicates such
+as `CompareNames` as needed.
+
+What we would like to avoid is having a so-called ['fat interface] as the base class, which 
+has a lot of extra information that is only relevant to one or more derived types. Some of these issues
+can be addressed with further use of interfaces and virtual methods to obtain sorting criteria.
+
+A full discussion on object-oriented design is beyond the scope of this brief tutorial - and I'm sure you're
+very aware of the issues in any case. Suffice to say 
+that you should pay attention to how you design your base types. Always use a virtual
+destructor, try to keep state to a minimum, and bear in mind how you will want to compare objects.
+
+Moving on, we define our derived types:
+
+``
 struct Cat : cloneable::base<Cat, Animal>
 {
-	Cat(double age = 0) : base_type(age) { }
+	Cat(string name, double age = 10) : Animal(name, age) { }
 };
 
 struct Dog : cloneable::base<Dog, Animal>
 {
-	Dog(double age = 0) : base_type(age) { }
+	Dog(string name, double age = 0) : Animal(name, age) { }
 };
 
 struct Labrador : Dog, cloneable::base<Labrador, Animal>
 {
-	Labrador(double age = 0) : base_type(age) { }
+	bool is_guide_dog;
+	Labrador(string name, bool can_lead, double age = 0) : Dog(name, age), is_guide_dog(can_lead) { }
 };
+``
+
+Labradors now have an extra field indicating that a given instance has been trained as a guide dog, and each Animal
+type can be constructed by passing its name and age. Note that there are no default constructors for 
+any of the Animal types.
+
+Feel free to return to this page to refresh your memory as we walk through some
+examples that use these definitions.
+
+First, a preamble on names and semantics.
+
+[endsect]
+
+[section Container Method Names]
+
+To add an element of type `Ty` to any heterogenous
+container such as a `list`, `vector` or `set` we use the following syntax:
 
 ``
+container.add_method_name<Ty>(a0, a1,..., an);
+``
+
+Specifically, we do not directly add an object to a heterogenous container. Rather, we specify the type of thing
+to add, and provide any construction arguments. This is true as well for specifying
+objects to search for in associative containers:
+
+``
+container.find<Ty>(a0, a1,..., an);
+``
+
+This creates a new object of type `Ty`, constructed with the provided arguments, and searches for it
+in the container. But, I'm getting a little ahead of ourselves here - more on associative containers later; let's
+look at that syntax again.
+
+The name for the method to add new objects to heterogenous sequence containers has gone from 
+being called `push_back` to `emplace_back` to `push_emplace_back`
+and back to `push_back`. Similarly for associative containers the names have varied
+from `insert` to `emplace` to `emplace_insert` and back to `insert`.
+
+The C++0x containers have emplace methods that insert a new object after a given iterator
+location, by passing construction arguments. These are called `emplace` methods.
+
+This is similar to the way that objects are added to heterogenous containers, but not 
+the same. For all heterogenous containers, the process is to specify the type of thing
+and any creation arguments. There is no need to specify an iterator, but there
+is a need to specify the type explicitly. This is different to the C++0x containers, which
+do not require the type.
+
+For this reason the names have changed and are yet to be settled. All suggestions
+for the names of the methods, or namespaces, are welcome. I am sure they'll end up being
+called something like `emplace_back` rather than `push_back`; but the difference is that
+there is no `push_back` in a heterogenous container: everything is always ['emplaced],
+so this is one reason why I've been vasilating over the naming conventions to use.
 
 With this in mind, let's visit the first container: the faithful list.
 
+[endsect]
+
 [section List]
 
-TODO
+The first heterogenous container we'll look at is the `list`. It is very much like a standard `list<T>`.
+But it is also very different:
 
 ``
 typedef heterogenous::list<Animal> List;
 
 List list;
-list.emplace_back<Cat>("sam", 12);
-list.emplace_back<Dog>("spot", 8);
-list.emplace_back<Labrador>("max", 14);
+list.push_back<Cat>("sam", 12);
+list.push_back<Dog>("spot", 8);
+list.push_back<Labrador>("max", 14);
 
 List copy = list;
 
@@ -553,31 +677,24 @@ assert(lab.name == "max" && lab.age == 14);
 ``
 
 The first thing you may notice is the strange way we add new items to a list. All heterogenous containers use ['emplace] 
-semantics for adding or querying objects.
+semantics for searching for existing objects or adding new objects.
 
-This means that the container creates the objects 'in place', in storage created by the containers allocator. 
-As such, to add a new object to a heterogenous container, you provide the type and the construction arguments.
-
-Clones are created using the same allocator as that used to make the original objects; this is why it is
-important that you overload `make_copy(abstract_allocator &) const`, rather than the `make_copy` method that
-does not take an allocator. Indeed, there is a good case to be made for removing this second method from the library
-completely.
-
-For now, it will be enough to absorb the emplace syntax, and to note that the cloned list called `copy` made
+For now, it will be enough to absorb the ['emplacement syntax] for adding new elements, and to note that the cloned list called `copy` made
 a deep copy of the list; the underlying base pointers were not just copied - they were cloned.
 
 [endsect]
 
 [section Vector]
 
-TODO
+The vector gets the same treatment as lists, with the same syntax for adding new elements, but also some
+extra methods for random access of specifically typed contained objects:
 
 ``
 typedef heterogenous::vector<Animal> Vector;
 Vector vector;
-vector.emplace_back<Cat>("sam");
-vector.emplace_back<Dog>("spot");
-vector.emplace_back<Labrador>("max", 14);
+vector.push_back<Cat>("sam");
+vector.push_back<Dog>("spot");
+vector.push_back<Labrador>("max", 14);
 
 Vector copy = vector;
 
@@ -585,13 +702,31 @@ Labrador &lab = vector.as<Labrador>(2);
 Dog &labs_dog = vector.as<Dog>(2);
 Dog &spot = vector.as<Dog>(1);
 
+const Dog *maybe_dog = vector.cast<Dog>(0);
 ``
+
+['Again, the names here have undergone a number of changes and remain in flux. Suggestions welcome!]
+
+`push_back` works just like with `list` and is not surprising. But the `as` and `cast` methods are new.
+
+`vector::as` is the same as `vector::at` except that it requires a type to convert to. `at` will return 
+a base reference. `as` returns a derived-type reference, or throws `std::bad_cast`.
+
+`vector::cast` (['another name in need of a better name]) returns a pointer of the given type to 
+the specified element, or returns the null pointer if conversion was not possible or ambiguous.
+
+The other members in `vector` are largely what you would expect with no real surprises. See the reference for complete details.
 
 [endsect]
 
 [section Set]
 
-TODO
+So far we have been intoduced to the two basic heterogenous sequence containers, `list` and `vector`. The main
+difference over the standard containers is how you add new objects to them, and that they are, well, heterogenous.
+You can store any type of object in them that derives from the base type that you used to define the list or vector.
+
+Things start to get interesting with the associative containers `set` and `map`. Here we take a quick look
+at how we might use a heterogenous set to store a collection of animals.
 
 ``
 int main()
@@ -599,21 +734,22 @@ int main()
 	typedef heterogenous::set<Animal> Set;
 	Set set;
 	
-	Cat &sam = set.emplace<Cat>("sam", 1.5);
-	Dog &spot = set.emplace<Dog>("spot", 3);
-	Labrador &max = set.emplace<Labrador>("max", 14);
+	const Cat &sam = set.emplace<Cat>("sam", 1.5).deref();
+	const Dog &spot = set.emplace<Dog>("spot", 3).deref();
+	const Labrador &max = set.emplace<Labrador>("max", 14).deref();
 
 	Set copy = set;
 
-	Set::iterator dog = copy.find<Dog>(14);
-	Set::iterator any = copy.find<Animal>(1.5);
+	Set::iterator dog = copy.find<Dog>(14);		// find a dog aged 14
+	Set::iterator any = copy.find<Animal>(1.5);	// find any animal aged 1.5
+	Set::iterator cat = copy.find<Cat>(3);		// find a cat aged 3
 
 	assert(&*dog == &max);
 	assert(&*any == &sam);
+	assert(cat == set.end());
 	
 	return 0;
 }
-
 ``
 
 [endsect]

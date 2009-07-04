@@ -6,8 +6,8 @@
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="../index.html" title="Cloneable 0.1">
 <link rel="up" href="../index.html" title="Cloneable 0.1">
-<link rel="prev" href="tutorial/using_custom_allocators.html" title="Using Custom Allocators">
-<link rel="next" href="containers/list.html" title="List">
+<link rel="prev" href="tutorial/cloneable_traits.html" title="Cloneable Traits">
+<link rel="next" href="containers/extended_object_hierarhcy.html" title="Extended Object Hierarhcy">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,13 +20,17 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial/using_custom_allocators.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers/list.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial/cloneable_traits.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers/extended_object_hierarhcy.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" title="Containers">
 <div class="titlepage"><div><div><h2 class="title" style="clear: both">
 <a name="cloneable.containers"></a><a class="link" href="containers.html" title="Containers">Containers</a>
 </h2></div></div></div>
 <div class="toc"><dl>
+<dt><span class="section"><a href="containers/extended_object_hierarhcy.html">Extended
+      Object Hierarhcy</a></span></dt>
+<dt><span class="section"><a href="containers/container_method_names.html">Container
+      Method Names</a></span></dt>
 <dt><span class="section"><a href="containers/list.html">List</a></span></dt>
 <dt><span class="section"><a href="containers/vector.html">Vector</a></span></dt>
 <dt><span class="section"><a href="containers/set.html">Set</a></span></dt>
@@ -41,64 +45,76 @@
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem"><code class="computeroutput"><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">chain</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">LinkLength</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">multimap</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">multiset</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">hash_map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">hash_set</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">hash_multimap</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code>.
+      </li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">hash_multiset</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
 </ul></div>
 <p>
       All of these containers store pointers to objects. However, they each expose
-      their contained objects using value semantics. If this seems similar to Boost.PtrContainer,
-      that is not coincidental, as these containers are based on a modified implementation
-      of that library.
+      their contained objects using value semantics. If this seems similar to <span class="bold"><strong>Boost.PtrContainer</strong></span>, that is not coincidental, as these
+      containers are based on a modified implementation of that library.
     </p>
 <p>
-      You will have noted that each container is specialised over a Base type, rather
-      than a concrete derived type. This is because they are intended to store base
-      pointers. It may be surprising that <code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;&gt;</span></code> takes only one type - the Base type
-      - of object to store, rather than the more familiar key and mapped types. This
-      is because a heterogenous map provides an association between objects with
-      the same base type.
+      You will have noted that each container is specialised over a <code class="computeroutput"><span class="identifier">Base</span></code> type, rather than a concrete derived
+      type. This is because they are intended to store base pointers.
     </p>
 <p>
-      These containers will be presented in order, with some motivational examples
-      which combines them. First, we shall extend our little Animal hierarchy to
-      include an age member, and a comparison operator:
+      It may be surprising that <code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;&gt;</span></code> takes only one type - the <code class="computeroutput"><span class="identifier">Base</span></code> type - of objects to store, rather than
+      the more familiar <span class="emphasis"><em>key</em></span> and <span class="emphasis"><em>mapped</em></span>
+      types. This is because a heterogenous map provides an association between objects
+      with the same base type.
+    </p>
+<p>
+      All heterogenous containers create objects to be added 'in place', in storage
+      created by the containers allocator. As such, to add a new object to a heterogenous
+      container, you provide the type and the construction arguments. Allocation
+      and construction is dealt with by the container, and, importantly, <span class="emphasis"><em>objects
+      are not copied into the container</em></span>:
     </p>
 <p>
       
 </p>
-<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">Animal</span>
-<span class="special">{</span>
-	<span class="keyword">double</span> <span class="identifier">age</span><span class="special">;</span>
-	<span class="identifier">Animal</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">years_old</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">age</span><span class="special">(</span><span class="identifier">years_old</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
-	
-	<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">&lt;(</span><span class="keyword">const</span> <span class="identifier">Animal</span> <span class="special">&amp;</span><span class="identifier">other</span><span class="special">)</span> <span class="keyword">const</span>
-	<span class="special">{</span>
-		<span class="keyword">return</span> <span class="identifier">age</span> <span class="special">&lt;</span> <span class="identifier">other</span><span class="special">.</span><span class="identifier">age</span><span class="special">;</span>
-	<span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">struct</span> <span class="identifier">Cat</span> <span class="special">:</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
-<span class="special">{</span>
-	<span class="identifier">Cat</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">struct</span> <span class="identifier">Dog</span> <span class="special">:</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
-<span class="special">{</span>
-	<span class="identifier">Dog</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
-<span class="special">};</span>
-
-<span class="keyword">struct</span> <span class="identifier">Labrador</span> <span class="special">:</span> <span class="identifier">Dog</span><span class="special">,</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
-<span class="special">{</span>
-	<span class="identifier">Labrador</span><span class="special">(</span><span class="keyword">double</span> <span class="identifier">age</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">age</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
-<span class="special">};</span>
-
+<pre class="programlisting"><span class="identifier">container</span><span class="special">.</span><span class="identifier">add_method</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;(</span><span class="identifier">args</span><span class="special">..);</span>
 </pre>
 <p>
     </p>
 <p>
-      With this in mind, let's visit the first container: the faithful list.
+      This means, for instance, that you can use non-default-constructable objects
+      in heterogenous vectors.
+    </p>
+<p>
+      It also means that you can use objects that do not or cannot have assignment
+      defined.
+    </p>
+<p>
+      Basically, as long as you can construct the object at all, you can use it in
+      a heterogenous container.
+    </p>
+<p>
+      Importantly, clones are guaranteed to be created using the same allocator as
+      that used to make the original objects.
+    </p>
+<p>
+      This is why it is important that you overload <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">(</span><span class="identifier">abstract_allocator</span>
+      <span class="special">&amp;)</span> <span class="keyword">const</span></code>,
+      rather than the <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span>
+      <span class="keyword">const</span></code> method that does not take an allocator.
+      (<span class="emphasis"><em>Indeed, there is a good case to be made for removing this second
+      method from the library completely</em></span>).
+    </p>
+<p>
+      These containers will be presented in order, with some motivational examples
+      which combines them. First, we shall extend our little Animal hierarchy to
+      include an age member, and comparison operators.
     </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
@@ -111,7 +127,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="tutorial/using_custom_allocators.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers/list.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="tutorial/cloneable_traits.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="containers/extended_object_hierarhcy.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
