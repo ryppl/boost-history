@@ -29,7 +29,7 @@
 </h3></div></div></div>
 <p>
         In the previous example, we did not supply a base class, so our Cloneable
-        type was given the <code class="computeroutput"><span class="identifier">base_type</span></code>.
+        type was given the default <code class="computeroutput"><span class="identifier">base_type</span></code>.
         Below, we prepare our own base type <code class="computeroutput"><span class="identifier">Animal</span></code>,
         which of course has a virtual destructor, as well as a means to get a member
         variable from a derived type:
@@ -73,10 +73,10 @@
       </p>
 <p>
         We derive our <code class="computeroutput"><span class="identifier">Cat</span></code> class from
-        <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span></code>. The first type argument to <code class="computeroutput"><span class="identifier">base</span><span class="special">&lt;...&gt;</span></code>
-        is the derived type to use for cloning, and the second argument is the common
-        base type of the hierarhcy. As we saw in the first example, if you do not
-        provide your own base type, your Cloneable type will use the base <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base_type</span></code>.
+        <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span></code>. The first type argument to <code class="computeroutput"><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span></code> is the derived type to use for cloning,
+        and the second argument is the common base type of the hierarhcy. As we saw
+        in the first example, if you do not provide your own base type, your Cloneable
+        type will use the base <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base_type</span></code>.
       </p>
 <p>
         Other than that, <code class="computeroutput"><span class="identifier">Cat</span></code> implements

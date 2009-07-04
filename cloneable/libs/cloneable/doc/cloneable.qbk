@@ -34,7 +34,7 @@ duplicating, and querying instances of object types that are specified
 in class hierarchies, and a set of containers[1] for those objects.
 
 Cloneable objects can create clones of derived types from base types, 
-can do so given any STL-compliant allocator, and support multiple clone type targets.
+can do so given any STL-compliant allocator, and supports multiple clone type targets.
 
 The user of the library is able to override the default cloning process, 
  and may supply custom allocators. Cloneable types can derive from other cloneable
@@ -49,10 +49,26 @@ There is a fundamental requirement that a common base class type is shared for
 each type in a given class hierarchy. The user can supply their own base classes, 
 or sensible defaults are generated.
 
+Key features of the library:
+
+* Can make any class-type Cloneable with or without modification to its definition
+* Optional user-supplied base classes
+* Base types can be queried for the interfaces they support
+* Clones can be created from base types
+* Supports multiple inheritance, cloning of sub-objects
+* Supports types with no default constructors
+* Customisation of the cloning process
+* Support for custom allocators
+* A set of heterogenous containers with emplace semantics for object insertion
+
 The complete source code for the library, with unit-tests, are available
 in the Boost SVN respository [@http://svn.boost.org/svn/boost/sandbox/cloneable/ here].
 
-[1] Cloneable objects can be used in containers-of-pointers (based on a modified [*Boost.PtrContainer] implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
+[1] Cloneable objects can be used in containers-of-pointers (based on a modified [*Boost.PtrContainer] 
+implementation), producing a 'heterogenous' container system with value semantics for 
+comparison and copying, and emplace semantics for insertion. These containers are currently
+ a part of the proposal as well, however it is intended that they eventually form a 
+ distinct library. This proposal will focus mostly on the single-object aspect of the system.
 
 [endsect]
 
@@ -60,6 +76,8 @@ in the Boost SVN respository [@http://svn.boost.org/svn/boost/sandbox/cloneable/
 
 [h3 Version 0.1]
 
+* Associative heterogenous containers
+* User-defined base classes
 * Created
 
 [endsect]
@@ -70,7 +88,7 @@ This tutorial progresses through the basic usage of the library, demonstrating h
 to make a new Cloneable type, how to make an exsiting, external type Cloneable, 
 and how to deal with multiple inheritance in type hierarchies.
 
-The following is a very quick introduction to [*Boost.Cloneable]:
+The following is a quick introduction to [*Boost.Cloneable]:
 
 ``
 #include <boost/cloneable.hpp>
@@ -78,7 +96,13 @@ The following is a very quick introduction to [*Boost.Cloneable]:
 using namespace boost;
 
 class Foo : public cloneable::base<Foo> { };
+``
 
+Here we have included the main [*Boost.Cloneable] header, made a class and 
+derived from `cloneable::base`, passing the type of thing to clone as the first type parameter. 
+Now we can use it to make a clone:
+
+``
 int main()
 {
      Foo *foo = new Foo();
@@ -88,24 +112,52 @@ int main()
 }
 ``
 
-Here we have made a class and derived from `cloneable::base`, passing the 
-type of thing to clone as a parameter. 
-
 Because we didn't supply a base
-type to use, we were given `base_type`, which is the return type of the clone
-method. 
+type to use, the default base type named `cloneable::base_type` is used. This is 
+the return-type of the `clone` method added to the `Foo` type.
+
+An equivalent way of making the clone is to use a free-function:
+
+``
+Foo *clone = cloneable::clone(*foo); // note: clone() takes a const reference, not a pointer
+``
+
+This allows us to work with types that may or may not be ['Cloneable] in the sense
+of this library. If the given type is not ['Cloneable], then the default way of
+making a clone using `new Type(original)` is used. (['is defaulting to `new T(orig)` too dangerous? --CJS])
+
+To clone from a base class, which generally doesn't have any clone-related methods, we use the 
+free-functions `clone`, `can_clone_as` and `clone_as`:
+
+``
+int main()
+{
+	using namespace cloneable;
+	
+	base_type *foo_base = new Foo();
+	assert(can_clone_as<Foo>(*foo_base));
+	
+	Foo *foo_clone = clone_as<Foo>(*foo_base);
+	assert(foo_clone != 0);
+	
+    return 0;
+}
+``
+
+Note that we pass references to these functions rather than pointers, and these functions work for ['Cloneable] types and generally.
+We can also pass an allocator to these functions, but more on custom allocation later.
 
 Although it is fine to use 
-this default base class, we shall see that in general it is better to provide 
-our own base classes as this gives us much flexibility when it comes to 
-associative containers and resource management. 
+the default base class in this example and other similar cases, we shall see that in general it is better to provide 
+our own base classes. This gives us flexibility and space for customisation, allows us to 
+use the types in associative containers, and to control resource management. 
  
 But we'll get to that later. For now, let's move on to some slightly less trivial examples.
 
 [section Simple Hierarchical Cloning]
 
 In the previous example, we did not supply a base class, so our Cloneable type
-was given the `base_type`. Below, we prepare our own base type `Animal`,
+was given the default `base_type`. Below, we prepare our own base type `Animal`,
 which of course has a virtual destructor, as well as a means to get a member 
 variable from a derived type:
 
@@ -139,12 +191,12 @@ public:
 };
 ``
 
-We derive our `Cat` class from `cloneable::base<Cat, Animal>`. The first type argument to `base<...>` is 
+We derive our `Cat` class from `cloneable::base<Cat, Animal>`. The first type argument to `base<Cat, Animal>` is 
 the derived type to use for cloning, and the second argument is the common base type of the hierarhcy. As
 we saw in the first example, if you do not provide your own base type, your Cloneable type will use the
 base `cloneable::base_type`.
 
-Other than that, `Cat` implements the `get_name` pure virtual method derived in the base class `Animal`.
+Other than that, `Cat` implements the `get_name` pure virtual method derived from the base class `Animal`.
 
 Now, let's use it:
 
@@ -177,6 +229,14 @@ Cat *cloned = cat->clone_as<Cat>();
 ``
 
 As we shall soon see, this is also handy when we have choices of which sub-object to clone.
+Of course, we could also use the free-function `clone`:
+
+``
+using namespace cloneable;
+
+assert(can_clone_as<Cat>(*cat));
+Cat *cloned = clone(*cat);
+``
 
 We now add other animals to the hierachy, including one that uses multiple inheritance:
 
@@ -197,12 +257,14 @@ and is Cloneable as either a Dog or a Labrador. Using these types:
 ``
 int main()
 {
-    Labrador *lab = new Labrador();
-    Dog *dog = lab->clone_as<Dog>();
-    Labrador *cloned_lab = lab->clone_as<Labrador>();
+    Animal *lab = new Labrador();
+    Animal *lab_as_dog = lab->clone_as<Dog>();
+    Animal *lab_clone = lab->clone_as<Labrador>();
     
-    assert(typeid(*dog) == typeid(Dog));
-    assert(typeid(*cloned_lab) == typeid(Labrador));
+    assert(typeid(*lab_as_dog) == typeid(Dog));
+    assert(typeid(*lab_clone) == typeid(Labrador));
+    
+    assert(!can_clone_as<Labrador>(lab_as_dog));
     
     return 0;
 }
@@ -211,37 +273,32 @@ int main()
 When cloning the `Labrador` class, we must specify which sub-object we wish to duplicate using the
 `clone_as<Ty>` method. 
 
-It should be noted that when using `clone_as<Ty>`, we actually are making a type of `Ty`, rather than 
+It should be noted that when using `clone_as<Ty>`, we actually are making an instance of type `Ty`, rather than 
 making another type and casting up.
 
-We can also use the Cloneable library to make a new instance, with no duplication:
+We can also use the Cloneable library to make a new derived instance from a base type:
 
 ``
-Animal *MakeNew(const cloneable::abstract_base<Animal> &animal)
-{
-    return animal.create_new();
-}
-
 int main()
 {
-    Cat *cat = new Cat();
-    Animal *new_animal = MakeNew(*cat);
+    Animal *cat = new Cat();
+    Animal *new_animal = create_new(*cat);
+    
     assert(typeid(*new_animal) == typeid(Cat));
+    
     return 0;
 }
 ``
 
 This will create a new derived animal type (not a new base), and return a pointer 
-to the base. Here we used a free-function to make the new object, to show how 
-to use the `abstract_base` template structure. We used `abstract_base<Animal>`, rather than 
-just `Animal`, as the base type argument for the `MakeNew` function. This is because 
-the base class we provided, `Animal`, does not derive from anything and does not 
-have any clone-related methods. These methods are added by the `abstract_base<>` mix-in, 
-which all derived `Animal`s are implicitly convertible to.
+to the base.
 
 This is the basics of the cloneability side of the library. But there are a few more
-details and use-cases to cover before we get to the containers. The first of which is
-dealing with types that we can't change.
+details and use-cases to cover before we get to the containers. The first of these details is
+dealing with types that are not default-constructable. This is a very useful part of the 
+library, as it allows for containers with elements that are not default constructable and
+do not have assignment operations. We'll get to that in the containers tutorial, but
+for now let's quickly cover the basics in the next section.
 
 [endsect]
 
@@ -264,7 +321,7 @@ struct T0 : cloneable::base<T0, Base, no_default_construction_tag>
 To avoid compile-time errors when using this type in the Cloneable libray, you must
 indicate that it is not default-constructible by passing the `no_default_construction_tag`
 type as a parameter to `cloneable::base<>`. The order that you give the base-type or tag-types
-to `cloneable::base<>` is not important and is dealt with correctly by the library.
+to `cloneable::base<>` is not important.
 
 Putting this type to use:
 
@@ -273,7 +330,7 @@ int main()
 {
     string str = "foo";
     T0 *p = new T0(str);
-    T0 *q = p->clone_as<T0>();
+    T0 *q = clone(*p); // or, p->clone_as<T0>();
     assert(&q->str == &str);
     
     // demonstrate that attempting to create
@@ -294,7 +351,10 @@ int main()
 ``
 
 A `no_default_construction` exception is thrown if you attempt to default-construct a 
-type that has no default constructor.
+type that has no default constructor. As you would expect, if a Cloneable Q type derives
+from a non-default-constructable type, then Q is also not default-constructable.
+
+Next, we'll look at how to use existing types that we can't change.
 
 [endsect]
 
@@ -352,7 +412,7 @@ finally get to the heterogenous containers.
 [section Dealing with Muliple Sub-Objects]
 
 When working with types that have multiple cloneable sub-objects, we must use the 
-`clone_as<T>` and `create_as<T>` methods to disambiguate which sub-type to clone
+`clone_as<T>` and `create_as<T>` methods or functions to disambiguate which sub-type to clone
 or create.
 
 This is demonstrated below:
@@ -368,24 +428,35 @@ int main()
 {
     T2 *t2 = new T2();
     
+    assert(can_clone_as<W>(*t2));
+    assert(can_clone_as<T0>(*t2));
+    assert(can_clone_as<T1>(*t2));
+    assert(can_clone_as<T2>(*t2));
+    
+    assert(can_create_as<W>(*t2));
+    assert(can_create_as<T0>(*t2));
+    assert(can_create_as<T1>(*t2));
+    assert(can_create_as<T2>(*t2));
+    
     // clone sub-objects
     W *t2_w = t2->clone_as<W>();
-    T1 *t2_t1 = t2->clone_as<T1>();
     T0 *t2_t0 = t2->clone_as<T0>();
+    T1 *t2_t1 = t2->clone_as<T1>();
+    T1 *t2_t2 = t2->clone_as<T2>();
     
     // create sub-objects
     W *t2_w_new = t2->create_as<W>();
-    T1 *t2_t1_new = t2->create_as<T1>();
     T0 *t2_t0_new = t2->create_as<T0>();
-    
+    T1 *t2_t1_new = t2->create_as<T1>();
+    T2 *t2_t2_new = t2->create_as<T2>();
     
     return 0;
 }
 ``
 
-Note that if a sub-type S in type T is not default-constructabe, an exception of type
-no_default_construction will be thrown if you attempt to default-create a new S instance
-from a T instance. 
+Note that if a sub-type `S` in type `T` is not default-constructabe, an exception of type
+`no_default_construction` will be thrown if you attempt to default-create a new `S` instance
+from a `T` instance. 
 
 [endsect]
 
@@ -788,6 +859,8 @@ int main()
 }
 ``
 
+TODO
+
 [endsect]
 
 [section Map]
@@ -799,10 +872,10 @@ int main()
 {
 	typedef heterogenous::map<Animal> Map;
 	Map map;
-	Map::value_type &pair0 = map.key<Dog>("spot", 12).value<Dog>("rover", 8);
-	Map::value_type &pair1 = map.key<Cat>("sam", 6).value<Cat>("sooty", 10);
-	Map::value_type &pair2 = map.key<Cat>("fluffy", 10).value<Cat>("tigger", 14);
-	Map::value_type &pair3 = map.key<Labrador>("max", 12).value<Cat>("sooty", 3);
+	Map::value_type pair0 = map.key<Dog>("spot", 12).value<Dog>("rover", 8).value;
+	Map::value_type pair1 = map.key<Cat>("sam", 6).value<Cat>("sooty", 10).value;
+	Map::value_type pair2 = map.key<Cat>("fluffy", 10).value<Cat>("tigger", 14).value;
+	Map::value_type pair3 = map.key<Labrador>("max", 12).value<Cat>("sooty", 3).value;
 	
 	Map copy = map;
 	
@@ -813,6 +886,9 @@ int main()
 	return 0;
 }
 ``
+
+TODO
+
 [endsect]
 
 [section HashMap and HashSet]

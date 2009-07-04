@@ -33,7 +33,7 @@
     </p>
 <p>
       Cloneable objects can create clones of derived types from base types, can do
-      so given any STL-compliant allocator, and support multiple clone type targets.
+      so given any STL-compliant allocator, and supports multiple clone type targets.
     </p>
 <p>
       The user of the library is able to override the default cloning process, and
@@ -52,6 +52,38 @@
       for each type in a given class hierarchy. The user can supply their own base
       classes, or sensible defaults are generated.
     </p>
+<p>
+      Key features of the library:
+    </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+        Can make any class-type Cloneable with or without modification to its definition
+      </li>
+<li class="listitem">
+        Optional user-supplied base classes
+      </li>
+<li class="listitem">
+        Base types can be queried for the interfaces they support
+      </li>
+<li class="listitem">
+        Clones can be created from base types
+      </li>
+<li class="listitem">
+        Supports multiple inheritance, cloning of sub-objects
+      </li>
+<li class="listitem">
+        Supports types with no default constructors
+      </li>
+<li class="listitem">
+        Customisation of the cloning process
+      </li>
+<li class="listitem">
+        Support for custom allocators
+      </li>
+<li class="listitem">
+        A set of heterogenous containers with emplace semantics for object insertion
+      </li>
+</ul></div>
 <p>
       The complete source code for the library, with unit-tests, are available in
       the Boost SVN respository <a href="http://svn.boost.org/svn/boost/sandbox/cloneable/" target="_top">here</a>.

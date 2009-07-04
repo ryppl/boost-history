@@ -47,7 +47,7 @@
       and how to deal with multiple inheritance in type hierarchies.
     </p>
 <p>
-      The following is a very quick introduction to <span class="bold"><strong>Boost.Cloneable</strong></span>:
+      The following is a quick introduction to <span class="bold"><strong>Boost.Cloneable</strong></span>:
     </p>
 <p>
       
@@ -57,8 +57,19 @@
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
 
 <span class="keyword">class</span> <span class="identifier">Foo</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;</span> <span class="special">{</span> <span class="special">};</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+</pre>
+<p>
+    </p>
+<p>
+      Here we have included the main <span class="bold"><strong>Boost.Cloneable</strong></span>
+      header, made a class and derived from <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span></code>, passing
+      the type of thing to clone as the first type parameter. Now we can use it to
+      make a clone:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
      <span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">foo</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Foo</span><span class="special">();</span>
      <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base_type</span> <span class="special">*</span><span class="identifier">cloned</span> <span class="special">=</span> <span class="identifier">foo</span><span class="special">-&gt;</span><span class="identifier">clone</span><span class="special">();</span>
@@ -69,17 +80,62 @@
 <p>
     </p>
 <p>
-      Here we have made a class and derived from <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span></code>, passing
-      the type of thing to clone as a parameter.
+      Because we didn't supply a base type to use, the default base type named <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base_type</span></code> is used. This is the return-type
+      of the <code class="computeroutput"><span class="identifier">clone</span></code> method added to
+      the <code class="computeroutput"><span class="identifier">Foo</span></code> type.
     </p>
 <p>
-      Because we didn't supply a base type to use, we were given <code class="computeroutput"><span class="identifier">base_type</span></code>,
-      which is the return type of the clone method.
+      An equivalent way of making the clone is to use a free-function:
     </p>
 <p>
-      Although it is fine to use this default base class, we shall see that in general
-      it is better to provide our own base classes as this gives us much flexibility
-      when it comes to associative containers and resource management.
+      
+</p>
+<pre class="programlisting"><span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">clone</span> <span class="special">=</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">clone</span><span class="special">(*</span><span class="identifier">foo</span><span class="special">);</span> <span class="comment">// note: clone() takes a const reference, not a pointer
+</span></pre>
+<p>
+    </p>
+<p>
+      This allows us to work with types that may or may not be <span class="emphasis"><em>Cloneable</em></span>
+      in the sense of this library. If the given type is not <span class="emphasis"><em>Cloneable</em></span>,
+      then the default way of making a clone using <code class="computeroutput"><span class="keyword">new</span>
+      <span class="identifier">Type</span><span class="special">(</span><span class="identifier">original</span><span class="special">)</span></code>
+      is used. (<span class="emphasis"><em>is defaulting to <code class="computeroutput"><span class="keyword">new</span>
+      <span class="identifier">T</span><span class="special">(</span><span class="identifier">orig</span><span class="special">)</span></code> too
+      dangerous? --CJS</em></span>)
+    </p>
+<p>
+      To clone from a base class, which generally doesn't have any clone-related
+      methods, we use the free-functions <code class="computeroutput"><span class="identifier">clone</span></code>,
+      <code class="computeroutput"><span class="identifier">can_clone_as</span></code> and <code class="computeroutput"><span class="identifier">clone_as</span></code>:
+    </p>
+<p>
+      
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+<span class="special">{</span>
+	<span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">cloneable</span><span class="special">;</span>
+	
+	<span class="identifier">base_type</span> <span class="special">*</span><span class="identifier">foo_base</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Foo</span><span class="special">();</span>
+	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;(*</span><span class="identifier">foo_base</span><span class="special">));</span>
+	
+	<span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">foo_clone</span> <span class="special">=</span> <span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;(*</span><span class="identifier">foo_base</span><span class="special">);</span>
+	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">foo_clone</span> <span class="special">!=</span> <span class="number">0</span><span class="special">);</span>
+	
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+    </p>
+<p>
+      Note that we pass references to these functions rather than pointers, and these
+      functions work for <span class="emphasis"><em>Cloneable</em></span> types and generally. We can
+      also pass an allocator to these functions, but more on custom allocation later.
+    </p>
+<p>
+      Although it is fine to use the default base class in this example and other
+      similar cases, we shall see that in general it is better to provide our own
+      base classes. This gives us flexibility and space for customisation, allows
+      us to use the types in associative containers, and to control resource management.
     </p>
 <p>
       But we'll get to that later. For now, let's move on to some slightly less trivial
