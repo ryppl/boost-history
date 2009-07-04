@@ -684,7 +684,7 @@ For this reason the names have changed and are yet to be settled. All suggestion
 for the names of the methods, or namespaces, are welcome. I am sure they'll end up being
 called something like `emplace_back` rather than `push_back`; but the difference is that
 there is no `push_back` in a heterogenous container: everything is always emplaced,
-so this is one reason why I've been vasilating over the naming conventions to use]]]
+so this is one reason why I've been vacillating over the naming conventions to use]]]
 
 -- CJS
 ]
