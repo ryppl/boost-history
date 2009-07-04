@@ -296,11 +296,15 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\cloneable\detail\make_clone_allocator.hpp"
+						RelativePath="..\..\..\boost\cloneable\detail\create_new.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\cloneable\detail\pointer.hpp"
+						RelativePath="..\..\..\boost\cloneable\detail\is_derived.hpp"
+						>
+					</File>
+					<File
+						RelativePath="..\..\..\boost\cloneable\detail\make_clone_allocator.hpp"
 						>
 					</File>
 					<File

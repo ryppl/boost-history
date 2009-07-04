@@ -108,30 +108,16 @@ namespace mulitple_inheritance_test
 		Q1(const char * t) : str(t) { }
 	};
 	
+	struct W : base<W> { };
+
+	struct Q2 : W, Q1, base<Q2>
+	{
+	};
+
 	struct my_region { };
 }
 
-
-BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)
-{
-	using namespace mulitple_inheritance_test;
-	typedef cloneable::vector<> vec;
-	
-	vec v;
-	v.push_back<Q0>(42);
-	v.push_back<Q1>("foo");
-
-	Q0 &q0 = v.as<Q0>(0);
-	Q1 &q1 = v.as<Q1>(1);
-
-	// ensure duplication of types with multiple cloneable sub-objects works correctly
-	vec v2 = v;
-	
-	BOOST_ASSERT(v2.as<Q0>(0).num == 42);
-	BOOST_ASSERT(v2.as<Q1>(1).str == "foo");
-}
-
-BOOST_AUTO_TEST_CASE(test_clones)
+BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
 {
 	using namespace mulitple_inheritance_test;
 
@@ -155,7 +141,34 @@ BOOST_AUTO_TEST_CASE(test_clones)
 
 	Q1 *q1_c1  = q1->clone_as<Q1>(alloc);
 	BOOST_ASSERT(typeid(*q1_c1) == typeid(Q1));
+
+	// create new sub-objects
+	Q2 *q2 = create<Q2>(alloc);
+	Q0 *q2_0 = q2->create_as<Q0>(alloc);
+	Q1 *q2_1 = q2->create_as<Q1>(alloc);
+	W *q2_w = q2->create_as<W>(alloc);
+	BOOST_ASSERT(q2_0 && q2_1 && q2_w);
 }	
+
+
+BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)
+{
+	using namespace mulitple_inheritance_test;
+	typedef cloneable::vector<> vec;
+	
+	vec v;
+	v.push_back<Q0>(42);
+	v.push_back<Q1>("foo");
+
+	Q0 &q0 = v.as<Q0>(0);
+	Q1 &q1 = v.as<Q1>(1);
+
+	// ensure duplication of types with multiple cloneable sub-objects works correctly
+	vec v2 = v;
+	
+	BOOST_ASSERT(v2.as<Q0>(0).num == 42);
+	BOOST_ASSERT(v2.as<Q1>(1).str == "foo");
+}
 
 namespace custom_clone_test
 {
@@ -186,9 +199,13 @@ BOOST_AUTO_TEST_CASE(test_custom_clone)
 
 namespace no_default_ctor_test
 {
-	struct T0 : base<T0, default_base_type, no_default_construction>
+	struct T0 : base<T0, base_type, no_default_construction>
 	{
 		T0(int) { }
+	};
+	struct T1 : T0, base<T1>
+	{
+		T1() : T0(4) { }
 	};
 }
 
@@ -206,14 +223,36 @@ BOOST_AUTO_TEST_CASE(test_no_default_ctor)
 	bool caught = false;
 	try
 	{
-		default_base_type *r = p->create();
+		base_type *r = p->create();
 	}
 	catch (no_default_construction)
 	{
 		caught = true;
 	}
 	BOOST_ASSERT(caught);
+
+	T1 *p1 = new T1();
+	// ensure we can clone a type that is derived from a type that is not
+	// default constructable
+	T1 *p1_clone = p1->clone_as<T1>();
+	BOOST_ASSERT(p1_clone);
+
+	// ensure that if we try to make a new sub-object that is not 
+	// default-constructable, we throw
+	caught = false;
+	try
+	{
+		p1_clone->create_as<T0>();
+	}
+	catch (no_default_construction)
+	{
+		caught = true;
+	}
+	BOOST_ASSERT(caught);
+
 	delete p;
+	delete p1;
+	delete p1_clone;
 }
 
 struct my_base
@@ -248,7 +287,7 @@ BOOST_AUTO_TEST_CASE(test_external_types)
 namespace traits_test
 {
 	struct T0 : base<T0> { };
-	struct T1 : base<T1, default_base_type, no_default_construction> { };
+	struct T1 : base<T1, base_type, no_default_construction> { };
 	struct T2 { };
 }
 
@@ -374,7 +413,7 @@ BOOST_AUTO_TEST_CASE(test_vector)
 		// does a deep copy, preserving concrete types
 		vec copy = bases;
 
-		// each object in the container can be retrieved generically as a default_base_type
+		// each object in the container can be retrieved generically as a base_type
 		my_base &generic0 = copy[0];
 		my_base &generic1 = copy[1];
 		my_base &generic2 = copy[2];

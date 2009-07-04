@@ -11,6 +11,13 @@
 #include <boost/cloneable/instance.hpp>
 #include <boost/cloneable/traits.hpp>
 
+#define BOOST_CLONEABLE_SCOPE_EXIT(locals)	\
+		this_type *self = this;			\
+		BOOST_SCOPE_EXIT(locals(self))
+
+#define BOOST_CLONEABLE_SCOPE_EXIT_END \
+		BOOST_SCOPE_EXIT_END
+
 namespace boost
 {
 	namespace cloneable
@@ -38,7 +45,10 @@ namespace boost
 				template <class T>
 				struct validate
 				{
-					// can only add cloneable things to a heterogenous container
+					// can only add cloneable things to a heterogenous container.
+					// to make a type T cloneable, derive from cloneable::base<T>,
+					// or provide your own base-type Base and derive from cloneable::base<T,Base>.
+					// there is no restriction on the Base type.
 					BOOST_STATIC_ASSERT(is_cloneable<T>::value);
 
 					// you must ensure that base-types for objects that you add to a container
@@ -49,12 +59,17 @@ namespace boost
 					typedef T type;
 				};
 
-				/// an instance of the given derived type U suitable for this container
+				/// an instance of the given derived type suitable for this container
 				template <class Derived>
 				struct instance 
-					: cloneable::instance<Derived, Base, Alloc, typename traits<Derived>::construction_tag>
+					: cloneable::instance<
+						typename validate<Derived>::type
+						, Base
+						, Alloc
+						, typename traits<typename validate<Derived>::type>::construction_tag>
 				{
-					typedef cloneable::instance<Derived, Base, Alloc, typename traits<Derived>::construction_tag> parent_type;
+					typedef typename validate<Derived>::type derived_type;
+					typedef cloneable::instance<derived_type, Base, Alloc, typename traits<derived_type>::construction_tag> parent_type;
 					
 					instance(allocator_type &a) : parent_type(a) { }
 					
@@ -94,7 +109,7 @@ namespace boost
 				}
 
 			public:
-				container_base() 
+				container_base()
 				{ 
 				}
 				container_base(allocator_type &a)
@@ -110,7 +125,6 @@ namespace boost
 				{
 					return alloc;
 				}
-
 			};
 
 		} // namespace detail

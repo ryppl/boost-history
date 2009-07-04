@@ -46,13 +46,13 @@ namespace boost
 		/// default base type used for object hierarchies. the user can supply their own when using 
 		/// cloneable<Derived, Base>.
 		/// this will be used as a base by default.
-		struct default_base_type : abstract_object<default_base_type>
+		struct base_type : abstract_object<base_type>
 		{
-			virtual ~default_base_type() { }
+			virtual ~base_type() { }
 
-			std::string to_string() const { return "default_base_type"; }
+			std::string to_string() const { return "base_type"; }
 			size_t hash_value() const { return 0; }
-			bool less(const default_base_type &other) const { return false; }
+			bool less(const base_type &other) const { return false; }
 		};
 
 		/// root structure for the cloneable object system

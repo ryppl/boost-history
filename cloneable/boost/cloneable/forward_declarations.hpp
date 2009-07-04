@@ -13,18 +13,11 @@
 #include <boost/pointee.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
 
-#define BOOST_CLONEABLE_SCOPE_EXIT(locals)	\
-		this_type *self = this;			\
-		BOOST_SCOPE_EXIT(locals(self))
-
-#define BOOST_CLONEABLE_SCOPE_EXIT_END \
-		BOOST_SCOPE_EXIT_END
-
 namespace boost
 {
-
 	namespace cloneable
 	{
+		/// allocator to use for clone or create operations when no allocator is provided
 		typedef std::allocator<char> default_allocator;
 
 		/// an abstract interface for an allocator that can allocate and de-allocate
@@ -33,27 +26,34 @@ namespace boost
 
 		/// empty structure with a virtual destructor used if the user does not
 		/// wish to use a custom base type
-		struct default_base_type;
+		struct base_type;
 
-		struct default_construction : mpl::true_ {};
-		struct no_default_construction : mpl::false_ {};
-		struct unknown_construction {};
+		namespace detail { struct ctag { }; }
+
+		/// {@ tags to inform about default-constructability
+		struct default_construction : detail::ctag, mpl::true_ {};
+		struct no_default_construction : detail::ctag, mpl::false_ {};
+		struct unknown_construction : detail::ctag {};
+		/// @}
 
 		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
-		template <class Base = default_base_type>
+		template <class Base = base_type>
 		struct abstract_base;
 
 		struct is_cloneable_tag { };
 
-		template <class Derived, class Base = default_base_type>
-		struct is_derived ;
+		struct nil { };
 
 		/// a structure derived from this, with type Derived, is correctly
 		/// cloneable from a base pointer, given an abstract_allocator.
+		/// TODO: allow Ctor and Base to be given in any order
 		template <
 			class Derived
-			, class Base = default_base_type
-			, class Ctor = default_construction>
+			, class Base = base_type
+			, class DefaultConstructionTag = default_construction
+			//, class Base = nil//base_type
+			//, class DefaultConstructionTag = nil//default_construction
+		>
 		struct base;
 
 		/// an adaptor for an existing class.
@@ -62,15 +62,14 @@ namespace boost
 		/// of effective type T, where T does not inherit from heterogenous::base.
 		template <
 			class T
-			, class Base = default_base_type
-			>//, class AbstractBase = abstract_cloneable<Base> >
+			, class Base = base_type>
 		struct adaptor;
 
 		// TODO: move to boost/heterogenous/foward
 		/// a heterogenous vector of objects
 		template 
 		<
-			class Base = default_base_type
+			class Base = base_type
 			, class Alloc = monotonic::allocator<int>
 		>
 		struct vector;
@@ -78,11 +77,12 @@ namespace boost
 		/// a heterogenous list of objects
 		template 
 		<
-			class Base = default_base_type
+			class Base = base_type
 			, class Alloc = monotonic::allocator<int>
 		>
 		struct list;
 		
+		// TODO: use ptr_container::detail::indirect_fun<>
 		template <class Fun>
 		struct indirect
 		{
@@ -103,7 +103,7 @@ namespace boost
 		/// a mapping of heterogenous objects to heterogenous objects
 		template 
 		<
-			class Base = default_base_type
+			class Base = base_type
 			, class Pred = indirect<std::less<Base> >
 			, class Alloc = monotonic::allocator<int>
 		>
@@ -112,7 +112,7 @@ namespace boost
 		/// a set of heterogenous objects
 		template 
 		<
-			class Base = default_base_type
+			class Base = base_type
 			, class Pred = std::less<Base>
 			, class Alloc = monotonic::allocator<int>
 		>

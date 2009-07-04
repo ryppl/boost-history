@@ -58,7 +58,7 @@ namespace boost
 
 			typedef Abstract abstract_type;
 			typedef Derived derived_type;
-			typedef is_derived<derived_type, base_type> is_derived_type;
+			typedef detail::is_derived<derived_type, base_type> is_derived_type;
 
 		protected:
 			derived_type *ptr;

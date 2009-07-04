@@ -36,6 +36,7 @@ namespace boost
 					, Base
 					, Alloc> 
 				parent_type;
+
 			using parent_type::base_type;
 			using parent_type::abstract_base_type;
 			using parent_type::allocator_type;
