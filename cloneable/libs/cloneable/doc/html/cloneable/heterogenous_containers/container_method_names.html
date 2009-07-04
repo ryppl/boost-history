@@ -55,39 +55,45 @@
       </p>
 <p>
         This creates a new object of type <code class="computeroutput"><span class="identifier">Ty</span></code>,
-        constructed with the provided arguments, and searches for it in the container.
+        constructed with the provided arguments, searches for it in the container,
+        then destroys it. This means that you can store, and search for objects that
+        are not default constructable and/or do not have an assignment operator.
         But, I'm getting a little ahead of ourselves here - more on associative containers
-        later; let's look at that syntax again.
+        later.
       </p>
+<div class="blockquote"><blockquote class="blockquote">
 <p>
-        The name for the method to add new objects to heterogenous sequence containers
-        has gone from being called <code class="computeroutput"><span class="identifier">push_back</span></code>
-        to <code class="computeroutput"><span class="identifier">emplace_back</span></code> to <code class="computeroutput"><span class="identifier">push_emplace_back</span></code> and back to <code class="computeroutput"><span class="identifier">push_back</span></code>. Similarly for associative containers
-        the names have varied from <code class="computeroutput"><span class="identifier">insert</span></code>
-        to <code class="computeroutput"><span class="identifier">emplace</span></code> to <code class="computeroutput"><span class="identifier">emplace_insert</span></code> and back to <code class="computeroutput"><span class="identifier">insert</span></code>.
-      </p>
+          </p>
 <p>
-        The C++0x containers have emplace methods that insert a new object after
-        a given iterator location, by passing construction arguments. These are called
-        <code class="computeroutput"><span class="identifier">emplace</span></code> methods.
-      </p>
+            <span class="bold"><strong><span class="emphasis"><em><span class="quote">&#8220;<span class="quote">Aside: The name for the method
+            to add new objects to heterogenous sequence containers has gone from
+            being called <code class="computeroutput"><span class="identifier">push_back</span></code>
+            to <code class="computeroutput"><span class="identifier">emplace_back</span></code> to <code class="computeroutput"><span class="identifier">push_emplace_back</span></code> and back to <code class="computeroutput"><span class="identifier">push_back</span></code>. Similarly for associative
+            containers the names have varied from <code class="computeroutput"><span class="identifier">insert</span></code>
+            to <code class="computeroutput"><span class="identifier">emplace</span></code> to <code class="computeroutput"><span class="identifier">emplace_insert</span></code> and back to <code class="computeroutput"><span class="identifier">insert</span></code>. The C++0x containers have emplace
+            methods that insert a new object after a given iterator location, by
+            passing construction arguments. These are called <code class="computeroutput"><span class="identifier">emplace</span></code>
+            methods. This is similar to the way that objects are added to heterogenous
+            containers, but not the same. For all heterogenous containers, the process
+            is to specify the type of thing and any creation arguments. There is
+            no need to specify an iterator, but there is a need to specify the type
+            explicitly. This is different to the C++0x containers, which do not require
+            the type. For this reason the names have changed and are yet to be settled.
+            All suggestions for the names of the methods, or namespaces, are welcome.
+            I am sure they'll end up being called something like <code class="computeroutput"><span class="identifier">emplace_back</span></code>
+            rather than <code class="computeroutput"><span class="identifier">push_back</span></code>;
+            but the difference is that there is no <code class="computeroutput"><span class="identifier">push_back</span></code>
+            in a heterogenous container: everything is always emplaced, so this is
+            one reason why I've been vasilating over the naming conventions to use</span>&#8221;</span></em></span></strong></span>
+          </p>
 <p>
-        This is similar to the way that objects are added to heterogenous containers,
-        but not the same. For all heterogenous containers, the process is to specify
-        the type of thing and any creation arguments. There is no need to specify
-        an iterator, but there is a need to specify the type explicitly. This is
-        different to the C++0x containers, which do not require the type.
-      </p>
+          </p>
 <p>
-        For this reason the names have changed and are yet to be settled. All suggestions
-        for the names of the methods, or namespaces, are welcome. I am sure they'll
-        end up being called something like <code class="computeroutput"><span class="identifier">emplace_back</span></code>
-        rather than <code class="computeroutput"><span class="identifier">push_back</span></code>; but
-        the difference is that there is no <code class="computeroutput"><span class="identifier">push_back</span></code>
-        in a heterogenous container: everything is always <span class="emphasis"><em>emplaced</em></span>,
-        so this is one reason why I've been vasilating over the naming conventions
-        to use.
-      </p>
+            -- CJS
+          </p>
+<p>
+        </p>
+</blockquote></div>
 <p>
         With this in mind, let's visit the first container: the faithful list.
       </p>

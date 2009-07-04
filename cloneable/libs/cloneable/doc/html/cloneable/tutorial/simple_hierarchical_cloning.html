@@ -54,7 +54,7 @@
 <p>
         Note that <code class="computeroutput"><span class="identifier">Animal</span></code> doesn't
         have to derive from anything, or have any special members or methods. Now
-        let's use out base class to create a simple type hierarchy:
+        let's use our base class to create a simple type hierarchy:
       </p>
 <p>
         
@@ -75,9 +75,13 @@
         We derive our <code class="computeroutput"><span class="identifier">Cat</span></code> class from
         <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span></code>. The first type argument to <code class="computeroutput"><span class="identifier">base</span><span class="special">&lt;...&gt;</span></code>
         is the derived type to use for cloning, and the second argument is the common
-        base type of the hierarhcy. Other than that, <code class="computeroutput"><span class="identifier">Cat</span></code>
-        implements the <code class="computeroutput"><span class="identifier">get_name</span></code> pure
-        virtual method derived in the base class <code class="computeroutput"><span class="identifier">Animal</span></code>.
+        base type of the hierarhcy. As we saw in the first example, if you do not
+        provide your own base type, your Cloneable type will use the base <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base_type</span></code>.
+      </p>
+<p>
+        Other than that, <code class="computeroutput"><span class="identifier">Cat</span></code> implements
+        the <code class="computeroutput"><span class="identifier">get_name</span></code> pure virtual
+        method derived in the base class <code class="computeroutput"><span class="identifier">Animal</span></code>.
       </p>
 <p>
         Now, let's use it:
@@ -166,11 +170,13 @@
 <p>
       </p>
 <p>
-        Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador.
-        When cloning this class, we specify which sub-object we wish to duplicate.
-        when using <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>,
-        we actually are making a type of T, rather than making another type and casting
-        up.
+        When cloning the <code class="computeroutput"><span class="identifier">Labrador</span></code>
+        class, we must specify which sub-object we wish to duplicate using the <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Ty</span><span class="special">&gt;</span></code>
+        method.
+      </p>
+<p>
+        It should be noted that when using <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Ty</span><span class="special">&gt;</span></code>, we actually are making a type of <code class="computeroutput"><span class="identifier">Ty</span></code>, rather than making another type and
+        casting up.
       </p>
 <p>
         We can also use the Cloneable library to make a new instance, with no duplication:

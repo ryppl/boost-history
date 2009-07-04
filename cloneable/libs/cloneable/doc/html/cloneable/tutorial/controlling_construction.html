@@ -49,9 +49,9 @@
         reference and as such doesn't have a default constructor. To avoid compile-time
         errors when using this type in the Cloneable libray, you must indicate that
         it is not default-constructible by passing the <code class="computeroutput"><span class="identifier">no_default_construction_tag</span></code>
-        type as a parameter to cloneable::base&lt;&gt;. The order that you give the
-        base-type or tag-types to cloneable::base&lt;&gt; is not important and is
-        dealt with be the library.
+        type as a parameter to <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;&gt;</span></code>. The order that you give the base-type
+        or tag-types to <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;&gt;</span></code> is not important and is dealt with
+        correctly by the library.
       </p>
 <p>
         Putting this type to use:
