@@ -49,6 +49,9 @@ There is a fundamental requirement that a common base class type is shared for
 each type in a given class hierarchy. The user can supply their own base classes, 
 or sensible defaults are generated.
 
+The complete source code for the library, with unit-tests, are available
+in the Boost SVN respository [@http://svn.boost.org/svn/boost/sandbox/cloneable/ here].
+
 [1] Cloneable objects can be used in containers-of-pointers (based on a modified [*Boost.PtrContainer] implementation), producing a 'heterogenous' container system with value semantics for comparison and copying, and emplace semantics for insertion. These containers are currently a part of the proposal as well, however it is intended that they eventually form a distinct library. This proposal will focus mostly on the single-object aspect of the system.
 
 [endsect]
@@ -563,7 +566,7 @@ struct Animal
 ``
 
 This is just a little more elaborate than the previous example hierarchy we used earlier in the tutorial.
-We have added an `age` field for all animals, which is how old it is in years. Animals have relational
+We have added an `age` field for all animals, indicating how old it is in years. Animals have relational
 operators for testing equivalence and sorting. Another functor named `CompareNames` is provided, which
 sorts by the name field of animals rather than age.
 
