@@ -8,7 +8,7 @@
 
 #include <boost/aligned_storage.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
-#include <boost/cloneable/detail/is_derived.hpp>
+#include <boost/cloneable/detail/mixin.hpp>
 #include <boost/cloneable/detail/create_new.hpp>
 
 namespace boost
@@ -23,7 +23,7 @@ namespace boost
 
 			template <class Derived, class Base, class DefaultCtorTag>
 			struct base 
-				: detail::is_derived<Derived, Base>
+				: detail::mixin<Derived, Base>
 				, virtual is_cloneable_tag
 				, virtual DefaultCtorTag
 			{

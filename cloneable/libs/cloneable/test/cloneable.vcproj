@@ -300,11 +300,11 @@
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\cloneable\detail\is_derived.hpp"
+						RelativePath="..\..\..\boost\cloneable\detail\make_clone_allocator.hpp"
 						>
 					</File>
 					<File
-						RelativePath="..\..\..\boost\cloneable\detail\make_clone_allocator.hpp"
+						RelativePath="..\..\..\boost\cloneable\detail\mixin.hpp"
 						>
 					</File>
 					<File
