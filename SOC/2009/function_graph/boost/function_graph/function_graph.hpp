@@ -54,6 +54,44 @@ struct func_graph_edge {
     vertex_descriptor target_;
 };
 
+
+
+/** @name bind_edge
+ * edge(u, v, g) is part of the adjacency matrix concept called Direct Edge
+ * Access. The function must account for edges that already return. There is
+ * specialization to account for functions that use bool and optional<T>.
+ */
+
+//@{
+template <typename Result, typename Vertex>
+std::pair<detail::func_graph_edge<Result, Vertex>, bool>
+bind_edge(Result const& r, Vertex u, Vertex v)
+{
+    return std::make_pair(detail::func_graph_edge<Result, Vertex>(r, u, v),
+                          true);
+}
+
+template <typename Vertex>
+std::pair<detail::func_graph_edge<bool, Vertex>, bool>
+bind_edge(bool r, Vertex u, Vertex v)
+{
+    return std::make_pair(typename detail::func_graph_edge<
+                              bool, Vertex
+                          >(r, u, v),
+                          r);
+}
+
+// This overload is specific to optional<T>
+template <typename OptType, typename Vertex>
+std::pair<detail::func_graph_edge<optional<OptType>, Vertex>, bool>
+bind_edge(optional<OptType> const& r, Vertex u, Vertex v)
+{
+    return std::make_pair(detail::func_graph_edge<
+                              optional<OptType>, Vertex
+                          >(r, u, v),
+                          (bool)r);
+}
+
 }   // detail namespace
 
 
@@ -67,12 +105,13 @@ struct func_graph_edge {
 //@{
 template <typename Func>
 struct function_graph_base {
-
     typedef Func function_type;
     typedef typename function_type::first_argument_type vertex_type;
     typedef typename function_type::result_type result_type;
-    typedef typename detail::func_graph_edge<result_type,
-                                             vertex_type> edge_type;
+    typedef typename detail::func_graph_edge<
+                         result_type,
+                         vertex_type
+                     > edge_type;
 
     /** Constructors to allow for initialization of edge */
     function_graph_base(function_type const& f)
@@ -165,7 +204,8 @@ public:
         do {
             ++vertex_begin_;
         } while((vertex_begin_ != vertex_end_) &&
-              !edge_(*vertex_begin_, *vertex_));
+              !detail::bind_edge(edge_(vertex_begin_, vertex_),
+                                 vertex_begin_, vertex_).second);
 
         return *this;
     }
@@ -324,10 +364,10 @@ public:
 /** @internal Allow a template function parameter without wrapping it with
  * boost::function.
  */
-template <typename Result, typename Vertex, typename Range>
+/*template <typename Result, typename Vertex, typename Range>
 struct function_graph<Result(Vertex, Vertex), Range>
     : public function_graph<function<Result(Vertex, Vertex)>, Range>
-{ };
+{ };*/
 
 // Specialization of function_graph without range
 template <typename Result, typename Vertex>
@@ -356,11 +396,10 @@ public:
     { }
 };
 
-
-template <typename Result, typename Vertex>
+/*template <typename Result, typename Vertex>
 struct function_graph<Result(Vertex, Vertex), infinite_domain_tag>
     : public function_graph<function<Result(Vertex, Vertex)> >
-{ };
+{ };*/
 
 
 
@@ -498,51 +537,9 @@ vertices(function_graph<function<Result(Vertex, Vertex)>, Range> const& g)
 template<typename Result, typename Vertex, typename Range>
 typename FUNC_GRAPH::vertices_size_type
 num_vertices(FUNC_GRAPH const& g)
-{
-    return size(g.range_);
-}
+{ return size(g.range_); }
 
 
-
-/** @name bind_edge
- * edge(u, v, g) is part of the adjacency matrix concept called Direct Edge
- * Access. The function must account for edges that already return. There is
- * specialization to account for functions that use bool and optional<T>.
- */
-
-//@{
-namespace detail {
-
-template <typename Result, typename Vertex>
-std::pair<detail::func_graph_edge<Result, Vertex>, bool>
-bind_edge(Result const& r, Vertex u, Vertex v)
-{
-    return std::make_pair(detail::func_graph_edge<Result, Vertex>(r, u, v),
-                          true);
-}
-
-template <typename Vertex>
-std::pair<detail::func_graph_edge<bool, Vertex>, bool>
-bind_edge(bool r, Vertex u, Vertex v)
-{
-    return std::make_pair(typename detail::func_graph_edge<
-                              bool, Vertex
-                          >(r, u, v),
-                          r);
-}
-
-// This overload is specific to optional<T>
-template <typename OptType, typename Vertex>
-std::pair<detail::func_graph_edge<optional<OptType>, Vertex>, bool>
-bind_edge(optional<OptType> const& r, Vertex u, Vertex v)
-{
-    return std::make_pair(detail::func_graph_edge<
-                              optional<OptType>, Vertex
-                          >(r, u, v),
-                          (bool)r);
-}
-
-}   // detail namespace
 
 template <typename Result, typename Vertex, typename Range>
 std::pair<typename FUNC_GRAPH::edge_descriptor, bool>
