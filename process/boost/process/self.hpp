@@ -22,6 +22,9 @@
 
 #if defined(BOOST_POSIX_API) 
 #  include <unistd.h> 
+#  if defined(__APPLE__) 
+#    include <crt_externs.h> 
+#  endif 
 #elif defined(BOOST_WINDOWS_API) 
 #  include <windows.h> 
 #else 
@@ -75,7 +78,11 @@ public:
         environment e; 
 
 #if defined(BOOST_POSIX_API) 
+#  if defined(__APPLE__) 
+        char **env = *_NSGetEnviron(); 
+#  else 
         char **env = ::environ; 
+#  endif 
         while (*env) 
         { 
             std::string s = *env; 
