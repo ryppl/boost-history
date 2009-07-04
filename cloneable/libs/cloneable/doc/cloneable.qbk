@@ -74,12 +74,12 @@ The following is a very quick introduction to [*Boost.Cloneable]:
 
 using namespace boost;
 
-class Foo : cloneable::base<Foo> { };
+class Foo : public cloneable::base<Foo> { };
 
 int main()
 {
      Foo *foo = new Foo();
-     cloneable::default_base_type *cloned = foo->clone();
+     cloneable::base_type *cloned = foo->clone();
      assert(typeid(*cloned) == typeid(Foo));
      return 0;
 }
@@ -89,7 +89,7 @@ Here we have made a class and derived from `cloneable::base`, passing the
 type of thing to clone as a parameter. 
 
 Because we didn't supply a base
-type to use, we were given `default_base_type`, which is the return type of the clone
+type to use, we were given `base_type`, which is the return type of the clone
 method. 
 
 Although it is fine to use 
@@ -102,7 +102,7 @@ But we'll get to that later. For now, let's move on to some slightly less trivia
 [section Simple Hierarchical Cloning]
 
 In the previous example, we did not supply a base class, so our Cloneable type
-was given the `default_base_type`. Below, we prepare our own base type `Animal`,
+was given the `base_type`. Below, we prepare our own base type `Animal`,
 which of course has a virtual destructor, as well as a means to get a member 
 variable from a derived type:
 
@@ -217,6 +217,52 @@ dealing with types that we can't change.
 
 [endsect]
 
+[section Controlling Construction]
+
+We sometimes work with objects that cannot be default constructed. The Cloneable system
+works with these types safely:
+
+``
+struct Base { virtual ~Base() {} };
+
+struct T0 : cloneable::base<T0, Base, no_default_construction>
+{
+    string &str;
+    T0(string &s) : str(s) { }
+};
+
+int main()
+{
+    string str = "foo";
+    T0 *p = new T0(str);
+    T0 *q = p->clone_as<T0>();
+    assert(&q->str == &str);
+    
+    // demonstrate that attempting to create
+    // a new T0 instance without parameters
+    // results in an exception of type no_default_construction
+    bool caught = false;
+    try
+    {
+        p->create_new();
+    }
+    catch (no_default_construction)
+    {
+        caught = true;
+    }
+    assert(caught);
+    return 0;
+}
+``
+
+Note that we had to pass the `no_default_construction` tag-type to `cloneable::base<>` in
+the definition of T0. Without this, an error would occur when compiling the `create_new()` line.
+
+The `no_default_construction` tag is thrown if you attempt to default-construct a 
+type that has no default constructor.
+
+[endsect]
+
 [section Using External Types]
 
 Quite often we find ourselves using classes that are defined in an external library. 
@@ -268,6 +314,48 @@ finally get to the heterogenous containers.
 
 [endsect]
 
+[section Dealing with Muliple SubObjects]
+
+When dealing with types that have multiple cloneable sub-objects, we must use the 
+`clone_as<T>` and `create_as<T>` methods to disambiguate which sub-type to clone
+or create.
+
+This is demonstrated below:
+
+``
+struct Base { virtual ~Base() { } };
+struct T0 : base<T0, Base> { };
+struct T1 : T0, base<T1, Base> { };
+struct W : base<W, Base> { };
+struct T2 : W, T1, base<T2, Base> { };
+
+int main()
+{
+    T2 *t2 = new T2();
+    
+    // clone sub-objects
+    W *t2_w = t2->clone_as<W>();
+    T1 *t2_t1 = t2->clone_as<T1>();
+    T0 *t2_t0 = t2->clone_as<T0>();
+    
+    // create sub-objects
+    W *t2_w_new = t2->create_as<W>();
+    T1 *t2_t1_new = t2->create_as<T1>();
+    T0 *t2_t0_new = t2->create_as<T0>();
+    
+    
+    return 0;
+}
+``
+
+Note that if a sub-type S in type T is not default-constructabe, an exception of type
+no_default_construction will be thrown if you attempt to default-create a new S instance
+from a T instance. 
+
+However, it is always safe to clone types that are not default constructable. 
+
+[endsect]
+
 [section Customising the Cloning Process]
 
 So far, we have been making clones using the default cloning process. 
@@ -299,6 +387,33 @@ will be no warning or error.
 
 This example uses the heap to make clones; we will next see how to make 
 clones using any standard-compliant allocator type.
+
+[endsect]
+
+[section Cloneable Traits]
+
+This is mostly relevant to library maintainers and is not important otherwise.
+
+To assist with dealing with cloneable objects in other systems, the following
+traits are provided:
+
+``
+class Base { virtual ~Base() { } };
+struct T : base<T, Base> { };
+struct U : base<T, Base, no_default_construction> { };
+struct V { };
+
+BOOST_STATIC_ASSERT(cloneable::is_cloneable<T>::value);
+BOOST_STATIC_ASSERT(cloneable::is_cloneable<U>::value);
+BOOST_STATIC_ASSERT(!cloneable::is_cloneable<V>::value);
+BOOST_STATIC_ASSERT(cloneable::has_base<T,Base>::value);
+
+//BOOST_STATIC_ASSERT(cloneable::is_default_constructable<V>::value); compile-time error: no traits
+BOOST_STATIC_ASSERT(cloneable::is_default_constructable<T>::value);
+BOOST_STATIC_ASSERT(!cloneable::is_default_constructable<T>::value);
+``
+
+More details are in the `clonable::traits<T>` structure.
 
 [endsect]
 

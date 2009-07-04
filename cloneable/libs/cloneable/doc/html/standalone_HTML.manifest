@@ -3,8 +3,11 @@ cloneable/intro.html
 cloneable/change_log.html
 cloneable/tutorial.html
 cloneable/tutorial/simple_hierarchical_cloning.html
+cloneable/tutorial/controlling_construction.html
 cloneable/tutorial/using_external_types.html
+cloneable/tutorial/dealing_with_muliple_subobjects.html
 cloneable/tutorial/customising_the_cloning_process.html
+cloneable/tutorial/cloneable_traits.html
 cloneable/tutorial/using_custom_allocators.html
 cloneable/containers.html
 cloneable/containers/list.html

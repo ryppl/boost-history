@@ -29,10 +29,15 @@
 <div class="toc"><dl>
 <dt><span class="section"><a href="tutorial/simple_hierarchical_cloning.html">Simple
       Hierarchical Cloning</a></span></dt>
+<dt><span class="section"><a href="tutorial/controlling_construction.html">Controlling
+      Construction</a></span></dt>
 <dt><span class="section"><a href="tutorial/using_external_types.html">Using External
       Types</a></span></dt>
+<dt><span class="section"><a href="tutorial/dealing_with_muliple_subobjects.html">Dealing
+      with Muliple SubObjects</a></span></dt>
 <dt><span class="section"><a href="tutorial/customising_the_cloning_process.html">Customising
       the Cloning Process</a></span></dt>
+<dt><span class="section"><a href="tutorial/cloneable_traits.html">Cloneable Traits</a></span></dt>
 <dt><span class="section"><a href="tutorial/using_custom_allocators.html">Using Custom
       Allocators</a></span></dt>
 </dl></div>
@@ -51,12 +56,12 @@
 
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">;</span>
 
-<span class="keyword">class</span> <span class="identifier">Foo</span> <span class="special">:</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;</span> <span class="special">{</span> <span class="special">};</span>
+<span class="keyword">class</span> <span class="identifier">Foo</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Foo</span><span class="special">&gt;</span> <span class="special">{</span> <span class="special">};</span>
 
 <span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
      <span class="identifier">Foo</span> <span class="special">*</span><span class="identifier">foo</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Foo</span><span class="special">();</span>
-     <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">default_base_type</span> <span class="special">*</span><span class="identifier">cloned</span> <span class="special">=</span> <span class="identifier">foo</span><span class="special">-&gt;</span><span class="identifier">clone</span><span class="special">();</span>
+     <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base_type</span> <span class="special">*</span><span class="identifier">cloned</span> <span class="special">=</span> <span class="identifier">foo</span><span class="special">-&gt;</span><span class="identifier">clone</span><span class="special">();</span>
      <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">cloned</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Foo</span><span class="special">));</span>
      <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -68,7 +73,7 @@
       the type of thing to clone as a parameter.
     </p>
 <p>
-      Because we didn't supply a base type to use, we were given <code class="computeroutput"><span class="identifier">default_base_type</span></code>,
+      Because we didn't supply a base type to use, we were given <code class="computeroutput"><span class="identifier">base_type</span></code>,
       which is the return type of the clone method.
     </p>
 <p>
