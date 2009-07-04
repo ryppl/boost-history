@@ -48,25 +48,30 @@ such concepts have two main uses:
    :Requires: ``T`` must meet the requirements of CopyConstructible
      (20.1.3) and Assignable (23.1) types
 
-   The ideal signature for C++0x would probably be something like::
+   The ideal signature for C++0x would probably be something like:
 
-    template <InputIterator Iter1, InputIterator Iter2, Iter1::value_type T> 
-    requires SemiRing<Iter1::value_type> 
-      && SameType<Iter1::value_type, Iter2::value_type>
-    T inner_product(Iter1 first1, Iter1 last1, Iter2 first2, T init);
+   .. parsed-literal::
+
+    template <**InputIterator Iter1**, **InputIterator Iter2**> 
+    requires **SemiRing<Iter1::value_type>**
+      && **SameType<Iter1::value_type, Iter2::value_type>**
+    T inner_product(Iter1 first1, Iter1 last1, Iter2 first2, Iter1::value_type init);
 
    but that would add quite a few requirements, many of them subtle,
    to those implied by the C++03 specification.  In C++0x, to maintain
-   the same requirements, the signature must be written as::
+   the same requirements, the signature must be written using
+   syntactic requirements:
 
-    template <InputIterator Iter1, InputIterator Iter2, MoveConstructible T> 
-    requires HasMultiply<Iter1::reference, Iter2::reference> 
-      && HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type> 
-      && HasAssign<T, 
+   .. parsed-literal::
+
+    template <**InputIterator Iter1**, **InputIterator Iter2**, **MoveConstructible T**> 
+    requires **HasMultiply<Iter1::reference, Iter2::reference>** 
+      && **HasPlus<T, HasMultiply<Iter1::reference, Iter2::reference>::result_type>** 
+      && **HasAssign<T, 
           HasPlus<T, 
             HasMultiply<Iter1::reference, Iter2::reference>::result_type
           >::result_type
-        > 
+        >** 
     T inner_product(Iter1 first1, Iter1 last1, Iter2 first2, T init);
 
 2. constraining components such as the operators in Boost.Lambda, whose
@@ -141,17 +146,61 @@ correctly identify them.  In c++std-lib-23956, Chris Jefferson writes:
 
 The expectation to be protected from such mistakes is consistent with
 the C++ tradition of protecting against accident rather than
-deliberate circumvention. [#cpppl3e]_ Nonetheless, these
-concepts should generally be declared ``auto`` because the normal
-interpretation of the combined syntactic elements is so widespread
-that convenience outweighs danger.  A separate mechanism (such as
-deleted concept maps) may be needed to assert that a type with a
-common syntax does not fit the usual semantic assumptions.
+deliberate circumvention. [#cpppl3e]_ 
 
-A large proportion of foundational concepts are covered by the
-standard library.  Our experience shows that widespread agreement on
-syntax and semantics for new concepts takes a long time to develop, so
-we don't expect new foundational concepts to proliferate quickly.
+Perhaps because they are simple, it is not uncommon that foundational
+concepts refine other concepts having the same syntactic structure.
+For example, if we know the operation used with ``std::accumulate`` is
+``Associative``, we can distribute the computation across N cores by
+breaking the input into N subranges, accumulating them, and using the
+operation again to combine the partial results:
+
+.. parsed-literal::
+
+  concept **Associative<typename F, typename...Args>**
+    : **Callable<F,Args...>**
+  {};
+
+  // operates serially 
+  template <
+      InputIterator Iter, MoveConstructible T, 
+      **Callable**\ <auto, const T&, Iter::reference> BinaryOperation
+  >
+  requires HasAssign<T, BinaryOperation::result_type> 
+        && CopyConstructible<BinaryOperation> 
+  T accumulate(Iter first, Iter last, T init, BinaryOperation binary_op);
+
+  // optimized parallel version
+  template <
+      ForwardIterator Iter, MoveConstructible T, 
+      **Associative**\ <auto, const T&, Iter::reference> BinaryOperation
+  >
+  requires HasAssign<T, BinaryOperation::result_type> 
+        && CopyConstructible<BinaryOperation> 
+  T accumulate(Iter first, Iter last, T init, BinaryOperation binary_op);
+
+If ``Associative`` were declared ``auto``, even non-``Associative``
+operations would be dispatched to the parallel implementation of
+``accumulate`` based on their callability with two arguments, yielding
+an incorrect result at runtime.
+
+Ideally, foundational concepts should be declared ``auto`` because the
+normal interpretation of the combined syntactic elements is so
+widespread that convenience outweighs danger.  A separate mechanism
+(such as deleted concept maps) may be needed to assert that a type
+with a common syntax does not fit the usual semantic assumptions.
+
+However, before making a foundational concept ``auto``, one must take
+great care to be sure it is not, and *will never be*, a refinement of
+another concept with identical or very similar syntax.  Changing a
+concept from ``auto`` to non-``auto`` will break any code that
+depended on that automatic conformance.
+
+Outside of algebraic structures such as ``SemiRing``, a large
+proportion of foundational concepts are covered by the standard
+library.  Our experience shows that widespread agreement on syntax and
+semantics for new concepts takes a long time to develop, so we don't
+expect new foundational concepts to proliferate quickly.
 
 
 Nontrivial Concepts
@@ -299,9 +348,9 @@ of expressive advantages over the “traditional” approach:
   (without exported concept maps, the intended public interface would
   be unavailable except in constrained contexts)
 
-Of course, it remains to be seen whether either of these styles, or
-some other one, will be preferred in the long run, but it is worth
-noting that intentional maps need not be empty.
+It remains to be seen whether either of these styles, or some other
+one, will be preferred in the long run, but it is worth noting that
+intentional maps need not be empty.
 
 We expect a vast majority of concept maps to be of the intentional
 variety.  That expectation is strongest where nontrivial concepts are
@@ -312,8 +361,8 @@ very low.
 Post-hoc Mapping
 ----------------
 
-A types can be mapped to a concept *post-hoc* when the type's creator
-had no specific intention to model the concept in question.  Post-hoc
+A type is mapped to a concept *post-hoc* when the type's creator had
+no specific intention to model the concept in question.  Post-hoc
 mapping can happen implicitly, as when a type happens to provide the
 expected syntax and semantics for an ``auto`` concept like
 ``EqualityComparable``, or explicitly, via a ``concept_map``.
@@ -332,7 +381,7 @@ are already expressed, but in a different form.  For example, one can
 use adaptive mapping to represent the edge connectivity of a graph
 using the nonzero elements of a sparse matrix (a technique used in
 efficiently solving systems of equations), or an iterator over
-integers using an actual ``int``::
+consecutive integers using an actual ``int``::
 
   concept_map RandomAccessIterator<int>
   {
