@@ -6,8 +6,8 @@ A Taxonomy of Concepts and Concept Maps
 :Number:  xxxx=xx-xxxx
 :Date: 2009-07-01
 
-This paper introduces classifies concepts and concept maps into three
-categories that will allow us to discuss the impliciations of various
+This paper introduces a classification of concepts and concept maps into three
+categories that will allow us to discuss the implications of various
 proposed design changes.
 
 Three Kinds of Concepts
@@ -36,8 +36,8 @@ such concepts have two main uses:
    ::
 
      template <class InputIterator1, class InputIterator2, class T> 
-     T inner_product(InputIterator1first1, InputIterator1last1, 
-     InputIterator2first2, T init); 
+     T inner_product(InputIterator1 first1, InputIterator1 last1, 
+                     InputIterator2 first2, T init); 
 
    :Effects: Computes its result by initializing the accumulator
      ``acc`` with the initial value ``init`` and then modifying it
@@ -424,5 +424,5 @@ combine:
   Edition*, section 10.2.2, page 226
 
 .. [#mat] Thanks to Mat Marcus for describing this style, which he
-  discovered during some research work done with Jakko Jarvi
+  discovered during some research work done with Jaakko Jarvi
   using ConceptGCC.
