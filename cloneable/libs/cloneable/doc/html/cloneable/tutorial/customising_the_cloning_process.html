@@ -54,16 +54,39 @@
 <p>
       </p>
 <p>
-        Please ensure that you override the <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span></code> method correctly. It must return a type
-        that is co-variant with the base you used for the derived type, and must
-        be <code class="computeroutput"><span class="keyword">const</span></code>. If you make a mistake
-        on the return type, the compiler will complain. But if you forget to make
-        the method const, it will not be invoked when needed and there will be no
-        warning or error.
+        Please ensure that you override the <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span> <span class="keyword">const</span></code> method
+        correctly. It must return a type that is co-variant with the base you used
+        for the derived type, and should be <code class="computeroutput"><span class="keyword">const</span></code>.
+        If you make a mistake on the return type, the compiler will complain. There
+        is a non-const <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span></code> method as well. This will be invoked on
+        a non-const original, then the const <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span> <span class="keyword">const</span></code> will
+        be attempted before finally using the <code class="computeroutput"><span class="identifier">copy_construct</span><span class="special">()</span> <span class="keyword">const</span></code> method.
+        To summarise:
+      </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+          Attempting to make a copy of a non-const original will invoke <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span></code>
+</li>
+<li class="listitem">
+          If this fails or is not over-ridden, then the <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">()</span> <span class="keyword">const</span></code>
+          method is invoked.
+        </li>
+<li class="listitem">
+          If this fails is or not over-ridden, then <code class="computeroutput"><span class="identifier">copy_construct</span><span class="special">()</span> <span class="keyword">const</span></code>
+          is invoked.
+        </li>
+</ul></div>
+<p>
+        This provides a means for clones to be made that alter the original, if you
+        need to do that. For <code class="computeroutput"><span class="keyword">const</span></code> originals,
+        the process starts from step 2. All of these methods are over-loaded with
+        a similar method that takes an <code class="computeroutput"><span class="identifier">abstract_allocator</span></code>
+        argument.
       </p>
 <p>
-        This example uses the heap to make clones; we will next see how to make clones
-        using any standard-compliant allocator type.
+        Which is a nice segue into the next section. This example used the heap to
+        make clones; we will next see how to make clones using any standard-compliant
+        allocator type.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

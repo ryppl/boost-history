@@ -55,6 +55,20 @@ namespace boost
 				return copy_construct(alloc);
 			}
 
+			/// MUTABLE
+			virtual this_type *make_copy(abstract_allocator &) { return 0; }
+
+			/// MUTABLE 
+			this_type *clone(abstract_allocator &alloc)
+			{
+				if (this_type *copy = make_copy(alloc))
+					return copy;
+				const this_type *const_this = const_cast<const this_type *>(this);
+				if (this_type *copy = const_this->make_copy(alloc))
+					return copy;
+				return const_this->copy_construct(alloc);
+			}
+
 			/// non-virtual method that allocates using default allocator
 			this_type *allocate() const
 			{

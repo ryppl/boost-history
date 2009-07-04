@@ -52,9 +52,9 @@
 <p>
       </p>
 <p>
-        Note that <code class="computeroutput"><span class="identifier">Animal</span></code> doesn't
-        have to derive from anything, or have any special members or methods. Now
-        let's use our base class to create a simple type hierarchy:
+        <span class="inlinemediaobject"><img src="../../images/note.png" alt="note"></span> <code class="computeroutput"><span class="identifier">Animal</span></code>
+        doesn't have to derive from anything, or have any special members or methods.
+        Now let's use our base class to create a simple type hierarchy:
       </p>
 <p>
         
@@ -81,7 +81,7 @@
 <p>
         Other than that, <code class="computeroutput"><span class="identifier">Cat</span></code> implements
         the <code class="computeroutput"><span class="identifier">get_name</span></code> pure virtual
-        method derived in the base class <code class="computeroutput"><span class="identifier">Animal</span></code>.
+        method derived from the base class <code class="computeroutput"><span class="identifier">Animal</span></code>.
       </p>
 <p>
         Now, let's use it:
@@ -107,10 +107,9 @@
 <p>
       </p>
 <p>
-        Note that the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code>
-        method returns a pointer to the base class of the type hierarchy - in this
-        case, <code class="computeroutput"><span class="identifier">Animal</span></code>. We had to use
-        a dynamic cast to down-cast to our derived type.
+        <span class="inlinemediaobject"><img src="../../images/note.png" alt="note"></span> the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code> method returns a pointer to the base class
+        of the type hierarchy - in this case, <code class="computeroutput"><span class="identifier">Animal</span></code>.
+        We had to use a dynamic cast to down-cast to our derived type.
       </p>
 <p>
         If you know the derived type that you wish to be cloned, you can use the
@@ -126,7 +125,17 @@
       </p>
 <p>
         As we shall soon see, this is also handy when we have choices of which sub-object
-        to clone.
+        to clone. Of course, we could also use the free-function <code class="computeroutput"><span class="identifier">clone</span></code>:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">cloneable</span><span class="special">;</span>
+
+<span class="identifier">assert</span><span class="special">(</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(*</span><span class="identifier">cat</span><span class="special">));</span>
+<span class="identifier">Cat</span> <span class="special">*</span><span class="identifier">cloned</span> <span class="special">=</span> <span class="identifier">clone</span><span class="special">(*</span><span class="identifier">cat</span><span class="special">);</span>
+</pre>
+<p>
       </p>
 <p>
         We now add other animals to the hierachy, including one that uses multiple
@@ -147,22 +156,24 @@
       </p>
 <p>
         <code class="computeroutput"><span class="identifier">Dog</span></code> is just like a cat, but
-        different. <code class="computeroutput"><span class="identifier">Labrador</span></code> is the
-        first example we have seen that uses multiple inheritance. In this case,
-        we are saying that a Labrador is-a Dog, and is Cloneable as either a Dog
-        or a Labrador. Using these types:
+        different <span class="inlinemediaobject"><img src="../../images/smiley.png" alt="smiley"></span>. <code class="computeroutput"><span class="identifier">Labrador</span></code>
+        is the first example we have seen that uses multiple inheritance. In this
+        case, we are saying that a Labrador is-a Dog, and is Cloneable as either
+        a Dog or a Labrador. Using these types:
       </p>
 <p>
         
 </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-    <span class="identifier">Labrador</span> <span class="special">*</span><span class="identifier">lab</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Labrador</span><span class="special">();</span>
-    <span class="identifier">Dog</span> <span class="special">*</span><span class="identifier">dog</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;();</span>
-    <span class="identifier">Labrador</span> <span class="special">*</span><span class="identifier">cloned_lab</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;();</span>
+    <span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">lab</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Labrador</span><span class="special">();</span>
+    <span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">lab_as_dog</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;();</span>
+    <span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">lab_clone</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;();</span>
     
-    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">dog</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Dog</span><span class="special">));</span>
-    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">cloned_lab</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Labrador</span><span class="special">));</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">lab_as_dog</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Dog</span><span class="special">));</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">lab_clone</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Labrador</span><span class="special">));</span>
+    
+    <span class="identifier">assert</span><span class="special">(!</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;(</span><span class="identifier">lab_as_dog</span><span class="special">));</span>
     
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -175,25 +186,24 @@
         method.
       </p>
 <p>
-        It should be noted that when using <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Ty</span><span class="special">&gt;</span></code>, we actually are making a type of <code class="computeroutput"><span class="identifier">Ty</span></code>, rather than making another type and
-        casting up.
+        It should be noted that when using <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Ty</span><span class="special">&gt;</span></code>, we actually are making an instance of
+        type <code class="computeroutput"><span class="identifier">Ty</span></code>, rather than making
+        another type and casting up.
       </p>
 <p>
-        We can also use the Cloneable library to make a new instance, with no duplication:
+        We can also use the Cloneable library to make a new derived instance from
+        a base type:
       </p>
 <p>
         
 </p>
-<pre class="programlisting"><span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">MakeNew</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">abstract_base</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;</span> <span class="special">&amp;</span><span class="identifier">animal</span><span class="special">)</span>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-    <span class="keyword">return</span> <span class="identifier">animal</span><span class="special">.</span><span class="identifier">create_new</span><span class="special">();</span>
-<span class="special">}</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
-<span class="special">{</span>
-    <span class="identifier">Cat</span> <span class="special">*</span><span class="identifier">cat</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Cat</span><span class="special">();</span>
-    <span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">new_animal</span> <span class="special">=</span> <span class="identifier">MakeNew</span><span class="special">(*</span><span class="identifier">cat</span><span class="special">);</span>
+    <span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">cat</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Cat</span><span class="special">();</span>
+    <span class="identifier">Animal</span> <span class="special">*</span><span class="identifier">new_animal</span> <span class="special">=</span> <span class="identifier">create_new</span><span class="special">(*</span><span class="identifier">cat</span><span class="special">);</span>
+    
     <span class="identifier">assert</span><span class="special">(</span><span class="keyword">typeid</span><span class="special">(*</span><span class="identifier">new_animal</span><span class="special">)</span> <span class="special">==</span> <span class="keyword">typeid</span><span class="special">(</span><span class="identifier">Cat</span><span class="special">));</span>
+    
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
@@ -201,18 +211,16 @@
       </p>
 <p>
         This will create a new derived animal type (not a new base), and return a
-        pointer to the base. Here we used a free-function to make the new object,
-        to show how to use the <code class="computeroutput"><span class="identifier">abstract_base</span></code>
-        template structure. We used <code class="computeroutput"><span class="identifier">abstract_base</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;</span></code>, rather than just <code class="computeroutput"><span class="identifier">Animal</span></code>,
-        as the base type argument for the <code class="computeroutput"><span class="identifier">MakeNew</span></code>
-        function. This is because the base class we provided, <code class="computeroutput"><span class="identifier">Animal</span></code>,
-        does not derive from anything and does not have any clone-related methods.
-        These methods are added by the <code class="computeroutput"><span class="identifier">abstract_base</span><span class="special">&lt;&gt;</span></code> mix-in, which all derived <code class="computeroutput"><span class="identifier">Animal</span></code>s are implicitly convertible to.
+        pointer to the base.
       </p>
 <p>
         This is the basics of the cloneability side of the library. But there are
         a few more details and use-cases to cover before we get to the containers.
-        The first of which is dealing with types that we can't change.
+        The first of these details is dealing with types that are not default-constructable.
+        This is a very useful part of the library, as it allows for containers with
+        elements that are not default constructable and do not have assignment operations.
+        We'll get to that in the containers tutorial, but for now let's quickly cover
+        the basics in the next section.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

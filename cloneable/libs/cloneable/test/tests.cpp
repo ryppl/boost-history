@@ -197,6 +197,8 @@ BOOST_AUTO_TEST_CASE(test_mi_2)
 	assert(t2->can_create_as<T1>());
 	assert(t2->can_create_as<T2>());
 	assert(t2->can_create_as<W>());
+
+	// these free-functions currently do not work...
    /* assert(can_clone_as<W>(*t2));
     assert(can_clone_as<T0>(*t2));
     assert(can_clone_as<T1>(*t2));

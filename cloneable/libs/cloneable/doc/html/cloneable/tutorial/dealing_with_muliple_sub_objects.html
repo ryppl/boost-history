@@ -31,7 +31,7 @@
         When working with types that have multiple cloneable sub-objects, we must
         use the <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> and
         <code class="computeroutput"><span class="identifier">create_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> methods
-        to disambiguate which sub-type to clone or create.
+        or functions to disambiguate which sub-type to clone or create.
       </p>
 <p>
         This is demonstrated below:
@@ -49,16 +49,27 @@
 <span class="special">{</span>
     <span class="identifier">T2</span> <span class="special">*</span><span class="identifier">t2</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T2</span><span class="special">();</span>
     
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">W</span><span class="special">&gt;());</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">&gt;());</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;());</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_clone_as</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;());</span>
+    
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_create_as</span><span class="special">&lt;</span><span class="identifier">W</span><span class="special">&gt;());</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_create_as</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">&gt;());</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_create_as</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;());</span>
+    <span class="identifier">assert</span><span class="special">(</span><span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">can_create_as</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;());</span>
+    
     <span class="comment">// clone sub-objects
 </span>    <span class="identifier">W</span> <span class="special">*</span><span class="identifier">t2_w</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">W</span><span class="special">&gt;();</span>
-    <span class="identifier">T1</span> <span class="special">*</span><span class="identifier">t2_t1</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;();</span>
     <span class="identifier">T0</span> <span class="special">*</span><span class="identifier">t2_t0</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">&gt;();</span>
+    <span class="identifier">T1</span> <span class="special">*</span><span class="identifier">t2_t1</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;();</span>
+    <span class="identifier">T1</span> <span class="special">*</span><span class="identifier">t2_t2</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;();</span>
     
     <span class="comment">// create sub-objects
 </span>    <span class="identifier">W</span> <span class="special">*</span><span class="identifier">t2_w_new</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">create_as</span><span class="special">&lt;</span><span class="identifier">W</span><span class="special">&gt;();</span>
-    <span class="identifier">T1</span> <span class="special">*</span><span class="identifier">t2_t1_new</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">create_as</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;();</span>
     <span class="identifier">T0</span> <span class="special">*</span><span class="identifier">t2_t0_new</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">create_as</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">&gt;();</span>
-    
+    <span class="identifier">T1</span> <span class="special">*</span><span class="identifier">t2_t1_new</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">create_as</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">&gt;();</span>
+    <span class="identifier">T2</span> <span class="special">*</span><span class="identifier">t2_t2_new</span> <span class="special">=</span> <span class="identifier">t2</span><span class="special">-&gt;</span><span class="identifier">create_as</span><span class="special">&lt;</span><span class="identifier">T2</span><span class="special">&gt;();</span>
     
     <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">}</span>
@@ -66,9 +77,11 @@
 <p>
       </p>
 <p>
-        Note that if a sub-type S in type T is not default-constructabe, an exception
-        of type no_default_construction will be thrown if you attempt to default-create
-        a new S instance from a T instance.
+        <span class="inlinemediaobject"><img src="../../images/alert.png" alt="alert"></span> if a sub-type <code class="computeroutput"><span class="identifier">S</span></code>
+        in type <code class="computeroutput"><span class="identifier">T</span></code> is not default-constructabe,
+        an exception of type <code class="computeroutput"><span class="identifier">no_default_construction</span></code>
+        will be thrown if you attempt to default-create a new <code class="computeroutput"><span class="identifier">S</span></code>
+        instance from a <code class="computeroutput"><span class="identifier">T</span></code> instance.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

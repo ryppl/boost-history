@@ -144,7 +144,7 @@ int main()
 }
 ``
 
-Note that we pass references to these functions rather than pointers, and these functions work for ['Cloneable] types and generally.
+__note__ we pass references to these functions rather than pointers, and these functions work for ['Cloneable] types and generally.
 We can also pass an allocator to these functions, but more on custom allocation later.
 
 Although it is fine to use 
@@ -175,7 +175,7 @@ class Animal
 };
 ``
 
-Note that `Animal` doesn't have to derive from anything, or have any special members or methods. 
+__note__ `Animal` doesn't have to derive from anything, or have any special members or methods. 
 Now let's use our base class to create a simple type hierarchy:
 
 ``
@@ -217,7 +217,7 @@ int main()
 };
 ``
 
-Note that the `clone()` method returns
+__note__ the `clone()` method returns
 a pointer to the base class of the type hierarchy - in this case, `Animal`. 
 We had to use a dynamic cast to down-cast to our derived type.
 
@@ -250,7 +250,7 @@ class Labrador : public Dog, public cloneable::base<Labrador, Animal>
 };
 ``
 
-`Dog` is just like a cat, but different. `Labrador` is the first example we have seen
+`Dog` is just like a cat, but different :-). `Labrador` is the first example we have seen
 that uses multiple inheritance. In this case, we are saying that a Labrador is-a Dog,
 and is Cloneable as either a Dog or a Labrador. Using these types:
 
@@ -428,15 +428,15 @@ int main()
 {
     T2 *t2 = new T2();
     
-    assert(can_clone_as<W>(*t2));
-    assert(can_clone_as<T0>(*t2));
-    assert(can_clone_as<T1>(*t2));
-    assert(can_clone_as<T2>(*t2));
+    assert(t2->can_clone_as<W>());
+    assert(t2->can_clone_as<T0>());
+    assert(t2->can_clone_as<T1>());
+    assert(t2->can_clone_as<T2>());
     
-    assert(can_create_as<W>(*t2));
-    assert(can_create_as<T0>(*t2));
-    assert(can_create_as<T1>(*t2));
-    assert(can_create_as<T2>(*t2));
+    assert(t2->can_create_as<W>());
+    assert(t2->can_create_as<T0>());
+    assert(t2->can_create_as<T1>());
+    assert(t2->can_create_as<T2>());
     
     // clone sub-objects
     W *t2_w = t2->clone_as<W>();
@@ -454,7 +454,7 @@ int main()
 }
 ``
 
-Note that if a sub-type `S` in type `T` is not default-constructabe, an exception of type
+__alert__ if a sub-type `S` in type `T` is not default-constructabe, an exception of type
 `no_default_construction` will be thrown if you attempt to default-create a new `S` instance
 from a `T` instance. 
 
@@ -483,14 +483,23 @@ class Foo : public cloneable::base<Foo>
 };
 ``
 
-Please ensure that you override the `make_copy()` method correctly. It must return 
-a type that is co-variant with the base you used for the derived type, and must be 
-`const`. If you make a mistake on the return type, the compiler will complain. But
-if you forget to make the method const, it will not be invoked when needed and there
-will be no warning or error.
+Please ensure that you override the `make_copy() const` method correctly. It must return 
+a type that is co-variant with the base you used for the derived type, and should be 
+`const`. If you make a mistake on the return type, the compiler will complain. 
+There is a non-const `make_copy()` method as well. This will be invoked on a non-const
+original, then the const `make_copy() const` will be attempted before finally using
+the `copy_construct() const` method. To summarise:
 
-This example uses the heap to make clones; we will next see how to make 
-clones using any standard-compliant allocator type.
+* Attempting to make a copy of a non-const original will invoke `make_copy()`
+* If this fails or is not over-ridden, then the `make_copy() const` method is invoked.
+* If this fails is or not over-ridden, then `copy_construct() const` is invoked.
+
+This provides a means for clones to be made that alter the original, if you need
+to do that. For `const` originals, the process starts from step 2. All of these
+methods are over-loaded with a similar method that takes an `abstract_allocator` argument.
+
+Which is a nice segue into the next section. This example used the heap to make clones; 
+we will next see how to make clones using any standard-compliant allocator type.
 
 [endsect]
 
@@ -502,7 +511,7 @@ types work well in containers.
 
 When making a new object, sub-object, clone or sub-clone, the underlying `abstract_base` 
 is given a reference to an `abstract_allocator`. This is 
-an interface (containing only pure virtual methods) that is used to expose a specialised 
+an interface used to expose a specialised 
 `allocator<T>` to the non-specific `abstract_base`. This process is easy to understand with some examples:
 
 ``
@@ -526,7 +535,7 @@ rather than just always use the heap:
 class Foo : public cloneable::base<Foo>
 {
     // over-ride the make_copy method, providing our own means to make a clone
-    Foo *make_copy(cloneable::abstract_allocator &amp;alloc) const
+    Foo *make_copy(cloneable::abstract_allocator &alloc) const
     {
         Foo *copy = cloneable::create<Foo>(alloc);
         
@@ -540,10 +549,12 @@ class Foo : public cloneable::base<Foo>
 Recall that if your class can be correctly copy-constructed, you do not need to 
 provide a custom clone override at all. If your class only members that have value 
 semantics and can in turn be copy-constructed (including `std::containers`, and heterogenous::containers), 
-then you do not need to provide any customisation. 
+then you do not need to provide any customisation. So don't start by making a custom clone override method.
+First, check your class to see if it is actually needed. Introducing a `make_copy()` method too early
+or when not needed can create maintenance problems.
 
-However, if your class contains pointers of any description, or references, 
-then you will in general have to provide a sensible copy-constructor, or provide a custom clone override.
+__tip__ if your class contains pointers of any description, or references, 
+then you will in general have to at least provide a sensible copy-constructor, or provide a custom clone override.
 
 In summary, there are three stages of customisation:
 
@@ -576,7 +587,7 @@ BOOST_STATIC_ASSERT(cloneable::is_default_constructable<T>::value);
 BOOST_STATIC_ASSERT(!cloneable::is_default_constructable<T>::value);
 ``
 
-More details are in the `clonable::traits<T>` structure.
+More details are in the `clonable::traits<T>` structure. [@boost:/libs/cloneable/boost/cloneable/traits.hpp traits.hpp]
 
 [endsect]
 
@@ -812,7 +823,7 @@ Dog &spot = vector.as<Dog>(1);
 const Dog *maybe_dog = vector.cast<Dog>(0);
 ``
 
-['Again, the names here have undergone a number of changes and remain in flux. Suggestions welcome!]
+['__alert__ the names here have undergone a number of changes and remain in flux. Suggestions welcome!]
 
 `push_back` works just like with `list` and is not surprising. But the `as` and `cast` methods are new.
 

@@ -50,8 +50,7 @@
         errors when using this type in the Cloneable libray, you must indicate that
         it is not default-constructible by passing the <code class="computeroutput"><span class="identifier">no_default_construction_tag</span></code>
         type as a parameter to <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;&gt;</span></code>. The order that you give the base-type
-        or tag-types to <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;&gt;</span></code> is not important and is dealt with
-        correctly by the library.
+        or tag-types to <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;&gt;</span></code> is not important.
       </p>
 <p>
         Putting this type to use:
@@ -63,8 +62,8 @@
 <span class="special">{</span>
     <span class="identifier">string</span> <span class="identifier">str</span> <span class="special">=</span> <span class="string">"foo"</span><span class="special">;</span>
     <span class="identifier">T0</span> <span class="special">*</span><span class="identifier">p</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T0</span><span class="special">(</span><span class="identifier">str</span><span class="special">);</span>
-    <span class="identifier">T0</span> <span class="special">*</span><span class="identifier">q</span> <span class="special">=</span> <span class="identifier">p</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T0</span><span class="special">&gt;();</span>
-    <span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">q</span><span class="special">-&gt;</span><span class="identifier">str</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">str</span><span class="special">);</span>
+    <span class="identifier">T0</span> <span class="special">*</span><span class="identifier">q</span> <span class="special">=</span> <span class="identifier">clone</span><span class="special">(*</span><span class="identifier">p</span><span class="special">);</span> <span class="comment">// or, p-&gt;clone_as&lt;T0&gt;();
+</span>    <span class="identifier">assert</span><span class="special">(&amp;</span><span class="identifier">q</span><span class="special">-&gt;</span><span class="identifier">str</span> <span class="special">==</span> <span class="special">&amp;</span><span class="identifier">str</span><span class="special">);</span>
     
     <span class="comment">// demonstrate that attempting to create
 </span>    <span class="comment">// a new T0 instance without parameters
@@ -87,7 +86,11 @@
 <p>
         A <code class="computeroutput"><span class="identifier">no_default_construction</span></code>
         exception is thrown if you attempt to default-construct a type that has no
-        default constructor.
+        default constructor. As you would expect, if a Cloneable Q type derives from
+        a non-default-constructable type, then Q is also not default-constructable.
+      </p>
+<p>
+        Next, we'll look at how to use existing types that we can't change.
       </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
