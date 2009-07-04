@@ -7,6 +7,7 @@
 #define BOOST_CLONEABLE_CLONEABLE_HPP
 
 #include <boost/cloneable/base.hpp>
+#include <boost/cloneable/clone.hpp>
 
 #endif // BOOST_CLONEABLE_CLONEABLE_HPP
 

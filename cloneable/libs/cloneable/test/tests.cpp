@@ -37,6 +37,8 @@ using namespace std;
 using namespace boost;
 using namespace cloneable;
 
+
+
 namespace basic_test
 {
 	struct my_base { virtual ~my_base() { } };
@@ -67,10 +69,30 @@ BOOST_AUTO_TEST_CASE(test_basic)
 	T0 *t0_clone = dynamic_cast<T0 *>(t0->clone());
 	BOOST_ASSERT(typeid(*t0_clone) == typeid(T0));
 
+	// cloning from a raw base type
+	my_base *t0_base = new T0();
+	T0 *t0_base_clone = cloneable::clone_as<T0>(*t0_base);
+	BOOST_ASSERT(t0_base_clone != 0);
+
+	// make a new object from an existing base
+	my_base *t0_new = cloneable::create_new(*t0_base);
+	BOOST_ASSERT(t0_new && typeid(*t0_new) == typeid(T0));
+
+	delete t0_base;
+	delete t0_base_clone;
+	delete t0_new;
+
 	// cloning from an abstract_base_type
+	BOOST_STATIC_ASSERT((is_same<my_base, T1::base_type>::value));
+	BOOST_STATIC_ASSERT((is_same<cloneable::abstract_base<my_base>, T1::abstract_base_type>::value));
 	T1::abstract_base_type *t1_base = new T1();
-	T1 *t1_clone = dynamic_cast<T1 *>(t1_base->clone());
-	BOOST_ASSERT(typeid(*t1_clone) == typeid(T1));
+
+	// query for supported clone types
+	BOOST_ASSERT(t1_base->can_clone_as<T1>());
+	BOOST_ASSERT(!t1_base->can_clone_as<T2>());
+
+	T1 *t1_clone = t1_base->clone_as<T1>();
+	BOOST_ASSERT(t1_clone != 0);
 
 	// use a free-function from a generalised abstract_base
 	T2 *t2 = new T2;
@@ -149,6 +171,64 @@ BOOST_AUTO_TEST_CASE(test_multiple_inheritance)
 	W *q2_w = q2->create_as<W>(alloc);
 	BOOST_ASSERT(q2_0 && q2_1 && q2_w);
 }	
+
+namespace mi_test_2
+{
+	struct Base { virtual ~Base() { } };
+	struct T0 : base<T0, Base> { };
+	struct T1 : T0, base<T1, Base> { };
+	struct W : base<W, Base> { };
+	struct T2 : W, T1, base<T2, Base> { };
+}
+
+BOOST_AUTO_TEST_CASE(test_mi_2)
+{
+	using namespace mi_test_2;
+	using namespace cloneable;
+
+    T2 *t2 = new T2();
+
+	assert(t2->can_clone_as<T0>());
+	assert(t2->can_clone_as<T1>());
+	assert(t2->can_clone_as<T2>());
+	assert(t2->can_clone_as<W>());
+    
+	assert(t2->can_create_as<T0>());
+	assert(t2->can_create_as<T1>());
+	assert(t2->can_create_as<T2>());
+	assert(t2->can_create_as<W>());
+   /* assert(can_clone_as<W>(*t2));
+    assert(can_clone_as<T0>(*t2));
+    assert(can_clone_as<T1>(*t2));
+    assert(can_clone_as<T2>(*t2));
+   */ 
+    //assert(can_create_as<W>(*t2));
+  //  assert(can_create_as<T0>(*t2));
+//    assert(can_create_as<T1>(*t2));
+    //assert(can_create_as<T2>(*t2));
+    
+    // clone sub-objects
+    W *t2_w = t2->clone_as<W>();
+    T0 *t2_t0 = t2->clone_as<T0>();
+    T1 *t2_t1 = t2->clone_as<T1>();
+    T1 *t2_t2 = t2->clone_as<T2>();
+    
+    // create sub-objects
+    W *t2_w_new = t2->create_as<W>();
+    T0 *t2_t0_new = t2->create_as<T0>();
+    T1 *t2_t1_new = t2->create_as<T1>();
+    T2 *t2_t2_new = t2->create_as<T2>();
+
+	delete t2;
+	delete t2_w;
+	delete t2_t0;
+	delete t2_t1;
+	delete t2_t2;
+	delete t2_w_new;
+	delete t2_t0_new;
+	delete t2_t1_new;
+	delete t2_t2_new;
+}
 
 
 BOOST_AUTO_TEST_CASE(test_multiple_inheritance_vector)

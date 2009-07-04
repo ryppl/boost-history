@@ -17,47 +17,11 @@ namespace boost
 {
 	namespace cloneable
 	{
-		template <class T>
-		struct abstract_object
-		{
-			typedef abstract_object<T> abstract_object_type;
-
-			virtual std::string to_string() const { return "abstract_object<T>"; }
-			virtual size_t hash_value() const { return 0; }
-			virtual bool less(const abstract_object_type& other) const { return false; }
-			virtual bool equiv(const abstract_object_type& other) const
-			{
-				return !less(other) && !other.less(static_cast<const T&>(*this));
-			}
-		};
-
-		template <class T>
-		inline bool operator<(const abstract_object<T>& left, const abstract_object<T>& right)
-		{
-			return left.less(right);
-		}
-
-		template <class T>
-		inline bool operator==(const abstract_object<T>& left, const abstract_object<T>& right)
-		{
-			return left.equiv(right);
-		}
-
-		/// default base type used for object hierarchies. the user can supply their own when using 
-		/// cloneable<Derived, Base>.
-		/// this will be used as a base by default.
-		struct base_type : abstract_object<base_type>
-		{
-			virtual ~base_type() { }
-
-			std::string to_string() const { return "base_type"; }
-			size_t hash_value() const { return 0; }
-			bool less(const base_type &other) const { return false; }
-		};
-
 		/// root structure for the cloneable object system
 		template <class Base>
-		struct abstract_base : virtual Base
+		struct abstract_base 
+			: virtual Base
+			, virtual is_cloneable_tag
 		{
 			typedef Base base_type;
 			typedef abstract_base<Base> this_type;
@@ -112,6 +76,13 @@ namespace boost
 				return create_new(alloc);
 			}
 
+			/// non-virtual method that creates a new instance of derived type using given allocator
+			template <class Alloc>
+			this_type *create(Alloc &alloc) const
+			{
+				return create_new(alloc);
+			}
+
 			/// non-virtual method that creates a new instance of derived type from this instance,
 			/// using copy-constructor and default allocator
 			this_type *copy_construct() const
@@ -126,6 +97,24 @@ namespace boost
 				make_clone_allocator<default_allocator>::type alloc;
 				return clone(alloc);
 			}
+
+			// these non-virtuals require mixin<D,B> to be defined before they can be 
+			// implemented. See detail/mixin.hpp for their definitions
+			template <class Derived>
+			bool can_clone_as() const;
+
+			template <class Derived>
+			Derived *clone_as() const;
+
+			template <class Derived>
+			Derived *clone_as(abstract_allocator &) const;
+
+			template <class Derived>
+			bool can_create_as() const;
+
+			template <class Derived>
+			bool can_default_create_as() const;
+			///
 
 			/// overridable to-string function, for utility
 			virtual std::string to_string() const { return "cloneable"; }

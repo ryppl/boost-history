@@ -273,6 +273,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\cloneable\base_type.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\cloneable\clone.hpp"
 					>
 				</File>
