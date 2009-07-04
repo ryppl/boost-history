@@ -121,6 +121,12 @@ class Animal
     virtual ~Animal() { }
     virtual string get_name() const = 0;
 };
+``
+
+Note that `Animal` doesn't have to derive from anything, or have any special members or methods. 
+Now let's use out base class to create a simple type hierarchy:
+
+``
 
 class Cat : public cloneable::base<Cat, Animal>
 {
@@ -131,7 +137,15 @@ public:
     Cat(string n) : name(n) { }
     string get_name() const { return name; }
 };
+``
 
+We derive our `Cat` class from `cloneable::base<Cat, Animal>`. The first type argument to `base<...>` is 
+the derived type to use for cloning, and the second argument is the common base type of the hierarhcy. 
+Other than that, `Cat` implements the `get_name` pure virtual method derived in the base class `Animal`.
+
+Now, let's use it:
+
+``
 int main()
 {
     Cat *cat = new Cat("sam");
@@ -148,7 +162,7 @@ int main()
 };
 ``
 
-In this example, we note that the `clone()` method returns
+Note that the `clone()` method returns
 a pointer to the base class of the type hierarchy - in this case, `Animal`. 
 We had to use a dynamic cast to down-cast to our derived type.
 
@@ -171,7 +185,13 @@ class Dog : public cloneable::base<Dog, Animal>
 class Labrador : public Dog, public cloneable::base<Labrador, Animal>
 {
 };
+``
 
+`Dog` is just like a cat, but different. `Labrador` is the first example we have seen
+that uses multiple inheritance. In this case, we are saying that a Labrador is-a Dog,
+and is Cloneable as either a Dog or a Labrador. Using these types:
+
+``
 int main()
 {
     Labrador *lab = new Labrador();
@@ -186,7 +206,7 @@ int main()
 ``
 
 Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador. 
-When cloning this class, we specify which sub-object we wish to duplicate. Note that 
+When cloning this class, we specify which sub-object we wish to duplicate. 
 when using `clone_as<T>`, we actually are making a type of T, rather than making another type and casting up.
 
 We can also use the Cloneable library to make a new instance, with no duplication:
@@ -228,12 +248,22 @@ works with these types safely:
 ``
 struct Base { virtual ~Base() {} };
 
-struct T0 : cloneable::base<T0, Base, no_default_construction>
+struct T0 : cloneable::base<T0, Base, no_default_construction_tag>
 {
     string &str;
     T0(string &s) : str(s) { }
 };
+``
 
+`T0` has a member that is a reference and as such doesn't have a default constructor.
+To avoid compile-time errors when using this type in the Cloneable libray, you must
+indicate that it is not default-constructible by passing the `no_default_construction_tag`
+type as a parameter to cloneable::base<>. The order that you give the base-type or tag-types
+to cloneable::base<> is not important and is dealt with be the library.
+
+Putting this type to use:
+
+``
 int main()
 {
     string str = "foo";
@@ -258,10 +288,7 @@ int main()
 }
 ``
 
-Note that we had to pass the `no_default_construction` tag-type to `cloneable::base<>` in
-the definition of T0. Without this, an error would occur when compiling the `create_new()` line.
-
-The `no_default_construction` tag is thrown if you attempt to default-construct a 
+A `no_default_construction` exception is thrown if you attempt to default-construct a 
 type that has no default constructor.
 
 [endsect]

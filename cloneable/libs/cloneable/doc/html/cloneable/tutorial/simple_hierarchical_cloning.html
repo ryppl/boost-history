@@ -48,8 +48,18 @@
     <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">Animal</span><span class="special">()</span> <span class="special">{</span> <span class="special">}</span>
     <span class="keyword">virtual</span> <span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
 <span class="special">};</span>
-
-<span class="keyword">class</span> <span class="identifier">Cat</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
+</pre>
+<p>
+      </p>
+<p>
+        Note that <code class="computeroutput"><span class="identifier">Animal</span></code> doesn't
+        have to derive from anything, or have any special members or methods. Now
+        let's use out base class to create a simple type hierarchy:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">Cat</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
 <span class="special">{</span>
     <span class="identifier">string</span> <span class="identifier">name</span><span class="special">;</span>
     
@@ -58,8 +68,24 @@
     <span class="identifier">Cat</span><span class="special">(</span><span class="identifier">string</span> <span class="identifier">n</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">name</span><span class="special">(</span><span class="identifier">n</span><span class="special">)</span> <span class="special">{</span> <span class="special">}</span>
     <span class="identifier">string</span> <span class="identifier">get_name</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">name</span><span class="special">;</span> <span class="special">}</span>
 <span class="special">};</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+</pre>
+<p>
+      </p>
+<p>
+        We derive our <code class="computeroutput"><span class="identifier">Cat</span></code> class from
+        <code class="computeroutput"><span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span></code>. The first type argument to <code class="computeroutput"><span class="identifier">base</span><span class="special">&lt;...&gt;</span></code>
+        is the derived type to use for cloning, and the second argument is the common
+        base type of the hierarhcy. Other than that, <code class="computeroutput"><span class="identifier">Cat</span></code>
+        implements the <code class="computeroutput"><span class="identifier">get_name</span></code> pure
+        virtual method derived in the base class <code class="computeroutput"><span class="identifier">Animal</span></code>.
+      </p>
+<p>
+        Now, let's use it:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
     <span class="identifier">Cat</span> <span class="special">*</span><span class="identifier">cat</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Cat</span><span class="special">(</span><span class="string">"sam"</span><span class="special">);</span>
 
@@ -77,9 +103,10 @@
 <p>
       </p>
 <p>
-        In this example, we note that the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code> method returns a pointer to the base class
-        of the type hierarchy - in this case, <code class="computeroutput"><span class="identifier">Animal</span></code>.
-        We had to use a dynamic cast to down-cast to our derived type.
+        Note that the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code>
+        method returns a pointer to the base class of the type hierarchy - in this
+        case, <code class="computeroutput"><span class="identifier">Animal</span></code>. We had to use
+        a dynamic cast to down-cast to our derived type.
       </p>
 <p>
         If you know the derived type that you wish to be cloned, you can use the
@@ -111,8 +138,20 @@
 <span class="keyword">class</span> <span class="identifier">Labrador</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">Dog</span><span class="special">,</span> <span class="keyword">public</span> <span class="identifier">cloneable</span><span class="special">::</span><span class="identifier">base</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span>
 <span class="special">{</span>
 <span class="special">};</span>
-
-<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
+</pre>
+<p>
+      </p>
+<p>
+        <code class="computeroutput"><span class="identifier">Dog</span></code> is just like a cat, but
+        different. <code class="computeroutput"><span class="identifier">Labrador</span></code> is the
+        first example we have seen that uses multiple inheritance. In this case,
+        we are saying that a Labrador is-a Dog, and is Cloneable as either a Dog
+        or a Labrador. Using these types:
+      </p>
+<p>
+        
+</p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
     <span class="identifier">Labrador</span> <span class="special">*</span><span class="identifier">lab</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">Labrador</span><span class="special">();</span>
     <span class="identifier">Dog</span> <span class="special">*</span><span class="identifier">dog</span> <span class="special">=</span> <span class="identifier">lab</span><span class="special">-&gt;</span><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;();</span>
@@ -129,7 +168,7 @@
 <p>
         Here we see that class Labrador is-a Dog, and is also cloneable as a Labrador.
         When cloning this class, we specify which sub-object we wish to duplicate.
-        Note that when using <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>,
+        when using <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>,
         we actually are making a type of T, rather than making another type and casting
         up.
       </p>
