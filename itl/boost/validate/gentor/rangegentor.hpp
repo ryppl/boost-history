@@ -48,12 +48,12 @@ namespace boost{namespace itl
         interval<Type> last()const;
 
         void setLowerBoundRange(int lwb, int upb)
-        { setLowerBoundRange(rightopen_interval(lwb,upb)); }
+        { setLowerBoundRange(interval<int>::rightopen(lwb,upb)); }
         void setLowerBoundRange(const interval<int>& range)
         { BOOST_ASSERT(range.is_rightopen()||range.is_closed()); _lwbGentor.setRange(range); }
 
         void setUpperBoundRange(int lwb, int upb)
-        { setUpperBoundRange(rightopen_interval(lwb,upb)); }
+        { setUpperBoundRange(interval<int>::rightopen(lwb,upb)); }
         void setUpperBoundRange(const interval<int>& range)
         { BOOST_ASSERT(range.is_rightopen()||range.is_closed()); _upbGentor.setRange(range); }
 

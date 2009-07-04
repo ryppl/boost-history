@@ -45,6 +45,7 @@ DEALINGS IN THE SOFTWARE.
 #include <boost/validate/loki/EmptyType.h>
 #include <boost/validate/loki_xt/TypelistGentor.h>
 
+#include <boost/itl/type_traits/to_string.hpp>
 
 namespace Loki
 {
@@ -740,7 +741,7 @@ namespace Loki
 
             static std::string Do(const TupleT& obj)
             {
-                return to_string<HeadType>::apply(get<0>(obj));
+                return boost::itl::to_string<HeadType>::apply(get<0>(obj));
             }
         };
 
@@ -752,7 +753,7 @@ namespace Loki
 
             static std::string Do(const TupleT& obj)
             {
-                return to_string<HeadType>::apply(get<0>(obj)) 
+                return boost::itl::to_string<HeadType>::apply(get<0>(obj)) 
                        + ", " + Stringer<TailClass, i-1>::Do(obj);
             }
         };
@@ -832,7 +833,7 @@ namespace Loki
         {
             static std::string apply(const SourceT& src)
             {
-                return itl::to_string<SourceT>::apply(src);
+                return boost::itl::to_string<SourceT>::apply(src);
             }
         };
         // ---------------------------------------------------------------------------
