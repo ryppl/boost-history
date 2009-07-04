@@ -33,17 +33,25 @@ namespace boost { namespace fusion {
         typedef zip_view_iterator_tag fusion_tag;
         typedef Traversal category;
 
-        //TODO !!!
-        zip_view_iterator(BOOST_FUSION_R_ELSE_CLREF(zip_view_iterator) it)
-          : iterators_(std::move(it._iterators_))
-        {
-        }
+        template<typename OtherZipViewIt>
+        zip_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherZipViewIt) it)
+          : iterators_(sequence_assign(
+                  BOOST_FUSION_FORWARD(OtherZipViewIt,it).iterators_))
+        {}
 
         template<typename InitSeq>
-        zip_view_iterator(BOOST_FUSION_R_ELSE_CLREF(InitSeq) iterator_seq)
+        zip_view_iterator(BOOST_FUSION_R_ELSE_CLREF(InitSeq) seq,int)
           : iterators_(
-                sequence_assign(BOOST_FUSION_FORWARD(InitSeq,iterator_seq)))
+                sequence_assign(BOOST_FUSION_FORWARD(InitSeq,seq)))
         {}
+
+        template<typename OtherZipViewIt>
+        zip_view_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherZipViewIt) it)
+        {
+            iterators_=BOOST_FUSION_FORWARD(OtherZipViewIt,it).iterators_;
+            return *this;
+        }
 
         typedef typename result_of::as_vector<ItSeq>::type iterators;
         iterators iterators_;

@@ -38,10 +38,25 @@ namespace boost { namespace fusion
         typedef Last end_type;
         typedef typename traits::category_of<First>::type category;
 
+        template<typename OtherIteratorRange>
+        iterator_range(BOOST_FUSION_R_ELSE_LREF(OtherIteratorRange) other_range)
+          : first(other_range.first)
+          , last(other_range.last)
+        {}
+
         iterator_range(First const& first, Last const& last)
           : first(first)
           , last(last)
         {}
+
+        template<typename OtherIteratorRange>
+        iterator_range&
+        operator=(BOOST_FUSION_R_ELSE_LREF(OtherIteratorRange) other_range)
+        {
+            first=other_range.first;
+            last=other_range.last;
+            return *this;
+        }
 
         begin_type first;
         end_type last;

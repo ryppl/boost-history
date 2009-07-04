@@ -20,13 +20,13 @@ namespace boost { namespace fusion
         template <>
         struct value_at_impl<list_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
             {
                 typedef typename
                     detail::result_of_forward_as<
-                        Sequence
-                      , typename detail::remove_reference<Sequence>::type::storage_type
+                        SeqRef
+                      , typename detail::remove_reference<SeqRef>::type::storage_type
                    >::type
                 storage_type;
 

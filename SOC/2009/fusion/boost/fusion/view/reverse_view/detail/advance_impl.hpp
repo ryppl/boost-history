@@ -41,9 +41,10 @@ namespace boost { namespace fusion {
                 typedef reverse_view_iterator<advanced_type> type;
 
                 static type
-                call(ItRef i)
+                call(ItRef it)
                 {
-                    return type(boost::fusion::advance<negative_dist>(i.first));
+                    return type(
+                            boost::fusion::advance<negative_dist>(it.first));
                 }
             };
         };

@@ -22,11 +22,11 @@ namespace boost { namespace fusion
         template <>
         struct value_at_impl<cons_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename Seq, typename N>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Sequence>::type
+                    detail::remove_reference<Seq>::type
                 identity_sequence;
 
                 typedef typename

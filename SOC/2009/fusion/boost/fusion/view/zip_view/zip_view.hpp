@@ -108,7 +108,7 @@ namespace boost { namespace fusion {
     struct zip_view
       : sequence_base< zip_view<Seqs> >
     {
-        //TODO cschmidt: ?!
+        //TODO cschmidt: replace view& with view
         typedef typename
             result_of::remove<Seqs, unused_type const&>::type
         real_seqs;
@@ -132,10 +132,29 @@ namespace boost { namespace fusion {
             fusion::result_of::as_vector<Seqs>::type
         seqs_type;
 
+#define ZIP_VIEW_CTOR(COMBINATION)\
+        template<typename OtherSeqs>\
+        zip_view(zip_view<OtherSeqs> COMBINATION other_view)\
+          : seqs(sequence_assign(BOOST_FUSION_FORWARD(\
+                zip_view<OtherSeqs> COMBINATION,other_view).seq))\
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(ZIP_VIEW_CTOR)
+
+#undef ZIP_VIEW_CTOR
+
         template<typename OtherSeqs>
         explicit zip_view(BOOST_FUSION_R_ELSE_LREF(OtherSeqs) other_seqs)
-          : seqs(BOOST_FUSION_FORWARD(OtherSeqs,other_seqs))
+          : seqs(sequence_assign(BOOST_FUSION_FORWARD(OtherSeqs,other_seqs)))
         {}
+
+        template<typename OtherZipView>
+        zip_view&
+        operator=(BOOST_FUSION_R_ELSE_LREF(OtherZipView) other_zip_view)
+        {
+            seqs=BOOST_FUSION_FORWARD(OtherZipView,other_zip_view).seqs;
+            return *this;
+        }
 
         seqs_type seqs;
     };

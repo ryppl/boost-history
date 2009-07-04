@@ -49,9 +49,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(ItRef i)
+                call(ItRef it)
                 {
-                    return type(filter::call(i.first));
+                    return type(filter::call(it.first),0);
                 }
             };
         };

@@ -8,15 +8,18 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
+//TODO save views directly
 //TODO as fusion element?!
+//TODO bidirectional
 
+#include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/sequence_assign.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/view/single_view/single_view_iterator.hpp>
@@ -44,23 +47,54 @@ namespace boost { namespace fusion
           : val()
         {}
 
-        single_view(single_view const& single_view)
-          : val(single_view.val)
+#define SINGLE_VIEW_CTOR(COMBINATION)\
+        single_view(single_view COMBINATION view)\
+          : val(BOOST_FUSION_FORWARD(single_view COMBINATION,view).val)\
         {}
 
-        //TODO !!!
-        single_view(single_view& single_view)
-          : val(single_view.val)
-        {}
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SINGLE_VIEW_CTOR)
 
-        single_view(single_view&& single_view)
-          : val(single_view.val)
+#undef SINGLE_VIEW_CTOR
+
+        template<typename SeqAssign>
+        single_view(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq,
+            typename enable_if<
+                 is_sequence_assign<BOOST_FUSION_R_ELSE_CLREF(SeqAssign)>
+            >::type* =NULL)
+          : val(fusion::front(seq.get()))
         {}
 
         template<typename OtherT>
-        explicit single_view(BOOST_FUSION_R_ELSE_CLREF(OtherT) val)
+        explicit single_view(BOOST_FUSION_R_ELSE_CLREF(OtherT) val,
+            typename disable_if<
+                    is_sequence_assign<BOOST_FUSION_R_ELSE_CLREF(OtherT)>
+            >::type* =NULL)
           : val(BOOST_FUSION_FORWARD(OtherT,val))
         {}
+
+        template<typename OtherT>
+        typename
+            disable_if<
+                is_sequence_assign<BOOST_FUSION_R_ELSE_CLREF(OtherT)>
+              , single_view&
+            >::type
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherT) val)
+        {
+            val=BOOST_FUSION_FORWARD(OtherT,val);
+            return *this;
+        }
+
+        template<typename SeqAssign>
+        typename
+            enable_if<
+                is_sequence_assign<BOOST_FUSION_R_ELSE_CLREF(SeqAssign)>
+              , single_view&
+            >::type
+        operator=(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq)
+        {
+            val=fusion::front(seq.get());
+            return *this;
+        }
 
         value_type val;
     };

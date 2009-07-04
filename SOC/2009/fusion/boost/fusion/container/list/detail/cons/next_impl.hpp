@@ -24,11 +24,11 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<cons_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename It>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Iterator>::type::cons_type
+                    detail::remove_reference<It>::type::cons_type
                 cons_type;
                 typedef typename
                     detail::remove_reference<cons_type>::type::cdr_type
@@ -44,9 +44,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(Iterator i)
+                call(It it)
                 {
-                    return type(i.cons.cdr);
+                    return type(it.cons->cdr,0);
                 }
             };
         };

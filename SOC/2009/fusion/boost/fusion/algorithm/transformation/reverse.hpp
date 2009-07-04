@@ -14,18 +14,18 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct reverse
         {
-            typedef reverse_view<Sequence> type;
+            typedef reverse_view<Seq> type;
         };
     }
 
-    template <typename Sequence>
-    inline reverse_view<Sequence const>
-    reverse(Sequence const& view)
+    template <typename Seq>
+    inline reverse_view<Seq const&>
+    reverse(Seq const& view)
     {
-        return reverse_view<Sequence const>(view);
+        return reverse_view<Seq const&>(view);
     }
 }}
 

@@ -32,11 +32,24 @@ namespace boost { namespace fusion
         typedef forward_traversal_tag category;
         typedef Cons cons_type;
 
-        explicit cons_iterator(cons_type cons)
-          : cons(cons)
+        template<typename OtherIt>
+        cons_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : cons(it.cons)
         {}
 
-        cons_type cons;
+        cons_iterator(cons_type cons, int)
+          : cons(&cons)
+        {}
+
+        template<typename OtherIt>
+        cons_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) other_it)
+        {
+            cons=other_it.cons;
+            return *this;
+        }
+
+        typename detail::remove_reference<cons_type>::type* cons;
     };
 
     struct nil_iterator
@@ -46,82 +59,28 @@ namespace boost { namespace fusion
         typedef cons_iterator_tag fusion_tag;
         typedef nil cons_type;
 
-        nil_iterator() {}
-        explicit nil_iterator(nil const&)
+        nil_iterator()
+        {}
+
+        nil_iterator(nil const&,int)
         {}
     };
 
-    template <>
-    struct cons_iterator<nil&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
+#define NIL_ITERATOR(COMBINATION)\
+      template <>\
+      struct cons_iterator<nil COMBINATION>\
+        : nil_iterator\
+      {\
+          cons_iterator()\
+          {}\
+          \
+          explicit cons_iterator(nil COMBINATION, int)\
+          {}\
+      };
 
-    template <>
-    struct cons_iterator<nil const&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(NIL_ITERATOR)
 
-    template <>
-    struct cons_iterator<nil volatile&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
-
-    template <>
-    struct cons_iterator<nil const volatile&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
-
-    template <>
-    struct cons_iterator<nil&&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
-
-    template <>
-    struct cons_iterator<nil const&&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
-
-    template <>
-    struct cons_iterator<nil volatile&&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
-
-    template <>
-    struct cons_iterator<nil const volatile&&>
-      : nil_iterator
-    {
-        cons_iterator() {}
-        explicit cons_iterator(nil const&)
-        {}
-    };
+#undef NIL_ITERATOR
 }}
 
 #endif

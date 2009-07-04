@@ -91,7 +91,7 @@ namespace boost { namespace fusion
         }
 
         template <int N>
-        typename add_reference<
+        typename detail::add_lref<
             typename mpl::at_c<types, N>::type
         >::type
         at_impl(mpl::int_<N> index)
@@ -100,7 +100,7 @@ namespace boost { namespace fusion
         }
 
         template <int N>
-        typename add_reference<
+        typename detail::add_lref<
             typename add_const<
                 typename mpl::at_c<types, N>::type
             >::type
@@ -111,7 +111,7 @@ namespace boost { namespace fusion
         }
 
         template <typename I>
-        typename add_reference<
+        typename detail::add_lref<
             typename mpl::at<types, I>::type
         >::type
         at_impl(I index)
@@ -120,7 +120,7 @@ namespace boost { namespace fusion
         }
 
         template<typename I>
-        typename add_reference<
+        typename detail::add_lref<
             typename add_const<
                 typename mpl::at<types, I>::type
             >::type

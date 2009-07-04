@@ -50,7 +50,7 @@ namespace boost { namespace fusion {
                            , get_endpoint<SeqRef, M>
                 >
             {
-                BOOST_MPL_ASSERT((is_reference<SeqRef>));
+                BOOST_MPL_ASSERT((detail::is_lrref<SeqRef>));
             };
 
             template<typename Seq>
@@ -95,9 +95,12 @@ namespace boost { namespace fusion {
                 static type
                 call(SeqRef seq)
                 {
-                    return type(fusion::transform(
-                            seq.seqs,
-                            detail::endpoints<typename seq::size>()));
+                    return type(
+                            fusion::transform(
+                                    seq.seqs
+                                  , detail::endpoints<typename seq::size>()
+                            )
+                          , 0);
                 }
             };
         };

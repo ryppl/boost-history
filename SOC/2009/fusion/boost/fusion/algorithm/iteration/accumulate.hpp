@@ -42,7 +42,7 @@ namespace boost { namespace fusion
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename State, typename F>
     inline typename result_of::accumulate<
-        BOOST_FUSION_R_ELSE_LREF(Sequence)
+        BOOST_FUSION_R_ELSE_LREF(Seq)
       , BOOST_FUSION_R_ELSE_CLREF(State)
       , BOOST_FUSION_R_ELSE_LREF(F)
     >::type

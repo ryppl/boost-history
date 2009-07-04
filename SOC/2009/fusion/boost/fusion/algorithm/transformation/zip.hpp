@@ -13,7 +13,6 @@
 #include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
-#include <boost/type_traits/add_reference.hpp>
 #include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -63,7 +62,7 @@ namespace boost { namespace fusion {
 #endif
         {
             typedef mpl::vector< BOOST_PP_ENUM_PARAMS(ZIP_ITERATION, T) > sequences;
-            typedef typename mpl::transform<sequences, add_reference<mpl::_> >::type ref_params;
+            typedef typename mpl::transform<sequences, detail::add_lref<mpl::_> >::type ref_params;
             typedef zip_view<typename result_of::as_vector<ref_params>::type> type;
         };
     }

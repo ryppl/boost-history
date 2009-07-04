@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_DETAIL_PP_LOOKUP_KEY_HPP
 #define BOOST_FUSION_CONTAINER_SET_DETAIL_PP_LOOKUP_KEY_HPP
 
-#include <boost/fusion/support/detail/unknown_key.hpp>
+#include <boost/fusion/support/detail/pp/unknown_key.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {

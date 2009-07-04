@@ -7,42 +7,30 @@
 #include <utility>
 #include <iostream>
 
-#include <boost/fusion/adapted/mpl.hpp>
-#include <boost/fusion/container/vector/vector10.hpp>
+#include <boost/fusion/sequence.hpp>
+#include <boost/fusion/iterator.hpp>
+//#include <boost/fusion/algorithm.hpp>
+#include <boost/fusion/container.hpp>
+#include <boost/fusion/view.hpp>
 
-#include <boost/fusion/container/set.hpp>
-#include <boost/fusion/sequence/intrinsic/at_key.hpp>
-
-#include <boost/fusion/container/vector.hpp>
-#include <boost/fusion/container/vector/convert.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/iterator/next.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/fusion/container/generation/make_vector.hpp>
-#include <boost/fusion/container/generation/vector_tie.hpp>
-
-#include <boost/fusion/container/map.hpp>
-#include <boost/fusion/container/generation/make_map.hpp>
-
-#include <boost/fusion/container/list/list.hpp>
-#include <boost/fusion/container/list/cons.hpp>
-#include <boost/fusion/container/generation/make_cons.hpp>
-
-#include <boost/fusion/sequence/io/out.hpp>
-
-#include <boost/fusion/view/zip_view.hpp>
+#include <boost/mpl/placeholders.hpp>
 
 namespace fusion=boost::fusion;
 
-template<class... Args> class get_vec_type
+struct moveable
 {
-public:
-    typedef fusion::result_of::as_vector<boost::mpl::vector<char,float> >::type type;
-    //typedef fusion::vector<Args...> type;
+    moveable()=default;
+    moveable(const moveable&)=delete;
+    moveable(moveable&&){}
 };
 
-typedef get_vec_type<char,short,int,long,float,double>::type vec;
+template<class... Args>
+struct get_vec_type
+{
+    typedef fusion::vector<Args...> type;
+};
+
+typedef get_vec_type<char,short,int,long,float,double,moveable>::type vec;
 typedef const vec cvec;
 
 typedef vec& lvec;
@@ -50,12 +38,71 @@ typedef vec&& rvec;
 typedef const vec& clvec;
 typedef const vec&& crvec;
 
-class moveable
+template<typename Seq>
+void seq_test(Seq&& seq)
 {
-public:
-    moveable()=default;
-    moveable(const moveable&)=delete;
-    moveable(moveable&&){}
+    using namespace fusion;
+
+    typedef typename detail::identity<Seq>::type id_seq;
+
+    typename result_of::begin<id_seq>::type beg=begin(std::forward<Seq>(seq));
+    typename result_of::begin<const id_seq>::type cbeg=begin(std::forward<Seq>(seq));
+
+    typename result_of::begin<id_seq&>::type beg2=begin(std::forward<Seq>(seq));
+    typename result_of::begin<const id_seq&>::type cbeg2=begin(std::forward<Seq>(seq));
+
+    typename result_of::begin<id_seq&&>::type beg3=begin(std::forward<Seq>(seq));
+    typename result_of::begin<const id_seq&&>::type cbeg3=begin(std::forward<Seq>(seq));
+
+    beg=beg;
+    cbeg=beg;
+
+    beg2=beg2;
+    cbeg2=beg2;
+
+    beg3=beg3;
+    cbeg3=beg3;
+
+    beg=beg2;
+    beg=beg3;
+    cbeg=beg2;
+    cbeg=cbeg2;
+    cbeg=beg3;
+    cbeg=cbeg3;
+
+    beg2=beg;
+    beg2=beg3;
+    cbeg2=beg;
+    cbeg2=cbeg;
+    cbeg2=beg3;
+    cbeg2=cbeg3;
+
+    beg3=beg2;
+    beg3=beg;
+    cbeg3=beg2;
+    cbeg3=cbeg2;
+    cbeg3=beg;
+    cbeg3=cbeg;
+
+    //beg=cbeg2;
+
+    deref(begin(std::forward<Seq>(seq)));
+    advance_c<1>(begin(std::forward<Seq>(seq)));
+    end(std::forward<Seq>(seq));
+}
+
+struct identity_int
+{
+    template<typename>
+    struct result
+    {
+        typedef int type;
+    };
+
+    int operator()(int i)
+    {
+        return i;
+    }
 };
 
 int main()
@@ -73,27 +120,26 @@ int main()
     }
 
     {
-        using namespace fusion;
-        vector<moveable> m;
-        vector<moveable> m2=std::move(m);
-        m=std::move(m2);
-
-        int i=0;
-        make_vector(boost::cref(i));
+        vec v;
+        vec v2=std::move(v);
+        //vec v2=v;
     }
 
     {
         using namespace fusion;
-        set<int,float,double> s(0,0,0);
-        at_key<int>(s)=0;
-    }
+        seq_test(make_vector(0,1));
+        seq_test(make_cons(0,make_cons(1)));
+        seq_test(make_list(0,1));
+        seq_test(make_set(0,1.0f));
+        seq_test(make_map<int,float>(0,1.0f));
 
-    {
-        using namespace fusion;
-        std::cout << deref(begin(make_map<int>(1))) << std::endl;
-
-        map<pair<char,char>,pair<int,int> > m('X', 123);
-        std::cout << m << std::endl;
-        std::cout << make_map<char, int>('X', 123) << std::endl;
+        seq_test(single_view<int>(0));
+        seq_test(filter_view<vector<int>&&,std::is_same<boost::mpl::_,int> >(vector<int>()));
+        vector<int> vec;
+        seq_test(iterator_range<result_of::begin<vector<int>>::type,result_of::end<vector<int>>::type>(begin(vec),end(vec)));
+        seq_test(joint_view<vector<int>&&,vector<int>&&>(vector<int>(),vector<int>()));
+        seq_test(zip_view<vector<vector<int>&&, vector<int>&&> >(vector_tie(vector<int>(),vector<int>())));
+        seq_test(transform_view<vector<int>&&,identity_int>(vector<int>(),identity_int()));
+        seq_test(reverse_view<vector<int>&&>(vector<int>()));
     }
 }

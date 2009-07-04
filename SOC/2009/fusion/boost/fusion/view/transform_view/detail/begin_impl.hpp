@@ -46,9 +46,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef s)
+                call(SeqRef seq)
                 {
-                    return type(fusion::begin(s.seq), s.f);
+                    return type(fusion::begin(seq.seq.get()), seq.f);
                 }
             };
         };
@@ -74,12 +74,12 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef s)
+                call(SeqRef seq)
                 {
                     return type(
-                            fusion::begin(s.seq1),
-                            fusion::begin(s.seq2),
-                            s.f);
+                            fusion::begin(seq.seq1.get()),
+                            fusion::begin(seq.seq2.get()),
+                            seq.f);
                 }
             };
         };

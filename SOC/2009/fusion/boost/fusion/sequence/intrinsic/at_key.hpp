@@ -21,11 +21,7 @@ namespace boost { namespace fusion
     namespace extension
     {
         template <typename Tag>
-        struct at_key_impl
-        {
-            template <typename Sequence, typename Key>
-            struct apply;
-        };
+        struct at_key_impl;
 
         template <>
         struct at_key_impl<sequence_facade_tag>

@@ -24,15 +24,15 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<cons_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef cons_iterator<Sequence> type;
+                typedef cons_iterator<SeqRef> type;
 
                 static type
-                call(Sequence t)
+                call(SeqRef t)
                 {
-                    return type(t);
+                    return type(t,0);
                 }
             };
         };

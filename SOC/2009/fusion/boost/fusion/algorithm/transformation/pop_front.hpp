@@ -17,25 +17,25 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct pop_front
         {
             typedef 
                 iterator_range<
                     typename next<
-                        typename begin<Sequence>::type
+                        typename begin<Seq>::type
                     >::type
-                  , typename end<Sequence>::type
+                  , typename end<Seq>::type
                 > 
             type;
         };
     }
 
-    template <typename Sequence>
-    inline typename result_of::pop_front<Sequence const>::type
-    pop_front(Sequence const& seq)
+    template <typename Seq>
+    inline typename result_of::pop_front<Seq const&>::type
+    pop_front(Seq const& seq)
     {
-        typedef typename result_of::pop_front<Sequence const>::type result;
+        typedef typename result_of::pop_front<Seq const&>::type result;
         return result(fusion::next(fusion::begin(seq)), fusion::end(seq));
     }
 }}

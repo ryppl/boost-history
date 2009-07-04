@@ -132,14 +132,15 @@ public:
         map()
             : data() {}
 
-        template<typename Map>
-        map(BOOST_FUSION_R_ELSE_CLREF(Map) map_,
-               typename enable_if<is_convertible<
-                   typename detail::remove_reference<Map>::type*
-                 , map const volatile*> >::type* =NULL)
-          : data(BOOST_FUSION_FORWARD(Map,map_).data)
-        {
+#define MAP_CTOR(COMBINATION)\
+        map(map COMBINATION map_)\
+          : data(BOOST_FUSION_FORWARD(map COMBINATION,map_).data)\
+        {\
         }
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MAP_CTOR)
+
+#undef MAP_CTOR
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
         template <typename Arg>
@@ -169,18 +170,18 @@ public:
         typename meta_find_impl_const<Key>::type
         find_impl(mpl::identity<Key>) const
         {
-            return typename meta_find_impl_const<Key>::type(data);
+            return typename meta_find_impl_const<Key>::type(data,0);
         }
 
         template <typename Key>
         typename meta_find_impl<Key>::type
         find_impl(mpl::identity<Key>)
         {
-            return typename meta_find_impl<Key>::type(data);
+            return typename meta_find_impl<Key>::type(data,0);
         }
 
         template <class Key>
-        typename add_reference<typename meta_at_impl<Key>::type>::type
+        typename detail::add_lref<typename meta_at_impl<Key>::type>::type
         at_impl(mpl::identity<Key>)
         {
             return data.at_impl(
@@ -188,7 +189,7 @@ public:
         }
 
         template <class Key>
-        typename add_reference<
+        typename detail::add_lref<
             typename add_const<typename meta_at_impl<Key>::type>::type
             >::type
         at_impl(mpl::identity<Key>) const

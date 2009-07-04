@@ -31,7 +31,7 @@ namespace boost { namespace fusion
                 static type
                 call(Sequence s)
                 {
-                    return type(s);
+                    return type(s,0);
                 }
             };
         };

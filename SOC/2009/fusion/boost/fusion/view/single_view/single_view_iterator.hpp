@@ -28,26 +28,41 @@ namespace boost { namespace fusion
         typedef forward_traversal_tag category;
     };
 
-    template <typename SingleView>
+    template <typename SingleViewRef>
     struct single_view_iterator
-      : iterator_base<single_view_iterator<SingleView> >
+      : iterator_base<single_view_iterator<SingleViewRef> >
     {
         typedef single_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
 
-        typedef SingleView view_type;
+        typedef SingleViewRef view_type;
         typedef typename
             detail::result_of_forward_as<
-                SingleView,
-                typename detail::remove_reference<SingleView>::type::value_type
+                SingleViewRef,
+                typename detail::remove_reference<
+                    SingleViewRef
+                >::type::value_type
             >::type
         value_type;
 
-        explicit single_view_iterator(SingleView view)
-          : view(view)
+        template<typename OtherSingleViewIt>
+        single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherSingleViewIt) it)
+          : view(it.view)
         {}
 
-        SingleView view;
+        single_view_iterator(SingleViewRef view, int)
+          : view(&view)
+        {}
+
+        template<typename OtherSingleViewIt>
+        single_view_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherSingleViewIt) it)
+        {
+            view=it.view;
+            return *this;
+        }
+
+        typename detail::remove_reference<SingleViewRef>::type* view;
     };
 }}
 

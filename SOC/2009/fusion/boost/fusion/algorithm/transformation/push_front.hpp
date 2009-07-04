@@ -16,19 +16,22 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename T>
+        template <typename Seq, typename T>
         struct push_front
         {
-            typedef fusion::single_view<typename detail::as_fusion_element<T>::type> single_view;
-            typedef joint_view<single_view const, Sequence> type;
+            typedef fusion::single_view<
+                typename detail::as_fusion_element<T>::type
+            > single_view;
+
+            typedef joint_view<single_view const, Seq> type;
         };
     }
 
-    template <typename Sequence, typename T>
-    inline typename result_of::push_front<Sequence const, T>::type
-    push_front(Sequence const& seq, T const& x)
+    template <typename Seq, typename T>
+    inline typename result_of::push_front<Seq const&, T>::type
+    push_front(Seq const& seq, T const& x)
     {
-        typedef typename result_of::push_front<Sequence const, T> push_front;
+        typedef typename result_of::push_front<Seq const&, T> push_front;
         typedef typename push_front::single_view single_view; 
         typedef typename push_front::type result; 
         single_view x_(x);

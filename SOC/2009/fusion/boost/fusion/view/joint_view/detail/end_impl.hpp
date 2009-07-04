@@ -36,9 +36,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef s)
+                call(SeqRef seq)
                 {
-                    return fusion::end(s.seq2);
+                    return fusion::end(seq.seq2.get());
                 }
             };
         };

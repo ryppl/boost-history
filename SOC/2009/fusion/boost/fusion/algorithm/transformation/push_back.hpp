@@ -29,11 +29,11 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Sequence, typename T>
-    inline typename result_of::push_back<Sequence const&, T const&>::type
-    push_back(Sequence const& seq, T const& x)
+    template <typename Seq, typename T>
+    inline typename result_of::push_back<Seq const&, T const&>::type
+    push_back(Seq const& seq, T const& x)
     {
-        typedef typename result_of::push_back<Sequence const&, T const&> gen;
+        typedef result_of::push_back<Seq const&, T const&> gen;
 
         return typename gen::type(seq, x);
     }

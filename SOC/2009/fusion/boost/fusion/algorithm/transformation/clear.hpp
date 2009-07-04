@@ -19,7 +19,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct clear
         {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

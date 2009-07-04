@@ -65,8 +65,12 @@ namespace boost { namespace fusion {
                 static type
                 call(ItRef it)
                 {
-                    return type(fusion::transform(
-                            it.iterators_, detail::poly_advance<N>()));
+                    return type(
+                        fusion::transform(
+                                it.iterators_
+                              , detail::poly_advance<N>()
+                        )
+                      , 0);
                 }
             };
         };

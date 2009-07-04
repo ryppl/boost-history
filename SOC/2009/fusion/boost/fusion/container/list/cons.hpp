@@ -25,7 +25,6 @@
 #include <boost/fusion/container/list/detail/cons/value_at_impl.hpp>
 #include <boost/fusion/container/list/detail/cons/empty_impl.hpp>
 
-#include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
@@ -53,11 +52,10 @@ namespace boost { namespace fusion
         {}
 
         nil(const nil&)
-        {
-        }
+        {}
 
-        template<typename Sequence>
-        nil(detail::sequence_assign_type<Sequence> const volatile&)
+        template<typename Seq>
+        nil(detail::sequence_assign_type<Seq> const volatile&)
         {
             //TODO cschmidt: assert!
         }
@@ -68,24 +66,22 @@ namespace boost { namespace fusion
             //TODO cschmidt: assert!
         }
 
-        template<typename Iterator>
-        nil(detail::assign_by_deref,Iterator const&)
-        {
-        }
+        template<typename It>
+        nil(detail::assign_by_deref,It const&)
+        {}
 
-        template<typename Sequence>
+        template<typename Seq>
         nil&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Sequence))
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq))
         {
             //TODO cschmidt: assert!
             return *this;
         }
 
-        template<typename Iterator>
+        template<typename It>
         void
-        assign(Iterator const&)
-        {
-        }
+        assign(It const&)
+        {}
     };
 
     template <typename Car, typename Cdr = nil>
@@ -104,29 +100,28 @@ namespace boost { namespace fusion
           , cdr()
         {}
 
-        template<typename Cons>
-        cons(BOOST_FUSION_R_ELSE_CLREF(Cons) cons_,
-               typename enable_if<is_convertible<
-                   typename detail::remove_reference<Cons>::type*
-                 , cons const volatile*> >::type* =NULL)
-          //cschmidt: iterators so we do not have to deal with the cv-ness
-          //of cons_.car/cons_.cdr explicitly
-          : car(fusion::front(BOOST_FUSION_FORWARD(Cons,cons_)))
-          , cdr(detail::assign_by_deref(),
-                  fusion::next(
-                          fusion::begin(BOOST_FUSION_FORWARD(Cons,cons_))))
-        {
-        }
+        //cschmidt: iterators so we do not have to deal with the cv-ness
+        //of cons_.car/cons_.cdr explicitly
+#define CONS_CTOR(COMBINATION)\
+        cons(cons COMBINATION cons_)\
+          : car(fusion::front(BOOST_FUSION_FORWARD(cons COMBINATION,cons_)))\
+          , cdr(detail::assign_by_deref(),\
+                fusion::next(fusion::begin(\
+                        BOOST_FUSION_FORWARD(cons COMBINATION,cons_))))\
+        {}
 
-        template<typename SequenceAssign>
-        cons(BOOST_FUSION_R_ELSE_CLREF(SequenceAssign) seq,
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CONS_CTOR);
+
+#undef CONS_CTOR
+
+        template<typename SeqAssign>
+        cons(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq,
              typename enable_if<
-                 is_sequence_assign<SequenceAssign> >::type* =NULL)
+                 is_sequence_assign<SeqAssign> >::type* =NULL)
           : car(fusion::front(seq.get()))
           , cdr(detail::assign_by_deref(),
                   fusion::next(fusion::begin(seq.get())))
-        {
-        }
+        {}
 
         //cschmidt: rvalue ref if possible, so this does not collide with
         //cons(OtherCar&&,OtherCdr&&)
@@ -135,8 +130,7 @@ namespace boost { namespace fusion
              BOOST_FUSION_R_ELSE_CLREF(Iterator) iterator)
           : car(fusion::deref(iterator))
           , cdr(detail::assign_by_deref(),fusion::next(iterator))
-        {
-        }
+        {}
 
         /*
         template<typename Sequence>
@@ -144,8 +138,7 @@ namespace boost { namespace fusion
                                 BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type seq)
           : base(detail::assign_by_deref(),
                  fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)))
-        {
-        }
+        {}
         */
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -160,9 +153,7 @@ namespace boost { namespace fusion
 #else
         template<typename OtherCar>
         explicit cons(OtherCar&& other_car,
-                typename disable_if<is_convertible<
-                    typename detail::remove_reference<OtherCar>::type*
-                  , cons const volatile*> >::type* =NULL)
+                typename disable_if<is_sequence_assign<OtherCar> >::type* =NULL)
           : car(std::forward<OtherCar>(other_car))
           , cdr()
         {}
@@ -174,20 +165,20 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename Sequence>
+        template<typename Seq>
         cons&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Sequence) sequence)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
-            assign(fusion::begin(BOOST_FUSION_FORWARD(Sequence,sequence)));
+            assign(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             return *this;
         }
 
-        template<typename Iterator>
+        template<typename It>
         void
-        assign(Iterator const& iterator)
+        assign(It const& it)
         {
-            car=fusion::deref(iterator);
-            cdr.assign(fusion::next(iterator));
+            car=fusion::deref(it);
+            cdr.assign(fusion::next(it));
         }
 
         car_type car;

@@ -35,13 +35,29 @@ namespace boost { namespace fusion
         typedef transform_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<first_type>::type category;
 
-        transform_view_iterator(First const& first, transform_type f)
-          : first(first)
-          , f(f)
+        template<typename OtherTransformViewIt>
+        transform_view_iterator(
+                BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
+          : first(it.first)
+          , f(it.f)
         {}
 
+        transform_view_iterator(First const& first, transform_type f)
+          : first(first)
+          , f(&f)
+        {}
+
+        template<typename OtherTransformViewIt>
+        transform_view_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
+        {
+            first=it.first;
+            f=it.f;
+            return *this;
+        }
+
         first_type first;
-        transform_type f;
+        typename detail::remove_reference<transform_type>::type* f;
     };
 
     // Binary Version
@@ -58,17 +74,35 @@ namespace boost { namespace fusion
         typedef transform_view_iterator2_tag fusion_tag;
         typedef typename traits::category_of<first1_type>::type category;
 
+        template<typename OtherTransformViewIt>
+        transform_view_iterator2(
+                BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
+          : first1(it.first1)
+          , first2(it.first2)
+          , f(it.f)
+        {}
+
         transform_view_iterator2(First1 const& first1,
                 First2 const& first2,
                 FRef f)
           : first1(first1)
           , first2(first2)
-          , f(f)
+          , f(&f)
         {}
+
+        template<typename OtherTransformViewIt>
+        transform_view_iterator2&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
+        {
+            first1=it.first1;
+            first2=it.first2;
+            f=it.f;
+            return *this;
+        }
 
         first1_type first1;
         first2_type first2;
-        transform_type f;
+        typename detail::remove_reference<transform_type>::type* f;
     };
 }}
 

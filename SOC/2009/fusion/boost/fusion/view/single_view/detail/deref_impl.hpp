@@ -33,7 +33,7 @@ namespace boost { namespace fusion
                 static type
                 call(Iterator const& i)
                 {
-                    return i.view.val;
+                    return i.view->val;
                 }
             };
         };

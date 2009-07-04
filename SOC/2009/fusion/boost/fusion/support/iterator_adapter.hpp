@@ -9,7 +9,6 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 
-
 #include <boost/fusion/support/detail/iterator_adapter/deref_impl.hpp>
 #include <boost/fusion/support/detail/iterator_adapter/value_of_impl.hpp>
 #include <boost/fusion/support/detail/iterator_adapter/next_impl.hpp>
@@ -22,17 +21,32 @@ namespace boost { namespace fusion
 {
     struct iterator_adapter_tag;
 
-    template<typename Iterator, typename NewCategory>
+    template<typename It, typename NewCategory>
     struct iterator_adapter
-      : iterator_base<iterator_adapter<Iterator, NewCategory> >
+      : iterator_base<iterator_adapter<It, NewCategory> >
     {
         typedef iterator_adapter_tag fusion_tag;
         typedef NewCategory category;
-        typedef Iterator iterator_type;
+        typedef It iterator_type;
 
-        iterator_adapter(Iterator iterator)
-            : iterator(BOOST_FUSION_FORWARD(Iterator,iterator)) {}
-        Iterator iterator;
+        template<typename OtherIt>
+        iterator_adapter(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : it(it.it)
+        {}
+
+        iterator_adapter(It const& it, int)
+          : it(it)
+        {}
+
+        template<typename OtherIt>
+        iterator_adapter&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) other_it)
+        {
+            it=other_it.it;
+            return *this;
+        }
+
+        It it;
     };
 }}
 

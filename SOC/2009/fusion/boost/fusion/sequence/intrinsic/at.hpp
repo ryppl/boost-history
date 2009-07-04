@@ -22,11 +22,7 @@ namespace boost { namespace fusion
     namespace extension
     {
         template <typename Tag>
-        struct at_impl
-        {
-            template <typename Sequence, typename N>
-            struct apply;
-        };
+        struct at_impl;
 
         template <>
         struct at_impl<sequence_facade_tag>

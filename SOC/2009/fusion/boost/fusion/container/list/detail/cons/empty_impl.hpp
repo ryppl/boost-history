@@ -27,9 +27,9 @@ namespace boost { namespace fusion
         template <>
         struct empty_impl<cons_tag>
         {
-            template <typename Sequence>
+            template <typename Seq>
             struct apply
-              : boost::is_same<typename detail::identity<Sequence>::type, nil>
+              : boost::is_same<typename detail::identity<Seq>::type, nil>
             {};
         };
     }

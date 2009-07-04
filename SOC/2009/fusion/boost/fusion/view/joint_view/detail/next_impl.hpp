@@ -46,21 +46,21 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(ItRef i, mpl::true_)
+                call(ItRef it, mpl::true_)
                 {
-                    return i.concat;
+                    return it.concat;
                 }
 
                 static type
-                call(ItRef i, mpl::false_)
+                call(ItRef it, mpl::false_)
                 {
-                    return type(fusion::next(i.first), i.concat);
+                    return type(fusion::next(it.first), it.concat);
                 }
 
                 static type
-                call(ItRef i)
+                call(ItRef it)
                 {
-                    return call(i, equal_to());
+                    return call(it, equal_to());
                 }
             };
         };

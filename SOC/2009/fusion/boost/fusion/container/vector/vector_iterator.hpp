@@ -31,6 +31,7 @@ namespace boost { namespace fusion
     template <typename Vector, int N>
     struct vector_iterator_identity;
 
+    //TODO VecRef!
     template <typename Vector, int N>
     struct vector_iterator
       : iterator_base<vector_iterator<Vector, N> >
@@ -45,11 +46,24 @@ namespace boost { namespace fusion
               , N>
         identity;
 
-        explicit vector_iterator(Vector vec)
-          : vec(vec)
+        template<typename OtherVecIt>
+        vector_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherVecIt) it)
+          : vec(it.vec)
         {}
 
-        Vector vec;
+        vector_iterator(Vector vec, int)
+          : vec(&vec)
+        {}
+
+        template<typename OtherVecIt>
+        vector_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherVecIt) it)
+        {
+            vec=it.vec;
+            return *this;
+        }
+
+        typename detail::remove_reference<Vector>::type* vec;
     };
 }}
 

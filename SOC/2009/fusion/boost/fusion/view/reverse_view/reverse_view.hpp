@@ -16,6 +16,7 @@
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/bool.hpp>
@@ -37,13 +38,7 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::true_ is_view;
 
-        typedef typename
-            mpl::if_<
-                traits::is_view<Seq>
-              , typename detail::remove_reference<Seq>::type
-              , typename detail::add_lref<Seq>::type
-            >::type
-        seq_type;
+        typedef typename detail::view_storage<Seq>::type seq_type;
         typedef typename traits::category_of<seq_type>::type category;
         typedef typename result_of::size<seq_type>::type size;
 
@@ -52,12 +47,31 @@ namespace boost { namespace fusion
         //            typename traits::category_of<first_type>::type>::value),
         //    "underlying iterator must be bidirectional");
 
+#define REVERSE_VIEW_CTOR(COMBINATION)\
+        template<typename OtherSeq>\
+        reverse_view(reverse_view<OtherSeq> COMBINATION other_view)\
+          : seq(BOOST_FUSION_FORWARD(\
+                reverse_view<OtherSeq> COMBINATION,other_view).seq)\
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(REVERSE_VIEW_CTOR)
+
+#undef REVERSE_VIEW_CTOR
+
         template<typename OtherSeq>
         explicit reverse_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq) other_seq)
           : seq(BOOST_FUSION_FORWARD(OtherSeq,other_seq))
         {}
 
-        seq_type seq;
+        template<typename OtherReverseView>
+        OtherReverseView&
+        operator=(BOOST_FUSION_R_ELSE_LREF(OtherReverseView) other_view)
+        {
+            seq=BOOST_FUSION_FORWARD(OtherReverseView,other_view).seq;
+            return *this;
+        }
+
+        detail::view_storage<Seq> seq;
     };
 }}
 

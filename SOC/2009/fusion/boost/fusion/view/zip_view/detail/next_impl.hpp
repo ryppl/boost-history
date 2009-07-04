@@ -82,7 +82,8 @@ namespace boost { namespace fusion {
                 call(ItRef it)
                 {
                     return type(
-                        fusion::transform(it.iterators_, detail::poly_next()));
+                        fusion::transform(it.iterators_, detail::poly_next())
+                      , 0);
                 }
             };
         };

@@ -21,11 +21,11 @@ namespace boost { namespace mpl
     template <>
     struct back_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename SeqRef>
         struct apply
           : fusion::result_of::value_of<
                 typename fusion::result_of::prior<
-                    typename fusion::result_of::end<Sequence>::type
+                    typename fusion::result_of::end<SeqRef>::type
                 >::type
             >
         {};

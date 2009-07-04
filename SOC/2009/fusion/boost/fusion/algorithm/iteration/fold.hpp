@@ -36,39 +36,39 @@ namespace boost { namespace fusion {
         {};
     }
 
-    template <typename Sequence, typename State, typename F>
+    template <typename Seq, typename State, typename F>
     inline typename result_of::fold<
-        BOOST_FUSION_R_ELSE_LREF(Sequence)
+        BOOST_FUSION_R_ELSE_LREF(Seq)
       , BOOST_FUSION_R_ELSE_LREF(State)
       , BOOST_FUSION_R_ELSE_LREF(F)
     >::type
-    fold(BOOST_FUSION_R_ELSE_LREF(Sequence) seq,
+    fold(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
          BOOST_FUSION_R_ELSE_LREF(State) state,
          BOOST_FUSION_R_ELSE_LREF(F) f)
     {
         return detail::fold(
-                BOOST_FUSION_FORWARD(Sequence,seq),
+                BOOST_FUSION_FORWARD(Seq,seq),
                 BOOST_FUSION_FORWARD(State,state),
                 BOOST_FUSION_FORWARD(F,f),
-                typename traits::category_of<Sequence>::type());
+                typename traits::category_of<Seq>::type());
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Sequence, typename State, typename F>
+    template <typename Seq, typename State, typename F>
     inline typename result_of::fold<
-        BOOST_FUSION_R_ELSE_LREF(Sequence)
+        BOOST_FUSION_R_ELSE_LREF(Seq)
       , BOOST_FUSION_R_ELSE_CLREF(State)
       , BOOST_FUSION_R_ELSE_LREF(F)
     >::type
-    fold(BOOST_FUSION_R_ELSE_LREF(Sequence) seq,
+    fold(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
          BOOST_FUSION_R_ELSE_CLREF(State) state,
          BOOST_FUSION_R_ELSE_LREF(F) f)
     {
         return detail::fold(
-                BOOST_FUSION_FORWARD(Sequence,seq),
+                BOOST_FUSION_FORWARD(Seq,seq),
                 BOOST_FUSION_FORWARD(State,state),
                 BOOST_FUSION_FORWARD(F,f),
-                typename traits::category_of<Sequence>::type());
+                typename traits::category_of<Seq>::type());
     }
 #endif
 }}

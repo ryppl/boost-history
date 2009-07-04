@@ -46,8 +46,7 @@ namespace boost { namespace fusion
                 static type
                 call(Iterator i)
                 {
-                    return fusion::prior(
-                            static_cast<iterator_type>(i.iterator));
+                    return type(fusion::prior(i.it),0);
                 }
             };
         };

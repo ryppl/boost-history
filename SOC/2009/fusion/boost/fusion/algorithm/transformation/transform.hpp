@@ -24,7 +24,7 @@ namespace boost { namespace fusion
 
         template <typename Seq, typename F>
 #if defined(BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS)
-        struct transform<Sequence, F, void_>
+        struct transform<Seq, F, void_>
 #else
         struct transform<Seq, F>
 #endif
@@ -40,11 +40,15 @@ namespace boost { namespace fusion
         return typename result_of::transform<Seq const&, F>::type(seq, f);
     }
 
-    template <typename Sequence1, typename Sequence2, typename F>
-    inline typename result_of::transform<Sequence1 const&, Sequence2 const&, F>::type
-    transform(Sequence1 const& seq1, Sequence2 const& seq2, F f)
+    template <typename Seq1, typename Seq2, typename F>
+    inline typename result_of::transform<Seq1 const&, Seq2 const&, F>::type
+    transform(Seq1 const& seq1, Seq2 const& seq2, F f)
     {
-        return typename result_of::transform<Sequence1 const&, Sequence2 const&, F>::type(seq1, seq2, f);
+        typedef typename
+            result_of::transform<Seq1 const&, Seq2 const&, F>::type
+        result;
+
+        return result(seq1, seq2, f);
     }
 }}
 

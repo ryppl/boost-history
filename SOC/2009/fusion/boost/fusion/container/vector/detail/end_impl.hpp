@@ -29,7 +29,7 @@ namespace boost { namespace fusion
                 static type
                 call(Sequence v)
                 {
-                    return type(BOOST_FUSION_FORWARD(Sequence,v));
+                    return type(BOOST_FUSION_FORWARD(Sequence,v),0);
                 }
             };
         };

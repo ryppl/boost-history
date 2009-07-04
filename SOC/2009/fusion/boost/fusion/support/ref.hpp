@@ -37,6 +37,12 @@
 #   define BOOST_FUSION_OBJ_ELSE_CLREF(OBJECT) OBJECT const&
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) ARGUMENT
+
+#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO)\
+        MACRO(&)\
+        MACRO(const &)\
+        MACRO(volatile&)\
+        MACRO(const volatile&)
 #else
 #   include <utility>
 
@@ -47,6 +53,19 @@
 #   define BOOST_FUSION_OBJ_ELSE_CLREF(OBJECT) OBJECT
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) std::forward<TYPE>(ARGUMENT)
+
+    //cschmidt: This macro could be workaround with a single function using
+    //enable if and is_convertible. This is a lot slower than five overloads/
+    //specialisations though.
+#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO)\
+        MACRO(&)\
+        MACRO(const&)\
+        MACRO(volatile&)\
+        MACRO(const volatile&)\
+        MACRO(&&)\
+        MACRO(const&&)\
+        MACRO(volatile&&)\
+        MACRO(const volatile&&)
 #endif
 
 namespace boost { namespace fusion { namespace detail
@@ -151,13 +170,6 @@ namespace boost { namespace fusion { namespace detail
             >::type&
         type;
     };
-
-    /*template <typename,typename Type>
-    Type
-    forward_as(Type type)
-    {
-        return type;
-    }*/
 #else
     template <typename TestType,typename Type>
     struct result_of_forward_as
@@ -178,9 +190,10 @@ namespace boost { namespace fusion { namespace detail
                          //rvalue refs!
                        , mpl::not_<is_rref<TestType> >
                 >,
-                mpl::if_<is_rref<TestType>
-                       , real_type&&
-                       , real_type&
+                mpl::eval_if<
+                         is_rref<TestType>
+                       , mpl::identity<real_type&&>
+                       , detail::add_lref<real_type>
                 >,
                 mpl::identity<real_type>
             >::type

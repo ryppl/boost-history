@@ -25,20 +25,20 @@ namespace boost { namespace fusion
         template <>
         struct convert_impl<cons_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
                 typedef
                     detail::build_cons<
-                        typename result_of::begin<Sequence>::type
-                      , typename result_of::end<Sequence>::type
+                        typename result_of::begin<SeqRef>::type
+                      , typename result_of::end<SeqRef>::type
                     >
                 build_cons;
 
                 typedef typename build_cons::type type;
 
                 static type
-                call(Sequence seq)
+                call(SeqRef seq)
                 {
                     return build_cons::call(
                             fusion::begin(seq),

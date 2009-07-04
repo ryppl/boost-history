@@ -14,8 +14,6 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>
 
-#include <boost/type_traits/is_convertible.hpp>
-
 #include <boost/fusion/container/list/detail/list/begin_impl.hpp>
 #include <boost/fusion/container/list/detail/list/end_impl.hpp>
 #include <boost/fusion/container/list/detail/list/at_impl.hpp>
@@ -46,26 +44,27 @@ namespace boost { namespace fusion
           : data()
         {}
 
-        template<typename List>
-        list(BOOST_FUSION_R_ELSE_CLREF(List) list_,
-               typename enable_if<is_convertible<
-                   typename detail::remove_reference<List>::type*
-                 , list const volatile*> >::type* =NULL)
-          : data(BOOST_FUSION_FORWARD(List,list_).data)
-        {
+#define LIST_CTOR(COMBINATION)\
+        list(list COMBINATION list_)\
+          : data(BOOST_FUSION_FORWARD(list COMBINATION,list_).data)\
+        {\
         }
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(LIST_CTOR)
+
+#undef LIST_CTOR
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
         template <typename Arg>
         list(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
-            : data(BOOST_FUSION_FORWARD(Arg,arg))
+          : data(BOOST_FUSION_FORWARD(Arg,arg))
         {}
 
 #   include <boost/fusion/container/list/detail/list/pp/list_forward_ctor.hpp>
 #else
         template <typename... OtherArguments>
         list(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
-            : data(BOOST_FUSION_FORWARD(OtherArguments,other_arguments)...)
+          : data(BOOST_FUSION_FORWARD(OtherArguments,other_arguments)...)
         {}
 #endif
 

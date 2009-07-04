@@ -15,8 +15,6 @@
 #include <boost/fusion/support/assign_tags.hpp>
 
 #include <boost/mpl/int.hpp>
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/utility/enable_if.hpp>
 
 #include <utility>
 
@@ -120,13 +118,13 @@ namespace boost { namespace fusion
             }
 #endif
 
-            typename add_reference<Head>::type
+            typename detail::add_lref<Head>::type
             at_impl(mpl::int_<Index>)
             {
                 return _element;
             }
 
-            typename add_reference<typename add_const<Head>::type>::type
+            typename detail::add_lref<typename add_const<Head>::type>::type
             at_impl(mpl::int_<Index>)const
             {
                 return _element;
@@ -154,15 +152,16 @@ namespace boost { namespace fusion
         {
         }
 
-        template<typename Vec>
-        vector(BOOST_FUSION_R_ELSE_CLREF(Vec) vec,
-               typename enable_if<is_convertible<
-                   typename detail::remove_reference<Vec>::type*
-                 , vector const volatile*> >::type* =NULL)
-          : base(detail::assign_by_deref(),
-                 fusion::begin(BOOST_FUSION_FORWARD(Vec,vec)))
-        {
+#define VECTOR_CTOR(COMBINATION)\
+        vector(vector COMBINATION vec)\
+          : base(detail::assign_by_deref(),\
+                fusion::begin(BOOST_FUSION_FORWARD(vector COMBINATION,vec)))\
+        {\
         }
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR)
+
+#undef VECTOR_CTOR
 
         template<typename SequenceAssign>
         vector(BOOST_FUSION_R_ELSE_CLREF(SequenceAssign) seq,
@@ -208,14 +207,18 @@ namespace boost { namespace fusion
         }
 
         template<typename I>
-        typename mpl::at<types, I>::type&
+        typename detail::add_lref<
+            typename mpl::at<types, I>::type
+        >::type
         at_impl(I)
         {
             return base::at_impl(mpl::int_<I::value>());
         }
 
         template<typename I>
-        typename add_const<typename mpl::at<types, I>::type>::type&
+        typename detail::add_lref<
+        typename add_const<typename mpl::at<types, I>::type>::type
+        >::type
         at_impl(I) const
         {
             return base::at_impl(mpl::int_<I::value>());

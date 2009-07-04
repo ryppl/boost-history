@@ -106,14 +106,15 @@ namespace boost { namespace fusion
         set()
             : data() {}
 
-        template<typename Set>
-        set(BOOST_FUSION_R_ELSE_CLREF(Set) set_,
-               typename enable_if<is_convertible<
-                   typename detail::remove_reference<Set>::type*
-                 , set const volatile*> >::type* =NULL)
-          : data(BOOST_FUSION_FORWARD(Set,set_).data)
-        {
+#define SET_CTOR(COMBINATION)\
+        set(set COMBINATION set_)\
+          : data(BOOST_FUSION_FORWARD(set COMBINATION,set_).data)\
+        {\
         }
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SET_CTOR)
+
+#undef SET_CTOR
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
         template <typename Arg>
@@ -143,25 +144,25 @@ namespace boost { namespace fusion
         typename meta_find_impl_const<Key>::type
         find_impl(mpl::identity<Key>) const
         {
-            return typename meta_find_impl_const<Key>::type(data);
+            return typename meta_find_impl_const<Key>::type(data,0);
         }
 
         template <typename Key>
         typename meta_find_impl<Key>::type
         find_impl(mpl::identity<Key>)
         {
-            return typename meta_find_impl<Key>::type(data);
+            return typename meta_find_impl<Key>::type(data,0);
         }
 
         template <class Key>
-        typename add_reference<Key>::type
+        typename detail::add_lref<Key>::type
         at_impl(mpl::identity<Key>)
         {
             return data.at_impl(typename meta_find_impl<Key>::type::index());
         }
 
         template <class Key>
-        typename add_reference<typename add_const<Key>::type>::type
+        typename detail::add_lref<typename add_const<Key>::type>::type
         at_impl(mpl::identity<Key>) const
         {
             return data.at_impl(

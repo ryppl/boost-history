@@ -15,19 +15,19 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename Pred>
+        template <typename Seq, typename Pred>
         struct remove_if
         {
-            typedef filter_view<Sequence, mpl::not_<Pred> > type;
+            typedef filter_view<Seq, mpl::not_<Pred> > type;
         };
     }
 
-    template <typename Pred, typename Sequence>
-    inline typename result_of::remove_if<Sequence const, Pred>::type
-    remove_if(Sequence const& seq)
+    template <typename Pred, typename Seq>
+    inline typename result_of::remove_if<Seq const&, Pred>::type
+    remove_if(Seq const& seq)
     {
         typedef typename
-            result_of::remove_if<Sequence const, Pred>::type
+            result_of::remove_if<Seq const&, Pred>::type
         result_type;
         return result_type(seq);
     }

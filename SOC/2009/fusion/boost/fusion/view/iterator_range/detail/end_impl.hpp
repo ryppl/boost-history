@@ -28,9 +28,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef s)
+                call(SeqRef seq)
                 {
-                    return s.last;
+                    return seq.last;
                 }
             };
         };

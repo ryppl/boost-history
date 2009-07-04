@@ -48,7 +48,7 @@ namespace boost { namespace fusion
                 static type
                 call(ItRef it)
                 {
-                    return it.f(fusion::deref(it.first));
+                    return (*it.f)(fusion::deref(it.first));
                 }
             };
         };
@@ -77,11 +77,11 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(ItRef i)
+                call(ItRef it)
                 {
-                    return i.f(
-                            fusion::deref(i.first1)
-                          , fusion::deref(i.first2));
+                    return (*it.f)(
+                            fusion::deref(it.first1)
+                          , fusion::deref(it.first2));
                 }
             };
         };

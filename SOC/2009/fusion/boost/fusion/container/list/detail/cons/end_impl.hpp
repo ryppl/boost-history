@@ -29,17 +29,17 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<cons_tag>
         {
-            template <typename Sequence>
+            template <typename Seq>
             struct apply
             {
                 typedef
                     cons_iterator<
-                        typename detail::result_of_forward_as<Sequence,nil>::type
+                        typename detail::result_of_forward_as<Seq,nil>::type
                     >
                 type;
 
                 static type
-                call(Sequence)
+                call(Seq)
                 {
                     return type();
                 }

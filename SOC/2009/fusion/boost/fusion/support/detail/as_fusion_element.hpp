@@ -11,8 +11,12 @@
 
 //TODO cschmidt: rref
 
-#include <boost/ref.hpp>
 #include <boost/fusion/support/ref.hpp>
+
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/ref.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -22,31 +26,15 @@ namespace boost { namespace fusion { namespace detail
         typedef T type;
     };
 
-    template <typename T>
-    struct as_fusion_element<T&>
-        : as_fusion_element<T>
-    {
-    };
+#define CV_REF_SPECIALISATION(COMBINATION)\
+    template <typename T>\
+    struct as_fusion_element<T COMBINATION>\
+      : as_fusion_element<T>\
+    {};
 
-    template <typename T>
-    struct as_fusion_element<const T&>
-        : as_fusion_element<T>
-    {
-    };
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALISATION)
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    template <typename T>
-    struct as_fusion_element<T&&>
-        : as_fusion_element<T>
-    {
-    };
-
-    template <typename T>
-    struct as_fusion_element<const T&&>
-        : as_fusion_element<T>
-    {
-    };
-#endif
+#undef CV_REF_SPECIALISATION
 
     template <typename T>
     struct as_fusion_element<reference_wrapper<T> >
@@ -55,7 +43,7 @@ namespace boost { namespace fusion { namespace detail
     };
 
     template <typename T>
-    struct as_fusion_element<const reference_wrapper<T> >
+    struct as_fusion_element<reference_wrapper<T> const>
     {
         typedef T& type;
     };
@@ -63,39 +51,36 @@ namespace boost { namespace fusion { namespace detail
     template <typename T, int N>
     struct as_fusion_element<T[N]>
     {
-        typedef const T(&type)[N];
+        typedef const typename as_fusion_element<T>::type(&type)[N];
     };
 
     template <typename T, int N>
     struct as_fusion_element<volatile T[N]>
     {
-        typedef const volatile T(&type)[N];
+        typedef const volatile typename as_fusion_element<T>::type(&type)[N];
     };
 
     template <typename T, int N>
     struct as_fusion_element<const volatile T[N]>
     {
-        typedef const volatile T(&type)[N];
+        typedef const volatile typename as_fusion_element<T>::type(&type)[N];
     };
 
     template <typename T>
     struct as_fusion_element_lref
     {
+        typedef typename as_fusion_element<T>::type element;
+
         typedef typename
-            add_lref<typename as_fusion_element<T>::type>::type
+            mpl::if_<
+                mpl::and_<
+                    is_lrref<T>
+                  , is_same<typename identity<T>::type,element>
+                >
+              , T
+              , typename add_lref<element>::type
+            >::type
         type;
-    };
-
-    template <typename T>
-    struct as_fusion_element_lref<const T&>
-      : as_fusion_element_lref<const T>
-    {
-    };
-
-    template <typename T>
-    struct as_fusion_element_lref<const T&&>
-      : as_fusion_element_lref<const T>
-    {
     };
 }}}
 

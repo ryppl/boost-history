@@ -44,7 +44,7 @@ namespace boost { namespace fusion
                 static type
                 call(Iterator i)
                 {
-                    return i.vec.at_impl(index());
+                    return i.vec->at_impl(index());
                 }
             };
         };

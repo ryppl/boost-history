@@ -35,7 +35,7 @@ namespace boost { namespace fusion
                type;
 
                 static type
-                call(ItRef i)
+                call(ItRef)
                 {
                     return type();
                 }

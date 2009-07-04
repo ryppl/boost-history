@@ -53,21 +53,23 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef s, mpl::true_)
+                call(SeqRef seq, mpl::true_)
                 {
-                    return fusion::begin(s.seq2);
+                    return fusion::begin(seq.seq2.get());
                 }
 
                 static type
-                call(SeqRef s, mpl::false_)
+                call(SeqRef seq, mpl::false_)
                 {
-                    return type(fusion::begin(s.seq1),fusion::begin(s.seq2));
+                    return type(
+                            fusion::begin(seq.seq1.get())
+                          , fusion::begin(seq.seq2.get()));
                 }
 
                 static type
-                call(SeqRef s)
+                call(SeqRef seq)
                 {
-                    return call(s, equal_to());
+                    return call(seq, equal_to());
                 }
             };
         };

@@ -72,12 +72,9 @@ main()
         typedef result_of::begin<vector_type>::type begin;
         typedef result_of::end<vector_type>::type end;
         typedef detail::static_find_if<begin, end, is_same<_, long> > filter;
-        typedef filter::type type;
 
-        BOOST_TEST(*type(v) == 987654);
-        std::cout << *type(v) << std::endl;
-        std::cout << *filter::call(begin(v)) << std::endl;
-        BOOST_TEST(*type(v) == *filter::call(begin(v)));
+        std::cout << *filter::call(boost::fusion::begin(v)) << std::endl;
+        BOOST_TEST(*filter::call(boost::fusion::begin(v)) == 987654);
     }
 
     {

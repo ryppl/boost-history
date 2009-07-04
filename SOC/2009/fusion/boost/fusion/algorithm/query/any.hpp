@@ -19,7 +19,7 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename F>
+        template <typename Seq, typename F>
         struct any
         {
             typedef bool type;

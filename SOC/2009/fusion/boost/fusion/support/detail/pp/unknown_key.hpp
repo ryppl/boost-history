@@ -5,8 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_SUPPORT_DETAIL_UNKNOWN_KEY_HPP
-#define BOOST_FUSION_SUPPORT_DETAIL_UNKNOWN_KEY_HPP
+#ifndef BOOST_FUSION_SUPPORT_DETAIL_PP_UNKNOWN_KEY_HPP
+#define BOOST_FUSION_SUPPORT_DETAIL_PP_UNKNOWN_KEY_HPP
 
 namespace boost { namespace fusion { namespace detail
 {

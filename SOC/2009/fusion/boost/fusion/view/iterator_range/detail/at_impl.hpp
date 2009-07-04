@@ -33,9 +33,9 @@ namespace boost { namespace fusion
                 typedef typename result_of::deref<pos>::type type;
 
                 static type
-                call(SeqRef s)
+                call(SeqRef seq)
                 {
-                    return *advance<N>(s.first);
+                    return *advance<N>(seq.first);
                 }
             };
         };

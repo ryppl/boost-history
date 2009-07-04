@@ -22,20 +22,22 @@ namespace boost { namespace fusion
         template<typename Tag>
         struct is_view_impl
         {
-            template <typename T>
+            template <typename SeqRef>
             struct apply
-                : detail::fusion_is_view<T>
+              :  detail::remove_reference<SeqRef>::type::is_view
             {};
         };
 
+        /*
         template <>
         struct is_view_impl<sequence_facade_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
-                : detail::remove_reference<Sequence>::type::is_view
+                : detail::remove_reference<SeqRef>::type::is_view
             {};
         };
+        */
     }
 
     namespace traits
@@ -43,7 +45,7 @@ namespace boost { namespace fusion
         template <typename T>
         struct is_view :
             extension::is_view_impl<typename fusion::traits::tag_of<T>::type>::
-                template apply<T>::type
+                template apply<typename detail::add_lref<T>::type>::type
         {};
     }
 }}

@@ -38,7 +38,7 @@ namespace boost { namespace fusion
                 static type
                 call(Iterator i)
                 {
-                    return i.cons.car;
+                    return i.cons->car;
                 }
             };
         };

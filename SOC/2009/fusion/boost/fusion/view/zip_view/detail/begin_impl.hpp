@@ -38,8 +38,7 @@ namespace boost { namespace fusion {
                            , result_of::begin<SeqRef>
                 >
             {
-                //TODO cschmidt: !!!
-                BOOST_MPL_ASSERT((is_reference<SeqRef>));
+                BOOST_MPL_ASSERT((detail::is_lrref<SeqRef>));
             };
 
             template<typename Seq>
@@ -85,8 +84,9 @@ namespace boost { namespace fusion {
                 static type
                 call(SeqRef seq)
                 {
-                    return type(fusion::transform(
-                            seq.seqs, detail::poly_begin()));
+                    return type(
+                            fusion::transform(seq.seqs, detail::poly_begin())
+                          , 0);
                 }
             };
         };

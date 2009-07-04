@@ -48,8 +48,7 @@ namespace boost { namespace fusion
                 static type
                 call(Iterator i)
                 {
-                    return fusion::advance<N>(
-                            static_cast<iterator_type>(i.iterator));
+                    return type(fusion::advance<N>(i.it),0);
                 }
             };
         };

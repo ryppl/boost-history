@@ -19,11 +19,7 @@ namespace boost { namespace fusion
     namespace extension
     {
         template <typename Tag>
-        struct begin_impl
-        {
-            template <typename Sequence>
-            struct apply;
-        };
+        struct begin_impl;
 
         template <>
         struct begin_impl<sequence_facade_tag>

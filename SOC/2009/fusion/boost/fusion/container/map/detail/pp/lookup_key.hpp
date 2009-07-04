@@ -10,7 +10,7 @@
 
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
-#include <boost/fusion/support/detail/unknown_key.hpp>
+#include <boost/fusion/support/detail/pp/unknown_key.hpp>
 
 namespace boost { namespace fusion
 {

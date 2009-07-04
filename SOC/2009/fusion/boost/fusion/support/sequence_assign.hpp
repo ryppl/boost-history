@@ -9,6 +9,7 @@
 #include <boost/fusion/support/ref.hpp>
 
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/if.hpp>
 
 namespace boost{namespace fusion{
 
@@ -44,62 +45,27 @@ namespace boost{namespace fusion{
     {
     };
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> const&>
-      : mpl::true_
-    {
+#   define IS_SEQUENCE_ASSIGN(COMBINATION)\
+    template<typename Seq>\
+    struct is_sequence_assign<detail::sequence_assign_type<Seq> COMBINATION>\
+      : mpl::true_\
+    {\
     };
 
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> const volatile&>
-      : mpl::true_
-    {
-    };
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(IS_SEQUENCE_ASSIGN);
+
+#   undef IS_SEQUENCE_ASSIGN
 
     template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> volatile&>
-      : mpl::true_
-    {
-    };
-
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq>&>
-      : mpl::true_
-    {
-    };
-
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> const&&>
-      : mpl::true_
-    {
-    };
-
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> const volatile&&>
-      : mpl::true_
-    {
-    };
-
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> volatile&&>
-      : mpl::true_
-    {
-    };
-
-    template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq>&&>
-      : mpl::true_
-    {
-    };
-
-    template<typename Seq>
-    detail::sequence_assign_type<BOOST_FUSION_R_ELSE_LREF(Seq)>
+    typename mpl::if_<
+        is_sequence_assign<BOOST_FUSION_R_ELSE_LREF(Seq)>
+      , BOOST_FUSION_R_ELSE_LREF(Seq)
+      , detail::sequence_assign_type<BOOST_FUSION_R_ELSE_LREF(Seq)>
+    >::type
     sequence_assign(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
         return seq;
     }
-#endif
 }}
 
 #endif

@@ -38,8 +38,9 @@ namespace boost { namespace fusion {
     pair_tie(BOOST_FUSION_R_ELSE_LREF(T) t)
     {
         typedef typename
-            result_of::pair_tie<Key, BOOST_FUSION_R_ELSE_LREF(Sequence)>::type
+            result_of::pair_tie<Key, BOOST_FUSION_R_ELSE_LREF(T)>::type
         type;
+
         return type(BOOST_FUSION_FORWARD(T,t));
     }
 

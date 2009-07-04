@@ -28,9 +28,9 @@ namespace boost { namespace fusion { namespace detail
         type;
 
         static type
-        call(SeqRef s)
+        call(SeqRef seq)
         {
-            return s.find_impl(mpl::identity<Key>());
+            return seq.find_impl(mpl::identity<Key>());
         }
     };
 }}}

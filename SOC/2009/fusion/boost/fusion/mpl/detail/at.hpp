@@ -25,9 +25,9 @@ namespace boost {
         template <>
         struct at_impl<fusion::fusion_sequence_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
-              : fusion::result_of::value_at<Sequence, N>
+              : fusion::result_of::value_at<SeqRef, N>
             {};
         };
     }

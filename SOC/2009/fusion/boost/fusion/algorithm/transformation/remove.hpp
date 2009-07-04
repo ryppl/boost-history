@@ -16,18 +16,20 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence, typename T>
+        template <typename Seq, typename T>
         struct remove
         {
-            typedef filter_view<Sequence, mpl::not_<is_same<mpl::_, T> > > type;
+            typedef
+                filter_view<Seq&, mpl::not_<is_same<mpl::_, T> > >
+            type;
         };
     }
 
-    template <typename T, typename Sequence>
-    inline typename result_of::remove<Sequence const, T>::type
-    remove(Sequence const& seq)
+    template <typename T, typename Seq>
+    inline typename result_of::remove<Seq const&, T>::type
+    remove(Seq const& seq)
     {
-        typedef typename result_of::remove<Sequence const, T>::type result_type;
+        typedef typename result_of::remove<Seq const&, T>::type result_type;
         return result_type(seq);
     }
 }}
