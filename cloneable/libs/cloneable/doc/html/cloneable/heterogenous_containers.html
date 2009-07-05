@@ -35,6 +35,8 @@
 <dt><span class="section"><a href="heterogenous_containers/vector.html">Vector</a></span></dt>
 <dt><span class="section"><a href="heterogenous_containers/set.html">Set</a></span></dt>
 <dt><span class="section"><a href="heterogenous_containers/map.html">Map</a></span></dt>
+<dt><span class="section"><a href="heterogenous_containers/heterogenous_map.html">Heterogenous
+      Map</a></span></dt>
 <dt><span class="section"><a href="heterogenous_containers/hashmap_and_hashset.html">HashMap
       and HashSet</a></span></dt>
 </dl></div>
@@ -47,14 +49,20 @@
 <li class="listitem"><code class="computeroutput"><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">chain</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">LinkLength</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
-<li class="listitem"><code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">heterogenous_map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">set</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
-<li class="listitem"><code class="computeroutput"><span class="identifier">multimap</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">multimap</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">heterogenous_multimap</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">multiset</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
-<li class="listitem"><code class="computeroutput"><span class="identifier">hash_map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">hash_map</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
+<li class="listitem"><code class="computeroutput"><span class="identifier">heterogenous_hash_map</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">hash_set</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">&gt;</span></code></li>
 <li class="listitem">
-<code class="computeroutput"><span class="identifier">hash_multimap</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code>.
+<code class="computeroutput"><span class="identifier">hash_multimap</span><span class="special">&lt;</span><span class="identifier">Key</span><span class="special">,</span> <span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code>.
+      </li>
+<li class="listitem">
+<code class="computeroutput"><span class="identifier">heterogenous_hash_multimap</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code>.
       </li>
 <li class="listitem"><code class="computeroutput"><span class="identifier">hash_multiset</span><span class="special">&lt;</span><span class="identifier">Base</span><span class="special">,</span> <span class="identifier">Pred</span><span class="special">,</span> <span class="identifier">Hash</span><span class="special">,</span> <span class="identifier">Alloc</span><span class="special">&gt;</span></code></li>
 </ul></div>
@@ -68,7 +76,7 @@
       type. This is because they are intended to store base pointers.
     </p>
 <p>
-      It may be surprising that <code class="computeroutput"><span class="identifier">map</span><span class="special">&lt;&gt;</span></code> takes only one type - the <code class="computeroutput"><span class="identifier">Base</span></code> type - of objects to store, rather than
+      It may be surprising that <code class="computeroutput"><span class="identifier">heterogenous_map</span><span class="special">&lt;&gt;</span></code> takes only one type - the <code class="computeroutput"><span class="identifier">Base</span></code> type - of objects to store, rather than
       the more familiar <span class="emphasis"><em>key</em></span> and <span class="emphasis"><em>mapped</em></span>
       types. This is because a heterogenous map provides an association between objects
       with the same base type.
@@ -81,11 +89,8 @@
       are not copied into the container</em></span>:
     </p>
 <p>
-      
-</p>
-<pre class="programlisting"><span class="identifier">container</span><span class="special">.</span><span class="identifier">add_method</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;(</span><span class="identifier">construction</span> <span class="identifier">args</span><span class="special">..);</span>
-</pre>
-<p>
+      <code class="computeroutput"><span class="identifier">container</span><span class="special">.</span></code><span class="emphasis"><em>add_method</em></span><code class="computeroutput"><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;(</span><span class="identifier">construction</span>
+      <span class="identifier">args</span><span class="special">..);</span></code>
     </p>
 <p>
       This means, for instance, that you can use non-default-constructable objects
@@ -99,10 +104,16 @@
       Basically, as long as you can construct the object at all, you can use it in
       a heterogenous container.
     </p>
-<p>
-      Importantly, clones are guaranteed to be created using the same allocator as
-      that used to make the original objects.
-    </p>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        clones are guaranteed to be created using the same allocator as that used
+        to make the original objects.
+      </p></td></tr>
+</table></div>
 <p>
       This is why it is important that you overload <code class="computeroutput"><span class="identifier">make_copy</span><span class="special">(</span><span class="identifier">abstract_allocator</span>
       <span class="special">&amp;)</span> <span class="keyword">const</span></code>,

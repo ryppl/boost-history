@@ -52,8 +52,10 @@
 <p>
       </p>
 <p>
-        <span class="inlinemediaobject"><img src="../../images/note.png" alt="note"></span> <code class="computeroutput"><span class="identifier">Animal</span></code>
-        doesn't have to derive from anything, or have any special members or methods.
+        <code class="computeroutput"><span class="identifier">Animal</span></code> doesn't have to derive
+        from anything, or have any special members or methods.
+      </p>
+<p>
         Now let's use our base class to create a simple type hierarchy:
       </p>
 <p>
@@ -106,14 +108,20 @@
 </pre>
 <p>
       </p>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code>
+          method returns a pointer to the base class of the type hierarchy - in this
+          case, <code class="computeroutput"><span class="identifier">Animal</span></code>.
+        </p></td></tr>
+</table></div>
 <p>
-        <span class="inlinemediaobject"><img src="../../images/note.png" alt="note"></span> the <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code> method returns a pointer to the base class
-        of the type hierarchy - in this case, <code class="computeroutput"><span class="identifier">Animal</span></code>.
-        We had to use a dynamic cast to down-cast to our derived type.
-      </p>
-<p>
-        If you know the derived type that you wish to be cloned, you can use the
-        <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
+        We had to use a dynamic cast to down-cast to our derived type. If you know
+        the derived type that you wish to be cloned, you can use the <code class="computeroutput"><span class="identifier">clone_as</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;()</span></code>
         method instead and save some typing:
       </p>
 <p>

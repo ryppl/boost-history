@@ -7,7 +7,7 @@
 <link rel="home" href="../../index.html" title="Cloneable 0.1">
 <link rel="up" href="../heterogenous_containers.html" title="Heterogenous Containers">
 <link rel="prev" href="set.html" title="Set">
-<link rel="next" href="hashmap_and_hashset.html" title="HashMap and HashSet">
+<link rel="next" href="heterogenous_map.html" title="Heterogenous Map">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="set.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../heterogenous_containers.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="hashmap_and_hashset.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="set.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../heterogenous_containers.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="heterogenous_map.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" title="Map">
 <div class="titlepage"><div><div><h3 class="title">
@@ -34,28 +34,11 @@
 </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span>
 <span class="special">{</span>
-	<span class="keyword">typedef</span> <span class="identifier">heterogenous</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;</span> <span class="identifier">Map</span><span class="special">;</span>
+	<span class="keyword">typedef</span> <span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">Animal</span><span class="special">&gt;</span> <span class="identifier">Map</span><span class="special">;</span>
 	<span class="identifier">Map</span> <span class="identifier">map</span><span class="special">;</span>
-	<span class="identifier">map</span><span class="special">.</span><span class="identifier">key</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="string">"spot"</span><span class="special">,</span> <span class="number">12</span><span class="special">).</span><span class="identifier">value</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="string">"rover"</span><span class="special">,</span> <span class="number">8</span><span class="special">);</span>
-	<span class="identifier">map</span><span class="special">.</span><span class="identifier">key</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"sam"</span><span class="special">,</span> <span class="number">6</span><span class="special">).</span><span class="identifier">value</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"sooty"</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
-	<span class="identifier">map</span><span class="special">.</span><span class="identifier">key</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"fluffy"</span><span class="special">,</span> <span class="number">10</span><span class="special">).</span><span class="identifier">value</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"tigger"</span><span class="special">,</span> <span class="number">14</span><span class="special">);</span>
-	<span class="identifier">map</span><span class="special">.</span><span class="identifier">key</span><span class="special">&lt;</span><span class="identifier">Labrador</span><span class="special">&gt;(</span><span class="string">"max"</span><span class="special">,</span> <span class="number">12</span><span class="special">).</span><span class="identifier">value</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"sooty"</span><span class="special">,</span> <span class="number">3</span><span class="special">);</span>
-	
-	<span class="comment">// make a deep copy of both the keys and values in the map
-</span>	<span class="identifier">Map</span> <span class="identifier">copy</span> <span class="special">=</span> <span class="identifier">map</span><span class="special">;</span>
-	
-	<span class="comment">// can search for any type of animal
-</span>	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;(</span><span class="string">"spot"</span><span class="special">,</span> <span class="number">12</span><span class="special">)</span> <span class="special">!=</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Animal</span><span class="special">&gt;(</span><span class="string">"sam"</span><span class="special">,</span> <span class="number">6</span><span class="special">)</span> <span class="special">!=</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	
-	<span class="comment">// or, search for specific animal instances
-</span>	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="string">"spot"</span><span class="special">,</span> <span class="number">12</span><span class="special">)</span> <span class="special">!=</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"spot"</span><span class="special">,</span> <span class="number">12</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="string">"sam"</span><span class="special">,</span> <span class="number">6</span><span class="special">)</span> <span class="special">!=</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="string">"max"</span><span class="special">,</span> <span class="number">12</span><span class="special">)</span> <span class="special">!=</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	<span class="identifier">assert</span><span class="special">(</span><span class="identifier">copy</span><span class="special">.</span><span class="identifier">find</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="string">"fluffy"</span><span class="special">,</span> <span class="number">10</span><span class="special">)</span> <span class="special">==</span> <span class="identifier">copy</span><span class="special">.</span><span class="identifier">end</span><span class="special">());</span>
-	
-	<span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+	<span class="identifier">map</span><span class="special">.</span><span class="identifier">insert</span><span class="special">&lt;</span><span class="identifier">Cat</span><span class="special">&gt;(</span><span class="number">1</span><span class="special">,</span> <span class="string">"sam"</span><span class="special">,</span> <span class="number">6</span><span class="special">);</span>
+	<span class="identifier">map</span><span class="special">.</span><span class="identifier">insert</span><span class="special">&lt;</span><span class="identifier">Dog</span><span class="special">&gt;(</span><span class="number">2</span><span class="special">,</span> <span class="string">"spot"</span><span class="special">,</span> <span class="number">6</span><span class="special">);</span>
+	<span class="identifier">map</span><span class="special">.</span><span class="identifier">insert</span><span class="special">&lt;</span><span class="identifier">Lab</span><span class="special">&gt;(</span><span class="number">3</span><span class="special">,</span> <span class="string">"max"</span><span class="special">,</span> <span class="number">6</span><span class="special">);</span>
 <span class="special">}</span>
 </pre>
 <p>
@@ -74,7 +57,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="set.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../heterogenous_containers.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="hashmap_and_hashset.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="set.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../heterogenous_containers.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="heterogenous_map.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

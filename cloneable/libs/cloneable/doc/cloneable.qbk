@@ -27,11 +27,19 @@
 [def __boostbook__  [@http://www.boost.org/doc/html/boostbook.html BoostBook]]
 [def __docbook__    [@http://www.docbook.org/ DocBook]]
 
-[section:intro Introduction]
+[h3 Motivation]
+
+We still use object type hierarchies, and we often use them with containers. However,
+doing so often means that we lose value semantics for those containers, becuase they
+typically contain base pointers. We would like to have the ability to copy containers 
+of base pointers and maintain value semantics, and also to safely clone and query 
+individual object instances.
+
+[h3 Description]
 
 The [*Boost.Cloneable] library provides a means for creating, 
 duplicating, and querying instances of object types that are specified 
-in class hierarchies, and a set of containers[1] for those objects.
+in class hierarchies, and a set of containers for those objects.
 
 Cloneable objects can create clones of derived types from base types, 
 can do so given any STL-compliant allocator, and supports multiple clone type targets.
@@ -64,13 +72,6 @@ Key features of the library:
 The complete source code for the library, with unit-tests, are available
 in the Boost SVN respository [@http://svn.boost.org/svn/boost/sandbox/cloneable/ here].
 
-[1] Cloneable objects can be used in containers-of-pointers (based on a modified [*Boost.PtrContainer] 
-implementation), producing a 'heterogenous' container system with value semantics for 
-comparison and copying, and emplace semantics for insertion. These containers are currently
- a part of the proposal as well, however it is intended that they eventually form a 
- distinct library. This proposal will focus mostly on the single-object aspect of the system.
-
-[endsect]
 
 [section:change_log Change Log]
 
@@ -144,8 +145,8 @@ int main()
 }
 ``
 
-__note__ we pass references to these functions rather than pointers, and these functions work for ['Cloneable] types and generally.
-We can also pass an allocator to these functions, but more on custom allocation later.
+[note we pass references to these functions rather than pointers, and these functions work for ['Cloneable] types and generally.
+We can also pass an allocator to these functions, but more on custom allocation later.]
 
 Although it is fine to use 
 the default base class in this example and other similar cases, we shall see that in general it is better to provide 
@@ -175,7 +176,8 @@ class Animal
 };
 ``
 
-__note__ `Animal` doesn't have to derive from anything, or have any special members or methods. 
+`Animal` doesn't have to derive from anything, or have any special members or methods.
+
 Now let's use our base class to create a simple type hierarchy:
 
 ``
@@ -217,11 +219,11 @@ int main()
 };
 ``
 
-__note__ the `clone()` method returns
-a pointer to the base class of the type hierarchy - in this case, `Animal`. 
-We had to use a dynamic cast to down-cast to our derived type.
+[note the `clone()` method returns
+a pointer to the base class of the type hierarchy - in this case, `Animal`.]
 
-If you know the derived type that you wish to be cloned, you can use the 
+We had to use a dynamic cast to down-cast to our derived type. If you know the derived 
+type that you wish to be cloned, you can use the 
 `clone_as<T>()` method instead and save some typing:
 
 ``
@@ -454,9 +456,9 @@ int main()
 }
 ``
 
-__alert__ if a sub-type `S` in type `T` is not default-constructabe, an exception of type
+[warning If a sub-type `S` in type `T` is not default-constructabe, an exception of type
 `no_default_construction` will be thrown if you attempt to default-create a new `S` instance
-from a `T` instance. 
+from a `T` instance.]
 
 [endsect]
 
@@ -553,14 +555,56 @@ then you do not need to provide any customisation. So don't start by making a cu
 First, check your class to see if it is actually needed. Introducing a `make_copy()` method too early
 or when not needed can create maintenance problems.
 
-__tip__ if your class contains pointers of any description, or references, 
-then you will in general have to at least provide a sensible copy-constructor, or provide a custom clone override.
+[note if your class contains pointers of any description, or references, 
+then you will in general have to at least provide a sensible copy-constructor, or provide a custom clone override.]
 
 In summary, there are three stages of customisation:
 
 * If your class has types with value semantics, the compiler-generated default copy constructor will suffice.
 * If your class has types that need explicit construction, making a copy-constructor for your class will suffice to make clones.
 * If your class has members that contain references, or require allocation, then you should override `make_copy` and construct the members in the copy instance, using the supplied abstract_allocator.
+
+[endsect]
+
+[ section Cloneable Instance]
+
+__alert__ ['subject to change -- CJS]
+
+A structure named `instance<>` is available within the library for storing instances of cloneable objects.
+
+This is used by the library to store a pointer to Cloneable objects, along with the allocator that made it. It can
+be used, for example, to assign from a generalised base to an `instance<>` without the user needing to 
+manually cast.
+
+``
+struct Base { virtual ~Base() { } };
+
+struct Foo : cloneable::base<Foo, Base> { };
+
+void test()
+{
+    typedef cloneable::list<Base> List;
+    list.push_back<Foo>(1);
+    List::instance<Foo> foo = list.front();
+}
+``
+
+The full signature of this type is:
+
+``
+template <
+	class Derived = any_derived_tag
+	, class Base = any_base_tag
+	, class Alloc = default_clone_allocator
+	, class Ctor = default_construction_tag
+	>
+struct instance;
+``
+
+But you will rarely need that when used as shown in the example.
+
+The next section cleans up some housework required for library maintainers, then we finally get to the
+fun stuff with the containers.
 
 [endsect]
 
@@ -602,13 +646,17 @@ provided by the Cloneable library. These are:
 * `vector<Base, Allocator>`
 * `deque<Base, Allocator>`
 * `chain<Base, LinkLength, Allocator>`
-* `map<Base, Predicate, Allocator>`
+* `map<Key, Base, Predicate, Allocator>`
+* `heterogenous_map<Base, Predicate, Allocator>`
 * `set<Base, Predicate, Allocator>`
-* `multimap<Base, Pred, Alloc>`
+* `multimap<Key, Base, Pred, Alloc>`
+* `heterogenous_multimap<Base, Pred, Alloc>`
 * `multiset<Base, Pred, Alloc>`
-* `hash_map<Base, Predicate, Hash, Allocator>`
+* `hash_map<Key, Base, Predicate, Hash, Allocator>`
+* `heterogenous_hash_map<Base, Predicate, Hash, Allocator>`
 * `hash_set<Base, Predicate, Hash, Allocator>`
-* `hash_multimap<Base, Pred, Hash, Alloc>`.
+* `hash_multimap<Key, Base, Pred, Hash, Alloc>`.
+* `heterogenous_hash_multimap<Base, Pred, Hash, Alloc>`.
 * `hash_multiset<Base, Pred, Hash, Alloc>`
 
 All of these containers store pointers to objects. However, they each expose their contained objects using value semantics.
@@ -618,7 +666,7 @@ of that library.
 You will have noted that each container is specialised over a `Base` type, rather than a concrete derived type. This is 
 because they are intended to store base pointers. 
 
-It may be surprising that `map<>` takes only one type - the `Base` type - of
+It may be surprising that `heterogenous_map<>` takes only one type - the `Base` type - of
 objects to store, rather than the more familiar ['key] and ['mapped] types. This is because a heterogenous map provides
 an association between objects with the same base type.
 
@@ -626,9 +674,7 @@ All heterogenous containers create objects to be added 'in place', in storage cr
 As such, to add a new object to a heterogenous container, you provide the type and the construction arguments. Allocation
 and construction is dealt with by the container, and, importantly, ['objects are not copied into the container]:
 
-``
-container.add_method<Type>(construction args..);
-``
+`container.`['add_method]`<Type>(construction args..);`
 
 This means, for instance, that you can use non-default-constructable objects in heterogenous vectors. 
 
@@ -636,7 +682,7 @@ It also means that you can use objects that do not or cannot have assignment def
 
 Basically, as long as you can construct the object at all, you can use it in a heterogenous container. 
 
-Importantly, clones are guaranteed to be created using the same allocator as that used to make the original objects.
+[note clones are guaranteed to be created using the same allocator as that used to make the original objects.]
 
 This is why it is
 important that you overload `make_copy(abstract_allocator &) const`, rather than the `make_copy() const` method that
@@ -880,7 +926,26 @@ TODO
 ``
 int main()
 {
-	typedef heterogenous::map<Animal> Map;
+	typedef map<int, Animal> Map;
+	Map map;
+	map.insert<Cat>(1, "sam", 6);
+	map.insert<Dog>(2, "spot", 6);
+	map.insert<Lab>(3, "max", 6);
+}
+``
+
+TODO
+
+[endsect]
+
+[section Heterogenous Map]
+
+And also a map of Cloneable to Cloneable:
+
+``
+int main()
+{
+	typedef heterogenous_map<Animal> Map;
 	Map map;
 	map.key<Dog>("spot", 12).value<Dog>("rover", 8);
 	map.key<Cat>("sam", 6).value<Cat>("sooty", 10);

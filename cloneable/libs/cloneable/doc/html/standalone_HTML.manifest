@@ -1,5 +1,4 @@
 index.html
-cloneable/intro.html
 cloneable/change_log.html
 cloneable/tutorial.html
 cloneable/tutorial/simple_hierarchical_cloning.html
@@ -8,6 +7,7 @@ cloneable/tutorial/using_external_types.html
 cloneable/tutorial/dealing_with_muliple_sub_objects.html
 cloneable/tutorial/customising_the_cloning_process.html
 cloneable/tutorial/using_custom_allocators.html
+cloneable/tutorial/cloneable_instance.html
 cloneable/tutorial/cloneable_traits.html
 cloneable/heterogenous_containers.html
 cloneable/heterogenous_containers/extended_object_hierarhcy.html
@@ -16,4 +16,5 @@ cloneable/heterogenous_containers/list.html
 cloneable/heterogenous_containers/vector.html
 cloneable/heterogenous_containers/set.html
 cloneable/heterogenous_containers/map.html
+cloneable/heterogenous_containers/heterogenous_map.html
 cloneable/heterogenous_containers/hashmap_and_hashset.html

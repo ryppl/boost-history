@@ -5,7 +5,7 @@
 <link rel="stylesheet" href="boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.1">
 <link rel="home" href="index.html" title="Cloneable 0.1">
-<link rel="next" href="cloneable/intro.html" title="Introduction">
+<link rel="next" href="cloneable/change_log.html" title="Change Log">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -17,7 +17,7 @@
 <td align="center"><a href="../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="cloneable/intro.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="cloneable/change_log.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
 <div class="article" title="Cloneable 0.1">
 <div class="titlepage">
 <div>
@@ -28,7 +28,7 @@
 </h3></div></div></div>
 <div><p class="copyright">Copyright © 2009 Christian Schladetsch</p></div>
 <div><div class="legalnotice" title="Legal Notice">
-<a name="id684042"></a><p>
+<a name="id663289"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -39,7 +39,6 @@
 <div class="toc">
 <p><b>Table of Contents</b></p>
 <dl>
-<dt><span class="section"><a href="cloneable/intro.html"> Introduction</a></span></dt>
 <dt><span class="section"><a href="cloneable/change_log.html"> Change Log</a></span></dt>
 <dt><span class="section"><a href="cloneable/tutorial.html"> Tutorial</a></span></dt>
 <dd><dl>
@@ -55,6 +54,7 @@
       the Cloning Process</a></span></dt>
 <dt><span class="section"><a href="cloneable/tutorial/using_custom_allocators.html">Using Custom
       Allocators</a></span></dt>
+<dt><span class="section"><a href="cloneable/tutorial/cloneable_instance.html">Cloneable Instance</a></span></dt>
 <dt><span class="section"><a href="cloneable/tutorial/cloneable_traits.html">Cloneable Traits</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="cloneable/heterogenous_containers.html">Heterogenous Containers</a></span></dt>
@@ -67,17 +67,96 @@
 <dt><span class="section"><a href="cloneable/heterogenous_containers/vector.html">Vector</a></span></dt>
 <dt><span class="section"><a href="cloneable/heterogenous_containers/set.html">Set</a></span></dt>
 <dt><span class="section"><a href="cloneable/heterogenous_containers/map.html">Map</a></span></dt>
+<dt><span class="section"><a href="cloneable/heterogenous_containers/heterogenous_map.html">Heterogenous
+      Map</a></span></dt>
 <dt><span class="section"><a href="cloneable/heterogenous_containers/hashmap_and_hashset.html">HashMap
       and HashSet</a></span></dt>
 </dl></dd>
 </dl>
 </div>
+<a name="cloneable..motivation"></a><h4>
+<a name="id663315"></a>
+    <a class="link" href="index.html#cloneable..motivation">Motivation</a>
+  </h4>
+<p>
+    We still use object type hierarchies, and we often use them with containers.
+    However, doing so often means that we lose value semantics for those containers,
+    becuase they typically contain base pointers. We would like to have the ability
+    to copy containers of base pointers and maintain value semantics, and also to
+    safely clone and query individual object instances.
+  </p>
+<a name="cloneable..description"></a><h4>
+<a name="id663331"></a>
+    <a class="link" href="index.html#cloneable..description">Description</a>
+  </h4>
+<p>
+    The <span class="bold"><strong>Boost.Cloneable</strong></span> library provides a means
+    for creating, duplicating, and querying instances of object types that are specified
+    in class hierarchies, and a set of containers for those objects.
+  </p>
+<p>
+    Cloneable objects can create clones of derived types from base types, can do
+    so given any STL-compliant allocator, and supports multiple clone type targets.
+  </p>
+<p>
+    The user of the library is able to override the default cloning process, and
+    may supply custom allocators. Cloneable types can derive from other cloneable
+    types, in which case the user can specify which subobject type to duplicate or
+    create when making a new clone or new object from an existing instance.
+  </p>
+<p>
+    You can use <span class="bold"><strong>Boost.Cloneable</strong></span> with existing, external
+    types without modification to those types by using the supplied <span class="emphasis"><em>adaptor</em></span>
+    mechanism. <span class="bold"><strong>Boost.Cloneable</strong></span> also supports types
+    that are not default-constructable.
+  </p>
+<p>
+    There is a fundamental requirement that a common base class type is shared for
+    each type in a given class hierarchy. The user can supply their own base classes,
+    or sensible defaults are generated.
+  </p>
+<p>
+    Key features of the library:
+  </p>
+<div class="itemizedlist"><ul class="itemizedlist" type="disc">
+<li class="listitem">
+      Can make any class-type Cloneable with or without modification to its definition
+    </li>
+<li class="listitem">
+      Optional user-supplied base classes
+    </li>
+<li class="listitem">
+      Base types can be queried for the interfaces they support
+    </li>
+<li class="listitem">
+      Clones can be created from base types
+    </li>
+<li class="listitem">
+      Supports multiple inheritance, cloning of sub-objects
+    </li>
+<li class="listitem">
+      Supports types with no default constructors
+    </li>
+<li class="listitem">
+      Customisation of the cloning process
+    </li>
+<li class="listitem">
+      Support for custom allocators
+    </li>
+<li class="listitem">
+      A set of heterogenous containers with emplace semantics for object insertion
+    </li>
+</ul></div>
+<p>
+    The complete source code for the library, with unit-tests, are available in the
+    Boost SVN respository <a href="http://svn.boost.org/svn/boost/sandbox/cloneable/" target="_top">here</a>.
+  </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: July 05, 2009 at 00:14:51 GMT</small></p></td>
+<td align="left"><p><small>Last revised: July 05, 2009 at 10:42:31 GMT</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>
-<div class="spirit-nav"><a accesskey="n" href="cloneable/intro.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
+<div class="spirit-nav"><a accesskey="n" href="cloneable/change_log.html"><img src="../../../../doc/html/images/next.png" alt="Next"></a></div>
 </body>
 </html>

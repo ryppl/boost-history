@@ -39,6 +39,7 @@
       the Cloning Process</a></span></dt>
 <dt><span class="section"><a href="tutorial/using_custom_allocators.html">Using Custom
       Allocators</a></span></dt>
+<dt><span class="section"><a href="tutorial/cloneable_instance.html">Cloneable Instance</a></span></dt>
 <dt><span class="section"><a href="tutorial/cloneable_traits.html">Cloneable Traits</a></span></dt>
 </dl></div>
 <p>
@@ -126,12 +127,17 @@
 </pre>
 <p>
     </p>
-<p>
-      <span class="inlinemediaobject"><img src="../images/note.png" alt="note"></span> we pass references to these functions rather than pointers,
-      and these functions work for <span class="emphasis"><em>Cloneable</em></span> types and generally.
-      We can also pass an allocator to these functions, but more on custom allocation
-      later.
-    </p>
+<div class="note" title="Note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        we pass references to these functions rather than pointers, and these functions
+        work for <span class="emphasis"><em>Cloneable</em></span> types and generally. We can also
+        pass an allocator to these functions, but more on custom allocation later.
+      </p></td></tr>
+</table></div>
 <p>
       Although it is fine to use the default base class in this example and other
       similar cases, we shall see that in general it is better to provide our own
