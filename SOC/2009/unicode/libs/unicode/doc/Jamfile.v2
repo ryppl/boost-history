@@ -18,10 +18,11 @@ import path ;
 
 boostbook quickbook
     :
-        users_manual.qbk autodoc
+        users_manual.qbk autodoc2.xml
     :
 		<format>pdf:<xsl:param>boost.url.prefix=http://www.boost.org/doc/libs/release/doc/html
         <format>pdf:<xsl:param>img.src.path=$(images)/
+        <dependency>autodoc
     ;
 
 doxygen autodoc 

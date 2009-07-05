@@ -1,0 +1,101 @@
+<?xml version="1.0" ?>
+<concept name="OneManyPipe" category="utility">
+  <!--
+  Copyright 2009 Mathias Gaunard
+
+  Distributed under the Boost
+  Software License, Version 1.0. (See accompanying
+  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+  -->
+  <param name="Pipe" role="model of OneManyPipe" />
+  <param name="In" role="value input type" />
+  <param name="Out" role="model of Output Iterator" />
+
+  <models-sentence>
+    The type <arg num="1" /> must be a model of <self/>.
+  </models-sentence>
+
+  <description>
+    <para>
+      A OneManyPipe is a function object that takes a value as argument and writes
+      a number of elements to a range, hence making it a
+      one-to-many conversion facility.
+    </para>
+  </description>
+  
+  <notation variables="p">
+    <sample-value>
+        <type name="Pipe" />
+    </sample-value>
+  </notation>
+  
+  <notation variables="v">
+    <sample-value>
+        <type name="In" />
+    </sample-value>
+  </notation>
+
+  <notation variables="out">
+    <sample-value>
+      <type name="Out" />
+    </sample-value>
+  </notation>
+
+  <associated-type name="output_type">
+    <get-member-type name="output_type">
+    <type name="Pipe" />
+    </get-member-type>
+    <description>
+      <simpara>The type of elements the pipe converts into.</simpara>
+    </description>
+  </associated-type>
+
+  <associated-type name="max_output">  
+    <get-member-type name="max_output">
+    <type name="Pipe" />
+    </get-member-type>
+    <description>
+      <simpara>Optional integral constant that states how many
+    elements may be added to <code>out</code> at maximum in a call to
+    the function object.</simpara>
+    </description>
+  </associated-type>
+
+  <valid-expression name="Construction">
+    <construct template-parameters="">
+      <type name="OneManyPipe"/>
+    </construct>
+    <return-type><require-same-type testable="yes"><type name="OneManyPipe"/></require-same-type></return-type>
+    <semantics>Construct an instance of the type with default parameters.</semantics>
+  </valid-expression>
+
+  <valid-expression name="Function Object Call">
+    <apply-funcobj>
+      <sample-value>
+        <type name="Pipe" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="Out" />
+      </sample-value>
+    </apply-funcobj>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="Out"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Writes some elements of type <code>output_type</code> to <code>out</code>,
+    and returns the past-the-end output iterator.
+    </semantics>
+  </valid-expression>
+
+  <example-model>
+    <type name="boost::unicode::u8_encoder" />
+    <type name="boost::unicode::u16_encoder" />
+    <type name="boost::unicode::hangul_decomposer" />
+  </example-model>
+
+</concept>

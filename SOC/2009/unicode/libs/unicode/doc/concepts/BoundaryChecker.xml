@@ -1,0 +1,77 @@
+<?xml version="1.0" ?>
+<concept name="BoundaryChecker" category="utility">
+  <!--
+  Copyright 2009 Mathias Gaunard
+
+  Distributed under the Boost
+  Software License, Version 1.0. (See accompanying
+  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+  -->
+  <param name="BoundaryChecker" role="model of BoundaryChecker" />
+  <param name="In" role="model of Bidirectional Iterator" />
+
+  <models-sentence>
+    The type <arg num="1" /> must be a model of <self/>.
+  </models-sentence>
+
+  <description>
+    <para>
+      A BoundaryChecker is a function object that tells whether a position
+      within a range constitutes a boundary.
+    </para>
+  </description>
+  
+  <notation variables="b">
+    <sample-value>
+        <type name="BoundaryChecker" />
+    </sample-value>
+  </notation>
+  
+  <notation variables="begin end pos">
+    <sample-value>
+      <type name="In" />
+    </sample-value>
+  </notation>
+
+  <valid-expression name="Construction">
+    <construct template-parameters="">
+      <type name="BoundaryChecker"/>
+    </construct>
+    <return-type><require-same-type testable="yes"><type name="BoundaryChecker"/></require-same-type></return-type>
+    <semantics>Construct an instance of the type with default parameters.</semantics>
+  </valid-expression>
+
+  <valid-expression name="Function Object Call">
+    <apply-funcobj>
+      <sample-value>
+        <type name="BoundaryChecker" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>      
+    </apply-funcobj>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="bool"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Returns whether <code>pos</code> is a boundary within the
+    [<code>begin</code>, <code>end</code>[ range.
+    </semantics>
+    <precondition><code>begin != end &amp;&amp; pos != begin &amp;&amp; pos != end</code></precondition>
+  </valid-expression>
+
+  <example-model>
+    <type name="boost::unicode::u8_boundary" />
+    <type name="boost::unicode::u16_boundary" />
+    <type name="boost::unicode::grapheme_boundary" />
+  </example-model>
+
+</concept>

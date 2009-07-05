@@ -87,12 +87,13 @@ public:
     };
 }
 
-template<typename P>
-struct one_many_pipe : P
+/** Model of \c Pipe constructed from a model of \c OneManyPipe */
+template<typename OneManyPipe>
+struct one_many_pipe : OneManyPipe
 {
     one_many_pipe() {} // singular
     
-	one_many_pipe(P p_) : P(p_)
+	one_many_pipe(OneManyPipe p_) : OneManyPipe(p_)
 	{
 	}
 	
@@ -117,12 +118,14 @@ struct one_many_pipe : P
 	}
 };
 
-template<typename P>
-one_many_pipe<P> make_one_many_pipe(P p)
+template<typename OneManyPipe>
+one_many_pipe<OneManyPipe> make_one_many_pipe(OneManyPipe p)
 {
-	return one_many_pipe<P>(p);
+	return one_many_pipe<OneManyPipe>(p);
 }
 
+/** Iterator adapter that wraps a range to make it appear like a converted
+ * one, by converting it step-by-step as it is advanced. */ 
 template<typename It, typename Pipe>
 struct pipe_iterator
 	: boost::iterator_facade<
@@ -134,7 +137,7 @@ struct pipe_iterator
 {
     pipe_iterator() {} // singular
     
-	pipe_iterator(It begin_, It pos_, It end_, Pipe p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
+	pipe_iterator(It begin_, It end_, It pos_, Pipe p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
 	{
 		if(pos != end)
         {
@@ -216,19 +219,19 @@ private:
 	detail::pipe_output_storage<Pipe> values;
 };
 
-template<typename It, typename P>
-pipe_iterator<It, P> make_pipe_iterator(It begin, It pos, It end, P p)
+template<typename It, typename Pipe>
+pipe_iterator<It, Pipe> make_pipe_iterator(It begin, It end, It pos, Pipe p)
 {
-	return pipe_iterator<It, P>(begin, pos, end, p);
+	return pipe_iterator<It, Pipe>(begin, end, pos, p);
 }
 
-template<typename Range, typename P>
+template<typename Range, typename Pipe>
 boost::iterator_range<
-	pipe_iterator<typename boost::range_iterator<const Range>::type, P>
-> piped(const Range& range, P p)
+	pipe_iterator<typename boost::range_iterator<const Range>::type, Pipe>
+> piped(const Range& range, Pipe p)
 {
 	return boost::make_iterator_range(
-		make_pipe_iterator(boost::begin(range), boost::begin(range), boost::end(range), p),
+		make_pipe_iterator(boost::begin(range), boost::end(range), boost::begin(range), p),
 		make_pipe_iterator(boost::begin(range), boost::end(range), boost::end(range), p)
 	);
 }
@@ -251,18 +254,20 @@ OutputIterator pipe(const Range& range, Pipe pipe, OutputIterator out)
     return out;
 }
 
-template<typename It, typename Pipe>
+/** Output Iterator adapter that wraps an output iterator to make one
+ * that will convert its output before pushing it to the wrapped iterator. */
+template<typename It, typename OneManyPipe>
 struct pipe_output_iterator
 {
     typedef void                                   difference_type;
     typedef void                                   value_type;
-    typedef pipe_output_iterator<It, Pipe>*        pointer;
-    typedef pipe_output_iterator<It, Pipe>&        reference;
+    typedef pipe_output_iterator<It, OneManyPipe>*        pointer;
+    typedef pipe_output_iterator<It, OneManyPipe>&        reference;
     typedef std::output_iterator_tag               iterator_category;
 
     pipe_output_iterator() {} // singular
     
-	pipe_output_iterator(It pos_, Pipe p_) : pos(pos_), p(p_)
+	pipe_output_iterator(It pos_, OneManyPipe p_) : pos(pos_), p(p_)
 	{
 	}
 	
@@ -289,7 +294,7 @@ struct pipe_output_iterator
     template<typename T>
 	void operator=(T val) const
 	{
-		pos = p.ltr(&val, &val + 1, pos).second;
+		pos = p(val, pos);
 	}
     
     bool operator==(const pipe_output_iterator& other) const
@@ -304,13 +309,13 @@ struct pipe_output_iterator
 	
 private:	
 	mutable It pos;
-	mutable Pipe p;
+	mutable OneManyPipe p;
 };
 
-template<typename OutputIterator, typename P>
-pipe_output_iterator<OutputIterator, P> piped_output(OutputIterator out, P p)
+template<typename OutputIterator, typename OneManyPipe>
+pipe_output_iterator<OutputIterator, OneManyPipe> piped_output(OutputIterator out, OneManyPipe p)
 {
-	return pipe_output_iterator<OutputIterator, P>(out, p);
+	return pipe_output_iterator<OutputIterator, OneManyPipe>(out, p);
 }
 
 } // namespace boost

@@ -111,7 +111,7 @@ namespace boost
 
 				std::vector <complex_casing> complex_case;
 
-				break_class::type			line_break;
+				line_break::type			line_break;
 				join_type::type				joining;
 
 				enum	{ CHARACTER_DOES_NOT_EXIST = 0x400000	};
@@ -135,7 +135,7 @@ namespace boost
 					uppercase (0),
 					lowercase (0),
 					titlecase (0),
-                    line_break (break_class::type (-1)),
+                    line_break (line_break::type (-1)),
                     joining (join_type::none)
 				{}
 			};

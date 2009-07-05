@@ -2,7 +2,7 @@
 #define BOOST_UNICODE_UNICHAR_DATA_HPP
 
 #include <boost/assert.hpp>
-#include <boost/mpl/int.hpp>
+#include <boost/integer/static_pow.hpp>
 #include <boost/integer/static_log2.hpp>
 
 #include <boost/cuchar.hpp>
@@ -10,25 +10,14 @@
 
 #define BOOST_UNICODE_ENUM_SIZE(en) (boost::static_log2<boost::unicode::ucd::en::_count>::value + 1)
 
+//#define BOOST_UNICODE_UCD_BIG 1
+
 namespace boost
 {
 namespace unicode
 {
 namespace ucd
 {
-    namespace detail
-    {
-        template<int X, int Y>
-        struct pow : boost::mpl::int_< X * pow<X, Y-1>::value >
-        {
-        };
-    
-        template<int X>
-        struct pow<X, 0> : boost::mpl::int_<1>
-        {
-        };
-    } // namespace detail
-
     /***************************************************************
     *** These structure are for internal use only and should not be
     **** used by any developer unless they are providing a custom
@@ -39,7 +28,7 @@ namespace ucd
     ****************************************************************/
     const int complex_case_size_const = 4;
     const int block_size_bits_const = 7;
-    const int block_size_const = detail::pow<2, block_size_bits_const>::value;
+    const int block_size_const = static_pow<2, block_size_bits_const>::value;
 
     struct unichar_sort_data_entry
     {
@@ -97,33 +86,42 @@ namespace ucd
     {
         // to optimise the structure across different targets we move the
         // pointers to the front
+#ifdef BOOST_UNICODE_UCD_BIG
         const char *     name;
+#endif
         const char32 *   decomp;
+#ifdef BOOST_UNICODE_UCD_BIG
         const unichar_complex_case_internal* complex_case;
+#endif
 
         struct
         { 
             unsigned  category : BOOST_UNICODE_ENUM_SIZE(category);
+#ifdef BOOST_UNICODE_UCD_BIG
             unsigned  join_type : BOOST_UNICODE_ENUM_SIZE(join_type);
+#endif
             unsigned  word_break : BOOST_UNICODE_ENUM_SIZE(word_break);
-            unsigned  unknown_char : 1;
+#ifdef BOOST_UNICODE_UCD_BIG
             // first value for sort_variable
             unsigned  sort_variable : 1;
             unsigned  sort_data_type : 2;
             unsigned  sort_data2 : 16;
+#endif
 
             unsigned  bidi_class : BOOST_UNICODE_ENUM_SIZE(bidi_class);           
             unsigned  decomposition_type : BOOST_UNICODE_ENUM_SIZE(decomposition_type);    
-            unsigned  break_class : BOOST_UNICODE_ENUM_SIZE(break_class);
+            unsigned  line_break : BOOST_UNICODE_ENUM_SIZE(line_break);
             unsigned  combining : 8;
             unsigned  sentence_break : BOOST_UNICODE_ENUM_SIZE(sentence_break); 
             unsigned  grapheme_cluster_break : BOOST_UNICODE_ENUM_SIZE(grapheme_cluster_break);
         };
+#ifdef BOOST_UNICODE_UCD_BIG
         // the meaning of this is controlled by predefined_sort
         const uint16_t   sort_index_or_data1;
         const char32     uppercase;
         const char32     lowercase;
         const char32     titlecase;
+#endif
     };
 
     struct unichar_blocks_internal
@@ -135,7 +133,9 @@ namespace ucd
 
     extern const boost::unicode::ucd::unichar_data_internal* __uni_char_data[];
     extern const boost::unicode::ucd::unichar_blocks_internal __uni_block_data[];
+#ifdef BOOST_UNICODE_UCD_BIG
     extern const boost::unicode::ucd::unichar_sort_data_entry __uni_sort_entry[];
+#endif
     
     extern const size_t __uni_block_data_size;
     

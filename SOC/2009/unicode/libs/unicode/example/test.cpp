@@ -8,6 +8,8 @@
 
 #include <algorithm>
 
+#include <boost/unicode/compose.hpp>
+
 template<typename Range>
 std::pair<
 	boost::reverse_iterator<typename boost::range_iterator<Range>::type>,
@@ -52,6 +54,10 @@ for(                                                                   \
 
 int main()
 {
+    namespace unicode = boost::unicode;
+    namespace ucd = boost::unicode::ucd;
+    using namespace boost;
+    
 	std::vector<boost::char32> v;
 	
 	/*v.push_back(122);
@@ -103,19 +109,36 @@ int main()
     }
     std::cout << std::endl;
         
-    std::cout << "\n" << boost::unicode::ucd::get_name(0xE9) << std::endl;
+    //std::cout << "\n" << boost::unicode::ucd::get_name(0xE9) << std::endl;
     std::cout << boost::unicode::ucd::as_string(boost::unicode::ucd::get_block(0xE9)) << std::endl;
     
     boost::char32 grapheme_test[] = {
-        'f', 'o', 'o', '\r', '\n', 275, 769, ' ', 0x1e17
+        'f', 'o', 'o', '\r', '\n', 0x113, 0x301, ' ', 0x1e17
     };
     
-    FOREACH_AUTO(code_points, boost::grapheme_bounded(grapheme_test))
-    {
-        BOOST_FOREACH(unsigned char c, boost::u8_encoded(code_points))
-            std::cout << c;
-        std::cout << '(' << count(code_points) << ')';
-    }
+    BOOST_AUTO(grapheme_utf8_test, u8_encoded(grapheme_test));
     
+    FOREACH_AUTO(grapheme, u8_grapheme_bounded(grapheme_utf8_test))
+    {
+        std::cout << "(";
+        BOOST_FOREACH(unsigned char c, grapheme)
+            std::cout << c;
+        std::cout << ")";
+    }
+    std::cout << std::endl << std::endl;
+    
+    for(const boost::char32* p = boost::unicode::ucd::get_decomposition(0x1e17); *p; ++p)
+        std::cout << "0x" << std::hex << *p << ' ';
+    std::cout << std::endl;
+    
+    unicode::decomposer<> decomp;
+    decomp(0x1e17, std::ostream_iterator<char32>(std::cout, " "));
+    std::cout << std::endl << std::endl;
+    
+    unicode::decomposer<> decomp2;
+    decomp2(0xa8, std::ostream_iterator<char32>(std::cout, " "));
+    std::cout << std::endl;
+    unicode::decomposer<static_pow<2, ucd::decomposition_type::compat>::value> decomp3;
+    decomp3(0xa8, std::ostream_iterator<char32>(std::cout, " "));
     std::cout << std::endl;
 }

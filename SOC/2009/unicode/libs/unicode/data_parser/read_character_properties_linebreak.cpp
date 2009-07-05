@@ -78,7 +78,7 @@ void read_character_properties_linebreak(
 		// F0000..FFFFD;XX # <Plane 15 Private Use, First>..<Plane 15 Private Use, Last>
 
 		char32 first_code, last_code;
-		break_class::type break_type;
+		line_break::type break_type;
 		info = parse (curr, last,
 			// start code
 			((hex_p [assign_a (first_code)] >> ".." >>
@@ -90,82 +90,82 @@ void read_character_properties_linebreak(
 			// block name
 			(
 			str_p("BK") [assign_a (break_type,
-				break_class::mandatory)] |
+				line_break::mandatory)] |
 			str_p("CR") [assign_a (break_type,
-				break_class::carriage_return)] |
+				line_break::carriage_return)] |
 			str_p("LF") [assign_a (break_type,
-				break_class::line_feed)] |
+				line_break::line_feed)] |
 			str_p("CM") [assign_a (break_type,
-				break_class::combining_mark)] |
+				line_break::combining_mark)] |
 			str_p("NL") [assign_a (break_type,
-				break_class::next_line)] |
+				line_break::next_line)] |
 			str_p("SG") [assign_a (break_type,
-				break_class::surrogate)] |
+				line_break::surrogate)] |
 			str_p("WJ") [assign_a (break_type,
-				break_class::word_joiner)] |
+				line_break::word_joiner)] |
 			str_p("ZW") [assign_a (break_type,
-				break_class::zero_width_space)] |
+				line_break::zero_width_space)] |
 			str_p("GL") [assign_a (break_type,
-				break_class::non_breaking)] |
+				line_break::non_breaking)] |
 			str_p("CB") [assign_a (break_type,
-				break_class::contingent_break_opportunity)] |
+				line_break::contingent_break_opportunity)] |
 			str_p("SP") [assign_a (break_type,
-				break_class::space)] |
+				line_break::space)] |
 			str_p("B2") [assign_a (break_type,
-				break_class::break_opportunity_before_after)] |
+				line_break::break_opportunity_before_after)] |
 			str_p("BA") [assign_a (break_type,
-				break_class::break_opportunity_after)] |
+				line_break::break_opportunity_after)] |
 			str_p("BB") [assign_a (break_type,
-				break_class::break_opportunity_before)] |
+				line_break::break_opportunity_before)] |
 			str_p("HY") [assign_a (break_type,
-				break_class::hyphen)] |
+				line_break::hyphen)] |
 
 			str_p("CL") [assign_a (break_type,
-				break_class::closing_punctuation)] |
+				line_break::closing_punctuation)] |
 			str_p("EX") [assign_a (break_type,
-				break_class::exclamation_interrogation)] |
+				line_break::exclamation_interrogation)] |
 			str_p("IN") [assign_a (break_type,
-				break_class::inseparable)] |
+				line_break::inseparable)] |
 			str_p("NS") [assign_a (break_type,
-				break_class::non_starter)] |
+				line_break::non_starter)] |
 			str_p("OP") [assign_a (break_type,
-				break_class::opening_punctuation)] |
+				line_break::opening_punctuation)] |
 			str_p("QU") [assign_a (break_type,
-				break_class::ambiguous_quotation)] |
+				line_break::ambiguous_quotation)] |
 
 			str_p("IS") [assign_a (break_type,
-				break_class::infix_separator)] |
+				line_break::infix_separator)] |
 			str_p("NU") [assign_a (break_type,
-				break_class::numeric)] |
+				line_break::numeric)] |
 			str_p("PO") [assign_a (break_type,
-				break_class::postfix_numeric)] |
+				line_break::postfix_numeric)] |
 			str_p("PR") [assign_a (break_type,
-				break_class::prefix_numeric)] |
+				line_break::prefix_numeric)] |
 			str_p("SY") [assign_a (break_type,
-				break_class::symbol_allowing_break)] |
+				line_break::symbol_allowing_break)] |
 
 			str_p("AI") [assign_a (break_type,
-				break_class::ambiguous)] |
+				line_break::ambiguous)] |
 			str_p("AL") [assign_a (break_type,
-				break_class::ordinary_alpabetic_or_symbol_character)] |
+				line_break::ordinary_alpabetic_or_symbol_character)] |
 			str_p("H2") [assign_a (break_type,
-				break_class::hangul_lv_syllable)] |
+				line_break::hangul_lv_syllable)] |
 			str_p("H3") [assign_a (break_type,
-				break_class::hangul_lvt_syllable)] |
+				line_break::hangul_lvt_syllable)] |
 			str_p("ID") [assign_a (break_type,
-				break_class::ideograph)] |
+				line_break::ideograph)] |
 			str_p("JL") [assign_a (break_type,
-				break_class::hangul_l_jamo)] |
+				line_break::hangul_l_jamo)] |
 			str_p("JV") [assign_a (break_type,
-				break_class::hangul_v_jamo)] |
+				line_break::hangul_v_jamo)] |
 			str_p("JT") [assign_a (break_type,
-				break_class::hangul_t_jamo)] |
+				line_break::hangul_t_jamo)] |
 			str_p("SA") [assign_a (break_type,
-				break_class::complex_context)] |
+				line_break::complex_context)] |
 			str_p("XX") [assign_a (break_type,
-				break_class::unknown)] |
+				line_break::unknown)] |
             (+alnum_p) [warning_assign_a (break_type,
-				break_class::unknown)]
+				line_break::unknown)]
 			) >>
 			// Skip any remaining entries, i.e., parse future versions
 			// of the table as well.
@@ -201,7 +201,7 @@ void read_character_properties_linebreak(
 				throw std::runtime_error (ss.str());
 			} 
 
-			if (prop->second.line_break != (break_class::type)-1)
+			if (prop->second.line_break != (line_break::type)-1)
 			{
 				std::stringstream ss;
 				ss << "codepoint " << std::hex << curr_code

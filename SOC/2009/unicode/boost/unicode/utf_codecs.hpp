@@ -1,5 +1,5 @@
-#ifndef BOOST_UTF_CONVERSION_HPP
-#define BOOST_UTF_CONVERSION_HPP
+#ifndef BOOST_UTF_CODECS_HPP
+#define BOOST_UTF_CODECS_HPP
 
 #include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
@@ -9,12 +9,11 @@
 #include <ios>
 #endif
 
-#include <boost/iterator/pipe_iterator.hpp>
 #include <boost/unicode/surrogates.hpp>
+
 
 namespace boost
 {
-
 namespace unicode
 {
 
@@ -48,7 +47,7 @@ inline void invalid_code_point(char32 val)
 {
 #ifndef BOOST_NO_STD_LOCALE
 	std::stringstream ss;
-	ss << "Invalid UTF-32 code point U+" << std::showbase << std::hex << (uint_least32_t)val << " encountered while trying to encode UTF-16 sequence";
+	ss << "Invalid UTF-32 code point U+" << std::showbase << std::hex << (uint_least32_t)val << " encountered";
 	std::out_of_range e(ss.str());
 #else
 	std::out_of_range e("Invalid UTF-32 code point encountered while trying to encode UTF-16 sequence");
@@ -69,16 +68,19 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 #else
 	std::out_of_range e("Invalid UTF sequence encountered while trying to decode UTF-32 sequence");
 #endif
-	throw_exception(e);
+	boost::throw_exception(e);
 }
 
 } // namespace detail
 
-struct u16_packer
+/** Model of \c OneManyPipe that converts a code point to a sequence
+ * of UTF-16 code units. */
+struct u16_encoder
 {
 	typedef char16 output_type;
     static const int max_output = 2;
 	
+    /** Throws std::out_of_range if \c v is not a valid code point. */
 	template<typename OutputIterator>
 	OutputIterator operator()(char32 v, OutputIterator out)
 	{
@@ -113,11 +115,14 @@ struct u16_packer
 	}
 };
 
-struct u16_unpacker
+/** Model of \c Pipe that converts a sequence of UTF-16 code units into
+ * a single code point. */
+struct u16_decoder
 {
 	typedef char32 output_type;
     static const int max_output = 1;
 	
+    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	ltr(In begin, In end, Out out)
@@ -129,10 +134,10 @@ struct u16_unpacker
 		
 		if(unicode::is_high_surrogate(value))
 		{
+            // precondition; next value must have be a low-surrogate:
 			if(++it == end)
 				detail::invalid_utf_sequence(begin, end);
 			
-			// precondition; next value must have be a low-surrogate:
          	char16 lo = *it;
          	if(!unicode::is_low_surrogate(lo))
             	detail::invalid_code_point(lo);
@@ -144,25 +149,27 @@ struct u16_unpacker
 			detail::invalid_code_point(static_cast<char16>(value));
 		
 		*out++ = value;
-				
 		return std::make_pair(++it, out);
 	}
 	
+    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	rtl(In begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
+        BOOST_ASSERT(!is_surrogate(*begin) || is_high_surrogate(*begin));
 		
 		In it = --end;
 		char32 value = *it;
 		
 		if(unicode::is_low_surrogate(value))
 		{
+            // precondition; next value must have be a high-surrogate:
 			if(it == begin)
 				detail::invalid_utf_sequence(begin, end);
 			--it;
-			
+        
 			char16 hi = *it;
          	if(!unicode::is_high_surrogate(hi))
             	detail::invalid_code_point(hi);
@@ -174,7 +181,6 @@ struct u16_unpacker
 			detail::invalid_code_point(static_cast<char16>(value));
 			
 		*out++ = value;
-		
 		return std::make_pair(it, out);
 	}
 	
@@ -186,11 +192,29 @@ private:
 	}
 };
 
-struct u8_packer
+/** Model of \c BoundaryChecker that tells whether a position lies on a code
+ * point boundary within a range of UTF-16 code units. */
+struct u16_boundary
+{
+    template<typename In>
+    bool operator()(In begin, In end, In pos)
+    {
+        BOOST_ASSERT(begin != end);
+        BOOST_ASSERT(pos != begin);
+        BOOST_ASSERT(pos != end);
+        
+        return !is_surrogate(*pos) || is_high_surrogate(*pos);
+    }
+};
+
+/** Model of \c OneManyPipe that converts a code point to a sequence
+ * of UTF-8 code units. */
+struct u8_encoder
 {
 	typedef char output_type;
     static const int max_output = 4;
 	
+    /** Throws std::out_of_range if \c c is not a valid code point. */
 	template<typename OutputIterator>
 	OutputIterator operator()(char32 c, OutputIterator out)
 	{
@@ -224,142 +248,147 @@ struct u8_packer
 	}
 };
 
-struct u8_unpacker
+/** Model of \c Pipe that converts a sequence of UTF-8 code units into
+ * a single code point. */
+struct u8_decoder
 {
 	typedef char32 output_type;
     static const int max_output = 1;
-	
+
+private:
+    template<typename In>
+    void check(bool test, In begin, In end)
+    {
+        if(!test)
+            detail::invalid_utf_sequence(begin, end);
+    }
+
+public:	
+    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	ltr(In begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
-		
-		In it = begin;
-		char32 value = *it;
-		
-		if((value & 0xC0u) == 0x80u)
-			detail::invalid_utf_sequence(begin, end);
-			
-		// see how many extra byts we have:
-		unsigned extra = detail::utf8_trailing_byte_count(value);
-		// extract the extra bits, 6 from each extra byte:
-		for(unsigned c = 0; c < extra; ++c)
-		{
-			if(++it == end)
-				detail::invalid_utf_sequence(begin, end);
-			
-			value <<= 6;
-			value += static_cast<unsigned char>(*it) & 0x3Fu;
-		}
-		
-		// we now need to remove a few of the leftmost bits, but how many depends
-		// upon how many extra bytes we've extracted:
-		static const char32 masks[4] = 
-		{
-			0x7Fu,
-			0x7FFu,
-			0xFFFFu,
-			0x1FFFFFu,
-		};
-		value &= masks[extra];
-		
-		// check the result:
-		if(value > static_cast<char32>(0x10FFFFu))
-			invalid_utf_sequence(begin, end);
-		
-		*out++ = value;
-				
-		return std::make_pair(++it, out);
+		In p = begin;
+        
+        unsigned char b0 = *(p++);
+        if((b0 & 0x80) == 0)
+        {
+            char32 r = b0;
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        check(p != end, begin, end);
+        unsigned char b1 = *(p++);
+        check((b1 & 0xc0) == 0x80, begin, end);
+        if((b0 & 0xe0) == 0xc0)
+        {
+            char32 r = (b1 & 0x3f) | ((b0 & 0x1f) << 6);
+            check(r >= 0x80, begin, end);
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        check(p != end, begin, end);
+        unsigned char b2 = *(p++);
+        check((b2 & 0xc0) == 0x80, begin, end);
+        if((b0 & 0xf0) == 0xe0)
+        {
+            char32 r = (b2 & 0x3f) | ((b1 & 0x3f) << 6) | ((b0 & 0x0f) << 12);
+            check(r >= 0x800, begin, end);
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        check(p != end, begin, end);
+        unsigned char b3 = *(p++);
+        check((b3 & 0xc0) == 0x80, begin, end);
+        if((b0 & 0xf8) == 0xf0)
+        {
+            char32 r = (b3 & 0x3f) | ((b2 & 0x3f) << 6) | ((b1 & 0x3f) << 12) | ((b0 & 0x07) << 18);
+            check(r >= 0x10000, begin, end);
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        detail::invalid_utf_sequence(begin, end);
+        return std::make_pair(p, out);
 	}
-	
+
+    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */	
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	rtl(In begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
-		
-		In it = --end;
-		char32 value = *it;
-		
-		// Keep backtracking until we don't have a trailing character:
-		unsigned count = 0;
-		while((*it & 0xC0u) == 0x80u)
-		{					
-			if(count >= 4 || it == begin)
-				invalid_utf_sequence(begin, end);
-				
-			--it;
-			++count;
-		}
-
-		// now check that the sequence was valid:
-		if(count != detail::utf8_trailing_byte_count(value))
-			invalid_utf_sequence(begin, end);
-		
-		out = ltr(it, end, out).second;
-		return std::make_pair(it, out);
+		In p = end;
+        
+		unsigned char b0 = *(--p);
+        if((b0 & 0x80) == 0)
+        {
+            char32 r = b0;
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        check((b0 & 0xc0) == 0x80, begin, end);
+        check(p != begin, begin, end);
+        unsigned char b1 = *(--p);
+        if((b1 & 0xe0) == 0xc0)
+        {
+            char32 r = (b0 & 0x3f) | ((b1 & 0x1f) << 6);
+            check(r >= 0x80, begin, end);
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        check((b1 & 0xc0) == 0x80, begin, end);
+        check(p != begin, begin, end);
+        unsigned char b2 = *(--p);
+        if((b2 & 0xf0) == 0xe0)
+        {
+            char32 r = (b0 & 0x3f) | ((b1 & 0x3f) << 6) | ((b2 & 0x0f) << 12);
+            check(r >= 0x800, begin, end);
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        check((b2 & 0xc0) == 0x80, begin, end);
+        check(p != begin, begin, end);
+        unsigned char b3 = *(--p);
+        if((b3 & 0xf8) == 0xf0)
+        {
+            char32 r = (b0 & 0x3f) | ((b1 & 0x3f) << 6) | ((b2 & 0x3f) << 12) | ((b3 & 0x07) << 18);
+            check(r >= 0x10000, begin, end);
+            *out++ = r;
+            return std::make_pair(p, out);
+        }
+        
+        detail::invalid_utf_sequence(begin, end);
+        return std::make_pair(p, out);
 	}
 };
 
+
+/** Model of \c BoundaryChecker that tells whether a position lies on a code
+ * point boundary within a range of UTF-8 code units. */
+struct u8_boundary
+{
+    template<typename In>
+    bool operator()(In begin, In end, In pos)
+    {
+        BOOST_ASSERT(begin != end);
+        BOOST_ASSERT(pos != begin);
+        BOOST_ASSERT(pos != end);
+        
+        unsigned char c = *pos;
+        return (c & 0x80) == 0 || (c & 0xc0) == 0xc0;
+    }
+};
+
 } // namespace unicode
-
-/** \brief test
- * blabla
- * \param range a big ass range
- * \return something
- * \throw bla
- * \pre precondition
- * \post postcondition **/
-template<typename Range>
-std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u16_packer> >,
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u16_packer> >
-> make_u32_to_u16_range(const Range& range)
-{
-	return make_pipe_range(range, make_one_many_pipe(unicode::u16_packer()));
-}
-
-template<typename Range>
-std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, unicode::u16_unpacker>,
-	pipe_iterator<typename range_iterator<const Range>::type, unicode::u16_unpacker>
-> make_u16_to_u32_range(const Range& range)
-{
-	return make_pipe_range(range, unicode::u16_unpacker());
-}
-
-template<typename Range>
-std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u8_packer> >,
-	pipe_iterator<typename range_iterator<const Range>::type, one_many_pipe<unicode::u8_packer> >
-> make_u32_to_u8_range(const Range& range)
-{
-	return make_pipe_range(range, make_one_many_pipe(unicode::u8_packer()));
-}
-
-template<typename Range>
-std::pair<
-	pipe_iterator<typename range_iterator<const Range>::type, unicode::u8_unpacker>,
-	pipe_iterator<typename range_iterator<const Range>::type, unicode::u8_unpacker>
-> make_u8_to_u32_range(const Range& range)
-{
-	return make_pipe_range(range, unicode::u8_unpacker());
-}
-
-template<typename OutputIterator>
-pipe_output_iterator<OutputIterator, one_many_pipe<unicode::u8_packer> >
-make_u8_output_iterator(OutputIterator out)
-{
-	return make_pipe_output_iterator(out, make_one_many_pipe(unicode::u8_packer()));
-}
-
-template<typename OutputIterator>
-pipe_output_iterator<OutputIterator, one_many_pipe<unicode::u16_packer> >
-make_u16_output_iterator(OutputIterator out)
-{
-	return make_pipe_output_iterator(out, make_one_many_pipe(unicode::u16_packer()));
-}
 
 } // namespace boost
 

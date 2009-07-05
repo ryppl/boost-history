@@ -53,7 +53,7 @@ write_entry::write_entry()
 	lowercase = (char32)0;
 	titlecase = (char32)0;
 	has_complex_case = false;
-	line_break = (break_class::type)-1;
+	line_break = (line_break::type)-1;
 	joining = (join_type::type)-1;
 }
 
@@ -144,8 +144,10 @@ std::fstream& operator << (std::fstream& file, const write_entry& data)
 	std::stringstream ss;
 	// start and comment
 	// --- start of character -------------------------------------------------
-	ss << "\t{\t// char 0x" << std::hex << data.chr << ",\n";	
+	ss << "\t{\t// char 0x" << std::hex << data.chr << ",\n";
+#ifdef BOOST_UNICODE_UCD_BIG
 	ss << "\t\t\"" << data.name << "\",\n";
+#endif
 	if (data.has_decomposition)
 	{
 		ss << "\t\t__uni_decomp_data_0x" << std::hex << data.chr << ",\n";
@@ -154,6 +156,7 @@ std::fstream& operator << (std::fstream& file, const write_entry& data)
 	{
 		ss << "\t\tNULL,\n";
 	}
+#ifdef BOOST_UNICODE_UCD_BIG
 	if (data.has_complex_case)
 	{
 		ss << "\t\t__uni_complex_case_0x" << std::hex << data.chr << ",\n";
@@ -162,26 +165,33 @@ std::fstream& operator << (std::fstream& file, const write_entry& data)
 	{
 		ss << "\t\tNULL,\n";
 	}
+#endif
     ss << "\t\t{\n";
 	ss << "\t\t\tcategory::" << as_string(data.general_category) << ",\n";
+#ifdef BOOST_UNICODE_UCD_BIG
 	ss << "\t\t\tjoin_type::" << as_string(data.joining) << ",\n";
+#endif
 	ss << "\t\t\tword_break::" << as_string(data.word_break_kind) << ",\n";
-    ss << "\t\t\t" << std::boolalpha << data.unknown_char << ",\n";
+//    ss << "\t\t\t" << std::boolalpha << data.unknown_char << ",\n";
+#ifdef BOOST_UNICODE_UCD_BIG
     ss << "\t\t\t" << std::boolalpha << data.sort_variable << ",\n";
     ss << "\t\t\tucd::sort_type::" << as_string(data.sort_type) << ",\n";
     ss << "\t\t\t" << std::dec << data.sort_data2 << ",\n";
+#endif
 	ss << "\t\t\tbidi_class::" << as_string(data.bidi) << ",\n";
 	ss << "\t\t\tdecomposition_type::" << as_string(data.decomposition_kind) << ",\n";
-	ss << "\t\t\tbreak_class::" << as_string(data.line_break) << ",\n";
+	ss << "\t\t\tline_break::" << as_string(data.line_break) << ",\n";
 	ss << "\t\t\t" << std::dec << data.combining << ",\n";
 	ss << "\t\t\tsentence_break::" << as_string(data.sentence_break_kind) << ",\n";
     ss << "\t\t\tgrapheme_cluster_break::" << as_string(data.grapheme_break) << ",\n";
     ss << "\t\t},\n";
-    
+
+#ifdef BOOST_UNICODE_UCD_BIG    
     ss << "\t\t" << std::dec << data.sort_index_or_data1 << ",\n";
 	ss << "\t\t0x" << std::hex << data.uppercase << ",\n";
 	ss << "\t\t0x" << std::hex << data.lowercase << ",\n";
 	ss << "\t\t0x" << std::hex << data.titlecase << ",\n";
+#endif
 	// --- end of character ---------------------------------------------------
 	ss << "\t},\n";		
 
@@ -214,7 +224,7 @@ std::fstream& operator << (std::fstream& file, const decomp_entry& data)
 {
 	// create the data in a stringstream
 	std::stringstream ss;
-	ss << "static const char32 __uni_decomp_data_0x" << std::hex << data.chr << "[] = {\t";
+	ss << "static const char32 __uni_decomp_data_0x" << std::hex << data.chr << "[] = { ";
 	size_t size = data.decomposition.size();
 	for (size_t n = 0; n < size; n++)
 	{
@@ -321,6 +331,7 @@ std::fstream& operator << (std::fstream& file, const read_block& data)
 std::fstream& operator << (std::fstream& file,
 	const tuple<char32, std::vector<complex_casing> >& data)
 {
+#ifdef BOOST_UNICODE_UCD_BIG
 	// write the block
 	file << "static const unichar_complex_case_internal __uni_complex_case_0x";
 	file << std::hex << get<0>(data) << "[]= \n{\n";
@@ -343,6 +354,7 @@ std::fstream& operator << (std::fstream& file,
 	// write the data to the file
 	file << "};\n\n\n";
 
+#endif
 	return file;
 }
 
@@ -1131,11 +1143,14 @@ void prepare(std::map <char32, character_properties> & props,
 	std::cout << "-Preparing to write data\n";
 }
 
+#ifdef BOOST_UNICODE_UCD_BIG
 static char32 cp_last_sort_data_entry = 0xFFFFF;
+#endif
 
 std::fstream& operator << (std::fstream& file, 
                            const tuple<char32, sort_data_entry>& data)
 {
+#ifdef BOOST_UNICODE_UCD_BIG
 	// write the entry
     if (get<0>(data) != cp_last_sort_data_entry)
     {
@@ -1166,7 +1181,8 @@ std::fstream& operator << (std::fstream& file,
     file << "\n\t\t" << get<1>(data).following_chars_length << ",";
     	
     file << "\n\t},\n";
-
+    
+#endif
 	return file;
 }
 
@@ -1191,6 +1207,7 @@ void write_sort(const write_data& data, const char * dest_path)
 	file << "\n\nusing namespace boost::unicode;\n\n";
 	file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
 
+#ifdef BOOST_UNICODE_UCD_BIG
 	// ---- sort data table ------------------------------------------------------
 
     std::vector<tuple<bool, uint16_t> >::const_iterator iter_sd = 
@@ -1270,6 +1287,7 @@ void write_sort(const write_data& data, const char * dest_path)
 	file << "\t};\n\n";
 
     // ----------------------------------------------------------------------------
+#endif
 
     file << "}}}  // namespaces\n\n";
 	

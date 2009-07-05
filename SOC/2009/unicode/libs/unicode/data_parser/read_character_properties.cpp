@@ -49,7 +49,7 @@ void add_unknown_character(std::map <char32, character_properties> & props)
 	char_not_present.combining = 0;
 	char_not_present.bidi = bidi_class::strong_left_to_right;
 	char_not_present.decomposition_kind = decomposition_type::none;
-	char_not_present.line_break = break_class::unknown;
+	char_not_present.line_break = line_break::unknown;
 	char_not_present.joining = join_type::none;
 	char_not_present.unknown_char = true;
 	props[character_properties::CHARACTER_DOES_NOT_EXIST] = char_not_present;

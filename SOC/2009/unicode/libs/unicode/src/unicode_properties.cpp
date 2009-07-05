@@ -116,7 +116,7 @@ const char* boost::unicode::ucd::as_string(boost::unicode::ucd::bidi_class::type
 
 // ----------------------------------------------------------------------------------------
 
-static const char* g_break_class[] =
+static const char* g_line_break[] =
 {
     "unknown",
 	"mandatory",
@@ -156,17 +156,17 @@ static const char* g_break_class[] =
 	"complex_context"
 };
 
-BOOST_STATIC_ASSERT(element_count(g_break_class) == break_class::_count); // check g_break_class matched break_class
+BOOST_STATIC_ASSERT(element_count(g_line_break) == line_break::_count); // check g_line_break matched line_break
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_class::type type)
+const char* boost::unicode::ucd::as_string(boost::unicode::ucd::line_break::type type)
 {
-	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::break_class::_count);
-	return g_break_class[type];
+	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::line_break::_count);
+	return g_line_break[type];
 }
 
 // ----------------------------------------------------------------------------------------
 
-static const char* g_break_action[] =
+/*static const char* g_break_action[] =
 {
 	"direct",
 	"indirect",
@@ -182,7 +182,7 @@ const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_action::ty
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::break_action::_count);
 	return g_break_action[type];
-}
+}*/
 
 // ----------------------------------------------------------------------------------------
 

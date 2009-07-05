@@ -23,6 +23,7 @@ namespace unicode
 	
 		struct category
 		{
+            /** This is a useful breakdown into various character types which can be used as a default categorization. */
 			enum type
 			{
                 unknown,
@@ -59,13 +60,14 @@ namespace unicode
 				// It seems too subtle a difference.
 				other_not_assigned,
 
-				_count
+				_count /**< INTERNAL ONLY */
 			};
 		};
 		const char* as_string(category::type);
 
 		struct join_type
 		{
+            /** Basic Arabic and Syriac character shaping properties, such as initial, medial and final shapes. */
 			enum type
 			{
 				none,				// default value for unknown characters
@@ -75,13 +77,14 @@ namespace unicode
 				causing,
 				transparent,
                 
-				_count
+				_count /**< INTERNAL ONLY */
 			};
 		};
 		const char* as_string(join_type::type);
 
 		struct bidi_class
 		{
+            /** These are the categories required by the Bidirectional Behavior Algorithm in the Unicode Standard. */
 			enum type
 			{
 				// default value for unknown characters
@@ -108,13 +111,14 @@ namespace unicode
 				neutral_whitespace,
 				neutral_other,
 
-				_count
+				_count /**< INTERNAL ONLY */
 			};
 		};
 		const char* as_string(bidi_class::type);
 
-		struct break_class
+		struct line_break
 		{
+            /** Property used to identify Line Boundaries */
 			enum type
 			{
                 unknown,
@@ -154,11 +158,12 @@ namespace unicode
 				hangul_t_jamo,
 				complex_context,
 
-				_count
+				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(break_class::type);
-		 
+		const char* as_string(line_break::type);
+
+#if 0		 
 		struct break_action
 		{
 			enum type
@@ -170,13 +175,16 @@ namespace unicode
 				prohibited,		
 				always,
 
-				_count
+				_count /**< INTERNAL ONLY */
 			};
 		};
 		const char* as_string(break_action::type);
+#endif
 
 		struct decomposition_type
 		{
+            /** Type of decomposition mapping associated with the code point.
+             * All values but \c none and \c canonical indicate a compatibility decomposition mapping. */
 			enum type
 			{
                 none,					// default value for unknown characters
@@ -198,13 +206,15 @@ namespace unicode
 				compat,
 				canonical,
 
-				_count
+				_count /**< INTERNAL ONLY */
 			};
 		};
 		const char* as_string(decomposition_type::type);
 
+        
         struct grapheme_cluster_break
         {
+            /** Property used to identify Grapheme Cluster Boundaries */
             enum type
             {
                 any,
@@ -220,13 +230,14 @@ namespace unicode
                 prepend,
                 spacing_mark,
    
-				_count
+				_count /**< INTERNAL ONLY */
             };
         };
 		const char* as_string(grapheme_cluster_break::type);
 
         struct word_break
         {
+            /** Property used to identify Word Boundaries */
             enum type
             {
                 any,
@@ -243,13 +254,14 @@ namespace unicode
                 extend,
                 midnumlet,
    
-				_count
+				_count /**< INTERNAL ONLY */
             };
         };
 		const char* as_string(word_break::type);
 
         struct sentence_break
         {
+            /** Property used to identify Sentence Boundaries */
             enum type
             {
                 any,
@@ -268,7 +280,7 @@ namespace unicode
                 extend,
                 scontinue,
    
-				_count
+				_count /**< INTERNAL ONLY */
             };
         };
 		const char* as_string(sentence_break::type);

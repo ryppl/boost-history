@@ -61,7 +61,7 @@ private:
 
 	bool						has_complex_case;	
 
-	break_class::type			line_break;
+	line_break::type			line_break;
 	join_type::type				joining;
 
 	// --- warning --- update data members - 

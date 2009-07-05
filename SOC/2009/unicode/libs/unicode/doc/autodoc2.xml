@@ -1,0 +1,9 @@
+<?xml version="1.0" standalone="yes"?>
+<library-reference xmlns:xi="http://www.w3.org/2001/XInclude">
+<xi:include href="concepts/Pipe.xml"/>
+<xi:include href="concepts/OneManyPipe.xml"/>
+<xi:include href="concepts/Consumer.xml"/>
+<xi:include href="concepts/BoundaryChecker.xml"/>
+
+<xi:include href="autodoc.xml"/>
+</library-reference>

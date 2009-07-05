@@ -1,0 +1,98 @@
+<?xml version="1.0" ?>
+<concept name="Consumer" category="utility">
+  <!--
+  Copyright 2009 Mathias Gaunard
+
+  Distributed under the Boost
+  Software License, Version 1.0. (See accompanying
+  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+  -->
+  <param name="Consumer" role="model of Consumer" />
+  <param name="In" role="model of Input Iterator" />
+
+  <models-sentence>
+    The type <arg num="1" /> must be a model of <self/>.
+  </models-sentence>
+
+  <description>
+    <para>
+      A Consumer is a type grouping two functions that read a certain number of
+      elements off a range, hence making it a facility to segment a range.
+    </para>
+  </description>
+  
+  <notation variables="c">
+    <sample-value>
+        <type name="Consumer" />
+    </sample-value>
+  </notation>
+  
+  <notation variables="begin end">
+    <sample-value>
+      <type name="In" />
+    </sample-value>
+  </notation>
+  
+  <valid-expression name="Construction">
+    <construct template-parameters="">
+      <type name="Consumer"/>
+    </construct>
+    <return-type><require-same-type testable="yes"><type name="Consumer"/></require-same-type></return-type>
+    <semantics>Construct an instance of the type with default parameters.</semantics>
+  </valid-expression>
+
+  <valid-expression name="Left to right">
+    <apply-method name="ltr">
+      <sample-value>
+        <type name="Consumer" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+    </apply-method>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="In"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Reads part of the [<code>begin</code>, <code>end</code>[ range left to right,
+    and returns the new begin iterator.
+    </semantics>
+    <precondition><code>begin != end</code></precondition>
+  </valid-expression>
+  
+  <valid-expression name="Right to left">
+    <apply-method name="rtl">
+      <sample-value>
+        <type name="Consumer" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+      <sample-value>
+        <type name="In" />
+      </sample-value>
+    </apply-method>
+    <return-type>
+      <require-same-type testable="yes">
+        <type name="In"/>
+      </require-same-type>
+    </return-type>
+    <semantics>
+    Reads part of the [<code>begin</code>, <code>end</code>[ range right to left,
+    and returns the new past-the-end iterator.
+    </semantics>
+    <precondition><code>begin != end</code></precondition>
+  </valid-expression>  
+
+  <example-model>
+    <apply-template name="boost::boundary_consumer">
+        <type name="BoundaryChecker"/>
+    </apply-template>
+  </example-model>
+
+</concept>
