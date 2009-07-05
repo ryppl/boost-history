@@ -30,11 +30,12 @@ namespace boost
 			{
 				typedef Derived derived_type;
 				typedef Base base_type;
-				typedef DefaultCtorTag default_constructable_type;
+				typedef DefaultCtorTag default_constructable_type, construction_tag_type;
 				typedef base<derived_type, base_type, default_constructable_type> this_type;
 
 				virtual this_type *create_new(abstract_allocator &alloc) const 
 				{
+					// TODO: deal with conversion from bases with unknown_construction_tag
 					return detail::create_new<Derived, DefaultCtorTag>::given(this, alloc, alignment);
 				}
 			};
@@ -51,8 +52,8 @@ namespace boost
 				template <class T>
 				struct get_default_construction_tag : if_<is_nil<T>, default_construction_tag, T> { };
 
-				typedef is_convertible<A *, detail::ctag *> a_is_tag;
-				typedef is_convertible<B *, detail::ctag *> b_is_tag;
+				typedef is_convertible<A *, detail::tag *> a_is_tag;
+				typedef is_convertible<B *, detail::tag *> b_is_tag;
 
 				typedef typename if_<
 					is_nil<A>

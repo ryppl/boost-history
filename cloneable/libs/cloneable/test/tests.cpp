@@ -471,6 +471,15 @@ struct T2 : base<T2, my_base>
 	}
 };
 
+BOOST_AUTO_TEST_CASE(test_instance)
+{
+	//make_clone_allocator<std::allocator<char> > alloc;
+	//instance<T2> ins(alloc, 3.14f, 42, "spam");
+	//instance<T2> copy = ins.clone();
+	//BOOST_ASSERT(ins.exists() && ins->str == "spam");
+	//BOOST_ASSERT(copy.exists() && copy->str == "spam");
+}
+
 BOOST_AUTO_TEST_CASE(test_vector)
 {
 	// this uses the base type for the contained elements as a region tag for a monotonic allocator.

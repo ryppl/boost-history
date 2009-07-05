@@ -37,7 +37,22 @@ namespace boost
 					throw no_default_construction();
 				}
 			};
+			
+			// TODO: deal with conversion from bases with unknown_construction_tag
 
+			template <class Derived>
+			struct create_new<Derived, unknown_construction_tag>
+			{
+				template <class Self, class Alloc>
+				static Derived *given(Self *self, Alloc &alloc, size_t alignment)
+				{
+					abstract_allocator::pointer bytes = alloc.allocate_bytes(sizeof(Derived), alignment);
+					Derived *ptr = reinterpret_cast<Derived *>(bytes);
+					ptr->Self::self_ptr = ptr;
+					new (ptr->Self::self_ptr) Derived(Derived());
+					return ptr;
+				}
+			};
 		} // namespace detail
 
 	} // namespace cloneable

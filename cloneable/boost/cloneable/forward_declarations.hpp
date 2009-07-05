@@ -29,12 +29,26 @@ namespace boost
 		/// wish to use a custom base type
 		struct base_type;
 
-		namespace detail { struct ctag { }; }
+		typedef base_type default_base_type;
+
+		namespace detail 
+		{ 
+			struct tag { };
+
+			template <size_t N>
+			struct bit_tag : tag 
+			{ 
+				BOOST_STATIC_CONSTANT(size_t, bit = (1<<N));
+			}; 
+		}
+
+		struct any_derived_tag : detail::bit_tag<0> { };
+		struct any_base_tag : detail::bit_tag<1> { };
 
 		/// {@ tags to inform about default-constructability
-		struct default_construction_tag : detail::ctag, mpl::true_ {};
-		struct no_default_construction_tag : detail::ctag, mpl::false_ {};
-		struct unknown_construction_tag : detail::ctag {};
+		struct default_construction_tag : detail::bit_tag<2>  {};
+		struct no_default_construction_tag : detail::bit_tag<3>  {};
+		struct unknown_construction_tag : detail::bit_tag<4> {};
 		/// @}
 
 		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
@@ -56,6 +70,15 @@ namespace boost
 			//, class DefaultConstructionTag = nil//default_construction
 		>
 		struct base;
+
+		template <
+			class Derived = any_derived_tag
+			, class Base = typename Derived::base_type
+			, class Alloc = default_allocator
+			, class Ctor = typename Derived::construction_tag_type
+		>
+		struct instance;
+
 
 		/// an adaptor for an existing class.
 		///

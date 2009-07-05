@@ -91,6 +91,8 @@ namespace boost
 
 		using detail::make_clone_allocator;
 
+		typedef make_clone_allocator<default_allocator> default_clone_allocator;
+
 	} // namespace cloneable
 
 } // namespace boost
