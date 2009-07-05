@@ -35,7 +35,9 @@ namespace boost { namespace fusion {
             result_of::join<
                 BOOST_FUSION_R_ELSE_LREF(Lhs)
               , BOOST_FUSION_R_ELSE_LREF(Rhs)
-            >::type(lhs,rhs);
+            >::type(
+                    BOOST_FUSION_FORWARD(Lhs,lhs)
+                  , BOOST_FUSION_FORWARD(Rhs,rhs));
     }
 }}
 

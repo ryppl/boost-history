@@ -21,10 +21,10 @@ namespace boost { namespace fusion
           : insert_range<
                 Seq
               , Pos
-              //TODO cschmidt!!!
-              , /*BOOST_FUSION_R_ELSE_CLREF(*/
-                      single_view<typename detail::as_fusion_element<T>::type>//)
-                  const&
+                //TODO cschmidt!!!
+              , BOOST_FUSION_R_ELSE_CLREF(
+                      single_view<typename detail::as_fusion_element<T>::type>)
+
             >
         {
         };
@@ -41,7 +41,8 @@ namespace boost { namespace fusion
             Pos const& pos,
             BOOST_FUSION_R_ELSE_LREF(T) x)
     {
-        return insert_range(BOOST_FUSION_FORWARD(Seq,seq)
+        return insert_range(
+                  BOOST_FUSION_FORWARD(Seq,seq)
                 , pos
                 , make_single_view(BOOST_FUSION_FORWARD(T,x)));
     }

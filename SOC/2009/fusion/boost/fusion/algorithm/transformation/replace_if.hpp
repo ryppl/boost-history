@@ -49,17 +49,17 @@ namespace boost { namespace fusion
     inline typename result_of::replace_if<
         BOOST_FUSION_R_ELSE_LREF(Seq)
       , BOOST_FUSION_R_ELSE_LREF(F)
-      , BOOST_FUSION_R_ELSE_LREF(NewValue)
+      , BOOST_FUSION_R_ELSE_CLREF(NewValue)
     >::type
     replace_if(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
             BOOST_FUSION_R_ELSE_LREF(F) pred,
-            BOOST_FUSION_R_ELSE_LREF(NewValue) new_value)
+            BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
     {
         typedef typename
             result_of::replace_if<
                 BOOST_FUSION_R_ELSE_LREF(Seq)
               , BOOST_FUSION_R_ELSE_LREF(F)
-              , BOOST_FUSION_R_ELSE_LREF(NewValue)
+              , BOOST_FUSION_R_ELSE_CLREF(NewValue)
             >
         result;
 
@@ -67,35 +67,6 @@ namespace boost { namespace fusion
                 typename result::replacer(BOOST_FUSION_FORWARD(F,pred),
                         BOOST_FUSION_FORWARD(NewValue,new_value)));
     }
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename F, typename NewValue>
-    inline typename result_of::replace_if<
-        Seq&
-      , F&
-      , NewValue const&
-    >::type
-    replace_if(Seq& seq,
-            F& pred,
-            NewValue const& new_value)
-    {
-        typedef typename
-            result_of::replace_if<
-                Seq&
-              , F&
-              , NewValue const&
-            >::type
-        type;
-        typedef
-            detail::replacer_if<
-                typename detail::as_fusion_element<F&>::type
-              , typename detail::as_fusion_element<NewValue const&>::type
-            >
-        replacer;
-
-        return type(seq, replacer(pred, new_value));
-    }
-#endif
 }}
 
 #endif

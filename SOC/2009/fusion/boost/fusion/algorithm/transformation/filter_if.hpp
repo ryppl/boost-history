@@ -26,7 +26,9 @@ namespace boost { namespace fusion
         result_of::filter_if<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>::type
     filter_if(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return filter_view<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>(seq);
+        return typename
+            result_of::filter_if<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>::type(
+                BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}
 

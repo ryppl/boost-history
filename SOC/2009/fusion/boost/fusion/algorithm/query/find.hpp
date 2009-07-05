@@ -46,7 +46,10 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct find<Seq, T, true>
         {
-            typedef detail::assoc_find<Seq, T> filter;
+            typedef
+                detail::assoc_find<typename detail::add_lref<Seq>::type, T>
+            filter;
+
             typedef typename filter::type type;
         };
     }

@@ -32,11 +32,13 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq>
-    inline typename result_of::pop_back<Seq const&>::type
-    pop_back(Seq const& seq)
+    inline typename result_of::pop_back<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
+    pop_back(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        typedef typename result_of::pop_back<Seq const&>::type result;
-        return result(fusion::begin(seq), fusion::prior(fusion::end(seq)));
+        return typename
+            result_of::pop_back<BOOST_FUSION_R_ELSE_LREF(Seq)>::type(
+                    fusion::begin(seq)
+                  , fusion::prior(fusion::end(seq)));
     }
 }}
 

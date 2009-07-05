@@ -23,13 +23,13 @@ namespace boost { namespace fusion
     }
 
     template <typename Pred, typename Seq>
-    inline typename result_of::remove_if<Seq const&, Pred>::type
-    remove_if(Seq const& seq)
+    inline typename
+        result_of::remove_if<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>::type
+    remove_if(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        typedef typename
-            result_of::remove_if<Seq const&, Pred>::type
-        result_type;
-        return result_type(seq);
+        return typename
+            result_of::remove_if<BOOST_FUSION_R_ELSE_LREF(Seq), Pred>::type(
+                BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}
 

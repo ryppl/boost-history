@@ -74,32 +74,32 @@ namespace boost { namespace fusion { namespace detail
         }
 
         //TODO cschmidt: volatile?
-        typename detail::add_lref<type>::type
-        get()
-        {
-            return get(typename traits::is_view<T>::type());
-        }
+        //typename detail::add_lref<type>::type
+        //get()
+        //{
+        //    return get(typename traits::is_view<T>::type());
+        //}
 
-        typename mpl::if_<traits::is_view<T>, type const&, type>::type
+        typename mpl::if_<traits::is_view<T>, type&, type>::type
         get() const
         {
             return get(typename traits::is_view<T>::type());
         }
 
     private:
+        //type&
+        //get(mpl::true_ /*is_view*/)
+        //{
+        //    return t;
+        //}
+
+        //type
+        //get(mpl::false_ /*is_view*/)
+        //{
+        //    return *t;
+        //}
+
         type&
-        get(mpl::true_ /*is_view*/)
-        {
-            return t;
-        }
-
-        type
-        get(mpl::false_ /*is_view*/)
-        {
-            return *t;
-        }
-
-        type const&
         get(mpl::true_ /*is_view*/)const
         {
             return t;
@@ -112,7 +112,7 @@ namespace boost { namespace fusion { namespace detail
         }
 
         typedef typename detail::remove_reference<T>::type non_ref_t;
-        typename
+        mutable typename
             mpl::if_<traits::is_view<T>, non_ref_t, non_ref_t*>::type
         t;
     };

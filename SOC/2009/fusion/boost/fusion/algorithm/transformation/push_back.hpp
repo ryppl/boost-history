@@ -30,12 +30,18 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq, typename T>
-    inline typename result_of::push_back<Seq const&, T const&>::type
-    push_back(Seq const& seq, T const& x)
+    inline typename
+        result_of::push_back<
+            BOOST_FUSION_R_ELSE_LREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(T)
+        >::type
+    push_back(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
-        typedef result_of::push_back<Seq const&, T const&> gen;
-
-        return typename gen::type(seq, x);
+        return typename
+            result_of::push_back<
+                BOOST_FUSION_R_ELSE_LREF(Seq)
+              , BOOST_FUSION_R_ELSE_CLREF(T)
+            >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(T,x));
     }
 }}
 

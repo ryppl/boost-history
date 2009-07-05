@@ -34,6 +34,7 @@ namespace boost { namespace fusion
                     detail::remove_reference<ItRef>::type
                 it;
 
+                //TODO: return only const
                 typedef typename
                     mpl::apply<
                         detail::apply_transform_result<

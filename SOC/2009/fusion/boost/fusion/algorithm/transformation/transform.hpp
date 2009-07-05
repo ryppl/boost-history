@@ -34,21 +34,41 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq, typename F>
-    inline typename result_of::transform<Seq const&, F>::type
-    transform(Seq const& seq, F f)
+    inline typename
+        result_of::transform<
+            BOOST_FUSION_R_ELSE_LREF(Seq)
+          , BOOST_FUSION_R_ELSE_LREF(F)
+        >::type
+    transform(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(F) f)
     {
-        return typename result_of::transform<Seq const&, F>::type(seq, f);
+        return typename
+            result_of::transform<
+                BOOST_FUSION_R_ELSE_LREF(Seq)
+              , BOOST_FUSION_R_ELSE_LREF(F)
+            >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
     }
 
     template <typename Seq1, typename Seq2, typename F>
-    inline typename result_of::transform<Seq1 const&, Seq2 const&, F>::type
-    transform(Seq1 const& seq1, Seq2 const& seq2, F f)
+    inline typename
+        result_of::transform<
+            BOOST_FUSION_R_ELSE_LREF(Seq1)
+          , BOOST_FUSION_R_ELSE_LREF(Seq2)
+          , BOOST_FUSION_R_ELSE_LREF(F)
+        >::type
+    transform(
+            BOOST_FUSION_R_ELSE_LREF(Seq1) seq1
+          , BOOST_FUSION_R_ELSE_LREF(Seq2) seq2
+          , BOOST_FUSION_R_ELSE_LREF(F) f)
     {
-        typedef typename
-            result_of::transform<Seq1 const&, Seq2 const&, F>::type
-        result;
-
-        return result(seq1, seq2, f);
+        return typename
+            result_of::transform<
+                BOOST_FUSION_R_ELSE_LREF(Seq1)
+              , BOOST_FUSION_R_ELSE_LREF(Seq2)
+              , BOOST_FUSION_R_ELSE_LREF(F)
+            >::type(
+                    BOOST_FUSION_FORWARD(Seq1,seq1)
+                  , BOOST_FUSION_FORWARD(Seq2,seq2)
+                  , BOOST_FUSION_FORWARD(F,f));
     }
 }}
 

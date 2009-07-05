@@ -19,23 +19,33 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct push_front
         {
-            typedef fusion::single_view<
-                typename detail::as_fusion_element<T>::type
-            > single_view;
-
-            typedef joint_view<single_view const, Seq> type;
+            //TODO cschmidt: move as_fusion_element inside single_view
+            typedef
+                joint_view<
+                    fusion::single_view<
+                        typename detail::as_fusion_element<T>::type
+                    >
+                  , typename detail::add_lref<Seq>::type
+                >
+            type;
         };
     }
 
     template <typename Seq, typename T>
-    inline typename result_of::push_front<Seq const&, T>::type
-    push_front(Seq const& seq, T const& x)
+    inline typename
+        result_of::push_front<
+            BOOST_FUSION_R_ELSE_LREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(T)
+        >::type
+    push_front(
+            BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+            BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
-        typedef typename result_of::push_front<Seq const&, T> push_front;
-        typedef typename push_front::single_view single_view; 
-        typedef typename push_front::type result; 
-        single_view x_(x);
-        return result(x_, seq);
+        return typename
+            result_of::push_front<
+                BOOST_FUSION_R_ELSE_LREF(Seq)
+              , BOOST_FUSION_R_ELSE_CLREF(T)
+            >::type(BOOST_FUSION_FORWARD(T,x), BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}
 

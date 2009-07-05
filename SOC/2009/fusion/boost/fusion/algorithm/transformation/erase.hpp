@@ -113,10 +113,10 @@ namespace boost { namespace fusion
               , First const&
               , Last const&
             >
-        result_of;
-        typedef typename result_of::left_type left_type;
-        typedef typename result_of::right_type right_type;
-        typedef typename result_of::type result_type;
+        result;
+        typedef typename result::left_type left_type;
+        typedef typename result::right_type right_type;
+        typedef typename result::type result_type;
 
         return result_type(
                 left_type(

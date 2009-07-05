@@ -26,11 +26,12 @@ namespace boost { namespace fusion
     }
 
     template <typename T, typename Seq>
-    inline typename result_of::remove<Seq const&, T>::type
-    remove(Seq const& seq)
+    inline typename result_of::remove<BOOST_FUSION_R_ELSE_LREF(Seq), T>::type
+    remove(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        typedef typename result_of::remove<Seq const&, T>::type result_type;
-        return result_type(seq);
+        return typename
+            result_of::remove<BOOST_FUSION_R_ELSE_LREF(Seq), T>::type(
+                BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}
 

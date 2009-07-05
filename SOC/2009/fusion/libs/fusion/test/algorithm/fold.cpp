@@ -37,9 +37,9 @@ struct add_ints_only
     template <typename T, typename State>
     struct result<add_ints_only(T,State)>
     {
-        typedef typename boost::fusion::detail::identity<State>::type type;
         //TODO cschmidt: remove_reference does not support rvalue refs yet,
         //therefore we use the internal function of fusion!
+        typedef typename boost::fusion::detail::identity<State>::type type;
         //typedef typename boost::remove_const<
         //    typename boost::remove_reference<State>::type>::type type;
     };

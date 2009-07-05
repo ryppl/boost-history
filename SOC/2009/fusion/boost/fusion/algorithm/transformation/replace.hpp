@@ -39,24 +39,24 @@ namespace boost { namespace fusion
     inline typename
         result_of::replace<
             BOOST_FUSION_R_ELSE_LREF(Seq)
-          , BOOST_FUSION_R_ELSE_LREF(OldValue)
-          , BOOST_FUSION_R_ELSE_LREF(NewValue)
+          , BOOST_FUSION_R_ELSE_CLREF(OldValue)
+          , BOOST_FUSION_R_ELSE_CLREF(NewValue)
         >::type
     replace(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
-            BOOST_FUSION_R_ELSE_LREF(OldValue) old_value,
-            BOOST_FUSION_R_ELSE_LREF(NewValue) new_value)
+            BOOST_FUSION_R_ELSE_CLREF(OldValue) old_value,
+            BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
     {
         typedef typename
             result_of::replace<
                 BOOST_FUSION_R_ELSE_LREF(Seq)
-              , BOOST_FUSION_R_ELSE_LREF(OldValue)
-              , BOOST_FUSION_R_ELSE_LREF(NewValue)
+              , BOOST_FUSION_R_ELSE_CLREF(OldValue)
+              , BOOST_FUSION_R_ELSE_CLREF(NewValue)
             >::type
         type;
         typedef
             detail::replacer<
                 typename detail::as_fusion_element<
-                    BOOST_FUSION_R_ELSE_LREF(OldValue)
+                    BOOST_FUSION_R_ELSE_CLREF(OldValue)
                 >::type
             >
         replacer;
@@ -66,29 +66,6 @@ namespace boost { namespace fusion
                   , replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0)
                   , BOOST_FUSION_FORWARD(NewValue,new_value));
     }
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename OldValue, typename NewValue>
-    inline typename result_of::replace<Seq&, T>::type
-    replace(Seq& seq,
-            OldValue const& old_value,
-            NewValue const& new_value)
-    {
-        typedef typename
-            result_of::replace<
-                Seq&
-              , NewValue const&
-            >::type
-        type;
-        typedef
-            detail::replacer<
-                typename detail::as_fusion_element<OldValue const&>::type
-            >
-        replacer;
-
-        return replace_if(seq,replacer(old_value,0),new_value);
-    }
-#endif
 }}
 
 #endif

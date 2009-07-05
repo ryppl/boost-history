@@ -30,11 +30,9 @@ namespace boost { namespace fusion
     inline typename result_of::filter<BOOST_FUSION_R_ELSE_LREF(Seq), T>::type
     filter(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return
-            filter_view<
-                BOOST_FUSION_R_ELSE_LREF(Seq)
-              , is_same<mpl::_, T>
-            >(BOOST_FUSION_FORWARD(Seq,seq));
+        return typename
+            result_of::filter<BOOST_FUSION_R_ELSE_LREF(Seq), T>::type(
+                BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}
 
