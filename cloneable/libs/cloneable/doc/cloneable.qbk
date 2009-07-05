@@ -587,10 +587,9 @@ BOOST_STATIC_ASSERT(cloneable::is_default_constructable<T>::value);
 BOOST_STATIC_ASSERT(!cloneable::is_default_constructable<T>::value);
 ``
 
-More details are in the `clonable::traits<T>` structure. [@boost:/libs/cloneable/boost/cloneable/traits.hpp traits.hpp]
+Full details are in [@boost:/boost/cloneable/traits.hpp traits.hpp].
 
 [endsect]
-
 
 [endsect]
 
@@ -883,16 +882,24 @@ int main()
 {
 	typedef heterogenous::map<Animal> Map;
 	Map map;
-	Map::value_type pair0 = map.key<Dog>("spot", 12).value<Dog>("rover", 8).value;
-	Map::value_type pair1 = map.key<Cat>("sam", 6).value<Cat>("sooty", 10).value;
-	Map::value_type pair2 = map.key<Cat>("fluffy", 10).value<Cat>("tigger", 14).value;
-	Map::value_type pair3 = map.key<Labrador>("max", 12).value<Cat>("sooty", 3).value;
+	map.key<Dog>("spot", 12).value<Dog>("rover", 8);
+	map.key<Cat>("sam", 6).value<Cat>("sooty", 10);
+	map.key<Cat>("fluffy", 10).value<Cat>("tigger", 14);
+	map.key<Labrador>("max", 12).value<Cat>("sooty", 3);
 	
+	// make a deep copy of both the keys and values in the map
 	Map copy = map;
 	
-	Map::iterator found_pair0 = map.find<Cat>("sam", 6);
+	// can search for any type of animal
+	assert(copy.find<Animal>("spot", 12) != copy.end());
+	assert(copy.find<Animal>("sam", 6) != copy.end());
 	
-	assert(&found_pair0->first == pair1.first);
+	// or, search for specific animal instances
+	assert(copy.find<Dog>("spot", 12) != copy.end());
+	assert(copy.find<Cat>("spot", 12) == copy.end());
+	assert(copy.find<Cat>("sam", 6) != copy.end());
+	assert(copy.find<Dog>("max", 12) != copy.end());
+	assert(copy.find<Dog>("fluffy", 10) == copy.end());
 	
 	return 0;
 }

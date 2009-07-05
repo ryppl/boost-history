@@ -593,6 +593,14 @@ namespace map_test
 		int number;
 		my_base(int n = 0) : number(n) { }
 		virtual ~my_base() { }
+		bool operator==(my_base const &other) const
+		{
+			return number == other.number;
+		}
+		bool operator!=(my_base const &other) const
+		{
+			return number != other.number;
+		}
 		bool operator<(my_base const &other) const
 		{
 			return number < other.number;
@@ -632,7 +640,7 @@ struct wtf_less
 
 BOOST_AUTO_TEST_CASE(test_map)
 {
-	return;
+	//return;
 	using namespace map_test;
 	M2 m2;
 	const abstract_base<map_test::my_base> &ab2 = m2;
@@ -644,19 +652,19 @@ BOOST_AUTO_TEST_CASE(test_map)
 	typedef cloneable::map<map_test::my_base> Map;
 	Map map;
 	map.key<M2>().value<M3>();
+	BOOST_ASSERT(map.size() == 1);
 	Map::iterator a = map.find<M2>();
+	BOOST_ASSERT(a != map.end());
 
 	map.key<M0>(42).value<M1>("foo");
-	map.key<M2>().value<M3>();
+	BOOST_ASSERT(map.size() == 2);
 
 	Map::iterator iter = map.find<M0>(42);
-
 	BOOST_ASSERT(iter!= map.end());
-	M1 *m1 = dynamic_cast<M1 *>(iter->second);
-	BOOST_ASSERT(m1 != 0);
-	BOOST_ASSERT(m1->str == "foo");
 
-	Map copy = map;
+	map.key<M2>().value<M3>();
+
+//	Map copy = map;
 }
 
 BOOST_AUTO_TEST_CASE(test_hash)
@@ -765,5 +773,3 @@ BOOST_AUTO_TEST_CASE(test_set)
 }
 
 //EOF
-
- 
