@@ -190,11 +190,11 @@
 			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
 			<File
-				RelativePath="..\..\..\..\boost\itl\interval_set.hpp"
+				RelativePath="..\..\..\..\boost\itl\interval.hpp"
 				>
 			</File>
 			<File
-				RelativePath="..\..\..\..\boost\itl\interval.hpp"
+				RelativePath="..\..\..\..\boost\itl\interval_set.hpp"
 				>
 			</File>
 		</Filter>

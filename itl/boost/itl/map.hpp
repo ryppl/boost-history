@@ -339,7 +339,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::add(const value_type& val)
 {
     if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
-        *this;
+        return *this;
 
     std::pair<iterator, bool> insertion;
     if(Traits::is_total)
@@ -518,6 +518,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& map<DomainT,Codomai
     }
     return *this;
 }
+
 //-------------------------------------------------------------------------
 template <class DomainT, class CodomainT, class Traits, 
           ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
