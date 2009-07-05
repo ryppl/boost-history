@@ -43,6 +43,8 @@ with the "overload" keyword succinctly (from c++std-lib-23985):
     In particular, we *must* pick the right version of an algorithm
     without a single point of definition of all versions.
 
+The principle of type-safe overloading is based on that same idea.
+
 Explicit Refinement
 ===================
 
@@ -100,17 +102,18 @@ Next, we consider two calls to ``copy()``::
 Ideally, the first call should invoke the ``copy()`` marked #1, since a deque
 does not store its contents in contiguous memory. The second call
 should invoke the ``copy())`` marked #2, providing the ``memmove()``
-optimization automatically.
+optimization automatically. Any other solution either misses an
+optimization opportunity or leads to run-time errors. 
 
 With explicit refinement, one would express the iterator concepts
-hierarchy using implicit concepts and some explicit refinement as:
+hierarchy using implicit concepts and some explicit refinement as::
 
   /*auto*/ concept InputIterator<typename T> { /* ... */ }
   /*auto*/ concept ForwardIterator<typename T> : explicit InputIterator<T> { /* ... */ }
   /*auto*/ concept BidirectionalIterator<typename T> : ForwardIterator<T> { /* ... */ }
   /*auto*/ concept RandomAccessIterator<typename T> : BidirectionalIterator<T> { /* ... */ }
-  /*auto*/ concept ContiguousIterator<typename T> : explicit RandomAccessIterator<T>  { 
-   requires LvalueReference<reference> && LvalueReference<subscript_reference>; 
+  /*auto*/ concept ContiguousIterator<typename T> : explicit RandomAccessIterator<T> { 
+    requires LvalueReference<reference> && LvalueReference<subscript_reference>; 
   }
 
 Now, consider the call to ``copy()`` that provides ``deque<int>``
@@ -120,14 +123,16 @@ of both ``InputIterator`` and ``ContiguousIterator``. However, the
 explicit refinement of ``ContiguousIterator`` from
 ``RandomAccessIterator`` (which, transitively, refines
 ``InputIterator``) prevents ``copy()`` #2 from being selected by
-partial ordering. Thus, we get the behavior we want.
+partial ordering. That's good: if we called ``copy()`` #2, the result
+would be a run-time failure as the code attempts to ``memmove()`` the
+contents of a deque.
 
 With the call to ``copy()`` that provides a pointer to ``int``, both
 versions of ``copy()`` can again be called, with the same
 result. However, we assume that the author of the
 ``ContiguousIterator`` concept will write the appropriate concept map
 template to explicitly state that all pointers are
-``ContiguousIterator``s, e.g.,
+``ContiguousIterators``, e.g.,
 
 ::
 
@@ -140,30 +145,73 @@ provided with pointers to ``int`` will select the optimized ``copy()``
 A Type-Safety Problem with Explicit Refinement
 ==============================================
 
-Rewrite this stupid section by separating the copy() algorithms into
-different headers, then pointing out the PTO violation.
-
-
 The Principle of Type-Safe Overloading says that each overload should
 be type-safe in isolation, without the presence of other
-overloads. The first of our ``copy()`` algorithms (#1) clearly follows
-this principle: the algorithm is safe for any applicable
-``InputIterator``/``OutputIterator`` combination, because every
-``ContiguousIterator`` is also an ``InputIterator``. In the worst
-case, if ``copy()`` #2 is not present, we will have sub-optimal copy
-performance from contiguous memory regions to other contiguous memory
-regions.
+overloads. Therefore, we separate the two ``copy()`` algorithms in
+some logical manner:
 
-The second, optimized  ``copy()`` algorithm (#2) violates the PTO when
-the concepts hierarchy makes use of explicit refinement. When
-``copy()`` #2 is called with ``deque<int>`` iterators, the iterators
-syntactically match the ``ContiguousIterator``concept and, therefore,
-we get a run-time failure when the algorithm tries to ``memmove`` the
-contents of the 
+  1. The first copy (for ``InputIterators``) is placed in the standard
+  header ``<algorithm>``, where it already resides.
 
+  2. The second copy (for ``ContiguousIterators``) is placed into the
+  header ``<mylib/contiguous.h>``, along with the
+  ``ContiguousIterator`` concept and any required concept maps. This
+  is a likely scenario where third-party libraries introduce new
+  semantic concepts along with optimizations based on those concepts.
+
+Now, consider our ``test_copy`` function compiled in three different
+translation units, where the set of includes varies from one to the
+next::
+
+  #include <deque>
+  #include <algorithm> // A
+  #include <mylib/contiguous.h> // B
+  #include <mylib/trie.h>
+  using namespace mylib;
+  using namespace std;
+
+  void test_copy(deque<int>::iterator di, int* ip, int n, int *result) {
+    copy(di, di + n, result);
+    copy(ip, ip + n, result);
+  }
+
+When lines A and B are present, both ``copy()`` algorithms will be
+visible and ``test_copy`` will have the intended semantics.
+
+When line A is present but line B is not present, only the
+``InputIterator`` version of ``copy()`` is visible, so both calls in
+``test_copy`` will use that function. The resulting performance will
+be lower, because we're missing the ``memmove()``
+optimization. However, the program is still correct.
+
+When line B is present but line A is not present, only the
+``ContiguousIterator`` version of ``copy()`` is visible. Since both
+``deque<int>`` iterators and ``int`` pointers meet the syntactic
+requirements of ``ContiguousIterator``, we end up performing the
+``memmove`` optimization in both cases, leading to erroneous run-time
+behavior for the deque.
+
+What happened? The optimized ``copy()`` violates the principle of
+type-safe overloading, because it only properly rejects iterators that 
+syntactically meet the requirements of ``ContiguousIterator`` (but
+don't semantically meet those requirements) when the
+less-specialized ``InputIterator`` copy algorithm is also
+visible. 
+
+Conclusion
+==========
+
+The use of explicit refinement leads to violations of the principle of
+type-safe overloading, leading to unsafe run-time behavior. If the
+introduction of explicit refinement also implies the removal of
+explicit concepts (as suggested in N2906_), programmers will not be
+able to safely provide optimized versions algorithms based on new
+semantic concepts, as we have shown in the ``copy()`` above, for fear
+that those optimizations will be silently applied when they should not
+be.
 
 -----
 
-.. N2906: Bjarne Stroustrup, *Simplifying the use of concepts *, ISO C++ committee document N2906=09-0096, June, 2009.
+.. [#N2906] Bjarne Stroustrup, *Simplifying the use of concepts*, ISO C++ committee document N2906=09-0096, June, 2009.
 
-.. N2831: David Abrahams and Doug Gregor, *Fixing a Safety Problem with Rvalue References: Proposed Wording*, ISO C++ committee document N2831=09-0021, December, 2008.
+.. [#N2831] David Abrahams and Doug Gregor, *Fixing a Safety Problem with Rvalue References: Proposed Wording*, ISO C++ committee document N2831=09-0021, December, 2008.
