@@ -64,10 +64,12 @@ namespace boost{namespace itl
 
             // --- right hand side -----------------------
             // rhs := atomize(a) * atomize(b)
+			SourceT value_a = this->template getInputValue<operand_a>();
             TargetT atomic_a;
-            FunctionT<TargetT,SourceT>()(atomic_a, this->template getInputValue<operand_a>());
+            FunctionT<TargetT,SourceT>()(atomic_a, value_a);
+			SourceT value_b = this->template getInputValue<operand_b>();
             TargetT atomic_b;
-            FunctionT<TargetT,SourceT>()(atomic_b, this->template getInputValue<operand_b>());
+            FunctionT<TargetT,SourceT>()(atomic_b, value_b);
             TargetT rhs = atomic_a;
             OperatorT<TargetT>()(rhs, atomic_b);
 
