@@ -131,76 +131,79 @@ and ``constexpr`` may make a suitable convention feasible.
 
 Although foundational concepts represent an accepted convention,
 syntactic properties are not an airtight criterion by which to
-correctly identify them.  In c++std-lib-23956, Chris Jefferson writes:
+correctly identify them.  This fact can be manifested in one of two
+ways.
 
-.. epigraph::
+1. In c++std-lib-23956, Chris Jefferson writes:
 
-  I have a type I use regularly where ``operator<`` does not define a
-  total ordering (but it defines a very natural operation). On
-  occasion, people have given this type to ``std::sort``, and expected it
-  to work, instead their program tends to crash in unpredictable ways.
-  
-  I had hoped that concepts were going to help me sort this out, but
-  at the moment they do not, as there is no way to mark my type as not
-  satisfying the auto concept ``LessThanComparable``.
+   .. epigraph::
 
-The expectation to be protected from such mistakes is consistent with
-the C++ tradition of protecting against accident rather than
-deliberate circumvention. [#cpppl3e]_ 
+     I have a type I use regularly where ``operator<`` does not define a
+     total ordering (but it defines a very natural operation). On
+     occasion, people have given this type to ``std::sort``, and expected it
+     to work, instead their program tends to crash in unpredictable ways.
 
-Perhaps because they are simple, it is not uncommon that foundational
-concepts refine other concepts having the same syntactic structure.
-For example, if we know the operation used with ``std::accumulate`` is
-``Associative``, we can distribute the computation across N cores by
-breaking the input into N subranges, accumulating them, and using the
-operation again to combine the partial results:
+     I had hoped that concepts were going to help me sort this out, but
+     at the moment they do not, as there is no way to mark my type as not
+     satisfying the auto concept ``LessThanComparable``.
 
-.. parsed-literal::
+   The expectation to be protected from such mistakes is consistent with
+   the C++ tradition of protecting against accident rather than
+   deliberate circumvention. [#cpppl3e]_ 
 
-  concept **Associative<typename F, typename...Args>**
-    : **Callable<F,Args...>**
-  {};
+2. Perhaps because they are simple, it is common that foundational
+   concepts refine other concepts having the same or similar syntactic
+   structure.  For example, if we know the operation used with
+   ``std::accumulate`` is ``Associative``, we can distribute the
+   computation across N cores by breaking the input into N subranges,
+   accumulating them, and using the operation again to combine the
+   partial results:
 
-  // operates serially 
-  template <
-      InputIterator Iter, MoveConstructible T, 
-      **Callable**\ <auto, const T&, Iter::reference> BinaryOperation
-  >
-  requires HasAssign<T, BinaryOperation::result_type> 
-        && CopyConstructible<BinaryOperation> 
-  T accumulate(Iter first, Iter last, T init, BinaryOperation binary_op);
+   .. parsed-literal::
 
-  // optimized parallel version
-  template <
-      ForwardIterator Iter, MoveConstructible T, 
-      **Associative**\ <auto, const T&, Iter::reference> BinaryOperation
-  >
-  requires HasAssign<T, BinaryOperation::result_type> 
-        && CopyConstructible<BinaryOperation> 
-  T accumulate(Iter first, Iter last, T init, BinaryOperation binary_op);
+     concept **Associative<typename F, typename...Args>**
+       : **Callable<F,Args...>**
+     {};
 
-If ``Associative`` were declared ``auto``, even non-``Associative``
-operations would be dispatched to the parallel implementation of
-``accumulate`` based on their callability with two arguments, yielding
-an incorrect result at runtime.
+     // operates serially 
+     template <
+         InputIterator Iter, MoveConstructible T, 
+         **Callable**\ <auto, const T&, Iter::reference> BinaryOperation
+     >
+     requires HasAssign<T, BinaryOperation::result_type> 
+           && CopyConstructible<BinaryOperation> 
+     T accumulate(Iter first, Iter last, T init, BinaryOperation binary_op);
 
-Ideally, foundational concepts should be declared ``auto`` because the
-normal interpretation of the combined syntactic elements is so
-widespread that convenience outweighs danger.  A separate mechanism
-(such as deleted concept maps) may be needed to assert that a type
-with a common syntax does not fit the usual semantic assumptions.
+     // optimized parallel version
+     template <
+         ForwardIterator Iter, MoveConstructible T, 
+         **Associative**\ <auto, const T&, Iter::reference> BinaryOperation
+     >
+     requires HasAssign<T, BinaryOperation::result_type> 
+           && CopyConstructible<BinaryOperation> 
+     T accumulate(Iter first, Iter last, T init, BinaryOperation binary_op);
 
-However, before making a foundational concept ``auto``, one must take
-great care to be sure it is not, and *will never be*, a refinement of
-another concept with identical or very similar syntax.  Changing a
-concept from ``auto`` to non-``auto`` will break any code that
-depended on that automatic conformance.
+   If ``Associative`` were declared ``auto``, even non-``Associative``
+   operations would be dispatched to the parallel implementation of
+   ``accumulate`` based on their callability with two arguments, yielding
+   an incorrect result at runtime.  [#undefined]_
 
-Outside of algebraic structures such as ``SemiRing``, a large
-proportion of foundational concepts are covered by the standard
-library.  Our experience shows that widespread agreement on syntax and
-semantics for new concepts takes a long time to develop, so we don't
-expect new foundational concepts to proliferate quickly.
+*Ideally*, foundational concepts should be declared ``auto`` because
+the normal interpretation of the combined syntactic elements is so
+widespread that convenience outweighs the sort of danger cited by
+Chris Jefferson.  [#delmap]_ However, before making a foundational
+concept ``auto``, one must also take great care to be sure it is not,
+and *will never be*, a refinement of another concept with identical or
+very similar syntax. Changing a concept from ``auto`` to
+non-``auto`` will break any code that depended on the earlier
+automatic conformance.
+
+Our experience shows that widespread agreement on syntax and semantics
+for new concepts takes a long time to develop, so we don't expect new
+foundational concepts to proliferate quickly.  With the notable
+exception of algebraic structures such as ``SemiRing``, [#alg]_ most
+foundational concepts known today are supplied by the standard
+library.
 
 
 Nontrivial Concepts
@@ -256,7 +259,7 @@ In C++0x, associated functions can be written in the scope of the
     template <class T, class U>
     struct pair
     {
-        // Just the data, M'am
+        // Just the data, Ma'am
         T first;
         U second;
     };
@@ -266,8 +269,6 @@ In C++0x, associated functions can be written in the scope of the
     {
         pair<T,U>::pair(pair<T,U> const& rhs)
           : first(rhs.first), second(rhs.second) {}
-        pair<T,U>::pair(T const& first, U const& second)
-          : first(first), second(second) {}
     };
 
     template <DefaultConstructible T, DefaultConstructible U>
@@ -281,7 +282,6 @@ In C++0x, associated functions can be written in the scope of the
     {
         swap(pair<T,U>& lhs, pair<T,U>& rhs) 
         { 
-            using std::swap; 
             swap(lhs.first,rhs.first); 
             swap(lhs.second,rhs.second);
         }
@@ -304,28 +304,8 @@ of expressive advantages over the “traditional” approach:
 * When combined with exported concept maps as proposed by
   N2918=09-0108, it can substantially reduce verbosity (even when the
   concepts are ``auto``), because the requirements associated with a
-  group of such operations are not repeated.  For example, when
-  declared in the traditional way, the part of the ``std::pair`` interface
-  given in the first concept map above looks like:
-
-  .. parsed-literal::
-
-    template <class T, class A>
-    struct pair
-    {
-        …
-        **requires CopyConstructible<T> && CopyConstructible<U>**
-        pair(pair<T,U> const& rhs)
-          : first(rhs.first), second(rhs.second) {}
-
-        **requires CopyConstructible<T> && CopyConstructible<U>**
-        pair(T const& first, U const& second)
-          : first(first), second(y) {}
-        …
-    };
-
-  The difference is more dramatic when there are defaults involved.
-  The part of the ``std::list`` interface needed to make it satisfy
+  group of such operations are not repeated.  For example, the part of
+  the ``std::list`` interface needed to make it satisfy
   ``LessThanComparable`` looks like::
 
     template <LessThanComparable T, class A> 
@@ -365,7 +345,7 @@ A type is mapped to a concept *post-hoc* when the type's creator had
 no specific intention to model the concept in question.  Post-hoc
 mapping can happen implicitly, as when a type happens to provide the
 expected syntax and semantics for an ``auto`` concept like
-``EqualityComparable``, or explicitly, via a ``concept_map``.
+``EqualityComparable``, or explicitly, via a ``concept_map``.  
 
 While most concept mapping is intentional, post-hoc mapping is still
 an important feature because it allows built-in and 3rd-party types to
@@ -393,6 +373,14 @@ consecutive integers using an actual ``int``::
 An adaptive ``concept_map`` is always explicitly written.  Syntax
 adaptation is most commonly associated with post-hoc mapping, but can
 be done intentionally as part of Mat's Mechanism.
+
+Because they don't have syntax with widespread acceptance, post-hoc
+mapping of nontrivial concepts is highly likely to be both explicit
+and adaptive.
+
+Summary
+=======
+
 
 The Full Grid
 =============
@@ -426,3 +414,19 @@ combine:
 .. [#mat] Thanks to Mat Marcus for describing this style, which he
   discovered during some research work done with Jaakko Jarvi
   using ConceptGCC.
+
+.. [#delmap] A separate mechanism (such as deleted concept maps) may
+   be needed to assert that a type with a common syntax does not fit
+   the usual semantic assumptions.
+
+.. [#undefined] In general, the manifestation of
+   accidental conformance within a refinement hierarchy can be any form
+   of undefined behavior—see the classic problem with ``InputIterator``
+   and ``ForwardIterator`` as detailed in N1798_ for a particularly bad
+   example.
+
+.. _N1798: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1798.html
+
+.. [#alg] Semantic-only refinements are especially common among the
+   algebraic structures, for example SemiRing/Ring,
+   Group/AbelianGroup, BinaryOperator/SemiGroup, etc.
