@@ -29,7 +29,7 @@ namespace boost
 				}
 			};
 			template <class Derived>
-			struct create_new<Derived, no_default_construction>
+			struct create_new<Derived, no_default_construction_tag>
 			{
 				template <class Self, class Alloc>
 				static Derived *given(Self *self, Alloc &alloc, size_t alignment)

@@ -66,19 +66,31 @@ namespace boost
 			{
 			}
 
-			/*
+			set(predicate_type pred)
+				: parnet_type(pred)
+			{
+			}
+			set(predicate_type pred, allocator_type &a) 
+				: parent_type(pred, a)
+			{
+			}
+
 			template <class II>
-			set(II F, II L)
-				: impl(F, L, get_allocator())
+			set(II F, II L, predicate_type pred = predicate_type())
+				: parent_type(F, L, pred)
 			{
 			}
 
 			template <class II>
 			set(II F, II L, allocator_type &a)
-				: parent_type(a), impl(F, L, get_allocator())
+				: parent_type(F, L, a)
 			{
 			}
-			*/
+			template <class II>
+			set(II F, II L, predicate_type pred, allocator_type &a)
+				: parent_type(F, L, pred, a)
+			{
+			}
 
 		public:
 			typedef std::pair<iterator, bool> insert_result;
@@ -124,15 +136,6 @@ namespace boost
 			emplace_result<U> emplace(A0 a0, A1 a1, A2 a2)
 			{
 				return emplace(new_instance<U>(a0, a1, a2));
-			}
-
-			template <class Fun>
-			Fun for_each(Fun fun)
-			{
-				BOOST_FOREACH(value_type &value, *this)
-				{
-					fun(value);
-				}
 			}
 
 			struct detail

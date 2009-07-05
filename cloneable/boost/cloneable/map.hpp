@@ -16,24 +16,15 @@ namespace boost
 {
 	namespace cloneable
 	{
-		/// a vector of heterogenous objects
-		// TODO: move to boost/heterogenous/map
-		template <class Base, class Pred, class Alloc>
-		struct map
-			: detail::associative_container_base<
-				ptr_map<
-					abstract_base<Base>
-					, abstract_base<Base>
-					, Pred
-					, allocator
-					, typename detail::make_clone_allocator<Alloc>::type>
-				, Pred
-				, Base
-				, Alloc>
-		{
-			typedef detail::associative_container_base<
+		//namespace heterogenous
+		//{
+			/// a vector of heterogenous objects
+			// TODO: move to boost/heterogenous/map
+			template <class Key, class Base, class Pred, class Alloc>
+			struct map
+				: detail::associative_container_base<
 					ptr_map<
-						abstract_base<Base>
+						Key
 						, abstract_base<Base>
 						, Pred
 						, allocator
@@ -41,220 +32,124 @@ namespace boost
 					, Pred
 					, Base
 					, Alloc>
-				parent_type;
-			
-			typedef typename parent_type::container_type container_type;
-			typedef typename parent_type::base_type base_type;
-			typedef typename parent_type::abstract_base_type abstract_base_type;
-			typedef typename parent_type::allocator_type allocator_type;
-			typedef typename parent_type::value_type value_type;
-			typedef typename parent_type::reference reference;
-			typedef typename parent_type::const_reference const_reference;
-			typedef typename parent_type::iterator iterator;
-			typedef typename parent_type::const_iterator const_iterator;
-
-			using parent_type::new_instance;
-			using parent_type::validate;
-
-			typedef typename container_type::key_type key_type;
-			typedef typename container_type::mapped_type mapped_type;
-
-			typedef map<Base, Pred, Alloc> this_type;
-
-		public:
-			map() 
 			{
-			}
-			map(allocator_type &a) 
-				: parent_type(a)
-			{
-			}
+				typedef detail::associative_container_base<
+					ptr_map<
+							Key
+							, abstract_base<Base>
+							, Pred
+							, allocator
+							, typename detail::make_clone_allocator<Alloc>::type>
+						, Pred
+						, Base
+						, Alloc>
+					parent_type;
+				
+				typedef typename parent_type::container_type container_type;
+				typedef typename parent_type::base_type base_type;
+				typedef typename parent_type::abstract_base_type abstract_base_type;
+				typedef typename parent_type::allocator_type allocator_type;
+				typedef typename parent_type::value_type value_type;
+				typedef typename parent_type::reference reference;
+				typedef typename parent_type::const_reference const_reference;
+				typedef typename parent_type::iterator iterator;
+				typedef typename parent_type::const_iterator const_iterator;
 
-			//template <class II>
-			//map(II F, II L)
-			//	: impl(F,L, get_allocator())
-			//{
-			//}
-			//template <class II>
-			//map(II F, II L, allocator_type &a)
-			//	: parent_type(a), impl(F,L, get_allocator())
-			//{
-			//}
+				using parent_type::new_instance;
+				using parent_type::validate;
 
-		private:
-			typedef std::pair<iterator, bool> map_insert_result;
+				typedef typename container_type::key_type key_type;
+				typedef typename container_type::mapped_type mapped_type;
 
-			template <class K, class V>
-			struct insert_result
-			{
-				//TODO: typedef const_instance<K> key_type;
-				typedef instance<K> key_type;
-				typedef instance<V> value_type;
-
-				key_type key;
-				value_type value;
-				iterator where;
-				bool inserted;
-
-				insert_result() : inserted(false) { }
-				insert_result(const key_type &K, const value_type &V, const map_insert_result &R)
-					: key(K), value(V), where(R.first), inserted(R.second) { }
-			};
-
-			template <class K>
-			struct value_adder
-			{
-			private:
-				typedef instance<K> key_type;
-				this_type *parent;
-				key_type key;
+				typedef map<Base, Pred, Alloc> this_type;
 
 			public:
-				value_adder(this_type &P, const key_type &K)
-					: parent(&P), key(K) { }
-
-				template <class V>
-				insert_result<K,V> value()
+				map() 
 				{
-					return insert(parent->new_instance<V>());
+				}
+				map(allocator_type &a) 
+					: parent_type(a)
+				{
 				}
 
+				//template <class II>
+				//map(II F, II L)
+				//	: impl(F,L, get_allocator())
+				//{
+				//}
+				//template <class II>
+				//map(II F, II L, allocator_type &a)
+				//	: parent_type(a), impl(F,L, get_allocator())
+				//{
+				//}
+
+
+			public:
+				typedef std::pair<iterator, bool> map_insert_result;
+
+				template <class V>
+				map_insert_result insert(key_type key)
+				{
+					return impl().insert(key, new_instance<V>().to_abstract());
+				}
 				template <class V, class A0>
-				insert_result<K,V> value(A0 a0)
+				map_insert_result insert(key_type key, A0 a0)
 				{
-					return insert(parent->new_instance<V>(a0));
+					return impl().insert(key, new_instance<V>(a0).to_abstract());
 				}
-				template <class V, class A0, class A1>
-				insert_result<K,V> value(A0 a0, A1 a1)
+				template <class K, class A0, class A1>
+				map_insert_result insert(key_type key, A0 a0, A1 a1)
 				{
-					return insert(parent->new_instance<V>(a0,a1));
+					return impl().insert(key, new_instance<V>(a0,a1).to_abstract());
+				}
+				template <class K, class A0, class A1, class A2>
+				map_insert_result insert(key_type key, A0 a0, A1 a1, A2 a2)
+				{
+					return impl().insert(key, new_instance<V>(a0,a1,a2).to_abstract());
 				}
 
-			private:
-				template <class V>
-				insert_result<K,V> insert(instance<V> &value)
+				template <class Fun>
+				Fun for_each_key(Fun fun)
 				{
-					map_insert_result result = parent->insert(key.to_abstract(), value.to_abstract());
-					if (!result.second)
+					BOOST_FOREACH(value_type &val, *this)
 					{
-						key.release();
-						value.release();
+						fun(val.first);
 					}
-					return insert_result<K,V>(key, value, result);
+					return fun;
+				}
+
+				template <class Ty, class Fun>
+				Fun for_each_mapped(Fun fun) const
+				{
+					BOOST_FOREACH(value_type const &value, *this)
+					{
+						if (Ty *ptr = dynamic_cast<Ty *>(&val.second))
+						{
+							fun(*ptr);
+						}
+					}
+					return fun;
+				}
+
+				iterator find(key_type const &key)
+				{
+					return impl().find(key);
+				}
+
+				const_iterator find(key_type const &key) const
+				{
+					return impl().find(key);
 				}
 			};
+		
+		//} // namespace heterogenous
 
-			// TODO: make this private
-			template <class A, class B>
-			map_insert_result insert(A a, B b)
-			{
-				return map_insert_result();// impl().insert(std::make_pair(a, b));
-			}
-			void insert(value_type x)
-			{
-				impl().insert(x);
-			}
-
-		public:
-			template <class K>
-			value_adder<K> key()
-			{
-				return value_adder<K>(*this, new_instance<K>());
-			}
-
-			// TODO: use variadic arguments or BOOST_PP to pass ctor args
-			template <class K, class A0>
-			value_adder<K> key(A0 a0)
-			{
-				return value_adder<K>(*this, new_instance<K>(a0));
-			}
-			template <class K, class A0, class A1>
-			value_adder<K> key(A0 a0, A1 a1)
-			{
-				return value_adder<K>(*this, new_instance<K>(a0,a1));
-			}
-			template <class K, class A0, class A1, class A2>
-			value_adder<K> key(A0 a0, A1 a1, A2 a2)
-			{
-				return value_adder<K>(*this, new_instance<K>(a0,a1,a2));
-			}
-
-			template <class Fun>
-			Fun for_each(Fun fun)
-			{
-				BOOST_FOREACH(value_type &value, *this)
-				{
-					fun(value);
-				}
-			}
-
-			template <class Ty, class Fun>
-			Fun for_each_key(Fun fun)
-			{
-				//BOOST_FOREACH(base_type &b, *this)
-				//{
-				//	if (Ty *ptr = dynamic_cast<Ty *>(&b))
-				//	{
-				//		fun(*ptr);
-				//	}
-				//}
-				return fun;
-			}
-
-			template <class Ty, class Fun>
-			Fun for_each_mapped(Fun fun) const
-			{
-				//BOOST_FOREACH(const common_base &base, *this)
-				//{
-				//	if (Ty *ptr = dynamic_cast<Ty *>(&base))
-				//	{
-				//		fun(*ptr);
-				//	}
-				//}
-				return fun;
-			}
-
-			template <class K>
-			iterator find()
-			{
-				instance<K> k(get_allocator());
-				BOOST_SCOPE_EXIT((k))
-				{
-					k.release();
-				}
-				BOOST_SCOPE_EXIT_END
-				return impl().find(k.to_abstract());
-			}
-
-			template <class K, class A0>
-			iterator find(A0 a0)
-			{
-				instance<K> k(get_allocator(), a0);
-				BOOST_SCOPE_EXIT((k))
-				{
-					k.release();
-				}
-				BOOST_SCOPE_EXIT_END
-				return impl().find(k.to_abstract());
-			}
-
-			//reference operator[](key_type const &key)
-			//{
-			//	return impl[n];
-			//}
-			//const_reference operator[](key_type const &key) const
-			//{
-			//	return impl[n];
-			//}
-
-		};
-	
-	} // namespace heterogenous
+	} // namespace cloneable
 
 } // namespace boost
 
 #include <boost/cloneable/detail/suffix.hpp>
 
-#endif // BOOST_HETEROGENOUS_MAP_HPP
+#endif // BOOST_CLONEABLE_MAP_HPP
 
 //EOF

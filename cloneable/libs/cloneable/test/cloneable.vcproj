@@ -285,6 +285,10 @@
 					>
 				</File>
 				<File
+					RelativePath="..\..\..\boost\cloneable\exception.hpp"
+					>
+				</File>
+				<File
 					RelativePath="..\..\..\boost\cloneable\forward_declarations.hpp"
 					>
 				</File>
@@ -327,6 +331,10 @@
 				<Filter
 					Name="containers"
 					>
+					<File
+						RelativePath="..\..\..\boost\cloneable\heterogenous_map.hpp"
+						>
+					</File>
 					<File
 						RelativePath="..\..\..\boost\cloneable\list.hpp"
 						>

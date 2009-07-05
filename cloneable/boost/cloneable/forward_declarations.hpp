@@ -12,6 +12,7 @@
 #include <boost/utility/result_of.hpp>
 #include <boost/pointee.hpp>
 #include <boost/cloneable/detail/prefix.hpp>
+#include <boost/cloneable/exception.hpp>
 
 namespace boost
 {
@@ -31,9 +32,9 @@ namespace boost
 		namespace detail { struct ctag { }; }
 
 		/// {@ tags to inform about default-constructability
-		struct default_construction : detail::ctag, mpl::true_ {};
-		struct no_default_construction : detail::ctag, mpl::false_ {};
-		struct unknown_construction : detail::ctag {};
+		struct default_construction_tag : detail::ctag, mpl::true_ {};
+		struct no_default_construction_tag : detail::ctag, mpl::false_ {};
+		struct unknown_construction_tag : detail::ctag {};
 		/// @}
 
 		/// provides a set of pure-virtual methods for allocation, de-allocation, and cloning
@@ -50,7 +51,7 @@ namespace boost
 		template <
 			class Derived
 			, class Base = base_type
-			, class DefaultConstructionTag = default_construction
+			, class DefaultConstructionTag = default_construction_tag
 			//, class Base = nil//base_type
 			//, class DefaultConstructionTag = nil//default_construction
 		>
@@ -100,14 +101,24 @@ namespace boost
 			}
 		};
 
-		/// a mapping of heterogenous objects to heterogenous objects
+		/// a mapping of Key to heterogenous object
+		template 
+		<
+			class Key
+			, class Base = base_type
+			, class Pred = std::less<Key>
+			, class Alloc = monotonic::allocator<int>
+		>
+		struct map;
+
+		/// a mapping of heterogenous object to heterogenous object
 		template 
 		<
 			class Base = base_type
 			, class Pred = indirect<std::less<Base> >
 			, class Alloc = monotonic::allocator<int>
 		>
-		struct map;
+		struct heterogenous_map;
 
 		/// a set of heterogenous objects
 		template 

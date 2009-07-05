@@ -13,37 +13,73 @@ namespace boost
 {
 	namespace cloneable
 	{
+		namespace impl
+		{
+			template <bool is_class>
+			struct allocator
+			{
+				template <class Object, class Alloc>
+				static Object *allocate_clone(const Object &orig, Alloc &alloc)
+				{
+					typename Alloc::template rebind<Object>::other al(alloc);
+					ptr *clone = al.allocate(1);
+					new (clone) (orig);
+					return clone;
+				}
+				template <class Object, class Alloc>
+				static void deallocate_clone(const Object *ptr, Alloc &alloc)
+				{
+					if (!ptr)
+						return;
+					typename Alloc::template rebind<Object>::other al(alloc);
+					al.deallocate(const_cast<Object *>(ptr), 1);
+				}
+			};
+			template <>
+			struct allocator<true>
+			{
+				template <class Object, class Alloc>
+				static Object *allocate_clone(const Object &orig, Alloc &alloc)
+				{
+					return orig.clone(alloc);
+				}
+
+				template <class Object, class Alloc>
+				static void deallocate_clone(const Object *ptr, Alloc &alloc)
+				{
+					const_cast<Object *>(ptr)->deallocate(alloc);
+				}
+			};
+		}
+
 		/// a cloning allocator
 		struct allocator
 		{
 			template <class Base>
-			static Base* allocate_clone( const Base& object )
+			static Base* allocate_clone(const Base& orig)
 			{
-				// use default allocator
-				return object.clone();
+				make_clone_allocator<default_allocator> alloc;
+				return impl::allocator<boost::is_class<Base>::value>::allocate_clone(orig, alloc);
 			}
 
 			template <class Base>
-			static void deallocate_clone( const Base* clone )
+			static void deallocate_clone(const Base* clone)
 			{
-				if (!object)
+				if (!clone)
 					return;
-				// use default allocator
-				return const_cast<Base *>(object->deallocate());
+				impl::allocator<boost::is_class<Base>::value>::deallocate_clone(clone, alloc);
 			}
 
 			template <class Base, class Alloc>
 			static Base* allocate_clone(const Base& object, Alloc &alloc )
 			{
-				return object.clone(alloc);
+				return impl::allocator<boost::is_class<Base>::value>::allocate_clone(object, alloc);
 			}
 
 			template <class Base, class Alloc>
 			static void deallocate_clone(const Base *object, Alloc &alloc )
 			{
-				if (!object)
-					return;
-				const_cast<Base &>(*object).deallocate(alloc);
+				impl::allocator<boost::is_class<Base>::value>::deallocate_clone(object, alloc);
 			}
 		};
 

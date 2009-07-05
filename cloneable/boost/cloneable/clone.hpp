@@ -140,9 +140,6 @@ namespace boost
 			return impl::clone<true>::from_base<Derived>(original, alloc);
 		}
 
-		/// TODO: add to cloneable/exceptions.hpp
-		struct not_cloneable { };
-
 		template <class Base>
 		Base *create_new(const Base &base)
 		{

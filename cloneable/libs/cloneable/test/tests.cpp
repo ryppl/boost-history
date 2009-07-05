@@ -26,6 +26,7 @@
 #include <boost/cloneable/list.hpp>
 #include <boost/cloneable/map.hpp>
 #include <boost/cloneable/set.hpp>
+#include <boost/cloneable/heterogenous_map.hpp>
 
 #include <boost/cloneable/adaptor.hpp>
 
@@ -281,7 +282,7 @@ BOOST_AUTO_TEST_CASE(test_custom_clone)
 
 namespace no_default_ctor_test
 {
-	struct T0 : base<T0, base_type, no_default_construction>
+	struct T0 : base<T0, base_type, no_default_construction_tag>
 	{
 		T0(int) { }
 	};
@@ -369,7 +370,7 @@ BOOST_AUTO_TEST_CASE(test_external_types)
 namespace traits_test
 {
 	struct T0 : base<T0> { };
-	struct T1 : base<T1, base_type, no_default_construction> { };
+	struct T1 : base<T1, base_type, no_default_construction_tag> { };
 	struct T2 { };
 }
 
@@ -547,15 +548,15 @@ namespace list_test
 		}
 	};
 
-	struct L0 : base<L0, list_test_base, no_default_construction>
+	struct L0 : base<L0, list_test_base, no_default_construction_tag>
 	{
 		L0(int n) : list_test_base(n) { }
 	};
-	struct L1 : base<L1, list_test_base, no_default_construction>
+	struct L1 : base<L1, list_test_base, no_default_construction_tag>
 	{
 		L1(string s, int n) : list_test_base(n) { }
 	};
-	struct L2 : base<L2, list_test_base, no_default_construction>
+	struct L2 : base<L2, list_test_base, no_default_construction_tag>
 	{
 		L2(float f, int n, string s) : list_test_base(n) { }
 	};
@@ -615,54 +616,62 @@ namespace map_test
 	struct M1 : base<M1, my_base>
 	{
 		string str;
-		M1() { }
-		M1(const char *s) : str(s) { }
+		M1(int n = 1) : my_base(n) { }
+		M1(const char *s, int n = 1) : my_base(n), str(s) { }
 	};
 
 	struct M2 : base<M2, my_base>
 	{
+		M2(int n = 2) : my_base(n) { }
 	};
 
 	struct M3 : base<M3, my_base>
 	{
+		M3(int n = 3) : my_base(n) { }
 	};
-
 }
-
-struct wtf_less
-{
-	template <class A, class B>
-	bool operator()(A const &a, B const &b) const
-	{
-		return a->number < b->number;
-	}
-};
 
 BOOST_AUTO_TEST_CASE(test_map)
 {
-	//return;
 	using namespace map_test;
-	M2 m2;
-	const abstract_base<map_test::my_base> &ab2 = m2;
-	const map_test::my_base &b2 = ab2;
-	std::less<map_test::my_base> less;
-	less(ab2,ab2);
-
-
-	typedef cloneable::map<map_test::my_base> Map;
+	typedef cloneable::map<int, map_test::my_base> Map;
 	Map map;
-	map.key<M2>().value<M3>();
-	BOOST_ASSERT(map.size() == 1);
-	Map::iterator a = map.find<M2>();
-	BOOST_ASSERT(a != map.end());
+	map.insert<M0>(1);
+	map.insert<M1>(2, "foo");
+	map.insert<M3>(3, 42);
 
-	map.key<M0>(42).value<M1>("foo");
-	BOOST_ASSERT(map.size() == 2);
+	// the preacher - prior to bill hicks? 
 
-	Map::iterator iter = map.find<M0>(42);
-	BOOST_ASSERT(iter!= map.end());
+	// deep copy
+	Map copy = map;
+	BOOST_ASSERT(copy == map);
 
-	map.key<M2>().value<M3>();
+	Map::iterator i3 = copy.find(3);
+	BOOST_ASSERT(i3 != copy.end());
+	BOOST_ASSERT(typeid(*i3->second) == typeid(M3));
+	M3 *m3_clone = i3->second->clone_as<M3>();
+	BOOST_ASSERT(m3_clone != 0);
+
+	delete m3_clone;
+}
+
+BOOST_AUTO_TEST_CASE(test_heterogenous_map)
+{
+	//using namespace map_test;
+	//typedef cloneable::heterogenous_map<map_test::my_base> Map;
+	//Map map;
+	//map.key<M2>().value<M3>();
+	//BOOST_ASSERT(map.size() == 1);
+	//Map::iterator a = map.find<M2>();
+	//BOOST_ASSERT(a != map.end());
+
+	//map.key<M0>(42).value<M1>("foo");
+	//BOOST_ASSERT(map.size() == 2);
+
+	//Map::iterator iter = map.find<M0>(42);
+	//BOOST_ASSERT(iter!= map.end());
+
+	//map.key<M2>().value<M3>();
 
 //	Map copy = map;
 }

@@ -28,16 +28,16 @@ namespace boost
 			struct traits<T, true>
 			{
 				BOOST_STATIC_CONSTANT(bool, is_cloneable = true);
-				typedef is_convertible<T *, default_construction *> has_default_ctor_type;
-				typedef is_convertible<T *, no_default_construction *> has_no_default_ctor_type;
-				// T is default constructable only if it is convertibel to def_constr and 
-				// it is also not convertible to no_def_constr. This ensures that a type
-				// that inherits from a type that is not default constructible, is also not
-				// default constructible no matter what.
+				typedef is_convertible<T *, default_construction_tag *> has_default_ctor_type;
+				typedef is_convertible<T *, no_default_construction_tag *> has_no_default_ctor_type;
+				/// T is default constructable only if it is convertibel to def_constr and 
+				/// it is also not convertible to no_def_constr. This ensures that a type
+				/// that inherits from a type that is not default constructible, is also not
+				/// default constructible no matter what.
 				BOOST_STATIC_CONSTANT(bool, has_default_ctor = has_default_ctor_type::value || !has_no_default_ctor_type::value);
 				typedef typename mpl::if_<mpl::bool_<has_default_ctor>
-						, default_construction
-						, no_default_construction>
+						, default_construction_tag
+						, no_default_construction_tag>
 					::type construction_tag;
 			};
 

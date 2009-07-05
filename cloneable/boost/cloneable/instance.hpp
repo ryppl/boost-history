@@ -14,11 +14,13 @@ namespace boost
 {
 	namespace cloneable
 	{
+		/// common for all instances of the given base and allocator type
 		template <class Base, class Alloc>
 		struct instance_base
 		{
 			typedef Base base_type;
 			typedef Alloc allocator_type;
+			typedef instance_base<Base,Alloc> this_type;
 
 		private:
 			allocator_type *alloc;
@@ -33,7 +35,7 @@ namespace boost
 			allocator_type &get_allocator() const 
 			{ 
 				if (!alloc)
-					throw std::exception("empty allocator");
+					throw empty_allocator(typeid(this_type).name());
 				return *alloc; 
 			}
 			void set_allocator(allocator_type &al)
@@ -48,6 +50,7 @@ namespace boost
 			virtual void release() = 0;
 		};
 
+		/// common for all instances
 		template <class Abstract, class Derived, class Base, class Alloc>
 		struct instance_common : instance_base<Base,Alloc>
 		{
@@ -108,10 +111,26 @@ namespace boost
 					return 0;
 				return ptr;//->is_derived_type::self_ptr;
 			}
+
+			derived_type &derived_ref()
+			{
+				ptr = to_derived();
+				if (ptr == 0)
+					throw empty_object();
+				return *ptr;
+			}
+
+			derived_type *operator->()
+			{
+				return &derived_ref();
+			}
+			derived_type &operator*()
+			{
+				return derived_ref();
+			}
 		};
 
-		/// a pointer store that can retrieve pointers from up and down 
-		/// the inheritance tree. stores the allocator that made it.
+		/// a pointer to a general instance
 		template <class Derived, class Base, class Alloc, class Ctor>
 		struct instance : instance_common<base<Derived,Base,Ctor>, Derived, Base, Alloc>
 		{
@@ -130,7 +149,7 @@ namespace boost
 			}
 			instance(allocator_type &al) 
 				: parent_type(al
-					, detail::create_new<Derived, Ctor>::given(to_abstract(), get_allocator(), abstract_type::alignment))
+					, detail::create_new<Derived, Ctor>::given(to_abstract(), al, abstract_type::alignment))
 			{
 			}
 			template <class A0>

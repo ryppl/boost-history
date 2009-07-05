@@ -68,6 +68,22 @@ namespace boost
 					: parent_type(a), predicate(p), container(p,a)
 				{
 				}
+				template <class II>
+				associative_container_base(II F, II L, predicate_type pred = predicate_type())
+					: predicate(pred), container(F,L)
+				{
+				}
+
+				template <class II>
+				associative_container_base(II F, II L, allocator_type &a)
+					: parent_type(a), container(F,L)
+				{
+				}
+				template <class II>
+				associative_container_base(II F, II L, predicate_type pred, allocator_type &a)
+					: parent_type(a), predicate(pred), container(F,L)
+				{
+				}
 
 				size_t size() const
 				{
@@ -93,6 +109,15 @@ namespace boost
 				const_iterator end() const
 				{
 					return impl().end();
+				}
+
+				template <class Fun>
+				Fun for_each(Fun fun)
+				{
+					BOOST_FOREACH(value_type &value, *this)
+					{
+						fun(value);
+					}
 				}
 
 			};

@@ -49,7 +49,7 @@ namespace boost
 				struct get_base_type : if_<is_nil<T>, base_type, T> { };
 
 				template <class T>
-				struct get_default_construction_tag : if_<is_nil<T>, default_construction, T> { };
+				struct get_default_construction_tag : if_<is_nil<T>, default_construction_tag, T> { };
 
 				typedef is_convertible<A *, detail::ctag *> a_is_tag;
 				typedef is_convertible<B *, detail::ctag *> b_is_tag;
