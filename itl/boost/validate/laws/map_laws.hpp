@@ -122,33 +122,33 @@ namespace boost{namespace itl
             // --- left hand side ------------------------
             // lhs := (a.absorb_neutrons() == b.absorb_neutrons())
 
-            cout << name() << "::debug_holds():" << endl;
-            cout << "Instance: " << typeString() << endl;
-            cout << "Formula: " << formula() << endl;
+            std::cout << name() << "::debug_holds():" << std::endl;
+            std::cout << "Instance: " << typeString() << std::endl;
+            std::cout << "Formula: " << formula() << std::endl;
 
             MapT a = this->template getInputValue<operand_a>();
             MapT b = this->template getInputValue<operand_b>();
 
-            cout << "a: " << a.as_string() << endl;
-            cout << "b: " << b.as_string() << endl;
+            std::cout << "a: " << a.as_string() << std::endl;
+            std::cout << "b: " << b.as_string() << std::endl;
 
             MapT a_protonic = a;
             a_protonic.absorb_neutrons();
             MapT b_protonic = b;
             b_protonic.absorb_neutrons();
 
-            cout << "a.absorb_neutrons(): " << a_protonic.as_string() << endl;
-            cout << "b.absorb_neutrons(): " << b_protonic.as_string() << endl;
+            std::cout << "a.absorb_neutrons(): " << a_protonic.as_string() << std::endl;
+            std::cout << "b.absorb_neutrons(): " << b_protonic.as_string() << std::endl;
 
             bool lhs = a_protonic == b_protonic;
 
-            cout << "lhs := (a.absorb_neutrons() == b.absorb_neutrons()): " << lhs << endl;
+            std::cout << "lhs := (a.absorb_neutrons() == b.absorb_neutrons()): " << lhs << std::endl;
 
             // --- right hand side -----------------------
             // rhs := is_protonic_equal(a, b)
             bool rhs = is_protonic_equal(a, b);
 
-            cout << "rhs := is_protonic_equal(a, b): " << rhs << endl;
+            std::cout << "rhs := is_protonic_equal(a, b): " << rhs << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
