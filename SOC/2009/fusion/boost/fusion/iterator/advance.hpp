@@ -27,60 +27,61 @@ namespace boost { namespace fusion
         struct advance_impl
         {
             // default implementation
-            template <typename Iterator, typename N>
+            template <typename ItRef, typename N>
             struct apply
               : mpl::if_c<
                     (N::value > 0)
-                  , advance_detail::forward<Iterator, N::value>
-                  , advance_detail::backward<Iterator, N::value>
+                  , advance_detail::forward<ItRef, N::value>
+                  , advance_detail::backward<ItRef, N::value>
                 >::type
             {
-                BOOST_FUSION_MPL_ASSERT_NOT(
-                        traits::is_random_access<Iterator>,
-            "default implementation not available for random access iterators");
+//                BOOST_FUSION_MPL_ASSERT_NOT(
+//                        traits::is_random_access<ItRef>,
+//            "default implementation not available for random access iterators");
             };
         };
 
         template <>
         struct advance_impl<iterator_facade_tag>
         {
-            template <typename Iterator, typename N>
+            template <typename ItRef, typename N>
             struct apply
-              : detail::remove_reference<Iterator>::type::template advance<Iterator, N>
+              : detail::remove_reference<ItRef>::type::
+                    template advance<ItRef, N>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Iterator, int N>
+        template <typename It, int N>
         struct advance_c
-          : extension::advance_impl<typename traits::tag_of<Iterator>::type>::
+          : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<
-                    typename detail::add_lref<Iterator>::type
+                    typename detail::add_lref<It>::type
                   , mpl::int_<N>
                 >
         {};
 
-        template <typename Iterator, typename N>
+        template <typename It, typename N>
         struct advance
-          : extension::advance_impl<typename traits::tag_of<Iterator>::type>::
-                template apply<typename detail::add_lref<Iterator>::type, N>
+          : extension::advance_impl<typename traits::tag_of<It>::type>::
+                template apply<typename detail::add_lref<It>::type, N>
         {};
     }
 
-    template <int N, typename Iterator>
-    inline typename result_of::advance_c<Iterator const&, N>::type const
-    advance_c(Iterator const& i)
+    template <int N, typename It>
+    inline typename result_of::advance_c<It const&, N>::type const
+    advance_c(It const& it)
     {
-        return result_of::advance_c<Iterator const&, N>::call(i);
+        return result_of::advance_c<It const&, N>::call(it);
     }
 
-    template<typename N, typename Iterator>
-    inline typename result_of::advance<Iterator const&, N>::type const
-    advance(Iterator const& i)
+    template<typename N, typename It>
+    inline typename result_of::advance<It const&, N>::type const
+    advance(It const& it)
     {
-        return result_of::advance<Iterator const&, N>::call(i);
+        return result_of::advance<It const&, N>::call(it);
     }
 
 }}

@@ -26,40 +26,41 @@ namespace boost { namespace fusion
         template <typename Tag>
         struct has_key_impl
         {
-            template <typename Sequence, typename Key>
+            template <typename SeqRef, typename Key>
             struct apply
-                : mpl::not_<is_same<
-                    typename detail::remove_reference<Sequence>::type::
+              : mpl::not_<is_same<
+                    typename detail::remove_reference<SeqRef>::type::
                         template meta_at_impl<Key>::type
-                  , void_> >
+                  , void_>
+                >
             {};
         };
 
         template <>
         struct has_key_impl<sequence_facade_tag>
         {
-            template <typename Sequence, typename Key>
+            template <typename SeqRef, typename Key>
             struct apply
-                : detail::remove_reference<Sequence>::type::
-                    template has_key<Sequence, Key>
+              : detail::remove_reference<SeqRef>::type::
+                    template has_key<SeqRef, Key>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Sequence, typename Key>
+        template <typename Seq, typename Key>
         struct has_key
-            : extension::has_key_impl<typename traits::tag_of<Sequence>::type>::
-                template apply<typename detail::add_lref<Sequence>::type, Key>
+            : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type, Key>
         {};
     }
 
-    template <typename Key, typename Sequence>
-    inline typename result_of::has_key<Sequence, Key>::type
-    has_key(Sequence const& seq)
+    template <typename Key, typename Seq>
+    inline typename result_of::has_key<Seq const&, Key>::type
+    has_key(Seq const& seq)
     {
-        typedef typename result_of::has_key<Sequence const&, Key>::type result;
+        typedef typename result_of::has_key<Seq const&, Key>::type result;
         return result();
     }
 }}

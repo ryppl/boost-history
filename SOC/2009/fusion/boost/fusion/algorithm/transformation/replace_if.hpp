@@ -58,6 +58,7 @@ namespace boost { namespace fusion
               , BOOST_FUSION_R_ELSE_LREF(NewValue)
             >::type
         type;
+
         typedef
             detail::replacer_if<
                 typename detail::as_fusion_element<

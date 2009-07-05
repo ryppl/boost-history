@@ -44,14 +44,14 @@ namespace boost { namespace fusion
             {
             }
 
-            template<typename Iterator>
-            vector_impl(assign_by_deref,Iterator const&)
+            template<typename It>
+            vector_impl(assign_by_deref,It const&)
             {
             }
 
-            template<typename Iterator>
+            template<typename It>
             void
-            assign(Iterator const&)
+            assign(It const&)
             {
             }
 
@@ -83,19 +83,19 @@ namespace boost { namespace fusion
             {
             }
 
-            template<typename Iterator>
-            vector_impl(assign_by_deref,Iterator const& iterator):
-                base(assign_by_deref(),fusion::next(iterator)),
-                _element(fusion::deref(iterator))
+            template<typename It>
+            vector_impl(assign_by_deref,It const& it)
+              : base(assign_by_deref(),fusion::next(it))
+              , _element(fusion::deref(it))
             {
             }
 
-            template<typename Iterator>
+            template<typename It>
             void
-            assign(Iterator const& iterator)
+            assign(It const& it)
             {
-                _element=fusion::deref(iterator);
-                static_cast<base*>(this)->assign(fusion::next(iterator));
+                _element=fusion::deref(it);
+                static_cast<base*>(this)->assign(fusion::next(it));
             }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -163,20 +163,20 @@ namespace boost { namespace fusion
 
 #undef VECTOR_CTOR
 
-        template<typename SequenceAssign>
-        vector(BOOST_FUSION_R_ELSE_CLREF(SequenceAssign) seq,
+        template<typename SeqAssign>
+        vector(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq,
                typename enable_if<
-                   is_sequence_assign<SequenceAssign> >::type* =NULL)
+                   is_sequence_assign<SeqAssign> >::type* =NULL)
           : base(detail::assign_by_deref(),fusion::begin(seq.get()))
         {
         }
 
         /*
-        template<typename Sequence>
+        template<typename Seq>
         vector(typename enable_if_c<sizeof...(Elements)!=1,
-                                BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type seq)
+                                BOOST_FUSION_R_ELSE_CLREF(Seq)>::type seq)
           : base(detail::assign_by_deref(),
-                 fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq.seq)))
+                 fusion::begin(BOOST_FUSION_FORWARD(Seq,seq.seq)))
         {
         }
         */
@@ -197,12 +197,12 @@ namespace boost { namespace fusion
         }
 #endif
 
-        template<typename Sequence>
+        template<typename Seq>
         vector&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(Sequence) sequence)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
             static_cast<base*>(this)->assign(
-                fusion::begin(BOOST_FUSION_FORWARD(Sequence,sequence)));
+                fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             return *this;
         }
 

@@ -48,11 +48,11 @@ public:
 #   endif
 #endif
 
-    template<typename Sequence>
+    template<typename Seq>
     BOOST_PP_CAT(vector, N)&
-    operator=(BOOST_FUSION_R_ELSE_CLREF(Sequence) sequence)
+    operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        *static_cast<base*>(this)=BOOST_FUSION_FORWARD(Sequence,sequence);
+        *static_cast<base*>(this)=BOOST_FUSION_FORWARD(Seq,seq);
         return *this;
     }
 };

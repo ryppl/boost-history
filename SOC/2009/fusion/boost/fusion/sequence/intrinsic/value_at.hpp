@@ -26,25 +26,25 @@ namespace boost { namespace fusion
         template <>
         struct value_at_impl<sequence_facade_tag>
         {
-            template <typename Sequence, typename N>
-            struct apply :
-                detail::remove_reference<Sequence>::type::template value_at<Sequence, N>
+            template <typename SeqRef, typename N>
+            struct apply
+              : detail::remove_reference<SeqRef>::type::
+                    template value_at<SeqRef, N>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Sequence, typename N>
+        template <typename Seq, typename N>
         struct value_at
-            : extension::value_at_impl<
-                    typename traits::tag_of<Sequence>::type>::
-                template apply<typename detail::add_lref<Sequence>::type, N>
+            : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type, N>
         {};
 
-        template <typename Sequence, int N>
+        template <typename Seq, int N>
         struct value_at_c
-            : fusion::result_of::value_at<Sequence,mpl::int_<N> >
+          : fusion::result_of::value_at<Seq,mpl::int_<N> >
         {};
     }
 }}

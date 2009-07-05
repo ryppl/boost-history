@@ -59,66 +59,66 @@ namespace boost { namespace fusion { namespace detail
     template<int N>
     struct for_each_unrolled
     {
-        template<typename I0, typename F>
-        static void call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+        template<typename It0, typename F>
+        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            f(fusion::deref(i0));
+            f(fusion::deref(it0));
 
-            typedef typename result_of::next<I0>::type I1;
-            I1 i1(fusion::next(i0));
-            f(fusion::deref(i1));
+            typedef typename result_of::next<It0>::type It1;
+            It1 it1(fusion::next(it0));
+            f(fusion::deref(it1));
 
-            typedef typename result_of::next<I1>::type I2;
-            I2 i2(fusion::next(i1));
-            f(fusion::deref(i2));
+            typedef typename result_of::next<It1>::type It2;
+            It2 it2(fusion::next(it1));
+            f(fusion::deref(it2));
 
-            typedef typename result_of::next<I2>::type I3;
-            I3 i3(fusion::next(i2));
-            f(fusion::deref(i3));
+            typedef typename result_of::next<It2>::type It3;
+            It3 it3(fusion::next(it2));
+            f(fusion::deref(it3));
 
-            for_each_unrolled<N-4>::call(fusion::next(i3), f);
+            for_each_unrolled<N-4>::call(fusion::next(it3), f);
         }
     };
 
     template<>
     struct for_each_unrolled<3>
     {
-        template<typename I0, typename F>
-        static void call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+        template<typename It0, typename F>
+        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            f(fusion::deref(i0));
+            f(fusion::deref(it0));
 
-            typedef typename result_of::next<I0>::type I1;
-            I1 i1(fusion::next(i0));
-            f(fusion::deref(i1));
+            typedef typename result_of::next<It0>::type It1;
+            It1 it1(fusion::next(it0));
+            f(fusion::deref(it1));
 
-            typedef typename result_of::next<I1>::type I2;
-            I2 i2(fusion::next(i1));
-            f(fusion::deref(i2));
+            typedef typename result_of::next<It1>::type It2;
+            It2 it2(fusion::next(it1));
+            f(fusion::deref(it2));
         }
     };
 
     template<>
     struct for_each_unrolled<2>
     {
-        template<typename I0, typename F>
-        static void call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+        template<typename It0, typename F>
+        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            f(fusion::deref(i0));
+            f(fusion::deref(it0));
 
-            typedef typename result_of::next<I0>::type I1;
-            I1 i1(fusion::next(i0));
-            f(fusion::deref(i1));
+            typedef typename result_of::next<It0>::type It1;
+            It1 it1(fusion::next(it0));
+            f(fusion::deref(it1));
         }
     };
 
     template<>
     struct for_each_unrolled<1>
     {
-        template<typename I0, typename F>
-        static void call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F))
+        template<typename It0, typename F>
+        static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F))
         {
-            f(fusion::deref(i0));
+            f(fusion::deref(it0));
         }
     };
 

@@ -24,31 +24,30 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<sequence_facade_tag>
         {
-            template <typename Sequence>
-            struct apply :
-                detail::remove_reference<Sequence>::type::template begin<Sequence>
+            template <typename SeqRef>
+            struct apply
+              : detail::remove_reference<SeqRef>::type::template begin<SeqRef>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct begin
-            : extension::begin_impl<typename traits::tag_of<Sequence>::type>::
-                template apply<typename detail::add_lref<Sequence>::type>
+            : extension::begin_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type>
         {};
     }
 
     //TODO cschmidt: const retval?!
 
-    template <typename Sequence>
+    template <typename Seq>
     inline typename
-        result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
-    begin(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+        result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    begin(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::call(
-                BOOST_FUSION_FORWARD(Sequence,seq));
+        return result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(seq);
     }
 
 }}

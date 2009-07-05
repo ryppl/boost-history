@@ -21,16 +21,16 @@ namespace boost { namespace mpl
     template <>
     struct insert_range_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence, typename Pos, typename Range>
+        template <typename Seq, typename Pos, typename Range>
         struct apply
         {
             typedef typename
-                fusion::result_of::insert_range<Sequence, Pos, Range>::type
+                fusion::result_of::insert_range<Seq, Pos, Range>::type
             result;
 
             typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Sequence>::type, result
+                    typename fusion::traits::tag_of<Seq>::type, result
                 >::type
             type;
         };

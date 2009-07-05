@@ -22,11 +22,11 @@ namespace boost { namespace fusion
         template <>
         struct equal_to_impl<vector_iterator_tag>
         {
-            template <typename I1, typename I2>
+            template <typename It1Ref, typename It2Ref>
             struct apply
               : is_same<
-                    typename detail::remove_reference<I1>::type::identity
-                  , typename detail::remove_reference<I2>::type::identity
+                    typename detail::remove_reference<It1Ref>::type::identity
+                  , typename detail::remove_reference<It2Ref>::type::identity
                 >
             {
             };

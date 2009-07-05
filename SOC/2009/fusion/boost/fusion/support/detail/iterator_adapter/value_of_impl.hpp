@@ -10,6 +10,9 @@
 
 namespace boost { namespace fusion
 {
+    template<typename It, typename NewCategory>
+    struct iterator_adapter;
+
     struct iterator_adapter_tag;
 
     namespace extension
@@ -20,12 +23,12 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<iterator_adapter_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
               : result_of::value_of<
-                    typename detail::result_of_forward_as<Iterator
-                      , typename detail::remove_reference<Iterator>::type::iterator_type
-                    >::type
+                    typename detail::remove_reference<
+                        ItRef
+                    >::type::iterator_type
                 >
             {
             };

@@ -10,7 +10,7 @@
 
 namespace boost { namespace fusion
 {
-    template<typename Iterator, typename NewCategory>
+    template<typename It, typename NewCategory>
     struct iterator_adapter;
 
     struct iterator_adapter_tag;
@@ -23,30 +23,26 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<iterator_adapter_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Iterator>::type
-                identity_iterator;
-                typedef typename
-                    detail::result_of_forward_as<
-                        Iterator
-                      , typename identity_iterator::iterator_type
-                    >::type
-                iterator_type;
+                    detail::remove_reference<ItRef>::type
+                it;
 
                 typedef
                     iterator_adapter<
-                        typename result_of::next<iterator_type>::type
-                      , typename identity_iterator::category
+                        typename result_of::next<
+                            typename it::iterator_type
+                        >::type
+                      , typename it::category
                     >
                 type;
 
                 static type
-                call(Iterator i)
+                call(ItRef it)
                 {
-                    return type(fusion::next(i.it),0);
+                    return type(fusion::next(it.it),0);
                 }
             };
         };

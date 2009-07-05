@@ -20,17 +20,17 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct front
-          : result_of::deref<typename result_of::begin<Sequence>::type>
+          : result_of::deref<typename result_of::begin<Seq>::type>
         {};
     }
 
-    template <typename Sequence>
-    inline typename result_of::front<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
-    front(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+    template <typename Seq>
+    inline typename result_of::front<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    front(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return *fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq));
+        return *fusion::begin(seq);
     }
 
 }}

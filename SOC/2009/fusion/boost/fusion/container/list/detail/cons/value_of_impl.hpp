@@ -21,11 +21,11 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<cons_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Iterator>::type::cons_type
+                    detail::remove_reference<ItRef>::type::cons_type
                 cons_type;
 
                 typedef typename

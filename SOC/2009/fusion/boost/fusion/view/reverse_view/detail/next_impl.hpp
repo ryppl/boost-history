@@ -25,13 +25,13 @@ namespace boost { namespace fusion
             template <typename ItRef>
             struct apply
             {
-                typedef typename
-                    detail::remove_reference<ItRef>::type::first_type
-                first_type;
-
                 typedef
                     reverse_view_iterator<
-                        typename result_of::prior<first_type>::type
+                        typename result_of::prior<
+                            typename detail::remove_reference<
+                                ItRef
+                            >::type::first_type
+                        >::type
                     >
                 type;
 

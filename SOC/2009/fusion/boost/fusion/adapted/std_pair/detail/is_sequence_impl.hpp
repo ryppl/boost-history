@@ -24,7 +24,9 @@ namespace boost { namespace fusion {
         struct is_sequence_impl<std_pair_tag>
         {
             template<typename Sequence>
-            struct apply : mpl::true_ {};
+            struct apply
+              : mpl::true_
+            {};
         };
     }
 }}

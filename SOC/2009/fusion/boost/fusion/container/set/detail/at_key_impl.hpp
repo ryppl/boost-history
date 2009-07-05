@@ -20,22 +20,22 @@ namespace boost { namespace fusion
         template <>
         struct at_key_impl<set_tag>
         {
-            template <typename Sequence, typename Key>
+            template <typename SeqRef, typename Key>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Sequence>::type::
+                    detail::remove_reference<SeqRef>::type::
                         template meta_at_impl<Key>::type
                 element;
 
                 typedef typename
-                    detail::result_of_forward_as<Sequence,element>::type
+                    detail::result_of_forward_as<SeqRef,element>::type
                 type;
 
                 static type
-                call(Sequence s)
+                call(SeqRef seq)
                 {
-                    return s.at_impl(mpl::identity<Key>());
+                    return seq.at_impl(mpl::identity<Key>());
                 }
             };
         };

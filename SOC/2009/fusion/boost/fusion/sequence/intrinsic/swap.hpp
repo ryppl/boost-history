@@ -9,27 +9,18 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_SWAP_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_SWAP_HPP
 
-#include <boost/fusion/support/is_sequence.hpp>
-#include <boost/fusion/view/zip_view.hpp>
-#include <boost/fusion/algorithm/iteration/for_each.hpp>
-#include <boost/fusion/sequence/intrinsic/front.hpp>
-#include <boost/fusion/sequence/intrinsic/back.hpp>
-
-#include <boost/utility/enable_if.hpp>
-#include <boost/mpl/and.hpp>
+#include <boost/config.hpp>
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/fusion/view/zip_view.hpp>
+#   include <boost/fusion/algorithm/iteration/for_each.hpp>
+#   include <boost/fusion/sequence/intrinsic/front.hpp>
+#   include <boost/fusion/sequence/intrinsic/back.hpp>
+#endif
 
 #include <algorithm>
 
 namespace boost { namespace fusion {
-    namespace result_of
-    {
-        template<typename Seq1, typename Seq2>
-        struct swap
-        {
-            typedef void type;
-        };
-    }
-
+#ifdef BOOST_NO_RVALUE_REFERENCES
     namespace detail
     {
         struct swap
@@ -48,16 +39,28 @@ namespace boost { namespace fusion {
             }
         };
     }
+#endif
 
+    namespace result_of
+    {
+        template<typename Seq1, typename Seq2>
+        struct swap
+        {
+            typedef void type;
+        };
+    }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename Seq1, typename Seq2>
-    typename enable_if<mpl::and_<
-        traits::is_sequence<Seq1>,
-        traits::is_sequence<Seq2> > >::type
+    void
     swap(Seq1& lhs, Seq2& rhs)
     {
         typedef vector<Seq1&, Seq2&> references;
         for_each(zip_view<references>(references(lhs, rhs)), detail::swap());
     }
+#else
+    using std::swap;
+#endif
 }}
 
 #endif

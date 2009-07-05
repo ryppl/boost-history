@@ -6,13 +6,13 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #==============================================================================
 project boost/libs/fusion/doc ;
-import boostbook : boostbook ;
-using quickbook ;
+import boostbook ;
+import quickbook ;
 
 import os ;
 local BOOST_ROOT = [ os.environ BOOST_ROOT ] ;
 
-boostbook quickbook
+boostbook fusion
     :
         fusion.qbk
     :

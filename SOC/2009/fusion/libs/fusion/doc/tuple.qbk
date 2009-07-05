@@ -30,7 +30,10 @@ in future releases of fusion.
         typename TN = __unspecified__>
     class tuple;
 
-/tuple.hpp>
+[heading Header]
+
+    #include <boost/fusion/tuple/tuple>
+    #include <boost/fusion/include/tuple.hpp>
 
 [section Construction]
 

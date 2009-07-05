@@ -21,11 +21,11 @@ namespace boost { namespace mpl
     template <>
     struct end_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct apply
         {
             typedef
-                fusion_iterator<typename fusion::result_of::end<Sequence>::type>
+                fusion_iterator<typename fusion::result_of::end<Seq>::type>
             type;
         };
     };

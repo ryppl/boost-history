@@ -21,14 +21,12 @@ namespace boost { namespace fusion
         template <>
         struct value_at_key_impl<set_tag>
         {
-            template <typename Sequence, typename Key>
+            template <typename SeqRef, typename Key>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Sequence>::type
-                identity_sequence_type;
-                typedef typename
-                    identity_sequence_type::template meta_at_impl<Key>::type
+                    detail::remove_reference<SeqRef>::type::
+                        template meta_at_impl<Key>::type
                 type;
             };
         };

@@ -29,17 +29,11 @@ namespace boost { namespace fusion
             struct apply
             {
                 typedef typename detail::remove_reference<SeqRef>::type seq;
-                typedef typename
-                    detail::result_of_forward_as<
-                        SeqRef
-                      , typename seq::seq_type
-                    >::type
-                forwarded_seq;
 
                 typedef
                     filter_iterator<
-                        typename result_of::end<forwarded_seq>::type
-                      , typename result_of::end<forwarded_seq>::type
+                        typename result_of::end<typename seq::seq_type>::type
+                      , typename result_of::end<typename seq::seq_type>::type
                       , typename seq::pred_type
                     >
                 type;

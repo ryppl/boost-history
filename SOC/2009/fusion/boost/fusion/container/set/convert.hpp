@@ -16,27 +16,27 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct as_set
         {
             typedef typename
                 extension::convert_impl<set_tag>::
-                    template apply<typename detail::add_lref<Sequence>::type>
+                    template apply<typename detail::add_lref<Seq>::type>
             gen;
 
             typedef typename gen::apply::type type;
         };
     }
 
-    template <typename Sequence>
-    inline typename result_of::as_set<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
-    as_set(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+    template <typename Seq>
+    inline typename result_of::as_set<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    as_set(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         typedef typename
-            result_of::as_set<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::gen
+            result_of::as_set<BOOST_FUSION_R_ELSE_CLREF(Seq)>::gen
         gen;
 
-        return gen::call(BOOST_FUSION_FORWARD(Sequence,seq));
+        return gen::call(seq);
     }
 
 }}

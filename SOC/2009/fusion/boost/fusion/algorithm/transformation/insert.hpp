@@ -43,7 +43,7 @@ namespace boost { namespace fusion
     {
         return insert_range(BOOST_FUSION_FORWARD(Seq,seq)
                 , pos
-                , (const single_view<T>&) make_single_view(BOOST_FUSION_FORWARD(T,x)));
+                , make_single_view(BOOST_FUSION_FORWARD(T,x)));
     }
 
     //TODO cref

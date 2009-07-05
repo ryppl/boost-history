@@ -20,12 +20,14 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<single_view_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
                 typedef typename
                     detail::remove_reference<
-                        typename detail::remove_reference<Iterator>::type::view_type
+                        typename detail::remove_reference<
+                            ItRef
+                        >::type::view_type
                     >::type::value_type
                 type;
             };

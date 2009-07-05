@@ -464,9 +464,7 @@ The user must the implement the key expressions required by their iterator type.
 [[`iterator::template advance<It, N>::type`][The type of an iterator advanced `N` elements from `It`][Implemented in terms of `next` and `prior`]]
 [[`iterator::template advance<It, N>::call(it)`][An iterator advanced `N` elements from `it`][Implemented in terms of `next` and `prior`]]
 [[`iterator::template distance<It1, It2>::type`][The distance between iterators of type `It1` and `It2` as an __mpl_integral_constant__][None]]
-[[`iterator::template distance<It1, It2>::call(it1, it2)`][The distance between iterator `it1` and `it2`][None]]
 [[`iterator::template equal_to<It1, It2>::type`][The distance between iterators of type `It1` and `It2`][`boost::same_type<It1, It2>::type`]]
-[[`iterator::template equal_to<It1, It2>::call(it1, it2)`][The distance between iterators `it1` and `it2`][`boost::same_type<It1, It2>::type()`]]
 ]
 
 [heading Header]

@@ -16,7 +16,7 @@ namespace boost { namespace fusion {
 
     struct reverse_view_iterator_tag;
 
-    template <typename Iterator>
+    template <typename It>
     struct reverse_view_iterator;
 
     namespace extension
@@ -30,21 +30,23 @@ namespace boost { namespace fusion {
             template<typename ItRef, typename Dist>
             struct apply
             {
-                typedef typename
-                    detail::remove_reference<ItRef>::type::first_type
-                first_type;
-                typedef typename mpl::negate<Dist>::type negative_dist;
-                typedef typename
-                    result_of::advance<first_type, negative_dist>::type
-                advanced_type;
+                typedef typename mpl::negate<Dist>::type neg_dist;
 
-                typedef reverse_view_iterator<advanced_type> type;
+                typedef
+                    reverse_view_iterator<
+                        typename result_of::advance<
+                            typename detail::remove_reference<
+                                ItRef
+                            >::type::first_type
+                          , neg_dist
+                        >::type
+                    >
+                type;
 
                 static type
                 call(ItRef it)
                 {
-                    return type(
-                            boost::fusion::advance<negative_dist>(it.first));
+                    return type(boost::fusion::advance<neg_dist>(it.first));
                 }
             };
         };

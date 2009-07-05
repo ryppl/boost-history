@@ -23,7 +23,9 @@ namespace boost { namespace fusion
         struct is_view_impl<boost_tuple_tag>
         {
             template<typename T>
-            struct apply : mpl::false_ {};
+            struct apply
+              : mpl::false_
+            {};
         };
     }
 }}

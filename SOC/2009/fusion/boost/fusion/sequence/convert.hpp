@@ -18,27 +18,28 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Tag, typename Sequence>
+        template <typename Tag, typename Seq>
         struct convert
         {
             typedef typename extension::convert_impl<Tag> gen;
 
             typedef typename gen::
-                template apply<typename detail::add_lref<Sequence>::type>::type
+                template apply<typename detail::add_lref<Seq>::type>::type
             type;
         };
     }
 
-    template <typename Tag, typename Sequence>
+    template <typename Tag, typename Seq>
     inline typename result_of::convert<
         Tag
-      , BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
-    convert(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+      , BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    convert(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         typedef typename result_of::convert<
             Tag
-          , BOOST_FUSION_R_ELSE_CLREF(Sequence)>::gen
+          , BOOST_FUSION_R_ELSE_CLREF(Seq)>::gen
         gen;
+
         return gen::call(seq);
     }
 

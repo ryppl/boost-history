@@ -20,15 +20,15 @@ namespace boost { namespace fusion
         template <>
         struct equal_to_impl<iterator_adapter_tag>
         {
-            template <typename I1, typename I2>
+            template <typename It1Ref, typename It2Ref>
             struct apply
               : result_of::equal_to<
-                    typename detail::result_of_forward_as<I1
-                      , typename detail::remove_reference<I1>::type::iterator_type
-                    >::type
-                  , typename detail::result_of_forward_as<I2
-                      , typename detail::remove_reference<I2>::type::iterator_type
-                    >::type
+                    typename detail::remove_reference<
+                        It1Ref
+                    >::type::iterator_type
+                  , typename detail::remove_reference<
+                        It2Ref
+                    >::type::iterator_type
                 >
             {
             };

@@ -74,9 +74,9 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename OS, typename Sequence>
+    template <typename OS, typename Seq>
     inline void
-    print_sequence(OS& os, Sequence const& seq)
+    print_sequence(OS& os, Seq const& seq)
     {
         delimiter_out<tuple_open_tag>::print(os, "(");
         print_sequence_loop::call(os, fusion::begin(seq), fusion::end(seq));

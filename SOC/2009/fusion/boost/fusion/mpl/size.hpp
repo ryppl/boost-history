@@ -19,9 +19,9 @@ namespace boost { namespace mpl
     template <>
     struct size_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct apply
-          : fusion::result_of::size<Sequence>
+          : fusion::result_of::size<Seq>
         {};
     };
 }}

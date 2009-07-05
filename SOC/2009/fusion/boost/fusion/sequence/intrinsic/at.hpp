@@ -27,43 +27,40 @@ namespace boost { namespace fusion
         template <>
         struct at_impl<sequence_facade_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
-                : detail::remove_reference<Sequence>::type::template at<Sequence, N>
+              : detail::remove_reference<SeqRef>::type::template at<SeqRef, N>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Sequence, typename N>
+        template <typename Seq, typename N>
         struct at
-            : extension::at_impl<typename traits::tag_of<Sequence>::type>::
-                template apply<typename detail::add_lref<Sequence>::type, N>
+          : extension::at_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type, N>
         {};
 
-        template <typename Sequence, int N>
+        template <typename Seq, int N>
         struct at_c
-            : at<Sequence, mpl::int_<N> >
+          : at<Seq, mpl::int_<N> >
         {};
     }
 
-
-    //TODO !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
-    template <typename N, typename Sequence>
-    inline typename result_of::at<BOOST_FUSION_R_ELSE_CLREF(Sequence), N>::type
-    at(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+    template <typename N, typename Seq>
+    inline typename result_of::at<BOOST_FUSION_R_ELSE_LREF(Seq), N>::type
+    at(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return result_of::at<BOOST_FUSION_R_ELSE_CLREF(Sequence), N>::call(
-                BOOST_FUSION_FORWARD(Sequence,seq));
+        return result_of::at<BOOST_FUSION_R_ELSE_LREF(Seq), N>::call(seq);
     }
 
-    template <int N, typename Sequence>
+    template <int N, typename Seq>
     inline typename
-        result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Sequence), N>::type
-    at_c(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+        result_of::at_c<BOOST_FUSION_R_ELSE_LREF(Seq), N>::type
+    at_c(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return fusion::at<mpl::int_<N> >(BOOST_FUSION_FORWARD(Sequence,seq));
+        return fusion::at<mpl::int_<N> >(seq);
     }
 }}
 

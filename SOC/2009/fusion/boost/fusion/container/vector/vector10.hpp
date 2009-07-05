@@ -57,10 +57,11 @@ namespace boost { namespace fusion
         typedef random_access_traversal_tag category;
         typedef mpl::int_<0> size;
 
-        vector0() {}
+        vector0()
+        {}
 
-        template<typename Sequence>
-        vector0(Sequence const& seq)
+        template<typename Seq>
+        vector0(Seq const& seq)
         {}
     };
 

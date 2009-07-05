@@ -21,16 +21,16 @@ namespace boost { namespace mpl
     template <>
     struct erase_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence, typename First, typename Last>
+        template <typename Seq, typename First, typename Last>
         struct apply
         {
             typedef typename
-                fusion::result_of::erase<Sequence, First, Last>::type
+                fusion::result_of::erase<Seq, First, Last>::type
             result;
 
             typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Sequence>::type, result
+                    typename fusion::traits::tag_of<Seq>::type, result
                 >::type
             type;
         };

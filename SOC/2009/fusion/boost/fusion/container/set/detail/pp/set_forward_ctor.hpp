@@ -7,7 +7,6 @@
 
 #ifndef BOOST_FUSION_CONTAINER_SET_DETAIL_PP_SET_FORWARD_CTOR_HPP
 #define BOOST_FUSION_CONTAINER_SET_DETAIL_PP_SET_FORWARD_CTOR_HPP
-#define FUSION_SET_FORWARD_CTOR_09162005_1115
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -18,7 +17,6 @@
 #define BOOST_PP_ITERATION_LIMITS (1, FUSION_MAX_SET_SIZE)
 #include BOOST_PP_ITERATE()
 
-#endif
 #else // defined(BOOST_PP_IS_ITERATING)
 ///////////////////////////////////////////////////////////////////////////////
 //

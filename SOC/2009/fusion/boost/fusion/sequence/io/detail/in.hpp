@@ -7,18 +7,21 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+//TODO !!!
+
 #ifndef BOOST_FUSION_SEQUENCE_IO_DETAIL_IN_HPP
 #define BOOST_FUSION_SEQUENCE_IO_DETAIL_IN_HPP
 
 #include <istream>
-#include <boost/fusion/sequence/io/detail/manip.hpp>
 
-#include <boost/mpl/bool.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
+#include <boost/fusion/sequence/io/detail/manip.hpp>
+
+#include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -73,9 +76,9 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename IS, typename Sequence>
+    template <typename IS, typename Seq>
     inline void
-    read_sequence(IS& is, Sequence& seq)
+    read_sequence(IS& is, Seq& seq)
     {
         delimiter_in<tuple_open_tag>::read(is, "(");
         read_sequence_loop::call(is, fusion::begin(seq), fusion::end(seq));

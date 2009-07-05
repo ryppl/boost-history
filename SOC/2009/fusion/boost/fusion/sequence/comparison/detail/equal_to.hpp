@@ -23,26 +23,26 @@ namespace boost { namespace fusion { namespace detail
         typedef typename result_of::end<Seq1>::type end1_type;
         typedef typename result_of::end<Seq2>::type end2_type;
 
-        template <typename I1, typename I2>
+        template <typename It1, typename It2>
         static bool
-        call(I1 const&, I2 const&, mpl::true_)
+        call(It1 const&, It2 const&, mpl::true_)
         {
             return true;
         }
 
-        template <typename I1, typename I2>
+        template <typename It1, typename It2>
         static bool
-        call(I1 const& a, I2 const& b, mpl::false_)
+        call(It1 const& a, It2 const& b, mpl::false_)
         {
             return fusion::deref(a) == fusion::deref(b)
                 && call(fusion::next(a), fusion::next(b));
         }
 
-        template <typename I1, typename I2>
+        template <typename It1, typename It2>
         static bool
-        call(I1 const& a, I2 const& b)
+        call(It1 const& a, It2 const& b)
         {
-            typename result_of::equal_to<I1, end1_type>::type eq;
+            typename result_of::equal_to<It1, end1_type>::type eq;
             return call(a, b, eq);
         }
     };
@@ -50,9 +50,9 @@ namespace boost { namespace fusion { namespace detail
     template <typename Seq1, typename Seq2>
     struct sequence_equal_to<Seq1, Seq2, false>
     {
-        template <typename I1, typename I2>
+        template <typename It1, typename It2>
         static bool
-        call(I1 const& a, I2 const& b)
+        call(It1 const& a, It2 const& b)
         {
             return false;
         }

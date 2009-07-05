@@ -20,12 +20,12 @@ namespace boost { namespace mpl
     template <>
     struct clear_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct apply
         {
             typedef typename
                 fusion::detail::clear<
-                    typename fusion::traits::tag_of<Sequence>::type
+                    typename fusion::traits::tag_of<Seq>::type
                 >::type
             type;
         };

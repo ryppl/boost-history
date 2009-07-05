@@ -17,16 +17,13 @@
 
 // Tuple I/O manipulators
 
-#define FUSION_GET_CHAR_TYPE(T) typename T::char_type
-#define FUSION_GET_TRAITS_TYPE(T) typename T::traits_type
-
 #if defined (BOOST_NO_TEMPLATED_STREAMS)
-#define FUSION_STRING_OF_STREAM(Stream) std::string
+#   define BOOST_FUSION_STRING_OF_STREAM(Stream) std::string
 #else
-#define FUSION_STRING_OF_STREAM(Stream)                                         \
-    std::basic_string<                                                          \
-        FUSION_GET_CHAR_TYPE(Stream)                                            \
-      , FUSION_GET_TRAITS_TYPE(Stream)                                          \
+#   define BOOST_FUSION_STRING_OF_STREAM(Stream) \
+    std::basic_string< \
+        typename Stream::char_type \
+      , typename Stream::traits_type \
     >
 #endif
 
@@ -83,13 +80,12 @@ namespace boost { namespace fusion
         class string_ios_manip
         {
         public:
-
-            typedef FUSION_STRING_OF_STREAM(Stream) string_type;
+            typedef BOOST_FUSION_STRING_OF_STREAM(Stream) string_type;
 
             typedef stream_data<Stream, Tag, string_type> stream_data_t;
 
             string_ios_manip(Stream& str_)
-                : stream(str_)
+              : stream(str_)
             {}
 
             void
@@ -308,9 +304,7 @@ namespace boost { namespace fusion
 
 #undef STD_TUPLE_DEFINE_MANIPULATOR
 #undef STD_TUPLE_DEFINE_MANIPULATOR_FUNCTIONS
-#undef FUSION_STRING_OF_STREAM
-#undef FUSION_GET_CHAR_TYPE
-#undef FUSION_GET_TRAITS_TYPE
+#undef BOOST_FUSION_STRING_OF_STREAM
 
 }}
 

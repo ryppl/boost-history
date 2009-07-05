@@ -24,20 +24,19 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<iterator_facade_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
-              : detail::remove_reference<Iterator>::type::template value_of<Iterator>
+              : detail::remove_reference<ItRef>::type::template value_of<ItRef>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Iterator>
+        template <typename It>
         struct value_of
-          : extension::value_of_impl<
-                typename traits::tag_of<Iterator>::type
-            >::template apply<typename detail::add_lref<Iterator>::type>
+          : extension::value_of_impl<typename traits::tag_of<It>::type>::
+                template apply<typename detail::add_lref<It>::type>
         {};
     }
 }}

@@ -55,8 +55,6 @@ namespace boost { namespace fusion
         typedef vector<EXPAND_ARGUMENTS(FUSION_MAX_MAP_SIZE)> storage_type;
         typedef typename storage_type::size size;
 
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-        //TODO cschmidt: enable for non-variadic templates version?
 private:
         template<class Key>struct is_key
         {
@@ -127,10 +125,9 @@ public:
                 >
             type;
         };
-#endif
 
         map()
-            : data() {}
+        {}
 
 #define MAP_CTOR(COMBINATION)\
         map(map COMBINATION map_)\
@@ -148,8 +145,7 @@ public:
             : data(BOOST_FUSION_FORWARD(Arg,arg))
         {}
 
-#   include <boost/fusion/container/map/detail/pp/set_forward_ctor.hpp>
-#   include <boost/fusion/container/map/detail/pp/set_lookup.hpp>
+#   include <boost/fusion/container/map/detail/pp/map_forward_ctor.hpp>
 #else
         template <typename... OtherArguments>
         map(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)

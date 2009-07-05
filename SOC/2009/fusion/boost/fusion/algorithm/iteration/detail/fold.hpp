@@ -73,77 +73,81 @@ namespace boost { namespace fusion
             type;
         };
 
-        template<typename I0, typename State, typename F, int N>
+        template<typename It0, typename State, typename F, int N>
         struct result_of_unrolled_fold;
 
         template<int N>
         struct unrolled_fold
         {
-            template<typename I0, typename State, typename F>
-            static typename result_of_unrolled_fold<I0, State, F, N>::type
-            call(I0 const& i0,
+            template<typename It0, typename State, typename F>
+            static typename result_of_unrolled_fold<It0, State, F, N>::type
+            call(It0 const& it0,
                     BOOST_FUSION_R_ELSE_LREF(State) state,
                     BOOST_FUSION_R_ELSE_LREF(F) f)
             {
-                typedef typename result_of::next<I0>::type I1;
-                I1 i1 = fusion::next(i0);
-                typedef typename result_of::next<I1>::type I2;
-                I2 i2 = fusion::next(i1);
-                typedef typename result_of::next<I2>::type I3;
-                I3 i3 = fusion::next(i2);
-                typedef typename result_of::next<I3>::type I4;
-                I4 i4 = fusion::next(i3);
+                typedef typename result_of::next<It0>::type It1;
+                It1 it1 = fusion::next(it0);
+                typedef typename result_of::next<It1>::type It2;
+                It2 it2 = fusion::next(it1);
+                typedef typename result_of::next<It2>::type It3;
+                It3 it3 = fusion::next(it2);
+                typedef typename result_of::next<It3>::type It4;
+                It4 it4 = fusion::next(it3);
 
                 return unrolled_fold<N-4>::call(
-                        i4,
-                        f(fusion::deref(i3),
-                            f(fusion::deref(i2),
-                                f(fusion::deref(i1),
-                                    f(fusion::deref(i0),
+                        it4,
+                        f(fusion::deref(it3),
+                            f(fusion::deref(it2),
+                                f(fusion::deref(it1),
+                                    f(fusion::deref(it0),
                                      BOOST_FUSION_FORWARD(State,state)
-                                     )
-                                 )
-                             )
-                         ),
-                        f);
+                                    )
+                                )
+                            )
+                        ),
+                        BOOST_FUSION_FORWARD(F,f));
             }
         };
 
         template<>
         struct unrolled_fold<3>
         {
-            template<typename I0, typename State, typename F>
-            static typename result_of_unrolled_fold<I0, State, F, 3>::type
-            call(I0 const& i0,
+            template<typename It0, typename State, typename F>
+            static typename result_of_unrolled_fold<It0, State, F, 3>::type
+            call(It0 const& it0,
                     BOOST_FUSION_R_ELSE_LREF(State) state,
                     BOOST_FUSION_R_ELSE_LREF(F) f)
             {
-                typedef typename result_of::next<I0>::type I1;
-                I1 i1 = fusion::next(i0);
-                typedef typename result_of::next<I1>::type I2;
-                I2 i2 = fusion::next(i1);
+                typedef typename result_of::next<It0>::type It1;
+                It1 it1 = fusion::next(it0);
+                typedef typename result_of::next<It1>::type It2;
+                It2 it2 = fusion::next(it1);
 
-                return f(fusion::deref(i2),
-                        f(fusion::deref(i1),
-                            f(fusion::deref(i0), BOOST_FUSION_FORWARD(State,state))
-                        ));
+                return f(fusion::deref(it2),
+                            f(fusion::deref(it1),
+                                f(
+                                    fusion::deref(it0),
+                                    BOOST_FUSION_FORWARD(State,state)
+                                )
+                            )
+                        );
             }
         };
 
         template<>
         struct unrolled_fold<2>
         {
-            template<typename I0, typename State, typename F>
-            static typename result_of_unrolled_fold<I0, State, F, 2>::type
-            call(I0 const& i0,
+            template<typename It0, typename State, typename F>
+            static typename result_of_unrolled_fold<It0, State, F, 2>::type
+            call(It0 const& it0,
                     BOOST_FUSION_R_ELSE_LREF(State) state,
                     BOOST_FUSION_R_ELSE_LREF(F) f)
             {
-                typedef typename result_of::next<I0>::type I1;
-                I1 i1 = fusion::next(i0);
+                typedef typename result_of::next<It0>::type It1;
+                It1 it1 = fusion::next(it0);
 
-                return f(fusion::deref(i1),
-                        f(fusion::deref(i0),
+                return f(fusion::deref(it1),
+                        f(fusion::deref(it0),
                           BOOST_FUSION_FORWARD(State,state)));
             }
         };
@@ -151,22 +155,22 @@ namespace boost { namespace fusion
         template<>
         struct unrolled_fold<1>
         {
-            template<typename I0, typename State, typename F>
-            static typename result_of_unrolled_fold<I0, State, F, 1>::type
-            call(I0 const& i0,
+            template<typename It0, typename State, typename F>
+            static typename result_of_unrolled_fold<It0, State, F, 1>::type
+            call(It0 const& it0,
                     BOOST_FUSION_R_ELSE_LREF(State) state,
                     BOOST_FUSION_R_ELSE_LREF(F) f)
             {
-                return f(fusion::deref(i0), BOOST_FUSION_FORWARD(State,state));
+                return f(fusion::deref(it0), BOOST_FUSION_FORWARD(State,state));
             }
         };
 
         template<>
         struct unrolled_fold<0>
         {
-            template<typename I0, typename State, typename F>
+            template<typename It0, typename State, typename F>
             static State
-            call(I0 const&,
+            call(It0 const&,
                     BOOST_FUSION_R_ELSE_LREF(State) state,
                     BOOST_FUSION_R_ELSE_LREF(F))
             {
@@ -207,57 +211,57 @@ namespace boost { namespace fusion
             );
         }
 
-        template<typename I0, typename State, typename F, int N>
+        template<typename It0, typename State, typename F, int N>
         struct result_of_unrolled_fold
         {
-            typedef typename result_of::next<I0>::type I1;
-            typedef typename result_of::next<I1>::type I2;
-            typedef typename result_of::next<I2>::type I3;
-            typedef typename result_of::next<I3>::type I4;
-            typedef typename fold_apply<I0, State, F>::type Rest1;
-            typedef typename fold_apply<I1, Rest1, F>::type Rest2;
-            typedef typename fold_apply<I2, Rest2, F>::type Rest3;
-            typedef typename fold_apply<I3, Rest3, F>::type Rest4;
+            typedef typename result_of::next<It0>::type It1;
+            typedef typename result_of::next<It1>::type It2;
+            typedef typename result_of::next<It2>::type It3;
+            typedef typename result_of::next<It3>::type It4;
+            typedef typename fold_apply<It0, State, F>::type Rest1;
+            typedef typename fold_apply<It1, Rest1, F>::type Rest2;
+            typedef typename fold_apply<It2, Rest2, F>::type Rest3;
+            typedef typename fold_apply<It3, Rest3, F>::type Rest4;
 
             typedef typename
-                result_of_unrolled_fold<I4, Rest4, F, N-4>::type
+                result_of_unrolled_fold<It4, Rest4, F, N-4>::type
             type;
         };
 
-        template<typename I0, typename State, typename F>
-        struct result_of_unrolled_fold<I0, State, F, 3>
+        template<typename It0, typename State, typename F>
+        struct result_of_unrolled_fold<It0, State, F, 3>
         {
-            typedef typename result_of::next<I0>::type I1;
-            typedef typename result_of::next<I1>::type I2;
-            typedef typename fold_apply<I0, State, F>::type Rest;
-            typedef typename fold_apply<I1, Rest, F>::type Rest2;
+            typedef typename result_of::next<It0>::type It1;
+            typedef typename result_of::next<It1>::type It2;
+            typedef typename fold_apply<It0, State, F>::type Rest;
+            typedef typename fold_apply<It1, Rest, F>::type Rest2;
 
             typedef typename
-                fold_apply<I2, Rest2, F>::type
+                fold_apply<It2, Rest2, F>::type
             type;
         };
 
-        template<typename I0, typename State, typename F>
-        struct result_of_unrolled_fold<I0, State, F, 2>
+        template<typename It0, typename State, typename F>
+        struct result_of_unrolled_fold<It0, State, F, 2>
         {
-            typedef typename result_of::next<I0>::type I1;
-            typedef typename fold_apply<I0, State, F>::type Rest;
+            typedef typename result_of::next<It0>::type It1;
+            typedef typename fold_apply<It0, State, F>::type Rest;
 
             typedef typename
-                fold_apply<I1, Rest, F>::type
+                fold_apply<It1, Rest, F>::type
             type;
         };
 
-        template<typename I0, typename State, typename F>
-        struct result_of_unrolled_fold<I0, State, F, 1>
+        template<typename It0, typename State, typename F>
+        struct result_of_unrolled_fold<It0, State, F, 1>
         {
             typedef typename
-                fold_apply<I0, State, F>::type
+                fold_apply<It0, State, F>::type
             type;
         };
 
-        template<typename I0, typename State, typename F>
-        struct result_of_unrolled_fold<I0, State, F, 0>
+        template<typename It0, typename State, typename F>
+        struct result_of_unrolled_fold<It0, State, F, 0>
         {
             typedef State type;
         };

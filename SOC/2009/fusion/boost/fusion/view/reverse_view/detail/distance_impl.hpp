@@ -26,18 +26,18 @@ namespace boost { namespace fusion {
         template<>
         struct distance_impl<reverse_view_iterator_tag>
         {
-            template<typename First, typename Last>
+            template<typename FirstRef, typename LastRef>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<First>::type::first_type
-                first_type;
-                typedef typename
-                    detail::remove_reference<Last>::type::first_type
-                last_type;
-
-                typedef typename
-                    result_of::distance<last_type, first_type>::type
+                    result_of::distance<
+                        typename detail::remove_reference<
+                            FirstRef
+                        >::type::first_type
+                      , typename detail::remove_reference<
+                            LastRef
+                        >::type::first_type
+                    >::type
                 type;
             };
         };

@@ -20,35 +20,43 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Iterator>
+    template <typename It>
     struct fusion_iterator
     {
-        typedef typename fusion::result_of::value_of<Iterator>::type type;
-        typedef typename fusion::traits::category_of<Iterator>::type category;
-        typedef Iterator iterator;
+        typedef typename fusion::result_of::value_of<It>::type type;
+        typedef typename fusion::traits::category_of<It>::type category;
+        typedef It iterator;
     };
 
-    template <typename Iterator>
-    struct next<fusion_iterator<Iterator> >
+    template <typename It>
+    struct next<fusion_iterator<It> >
     {
-        typedef fusion_iterator<typename fusion::result_of::next<Iterator>::type> type;
+        typedef
+            fusion_iterator<typename fusion::result_of::next<It>::type>
+        type;
     };
 
-    template <typename Iterator>
-    struct prior<fusion_iterator<Iterator> >
+    template <typename It>
+    struct prior<fusion_iterator<It> >
     {
-        typedef fusion_iterator<typename fusion::result_of::prior<Iterator>::type> type;
+        typedef
+            fusion_iterator<typename fusion::result_of::prior<It>::type>
+        type;
     };
 
-    template <typename Iterator, typename N>
-    struct advance<fusion_iterator<Iterator>, N>
+    template <typename It, typename N>
+    struct advance<fusion_iterator<It>, N>
     {
-        typedef fusion_iterator<typename fusion::result_of::advance<Iterator, N>::type> type;
+        typedef
+            fusion_iterator<
+                typename fusion::result_of::advance<It, N>::type
+            >
+        type;
     };
 
     template <typename First, typename Last>
     struct distance<fusion_iterator<First>, fusion_iterator<Last> >
-        : fusion::result_of::distance<First, Last>
+      : fusion::result_of::distance<First, Last>
     {};
 
 }}

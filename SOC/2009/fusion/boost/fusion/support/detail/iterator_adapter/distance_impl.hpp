@@ -20,24 +20,19 @@ namespace boost { namespace fusion
         template <>
         struct distance_impl<iterator_adapter_tag>
         {
-            template <typename I1, typename I2>
+            template <typename It1Ref, typename It2Ref>
             struct apply
             {
                 //TODO cschmidt: category assert
-
                 typedef typename
-                    detail::result_of_forward_as<I1
-                      , typename detail::remove_reference<I1>::type::iterator_type
+                    result_of::distance<
+                        typename detail::remove_reference<
+                            It1Ref
+                        >::type::iterator_type
+                      , typename detail::remove_reference<
+                            It2Ref
+                        >::type::iterator_type
                     >::type
-                iterator1_type;
-                typedef typename
-                    detail::result_of_forward_as<I2
-                      , typename detail::remove_reference<I2>::type::iterator_type
-                    >::type
-                iterator2_type;
-
-                typedef typename
-                    result_of::distance<iterator1_type,iterator2_type>::type
                 type;
             };
         };

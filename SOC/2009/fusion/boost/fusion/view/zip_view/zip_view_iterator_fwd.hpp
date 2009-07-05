@@ -13,12 +13,11 @@
 
 namespace boost { namespace fusion {
 
-    template<typename IteratorSequence,
-             typename Traversal =
-                 typename detail::strictest_traversal<IteratorSequence>::type
-            >
+    template<
+        typename ItSeq
+      , typename Traversal=typename detail::strictest_traversal<ItSeq>::type
+    >
     struct zip_view_iterator;
-
 }}
 
 #endif

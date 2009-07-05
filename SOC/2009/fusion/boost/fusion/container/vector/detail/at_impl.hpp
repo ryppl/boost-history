@@ -23,24 +23,24 @@ namespace boost { namespace fusion
         template <>
         struct at_impl<vector_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
             {
                 typedef typename
                     mpl::at<
-                        typename detail::remove_reference<Sequence>::type::types
+                        typename detail::remove_reference<SeqRef>::type::types
                       , N
                     >::type
                 element;
 
                 typedef typename
-                    detail::result_of_forward_as<Sequence,element>::type
+                    detail::result_of_forward_as<SeqRef,element>::type
                 type;
 
                 static type
-                call(Sequence v)
+                call(SeqRef seq)
                 {
-                    return v.at_impl(N());
+                    return seq.at_impl(N());
                 }
             };
         };

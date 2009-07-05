@@ -10,7 +10,7 @@
 
 namespace boost { namespace fusion
 {
-    template<typename Iterator, typename NewCategory>
+    template<typename It, typename NewCategory>
     struct iterator_adapter;
 
     struct iterator_adapter_tag;
@@ -23,32 +23,26 @@ namespace boost { namespace fusion
         template <>
         struct advance_impl<iterator_adapter_tag>
         {
-            template <typename Iterator, typename N>
+            template <typename ItRef, typename N>
             struct apply
             {
                 //TODO cschmidt: category assert
-
-                typedef typename
-                    detail::remove_reference<Iterator>::type
-                identity_iterator;
-
-                typedef typename
-                    detail::result_of_forward_as<Iterator
-                      , typename identity_iterator::iterator_type
-                    >::type
-                iterator_type;
+                typedef typename detail::remove_reference<ItRef>::type it;
 
                 typedef
                     iterator_adapter<
-                        typename result_of::advance<iterator_type, N>::type
-                      , typename identity_iterator::category
+                        typename result_of::advance<
+                            typename it::iterator_type
+                          , N
+                        >::type
+                      , typename it::category
                     >
                 type;
 
                 static type
-                call(Iterator i)
+                call(ItRef it)
                 {
-                    return type(fusion::advance<N>(i.it),0);
+                    return type(fusion::advance<N>(it.it),0);
                 }
             };
         };

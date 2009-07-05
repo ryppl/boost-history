@@ -24,16 +24,15 @@ namespace boost { namespace fusion
         template <>
         struct deref_impl<vector_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
-                typedef typename detail::remove_reference<Iterator>::type iterator;
-                typedef typename iterator::vector vector;
-                typedef typename iterator::index index;
+                typedef typename detail::remove_reference<ItRef>::type it;
+                typedef typename it::vector vector;
                 typedef typename
                     mpl::at<
                         typename detail::remove_reference<vector>::type::types
-                      , index
+                      , typename it::index
                     >::type
                 element;
 
@@ -42,9 +41,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(Iterator i)
+                call(ItRef it)
                 {
-                    return i.vec->at_impl(index());
+                    return it.vec->at_impl(typename it::index());
                 }
             };
         };

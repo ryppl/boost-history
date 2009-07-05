@@ -37,8 +37,7 @@ namespace boost { namespace fusion
                 static type
                 call(SeqRef seq)
                 {
-                    return fusion::at<N>(
-                            static_cast<storage_type&>(seq.get_data()));
+                    return fusion::at<N>(seq.get_data());
                 }
             };
         };

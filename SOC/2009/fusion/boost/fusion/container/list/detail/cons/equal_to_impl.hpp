@@ -20,17 +20,17 @@ namespace boost { namespace fusion
         template <>
         struct equal_to_impl<cons_iterator_tag>
         {
-            template <typename I1Ref, typename I2Ref>
+            template <typename It1Ref, typename It2Ref>
             struct apply
               : is_same<
                     typename detail::identity<
                         typename detail::remove_reference<
-                            I1Ref
+                            It1Ref
                         >::type::cons_type
                     >::type
                   , typename detail::identity<
                         typename detail::remove_reference<
-                            I2Ref
+                            It2Ref
                         >::type::cons_type
                     >::type
                 >

@@ -54,14 +54,8 @@ namespace boost { namespace fusion
         nil(const nil&)
         {}
 
-        template<typename Seq>
-        nil(detail::sequence_assign_type<Seq> const volatile&)
-        {
-            //TODO cschmidt: assert!
-        }
-
-        template<typename Sequence>
-        nil(detail::sequence_assign_type<Sequence> const volatile&&)
+        template<typename SeqAssign>
+        nil(BOOST_FUSION_R_ELSE_LREF(SeqAssign))
         {
             //TODO cschmidt: assert!
         }
@@ -125,19 +119,19 @@ namespace boost { namespace fusion
 
         //cschmidt: rvalue ref if possible, so this does not collide with
         //cons(OtherCar&&,OtherCdr&&)
-        template<typename Iterator>
+        template<typename It>
         cons(detail::assign_by_deref,
-             BOOST_FUSION_R_ELSE_CLREF(Iterator) iterator)
-          : car(fusion::deref(iterator))
-          , cdr(detail::assign_by_deref(),fusion::next(iterator))
+             BOOST_FUSION_R_ELSE_CLREF(It) it)
+          : car(fusion::deref(it))
+          , cdr(detail::assign_by_deref(),fusion::next(it))
         {}
 
         /*
-        template<typename Sequence>
+        template<typename Seq>
         vector(typename enable_if_c<sizeof...(Elements)!=1,
-                                BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type seq)
+                                BOOST_FUSION_R_ELSE_CLREF(Seq)>::type seq)
           : base(detail::assign_by_deref(),
-                 fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)))
+                 fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)))
         {}
         */
 

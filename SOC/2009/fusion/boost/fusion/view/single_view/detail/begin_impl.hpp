@@ -23,13 +23,13 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<single_view_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef single_view_iterator<Sequence> type;
+                typedef single_view_iterator<SeqRef> type;
 
                 static type
-                call(Sequence s)
+                call(SeqRef s)
                 {
                     return type(s,0);
                 }

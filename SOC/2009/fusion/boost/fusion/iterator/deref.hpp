@@ -25,34 +25,34 @@ namespace boost { namespace fusion
         template <>
         struct deref_impl<iterator_facade_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
-              : detail::remove_reference<Iterator>::type::template deref<Iterator>
+              : detail::remove_reference<ItRef>::type::template deref<ItRef>
             {};
        };
     }
 
     namespace result_of
     {
-        template <typename Iterator>
+        template <typename It>
         struct deref
-          : extension::deref_impl<typename traits::tag_of<Iterator>::type>::
-                template apply<typename detail::add_lref<Iterator>::type>
+          : extension::deref_impl<typename traits::tag_of<It>::type>::
+                template apply<typename detail::add_lref<It>::type>
         {};
     }
 
-    template <typename Iterator>
-    typename result_of::deref<Iterator const&>::type
-    deref(Iterator const& i)
+    template <typename It>
+    typename result_of::deref<It const&>::type
+    deref(It const& it)
     {
-        return result_of::deref<Iterator const&>::call(i);
+        return result_of::deref<It const&>::call(it);
     }
 
-    template <typename Iterator>
-    typename result_of::deref<Iterator const&>::type
-    operator*(iterator_base<Iterator> const& i)
+    template <typename It>
+    typename result_of::deref<It const&>::type
+    operator*(iterator_base<It> const& it)
     {
-        return fusion::deref(i.cast());
+        return fusion::deref(it.cast());
     }
 }}
 

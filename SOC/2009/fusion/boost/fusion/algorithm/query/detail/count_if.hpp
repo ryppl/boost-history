@@ -70,33 +70,33 @@ namespace boost { namespace fusion {
         template<int n>
         struct unrolled_count_if
         {
-            template<typename I0, typename F>
-            static int call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+            template<typename It0, typename F>
+            static int call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
             {
                 int ct = unrolled_count_if<n-4>::
-                    call(fusion::advance_c<4>(i0), BOOST_FUSION_FORWARD(F,f));
-                if(f(fusion::deref(i0)))
+                    call(fusion::advance_c<4>(it0), BOOST_FUSION_FORWARD(F,f));
+                if(f(fusion::deref(it0)))
                 {
                     ++ct;
                 }
 
-                typedef typename result_of::next<I0>::type I1;
-                I1 i1(fusion::next(i0));
-                if(f(fusion::deref(i1)))
+                typedef typename result_of::next<It0>::type It1;
+                It1 it1(fusion::next(it0));
+                if(f(fusion::deref(it1)))
                 {
                     ++ct;
                 }
 
-                typedef typename result_of::next<I1>::type I2;
-                I2 i2(fusion::next(i1));
-                if(f(fusion::deref(i2)))
+                typedef typename result_of::next<It1>::type It2;
+                It2 it2(fusion::next(it1));
+                if(f(fusion::deref(it2)))
                 {
                     ++ct;
                 }
 
-                typedef typename result_of::next<I2>::type I3;
-                I3 i3(fusion::next(i2));
-                if(f(fusion::deref(i3)))
+                typedef typename result_of::next<It2>::type It3;
+                It3 it3(fusion::next(it2));
+                if(f(fusion::deref(it3)))
                 {
                     ++ct;
                 }
@@ -108,25 +108,25 @@ namespace boost { namespace fusion {
         template<>
         struct unrolled_count_if<3>
         {
-            template<typename I0, typename F>
-            static int call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+            template<typename It0, typename F>
+            static int call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
             {
                 int ct = 0;
-                if(f(fusion::deref(i0)))
+                if(f(fusion::deref(it0)))
                 {
                     ++ct;
                 }
 
-                typedef typename result_of::next<I0>::type I1;
-                I1 i1(fusion::next(i0));
-                if(f(fusion::deref(i1)))
+                typedef typename result_of::next<It0>::type It1;
+                It1 it1(fusion::next(it0));
+                if(f(fusion::deref(it1)))
                 {
                     ++ct;
                 }
 
-                typedef typename result_of::next<I1>::type I2;
-                I2 i2(fusion::next(i1));
-                if(f(fusion::deref(i2)))
+                typedef typename result_of::next<It1>::type It2;
+                It2 it2(fusion::next(it1));
+                if(f(fusion::deref(it2)))
                 {
                     ++ct;
                 }
@@ -138,18 +138,18 @@ namespace boost { namespace fusion {
         template<>
         struct unrolled_count_if<2>
         {
-            template<typename I0, typename F>
-            static int call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+            template<typename It0, typename F>
+            static int call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
             {
                 int ct = 0;
-                if(f(fusion::deref(i0)))
+                if(f(fusion::deref(it0)))
                 {
                     ++ct;
                 }
 
-                typedef typename result_of::next<I0>::type I1;
-                I1 i1(fusion::next(i0));
-                if(f(fusion::deref(i1)))
+                typedef typename result_of::next<It0>::type It1;
+                It1 it1(fusion::next(it0));
+                if(f(fusion::deref(it1)))
                 {
                     ++ct;
                 }
@@ -161,11 +161,11 @@ namespace boost { namespace fusion {
         template<>
         struct unrolled_count_if<1>
         {
-            template<typename I0, typename F>
-            static int call(I0 const& i0, BOOST_FUSION_R_ELSE_LREF(F) f)
+            template<typename It0, typename F>
+            static int call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
             {
                 int ct = 0;
-                if(f(fusion::deref(i0)))
+                if(f(fusion::deref(it0)))
                 {
                     ++ct;
                 }
@@ -177,8 +177,8 @@ namespace boost { namespace fusion {
         template<>
         struct unrolled_count_if<0>
         {
-            template<typename I0, typename F>
-            static int call(I0 const&, BOOST_FUSION_R_ELSE_LREF(F))
+            template<typename It0, typename F>
+            static int call(It0 const&, BOOST_FUSION_R_ELSE_LREF(F))
             {
                 return 0;
             }
@@ -196,9 +196,7 @@ namespace boost { namespace fusion {
                 >
             gen;
 
-            return gen::call(
-                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
-                    BOOST_FUSION_FORWARD(F,f));
+            return gen::call(fusion::begin(seq),BOOST_FUSION_FORWARD(F,f));
         }
     }
 }}

@@ -26,30 +26,34 @@ namespace boost { namespace fusion
         template <>
         struct at_key_impl<sequence_facade_tag>
         {
-            template <typename Sequence, typename Key>
-            struct apply :
-                detail::remove_reference<Sequence>::type::template at_key<Sequence, Key>
+            template <typename SeqRef, typename Key>
+            struct apply
+              : detail::remove_reference<SeqRef>::type::
+                    template at_key<SeqRef, Key>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Sequence, typename Key>
+        template <typename Seq, typename Key>
         struct at_key
-            : extension::at_key_impl<typename traits::tag_of<Sequence>::type>::
-                template apply<typename detail::add_lref<Sequence>::type, Key>
+            : extension::at_key_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type, Key>
         {};
     }
 
-    template <typename Key, typename Sequence>
+    template <typename Key, typename Seq>
     inline typename result_of::at_key<
-        BOOST_FUSION_R_ELSE_CLREF(Sequence)
+        BOOST_FUSION_R_ELSE_CLREF(Seq)
       , Key>::type
-    at_key(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+    at_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::at_key<BOOST_FUSION_R_ELSE_CLREF(Sequence), Key>::call(
-                BOOST_FUSION_FORWARD(Sequence,seq));
+        return
+            result_of::at_key<
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
+              , Key
+            >::call(seq);
     }
 
 }}

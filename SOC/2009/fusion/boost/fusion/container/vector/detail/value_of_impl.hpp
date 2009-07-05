@@ -22,19 +22,20 @@ namespace boost { namespace fusion
         template <>
         struct value_of_impl<vector_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Iterator>::type::vector
-                vector;
+                    detail::remove_reference<ItRef>::type
+                it;
                 typedef typename
-                    detail::remove_reference<Iterator>::type::index
-                index;
+                    it::vector
+                vector;
+
                 typedef typename
                     mpl::at<
                         typename detail::remove_reference<vector>::type::types
-                      , index
+                      , typename it::index
                     >::type
                 type;
             };

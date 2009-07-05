@@ -48,21 +48,26 @@ namespace boost { namespace fusion
         typedef typename vector_n::is_view is_view;
 
         vector()
-            : vec() {}
+          : vec()
+        {}
 
         template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename U)>
         vector(vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, U)> const& rhs)
-            : vec(rhs.vec) {}
+          : vec(rhs.vec)
+        {}
 
         vector(vector const& rhs)
-            : vec(rhs.vec) {}
+          : vec(rhs.vec)
+        {}
 
         template <typename Sequence>
         vector(Sequence const& rhs)
 #if BOOST_WORKAROUND(BOOST_MSVC, <= 1400)
-            : vec(ctor_helper(rhs, is_base_of<vector, Sequence>())) {}
+          : vec(ctor_helper(rhs, is_base_of<vector, Sequence>()))
+        {}
 #else
-            : vec(rhs) {}
+          : vec(rhs)
+        {}
 #endif
 
         //  Expand a couple of forwarding constructors for arguments

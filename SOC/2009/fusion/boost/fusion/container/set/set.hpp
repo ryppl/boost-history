@@ -51,8 +51,6 @@ namespace boost { namespace fusion
         typedef vector<EXPAND_ARGUMENTS(FUSION_MAX_SET_SIZE)> storage_type;
         typedef typename storage_type::size size;
 
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-        //TODO cschmidt: enable for non-variadic templates version?
         template <typename Key>
         struct meta_at_impl
         {
@@ -61,9 +59,9 @@ namespace boost { namespace fusion
                     typename mpl::contains<
                         typename storage_type::types
                       , Key
-                    >::type,
-                    Key,
-                    void_
+                    >::type
+                  , Key
+                  , void_
                 >::type
             type;
         };
@@ -101,10 +99,9 @@ namespace boost { namespace fusion
                 >
             type;
         };
-#endif
 
         set()
-            : data() {}
+        {}
 
 #define SET_CTOR(COMBINATION)\
         set(set COMBINATION set_)\
@@ -123,7 +120,6 @@ namespace boost { namespace fusion
         {}
 
 #   include <boost/fusion/container/set/detail/pp/set_forward_ctor.hpp>
-#   include <boost/fusion/container/set/detail/pp/set_lookup.hpp>
 #else
         template <typename... OtherArguments>
         set(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)

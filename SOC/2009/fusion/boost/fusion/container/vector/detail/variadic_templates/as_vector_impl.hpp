@@ -16,7 +16,8 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template<typename Sequence>struct as_vector_impl
+    template<typename SeqRef>
+    struct as_vector_impl
     {
         struct apply
         {
@@ -24,17 +25,17 @@ namespace boost { namespace fusion { namespace detail
                 mpl::apply<
                     mpl::unpack_args<variadic_quote<vector> >
                   , typename detail::to_random_access_mpl_seq<
-                        typename detail::remove_reference<Sequence>::type
+                        typename detail::remove_reference<SeqRef>::type
                     >::type
                 >::type
             type;
         };
 
         static typename apply::type
-        call(Sequence sequence)
+        call(SeqRef seq)
         {
             return typename apply::type(
-                    sequence_assign(BOOST_FUSION_FORWARD(Sequence,sequence)));
+                    sequence_assign(BOOST_FUSION_FORWARD(SeqRef,seq)));
         }
     };
 }}}

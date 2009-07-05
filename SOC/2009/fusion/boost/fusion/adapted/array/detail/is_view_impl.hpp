@@ -24,7 +24,8 @@ namespace boost { namespace fusion
         struct is_view_impl<array_tag>
         {
             template<typename T>
-            struct apply : mpl::false_
+            struct apply
+              : mpl::false_
             {};
         };
     }

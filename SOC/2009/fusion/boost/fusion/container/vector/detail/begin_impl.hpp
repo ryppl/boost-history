@@ -18,15 +18,15 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<vector_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef vector_iterator<Sequence, 0> type;
+                typedef vector_iterator<SeqRef, 0> type;
 
                 static type
-                call(Sequence v)
+                call(SeqRef seq)
                 {
-                    return type(BOOST_FUSION_FORWARD(Sequence,v),0);
+                    return type(seq,0);
                 }
             };
         };

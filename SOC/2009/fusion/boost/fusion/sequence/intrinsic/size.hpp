@@ -50,12 +50,11 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Sequence>
-    inline typename result_of::size<Sequence const&>::type
-    size(Sequence const&)
+    template <typename Seq>
+    inline typename result_of::size<Seq const&>::type
+    size(Seq const&)
     {
-        typedef typename result_of::size<Sequence const&>::type result;
-        return result();
+        return typename result_of::size<Seq const&>::type();
     }
 }}
 

@@ -19,9 +19,9 @@ namespace boost { namespace mpl
     template <>
     struct has_key_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence, typename Key>
+        template <typename Seq, typename Key>
         struct apply
-          : fusion::result_of::has_key<Sequence, Key>
+          : fusion::result_of::has_key<Seq, Key>
         {};
     };
 }}

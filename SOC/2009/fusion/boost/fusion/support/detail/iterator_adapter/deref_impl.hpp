@@ -8,8 +8,13 @@
 
 #include <boost/fusion/iterator/deref.hpp>
 
+//TODO seq_type -> sequence_type
+
 namespace boost { namespace fusion
 {
+    template<typename It, typename NewCategory>
+    struct iterator_adapter;
+
     struct iterator_adapter_tag;
 
     namespace extension
@@ -20,24 +25,21 @@ namespace boost { namespace fusion
         template <>
         struct deref_impl<iterator_adapter_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
                 typedef typename
-                    detail::result_of_forward_as<
-                        Iterator
-                      , typename detail::remove_reference<Iterator>::type::iterator_type
+                    result_of::deref<
+                        typename detail::remove_reference<
+                            ItRef
+                        >::type::iterator_type
                     >::type
-                iterator_type;
-
-                typedef typename
-                    result_of::deref<iterator_type>::type
                 type;
 
                 static type
-                call(Iterator i)
+                call(ItRef it)
                 {
-                    return fusion::deref(i.it);
+                    return fusion::deref(it.it);
                 }
             };
         };

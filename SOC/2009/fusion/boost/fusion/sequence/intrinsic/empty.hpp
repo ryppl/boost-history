@@ -24,37 +24,36 @@ namespace boost { namespace fusion
         template <typename Tag>
         struct empty_impl
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
-                : mpl::bool_<(result_of::size<Sequence>::value == 0)>
+              : mpl::bool_<(result_of::size<SeqRef>::value == 0)>
             {};
         };
 
         template <>
         struct empty_impl<sequence_facade_tag>
         {
-            template <typename Sequence>
-            struct apply :
-                detail::remove_reference<Sequence>::type::template empty<Sequence>
+            template <typename SeqRef>
+            struct apply
+              : detail::remove_reference<SeqRef>::type::template empty<SeqRef>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct empty
-            : extension::empty_impl<typename traits::tag_of<Sequence>::type>::
-                template apply<typename detail::add_lref<Sequence>::type>
+            : extension::empty_impl<typename traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type>
         {};
     }
 
-    template <typename Sequence>
-    inline typename result_of::empty<Sequence const&>::type
-    empty(Sequence const&)
+    template <typename Seq>
+    inline typename result_of::empty<Seq const&>::type
+    empty(Seq const&)
     {
-        typedef typename result_of::empty<Sequence const&>::type result;
-        return result();
+        return typename result_of::empty<Seq const&>::type();
     }
 }}
 

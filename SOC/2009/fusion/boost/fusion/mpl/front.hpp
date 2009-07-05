@@ -20,10 +20,10 @@ namespace boost { namespace mpl
     template <>
     struct front_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct apply
           : fusion::result_of::value_of<
-                typename fusion::result_of::begin<Sequence>::type
+                typename fusion::result_of::begin<Seq>::type
             >
         {};
     };

@@ -19,38 +19,46 @@ namespace boost { namespace fusion
     struct pair
     {
         pair()
-          : second() {}
+          : second()
+        {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         pair(typename detail::call_param<Second>::type val)
-          : second(val) {}
+          : second(val)
+        {}
 #elif defined(BOOST_NO_VARIADIC_TEMPLATES)
         template<typename Arg>
         pair(Arg&& arg)
-          : second(std::forward<Arg>(arg)) {}
+          : second(std::forward<Arg>(arg))
+        {}
 #else
         template<typename Arg1,typename... Args>
         pair(Arg1&& arg1, Args&&... args)
-          : second(std::forward<Arg1>(arg1),std::forward<Args>(args)...) {}
+          : second(std::forward<Arg1>(arg1),std::forward<Args>(args)...)
+        {}
 #endif
 
         template <typename Second2>
         pair(pair<First, Second2> const& rhs)
-          : second(rhs.second) {}
+          : second(rhs.second)
+        {}
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
         //TODO cschmidt: needed?
         template <typename Second2>
         pair(pair<First, Second2> const&& rhs)
-          : second(std::forward<const Second2>(rhs.second)) {}
+          : second(std::forward<const Second2>(rhs.second))
+        {}
 
         template <typename Second2>
         pair(pair<First, Second2>& rhs)
-          : second(rhs.second) {}
+          : second(rhs.second)
+        {}
 
         template <typename Second2>
         pair(pair<First, Second2>&& rhs)
-          : second(std::forward<Second2>(rhs.second)) {}
+          : second(std::forward<Second2>(rhs.second))
+        {}
 #endif
 
         template <typename Second2>
@@ -102,8 +110,7 @@ namespace boost { namespace fusion
     make_pair(BOOST_FUSION_R_ELSE_CLREF(Second) val)
     {
         return typename result_of::
-            make_pair<First,BOOST_FUSION_R_ELSE_CLREF(Second)>::type(
-                BOOST_FUSION_FORWARD(Second,val));
+            make_pair<First,BOOST_FUSION_R_ELSE_CLREF(Second)>::type(val);
     }
 
     template <typename OStream, typename First, typename Second>

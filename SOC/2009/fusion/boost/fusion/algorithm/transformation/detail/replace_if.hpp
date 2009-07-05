@@ -90,13 +90,10 @@ namespace boost { namespace fusion { namespace detail
                 >
             gen;
 
-            //TODO ???
             return gen::call(
                     BOOST_FUSION_FORWARD(U, x),
-                    static_cast<F>(f),
-                    static_cast<NewValue>(new_value));
-                    //BOOST_FUSION_FORWARD(pred_type,f),
-                    //BOOST_FUSION_FORWARD(value_type,new_value));
+                    f,
+                    new_value);
         }
 
         F f;

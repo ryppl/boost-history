@@ -26,28 +26,28 @@ namespace boost { namespace fusion
         template <>
         struct convert_impl<set_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
                 typedef typename
-                    detail::as_set<result_of::size<Sequence>::value>
+                    detail::as_set<result_of::size<SeqRef>::value>
                 gen;
                 typedef typename gen::template apply<
-                    typename result_of::begin<Sequence>::type>::type
+                    typename result_of::begin<SeqRef>::type>::type
                 type;
 
-                static type call(Sequence seq)
+                static type call(SeqRef seq)
                 {
                     return gen::call(
                             fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)));
                 }
 #else
-                typedef typename detail::as_set_impl<Sequence> gen;
+                typedef typename detail::as_set_impl<SeqRef> gen;
 
                 typedef typename gen::apply::type type;
 
-                static type call(Sequence seq)
+                static type call(SeqRef seq)
                 {
                     return gen::call(seq);
                 }

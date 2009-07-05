@@ -8,8 +8,9 @@
 #ifndef BOOST_FUSION_ITERATOR_ITERATOR_FACADE_HPP
 #define BOOST_FUSION_ITERATOR_ITERATOR_FACADE_HPP
 
-#include <boost/fusion/support/iterator_base.hpp>
+#include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/iterator/detail/advance.hpp>
+#include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/assert.hpp>
 
@@ -28,21 +29,21 @@ namespace boost { namespace fusion
         typedef Category category;
 
         // default implementation
-        template <typename I1, typename I2>
+        template <typename It1Ref, typename It2Ref>
         struct equal_to // default implementation
           : is_same<
-                typename detail::remove_reference<I1>::type::derived_type
-              , typename detail::remove_reference<I2>::type::derived_type
+                typename detail::remove_reference<It1Ref>::type::derived_type
+              , typename detail::remove_reference<It2Ref>::type::derived_type
             >
         {};
 
         // default implementation
-        template <typename Iterator, typename N>
+        template <typename ItRef, typename N>
         struct advance
           : mpl::if_c<
                 (N::value > 0)
-              , advance_detail::forward<Iterator, N::value>
-              , advance_detail::backward<Iterator, N::value>
+              , advance_detail::forward<ItRef, N::value>
+              , advance_detail::backward<ItRef, N::value>
             >::type
         {
      //             BOOST_FUSION_MPL_ASSERT_NOT(

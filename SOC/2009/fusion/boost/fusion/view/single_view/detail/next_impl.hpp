@@ -26,17 +26,19 @@ namespace boost { namespace fusion
         template <>
         struct next_impl<single_view_iterator_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
             {
                 typedef
                     single_view_iterator_end<
-                        typename detail::remove_reference<Iterator>::type::view_type
+                        typename detail::remove_reference<
+                            ItRef
+                        >::type::view_type
                     >
                 type;
 
                 static type
-                call(Iterator)
+                call(ItRef)
                 {
                     return type();
                 }

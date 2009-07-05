@@ -23,28 +23,27 @@ namespace boost { namespace fusion
         template <>
         struct prior_impl<iterator_facade_tag>
         {
-            template <typename Iterator>
+            template <typename ItRef>
             struct apply
-              : detail::remove_reference<Iterator>::type::template prior<Iterator>
+              : detail::remove_reference<ItRef>::type::template prior<ItRef>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename Iterator>
+        template <typename It>
         struct prior
-          : extension::prior_impl<
-                typename traits::tag_of<Iterator>::type
-            >::template apply<typename detail::add_lref<Iterator>::type>
+          : extension::prior_impl<typename traits::tag_of<It>::type>::
+                template apply<typename detail::add_lref<It>::type>
         {};
     }
 
-    template <typename Iterator>
-    typename result_of::prior<Iterator const&>::type const
-    prior(Iterator const& i)
+    template <typename It>
+    typename result_of::prior<It const&>::type const
+    prior(It const& it)
     {
-        return result_of::prior<Iterator const&>::call(i);
+        return result_of::prior<It const&>::call(it);
     }
 }}
 

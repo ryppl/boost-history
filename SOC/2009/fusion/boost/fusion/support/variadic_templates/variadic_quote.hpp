@@ -22,18 +22,22 @@ namespace boost{namespace fusion
     template<template<typename...>class Type>struct variadic_quote
     {
     private:
-        template<typename ConcreteType,typename/* HasType*/>struct apply_impl
+        template<typename ConcreteType,typename/* HasType*/>
+        struct apply_impl
         {
             typedef ConcreteType type;
         };
-        template<typename ConcreteType>struct apply_impl<ConcreteType,mpl::true_>:
+
+        template<typename ConcreteType>
+        struct apply_impl<ConcreteType,mpl::true_>:
             ConcreteType
         {
         };
 
     public:
-        template<typename... Argument>struct apply :
-            apply_impl<Type<Argument...>,detail::has_type<Type<Argument...> > >
+        template<typename... Argument>
+        struct apply
+          : apply_impl<Type<Argument...>,detail::has_type<Type<Argument...> > >
         {
         };
     };

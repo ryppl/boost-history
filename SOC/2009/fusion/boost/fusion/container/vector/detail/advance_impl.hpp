@@ -22,21 +22,24 @@ namespace boost { namespace fusion
         template <>
         struct advance_impl<vector_iterator_tag>
         {
-            template <typename Iterator, typename N>
+            template <typename ItRef, typename N>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<Iterator>::type::index
-                index;
-                typedef typename
-                    detail::remove_reference<Iterator>::type::vector
-                vector;
-                typedef vector_iterator<vector, index::value+N::value> type;
+                    detail::remove_reference<ItRef>::type
+                it;
+
+                typedef
+                    vector_iterator<
+                        typename it::vector
+                      , it::index::value+N::value
+                    >
+                type;
 
                 static type
-                call(Iterator i)
+                call(ItRef it)
                 {
-                    return type(*i.vec,0);
+                    return type(*it.vec,0);
                 }
             };
         };

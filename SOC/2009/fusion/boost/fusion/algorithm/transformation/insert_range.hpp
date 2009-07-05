@@ -59,13 +59,16 @@ namespace boost { namespace fusion
         return result(
                 left_insert_type(
                     left_type(
-                        fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
-                        pos),
-                    BOOST_FUSION_FORWARD(Range,range)),
+                        fusion::begin(seq),
+                        pos
+                    ),
+                    BOOST_FUSION_FORWARD(Range,range)
+                ),
                 right_type(
                     pos,
-                    fusion::end(seq))
-                );
+                    fusion::end(seq)
+                )
+               );
     }
 }}
 

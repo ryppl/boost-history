@@ -22,19 +22,19 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct back
             : result_of::deref<typename result_of::prior<
-                typename result_of::end<Sequence>::type>::type
+                typename result_of::end<Seq>::type>::type
                 >
         {};
     }
 
-    template <typename Sequence>
-    inline typename result_of::back<BOOST_FUSION_R_ELSE_CLREF(Sequence)>::type
-    back(BOOST_FUSION_R_ELSE_CLREF(Sequence) seq)
+    template <typename Seq>
+    inline typename result_of::back<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    back(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return *fusion::prior(fusion::end(BOOST_FUSION_FORWARD(Sequence,seq)));
+        return *fusion::prior(fusion::end(seq));
     }
 }}
 

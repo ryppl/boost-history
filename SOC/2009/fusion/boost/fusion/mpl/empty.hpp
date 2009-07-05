@@ -19,9 +19,9 @@ namespace boost { namespace mpl
     template <>
     struct empty_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct apply
-          : fusion::result_of::empty<Sequence>
+          : fusion::result_of::empty<Seq>
         {};
     };
 }}

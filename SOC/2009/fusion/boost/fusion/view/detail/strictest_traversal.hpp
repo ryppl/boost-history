@@ -54,10 +54,10 @@ namespace boost { namespace fusion
             };
         };
 
-        template<typename Sequence>
+        template<typename Seq>
         struct strictest_traversal
           : result_of::fold<
-                Sequence
+                Seq
               , fusion::random_access_traversal_tag
               , strictest_traversal_impl
             >

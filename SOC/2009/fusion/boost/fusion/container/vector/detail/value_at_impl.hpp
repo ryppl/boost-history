@@ -22,12 +22,13 @@ namespace boost { namespace fusion
         template <>
         struct value_at_impl<vector_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
             {
                 typedef typename
                     mpl::at<
-                        typename detail::remove_reference<Sequence>::type::types, N
+                        typename detail::remove_reference<SeqRef>::type::types
+                      , N
                     >::type
                 type;
             };

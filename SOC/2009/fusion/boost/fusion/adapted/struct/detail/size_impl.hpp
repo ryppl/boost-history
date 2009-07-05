@@ -30,7 +30,9 @@ namespace boost { namespace fusion
         struct size_impl<struct_tag>
         {
             template <typename Sequence>
-            struct apply : extension::struct_size<Sequence> {};
+            struct apply
+              : extension::struct_size<Sequence>
+            {};
         };
     }
 }}

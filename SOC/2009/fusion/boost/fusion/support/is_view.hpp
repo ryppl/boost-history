@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_SUPPORT_IS_VIEW_HPP
 #define BOOST_FUSION_SUPPORT_IS_VIEW_HPP
 
-#include <boost/fusion/support/detail/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
 

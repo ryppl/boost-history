@@ -21,16 +21,16 @@ namespace boost { namespace mpl
     template <>
     struct pop_back_impl<fusion::fusion_sequence_tag>
     {
-        template <typename Sequence>
+        template <typename Seq>
         struct apply
         {
             typedef typename
-                fusion::result_of::pop_back<Sequence>::type
+                fusion::result_of::pop_back<Seq>::type
             result;
 
             typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Sequence>::type, result
+                    typename fusion::traits::tag_of<Seq>::type, result
                 >::type
             type;
         };

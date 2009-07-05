@@ -20,12 +20,15 @@ namespace boost { namespace fusion
         template <>
         struct begin_impl<map_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
                 typedef typename
-                    detail::result_of_forward_as<Sequence
-                      , typename detail::remove_reference<Sequence>::type::storage_type
+                    detail::result_of_forward_as<
+                        SeqRef
+                      , typename detail::remove_reference<
+                            SeqRef
+                        >::type::storage_type
                     >::type
                 storage_type;
 
@@ -34,10 +37,9 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(Sequence s)
+                call(SeqRef seq)
                 {
-                    return fusion::begin(
-                            static_cast<storage_type>(s.get_data()));
+                    return fusion::begin(seq.get_data());
                 }
             };
         };

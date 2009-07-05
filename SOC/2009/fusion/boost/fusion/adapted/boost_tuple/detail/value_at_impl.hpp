@@ -23,7 +23,9 @@ namespace boost { namespace fusion
         struct value_at_impl<boost_tuple_tag>
         {
             template <typename Sequence, typename N>
-            struct apply : tuples::element<N::value, Sequence> {};
+            struct apply
+              : tuples::element<N::value, Sequence>
+            {};
         };
     }
 }}

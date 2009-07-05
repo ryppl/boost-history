@@ -18,18 +18,20 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<vector_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
-                typedef typename
-                    detail::remove_reference<Sequence>::type::size
-                size;
-                typedef vector_iterator<Sequence, size::value> type;
+                typedef
+                    vector_iterator<
+                        SeqRef
+                      , detail::remove_reference<SeqRef>::type::size::value
+                    >
+                type;
 
                 static type
-                call(Sequence v)
+                call(SeqRef seq)
                 {
-                    return type(BOOST_FUSION_FORWARD(Sequence,v),0);
+                    return type(seq,0);
                 }
             };
         };
