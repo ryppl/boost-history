@@ -6,8 +6,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
-#define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
+#ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ANY_HPP
+#define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ANY_HPP
 
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>

@@ -8,6 +8,8 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 
+#include <boost/fusion/support/result_of.hpp>
+
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
@@ -43,19 +45,23 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
+    //TODO !!!
     template <typename F, typename NewValue>
     struct replacer_if
     {
-        replacer_if(replacer_if&& replacer_if)
-          : f(replacer_if.f)
-          , new_value(replacer_if.new_value)
+        replacer_if(BOOST_FUSION_R_ELSE_CLREF(replacer_if) replacer)
+          : f(BOOST_FUSION_FORWARD(
+                  BOOST_FUSION_R_ELSE_CLREF(replacer_if),replacer).f)
+          , new_value(BOOST_FUSION_FORWARD(
+                  BOOST_FUSION_R_ELSE_CLREF(replacer_if),replacer).new_value)
         {}
 
-        template<typename F_, typename NewValue_>
-        replacer_if(BOOST_FUSION_R_ELSE_LREF(F_) f,
-                BOOST_FUSION_R_ELSE_LREF(NewValue_) new_value)
-          : f(f)
-          , new_value(new_value)
+        template<typename OtherF, typename OtherNewValue>
+        replacer_if(
+                BOOST_FUSION_R_ELSE_LREF(OtherF) other_f,
+                BOOST_FUSION_R_ELSE_LREF(OtherNewValue) other_new_value)
+          : f(BOOST_FUSION_FORWARD(OtherF,other_f))
+          , new_value(BOOST_FUSION_FORWARD(OtherNewValue,other_new_value))
         {}
 
         template<typename Params>
@@ -76,7 +82,6 @@ namespace boost { namespace fusion { namespace detail
             type;
         };
 
-        //TODO cschmidt: template result in f?
         template <typename U>
         typename result<replacer_if(U)>::type
         operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const

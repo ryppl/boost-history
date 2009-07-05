@@ -25,11 +25,7 @@ namespace boost { namespace fusion {
     {
         struct swap
         {
-            template<typename Elem>
-            struct result
-            {
-                typedef void type;
-            };
+            typedef void result_type;
 
             template<typename Elem>
             void operator()(Elem const& e) const

@@ -14,6 +14,7 @@
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost { namespace fusion
 {

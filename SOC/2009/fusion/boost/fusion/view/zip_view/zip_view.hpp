@@ -136,7 +136,7 @@ namespace boost { namespace fusion {
         template<typename OtherSeqs>\
         zip_view(zip_view<OtherSeqs> COMBINATION other_view)\
           : seqs(sequence_assign(BOOST_FUSION_FORWARD(\
-                zip_view<OtherSeqs> COMBINATION,other_view).seq))\
+                zip_view<OtherSeqs> COMBINATION,other_view).seqs))\
         {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(ZIP_VIEW_CTOR)

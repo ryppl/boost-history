@@ -17,6 +17,7 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/distance.hpp>
+#include <boost/fusion/support/result_of.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/apply.hpp>
@@ -34,18 +35,13 @@ namespace boost { namespace fusion
     {
         template <typename It, typename State, typename F>
         struct fold_apply
-        {
-            typedef typename identity<F>::type identity_F;
-
-            typedef typename
-                identity_F::template result<
-                    identity_F(
-                        typename result_of::deref<It>::type
-                      , State
-                    )
-                >::type
-            type;
-        };
+          : support::result_of<
+                F(
+                    typename result_of::deref<It>::type
+                  , State
+                )
+            >
+        {};
 
         template <typename First, typename Last, typename State, typename F>
         struct static_fold;

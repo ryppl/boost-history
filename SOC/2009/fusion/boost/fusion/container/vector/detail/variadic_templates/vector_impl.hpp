@@ -149,8 +149,7 @@ namespace boost { namespace fusion
         typedef mpl::int_<sizeof...(Elements)> size;
 
         vector()
-        {
-        }
+        {}
 
 #define VECTOR_CTOR(COMBINATION)\
         vector(vector COMBINATION vec)\
@@ -168,8 +167,7 @@ namespace boost { namespace fusion
                typename enable_if<
                    is_sequence_assign<SeqAssign> >::type* =NULL)
           : base(detail::assign_by_deref(),fusion::begin(seq.get()))
-        {
-        }
+        {}
 
         /*
         template<typename Seq>
@@ -177,8 +175,7 @@ namespace boost { namespace fusion
                                 BOOST_FUSION_R_ELSE_CLREF(Seq)>::type seq)
           : base(detail::assign_by_deref(),
                  fusion::begin(BOOST_FUSION_FORWARD(Seq,seq.seq)))
-        {
-        }
+        {}
         */
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -186,15 +183,13 @@ namespace boost { namespace fusion
                typename detail::call_param<OtherElements>::type... others)
           : base(assign_directly(),others...)
           , _element(head)
-        {
-        }
+        {}
 #else
         template<typename... OtherElements>
         vector(OtherElements&&... other_elements)
           : base(detail::assign_directly(),
                  std::forward<OtherElements>(other_elements)...)
-        {
-        }
+        {}
 #endif
 
         template<typename Seq>

@@ -24,6 +24,13 @@ namespace boost { namespace fusion
         struct replace_if
         {
             typedef
+                detail::replacer_if<
+                    typename detail::as_fusion_element<F>::type
+                  , typename detail::as_fusion_element<T>::type
+                >
+            replacer;
+
+            typedef
                 transform_view<
                 //TODO ?!
                     typename detail::result_of_forward_as<
@@ -32,10 +39,7 @@ namespace boost { namespace fusion
                             typename detail::remove_reference<Seq>::type
                         >::type
                     >::type
-                  , detail::replacer_if<
-                        typename detail::as_fusion_element<F>::type
-                      , typename detail::as_fusion_element<T>::type
-                    >
+                  , replacer
                 >
             type;
         };
@@ -56,22 +60,11 @@ namespace boost { namespace fusion
                 BOOST_FUSION_R_ELSE_LREF(Seq)
               , BOOST_FUSION_R_ELSE_LREF(F)
               , BOOST_FUSION_R_ELSE_LREF(NewValue)
-            >::type
-        type;
-
-        typedef
-            detail::replacer_if<
-                typename detail::as_fusion_element<
-                    BOOST_FUSION_R_ELSE_LREF(F)
-                >::type
-              , typename detail::as_fusion_element<
-                    BOOST_FUSION_R_ELSE_LREF(NewValue)
-                >::type
             >
-        replacer;
+        result;
 
-        return type(BOOST_FUSION_FORWARD(Seq,seq),
-                replacer(BOOST_FUSION_FORWARD(F,pred),
+        return typename result::type(BOOST_FUSION_FORWARD(Seq,seq),
+                typename result::replacer(BOOST_FUSION_FORWARD(F,pred),
                         BOOST_FUSION_FORWARD(NewValue,new_value)));
     }
 

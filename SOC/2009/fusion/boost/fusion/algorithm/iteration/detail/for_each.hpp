@@ -53,7 +53,7 @@ namespace boost { namespace fusion { namespace detail
         detail::for_each_linear<BOOST_FUSION_R_ELSE_LREF(Seq)>(
                 fusion::begin(seq)
               , f
-              , result_of::empty<Seq>::type());
+              , typename result_of::empty<Seq>::type());
     }
 
     template<int N>

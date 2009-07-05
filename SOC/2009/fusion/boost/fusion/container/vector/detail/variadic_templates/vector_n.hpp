@@ -11,38 +11,43 @@
 template <BOOST_PP_ENUM_PARAMS(N, typename T)>
 #endif
 struct BOOST_PP_CAT(vector, N)
-    : vector<BOOST_PP_ENUM_PARAMS(N, T)>
+  : vector<BOOST_PP_ENUM_PARAMS(N, T)>
 {
 private:
     typedef vector<BOOST_PP_ENUM_PARAMS(N, T)> base;
 
 public:
     BOOST_PP_CAT(vector, N)()
-    {
-    }
+    {}
+
+#define VECTOR_CTOR(COMBINATION)\
+    BOOST_PP_CAT(vector, N)(BOOST_PP_CAT(vector, N) COMBINATION vec)\
+      : base(sequence_assign(\
+            BOOST_FUSION_FORWARD(BOOST_PP_CAT(vector, N) COMBINATION,vec)))\
+    {}
+
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR)
+
+#undef VECTOR_CTOR
 
     template<typename Arg>
     BOOST_PP_CAT(vector, N)(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
-        : base(BOOST_FUSION_FORWARD(Arg,arg))
-    {
-    }
+      : base(BOOST_FUSION_FORWARD(Arg,arg))
+    {}
 
 #if N > 1
 #   ifdef BOOST_NO_RVALUE_REFERENCES
-    BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(
-            N, typename detail::call_param<T, >::type _))
-        : base(BOOST_PP_ENUM_PARAMS(N, _))
-    {
-    }
+    BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, const T, & a))
+      : base(BOOST_PP_ENUM_PARAMS(N, a))
+    {}
 #   else
 #       define FORWARD_ARGUMENT(Z, INDEX, _) std::forward<\
             BOOST_PP_CAT(OtherT,INDEX)>(BOOST_PP_CAT(other,INDEX))
 
     template <BOOST_PP_ENUM_PARAMS(N, typename OtherT)>
     BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, OtherT,&& other))
-        : base(BOOST_PP_ENUM(N, FORWARD_ARGUMENT, _))
-    {
-    }
+      : base(BOOST_PP_ENUM(N, FORWARD_ARGUMENT, _))
+    {}
 
 #       undef FORWARD_ARGUMENT
 #   endif

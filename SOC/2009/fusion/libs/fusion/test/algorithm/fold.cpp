@@ -37,8 +37,9 @@ struct add_ints_only
     template <typename T, typename State>
     struct result<add_ints_only(T,State)>
     {
-        //TODO !!!
         typedef typename boost::fusion::detail::identity<State>::type type;
+        //TODO cschmidt: remove_reference does not support rvalue refs yet,
+        //therefore we use the internal function of fusion!
         //typedef typename boost::remove_const<
         //    typename boost::remove_reference<State>::type>::type type;
     };
@@ -93,14 +94,7 @@ struct count_ints
 
 struct appender
 {
-    //TODO
-    //typedef std::string result_type;
-
-    template<typename>
-    struct result
-    {
-        typedef std::string type;
-    };
+    typedef std::string result_type;
 
     std::string operator()(char c, std::string const& str) const
     {
@@ -183,8 +177,7 @@ main()
 
     {
         vector<int, int> vec(1,2);
-        //TODO!!!
-        //BOOST_TEST(fusion::fold(vec, 0, add) == 3);
+        BOOST_TEST(fusion::fold(vec, 0, add) == 3);
     }
 
     {
@@ -227,8 +220,7 @@ main()
 
     {
         vector<int, int> vec(1,2);
-        //TODO!!!
-        //BOOST_TEST(fusion::accumulate(vec, 0, add) == 3);
+        BOOST_TEST(fusion::accumulate(vec, 0, add) == 3);
     }
 
     return boost::report_errors();

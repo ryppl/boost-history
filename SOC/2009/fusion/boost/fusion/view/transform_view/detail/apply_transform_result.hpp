@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_APPLY_TRANSFORM_RESULT_HPP
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_APPLY_TRANSFORM_RESULT_HPP
 
-#include <boost/utility/result_of.hpp>
+#include <boost/fusion/support/result_of.hpp>
 
 namespace boost { namespace fusion
 {
@@ -20,19 +20,14 @@ namespace boost { namespace fusion
         template <typename F>
         struct apply_transform_result
         {
-            //TODO cschmidt: !!!
             template <typename T0, typename T1 = void_>
             struct apply
-              : //boost::result_of<F(T0, T1)>
-                detail::remove_reference<F>::type::template result<
-                    typename detail::identity<F>::type(T0, T1)>
+              : support::result_of<F(T0, T1)>
             {};
 
             template <typename T0>
             struct apply<T0, void_>
-              : //boost::result_of<F(T0)>
-                detail::remove_reference<F>::type::template result<
-                    typename detail::identity<F>::type(T0)>
+              : support::result_of<F(T0)>
             {};
         };
     }
