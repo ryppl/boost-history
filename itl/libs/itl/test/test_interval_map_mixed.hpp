@@ -249,8 +249,6 @@ void interval_map_mixed_add_4_bicremental_types()
 template <class T, class U> 
 void interval_map_mixed_add2_4_bicremental_types()
 {         
-	typedef bicremental_type_2 T;
-    typedef int U;
     typedef interval_map<T,U>        IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
     U u1 = make<U>(1);
@@ -293,8 +291,6 @@ void interval_map_mixed_add2_4_bicremental_types()
 template <class T, class U> 
 void interval_map_mixed_subtract_4_bicremental_types()
 {         
-	typedef bicremental_type_3 T;
-    typedef int U;
     typedef interval_map<T,U>        IntervalMapT;
     typedef split_interval_map<T,U> SplitIntervalMapT;
     U u1 = make<U>(1);
@@ -1264,4 +1260,6 @@ void interval_map_mixed_infix_et_overload_4_bicremental_types()
 
 
 
-#endif __test_itl_interval_map_mixed_hpp_JOFA_081005__
+#endif // __test_itl_interval_map_mixed_hpp_JOFA_081005__
+
+
