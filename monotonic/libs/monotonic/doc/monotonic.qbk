@@ -266,46 +266,61 @@ defined container which is populated, used and discarded regularly.
 
 [endsect]
 
-[section Monotonic Stack]
+[section Stack]
 
 While monotonic allocators use monotonic storage, we can also use this storage 
 directly and wherever we want efficient resource management.
 
+The general usage pattern is:
+
 ``
-int main()
+monotonic::stack<Size> stack;
 {
-    // define local storage of 4k on the stack.
-    // allocations will use the heap after the inline stack-based storage
-    // has been exhausted.
-    typedef monotonic::stack<4*1024> Stack;
-    Stack stack;
-    {
-        int &num = stack.push<int>();
-        std::string &str = stack.push<std::string>("foo");        // objects are created in-place on the stack
-        boost::array<char, 1000> &bytes = stack.push_array<char, 1000>();
-        
-        // use bytes
-        std::generate_n(bytes.begin(), 1000, rand);
-        
-        // pop them off the stack
-        stack.pop();
-        
-        float &num2 = stack.push<float>();
-        stack.pop();
-        
-        assert(stack.size() == 2);
-        
-        BOOST_FOREACH(Stack::value_type const &elem, stack)
-        {
-            cout << elem.get_type().name() << endl;
-        }
-        
-        DoSomethingElseWith(stack);
-        
-        // can copy stacks, but cannot compare them
-        Stack copy = stack;
-    }
-    return 0;
+    T0 &t0 = stack.push<T0>(..args..);
+    T1 &t1 = stack.push<T1>(..args..);
+    ....
+    Tn &tn = stack.push<Tn>(..args..);
+    
+    boost::array<T, Size> &array = stack.push_array<T, Size>();
+    
+    stack.pop();
+    ...
+}
+``
+
+The default inline size of a `stack<>` object is defined as `boost::monotonic::DefaltSizes::InlineSize`. 
+
+We can use a `stack<>` as a platform-independant `alloca(size)` by pushing an array of bytes, as shown above.
+
+[note It is best practise to open a new statement block before using a `stack<>` object. This ensures that the objects
+on the `stack<>` still have storage when when they are automatically deleted]
+
+We can also iterate over the stack, get the stack size, and clear the stack:
+
+``
+typedef monotonic::stack<> Stack;
+Stack stack;
+{
+    ... add objects to the stack ...
+    
+	size_t size = stack.size();
+	Stack::const_iterator elem = stack.begin(), end = stack.end();
+	for (; elem != end; ++elem)
+	{
+	    cout << elem->get_type().name() << endl;
+	    if (elem->is_type<int>())
+	    {
+	        int num = elem->get<int>();
+	        cout << num << endl;
+	    }
+	}
+	
+	// stacks are first-class objects and can be copied, passed
+	// as arguments and returned as results
+	Stack copy = stack;
+	
+	// unecessary in this case; will be cleared when stack leaves scope
+	stack.clear();
 }
 ``
 
@@ -318,7 +333,7 @@ This makes it ideal for using things like local buffers and containers that gene
 enough to fit onto the stack, but with the fallback safety of transparently using the heap to 
 service later requests for the cases where that inline buffer is not large enough.
 
-When the stack goes out of scope, all objects are automatically destroyed.
+When a stack goes out of scope, all objects in that stack are automatically destroyed.
 
 [endsect]
 
