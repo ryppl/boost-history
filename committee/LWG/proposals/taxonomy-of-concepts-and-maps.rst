@@ -6,9 +6,12 @@ A Taxonomy of Concepts and Concept Maps
 :Number:  xxxx=xx-xxxx
 :Date: 2009-07-01
 
-This paper introduces a classification of concepts and concept maps into three
-categories that will allow us to discuss the implications of various
-proposed design changes.
+This paper introduces a classification of concepts and concept maps
+into categories that we help will support the discussion of various
+proposed design changes.  We use this classification to analyze the
+implications of making certain concepts ``auto``.  We hope that the
+classification can be a useful basis for discussion even if no
+consensus forms around our analysis.
 
 Three Kinds of Concepts
 =======================
@@ -129,12 +132,38 @@ usual mathematical syntaxes are “0” and “1” respectively, and a
 corresponding C++ syntax should be established.  User-defined literals
 and ``constexpr`` may make a suitable convention feasible.
 
-Although foundational concepts represent an accepted convention,
-syntactic properties are not an airtight criterion by which to
-correctly identify them.  This fact can be manifested in one of two
-ways.
+There are a few good reasons to make foundational concepts ``auto``:
 
-1. In c++std-lib-23956, Chris Jefferson writes:
+1. Because they are simple, foundational concepts can be very easy to
+   model correctly, which tends to factor against the diagnostic value 
+   added by an explicitly-written ``concept_map``.
+
+2. They are often so simple that the syntactic weight of an
+   explicitly-written ``concept_map`` is a significant fraction of the
+   weight of the model declaration itself:
+
+      struct case_insensitive // 67 non-whitespace characters
+      {
+          bool operator()(string const&, string const&);
+      };
+
+      // 46 non-whitespace characters.
+      concept_map BinaryPredicate<case_insensitive> {}
+
+   [This relative weight is mitigated somewhat by the need to actually
+   *implement* the model, and, if accepted, by the intentional mapping
+   syntax proposed in N2916]
+
+3. Because foundational concepts have a widely agreed-upon syntax and
+   semantics, there's a very good chance that there are already models
+   “out there in the wild,” likely designed with the abstract concept,
+   in mind, but without sepecific knowledge of the C++ ``concept``.
+
+On the other hand, syntactic properties are not an airtight criterion
+by which to correctly identify foundational concepts.  This fact can
+be manifested in one of two ways.
+
+1. **Structural Aliasing**.  In c++std-lib-23956, Chris Jefferson writes:
 
    .. epigraph::
 
@@ -147,12 +176,13 @@ ways.
      at the moment they do not, as there is no way to mark my type as not
      satisfying the auto concept ``LessThanComparable``.
 
-   The expectation to be protected from such mistakes is consistent with
-   the C++ tradition of protecting against accident rather than
-   deliberate circumvention. [#cpppl3e]_ 
+   Chris' users have a reasonable expectation to be protected from
+   such mistakes that is consistent with the C++ tradition of
+   protecting against accident rather than deliberate
+   circumvention. [#cpppl3e]_
 
-2. Perhaps because they are simple, it is common that foundational
-   concepts refine other concepts having the same or similar syntactic
+2. **Semantic Refinement**.  Perhaps because they are simple, foundational
+   concepts often refine other concepts having the same or similar syntactic
    structure.  For example, if we know the operation used with
    ``std::accumulate`` is ``Associative``, we can distribute the
    computation across N cores by breaking the input into N subranges,
@@ -185,34 +215,43 @@ ways.
 
    If ``Associative`` were declared ``auto``, even non-``Associative``
    operations would be dispatched to the parallel implementation of
-   ``accumulate`` based on their callability with two arguments, yielding
-   an incorrect result at runtime.  [#undefined]_
+   ``accumulate`` based on their callability with two arguments,
+   yielding an incorrect result at runtime.  [#undefined]_ Note:
+   Semantic refinements are especially common among the algebraic
+   structures (see SemiRing/Ring, Group/AbelianGroup,
+   BinaryOperator/SemiGroup, etc.)
 
-*Ideally*, foundational concepts should be declared ``auto`` because
-the normal interpretation of the combined syntactic elements is so
-widespread that convenience outweighs the sort of danger cited by
-Chris Jefferson.  [#delmap]_ However, before making a foundational
-concept ``auto``, one must also take great care to be sure it is not,
-and *will never be*, a refinement of another concept with identical or
-very similar syntax. Changing a concept from ``auto`` to
-non-``auto`` will break any code that depended on the earlier
-automatic conformance.
+We believe that for foundational concepts, the normal interpretation
+of combined syntactic elements is so widespread that the convenience
+of automatic conformance usually outweighs the danger of structural
+aliasing.  [#delmap]_ 
 
-Our experience shows that widespread agreement on syntax and semantics
-for new concepts takes a long time to develop, so we don't expect new
-foundational concepts to proliferate quickly.  With the notable
-exception of algebraic structures such as ``SemiRing``, [#alg]_ most
-foundational concepts known today are supplied by the standard
+However, before making any concept ``auto``, one must also take great
+care to be sure it is not, and *will never be*, a refinement of
+another concept with identical or very similar syntax, because
+changing a concept from ``auto`` to non-``auto`` will break any code
+that depended on the earlier automatic conformance.
+[#explicit-refinement]_ This sort of concept hierarchy evolution is
+more common than one might think.  In fact, Chris Jefferson's problem
+was also a case of semantic refinement—after all, a total order *is-a*
+partial order—the only difference being that Chris hadn't (yet) found
+a use for overloading on this semantic difference.
+
+Our experience shows that it takes a long time to develop widespread
+agreement on syntax and semantics for new concepts, so we don't expect
+new foundational concepts to proliferate quickly.  Also, with the
+notable exception of algebraic structures such as ``SemiRing``, most
+foundational concepts known today are already supplied by the standard
 library.
-
 
 Nontrivial Concepts
 -------------------
 
-Nontrivial concepts have generally higher complexity and cannot be
-easily satisfied without significant coding effort.  Examples in this
-category include `graph concepts`_, and the standard iterator and
-container concepts.  
+Any concepts that are neither syntactic or foundational are called
+*nontrivial*.  Nontrivial concepts have generally higher complexity
+and usually cannot be satisfied without significant coding effort.
+Examples in this category include `graph concepts`_, and the standard
+iterator and container concepts.
 
 .. _graph concepts: http://www.boost.org/doc/libs/1_39_0/libs/graph/doc/graph_concepts.html
 
@@ -224,9 +263,21 @@ b. The standard library already supplies most syntactic concepts
 c. The standard library already supplies many foundational concepts
 d. New foundational concepts don't come along every day.
 
-In our opinion, the arguments for making nontrivial concepts ``auto``
-are not nearly so compelling as for syntactic and foundational
-concepts.  We explain why below.
+The arguments for declaring a concept ``auto`` are not nearly as
+compelling in the case of nontrivial concepts as they are for
+foundational ones.  Nontrivial concepts are not easy to model
+correctly, so the diagnostics produced by a ``concept_map`` can be
+highly valuable to the concept author.  Declaring a new model is a
+significant job that tends to make the effort required to write a
+``concept_map`` “disappear in the noise.” Finally, because they are
+not simple, there is little chance of finding pre-existing models of
+newly-defined nontrivial concepts “in the wild.”
+
+The risks of declaring a nontrivial concept ``auto`` are also less
+compelling than for a foundational concept, because structural
+aliasing of a complex syntactic form is so unusual.  However,
+syntactic complexity doesn't seem to reduce the likelihood of eventual
+semantic refinement.
 
 Three Kinds of Concept Maps
 ===========================
@@ -238,15 +289,16 @@ Intentional Mapping
 -------------------
 
 Intentional concept maps occur when a programmer designs a class with
-the goal of modeling a particular concept.  For example, I might
-design a type to model ``EqualityComparable`` or
+the goal of modeling a particular concept.  Note that this distinction
+is unrelated to the choice to make a concept ``auto``.  For example, I
+might design a type to model ``EqualityComparable`` or
 ``BidirectionalIterator``.  Because ``EqualityComparable`` is an
 ``auto`` concept, an intentional map may be automatically generated
 when the type is passed where ``EqualityComparable`` is required.  In
 the case of the non-``auto`` concept ``BidirectionalIterator``, an
 intentional map must be written by the author of the model.  We call
 both maps “intentional” because they are intended by the author of the
-model.  
+model.
 
 Intentional ``concept_maps``\ s are traditionally empty, since a
 programmer modeling a concept in C++03 must write the required
@@ -317,7 +369,7 @@ of expressive advantages over the “traditional” approach:
     template <LessThanComparable T, class A> 
     bool operator<=(const list<T,A>& x, const list<T,A>& y); 
 
-  which can be reduced to::
+  which can be simplified, using an exported concept map, to::
 
     template <LessThanComparable T, class A>
     export concept_map LessThanComparable<list<T,A> >
@@ -381,6 +433,16 @@ and adaptive.
 Summary
 =======
 
+Unfortunately, with the exception of syntactic concepts, deciding
+whether to make a concept ``auto`` is unfortunately not cut-and-dried.
+Your users may demand protection from structural aliasing and may be
+willing to pay the syntactic cost of writing empty concept maps, or
+they may be intolerant of empty concept maps and willing to live with
+some accidental conformance.  You may be confident that you can
+predict the future of your concept hierarchy and be willing to break
+your users' code in case you are wrong, or you may need to ensure that
+there is room to transparently evolve your refinement hierarchy.
+
 
 The Full Grid
 =============
@@ -427,6 +489,18 @@ combine:
 
 .. _N1798: http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1798.html
 
-.. [#alg] Semantic-only refinements are especially common among the
-   algebraic structures, for example SemiRing/Ring,
-   Group/AbelianGroup, BinaryOperator/SemiGroup, etc.
+.. [#explicit-refinement] Although the “explicit refinement” proposal
+   attempts to forbid the declaration of non-``auto`` concepts, it
+   requires roughly the same risk calculus with respect to semantic
+   refinement.  One can still get all the effects of an explicit
+   concept; to future-proof a concept ``MyConcept`` against hierarchy
+   evolution, one would have to write::
+
+     concept Explicit <typename T> {};
+
+     concept MyConcept : explicit Explicit
+     {
+         …
+     };     
+
+   
