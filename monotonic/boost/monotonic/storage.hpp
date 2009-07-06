@@ -186,14 +186,6 @@ namespace boost
 			}
 
 			template <class Ty>
-			Ty &create()
-			{
-				Ty *ptr = uninitialised_create<Ty>();
-				construct(ptr, boost::is_pod<Ty>());
-				return *ptr;
-			}
-
-			template <class Ty>
 			void construct(Ty *ptr, const boost::true_type& /*is_pod*/)
 			{
 				// do nothing
@@ -206,10 +198,26 @@ namespace boost
 			}
 
 			template <class Ty>
-			Ty &create(Ty const &X)
+			Ty &create()
 			{
 				Ty *ptr = uninitialised_create<Ty>();
-				new (ptr) Ty(X);
+				construct(ptr, boost::is_pod<Ty>());
+				return *ptr;
+			}
+
+			template <class Ty, class A0>
+			Ty &create(A0 a0)
+			{
+				Ty *ptr = uninitialised_create<Ty>();
+				new (ptr) Ty(a0);
+				return *ptr;
+			}
+
+			template <class Ty, class A0, class A1>
+			Ty &create(A0 a0, A1 a1)
+			{
+				Ty *ptr = uninitialised_create<Ty>();
+				new (ptr) Ty(a0, a1);
 				return *ptr;
 			}
 
@@ -234,6 +242,15 @@ namespace boost
 			char *allocate_bytes(size_t num_bytes, size_t alignment = 1)
 			{
 				return reinterpret_cast<char *>(allocate(num_bytes, alignment));
+			}
+
+			size_t get_cursor() const
+			{
+				return fixed.get_cursor();
+			}
+			void set_cursor(size_t n)
+			{
+				fixed.set_cursor(n);
 			}
 
 		private:

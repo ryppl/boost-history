@@ -20,6 +20,7 @@
 #include <boost/monotonic/allocator.hpp>
 #include <boost/interprocess/containers/list.hpp>
 #include <boost/monotonic/reclaimable_storage.hpp>
+#include <boost/monotonic/stack.hpp>
 #include <boost/iterator.hpp>
 
 #define BOOST_TEST_MODULE basic_test test
@@ -61,26 +62,55 @@ struct str_tag;
 struct Tracked
 {
 	static int count;
-	Tracked(Tracked const &) 
-	{ 
-		++count; 
-	}
 	Tracked() 
 	{ 
 		++count; 
+		std::cout << "T::T(): " << count << endl;
+	}
+	Tracked(Tracked const &) 
+	{ 
+		++count; 
+		std::cout << "T::T(T const &): " << count << endl;
 	}
 	Tracked &operator=(Tracked const &)
 	{
 		++count; 
+		std::cout << "T &operator=(T const &): " << count << endl;
 		return *this;
 	}
 	~Tracked()
 	{
 		--count;
+		std::cout << "T::~T(): " << count << endl;
 	}
 };
 
 int Tracked::count = 0;
+
+BOOST_AUTO_TEST_CASE(test_stack)
+{
+	monotonic::stack<> stack;
+	{
+		size_t top = stack.top();
+		int &n = stack.push<int>();
+		stack.pop();
+		size_t top2 = stack.top();
+		BOOST_ASSERT(top2 == top);
+
+		int &n2 = stack.push<int>();
+		int &n3 = stack.push<int>();
+		Tracked &tracked = stack.push<Tracked>();
+		boost::array<int, 42> &a = stack.push<boost::array<int, 42> >();
+		size_t peak = stack.top();
+		stack.pop();
+		stack.pop();
+		stack.pop();
+		stack.pop();
+		top2 = stack.top();
+		BOOST_ASSERT(top2 == top);
+		BOOST_ASSERT(Tracked::count == 0);
+	}
+}
 
 template <class Number>
 Number work(size_t iterations, std::vector<Number> const &data)
