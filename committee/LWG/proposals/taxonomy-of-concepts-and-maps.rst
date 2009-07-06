@@ -140,7 +140,7 @@ There are a few good reasons to make foundational concepts ``auto``:
 
 2. They are often so simple that the syntactic weight of an
    explicitly-written ``concept_map`` is a significant fraction of the
-   weight of the model declaration itself:
+   weight of the model declaration itself::
 
       struct case_insensitive // 67 non-whitespace characters
       {
@@ -157,7 +157,7 @@ There are a few good reasons to make foundational concepts ``auto``:
 3. Because foundational concepts have a widely agreed-upon syntax and
    semantics, there's a very good chance that there are already models
    “out there in the wild,” likely designed with the abstract concept,
-   in mind, but without sepecific knowledge of the C++ ``concept``.
+   in mind, but without specific knowledge of the C++ ``concept``.
 
 On the other hand, syntactic properties are not an airtight criterion
 by which to correctly identify foundational concepts.  This fact can
@@ -267,7 +267,7 @@ The arguments for declaring a concept ``auto`` are not nearly as
 compelling in the case of nontrivial concepts as they are for
 foundational ones.  Nontrivial concepts are not easy to model
 correctly, so the diagnostics produced by a ``concept_map`` can be
-highly valuable to the concept author.  Declaring a new model is a
+highly valuable to the author of the model.  Declaring a new model is a
 significant job that tends to make the effort required to write a
 ``concept_map`` “disappear in the noise.” Finally, because they are
 not simple, there is little chance of finding pre-existing models of
@@ -434,7 +434,7 @@ Summary
 =======
 
 Unfortunately, with the exception of syntactic concepts, deciding
-whether to make a concept ``auto`` is unfortunately not cut-and-dried.
+whether to make a concept ``auto`` is not cut-and-dried.
 Your users may demand protection from structural aliasing and may be
 willing to pay the syntactic cost of writing empty concept maps, or
 they may be intolerant of empty concept maps and willing to live with
