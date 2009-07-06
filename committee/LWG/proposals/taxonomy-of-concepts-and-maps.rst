@@ -332,7 +332,7 @@ In C++0x, associated functions can be written in the scope of the
     template <Swappable T, Swappable U>
     concept_map Swappable<pair<T,U> >
     {
-        swap(pair<T,U>& lhs, pair<T,U>& rhs) 
+        void swap(pair<T,U>& lhs, pair<T,U>& rhs) 
         { 
             swap(lhs.first,rhs.first); 
             swap(lhs.second,rhs.second);
@@ -361,20 +361,20 @@ of expressive advantages over the “traditional” approach:
   ``LessThanComparable`` looks like::
 
     template <LessThanComparable T, class A> 
-    bool operator< (const list<T,A>& x, const list<T,A>& y); 
+      bool operator< (const list<T,A>& x, const list<T,A>& y); 
     template <LessThanComparable T, class A> 
-    bool operator> (const list<T,A>& x, const list<T,A>& y); 
+      bool operator> (const list<T,A>& x, const list<T,A>& y); 
     template <LessThanComparable T, class A> 
-    bool operator>=(const list<T,A>& x, const list<T,A>& y); 
+      bool operator>=(const list<T,A>& x, const list<T,A>& y); 
     template <LessThanComparable T, class A> 
-    bool operator<=(const list<T,A>& x, const list<T,A>& y); 
+      bool operator<=(const list<T,A>& x, const list<T,A>& y); 
 
   which can be simplified, using an exported concept map, to::
 
     template <LessThanComparable T, class A>
     export concept_map LessThanComparable<list<T,A> >
     {
-        bool operator<(const list<T,A>& x, const list<T,A>& y);
+        bool operator<(const list<T,A>& x, const list<T,A>& y) { /*...*/ }
     };
 
   (without exported concept maps, the intended public interface would
@@ -408,7 +408,7 @@ general syntax for ``concept_map``\ s be non-intrusive.
 Adaptive Mapping
 ----------------
 
-Adaptative mapping is used to fulfill a concept's requirements that
+Adaptive mapping is used to fulfill a concept's requirements that
 are already expressed, but in a different form.  For example, one can
 use adaptive mapping to represent the edge connectivity of a graph
 using the nonzero elements of a sparse matrix (a technique used in
