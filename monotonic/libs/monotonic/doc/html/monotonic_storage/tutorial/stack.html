@@ -59,6 +59,13 @@
         as a platform-independant <code class="computeroutput"><span class="identifier">alloca</span><span class="special">(</span><span class="identifier">size</span><span class="special">)</span></code>
         by pushing an array of bytes, as shown above.
       </p>
+<p>
+        When we call <code class="computeroutput"><span class="identifier">stack</span><span class="special">.</span><span class="identifier">pop</span><span class="special">()</span></code>,
+        the last value added to the stack is destroyed and the stack pointer is set
+        to the start of the previous object on the stack. Calling <code class="computeroutput"><span class="identifier">pop</span></code>
+        on an empty stack throws an <code class="computeroutput"><span class="identifier">empty_stack</span></code>
+        exception.
+      </p>
 <div class="note" title="Note"><table border="0" summary="Note">
 <tr>
 <td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
@@ -81,24 +88,26 @@
 <span class="special">{</span>
     <span class="special">...</span> <span class="identifier">add</span> <span class="identifier">objects</span> <span class="identifier">to</span> <span class="identifier">the</span> <span class="identifier">stack</span> <span class="special">...</span>
     
-	<span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
-	<span class="identifier">Stack</span><span class="special">::</span><span class="identifier">const_iterator</span> <span class="identifier">elem</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
-	<span class="keyword">for</span> <span class="special">(;</span> <span class="identifier">elem</span> <span class="special">!=</span> <span class="identifier">end</span><span class="special">;</span> <span class="special">++</span><span class="identifier">elem</span><span class="special">)</span>
-	<span class="special">{</span>
-	    <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">elem</span><span class="special">-&gt;</span><span class="identifier">get_type</span><span class="special">().</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
-	    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">elem</span><span class="special">-&gt;</span><span class="identifier">is_type</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;())</span>
-	    <span class="special">{</span>
-	        <span class="keyword">int</span> <span class="identifier">num</span> <span class="special">=</span> <span class="identifier">elem</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
-	        <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">num</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
-	    <span class="special">}</span>
-	<span class="special">}</span>
-	
-	<span class="comment">// stacks are first-class objects and can be copied, passed
-</span>	<span class="comment">// as arguments and returned as results
-</span>	<span class="identifier">Stack</span> <span class="identifier">copy</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">;</span>
-	
-	<span class="comment">// unecessary in this case; will be cleared when stack leaves scope
-</span>	<span class="identifier">stack</span><span class="special">.</span><span class="identifier">clear</span><span class="special">();</span>
+    <span class="identifier">array</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="number">1000</span><span class="special">&gt;</span> <span class="special">&amp;</span><span class="identifier">bytes</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">push_array</span><span class="special">&lt;</span><span class="keyword">char</span><span class="special">,</span> <span class="number">1000</span><span class="special">&gt;();</span>
+    
+    <span class="identifier">size_t</span> <span class="identifier">size</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">size</span><span class="special">();</span>
+    <span class="identifier">Stack</span><span class="special">::</span><span class="identifier">const_iterator</span> <span class="identifier">elem</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+    <span class="keyword">for</span> <span class="special">(;</span> <span class="identifier">elem</span> <span class="special">!=</span> <span class="identifier">end</span><span class="special">;</span> <span class="special">++</span><span class="identifier">elem</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">elem</span><span class="special">-&gt;</span><span class="identifier">get_type</span><span class="special">().</span><span class="identifier">name</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">elem</span><span class="special">-&gt;</span><span class="identifier">is_type</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;())</span>
+        <span class="special">{</span>
+            <span class="keyword">int</span> <span class="identifier">num</span> <span class="special">=</span> <span class="identifier">elem</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;();</span>
+            <span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">num</span> <span class="special">&lt;&lt;</span> <span class="identifier">endl</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+    
+    <span class="comment">// stacks are first-class objects and can be copied, passed
+</span>    <span class="comment">// as arguments and returned as results
+</span>    <span class="identifier">Stack</span> <span class="identifier">copy</span> <span class="special">=</span> <span class="identifier">stack</span><span class="special">;</span>
+    
+    <span class="comment">// unecessary in this case; will be cleared when stack leaves scope
+</span>    <span class="identifier">stack</span><span class="special">.</span><span class="identifier">clear</span><span class="special">();</span>
 <span class="special">}</span>
 </pre>
 <p>

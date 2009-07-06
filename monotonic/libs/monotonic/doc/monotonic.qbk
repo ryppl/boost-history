@@ -292,6 +292,9 @@ The default inline size of a `stack<>` object is defined as `boost::monotonic::D
 
 We can use a `stack<>` as a platform-independant `alloca(size)` by pushing an array of bytes, as shown above.
 
+When we call `stack.pop()`, the last value added to the stack is destroyed and the stack pointer is set to
+the start of the previous object on the stack. Calling `pop` on an empty stack throws an `empty_stack` exception.
+
 [note It is best practise to open a new statement block before using a `stack<>` object. This ensures that the objects
 on the `stack<>` still have storage when when they are automatically deleted]
 
@@ -303,24 +306,26 @@ Stack stack;
 {
     ... add objects to the stack ...
     
-	size_t size = stack.size();
-	Stack::const_iterator elem = stack.begin(), end = stack.end();
-	for (; elem != end; ++elem)
-	{
-	    cout << elem->get_type().name() << endl;
-	    if (elem->is_type<int>())
-	    {
-	        int num = elem->get<int>();
-	        cout << num << endl;
-	    }
-	}
-	
-	// stacks are first-class objects and can be copied, passed
-	// as arguments and returned as results
-	Stack copy = stack;
-	
-	// unecessary in this case; will be cleared when stack leaves scope
-	stack.clear();
+    array<char, 1000> &bytes = stack.push_array<char, 1000>();
+    
+    size_t size = stack.size();
+    Stack::const_iterator elem = stack.begin(), end = stack.end();
+    for (; elem != end; ++elem)
+    {
+        cout << elem->get_type().name() << endl;
+        if (elem->is_type<int>())
+        {
+            int num = elem->get<int>();
+            cout << num << endl;
+        }
+    }
+    
+    // stacks are first-class objects and can be copied, passed
+    // as arguments and returned as results
+    Stack copy = stack;
+    
+    // unecessary in this case; will be cleared when stack leaves scope
+    stack.clear();
 }
 ``
 
