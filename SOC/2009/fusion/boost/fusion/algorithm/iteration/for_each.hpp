@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_ALGORITHM_ITERATION_FOR_EACH_HPP
 #define BOOST_FUSION_ALGORITHM_ITERATION_FOR_EACH_HPP
 
-#include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
 
 #include <boost/fusion/algorithm/iteration/detail/for_each.hpp>
@@ -27,15 +27,15 @@ namespace boost { namespace fusion
         };
     }
 
-
     template <typename Seq, typename F>
     inline void
     for_each(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
              BOOST_FUSION_R_ELSE_LREF(F) f)
     {
-        detail::for_each(BOOST_FUSION_FORWARD(Seq,seq),
-                BOOST_FUSION_FORWARD(F,f),
-                typename traits::category_of<Seq>::type());
+        detail::for_each_unrolled<
+            result_of::size<BOOST_FUSION_R_ELSE_LREF(Seq)>::value
+        >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
+                BOOST_FUSION_FORWARD(F,f));
     }
 }}
 

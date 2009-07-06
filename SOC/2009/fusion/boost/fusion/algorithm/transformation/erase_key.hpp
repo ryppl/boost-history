@@ -41,6 +41,7 @@ namespace boost { namespace fusion
     erase_key(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
         typedef result_of::erase_key<BOOST_FUSION_R_ELSE_LREF(Seq), Key> result;
+
         return erase(BOOST_FUSION_FORWARD(Seq,seq), result::gen::call(seq));
     }
 }}

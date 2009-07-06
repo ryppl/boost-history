@@ -26,23 +26,6 @@ namespace boost { namespace fusion
     template <typename Seq, typename State, typename F>
     inline typename result_of::accumulate<
         BOOST_FUSION_R_ELSE_LREF(Seq)
-      , BOOST_FUSION_R_ELSE_LREF(State)
-      , BOOST_FUSION_R_ELSE_LREF(F)
-    >::type
-    accumulate(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
-            BOOST_FUSION_R_ELSE_LREF(State) state,
-            BOOST_FUSION_R_ELSE_LREF(F) f)
-    {
-        return fusion::fold(
-                BOOST_FUSION_FORWARD(Seq,seq),
-                BOOST_FUSION_FORWARD(State,state),
-                BOOST_FUSION_FORWARD(F,f));
-    }
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename State, typename F>
-    inline typename result_of::accumulate<
-        BOOST_FUSION_R_ELSE_LREF(Seq)
       , BOOST_FUSION_R_ELSE_CLREF(State)
       , BOOST_FUSION_R_ELSE_LREF(F)
     >::type
@@ -55,7 +38,6 @@ namespace boost { namespace fusion
                 BOOST_FUSION_FORWARD(State,state),
                 BOOST_FUSION_FORWARD(F,f));
     }
-#endif
 }}
 
 #endif

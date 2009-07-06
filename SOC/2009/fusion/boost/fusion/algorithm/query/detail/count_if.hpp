@@ -16,7 +16,6 @@
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
-#include <boost/fusion/iterator/distance.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 
 #include <boost/mpl/bool.hpp>
