@@ -92,21 +92,26 @@ BOOST_AUTO_TEST_CASE(test_stack)
 	monotonic::stack<> stack;
 	{
 		size_t top = stack.top();
-		int &n = stack.push<int>();
-		stack.pop();
-		size_t top2 = stack.top();
-		BOOST_ASSERT(top2 == top);
-
 		int &n2 = stack.push<int>();
-		int &n3 = stack.push<int>();
+		float &f0 = stack.push<float>();
+		char &n3 = stack.push<char>();
 		Tracked &tracked = stack.push<Tracked>();
 		boost::array<int, 42> &a = stack.push<boost::array<int, 42> >();
+
+		BOOST_ASSERT(stack.size() == 5);
+
 		size_t peak = stack.top();
+		cout << "STACK:" << endl;
+		BOOST_FOREACH(monotonic::stack<>::value_type const &elem, stack)
+		{
+			cout << elem.get_type().name() << endl;
+		}
 		stack.pop();
 		stack.pop();
 		stack.pop();
 		stack.pop();
-		top2 = stack.top();
+		stack.pop();
+		size_t top2 = stack.top();
 		BOOST_ASSERT(top2 == top);
 		BOOST_ASSERT(Tracked::count == 0);
 	}

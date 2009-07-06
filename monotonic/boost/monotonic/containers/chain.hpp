@@ -6,11 +6,11 @@
 #ifndef BOOST_MONOTONIC_CHAIN_HPP
 #define BOOST_MONOTONIC_CHAIN_HPP
 
-#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_categories.hpp>
-
 #include <boost/utility/iter_range.hpp>
+
+#include <boost/monotonic/detail/prefix.hpp>
 #include <boost/monotonic/containers/vector.hpp>
 #include <boost/monotonic/containers/deque.hpp>
 
