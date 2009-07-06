@@ -173,13 +173,13 @@ with each container using a monotonic allocator:
 int main()
 {
     {
-	typedef std::vector<int, monotonic::allocator<int> > Vector;
-	typedef std::map<int, Vector, std::less<int>, monotonic::allocator<Vector> > Map;
-	Map map;
-	for (size_t n = 0; n < 10000; ++n)
-	{
+    typedef std::vector<int, monotonic::allocator<int> > Vector;
+    typedef std::map<int, Vector, std::less<int>, monotonic::allocator<Vector> > Map;
+    Map map;
+    for (size_t n = 0; n < 10000; ++n)
+    {
             map[rand()%100].push_back(n);
-	}
+    }
     }
     monotonic::static_storage<>::release();
     return 0;
@@ -246,14 +246,14 @@ class System
 public:
     void update()
     {
-		{
-			Objects objects;
-			GatherRelevant(objects);
-			Process(objects);
-			Update(objects);
-		}
-		// reset storage, ready for next update
-		monotonic::static_storage<region>::reset();
+        {
+            Objects objects;
+            GatherRelevant(objects);
+            Process(objects);
+            Update(objects);
+        }
+        // reset storage, ready for next update
+        monotonic::static_storage<region>::reset();
     }
 };
 ``
@@ -266,7 +266,7 @@ defined container which is populated, used and discarded regularly.
 
 [endsect]
 
-[section Using Monotonic Storage]
+[section Monotonic Stack]
 
 While monotonic allocators use monotonic storage, we can also use this storage 
 directly and wherever we want efficient resource management.
@@ -277,40 +277,95 @@ int main()
     // define local storage of 4k on the stack.
     // allocations will use the heap after the inline stack-based storage
     // has been exhausted.
-    monotonic::storage<4*1024> storage;
+    typedef monotonic::stack<4*1024> Stack;
+    Stack stack;
     {
-		int &amp;num = storage.create<int>();
-		std::string &amp;str = storage.create<std::string>();
-		char *bytes = storage.allocate_bytes(3000);     
-
-		// use num, str, bytes as needed
-
-		// call std::string's destructor directly, or use storage.destroy
-		storage.destroy(str);
+        int &num = stack.push<int>();
+        std::string &str = stack.push<std::string>("foo");        // objects are created in-place on the stack
+        boost::array<char, 1000> &bytes = stack.push_array<char, 1000>();
+        
+        // use bytes
+        std::generate_n(bytes.begin(), 1000, rand);
+        
+        // pop them off the stack
+        stack.pop();
+        
+        float &num2 = stack.push<float>();
+        stack.pop();
+        
+        assert(stack.size() == 2);
+        
+        BOOST_FOREACH(Stack::value_type const &elem, stack)
+        {
+            cout << elem.get_type().name() << endl;
+        }
+        
+        DoSomethingElseWith(stack);
+        
+        // can copy stacks, but cannot compare them
+        Stack copy = stack;
     }
     return 0;
 }
 ``
 
-Of course, we could have just made `num`, `str` and `bytes` on the stack by declaring them as 
-local variables and be done with it - well, except for having a dynamically-sized array of bytes
-on the stack. There is no other functional difference in this case, except that you are 
-responsible for invoking object destructors. So how is this at all useful?
-
-We can use `monotonic::storage` as a form of "first-class scope" which can be created, 
-manipulated, passed as as argument, returned as a value or reference, and destroyed as needed. 
-
-In this sense, `monotonic::storage` is just like your very own C++ stack which you can share 
+`monotonic::stack<>` is just like your very own C++ stack which you can share 
 between objects and functions and even across process boundaries, independantly of the 
-underlying machine-based stack.
+underlying machine-based stack. They can be copied and compared and iterated over.
 
 Also unlike the stack, storage will use the heap when its local inline stack-based buffer is exhuasted. 
 This makes it ideal for using things like local buffers and containers that generally will be small 
 enough to fit onto the stack, but with the fallback safety of transparently using the heap to 
 service later requests for the cases where that inline buffer is not large enough.
 
+When the stack goes out of scope, all objects are automatically destroyed.
+
 [endsect]
 
 
 [endsect]
 
+[section Containers]
+
+Along with an allocator, storage and stack system, the Monotonic library provides a set of containers
+that use stateful monotonic allocators [footnote these are based on boost::interprocess::containers].
+
+These containers are able to use locally defined monotonic storage that is not visible outside
+of a given stack-frame. As such, these are ideal for small, fast, short-lived containers.
+
+An example:
+
+``
+monotonic::storage<> storage;
+{
+    typedef monotonic::list<int> List;
+    typedef monotonic::map<int, monotonic::vector<int> > Map;
+    
+    Map map(storage);
+    List list(storage);
+    
+    generate_n(back_inserter(list), 100, rand);
+    for (size_t n = 0; n < 100; ++n)
+    {
+        int random = rand() % 10;
+        
+        Map::iterator iter = map.find(random);
+        if (iter == map.end())
+        {
+            iter = map.insert(make_pair(random, monotonic::vector<int>(storage)).first;
+        }
+        iter->second.push_back(rand);
+    }
+}
+``
+
+All of the standard containers are so adapted.
+
+[note If you have nested containers, and you wish them to use the same storage as the parent
+container, you must initialise them with the storage as shown in the example]
+
+[section Chain]
+
+[endsect]
+
+[endsect]

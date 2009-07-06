@@ -7,7 +7,7 @@
 <link rel="home" href="../../index.html" title="Monotonic Storage 0.3">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="using_multiple_containers.html" title="Using Multiple Containers">
-<link rel="next" href="using_monotonic_storage.html" title="Using Monotonic Storage">
+<link rel="next" href="monotonic_stack.html" title="Monotonic Stack">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="using_multiple_containers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="using_monotonic_storage.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="using_multiple_containers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="monotonic_stack.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" title="Using Regions">
 <div class="titlepage"><div><div><h3 class="title">
@@ -81,14 +81,14 @@
 <span class="keyword">public</span><span class="special">:</span>
     <span class="keyword">void</span> <span class="identifier">update</span><span class="special">()</span>
     <span class="special">{</span>
-		<span class="special">{</span>
-			<span class="identifier">Objects</span> <span class="identifier">objects</span><span class="special">;</span>
-			<span class="identifier">GatherRelevant</span><span class="special">(</span><span class="identifier">objects</span><span class="special">);</span>
-			<span class="identifier">Process</span><span class="special">(</span><span class="identifier">objects</span><span class="special">);</span>
-			<span class="identifier">Update</span><span class="special">(</span><span class="identifier">objects</span><span class="special">);</span>
-		<span class="special">}</span>
-		<span class="comment">// reset storage, ready for next update
-</span>		<span class="identifier">monotonic</span><span class="special">::</span><span class="identifier">static_storage</span><span class="special">&lt;</span><span class="identifier">region</span><span class="special">&gt;::</span><span class="identifier">reset</span><span class="special">();</span>
+        <span class="special">{</span>
+            <span class="identifier">Objects</span> <span class="identifier">objects</span><span class="special">;</span>
+            <span class="identifier">GatherRelevant</span><span class="special">(</span><span class="identifier">objects</span><span class="special">);</span>
+            <span class="identifier">Process</span><span class="special">(</span><span class="identifier">objects</span><span class="special">);</span>
+            <span class="identifier">Update</span><span class="special">(</span><span class="identifier">objects</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="comment">// reset storage, ready for next update
+</span>        <span class="identifier">monotonic</span><span class="special">::</span><span class="identifier">static_storage</span><span class="special">&lt;</span><span class="identifier">region</span><span class="special">&gt;::</span><span class="identifier">reset</span><span class="special">();</span>
     <span class="special">}</span>
 <span class="special">};</span>
 </pre>
@@ -113,7 +113,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="using_multiple_containers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="using_monotonic_storage.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="using_multiple_containers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="monotonic_stack.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>
