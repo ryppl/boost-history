@@ -6666,7 +6666,7 @@ Library
 </rationale>
 </comment>
 
-<comment nb="US" num="63" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="63" uknum="" type="te" owner="LWG" issue="1151" disp="" date="" extdoc="">
 <section>
 17-30
 </section>
@@ -6692,7 +6692,7 @@ Library
 </rationale>
 </comment>
 
-<comment nb="DE" num="2" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="2" uknum="" type="te" owner="LWG" issue="1153" disp="" date="" extdoc="">
 <section>
 17 through 30
 </section>
@@ -7774,7 +7774,7 @@ LWG625</a>
 </rationale>
 </comment>
 
-<comment nb="UK" num="165" uknum="92" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="165" uknum="92" type="Te" owner="LWG" issue="1156" disp="" date="" extdoc="">
 <section>
 17.5.3.2.2,
 17.5.3.2.3
@@ -7982,7 +7982,7 @@ N2814</a>, but we're concerned whether CWG will accept
 language recommendations.
 
 <i>Pre-Frankfurt</i> See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2886.pdf">
-N2886</a
+N2886</a>
 </notes>
 <rationale>
 </rationale>
@@ -8046,7 +8046,7 @@ add &lt;type_traits&gt; only. Alisdair will draft an issue.</notes>
 </rationale>
 </comment>
 
-<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="175" uknum="101" type="Te" owner="LWG" issue="1157" disp="accepted" date="" extdoc="">
 <section>
 17.6.4.2.1
 </section>
@@ -8533,7 +8533,7 @@ Footnote 221
 </rationale>
 </comment>
 
-<comment nb="UK" num="187" uknum="266" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="187" uknum="266" type="Te" owner="LWG" issue="1144" disp="" date="" extdoc="">
 <section>
 18.4
 </section>
@@ -8744,7 +8744,7 @@ to terminate the program. Bill
 <notes>Handled by the free-standing paper.
 
 See <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2886.pdf">
-N2886</a
+N2886</a>
 </notes>
 <rationale>
 </rationale>
@@ -8862,7 +8862,8 @@ N2886</a
         std::initializer_list.
 </suggestion>
 <notes><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2900.html">
-N2900</a</notes>
+N2900</a>
+</notes>
 <rationale>
 </rationale>
 </comment>
@@ -8887,7 +8888,8 @@ N2900</a</notes>
         instead of &lt;initializer_list&gt;.
 </suggestion>
 <notes><a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2009/n2900.html">
-N2900</a</notes>
+N2900</a>
+</notes>
 <rationale>
 </rationale>
 </comment>
@@ -10371,7 +10373,7 @@ The text in question is in 20.7.2.2, not 20.8.2.2.
 </rationale>
 </comment>
 
-<comment nb="US" num="77" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="77" uknum="" type="te" owner="LWG" issue="1166" disp="" date="" extdoc="">
 <section>
 20.8.4
 </section>
@@ -14519,7 +14521,7 @@ N2836</a>, which was accepted in New Jersey.
 </rationale>
 </comment>
 
-<comment nb="FR" num="35" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="35" uknum="" type="te" owner="LWG" issue="1154" disp="" date="" extdoc="">
 <section>
 26.3
         [Complex
@@ -15283,7 +15285,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="73" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="JP" num="73" uknum="" type="te" owner="LWG" issue="1150" disp="" date="" extdoc="">
 <section>
 27.8.1.14
 </section>
@@ -15590,7 +15592,7 @@ N2427. Needs to also consider issues
 </rationale>
 </comment>
 
-<comment nb="UK" num="312" uknum="157" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="312" uknum="157" type="Te" owner="LWG" issue="1145" disp="" date="" extdoc="">
 <section>
 29
 </section>
@@ -15816,7 +15818,7 @@ spelling. Move to review state. Hans to ask additional review from cpp-threads.
 </rationale>
 </comment>
 
-<comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="88" uknum="" type="te" owner="LWG" issue="1146" disp="" date="" extdoc="">
 <section>
 29.2
 </section>
@@ -15865,7 +15867,7 @@ Rationale: for compatibility with C.</notes>
 </rationale>
 </comment>
 
-<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="908" disp="" date="" extdoc="">
+<comment nb="US" num="90" uknum="" type="te" owner="LWG" issue="908, 1147" disp="" date="" extdoc="">
 <section>
 29.4
 </section>
@@ -16095,8 +16097,8 @@ this.
     the classes in question.
 </rationale>
 </comment>
-
-<comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="" disp="rejected" date="" extdoc="">
+1152
+<comment nb="US" num="96" uknum="" type="te" owner="LWG" issue="1158" disp="rejected" date="" extdoc="">
 <section>
 30.1.4
 </section>
@@ -16120,7 +16122,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="UK" num="322" uknum="168" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="322" uknum="168" type="Te" owner="LWG" issue="1158" disp="" date="" extdoc="">
 <section>
 30.1.4
 </section>
@@ -16337,7 +16339,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="UK" num="327" uknum="179" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="327" uknum="179" type="Te" owner="LWG" issue="1159" disp="" date="" extdoc="">
 <section>
 30.3.3.2.2
 </section>
@@ -16374,7 +16376,7 @@ this.
 </rationale>
 </comment>
 
-<comment nb="UK" num="328" uknum="182" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="328" uknum="182" type="Te" owner="LWG" issue="1159" disp="" date="" extdoc="">
 <section>
 30.3.3.2.2
 </section>
@@ -16519,7 +16521,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="331" uknum="192" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="331" uknum="192" type="Te" owner="LWG" issue="1160" disp="" date="" extdoc="">
 <section>
 30.5.3
 </section>
@@ -16643,7 +16645,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="336" uknum="437" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="336" uknum="437" type="Te" owner="LWG" issue="1161" disp="" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -16692,7 +16694,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="337" uknum="198" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="337" uknum="198" type="Te" owner="LWG" issue="1162" disp="" date="" extdoc="">
 <section>
 30.5.5
 </section>
@@ -16712,7 +16714,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="338" uknum="223" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="338" uknum="223" type="Te" owner="LWG" issue="1163" disp="" date="" extdoc="">
 <section>
 30.5.5
 </section>
@@ -16796,7 +16798,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="341" uknum="122" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="341" uknum="122" type="Te" owner="LWG" issue="1164" disp="" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -16838,7 +16840,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="343" uknum="439" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="343" uknum="439" type="Te" owner="LWG" issue="1165" disp="" date="" extdoc="">
 <section>
 30.5.6
 </section>
@@ -17027,7 +17029,7 @@ p2
 </rationale>
 </comment>
 
-<comment nb="FR" num="38" uknum="" type="ed" owner="LWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="FR" num="38" uknum="" type="ed" owner="LWG" issue="1155" disp="accepted" date="" extdoc="">
 <section>
 C.2
         [diffs.library]
