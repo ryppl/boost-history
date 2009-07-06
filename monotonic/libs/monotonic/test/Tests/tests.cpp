@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE(test_stack)
 		float &f0 = stack.push<float>();
 		char &n3 = stack.push<char>();
 		Tracked &tracked = stack.push<Tracked>();
-		boost::array<int, 42> &a = stack.push<boost::array<int, 42> >();
+		boost::array<int, 42> &a = stack.push_array<int, 42>();
 
 		BOOST_ASSERT(stack.size() == 5);
 

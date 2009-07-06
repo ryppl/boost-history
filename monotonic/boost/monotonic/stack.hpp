@@ -44,18 +44,23 @@ namespace boost
 				element_base(bool ip = false) 
 					: is_pod(ip) { }
 				template <class T>
-				T &cast()
+				bool is_type() const
 				{
-					if (get_type() != typeid(T))
-						throw std::bad_cast();
-					return *static_cast<element<T> &>(*this).get_pointer();
+					return get_type() == typeid(T);
 				}
 				template <class T>
-				const T &cast() const
+				T &get()
 				{
 					if (get_type() != typeid(T))
-						throw std::bad_cast();
-					return *static_cast<const element<T> &>(*this).get_pointer();
+						throw std::bad_get();
+					return *static_get<element<T> &>(*this).get_pointer();
+				}
+				template <class T>
+				const T &get() const
+				{
+					if (get_type() != typeid(T))
+						throw std::bad_get();
+					return *static_get<const element<T> &>(*this).get_pointer();
 				}
 				virtual void destroy() {}
 				virtual const std::type_info &get_type() const = 0;
@@ -260,11 +265,17 @@ namespace boost
 			}
 
 			template <class T, class A0, class A1>
-			T &push(A0 a0)
+			T &push(A0 a0, A1 a1)
 			{
 				element<T> &elem = push_element<T>();
 				new (elem.get_pointer()) T(a0, a1);
 				return *elem.get_pointer();
+			}
+
+			template <class T, size_t N>
+			array<T, N> &push_array()
+			{
+				return push<array<T, N> >();
 			}
 
 			void pop()
