@@ -12,7 +12,7 @@
 #include <boost/function.hpp>
 #include <boost/thread/detail/move.hpp>
 
-#include <boost/task/detail/interrupter.hpp>
+#include <boost/task/context.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
@@ -23,6 +23,7 @@
 
 namespace boost { namespace task
 {
+
 struct as_sub_task
 {
 	template< typename R >
@@ -31,25 +32,27 @@ struct as_sub_task
 		detail::worker * w( detail::worker::tss_get() );
 		if ( w)
 		{
-			shared_future< R > fut( t.get_future() );
-			detail::interrupter intr;
+			shared_future< R > f( t.get_future() );
 			function< bool() > wcb(
 				bind(
 					& shared_future< R >::is_ready,
-					fut) );
+					f) );
 			t.set_wait_callback(
 				bind(
 					( void ( detail::worker::*)( function< bool() > const&) ) & detail::worker::reschedule_until,
 					w,
 					wcb) );
-			w->put( detail::callable( boost::move( t), intr) );
-			return handle< R >( fut, intr);
+			context ctx;
+			handle< R > h( ctx.get_handle( f) );
+			w->put( ctx.get_callable( boost::move( t) ) );
+			return h;
 		}
 		else
 			return new_thread()( boost::move( t) );
 	}
 };
-} }
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

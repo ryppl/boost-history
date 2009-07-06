@@ -34,22 +34,22 @@ private:
 	class impl : private noncopyable
 	{
 	private:
-		bool					interruption_requested_;
+		bool					requested_;
 		mutex					mtx_;
 		shared_ptr< thread >	thrd_;
 
-		void set_( shared_ptr< thread > const& thrd);
-
 		void reset_();
+
+		void reset_( shared_ptr< thread > const& thrd);
 
 		void interrupt_();
 
 	public:
 		impl();
 
-		void set( shared_ptr< thread > const& thrd);
-
 		void reset();
+
+		void reset( shared_ptr< thread > const& thrd);
 
 		void interrupt();
 
@@ -59,29 +59,17 @@ private:
 	shared_ptr< impl >	impl_;
 
 public:
-	class scoped_guard : public noncopyable
-	{
-	private:
-		interrupter	&	intr_;
-	
-	public:
-		scoped_guard( interrupter &, shared_ptr< thread > &);
-	
-		~scoped_guard();
-	};
-
 	interrupter();
 
-	void set( shared_ptr< thread > const& thrd);
-
 	void reset();
+
+	void reset( shared_ptr< thread > const& thrd);
 
 	void interrupt();
 
 	bool interruption_requested();
 
-	void swap( interrupter & other)
-	{ impl_.swap( other.impl_); }
+	void swap( interrupter & other);
 };
 }}}
 

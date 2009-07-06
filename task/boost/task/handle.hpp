@@ -19,23 +19,16 @@
 namespace boost { namespace task
 {
 
+class context;
+
 template< typename R >
 class handle
 {
 private:
+	friend class context;
+
 	shared_future< R >		fut_;
 	detail::interrupter		intr_;
-
-public:
-	handle()
-	: fut_(), intr_()
-	{}
-
-	handle( shared_future< R > fut)
-	:
-	fut_( fut),
-	intr_()
-	{}
 
 	handle(
 		shared_future< R > fut,
@@ -43,6 +36,11 @@ public:
 	:
 	fut_( fut),
 	intr_( intr)
+	{}
+
+public:
+	handle()
+	: fut_(), intr_()
 	{}
 
 	void interrupt()
@@ -134,7 +132,7 @@ public:
 	void swap( handle< R > & other)
 	{
 		fut_.swap( other.fut_);
-		intr_.swap( other.intr_);
+// 		intr_.swap( other.intr_);
 	}
 };
 
@@ -235,7 +233,6 @@ unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t
 	catch ( thread_interrupted const&)
 	{ throw task_interrupted(); }
 }
-
 }}
 
 #include <boost/config/abi_suffix.hpp>

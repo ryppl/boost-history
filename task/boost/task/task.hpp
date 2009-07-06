@@ -14,18 +14,13 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/result_of.hpp>
 
-#include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
+#include <boost/task/future.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
 namespace boost { namespace task
 {
-template< typename Channel >
-class static_pool;
-
-struct as_sub_task;
-
 namespace detail
 {
 template< typename R >
@@ -177,11 +172,6 @@ template< typename R >
 class task
 {
 private:
-	template< typename Channel >
-	friend class static_pool;
-
-	friend struct as_sub_task;
-
 	struct dummy;
 
 	shared_ptr< detail::task_base< R > >	task_;
@@ -278,18 +268,18 @@ BOOST_PP_REPEAT_FROM_TO( 1, BOOST_TASK_MAX_ARITY, BOOST_TASK_CTOR, ~)
 
 # undef BOOST_TASK_CTOR
 
-	unique_future< R > get_future()
-	{
-		if ( ! task_)
-			throw task_moved();
-		return task_->get_future();
-	}
-
 	void operator()()
 	{
 		if ( ! task_)
 			throw task_moved();
 		task_->run();
+	}
+
+	unique_future< R > get_future()
+	{
+		if ( ! task_)
+			throw task_moved();
+		return task_->get_future();	
 	}
 
 	template< typename Cb >
@@ -347,7 +337,6 @@ template< typename R >
 task::task< R > move( boost::detail::thread_move_t< task::task< R > > t)
 { return task::task< R >( t); }
 # endif
-
 }
 
 #include <boost/config/abi_suffix.hpp>

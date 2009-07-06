@@ -4,14 +4,14 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_OWN_THREAD_H
-#define BOOST_TASK_OWN_THREAD_H
+#ifndef BOOST_TASK_CONTEXT_H
+#define BOOST_TASK_CONTEXT_H
 
-#include <boost/config.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/thread/detail/move.hpp>
 
 #include <boost/task/callable.hpp>
-#include <boost/task/context.hpp>
+#include <boost/task/detail/interrupter.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/task.hpp>
@@ -20,21 +20,24 @@
 
 namespace boost { namespace task
 {
-struct own_thread
+
+class context
 {
+private:
+	detail::interrupter	intr_;
+
+public:
 	template< typename R >
-	handle< R > operator()( task< R > t)
-	{
-		shared_future< R > f( t.get_future() );
-		context ctx;
-		handle< R > h( ctx.get_handle( f) );
-		callable ca( ctx.get_callable( boost::move( t) ) );
-		ca();
-		return h;
-	}
+	callable get_callable( task< R > t)
+	{ return callable( boost::move( t), intr_); }
+
+	template< typename R >
+	handle< R > get_handle( shared_future< R > f)
+	{ return handle< R >( f, intr_); }
 };
+
 }}
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_OWN_THREAD_H
+#endif // BOOST_TASK_CONTEXT_H

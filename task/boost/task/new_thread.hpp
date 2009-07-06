@@ -7,13 +7,13 @@
 #ifndef BOOST_TASK_NEW_THREAD_H
 #define BOOST_TASK_NEW_THREAD_H
 
+#include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
 
-#include <boost/task/detail/interrupter.hpp>
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/context.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
 #include <boost/task/task.hpp>
@@ -24,18 +24,30 @@ namespace boost { namespace task
 {
 namespace detail
 {
-struct joiner
+class joiner
 {
+private:
+	callable	ca_;
+
+public:
+	joiner( callable const& ca)
+	: ca_( ca)
+	{}
+
 	void operator()( thread * thrd)
 	{
 		try
-		{ thrd->join(); }
+		{
+			ca_.reset();
+			BOOST_ASSERT( thrd);
+			BOOST_ASSERT( thrd->joinable() );
+			thrd->join();
+		}
 		catch (...)
 		{}
 		delete thrd;
 	}
 };
-
 }
 
 struct new_thread
@@ -43,21 +55,19 @@ struct new_thread
 	template< typename R >
 	handle< R > operator()( task< R > t)
 	{
-		shared_future< R > fut( t.get_future() );
-
-		detail::interrupter intr;
+		shared_future< R > f( t.get_future() );
+		context ctx;
+		handle< R > h( ctx.get_handle( f) );
+		callable ca( ctx.get_callable( boost::move( t) ) );
 		shared_ptr< thread > thrd(
-			new thread(
-				detail::callable(
-					boost::move( t),
-					intr) ),
-			detail::joiner() );
-		intr.set( thrd);
+			new thread( ca),
+			detail::joiner( ca) );
+		ca.reset( thrd);
 
-		return handle< R >( fut, intr);
+		return h;
 	}
 };
-} }
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

@@ -14,7 +14,7 @@
 #include <boost/multi_index/mem_fun.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/callable.hpp>
 #include <boost/task/detail/meta.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -44,8 +44,8 @@ struct smart
 		class item
 		{
 		private:
-			detail::callable	ca_;
-			attribute			attr_;
+			callable	ca_;
+			attribute	attr_;
 	
 		public:
 			item()
@@ -53,12 +53,12 @@ struct smart
 			{}
 
 			item(
-				detail::callable const& ca,
+				callable const& ca,
 				attribute const& attr)
 			: ca_( ca), attr_( attr)
 			{ BOOST_ASSERT( ! ca_.empty() ); }
 	
-			const detail::callable ca() const
+			const callable ca() const
 			{ return ca_; }
 	
 			const attribute attr() const
@@ -103,7 +103,7 @@ struct smart
 		void push( item const& itm)
 		{ enq_op_( idx_, itm); }
 	
-		const detail::callable pop()
+		const callable pop()
 		{
 			item itm;
 			deq_op_( idx_, itm);

@@ -17,8 +17,8 @@
 #include <boost/thread.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/callable.hpp>
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/callable.hpp>
 #include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/detail/wsq.hpp>
@@ -107,7 +107,7 @@ private:
 			BOOST_ASSERT( ! ca.empty() );
 			guard grd( get_pool().active_worker_);
 			{
-				interrupter::scoped_guard lk( ca.get_interrupter(), thrd_);
+				callable::context_guard lk( ca, thrd_);
 				ca();
 			}
 			ca.clear();

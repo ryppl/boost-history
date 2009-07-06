@@ -18,7 +18,7 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/callable.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/watermark.hpp>
 
@@ -92,12 +92,12 @@ private:
 		BOOST_ASSERT( deactive_now_() );
 	}
 
-	const std::vector< detail::callable > drain_()
+	const std::vector< callable > drain_()
 	{
 		BOOST_ASSERT( deactive_now_() );
-		std::vector< detail::callable > unprocessed;
+		std::vector< callable > unprocessed;
 		unprocessed.reserve( queue_.size() );
-		BOOST_FOREACH( detail::callable ca, queue_)
+		BOOST_FOREACH( callable ca, queue_)
 		{ unprocessed.push_back( ca); }
 		clear_();
 		BOOST_ASSERT( empty_() );
@@ -135,11 +135,14 @@ private:
 		item const& itm,
 		unique_lock< shared_mutex > & lk)
 	{
-		not_full_cond_.wait(
-			lk,
-			bind(
-				& bounded_channel::producers_activate_,
-				this) );
+		if ( full_() )
+		{
+			not_full_cond_.wait(
+				lk,
+				bind(
+					& bounded_channel::producers_activate_,
+					this) );
+		}
 		if ( ! active_() )
 			throw task_rejected("channel is not active");
 		queue_.push( itm);
@@ -152,13 +155,16 @@ private:
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
-		if ( ! not_full_cond_.timed_wait(
-			lk,
-			rel_time,
-			bind(
-				& bounded_channel::producers_activate_,
-				this) ) )
-			throw task_rejected("timed out");
+		if ( full_() )
+		{
+			if ( ! not_full_cond_.timed_wait(
+				lk,
+				rel_time,
+				bind(
+					& bounded_channel::producers_activate_,
+					this) ) )
+				throw task_rejected("timed out");
+		}
 		if ( ! active_() )
 			throw task_rejected("channel is not active");
 		queue_.push( itm);
@@ -166,21 +172,24 @@ private:
 	}
 
 	bool take_(
-		detail::callable & ca,
+		callable & ca,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		try
+		if ( empty_() )
 		{
-			not_empty_cond_.wait(
-				lk,
-				bind(
-					& bounded_channel::consumers_activate_,
-					this) );
+			try
+			{
+				not_empty_cond_.wait(
+					lk,
+					bind(
+						& bounded_channel::consumers_activate_,
+						this) );
+			}
+			catch ( thread_interrupted const&)
+			{ return false; }
 		}
-		catch ( thread_interrupted const&)
-		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
 		ca = queue_.pop();
@@ -198,24 +207,27 @@ private:
 
 	template< typename Duration >
 	bool take_(
-		detail::callable & ca,
+		callable & ca,
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		try
+		if ( empty_() )
 		{
-			if ( ! not_empty_cond_.timed_wait(
-				lk,
-				rel_time,
-				bind(
-					& bounded_channel::consumers_activate_,
-					this) ) )
-				return false;
+			try
+			{
+				if ( ! not_empty_cond_.timed_wait(
+					lk,
+					rel_time,
+					bind(
+						& bounded_channel::consumers_activate_,
+						this) ) )
+					return false;
+			}
+			catch ( thread_interrupted const&)
+			{ return false; }
 		}
-		catch ( thread_interrupted const&)
-		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
 		ca = queue_.pop();
@@ -231,12 +243,13 @@ private:
 		return ! ca.empty();
 	}
 
-	bool try_take_( detail::callable & ca)
+	bool try_take_( callable & ca)
 	{
 		if ( deactive_now_() || empty_() )
 			return false;
 		ca = queue_.pop();
-		if ( size_() <= lwm_)
+		bool valid = ! ca.empty();
+		if ( valid && size_() <= lwm_)
 		{
 			if ( lwm_ == hwm_)
 				not_full_cond_.notify_one();
@@ -245,7 +258,7 @@ private:
 				// in order to submit an task
 				not_full_cond_.notify_all();
 		}
-		return ! ca.empty();
+		return valid;
 	}
 
 	bool producers_activate_() const
@@ -304,7 +317,7 @@ public:
 		deactivate_now_();
 	}
 
-	const std::vector< detail::callable > drain()
+	const std::vector< callable > drain()
 	{
 		lock_guard< shared_mutex > lk( mtx_);
 		return drain_();
@@ -367,7 +380,7 @@ public:
 		put_( itm, rel_time, lk);
 	}
 
-	bool take( detail::callable & ca)
+	bool take( callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, lk);
@@ -375,14 +388,14 @@ public:
 
 	template< typename Duration >
 	bool take(
-		detail::callable & ca,
+		callable & ca,
 		Duration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, rel_time, lk);
 	}
 
-	bool try_take( detail::callable & ca)
+	bool try_take( callable & ca)
 	{
 		lock_guard< shared_mutex > lk( mtx_);
 		return try_take_( ca);

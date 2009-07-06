@@ -4,12 +4,11 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#include "boost/task/detail/callable.hpp"
+#include "boost/task/callable.hpp"
 
 namespace boost { namespace task
 {
-namespace detail
-{
+
 callable::callable()
 : impl_()
 {}
@@ -26,8 +25,12 @@ void
 callable::clear()
 { impl_.reset(); }
 
-interrupter &
-callable::get_interrupter()
-{ return impl_->get_interrupter(); }
-} } }
+void
+callable::reset()
+{ impl_->reset(); }
 
+void
+callable::reset( shared_ptr< thread > const& thrd)
+{ impl_->reset( thrd); }
+
+}}

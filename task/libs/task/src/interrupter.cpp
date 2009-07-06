@@ -12,48 +12,49 @@ namespace boost { namespace task
 {
 namespace detail
 {
+
 void
-interrupter::impl::set_( shared_ptr< thread > const& thrd)
+interrupter::impl::reset_( shared_ptr< thread > const& thrd)
 {
 	thrd_ = thrd;
 	BOOST_ASSERT( thrd_);
-	if ( interruption_requested_)
+	if ( requested_)
 		if ( thrd_) thrd_->interrupt();
 }
 
 void
 interrupter::impl::reset_()
 {
+	thrd_.reset();
 	try
 	{ this_thread::interruption_point(); }
 	catch ( thread_interrupted const&)
 	{}
-	thrd_.reset();
 	BOOST_ASSERT( ! this_thread::interruption_requested() );
 }
 
 void
 interrupter::impl::interrupt_()
 {
-	if ( ! interruption_requested_)
+	if ( ! requested_)
 	{
-		interruption_requested_ = true;
+		requested_ = true;
 		if ( thrd_) thrd_->interrupt();
 	}
 }
 
 interrupter::impl::impl()
 :
-interruption_requested_( false),
+requested_( false),
 mtx_(),
 thrd_()
 {}
 
 void
-interrupter::impl::set( shared_ptr< thread > const& thrd)
+interrupter::impl::reset( shared_ptr< thread > const& thrd)
 {
 	lock_guard< mutex > lk( mtx_);
-	set_( thrd);
+	reset_( thrd);
 }
 
 void
@@ -74,7 +75,7 @@ bool
 interrupter::impl::interruption_requested()
 {
 	lock_guard< mutex > lk( mtx_);
-	return interruption_requested_;
+	return requested_;
 }
 
 interrupter::interrupter()
@@ -82,8 +83,8 @@ interrupter::interrupter()
 {}
 
 void
-interrupter::set( shared_ptr< thread > const& thrd)
-{ impl_->set( thrd); }
+interrupter::reset( shared_ptr< thread > const& thrd)
+{ impl_->reset( thrd); }
 
 void
 interrupter::reset()
@@ -97,12 +98,8 @@ bool
 interrupter::interruption_requested()
 { return impl_->interruption_requested(); }
 
-interrupter::scoped_guard::scoped_guard( interrupter & intr, shared_ptr< thread > & thrd)
-: intr_( intr)
-{ intr_.set( thrd); }
+void
+interrupter::swap( interrupter & other)
+{ impl_.swap( other.impl_); }
 
-interrupter::scoped_guard::~scoped_guard()
-{ intr_.reset(); }
-}
-} }
-
+}}}

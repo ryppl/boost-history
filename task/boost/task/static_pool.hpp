@@ -20,10 +20,10 @@
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
 
+#include <boost/task/callable.hpp>
+#include <boost/task/context.hpp>
 #include <boost/task/detail/atomic.hpp>
 #include <boost/task/detail/bind_processor.hpp>
-#include <boost/task/detail/interrupter.hpp>
-#include <boost/task/detail/callable.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
@@ -73,11 +73,11 @@ private:
 		template< typename Pool >
 		friend class detail::worker::impl_pool;
 # endif
-	
-		detail::worker_group		wg_;
+
+		detail::worker_group	wg_;
 		shared_mutex			mtx_wg_;
 		volatile uint32_t		state_;
-		channel		 		channel_;
+		channel			 		channel_;
 		volatile uint32_t		active_worker_;
 		volatile uint32_t		idle_worker_;
 
@@ -91,7 +91,7 @@ private:
 			detail::worker w( * i);
 			w.run();
 		}
-		
+
 		void create_worker_(
 			poolsize const& psize,
 			posix_time::time_duration const& asleep,
@@ -322,25 +322,28 @@ private:
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			shared_future< R > fut( t.get_future() );
-			detail::interrupter intr;
-			channel_.put( detail::callable( boost::move( t), intr) );
-			return handle< R >( fut, intr);
+			shared_future< R > f( t.get_future() );
+			context ctx;
+			handle< R > h( ctx.get_handle( f) );
+			channel_.put(
+					ctx.get_callable( boost::move( t) ) );
+			return h;
 		}
 
-		template<
-			typename R,
-			typename Attr
-		>
+		template< typename R, typename Attr >
 		handle< R > submit( task< R > t, Attr const& attr)
 		{
 			if ( closed_() )
 				throw task_rejected("pool is closed");
 
-			shared_future< R > fut( t.get_future() );
-			detail::interrupter intr;
-			channel_.put( channel_item( detail::callable( boost::move( t), intr), attr) );
-			return handle< R >( fut, intr);
+			shared_future< R > f( t.get_future() );
+			context ctx;
+			handle< R > h( ctx.get_handle( f) );
+			channel_.put(
+					channel_item(
+						ctx.get_callable( boost::move( t) ),
+						attr) );
+			return h;
 		}
 	};
 	
@@ -533,10 +536,7 @@ public:
 		return pool_->submit( boost::move( t) );
 	}
 
-	template<
-		typename R,
-		typename Attr
-	>
+	template< typename R, typename Attr >
 	handle< R > submit( task< R > t, Attr const& attr)
 	{
 		if ( ! pool_)

@@ -18,7 +18,7 @@
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
-#include <boost/task/detail/callable.hpp>
+#include <boost/task/callable.hpp>
 #include <boost/task/exceptions.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -88,12 +88,12 @@ private:
 		BOOST_ASSERT( deactive_now_() );
 	}
 
-	const std::vector< detail::callable > drain_()
+	const std::vector< callable > drain_()
 	{
 		BOOST_ASSERT( deactive_now_() );
-		std::vector< detail::callable > unprocessed;
+		std::vector< callable > unprocessed;
 		unprocessed.reserve( queue_.size() );
-		BOOST_FOREACH( detail::callable ca, queue_)
+		BOOST_FOREACH( callable ca, queue_)
 		{ unprocessed.push_back( ca); }
 		clear_();
 		BOOST_ASSERT( empty_() );
@@ -106,9 +106,7 @@ private:
 	std::size_t size_() const
 	{ return queue_.size(); }
 
-	void put_(
-		item const& itm,
-		unique_lock< shared_mutex > & lk)
+	void put_( item const& itm)
 	{
 		if ( ! active_() )
 			throw task_rejected("channel is not active");
@@ -117,21 +115,24 @@ private:
 	}
 
 	bool take_(
-		detail::callable & ca,
+		callable & ca,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		try
+		if ( empty_() )
 		{
-			not_empty_cond_.wait(
-				lk,
-				bind(
-					& unbounded_channel::consumers_activate_,
-					this) );
+			try
+			{
+				not_empty_cond_.wait(
+					lk,
+					bind(
+						& unbounded_channel::consumers_activate_,
+						this) );
+			}
+			catch ( thread_interrupted const&)
+			{ return false; }
 		}
-		catch ( thread_interrupted const&)
-		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
 		ca = queue_.pop();
@@ -140,31 +141,34 @@ private:
 
 	template< typename Duration >
 	bool take_(
-		detail::callable & ca,
+		callable & ca,
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		try
+		if ( empty_() )
 		{
-			if ( ! not_empty_cond_.timed_wait(
-				lk,
-				rel_time,
-				bind(
-					& unbounded_channel::consumers_activate_,
-					this) ) )
-				return false;
+			try
+			{
+				if ( ! not_empty_cond_.timed_wait(
+					lk,
+					rel_time,
+					bind(
+						& unbounded_channel::consumers_activate_,
+						this) ) )
+					return false;
+			}
+			catch ( thread_interrupted const&)
+			{ return false; }
 		}
-		catch ( thread_interrupted const&)
-		{ return false; }
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
 		ca = queue_.pop();
 		return ! ca.empty();
 	}
 
-	bool try_take_( detail::callable & ca)
+	bool try_take_( callable & ca)
 	{
 		if ( deactive_now_() || empty_() )
 			return false;
@@ -217,7 +221,7 @@ public:
 		deactivate_now_();
 	}
 
-	const std::vector< detail::callable > drain()
+	const std::vector< callable > drain()
 	{
 		lock_guard< shared_mutex > lk( mtx_);
 		return drain_();
@@ -240,20 +244,11 @@ public:
 
 	void put( item const& itm)
 	{
-		unique_lock< shared_mutex > lk( mtx_);
-		put_( itm, lk);
+		lock_guard< shared_mutex > lk( mtx_);
+		put_( itm);
 	}
 
-	template< typename Duration >
-	void put(
-		item & itm,
-		Duration const&)
-	{
-		unique_lock< shared_mutex > lk( mtx_);
-		put_( itm, lk);
-	}
-
-	bool take( detail::callable & ca)
+	bool take( callable & ca)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, lk);
@@ -261,14 +256,14 @@ public:
 
 	template< typename Duration >
 	bool take(
-		detail::callable & ca,
+		callable & ca,
 		Duration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
 		return take_( ca, rel_time, lk);
 	}
 
-	bool try_take( detail::callable & ca)
+	bool try_take( callable & ca)
 	{
 		lock_guard< shared_mutex > lk( mtx_);
 		return try_take_( ca);

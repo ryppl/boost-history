@@ -12,8 +12,8 @@
 #include <boost/thread/mutex.hpp>
 #include <boost/utility.hpp>
 
+#include <boost/task/callable.hpp>
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/callable.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -29,13 +29,13 @@ namespace detail
 class BOOST_TASK_DECL wsq : private noncopyable
 {
 private:
-	const int						initial_size_;
+	const int					initial_size_;
 	shared_array< callable >	array_;
-	int								capacity_;
-	int								mask_;
-	volatile uint32_t				head_idx_;
-	volatile uint32_t				tail_idx_;
-	recursive_mutex					mtx_;
+	int							capacity_;
+	int							mask_;
+	volatile uint32_t			head_idx_;
+	volatile uint32_t			tail_idx_;
+	recursive_mutex				mtx_;
 
 public:
 	wsq();
