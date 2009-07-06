@@ -23,6 +23,8 @@
 namespace boost { namespace fusion {
     struct random_access_traversal_tag;
 
+    //code based on fold!!!
+
     namespace detail
     {
         template <typename SeqRef, typename First, typename F>

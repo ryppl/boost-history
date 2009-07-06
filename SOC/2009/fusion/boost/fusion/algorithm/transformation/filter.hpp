@@ -22,7 +22,12 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct filter
         {
-            typedef filter_view<Seq, is_same<mpl::_, T> > type;
+            typedef
+                filter_view<
+                    typename detail::add_lref<Seq>::type
+                  , is_same<mpl::_, T>
+                >
+            type;
         };
     }
 

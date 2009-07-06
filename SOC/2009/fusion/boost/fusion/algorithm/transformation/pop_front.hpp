@@ -22,9 +22,7 @@ namespace boost { namespace fusion
         {
             typedef 
                 iterator_range<
-                    typename next<
-                        typename begin<Seq>::type
-                    >::type
+                    typename next<typename begin<Seq>::type>::type
                   , typename end<Seq>::type
                 > 
             type;

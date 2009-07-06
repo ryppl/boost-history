@@ -18,7 +18,12 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pred>
         struct remove_if
         {
-            typedef filter_view<Seq, mpl::not_<Pred> > type;
+            typedef
+                filter_view<
+                    typename detail::add_lref<Seq>::type
+                  , mpl::not_<Pred>
+                >
+            type;
         };
     }
 

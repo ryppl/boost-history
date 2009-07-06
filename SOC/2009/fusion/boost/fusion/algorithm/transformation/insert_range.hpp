@@ -25,9 +25,24 @@ namespace boost { namespace fusion
             typedef typename result_of::begin<Seq>::type first_type;
             typedef typename result_of::end<Seq>::type last_type;
 
-            typedef iterator_range<first_type, Pos> left_type;
-            typedef iterator_range<Pos, last_type> right_type;
-            typedef joint_view<left_type, Range> left_insert_type;
+            typedef
+                iterator_range<
+                    first_type
+                  , typename detail::add_lref<Pos>::type
+                >
+            left_type;
+            typedef
+                iterator_range<
+                    typename detail::add_lref<Pos>::type
+                  , last_type
+                >
+            right_type;
+            typedef
+                joint_view<
+                    left_type
+                  , typename detail::add_lref<Range>::type
+                >
+            left_insert_type;
             typedef joint_view<left_insert_type, right_type> type;
         };
     }

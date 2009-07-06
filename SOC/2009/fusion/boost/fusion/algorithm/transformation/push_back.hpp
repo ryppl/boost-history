@@ -20,12 +20,13 @@ namespace boost { namespace fusion
         struct push_back
         {
             typedef
-                fusion::single_view<
-                    typename detail::as_fusion_element<T>::type
+                joint_view<
+                    typename detail::add_lref<Seq>::type
+                  , fusion::single_view<
+                        typename detail::as_fusion_element<T>::type
+                    >
                 >
-            single_view;
-
-            typedef joint_view<Seq, single_view const> type;
+            type;
         };
     }
 

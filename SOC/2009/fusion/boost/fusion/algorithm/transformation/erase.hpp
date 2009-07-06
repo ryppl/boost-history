@@ -91,6 +91,7 @@ namespace boost { namespace fusion
                 >
             right_type;
 
+            //TODO !!!
             typedef
                 joint_view<left_type, right_type>
             type;

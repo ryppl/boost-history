@@ -32,13 +32,7 @@ namespace boost { namespace fusion
 
             typedef
                 transform_view<
-                //TODO ?!
-                    typename detail::result_of_forward_as<
-                        Seq
-                      , typename add_const<
-                            typename detail::remove_reference<Seq>::type
-                        >::type
-                    >::type
+                    typename detail::add_lref<Seq>::type
                   , replacer
                 >
             type;
