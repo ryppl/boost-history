@@ -140,7 +140,7 @@ There are a few good reasons to make foundational concepts ``auto``:
 
 2. They are often so simple that the syntactic weight of an
    explicitly-written ``concept_map`` is a significant fraction of the
-   weight of the model declaration itself::
+   weight of the user's data type itself::
 
       struct case_insensitive // 67 non-whitespace characters
       {
@@ -151,11 +151,12 @@ There are a few good reasons to make foundational concepts ``auto``:
       concept_map BinaryPredicate<case_insensitive> {}
 
    [This relative weight is mitigated somewhat by the need to actually
-   *implement* the model, and, if accepted, by the intentional mapping
+   *implement* the data type, and, if accepted, by the intentional mapping
    syntax proposed in N2916]
 
 3. Because foundational concepts have a widely agreed-upon syntax and
-   semantics, there's a very good chance that there are already models
+   semantics, there's a very good chance that there are already matching
+   user data types
    “out there in the wild,” likely designed with the abstract concept,
    in mind, but without specific knowledge of the C++ ``concept``.
 
@@ -267,10 +268,12 @@ The arguments for declaring a concept ``auto`` are not nearly as
 compelling in the case of nontrivial concepts as they are for
 foundational ones.  Nontrivial concepts are not easy to model
 correctly, so the diagnostics produced by a ``concept_map`` can be
-highly valuable to the author of the model.  Declaring a new model is a
+highly valuable to the author of the data type.  Declaring a new matching
+data type is a
 significant job that tends to make the effort required to write a
 ``concept_map`` “disappear in the noise.” Finally, because they are
-not simple, there is little chance of finding pre-existing models of
+not simple, there is little chance of finding pre-existing data types that
+meet the requirements of
 newly-defined nontrivial concepts “in the wild.”
 
 The risks of declaring a nontrivial concept ``auto`` are also less
@@ -296,9 +299,9 @@ might design a type to model ``EqualityComparable`` or
 ``auto`` concept, an intentional map may be automatically generated
 when the type is passed where ``EqualityComparable`` is required.  In
 the case of the non-``auto`` concept ``BidirectionalIterator``, an
-intentional map must be written by the author of the model.  We call
+intentional map must be written by the author of the data type.  We call
 both maps “intentional” because they are intended by the author of the
-model.
+data type.
 
 Intentional ``concept_maps``\ s are traditionally empty, since a
 programmer modeling a concept in C++03 must write the required
@@ -348,7 +351,7 @@ over the “traditional” approach:
   together, within the concept map.
 
 * It makes explicit and visible the relationship between the
-  properties of the model's template arguments and of the model itself
+  properties of the data type's template arguments and of the data type itself
   (even if the concept is ``auto``).  For example, a ``pair<T,U>`` is
   ``CopyConstructible`` if both ``T`` and ``U`` are
   ``CopyConstructible``.
