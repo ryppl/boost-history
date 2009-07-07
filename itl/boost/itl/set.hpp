@@ -625,20 +625,20 @@ template <class Type>
 struct is_interval_container<itl::set<Type> >
 { 
     typedef is_interval_container<itl::set<Type> > type;
-    enum{value = true}; 
+    static const bool value = false; 
 };
 
 template <class Type>
 struct is_interval_splitter<itl::set<Type> >
-{ enum{value = false}; };
+{ static const bool value = false; };
 
 template <class Type>
 struct absorbs_neutrons<itl::set<Type> >
-{ enum{value = false}; };
+{ static const bool value = false; };
 
 template <class Type>
 struct is_total<itl::set<Type> >
-{ enum{value = false}; };
+{ static const bool value = false; };
 
 template <class Type>
 struct type_to_string<itl::set<Type> >

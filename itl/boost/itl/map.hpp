@@ -877,12 +877,12 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 struct is_interval_container<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
 { 
     typedef is_interval_container<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> > type;
-    enum{value = true}; 
+    static const bool value = false; 
 };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct is_interval_splitter<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
-{ enum{value = false}; };
+{ static const bool value = false; };
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 struct absorbs_neutrons<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> >
