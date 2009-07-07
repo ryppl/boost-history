@@ -433,8 +433,8 @@ Because they don't have syntax with widespread acceptance, post-hoc
 mapping of nontrivial concepts is highly likely to be both explicit
 and adaptive.
 
-Summary
-=======
+When to Use Auto or Non-Auto Concepts?
+======================================
 
 Unfortunately, with the exception of syntactic concepts, deciding
 whether to make a concept ``auto`` is not cut-and-dried.
