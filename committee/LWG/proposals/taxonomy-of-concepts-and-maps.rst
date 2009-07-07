@@ -341,8 +341,8 @@ In C++0x, associated functions can be written in the scope of the
 
     …etc…
 
-This style, sometimes called “Mat's Mechanism,” [#mat]_ has a number
-of expressive advantages over the “traditional” approach:
+This map-centric style [#mat]_ has a number of expressive advantages
+over the “traditional” approach:
 
 * It groups the operations associated with modeling a concept
   together, within the concept map.
@@ -424,7 +424,7 @@ consecutive integers using an actual ``int``::
 
 An adaptive ``concept_map`` is always explicitly written.  Syntax
 adaptation is most commonly associated with post-hoc mapping, but can
-be done intentionally as part of Mat's Mechanism.
+be done intentionally as part of the map-centric style.
 
 Because they don't have syntax with widespread acceptance, post-hoc
 mapping of nontrivial concepts is highly likely to be both explicit
