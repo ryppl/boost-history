@@ -15,11 +15,11 @@ BOOST_OM_BEGIN
 
 namespace detail
 {
-	template <class Alloc, class T>
-	struct rebind
-	{
-		typedef typename Alloc::template rebind<T>::other type;
-	};
+    template <class Alloc, class T>
+    struct rebind
+    {
+        typedef typename Alloc::template rebind<T>::other type;
+    };
 }
 
 BOOST_OM_END

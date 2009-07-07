@@ -18,17 +18,17 @@ BOOST_OM_BEGIN
 
 namespace generic
 {
-	struct registry : base
-	{
-	public:
+    struct registry : base
+    {
+    public:
 
-		virtual handle get_next_handle() = 0;
-		virtual klass const *get_class(type::number) const = 0;
-		virtual bool exists(handle) const = 0;
+        virtual handle get_next_handle() = 0;
+        virtual klass const *get_class(type::number) const = 0;
+        virtual bool exists(handle) const = 0;
 
-		virtual object_base &get_storage(handle) const = 0;
+        virtual object_base &get_storage(handle) const = 0;
 
-	};
+    };
 }
 
 BOOST_OM_END

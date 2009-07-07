@@ -16,29 +16,29 @@ BOOST_OM_BEGIN
 
 namespace type
 {
-	struct modifiers
-	{
-		typedef std::bitset<3> flags_type;
-		typedef unsigned long flags_value;
-		enum
-		{
-			None = 0,
-			Const = 1,
-			Reference = 2,
-		};
-	private:
-		flags_type flags;
+    struct modifiers
+    {
+        typedef std::bitset<3> flags_type;
+        typedef unsigned long flags_value;
+        enum
+        {
+            None = 0,
+            Const = 1,
+            Reference = 2,
+        };
+    private:
+        flags_type flags;
 
-	public:
-		modifiers() : flags((flags_value)0) { }
-		modifiers(flags_value N) : flags(N) { }
+    public:
+        modifiers() : flags((flags_value)0) { }
+        modifiers(flags_value N) : flags(N) { }
 
-		bool is_const() const { return flags[Const]; }
-		bool is_reference() const { return flags[Reference]; }
-		void set_const(bool B = true) { flags[Const] = B; }
-		void set_reference(bool B = true) { flags[Reference] = B; } 
-		void set_const_reference(bool B = true) { set_const(B); set_reference(B); }	
-	};
+        bool is_const() const { return flags[Const]; }
+        bool is_reference() const { return flags[Reference]; }
+        void set_const(bool B = true) { flags[Const] = B; }
+        void set_reference(bool B = true) { flags[Reference] = B; } 
+        void set_const_reference(bool B = true) { set_const(B); set_reference(B); }    
+    };
 }
 
 BOOST_OM_END

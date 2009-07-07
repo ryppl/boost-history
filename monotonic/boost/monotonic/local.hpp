@@ -12,88 +12,88 @@
 
 namespace boost
 {
-	namespace monotonic
-	{
-		/// RIIA for storage
-		template <class Region, class Access>
-		struct local
-		{
-			typedef local<Region, Access> This;
+    namespace monotonic
+    {
+        /// RIIA for storage
+        template <class Region, class Access>
+        struct local
+        {
+            typedef local<Region, Access> This;
 
-			/// the storage to use 
-			typedef static_storage<
-				Region
-				, Access
-				, DefaultSizes::InlineSize
-				, DefaultSizes::MinHeapIncrement
-				, default_allocator > StaticStorage;
+            /// the storage to use 
+            typedef static_storage<
+                Region
+                , Access
+                , DefaultSizes::InlineSize
+                , DefaultSizes::MinHeapIncrement
+                , default_allocator > StaticStorage;
 
-			/// create a rebounded allocator type
-			template <class T>
-			struct allocator
-			{
-				typedef monotonic::allocator<T, Region, Access> type;
-			};
+            /// create a rebounded allocator type
+            template <class T>
+            struct allocator
+            {
+                typedef monotonic::allocator<T, Region, Access> type;
+            };
 
-			local()
-			{
-			}
-			~local()
-			{
-				reset();
-			}
+            local()
+            {
+            }
+            ~local()
+            {
+                reset();
+            }
 
-			template <class T>
-			static monotonic::allocator<T,Region,Access> make_allocator()
-			{
-				return monotonic::allocator<T,Region,Access>();
-			}
+            template <class T>
+            static monotonic::allocator<T,Region,Access> make_allocator()
+            {
+                return monotonic::allocator<T,Region,Access>();
+            }
 
-			static typename StaticStorage::StorageType &get_storage()
-			{
-				return StaticStorage::get_storage();
-			}
-			static void reset()
-			{
-				get_storage().reset();
-			}
-			static void release()
-			{
-				get_storage().release();
-			}
+            static typename StaticStorage::StorageType &get_storage()
+            {
+                return StaticStorage::get_storage();
+            }
+            static void reset()
+            {
+                get_storage().reset();
+            }
+            static void release()
+            {
+                get_storage().release();
+            }
 
-			template <class Ty>
-			Ty &create()
-			{
-				return get_storage().create<Ty>();
-			}
-			template <class Ty>
-			Ty &create(Ty const &X)
-			{
-				return get_storage().create<Ty>(X);
-			}
-			template <class Ty>
-			void destroy(Ty &X)
-			{
-				get_storage().destroy(X);
-			}
+            template <class Ty>
+            Ty &create()
+            {
+                return get_storage().create<Ty>();
+            }
+            template <class Ty>
+            Ty &create(Ty const &X)
+            {
+                return get_storage().create<Ty>(X);
+            }
+            template <class Ty>
+            void destroy(Ty &X)
+            {
+                get_storage().destroy(X);
+            }
 
-			static size_t fixed_used() 
-			{
-				return get_storage().fixed_used();
-			}
-			static size_t heap_used() 
-			{
-				return get_storage().heap_used();
-			}
-			static size_t used()
-			{
-				return get_storage().used();
-			}
+            static size_t fixed_used() 
+            {
+                return get_storage().fixed_used();
+            }
+            static size_t heap_used() 
+            {
+                return get_storage().heap_used();
+            }
+            static size_t used()
+            {
+                return get_storage().used();
+            }
 
-		};
+        };
 
-	} // namespace monotonic
+    } // namespace monotonic
 
 } // namespace boost
 

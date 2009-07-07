@@ -15,40 +15,40 @@ BOOST_OM_BEGIN
 
 namespace type
 {
-	struct number
-	{
-		enum builtins
-		{
-			None,
-			Any,
-			Void,
-			
-			Object,
-			
-			Method,
-			Property,
-			Class,
+    struct number
+    {
+        enum builtins
+        {
+            None,
+            Any,
+            Void,
+            
+            Object,
+            
+            Method,
+            Property,
+            Class,
 
-			Bool,
-			Int,
-			Float,
-			String,
+            Bool,
+            Int,
+            Float,
+            String,
 
-			List,
-			Vector,
-			Map,
-			Set,
-		};
+            List,
+            Vector,
+            Map,
+            Set,
+        };
 
-		typedef unsigned short value_type;
-		value_type value;
+        typedef unsigned short value_type;
+        value_type value;
 
-		number() : value(0) { }
-		number(value_type val) : value(val) { }
+        number() : value(0) { }
+        number(value_type val) : value(val) { }
 
-		friend bool operator==(number a, number b) { return a.value == b.value; }
-		friend bool operator<(number a, number b) { return a.value < b.value; }
-	};
+        friend bool operator==(number a, number b) { return a.value == b.value; }
+        friend bool operator<(number a, number b) { return a.value < b.value; }
+    };
 
 }
 
@@ -59,10 +59,10 @@ BOOST_BEGIN
 template <>
 struct hash<BOOST_OBJECT_MODEL_NAMESPACE(type::number)>
 {
-	size_t operator()(BOOST_OBJECT_MODEL_NAMESPACE(type::number) num) const
-	{
-		return num.value;
-	}
+    size_t operator()(BOOST_OBJECT_MODEL_NAMESPACE(type::number) num) const
+    {
+        return num.value;
+    }
 };
 
 BOOST_END

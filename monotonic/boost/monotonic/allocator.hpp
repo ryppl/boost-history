@@ -11,67 +11,67 @@
 
 namespace boost
 {
-	namespace monotonic
-	{
-		template <class Region, class Access> 
-		struct allocator<void, Region, Access>
-		{
-			typedef void* pointer;
-			typedef const void* const_pointer;
+    namespace monotonic
+    {
+        template <class Region, class Access> 
+        struct allocator<void, Region, Access>
+        {
+            typedef void* pointer;
+            typedef const void* const_pointer;
 
-			typedef void value_type;
-			template <class U> 
-			struct rebind 
-			{ 
-				typedef allocator<U, Region, Access> other; 
-			};
-		};
+            typedef void value_type;
+            template <class U> 
+            struct rebind 
+            { 
+                typedef allocator<U, Region, Access> other; 
+            };
+        };
 
-		template <class T, class Region, class Access> 
-		struct allocator : allocator_base<T, allocator<T, Region, Access> >
-		{
-			typedef allocator_base<T, allocator<T, Region, Access> > Parent;
-			using typename Parent::size_type;
-			using typename Parent::difference_type;
-			using typename Parent::pointer;
-			using typename Parent::const_pointer;
-			using typename Parent::reference;
-			using typename Parent::const_reference;
-			using typename Parent::value_type;
+        template <class T, class Region, class Access> 
+        struct allocator : allocator_base<T, allocator<T, Region, Access> >
+        {
+            typedef allocator_base<T, allocator<T, Region, Access> > Parent;
+            using typename Parent::size_type;
+            using typename Parent::difference_type;
+            using typename Parent::pointer;
+            using typename Parent::const_pointer;
+            using typename Parent::reference;
+            using typename Parent::const_reference;
+            using typename Parent::value_type;
 
-			template <class U> 
-			struct rebind 
-			{ 
-				typedef allocator<U, Region, Access> other; 
-			};
+            template <class U> 
+            struct rebind 
+            { 
+                typedef allocator<U, Region, Access> other; 
+            };
 
-			allocator() throw() 
-				: Parent(static_storage<Region,Access>::get_storage()) { }
+            allocator() throw() 
+                : Parent(static_storage<Region,Access>::get_storage()) { }
 
-		public:
-			allocator(storage_base &store) throw() 
-				: Parent(store) { }
+        public:
+            allocator(storage_base &store) throw() 
+                : Parent(store) { }
 
-		public:
-			allocator(const allocator& alloc) throw() 
-				: Parent(alloc) { }
+        public:
+            allocator(const allocator& alloc) throw() 
+                : Parent(alloc) { }
 
-			template <class U> 
-			allocator(const allocator<U, Region, Access> &alloc) throw()
-				: Parent(alloc) { }
+            template <class U> 
+            allocator(const allocator<U, Region, Access> &alloc) throw()
+                : Parent(alloc) { }
 
-			friend bool operator==(allocator<T,Region, Access> const &A, allocator<T,Region, Access> const &B) 
-			{ 
-				return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
-			}
+            friend bool operator==(allocator<T,Region, Access> const &A, allocator<T,Region, Access> const &B) 
+            { 
+                return static_cast<Parent const &>(A) == static_cast<Parent const &>(B);
+            }
 
-			friend bool operator!=(allocator<T,Region, Access> const &A, allocator<T,Region, Access> const &B) 
-			{ 
-				return static_cast<Parent const &>(A) != static_cast<Parent const &>(B);
-			}
-		};
-	
-	} // namespace monotonic
+            friend bool operator!=(allocator<T,Region, Access> const &A, allocator<T,Region, Access> const &B) 
+            { 
+                return static_cast<Parent const &>(A) != static_cast<Parent const &>(B);
+            }
+        };
+    
+    } // namespace monotonic
 
 } // namespace boost
 

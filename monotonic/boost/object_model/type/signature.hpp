@@ -15,9 +15,9 @@ BOOST_OM_BEGIN
 
 namespace type
 {
-	struct signature
-	{
-	};
+    struct signature
+    {
+    };
 }
 
 BOOST_OM_END

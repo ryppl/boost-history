@@ -8,10 +8,10 @@
 #endif
 
 #ifdef BOOST_MSVC
-#	pragma warning(push)
-#	pragma warning(disable:4127) // conditional expression is constant
-#	pragma warning(disable:4702) // unreachable code
-#	pragma warning(disable:4996) // Function call with parameters that may be unsafe
+#    pragma warning(push)
+#    pragma warning(disable:4127) // conditional expression is constant
+#    pragma warning(disable:4702) // unreachable code
+#    pragma warning(disable:4996) // Function call with parameters that may be unsafe
 #endif
 
 //EOF

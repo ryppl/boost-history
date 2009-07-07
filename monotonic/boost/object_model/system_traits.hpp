@@ -18,27 +18,27 @@ BOOST_OM_BEGIN
 
 ///
 template <class Alloc
-	, class Char
-	, class ChTr
-	, class Str
-	, class Label
-	, class Ident
+    , class Char
+    , class ChTr
+    , class Str
+    , class Label
+    , class Ident
 >
 struct system_traits
 {
-	typedef Char char_type;
-	typedef Alloc allocator_type;
-	typedef Str string_type;
-	typedef ChTr char_traits;
-	typedef Label label_type;
-	typedef Ident identifier_type;
-	typedef system_traits<Alloc, Char, ChTr, Str, Label, Ident> this_type;
+    typedef Char char_type;
+    typedef Alloc allocator_type;
+    typedef Str string_type;
+    typedef ChTr char_traits;
+    typedef Label label_type;
+    typedef Ident identifier_type;
+    typedef system_traits<Alloc, Char, ChTr, Str, Label, Ident> this_type;
 };
 
 template <class Label, class Al = default_allocator, class Ch = char >
 struct set_label : system_traits<Al, Ch>
 {
-	typedef Label label_type;
+    typedef Label label_type;
 };
 
 BOOST_OM_END

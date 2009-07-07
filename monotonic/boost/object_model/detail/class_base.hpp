@@ -17,55 +17,55 @@ BOOST_OM_BEGIN
 
 namespace detail
 {
-	template <class Registry>
-	struct klass_base : generic::klass
-	{
-		typedef typename Registry::identifier_type Label;
-		typedef typename Registry::allocator_type allocator_type;
+    template <class Registry>
+    struct klass_base : generic::klass
+    {
+        typedef typename Registry::identifier_type Label;
+        typedef typename Registry::allocator_type allocator_type;
 
-		// TODO: use unordered_map
-		typedef std::map<Label, generic::property const *, std::less<Label>, allocator_type> properties_type;
-		typedef std::map<Label, generic::method<Registry> const *, std::less<Label>, allocator_type> methods_type;
+        // TODO: use unordered_map
+        typedef std::map<Label, generic::property const *, std::less<Label>, allocator_type> properties_type;
+        typedef std::map<Label, generic::method<Registry> const *, std::less<Label>, allocator_type> methods_type;
 
-	private:
-		properties_type properties;
-		methods_type methods;
-		Registry &factory;
+    private:
+        properties_type properties;
+        methods_type methods;
+        Registry &factory;
 
-	public:
-		klass_base(Registry &reg, generic::class_name ident, type::number num)
-			: generic::klass(ident, num), factory(reg)
-		{
-		}
-		~klass_base()
-		{
-			BOOST_FOREACH(methods_type::value_type &val, methods)
-			{
-				factory.allocator_destroy_deallocate(const_cast<generic::method<Registry> *>(val.second));
-			}
-		}
+    public:
+        klass_base(Registry &reg, generic::class_name ident, type::number num)
+            : generic::klass(ident, num), factory(reg)
+        {
+        }
+        ~klass_base()
+        {
+            BOOST_FOREACH(methods_type::value_type &val, methods)
+            {
+                factory.allocator_destroy_deallocate(const_cast<generic::method<Registry> *>(val.second));
+            }
+        }
 
-		void add_method(Label const &name, generic::method<Registry> const *meth)
-		{
-			methods[name] = meth;
-		}
+        void add_method(Label const &name, generic::method<Registry> const *meth)
+        {
+            methods[name] = meth;
+        }
 
-		generic::method<Registry> const *get_method(Label const &name) const
-		{
-			methods_type::const_iterator iter = methods.find(name);
-			return iter == methods.end() ? 0 : iter->second;
-		}
+        generic::method<Registry> const *get_method(Label const &name) const
+        {
+            methods_type::const_iterator iter = methods.find(name);
+            return iter == methods.end() ? 0 : iter->second;
+        }
 
-		bool has_method(Label const &name) const
-		{
-			return methods.find(name) != methods.end();
-		}
+        bool has_method(Label const &name) const
+        {
+            return methods.find(name) != methods.end();
+        }
 
-		bool has_field(Label const &name) const
-		{
-			return properties.find(name) != properties.end();
-		}
-	};
+        bool has_field(Label const &name) const
+        {
+            return properties.find(name) != properties.end();
+        }
+    };
 
 } // namespace detail
 

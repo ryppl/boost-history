@@ -16,35 +16,35 @@ BOOST_OM_BEGIN
 
 namespace generic
 {
-	template <class Traits>
-	struct const_storage : object
-	{
-		typedef dictionary<Traits> dictionary_type;
-		typedef typename dictionary_type::label_type label_type;
+    template <class Traits>
+    struct const_storage : object
+    {
+        typedef dictionary<Traits> dictionary_type;
+        typedef typename dictionary_type::label_type label_type;
 
-	protected:
-		dictionary_type dict;
+    protected:
+        dictionary_type dict;
 
-	public:
-		void set(label_type const &name, generic::object const &obj)
-		{
-			dict.set(name, obj);
-		}
-		generic::object get(label_type const &name) const
-		{
-			return dict.get(name);
-		}
-		bool has(label_type const &name) const
-		{
-			return dict.has(name);
-		}
-	};
+    public:
+        void set(label_type const &name, generic::object const &obj)
+        {
+            dict.set(name, obj);
+        }
+        generic::object get(label_type const &name) const
+        {
+            return dict.get(name);
+        }
+        bool has(label_type const &name) const
+        {
+            return dict.has(name);
+        }
+    };
 
-	template <class Traits>
-	struct storage : const_storage<Traits>
-	{
+    template <class Traits>
+    struct storage : const_storage<Traits>
+    {
 
-	};
+    };
 }
 
 BOOST_OM_END

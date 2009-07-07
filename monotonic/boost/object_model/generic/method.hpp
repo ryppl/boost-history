@@ -18,25 +18,25 @@ BOOST_OM_BEGIN
 
 namespace generic
 {
-	/// common base for all specific methods
-	template <class Registry>
-	struct method
-	{
-	private:
-		typename Registry::label_type name;
-		type::signature sig;
+    /// common base for all specific methods
+    template <class Registry>
+    struct method
+    {
+    private:
+        typename Registry::label_type name;
+        type::signature sig;
 
-	public:
+    public:
 
-		virtual void invoke(object &servant, typename Registry::vector_type &args) const = 0;
+        virtual void invoke(object &servant, typename Registry::vector_type &args) const = 0;
 
-		template <class Traits>
-		typename Traits::string_type to_string(const Registry &reg) const
-		{
-			typename Traits::string_type s;
-			return s;
-		}
-	};
+        template <class Traits>
+        typename Traits::string_type to_string(const Registry &reg) const
+        {
+            typename Traits::string_type s;
+            return s;
+        }
+    };
 }
 
 BOOST_OM_END

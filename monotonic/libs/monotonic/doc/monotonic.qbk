@@ -76,16 +76,18 @@
 The [*Boost.Monotonic] library provides storage, allocation and container types for use 
 in high-performance and real-time applications.
 
-The library provides a means for allocation to come from the stack, or the heap, or a combination of
- both the stack and the heap. Allocation is fast, because de-allocation does nothing. 
+The library provides a means for allocation to come from the BSS, stack, or the heap, or transparently from a 
+combination of the BSS, stack and heap. Allocation is fast, because de-allocation does nothing[footnote except for `monotonic::stack<>`] . 
  As such, the amount of storage used by a monotonic allocator can only ever increase 
- - hence the name of the library.
+ - hence the name of the library. A LIFO allocation model is also provided.
 
 Allocation can be ['regionalised] by application of user-supplied 'tag types' to specify a 
 logical storage region. A second tag may be used to specify the 
 ['access type] for the region - which can be either global, guarded by a mutex, or using thread-local storage.
 
-[*Boost.Monotonic] is generally used where performace is a key concern. 
+[*Boost.Monotonic] is generally used where performace is a key concern, but there are many use-cases where 
+use of this library provides new functionality[footnote such as in self- or mutually-recursive algorithms].
+
 By making deallocation a no-op, allocation of memory resources is extremely fast. 
 In general, the programmer is required to release storage used at an appropriate time, 
 however local scoping systems are provided by the library for the most common use cases.
@@ -269,7 +271,9 @@ defined container which is populated, used and discarded regularly.
 [section Stack]
 
 While monotonic allocators use monotonic storage, we can also use this storage 
-directly and wherever we want efficient resource management.
+directly and wherever we want efficient resource management. Using a `monotonic::stack<>`
+gives you a first-class C++ stack which you can use at will, pass as an argument or return
+as a result[footnote To avoid slicing copies, use Boost.Cloneable.Stack].
 
 The general usage pattern is:
 
@@ -281,19 +285,27 @@ monotonic::stack<Size> stack;
     ....
     Tn &tn = stack.push<Tn>(..args..);
     
-    boost::array<T, Size> &array = stack.push_array<T, Size>();
-    
+    stack.pop();
     stack.pop();
     ...
 }
 ``
 
-The default inline size of a `stack<>` object is defined as `boost::monotonic::DefaltSizes::InlineSize`. 
+Objects are created in-place using /emplace/ semantics. You just provide the type and construction arguments - your object
+will be either on the stack or the heap and you needn't worry either way. Objects are /not/ copied, which means you 
+can safely use types that do not have default constructors or assignment overloads with `stack<>`.
 
-We can use a `stack<>` as a platform-independant `alloca(size)` by pushing an array of bytes, as shown above.
+All objects pushed onto the `stack<>` are destroyed when the stack leaves scope - there is no need to pop them all explicitly.
+New objects can be added between `push` and `pop`.
+
+You can set the amount of C++ machine stack to use by saying `stack<num_bytes>`.The default inline size of a `stack<>` 
+object is defined as `boost::monotonic::DefaltSizes::InlineSize`. 
+
+We can use a `stack<>` as a platform-independant `alloca(size)` by pushing an array of bytes, by using `stack.push<char [N]>` or
+`stack.push<boost::array<char, N> >` or more generally `stack.push_array<Ty, N>`.
 
 When we call `stack.pop()`, the last value added to the stack is destroyed and the stack pointer is set to
-the start of the previous object on the stack. Calling `pop` on an empty stack throws an `empty_stack` exception.
+the end of the previous object on the stack. Objects are added using correct machine alignment. Calling `pop` on an empty stack throws an `empty_stack` exception.
 
 [note It is best practise to open a new statement block before using a `stack<>` object. This ensures that the objects
 on the `stack<>` still have storage when when they are automatically deleted]
@@ -308,7 +320,13 @@ Stack stack;
     
     array<char, 1000> &bytes = stack.push_array<char, 1000>();
     
+    // number of elements on the stack
     size_t size = stack.size();
+    
+    // number of bytes used
+    size_t used_bytes = stack.bytes_used();
+    
+    // iterate over heterogenous elements
     Stack::const_iterator elem = stack.begin(), end = stack.end();
     for (; elem != end; ++elem)
     {
@@ -323,9 +341,6 @@ Stack stack;
     // stacks are first-class objects and can be copied, passed
     // as arguments and returned as results
     Stack copy = stack;
-    
-    // unecessary in this case; will be cleared when stack leaves scope
-    stack.clear();
 }
 ``
 
@@ -333,15 +348,33 @@ Stack stack;
 between objects and functions and even across process boundaries, independantly of the 
 underlying machine-based stack. They can be copied and compared and iterated over.
 
-Also unlike the stack, storage will use the heap when its local inline stack-based buffer is exhuasted. 
-This makes it ideal for using things like local buffers and containers that generally will be small 
-enough to fit onto the stack, but with the fallback safety of transparently using the heap to 
-service later requests for the cases where that inline buffer is not large enough.
+[warning Copying `stack<>` objects performs a slicing copy. 
+To safely copy general stacks, use `boost::cloneable::stack<>`[footnote TODO] instead]
 
-When a stack goes out of scope, all objects in that stack are automatically destroyed.
+Unlike the C++ stack, storage for a `stack<>` will use the heap when its local inline stack-based buffer is exhuasted. 
+This makes it ideal for local buffers that will generally be small 
+enough to fit onto the stack, but with the fallback safety of transparently using the heap to 
+service later requests for the cases where that inline buffer is not large enough. This is 
+especially useful in recursive functions, which can be readily re-written to use a `monotonic::stack<>` and 
+thus be divorced from the limitations of the C++ stack.
+
+[note When a `stack<>` goes out of scope, all objects in that stack are destroyed]
+
+You can use `monotonic::enter` to localise
+usage of a stack:
+
+``
+template <class Stack>
+void UseStack(Stack &stack)
+{
+	monotonic::enter local(stack);
+}
+``
+
+This ensures that the stack leaves in the same state that it entered, by `pop`ping until the stack is balanced. If the stack is smaller
+when `local` leaves scope than when it entered scope, it will throw `boost::monotonic::uneven_stack`.
 
 [endsect]
-
 
 [endsect]
 

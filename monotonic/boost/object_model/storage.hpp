@@ -17,46 +17,46 @@ BOOST_OM_BEGIN
 template <class T, class Traits>
 struct const_storage : generic::const_storage<Traits>
 {
-	typedef Traits system_traits;
-	typedef type::traits<T> type_traits;
-	typename type_traits::storage_type value;
+    typedef Traits system_traits;
+    typedef type::traits<T> type_traits;
+    typename type_traits::storage_type value;
 
-	const_storage() {} 
-	const_storage(typename type_traits::const_reference_type init) : value(init) { }
-	typename type_traits::const_reference_type get_const_reference() const
-	{
-		return value;
-	}
+    const_storage() {} 
+    const_storage(typename type_traits::const_reference_type init) : value(init) { }
+    typename type_traits::const_reference_type get_const_reference() const
+    {
+        return value;
+    }
 };
 
 template <class T, class Traits>
 struct storage : generic::storage<Traits>
 {
-	typedef Traits system_traits;
-	typedef type::traits<T> type_traits;
-	typename type_traits::storage_type value;
-	mutable bool dirty;
+    typedef Traits system_traits;
+    typedef type::traits<T> type_traits;
+    typename type_traits::storage_type value;
+    mutable bool dirty;
 
-	storage() : dirty(true) {} 
-	storage(typename type_traits::const_reference_type init) : value(init), dirty(false) { }
+    storage() : dirty(true) {} 
+    storage(typename type_traits::const_reference_type init) : value(init), dirty(false) { }
 
-	typename type_traits::const_reference_type get_const_reference() const
-	{
-		return value;
-	}
-	typename type_traits::reference_type get_reference()
-	{
-		dirty = true;
-		return value;
-	}
-	bool is_dirty() const
-	{
-		return dirty;
-	}
-	void set_clean() const
-	{
-		dirty = false;
-	}
+    typename type_traits::const_reference_type get_const_reference() const
+    {
+        return value;
+    }
+    typename type_traits::reference_type get_reference()
+    {
+        dirty = true;
+        return value;
+    }
+    bool is_dirty() const
+    {
+        return dirty;
+    }
+    void set_clean() const
+    {
+        dirty = false;
+    }
 };
 
 BOOST_OM_END

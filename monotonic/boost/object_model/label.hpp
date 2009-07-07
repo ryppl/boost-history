@@ -20,44 +20,44 @@ BOOST_OM_BEGIN
 template <class String>
 struct label
 {
-	typedef String string_type;
-	typedef typename String::allocator_type allocator_type;
-	typedef typename string_type::value_type char_type;
+    typedef String string_type;
+    typedef typename String::allocator_type allocator_type;
+    typedef typename string_type::value_type char_type;
 
 private:
-	string_type value;
+    string_type value;
 
 public:
-	label() { }
-	label(const char_type *text)
-	{
-		from_string(text);
-	}
-	label(const string_type &text)
-	{
-		from_string(text);
-	}
+    label() { }
+    label(const char_type *text)
+    {
+        from_string(text);
+    }
+    label(const string_type &text)
+    {
+        from_string(text);
+    }
 
-	const string_type &to_string() const { return value; }
+    const string_type &to_string() const { return value; }
 
-	friend bool operator==(label const &a, label const &b) { return a.value == b.value; }
-	friend bool operator<(label const &a, label const &b) { return a.value < b.value; }
+    friend bool operator==(label const &a, label const &b) { return a.value == b.value; }
+    friend bool operator<(label const &a, label const &b) { return a.value < b.value; }
 
 private:
-	void from_string(const string_type &text)
-	{
-		from_string(text.c_str());
-	}
-	void from_string(const char_type *text)
-	{
-		value = text;
-	}
+    void from_string(const string_type &text)
+    {
+        from_string(text.c_str());
+    }
+    void from_string(const char_type *text)
+    {
+        value = text;
+    }
 };
 
 template <class Al, class Ch, class Tr, class String>
 string_stream<Al,Ch,Tr> &operator<<(string_stream<Al,Ch,Tr> &stream, const label<String> &val)
 {
-	return stream << val.to_string();
+    return stream << val.to_string();
 }
 
 BOOST_OM_END
@@ -67,10 +67,10 @@ BOOST_BEGIN
 template <class Str>
 struct hash<boost::BOOST_OBJECT_MODEL_NAMESPACE_NAME::label<Str> >
 {
-	size_t operator()(const boost::BOOST_OBJECT_MODEL_NAMESPACE_NAME::label<Str>  &ident) const
-	{
-		return hash<const typename Str::char_type *>(ident.to_string().c_str());
-	}
+    size_t operator()(const boost::BOOST_OBJECT_MODEL_NAMESPACE_NAME::label<Str>  &ident) const
+    {
+        return hash<const typename Str::char_type *>(ident.to_string().c_str());
+    }
 };
 
 BOOST_END

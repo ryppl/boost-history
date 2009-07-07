@@ -19,45 +19,45 @@ BOOST_OM_BEGIN
 template <class T, class Registry>
 struct klass : detail::klass_base<typename Registry>
 {
-	typedef typename Registry::traits_type system_traits;
-	typedef detail::klass_base<Registry> klass_base_type;
-	typedef typename system_traits::label_type label_type;
-	typedef typename Registry::rebind_storage<T>::type storage_type;
-	typedef typename system_traits::allocator_type::template rebind<storage_type>::other allocator_type;
-	typedef type::traits<T> traits;
+    typedef typename Registry::traits_type system_traits;
+    typedef detail::klass_base<Registry> klass_base_type;
+    typedef typename system_traits::label_type label_type;
+    typedef typename Registry::rebind_storage<T>::type storage_type;
+    typedef typename system_traits::allocator_type::template rebind<storage_type>::other allocator_type;
+    typedef type::traits<T> traits;
 
 private:
-	Registry &factory;
-	mutable allocator_type allocator;
+    Registry &factory;
+    mutable allocator_type allocator;
 
 public:
-	klass(Registry &reg)
-		: klass_base_type(reg, traits::name, traits::type_number), factory(reg), allocator(reg.get_allocator()) { }
+    klass(Registry &reg)
+        : klass_base_type(reg, traits::name, traits::type_number), factory(reg), allocator(reg.get_allocator()) { }
 
-	generic::object &create() const
-	{
-		storage_type *store = allocator.allocate(1);
-		//allocator.construct(store);
-		new (store) storage_type();
-		store->construct(factory, *this, factory.get_next_handle());
-		return *store;
-	}
+    generic::object &create() const
+    {
+        storage_type *store = allocator.allocate(1);
+        //allocator.construct(store);
+        new (store) storage_type();
+        store->construct(factory, *this, factory.get_next_handle());
+        return *store;
+    }
 
-	storage_type &create(typename traits::const_reference_type init) const
-	{
-		storage_type *store = allocator.allocate(1);
-		//allocator.construct(store);
-		new (store) storage_type(init);
-		store->construct(factory, *this, factory.get_next_handle());
-		return *store;
-	}
+    storage_type &create(typename traits::const_reference_type init) const
+    {
+        storage_type *store = allocator.allocate(1);
+        //allocator.construct(store);
+        new (store) storage_type(init);
+        store->construct(factory, *this, factory.get_next_handle());
+        return *store;
+    }
 
-	void destroy(generic::object &obj) const
-	{
-		storage_type *store = &static_cast<storage_type &>(obj);
-		allocator.destroy(store);
-		allocator.deallocate(store, 1);
-	}
+    void destroy(generic::object &obj) const
+    {
+        storage_type *store = &static_cast<storage_type &>(obj);
+        allocator.destroy(store);
+        allocator.deallocate(store, 1);
+    }
 
 };
 

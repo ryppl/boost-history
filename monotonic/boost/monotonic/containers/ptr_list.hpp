@@ -13,26 +13,26 @@
 
 namespace boost
 {
-	namespace monotonic
-	{
-		/// A boost::ptr_list<T> that uses a monotonic allocator, and a custom clone allocator
-		/// TODO: not use inheritance
-		template <class T, class Region, class Access>
-		struct ptr_list : boost::ptr_list<T, inline_clone_allocator, allocator<T,Region,Access> >
-		{
-			typedef allocator<T,Region,Access> Allocator;
-			typedef boost::ptr_list<T, inline_clone_allocator, Allocator> List;
+    namespace monotonic
+    {
+        /// A boost::ptr_list<T> that uses a monotonic allocator, and a custom clone allocator
+        /// TODO: not use inheritance
+        template <class T, class Region, class Access>
+        struct ptr_list : boost::ptr_list<T, inline_clone_allocator, allocator<T,Region,Access> >
+        {
+            typedef allocator<T,Region,Access> Allocator;
+            typedef boost::ptr_list<T, inline_clone_allocator, Allocator> List;
 
-			ptr_list() 
-			{ 
-			}
-			ptr_list(Allocator const &A) 
-				: List(A) 
-			{ 
-			}	
-		};
+            ptr_list() 
+            { 
+            }
+            ptr_list(Allocator const &A) 
+                : List(A) 
+            { 
+            }    
+        };
 
-	} // namespace monotonic
+    } // namespace monotonic
 
 } // namespace boost
 

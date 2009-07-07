@@ -17,23 +17,23 @@ BOOST_OM_BEGIN
 template <class Alloc = default_allocator, class Ch = char, class Tr = std::char_traits<Ch> >
 struct string_stream
 {
-	typedef string<Alloc,Ch,Tr> string_type;
-	typedef std::basic_stringstream<Ch, Tr, Alloc> string_stream_type;
+    typedef string<Alloc,Ch,Tr> string_type;
+    typedef std::basic_stringstream<Ch, Tr, Alloc> string_stream_type;
 
 private:
-	string_stream_type stream;
+    string_stream_type stream;
 
 public:
-	string_type str() const
-	{
-		return stream.str();
-	}
+    string_type str() const
+    {
+        return stream.str();
+    }
 };
 
 template <class Al, class Ch, class Tr, class Ty>
 string_stream<Al,Ch,Tr> &operator<<(string_stream<Al,Ch,Tr> &stream, const Ty &val)
 {
-	return stream << val;
+    return stream << val;
 }
 
 BOOST_OM_END

@@ -19,48 +19,48 @@ BOOST_OM_BEGIN
 
 namespace type
 {
-	struct specifier : modifiers
-	{
-		number type_number;
+    struct specifier : modifiers
+    {
+        number type_number;
 
-		specifier(number N = number::None, modifiers M = modifiers()) : modifiers(M), type_number(N) { }
+        specifier(number N = number::None, modifiers M = modifiers()) : modifiers(M), type_number(N) { }
 
-		number get_number() const { return type_number; }
+        number get_number() const { return type_number; }
 
-		template <class Alloc>
-		string<Alloc> to_string(const registry<Alloc> &reg) const
-		{
-			string_stream<Alloc> stream;
-			generic::klass const *k = reg.get_class(type_number);
-			if (k  == 0)
-				stream << "[type_number: " << type_number.value << "]";
-			else
-				stream << k->get_name();
-			if (is_const())
-				stream << " const";
-			if (is_reference())
-				stream << " &";
-			return stream.str();
-		}
-	};
+        template <class Alloc>
+        string<Alloc> to_string(const registry<Alloc> &reg) const
+        {
+            string_stream<Alloc> stream;
+            generic::klass const *k = reg.get_class(type_number);
+            if (k  == 0)
+                stream << "[type_number: " << type_number.value << "]";
+            else
+                stream << k->get_name();
+            if (is_const())
+                stream << " const";
+            if (is_reference())
+                stream << " &";
+            return stream.str();
+        }
+    };
 
-	template <class T>
-	struct is_const : mpl::true_ { };
+    template <class T>
+    struct is_const : mpl::true_ { };
 
-	template <class T>
-	struct is_const<const T> : mpl::true_ { };
+    template <class T>
+    struct is_const<const T> : mpl::true_ { };
 
-	template <class T>
-	struct is_const<const T&> : mpl::true_ { };
+    template <class T>
+    struct is_const<const T&> : mpl::true_ { };
 
-	template <class T>
-	specifier make_specifier()
-	{
-		modifiers mods;
-		mods.set_const(is_const<T>::value);	// what is wrong with boost::is_const<T> ??
-		mods.set_reference(boost::is_reference<T>::value);
-		return specifier();//(traits<typename base_type<T>::Type>::type_number, mods);
-	};
+    template <class T>
+    specifier make_specifier()
+    {
+        modifiers mods;
+        mods.set_const(is_const<T>::value);    // what is wrong with boost::is_const<T> ??
+        mods.set_reference(boost::is_reference<T>::value);
+        return specifier();//(traits<typename base_type<T>::Type>::type_number, mods);
+    };
 
 } // namespace type
 

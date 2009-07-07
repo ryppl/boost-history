@@ -9,8 +9,8 @@
 #include <boost/monotonic/detail/prefix.hpp>
 
 #ifdef BOOST_MONOTONIC_THREADS
-#	include <boost/monotonic/shared_allocator.hpp>
-//TODO #	include <boost/monotonic/thread_local_allocator.hpp>
+#    include <boost/monotonic/shared_allocator.hpp>
+//TODO #    include <boost/monotonic/thread_local_allocator.hpp>
 #endif
 
 #include <boost/monotonic/containers/string.hpp>
@@ -23,10 +23,10 @@
 
 namespace boost
 {
-	namespace monotonic
-	{
+    namespace monotonic
+    {
 
-	} // namespace monotonic
+    } // namespace monotonic
 
 } // namespace boost
 

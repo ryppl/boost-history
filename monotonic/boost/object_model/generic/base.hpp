@@ -16,17 +16,17 @@ BOOST_OM_BEGIN
 
 namespace generic
 {
-	/// common to all other base structures in namespace generic
-	struct base
-	{
-		virtual ~base() { }
-	};
+    /// common to all other base structures in namespace generic
+    struct base
+    {
+        virtual ~base() { }
+    };
 
-	/// common to all other base structures in namespace generic
-	struct noncopyable_base : noncopyable
-	{
-		virtual ~noncopyable_base() { }
-	};
+    /// common to all other base structures in namespace generic
+    struct noncopyable_base : noncopyable
+    {
+        virtual ~noncopyable_base() { }
+    };
 }
 
 BOOST_OM_END

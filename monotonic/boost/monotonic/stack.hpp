@@ -19,303 +19,322 @@
 
 namespace boost
 {
-	namespace monotonic
-	{
-		struct null_pointer {};
+    namespace monotonic
+    {
+        struct null_pointer {};
 
-		/// a first-class stack object
-		template <size_t InlineSize = DefaultSizes::InlineSize>
-		struct stack
-		{
-			typedef stack<InlineSize> this_type;
+        /// a first-class stack object
+        template <size_t InlineSize>
+        struct fixed_stack
+        {
+            typedef fixed_stack<InlineSize> this_type;
 
-		private:
-			fixed_storage<InlineSize> store;
+        private:
+            fixed_storage<InlineSize> store;
 
-			template <class>
-			struct element;
+            template <class>
+            struct element;
 
-			/// an entry on the stack
-			struct element_base
-			{
-				element_base *previous;
-				size_t cursor;
-				bool is_pod;
-				element_base(bool ip = false) 
-					: is_pod(ip) { }
-				template <class T>
-				bool is_type() const
-				{
-					return get_type() == typeid(T);
-				}
-				template <class T>
-				T &get()
-				{
-					if (get_type() != typeid(T))
-						throw std::bad_get();
-					return *static_get<element<T> &>(*this).get_pointer();
-				}
-				template <class T>
-				const T &get() const
-				{
-					if (get_type() != typeid(T))
-						throw std::bad_get();
-					return *static_get<const element<T> &>(*this).get_pointer();
-				}
-				virtual void destroy() {}
-				virtual const std::type_info &get_type() const = 0;
-			};
-			struct impl
-			{
-				/// a class-type element
-				template <class T, bool>
-				struct element : element_base
-				{
-					typedef T type;
-					typedef type *pointer;
+            /// an entry on the stack
+            struct element_base
+            {
+                element_base *previous;
+                size_t cursor;
+                bool is_pod;
+                element_base(bool ip = false) 
+                    : is_pod(ip) { }
+                template <class T>
+                bool is_type() const
+                {
+                    return get_type() == typeid(T);
+                }
+                template <class T>
+                T &get()
+                {
+                    if (get_type() != typeid(T))
+                        throw std::bad_get();
+                    return *static_get<element<T> &>(*this).get_pointer();
+                }
+                template <class T>
+                const T &get() const
+                {
+                    if (get_type() != typeid(T))
+                        throw std::bad_get();
+                    return *static_get<const element<T> &>(*this).get_pointer();
+                }
 
-				private:
-					pointer ptr;
-					char value[sizeof(T)];
-				
-				public:
-					element()
-						: ptr(reinterpret_cast<T *>(value))
-					{
-					}
-					const std::type_info &get_type() const
-					{
-						return typeid(T);
-					}
-					pointer get_pointer()
-					{
-						return ptr;
-					}
-					void destroy()
-					{
-						destroy(ptr, boost::has_trivial_destructor<type>());
-					}
-					void destroy(pointer ptr, const boost::false_type& )
-					{
-						(*ptr).~type();
-					}
+                virtual void destroy() {}
+                virtual const std::type_info &get_type() const = 0;
+            };
+            struct impl
+            {
+                /// a class-type element
+                template <class T, bool>
+                struct element : element_base
+                {
+                    typedef T type;
+                    typedef type *pointer;
 
-					void destroy(pointer, const boost::true_type& )
-					{ 
-					}
-				};
+                private:
+                    pointer ptr;
+                    char value[sizeof(T)];
+                
+                public:
+                    element()
+                        : ptr(reinterpret_cast<T *>(value))
+                    {
+                    }
+                    const std::type_info &get_type() const
+                    {
+                        return typeid(T);
+                    }
+                    pointer get_pointer()
+                    {
+                        return ptr;
+                    }
+                    void destroy()
+                    {
+                        destroy(ptr, boost::has_trivial_destructor<type>());
+                    }
+                    void destroy(pointer ptr, const boost::false_type& )
+                    {
+                        (*ptr).~type();
+                    }
 
-				/// a pod-type element
-				template <class T>
-				struct element<T, true> : element_base
-				{
-					typedef T type;
-					type val;
-					element()
-						: element_base(true)
-					{
-					}
-					type *get_pointer()
-					{
-						return &val;
-					}
-					const std::type_info &get_type() const
-					{
-						return typeid(T);
-					}
-				};
-			};
+                    void destroy(pointer, const boost::true_type& )
+                    { 
+                    }
+                };
 
-			/// an element of a given type on the stack
-			template <class T>
-			struct element 
-				: impl::element<T, boost::is_pod<T>::value>
-			{
-			};
+                /// a pod-type element
+                template <class T>
+                struct element<T, true> : element_base
+                {
+                    typedef T type;
+                    type val;
+                    element()
+                        : element_base(true)
+                    {
+                    }
+                    type *get_pointer()
+                    {
+                        return &val;
+                    }
+                    const std::type_info &get_type() const
+                    {
+                        return typeid(T);
+                    }
+                };
+            };
 
-			element_base *previous;
+            /// an element of a given type on the stack
+            template <class T>
+            struct element 
+                : impl::element<T, boost::is_pod<T>::value>
+            {
+            };
 
-		public:
-			typedef element_base value_type;
-			typedef element_base &reference;
-			typedef element_base const &const_reference;
-			typedef size_t size_type;
+            element_base *previous;
 
-			struct const_iterator : boost::iterator<forward_traversal_tag, element_base>
-			{
-				typedef element_base value_type;
-				element_base *current;
+        public:
+            typedef element_base value_type;
+            typedef element_base &reference;
+            typedef element_base const &const_reference;
+            typedef size_t size_type;
 
-				const_iterator(element_base *elem = 0) 
-					: current(elem) { }
+            struct const_iterator : boost::iterator<forward_traversal_tag, element_base>
+            {
+                typedef element_base value_type;
+                element_base *current;
 
-				const value_type &operator*() const
-				{
-					return *current;
-				}
-				const value_type *operator->() const
-				{
-					return current;
-				}
-				const_iterator &operator++()
-				{
-					current = current->previous;
-					return *this;
-				}
-				const_iterator operator++(int)
-				{
-					const_iterator tmp = *this;
-					++(*this);
-					return tmp;
-				}
-				friend bool operator==(const_iterator left, const_iterator right)
-				{
-					return left.current == right.current;
-				}
-				friend bool operator!=(const_iterator left, const_iterator right)
-				{
-					return left.current != right.current;
-				}
-			};
+                const_iterator(element_base *elem = 0) 
+                    : current(elem) { }
 
-			struct iterator : const_iterator
-			{
-				iterator(element_base *elem = 0) 
-					: const_iterator(elem) { }
+                const value_type &operator*() const
+                {
+                    return *current;
+                }
+                const value_type *operator->() const
+                {
+                    return current;
+                }
+                const_iterator &operator++()
+                {
+                    current = current->previous;
+                    return *this;
+                }
+                const_iterator operator++(int)
+                {
+                    const_iterator tmp = *this;
+                    ++(*this);
+                    return tmp;
+                }
+                friend bool operator==(const_iterator left, const_iterator right)
+                {
+                    return left.current == right.current;
+                }
+                friend bool operator!=(const_iterator left, const_iterator right)
+                {
+                    return left.current != right.current;
+                }
+            };
 
-				value_type &operator*()
-				{
-					return *current;
-				}
-				value_type *operator->()
-				{
-					return current;
-				}
-				iterator &operator++()
-				{
-					const_iterator::operator++(0);
-					return *this;
-				}
-				iterator operator++(int)
-				{
-					iterator tmp = *this;
-					const_iterator::operator++(0);
-					return tmp;
-				}
-				friend bool operator==(iterator left, iterator right)
-				{
-					return left.current == right.current;
-				}
-				friend bool operator!=(iterator left, iterator right)
-				{
-					return left.current != right.current;
-				}
-			};
+            struct iterator : const_iterator
+            {
+                iterator(element_base *elem = 0) 
+                    : const_iterator(elem) { }
 
-		public:
-			stack() 
-				: previous(0)
-			{
-			}
-			~stack()
-			{
-				clear();
-			}
+                value_type &operator*()
+                {
+                    return *current;
+                }
+                value_type *operator->()
+                {
+                    return current;
+                }
+                iterator &operator++()
+                {
+                    const_iterator::operator++(0);
+                    return *this;
+                }
+                iterator operator++(int)
+                {
+                    iterator tmp = *this;
+                    const_iterator::operator++(0);
+                    return tmp;
+                }
+            };
 
-			size_t size() const
-			{
-				size_t len = 0;
-				const_iterator F = begin(), L = end();
-				for (; F != L; ++F)
-					++len;
-				return len;
-			}
-			const_iterator begin() const
-			{
-				return const_iterator(previous);
-			}
-			const_iterator end() const
-			{
-				return const_iterator(0);
-			}
-			iterator begin()
-			{
-				return iterator(previous);
-			}
-			iterator end()
-			{
-				return iterator(0);
-			}
+        public:
+            fixed_stack() 
+                : previous(0)
+            {
+            }
+            ~fixed_stack()
+            {
+                clear();
+            }
 
-			template <class T>
-			T &push()
-			{
-				element<T> &elem = push_element<T>();
-				if (!is_pod<T>::value)
-					new (elem.get_pointer()) T();
-				return *elem.get_pointer();
-			}
+            size_t size() const
+            {
+                size_t len = 0;
+                const_iterator F = begin(), L = end();
+                for (; F != L; ++F)
+                    ++len;
+                return len;
+            }
+            const_iterator begin() const
+            {
+                return const_iterator(previous);
+            }
+            const_iterator end() const
+            {
+                return const_iterator(0);
+            }
+            iterator begin()
+            {
+                return iterator(previous);
+            }
+            iterator end()
+            {
+                return iterator(0);
+            }
 
-			template <class T, class A0>
-			T &push(A0 a0)
-			{
-				element<T> &elem = push_element<T>();
-				new (elem.get_pointer()) T(a0);
-				return *elem.get_pointer();
-			}
+            template <class T>
+            T &push()
+            {
+                element<T> &elem = push_element<T>();
+                if (!is_pod<T>::value)
+                    new (elem.get_pointer()) T();
+                return *elem.get_pointer();
+            }
 
-			template <class T, class A0, class A1>
-			T &push(A0 a0, A1 a1)
-			{
-				element<T> &elem = push_element<T>();
-				new (elem.get_pointer()) T(a0, a1);
-				return *elem.get_pointer();
-			}
+            template <class T, class A0>
+            T &push(A0 a0)
+            {
+                element<T> &elem = push_element<T>();
+                new (elem.get_pointer()) T(a0);
+                return *elem.get_pointer();
+            }
 
-			template <class T, size_t N>
-			array<T, N> &push_array()
-			{
-				return push<array<T, N> >();
-			}
+            template <class T, class A0, class A1>
+            T &push(A0 a0, A1 a1)
+            {
+                element<T> &elem = push_element<T>();
+                new (elem.get_pointer()) T(a0, a1);
+                return *elem.get_pointer();
+            }
 
-			void pop()
-			{
-				BOOST_ASSERT(previous);
-				element_base *elem = previous;
-				previous = elem->previous;
-				size_t cursor = elem->cursor;
-				if (!elem->is_pod)	// avoid empty virtual call for pods
-					elem->destroy();
-				store.set_cursor(cursor);
-			}
+            template <class T, size_t N>
+            array<T, N> &push_array()
+            {
+                return push<array<T, N> >();
+            }
 
-			size_t top() const
-			{
-				return store.get_cursor();
-			}
+            void pop()
+            {
+                BOOST_ASSERT(previous);
+                element_base *elem = previous;
+                previous = elem->previous;
+                size_t cursor = elem->cursor;
+                if (!elem->is_pod)    // avoid empty virtual call for pods
+                    elem->destroy();
+                store.set_cursor(cursor);
+            }
 
-			void clear()
-			{
-				while (previous != 0)
-				{
-					pop();
-				}
-			}
+            size_t top() const
+            {
+                return store.get_cursor();
+            }
 
-		private:
-			template <class T>
-			element<T> &push_element()
-			{
-				size_t cursor = store.get_cursor();
-				element<T> &elem = store.create<element<T> >();
-				elem.previous = previous;
-				elem.cursor = cursor;
-				previous = &elem;
-				return elem;
-			}
-		};
-	}
-}
+            void clear()
+            {
+                while (previous != 0)
+                {
+                    pop();
+                }
+            }
+
+        private:
+            template <class T>
+            element<T> &push_element()
+            {
+                size_t cursor = store.get_cursor();
+                element<T> &elem = store.create<element<T> >();
+                elem.previous = previous;
+                elem.cursor = cursor;
+                previous = &elem;
+                return elem;
+            }
+        };
+
+        template <size_t Size, size_t Inc, class Al>
+        struct stack
+        {
+            fixed_stack<Size> fixed;
+
+        private:
+            storage<Size, Inc, Al> storage;
+
+        public:
+            stack()
+            {
+            }
+            ~stack()
+            {
+                clear();
+            }
+
+            template <class T>
+            T &push()
+            {
+
+            }
+        };
+    
+    } // namespace monotonic
+
+} // namespace boost
 
 #include <boost/monotonic/detail/postfix.hpp>
 

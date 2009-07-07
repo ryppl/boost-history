@@ -19,32 +19,32 @@ BOOST_OM_BEGIN
 
 namespace detail
 {
-	template <class T>
-	struct remove_const_and_reference
-	{
-		typedef typename boost::remove_reference<T>::type T0;
-		typedef typename boost::remove_const<T0>::type type;
-	};
+    template <class T>
+    struct remove_const_and_reference
+    {
+        typedef typename boost::remove_reference<T>::type T0;
+        typedef typename boost::remove_const<T0>::type type;
+    };
 
-	template <class T>
-	struct remove_object_wrap
-	{
-		typedef T type;
-	};
+    template <class T>
+    struct remove_object_wrap
+    {
+        typedef T type;
+    };
 
-	template <class T>
-	struct remove_object_wrap<object<T> >
-	{
-		typedef T type;
-	};
+    template <class T>
+    struct remove_object_wrap<object<T> >
+    {
+        typedef T type;
+    };
 
-	/// remove any reference-ness or const-ness from a C++ type, and also strip object<> from it
-	template <class T>
-	struct base_type
-	{
-		typedef typename remove_const_and_reference<T>::type T0;
-		typedef typename remove_object_wrap<T0>::type type;
-	};
+    /// remove any reference-ness or const-ness from a C++ type, and also strip object<> from it
+    template <class T>
+    struct base_type
+    {
+        typedef typename remove_const_and_reference<T>::type T0;
+        typedef typename remove_object_wrap<T0>::type type;
+    };
 
 } // namespace detail
 

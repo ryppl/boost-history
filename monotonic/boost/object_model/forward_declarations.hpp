@@ -16,14 +16,14 @@ BOOST_OM_BEGIN
 
 namespace type
 {
-	/// traits for a given type
-	template <class T>
-	struct traits;
+    /// traits for a given type
+    template <class T>
+    struct traits;
 
-	/// a type number
-	struct number;
+    /// a type number
+    struct number;
 
-	struct any;
+    struct any;
 }
 
 /// a unique identifier of an object
@@ -40,40 +40,40 @@ struct dictionary;
 /// generic bases for type-specific derived types
 namespace generic
 {
-	struct base;
+    struct base;
 
-	struct object_base;
+    struct object_base;
 
-	struct const_object;
+    struct const_object;
 
-	struct mutable_object;
+    struct mutable_object;
 
-	struct object;
+    struct object;
 
-	/// common for all const storage for an instance
-	template <class Traits>
-	struct const_storage;
+    /// common for all const storage for an instance
+    template <class Traits>
+    struct const_storage;
 
-	/// common for all storage for an instance
-	template <class Traits>
-	struct storage;
+    /// common for all storage for an instance
+    template <class Traits>
+    struct storage;
 
-	/// common for types that have a `self` pointer
-	struct reflected;
+    /// common for types that have a `self` pointer
+    struct reflected;
 
-	/// common for a all methods
-	template <class Traits>
-	struct method;
+    /// common for a all methods
+    template <class Traits>
+    struct method;
 
-	/// common for all class properties
-	struct property;
+    /// common for all class properties
+    struct property;
 
-	/// common for all classes
-	//template <class Label>
-	struct klass;
+    /// common for all classes
+    //template <class Label>
+    struct klass;
 
-	//template <class Label>
-	struct registry;
+    //template <class Label>
+    struct registry;
 }
 
 template <class T = type::any>
@@ -139,12 +139,12 @@ struct builder;
 /// traits type to control how the system works, and what data-types to use for various 
 /// key components
 template <
-	class Alloc = default_allocator				// allocator to use for everything
-	, class Char = char							// default char type
-	, class ChTr = std::char_traits<Char>		// char traits
-	, class Str = string<Alloc, Char, ChTr>		// string type to use
-	, class Label = label<Str>					// label type. used to name sub-objects
-	, class Ident = label<Str>					// identifier. used to access fields and methods
+    class Alloc = default_allocator                // allocator to use for everything
+    , class Char = char                            // default char type
+    , class ChTr = std::char_traits<Char>        // char traits
+    , class Str = string<Alloc, Char, ChTr>        // string type to use
+    , class Label = label<Str>                    // label type. used to name sub-objects
+    , class Ident = label<Str>                    // identifier. used to access fields and methods
 >
 struct system_traits;
 
@@ -154,21 +154,21 @@ struct registry;
 
 namespace containers
 {
-	/// an array of objects given an allocator
-	template <class Al>
-	struct vector;
+    /// an array of objects given an allocator
+    template <class Al>
+    struct vector;
 
-	/// an list of objects given an allocator
-	template <class Al>
-	struct list;
+    /// an list of objects given an allocator
+    template <class Al>
+    struct list;
 
-	/// an map of objects to objects given an allocator
-	template <class Al>
-	struct map;
+    /// an map of objects to objects given an allocator
+    template <class Al>
+    struct map;
 
-	/// an set of objects given an allocator
-	template <class Al>
-	struct set;
+    /// an set of objects given an allocator
+    template <class Al>
+    struct set;
 
 }
 

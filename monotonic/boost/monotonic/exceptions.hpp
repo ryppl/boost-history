@@ -12,16 +12,18 @@
 
 namespace boost
 {
-	namespace monotonic
-	{
-		/// a request was made for a reference to storage that does not exist
-		struct no_storage : std::exception
-		{
-			no_storage() { }
-			//no_storage(const char *text) : std::exception(text) { }
-		};
-	
-	} // namespace monotonic
+    namespace monotonic
+    {
+        /// a request was made for a reference to storage that does not exist
+        struct no_storage : std::exception
+        {
+            no_storage() { }
+            //no_storage(const char *text) : std::exception(text) { }
+        };
+
+        struct internal_error { };;
+
+    } // namespace monotonic
 
 } // namespace boost
 

@@ -17,46 +17,46 @@ BOOST_OM_BEGIN
 
 namespace type
 {
-	template <class T, size_t N, class S = T>
-	struct traits_base
-	{
-		typedef S Storage;
-		typedef Storage storage_type;
-		typedef Storage *pointer_type;
-		typedef Storage &reference_type;
-		typedef Storage const &const_reference_type;
-	};
+    template <class T, size_t N, class S = T>
+    struct traits_base
+    {
+        typedef S Storage;
+        typedef Storage storage_type;
+        typedef Storage *pointer_type;
+        typedef Storage &reference_type;
+        typedef Storage const &const_reference_type;
+    };
 
-	struct any { };
-	struct none { };
+    struct any { };
+    struct none { };
 }
 
 #ifdef BOOST_OBJECT_MODEL_MAIN
-#	define BOOST_OBJECT_MODEL_DEFINE_NAME(T, NAME) \
-		const char * traits<T>::name = NAME;
+#    define BOOST_OBJECT_MODEL_DEFINE_NAME(T, NAME) \
+        const char * traits<T>::name = NAME;
 #else
-#	define BOOST_OBJECT_MODEL_DEFINE_NAME(T, NAME)
+#    define BOOST_OBJECT_MODEL_DEFINE_NAME(T, NAME)
 #endif
 
 #define BOOST_OBJECT_MODEL_TRAITS_NUM_STORE_NAME(T,N,S,NAME) \
-	BOOST_OM_BEGIN \
-	namespace type \
-	{ \
-		template <> \
-		struct traits<T> : traits_base<T,N,S> \
-		{ \
-			BOOST_STATIC_CONSTANT(number::value_type, type_number = N); \
-			static const char *name; \
-		}; \
-		BOOST_OBJECT_MODEL_DEFINE_NAME(T,NAME); \
-	} \
-	BOOST_OM_END
+    BOOST_OM_BEGIN \
+    namespace type \
+    { \
+        template <> \
+        struct traits<T> : traits_base<T,N,S> \
+        { \
+            BOOST_STATIC_CONSTANT(number::value_type, type_number = N); \
+            static const char *name; \
+        }; \
+        BOOST_OBJECT_MODEL_DEFINE_NAME(T,NAME); \
+    } \
+    BOOST_OM_END
 
 #define BOOST_OBJECT_MODEL_TRAITS_NUM_STORE(T,N,S) \
-	BOOST_OBJECT_MODEL_TRAITS_NUM_STORE_NAME(T,N,S,BOOST_PP_STRINGIZE(T))
+    BOOST_OBJECT_MODEL_TRAITS_NUM_STORE_NAME(T,N,S,BOOST_PP_STRINGIZE(T))
 
 #define BOOST_OBJECT_MODEL_TRAITS_NUM(T,N) \
-	BOOST_OBJECT_MODEL_TRAITS_NUM_STORE(T,N,T)
+    BOOST_OBJECT_MODEL_TRAITS_NUM_STORE(T,N,T)
 
 BOOST_OM_END
 

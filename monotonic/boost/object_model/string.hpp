@@ -17,37 +17,37 @@ BOOST_OM_BEGIN
 template <class Alloc, class Ch, class Tr>
 struct string
 {
-	typedef std::basic_string<Ch, Tr, Alloc> implementation;
-	typedef typename implementation::value_type value_type;
-	typedef typename implementation::iterator iterator;
-	typedef typename implementation::const_iterator const_iterator;
-	typedef Alloc allocator_type;
+    typedef std::basic_string<Ch, Tr, Alloc> implementation;
+    typedef typename implementation::value_type value_type;
+    typedef typename implementation::iterator iterator;
+    typedef typename implementation::const_iterator const_iterator;
+    typedef Alloc allocator_type;
 
 private:
-	implementation impl;
+    implementation impl;
 
 public:
 
-	string() { }
-	string(const value_type *text) : impl(text) { }
-	string &operator=(const value_type *text)
-	{
-		impl = text;
-		return *this;
-	}
-	const value_type *c_str() const
-	{
-		return impl.c_str();
-	}
+    string() { }
+    string(const value_type *text) : impl(text) { }
+    string &operator=(const value_type *text)
+    {
+        impl = text;
+        return *this;
+    }
+    const value_type *c_str() const
+    {
+        return impl.c_str();
+    }
 
-	friend bool operator==(string const &a, string const &b)
-	{
-		return a.impl == b.impl;
-	}
-	friend bool operator<(string const &a, string const &b)
-	{
-		return a.impl < b.impl;
-	}
+    friend bool operator==(string const &a, string const &b)
+    {
+        return a.impl == b.impl;
+    }
+    friend bool operator<(string const &a, string const &b)
+    {
+        return a.impl < b.impl;
+    }
 };
 
 BOOST_OM_END
