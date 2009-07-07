@@ -19,13 +19,7 @@ namespace boost { namespace fusion
         template <typename Seq1, typename Seq2, typename F = void_>
         struct transform
         {
-            typedef
-                transform_view<
-                    typename detail::add_lref<Seq1>::type
-                  , typename detail::add_lref<Seq2>::type
-                  , typename detail::add_lref<F>::type
-                >
-            type;
+            typedef transform_view<Seq1,Seq2,F> type;
         };
 
         template <typename Seq, typename F>

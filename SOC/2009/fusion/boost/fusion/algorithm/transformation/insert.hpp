@@ -19,10 +19,9 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pos, typename T>
         struct insert
           : insert_range<
-                typename detail::add_lref<Seq>::type
-              , typename detail::add_lref<Pos>::type
-              , BOOST_FUSION_R_ELSE_CLREF(
-                      single_view<typename detail::as_fusion_element<T>::type>)
+                Seq
+              , Pos
+              , single_view<typename detail::as_fusion_element<T>::type>
             >
         {
         };

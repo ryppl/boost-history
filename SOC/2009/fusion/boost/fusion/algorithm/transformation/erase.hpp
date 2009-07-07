@@ -81,17 +81,16 @@ namespace boost { namespace fusion
             typedef
                 iterator_range<
                     seq_first_type
-                  , typename detail::identity<First>::type
+                  , First
                 >
             left_type;
             typedef
                 iterator_range<
-                    typename detail::identity<Last>::type
+                    Last
                   , seq_last_type
                 >
             right_type;
 
-            //TODO !!!
             typedef
                 joint_view<left_type, right_type>
             type;

@@ -30,12 +30,7 @@ namespace boost { namespace fusion
                 >
             replacer;
 
-            typedef
-                transform_view<
-                    typename detail::add_lref<Seq>::type
-                  , replacer
-                >
-            type;
+            typedef transform_view<Seq, replacer> type;
         };
     }
 

@@ -21,10 +21,8 @@ namespace boost { namespace fusion
         {
             typedef
                 joint_view<
-                    typename detail::add_lref<Seq>::type
-                  , fusion::single_view<
-                        typename detail::as_fusion_element<T>::type
-                    >
+                    Seq
+                  , single_view<typename detail::as_fusion_element<T>::type>
                 >
             type;
         };

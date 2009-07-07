@@ -22,19 +22,16 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pos, typename Range>
         struct insert_range
         {
-            typedef typename result_of::begin<Seq>::type first_type;
-            typedef typename result_of::end<Seq>::type last_type;
-
             typedef
                 iterator_range<
-                    first_type
+                    typename result_of::begin<Seq>::type
                   , typename detail::add_lref<Pos>::type
                 >
             left_type;
             typedef
                 iterator_range<
                     typename detail::add_lref<Pos>::type
-                  , last_type
+                  , typename result_of::end<Seq>::type
                 >
             right_type;
             typedef
@@ -43,6 +40,7 @@ namespace boost { namespace fusion
                   , typename detail::add_lref<Range>::type
                 >
             left_insert_type;
+
             typedef joint_view<left_insert_type, right_type> type;
         };
     }

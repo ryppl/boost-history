@@ -18,12 +18,7 @@ namespace boost { namespace fusion {
         template<typename Lhs, typename Rhs>
         struct join
         {
-            typedef
-                joint_view<
-                    typename detail::add_lref<Lhs>::type
-                  , typename detail::add_lref<Rhs>::type
-                >
-            type;
+            typedef joint_view<Lhs,Rhs> type;
         };
     }
 

@@ -22,10 +22,10 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq>
-    inline reverse_view<BOOST_FUSION_R_ELSE_LREF(Seq)>
+    inline typename result_of::reverse<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
     reverse(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
     {
-        return reverse_view<BOOST_FUSION_R_ELSE_LREF(Seq)>(
+        return typename result_of::reverse<BOOST_FUSION_R_ELSE_LREF(Seq)>::type(
                 BOOST_FUSION_FORWARD(Seq,seq));
     }
 }}

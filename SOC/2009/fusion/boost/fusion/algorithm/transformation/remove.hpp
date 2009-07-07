@@ -20,10 +20,7 @@ namespace boost { namespace fusion
         struct remove
         {
             typedef
-                filter_view<
-                    typename detail::add_lref<Seq>::type
-                  , mpl::not_<is_same<mpl::_, T> >
-                >
+                filter_view<Seq, mpl::not_<is_same<mpl::_, T> > >
             type;
         };
     }

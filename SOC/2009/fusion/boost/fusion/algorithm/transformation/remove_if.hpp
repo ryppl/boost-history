@@ -19,10 +19,7 @@ namespace boost { namespace fusion
         struct remove_if
         {
             typedef
-                filter_view<
-                    typename detail::add_lref<Seq>::type
-                  , mpl::not_<Pred>
-                >
+                filter_view<Seq, mpl::not_<Pred> >
             type;
         };
     }

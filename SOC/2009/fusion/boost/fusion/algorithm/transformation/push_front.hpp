@@ -25,7 +25,7 @@ namespace boost { namespace fusion
                     fusion::single_view<
                         typename detail::as_fusion_element<T>::type
                     >
-                  , typename detail::add_lref<Seq>::type
+                  , Seq
                 >
             type;
         };
