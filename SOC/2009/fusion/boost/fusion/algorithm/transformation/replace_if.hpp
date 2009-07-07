@@ -11,9 +11,6 @@
 #include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
-
-#include <boost/type_traits/add_const.hpp>
-
 #include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
 
 namespace boost { namespace fusion
@@ -24,7 +21,7 @@ namespace boost { namespace fusion
         struct replace_if
         {
             typedef
-                detail::replacer_if<
+                detail::replace_if_helper<
                     typename detail::as_fusion_element<F>::type
                   , typename detail::as_fusion_element<T>::type
                 >
@@ -53,8 +50,9 @@ namespace boost { namespace fusion
         result;
 
         return typename result::type(BOOST_FUSION_FORWARD(Seq,seq),
-                typename result::replacer(BOOST_FUSION_FORWARD(F,pred),
-                        BOOST_FUSION_FORWARD(NewValue,new_value)));
+                typename result::replacer(
+                    BOOST_FUSION_FORWARD(F,pred),
+                    BOOST_FUSION_FORWARD(NewValue,new_value)));
     }
 }}
 

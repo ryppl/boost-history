@@ -34,6 +34,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace fusion
 {

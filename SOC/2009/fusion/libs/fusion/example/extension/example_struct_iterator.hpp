@@ -12,7 +12,6 @@
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/mpl/int.hpp>
-#include <boost/type_traits/add_const.hpp>
 #include <boost/static_assert.hpp>
 
 #include "./detail/next_impl.hpp"

@@ -9,7 +9,9 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REMOVE_HPP
 
 #include <boost/fusion/view/filter_view/filter_view.hpp>
+
 #include <boost/mpl/not.hpp>
+#include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion

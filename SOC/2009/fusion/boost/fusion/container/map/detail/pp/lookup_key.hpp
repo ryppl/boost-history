@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_CONTAINER_MAP_DETAIL_PP_LOOKUP_KEY_HPP
 #define BOOST_FUSION_CONTAINER_MAP_DETAIL_PP_LOOKUP_KEY_HPP
 
-#include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/fusion/support/detail/pp/unknown_key.hpp>
 

@@ -19,10 +19,17 @@ namespace fusion=boost::fusion;
 
 struct moveable
 {
-    moveable()=default;
-    moveable(const moveable&)=delete;
+    moveable(int){};
     moveable(moveable&&){}
+    moveable& operator=(moveable&&){return *this;}
+    moveable()=delete;
+    moveable(moveable const&)=delete;
+    moveable& operator=(moveable const&)=delete;
 };
+bool operator==(moveable const&, moveable const&)
+{
+    return true;
+}
 
 template<class... Args>
 struct get_vec_type
@@ -120,7 +127,7 @@ int main()
     }
 
     {
-        vec v;
+        vec v(0,0,0,0,0,0,0);
         vec v2=std::move(v);
         //vec v2=v;
     }
@@ -141,5 +148,11 @@ int main()
         seq_test(zip_view<vector<vector<int>&&, vector<int>&&> >(vector_tie(vector<int>(),vector<int>())));
         seq_test(transform_view<vector<int>&&,identity_int>(vector<int>(),identity_int()));
         seq_test(reverse_view<vector<int>&&>(vector<int>()));
+    }
+
+    {
+        using namespace fusion;
+        vector<moveable> m(0);
+        replace(m, moveable(0), moveable(0))=replace(m, moveable(0), moveable(0));
     }
 }

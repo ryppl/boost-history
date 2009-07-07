@@ -9,7 +9,8 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_ALL_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_ALL_HPP
 
-#include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
 
 #include <boost/fusion/algorithm/query/detail/all.hpp>
@@ -29,12 +30,12 @@ namespace boost { namespace fusion
     inline bool
     all(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(F) f)
     {
-        return detail::all(
-                BOOST_FUSION_FORWARD(Seq,seq),
-                BOOST_FUSION_FORWARD(F,f),
-                typename traits::category_of<
-                    BOOST_FUSION_R_ELSE_LREF(Seq)
-                >::type());
+        return
+            detail::unrolled_all<
+                result_of::size<BOOST_FUSION_R_ELSE_LREF(Seq)>::value
+            >::call(
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
+                  , BOOST_FUSION_FORWARD(F,f));
     }
 }}
 

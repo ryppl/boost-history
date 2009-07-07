@@ -31,7 +31,7 @@ namespace boost { namespace fusion
     {
         return fusion::count_if(
                 BOOST_FUSION_FORWARD(Seq,seq),
-                detail::count_compare<BOOST_FUSION_R_ELSE_LREF(T)>(x));
+                detail::count_helper<BOOST_FUSION_R_ELSE_LREF(T)>(x));
     }
 }}
 

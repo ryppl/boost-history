@@ -17,7 +17,6 @@
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace fusion
 {

@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 
-#include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace fusion { namespace detail
@@ -41,9 +40,9 @@ namespace boost { namespace fusion { namespace detail
     };
 
     template <typename T1Ref>
-    struct count_compare
+    struct count_helper
     {
-        count_compare(T1Ref x)
+        count_helper(T1Ref x)
           : x(x)
         {}
 

@@ -10,7 +10,8 @@
 
 namespace boost { namespace fusion
 {
-    struct void_ {};
+    struct void_
+    {};
 }}
 
 #endif

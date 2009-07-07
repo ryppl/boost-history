@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
 
-#include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/algorithm/transformation/replace_if.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
@@ -17,20 +16,55 @@
 
 namespace boost { namespace fusion
 {
+    namespace detail
+    {
+        template <typename OldValue>
+        struct replace_helper
+        {
+            template <typename OtherOldValue>
+            replace_helper(
+                    BOOST_FUSION_R_ELSE_LREF(OtherOldValue) old_value
+                  , int)
+              : old_value(BOOST_FUSION_FORWARD(OtherOldValue,old_value))
+            {}
+
+            template<typename Replacer>
+            replace_helper(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+              : old_value(BOOST_FUSION_FORWARD(Replacer,replacer).old_value)
+            {}
+
+            template<typename Replacer>
+            replace_helper&
+            operator=(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+            {
+                old_value=BOOST_FUSION_FORWARD(Replacer,replacer).old_value;
+                return *this;
+            }
+
+            template <typename U>
+            bool
+            operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
+            {
+                return x==old_value;
+            }
+
+            OldValue old_value;
+        };
+    }
+
     namespace result_of
     {
-    //TODO New arg?!
+        //TODO New arg?!
         template <typename Seq, typename OldValue, typename NewValue>
         struct replace
-          : replace_if<
-                Seq
-              , BOOST_FUSION_R_ELSE_CLREF(
-                    detail::replacer<
-                        typename detail::as_fusion_element<OldValue>::type
-                    >)
-              , NewValue
-            >
         {
+            typedef
+                detail::replace_helper<
+                    typename detail::as_fusion_element<OldValue>::type
+                >
+            replacer;
+
+            typedef typename replace_if<Seq, replacer, NewValue>::type type;
         };
     }
 
@@ -51,14 +85,7 @@ namespace boost { namespace fusion
                 BOOST_FUSION_R_ELSE_LREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(OldValue)
               , BOOST_FUSION_R_ELSE_CLREF(NewValue)
-            >::type
-        type;
-        typedef
-            detail::replacer<
-                typename detail::as_fusion_element<
-                    BOOST_FUSION_R_ELSE_CLREF(OldValue)
-                >::type
-            >
+            >::replacer
         replacer;
 
         return replace_if(

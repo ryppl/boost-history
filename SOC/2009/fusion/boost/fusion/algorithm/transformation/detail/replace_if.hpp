@@ -45,30 +45,14 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    //TODO !!!
     template <typename F, typename NewValue>
-    struct replacer_if
+    struct replace_if_helper
     {
-        replacer_if(BOOST_FUSION_R_ELSE_CLREF(replacer_if) replacer)
-          : f(BOOST_FUSION_FORWARD(
-                  BOOST_FUSION_R_ELSE_CLREF(replacer_if),replacer).f)
-          , new_value(BOOST_FUSION_FORWARD(
-                  BOOST_FUSION_R_ELSE_CLREF(replacer_if),replacer).new_value)
-        {}
-
-        template<typename OtherF, typename OtherNewValue>
-        replacer_if(
-                BOOST_FUSION_R_ELSE_LREF(OtherF) other_f,
-                BOOST_FUSION_R_ELSE_LREF(OtherNewValue) other_new_value)
-          : f(BOOST_FUSION_FORWARD(OtherF,other_f))
-          , new_value(BOOST_FUSION_FORWARD(OtherNewValue,other_new_value))
-        {}
-
         template<typename Params>
         struct result;
 
         template <typename U>
-        struct result<replacer_if<F, NewValue>(U)>
+        struct result<replace_if_helper<F, NewValue>(U)>
         {
             typedef typename
                 mpl::if_<
@@ -82,8 +66,31 @@ namespace boost { namespace fusion { namespace detail
             type;
         };
 
+        template<typename OtherF, typename OtherNewValue>
+        replace_if_helper(
+                BOOST_FUSION_R_ELSE_LREF(OtherF) other_f,
+                BOOST_FUSION_R_ELSE_LREF(OtherNewValue) other_new_value)
+          : f(BOOST_FUSION_FORWARD(OtherF,other_f))
+          , new_value(BOOST_FUSION_FORWARD(OtherNewValue,other_new_value))
+        {}
+
+        template<typename Replacer>
+        replace_if_helper(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+          : f(BOOST_FUSION_FORWARD(Replacer,replacer).f)
+          , new_value(BOOST_FUSION_FORWARD(Replacer,replacer).new_value)
+        {}
+
+        template<typename Replacer>
+        replace_if_helper&
+        operator=(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+        {
+            f=BOOST_FUSION_FORWARD(Replacer,replacer).f;
+            new_value=BOOST_FUSION_FORWARD(Replacer,replacer).new_value;
+            return *this;
+        }
+
         template <typename U>
-        typename result<replacer_if(U)>::type
+        typename result<replace_if_helper(U)>::type
         operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
         {
             typedef

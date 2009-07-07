@@ -20,12 +20,14 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
 
+//TODO cschmidt: is this really worth the effort?
+
 namespace boost { namespace fusion {
     struct random_access_traversal_tag;
+
 namespace detail
 {
     template <typename It, typename Pred>
@@ -200,7 +202,7 @@ namespace detail
             choose_find_if<
                 First
               , Last
-              , typename mpl::lambda<Pred>::type
+              , Pred
               , is_base_of<
                     random_access_traversal_tag
                   , typename traits::category_of<First>::type

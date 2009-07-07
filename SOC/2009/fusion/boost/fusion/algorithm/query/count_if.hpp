@@ -29,12 +29,7 @@ namespace boost { namespace fusion
             inline int
             operator()(BOOST_FUSION_R_ELSE_LREF(E) e, int count)
             {
-                if(f(BOOST_FUSION_FORWARD(E,e)))
-                {
-                    return count+1;
-                }
-
-                return count;
+                return f(BOOST_FUSION_FORWARD(E,e)) ? ++count : count;
             }
 
             FRef f;

@@ -26,18 +26,16 @@ namespace boost { namespace fusion { namespace detail
         template<typename It0, typename F>
         static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            f(fusion::deref(it0));
-
-            typedef typename result_of::next<It0>::type It1;
+            typedef typename result_of::next<It0 const&>::type It1;
             It1 it1(fusion::next(it0));
-            f(fusion::deref(it1));
-
-            typedef typename result_of::next<It1>::type It2;
+            typedef typename result_of::next<It1&>::type It2;
             It2 it2(fusion::next(it1));
-            f(fusion::deref(it2));
-
-            typedef typename result_of::next<It2>::type It3;
+            typedef typename result_of::next<It2&>::type It3;
             It3 it3(fusion::next(it2));
+
+            f(fusion::deref(it0));
+            f(fusion::deref(it1));
+            f(fusion::deref(it2));
             f(fusion::deref(it3));
 
             for_each_unrolled<N-4>::call(
@@ -52,14 +50,13 @@ namespace boost { namespace fusion { namespace detail
         template<typename It0, typename F>
         static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            f(fusion::deref(it0));
-
-            typedef typename result_of::next<It0>::type It1;
+            typedef typename result_of::next<It0 const&>::type It1;
             It1 it1(fusion::next(it0));
-            f(fusion::deref(it1));
-
-            typedef typename result_of::next<It1>::type It2;
+            typedef typename result_of::next<It1&>::type It2;
             It2 it2(fusion::next(it1));
+
+            f(fusion::deref(it0));
+            f(fusion::deref(it1));
             f(fusion::deref(it2));
         }
     };
@@ -70,10 +67,10 @@ namespace boost { namespace fusion { namespace detail
         template<typename It0, typename F>
         static void call(It0 const& it0, BOOST_FUSION_R_ELSE_LREF(F) f)
         {
-            f(fusion::deref(it0));
-
-            typedef typename result_of::next<It0>::type It1;
+            typedef typename result_of::next<It0 const&>::type It1;
             It1 it1(fusion::next(it0));
+
+            f(fusion::deref(it0));
             f(fusion::deref(it1));
         }
     };

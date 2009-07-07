@@ -37,7 +37,7 @@ namespace boost { namespace fusion
             >
         {};
 
-        template<typename It0Ref, typename State, typename F, int N>
+        template<typename It0Ref, typename StateRef, typename FRef, int N>
         struct result_of_unrolled_fold;
 
         template<int N>

@@ -11,7 +11,6 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/container/list/list_fwd.hpp>
-#include <boost/type_traits/add_const.hpp>
 
 #include <boost/fusion/container/list/detail/cons/deref_impl.hpp>
 #include <boost/fusion/container/list/detail/cons/next_impl.hpp>
