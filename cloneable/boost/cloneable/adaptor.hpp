@@ -11,49 +11,49 @@
 
 namespace boost
 {
-	namespace cloneable
-	{
-		/// an adaptor for an existing class T, making it cloneable
-		template <class T, class Base>
-		struct adaptor : T, base<adaptor<T, Base>, Base>
-		{
-			adaptor() { }
-			adaptor(const adaptor &X) : T(X), base<adaptor<T,Base>,Base>(X) { }
+    namespace cloneable
+    {
+        /// an adaptor for an existing class T, making it cloneable
+        template <class T, class Base>
+        struct adaptor : T, base<adaptor<T, Base>, Base>
+        {
+            adaptor() { }
+            adaptor(const adaptor &X) : T(X), base<adaptor<T,Base>,Base>(X) { }
 
-			template <class A0>
-			adaptor(A0 a0) : T(a0)
-			{
-			}
-			template <class A0, class A1>
-			adaptor(A0 a0, A1 a1) : T(a0, a1)
-			{
-			}
-			template <class A0, class A1, class A2>
-			adaptor(A0 a0, A1 a1, A2 a2) : T(a0, a1, a2)
-			{
-			}
-		};
+            template <class A0>
+            adaptor(A0 a0) : T(a0)
+            {
+            }
+            template <class A0, class A1>
+            adaptor(A0 a0, A1 a1) : T(a0, a1)
+            {
+            }
+            template <class A0, class A1, class A2>
+            adaptor(A0 a0, A1 a1, A2 a2) : T(a0, a1, a2)
+            {
+            }
+        };
 
-		/// an adaptor for an existing class T, making it cloneable
-		template <class T, class D, class Base>
-		struct adaptor_base : T, base<adaptor<T, Base>, Base>
-		{
-			adaptor_base() { }
+        /// an adaptor for an existing class T, making it cloneable
+        template <class T, class D, class Base>
+        struct adaptor_base : T, base<adaptor<T, Base>, Base>
+        {
+            adaptor_base() { }
 
-			template <class A0>
-			adaptor_base(A0 a0) : T(a0)
-			{
-			}
-			template <class A0, class A1>
-			adaptor_base(A0 a0, A1 a1) : T(a0, a1)
-			{
-			}
-			template <class A0, class A1, class A2>
-			adaptor_base(A0 a0, A1 a1, A2 a2) : T(a0, a1, a2)
-			{
-			}
-		};
-	} // namespace cloneable
+            template <class A0>
+            adaptor_base(A0 a0) : T(a0)
+            {
+            }
+            template <class A0, class A1>
+            adaptor_base(A0 a0, A1 a1) : T(a0, a1)
+            {
+            }
+            template <class A0, class A1, class A2>
+            adaptor_base(A0 a0, A1 a1, A2 a2) : T(a0, a1, a2)
+            {
+            }
+        };
+    } // namespace cloneable
 
 } // namespace boost
 

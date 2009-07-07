@@ -23,12 +23,12 @@ namespace boost
 {
 
 
-	//template
-	//< 
-	//	class T, 
-	//	class Allocator      = std::allocator<void*>,
-	//	class CloneAllocator = cloneable::make_cloneable_allocator<Al>
-	//>
+    //template
+    //< 
+    //    class T, 
+    //    class Allocator      = std::allocator<void*>,
+    //    class CloneAllocator = cloneable::make_cloneable_allocator<Al>
+    //>
 
     template
     < 
@@ -61,7 +61,7 @@ namespace boost
             this->base().reserve( n );
         }        
 
-	};
+    };
 
     //////////////////////////////////////////////////////////////////////////////
     // clonability

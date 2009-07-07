@@ -51,8 +51,8 @@ namespace ptr_container_detail
     template< class CloneAllocator, class Alloc >
     struct clone_deleter
     {
-		Alloc &alloc;
-		clone_deleter(Alloc &a) : alloc(a) { }
+        Alloc &alloc;
+        clone_deleter(Alloc &a) : alloc(a) { }
         template< class T >
         void operator()( const T* p ) const
         {
@@ -117,35 +117,35 @@ namespace ptr_container_detail
                 return res;
             }
             
-			template< class Iter, class Alloc >
-			static Ty_* allocate_clone_from_iterator( Iter i, Alloc &alloc )
-			{ 
-				return allocate_clone( Config::get_const_pointer( i ), alloc );
-			}
+            template< class Iter, class Alloc >
+            static Ty_* allocate_clone_from_iterator( Iter i, Alloc &alloc )
+            { 
+                return allocate_clone( Config::get_const_pointer( i ), alloc );
+            }
 
-			template <class Alloc>
-			static Ty_* allocate_clone( const Ty_* x, Alloc &alloc )
-			{
-				if( allow_null_values )
-				{
-					if( x == 0 )
-						return 0;
-				}
-				else
-				{
-					BOOST_ASSERT( x != 0 && "Cannot insert clone of null!" );
-				}
+            template <class Alloc>
+            static Ty_* allocate_clone( const Ty_* x, Alloc &alloc )
+            {
+                if( allow_null_values )
+                {
+                    if( x == 0 )
+                        return 0;
+                }
+                else
+                {
+                    BOOST_ASSERT( x != 0 && "Cannot insert clone of null!" );
+                }
 
-				Ty_* res = CloneAllocator::allocate_clone( *x, alloc );
-				BOOST_ASSERT( typeid(*res) == typeid(*x) &&
-					"CloneAllocator::allocate_clone() does not clone the "
-					"object properly. Check that new_clone() is implemented"
-					" correctly" );
-				return res;
-			}
+                Ty_* res = CloneAllocator::allocate_clone( *x, alloc );
+                BOOST_ASSERT( typeid(*res) == typeid(*x) &&
+                    "CloneAllocator::allocate_clone() does not clone the "
+                    "object properly. Check that new_clone() is implemented"
+                    " correctly" );
+                return res;
+            }
 
-			template <class Alloc>
-			static void deallocate_clone( const Ty_* x, Alloc &alloc )
+            template <class Alloc>
+            static void deallocate_clone( const Ty_* x, Alloc &alloc )
             {
                 if( allow_null_values )
                 {
@@ -164,7 +164,7 @@ namespace ptr_container_detail
 #else
         typedef null_clone_allocator<allow_null>                    null_cloner_type;
 #endif        
-		typedef clone_deleter<null_cloner_type, typename Config::allocator_type>                     Deleter;
+        typedef clone_deleter<null_cloner_type, typename Config::allocator_type>                     Deleter;
 
         Cont      c_;
 
@@ -293,13 +293,13 @@ namespace ptr_container_detail
 
         static Ty_* null_policy_allocate_clone( const Ty_* x )
         {
-			allocator_type alloc;
+            allocator_type alloc;
             return null_cloner_type::allocate_clone( x, alloc);
         }
 
         static void null_policy_deallocate_clone( const Ty_* x )
         {
-			allocator_type alloc;
+            allocator_type alloc;
             null_cloner_type::deallocate_clone( x, alloc );
         }
 

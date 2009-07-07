@@ -12,50 +12,50 @@
 
 namespace boost
 {
-	namespace cloneable
-	{
-		namespace impl
-		{
-			template <class T, bool>
-			struct traits
-			{
-				BOOST_STATIC_CONSTANT(bool, is_cloneable = false);
-				BOOST_STATIC_CONSTANT(bool, has_default_ctor = false);	// this really should be ternary: yes, no or unknown
-				typedef void construction_tag_type;
-			};
+    namespace cloneable
+    {
+        namespace impl
+        {
+            template <class T, bool>
+            struct traits
+            {
+                BOOST_STATIC_CONSTANT(bool, is_cloneable = false);
+                BOOST_STATIC_CONSTANT(bool, has_default_ctor = false);    // this really should be ternary: yes, no or unknown
+                typedef void construction_tag_type;
+            };
 
-			template <class T>
-			struct traits<T, true>
-			{
-				BOOST_STATIC_CONSTANT(bool, is_cloneable = true);
-				typedef is_convertible<T *, default_construction_tag *> has_default_ctor_type;
-				typedef is_convertible<T *, no_default_construction_tag *> has_no_default_ctor_type;
-				/// T is default constructable only if it is convertibel to def_constr and 
-				/// it is also not convertible to no_def_constr. This ensures that a type
-				/// that inherits from a type that is not default constructible, is also not
-				/// default constructible no matter what.
-				BOOST_STATIC_CONSTANT(bool, has_default_ctor = has_default_ctor_type::value || !has_no_default_ctor_type::value);
-				typedef typename mpl::if_<mpl::bool_<has_default_ctor>
-						, default_construction_tag
-						, no_default_construction_tag>
-					::type construction_tag;
-			};
+            template <class T>
+            struct traits<T, true>
+            {
+                BOOST_STATIC_CONSTANT(bool, is_cloneable = true);
+                typedef is_convertible<T *, default_construction_tag *> has_default_ctor_type;
+                typedef is_convertible<T *, no_default_construction_tag *> has_no_default_ctor_type;
+                /// T is default constructable only if it is convertibel to def_constr and 
+                /// it is also not convertible to no_def_constr. This ensures that a type
+                /// that inherits from a type that is not default constructible, is also not
+                /// default constructible no matter what.
+                BOOST_STATIC_CONSTANT(bool, has_default_ctor = has_default_ctor_type::value || !has_no_default_ctor_type::value);
+                typedef typename mpl::if_<mpl::bool_<has_default_ctor>
+                        , default_construction_tag
+                        , no_default_construction_tag>
+                    ::type construction_tag;
+            };
 
-			template <class T>
-			struct get_traits : traits<T, is_convertible<T *, is_cloneable_tag *>::value> { };
+            template <class T>
+            struct get_traits : traits<T, is_convertible<T *, is_cloneable_tag *>::value> { };
 
-		} // namespace impl
+        } // namespace impl
 
-		template <class T>
-		struct traits : impl::get_traits<T> { };
+        template <class T>
+        struct traits : impl::get_traits<T> { };
 
-		template <class T>
-		struct is_cloneable : mpl::bool_<traits<T>::is_cloneable> { };
+        template <class T>
+        struct is_cloneable : mpl::bool_<traits<T>::is_cloneable> { };
 
-		template <class T>
-		struct is_default_constructable : mpl::bool_<traits<T>::has_default_ctor> { };
+        template <class T>
+        struct is_default_constructable : mpl::bool_<traits<T>::has_default_ctor> { };
 
-	} // namespace cloneable
+    } // namespace cloneable
 
 } // namespace boost
 

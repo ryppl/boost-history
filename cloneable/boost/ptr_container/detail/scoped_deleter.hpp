@@ -32,7 +32,7 @@ namespace boost
             scoped_array<T*>  ptrs_;
             size_type         stored_; 
             bool              released_;
-			Alloc &alloc;
+            Alloc &alloc;
             
         public:
             scoped_deleter( T** a, size_type size, Alloc &al ) 

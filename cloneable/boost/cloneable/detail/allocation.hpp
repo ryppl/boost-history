@@ -12,51 +12,51 @@
 
 namespace boost
 {
-	namespace cloneable
-	{
-		/*
-		namespace detail
-		{
-			// TODO: use variadic template arguments, or BOOST_PP
+    namespace cloneable
+    {
+        /*
+        namespace detail
+        {
+            // TODO: use variadic template arguments, or BOOST_PP
 
-			template <class U, class Base, class Alloc>
-			pointer<U,Base,Alloc> construct(Alloc &al)
-			{
-				pointer<U,Base,Alloc> ptr(al);
-				ptr.construct();
-				return ptr;
-			}
+            template <class U, class Base, class Alloc>
+            pointer<U,Base,Alloc> construct(Alloc &al)
+            {
+                pointer<U,Base,Alloc> ptr(al);
+                ptr.construct();
+                return ptr;
+            }
 
-			template <class U, class Base, class Alloc, class A0>
-			pointer<U,Base,Alloc> construct(Alloc &al, A0 a0)
-			{
-				pointer<U,Base,Alloc> ptr(al);
-				new (ptr.to_derived()) U(a0);
-				return ptr;
-			}
+            template <class U, class Base, class Alloc, class A0>
+            pointer<U,Base,Alloc> construct(Alloc &al, A0 a0)
+            {
+                pointer<U,Base,Alloc> ptr(al);
+                new (ptr.to_derived()) U(a0);
+                return ptr;
+            }
 
-			template <class U, class Base, class Alloc, class A0, class A1>
-			pointer<U,Base,Alloc> construct(Alloc &al, A0 a0, A1 a1)
-			{
-				pointer<U,Base,Alloc> ptr(al);
-				new (ptr.to_derived()) U(a0, a1);
-				return ptr;
-			}
+            template <class U, class Base, class Alloc, class A0, class A1>
+            pointer<U,Base,Alloc> construct(Alloc &al, A0 a0, A1 a1)
+            {
+                pointer<U,Base,Alloc> ptr(al);
+                new (ptr.to_derived()) U(a0, a1);
+                return ptr;
+            }
 
-			template <class U, class Base, class Alloc, class A0, class A1, class A2>
-			pointer<U,Base,Alloc> construct(Alloc &al, A0 a0, A1 a1, A2 a2)
-			{
-				pointer<U,Base,Alloc> ptr(al);
-				new (ptr.to_derived()) U(a0, a1, a2);
-				return ptr;
-			}
+            template <class U, class Base, class Alloc, class A0, class A1, class A2>
+            pointer<U,Base,Alloc> construct(Alloc &al, A0 a0, A1 a1, A2 a2)
+            {
+                pointer<U,Base,Alloc> ptr(al);
+                new (ptr.to_derived()) U(a0, a1, a2);
+                return ptr;
+            }
 
-			// etc...
+            // etc...
 
-		} // namespace detail
-		*/
+        } // namespace detail
+        */
 
-	} // namespace cloneable
+    } // namespace cloneable
 
 } // namespace boost
 
