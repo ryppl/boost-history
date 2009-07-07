@@ -32,13 +32,10 @@ context (__boost_task__ uses preemptible threads for this purpose).
 
 	void main()
 	{
-		// task, to be executed asynchronously
-		boost::task::task< void > t( print, "Hello World!");
-
 		// execute task in newly-created thread
 		// move task ownership to executor
 		boost::task::async(
-			boost::move( t),
+			boost::task::make_task( print, "Hello World!"),
 			boost::task::new_thread() ) );
 	}
 ``
@@ -52,14 +49,11 @@ that means it transfers the result of the execution back to the caller thread.
 
 	void main()
 	{
-		// task returning the submitted string
-		boost::task::task< std::string > t( echo, "Hello World!");
-
 		// execute task in newly-created thread
 		// move task ownership to executor
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::move( t),
+				boost::task::make_task( echo, "Hello World!"),
 				boost::task::new_thread() ) );
 
 		// wait until task has finished and return the result
@@ -75,14 +69,13 @@ The task can also be interrupted via __handle__ if it is a so-called [link_task 
 
 	void main()
 	{
-		// create a long runing task
-		boost::task::task< void > t( long_running, boost::posix_time::millisec( 500) );
-
 		// execute task in newly-created thread
 		// move task ownership to executor
 		boost::task::handle< std::string > h(
 			boost::task::async(
-				boost::move( t),
+				boost::task::make_task(
+					long_running,
+					boost::posix_time::millisec( 500) ),
 				boost::task::new_thread() ) );
 
 		// requests interruption of task
@@ -110,25 +103,22 @@ to prevent the overhead of thread creation and destruction of threads for each t
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			// create a sub-task calculating fibonacci(n-1)
-			boost::task::task< long > t1(
-				parallel_fib,
-				n - 1,
-				cutof);
-			// create a sub-task calculating fibonacci(n-2)
-			boost::task::task< long > t2(
-				parallel_fib,
-				n - 2,
-				cutof);
-
-			// fork two sub-tasks
+			// fork sub-task calculating fibonacci(n-1)
 			boost::task::handle< long > h1(
 				boost::task::async(
-					boost::move( t1),
+					boost::task::make_task(
+						parallel_fib,
+						n - 1,
+						cutof),
 					boost::this_task::get_pool() ) );
+
+			// fork sub-task calculating fibonacci(n-2)
 			boost::task::handle< long > h2(
 				boost::task::async(
-					boost::move( t2),
+					boost::task::make_task(
+						parallel_fib,
+						n - 2,
+						cutof),
 					boost::this_task::get_pool() ) );
 
 			// join the results of both sub-tasks
@@ -145,17 +135,14 @@ to prevent the overhead of thread creation and destruction of threads for each t
 			>
 		> pool( boost::task::poolsize( 5) );
 
-		// create task computing fibonacci-number for 10
-		boost::task::task< long > t(
-			parallel_fib,
-			10,
-			5);
-
 		// execute task in a thread-pool
 		// move task ownership to executor
 		boost::task::handle< long > h(
 			boost::task::async(
-				boost::move( t),
+				boost::task::make_task(
+					parallel_fib,
+					10,
+					5),
 				pool) );
 
 		// access the result

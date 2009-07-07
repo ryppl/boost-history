@@ -26,21 +26,23 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 		if ( n < cutof) return serial_fib( n);
 		else
 		{
-			// create a sub-task calculating fibonacci(n-1)
-			boost::task::task< long > t1(
+			// fork sub-task by moving the task
+			// ownership to the thread-pool
+			// sub-task computes fibonacci(n-1)
+			h1 = boost::task::async(
+				boost::task::make_task(
 				parallel_fib,
 				n - 1,
-				cutof);
-			// create a sub-task calculating fibonacci(n-2)
-			boost::task< long > t2(
+				cutof) );
+
+			// fork sub-task by moving the task
+			// ownership to the thread-pool
+			// sub-task computes fibonacci(n-2)
+			h2 = boost::task::async(
+				boost::task::make_task(
 				parallel_fib,
 				n - 2,
-				cutof);
-
-			// fork both sub-tasks by moving the task
-			// ownership to the thread-pool
-			h1 = boost::task::async( boost::move( t1) );
-			h2 = boost::task::async( boost::move( t2) );
+				cutof) );
 
 			// join the results of both sub-tasks
 			// if one of the both sub-tasks is not ready

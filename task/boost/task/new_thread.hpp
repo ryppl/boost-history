@@ -24,21 +24,13 @@ namespace boost { namespace task
 {
 namespace detail
 {
-class joiner
+
+struct joiner
 {
-private:
-	callable	ca_;
-
-public:
-	joiner( callable const& ca)
-	: ca_( ca)
-	{}
-
 	void operator()( thread * thrd)
 	{
 		try
 		{
-			ca_.reset();
 			BOOST_ASSERT( thrd);
 			BOOST_ASSERT( thrd->joinable() );
 			thrd->join();
@@ -48,6 +40,7 @@ public:
 		delete thrd;
 	}
 };
+
 }
 
 struct new_thread
@@ -61,12 +54,13 @@ struct new_thread
 		callable ca( ctx.get_callable( boost::move( t) ) );
 		shared_ptr< thread > thrd(
 			new thread( ca),
-			detail::joiner( ca) );
+			detail::joiner() );
 		ca.reset( thrd);
 
 		return h;
 	}
 };
+
 }}
 
 #include <boost/config/abi_suffix.hpp>

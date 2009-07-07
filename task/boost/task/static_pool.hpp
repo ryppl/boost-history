@@ -53,10 +53,8 @@ private:
 
 	friend class detail::worker;
 
-# if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300) // <= MSVC 7.1
-	template< typename Pool >
-	friend class detail::worker::impl_pool;
-# endif
+	template< typename Channel >
+	friend class detail::worker::worker_object< static_pool< Channel > >;
 
 	typedef typename channel::item	channel_item;
 	
@@ -69,10 +67,8 @@ private:
 	private:
 		friend class detail::worker;
 
-# if defined(BOOST_MSVC) && (BOOST_MSVC <= 1300) // <= MSVC 7.1
-		template< typename Pool >
-		friend class detail::worker::impl_pool;
-# endif
+		template< typename Channel >
+		friend class detail::worker::worker_object< static_pool< Channel > >;
 
 		detail::worker_group	wg_;
 		shared_mutex			mtx_wg_;

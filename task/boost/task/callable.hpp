@@ -74,20 +74,6 @@ private:
 	{}
 
 public:
-	class context_guard : private noncopyable
-	{
-	private:
-		callable	&	ca_;
-
-	public:
-		context_guard( callable & ca, shared_ptr< thread > const& thrd)
-		: ca_( ca)
-		{ ca_.reset( thrd); }
-
-		~context_guard()
-		{ ca_.reset(); }
-	};
-
 	callable();
 
 	void operator()();
@@ -99,6 +85,20 @@ public:
 	void reset();
 
 	void reset( shared_ptr< thread > const&);
+};
+
+class context_guard : private noncopyable
+{
+private:
+	callable	&	ca_;
+
+public:
+	context_guard( callable & ca, shared_ptr< thread > const& thrd)
+	: ca_( ca)
+	{ ca_.reset( thrd); }
+
+	~context_guard()
+	{ ca_.reset(); }
 };
 
 }}

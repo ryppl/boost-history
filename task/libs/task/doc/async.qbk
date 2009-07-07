@@ -32,15 +32,21 @@ __as_sub_task__ is used per default. The function returns a __handle__ which con
 	void main()
 	{
 		// task computing fibonacci(10)
-		boost::task< long > t( fibonacci, 10);
-
 		// move the task to executor
-		boost::task::handle< long > h(
+		boost::task::handle< long > h1(
 			boost::task::async(
-				 boost::move( t) );
+				 boost::task::make_task( fibonacci, 10) ) );
 
-		// access the result
-		std::cout << "fibonacci(10) == " << h.get() << std::endl;
+		// task computing fibonacci(5)
+		boost::task< long > t( fibonacci, 5);
+		// move the task to executor
+		boost::task::handle< long > h2(
+			boost::task::async(
+				 boost::move( t) ) );
+
+		// access the results
+		std::cout << "fibonacci(10) == " << h1.get() << std::endl;
+		std::cout << "fibonacci(5) == " << h2.get() << std::endl;
 	}
 ``
 

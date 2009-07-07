@@ -43,7 +43,7 @@ __boost_task__ provides the helper function __make_task__ in order to create __t
 
 ``
 
-[/
+
 [heading Creation]
 
 __tasks__ are created by passing free-functions or member-functions of objects and its arguments to the task-constructor.
@@ -80,7 +80,19 @@ It is possible to create __task__ from a __callable__ too:
 	Y y;
 	boost::task::task< std::string > t( y);
 ``
-]
+
+__fn_make_task__ can be used too in order to create an __task__:
+
+``
+	// task computing fibonacci(10)
+	// move the task to executor
+	boost::task::handle< long > h(
+		boost::task::async(
+			  boost::make_task( fibonacci, 10) ) );
+
+``
+
+
 
 [heading Cooperative task and interruption]
 

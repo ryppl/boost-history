@@ -20,6 +20,7 @@
 ]
 
 [def __boost__ [*boost-1.39.0]]
+[def __boost_fiber__ [*Boost.Fiber]]
 [def __boost_task__ [*Boost.Task]]
 [def __boost_thread__ [@http://www.boost.org/libs/thread [*Boost.Thread]]]
 [def __boost_future__ [@http://www.justsoftwaresolutions.co.uk/threading/updated-implementation-of-c++-futures-3.html [*Boost.Future]]]
@@ -74,6 +75,7 @@
 [def __fn_yield__ `boost::this_task::yield()`]
 
 [def __fn_async__ `boost::task::async()`]
+[def __fn_make_task__ `boost::task::make_task()`]
 
 [def __fn_active__ `active()`]
 [def __fn_bind_to_processors__ `bind_to_processors()`]
@@ -128,12 +130,9 @@
 [include overview.qbk]
 [include introduction.qbk]
 [include task.qbk]
-[include handle.qbk]
 [include async.qbk]
-[include own_thread.qbk]
-[include new_thread.qbk]
-[include pool.qbk]
-[include as_sub_task.qbk]
+[include async_completion_token.qbk]
+[include execution_policy.qbk]
 [include utilities.qbk]
 [include meta_functions.qbk]
 [include reference.qbk]

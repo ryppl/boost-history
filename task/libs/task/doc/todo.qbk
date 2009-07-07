@@ -39,7 +39,8 @@ dependencies or communicate with each other.
 
 [heading Interdepended task]
 
-* With special support of concurrence and synchronisation abstractions interdepended tasks work in __thread_pools__ without deadlocking the pool. 
+* With special support of __boost_fiber__ interdepended tasks (using communication and synchronisation abstractions above) work in 
+__thread_pools__ without deadlocking the pool. 
 
 
 [heading Optimizations]

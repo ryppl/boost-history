@@ -35,16 +35,24 @@
 
 namespace boost { namespace task
 {
+
+template< typename Channel >
+class static_pool;
+
 namespace detail
 {
+
 class BOOST_TASK_DECL worker
 {
 private:
+	template< typename Channel >
+	friend class static_pool;
+
 	static thread_specific_ptr< worker >	tss_;
 
-	struct impl
+	struct worker_base
 	{
-		virtual ~impl() {}
+		virtual ~worker_base() {}
 
 		virtual const thread::id get_id() const = 0;
 
@@ -68,8 +76,8 @@ private:
 	};
 
 	template< typename Pool >
-	class impl_pool : public impl,
-					  private noncopyable
+	class worker_object : public worker_base,
+			      private noncopyable
 	{
 	private:
 		class random_idx
@@ -78,7 +86,7 @@ private:
 			rand48 rng_;
 			uniform_int<> six_;
 			variate_generator< rand48 &, uniform_int<> > die_;
-	
+
 		public:
 			random_idx( std::size_t size)
 			:
@@ -86,7 +94,7 @@ private:
 			six_( 0, size - 1),
 			die_( rng_, six_)
 			{}
-	
+
 			std::size_t operator()()
 			{ return die_(); }
 		};
@@ -107,13 +115,13 @@ private:
 			BOOST_ASSERT( ! ca.empty() );
 			guard grd( get_pool().active_worker_);
 			{
-				callable::context_guard lk( ca, thrd_);
+				context_guard lk( ca, thrd_);
 				ca();
 			}
 			ca.clear();
 			BOOST_ASSERT( ca.empty() );
 		}
-	
+
 		void next_callable_( callable & ca)
 		{
 			if ( ! try_take( ca) )
@@ -128,7 +136,7 @@ private:
 						if ( ++idx >= get_pool().wg_.size() ) idx = 0;
 						if ( other.try_steal( ca) ) break;
 					}
-	
+
 					if ( ca.empty() )
 					{
 						guard grd( get_pool().idle_worker_);
@@ -148,7 +156,7 @@ private:
 				}
 			}
 		}
-	
+
 		void next_local_callable_( callable & ca)
 		{
 			if ( ! try_take( ca) )
@@ -186,7 +194,7 @@ private:
 		{ return shtdwn_now_sem_.try_wait(); }
 
 	public:
-		impl_pool(
+		worker_object(
 			Pool & pool,
 			poolsize const& psize,
 			posix_time::time_duration const& asleep,
@@ -279,7 +287,7 @@ private:
 		}
 	};
 
-	shared_ptr< impl >	impl_;
+	shared_ptr< worker_base >	impl_;
 
 public:
 	template< typename Pool >
@@ -291,7 +299,7 @@ public:
 		function< void() > const& fn)
 	:
 	impl_(
-		new impl_pool< Pool >(
+		new worker_object< Pool >(
 			pool,
 			psize,
 			asleep,
@@ -315,7 +323,7 @@ public:
 	template< typename Pool >
 	Pool & get_pool() const
 	{
-		impl_pool< Pool > * p( dynamic_cast< impl_pool< Pool > * >( impl_.get() ) );
+		worker_object< Pool > * p( dynamic_cast< worker_object< Pool > * >( impl_.get() ) );
 		BOOST_ASSERT( p);
 		return p->get_pool();
 	}
@@ -324,6 +332,7 @@ public:
 
 	static worker * tss_get();
 };
+
 }}}
 
 # if defined(BOOST_MSVC)

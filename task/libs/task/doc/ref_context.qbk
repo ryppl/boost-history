@@ -1,0 +1,48 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:context Class `context`]
+
+``
+	#include <boost/task/context.hpp>
+
+	class context
+	{
+	public:
+		template< typename R >
+		callable get_callable( task< R > t);
+
+		template< typename R >
+		handle< R > get_handle( shared_future< R > f);
+	};
+``
+
+
+[heading Templated member function `get_callable( task< R > t)`]
+
+	template< typename R >
+	callable get_callable( task< R > t);
+
+[variablelist
+[[Effects:] [returns a callable containing the moved task< R >]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Templated member function `get_handle( shared_future< R > f)`]
+
+	template< typename R >
+	handle< R > get_handle( shared_future< R > f);
+
+[variablelist
+[[Effects:] [returns a handle associated to the moved task< R >]]
+[[Throws:] [Nothing]]
+]
+
+
+[endsect]

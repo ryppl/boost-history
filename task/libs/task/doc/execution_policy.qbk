@@ -17,6 +17,7 @@ A __ep__ describes how a __task__ gets asynchronously executed and provides a li
 [include new_thread.qbk]
 [include pool.qbk]
 [include as_sub_task.qbk]
+[include user_defined_executor.qbk]
 
 
 [endsect] 

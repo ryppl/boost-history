@@ -1,0 +1,92 @@
+[/
+          Copyright Oliver Kowalke 2009.
+ Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+          http://www.boost.org/LICENSE_1_0.txt
+]
+
+
+[section:callable Class `callable`]
+
+``
+	#include <boost/task/callable.hpp>
+
+	class callable
+	{
+	public:
+		callable();
+
+		void operator()();
+
+		bool empty() const;
+
+		void clear();
+
+		void reset();
+
+		void reset( shared_ptr< thread > const& thrd);
+	};
+``
+
+
+[heading Constructor `callable()`]
+
+	callable()
+
+[variablelist
+[[Effects:] [constructs an empty callable]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `operator()()`]
+
+	void operator()()
+
+[variablelist
+[[Effects:] [executes the stored task< R >]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `empty()`]
+
+	bool empty() const
+
+[variablelist
+[[Effects:] [tests if callable contains a task< R >]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `clear()`]
+
+	void clear()
+
+[variablelist
+[[Effects:] [clears internal task< R >, callable becomes empty]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `reset()`]
+
+	void reset()
+
+[variablelist
+[[Effects:] [clears internal thrread-context]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `reset( shared_ptr< thread> const& thrd)`]
+
+	void reset( shared_ptr< thread > const& thrd)
+
+[variablelist
+[[Effects:] [sets internal thread-context]]
+[[Throws:] [Nothing]]
+]
+
+
+[endsect]
