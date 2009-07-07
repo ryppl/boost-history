@@ -77,7 +77,7 @@ private:
 
 	template< typename Pool >
 	class worker_object : public worker_base,
-			      private noncopyable
+					      private noncopyable
 	{
 	private:
 		class random_idx

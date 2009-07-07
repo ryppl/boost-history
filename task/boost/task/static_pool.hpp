@@ -53,8 +53,8 @@ private:
 
 	friend class detail::worker;
 
-	template< typename Channel >
-	friend class detail::worker::worker_object< static_pool< Channel > >;
+	template< typename T >
+	friend class detail::worker::worker_object;
 
 	typedef typename channel::item	channel_item;
 	
@@ -67,8 +67,8 @@ private:
 	private:
 		friend class detail::worker;
 
-		template< typename Channel >
-		friend class detail::worker::worker_object< static_pool< Channel > >;
+		template< typename T >
+		friend class detail::worker::worker_object;
 
 		detail::worker_group	wg_;
 		shared_mutex			mtx_wg_;
