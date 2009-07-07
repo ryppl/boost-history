@@ -10,8 +10,7 @@ This paper introduces a classification of concepts and concept maps
 into categories that we help will support the discussion of various
 proposed design changes.  We use this classification to analyze the
 implications of making certain concepts ``auto``.  We hope that the
-classification can be a useful basis for discussion even if no
-consensus forms around our analysis.
+classification can be a useful basis for discussion.
 
 Three Kinds of Concepts
 =======================
@@ -455,7 +454,7 @@ the reflectors. Given our categorizations of concepts and concept
 maps, which combinations of concepts and concept maps are likely to
 result in empty concept maps? The following table illustrates our
 view, where the columns correspond to the kinds of concepts and the
-rows correspond to the kinds of concept maps. Justifications follow.
+rows correspond to the kinds of concept maps.  Justification follows.
 
 .. list-table:: When are empty concept maps required?
   :header-rows: 1
@@ -463,7 +462,7 @@ rows correspond to the kinds of concept maps. Justifications follow.
   * - 
     - Syntactic
     - Foundational
-    - Non-trivial
+    - nontrivial
   * - **Adaptive**
     - Never (1, 2)
     - Never (1)
@@ -477,30 +476,58 @@ rows correspond to the kinds of concept maps. Justifications follow.
     - Occasionally (3)
     - Occasionally (3)
 
-Our reasoning for the various classifications:
+Our reasoning for the expectations:
 
-1. The row corresponding to Adaptive concept maps is marked "Never" because adaptive concept maps are, by definition, non-empty. They provide a syntactic mapping within the concept map itself.
+1. The row corresponding to Adaptive concept maps is marked "Never"
+   because adaptive concept maps are, by definition, non-empty. They
+   provide a syntactic mapping within the concept map itself.
 
-2. The column corresponding to Syntactic concepts is marked "Never" because syntactic concepts are "auto" concepts and, therefore, do not need explicit concept maps.
+2. The column corresponding to Syntactic concepts is marked "Never"
+   because syntactic concepts are "auto" concepts and, therefore, do not
+   need explicit concept maps.
 
-3. Intentional concept maps for foundational and non-trivial concept maps may be empty, when the data types are specifically designed to model the concept. By definition, however, intentional concept maps are written by the programmer to assert and check that the concept's requirements are met. If the programmer did not want to write the concept map, then we actually have a case of post-hoc mapping (see below).
+3. Intentional concept maps for foundational and nontrivial concept
+   maps may be empty when the data types are specifically designed to
+   model the concept. By definition, however, intentional concept maps
+   are written by the programmer to assert and check that the concept's
+   requirements are met. If the programmer did not want to write the
+   concept map, then we actually have a case of post-hoc mapping (see
+   below).
 
-4. Post-hoc mapping of a foundational concept is expected to be very rare, since the majority of foundational concepts are ``auto`` concepts. For non-``auto`` foundational concepts, where the dangers due to semantic refinement or structural aliasing outweigh the benefits of implicit matching (e.g., for ``Associative``), empty concept maps will occur. However, for such concepts, these concept maps are necessary to ensure proper semantics.
+4. Post-hoc mapping of a foundational concept is expected to be very
+   rare, since the majority of foundational concepts are ``auto``
+   concepts. For non-``auto`` foundational concepts, where the dangers
+   due to semantic refinement or structural aliasing outweigh the
+   benefits of implicit matching (e.g., for ``Associative``), empty
+   concept maps will occur. However, for such concepts, these concept
+   maps are necessary to ensure proper semantics.
 
-5. Post-hoc mapping of a non-trivial concept will occur occasionally, when a data type was specifically designed to meet the requirements of the non-trivial concept. The number of empty concept maps is bounded by the number of data types that model the non-trivial concept.
+5. Post-hoc mapping of a nontrivial concept will occur occasionally,
+   when a data type was specifically designed to meet the requirements
+   of the nontrivial concept. The number of empty concept maps is
+   bounded by the number of data types that model the nontrivial
+   concept.
 
 We suspect that most of the concern about explicit concept maps is
-focused on (5), post-hoc mapping of a non-trivial concept, which is
+focused on (5), post-hoc mapping of a nontrivial concept, which is
 most likely to occur when a programmer is using a generic
-library. There are several mitigating factors, including:
+library. There are several mitigating facts, among them:
 
-a. Most data types that model non-trivial concepts are part of the same library that provides the concepts, e.g., a graph library will contain both graph types and graph concepts, so the empty concept maps will already have been written by the library author; the library user will not need to write any such statement.
+a. Data types that model nontrivial concepts are often part of the same
+   library that provides the concepts, e.g., a graph library will contain
+   both graph types and graph concepts, so the empty concept maps will
+   already have been written by the library author; the library user will
+   not need to write any such statement.
 
-b. The library itself must document which of its data types model which of its concepts; a concept map is a natural way to do so.
+b. The library itself must document which of its data types model
+   which of its concepts; a concept map is a natural way to do so.
 
-c. With non-trivial concepts, empty concept maps provide the most benefit, because modeling a non-trivial concept is not, *ahem*, trivial.
+c. With nontrivial concepts, empty concept maps provide the most
+   benefit, because modeling a nontrivial concept is
+   not (*ahem*) trivial.
 
-d. Many non-trivial concepts already require some explicit statement that they meet the requirements of a concept 
+d. Many nontrivial concepts already require some explicit statement
+   that they meet the requirements of a concept
 
 Summary
 =======
