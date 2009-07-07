@@ -447,29 +447,71 @@ your users' code in case you are wrong, or you may need to ensure that
 there is room to transparently evolve your refinement hierarchy.
 
 
-The Full Grid
-=============
+When Are Empty Concept Maps Required?
+=====================================
 
-This is our analysis of how these categories of concepts and mappings
-combine:
+There has been a great deal of concern about "empty" concept maps on
+the reflectors. Given our categorizations of concepts and concept
+maps, which combinations of concepts and concept maps are likely to
+result in empty concept maps? The following table illustrates our
+view, where the columns correspond to the kinds of concepts and the
+rows correspond to the kinds of concept maps. Justifications follow.
 
-+--------------------+--------------------+--------------------+--------------------+
-|            Concept:|     Syntactic      |    Foundational    |     Nontrivial     |
-|                    |                    |                    |                    |
-|             Mapping|                    |                    |                    |
-+====================+====================+====================+====================+
-|            Adaptive|rare, explicit,     |rare, explicit,     |rare, explicit,     |
-|                    |nonempty            |nonempty            |nonempty            |
-+--------------------+--------------------+--------------------+--------------------+
-|            Post-Hoc|usually implicit and|common, usually     |rare, usually       |
-|                    |empty               |implicit and empty  |explicit and        |
-|                    |                    |                    |nonempty            |
-+--------------------+--------------------+--------------------+--------------------+
-|         Intentional|moderately rare,    |very common, usually|common, usually     |
-|                    |usually implicit and|implicit and empty  |explicit and empty  |
-|                    |empty               |                    |                    |
-+--------------------+--------------------+--------------------+--------------------+
+.. list-table:: When are empty concept maps required?
+  :header-rows: 1
 
+  * - 
+    - Syntactic
+    - Foundational
+    - Non-trivial
+  * - **Adaptive**
+    - Never (1, 2)
+    - Never (1)
+    - Never (1)
+  * - **Post-Hoc**
+    - Never (2)
+    - Rarely (4)
+    - Occasionally (5)
+  * - **Intentional**
+    - Never (2, 3)
+    - Occasionally (3)
+    - Occasionally (3)
+
+Our reasoning for the various classifications:
+
+1. The row corresponding to Adaptive concept maps is marked "Never" because adaptive concept maps are, by definition, non-empty. They provide a syntactic mapping within the concept map itself.
+
+2. The column corresponding to Syntactic concepts is marked "Never" because syntactic concepts are "auto" concepts and, therefore, do not need explicit concept maps.
+
+3. Intentional concept maps for foundational and non-trivial concept maps may be empty, when the data types are specifically designed to model the concept. By definition, however, intentional concept maps are written by the programmer to assert and check that the concept's requirements are met. If the programmer did not want to write the concept map, then we actually have a case of post-hoc mapping (see below).
+
+4. Post-hoc mapping of a foundational concept is expected to be very rare, since the majority of foundational concepts are ``auto`` concepts. For non-``auto`` foundational concepts, where the dangers due to semantic refinement or structural aliasing outweigh the benefits of implicit matching (e.g., for ``Associative``), empty concept maps will occur. However, for such concepts, these concept maps are necessary to ensure proper semantics.
+
+5. Post-hoc mapping of a non-trivial concept will occur occasionally, when a data type was specifically designed to meet the requirements of the non-trivial concept. The number of empty concept maps is bounded by the number of data types that model the non-trivial concept.
+
+We suspect that most of the concern about explicit concept maps is
+focused on (5), post-hoc mapping of a non-trivial concept, which is
+most likely to occur when a programmer is using a generic
+library. There are several mitigating factors, including:
+
+a. Most data types that model non-trivial concepts are part of the same library that provides the concepts, e.g., a graph library will contain both graph types and graph concepts, so the empty concept maps will already have been written by the library author; the library user will not need to write any such statement.
+
+b. The library itself must document which of its data types model which of its concepts; a concept map is a natural way to do so.
+
+c. With non-trivial concepts, empty concept maps provide the most benefit, because modeling a non-trivial concept is not, *ahem*, trivial.
+
+d. Many non-trivial concepts already require some explicit statement that they meet the requirements of a concept 
+
+Summary
+=======
+
+We have provided a classification of different kinds of concepts and
+concept maps, with the intent of establishing which concepts will be
+``auto`` and which will be explicit, and to enumerate the various uses
+for concept maps. While we suspect that our classifications will not
+be universally accepted, we hope that this terminology can be useful
+for narrowing the discussion and guiding future experiments with
+concepts.
 
 -----
 
