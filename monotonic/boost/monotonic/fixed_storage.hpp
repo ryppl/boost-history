@@ -101,7 +101,7 @@ namespace boost
 
             AllocationAttempt TryAllocation(size_t num_bytes, size_t alignment)
             {
-                size_t extra = cursor & (alignment - 1);
+                size_t extra = cursor & (alignment - 1);    // assumes alignment is a power of 2!
                 if (extra > 0)
                     extra = alignment - extra;
                 size_t required = num_bytes + extra;

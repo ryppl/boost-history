@@ -37,9 +37,10 @@ namespace boost
             // allocations are always made from the stack, or from a pool the first link in the chain
             typedef std::vector<Link, Alloc> Chain;                    
             typedef boost::array<Pool, NumPools> Pools;
+            typedef fixed_storage<InlineSize> FixedStorage;    // the inline fixed-sized storage which may be on the stack
 
         private:
-            fixed_storage<InlineSize> fixed;    // the inline fixed-sized storage which may be on the stack
+            FixedStorage fixed;    // the inline fixed-sized storage which may be on the stack
             Chain chain;                        // heap-based storage
             Allocator alloc;                    // allocator for heap-based storage
             Pools pools;                        // pools of same-sized chunks
@@ -94,13 +95,19 @@ namespace boost
 
             struct Allocation
             {
-                void *ptr;
                 size_t cursor;
                 Pool *pool;
                 Link *link;
+                void *ptr;
+                fixed_storage_type *fixed;
+                
 
                 Allocation() 
-                    : pool(0), link(0), cursor(0), ptr(0) { }
+                    : cursor(0), pool(0), link(0), ptr(0), fixed(0) { }
+                Allocation(Pool *p, void *result) 
+                    : cursor(0), pool(p), link(0), ptr(result), fixed(0) { }
+                Allocation(fixed_storage_type *p, size_t cursor, void *result) 
+                    : cursor(cursor), pool(p), link(0), ptr(result), fixed(p) { }
 
                 void undo()
                 {
@@ -114,10 +121,11 @@ namespace boost
                         link->set_cursor(cursor);
                         return;
                     }
-                    if (storage)
+                    if (fixed)
                     {
-                        storage->set_cursor(cursor);
+                        fixed->set_cursor(cursor);
                     }
+                    BOOST_ASSERT(0);
                 }
             };
             Allocation MakeAllocation(size_t num_bytes, size_t alignment = 4)
@@ -126,12 +134,17 @@ namespace boost
                 if (bucket < NumPools)
                 {
                     if (void *ptr = from_pool(bucket, num_bytes, alignment))
-                        return Allocation(bucket, ptr);
+                        return Allocation(&pools[bucket], ptr);
                 }
-                //if (fixed.
-                //if (void *ptr = from_fixed(num_bytes, alignment))
-                //    return Allocation(
-                return from_heap(num_bytes, alignment);
+                FixedStorage::AllocationAttempt attempt = fixed.TryAllocation(num_bytes, alignment);
+                if (attempt.able)
+                {
+                    size_t restore_point = fixed.get_cursor();
+                    return Allocation(&fixed, restore_point, fixed.MakeAllocation(attempt));
+                }
+                throw;
+                //void *ptr = from_heap(num_bytes, alignment);
+                //return Allocation(&chain.front(), restore_point, ptr);
             }
 
         public:

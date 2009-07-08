@@ -23,7 +23,7 @@ namespace boost
     {
         struct null_pointer {};
 
-        /// a first-class stack object
+        /// a first-class fixed-size stack object
         template <size_t InlineSize>
         struct fixed_stack
         {
@@ -308,6 +308,7 @@ namespace boost
             }
         };
 
+        /// a growable stack
         template <size_t Size, size_t Inc, class Al>
         struct stack
         {
@@ -325,10 +326,22 @@ namespace boost
                 clear();
             }
 
+            void clear()
+            {
+
+            }
+            size_t top() const
+            {
+                return 0;
+            }
+            size_t size() const
+            {
+                return 0;
+            }
             template <class T>
             T &push()
             {
-
+                return fixed.push<T>();
             }
         };
     
