@@ -44,7 +44,7 @@ import testing ;
 
 #   [ run sequence/adapt_struct.cpp : : : : ]
 #   [ run sequence/adapt_assoc_struct.cpp : : : : ]
-#   [ run sequence/array : : : : ]
+    [ run sequence/array.cpp : : : : ]
     [ run sequence/as_list.cpp :  :  :  : ]
     [ run sequence/as_map.cpp :  :  :  : ]
     [ run sequence/as_set.cpp :  :  :  : ]

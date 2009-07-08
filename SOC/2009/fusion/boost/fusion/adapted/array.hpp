@@ -9,15 +9,17 @@
 #ifndef BOOST_FUSION_ADAPTED_ARRAY_HPP
 #define BOOST_FUSION_ADAPTED_ARRAY_HPP
 
-#include <boost/fusion/adapted/array/array_iterator.hpp>
-#include <boost/fusion/adapted/array/tag_of.hpp>
-#include <boost/fusion/adapted/array/detail/is_view_impl.hpp>
-#include <boost/fusion/adapted/array/detail/is_sequence_impl.hpp>
-#include <boost/fusion/adapted/array/detail/category_of_impl.hpp>
-#include <boost/fusion/adapted/array/detail/begin_impl.hpp>
-#include <boost/fusion/adapted/array/detail/end_impl.hpp>
-#include <boost/fusion/adapted/array/detail/size_impl.hpp>
-#include <boost/fusion/adapted/array/detail/at_impl.hpp>
-#include <boost/fusion/adapted/array/detail/value_at_impl.hpp>
+#include <boost/fusion/support/ref.hpp>
+
+#include <boost/fusion/adapted/detail/array/array_iterator.hpp>
+#include <boost/fusion/adapted/detail/array/tag_of.hpp>
+#include <boost/fusion/adapted/detail/array/is_view_impl.hpp>
+#include <boost/fusion/adapted/detail/array/is_sequence_impl.hpp>
+#include <boost/fusion/adapted/detail/array/category_of_impl.hpp>
+#include <boost/fusion/adapted/detail/array/begin_impl.hpp>
+#include <boost/fusion/adapted/detail/array/end_impl.hpp>
+#include <boost/fusion/adapted/detail/array/size_impl.hpp>
+#include <boost/fusion/adapted/detail/array/at_impl.hpp>
+#include <boost/fusion/adapted/detail/array/value_at_impl.hpp>
 
 #endif

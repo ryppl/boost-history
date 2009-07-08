@@ -9,7 +9,6 @@
 #define BOOST_FUSION_MPL_BEGIN_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/adapted/mpl/detail/begin_impl.hpp>
 #include <boost/fusion/mpl/detail/fusion_iterator.hpp>
 
 #include <boost/mpl/begin.hpp>

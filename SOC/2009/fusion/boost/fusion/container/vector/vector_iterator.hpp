@@ -43,7 +43,8 @@ namespace boost { namespace fusion
         typedef
             vector_iterator_identity<
                 typename detail::identity<Vector>::type
-              , N>
+              , N
+            >
         identity;
 
         template<typename OtherVecIt>
