@@ -89,11 +89,11 @@ int Tracked::count = 0;
 
 BOOST_AUTO_TEST_CASE(test_stack)
 {
-    /*
     monotonic::stack<> stack;
     {
         size_t top = stack.top();
         int &n2 = stack.push<int>();
+        /*
         float &f0 = stack.push<float>();
         char &n3 = stack.push<char>();
         Tracked &tracked = stack.push<Tracked>();
@@ -115,8 +115,8 @@ BOOST_AUTO_TEST_CASE(test_stack)
         size_t top2 = stack.top();
         BOOST_ASSERT(top2 == top);
         BOOST_ASSERT(Tracked::count == 0);
+        */
     }
-    */
 }
 
 BOOST_AUTO_TEST_CASE(test_fixed_stack)
