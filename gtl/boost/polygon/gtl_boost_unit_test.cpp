@@ -6,6 +6,7 @@
   http://www.boost.org/LICENSE_1_0.txt).
 */
 #define BOOST_POLYGON_NO_DEPS
+#include <iostream>
 #include "polygon.hpp"
 namespace gtl = boost::polygon;
 
@@ -13,6 +14,299 @@ namespace gtl = boost::polygon;
 #include <stdlib.h>
 
 namespace boost { namespace polygon{
+
+template <class T>
+std::ostream& operator << (std::ostream& o, const interval_data<T>& i)
+{
+  return o << i.get(LOW) << ' ' << i.get(HIGH);
+}
+  template <class T>
+  std::ostream& operator << (std::ostream& o, const point_data<T>& r)
+  {
+    return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
+  }
+  template <typename T>
+  std::ostream& operator<<(std::ostream& o, const polygon_45_data<T>& poly) {
+    o << "Polygon { ";
+    for(typename polygon_45_data<T>::iterator_type itr = poly.begin(); 
+        itr != poly.end(); ++itr) {
+      if(itr != poly.begin()) o << ", ";
+      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
+    } 
+    o << " } ";
+    return o;
+  }
+  template <typename Unit>
+  inline std::ostream& operator<< (std::ostream& o, const polygon_45_set_data<Unit>& p) {
+    o << "Polygon45Set ";
+    o << " " << !p.sorted() << " " << p.dirty() << " { ";
+    for(typename polygon_45_set_data<Unit>::iterator_type itr = p.begin();
+        itr != p.end(); ++itr) {
+      o << (*itr).pt << ":";
+      for(unsigned int i = 0; i < 4; ++i) {
+        o << (*itr).count[i] << ",";
+      } o << " ";
+      //o << (*itr).first << ":" <<  (*itr).second << "; ";
+    }
+    o << "} ";
+    return o;
+  }
+
+  template <typename Unit>
+  inline std::istream& operator>> (std::istream& i, polygon_45_set_data<Unit>& p) {
+    //TODO
+    return i;
+  }
+template <typename T>
+std::ostream& operator << (std::ostream& o, const polygon_90_data<T>& r)
+{
+  o << "Polygon { ";
+  for(typename polygon_90_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
+    o << *itr << ", ";
+  }
+  return o << "} ";
+}
+
+template <typename T>
+std::istream& operator >> (std::istream& i, polygon_90_data<T>& r)
+{
+  std::size_t size;
+  i >> size; 
+  std::vector<T> vec;
+  vec.reserve(size);
+  for(std::size_t ii = 0; ii < size; ++ii) {
+    T coord;
+    i >> coord;
+    vec.push_back(coord);
+  }
+  r.set_compact(vec.begin(), vec.end());
+  return i;
+}
+  
+template <typename T>
+std::ostream& operator << (std::ostream& o, const std::vector<polygon_90_data<T> >& r) {
+  o << r.size() << ' ';
+  for(std::size_t ii = 0; ii < r.size(); ++ii) {
+    o << (r[ii]); 
+  }
+  return o;
+}
+template <typename T>
+std::istream& operator >> (std::istream& i, std::vector<polygon_90_data<T> >& r) {
+  std::size_t size;
+  i >> size;
+  r.clear();
+  r.reserve(size);
+  for(std::size_t ii = 0; ii < size; ++ii) {
+    polygon_90_data<T> tmp;
+    i >> tmp;
+    r.push_back(tmp);
+  }
+  return i;
+}
+  template <typename T>
+  std::ostream& operator<<(std::ostream& o, const polygon_data<T>& poly) {
+    o << "Polygon { ";
+    for(typename polygon_data<T>::iterator_type itr = poly.begin(); 
+        itr != poly.end(); ++itr) {
+      if(itr != poly.begin()) o << ", ";
+      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
+    } 
+    o << " } ";
+    return o;
+  } 
+  template <typename T>
+  std::ostream& operator << (std::ostream& o, const polygon_set_data<T>& r)
+  {
+    o << "Polygon Set Data { ";
+    for(typename polygon_set_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
+      o << "<" << (*itr).first.first << ", " << (*itr).first.second << ">:" << (*itr).second << " ";
+    }
+    o << "} ";
+    return o;
+  }
+  template <typename T>
+  std::ostream& operator<<(std::ostream& o, const polygon_90_with_holes_data<T>& poly) {
+    o << "Polygon With Holes { ";
+    for(typename polygon_90_with_holes_data<T>::iterator_type itr = poly.begin(); 
+        itr != poly.end(); ++itr) {
+      if(itr != poly.begin()) o << ", ";
+      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
+    } o << " { ";
+    for(typename polygon_90_with_holes_data<T>::iterator_holes_type itr = poly.begin_holes();
+        itr != poly.end_holes(); ++itr) {
+      o << (*itr);
+    }
+    o << " } } ";
+    return o;
+  }
+  template <typename T>
+  std::ostream& operator<<(std::ostream& o, const polygon_45_with_holes_data<T>& poly) {
+    o << "Polygon With Holes { ";
+    for(typename polygon_45_with_holes_data<T>::iterator_type itr = poly.begin(); 
+        itr != poly.end(); ++itr) {
+      if(itr != poly.begin()) o << ", ";
+      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
+    } o << " { ";
+    for(typename polygon_45_with_holes_data<T>::iterator_holes_type itr = poly.begin_holes();
+        itr != poly.end_holes(); ++itr) {
+      o << (*itr);
+    }
+    o << " } } ";
+    return o;
+  }
+  template <typename T>
+  std::ostream& operator<<(std::ostream& o, const polygon_with_holes_data<T>& poly) {
+    o << "Polygon With Holes { ";
+    for(typename polygon_with_holes_data<T>::iterator_type itr = poly.begin(); 
+        itr != poly.end(); ++itr) {
+      if(itr != poly.begin()) o << ", ";
+      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
+    } o << " { ";
+    for(typename polygon_with_holes_data<T>::iterator_holes_type itr = poly.begin_holes();
+        itr != poly.end_holes(); ++itr) {
+      o << (*itr);
+    }
+    o << " } } ";
+    return o;
+  }
+template <class T>
+std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
+{
+  return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
+}
+
+
+  template <typename T>
+  typename enable_if<typename is_polygon_90_set_type<T>::type, void>::type
+  print_is_polygon_90_set_concept(const T& t) { std::cout << "is polygon 90 set concept\n"; }
+  template <typename T>
+  typename enable_if<typename is_mutable_polygon_90_set_type<T>::type, void>::type
+  print_is_mutable_polygon_90_set_concept(const T& t) { std::cout << "is mutable polygon 90 set concept\n"; }
+namespace boolean_op {
+  //self contained unit test for BooleanOr algorithm
+  template <typename Unit>
+  inline bool testBooleanOr() {
+    BooleanOp<int, Unit> booleanOr;
+    //test one rectangle
+    std::vector<std::pair<interval_data<Unit>, int> > container;
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+    if(container.size() != 2) { 
+      std::cout << "Test one rectangle, wrong output size\n";
+      return false;
+    }
+    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
+      std::cout << "Test one rectangle, first output wrong: Interval(" <<
+        container[0].first << "), " << container[0].second << std::endl;
+    }
+    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
+      std::cout << "Test one rectangle, second output wrong: Interval(" <<
+        container[1].first << "), " << container[1].second << std::endl;
+    }
+
+    //test two rectangles
+    container.clear();
+    booleanOr = BooleanOp<int, Unit>();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
+    if(container.size() != 4) {
+      std::cout << "Test two rectangles, wrong output size\n";
+      for(std::size_t i = 0; i < container.size(); ++i){
+              std::cout << container[i].first << "), " << container[i].second << std::endl;
+      }
+      return false;
+    }
+    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
+            std::cout << "Test two rectangles, first output wrong: Interval(" <<
+        container[0].first << "), " << container[0].second << std::endl;
+    }
+    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), 1)) {
+            std::cout << "Test two rectangles, second output wrong: Interval(" <<
+        container[1].first << "), " << container[1].second << std::endl;
+    }
+    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), -1)) {
+            std::cout << "Test two rectangles, third output wrong: Interval(" <<
+        container[2].first << "), " << container[2].second << std::endl;
+    }
+    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), -1)) {
+            std::cout << "Test two rectangles, fourth output wrong: Interval(" <<
+        container[3].first << "), " << container[3].second << std::endl;
+    }
+
+    //test two rectangles
+    container.clear();
+    booleanOr = BooleanOp<int, Unit>();
+    booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+    if(container.size() != 4) {
+            std::cout << "Test other two rectangles, wrong output size\n";
+      for(std::size_t i = 0; i < container.size(); ++i){
+              std::cout << container[i].first << "), " << container[i].second << std::endl;
+      }
+      return false;
+    }
+    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), 1)) {
+            std::cout << "Test other two rectangles, first output wrong: Interval(" <<
+        container[0].first << "), " << container[0].second << std::endl;
+    }
+    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), 1)) {
+            std::cout << "Test other two rectangles, second output wrong: Interval(" <<
+        container[1].first << "), " << container[1].second << std::endl;
+    }
+    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), -1)) {
+            std::cout << "Test other two rectangles, third output wrong: Interval(" <<
+        container[2].first << "), " << container[2].second << std::endl;
+    }
+    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
+            std::cout << "Test other two rectangles, fourth output wrong: Interval(" <<
+        container[3].first << "), " << container[3].second << std::endl;
+    }
+
+    //test two nonoverlapping rectangles
+    container.clear();
+    booleanOr = BooleanOp<int, Unit>();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(15, 25), 1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
+    booleanOr.advanceScan();
+    booleanOr.processInterval(container, interval_data<Unit>(15, 25), -1);
+    if(container.size() != 4) {
+            std::cout << "Test two nonoverlapping rectangles, wrong output size\n";
+      return false;
+    }
+    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
+            std::cout << "Test two nonoverlapping rectangles, first output wrong: Interval(" <<
+        container[0].first << "), " << container[0].second << std::endl;
+    }
+    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), 1)) {
+            std::cout << "Test two nonoverlapping rectangles, second output wrong: Interval(" <<
+        container[1].first << "), " << container[1].second << std::endl;
+    }
+    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
+            std::cout << "Test two nonoverlapping rectangles, third output wrong: Interval(" <<
+        container[2].first << "), " << container[2].second << std::endl;
+    }
+    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), -1)) {
+            std::cout << "Test two nonoverlapping rectangles, fourth output wrong: Interval(" <<
+        container[3].first << "), " << container[3].second << std::endl;
+    }
+    return true;
+  }
+}
 
   void test_assign() {
     using namespace gtl;
@@ -2009,9 +2303,9 @@ int main() {
      std::cout << polys1[i] << std::endl;
    }
 
-  boolean_op_45<int>::testScan45();
-  polygon_45_formation<int>::testPolygon45Formation();
-  polygon_45_formation<int>::testPolygon45Tiling();
+   boolean_op_45<int>::testScan45(std::cout);
+   polygon_45_formation<int>::testPolygon45Formation(std::cout);
+  polygon_45_formation<int>::testPolygon45Tiling(std::cout);
 
   axis_transformation atr;
   transform(p, atr);
@@ -2059,23 +2353,23 @@ int main() {
   std::cout << testPropertyMerge() << std::endl;
   std::cout << testPolygonAssign() << std::endl;
   std::cout << testPolygonWithHoles() << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationRect()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationP1()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationP2()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationPolys()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch1()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch2()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch3()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testSegmentIntersection()) << std::endl;
-  std::cout << (property_merge<int, int>::test_insertion()) << std::endl;
-  std::cout << (line_intersection<int>::test_verify_scan()) << std::endl;
-  std::cout << (line_intersection<int>::test_validate_scan()) << std::endl;
-  std::cout << (scanline<int, int>::test_scanline()) << std::endl;
-  std::cout << (property_merge<int, int>::test_merge()) << std::endl;
-  std::cout << (property_merge<int, int>::test_intersection()) << std::endl;
-  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationColinear()) << std::endl;
-  std::cout << (property_merge<int, int>::test_manhattan_intersection()) << std::endl;
-  std::cout << (test_arbitrary_boolean_op<int>()) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationRect(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationP1(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationP2(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationPolys(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch1(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch2(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch3(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testSegmentIntersection(std::cout)) << std::endl;
+  std::cout << (property_merge<int, int>::test_insertion(std::cout)) << std::endl;
+  std::cout << (line_intersection<int>::test_verify_scan(std::cout)) << std::endl;
+  std::cout << (line_intersection<int>::test_validate_scan(std::cout)) << std::endl;
+  std::cout << (scanline<int, int>::test_scanline(std::cout)) << std::endl;
+  std::cout << (property_merge<int, int>::test_merge(std::cout)) << std::endl;
+  std::cout << (property_merge<int, int>::test_intersection(std::cout)) << std::endl;
+  std::cout << (polygon_arbitrary_formation<int>::testPolygonArbitraryFormationColinear(std::cout)) << std::endl;
+  std::cout << (property_merge<int, int>::test_manhattan_intersection(std::cout)) << std::endl;
+  std::cout << (test_arbitrary_boolean_op<int>(std::cout)) << std::endl;
   }
   {
     polygon_set_data<int> psd;
@@ -2436,9 +2730,9 @@ int main() {
     std::cout << is_45(polyWHoles) << " " << polyWHoles << std::endl;
     if(is_45(polyWHoles) != true) return 1;
 
-    std::cout << (boolean_op_45<Unit>::testScan45()) << std::endl;
-    std::cout << (polygon_45_formation<Unit>::testPolygon45Formation()) << std::endl;
-    std::cout << (polygon_45_formation<Unit>::testPolygon45Tiling()) << std::endl;
+    std::cout << (boolean_op_45<Unit>::testScan45(std::cout)) << std::endl;
+    std::cout << (polygon_45_formation<Unit>::testPolygon45Formation(std::cout)) << std::endl;
+    std::cout << (polygon_45_formation<Unit>::testPolygon45Tiling(std::cout)) << std::endl;
 
 
     {

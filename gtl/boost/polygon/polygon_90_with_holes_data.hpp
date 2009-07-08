@@ -88,7 +88,7 @@ public:
     return self_.end_compact();
   }
 
-  inline unsigned int size() const {
+  inline std::size_t size() const {
     return self_.size();
   } 
 
@@ -102,7 +102,7 @@ public:
     return holes_.end();
   }
 
-  inline unsigned int size_holes() const {
+  inline std::size_t size_holes() const {
     return holes_.size();
   }
 

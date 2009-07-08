@@ -269,16 +269,16 @@ namespace boost { namespace polygon{
         nextItr_ = highItr;
       }
 
-      inline void print() const {
-        for(typename ScanData::const_iterator itr = scanData_.begin(); itr != scanData_.end(); ++itr) {
-          std::cout << itr->first << ": ";
-          for(std::set<int>::const_iterator sitr = itr->second.begin();
-              sitr != itr->second.end(); ++sitr){
-            std::cout << *sitr << " ";
-          }
-          std::cout << std::endl;
-        }
-      }
+//       inline void print() const {
+//         for(typename ScanData::const_iterator itr = scanData_.begin(); itr != scanData_.end(); ++itr) {
+//           std::cout << itr->first << ": ";
+//           for(std::set<int>::const_iterator sitr = itr->second.begin();
+//               sitr != itr->second.end(); ++sitr){
+//             std::cout << *sitr << " ";
+//           }
+//           std::cout << std::endl;
+//         }
+//       }
    
     private:
       inline typename ScanData::iterator lookup_(Unit pos){

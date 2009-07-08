@@ -133,7 +133,7 @@ namespace boost { namespace polygon{
     std::vector<p_type> polys;
     assign(polys, polygon_set);
     area_type retval = (area_type)0;
-    for(unsigned int i = 0; i < polys.size(); ++i) {
+    for(std::size_t i = 0; i < polys.size(); ++i) {
       retval += area(polys[i]);
     }
     return retval;
@@ -219,8 +219,10 @@ namespace boost { namespace polygon{
     return polygon_set;
   }
 
+  struct yes_ps_ob : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and_3 < typename is_any_polygon_set_type<geometry_type_1>::type,
+  typename enable_if< typename gtl_and_4 < yes_ps_ob, typename is_any_polygon_set_type<geometry_type_1>::type,
                                             typename is_any_polygon_set_type<geometry_type_2>::type,
                                             typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>::type,
                        polygon_set_view<geometry_type_1, geometry_type_2, 0> >::type 
@@ -228,28 +230,24 @@ namespace boost { namespace polygon{
     return polygon_set_view<geometry_type_1, geometry_type_2, 0>
       (lvalue, rvalue);
   }
-  
+
+  struct yes_ps_op : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and_3 < typename is_any_polygon_set_type<geometry_type_1>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type, typename is_any_polygon_set_type<geometry_type_2>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type, typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type, polygon_set_view<geometry_type_1, geometry_type_2, 0> >::type 
+  typename enable_if< typename gtl_and_4 < yes_ps_op,
+    typename gtl_if<typename is_any_polygon_set_type<geometry_type_1>::type>::type, 
+    typename gtl_if<typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
+    typename gtl_if<typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>::type>
+    ::type, polygon_set_view<geometry_type_1, geometry_type_2, 0> >::type 
   operator+(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_set_view<geometry_type_1, geometry_type_2, 0>
       (lvalue, rvalue);
   }
   
+  struct yes_ps_os : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and_3 < 
+  typename enable_if< typename gtl_and_4 < yes_ps_os, 
     typename is_any_polygon_set_type<geometry_type_1>::type,
     typename is_any_polygon_set_type<geometry_type_2>::type,
     typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>::type,
@@ -258,9 +256,24 @@ namespace boost { namespace polygon{
     return polygon_set_view<geometry_type_1, geometry_type_2, 1>
       (lvalue, rvalue);
   }
-  
+
+  struct yes_ps_oa : gtl_yes {};
+#if 0
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and_3 < 
+  typename enable_if< typename gtl_and_4 < yes_ps_oa,
+    typename is_any_polygon_set_type<geometry_type_1>::type,
+    typename is_any_polygon_set_type<geometry_type_2>::type,
+    typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>::type,
+                       polygon_set_view<geometry_type_1, geometry_type_2, 1> >::type 
+  operator&(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
+    return polygon_set_view<geometry_type_1, geometry_type_2, 1>
+      (lvalue, rvalue);
+  }
+#endif
+  struct yes_ps_ox : gtl_yes {};
+
+  template <typename geometry_type_1, typename geometry_type_2>
+  typename enable_if< typename gtl_and_4 < yes_ps_ox,
     typename is_any_polygon_set_type<geometry_type_1>::type,
     typename is_any_polygon_set_type<geometry_type_2>::type,
     typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>::type,
@@ -270,69 +283,75 @@ namespace boost { namespace polygon{
       (lvalue, rvalue);
   }
   
+  struct yes_ps_om : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and_3 < typename is_any_polygon_set_type<geometry_type_1>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type, typename is_any_polygon_set_type<geometry_type_2>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type, typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type, polygon_set_view<geometry_type_1, geometry_type_2, 3> >::type 
+    typename enable_if< typename gtl_and_4 < yes_ps_om,
+    typename gtl_if<typename is_any_polygon_set_type<geometry_type_1>::type>::type, 
+    typename gtl_if<typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
+    typename gtl_if<typename is_either_polygon_set_type<geometry_type_1, geometry_type_2>::type>::type>
+    ::type, polygon_set_view<geometry_type_1, geometry_type_2, 3> >::type 
   operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_set_view<geometry_type_1, geometry_type_2, 3>
       (lvalue, rvalue);
   }
-  
+ 
+  struct yes_ps_ope : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_4< yes_ps_ope, gtl_yes, typename is_mutable_polygon_set_type<geometry_type_1>::type, 
                                          typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator+=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 0>(lvalue, rvalue);
   }
 
+  struct yes_ps_obe : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3< yes_ps_obe, typename is_mutable_polygon_set_type<geometry_type_1>::type, 
                                          typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator|=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 0>(lvalue, rvalue);
   }
 
+  struct yes_ps_ose : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3< yes_ps_ose, typename is_mutable_polygon_set_type<geometry_type_1>::type, 
                                          typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator*=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 1>(lvalue, rvalue);
   }
 
+  struct yes_ps_oae : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
   typename enable_if<
-    typename gtl_and< typename is_mutable_polygon_set_type<geometry_type_1>::type, 
+    typename gtl_and_3< yes_ps_oae, typename is_mutable_polygon_set_type<geometry_type_1>::type, 
                       typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
     geometry_type_1>::type &
   operator&=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 1>(lvalue, rvalue);
   }
 
+  struct yes_ps_oxe : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3< yes_ps_oxe, typename is_mutable_polygon_set_type<geometry_type_1>::type, 
                                          typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator^=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 2>(lvalue, rvalue);
   }
 
+  struct yes_ps_ome : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
   typename enable_if< 
-    typename gtl_and< typename is_mutable_polygon_set_type<geometry_type_1>::type, 
+    typename gtl_and_3< yes_ps_ome, typename is_mutable_polygon_set_type<geometry_type_1>::type, 
                       typename is_any_polygon_set_type<geometry_type_2>::type>::type, 
     geometry_type_1>::type &
   operator-=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {

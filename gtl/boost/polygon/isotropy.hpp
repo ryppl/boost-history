@@ -20,9 +20,15 @@
 #endif
 #ifdef BOOST_HAS_LONG_LONG
 #define BOOST_POLYGON_USE_LONG_LONG
+//typedef boost::long_long_type polygon_long_long_type;
+//typedef boost::ulong_long_type polygon_ulong_long_type;
+typedef long long polygon_long_long_type;
+typedef unsigned long long polygon_ulong_long_type;
 #endif
 #include <boost/utility/enable_if.hpp>
-
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/or.hpp>
 #else
 
 #ifdef WIN32
@@ -32,6 +38,9 @@
 #define BOOST_POLYGON_ICC
 #endif
 #define BOOST_POLYGON_USE_LONG_LONG
+typedef long long polygon_long_long_type;
+typedef unsigned long long polygon_ulong_long_type;
+
   namespace boost { 
     template <bool B, class T   = void>
     struct enable_if_c {
@@ -124,9 +133,9 @@ namespace boost { namespace polygon{
     typedef int coordinate_type;
     typedef long double area_type;
 #ifdef BOOST_POLYGON_USE_LONG_LONG
-    typedef long long manhattan_area_type;
-    typedef unsigned long long unsigned_area_type;
-    typedef long long coordinate_difference;
+    typedef polygon_long_long_type manhattan_area_type;
+    typedef polygon_ulong_long_type unsigned_area_type;
+    typedef polygon_long_long_type coordinate_difference;
 #else
     typedef long manhattan_area_type;
     typedef unsigned long unsigned_area_type;
@@ -137,12 +146,12 @@ namespace boost { namespace polygon{
 
 #ifdef BOOST_POLYGON_USE_LONG_LONG
   template <>
-  struct coordinate_traits<long long> {
-    typedef long long coordinate_type;
+  struct coordinate_traits<polygon_long_long_type> {
+    typedef polygon_long_long_type coordinate_type;
     typedef long double area_type;
-    typedef long long manhattan_area_type;
-    typedef unsigned long long unsigned_area_type;
-    typedef long long coordinate_difference;
+    typedef polygon_long_long_type manhattan_area_type;
+    typedef polygon_ulong_long_type unsigned_area_type;
+    typedef polygon_long_long_type coordinate_difference;
     typedef long double coordinate_distance;
   };
 #endif
@@ -183,8 +192,10 @@ namespace boost { namespace polygon{
 
   template <>
   struct geometry_concept<int> { typedef coordinate_concept type; };
+#ifdef BOOST_POLYGON_USE_LONG_LONG
   template <>
-  struct geometry_concept<long long> { typedef coordinate_concept type; };
+  struct geometry_concept<polygon_long_long_type> { typedef coordinate_concept type; };
+#endif
   template <>
   struct geometry_concept<float> { typedef coordinate_concept type; };
   template <>
@@ -197,24 +208,46 @@ namespace boost { namespace polygon{
   struct requires<T1, T1, T3> {
     typedef T3 type;
   };
-
+#ifndef BOOST_POLYGON_NO_DEPS
+  struct gtl_no : mpl::bool_<false> {};
+  struct gtl_yes : mpl::bool_<true> {};
+  template <typename T, typename T2>
+  struct gtl_and : mpl::and_<T, T2> {};
+  template <typename T, typename T2, typename T3>
+  struct gtl_and_3 : mpl::and_<T, T2, T3> {};
+  template <typename T, typename T2, typename T3, typename T4>
+  struct gtl_and_4 : mpl::and_<T, T2, T3, T4> {};
+//  template <typename T, typename T2>
+//  struct gtl_or : mpl::or_<T, T2> {};
+//  template <typename T, typename T2, typename T3>
+//  struct gtl_or_3 : mpl::or_<T, T2, T3> {};
+//  template <typename T, typename T2, typename T3, typename T4>
+//  struct gtl_or_4 : mpl::or_<T, T2, T3, T4> {};
+#else
   struct gtl_no { static const bool value = false; };
   struct gtl_yes { typedef gtl_yes type;
     static const bool value = true; };
 
+  template <bool T, bool T2>
+  struct gtl_and_c { typedef gtl_no type; };
+  template <>
+  struct gtl_and_c<true, true> { typedef gtl_yes type; };
+
   template <typename T, typename T2>
-  struct gtl_and { typedef gtl_no type; };
-  template <typename T>
-  struct gtl_and<T, T> { typedef T type; };
-  
+  struct gtl_and : gtl_and_c<T::value, T2::value> {};
+  template <typename T, typename T2, typename T3>
+  struct gtl_and_3 { typedef typename gtl_and<
+                       T, typename gtl_and<T2, T3>::type>::type type; };
+
+  template <typename T, typename T2, typename T3, typename T4>
+  struct gtl_and_4 { typedef typename gtl_and_3<
+                       T, T2, typename gtl_and<T3, T4>::type>::type type; };
+#endif
   template <typename T, typename T2>
   struct gtl_or { typedef gtl_yes type; };
   template <typename T>
   struct gtl_or<T, T> { typedef T type; };
-    
-  template <typename T, typename T2, typename T3>
-  struct gtl_and_3 { typedef typename gtl_and<
-                       T, typename gtl_and<T2, T3>::type>::type type; };
+
   template <typename T, typename T2, typename T3>
   struct gtl_or_3 { typedef typename gtl_or<
                       T, typename gtl_or<T2, T3>::type>::type type; };
@@ -222,7 +255,7 @@ namespace boost { namespace polygon{
   template <typename T, typename T2, typename T3, typename T4>
   struct gtl_or_4 { typedef typename gtl_or<
                       T, typename gtl_or_3<T2, T3, T4>::type>::type type; };
-    
+
   template <typename T>
   struct gtl_not { typedef gtl_no type; };
   template <>
@@ -272,11 +305,13 @@ namespace boost { namespace polygon{
   struct area_type_by_domain<manhattan_domain, coordinate_type> { 
     typedef typename coordinate_traits<coordinate_type>::manhattan_area_type type; };
 
+	struct y_c_edist : gtl_yes {};
+
   template <typename coordinate_type_1, typename coordinate_type_2>
-  typename enable_if< 
-    typename gtl_and<typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
-                     typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
-    typename coordinate_traits<coordinate_type_1>::coordinate_difference>::type
+    typename enable_if< 
+    typename gtl_and_3<y_c_edist, typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type,
+	typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
+	typename coordinate_traits<coordinate_type_1>::coordinate_difference>::type
   euclidean_distance(const coordinate_type_1& lvalue, const coordinate_type_2& rvalue) {
     typedef typename coordinate_traits<coordinate_type_1>::coordinate_difference Unit;
     return (lvalue < rvalue) ? (Unit)rvalue - (Unit)lvalue : (Unit)lvalue - (Unit)rvalue;

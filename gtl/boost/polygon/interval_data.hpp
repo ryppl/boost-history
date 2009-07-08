@@ -50,12 +50,6 @@ private:
   coordinate_type coords_[2]; 
 };
 
-
-template <class T>
-std::ostream& operator << (std::ostream& o, const interval_data<T>& i)
-{
-  return o << i.get(LOW) << ' ' << i.get(HIGH);
-}
 }
 }
 #endif

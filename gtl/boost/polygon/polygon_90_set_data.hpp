@@ -287,7 +287,7 @@ namespace boost { namespace polygon{
       else
         set_points(extents_rectangle, point_data<coordinate_type>(data_[0].first, data_[0].second.first),
                    point_data<coordinate_type>(data_[data_.size() - 1].first, data_[data_.size() - 1].second.first));
-      for(unsigned int i = 1; i < data_.size() - 1; ++i) {
+      for(std::size_t i = 1; i < data_.size() - 1; ++i) {
         if(orient_ == HORIZONTAL)
           encompass(extents_rectangle, point_data<coordinate_type>(data_[i].second.first, data_[i].first));
         else
@@ -473,7 +473,7 @@ namespace boost { namespace polygon{
       std::vector<polygon_90_data<Unit> > polys;
       get(polys);
       std::vector<std::set<int> > graph(polys.size()+1, std::set<int>());
-      for(unsigned int i = 0; i < polys.size(); ++i){
+      for(std::size_t i = 0; i < polys.size(); ++i){
         polygon_90_set_data<Unit> psTmp(that.orient_);
         psTmp.insert(polys[i]);
         psTmp.clean();

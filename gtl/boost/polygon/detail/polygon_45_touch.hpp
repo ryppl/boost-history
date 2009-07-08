@@ -19,8 +19,8 @@ namespace boost { namespace polygon{
     static inline void merge_property_maps(property_map& mp, const property_map& mp2, bool subtract = false) {
       property_map newmp;
       newmp.reserve(mp.size() + mp2.size());
-      unsigned int i = 0;
-      unsigned int j = 0;
+      std::size_t i = 0;
+      std::size_t j = 0;
       while(i != mp.size() && j != mp2.size()) {
         if(mp[i].first < mp2[j].first) {
           newmp.push_back(mp[i]);
@@ -158,30 +158,30 @@ namespace boost { namespace polygon{
       }
     };
     
-    template <typename TSD>
-    static void print_tsd(TSD& tsd) {
-      for(unsigned int i = 0; i < tsd.size(); ++i) {
-        std::cout << tsd[i].first << ": ";
-        for(unsigned int r = 0; r < 4; ++r) {
-          std::cout << r << " { ";
-          for(std::vector<std::pair<int, int> >::iterator itr = tsd[i].second[r].counts.begin();
-              itr != tsd[i].second[r].counts.end(); ++itr) {
-            std::cout << itr->first << "," << itr->second << " ";
-          } std::cout << "} ";
-        }
-      } std::cout << std::endl;
-    }
+//     template <typename TSD>
+//     static void print_tsd(TSD& tsd) {
+//       for(std::size_t i = 0; i < tsd.size(); ++i) {
+//         std::cout << tsd[i].first << ": ";
+//         for(unsigned int r = 0; r < 4; ++r) {
+//           std::cout << r << " { ";
+//           for(std::vector<std::pair<int, int> >::iterator itr = tsd[i].second[r].counts.begin();
+//               itr != tsd[i].second[r].counts.end(); ++itr) {
+//             std::cout << itr->first << "," << itr->second << " ";
+//           } std::cout << "} ";
+//         }
+//       } std::cout << std::endl;
+//     }
 
-    template <typename T>
-    static void print_scanline(T& t) {
-      for(typename T::iterator itr = t.begin(); itr != t.end(); ++itr) {
-        std::cout << itr->x << "," << itr->y << " " << itr->rise << " ";
-        for(std::vector<std::pair<int, int> >::iterator itr2 = itr->count.counts.begin();
-            itr2 != itr->count.counts.end(); ++itr2) {
-          std::cout << itr2->first << ":" << itr2->second << " ";
-        } std::cout << std::endl;
-      }
-    }
+//     template <typename T>
+//     static void print_scanline(T& t) {
+//       for(typename T::iterator itr = t.begin(); itr != t.end(); ++itr) {
+//         std::cout << itr->x << "," << itr->y << " " << itr->rise << " ";
+//         for(std::vector<std::pair<int, int> >::iterator itr2 = itr->count.counts.begin();
+//             itr2 != itr->count.counts.end(); ++itr2) {
+//           std::cout << itr2->first << ":" << itr2->second << " ";
+//         } std::cout << std::endl;
+//       }
+//     }
 
     template <typename graph_type>
     static void performTouch(graph_type& graph, TouchSetData& tsd) {

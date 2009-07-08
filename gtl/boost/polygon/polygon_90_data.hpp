@@ -73,53 +73,6 @@ private:
   std::vector<coordinate_type> coords_; 
 };
 
-template <typename T>
-std::ostream& operator << (std::ostream& o, const polygon_90_data<T>& r)
-{
-  o << "Polygon { ";
-  for(typename polygon_90_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
-    o << *itr << ", ";
-  }
-  return o << "} ";
-}
-
-template <typename T>
-std::istream& operator >> (std::istream& i, polygon_90_data<T>& r)
-{
-  unsigned int size;
-  i >> size; 
-  std::vector<T> vec;
-  vec.reserve(size);
-  for(unsigned int ii = 0; ii < size; ++ii) {
-    T coord;
-    i >> coord;
-    vec.push_back(coord);
-  }
-  r.set_compact(vec.begin(), vec.end());
-  return i;
-}
-  
-template <typename T>
-std::ostream& operator << (std::ostream& o, const std::vector<polygon_90_data<T> >& r) {
-  o << r.size() << ' ';
-  for(unsigned int ii = 0; ii < r.size(); ++ii) {
-    o << (r[ii]); 
-  }
-  return o;
-}
-template <typename T>
-std::istream& operator >> (std::istream& i, std::vector<polygon_90_data<T> >& r) {
-  unsigned int size;
-  i >> size;
-  r.clear();
-  r.reserve(size);
-  for(unsigned int ii = 0; ii < size; ++ii) {
-    polygon_90_data<T> tmp;
-    i >> tmp;
-    r.push_back(tmp);
-  }
-  return i;
-}
 
 }
 }

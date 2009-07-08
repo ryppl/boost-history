@@ -571,7 +571,7 @@ namespace boost { namespace polygon{
           }
           //std::cout << "Below Count: " << countBelow << std::endl;
           Scan45Count count(countBelow);
-          unsigned int numEdges = 0;
+          std::size_t numEdges = 0;
           iterator eraseItrs[3];
           while(lowIter != scanData_.end() &&
                 lowIter->evalAtX(x_) == vertex.first.y()) {
@@ -590,13 +590,13 @@ namespace boost { namespace polygon{
           }
           //before we erase the elements we need to decide if they should be written out
           CountType currentCount = countBelow;
-          for(unsigned int i = 0; i < numEdges; ++i) {
+          for(std::size_t i = 0; i < numEdges; ++i) {
             output_functor f;
             f(output, currentCount, eraseItrs[i]->count, crossPoint, eraseItrs[i]->rise, LOW);
             currentCount = eraseItrs[i]->count;
           }
           //schedule erase of the elements
-          for(unsigned int i = 0; i < numEdges; ++i) {
+          for(std::size_t i = 0; i < numEdges; ++i) {
             eraseVec.push_back(eraseItrs[i]);
           }
          
@@ -612,7 +612,7 @@ namespace boost { namespace polygon{
         }
         //erase crossing elements
         std::vector<iterator> searchVec;
-        for(unsigned int i = 0; i < eraseVec.size(); ++i) {
+        for(std::size_t i = 0; i < eraseVec.size(); ++i) {
           if(eraseVec[i] != scanData_.begin()) {
             iterator searchItr = eraseVec[i];
             --searchItr;
@@ -622,7 +622,7 @@ namespace boost { namespace polygon{
           }
           scanData_.erase(eraseVec[i]);
         }
-        for(unsigned int i = 0; i < searchVec.size(); ++i) {
+        for(std::size_t i = 0; i < searchVec.size(); ++i) {
           findCross_(searchVec[i]);
         }
       }
@@ -632,14 +632,14 @@ namespace boost { namespace polygon{
         Scan45Vector vec;
         swap(vec, crossVector_);
         iT mergeEnd = inputBegin;
-        unsigned int mergeCount = 0;
+        std::size_t mergeCount = 0;
         while(mergeEnd != inputEnd &&
               (*mergeEnd).first.x() == x_) {
           ++mergeCount;
           ++mergeEnd;
         }
         crossVector_.reserve((std::max)(vec.capacity(), vec.size() + mergeCount));
-        for(unsigned int i = 0; i < vec.size(); ++i){
+        for(std::size_t i = 0; i < vec.size(); ++i){
           while(inputBegin != mergeEnd &&
                 (*inputBegin).first.y() < vec[i].first.y()) {
             crossVector_.push_back(*inputBegin);
@@ -849,16 +849,17 @@ namespace boost { namespace polygon{
       }
     };
 
-    template <typename CountType>
-    static inline void print45Data(const std::set<Scan45ElementT<CountType>, 
-                                   lessScan45Element<CountType> >& data) {
-      typename std::set<Scan45ElementT<CountType>, lessScan45Element<CountType> >::const_iterator iter;
-      for(iter = data.begin(); iter != data.end(); ++iter) {
-        std::cout << iter->x << " " << iter->y << " " << iter->rise << std::endl;
-      }
-    }
+    //template <typename CountType>
+    //static inline void print45Data(const std::set<Scan45ElementT<CountType>, 
+    //                               lessScan45Element<CountType> >& data) {
+    //  typename std::set<Scan45ElementT<CountType>, lessScan45Element<CountType> >::const_iterator iter;
+    //  for(iter = data.begin(); iter != data.end(); ++iter) {
+    //    std::cout << iter->x << " " << iter->y << " " << iter->rise << std::endl;
+    //  }
+    //}
 
-    static inline bool testScan45Data() {
+    template <typename streamtype>
+    static inline bool testScan45Data(streamtype& stdcout) {
       Unit x = 0;
       int justBefore = false;
       lessScan45Element<Count2> lessElm(&x, &justBefore);
@@ -875,8 +876,8 @@ namespace boost { namespace polygon{
       //now at 14 24 26 36
       typename Scan45Data::iterator itrB = testData.lower_bound(Scan45Element(4, 29, -1));
       typename Scan45Data::iterator itr2 = testData.lower_bound(Scan45Element(4, 14, -1));
-      if(itr1 != itr2) std::cout << "test1 failed\n";
-      if(itrA == itrB) std::cout << "test2 failed\n";
+      if(itr1 != itr2) stdcout << "test1 failed\n";
+      if(itrA == itrB) stdcout << "test2 failed\n";
       //remove crossing elements
       testData.erase(itr20);
       testData.erase(itr30);
@@ -885,19 +886,20 @@ namespace boost { namespace polygon{
       itr30 = testData.insert(testData.end(), Scan45Element(0, 30, -1));
       //now at 15 25 25 35
       typename Scan45Data::iterator itr = testData.begin();
-      if(itr != itr10) std::cout << "test3 failed\n";
+      if(itr != itr10) stdcout << "test3 failed\n";
       ++itr;
-      if(itr != itr30) std::cout << "test4 failed\n";
+      if(itr != itr30) stdcout << "test4 failed\n";
       ++itr;
-      if(itr != itr20) std::cout << "test5 failed\n";
+      if(itr != itr20) stdcout << "test5 failed\n";
       ++itr;
-      if(itr != itr40) std::cout << "test6 failed\n";
-      std::cout << "done testing Scan45Data\n";
+      if(itr != itr40) stdcout << "test6 failed\n";
+      stdcout << "done testing Scan45Data\n";
       return true;
     }
    
-    static inline bool testScan45Rect() {
-      std::cout << "testing Scan45Rect\n";
+    template <typename stream_type>
+    static inline bool testScan45Rect(stream_type& stdcout) {
+      stdcout << "testing Scan45Rect\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -909,9 +911,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(0,10), Scan45Count(Count2(0, 0), ncount, Count2(0, 0), ncount)));
       vertices.push_back(Scan45Vertex(Point(10,0), Scan45Count(Count2(0, 0), ncount, Count2(0, 0), ncount)));
       vertices.push_back(Scan45Vertex(Point(10,10), Scan45Count(Count2(0, 0), count, Count2(0, 0), count)));
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 8
       // result == 0 0 0 1
       // result == 0 0 2 1
@@ -931,22 +933,23 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(10, 10), 2, 1));
       reference.push_back(Vertex45(Point(10, 10), 0, 1));
       if(result != reference) {
-        std::cout << "result size == " << result.size() << std::endl;
-        for(unsigned int i = 0; i < result.size(); ++i) {
+        stdcout << "result size == " << result.size() << std::endl;
+        for(std::size_t i = 0; i < result.size(); ++i) {
           //std::cout << "result == " << result[i]<< std::endl;
         }
-        std::cout << "reference size == " << reference.size() << std::endl;
-        for(unsigned int i = 0; i < reference.size(); ++i) {
+        stdcout << "reference size == " << reference.size() << std::endl;
+        for(std::size_t i = 0; i < reference.size(); ++i) {
           //std::cout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
-      std::cout << "done testing Scan45Rect\n";
+      stdcout << "done testing Scan45Rect\n";
       return true;
     }
 
-    static inline bool testScan45P1() {
-      std::cout << "testing Scan45P1\n";
+    template <typename stream_type>
+    static inline bool testScan45P1(stream_type& stdcout) {
+      stdcout << "testing Scan45P1\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -958,9 +961,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(0,10), Scan45Count(Count2(0, 0), Count2(0, 0), ncount, ncount)));
       vertices.push_back(Scan45Vertex(Point(10,10), Scan45Count(Count2(0, 0), Count2(0, 0), ncount, ncount)));
       vertices.push_back(Scan45Vertex(Point(10,20), Scan45Count(Count2(0, 0), Count2(0, 0), count, count)));
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 8
       // result == 0 0 1 1
       // result == 0 0 2 1
@@ -980,22 +983,23 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(10, 20), 2, 1));
       reference.push_back(Vertex45(Point(10, 20), 1, 1));
       if(result != reference) {
-        std::cout << "result size == " << result.size() << std::endl;
-        for(unsigned int i = 0; i < result.size(); ++i) {
+        stdcout << "result size == " << result.size() << std::endl;
+        for(std::size_t i = 0; i < result.size(); ++i) {
           //std::cout << "result == " << result[i]<< std::endl;
         }
-        std::cout << "reference size == " << reference.size() << std::endl;
-        for(unsigned int i = 0; i < reference.size(); ++i) {
+        stdcout << "reference size == " << reference.size() << std::endl;
+        for(std::size_t i = 0; i < reference.size(); ++i) {
           //std::cout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
-      std::cout << "done testing Scan45P1\n";
+      stdcout << "done testing Scan45P1\n";
       return true;
     }
 
-    static inline bool testScan45P2() {
-      std::cout << "testing Scan45P2\n";
+    template <typename stream_type>
+    static inline bool testScan45P2(stream_type& stdcout) {
+      stdcout << "testing Scan45P2\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -1007,9 +1011,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(10,0), Scan45Count(Count2(0, 0), ncount, count, Count2(0, 0))));
       vertices.push_back(Scan45Vertex(Point(10,10), Scan45Count(Count2(0, 0), ncount, count, Count2(0, 0))));
       vertices.push_back(Scan45Vertex(Point(20,10), Scan45Count(Count2(0, 0), count, ncount, Count2(0, 0))));
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 8
       // result == 0 0 0 1
       // result == 0 0 1 -1
@@ -1029,22 +1033,23 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(20, 10), 1, -1));
       reference.push_back(Vertex45(Point(20, 10), 0, 1));
       if(result != reference) {
-        std::cout << "result size == " << result.size() << std::endl;
-        for(unsigned int i = 0; i < result.size(); ++i) {
-          //std::cout << "result == " << result[i]<< std::endl;
+        stdcout << "result size == " << result.size() << std::endl;
+        for(std::size_t i = 0; i < result.size(); ++i) {
+          //stdcout << "result == " << result[i]<< std::endl;
         }
-        std::cout << "reference size == " << reference.size() << std::endl;
-        for(unsigned int i = 0; i < reference.size(); ++i) {
-          //std::cout << "reference == " << reference[i]<< std::endl;
+        stdcout << "reference size == " << reference.size() << std::endl;
+        for(std::size_t i = 0; i < reference.size(); ++i) {
+          //stdcout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
-      std::cout << "done testing Scan45P2\n";
+      stdcout << "done testing Scan45P2\n";
       return true;
     }
 
-    static inline bool testScan45And() {
-      std::cout << "testing Scan45And\n";
+    template <typename streamtype>
+    static inline bool testScan45And(streamtype& stdcout) {
+      stdcout << "testing Scan45And\n";
       Scan45<Count2, boolean_op_45_output_functor<1> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -1063,9 +1068,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(12,2), Scan45Count(Count2(0, 0), ncount, Count2(0, 0), ncount)));
       vertices.push_back(Scan45Vertex(Point(12,12), Scan45Count(Count2(0, 0), count, Count2(0, 0), count)));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       //result size == 8
       //result == 2 2 0 1
       //result == 2 2 2 1
@@ -1085,22 +1090,23 @@ namespace boost { namespace polygon{
       reference.push_back(Vertex45(Point(10, 10), 2, 1));
       reference.push_back(Vertex45(Point(10, 10), 0, 1));
       if(result != reference) {
-        std::cout << "result size == " << result.size() << std::endl;
-        for(unsigned int i = 0; i < result.size(); ++i) {
-          //std::cout << "result == " << result[i]<< std::endl;
+        stdcout << "result size == " << result.size() << std::endl;
+        for(std::size_t i = 0; i < result.size(); ++i) {
+          //stdcout << "result == " << result[i]<< std::endl;
         }
-        std::cout << "reference size == " << reference.size() << std::endl;
-        for(unsigned int i = 0; i < reference.size(); ++i) {
-          //std::cout << "reference == " << reference[i]<< std::endl;
+        stdcout << "reference size == " << reference.size() << std::endl;
+        for(std::size_t i = 0; i < reference.size(); ++i) {
+          //stdcout << "reference == " << reference[i]<< std::endl;
         }
         return false;
       }
-      std::cout << "done testing Scan45And\n";
+      stdcout << "done testing Scan45And\n";
       return true;
     }
 
-    static inline bool testScan45Star1() {
-      std::cout << "testing Scan45Star1\n";
+    template <typename stream_type>
+    static inline bool testScan45Star1(stream_type& stdcout) {
+      stdcout << "testing Scan45Star1\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -1117,9 +1123,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(4,0), Scan45Count(Count2(0, 0), Count2(0, 0), count, count)));
       vertices.push_back(Scan45Vertex(Point(4,16), Scan45Count(ncount, Count2(0, 0), Count2(0, 0), ncount)));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 24
       // result == 0 8 -1 1
       // result == 0 8 1 -1
@@ -1146,16 +1152,17 @@ namespace boost { namespace polygon{
       // result == 12 8 1 -1
       // result == 12 8 -1 1
       if(result.size() != 24) {
-        //std::cout << "result size == " << result.size() << std::endl;
-        //std::cout << "reference size == " << 24 << std::endl;
+        //stdcout << "result size == " << result.size() << std::endl;
+        //stdcout << "reference size == " << 24 << std::endl;
         return false;
       }
-      std::cout << "done testing Scan45Star1\n";
+      stdcout << "done testing Scan45Star1\n";
       return true;
     }
 
-    static inline bool testScan45Star2() {
-      std::cout << "testing Scan45Star2\n";
+    template <typename stream_type>
+    static inline bool testScan45Star2(stream_type& stdcout) {
+      stdcout << "testing Scan45Star2\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -1172,9 +1179,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(16,8), Scan45Count(Count2(0, 0), count, ncount, Count2(0, 0))));
       vertices.push_back(Scan45Vertex(Point(8,0), Scan45Count(ncount, Count2(0, 0), count, Count2(0, 0))));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 24
       // result == 0 4 0 1
       // result == 0 4 1 -1
@@ -1205,12 +1212,13 @@ namespace boost { namespace polygon{
         //std::cout << "reference size == " << 24 << std::endl;
         return false;
       }
-      std::cout << "done testing Scan45Star2\n";
+      stdcout << "done testing Scan45Star2\n";
       return true;
     }
 
-    static inline bool testScan45Star3() {
-      std::cout << "testing Scan45Star3\n";
+    template <typename stream_type>
+    static inline bool testScan45Star3(stream_type& stdcout) {
+      stdcout << "testing Scan45Star3\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -1232,9 +1240,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(4,0), Scan45Count(Count2(0, 0), Count2(0, 0), count, count)));
       vertices.push_back(Scan45Vertex(Point(4,16), Scan45Count(ncount, Count2(0, 0), Count2(0, 0), ncount)));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 28
       // result == 0 8 -1 1
       // result == 0 8 1 -1
@@ -1270,12 +1278,14 @@ namespace boost { namespace polygon{
         return false;
       }
 
-      std::cout << "done testing Scan45Star3\n";
+      stdcout << "done testing Scan45Star3\n";
       return true;
     }
 
-    static inline bool testScan45Star4() {
-      std::cout << "testing Scan45Star4\n";
+    
+    template <typename stream_type>
+    static inline bool testScan45Star4(stream_type& stdcout) {
+      stdcout << "testing Scan45Star4\n";
       Scan45<Count2, boolean_op_45_output_functor<0> > scan45;
       std::vector<Vertex45 > result;
       typedef std::pair<Point, Scan45Count> Scan45Vertex;
@@ -1297,9 +1307,9 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(16,8), Scan45Count(Count2(0, 0), count, ncount, Count2(0, 0))));
       vertices.push_back(Scan45Vertex(Point(8,0), Scan45Count(ncount, Count2(0, 0), count, Count2(0, 0))));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
-      std::cout << "done scanning\n";
+      stdcout << "done scanning\n";
       // result size == 28
       // result == 0 4 0 1
       // result == 0 4 1 -1
@@ -1330,24 +1340,25 @@ namespace boost { namespace polygon{
       // result == 16 12 2 1
       // result == 16 12 0 1
       if(result.size() != 28) {
-        //std::cout << "result size == " << result.size() << std::endl;
-        //std::cout << "reference size == " << 28 << std::endl;
+        //stdcout << "result size == " << result.size() << std::endl;
+        //stdcout << "reference size == " << 28 << std::endl;
         return false;
       }
 
-      std::cout << "done testing Scan45Star4\n";
+      stdcout << "done testing Scan45Star4\n";
       return true;
     }
 
-    static inline bool testScan45() {
-      if(!testScan45Rect()) return false;
-      if(!testScan45P1()) return false;
-      if(!testScan45P2()) return false;
-      if(!testScan45And()) return false;
-      if(!testScan45Star1()) return false;
-      if(!testScan45Star2()) return false;
-      if(!testScan45Star3()) return false;
-      if(!testScan45Star4()) return false;
+    template <typename stream_type>
+    static inline bool testScan45(stream_type& stdcout) {
+      if(!testScan45Rect(stdcout)) return false;
+      if(!testScan45P1(stdcout)) return false;
+      if(!testScan45P2(stdcout)) return false;
+      if(!testScan45And(stdcout)) return false;
+      if(!testScan45Star1(stdcout)) return false;
+      if(!testScan45Star2(stdcout)) return false;
+      if(!testScan45Star3(stdcout)) return false;
+      if(!testScan45Star4(stdcout)) return false;
       return true;
     }
 

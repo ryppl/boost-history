@@ -204,7 +204,7 @@ namespace boost { namespace polygon{
     //edges are in sorted order
     template <class iT>
     static inline void computeDag(iT beginNode, iT endNode, orientation_2d orient,
-                           unsigned int size) {
+                                  std::size_t size) {
       std::vector<EdgeAssociation> leadingEdges; 
       leadingEdges.reserve(size);
       for(iT iter = beginNode; iter != endNode; ++iter) {
@@ -263,10 +263,10 @@ namespace boost { namespace polygon{
           return;
         }
         nodes.reserve(rects.size());
-        for(unsigned int i = 0; i < rects.size(); ++i) { nodes.push_back(Node(rects[i])); }
+        for(std::size_t i = 0; i < rects.size(); ++i) { nodes.push_back(Node(rects[i])); }
       }
       computeDag(nodes.begin(), nodes.end(), orient, nodes.size());
-      for(unsigned int i = 0; i < nodes.size(); ++i) {
+      for(std::size_t i = 0; i < nodes.size(); ++i) {
         getMaxCover(outputContainer, &(nodes[i]), orient);
       }
     }

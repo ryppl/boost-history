@@ -137,7 +137,7 @@ namespace boost { namespace polygon{
     std::vector<p_type> polys;
     assign(polys, polygon_set);
     area_type retval = (area_type)0;
-    for(unsigned int i = 0; i < polys.size(); ++i) {
+    for(std::size_t i = 0; i < polys.size(); ++i) {
       retval += area(polys[i]);
     }
     return retval;
@@ -156,7 +156,7 @@ namespace boost { namespace polygon{
     std::vector<std::set<int> > graph(polys.size()+1, std::set<int>());
     connectivity_extraction_45<Unit> ce;
     ce.insert(polygon_set_2);
-    for(unsigned int i = 0; i < polys.size(); ++i){
+    for(std::size_t i = 0; i < polys.size(); ++i){
       ce.insert(polys[i]);
     }
     ce.extract(graph);
@@ -218,7 +218,7 @@ namespace boost { namespace polygon{
     assign(polys, polygon_set);
     clear(polygon_set);
     polygon_45_set_data<Unit> ps;
-    for(unsigned int i = 0; i < polys.size(); ++i) {
+    for(std::size_t i = 0; i < polys.size(); ++i) {
       polygon_45_set_data<Unit> tmpPs;
       tmpPs.insert(polys[i]);
       bloat(tmpPs, bloating);

@@ -25,7 +25,7 @@ namespace boost { namespace polygon{
     }
   
     // Get the number of sides of the polygon
-    static inline unsigned int size(const T& t) {
+    static inline std::size_t size(const T& t) {
       return t.size();
     }
   
@@ -61,7 +61,7 @@ namespace boost { namespace polygon{
     }
   
     // Get the number of sides of the polygon
-    static inline unsigned int size(const T& t) {
+    static inline std::size_t size(const T& t) {
       return t.size();
     }
   
@@ -93,7 +93,7 @@ namespace boost { namespace polygon{
     }
   
     // Get the number of sides of the polygon
-    static inline unsigned int size(const T& t) {
+    static inline std::size_t size(const T& t) {
       return polygon_90_traits<T>::size(t);
     }
   
@@ -119,7 +119,7 @@ namespace boost { namespace polygon{
     }
 
     // Get the number of holes 
-    static inline unsigned int size_holes(const T& t) {
+    static inline std::size_t size_holes(const T& t) {
       return t.size_holes();
     }
   };
@@ -379,24 +379,25 @@ namespace boost { namespace polygon{
 
 /// \relatesalso polygon_90_concept
   template <typename T>
-  typename enable_if<
-    typename gtl_if<
+  typename polygon_90_traits<T>::compact_iterator_type
+  begin_compact(const T& polygon,
+    typename enable_if<
       typename gtl_and <typename is_polygon_with_holes_type<T>::type, 
                         typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type,
-                                               manhattan_domain>::type>::type>::type, 
-    typename polygon_90_traits<T>::compact_iterator_type>::type
-  begin_compact(const T& polygon) {
+						manhattan_domain>::type>::type>::type *ptr = 0
+  ) {
     return polygon_90_traits<T>::begin_compact(polygon);
   }
   
 /// \relatesalso polygon_90_concept
   template <typename T>
-  typename enable_if< typename gtl_if<
+  typename polygon_90_traits<T>::compact_iterator_type
+  end_compact(const T& polygon,
+    typename enable_if< 
     typename gtl_and <typename is_polygon_with_holes_type<T>::type, 
                       typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type,
-                                             manhattan_domain>::type>::type>::type, 
-                       typename polygon_90_traits<T>::compact_iterator_type>::type
-  end_compact(const T& polygon) {
+					  manhattan_domain>::type>::type>::type *ptr = 0
+  ) {
     return polygon_90_traits<T>::end_compact(polygon);
   }
   
@@ -421,7 +422,7 @@ namespace boost { namespace polygon{
   /// \relatesalso polygon_concept
   template <typename T>
   typename enable_if <typename is_polygon_with_holes_type<T>::type, 
-                       unsigned int>::type
+                       std::size_t>::type
   size(const T& polygon) {
     return polygon_traits<T>::size(polygon);
   }
@@ -447,7 +448,7 @@ namespace boost { namespace polygon{
 /// \relatesalso polygon_with_holes_concept
   template <typename T>
   typename enable_if <typename is_polygon_with_holes_type<T>::type, 
-                       unsigned int>::type
+                       std::size_t>::type
   size_holes(const T& polygon) {
     return polygon_with_holes_traits<T>::size_holes(polygon);
   }
@@ -737,7 +738,7 @@ namespace boost { namespace polygon{
               x(pt2, x(pt2) - halfdiff - (diff % 2));
               y(pt2, y(pt2) + halfdiff);
             } else{
-              std::cout << "fail1\n";
+              //std::cout << "fail1\n";
             }
           } else {
             //previous edge is falling slope
@@ -750,7 +751,7 @@ namespace boost { namespace polygon{
               x(pt2, x(pt2) - halfdiff - (diff % 2));
               y(pt2, y(pt2) - halfdiff);
             } else {
-              std::cout << "fail2\n";
+              //std::cout << "fail2\n";
             }
           }
           if(i == numPts - 1 && (diff % 2)) {
@@ -872,13 +873,14 @@ namespace boost { namespace polygon{
 
   //scale specifically 45 
   template <typename polygon_type>
-  typename enable_if<
+  polygon_type&
+  scale(polygon_type& polygon, double factor,
+    typename enable_if<
     typename gtl_and< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, 
                       typename gtl_same_type
                       < forty_five_domain, 
-                        typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type,
-    polygon_type>::type &
-  scale(polygon_type& polygon, double factor) {
+					  typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type>::type *ptr = 0
+  ) {
     std::vector<typename std::iterator_traits<typename polygon_traits<polygon_type>::iterator_type>::value_type> points;
     points.reserve(size(polygon));
     for(typename polygon_traits<polygon_type>::iterator_type iter = begin_points(polygon); 
@@ -892,8 +894,10 @@ namespace boost { namespace polygon{
   }
 
   template <typename T>
-  typename enable_if< typename is_any_mutable_polygon_with_holes_type<T>::type, T>::type &
-  scale(T& polygon, double factor) {
+  T&
+  scale(T& polygon, double factor,
+  typename enable_if< typename is_any_mutable_polygon_with_holes_type<T>::type>::type *ptr = 0
+  ) {
     typedef typename polygon_with_holes_traits<T>::hole_type hole_type;
     hole_type h;
     set_points(h, begin_points(polygon), end_points(polygon));
@@ -1035,12 +1039,11 @@ namespace boost { namespace polygon{
   }
 
   template <typename T>
+  typename polygon_traits<T>::coordinate_type
+  perimeter(const T& polygon,
   typename enable_if< 
-    typename gtl_if<
-      typename is_polygon_with_holes_type<T>::type>::type, 
-    typename distance_type_by_domain<typename geometry_domain<typename geometry_concept<T>::type>::type, 
-                                     typename polygon_traits<T>::coordinate_type>::type>::type
-  perimeter(const T& polygon) {
+      typename is_polygon_with_holes_type<T>::type>::type *ptr = 0
+  ) {
     typedef typename distance_type_by_domain
       <typename geometry_domain<typename geometry_concept<T>::type>::type, typename polygon_traits<T>::coordinate_type>::type Unit;
     typedef typename polygon_traits<T>::iterator_type iterator;
@@ -1084,9 +1087,9 @@ namespace boost { namespace polygon{
     iter_end = end_points(polygon);
     iter = begin_points(polygon);
     point_type prev_pt = *iter;
-    unsigned int num = size(polygon);
-    unsigned int counts[2] = {0, 0};
-    for(unsigned int i = 0; i < num; ++i) {
+    std::size_t num = size(polygon);
+    std::size_t counts[2] = {0, 0};
+    for(std::size_t i = 0; i < num; ++i) {
       if(i == num-1) iter = begin_points(polygon);
       else ++iter;
       point_type current_pt = *iter;
@@ -1094,7 +1097,7 @@ namespace boost { namespace polygon{
          x(prev_pt)) {
         unsigned int index = x(current_pt) > 
           x(point);
-        unsigned int increment = 0;
+        std::size_t increment = 0;
         interval_data<coordinate_type> ivl(y(current_pt), 
                                            y(prev_pt));
         if(contains(ivl, y(point), true)) {
@@ -1383,21 +1386,21 @@ namespace boost { namespace polygon{
 //     typedef const hole_type* iterator_holes_type;
 //     static inline iterator_holes_type begin_holes(const hole_type& t) { return &t; }
 //     static inline iterator_holes_type end_holes(const hole_type& t) { return &t; }
-//     static inline unsigned int size_holes(const hole_type& t) { return 0; }
+//     static inline std::size_t size_holes(const hole_type& t) { return 0; }
 //   };
 //   template <typename T> struct polygon_with_holes_traits<polygon_45_data<T> > {
 //     typedef polygon_45_data<T> hole_type;
 //     typedef const hole_type* iterator_holes_type;
 //     static inline iterator_holes_type begin_holes(const hole_type& t) { return &t; }
 //     static inline iterator_holes_type end_holes(const hole_type& t) { return &t; }
-//     static inline unsigned int size_holes(const hole_type& t) { return 0; }
+//     static inline std::size_t size_holes(const hole_type& t) { return 0; }
 //   };
 //   template <typename T> struct polygon_with_holes_traits<polygon_data<T> > {
 //     typedef polygon_data<T> hole_type;
 //     typedef const hole_type* iterator_holes_type;
 //     static inline iterator_holes_type begin_holes(const hole_type& t) { return &t; }
 //     static inline iterator_holes_type end_holes(const hole_type& t) { return &t; }
-//     static inline unsigned int size_holes(const hole_type& t) { return 0; }
+//     static inline std::size_t size_holes(const hole_type& t) { return 0; }
 //   };
   template <typename T> struct get_void {};
   template <> struct get_void<gtl_yes> { typedef void type; };
@@ -1408,7 +1411,7 @@ namespace boost { namespace polygon{
     typedef const hole_type* iterator_holes_type;
     static inline iterator_holes_type begin_holes(const hole_type& t) { return &t; }
     static inline iterator_holes_type end_holes(const hole_type& t) { return &t; }
-    static inline unsigned int size_holes(const hole_type& t) { return 0; }
+    static inline std::size_t size_holes(const hole_type& t) { return 0; }
   };
 
   template <typename T>
@@ -1457,7 +1460,7 @@ namespace boost { namespace polygon{
     }
   
     /// Get the number of sides of the polygon
-    inline unsigned int size() const {
+    inline std::size_t size() const {
       return polygon_traits<T>::size(*t);
     }
   
@@ -1494,7 +1497,7 @@ namespace boost { namespace polygon{
     }
   
     /// Get the number of sides of the polygon
-    inline unsigned int size() const {
+    inline std::size_t size() const {
       return polygon_traits<T>::size(*t);
     }
   
@@ -1558,7 +1561,7 @@ namespace boost { namespace polygon{
     }
   
     /// Get the number of sides of the polygon
-    inline unsigned int size() const {
+    inline std::size_t size() const {
       return polygon_traits<T>::size(*t);
     }
   
@@ -1578,7 +1581,7 @@ namespace boost { namespace polygon{
     }
   
     /// Get the number of sides of the polygon
-    inline unsigned int size_holes() const {
+    inline std::size_t size_holes() const {
       return polygon_with_holes_traits<T>::size_holes(*t);
     }
   
@@ -1641,7 +1644,7 @@ namespace boost { namespace polygon{
     }
   
     /// Get the number of sides of the polygon
-    inline unsigned int size() const {
+    inline std::size_t size() const {
       return polygon_traits<T>::size(*t);
     }
   
@@ -1661,7 +1664,7 @@ namespace boost { namespace polygon{
     }
   
     /// Get the number of sides of the polygon
-    inline unsigned int size_holes() const {
+    inline std::size_t size_holes() const {
       return polygon_with_holes_traits<T>::size_holes(*t);
     }
   

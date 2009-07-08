@@ -116,7 +116,7 @@ public:
     //scanline
     bool firstIteration = true;
     scanlinePosition = scanline.end();
-    for(unsigned int i = 0; i < data.size(); ++i) {
+    for(std::size_t i = 0; i < data.size(); ++i) {
       if(firstIteration) {
         mergeProperty(currentVertex.second, data[i].second);
         currentVertex.first = data[i].first;
@@ -191,24 +191,24 @@ private:
 //     }
   }
 
-  static inline bool assertSorted(property_map& pset) {
-    bool result = false;
-    for(unsigned int i = 1; i < pset.size(); ++i) {
-      if(pset[i] < pset[i-1]) {
-        std::cout << "Out of Order Error ";
-        result = true;
-      }
-      if(pset[i].first == pset[i-1].first) {
-        std::cout << "Duplicate Property Error ";
-        result = true;
-      }
-      if(pset[0].second == 0 || pset[1].second == 0) {
-        std::cout << "Empty Property Error ";
-        result = true;
-      }
-    }
-    return result;
-  }
+//   static inline bool assertSorted(property_map& pset) {
+//     bool result = false;
+//     for(std::size_t i = 1; i < pset.size(); ++i) {
+//       if(pset[i] < pset[i-1]) {
+//         std::cout << "Out of Order Error ";
+//         result = true;
+//       }
+//       if(pset[i].first == pset[i-1].first) {
+//         std::cout << "Duplicate Property Error ";
+//         result = true;
+//       }
+//       if(pset[0].second == 0 || pset[1].second == 0) {
+//         std::cout << "Empty Property Error ";
+//         result = true;
+//       }
+//     }
+//     return result;
+//   }
 
   static inline void setProperty(property_set& pset, property_map& pmap) {
     for(typename property_map::iterator itr = pmap.begin(); itr != pmap.end(); ++itr) {
@@ -272,7 +272,7 @@ private:
       ++ritr;
     }
     lvalue.clear();
-    for(unsigned int i = 0; i < tmpVector.size(); ++i) {
+    for(std::size_t i = 0; i < tmpVector.size(); ++i) {
       if(tmpVector[i].second != 0) {
         lvalue.push_back(tmpVector[i]);
       }
@@ -447,7 +447,7 @@ private:
     //scanline
     bool firstIteration = true;
     scanlinePosition = scanline.end();
-    for(unsigned int i = 0; i < data.size(); ++i) {
+    for(std::size_t i = 0; i < data.size(); ++i) {
       if(firstIteration) {
         mergeProperty(currentVertex.second, data[i].second);
         currentVertex.first = data[i].first;
@@ -514,7 +514,7 @@ private:
     edge_property* previousEdgeP = &(output[0]);
     bool firstIteration = true;
     property_set ps;
-    for(unsigned int i = 0; i < output.size(); ++i) {
+    for(std::size_t i = 0; i < output.size(); ++i) {
       edge_property& previousEdge = *previousEdgeP;
       edge_property& edge = output[i];
       if(previousEdge.first.high() == edge.first.low()) {
@@ -556,7 +556,7 @@ private:
 
   template <typename Result>
   inline void writeOutput(coordinate_type x, Result& result, edge_property_vector& output) {
-    for(unsigned int i = 0; i < output.size(); ++i) {
+    for(std::size_t i = 0; i < output.size(); ++i) {
       edge_property& edge = output[i];
       //edge.second.first is the property set on the left of the edge
       if(!edge.second.first.empty()) {

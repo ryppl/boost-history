@@ -57,11 +57,7 @@ private:
   interval_data<coordinate_type> ranges_[2]; 
 };
 
-template <class T>
-std::ostream& operator << (std::ostream& o, const rectangle_data<T>& r)
-{
-  return o << r.get(HORIZONTAL) << ' ' << r.get(VERTICAL);
-}
+
 }
 }
 #endif

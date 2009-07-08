@@ -551,12 +551,12 @@ namespace boost { namespace polygon{
   // insert polygon set
   template <typename Unit>
   inline void polygon_45_set_data<Unit>::insert(const polygon_45_set_data<Unit>& polygon_set, bool is_hole) {
-    unsigned int count = data_.size();
+    std::size_t count = data_.size();
     data_.insert(data_.end(), polygon_set.data_.begin(), polygon_set.data_.end());
     error_data_.insert(error_data_.end(), polygon_set.error_data_.begin(),
                        polygon_set.error_data_.end());
     if(is_hole) {
-      for(unsigned int i = count; i < data_.size(); ++i) {
+      for(std::size_t i = count; i < data_.size(); ++i) {
         data_[i].count = data_[i].count.invert();
       }
     }
@@ -841,11 +841,11 @@ namespace boost { namespace polygon{
   void handleResizingEdge45_SQRT1OVER2(polygon_45_set_data<Unit>& sizingSet, point_data<Unit> first, 
                                        point_data<Unit> second, Unit resizing, CornerOption corner) {
     if(first.x() == second.x()) {
-      sizingSet.insert(rectangle_data<int>(first.x() - resizing, first.y(), first.x() + resizing, second.y()));
+      sizingSet.insert(rectangle_data<Unit>(first.x() - resizing, first.y(), first.x() + resizing, second.y()));
       return;
     }
     if(first.y() == second.y()) {
-      sizingSet.insert(rectangle_data<int>(first.x(), first.y() - resizing, second.x(), first.y() + resizing));
+      sizingSet.insert(rectangle_data<Unit>(first.x(), first.y() - resizing, second.x(), first.y() + resizing));
       return;
     }
     std::vector<point_data<Unit> > pts;
@@ -1217,8 +1217,8 @@ namespace boost { namespace polygon{
         //scan event
         scan45.scan(eventOut, eventIn.begin(), eventIn.end());
         std::sort(eventOut.begin(), eventOut.end());
-        unsigned int ptCount = 0;
-        for(unsigned int i = 0; i < eventOut.size(); ++i) {
+        std::size_t ptCount = 0;
+        for(std::size_t i = 0; i < eventOut.size(); ++i) {
           if(!result_data.empty() &&
              result_data.back().pt == eventOut[i].pt) {
             result_data.back().count += eventOut[i];
@@ -1289,8 +1289,8 @@ namespace boost { namespace polygon{
     scan45.scan(eventOut, eventIn.begin(), eventIn.end());
     std::sort(eventOut.begin(), eventOut.end());
 
-    unsigned int ptCount = 0;
-    for(unsigned int i = 0; i < eventOut.size(); ++i) {
+    std::size_t ptCount = 0;
+    for(std::size_t i = 0; i < eventOut.size(); ++i) {
       if(!result_data.empty() &&
          result_data.back().pt == eventOut[i].pt) {
         result_data.back().count += eventOut[i];
@@ -1340,8 +1340,8 @@ namespace boost { namespace polygon{
         //scan event
         scan45.scan(eventOut, eventIn.begin(), eventIn.end());
         std::sort(eventOut.begin(), eventOut.end());
-        unsigned int ptCount = 0;
-        for(unsigned int i = 0; i < eventOut.size(); ++i) {
+        std::size_t ptCount = 0;
+        for(std::size_t i = 0; i < eventOut.size(); ++i) {
           if(!result_data.empty() &&
              result_data.back().pt == eventOut[i].pt) {
             result_data.back().count += eventOut[i];
@@ -1378,8 +1378,8 @@ namespace boost { namespace polygon{
     scan45.scan(eventOut, eventIn.begin(), eventIn.end());
     std::sort(eventOut.begin(), eventOut.end());
 
-    unsigned int ptCount = 0;
-    for(unsigned int i = 0; i < eventOut.size(); ++i) {
+    std::size_t ptCount = 0;
+    for(std::size_t i = 0; i < eventOut.size(); ++i) {
       if(!result_data.empty() &&
          result_data.back().pt == eventOut[i].pt) {
         result_data.back().count += eventOut[i];
@@ -1534,7 +1534,7 @@ namespace boost { namespace polygon{
           Data2 rvalue_data, lvalue_data, result_data;
           rvalue_data.reserve(rvalue.data_.size());
           lvalue_data.reserve(data_.size());
-          for(unsigned int i = 0 ; i < data_.size(); ++i) {
+          for(std::size_t i = 0 ; i < data_.size(); ++i) {
             const Vertex45Compact& vi = data_[i];
             Vertex45Compact2 ci; 
             ci.pt = point_data<Unit2>(x(vi.pt), y(vi.pt));
@@ -1542,7 +1542,7 @@ namespace boost { namespace polygon{
               ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
             lvalue_data.push_back(ci);
           }
-          for(unsigned int i = 0 ; i < rvalue.data_.size(); ++i) {
+          for(std::size_t i = 0 ; i < rvalue.data_.size(); ++i) {
             const Vertex45Compact& vi = rvalue.data_[i];
             Vertex45Compact2 ci;
             ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
@@ -1563,19 +1563,19 @@ namespace boost { namespace polygon{
             Data2 error_data_out;
             std::vector<rectangle_data<Unit2> > pos_error_rects;
             std::vector<rectangle_data<Unit2> > neg_error_rects;
-            for(unsigned int i = 0; i < container.size(); ++i) {
+            for(std::size_t i = 0; i < container.size(); ++i) {
               get_error_rects(pos_error_rects, neg_error_rects, container[i]);
             }
-            for(unsigned int i = 0; i < pos_error_rects.size(); ++i) {
+            for(std::size_t i = 0; i < pos_error_rects.size(); ++i) {
               insert_rectangle_into_vector_45(result_data, pos_error_rects[i], false);
               insert_rectangle_into_vector_45(error_data_out, pos_error_rects[i], false);
             }
-            for(unsigned int i = 0; i < neg_error_rects.size(); ++i) {
+            for(std::size_t i = 0; i < neg_error_rects.size(); ++i) {
               insert_rectangle_into_vector_45(result_data, neg_error_rects[i], true);
               insert_rectangle_into_vector_45(error_data_out, neg_error_rects[i], false);
             }
             scale_down_vertex_45_compact_range_blindly(error_data_out.begin(), error_data_out.end(), 2);
-            for(unsigned int i = 0 ; i < error_data_out.size(); ++i) {
+            for(std::size_t i = 0 ; i < error_data_out.size(); ++i) {
               const Vertex45Compact2& vi = error_data_out[i];
               Vertex45Compact ci;
               ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
@@ -1590,7 +1590,7 @@ namespace boost { namespace polygon{
           }
           scale_down_vertex_45_compact_range_blindly(result_data.begin(), result_data.end(), 2);
           //result.data_.reserve(result_data.size());
-          for(unsigned int i = 0 ; i < result_data.size(); ++i) {
+          for(std::size_t i = 0 ; i < result_data.size(); ++i) {
             const Vertex45Compact2& vi = result_data[i];
             Vertex45Compact ci;
             ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
@@ -1645,7 +1645,7 @@ namespace boost { namespace polygon{
           typedef std::vector<Vertex45Compact2> Data2;
           Data2 lvalue_data, result_data;
           lvalue_data.reserve(data_.size());
-          for(unsigned int i = 0 ; i < data_.size(); ++i) {
+          for(std::size_t i = 0 ; i < data_.size(); ++i) {
             const Vertex45Compact& vi = data_[i];
             Vertex45Compact2 ci; 
             ci.pt = point_data<Unit2>(x(vi.pt), y(vi.pt));
@@ -1664,19 +1664,19 @@ namespace boost { namespace polygon{
             Data2 error_data_out;
             std::vector<rectangle_data<Unit2> > pos_error_rects;
             std::vector<rectangle_data<Unit2> > neg_error_rects;
-            for(unsigned int i = 0; i < container.size(); ++i) {
+            for(std::size_t i = 0; i < container.size(); ++i) {
               get_error_rects(pos_error_rects, neg_error_rects, container[i]);
             }
-            for(unsigned int i = 0; i < pos_error_rects.size(); ++i) {
+            for(std::size_t i = 0; i < pos_error_rects.size(); ++i) {
               insert_rectangle_into_vector_45(result_data, pos_error_rects[i], false);
               insert_rectangle_into_vector_45(error_data_out, pos_error_rects[i], false);
             }
-            for(unsigned int i = 0; i < neg_error_rects.size(); ++i) {
+            for(std::size_t i = 0; i < neg_error_rects.size(); ++i) {
               insert_rectangle_into_vector_45(result_data, neg_error_rects[i], true);
               insert_rectangle_into_vector_45(error_data_out, neg_error_rects[i], false);
             }
             scale_down_vertex_45_compact_range_blindly(error_data_out.begin(), error_data_out.end(), 2);
-            for(unsigned int i = 0 ; i < error_data_out.size(); ++i) {
+            for(std::size_t i = 0 ; i < error_data_out.size(); ++i) {
               const Vertex45Compact2& vi = error_data_out[i];
               Vertex45Compact ci;
               ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
@@ -1691,7 +1691,7 @@ namespace boost { namespace polygon{
           }
           scale_down_vertex_45_compact_range_blindly(result_data.begin(), result_data.end(), 2);
           //result.data_.reserve(result_data.size());
-          for(unsigned int i = 0 ; i < result_data.size(); ++i) {
+          for(std::size_t i = 0 ; i < result_data.size(); ++i) {
             const Vertex45Compact2& vi = result_data[i];
             Vertex45Compact ci;
             ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
@@ -1713,27 +1713,7 @@ namespace boost { namespace polygon{
     is_manhattan_ = result.is_manhattan_;
   }
 
-  template <typename Unit>
-  inline std::ostream& operator<< (std::ostream& o, const polygon_45_set_data<Unit>& p) {
-    o << "Polygon45Set ";
-    o << " " << !p.sorted() << " " << p.dirty() << " { ";
-    for(typename polygon_45_set_data<Unit>::iterator_type itr = p.begin();
-        itr != p.end(); ++itr) {
-      o << (*itr).pt << ":";
-      for(unsigned int i = 0; i < 4; ++i) {
-        o << (*itr).count[i] << ",";
-      } o << " ";
-      //o << (*itr).first << ":" <<  (*itr).second << "; ";
-    }
-    o << "} ";
-    return o;
-  }
 
-  template <typename Unit>
-  inline std::istream& operator>> (std::istream& i, polygon_45_set_data<Unit>& p) {
-    //TODO
-    return i;
-  }
 }
 }
 #endif

@@ -576,7 +576,7 @@ namespace polygon_formation {
     inline compact_iterator_type end_compact() const { return p_->end(); }
     inline iterator_type begin() const { return iterator_type(begin_compact(), end_compact()); }
     inline iterator_type end() const { return iterator_type(end_compact(), end_compact()); }
-    inline unsigned int size() const { return 0; }
+    inline std::size_t size() const { return 0; }
     inline ActiveTail<Unit>* yield() { return p_; }
     template<class iT>
     inline PolyLineHoleData& set(iT inputBegin, iT inputEnd) {
@@ -636,8 +636,8 @@ namespace polygon_formation {
     inline iteratorHoles end_holes() const { return iteratorHoles(p_->endHoles()); }
     inline ActiveTail<Unit>* yield() { return p_; }
     //stub out these four required functions that will not be used but are needed for the interface
-    inline unsigned int size_holes() const { return 0; }
-    inline unsigned int size() const { return 0; }
+    inline std::size_t size_holes() const { return 0; }
+    inline std::size_t size() const { return 0; }
     template<class iT>
     inline PolyLinePolygonWithHolesData& set(iT inputBegin, iT inputEnd) {
       return *this;
@@ -1229,7 +1229,7 @@ namespace polygon_formation {
   template <typename Unit>
   inline void ActiveTail<Unit>::writeOutFigure(std::vector<Unit>& outVec, bool isHole) const {
     //we start writing out the polyLine that this active tail points to at its tail
-    unsigned int size = outVec.size();
+    std::size_t size = outVec.size();
     outVec.push_back(0); //place holder for size
     PolyLine<Unit>* nextPolyLinep = 0;
     if(!isHole){
@@ -1686,7 +1686,7 @@ namespace polygon_formation {
 
   template<bool orientT, typename Unit, typename polygon_concept_type>
   inline void ScanLineToPolygonItrs<orientT, Unit, polygon_concept_type>::clearOutput_() {
-    for(unsigned int i = 0; i < outputPolygons_.size(); ++i) {
+    for(std::size_t i = 0; i < outputPolygons_.size(); ++i) {
       ActiveTail<Unit>* at1 = outputPolygons_[i].yield();
       const std::list<ActiveTail<Unit>*>& holes = at1->getHoles();
       for(typename std::list<ActiveTail<Unit>*>::const_iterator litr = holes.begin(); litr != holes.end(); ++litr) {

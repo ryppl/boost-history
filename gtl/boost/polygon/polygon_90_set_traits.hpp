@@ -350,12 +350,12 @@ namespace boost { namespace polygon{
   template <typename T>
   struct geometry_concept<polygon_90_set_data<T> > { typedef polygon_90_set_concept type; };
   
-  template <typename T>
-  typename enable_if<typename is_polygon_90_set_type<T>::type, void>::type
-  print_is_polygon_90_set_concept(const T& t) { std::cout << "is polygon 90 set concept\n"; }
-  template <typename T>
-  typename enable_if<typename is_mutable_polygon_90_set_type<T>::type, void>::type
-  print_is_mutable_polygon_90_set_concept(const T& t) { std::cout << "is mutable polygon 90 set concept\n"; }
+  //template <typename T>
+  //typename enable_if<typename is_polygon_90_set_type<T>::type, void>::type
+  //print_is_polygon_90_set_concept(const T& t) { std::cout << "is polygon 90 set concept\n"; }
+  //template <typename T>
+  //typename enable_if<typename is_mutable_polygon_90_set_type<T>::type, void>::type
+  //print_is_mutable_polygon_90_set_concept(const T& t) { std::cout << "is mutable polygon 90 set concept\n"; }
 }
 }
 #endif

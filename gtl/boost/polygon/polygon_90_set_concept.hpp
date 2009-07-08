@@ -156,7 +156,7 @@ namespace boost { namespace polygon{
     std::vector<rectangle_type> rects;
     assign(rects, polygon_set);
     area_type retval = (area_type)0;
-    for(unsigned int i = 0; i < rects.size(); ++i) {
+    for(std::size_t i = 0; i < rects.size(); ++i) {
       retval += (area_type)area(rects[i]);
     }
     return retval;
@@ -407,7 +407,7 @@ namespace boost { namespace polygon{
     assign(polys, polygon_set);
     clear(polygon_set);
     polygon_90_set_data<Unit> ps(scanline_orientation(polygon_set));
-    for(unsigned int i = 0; i < polys.size(); ++i) {
+    for(std::size_t i = 0; i < polys.size(); ++i) {
       polygon_90_set_data<Unit> tmpPs(scanline_orientation(polygon_set));
       tmpPs.insert(polys[i]);
       bloat(tmpPs, west_bloating, east_bloating, south_bloating, north_bloating);
@@ -461,21 +461,23 @@ namespace boost { namespace polygon{
   }
 
   //move
-  template <typename polygon_set_type, typename coord_type>
-  typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
-                       polygon_set_type>::type &
+  template <typename polygon_set_type>
+  polygon_set_type&
   move(polygon_set_type& polygon_set,
-       orientation_2d orient, coord_type displacement) {
+  orientation_2d orient, typename polygon_90_set_traits<polygon_set_type>::coordinate_type displacement,
+	   typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type *ptr = 0) {
     if(orient == HORIZONTAL)
       return move(polygon_set, displacement, 0);
     else 
       return move(polygon_set, 0, displacement);
   }
 
-  template <typename polygon_set_type, typename coord_type>
-  typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type,
-                       polygon_set_type>::type &
-  move(polygon_set_type& polygon_set, coord_type x_displacement, coord_type y_displacement) {
+  template <typename polygon_set_type>
+  polygon_set_type&
+  move(polygon_set_type& polygon_set, typename polygon_90_set_traits<polygon_set_type>::coordinate_type x_displacement, 
+  typename polygon_90_set_traits<polygon_set_type>::coordinate_type y_displacement,
+  typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type *ptr = 0
+  ) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
     polygon_90_set_data<Unit> ps;
     assign(ps, polygon_set);

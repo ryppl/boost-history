@@ -223,8 +223,10 @@ namespace boost { namespace polygon{
     return lvalue_;
   }
   
+  struct y_ps90_b : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< 
+  typename enable_if< typename gtl_and_3< y_ps90_b,
     typename is_polygon_90_set_type<geometry_type_1>::type,
     typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> >::type
@@ -235,19 +237,13 @@ namespace boost { namespace polygon{
        boolean_op::BinaryOr());
   }
   
+  struct y_ps90_p : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
   typename enable_if< 
-    typename gtl_and< 
-      typename is_polygon_90_set_type<geometry_type_1>
-#ifdef BOOST_POLYGON_ICC 
-      ::type
-#endif
-      ::type,
-      typename is_polygon_90_set_type<geometry_type_2>::type>
-#ifdef BOOST_POLYGON_ICC 
-    ::type
-#endif
-    ::type,
+    typename gtl_and_3< y_ps90_p,
+      typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type,
+      typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type>::type,
     polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> >::type
   operator+(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryOr> 
@@ -256,8 +252,10 @@ namespace boost { namespace polygon{
        boolean_op::BinaryOr());
   }
   
+  struct y_ps90_s : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< 
+  typename enable_if< typename gtl_and_3< y_ps90_s,
     typename is_polygon_90_set_type<geometry_type_1>::type,
     typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> >::type
@@ -268,8 +266,10 @@ namespace boost { namespace polygon{
        boolean_op::BinaryAnd());
   }
   
+  struct y_ps90_a : gtl_yes {};
+#if 0
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_if<typename gtl_and< 
+  typename enable_if< typename gtl_if<typename gtl_and_3< y_ps90_a,
     typename is_polygon_90_set_type<geometry_type_1>::type,
     typename is_polygon_90_set_type<geometry_type_2>::type>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> >::type
@@ -279,9 +279,11 @@ namespace boost { namespace polygon{
        polygon_90_set_traits<geometry_type_1>::orient(lvalue),
        boolean_op::BinaryAnd());
   }
+#endif
+  struct y_ps90_x : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< 
+  typename enable_if< typename gtl_and_3< y_ps90_x,
     typename is_polygon_90_set_type<geometry_type_1>::type,
     typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryXor> >::type
@@ -292,18 +294,12 @@ namespace boost { namespace polygon{
        boolean_op::BinaryXor());
   }
   
+  struct y_ps90_m : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< 
-    typename is_polygon_90_set_type<geometry_type_1>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-::type,
-    typename is_polygon_90_set_type<geometry_type_2>::type>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-::type,
+  typename enable_if< typename gtl_and_3< y_ps90_m,
+    typename gtl_if<typename is_polygon_90_set_type<geometry_type_1>::type>::type,
+    typename gtl_if<typename is_polygon_90_set_type<geometry_type_2>::type>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryNot> >::type
   operator-(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryNot> 
@@ -312,8 +308,10 @@ namespace boost { namespace polygon{
        boolean_op::BinaryNot());
   }
   
+  struct y_ps90_pe : gtl_yes {};
+
   template <typename coordinate_type_1, typename geometry_type_2>
-  typename enable_if< typename is_polygon_90_set_type<geometry_type_2>::type,
+  typename enable_if< typename gtl_and< y_ps90_pe, typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_data<coordinate_type_1> >::type &
   operator+=(polygon_90_set_data<coordinate_type_1>& lvalue, const geometry_type_2& rvalue) {
     lvalue.insert(polygon_90_set_traits<geometry_type_2>::begin(rvalue), polygon_90_set_traits<geometry_type_2>::end(rvalue),
@@ -321,64 +319,80 @@ namespace boost { namespace polygon{
     return lvalue;
   }
   
+  struct y_ps90_be : gtl_yes {};
   //
   template <typename coordinate_type_1, typename geometry_type_2>
-  typename enable_if< typename is_polygon_90_set_type<geometry_type_2>::type, 
+  typename enable_if< typename gtl_and< y_ps90_be, typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        polygon_90_set_data<coordinate_type_1> >::type &
   operator|=(polygon_90_set_data<coordinate_type_1>& lvalue, const geometry_type_2& rvalue) {
     return lvalue += rvalue;
   }
 
+  struct y_ps90_pe2 : gtl_yes {};
+
   //normal self assignment boolean operations
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3< y_ps90_pe2, typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
                                          typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator+=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryOr>(lvalue, rvalue);
   }
 
+  struct y_ps90_be2 : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3<y_ps90_be2, typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
                                          typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator|=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryOr>(lvalue, rvalue);
   }
 
+  struct y_ps90_se : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3<y_ps90_se, typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
                                          typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator*=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd>(lvalue, rvalue);
   }
+ 
+  struct y_ps90_ae : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3<y_ps90_ae, typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
                                          typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator&=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd>(lvalue, rvalue);
   }
 
+  struct y_ps90_xe : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3<y_ps90_xe, typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
                                          typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator^=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryXor>(lvalue, rvalue);
   }
 
+  struct y_ps90_me : gtl_yes {};
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_and< typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
+  typename enable_if< typename gtl_and_3< y_ps90_me, typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
                                          typename is_polygon_90_set_type<geometry_type_2>::type>::type, 
                        geometry_type_1>::type &
   operator-=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, boolean_op::BinaryNot>(lvalue, rvalue);
   }
 
+  struct y_ps90_rpe : gtl_yes {};
+
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename enable_if< typename gtl_and<
+  typename enable_if< typename gtl_and_3<y_ps90_rpe,
     typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
     typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
                        geometry_type_1>::type &
@@ -386,8 +400,10 @@ namespace boost { namespace polygon{
     return resize(lvalue, rvalue);
   }
 
+  struct y_ps90_rme : gtl_yes {};
+
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename enable_if< typename gtl_and<
+  typename enable_if< typename gtl_and_3<y_ps90_rme,
     typename is_mutable_polygon_90_set_type<geometry_type_1>::type, 
     typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type,
                        geometry_type_1>::type &
@@ -395,38 +411,26 @@ namespace boost { namespace polygon{
     return resize(lvalue, -rvalue);
   }
 
+  struct y_ps90_rp : gtl_yes {};
+
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename enable_if< typename gtl_and<
-    typename is_mutable_polygon_90_set_type<geometry_type_1>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-::type, 
-    typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type,
-                       geometry_type_1>::type
+  typename enable_if< typename gtl_and_3<y_ps90_rp,
+    typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
+    typename gtl_if<typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type>::type,
+  geometry_type_1>::type
   operator+(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
     geometry_type_1 retval(lvalue);
     retval += rvalue;
     return retval;
   }
 
+  struct y_ps90_rm : gtl_yes {};
+
   template <typename geometry_type_1, typename coordinate_type_1>
-  typename enable_if< typename gtl_and<
-    typename is_mutable_polygon_90_set_type<geometry_type_1>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-::type, 
-    typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>
-#ifdef BOOST_POLYGON_ICC 
-  ::type
-#endif
-  ::type,
-                       geometry_type_1>::type
+  typename enable_if< typename gtl_and_3<y_ps90_rm,
+    typename gtl_if<typename is_mutable_polygon_90_set_type<geometry_type_1>::type>::type, 
+    typename gtl_if<typename gtl_same_type<typename geometry_concept<coordinate_type_1>::type, coordinate_concept>::type>::type>::type,
+  geometry_type_1>::type
   operator-(const geometry_type_1& lvalue, coordinate_type_1 rvalue) {
     geometry_type_1 retval(lvalue);
     retval -= rvalue;

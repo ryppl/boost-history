@@ -44,7 +44,7 @@ public:
 
   inline bool operator==(const polygon_data& that) const {
     if(coords_.size() != that.coords_.size()) return false;
-    for(unsigned int i = 0; i < coords_.size(); ++i) {
+    for(std::size_t i = 0; i < coords_.size(); ++i) {
       if(coords_[i] != that.coords_[i]) return false;
     }
     return true;
@@ -63,17 +63,7 @@ public:
 private:
   std::vector<point_data<coordinate_type> > coords_; 
 };
-  template <typename T>
-  std::ostream& operator<<(std::ostream& o, const polygon_data<T>& poly) {
-    o << "Polygon { ";
-    for(typename polygon_data<T>::iterator_type itr = poly.begin(); 
-        itr != poly.end(); ++itr) {
-      if(itr != poly.begin()) o << ", ";
-      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
-    } 
-    o << " } ";
-    return o;
-  } 
+
 }
 }
 #endif

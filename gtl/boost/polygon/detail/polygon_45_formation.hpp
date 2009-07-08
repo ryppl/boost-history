@@ -362,9 +362,9 @@ namespace boost { namespace polygon{
         holesList_.clear();
       }
 
-      inline void print() {
-        std::cout << this << " " << tailp_ << " " << otherTailp_ << " " << holesList_.size() << " " << head_ << std::endl;
-      }
+//       inline void print() {
+//         std::cout << this << " " << tailp_ << " " << otherTailp_ << " " << holesList_.size() << " " << head_ << std::endl;
+//       }
 
       static inline std::pair<ActiveTail45*, ActiveTail45*> createActiveTail45sAsPair(Point point, bool solid, 
                                                                                       ActiveTail45* phole, bool fractureHoles) {
@@ -869,8 +869,9 @@ namespace boost { namespace polygon{
    
     };
 
-    static inline bool testPolygon45FormationRect() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationRect(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -884,16 +885,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(10, 10), 0, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygon45FormationP1() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationP1(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -907,17 +909,18 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(10, 20), 1, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
     //polygon45set class
 
-    static inline bool testPolygon45FormationP2() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationP2(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -931,17 +934,18 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(20, 10), 0, 1)); 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
     //polygon45set class
 
-    static inline bool testPolygon45FormationStar1() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationStar1(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -995,16 +999,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(12, 8), -1, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
 
-    static inline bool testPolygon45FormationStar2() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationStar2(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
       Scan45 scan45;
@@ -1022,21 +1027,22 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(16,8), Scan45Count(Count2(0, 0), count, ncount, Count2(0, 0))));
       vertices.push_back(Scan45Vertex(Point(8,0), Scan45Count(ncount, Count2(0, 0), count, Count2(0, 0))));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
    
       std::sort(result.begin(), result.end());
       pf.scan(polys, result.begin(), result.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
 
-    static inline bool testPolygon45FormationStarHole1() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationStarHole1(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(true);
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1098,16 +1104,17 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
 
-    static inline bool testPolygon45FormationStarHole2() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45FormationStarHole2(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(false);
       std::vector<Polygon45WithHoles> polys;
       std::vector<Vertex45> data;
@@ -1169,16 +1176,17 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
 
-    static inline bool testPolygon45Formation() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygon45Formation(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       Polygon45Formation pf(false);
       std::vector<Polygon45WithHoles> polys;
       std::vector<Vertex45> data;
@@ -1212,11 +1220,11 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true; 
     }
 
@@ -1625,8 +1633,9 @@ namespace boost { namespace polygon{
    
     };
 
-    static inline bool testPolygon45TilingRect() {
-      std::cout << "testing polygon tiling\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingRect(stream_type& stdcout) {
+      stdcout << "testing polygon tiling\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1640,16 +1649,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(10, 10), 0, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true;
     }
 
-    static inline bool testPolygon45TilingP1() {
-      std::cout << "testing polygon tiling\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingP1(stream_type& stdcout) {
+      stdcout << "testing polygon tiling\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1663,16 +1673,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(10, 20), 1, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingP2() {
-      std::cout << "testing polygon tiling\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingP2(stream_type& stdcout) {
+      stdcout << "testing polygon tiling\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1686,16 +1697,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(20, 10), 0, 1)); 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingP3() {
-      std::cout << "testing polygon tiling\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingP3(stream_type& stdcout) {
+      stdcout << "testing polygon tiling\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1711,16 +1723,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(20, 20), 2, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingP4() {
-      std::cout << "testing polygon tiling p4\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingP4(stream_type& stdcout) {
+      stdcout << "testing polygon tiling p4\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1736,16 +1749,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(20, -10), 2, -1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingP5() {
-      std::cout << "testing polygon tiling P5\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingP5(stream_type& stdcout) {
+      stdcout << "testing polygon tiling P5\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1768,16 +1782,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(3, 2), 0, -1)); 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true;
     }
 
-    static inline bool testPolygon45TilingP6() {
-      std::cout << "testing polygon tiling P6\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingP6(stream_type& stdcout) {
+      stdcout << "testing polygon tiling P6\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1801,16 +1816,17 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true;
     }
 
-    static inline bool testPolygon45TilingStar1() {
-      std::cout << "testing polygon tiling star1\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingStar1(stream_type& stdcout) {
+      stdcout << "testing polygon tiling star1\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1864,16 +1880,17 @@ namespace boost { namespace polygon{
       data.push_back(Vertex45(Point(12, 8), -1, 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingStar2() {
-      std::cout << "testing polygon tiling\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingStar2(stream_type& stdcout) {
+      stdcout << "testing polygon tiling\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
 
@@ -1892,21 +1909,22 @@ namespace boost { namespace polygon{
       vertices.push_back(Scan45Vertex(Point(16,8), Scan45Count(Count2(0, 0), count, ncount, Count2(0, 0))));
       vertices.push_back(Scan45Vertex(Point(8,0), Scan45Count(ncount, Count2(0, 0), count, Count2(0, 0))));
       sortScan45Vector(vertices);
-      std::cout << "scanning\n";
+      stdcout << "scanning\n";
       scan45.scan(result, vertices.begin(), vertices.end());
    
       std::sort(result.begin(), result.end());
       pf.scan(polys, result.begin(), result.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingStarHole1() {
-      std::cout << "testing polygon tiling star hole 1\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingStarHole1(stream_type& stdcout) {
+      stdcout << "testing polygon tiling star hole 1\n";
       Polygon45Tiling pf;
       std::vector<Polygon45> polys;
       std::vector<Vertex45> data;
@@ -1968,16 +1986,17 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45TilingStarHole2() {
-      std::cout << "testing polygon tiling star hole 2\n";
+    template <typename stream_type>
+    static inline bool testPolygon45TilingStarHole2(stream_type& stdcout) {
+      stdcout << "testing polygon tiling star hole 2\n";
       Polygon45Tiling pf;
       std::vector<Polygon45WithHoles> polys;
       std::vector<Vertex45> data;
@@ -2039,16 +2058,17 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
 
-    static inline bool testPolygon45Tiling() {
-      std::cout << "testing polygon tiling\n";
+    template <typename stream_type>
+    static inline bool testPolygon45Tiling(stream_type& stdcout) {
+      stdcout << "testing polygon tiling\n";
       Polygon45Tiling pf;
       std::vector<Polygon45WithHoles> polys;
       std::vector<Vertex45> data;
@@ -2082,11 +2102,11 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon tiling\n";
+      stdcout << "done testing polygon tiling\n";
       return true; 
     }
   };
@@ -2110,7 +2130,7 @@ namespace boost { namespace polygon{
     //use default copy and assign
     inline iterator begin() const { return p_->getTail()->begin(); }
     inline iterator end() const { return p_->getTail()->end(); }
-    inline unsigned int size() const { return 0; }
+    inline std::size_t size() const { return 0; }
     template<class iT>
     inline PolyLine45HoleData& set(iT inputBegin, iT inputEnd) {
       return *this;
@@ -2178,8 +2198,8 @@ namespace boost { namespace polygon{
     inline iteratorHoles end_holes() const { return iteratorHoles(p_->getHoles().end()); }
     inline ActiveTail45* yield() { return p_; }
     //stub out these four required functions that will not be used but are needed for the interface
-    inline unsigned int size_holes() const { return 0; }
-    inline unsigned int size() const { return 0; }
+    inline std::size_t size_holes() const { return 0; }
+    inline std::size_t size() const { return 0; }
     template<class iT>
     inline PolyLine45PolygonData& set(iT inputBegin, iT inputEnd) {
       return *this;

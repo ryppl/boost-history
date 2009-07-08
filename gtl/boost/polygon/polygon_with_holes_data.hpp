@@ -78,7 +78,7 @@ public:
     return self_.end();
   }
 
-  inline unsigned int size() const {
+  inline std::size_t size() const {
     return self_.size();
   } 
 
@@ -92,7 +92,7 @@ public:
     return holes_.end();
   }
 
-  inline unsigned int size_holes() const {
+  inline std::size_t size_holes() const {
     return holes_.size();
   }
 
@@ -101,51 +101,7 @@ private:
   std::list<hole_type> holes_; 
   };
   
-  template <typename T>
-  std::ostream& operator<<(std::ostream& o, const polygon_90_with_holes_data<T>& poly) {
-    o << "Polygon With Holes { ";
-    for(typename polygon_90_with_holes_data<T>::iterator_type itr = poly.begin(); 
-        itr != poly.end(); ++itr) {
-      if(itr != poly.begin()) o << ", ";
-      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
-    } o << " { ";
-    for(typename polygon_90_with_holes_data<T>::iterator_holes_type itr = poly.begin_holes();
-        itr != poly.end_holes(); ++itr) {
-      o << (*itr);
-    }
-    o << " } } ";
-    return o;
-  }
-  template <typename T>
-  std::ostream& operator<<(std::ostream& o, const polygon_45_with_holes_data<T>& poly) {
-    o << "Polygon With Holes { ";
-    for(typename polygon_45_with_holes_data<T>::iterator_type itr = poly.begin(); 
-        itr != poly.end(); ++itr) {
-      if(itr != poly.begin()) o << ", ";
-      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
-    } o << " { ";
-    for(typename polygon_45_with_holes_data<T>::iterator_holes_type itr = poly.begin_holes();
-        itr != poly.end_holes(); ++itr) {
-      o << (*itr);
-    }
-    o << " } } ";
-    return o;
-  }
-  template <typename T>
-  std::ostream& operator<<(std::ostream& o, const polygon_with_holes_data<T>& poly) {
-    o << "Polygon With Holes { ";
-    for(typename polygon_with_holes_data<T>::iterator_type itr = poly.begin(); 
-        itr != poly.end(); ++itr) {
-      if(itr != poly.begin()) o << ", ";
-      o << (*itr).get(HORIZONTAL) << " " << (*itr).get(VERTICAL);
-    } o << " { ";
-    for(typename polygon_with_holes_data<T>::iterator_holes_type itr = poly.begin_holes();
-        itr != poly.end_holes(); ++itr) {
-      o << (*itr);
-    }
-    o << " } } ";
-    return o;
-  }
+
 }
 }
 #endif

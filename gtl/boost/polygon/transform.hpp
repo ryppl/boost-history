@@ -322,8 +322,8 @@ public:
   // get the inverse axis_transformation of this
   axis_transformation inverse() const;
 
-  friend std::ostream& operator<< (std::ostream& o, const axis_transformation& r);
-  friend std::istream& operator>> (std::istream& i, axis_transformation& r);
+  //friend std::ostream& operator<< (std::ostream& o, const axis_transformation& r);
+  //friend std::istream& operator>> (std::istream& i, axis_transformation& r);
 
 private:
   ATR atr_;

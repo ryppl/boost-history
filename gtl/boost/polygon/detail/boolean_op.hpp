@@ -252,128 +252,6 @@ namespace boolean_op {
     return BinaryCount<T>() - *this;
   }
 
-  //self contained unit test for BooleanOr algorithm
-  template <typename Unit>
-  inline bool testBooleanOr() {
-    BooleanOp<int, Unit> booleanOr;
-    //test one rectangle
-    std::vector<std::pair<interval_data<Unit>, int> > container;
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    if(container.size() != 2) { 
-      std::cout << "Test one rectangle, wrong output size\n";
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
-      std::cout << "Test one rectangle, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
-      std::cout << "Test one rectangle, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-
-    //test two rectangles
-    container.clear();
-    booleanOr = BooleanOp<int, Unit>();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
-    if(container.size() != 4) {
-      std::cout << "Test two rectangles, wrong output size\n";
-      for(unsigned int i = 0; i < container.size(); ++i){
-              std::cout << container[i].first << "), " << container[i].second << std::endl;
-      }
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
-            std::cout << "Test two rectangles, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), 1)) {
-            std::cout << "Test two rectangles, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), -1)) {
-            std::cout << "Test two rectangles, third output wrong: Interval(" <<
-        container[2].first << "), " << container[2].second << std::endl;
-    }
-    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), -1)) {
-            std::cout << "Test two rectangles, fourth output wrong: Interval(" <<
-        container[3].first << "), " << container[3].second << std::endl;
-    }
-
-    //test two rectangles
-    container.clear();
-    booleanOr = BooleanOp<int, Unit>();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(5, 15), -1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    if(container.size() != 4) {
-            std::cout << "Test other two rectangles, wrong output size\n";
-      for(unsigned int i = 0; i < container.size(); ++i){
-              std::cout << container[i].first << "), " << container[i].second << std::endl;
-      }
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(5, 15), 1)) {
-            std::cout << "Test other two rectangles, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 5), 1)) {
-            std::cout << "Test other two rectangles, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(10, 15), -1)) {
-            std::cout << "Test other two rectangles, third output wrong: Interval(" <<
-        container[2].first << "), " << container[2].second << std::endl;
-    }
-    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
-            std::cout << "Test other two rectangles, fourth output wrong: Interval(" <<
-        container[3].first << "), " << container[3].second << std::endl;
-    }
-
-    //test two nonoverlapping rectangles
-    container.clear();
-    booleanOr = BooleanOp<int, Unit>();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(15, 25), 1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(0, 10), -1);
-    booleanOr.advanceScan();
-    booleanOr.processInterval(container, interval_data<Unit>(15, 25), -1);
-    if(container.size() != 4) {
-            std::cout << "Test two nonoverlapping rectangles, wrong output size\n";
-      return false;
-    }
-    if(container[0] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), 1)) {
-            std::cout << "Test two nonoverlapping rectangles, first output wrong: Interval(" <<
-        container[0].first << "), " << container[0].second << std::endl;
-    }
-    if(container[1] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), 1)) {
-            std::cout << "Test two nonoverlapping rectangles, second output wrong: Interval(" <<
-        container[1].first << "), " << container[1].second << std::endl;
-    }
-    if(container[2] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(0, 10), -1)) {
-            std::cout << "Test two nonoverlapping rectangles, third output wrong: Interval(" <<
-        container[2].first << "), " << container[2].second << std::endl;
-    }
-    if(container[3] != std::pair<interval_data<Unit>, int>(interval_data<Unit>(15, 25), -1)) {
-            std::cout << "Test two nonoverlapping rectangles, fourth output wrong: Interval(" <<
-        container[3].first << "), " << container[3].second << std::endl;
-    }
-    return true;
-  }
 
   template <class T, typename Unit, typename iterator_type_1, typename iterator_type_2>
   inline void applyBooleanBinaryOp(std::vector<std::pair<Unit, std::pair<Unit, int> > >& output,
@@ -457,7 +335,7 @@ namespace boolean_op {
         interval_data<Unit> ivl(prevPosition, curPosition);
         container.clear();
         boolean.processInterval(container, ivl, count);
-        for(unsigned int i = 0; i < container.size(); ++i) {
+        for(std::size_t i = 0; i < container.size(); ++i) {
           std::pair<interval_data<Unit>, int>& element = container[i];
           if(!output.empty() && output.back().first == prevCoord && 
              output.back().second.first == element.first.low() &&
@@ -524,7 +402,7 @@ namespace boolean_op {
           interval_data<Unit> ivl(prevY, y);
           container.clear();
           booleanOr.processInterval(container, ivl, count_type(count));
-          for(unsigned int i = 0; i < container.size(); ++i) {
+          for(std::size_t i = 0; i < container.size(); ++i) {
             std::pair<interval_data<Unit>, int>& element = container[i];
             if(!output.empty() && output.back().first == prevPos && 
                output.back().second.first == element.first.low() &&

@@ -415,16 +415,7 @@ namespace boost { namespace polygon{
     }
   };
 
-  template <typename T>
-  std::ostream& operator << (std::ostream& o, const polygon_set_data<T>& r)
-  {
-    o << "Polygon Set Data { ";
-    for(typename polygon_set_data<T>::iterator_type itr = r.begin(); itr != r.end(); ++itr) {
-      o << "<" << (*itr).first.first << ", " << (*itr).first.second << ">:" << (*itr).second << " ";
-    }
-    o << "} ";
-    return o;
-  }
+
 
   struct polygon_set_concept;
   template <typename T>

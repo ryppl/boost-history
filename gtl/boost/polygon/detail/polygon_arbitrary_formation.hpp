@@ -878,7 +878,7 @@ namespace boost { namespace polygon{
       }
 
       inline void print() {
-        std::cout << this << " " << tailp_ << " " << otherTailp_ << " " << holesList_.size() << " " << head_ << std::endl;
+        //std::cout << this << " " << tailp_ << " " << otherTailp_ << " " << holesList_.size() << " " << head_ << std::endl;
       }
 
       static inline std::pair<active_tail_arbitrary*, active_tail_arbitrary*> createActiveTailsAsPair(Point point, bool solid, 
@@ -954,7 +954,7 @@ namespace boost { namespace polygon{
       tmp.reserve(count.size());
       tmp.push_back(count[0]);
       //merge duplicates
-      for(unsigned int i = 1; i < count.size(); ++i) {
+      for(std::size_t i = 1; i < count.size(); ++i) {
         if(!equal_slope(pt.get(HORIZONTAL), pt.get(VERTICAL), tmp[i-1].first, count[i].first)) {
           tmp.push_back(count[i]);
         } else {
@@ -1079,11 +1079,11 @@ namespace boost { namespace polygon{
       counts.reserve(counts_from_scanline.size());
       tails.reserve(counts_from_scanline.size());
       incoming.reserve(incoming_count.size());
-      for(unsigned int i = 0; i < counts_from_scanline.size(); ++i) {
+      for(std::size_t i = 0; i < counts_from_scanline.size(); ++i) {
         counts.push_back(counts_from_scanline[i].first.second);
         tails.push_back(counts_from_scanline[i].second);
       }
-      for(unsigned int i = 0; i < incoming_count.size(); ++i) {
+      for(std::size_t i = 0; i < incoming_count.size(); ++i) {
         incoming.push_back(incoming_count[i].second);
         if(incoming_count[i].first < point) {
           incoming.back() = 0;
@@ -1104,7 +1104,7 @@ namespace boost { namespace polygon{
       }
       //assert size = size_less_1 + 1
       //std::cout << tails.size() << " " << incoming.size() << " " << counts_from_scanline.size() << " " << incoming_count.size() << std::endl;
-      //         for(unsigned int i = 0; i < counts.size(); ++i) {
+      //         for(std::size_t i = 0; i < counts.size(); ++i) {
       //           std::cout << counts_from_scanline[i].first.first.first.get(HORIZONTAL) << ",";
       //           std::cout << counts_from_scanline[i].first.first.first.get(VERTICAL) << " ";
       //           std::cout << counts_from_scanline[i].first.first.second.get(HORIZONTAL) << ",";
@@ -1338,16 +1338,16 @@ namespace boost { namespace polygon{
 
     static inline void print(const vertex_arbitrary_count& count) {
       for(unsigned i = 0; i < count.size(); ++i) {
-        std::cout << count[i].first.get(HORIZONTAL) << ",";
-        std::cout << count[i].first.get(VERTICAL) << ":";
-        std::cout << count[i].second << " ";
-      } std::cout << std::endl;
+        //std::cout << count[i].first.get(HORIZONTAL) << ",";
+        //std::cout << count[i].first.get(VERTICAL) << ":";
+        //std::cout << count[i].second << " ";
+      } //std::cout << std::endl;
     }
 
     static inline void print(const scanline_data& data) {
       for(typename scanline_data::const_iterator itr = data.begin(); itr != data.end(); ++itr){
-        std::cout << itr->first.pt << ", " << itr->first.other_pt << "; ";
-      } std::cout << std::endl;
+        //std::cout << itr->first.pt << ", " << itr->first.other_pt << "; ";
+      } //std::cout << std::endl;
     }
 
     template <class cT, class iT>
@@ -1408,7 +1408,7 @@ namespace boost { namespace polygon{
         //compact_vertex_arbitrary_count(currentPoint, incoming);
         vertex_arbitrary_count tmp;
         tmp.reserve(incoming.size());
-        for(unsigned int i = 0; i < incoming.size(); ++i) {
+        for(std::size_t i = 0; i < incoming.size(); ++i) {
           if(currentPoint < incoming[i].first) {
             tmp.push_back(incoming[i]);
           }
@@ -1498,8 +1498,9 @@ namespace boost { namespace polygon{
       
   public: //test functions
       
-    static inline bool testPolygonArbitraryFormationRect() {
-      std::cout << "testing polygon formation\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationRect(stream_type& stdcout) {
+      stdcout << "testing polygon formation\n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1513,16 +1514,17 @@ namespace boost { namespace polygon{
       data.push_back(vertex_half_edge(Point(10, 10), Point(0, 10), 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygonArbitraryFormationP1() {
-      std::cout << "testing polygon formation P1\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationP1(stream_type& stdcout) {
+      stdcout << "testing polygon formation P1\n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1536,16 +1538,17 @@ namespace boost { namespace polygon{
       data.push_back(vertex_half_edge(Point(10, 20), Point(0, 10), 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygonArbitraryFormationP2() {
-      std::cout << "testing polygon formation P2\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationP2(stream_type& stdcout) {
+      stdcout << "testing polygon formation P2\n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1559,17 +1562,18 @@ namespace boost { namespace polygon{
       data.push_back(vertex_half_edge(Point(2, 4), Point(2, -4), 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
 
-    static inline bool testPolygonArbitraryFormationPolys() {
-      std::cout << "testing polygon formation polys\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationPolys(stream_type& stdcout) {
+      stdcout << "testing polygon formation polys\n";
       polygon_arbitrary_formation pf(false);
       std::vector<polygon_with_holes_data<Unit> > polys;
       polygon_arbitrary_formation pf2(true);
@@ -1604,21 +1608,22 @@ namespace boost { namespace polygon{
 
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
       pf2.scan(polys2, data.begin(), data.end());
-      std::cout << "result size: " << polys2.size() << std::endl;
-      for(unsigned int i = 0; i < polys2.size(); ++i) {
-        std::cout << polys2[i] << std::endl;
+      stdcout << "result size: " << polys2.size() << std::endl;
+      for(std::size_t i = 0; i < polys2.size(); ++i) {
+        stdcout << polys2[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygonArbitraryFormationSelfTouch1() {
-      std::cout << "testing polygon formation self touch 1\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationSelfTouch1(stream_type& stdcout) {
+      stdcout << "testing polygon formation self touch 1\n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1650,16 +1655,17 @@ namespace boost { namespace polygon{
       
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygonArbitraryFormationSelfTouch2() {
-      std::cout << "testing polygon formation self touch 2\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationSelfTouch2(stream_type& stdcout) {
+      stdcout << "testing polygon formation self touch 2\n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1689,16 +1695,17 @@ namespace boost { namespace polygon{
       
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygonArbitraryFormationSelfTouch3() {
-      std::cout << "testing polygon formation self touch 3\n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationSelfTouch3(stream_type& stdcout) {
+      stdcout << "testing polygon formation self touch 3\n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1728,17 +1735,18 @@ namespace boost { namespace polygon{
       
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testPolygonArbitraryFormationColinear() {
-      std::cout << "testing polygon formation colinear 3\n";
-      std::cout << "Polygon Set Data { <-3 2, -2 2>:1 <-3 2, -1 4>:-1 <-2 2, 0 2>:1 <-1 4, 0 2>:-1 } \n";
+    template <typename stream_type>
+    static inline bool testPolygonArbitraryFormationColinear(stream_type& stdcout) {
+      stdcout << "testing polygon formation colinear 3\n";
+      stdcout << "Polygon Set Data { <-3 2, -2 2>:1 <-3 2, -1 4>:-1 <-2 2, 0 2>:1 <-1 4, 0 2>:-1 } \n";
       polygon_arbitrary_formation pf(true);
       std::vector<polygon_data<Unit> > polys;
       std::vector<vertex_half_edge> data;
@@ -1755,16 +1763,17 @@ namespace boost { namespace polygon{
       data.push_back(vertex_half_edge(Point(0, 2), Point(-1, 4), 1));
       std::sort(data.begin(), data.end());
       pf.scan(polys, data.begin(), data.end());
-      std::cout << "result size: " << polys.size() << std::endl;
-      for(unsigned int i = 0; i < polys.size(); ++i) {
-        std::cout << polys[i] << std::endl;
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
       }
-      std::cout << "done testing polygon formation\n";
+      stdcout << "done testing polygon formation\n";
       return true;
     }
 
-    static inline bool testSegmentIntersection() {
-      std::cout << "testing segment intersection\n";
+    template <typename stream_type>
+    static inline bool testSegmentIntersection(stream_type& stdcout) {
+      stdcout << "testing segment intersection\n";
       half_edge he1, he2;
       he1.first = Point(0, 0);
       he1.second = Point(10, 10);
@@ -1832,7 +1841,7 @@ namespace boost { namespace polygon{
     inline iterator end() const { return p_->getTail()->end(); }
     //inline compact_iterator_type begin_compact() const { return compact_iterator_type(begin()); }
     //inline compact_iterator_type end_compact() const { return compact_iterator_type(end()); }
-    inline unsigned int size() const { return 0; }
+    inline std::size_t size() const { return 0; }
     template<class iT>
     inline poly_line_arbitrary_hole_data& set(iT inputBegin, iT inputEnd) {
       //assert this is not called
@@ -1907,8 +1916,8 @@ namespace boost { namespace polygon{
     inline iterator_holes_type end_holes() const { return iterator_holes_type(p_->getHoles().end()); }
     inline active_tail_arbitrary* yield() { return p_; }
     //stub out these four required functions that will not be used but are needed for the interface
-    inline unsigned int size_holes() const { return 0; }
-    inline unsigned int size() const { return 0; }
+    inline std::size_t size_holes() const { return 0; }
+    inline std::size_t size() const { return 0; }
     template<class iT>
     inline poly_line_arbitrary_polygon_data& set(iT inputBegin, iT inputEnd) {
       return *this;
