@@ -3074,6 +3074,70 @@ int main() {
     if(!empty(ps90_1)) return 1;
   }
   if(!nonInteger45StessTest()) return 1;
+  {
+  using namespace gtl;
+  typedef polygon_45_property_merge<int, int> p45pm;
+  p45pm::MergeSetData msd;
+  polygon_45_set_data<int> ps;
+  ps += rectangle_data<int>(0, 0, 10, 10);
+  p45pm::populateMergeSetData(msd, ps.begin(), ps.end(), 444);
+  ps.clear();
+  ps += rectangle_data<int>(5, 5, 15, 15);
+  p45pm::populateMergeSetData(msd, ps.begin(), ps.end(), 333);
+  std::map<std::set<int>, polygon_45_set_data<int> > result;
+  p45pm::performMerge(result, msd);
+  int i = 0;
+  for(std::map<std::set<int>, polygon_45_set_data<int> >::iterator itr = result.begin();
+      itr != result.end(); ++itr) {
+    for(std::set<int>::iterator itr2 = (*itr).first.begin();
+        itr2 != (*itr).first.end(); ++itr2) {
+      std::cout << *itr2 << " ";
+    } std::cout << " : ";
+    std::cout << area((*itr).second) << std::endl;
+    if(i == 1) {
+      if(area((*itr).second) != 100) return 1;
+    } else
+      if(area((*itr).second) != 300) return 1;
+    ++i;
+  }
+
+
+  property_merge_45<int, int> pm;
+  pm.insert(rectangle_data<int>(0, 0, 10, 10), 444);
+  pm.insert(rectangle_data<int>(5, 5, 15, 15), 333);
+  std::map<std::set<int>, polygon_45_set_data<int> > mp;
+  pm.merge(mp);
+  i = 0;
+  for(std::map<std::set<int>, polygon_45_set_data<int> >::iterator itr = mp.begin();
+      itr != mp.end(); ++itr) {
+    for(std::set<int>::const_iterator itr2 = (*itr).first.begin();
+        itr2 != (*itr).first.end(); ++itr2) {
+      std::cout << *itr2 << " ";
+    } std::cout << " : ";
+    std::cout << area((*itr).second) << std::endl;
+    if(i == 1) {
+      if(area((*itr).second) != 25) return 1;
+    } else
+      if(area((*itr).second) != 75) return 1;
+    ++i;
+  }
+  std::map<std::vector<int>, polygon_45_set_data<int> > mp2;
+  pm.merge(mp2);
+  i = 0;
+  for(std::map<std::vector<int>, polygon_45_set_data<int> >::iterator itr = mp2.begin();
+      itr != mp2.end(); ++itr) {
+    for(std::vector<int>::const_iterator itr2 = (*itr).first.begin();
+        itr2 != (*itr).first.end(); ++itr2) {
+      std::cout << *itr2 << " ";
+    } std::cout << " : ";
+    std::cout << area((*itr).second) << std::endl;
+    if(i == 1) {
+      if(area((*itr).second) != 25) return 1;
+    } else
+      if(area((*itr).second) != 75) return 1;
+    ++i;
+  }
+  }
   std::cout << "ALL TESTS COMPLETE\n";
   return 0;
 }

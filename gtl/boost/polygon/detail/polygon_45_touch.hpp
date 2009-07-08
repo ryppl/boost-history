@@ -230,46 +230,7 @@ namespace boost { namespace polygon{
     
   };
 
-  //ConnectivityExtraction computes the graph of connectivity between rectangle, polygon and
-  //polygon set graph nodes where an edge is created whenever the geometry in two nodes overlap
-  template <typename coordinate_type>
-  class connectivity_extraction_45 {
-  private:
-    typedef typename coordinate_traits<coordinate_type>::manhattan_area_type big_coord;
-    typedef typename polygon_45_touch<big_coord>::TouchSetData tsd;
-    tsd tsd_;
-    unsigned int nodeCount_;
-  public:
-    inline connectivity_extraction_45() : tsd_(), nodeCount_(0) {}
-    inline connectivity_extraction_45(const connectivity_extraction_45& that) : tsd_(that.tsd_),
-                                                                          nodeCount_(that.nodeCount_) {}
-    inline connectivity_extraction_45& operator=(const connectivity_extraction_45& that) { 
-      tsd_ = that.tsd_; 
-      nodeCount_ = that.nodeCount_; {}
-      return *this;
-    }
-    
-    //insert a polygon set graph node, the value returned is the id of the graph node
-    inline unsigned int insert(const polygon_45_set_data<coordinate_type>& ps) {
-      ps.clean();
-      polygon_45_touch<big_coord>::populateTouchSetData(tsd_, ps.begin(), ps.end(), nodeCount_);
-      return nodeCount_++;
-    }
-    template <class GeoObjT>
-    inline unsigned int insert(const GeoObjT& geoObj) {
-      polygon_45_set_data<coordinate_type> ps;
-      ps.insert(geoObj);
-      return insert(ps);
-    }
-    
-    //extract connectivity and store the edges in the graph
-    //graph must be indexable by graph node id and the indexed value must be a std::set of
-    //graph node id
-    template <class GraphT>
-    inline void extract(GraphT& graph) {
-      polygon_45_touch<big_coord>::performTouch(graph, tsd_);
-    }
-  };
+
 }
 }
 #endif 

@@ -82,9 +82,10 @@
 #include "detail/polygon_90_set_view.hpp"
 
 //45 boolean op algorithms
+#include "detail/polygon_45_touch.hpp"
+#include "detail/property_merge_45.hpp"
 #include "polygon_45_set_data.hpp"
 #include "polygon_45_set_traits.hpp"
-#include "detail/polygon_45_touch.hpp"
 #include "polygon_45_set_concept.hpp"
 #include "detail/polygon_45_set_view.hpp"
 

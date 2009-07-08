@@ -10,6 +10,8 @@
 #include "polygon_90_set_data.hpp"
 #include "detail/boolean_op_45.hpp"
 #include "detail/polygon_45_formation.hpp"
+#include "detail/polygon_45_touch.hpp"
+#include "detail/property_merge_45.hpp"
 namespace boost { namespace polygon{
 
   enum RoundingOption { CLOSEST = 0, OVERSIZE = 1, UNDERSIZE = 2, SQRT2 = 3, SQRT1OVER2 = 4 };
@@ -102,6 +104,8 @@ namespace boost { namespace polygon{
     }
 
     inline void insert(const polygon_45_set_data& polygon_set, bool is_hole = false);
+    template <typename coord_type>
+    inline void insert(const polygon_45_set_data<coord_type>& polygon_set, bool is_hole = false);
 
     template <typename geometry_type>
     inline void insert(const geometry_type& geometry_object, bool is_hole = false) {
@@ -563,6 +567,39 @@ namespace boost { namespace polygon{
     dirty_ = true;
     unsorted_ = true;
     if(polygon_set.is_manhattan_ == false) is_manhattan_ = false;
+    return;
+  }
+  // insert polygon set
+  template <typename Unit>
+  template <typename coord_type>
+  inline void polygon_45_set_data<Unit>::insert(const polygon_45_set_data<coord_type>& polygon_set, bool is_hole) {
+    std::size_t count = data_.size();
+    for(typename polygon_45_set_data<coord_type>::iterator_type itr = polygon_set.begin();
+        itr != polygon_set.end(); ++itr) {
+      const typename polygon_45_set_data<coord_type>::Vertex45Compact& v = *itr;
+      typename polygon_45_set_data<Unit>::Vertex45Compact v2;
+      assign(v2.pt, v.pt);
+      v2.count = typename polygon_45_formation<Unit>::Vertex45Count(v.count[0], v.count[1], v.count[2], v.count[3]);
+      data_.push_back(v2);
+    }
+    polygon_45_set_data<coord_type> tmp;
+    polygon_set.get_error_data(tmp);
+    for(typename polygon_45_set_data<coord_type>::iterator_type itr = tmp.begin();
+        itr != tmp.end(); ++itr) {
+      const typename polygon_45_set_data<coord_type>::Vertex45Compact& v = *itr;
+      typename polygon_45_set_data<Unit>::Vertex45Compact v2;
+      assign(v2.pt, v.pt);
+      v2.count = typename polygon_45_formation<Unit>::Vertex45Count(v.count[0], v.count[1], v.count[2], v.count[3]);
+      error_data_.push_back(v2);
+    }
+    if(is_hole) {
+      for(std::size_t i = count; i < data_.size(); ++i) {
+        data_[i].count = data_[i].count.invert();
+      }
+    }
+    dirty_ = true;
+    unsorted_ = true;
+    if(polygon_set.is_manhattan() == false) is_manhattan_ = false;
     return;
   }
 
@@ -1713,7 +1750,99 @@ namespace boost { namespace polygon{
     is_manhattan_ = result.is_manhattan_;
   }
 
+  template <typename coordinate_type, typename property_type>
+  class property_merge_45 {
+  private:
+    typedef typename coordinate_traits<coordinate_type>::manhattan_area_type big_coord;
+    typedef typename polygon_45_property_merge<big_coord, property_type>::MergeSetData tsd;
+    tsd tsd_;
+  public:
+    inline property_merge_45() : tsd_() {}
+    inline property_merge_45(const property_merge_45& that) : tsd_(that.tsd_) {}
+    inline property_merge_45& operator=(const property_merge_45& that) { 
+      tsd_ = that.tsd_; 
+      return *this;
+    }
+    
+    inline void insert(const polygon_45_set_data<coordinate_type>& ps, property_type property) {
+      ps.clean();
+      polygon_45_property_merge<big_coord, property_type>::populateMergeSetData(tsd_, ps.begin(), ps.end(), property);
+    }
+    template <class GeoObjT>
+    inline void insert(const GeoObjT& geoObj, property_type property) {
+      polygon_45_set_data<coordinate_type> ps;
+      ps.insert(geoObj);
+      insert(ps, property);
+    }
 
+    //merge properties of input geometries and store the resulting geometries of regions
+    //with unique sets of merged properties to polygons sets in a map keyed by sets of properties
+    // T = std::map<std::set<property_type>, polygon_45_set_data<coordiante_type> > or
+    // T = std::map<std::vector<property_type>, polygon_45_set_data<coordiante_type> >
+    template <class result_type>
+    inline void merge(result_type& result) {
+      typedef typename result_type::key_type keytype;
+      typedef std::map<keytype, polygon_45_set_data<big_coord> > bigtype;
+      bigtype result_big;
+      polygon_45_property_merge<big_coord, property_type>::performMerge(result_big, tsd_);
+      std::vector<polygon_45_with_holes_data<big_coord> > polys;
+      std::vector<rectangle_data<big_coord> > pos_error_rects;
+      std::vector<rectangle_data<big_coord> > neg_error_rects;
+      for(typename std::map<keytype, polygon_45_set_data<big_coord> >::iterator itr = result_big.begin();
+          itr != result_big.end(); ++itr) {
+        polys.clear();
+        (*itr).second.get(polys);
+        for(std::size_t i = 0; i < polys.size(); ++i) {
+          get_error_rects(pos_error_rects, neg_error_rects, polys[i]);
+        }
+        (*itr).second += pos_error_rects;
+        (*itr).second -= neg_error_rects;
+        (*itr).second.scale_down(2);
+        result[(*itr).first].insert((*itr).second);
+      }
+    }
+  };
+
+  //ConnectivityExtraction computes the graph of connectivity between rectangle, polygon and
+  //polygon set graph nodes where an edge is created whenever the geometry in two nodes overlap
+  template <typename coordinate_type>
+  class connectivity_extraction_45 {
+  private:
+    typedef typename coordinate_traits<coordinate_type>::manhattan_area_type big_coord;
+    typedef typename polygon_45_touch<big_coord>::TouchSetData tsd;
+    tsd tsd_;
+    unsigned int nodeCount_;
+  public:
+    inline connectivity_extraction_45() : tsd_(), nodeCount_(0) {}
+    inline connectivity_extraction_45(const connectivity_extraction_45& that) : tsd_(that.tsd_),
+                                                                          nodeCount_(that.nodeCount_) {}
+    inline connectivity_extraction_45& operator=(const connectivity_extraction_45& that) { 
+      tsd_ = that.tsd_; 
+      nodeCount_ = that.nodeCount_; {}
+      return *this;
+    }
+    
+    //insert a polygon set graph node, the value returned is the id of the graph node
+    inline unsigned int insert(const polygon_45_set_data<coordinate_type>& ps) {
+      ps.clean();
+      polygon_45_touch<big_coord>::populateTouchSetData(tsd_, ps.begin(), ps.end(), nodeCount_);
+      return nodeCount_++;
+    }
+    template <class GeoObjT>
+    inline unsigned int insert(const GeoObjT& geoObj) {
+      polygon_45_set_data<coordinate_type> ps;
+      ps.insert(geoObj);
+      return insert(ps);
+    }
+    
+    //extract connectivity and store the edges in the graph
+    //graph must be indexable by graph node id and the indexed value must be a std::set of
+    //graph node id
+    template <class GraphT>
+    inline void extract(GraphT& graph) {
+      polygon_45_touch<big_coord>::performTouch(graph, tsd_);
+    }
+  };
 }
 }
 #endif
