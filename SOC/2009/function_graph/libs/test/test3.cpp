@@ -13,13 +13,15 @@
 #include <boost/range.hpp>
 #include <cassert>
 
+namespace test3 {
 // print an edge
-template<typename Result, typename Vertex>
-void print_edge(boost::detail::func_graph_edge<Result, Vertex> const& e)
+template<typename Graph>
+void print_edge(typename Graph::edge_descriptor const& e, Graph const& g)
 {
     std::cout << "\nEdge:\n" << "  Source: " << e.source_ << "\n";
     std::cout << "  Target: " << e.target_ << "\n";
 }
+} // namespace
 
 int main()
 {
@@ -41,7 +43,19 @@ int main()
     typedef std::pair<
                 boolean_graph::in_edge_iterator,
                 boolean_graph::in_edge_iterator
-            > in_edge_range;
+            > in_edge_bool_range;
+    typedef std::pair<
+                weighted_graph::in_edge_iterator,
+                weighted_graph::in_edge_iterator
+            > in_edge_wght_range;
+    typedef std::pair<
+                boolean_graph::out_edge_iterator,
+                boolean_graph::out_edge_iterator
+            > out_edge_bool_range;
+    typedef std::pair<
+                weighted_graph::out_edge_iterator,
+                weighted_graph::out_edge_iterator
+            > out_edge_wght_range;
 
     ////////
     // Create function graphs
@@ -50,17 +64,16 @@ int main()
     weighted_graph weightedGraph(std::minus<long>(),
                                 std::make_pair(numbers.begin(), numbers.end()));
 
-    ////////
-    // Check graph boolean operators
-    assert(booleanGraph == booleanGraph);
-    assert(weightedGraph == weightedGraph);
+
 
     ////////
     // Check vertices(g)
     iterator_range correctRange = std::make_pair(numbers.begin(),
-                                                    numbers.end());
+                                                 numbers.end());
     assert(vertices(booleanGraph) == correctRange);
     assert(vertices(weightedGraph) == correctRange);
+
+
 
     ////////
     // Check num_vertices
@@ -68,18 +81,56 @@ int main()
     assert(num_vertices(booleanGraph) == numVertices);
     assert(num_vertices(weightedGraph) == numVertices);
 
+
+
     ////////
     // Check in edges
     std::vector<long>::iterator aVertex = ++numbers.begin(); // aVector = 572
-    in_edge_range in_edges_bool = in_edges(*aVertex, booleanGraph);
-    // print all in_edges
+    in_edge_bool_range in_edges_bool = boost::in_edges(*aVertex, booleanGraph);
+    // Print all in_edges from booleanGraph to 572
+    // In other words, print pairs of numbers that are less than 572
     while(in_edges_bool.first != in_edges_bool.second)
     {
+        test3::print_edge(*in_edges_bool.first, booleanGraph);
         ++in_edges_bool.first;
     }
-    //iterator_range in_edges_wght = in_edges(*aVertex, weightedGraph);
-    
-    std::cerr << "\nCompiled - What? It worked?\n\n";
+
+    in_edge_wght_range in_edges_wght = boost::in_edges(*aVertex, weightedGraph);
+    // Print all in_edges from weightedGraph to 572
+    // By the function, this prints in_edge - 572
+    while(in_edges_wght.first != in_edges_wght.second)
+    {
+        std::cout << boost::source(*in_edges_wght.first, weightedGraph)
+                  << " - 572 = " << (*in_edges_wght.first).result_
+                  << "\n";
+        ++in_edges_wght.first;
+    }
+
+
+    ////////
+    // Check out edges
+    ++ ++ ++aVertex; // aVertex now holds -2
+     out_edge_bool_range out_edges_bool = boost::out_edges(*aVertex, booleanGraph);
+    // Print all out_edges from booleanGraph to -2
+    // In other words, print pairs of numbers that are not less than -2
+    while(out_edges_bool.first != out_edges_bool.second)
+    {
+        test3::print_edge(*out_edges_bool.first, booleanGraph);
+        ++out_edges_bool.first;
+    }
+
+    out_edge_wght_range out_edges_wght = boost::out_edges(*aVertex, weightedGraph);
+    // Print all in_edges from weightedGraph to 572
+    // By the function, this prints in_edge - 572
+    while(out_edges_wght.first != out_edges_wght.second)
+    {
+        std::cout << "-2 - "
+                  << boost::target(*out_edges_wght.first, weightedGraph)
+                  << " = "
+                  << (*out_edges_wght.first).result_
+                  << "\n";
+        ++out_edges_wght.first;
+    }
 
     return 0;
 }

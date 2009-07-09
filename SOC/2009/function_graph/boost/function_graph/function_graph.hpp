@@ -22,10 +22,11 @@
 #include <boost/range/iterator.hpp>
 #include <iterator>
 
+
 namespace boost {
 
 template<typename Graph> struct function_graph_in_edge_iterator;
-//template<typename Graph> struct function_graph_out_edge_iterator;
+template<typename Graph> struct function_graph_out_edge_iterator;
 
 /** @name Domain Tags
  * @description Traits that identify the function_graph as either having a
@@ -201,11 +202,7 @@ public:
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
     typedef function_graph_in_edge_iterator<This> in_edge_iterator;
-    /*typedef function_graph_out_edge_iterator<
-                result_type,
-                vertex_descriptor,
-                vertex_iterator_range
-            > out_edge_iterator;*/
+    typedef function_graph_out_edge_iterator<This> out_edge_iterator;
     typedef finite_domain_tag domain_category;
 
     /** Constructor: takes a functor and range */
@@ -401,7 +398,7 @@ in_edges(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
 
     vertex_iterator vertex_begin = begin(g.range_);
     vertex_iterator vertex_end = end(g.range_);
-    while((vertex_begin != vertex_end) || !edge(*vertex_begin, v, g).second)
+    while((vertex_begin != vertex_end) && !edge(*vertex_begin, v, g).second)
     { ++vertex_begin; }
     in_edge_iterator in_edge_begin(g, v, vertex_begin, vertex_end);
     in_edge_iterator in_edge_end(g, v, vertex_end, vertex_end);
@@ -416,17 +413,17 @@ std::pair<
 >
 out_edges(typename FUNC_GRAPH::vertex_descriptor const& u, FUNC_GRAPH const& g)
 {
-    typedef FUNC_GRAPH Graph;
+    typedef function_graph<function<Result(Vertex, Vertex)>, Range> Graph;
     typedef typename Graph::out_edge_iterator out_edge_iterator;
     typedef typename Graph::vertex_iterator vertex_iterator;
     typedef std::pair<out_edge_iterator, out_edge_iterator> iter_range;
 
-    vertex_iterator first_vertex_pair = begin(g.range_);
+    vertex_iterator vertex_begin = begin(g.range_);
     vertex_iterator vertex_end = end(g.range_);
-    while((first_vertex_pair != vertex_end) || !g.edge_(first_vertex_pair, u))
-    { ++first_vertex_pair; }
-    out_edge_iterator out_edge_begin(first_vertex_pair, u);
-    out_edge_iterator out_edge_end(vertex_end, u);
+    while((vertex_begin != vertex_end) && !edge(u, *vertex_begin, g).second)
+    { ++vertex_begin; }
+    out_edge_iterator out_edge_begin(g, u, vertex_begin, vertex_end);
+    out_edge_iterator out_edge_end(g, u, vertex_end, vertex_end);
 
     return std::make_pair(out_edge_begin, out_edge_end);
 }
@@ -495,16 +492,6 @@ public:
     edge_descriptor operator*()
     { return edge_descriptor(edge(*vertex_begin_, vertex_, g_).first); }
 
-    /*bool operator==(This const& rhs)
-    {
-        return g_ == true//rhs.g_ && vertex_ == rhs.vertex_ &&
-                     vertex_begin_ == rhs.vertex_begin_ &&
-                     vertex_end_ == rhs.vertex_end_*/;
-    /*}
-    bool operator!=(This const& rhs)
-    { return !(*this == rhs); }*/
-    
-
     graph_type const& g_;
     vertex_descriptor vertex_;
     vertex_iterator vertex_begin_;
@@ -535,17 +522,17 @@ bool operator!=(function_graph_in_edge_iterator<Graph> const& lhs,
  * @description Iterates through the in edges of a vertex.
  */
 
-template<typename Function, typename Edge, typename Range>
+template<typename Graph>
 struct function_graph_out_edge_iterator {
 private:
-    typedef function_graph_out_edge_iterator<Function, Edge, Range> This;
+    typedef function_graph_out_edge_iterator<Graph> This;
 
 public:
-    typedef Range vertex_iterator_range;
-    typedef typename range_iterator<vertex_iterator_range>::type
-            vertex_iterator;
-    typedef Edge edge_descriptor;
-    typedef Function function_type;
+    typedef Graph graph_type;
+    typedef typename graph_type::vertex_iterator vertex_iterator;
+    typedef typename graph_type::edge_descriptor edge_descriptor;
+    typedef typename graph_type::vertex_descriptor vertex_descriptor;
+    typedef typename graph_type::function_type function_type;
 
     /** Iterator traits */
     typedef std::input_iterator_tag iterator_category;
@@ -556,11 +543,12 @@ public:
 
     /** @internal Constructors */
     //@{
-    function_graph_out_edge_iterator(function_type const& f,
-                                     vertex_iterator const& v,
-                                     vertex_iterator const& v_begin,
-                                     vertex_iterator const& v_end)
-        : edge_(f),
+    
+    function_graph_out_edge_iterator(graph_type const& g,
+                                    vertex_descriptor const& v,
+                                    vertex_iterator const& v_begin,
+                                    vertex_iterator const& v_end)
+        : g_(g),
           vertex_(v),
           vertex_begin_(v_begin),
           vertex_end_(v_end)
@@ -568,7 +556,7 @@ public:
 
     // Copy constructor
     function_graph_out_edge_iterator(This const& cp)
-        : edge_(cp.edge_),
+        : g_(cp.g_),
           vertex_(cp.vertex_),
           vertex_begin_(cp.vertex_begin_),
           vertex_end_(cp.vertex_end_)
@@ -576,31 +564,44 @@ public:
     //@}
 
     /** Input Iterator operator overloads */
-    function_graph_out_edge_iterator& operator++()
+    This& operator++()
     {
         // Cycle through the range until an edge is found,
         // or the end of the list is found
         do {
             ++vertex_begin_;
         } while((vertex_begin_ != vertex_end_) &&
-              !edge_(*vertex_, *vertex_begin_));
+              !edge(vertex_, *vertex_begin_, g_).second);
 
         return *this;
     }
 
     edge_descriptor operator*()
-    {
-        return edge_descriptor(edge_(vertex_, *vertex_begin_),
-                               *vertex_begin_,
-                               *vertex_);
-    }
+    { return edge_descriptor(edge(vertex_, *vertex_begin_, g_).first); }
 
-    function_type edge_;
-    vertex_iterator vertex_;
+    graph_type const& g_;
+    vertex_descriptor vertex_;
     vertex_iterator vertex_begin_;
     vertex_iterator vertex_end_;
 };
 
+template<typename Graph>
+bool operator==(function_graph_out_edge_iterator<Graph> const& lhs,
+                function_graph_out_edge_iterator<Graph> const& rhs)
+{
+    return lhs.vertex_ == rhs.vertex_ &&
+           lhs.vertex_begin_ == rhs.vertex_begin_ &&
+           lhs.vertex_end_ == rhs.vertex_end_;
+}
+
+template<typename Graph>
+bool operator!=(function_graph_out_edge_iterator<Graph> const& lhs,
+                function_graph_out_edge_iterator<Graph> const& rhs)
+{
+    return !(lhs.vertex_ == rhs.vertex_ &&
+             lhs.vertex_begin_ == rhs.vertex_begin_ &&
+             lhs.vertex_end_ == rhs.vertex_end_);
+}
 
 
 }   // boost namespace
