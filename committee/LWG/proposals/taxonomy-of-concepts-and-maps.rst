@@ -486,32 +486,33 @@ Our reasoning for the expectations:
    because syntactic concepts are "auto" concepts and, therefore, do not
    need explicit concept maps.
 
-3. Intentional concept maps for foundational and nontrivial concept
-   maps may be empty when the data types are specifically designed to
-   model the concept. By definition, however, intentional concept maps
-   are written by the programmer to assert and check that the concept's
-   requirements are met. If the programmer did not want to write the
-   concept map, then we actually have a case of post-hoc mapping (see
-   below).
+3. Intentional concept maps for non-auto foundational and nontrivial
+   concepts will typically be empty. By definition, intentional
+   concept maps aren't "required", because the programmer has opted to
+   write the concept maps to assert and check that the concept's
+   requirements are satisfied. If the programmer would prefer not to
+   write these empty concept maps, they can be omitted (if the concept
+   is auto) or will be considered post-hoc maps.
 
-4. Post-hoc mapping of a foundational concept is expected to be very
-   rare, since the majority of foundational concepts are ``auto``
+4. Post-hoc mapping of a foundational concept is expected to be
+   rare, since the majority of foundational concepts seem to be ``auto``
    concepts. For non-``auto`` foundational concepts, where the dangers
    due to semantic refinement or structural aliasing outweigh the
-   benefits of implicit matching (e.g., for ``Associative``), empty
-   concept maps will occur. However, for such concepts, these concept
-   maps are necessary to ensure proper semantics.
+   benefits of implicit matching (e.g., for ``Associative`` or
+   ``AbelianGroup``), empty concept maps will be required.
 
 5. Post-hoc mapping of a nontrivial concept will occur occasionally,
-   when a data type was specifically designed to meet the requirements
+   when a data type was not specifically designed to meet the requirements
    of the nontrivial concept. The number of empty concept maps is
    bounded by the number of data types that model the nontrivial
    concept.
 
-We suspect that most of the concern about explicit concept maps is
-focused on (5), post-hoc mapping of a nontrivial concept, which is
-most likely to occur when a programmer is using a generic
-library. There are several mitigating facts, among them:
+Most of the empty, explicitly-written concept maps involve non-auto
+foundational concepts and nontrivial concepts, and much of the concern
+centers around the cases where the programmer is not writing
+intentional concept maps to check his types. There are several
+mitigating factors that limit the number of empty concept maps that
+will actually be written in practice, among them:
 
 a. Data types that model nontrivial concepts are often part of the same
    library that provides the concepts, e.g., a graph library will contain
@@ -523,11 +524,8 @@ b. The library itself must document which of its data types model
    which of its concepts; a concept map is a natural way to do so.
 
 c. With nontrivial concepts, empty concept maps provide the most
-   benefit, because modeling a nontrivial concept is
-   not (*ahem*) trivial.
-
-d. Many nontrivial concepts already require some explicit statement
-   that they meet the requirements of a concept
+   benefit relative to the effort to write the data types itself,
+   because modeling a nontrivial concept is not (*ahem*) trivial.
 
 Summary
 =======
