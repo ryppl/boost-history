@@ -10,7 +10,6 @@
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_AT_IMPL_HPP
 
 #include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/detail/access.hpp>
 
 #include <boost/mpl/int.hpp>
 
@@ -20,42 +19,36 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename T>
+        template<typename Tag>
         struct at_impl;
-
-        template <typename Struct, int N>
-        struct struct_member;
-
-        template <typename Struct>
-        struct struct_size;
 
         template <>
         struct at_impl<struct_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
             {
-                static int const n_value = N::value;
-                BOOST_FUSION_INDEX_CHECK(n_value,
-                    extension::struct_size<Sequence>::value);
+                //BOOST_FUSION_INDEX_CHECK(n_value,
+                //    struct_size<Sequence>::value);
 
                 typedef typename
-                    extension::struct_member<Sequence, N::value>
-                element;
-
-                typedef typename
-                    mpl::eval_if<
-                        is_const<Sequence>
-                      , detail::cref_result<element>
-                      , detail::ref_result<element>
+                    detail::result_of_forward_as<
+                        SeqRef
+                      , typename struct_member<
+                            typename detail::identity<SeqRef>::type
+                          , N::value
+                        >::type
                     >::type
                 type;
 
                 static type
-                call(Sequence& seq)
+                call(SeqRef seq)
                 {
-                    return extension::
-                        struct_member<Sequence, N::value>::call(seq);
+                    return
+                        struct_member<
+                            typename detail::identity<SeqRef>::type
+                          , N::value
+                        >::call(seq);
                 }
             };
         };

@@ -7,8 +7,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_INVOCATION_INVOKE_FUNCTION_OBJECT_HPP_INCLUDED)
-#if !defined(BOOST_PP_IS_ITERATING)
+#ifndef BOOST_FUSION_FUNCTIONAL_INVOCATION_INVOKE_FUNCTION_OBJECT_HPP
+#define BOOST_FUSION_FUNCTIONAL_INVOCATION_INVOKE_FUNCTION_OBJECT_HPP
 
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
@@ -174,4 +174,3 @@ namespace boost { namespace fusion
 #undef N
 #endif // defined(BOOST_PP_IS_ITERATING)
 #endif
-

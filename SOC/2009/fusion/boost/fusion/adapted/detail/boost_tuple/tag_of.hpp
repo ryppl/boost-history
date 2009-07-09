@@ -10,46 +10,45 @@
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
-namespace boost { namespace tuples
-{
-    struct null_type;
-    
-    template <
-        class T0, class T1, class T2, class T3, class T4, 
-        class T5, class T6, class T7, class T8, class T9
-    >
-    class tuple;
+#include <boost/preprocessor/facilities/empty.hpp>
 
-    template <class Head, class Tail>
-    struct cons;
-}}
-    
 namespace boost { namespace fusion 
 {
     struct boost_tuple_tag;
 
     namespace traits
     {
-        template <
-            class T0, class T1, class T2, class T3, class T4, 
-            class T5, class T6, class T7, class T8, class T9
-        >
-        struct tag_of<tuples::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> >
-        {
-            typedef boost_tuple_tag type;
+#define TAG_OF_SPECIALIZATION(COMBINATION,_)\
+        template <\
+            class T0, class T1, class T2, class T3, class T4, \
+            class T5, class T6, class T7, class T8, class T9\
+        >\
+        struct tag_of<\
+            tuples::tuple<T0, T1, T2, T3, T4, T5, T6, T7, T8, T9> COMBINATION\
+        >\
+        {\
+            typedef boost_tuple_tag type;\
+        };\
+        \
+        template <class Head, class Tail>\
+        struct tag_of<tuples::cons<Head, Tail> COMBINATION>\
+        {\
+            typedef boost_tuple_tag type;\
+        };\
+        \
+        template <>\
+        struct tag_of<tuples::null_type COMBINATION>\
+        {\
+            typedef boost_tuple_tag type;\
         };
 
-        template <class Head, class Tail>
-        struct tag_of<tuples::cons<Head, Tail> >
-        {
-            typedef boost_tuple_tag type;
-        };
+        TAG_OF_SPECIALIZATION(BOOST_PP_EMPTY(),_);
+        TAG_OF_SPECIALIZATION(const,_);
+        TAG_OF_SPECIALIZATION(const volatile,_);
+        TAG_OF_SPECIALIZATION(volatile,_);
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TAG_OF_SPECIALIZATION,_)
 
-        template <>
-        struct tag_of<tuples::null_type>
-        {
-            typedef boost_tuple_tag type;
-        };   
+#undef TAG_OF_SPECIALIZATION
     }
 }}
 

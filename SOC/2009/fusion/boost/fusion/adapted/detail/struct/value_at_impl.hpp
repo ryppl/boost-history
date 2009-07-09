@@ -11,15 +11,13 @@
 
 #include <boost/fusion/support/assert.hpp>
 
-#include <boost/mpl/if.hpp>
-
 namespace boost { namespace fusion
 {
     struct struct_tag;
 
     namespace extension
     {
-        template<typename T>
+        template<typename SeqRef>
         struct value_at_impl;
 
         template <typename Struct, int N>
@@ -31,16 +29,11 @@ namespace boost { namespace fusion
         template <>
         struct value_at_impl<struct_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
+              : struct_member<typename detail::identity<SeqRef>::type, N::value>
             {
-                static int const n_value = N::value;
-                BOOST_FUSION_INDEX_CHECK(n_value,
-                        extension::struct_size<Sequence>::value);
-
-                typedef typename
-                    extension::struct_member<Sequence, N::value>::type
-                type;
+                //BOOST_FUSION_INDEX_CHECK(N::value, struct_size<Sequence>::value);
             };
         };
     }

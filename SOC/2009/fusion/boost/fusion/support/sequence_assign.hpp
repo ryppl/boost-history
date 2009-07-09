@@ -45,14 +45,14 @@ namespace boost{namespace fusion{
     {
     };
 
-#   define IS_SEQUENCE_ASSIGN(COMBINATION)\
+#   define IS_SEQUENCE_ASSIGN_SPECIALIZATION(COMBINATION,_)\
     template<typename Seq>\
     struct is_sequence_assign<detail::sequence_assign_type<Seq> COMBINATION>\
       : mpl::true_\
     {\
     };
 
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(IS_SEQUENCE_ASSIGN);
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(IS_SEQUENCE_ASSIGN_SPECIALIZATION,_);
 
 #   undef IS_SEQUENCE_ASSIGN
 

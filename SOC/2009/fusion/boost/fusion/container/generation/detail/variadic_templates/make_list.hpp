@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_DETAIL_MAKE_LIST
-#define BOOST_FUSION_CONTAINER_DETAIL_MAKE_LIST
+#ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAKE_LIST_HPP
+#define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAKE_LIST_HPP
 
 #include <boost/fusion/container/list/list.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
@@ -36,4 +36,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

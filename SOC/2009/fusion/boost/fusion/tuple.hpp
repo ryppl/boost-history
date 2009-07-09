@@ -9,9 +9,4 @@
 #define BOOST_FUSION_TUPLE_HPP
 
 #include <boost/fusion/tuple/tuple.hpp>
-#include <boost/fusion/tuple/make_tuple.hpp>
-#include <boost/fusion/tuple/tuple_tie.hpp>
-
-#include <boost/fusion/container/generation/detail/ignore.hpp>
-
 #endif

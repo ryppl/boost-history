@@ -12,11 +12,11 @@
 #include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 
-#include <cstddef>
-#include <boost/config.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/minus.hpp>
+
+#include <cstddef>
 
 namespace boost { namespace fusion
 {
@@ -102,8 +102,8 @@ namespace boost { namespace fusion
         typedef mpl::int_<Pos> index;
         typedef ArrayRef array_type;
 
-        template<typename OtherZipViewIt>
-        array_iterator(OtherZipViewIt const& it)
+        template<typename OtherIt>
+        array_iterator(OtherIt const& it)
           : array(it.array)
         {}
 
@@ -111,9 +111,9 @@ namespace boost { namespace fusion
           : array(&a)
         {}
 
-        template<typename OtherZipViewIt>
+        template<typename OtherIt>
         array_iterator&
-        operator=(OtherZipViewIt const& it)
+        operator=(OtherIt const& it)
         {
             array=it.array;
             return *this;

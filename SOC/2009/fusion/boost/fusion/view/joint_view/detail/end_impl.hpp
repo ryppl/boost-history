@@ -27,18 +27,20 @@ namespace boost { namespace fusion
             template <typename SeqRef>
             struct apply
             {
-                typedef typename
-                    result_of::end<
-                        typename detail::remove_reference<
-                            SeqRef
-                        >::type::seq2_type
-                    >::type
+                typedef
+                    concat_iterator<
+                        typename result_of::end<
+                            typename detail::remove_reference<
+                                SeqRef
+                            >::type::seq2_type
+                        >::type
+                    >
                 type;
 
                 static type
                 call(SeqRef seq)
                 {
-                    return fusion::end(seq.seq2.get());
+                    return type(fusion::end(seq.seq2.get()));
                 }
             };
         };

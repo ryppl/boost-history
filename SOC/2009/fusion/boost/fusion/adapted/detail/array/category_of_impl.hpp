@@ -9,8 +9,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_CATEGORY_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_CATEGORY_OF_IMPL_HPP
 
-#include <boost/config/no_tr1/utility.hpp>
-
 namespace boost { namespace fusion { 
 
     struct array_tag;

@@ -10,14 +10,12 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
-#include <boost/fusion/view/joint_view/detail/deref_impl.hpp>
-#include <boost/fusion/view/joint_view/detail/next_impl.hpp>
-#include <boost/fusion/view/joint_view/detail/value_of_impl.hpp>
 #include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
     struct joint_view_iterator_tag;
+    struct concat_iterator_tag;
     struct forward_traversal_tag;
 
     template <typename First, typename Last, typename Concat>
@@ -38,6 +36,22 @@ namespace boost { namespace fusion
 
         first_type first;
         concat_type concat;
+    };
+
+    template <typename First>
+    struct concat_iterator
+      : iterator_base<concat_iterator<First> >
+    {
+        typedef concat_iterator_tag fusion_tag;
+        typedef forward_traversal_tag category;
+
+        typedef First first_type;
+
+        explicit concat_iterator(First const& first)
+          : first(first)
+        {}
+
+        first_type first;
     };
 }}
 

@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_VECTOR_VECTOR_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_VECTOR_VECTOR_IMPL_HPP
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_VECTOR_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_VECTOR_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
@@ -151,14 +151,14 @@ namespace boost { namespace fusion
         vector()
         {}
 
-#define VECTOR_CTOR(COMBINATION)\
+#define VECTOR_CTOR(COMBINATION,_)\
         vector(vector COMBINATION vec)\
           : base(detail::assign_by_deref(),\
                 fusion::begin(BOOST_FUSION_FORWARD(vector COMBINATION,vec)))\
         {\
         }
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
 
 #undef VECTOR_CTOR
 

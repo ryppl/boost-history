@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_SUPPORT_VARIADIC_QUOTE_HPP
-#define BOOST_FUSION_SUPPORT_VARIADIC_QUOTE_HPP
+#ifndef BOOST_FUSION_SUPPORT_VARIADIC_TEMPLATES_VARIADIC_QUOTE_HPP
+#define BOOST_FUSION_SUPPORT_VARIADIC_TEMPLATES_VARIADIC_QUOTE_HPP
 
 //TODO cschmidt: Are there any compiler that support variadic templates but
 //BOOST_MPL_CFG_NO_HAS_XXX ?!

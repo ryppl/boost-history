@@ -47,14 +47,14 @@ namespace boost { namespace fusion
         //            typename traits::category_of<first_type>::type>::value),
         //    "underlying iterator must be bidirectional");
 
-#define REVERSE_VIEW_CTOR(COMBINATION)\
+#define REVERSE_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeq>\
         reverse_view(reverse_view<OtherSeq> COMBINATION other_view)\
           : seq(BOOST_FUSION_FORWARD(\
                 reverse_view<OtherSeq> COMBINATION,other_view).seq)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(REVERSE_VIEW_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(REVERSE_VIEW_CTOR,_)
 
 #undef REVERSE_VIEW_CTOR
 

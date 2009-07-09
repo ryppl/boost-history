@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_INVOCATION_DETAIL_THAT_PTR_HPP_INCLUDED)
-#define BOOST_FUSION_FUNCTIONAL_INVOCATION_DETAIL_THAT_PTR_HPP_INCLUDED
+#ifndef BOOST_FUSION_FUNCTIONAL_INVOCATION_DETAIL_THAT_PTR_HPP
+#define BOOST_FUSION_FUNCTIONAL_INVOCATION_DETAIL_THAT_PTR_HPP
 
 #include <boost/get_pointer.hpp>
 #include <boost/utility/addressof.hpp>
@@ -84,4 +84,3 @@ namespace boost { namespace fusion { namespace detail
 }}}
 
 #endif
-

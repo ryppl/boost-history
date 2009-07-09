@@ -130,13 +130,13 @@ public:
         map()
         {}
 
-#define MAP_CTOR(COMBINATION)\
+#define MAP_CTOR(COMBINATION,_)\
         map(map COMBINATION map_)\
           : data(BOOST_FUSION_FORWARD(map COMBINATION,map_).data)\
         {\
         }
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MAP_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MAP_CTOR,_)
 
 #undef MAP_CTOR
 
@@ -154,11 +154,11 @@ public:
         {}
 #endif
 
-        template <typename T>
+        template <typename Seq>
         map&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(T) rhs)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
-            data = BOOST_FUSION_FORWARD(T, rhs);
+            data = BOOST_FUSION_FORWARD(Seq, seq);
             return *this;
         }
 

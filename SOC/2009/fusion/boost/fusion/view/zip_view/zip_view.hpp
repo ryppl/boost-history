@@ -132,14 +132,14 @@ namespace boost { namespace fusion {
             fusion::result_of::as_vector<Seqs>::type
         seqs_type;
 
-#define ZIP_VIEW_CTOR(COMBINATION)\
+#define ZIP_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeqs>\
         zip_view(zip_view<OtherSeqs> COMBINATION other_view)\
           : seqs(sequence_assign(BOOST_FUSION_FORWARD(\
                 zip_view<OtherSeqs> COMBINATION,other_view).seqs))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(ZIP_VIEW_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(ZIP_VIEW_CTOR,_)
 
 #undef ZIP_VIEW_CTOR
 

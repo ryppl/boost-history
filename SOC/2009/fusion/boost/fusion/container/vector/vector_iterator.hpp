@@ -28,6 +28,7 @@ namespace boost { namespace fusion
     struct vector_iterator_tag;
     struct random_access_traversal_tag;
 
+    //TODO needed?
     template <typename Vector, int N>
     struct vector_iterator_identity;
 
@@ -48,7 +49,7 @@ namespace boost { namespace fusion
         identity;
 
         template<typename OtherVecIt>
-        vector_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherVecIt) it)
+        vector_iterator(OtherVecIt const& it)
           : vec(it.vec)
         {}
 
@@ -58,7 +59,7 @@ namespace boost { namespace fusion
 
         template<typename OtherVecIt>
         vector_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherVecIt) it)
+        operator=(OtherVecIt const& it)
         {
             vec=it.vec;
             return *this;

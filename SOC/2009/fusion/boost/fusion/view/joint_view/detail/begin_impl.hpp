@@ -42,12 +42,14 @@ namespace boost { namespace fusion
                 typedef typename
                     result_of::begin<typename seq::seq2_type>::type
                 concat_type;
-                typedef result_of::equal_to<first_type, last_type> equal_to;
+                typedef typename
+                    result_of::equal_to<first_type, last_type>::type
+                equal_to;
 
                 typedef typename
                     mpl::if_<
                         equal_to
-                      , concat_type
+                      , concat_iterator<concat_type>
                       , joint_view_iterator<first_type, last_type, concat_type>
                     >::type
                 type;
@@ -55,7 +57,7 @@ namespace boost { namespace fusion
                 static type
                 call(SeqRef seq, mpl::true_)
                 {
-                    return fusion::begin(seq.seq2.get());
+                    return type(fusion::begin(seq.seq2.get()));
                 }
 
                 static type

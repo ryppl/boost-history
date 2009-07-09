@@ -33,20 +33,20 @@ namespace boost { namespace fusion
         typedef Last last_type;
         typedef Pred pred_type;
 
-        template<typename OtherFilterIt>
-        filter_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherFilterIt) it)
-          : first(it.first)
+        template<typename OtherIt>
+        filter_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
         {}
 
         filter_iterator(First const& first,int)
           : first(filter::call(first))
         {}
 
-        template<typename OtherFilterIt>
+        template<typename OtherIt>
         filter_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherFilterIt) it)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
-            first=it.first;
+            first=BOOST_FUSION_FORWARD(OtherIt,it).first;
             return *this;
         }
 

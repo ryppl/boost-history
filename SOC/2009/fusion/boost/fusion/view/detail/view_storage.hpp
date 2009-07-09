@@ -50,13 +50,13 @@ namespace boost { namespace fusion { namespace detail
             >::type
         type;
 
-#define VIEW_STORAGE_CTOR(COMBINATION)\
+#define VIEW_STORAGE_CTOR(COMBINATION,_)\
         template<typename OtherT>\
         view_storage(view_storage<OtherT> COMBINATION storage)\
           : t(get_init_type(storage.get()))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VIEW_STORAGE_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VIEW_STORAGE_CTOR,_)
 
 #undef VIEW_STORAGE_CTOR
 

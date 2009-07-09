@@ -75,13 +75,13 @@ main()
 
     {
         // conversion from boost tuple to vector
-        fusion::vector<int, std::string> v(tuples::make_tuple(123, "Hola!!!"));
+        fusion::vector<int, std::string> v(sequence_assign(tuples::make_tuple(123, "Hola!!!")));
         v = tuples::make_tuple(123, "Hola!!!");
     }
 
     {
         // conversion from boost tuple to list
-        fusion::list<int, std::string> l(tuples::make_tuple(123, "Hola!!!"));
+        fusion::list<int, std::string> l(sequence_assign(tuples::make_tuple(123, "Hola!!!")));
         l = tuples::make_tuple(123, "Hola!!!");
     }
 

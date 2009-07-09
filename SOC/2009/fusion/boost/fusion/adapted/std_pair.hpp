@@ -9,8 +9,11 @@
 #ifndef BOOST_FUSION_ADAPTED_STD_PAIR_HPP
 #define BOOST_FUSION_ADAPTED_STD_PAIR_HPP
 
+#include <boost/fusion/support/ref.hpp>
+
 #include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/adapted/struct.hpp>
+
 #include <boost/mpl/int.hpp>
 #include <boost/config/no_tr1/utility.hpp>
 

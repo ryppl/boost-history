@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_MPL_CATEGORY_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_MPL_CATEGORY_OF_IMPL_HPP
 
+//TODO make detail the very last include
 #include <boost/fusion/support/detail/mpl_iterator_category.hpp>
 
 #include <boost/mpl/begin.hpp>

@@ -16,11 +16,11 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename Seq1, typename Seq2, bool same_size>
+    template <typename Seq1Ref, typename Seq2Ref, bool same_size>
     struct sequence_not_equal_to
     {
-        typedef typename result_of::end<Seq1>::type end1_type;
-        typedef typename result_of::end<Seq2>::type end2_type;
+        typedef typename result_of::end<Seq1Ref>::type end1_type;
+        typedef typename result_of::end<Seq2Ref>::type end2_type;
 
         template <typename It1, typename It2>
         static bool
@@ -31,27 +31,29 @@ namespace boost { namespace fusion { namespace detail
 
         template <typename It1, typename It2>
         static bool
-        call(It1 const& a, It2 const& b, mpl::false_)
+        call(It1 const& it1, It2 const& it2, mpl::false_)
         {
-            return fusion::deref(a) != fusion::deref(b)
-                || call(fusion::next(a), fusion::next(b));
+            return fusion::deref(it1) != fusion::deref(it2) ||
+                   call(fusion::next(it1), fusion::next(it2));
         }
 
         template <typename It1, typename It2>
         static bool
-        call(It1 const& a, It2 const& b)
+        call(It1 const& it1, It2 const& it2)
         {
-            typename result_of::equal_to<It1, end1_type>::type eq;
-            return call(a, b, eq);
+            return call(
+                    it1,
+                    it2,
+                    typename result_of::equal_to<It1, end1_type>::type());
         }
     };
 
-    template <typename Seq1, typename Seq2>
-    struct sequence_not_equal_to<Seq1, Seq2, false>
+    template <typename Seq1Ref, typename Seq2Ref>
+    struct sequence_not_equal_to<Seq1Ref, Seq2Ref, false>
     {
         template <typename It1, typename It2>
         static bool
-        call(It1 const& a, It2 const& b)
+        call(It1 const&, It2 const&)
         {
             return true;
         }

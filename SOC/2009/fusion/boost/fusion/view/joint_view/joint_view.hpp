@@ -22,7 +22,11 @@
 
 #include <boost/fusion/view/joint_view/joint_view_iterator.hpp>
 #include <boost/fusion/view/joint_view/detail/begin_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/deref_impl.hpp>
 #include <boost/fusion/view/joint_view/detail/end_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/equal_to_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/next_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/value_of_impl.hpp>
 
 namespace boost { namespace fusion
 {
@@ -30,13 +34,10 @@ namespace boost { namespace fusion
     struct forward_traversal_tag;
     struct fusion_sequence_tag;
 
-    //TODO cschmidt: not only forward traversal!
-
     template <typename Seq1, typename Seq2>
     struct joint_view
       : sequence_base<joint_view<Seq1, Seq2> >
     {
-        //TODO non_forward_traversal!
         typedef joint_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef forward_traversal_tag category;

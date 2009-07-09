@@ -8,15 +8,9 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_END_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_END_IMPL_HPP
 
-#include <boost/fusion/adapted/boost_tuple/boost_tuple_iterator.hpp>
-#include <boost/mpl/if.hpp>
-#include <boost/type_traits/is_const.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 
-namespace boost { namespace tuples
-{
-    struct null_type;
-}}
-    
 namespace boost { namespace fusion
 {
     struct boost_tuple_tag;
@@ -29,23 +23,37 @@ namespace boost { namespace fusion
         template <>
         struct end_impl<boost_tuple_tag>
         {
-            template <typename Sequence>
+            template <typename>
             struct apply 
             {
-                typedef 
-                    boost_tuple_iterator<
-                        typename mpl::if_<
-                            is_const<Sequence>
-                          , tuples::null_type const
-                          , tuples::null_type
-                        >::type
-                    > 
+                typedef
+                    boost_tuple_iterator<tuples::null_type const volatile&>
                 type;
 
+                //TODO volatile!
+                template<typename Seq>
                 static type
-                call(Sequence& seq)
+                call(Seq const& seq, mpl::true_)
                 {
-                    return type(seq);
+                    return type(seq,0);
+                }
+
+                template<typename Seq>
+                static type
+                call(Seq const& seq, mpl::false_)
+                {
+                    return call(seq.get_tail());
+                }
+
+                template<typename Seq>
+                static type
+                call(Seq const& seq)
+                {
+                    return call(seq,
+                            typename is_convertible<
+                                Seq*
+                              , tuples::null_type const volatile*
+                            >::type());
                 }
             };
         };

@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_DETAIL_VECTOR_TIE
-#define BOOST_FUSION_CONTAINER_DETAIL_VECTOR_TIE
+#ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_VECTOR_TIE_HPP
+#define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_VECTOR_TIE_HPP
 
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
@@ -35,5 +35,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-
-

@@ -29,6 +29,11 @@ namespace boost { namespace fusion
                 >
             {};
         };
+
+        template <>
+        struct value_of_impl<concat_iterator_tag>
+          : value_of_impl<joint_view_iterator_tag>
+        {};
     }
 }}
 

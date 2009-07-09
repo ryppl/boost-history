@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_MAP_CONVERT_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_MAP_CONVERT_IMPL_HPP
+#ifndef BOOST_FUSION_CONTAINER_MAP_DETAIL_CONVERT_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_MAP_DETAIL_CONVERT_IMPL_HPP
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>

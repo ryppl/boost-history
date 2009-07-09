@@ -26,13 +26,13 @@ namespace boost { namespace fusion { namespace detail
         typedef T type;
     };
 
-#define CV_REF_SPECIALISATION(COMBINATION)\
+#define CV_REF_SPECIALISATION(COMBINATION,_)\
     template <typename T>\
     struct as_fusion_element<T COMBINATION>\
       : as_fusion_element<T>\
     {};
 
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALISATION)
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALISATION,_)
 
 #undef CV_REF_SPECIALISATION
 

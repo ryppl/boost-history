@@ -31,16 +31,19 @@ namespace boost { namespace fusion
             struct apply
             {
                 typedef typename detail::remove_reference<ItRef>::type it;
+
                 typedef typename it::first_type first_type;
                 typedef typename it::last_type last_type;
                 typedef typename it::concat_type concat_type;
                 typedef typename result_of::next<first_type>::type next_type;
-                typedef result_of::equal_to<next_type, last_type> equal_to;
+                typedef typename
+                    result_of::equal_to<next_type, last_type>::type
+                equal_to;
 
                 typedef typename
                     mpl::if_<
                         equal_to
-                      , concat_type
+                      , concat_iterator<concat_type>
                       , joint_view_iterator<next_type, last_type, concat_type>
                     >::type
                 type;
@@ -48,7 +51,7 @@ namespace boost { namespace fusion
                 static type
                 call(ItRef it, mpl::true_)
                 {
-                    return it.concat;
+                    return type(it.concat);
                 }
 
                 static type
@@ -61,6 +64,30 @@ namespace boost { namespace fusion
                 call(ItRef it)
                 {
                     return call(it, equal_to());
+                }
+            };
+        };
+
+        template <>
+        struct next_impl<concat_iterator_tag>
+        {
+            template <typename ItRef>
+            struct apply
+            {
+                typedef
+                    concat_iterator<
+                        typename result_of::next<
+                            typename detail::remove_reference<
+                                ItRef
+                            >::type::first_type
+                        >::type
+                    >
+                type;
+
+                static type
+                call(ItRef it)
+                {
+                    return type(fusion::next(it.first));
                 }
             };
         };

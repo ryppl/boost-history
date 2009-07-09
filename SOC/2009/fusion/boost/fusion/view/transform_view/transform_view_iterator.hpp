@@ -35,11 +35,10 @@ namespace boost { namespace fusion
         typedef transform_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<first_type>::type category;
 
-        template<typename OtherTransformViewIt>
-        transform_view_iterator(
-                BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
-          : first(it.first)
-          , f(it.f)
+        template<typename OtherIt>
+        transform_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
+          , f(BOOST_FUSION_FORWARD(OtherIt,it).f)
         {}
 
         transform_view_iterator(First const& first, transform_type f)
@@ -47,12 +46,12 @@ namespace boost { namespace fusion
           , f(&f)
         {}
 
-        template<typename OtherTransformViewIt>
+        template<typename OtherIt>
         transform_view_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
-            first=it.first;
-            f=it.f;
+            first=BOOST_FUSION_FORWARD(OtherIt,it).first;
+            f=BOOST_FUSION_FORWARD(OtherIt,it).f;
             return *this;
         }
 
@@ -74,12 +73,12 @@ namespace boost { namespace fusion
         typedef transform_view_iterator2_tag fusion_tag;
         typedef typename traits::category_of<first1_type>::type category;
 
-        template<typename OtherTransformViewIt>
+        template<typename OtherIt>
         transform_view_iterator2(
-                BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
-          : first1(it.first1)
-          , first2(it.first2)
-          , f(it.f)
+                BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : first1(BOOST_FUSION_FORWARD(OtherIt,it).first1)
+          , first2(BOOST_FUSION_FORWARD(OtherIt,it).first2)
+          , f(BOOST_FUSION_FORWARD(OtherIt,it).f)
         {}
 
         transform_view_iterator2(First1 const& first1,
@@ -90,13 +89,13 @@ namespace boost { namespace fusion
           , f(&f)
         {}
 
-        template<typename OtherTransformViewIt>
+        template<typename OtherIt>
         transform_view_iterator2&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformViewIt) it)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
-            first1=it.first1;
-            first2=it.first2;
-            f=it.f;
+            first1=BOOST_FUSION_FORWARD(OtherIt,it).first1;
+            first2=BOOST_FUSION_FORWARD(OtherIt,it).first2;
+            f=BOOST_FUSION_FORWARD(OtherIt,it).f;
             return *this;
         }
 

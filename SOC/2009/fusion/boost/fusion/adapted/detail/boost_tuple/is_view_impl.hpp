@@ -10,6 +10,8 @@
 
 #include <boost/mpl/bool.hpp>
 
+//TODO: implement through is_sequence
+
 namespace boost { namespace fusion 
 {
     struct boost_tuple_tag;
@@ -22,7 +24,7 @@ namespace boost { namespace fusion
         template<>
         struct is_view_impl<boost_tuple_tag>
         {
-            template<typename T>
+            template<typename SeqRef>
             struct apply
               : mpl::false_
             {};

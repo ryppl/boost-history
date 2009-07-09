@@ -30,7 +30,6 @@ namespace boost { namespace fusion
         : sequence_base<vector<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)> >
     {
     private:
-
         typedef typename detail::vector_n_chooser<
             BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>::type
         vector_n;
@@ -39,7 +38,6 @@ namespace boost { namespace fusion
         friend struct vector;
 
     public:
-
         typedef typename vector_n::types types;
         typedef typename vector_n::fusion_tag fusion_tag;
         typedef typename vector_n::tag tag;

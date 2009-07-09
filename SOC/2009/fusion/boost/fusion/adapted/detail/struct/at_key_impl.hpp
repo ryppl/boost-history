@@ -9,43 +9,32 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_AT_KEY_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_AT_KEY_IMPL_HPP
 
-#include <boost/fusion/support/detail/access.hpp>
-
 namespace boost { namespace fusion
 {
     struct struct_tag;
 
     namespace extension
     {
-        template<typename T>
+        template <typename Tag>
         struct at_key_impl;
-
-        template <typename Struct, typename Key>
-        struct struct_assoc_member;
 
         template <>
         struct at_key_impl<struct_tag>
         {
-            template <typename Sequence, typename Key>
+            template <typename SeqRef, typename Key>
             struct apply
             {
-                typedef typename
-                extension::struct_assoc_member<Sequence, Key>
-                element;
+                typedef typename detail::identity<SeqRef>::type seq;
+                typedef typename struct_assoc_member<seq, Key>::type element;
 
                 typedef typename
-                    mpl::eval_if<
-                        is_const<Sequence>
-                      , detail::cref_result<element>
-                      , detail::ref_result<element>
-                    >::type
+                    detail::result_of_forward_as<SeqRef,element>::type
                 type;
 
                 static type
-                call(Sequence& seq)
+                call(SeqRef seq_)
                 {
-                    return extension::
-                        struct_assoc_member<Sequence, Key>::call(seq);
+                    return struct_assoc_member<seq, Key>::call(seq_);
                 }
             };
         };

@@ -5,6 +5,7 @@
 
 //TODO Authors???
 
+//TODO!!!
 #include <boost/tr1/memory.hpp>
 #include <boost/tr1/tuple.hpp>
 #include <boost/any.hpp>
@@ -18,7 +19,7 @@ namespace Core
 
     public:
         AutoConverter(std::tr1::shared_ptr<boost::any> const & t)
-            : t_(t)
+          : t_(t)
         {}
 
         template <typename C>
@@ -44,14 +45,12 @@ namespace Core
         }
     };
 
-
     inline AutoConverter Demo()
     {
         std::tr1::shared_ptr<boost::any> p_result
             (new boost::any(std::tr1::make_tuple(1, 2, 3, 4)));
         return p_result;
     }
-
 } // namespace Core
 
 

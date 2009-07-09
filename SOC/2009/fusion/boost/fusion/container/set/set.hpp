@@ -103,13 +103,13 @@ namespace boost { namespace fusion
         set()
         {}
 
-#define SET_CTOR(COMBINATION)\
+#define SET_CTOR(COMBINATION,_)\
         set(set COMBINATION set_)\
           : data(BOOST_FUSION_FORWARD(set COMBINATION,set_).data)\
         {\
         }
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SET_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SET_CTOR,_)
 
 #undef SET_CTOR
 
@@ -127,11 +127,11 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template <typename T>
+        template <typename Seq>
         set&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(T) rhs)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
-            data = BOOST_FUSION_FORWARD(T, rhs);
+            data = BOOST_FUSION_FORWARD(Seq, seq);
             return *this;
         }
 

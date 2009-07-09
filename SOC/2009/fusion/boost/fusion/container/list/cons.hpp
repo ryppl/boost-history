@@ -96,7 +96,7 @@ namespace boost { namespace fusion
 
         //cschmidt: iterators so we do not have to deal with the cv-ness
         //of cons_.car/cons_.cdr explicitly
-#define CONS_CTOR(COMBINATION)\
+#define CONS_CTOR(COMBINATION,_)\
         cons(cons COMBINATION cons_)\
           : car(fusion::front(BOOST_FUSION_FORWARD(cons COMBINATION,cons_)))\
           , cdr(detail::assign_by_deref(),\
@@ -104,7 +104,7 @@ namespace boost { namespace fusion
                         BOOST_FUSION_FORWARD(cons COMBINATION,cons_))))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CONS_CTOR);
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CONS_CTOR,_);
 
 #undef CONS_CTOR
 
@@ -120,8 +120,7 @@ namespace boost { namespace fusion
         //cschmidt: rvalue ref if possible, so this does not collide with
         //cons(OtherCar&&,OtherCdr&&)
         template<typename It>
-        cons(detail::assign_by_deref,
-             BOOST_FUSION_R_ELSE_CLREF(It) it)
+        cons(detail::assign_by_deref,BOOST_FUSION_R_ELSE_LREF(It) it)
           : car(fusion::deref(it))
           , cdr(detail::assign_by_deref(),fusion::next(it))
         {}

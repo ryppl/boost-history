@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#if !defined(BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_FUNCTION_OBJECT_HPP_INCLUDED)
-#define BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_FUNCTION_OBJECT_HPP_INCLUDED
+#ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_FUNCTION_OBJECT_HPP
+#define BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_FUNCTION_OBJECT_HPP
 
 #include <boost/type_traits/add_reference.hpp>
 
@@ -87,4 +87,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

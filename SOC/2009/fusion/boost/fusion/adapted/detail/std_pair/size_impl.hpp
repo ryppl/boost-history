@@ -17,7 +17,7 @@ namespace boost { namespace fusion {
 
     namespace extension
     {
-        template<typename T>
+        template<typename Tag>
         struct size_impl;
 
         template <>

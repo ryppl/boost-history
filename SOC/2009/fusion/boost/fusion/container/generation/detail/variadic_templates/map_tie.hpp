@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_DETAIL_MAP_TIE
-#define BOOST_FUSION_CONTAINER_DETAIL_MAP_TIE
+#ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAP_TIE_HPP
+#define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAP_TIE_HPP
 
 #include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
@@ -84,4 +84,3 @@ namespace boost { namespace fusion
 }}
 
 #endif
-

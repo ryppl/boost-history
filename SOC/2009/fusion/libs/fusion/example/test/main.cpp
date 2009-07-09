@@ -12,6 +12,7 @@
 #include <boost/fusion/algorithm.hpp>
 #include <boost/fusion/container.hpp>
 #include <boost/fusion/view.hpp>
+#include <boost/fusion/adapted.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 

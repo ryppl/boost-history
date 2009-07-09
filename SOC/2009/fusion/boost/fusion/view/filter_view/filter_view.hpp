@@ -40,13 +40,13 @@ namespace boost { namespace fusion
         typedef typename detail::view_storage<Seq>::type seq_type;
         typedef Pred pred_type;
 
-#define FILTER_VIEW_CTOR(COMBINATION)\
+#define FILTER_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeq>\
         filter_view(filter_view<OtherSeq, Pred> COMBINATION view)\
           : seq(static_cast<filter_view<OtherSeq, Pred> COMBINATION>(view).seq)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(FILTER_VIEW_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(FILTER_VIEW_CTOR,_)
 
 #undef FILTER_VIEW_CTOR
 

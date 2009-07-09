@@ -35,7 +35,7 @@ namespace boost { namespace fusion
                 static type
                 call(SeqRef seq)
                 {
-                    return *advance<N>(seq.first);
+                    return fusion::deref(advance<N>(seq.first));
                 }
             };
         };

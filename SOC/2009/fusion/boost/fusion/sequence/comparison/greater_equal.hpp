@@ -11,10 +11,9 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
-#include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/sequence/comparison/detail/enable_comparison.hpp>
 
-#if defined(FUSION_DIRECT_OPERATOR_USAGE)
+#include <boost/fusion/sequence/comparison/detail/enable_comparison.hpp>
+#ifdef FUSION_DIRECT_OPERATOR_USAGE
 #include <boost/fusion/sequence/comparison/detail/greater_equal.hpp>
 #else
 #include <boost/fusion/sequence/comparison/less.hpp>
@@ -24,13 +23,16 @@ namespace boost { namespace fusion
 {
     template <typename Seq1, typename Seq2>
     inline bool
-    greater_equal(Seq1 const& a, Seq2 const& b)
+    greater_equal(Seq1 const& seq1, Seq2 const& seq2)
     {
-#if defined(FUSION_DIRECT_OPERATOR_USAGE)
-        return detail::sequence_greater_equal<Seq1 const, Seq2 const>::
-            call(fusion::begin(a), fusion::begin(b));
+#ifdef FUSION_DIRECT_OPERATOR_USAGE
+        return
+            detail::sequence_greater_equal<
+                Seq1 const&
+              , Seq2 const&
+            >::call(fusion::begin(seq1), fusion::begin(seq2));
 #else
-        return !(a < b);
+        return !(seq1 < seq2);
 #endif
     }
 
@@ -39,12 +41,12 @@ namespace boost { namespace fusion
         template <typename Seq1, typename Seq2>
         inline typename
             enable_if<
-                detail::enable_comparison<Seq1, Seq2>
+                detail::enable_comparison<Seq1 const&, Seq2 const&>
               , bool
             >::type
-        operator>=(Seq1 const& a, Seq2 const& b)
+        operator>=(Seq1 const& seq1, Seq2 const& seq2)
         {
-            return fusion::greater_equal(a, b);
+            return fusion::greater_equal(seq1, seq2);
         }
     }
     using operators::operator>=;

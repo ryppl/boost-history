@@ -11,7 +11,6 @@
 
 #include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
-#include <boost/fusion/adapted/struct/extension.hpp>
 
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
@@ -25,77 +24,96 @@ namespace boost { namespace fusion
 {
     struct random_access_traversal_tag;
 
-    template <typename Struct, int N_>
+    template <typename SeqRef, int N>
     struct struct_iterator
-        : iterator_facade<struct_iterator<Struct, N_>, random_access_traversal_tag>
+      : iterator_facade<struct_iterator<SeqRef, N>, random_access_traversal_tag>
     {
-        BOOST_FUSION_INDEX_CHECK(N,extension::struct_size<Struct>::value);
+        //BOOST_FUSION_INDEX_CHECK(N,struct_size<SeqRef>::value);
 
-        typedef mpl::int_<N_> index;
-        typedef Struct struct_type;
-
-        struct_iterator(Struct& struct_)
-            : struct_(struct_) {}
-        Struct& struct_;
-
-        template <typename Iterator>
+        template <typename ItRef>
         struct value_of
-            : extension::struct_member<Struct, N_>
-        {
-        };
+          : extension::struct_member<SeqRef, N>
+        {};
 
-        template <typename Iterator>
+        template <typename ItRef>
         struct deref
         {
+            typedef typename detail::identity<SeqRef>::type identity_struct;
+
             typedef typename
-                add_reference<
-                    typename extension::struct_member<Struct, N_>::type
+                detail::result_of_forward_as<
+                    SeqRef
+                  , typename extension::struct_member<identity_struct, N>::type
                 >::type
             type;
 
             static type
-            call(Iterator const& iter)
+            call(ItRef it)
             {
-                return extension::struct_member<Struct, N_>::
-                    call(iter.struct_);
+                return extension::struct_member<identity_struct, N>::call(
+                        *it.struct_);
             }
         };
 
-        template <typename Iterator, typename N>
+        template <typename ItRef, typename N_>
         struct advance
         {
-            typedef typename Iterator::index index;
-            typedef typename Iterator::struct_type struct_type;
-            typedef struct_iterator<struct_type, index::value + N::value> type;
+            typedef typename detail::remove_reference<ItRef>::type it;
 
-            static type
-            call(Iterator const& iter)
-            {
-                return type(iter.struct_);
-            }
-        };
-
-        template <typename Iterator>
-        struct next : advance<Iterator, mpl::int_<1> > {};
-
-        template <typename Iterator>
-        struct prior : advance<Iterator, mpl::int_<-1> > {};
-
-        template <typename I1, typename I2>
-        struct distance : mpl::minus<typename I2::index, typename I1::index>
-        {
-            typedef typename
-                mpl::minus<
-                    typename I2::index, typename I1::index
-                >::type
+            typedef
+                struct_iterator<
+                    typename it::struct_type
+                  , it::index::value + N_::value
+                >
             type;
 
             static type
-            call(I1 const&, I2 const&)
+            call(ItRef it)
             {
-                return type();
+                return type(*it.struct_,0);
             }
         };
+
+        typedef mpl::int_<N> index;
+        typedef SeqRef struct_type;
+
+        template <typename ItRef>
+        struct next
+          : advance<ItRef, mpl::int_<1> >
+        {};
+
+        template <typename ItRef>
+        struct prior
+          : advance<ItRef, mpl::int_<-1> >
+        {};
+
+        template <typename It1Ref, typename It2Ref>
+        struct distance
+          : mpl::minus<
+                typename detail::remove_reference<It2Ref>::type::index
+              , typename detail::remove_reference<It1Ref>::type::index
+            >
+        {
+        };
+
+        template<typename OtherIt>
+        struct_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+          : struct_(it.struct_)
+        {}
+
+        struct_iterator(SeqRef struct_,int)
+          : struct_(&struct_)
+        {}
+
+        template<typename OtherIt>
+        struct_iterator&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        {
+            struct_=it.struct_;
+            return *this;
+        }
+
+        typename detail::remove_reference<SeqRef>::type* struct_;
     };
 }}
 

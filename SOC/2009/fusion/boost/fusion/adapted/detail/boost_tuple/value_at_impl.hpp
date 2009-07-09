@@ -8,23 +8,24 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_VALUE_AT_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_VALUE_AT_IMPL_HPP
 
-#include <boost/tuple/tuple.hpp>
-
 namespace boost { namespace fusion
 {
     struct boost_tuple_tag;
 
     namespace extension
     {
-        template<typename T>
+        template<typename Tag>
         struct value_at_impl;
 
         template <>
         struct value_at_impl<boost_tuple_tag>
         {
-            template <typename Sequence, typename N>
+            template <typename SeqRef, typename N>
             struct apply
-              : tuples::element<N::value, Sequence>
+              : tuples::element<
+                    N::value
+                  , typename detail::identity<SeqRef>::type
+                >
             {};
         };
     }

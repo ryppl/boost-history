@@ -9,8 +9,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_END_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_END_IMPL_HPP
 
-#include <boost/fusion/adapted/struct/struct_iterator.hpp>
-
 namespace boost { namespace fusion
 {
     struct struct_tag;
@@ -20,26 +18,25 @@ namespace boost { namespace fusion
         template <typename Tag>
         struct end_impl;
 
-        template <typename Struct>
-        struct struct_size;
-
         template <>
         struct end_impl<struct_tag>
         {
-            template <typename Sequence>
+            template <typename SeqRef>
             struct apply
             {
                 typedef
                     struct_iterator<
-                        Sequence
-                      , struct_size<Sequence>::value
+                        SeqRef
+                      , struct_size<
+                            typename detail::identity<SeqRef>::type
+                        >::value
                     >
                 type;
 
                 static type
-                call(Sequence& v)
+                call(SeqRef seq)
                 {
-                    return type(v);
+                    return type(seq,0);
                 }
             };
         };

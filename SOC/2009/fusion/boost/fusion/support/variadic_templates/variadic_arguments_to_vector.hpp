@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_SUPPORT_VARIADIC_ARGUMENTS_TO_VECTOR_HPP
-#define BOOST_FUSION_SUPPORT_VARIADIC_ARGUMENTS_TO_VECTOR_HPP
+#ifndef BOOST_FUSION_SUPPORT_VARIADIC_TEMPLATES_VARIADIC_ARGUMENTS_TO_VECTOR_HPP
+#define BOOST_FUSION_SUPPORT_VARIADIC_TEMPLATES_VARIADIC_ARGUMENTS_TO_VECTOR_HPP
 
 //workaround to get variadic template arguments into fixed-length template
 //argument list. We definitely need a boost config macro for this issue though.

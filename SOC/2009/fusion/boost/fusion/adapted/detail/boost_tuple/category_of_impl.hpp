@@ -15,13 +15,13 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename T>
+        template<typename Tag>
         struct category_of_impl;
 
         template<>
         struct category_of_impl<boost_tuple_tag>
         {
-            template<typename T>
+            template<typename SeqRef>
             struct apply
             {
                 typedef forward_traversal_tag type;

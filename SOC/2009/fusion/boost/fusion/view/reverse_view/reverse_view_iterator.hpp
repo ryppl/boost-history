@@ -10,15 +10,17 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/assert.hpp>
+
+#include <boost/type_traits/is_base_of.hpp>
+
 #include <boost/fusion/view/reverse_view/detail/deref_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/next_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/prior_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/advance_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/distance_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/value_of_impl.hpp>
-#include <boost/fusion/support/assert.hpp>
-
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/fusion/view/reverse_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {

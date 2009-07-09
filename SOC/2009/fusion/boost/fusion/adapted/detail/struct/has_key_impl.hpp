@@ -20,20 +20,24 @@ namespace boost { namespace fusion {
     {
         struct no_such_member;
 
-        template<typename T>
+        template<typename Tag>
         struct has_key_impl;
-
-        template<typename Struct, typename Key>
-        struct struct_assoc_member;
 
         template<>
         struct has_key_impl<struct_tag>
         {
-            template<typename Sequence, typename Key>
+            template<typename SeqRef, typename Key>
             struct apply
-                : mpl::not_<is_same<no_such_member, typename struct_assoc_member<Sequence, Key>::type> >
-            {
-            };
+              : mpl::not_<
+                    is_same<
+                        no_such_member
+                      , typename struct_assoc_member<
+                            typename detail::identity<SeqRef>::type
+                          , Key
+                        >::type
+                    >
+                >
+            {};
         };
     }
 }}

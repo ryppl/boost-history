@@ -23,7 +23,10 @@
 #include <boost/fusion/sequence/comparison/greater.hpp>
 #include <boost/fusion/sequence/comparison/greater_equal.hpp>
 #include <boost/fusion/support/is_view.hpp>
+
 #include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
+
 #include <iostream>
 #include <string>
 
@@ -93,14 +96,14 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p = {5, 3};
-        fusion::vector<int, short> v(p);
+        fusion::vector<int, short> v(sequence_assign(p));
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p = {5, 3};
-        fusion::list<int, short> l(p);
+        fusion::list<int, short> l(sequence_assign(p));
         l = p;
     }
 

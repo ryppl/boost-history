@@ -32,7 +32,7 @@ namespace boost { namespace fusion
         typedef Cons cons_type;
 
         template<typename OtherIt>
-        cons_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        cons_iterator(OtherIt const& it)
           : cons(it.cons)
         {}
 
@@ -42,7 +42,7 @@ namespace boost { namespace fusion
 
         template<typename OtherIt>
         cons_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) other_it)
+        operator=(OtherIt const& other_it)
         {
             cons=other_it.cons;
             return *this;
@@ -65,7 +65,7 @@ namespace boost { namespace fusion
         {}
     };
 
-#define NIL_ITERATOR(COMBINATION)\
+#define NIL_ITERATOR(COMBINATION,_)\
       template <>\
       struct cons_iterator<nil COMBINATION>\
         : nil_iterator\
@@ -77,7 +77,7 @@ namespace boost { namespace fusion
           {}\
       };
 
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(NIL_ITERATOR)
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(NIL_ITERATOR,_)
 
 #undef NIL_ITERATOR
 }}

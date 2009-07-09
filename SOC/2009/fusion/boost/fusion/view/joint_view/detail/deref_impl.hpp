@@ -40,6 +40,11 @@ namespace boost { namespace fusion
                 }
             };
         };
+
+        template <>
+        struct deref_impl<concat_iterator_tag>
+          : deref_impl<joint_view_iterator_tag>
+        {};
     }
 }}
 

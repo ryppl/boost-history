@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_VECTOR_AS_VECTOR_HPP
-#define BOOST_FUSION_CONTAINER_VECTOR_AS_VECTOR_HPP
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_AS_VECTOR_IMPL_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_AS_VECTOR_IMPL_HPP
 
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/end.hpp>

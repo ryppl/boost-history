@@ -8,18 +8,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_STRUCT_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_STRUCT_HPP
 
-#include <boost/fusion/support/tag_of_fwd.hpp>
-#include <boost/fusion/adapted/struct/extension.hpp>
-#include <boost/fusion/adapted/struct/struct_iterator.hpp>
-#include <boost/fusion/adapted/struct/detail/is_view_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/is_sequence_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/category_of_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/begin_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/end_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/size_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/at_impl.hpp>
-#include <boost/fusion/adapted/struct/detail/value_at_impl.hpp>
-
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
 #include <boost/preprocessor/seq/for_each_i.hpp>
@@ -27,13 +15,12 @@
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/cat.hpp>
+
 #include <boost/mpl/int.hpp>
-#include <boost/config/no_tr1/utility.hpp>
 
 #define BOOST_FUSION_ADAPT_STRUCT(name, bseq)                                   \
     BOOST_FUSION_ADAPT_STRUCT_I(                                                \
-        name, BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_X bseq, 0))                \
-    /***/
+        name, BOOST_PP_CAT(BOOST_FUSION_ADAPT_STRUCT_X bseq, 0))
 
 #define BOOST_FUSION_ADAPT_STRUCT_X(x, y) ((x, y)) BOOST_FUSION_ADAPT_STRUCT_Y
 #define BOOST_FUSION_ADAPT_STRUCT_Y(x, y) ((x, y)) BOOST_FUSION_ADAPT_STRUCT_X
@@ -44,33 +31,18 @@
 // SEQ_FOR_EACH_I to generate the "linear" substructures.
 // Thanks to Paul Mensonides for the PP macro help
 
+#define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(COMBINATION, name)      \
+    template <>                                                                 \
+    struct tag_of<name COMBINATION>                                             \
+    {                                                                           \
+        typedef struct_tag type;                                                \
+    };                                                                          \
+
 #define BOOST_FUSION_ADAPT_STRUCT_I(name, seq)                                  \
-    namespace boost { namespace fusion { namespace traits                       \
-    {                                                                           \
-        template <>                                                             \
-        struct tag_of<name>                                                     \
-        {                                                                       \
-            typedef struct_tag type;                                            \
-        };                                                                      \
-    }}}                                                                         \
-    namespace boost { namespace fusion { namespace extension                    \
-    {                                                                           \
-        template <>                                                             \
-        struct struct_size<name> : mpl::int_<BOOST_PP_SEQ_SIZE(seq)> {};        \
-        BOOST_PP_SEQ_FOR_EACH_I(BOOST_FUSION_ADAPT_STRUCT_C, name, seq)         \
-    }}}                                                                         \
-    /***/
+    BOOST_FUSION_ADAPT_STRUCT_BASE(name, seq)                                   \
+    BOOST_PP_SEQ_FOR_EACH_I(BOOST_FUSION_ADAPT_STRUCT_C, name, seq)
 
 #define BOOST_FUSION_ADAPT_STRUCT_C(r, name, i, xy)                             \
-    template <>                                                                 \
-    struct struct_member<name, i>                                               \
-    {                                                                           \
-        typedef BOOST_PP_TUPLE_ELEM(2, 0, xy) type;                             \
-        static type& call(name& struct_)                                        \
-        {                                                                       \
-            return struct_.BOOST_PP_TUPLE_ELEM(2, 1, xy);                       \
-        };                                                                      \
-    };                                                                          \
-    /***/
+    BOOST_FUSION_ADAPT_STRUCT_C_BASE(r, name, i, xy, 2)
 
 #endif

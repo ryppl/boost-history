@@ -20,13 +20,13 @@ public:
     BOOST_PP_CAT(vector, N)()
     {}
 
-#define VECTOR_CTOR(COMBINATION)\
+#define VECTOR_CTOR(COMBINATION,_)\
     BOOST_PP_CAT(vector, N)(BOOST_PP_CAT(vector, N) COMBINATION vec)\
       : base(sequence_assign(\
             BOOST_FUSION_FORWARD(BOOST_PP_CAT(vector, N) COMBINATION,vec)))\
     {}
 
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR)
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
 
 #undef VECTOR_CTOR
 

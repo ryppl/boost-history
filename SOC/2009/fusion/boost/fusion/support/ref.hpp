@@ -38,11 +38,11 @@
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) ARGUMENT
 
-#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO)\
-        MACRO(&)\
-        MACRO(const &)\
-        MACRO(volatile&)\
-        MACRO(const volatile&)
+#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
+        MACRO(&,ARG)\
+        MACRO(const&,ARG)\
+        MACRO(volatile&,ARG)\
+        MACRO(const volatile&,ARG)
 #else
 #   include <utility>
 
@@ -57,15 +57,15 @@
     //cschmidt: This macro could be workaround with a single function using
     //enable if and is_convertible. This is a lot slower than five overloads/
     //specialisations though.
-#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO)\
-        MACRO(&)\
-        MACRO(const&)\
-        MACRO(volatile&)\
-        MACRO(const volatile&)\
-        MACRO(&&)\
-        MACRO(const&&)\
-        MACRO(volatile&&)\
-        MACRO(const volatile&&)
+#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
+        MACRO(&,ARG)\
+        MACRO(const&,ARG)\
+        MACRO(volatile&,ARG)\
+        MACRO(const volatile&,ARG)\
+        MACRO(&&,ARG)\
+        MACRO(const&&,ARG)\
+        MACRO(volatile&&,ARG)\
+        MACRO(const volatile&&,ARG)
 #endif
 
 namespace boost { namespace fusion { namespace detail
@@ -158,8 +158,8 @@ namespace boost { namespace fusion { namespace detail
         typedef typename boost::remove_cv<T>::type const& type;
     };
 
+    //TODO cschmidt: volatile support
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    //TODO cschmidt: !!!
     template <typename,typename Type>
     struct result_of_forward_as
     {

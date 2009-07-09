@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_TIE
-#define BOOST_FUSION_CONTAINER_LIST_TIE
+#ifndef BOOST_FUSION_CONTAINER_GENERATION_LIST_TIE_HPP
+#define BOOST_FUSION_CONTAINER_GENERATION_LIST_TIE_HPP
 
 #include <boost/config.hpp>
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

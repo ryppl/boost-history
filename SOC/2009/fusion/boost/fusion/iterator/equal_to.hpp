@@ -22,18 +22,10 @@ namespace boost { namespace fusion
 
     namespace extension
     {
+        //TODO: doc no default any more!
+
         template <typename Tag>
-        struct equal_to_impl
-        {
-            // default implementation
-            template <typename It1Ref, typename It2Ref>
-            struct apply
-              : is_same<
-                    typename detail::identity<It1Ref>::type
-                  , typename detail::identity<It2Ref>::type
-                >
-            {};
-        };
+        struct equal_to_impl;
 
         template <>
         struct equal_to_impl<iterator_facade_tag>

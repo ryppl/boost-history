@@ -23,7 +23,7 @@ namespace boost { namespace fusion
         template<>
         struct is_view_impl<struct_tag>
         {
-            template<typename T>
+            template<typename SeqRef>
             struct apply
               : mpl::false_
             {};

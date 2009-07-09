@@ -17,22 +17,19 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename T>
+        template<typename SeqRef>
         struct value_at_key_impl;
-
-        template <typename Struct, typename Key>
-        struct struct_assoc_member;
 
         template <>
         struct value_at_key_impl<struct_tag>
         {
-            template <typename Sequence, typename Key>
+            template <typename SeqRef, typename Key>
             struct apply
-            {
-                typedef typename
-                    extension::struct_assoc_member<Sequence, Key>::type
-                type;
-            };
+              : struct_assoc_member<
+                    typename detail::identity<SeqRef>::type
+                  , Key
+                >
+            {};
         };
     }
 }}

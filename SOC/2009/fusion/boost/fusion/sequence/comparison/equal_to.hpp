@@ -19,12 +19,15 @@ namespace boost { namespace fusion
 {
     template <typename Seq1, typename Seq2>
     inline bool
-    equal_to(Seq1 const& a, Seq2 const& b)
+    equal_to(Seq1 const& seq1, Seq2 const& seq2)
     {
-        return result_of::size<Seq1>::value == result_of::size<Seq2>::value
-            && detail::sequence_equal_to<Seq1 const, Seq2 const
-            , result_of::size<Seq1>::value == result_of::size<Seq2>::value>::
-            call(fusion::begin(a), fusion::begin(b));
+        return
+            detail::sequence_equal_to<
+                Seq1 const&
+              , Seq2 const&
+              , result_of::size<Seq1 const&>::value==
+                    result_of::size<Seq2 const&>::value
+            >::call(fusion::begin(seq1), fusion::begin(seq2));
     }
 
     namespace operators
@@ -32,12 +35,12 @@ namespace boost { namespace fusion
         template <typename Seq1, typename Seq2>
         inline typename
             enable_if<
-                detail::enable_equality<Seq1, Seq2>
+                detail::enable_equality<Seq1 const&, Seq2 const&>
               , bool
             >::type
-        operator==(Seq1 const& a, Seq2 const& b)
+        operator==(Seq1 const& seq1, Seq2 const& seq2)
         {
-            return fusion::equal_to(a, b);
+            return fusion::equal_to(seq1, seq2);
         }
     }
     using operators::operator==;

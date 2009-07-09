@@ -14,18 +14,24 @@
 #include <boost/fusion/view/single_view/detail/deref_impl.hpp>
 #include <boost/fusion/view/single_view/detail/next_impl.hpp>
 #include <boost/fusion/view/single_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/single_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {
     struct single_view_iterator_tag;
     struct forward_traversal_tag;
 
+    struct void_;
+
+    //TODO???
     template <typename SingleView>
     struct single_view_iterator_end
       : iterator_base<single_view_iterator_end<SingleView> >
     {
         typedef single_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
+
+        typedef void_ view_type;
     };
 
     template <typename SingleViewRef>

@@ -16,9 +16,6 @@ namespace boost { namespace fusion
 {
     struct reverse_view_tag;
 
-    template <typename First>
-    struct reverse_view_iterator;
-
     namespace extension
     {
         template <typename Tag>

@@ -47,12 +47,12 @@ namespace boost { namespace fusion
           : val()
         {}
 
-#define SINGLE_VIEW_CTOR(COMBINATION)\
+#define SINGLE_VIEW_CTOR(COMBINATION,_)\
         single_view(single_view COMBINATION view)\
           : val(BOOST_FUSION_FORWARD(single_view COMBINATION,view).val)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SINGLE_VIEW_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SINGLE_VIEW_CTOR,_)
 
 #undef SINGLE_VIEW_CTOR
 

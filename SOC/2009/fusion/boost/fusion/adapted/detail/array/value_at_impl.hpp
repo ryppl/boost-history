@@ -15,7 +15,7 @@ namespace boost { namespace fusion {
 
     namespace extension
     {
-        template<typename T>
+        template<typename Tag>
         struct value_at_impl;
 
         template <>

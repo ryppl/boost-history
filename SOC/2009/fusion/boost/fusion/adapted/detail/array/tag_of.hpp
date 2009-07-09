@@ -27,15 +27,18 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-#define TAG_OF_SPECIALIZATION(COMBINATION)\
+#define TAG_OF_SPECIALIZATION(COMBINATION,_)\
         template<typename T, std::size_t N>\
         struct tag_of<boost::array<T,N> COMBINATION>\
         {\
             typedef array_tag type;\
         };
 
-        TAG_OF_SPECIALIZATION(BOOST_PP_EMPTY());
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TAG_OF_SPECIALIZATION)
+        TAG_OF_SPECIALIZATION(BOOST_PP_EMPTY(),_);
+        TAG_OF_SPECIALIZATION(const,_);
+        TAG_OF_SPECIALIZATION(const volatile,_);
+        TAG_OF_SPECIALIZATION(volatile,_);
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TAG_OF_SPECIALIZATION,_)
 
 #undef TAG_OF_SPECIALIZATION
     }

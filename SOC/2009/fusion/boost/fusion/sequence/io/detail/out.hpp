@@ -69,8 +69,13 @@ namespace boost { namespace fusion { namespace detail
         static void
         call(OS& os, First const& first, Last const& last)
         {
-            result_of::equal_to<First, Last> eq;
-            call(os, first, last, eq);
+            call(os,
+                    first,
+                    last,
+                    typename result_of::equal_to<
+                        First const&
+                      , Last const&
+                    >::type());
         }
     };
 

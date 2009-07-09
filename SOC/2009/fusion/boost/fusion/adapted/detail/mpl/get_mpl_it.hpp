@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_ADAPTED_MPL_DETAIL_GET_MPL_IT_HPP
-#define BOOST_FUSION_ADAPTED_MPL_DETAIL_GET_MPL_IT_HPP
+#ifndef BOOST_FUSION_ADAPTED_DETAIL_MPL_GET_MPL_IT_HPP
+#define BOOST_FUSION_ADAPTED_DETAIL_MPL_GET_MPL_IT_HPP
 
 namespace boost { namespace fusion { namespace detail
 {

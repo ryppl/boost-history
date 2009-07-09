@@ -56,23 +56,29 @@ namespace boost { namespace fusion { namespace detail
         static void
         call(IS& is, First const& first, Last const& last, mpl::false_)
         {
-            result_of::equal_to<
-                typename result_of::next<First>::type
-              , Last
-            >
+            typedef typename
+                result_of::equal_to<
+                    typename result_of::next<First>::type
+                  , Last
+                >::type
             is_last;
 
             is >> fusion::deref(first);
-            delimiter_in<tuple_delimiter_tag>::read(is, " ", is_last);
-            call(is, fusion::next(first), last, is_last);
+            delimiter_in<tuple_delimiter_tag>::read(is, " ", is_last());
+            call(is, fusion::next(first), last, is_last());
         }
 
         template <typename IS, typename First, typename Last>
         static void
         call(IS& is, First const& first, Last const& last)
         {
-            result_of::equal_to<First, Last> eq;
-            call(is, first, last, eq);
+            call(is,
+                    first,
+                    last,
+                    typename result_of::equal_to<
+                        First const&
+                      , Last const&
+                    >::type());
         }
     };
 

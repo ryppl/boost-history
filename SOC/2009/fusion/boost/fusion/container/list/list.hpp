@@ -41,16 +41,14 @@ namespace boost { namespace fusion
         typedef typename storage_type::size size;
 
         list()
-          : data()
         {}
 
-#define LIST_CTOR(COMBINATION)\
+#define LIST_CTOR(COMBINATION,_)\
         list(list COMBINATION list_)\
           : data(BOOST_FUSION_FORWARD(list COMBINATION,list_).data)\
-        {\
-        }
+        {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(LIST_CTOR)
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(LIST_CTOR,_)
 
 #undef LIST_CTOR
 
@@ -68,11 +66,11 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template <typename T>
+        template <typename Seq>
         list&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(T) rhs)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
-            data = BOOST_FUSION_FORWARD(T, rhs);
+            data = BOOST_FUSION_FORWARD(Seq, seq);
             return *this;
         }
 
