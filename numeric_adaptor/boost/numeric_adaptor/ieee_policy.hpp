@@ -32,20 +32,30 @@ struct ieee_policy : public default_policy<ieee_policy<T>, T>
     typedef T value_type;
 
     template <typename OtherType>
-    static inline void set(value_type& value, OtherType const& v)   { value = v; } //boost::numeric_cast<T>(v); }
+    static inline void set(value_type& value, OtherType const& v)
+    { value = v; } //boost::numeric_cast<T>(v); }
 
-    static inline void set(value_type& value, std::string const& v) { value = boost::lexical_cast<T>(v); }
+    static inline void set(value_type& value, std::string const& v)
+    { value = boost::lexical_cast<T>(v); }
 
-    static inline void abs(value_type& r, value_type const& a) { r = std::abs(a); }
-    static inline void hypot(value_type& r, value_type const& a, value_type const& b)
+    static inline void abs(ieee_policy& r, ieee_policy const& a)
+    { r.value = std::abs(a.value); }
+
+    static inline void hypot(ieee_policy& r, ieee_policy const& a, ieee_policy const& b)
     {
-        r = boost::math::hypot(a, b);
+        r.value = boost::math::hypot(a.value, b.value);
     }
 
     template <typename OtherType>
     static inline OtherType big_numeric_cast(value_type const& v)
     {
         return boost::numeric_cast<OtherType>(v);
+    }
+
+    template <typename OtherType>
+    static inline OtherType big_numeric_cast(ieee_policy const& v)
+    {
+        return boost::numeric_cast<OtherType>(v.value);
     }
 };
 

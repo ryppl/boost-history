@@ -49,40 +49,40 @@ struct cln_policy : public default_policy<cln_policy, cln::cl_F>
         //value = cln::cl_float(atof(v.c_str()), cln::float_format(256));
     }
 
-    static inline void abs(value_type& r, value_type const& a)
+    static inline void abs(cln_policy& r, cln_policy const& a)
     {
-        r = cln::abs(a);
+        r.value = cln::abs(a.value);
     }
 
 
-    static inline void sqrt(value_type& r, value_type const& a)
+    static inline void sqrt(cln_policy& r, cln_policy const& a)
     {
-        r = cln::sqrt(a);
+        r.value = cln::sqrt(a.value);
     }
 
-    static inline void cos(value_type& r, value_type const& a)
+    static inline void cos(cln_policy& r, cln_policy const& a)
     {
-        r = cln::cos(a);
+        r.value = cln::cos(a.value);
     }
 
-    static inline void sin(value_type& r, value_type const& a)
+    static inline void sin(cln_policy& r, cln_policy const& a)
     {
-        r = cln::sin(a);
+        r.value = cln::sin(a.value);
     }
 
-    static inline void tan(value_type& r, value_type const& a)
+    static inline void tan(cln_policy& r, cln_policy const& a)
     {
-        r = cln::tan(a);
+        r.value = cln::tan(a.value);
     }
 
-    static inline void atan(value_type& r, value_type const& a)
+    static inline void atan(cln_policy& r, cln_policy const& a)
     {
-        r = cln::atan(a);
+        r.value = cln::atan(a.value);
     }
 
-    static inline void hypot(value_type& r, value_type const& a, value_type const& b)
+    static inline void hypot(cln_policy& r, cln_policy const& a, cln_policy const& b)
     {
-        r = cln::sqrt(a * a + b * b);
+        r.value = cln::sqrt(a.value * a.value + b.value * b.value);
     }
 
 

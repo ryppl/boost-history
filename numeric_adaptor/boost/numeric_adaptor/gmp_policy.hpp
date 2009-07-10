@@ -51,69 +51,69 @@ struct gmp_policy: default_policy<gmp_policy, mpf_t>
 
     // TODO should we add specific overloads for function like mpf_add_ui?
 
-    static inline void add(value_type& r, value_type const& a, value_type const& b)
+    static inline void add(gmp_policy& r, gmp_policy const& a, gmp_policy const& b)
     {
-        mpf_add(r, a, b);
+        mpf_add(r.value, a.value, b.value);
     }
 
-    static inline void add(value_type& a, value_type const& b)
+    static inline void add(gmp_policy& a, gmp_policy const& b)
     {
-        mpf_add(a, a, b);
+        mpf_add(a.value, a.value, b.value);
     }
 
-    static inline void subtract(value_type& r, value_type const& a, value_type const& b)
+    static inline void subtract(gmp_policy& r, gmp_policy const& a, gmp_policy const& b)
     {
-        mpf_sub(r, a, b);
+        mpf_sub(r.value, a.value, b.value);
     }
 
-    static inline void subtract(value_type& a, value_type const& b)
+    static inline void subtract(gmp_policy& a, gmp_policy const& b)
     {
-        mpf_sub(a, a, b);
+        mpf_sub(a.value, a.value, b.value);
     }
 
-    static inline void multiply(value_type& r, value_type const& a, value_type const& b)
+    static inline void multiply(gmp_policy& r, gmp_policy const& a, gmp_policy const& b)
     {
-        mpf_mul(r, a, b);
+        mpf_mul(r.value, a.value, b.value);
     }
 
-    static inline void multiply(value_type& a, value_type const& b)
+    static inline void multiply(gmp_policy& a, gmp_policy const& b)
     {
-        mpf_mul(a, a, b);
+        mpf_mul(a.value, a.value, b.value);
     }
 
-    static inline void divide(value_type& r, value_type const& a, value_type const& b)
+    static inline void divide(gmp_policy& r, gmp_policy const& a, gmp_policy const& b)
     {
-        mpf_div(r, a, b);
+        mpf_div(r.value, a.value, b.value);
     }
 
-    static inline void divide(value_type& a, value_type const& b)
+    static inline void divide(gmp_policy& a, gmp_policy const& b)
     {
-        mpf_div(a, a, b);
+        mpf_div(a.value, a.value, b.value);
     }
 
-    static inline void neg(value_type& r, value_type const& n)
+    static inline void neg(gmp_policy& r, gmp_policy const& n)
     {
-        mpf_neg(r, n);
+        mpf_neg(r.value, n.value);
     }
 
-    static inline void abs(value_type& r, value_type const& a)
+    static inline void abs(gmp_policy& r, gmp_policy const& a)
     {
-        mpf_abs(r, a);
+        mpf_abs(r.value, a.value);
     }
 
-    static inline void sqrt(value_type& r, value_type const& a)
+    static inline void sqrt(gmp_policy& r, gmp_policy const& a)
     {
-        mpf_sqrt(r, a);
+        mpf_sqrt(r.value, a.value);
     }
 
-    static inline void hypot(value_type& r, value_type const& a, value_type const& b)
+    static inline void hypot(gmp_policy& r, gmp_policy const& a, gmp_policy const& b)
     {
-        mpf_mul(r, a, a);
+        mpf_mul(r.value, a.value, a.value);
         value_type t;
         mpf_init(t);
-        mpf_mul(t, b, b);
-        mpf_add(t, r, t);
-        mpf_sqrt(r, t);
+        mpf_mul(t, b.value, b.value);
+        mpf_add(t, r.value, t);
+        mpf_sqrt(r.value, t);
         mpf_clear(t);
     }
 
@@ -122,6 +122,12 @@ struct gmp_policy: default_policy<gmp_policy, mpf_t>
     static inline OtherType big_numeric_cast(value_type const& b)
     {
         return mpf_get_d(b);
+    }
+
+    template <typename OtherType>
+    static inline OtherType big_numeric_cast(gmp_policy const& b)
+    {
+        return mpf_get_d(b.value);
     }
 
 

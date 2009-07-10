@@ -130,15 +130,14 @@ struct numeric_adaptor:
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::add(r, a.value, b.value);
-        return numeric_adaptor<Policy>(r, true);
+        numeric_adaptor<Policy> r;
+        Policy::add(r, a, b);
+        return r;
     }
 
     numeric_adaptor<Policy>& operator+=(numeric_adaptor<Policy> const& other)
     {
-        Policy::add(Policy::value, other.value);
+        Policy::add(*this, other);
         return *this;
     }
 
@@ -146,15 +145,14 @@ struct numeric_adaptor:
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::multiply(r, a.value, b.value);
-        return numeric_adaptor<Policy>(r, true);
+        numeric_adaptor<Policy> r;
+        Policy::multiply(r, a, b);
+        return r;
     }
 
     numeric_adaptor<Policy>& operator*=(numeric_adaptor<Policy> const& other)
     {
-        Policy::multiply(Policy::value, other.value);
+        Policy::multiply(*this, other);
         return *this;
     }
 
@@ -162,15 +160,14 @@ struct numeric_adaptor:
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::subtract(r, a.value, b.value);
-        return numeric_adaptor<Policy>(r, true);
+        numeric_adaptor<Policy> r;
+        Policy::subtract(r, a, b);
+        return r;
     }
 
     numeric_adaptor<Policy>& operator-=(numeric_adaptor<Policy> const& other)
     {
-        Policy::subtract(Policy::value, other.value);
+        Policy::subtract(*this, other);
         return *this;
     }
 
@@ -178,24 +175,22 @@ struct numeric_adaptor:
         numeric_adaptor<Policy> const& a,
         numeric_adaptor<Policy> const& b)
     {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::divide(r, a.value, b.value);
-        return numeric_adaptor<Policy>(r, true);
+        numeric_adaptor<Policy> r;
+        Policy::divide(r, a, b);
+        return r;
     }
 
     numeric_adaptor<Policy>& operator/=(numeric_adaptor<Policy> const& other)
     {
-        Policy::divide(Policy::value, other.value);
+        Policy::divide(*this, other);
         return *this;
     }
 
     friend inline numeric_adaptor<Policy> operator-(numeric_adaptor<Policy> const& n)
     {
-        typename Policy::value_type r;
-        Policy::init(r);
-        Policy::neg(r, n.value);
-        return numeric_adaptor<Policy>(r, true);
+        numeric_adaptor<Policy> r;
+        Policy::neg(r, n);
+        return r;
     }
 
     // Construct from a policy-type. Bool (or any other signature changing parameter)
@@ -211,55 +206,49 @@ struct numeric_adaptor:
 template <typename Policy>
 inline numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const& v)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::abs(r, v.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::abs(r, v);
+    return r;
 }
 
 template <typename Policy>
 inline numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const& v)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::sqrt(r, v.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::sqrt(r, v);
+    return r;
 }
 
 template <typename Policy>
 inline numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const& v)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::cos(r, v.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::cos(r, v);
+    return r;
 }
 
 template <typename Policy>
 inline numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const& v)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::sin(r, v.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::sin(r, v);
+    return r;
 }
 
 template <typename Policy>
 inline numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const& v)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::tan(r, v.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::tan(r, v);
+    return r;
 }
 
 template <typename Policy>
 inline numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const& v)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::atan(r, v.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::atan(r, v);
+    return r;
 }
 
 
@@ -267,10 +256,9 @@ template <typename Policy>
 inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
                                      numeric_adaptor<Policy> const& b)
 {
-    typename Policy::value_type r;
-    Policy::init(r);
-    Policy::hypot(r, a.value, b.value);
-    return numeric_adaptor<Policy>(r, true);
+    numeric_adaptor<Policy> r;
+    Policy::hypot(r, a, b);
+    return r;
 }
 
 

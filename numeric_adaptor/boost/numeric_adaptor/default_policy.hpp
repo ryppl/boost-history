@@ -22,8 +22,6 @@ struct default_policy
 {
     typedef T value_type;
 
-    value_type value;
-
     // Default no initialization or pre-destruction is necessary
     static inline void init(T& value) {}
     static inline void destruct(T& value) {}
@@ -32,53 +30,53 @@ struct default_policy
     static inline void copy(T const& source, T& dest) { dest = source; }
 
     // The default policy uses the default operators +, -, *, /
-    static inline void add(value_type& r, const value_type& a, const value_type& b)
-    { r = a + b; }
-    static inline void add(value_type& a, const value_type& b)
-    { a += b; }
-    static inline void subtract(value_type& r, const value_type& a, const value_type& b)
-    { r = a - b; }
-    static inline void subtract(value_type& a, const value_type& b)
-    { a -= b; }
-    static inline void multiply(value_type& r, const value_type& a, const value_type& b)
-    { r = a * b; }
-    static inline void multiply(value_type& a, const value_type& b)
-    { a *= b; }
-    static inline void divide(value_type& r, const value_type& a, const value_type& b)
-    { r = a / b; }
-    static inline void divide(value_type& a, const value_type& b)
-    { a /= b; }
-    static inline void neg(value_type& r, const value_type& n)
-    { r = -n; }
+    static inline void add(default_policy& r, const default_policy& a, const default_policy& b)
+    { r.value = a.value + b.value; }
+    static inline void add(default_policy& a, const default_policy& b)
+    { a.value += b.value; }
+    static inline void subtract(default_policy& r, const default_policy& a, const default_policy& b)
+    { r.value = a.value - b.value; }
+    static inline void subtract(default_policy& a, const default_policy& b)
+    { a.value -= b.value; }
+    static inline void multiply(default_policy& r, const default_policy& a, const default_policy& b)
+    { r.value = a.value * b.value; }
+    static inline void multiply(default_policy& a, const default_policy& b)
+    { a.value *= b.value; }
+    static inline void divide(default_policy& r, const default_policy& a, const default_policy& b)
+    { r.value = a.value / b.value; }
+    static inline void divide(default_policy& a, const default_policy& b)
+    { a.value /= b.value; }
+    static inline void neg(default_policy& r, const default_policy& n)
+    { r.value = -n.value; }
 
-    static inline void cos(value_type& r, value_type const& a)
+    static inline void cos(default_policy& r, default_policy const& a)
     {
-        double d = Derived::template big_numeric_cast<double>(a);
-        Derived::set(r, std::cos(d));
+        double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
+        Derived::set(r.value, std::cos(d));
     }
 
-    static inline void sin(value_type& r, value_type const& a)
+    static inline void sin(default_policy& r, default_policy const& a)
     {
-        double d = Derived::template big_numeric_cast<double>(a);
-        Derived::set(r, std::sin(d));
+        double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
+        Derived::set(r.value, std::sin(d));
     }
 
-    static inline void tan(value_type& r, value_type const& a)
+    static inline void tan(default_policy& r, default_policy const& a)
     {
-        double d = Derived::template big_numeric_cast<double>(a);
-        Derived::set(r, std::tan(d));
+        double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
+        Derived::set(r.value, std::tan(d));
     }
 
-    static inline void atan(value_type& r, value_type const& a)
+    static inline void atan(default_policy& r, default_policy const& a)
     {
-        double d = Derived::template big_numeric_cast<double>(a);
-        Derived::set(r, std::atan(d));
+        double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
+        Derived::set(r.value, std::atan(d));
     }
 
-    static inline void sqrt(value_type& r, value_type const& a)
+    static inline void sqrt(default_policy& r, default_policy const& a)
     {
-        double d = Derived::template big_numeric_cast<double>(a);
-        Derived::set(r, std::sqrt(d));
+        double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
+        Derived::set(r.value, std::sqrt(d));
     }
 
     // Default use the comparison operators
@@ -93,6 +91,9 @@ struct default_policy
         out << std::setprecision(20) << a;
         return out.str();
     }
+
+protected:
+    value_type value;
 };
 
 
