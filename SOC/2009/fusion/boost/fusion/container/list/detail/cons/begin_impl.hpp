@@ -9,34 +9,26 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_BEGIN_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_BEGIN_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    template <typename Cons>
-    struct cons_iterator;
-
-    namespace extension
+    template <>
+    struct begin_impl<cons_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<cons_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef cons_iterator<SeqRef> type;
+            typedef cons_iterator<SeqRef> type;
 
-                static type
-                call(SeqRef t)
-                {
-                    return type(t,0);
-                }
-            };
+            static type
+            call(SeqRef t)
+            {
+                return type(t,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

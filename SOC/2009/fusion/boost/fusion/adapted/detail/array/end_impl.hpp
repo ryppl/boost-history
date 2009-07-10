@@ -9,38 +9,31 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_END_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_END_IMPL_HPP
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template <typename Tag>
+    struct end_impl;
 
-    struct array_tag;
-
-    namespace extension
+    template <>
+    struct end_impl<array_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<array_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply 
+            typedef
+                array_iterator<
+                    SeqRef
+                  , detail::remove_reference<SeqRef>::type::static_size
+                >
+            type;
+
+            static type
+            call(SeqRef seq)
             {
-                typedef
-                    array_iterator<
-                        SeqRef
-                      , detail::remove_reference<
-                            SeqRef
-                        >::type::static_size
-                    >
-                type;
-    
-                static type
-                call(SeqRef seq)
-                {
-                    return type(seq,0);
-                }
-            };
+                return type(seq,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

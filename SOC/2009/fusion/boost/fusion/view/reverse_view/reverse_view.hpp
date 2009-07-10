@@ -21,13 +21,20 @@
 #include <boost/type_traits/is_base_of.hpp>
 #include <boost/mpl/bool.hpp>
 
-#include <boost/fusion/view/reverse_view/reverse_view_iterator.hpp>
+#include <boost/fusion/view/reverse_view/detail/reverse_view_fwd.hpp>
+#include <boost/fusion/view/reverse_view/detail/reverse_view_iterator.hpp>
 #include <boost/fusion/view/reverse_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/end_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/deref_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/next_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/prior_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/advance_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/distance_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {
-    struct reverse_view_tag;
     struct fusion_sequence_tag;
 
     template <typename Seq>

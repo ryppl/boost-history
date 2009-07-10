@@ -22,9 +22,14 @@
 #include <boost/mpl/int.hpp>
 #include <boost/utility/enable_if.hpp>
 
-#include <boost/fusion/view/single_view/single_view_iterator.hpp>
+#include <boost/fusion/view/single_view/detail/single_view_fwd.hpp>
+#include <boost/fusion/view/single_view/detail/single_view_iterator.hpp>
 #include <boost/fusion/view/single_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/single_view/detail/end_impl.hpp>
+#include <boost/fusion/view/single_view/detail/deref_impl.hpp>
+#include <boost/fusion/view/single_view/detail/next_impl.hpp>
+#include <boost/fusion/view/single_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/single_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {

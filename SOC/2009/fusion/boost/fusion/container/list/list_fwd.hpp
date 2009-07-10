@@ -13,9 +13,10 @@
 
 namespace boost { namespace fusion
 {
+    struct list_tag;
+
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_LIST_SIZE)
     struct list;
 }}
-
 
 #endif

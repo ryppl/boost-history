@@ -10,27 +10,21 @@
 
 #include <boost/fusion/iterator/value_of.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct filter_view_iterator_tag;
+    template <typename Tag>
+    struct value_of_impl;
 
-    namespace extension
+    template <>
+    struct value_of_impl<filter_view_iterator_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        template <>
-        struct value_of_impl<filter_view_iterator_tag>
-        {
-            template <typename ItRef>
-            struct apply
-              : result_of::value_of<
-                    typename detail::remove_reference<ItRef>::type::first_type
-                >
-            {
-            };
-        };
-    }
-}}
+        template <typename ItRef>
+        struct apply
+          : result_of::value_of<
+                typename detail::remove_reference<ItRef>::type::first_type
+            >
+        {};
+    };
+}}}
 
 #endif

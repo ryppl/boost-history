@@ -8,46 +8,41 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_DEREF_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_DEREF_IMPL_HPP
 
-#include <boost/type_traits/is_const.hpp>
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/eval_if.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct vector_iterator_tag;
+    template <typename Tag>
+    struct deref_impl;
 
-    namespace extension
+    template <>
+    struct deref_impl<vector_iterator_tag>
     {
-        template <typename Tag>
-        struct deref_impl;
-
-        template <>
-        struct deref_impl<vector_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename detail::remove_reference<ItRef>::type it;
-                typedef typename it::vector vector;
-                typedef typename
-                    mpl::at<
-                        typename detail::remove_reference<vector>::type::types
+            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename it::vector vector;
+
+            typedef
+                typename detail::forward_as<
+                    vector
+                  , typename mpl::at<
+                        typename detail::remove_reference<
+                            vector
+                        >::type::types
                       , typename it::index
                     >::type
-                element;
+                >::type
+            type;
 
-                typedef typename
-                    detail::result_of_forward_as<vector,element>::type
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return it.vec->at_impl(typename it::index());
-                }
-            };
+            static type
+            call(ItRef it)
+            {
+                return it.vec->at_impl(typename it::index());
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

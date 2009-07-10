@@ -12,42 +12,38 @@
 #include <boost/fusion/support/iterator_adapter.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct list_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    namespace extension
+    template <>
+    struct begin_impl<list_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<list_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef typename
-                    detail::result_of_forward_as<SeqRef
-                      , typename detail::remove_reference<SeqRef>::type::storage_type
+            typedef
+                iterator_adapter<
+                    typename result_of::begin<
+                        typename detail::forward_as<
+                            SeqRef
+                          , typename detail::remove_reference<
+                                SeqRef
+                            >::type::storage_type
+                        >::type
                     >::type
-                storage_type;
+                  , forward_traversal_tag
+                >
+            type;
 
-                typedef
-                    iterator_adapter<
-                        typename result_of::begin<storage_type>::type
-                      , forward_traversal_tag
-                    >
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return type(fusion::begin(seq.get_data()),0);
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(fusion::begin(seq.get_data()),0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

@@ -36,7 +36,7 @@ namespace boost { namespace fusion
 
         template <class Seq> 
         inline typename result_of::invoke_function_object<func_const_fwd_t,
-            Seq const>::type operator()(Seq const & s) const
+            Seq const>::type operator()(Seq const& s) const
         {
           return fusion::invoke_function_object<
               func_const_fwd_t >(this->fnc_transformed,s);
@@ -45,7 +45,7 @@ namespace boost { namespace fusion
         template <class Seq> 
         inline typename result_of::invoke_function_object<func_fwd_t,
             Seq const>::type 
-        operator()(Seq const & s) 
+        operator()(Seq const& s) 
         {
           return fusion::invoke_function_object<
               func_fwd_t >(this->fnc_transformed,s);

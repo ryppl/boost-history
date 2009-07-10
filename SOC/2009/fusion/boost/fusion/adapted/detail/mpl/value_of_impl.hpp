@@ -10,24 +10,19 @@
 
 #include <boost/mpl/deref.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct value_of_impl;
 
-    namespace extension
+    template <>
+    struct value_of_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        template <>
-        struct value_of_impl<mpl_iterator_tag>
-        {
-            template <typename ItRef>
-            struct apply
-              : mpl::deref<typename detail::identity<ItRef>::type>
-            {};
-        };
-    }
-}}
+        template <typename ItRef>
+        struct apply
+          : mpl::deref<typename detail::identity<ItRef>::type>
+        {};
+    };
+}}}
 
 #endif

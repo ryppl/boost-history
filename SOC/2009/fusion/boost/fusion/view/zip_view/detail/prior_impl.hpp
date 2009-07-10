@@ -18,10 +18,8 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_iterator_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         struct poly_prior

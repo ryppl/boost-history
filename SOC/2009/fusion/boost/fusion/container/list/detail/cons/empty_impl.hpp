@@ -10,29 +10,19 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_tag;
+    template <typename Tag>
+    struct empty_impl;
 
-    struct nil;
-
-    template <typename Car, typename Cdr>
-    struct cons;
-
-    namespace extension
+    template <>
+    struct empty_impl<cons_tag>
     {
-        template <typename Tag>
-        struct empty_impl;
-
-        template <>
-        struct empty_impl<cons_tag>
-        {
-            template <typename Seq>
-            struct apply
-              : boost::is_same<typename detail::identity<Seq>::type, nil>
-            {};
-        };
-    }
-}}
+        template <typename Seq>
+        struct apply
+          : boost::is_same<typename detail::identity<Seq>::type, nil>
+        {};
+    };
+}}}
 
 #endif

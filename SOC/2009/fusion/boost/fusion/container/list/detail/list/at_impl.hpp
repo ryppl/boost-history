@@ -8,40 +8,36 @@
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct list_tag;
+    template <typename Tag>
+    struct at_impl;
 
-    namespace extension
+    template <>
+    struct at_impl<list_tag>
     {
-        template <typename Tag>
-        struct at_impl;
-
-        template <>
-        struct at_impl<list_tag>
+        template <typename SeqRef, typename N>
+        struct apply
         {
-            template <typename SeqRef, typename N>
-            struct apply
-            {
-                typedef typename
-                    detail::result_of_forward_as<
+            typedef typename
+                result_of::at<
+                    typename detail::forward_as<
                         SeqRef
-                      , typename detail::remove_reference<SeqRef>::type::storage_type
-                   >::type
-                storage_type;
+                      , typename detail::remove_reference<
+                            SeqRef
+                        >::type::storage_type
+                    >::type
+                  , N
+                >::type
+            type;
 
-                typedef typename
-                    result_of::at<storage_type,N>::type
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return fusion::at<N>(seq.get_data());
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return fusion::at<N>(seq.get_data());
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

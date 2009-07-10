@@ -9,81 +9,71 @@
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_BEGIN_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    template <typename First, typename F>
-    struct transform_view_iterator;
+    template <typename Tag>
+    struct begin_impl;
 
-    template <typename First1, typename First2, typename F>
-    struct transform_view_iterator2;
-
-    namespace extension
+    // Unary Version
+    template <>
+    struct begin_impl<transform_view_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        // Unary Version
-        template <>
-        struct begin_impl<transform_view_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
+            typedef typename
+                detail::remove_reference<SeqRef>::type
+            seq;
+
+            typedef
+                transform_view_iterator<
+                    typename result_of::begin<typename seq::seq_type>::type
+                  , typename detail::forward_as<
+                        SeqRef
+                      , typename seq::transform_type
+                    >::type
+                >
+            type;
+
+            static type
+            call(SeqRef seq)
             {
-                typedef typename
-                    detail::remove_reference<SeqRef>::type
-                seq;
-
-                typedef
-                    transform_view_iterator<
-                        typename result_of::begin<typename seq::seq_type>::type
-                      , typename detail::result_of_forward_as<
-                            SeqRef
-                          , typename seq::transform_type
-                        >::type
-                    >
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return type(fusion::begin(seq.seq.get()), seq.f);
-                }
-            };
+                return type(fusion::begin(seq.seq.get()), seq.f);
+            }
         };
+    };
 
-        // Binary Version
-        template <>
-        struct begin_impl<transform_view2_tag>
+    // Binary Version
+    template <>
+    struct begin_impl<transform_view2_tag>
+    {
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
+            typedef typename detail::remove_reference<SeqRef>::type seq;
+
+            typedef
+                transform_view_iterator2<
+                    typename result_of::begin<typename seq::seq1_type>::type
+                  , typename result_of::begin<typename seq::seq2_type>::type
+                  , typename detail::forward_as<
+                        SeqRef
+                      , typename seq::transform_type
+                    >::type
+                >
+            type;
+
+            static type
+            call(SeqRef seq)
             {
-                typedef typename detail::remove_reference<SeqRef>::type seq;
-
-                typedef
-                    transform_view_iterator2<
-                        typename result_of::begin<typename seq::seq1_type>::type
-                      , typename result_of::begin<typename seq::seq2_type>::type
-                      , typename detail::result_of_forward_as<
-                            SeqRef
-                          , typename seq::transform_type
-                        >::type
-                    >
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return type(
-                            fusion::begin(seq.seq1.get()),
-                            fusion::begin(seq.seq2.get()),
-                            seq.f);
-                }
-            };
+                return type(
+                        fusion::begin(seq.seq1.get()),
+                        fusion::begin(seq.seq2.get()),
+                        seq.f);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

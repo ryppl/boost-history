@@ -9,24 +9,19 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_SIZE_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_SIZE_IMPL_HPP
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct size_impl;
 
-    struct array_tag;
-
-    namespace extension
+    template<>
+    struct size_impl<array_tag>
     {
-        template<typename Tag>
-        struct size_impl;
-
-        template<>
-        struct size_impl<array_tag>
-        {
-            template<typename SeqRef>
-            struct apply
-              : mpl::int_<detail::remove_reference<SeqRef>::type::static_size>
-            {};
-        };
-    }
-}}
+        template<typename SeqRef>
+        struct apply
+          : mpl::int_<detail::remove_reference<SeqRef>::type::static_size>
+        {};
+    };
+}}}
 
 #endif

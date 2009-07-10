@@ -18,7 +18,7 @@ namespace boost { namespace fusion
 
     template <typename T>
     struct is_fusion_iterator
-      : is_base_of<iterator_root, typename detail::remove_reference<T>::type>
+      : is_base_of<iterator_root, typename detail::identity<T>::type>
     {};
 }}
 

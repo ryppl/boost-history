@@ -277,7 +277,7 @@ Constructors can be called applying __boost_func_factory__.
         class Sequence
         >
     typename __result_of_invoke__<Function, Sequence const>::type
-    invoke(Function f, Sequence const & s);
+    invoke(Function f, Sequence const& s);
 
 [heading Parameters]
 [table
@@ -345,7 +345,7 @@ implemented).
         class Sequence
         >
     typename __result_of_invoke_procedure__<Function, Sequence const>::type
-    invoke_procedure(Function f, Sequence const & s);
+    invoke_procedure(Function f, Sequence const& s);
 
 [heading Parameters]
 [table
@@ -405,7 +405,7 @@ Constructors can be called applying __boost_func_factory__.
         class Sequence
         >
     typename __result_of_invoke_function_object__<Function, Sequence const>::type
-    invoke_function_object(Function f, Sequence const & s);
+    invoke_function_object(Function f, Sequence const& s);
 
 [heading Parameters]
 [table
@@ -703,10 +703,10 @@ is not implemented).
 
 [heading Example]
     template<class SequenceOfSequences, class Func>
-    void n_ary_for_each(SequenceOfSequences const & s, Func const & f)
+    void n_ary_for_each(SequenceOfSequences const& s, Func const& f)
     {
         __for_each__(__zip_view__<SequenceOfSequences>(s),
-            fused_procedure<Func const &>(f));
+            fused_procedure<Func const&>(f));
     }
 
     void try_it()
@@ -780,11 +780,11 @@ is held by value, the adapter is const).
 [heading Example]
     template<class SeqOfSeqs, class Func>
     typename __result_of_transform__< zip_view<SeqOfSeqs> const,
-        fused_function_object<Func const &> >::type
-    n_ary_transform(SeqOfSeqs const & s, Func const & f)
+        fused_function_object<Func const&> >::type
+    n_ary_transform(SeqOfSeqs const& s, Func const& f)
     {
         return __transform__(zip_view<SeqOfSeqs>(s),
-            fused_function_object<Func const &>(f));
+            fused_function_object<Func const&>(f));
     }
 
     struct sub
@@ -894,7 +894,7 @@ object is held by value, the adapter is const.
         };
 
         template <class Seq>
-        void operator()(Seq const & s) const
+        void operator()(Seq const& s) const
         {
             __for_each__(s,++boost::lambda::_1);
         }
@@ -986,7 +986,7 @@ signature is optimized automatically to avoid by-value parameters.]
         typedef void result_type; // for simplicity
 
         template <typename T>
-        void operator()(T & lhs, T const & rhs) const
+        void operator()(T & lhs, T const& rhs) const
         {
             lhs += rhs;
         }
@@ -997,14 +997,14 @@ signature is optimized automatically to avoid by-value parameters.]
     {
         Tie tie_dest;
     public:
-        explicit fused_parallel_adder(Tie const & dest)
+        explicit fused_parallel_adder(Tie const& dest)
             : tie_dest(dest)
         { }
 
         typedef void result_type;
 
         template <class Seq>
-        void operator()(Seq const & s) const
+        void operator()(Seq const& s) const
         {
             for_each( zip(tie_dest,s), fused<add_assign>() );
         }
@@ -1026,7 +1026,7 @@ signature is optimized automatically to avoid by-value parameters.]
         };
 
         template <class Seq>
-        typename result< void(Seq) >::type operator()(Seq const & tie)
+        typename result< void(Seq) >::type operator()(Seq const& tie)
         {
             return typename result< void(Seq) >::type(
                 fused_parallel_adder<Seq>(tie) );
@@ -1086,7 +1086,7 @@ __element_conversion__ is applied to the target function.
 [heading Synopsis]
     template <typename F>
     inline typename __result_of_make_fused__<F>::type
-    make_fused(F const & f);
+    make_fused(F const& f);
 
 [heading Parameters]
 [table
@@ -1135,7 +1135,7 @@ The usual __element_conversion__ applied to the target function.
 [heading Synopsis]
     template <typename F>
     inline typename __result_of_make_fused_procedure__<F>::type
-    make_fused_procedure(F const & f);
+    make_fused_procedure(F const& f);
 
 [heading Parameters]
 [table
@@ -1178,7 +1178,7 @@ The usual __element_conversion__ is applied to the target function.
 [heading Synopsis]
     template <typename F>
     inline typename __result_of_make_fused_function_object__<F>::type
-    make_fused_function_object(F const & f);
+    make_fused_function_object(F const& f);
 
 [heading Parameters]
 [table
@@ -1240,7 +1240,7 @@ The usual __element_conversion__ is applied to the target function.
 [heading Synopsis]
     template <typename F>
     inline typename __result_of_make_unfused__<F>::type
-    make_unfused(F const & f);
+    make_unfused(F const& f);
 
 [heading Parameters]
 [table
@@ -1271,7 +1271,7 @@ The usual __element_conversion__ is applied to the target function.
         };
 
         template <class Seq>
-        void operator()(Seq const & s) const
+        void operator()(Seq const& s) const
         {
             __for_each__(s,++boost::lambda::_1);
         }

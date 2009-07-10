@@ -10,42 +10,34 @@
 
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct reverse_view_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    template <typename First>
-    struct reverse_view_iterator;
-
-    namespace extension
+    template <>
+    struct begin_impl<reverse_view_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<reverse_view_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    reverse_view_iterator<
-                        typename result_of::end<
-                            typename detail::remove_reference<
-                                SeqRef
-                            >::type::seq_type
-                        >::type
-                    >
-                type;
+            typedef
+                reverse_view_iterator<
+                    typename result_of::end<
+                        typename detail::remove_reference<
+                            SeqRef
+                        >::type::seq_type
+                    >::type
+                >
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(fusion::end(seq.seq.get()));
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(fusion::end(seq.seq.get()));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

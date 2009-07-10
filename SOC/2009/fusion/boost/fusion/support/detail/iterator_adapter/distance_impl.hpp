@@ -8,35 +8,30 @@
 
 #include <boost/fusion/iterator/distance.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct iterator_adapter_tag;
+    template <typename Tag>
+    struct distance_impl;
 
-    namespace extension
+    template <>
+    struct distance_impl<iterator_adapter_tag>
     {
-        template <typename Tag>
-        struct distance_impl;
-
-        template <>
-        struct distance_impl<iterator_adapter_tag>
+        template <typename It1Ref, typename It2Ref>
+        struct apply
         {
-            template <typename It1Ref, typename It2Ref>
-            struct apply
-            {
-                //TODO cschmidt: category assert
-                typedef typename
-                    result_of::distance<
-                        typename detail::remove_reference<
-                            It1Ref
-                        >::type::iterator_type
-                      , typename detail::remove_reference<
-                            It2Ref
-                        >::type::iterator_type
-                    >::type
-                type;
-            };
+            //TODO cschmidt: category assert
+            typedef typename
+                result_of::distance<
+                    typename detail::remove_reference<
+                        It1Ref
+                    >::type::iterator_type
+                  , typename detail::remove_reference<
+                        It2Ref
+                    >::type::iterator_type
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

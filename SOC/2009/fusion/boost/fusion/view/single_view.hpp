@@ -9,6 +9,5 @@
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_HPP
 
 #include <boost/fusion/view/single_view/single_view.hpp>
-#include <boost/fusion/view/single_view/single_view_iterator.hpp>
 
 #endif

@@ -11,27 +11,22 @@
 
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct struct_tag;
+    template<typename SeqRef>
+    struct value_at_key_impl;
 
-    namespace extension
+    template <>
+    struct value_at_key_impl<struct_tag>
     {
-        template<typename SeqRef>
-        struct value_at_key_impl;
-
-        template <>
-        struct value_at_key_impl<struct_tag>
-        {
-            template <typename SeqRef, typename Key>
-            struct apply
-              : struct_assoc_member<
-                    typename detail::identity<SeqRef>::type
-                  , Key
-                >
-            {};
-        };
-    }
-}}
+        template <typename SeqRef, typename Key>
+        struct apply
+          : struct_assoc_member<
+                typename detail::identity<SeqRef>::type
+              , Key
+            >
+        {};
+    };
+}}}
 
 #endif

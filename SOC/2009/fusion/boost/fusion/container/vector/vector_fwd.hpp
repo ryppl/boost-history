@@ -14,6 +14,8 @@
 
 namespace boost { namespace fusion
 {
+    struct vector_tag;
+
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_VECTOR_SIZE)
     struct vector;
 }}

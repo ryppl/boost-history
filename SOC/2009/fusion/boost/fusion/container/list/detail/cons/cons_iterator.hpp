@@ -6,20 +6,13 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_CONTAINER_LIST_CONS_ITERATOR_HPP
-#define BOOST_FUSION_CONTAINER_LIST_CONS_ITERATOR_HPP
+#ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONS_ITERATOR_HPP
+#define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_CONS_ITERATOR_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
-#include <boost/fusion/container/list/list_fwd.hpp>
-
-#include <boost/fusion/container/list/detail/cons/deref_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/next_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/value_of_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {
-    struct nil;
     struct cons_iterator_tag;
     struct forward_traversal_tag;
 

@@ -15,14 +15,6 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/container/map/detail/lookup_key.hpp>
-#endif
-#include <boost/fusion/container/map/detail/begin_impl.hpp>
-#include <boost/fusion/container/map/detail/end_impl.hpp>
-#include <boost/fusion/container/map/detail/at_key_impl.hpp>
-#include <boost/fusion/container/map/detail/value_at_key_impl.hpp>
-
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
@@ -36,9 +28,16 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/add_const.hpp>
 
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/map/detail/pp/lookup_key.hpp>
+#endif
+#include <boost/fusion/container/map/detail/begin_impl.hpp>
+#include <boost/fusion/container/map/detail/end_impl.hpp>
+#include <boost/fusion/container/map/detail/at_key_impl.hpp>
+#include <boost/fusion/container/map/detail/value_at_key_impl.hpp>
+
 namespace boost { namespace fusion
 {
-    struct map_tag;
     struct fusion_sequence_tag;
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
     struct void_;

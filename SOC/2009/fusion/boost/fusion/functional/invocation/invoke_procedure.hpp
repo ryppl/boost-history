@@ -50,7 +50,7 @@ namespace boost { namespace fusion
     inline void invoke_procedure(Function, Sequence &);
 
     template <typename Function, class Sequence>
-    inline void invoke_procedure(Function, Sequence const &);
+    inline void invoke_procedure(Function, Sequence const&);
 
     //----- ---- --- -- - -  -   -
 
@@ -83,7 +83,7 @@ namespace boost { namespace fusion
     }
 
     template <typename Function, class Sequence>
-    inline void invoke_procedure(Function f, Sequence const & s)
+    inline void invoke_procedure(Function f, Sequence const& s)
     {
         detail::invoke_procedure_impl<
                 typename boost::remove_reference<Function>::type,Sequence const

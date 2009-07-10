@@ -8,42 +8,35 @@
 
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct map_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<map_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<map_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef typename
-                    detail::result_of_forward_as<
+            typedef typename
+                result_of::end<
+                    typename detail::forward_as<
                         SeqRef
                       , typename detail::remove_reference<
                             SeqRef
                         >::type::storage_type
                     >::type
-                storage_type;
+                >::type
+            type;
 
-                typedef typename
-                    result_of::end<storage_type>::type
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return fusion::end(seq.get_data());
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return fusion::end(seq.get_data());
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

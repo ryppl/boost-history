@@ -24,10 +24,8 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_iterator_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         template<typename It1, typename It2>

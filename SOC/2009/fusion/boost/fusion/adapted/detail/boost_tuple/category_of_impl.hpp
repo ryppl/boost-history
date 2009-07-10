@@ -10,7 +10,6 @@
 
 namespace boost { namespace fusion 
 { 
-    struct boost_tuple_tag;
     struct forward_traversal_tag;
 
     namespace extension

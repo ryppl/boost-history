@@ -8,32 +8,23 @@
 
 #include <boost/fusion/iterator/value_of.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    template<typename It, typename NewCategory>
-    struct iterator_adapter;
+    template <typename Tag>
+    struct value_of_impl;
 
-    struct iterator_adapter_tag;
-
-    namespace extension
+    template <>
+    struct value_of_impl<iterator_adapter_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        template <>
-        struct value_of_impl<iterator_adapter_tag>
-        {
-            template <typename ItRef>
-            struct apply
-              : result_of::value_of<
-                    typename detail::remove_reference<
-                        ItRef
-                    >::type::iterator_type
-                >
-            {
-            };
-        };
-    }
-}}
+        template <typename ItRef>
+        struct apply
+          : result_of::value_of<
+                typename detail::remove_reference<
+                    ItRef
+                >::type::iterator_type
+            >
+        {};
+    };
+}}}
 
 #endif

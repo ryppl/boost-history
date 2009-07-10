@@ -24,8 +24,10 @@
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/add_volatile.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
@@ -166,29 +168,26 @@ namespace boost { namespace fusion { namespace detail
         typedef typename boost::remove_cv<T>::type const& type;
     };
 
-    //TODO cschmidt: volatile support
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename,typename Type>
-    struct result_of_forward_as
-    {
-        typedef typename
-            mpl::if_<is_const<typename remove_reference<TestType>::type>
-                   , typename add_const<Type>::type
-                   , Type
-            >::type&
-        type;
-    };
-#else
     template <typename TestType,typename Type>
-    struct result_of_forward_as
+    struct forward_as
     {
         typedef typename
             mpl::if_<is_const<typename remove_reference<TestType>::type>
                    , typename add_const<Type>::type
                    , Type
             >::type
+        const_type;
+
+        typedef typename
+            mpl::if_<is_volatile<typename remove_reference<TestType>::type>
+                   , typename add_volatile<const_type>::type
+                   , const_type
+            >::type
         real_type;
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        typedef real_type& type;
+#else
         typedef typename
             mpl::eval_if<
                 //8.5.3p5...
@@ -206,36 +205,8 @@ namespace boost { namespace fusion { namespace detail
                 mpl::identity<real_type>
             >::type
         type;
-    };
-
-    /*template <typename TestType,typename Type>
-    typename result_of_forward_as<TestType,Type>::type
-    forward_as(typename mpl::identity<Type>::type&& type)
-    {
-        return type;
-    }
-
-    template <typename TestType,typename Type>
-    typename result_of_forward_as<TestType,Type const&&>::type
-    forward_as(typename mpl::identity<Type>::type const&& type)
-    {
-        return type;
-    }
-
-    template <typename TestType,typename Type>
-    typename result_of_forward_as<TestType,Type volatile&&>::type
-    forward_as(typename mpl::identity<Type>::type volatile&& type)
-    {
-        return type;
-    }
-
-    template <typename TestType,typename Type>
-    typename result_of_forward_as<TestType,Type const volatile&&>::type
-    forward_as(typename mpl::identity<Type>::type const volatile&& type)
-    {
-        return type;
-    }*/
 #endif
+    };
 }}}
 
 #endif

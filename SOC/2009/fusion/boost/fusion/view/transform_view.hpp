@@ -9,6 +9,5 @@
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_HPP
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
-#include <boost/fusion/view/transform_view/transform_view_iterator.hpp>
 
 #endif

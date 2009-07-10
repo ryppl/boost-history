@@ -49,11 +49,8 @@ namespace boost { namespace fusion { namespace extension                        
         typedef BOOST_PP_TUPLE_ELEM(3, 0, xy) type;                             \
                                                                                 \
         template<typename Seq>                                                  \
-        static typename                                                         \
-            detail::result_of_forward_as<                                       \
-                BOOST_FUSION_R_ELSE_LREF(Seq),type                              \
-            >::type                                                             \
-        call(BOOST_FUSION_R_ELSE_LREF(Seq) seq)                                 \
+        static typename detail::forward_as<Seq&,type>::type                     \
+        call(Seq& seq)                                                          \
         {                                                                       \
             return seq.BOOST_PP_TUPLE_ELEM(3, 1, xy);                           \
         };                                                                      \

@@ -18,17 +18,23 @@
 #include <boost/fusion/support/assign_tags.hpp>
 #include <boost/fusion/support/sequence_assign.hpp>
 
-#include <boost/fusion/container/list/cons_iterator.hpp>
-#include <boost/fusion/container/list/detail/cons/begin_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/end_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/at_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/value_at_impl.hpp>
-#include <boost/fusion/container/list/detail/cons/empty_impl.hpp>
-
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
+
+#include <boost/fusion/container/list/detail/cons/cons_fwd.hpp>
+#include <boost/fusion/container/list/detail/cons/at_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/value_at_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/empty_impl.hpp>
+
+#include <boost/fusion/container/list/detail/cons/cons_iterator.hpp>
+#include <boost/fusion/container/list/detail/cons/begin_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/end_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/deref_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/next_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/value_of_impl.hpp>
+#include <boost/fusion/container/list/detail/cons/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {

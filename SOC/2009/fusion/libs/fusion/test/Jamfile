@@ -51,7 +51,7 @@ import testing ;
     [ run sequence/as_vector.cpp :  :  :  : ]
     [ run sequence/boost_tuple.cpp :  :  :  : ]
     [ run sequence/cons.cpp :  :  :  : ]
-#   [ run sequence/deduce_sequence.cpp : : : : ]
+    [ run sequence/deduce_sequence.cpp : : : : ]
     [ run sequence/filter_view.cpp :  :  :  : ]
     [ run sequence/io.cpp :  :  :  : ]
     [ run sequence/iterator_range.cpp :  :  :  : ]

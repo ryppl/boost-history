@@ -11,44 +11,38 @@
 
 #include <boost/fusion/iterator/distance.hpp>
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct distance_impl;
 
-    struct transform_view_iterator_tag;
-    struct transform_view_iterator2_tag;
-
-    namespace extension
+    // Unary Version
+    template<>
+    struct distance_impl<transform_view_iterator_tag>
     {
-        template<typename Tag>
-        struct distance_impl;
-
-        // Unary Version
-        template<>
-        struct distance_impl<transform_view_iterator_tag>
+        template<typename First, typename Last>
+        struct apply
+          : result_of::distance<
+                typename detail::remove_reference<First>::type::first_type
+              , typename detail::remove_reference<Last>::type::first_type
+            >
         {
-            template<typename First, typename Last>
-            struct apply
-              : result_of::distance<
-                    typename detail::remove_reference<First>::type::first_type
-                  , typename detail::remove_reference<Last>::type::first_type
-                >
-            {
-            };
         };
+    };
 
-        // Binary Version
-        template<>
-        struct distance_impl<transform_view_iterator2_tag>
+    // Binary Version
+    template<>
+    struct distance_impl<transform_view_iterator2_tag>
+    {
+        template<typename First, typename Last>
+        struct apply
+          : result_of::distance<
+                typename detail::remove_reference<First>::type::first1_type
+              , typename detail::remove_reference<Last>::type::first1_type
+            >
         {
-            template<typename First, typename Last>
-            struct apply
-              : result_of::distance<
-                    typename detail::remove_reference<First>::type::first1_type
-                  , typename detail::remove_reference<Last>::type::first1_type
-                >
-            {
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

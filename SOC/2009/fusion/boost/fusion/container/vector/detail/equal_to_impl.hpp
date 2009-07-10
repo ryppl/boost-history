@@ -8,11 +8,22 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_EQUAL_TO_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_EQUAL_TO_IMPL_HPP
 
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/equal_to.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
 {
-    struct vector_iterator_tag;
+    namespace detail
+    {
+        template <typename It1, typename It2>
+        struct vector_types_equal
+          : is_same<
+                typename detail::identity<typename It1::vector>::type
+              , typename detail::identity<typename It2::vector>::type
+            >
+        {};
+    }
 
     namespace extension
     {
@@ -24,11 +35,16 @@ namespace boost { namespace fusion
         {
             template <typename It1Ref, typename It2Ref>
             struct apply
-              : is_same<
-                    typename detail::remove_reference<It1Ref>::type::identity
-                  , typename detail::remove_reference<It2Ref>::type::identity
-                >
             {
+                typedef typename detail::remove_reference<It1Ref>::type it1;
+                typedef typename detail::remove_reference<It2Ref>::type it2;
+
+                typedef
+                    mpl::and_<
+                        mpl::equal_to<typename it1::index, typename it2::index>
+                      , detail::vector_types_equal<it1,it2>
+                    >
+                type;
             };
         };
     }

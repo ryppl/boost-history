@@ -74,8 +74,6 @@ namespace boost { namespace fusion
         };
     }
 
-    struct cons_tag;
-
     namespace extension
     {
         template <typename Tag>
@@ -88,24 +86,24 @@ namespace boost { namespace fusion
             struct apply
             {
                 typedef typename
-                    detail::cons_advance<SeqRef, N::value>::type
-                element;
-                typedef typename
-                    detail::result_of_forward_as<SeqRef,element>::type
+                    detail::forward_as<
+                        SeqRef
+                      , typename detail::cons_advance<SeqRef, N::value>::type
+                    >::type
                 type;
 
                 template <typename Cons, int N2>
                 static type
-                call(Cons&& s, mpl::int_<N2>)
+                call(Cons& cons, mpl::int_<N2>)
                 {
-                    return call(s.cdr, mpl::int_<N2-1>());
+                    return call(cons.cdr, mpl::int_<N2-1>());
                 }
 
                 template <typename Cons>
                 static type
-                call(Cons&& s, mpl::int_<0>)
+                call(Cons& cons, mpl::int_<0>)
                 {
-                    return s.car;
+                    return cons.car;
                 }
 
                 static type

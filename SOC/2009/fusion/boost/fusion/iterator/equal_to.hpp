@@ -46,32 +46,32 @@ namespace boost { namespace fusion
                 template apply<
                     typename detail::add_lref<It1>::type
                   , typename detail::add_lref<It2>::type
-                >
+                >::type
         {};
     }
 
     namespace iterator_operators
     {
-        template <typename Iter1, typename Iter2>
+        template <typename It1, typename It2>
         inline typename
             enable_if<
-                mpl::and_<is_fusion_iterator<Iter1>, is_fusion_iterator<Iter2> >
+                mpl::and_<is_fusion_iterator<It1>, is_fusion_iterator<It2> >
               , bool
-                >::type
-        operator==(Iter1 const&, Iter2 const&)
+            >::type
+        operator==(It1 const&, It2 const&)
         {
-            return result_of::equal_to<Iter1 const&, Iter2 const&>::value;
+            return result_of::equal_to<It1 const&, It1 const&>::value;
         }
 
-        template <typename Iter1, typename Iter2>
+        template <typename It1, typename It2>
         inline typename
-        enable_if<
-            mpl::and_<is_fusion_iterator<Iter1>, is_fusion_iterator<Iter2> >
-          , bool
+            enable_if<
+                mpl::and_<is_fusion_iterator<It1>, is_fusion_iterator<It2> >
+              , bool
             >::type
-        operator!=(Iter1 const&, Iter2 const&)
+        operator!=(It1 const&, It1 const&)
         {
-            return !result_of::equal_to<Iter1 const&, Iter2 const&>::value;
+            return !result_of::equal_to<It1 const&, It1 const&>::value;
         }
     }
 

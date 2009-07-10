@@ -22,8 +22,8 @@
 #include <boost/fusion/adapted/detail/mpl/end_impl.hpp>
 #include <boost/fusion/adapted/detail/mpl/equal_to_impl.hpp>
 #include <boost/fusion/adapted/detail/mpl/has_key_impl.hpp>
-#include <boost/fusion/adapted/detail/mpl/is_sequence_impl.hpp>
 #include <boost/fusion/adapted/detail/mpl/is_view_impl.hpp>
+#include <boost/fusion/adapted/detail/mpl/is_sequence_impl.hpp>
 #include <boost/fusion/adapted/detail/mpl/next_impl.hpp>
 #include <boost/fusion/adapted/detail/mpl/prior_impl.hpp>
 #include <boost/fusion/adapted/detail/mpl/size_impl.hpp>

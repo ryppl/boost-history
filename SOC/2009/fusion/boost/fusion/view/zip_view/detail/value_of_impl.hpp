@@ -20,8 +20,6 @@
 
 namespace boost { namespace fusion
 {
-    struct zip_view_iterator_tag;
-
     namespace detail
     {
         struct poly_value_of

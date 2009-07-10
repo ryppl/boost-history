@@ -13,6 +13,8 @@
 
 namespace boost { namespace fusion
 {
+    struct map_tag;
+
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_MAP_SIZE)
     struct map;
 }}

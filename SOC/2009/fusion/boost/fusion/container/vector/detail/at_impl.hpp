@@ -11,40 +11,36 @@
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/eval_if.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct vector_tag;
+    template <typename Tag>
+    struct at_impl;
 
-    namespace extension
+    template <>
+    struct at_impl<vector_tag>
     {
-        template <typename Tag>
-        struct at_impl;
-
-        template <>
-        struct at_impl<vector_tag>
+        template <typename SeqRef, typename N>
+        struct apply
         {
-            template <typename SeqRef, typename N>
-            struct apply
-            {
-                typedef typename
-                    mpl::at<
-                        typename detail::remove_reference<SeqRef>::type::types
+            typedef typename
+                detail::forward_as<
+                    SeqRef
+                  , typename mpl::at<
+                        typename detail::remove_reference<
+                            SeqRef
+                        >::type::types
                       , N
                     >::type
-                element;
+                >::type
+            type;
 
-                typedef typename
-                    detail::result_of_forward_as<SeqRef,element>::type
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return seq.at_impl(N());
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return seq.at_impl(N());
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

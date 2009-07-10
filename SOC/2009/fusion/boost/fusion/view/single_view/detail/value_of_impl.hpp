@@ -8,31 +8,26 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct single_view_iterator_tag;
+    template <typename Tag>
+    struct value_of_impl;
 
-    namespace extension
+    template <>
+    struct value_of_impl<single_view_iterator_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        template <>
-        struct value_of_impl<single_view_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<
-                        typename detail::remove_reference<
-                            ItRef
-                        >::type::view_type
-                    >::type::value_type
-                type;
-            };
+            typedef typename
+                detail::remove_reference<
+                    typename detail::remove_reference<
+                        ItRef
+                    >::type::view_type
+                >::type::value_type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

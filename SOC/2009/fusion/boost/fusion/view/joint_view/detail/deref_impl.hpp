@@ -10,42 +10,37 @@
 
 #include <boost/fusion/iterator/deref.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct joint_view_iterator_tag;
+    template <typename Tag>
+    struct deref_impl;
 
-    namespace extension
+    template <>
+    struct deref_impl<joint_view_iterator_tag>
     {
-        template <typename Tag>
-        struct deref_impl;
-
-        template <>
-        struct deref_impl<joint_view_iterator_tag>
+        template<typename ItRef>
+        struct apply
         {
-            template<typename ItRef>
-            struct apply
+            typedef typename
+                result_of::deref<
+                    typename detail::remove_reference<
+                        ItRef
+                    >::type::first_type
+                >::type
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename
-                    result_of::deref<
-                        typename detail::remove_reference<
-                            ItRef
-                        >::type::first_type
-                    >::type
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return fusion::deref(it.first);
-                }
-            };
+                return fusion::deref(it.first);
+            }
         };
+    };
 
-        template <>
-        struct deref_impl<concat_iterator_tag>
-          : deref_impl<joint_view_iterator_tag>
-        {};
-    }
-}}
+    template <>
+    struct deref_impl<concat_iterator_tag>
+      : deref_impl<joint_view_iterator_tag>
+    {};
+}}}
 
 #endif

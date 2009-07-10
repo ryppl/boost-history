@@ -11,21 +11,26 @@
 
 #include <boost/type_traits/add_const.hpp>
 
-namespace boost { namespace fusion { namespace extension
+namespace boost { namespace fusion
 {
-    struct no_such_member;
+    struct struct_tag;
 
-    template<typename Seq, int N>
-    struct struct_member;
-
-    template<typename Seq>
-    struct struct_size;
-
-    template<typename Seq, typename Key>
-    struct struct_assoc_member
+    namespace extension
     {
-        typedef no_such_member type;
-    };
-}}}
+        struct no_such_member;
+
+        template<typename Seq, int N>
+        struct struct_member;
+
+        template<typename Seq>
+        struct struct_size;
+
+        template<typename Seq, typename Key>
+        struct struct_assoc_member
+        {
+            typedef no_such_member type;
+        };
+    }
+}}
 
 #endif

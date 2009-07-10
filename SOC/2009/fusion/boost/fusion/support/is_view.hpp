@@ -13,9 +13,6 @@
 
 namespace boost { namespace fusion
 {
-    // Special tags:
-    struct sequence_facade_tag;
-
     namespace extension
     {
         template<typename Tag>
@@ -26,17 +23,6 @@ namespace boost { namespace fusion
               :  detail::remove_reference<SeqRef>::type::is_view
             {};
         };
-
-        /*
-        template <>
-        struct is_view_impl<sequence_facade_tag>
-        {
-            template <typename SeqRef>
-            struct apply
-                : detail::remove_reference<SeqRef>::type::is_view
-            {};
-        };
-        */
     }
 
     namespace traits

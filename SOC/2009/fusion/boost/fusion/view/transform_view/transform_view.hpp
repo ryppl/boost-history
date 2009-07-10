@@ -28,11 +28,19 @@
 #include <boost/mpl/bool.hpp>
 
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
-#include <boost/fusion/view/transform_view/transform_view_iterator.hpp>
-#include <boost/fusion/view/transform_view/detail/begin_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/end_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/at_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/value_at_impl.hpp>
+
+#include <boost/fusion/view/transform_view/detail/transform_view_iterator.hpp>
+#include <boost/fusion/view/transform_view/detail/begin_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/end_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/deref_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/next_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/prior_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/advance_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/distance_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {

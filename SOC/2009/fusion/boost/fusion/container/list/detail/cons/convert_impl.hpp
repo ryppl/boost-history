@@ -13,40 +13,35 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_tag;
+    template <typename T>
+    struct convert_impl;
 
-    namespace extension
+    template <>
+    struct convert_impl<cons_tag>
     {
-        template <typename T>
-        struct convert_impl;
-
-        template <>
-        struct convert_impl<cons_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
+            typedef
+                detail::build_cons<
+                    typename result_of::begin<SeqRef>::type
+                  , typename result_of::end<SeqRef>::type
+                >
+            build_cons;
+
+            typedef typename build_cons::type type;
+
+            static type
+            call(SeqRef seq)
             {
-                typedef
-                    detail::build_cons<
-                        typename result_of::begin<SeqRef>::type
-                      , typename result_of::end<SeqRef>::type
-                    >
-                build_cons;
-
-                typedef typename build_cons::type type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return build_cons::call(
-                            fusion::begin(seq),
-                            fusion::end(seq));
-                }
-            };
+                return build_cons::call(
+                        fusion::begin(seq),
+                        fusion::end(seq));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

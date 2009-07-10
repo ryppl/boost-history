@@ -36,14 +36,14 @@ namespace boost { namespace fusion
 
         template <class Seq> 
         inline typename result_of::invoke<func_const_fwd_t,Seq const>::type 
-        operator()(Seq const & s) const
+        operator()(Seq const& s) const
         {
             return fusion::invoke<func_const_fwd_t>(this->fnc_transformed,s);
         }
 
         template <class Seq> 
         inline typename result_of::invoke<func_fwd_t,Seq const>::type 
-        operator()(Seq const & s) 
+        operator()(Seq const& s) 
         {
             return fusion::invoke<func_fwd_t>(this->fnc_transformed,s);
         }

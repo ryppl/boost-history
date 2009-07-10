@@ -32,11 +32,21 @@
 #include <boost/type_traits/is_reference.hpp>
 
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
-#include <boost/fusion/view/zip_view/detail/begin_impl.hpp>
-#include <boost/fusion/view/zip_view/detail/end_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/zip_view_fwd.hpp>
 #include <boost/fusion/view/zip_view/detail/size_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/at_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/value_at_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/zip_view_iterator.hpp>
+
+#include <boost/fusion/view/zip_view/detail/begin_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/end_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/deref_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/next_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/prior_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/advance_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/distance_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/zip_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion {
 

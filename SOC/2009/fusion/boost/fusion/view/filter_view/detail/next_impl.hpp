@@ -13,49 +13,41 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct filter_view_iterator_tag;
+    template <typename Tag>
+    struct next_impl;
 
-    template <typename First, typename Last, typename Pred>
-    struct filter_iterator;
-
-    namespace extension
+    template <>
+    struct next_impl<filter_view_iterator_tag>
     {
-        template <typename Tag>
-        struct next_impl;
-
-        template <>
-        struct next_impl<filter_view_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
+            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename
+                detail::static_find_if<
+                    typename result_of::next<typename it::first_type>::type
+                  , typename it::last_type
+                  , typename it::pred_type
+                >
+            filter;
+
+            typedef
+                filter_iterator<
+                    typename filter::type
+                  , typename it::last_type
+                  , typename it::pred_type
+                >
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename detail::remove_reference<ItRef>::type it;
-                typedef typename
-                    detail::static_find_if<
-                        typename result_of::next<typename it::first_type>::type
-                      , typename it::last_type
-                      , typename it::pred_type
-                    >
-                filter;
-
-                typedef
-                    filter_iterator<
-                        typename filter::type
-                      , typename it::last_type
-                      , typename it::pred_type
-                    >
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return type(filter::call(it.first),0);
-                }
-            };
+                return type(filter::call(it.first),0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

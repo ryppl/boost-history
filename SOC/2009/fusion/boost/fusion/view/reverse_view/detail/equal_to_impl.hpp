@@ -11,27 +11,22 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct reverse_view_iterator_tag;
+    template<typename Tag>
+    struct equal_to_impl;
 
-    namespace extension
+    template<>
+    struct equal_to_impl<reverse_view_iterator_tag>
     {
-        template<typename Tag>
-        struct equal_to_impl;
-
-        template<>
-        struct equal_to_impl<reverse_view_iterator_tag>
-        {
-            template<typename It1Ref, typename It2Ref>
-            struct apply
-              : is_same<
-                    typename detail::remove_reference<It1Ref>::type::first_type
-                  , typename detail::remove_reference<It2Ref>::type::first_type
-                >
-            {};
-        };
-    }
-}}
+        template<typename It1Ref, typename It2Ref>
+        struct apply
+          : is_same<
+                typename detail::remove_reference<It1Ref>::type::first_type
+              , typename detail::remove_reference<It2Ref>::type::first_type
+            >
+        {};
+    };
+}}}
 
 #endif

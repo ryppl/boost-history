@@ -15,32 +15,27 @@
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/is_sequence.hpp>
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct category_of_impl;
 
-    struct mpl_sequence_tag;
-
-    namespace extension
+    template<>
+    struct category_of_impl<mpl_sequence_tag>
     {
-        template<typename Tag>
-        struct category_of_impl;
-
-        template<>
-        struct category_of_impl<mpl_sequence_tag>
+        template<typename SeqRef>
+        struct apply
         {
-            template<typename SeqRef>
-            struct apply
-            {
-                //TODO get_category?
-                typedef typename
-                    detail::mpl_iterator_category<
-                        typename mpl::begin<
-                            typename detail::identity<SeqRef>::type
-                        >::type::category
-                    >::type
-                type;
-            };
+            //TODO get_category?
+            typedef typename
+                detail::mpl_iterator_category<
+                    typename mpl::begin<
+                        typename detail::identity<SeqRef>::type
+                    >::type::category
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

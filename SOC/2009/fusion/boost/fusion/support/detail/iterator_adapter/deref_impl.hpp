@@ -10,40 +10,32 @@
 
 //TODO seq_type -> sequence_type
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    template<typename It, typename NewCategory>
-    struct iterator_adapter;
+    template <typename Tag>
+    struct deref_impl;
 
-    struct iterator_adapter_tag;
-
-    namespace extension
+    template <>
+    struct deref_impl<iterator_adapter_tag>
     {
-        template <typename Tag>
-        struct deref_impl;
-
-        template <>
-        struct deref_impl<iterator_adapter_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename
-                    result_of::deref<
-                        typename detail::remove_reference<
-                            ItRef
-                        >::type::iterator_type
-                    >::type
-                type;
+            typedef typename
+                result_of::deref<
+                    typename detail::remove_reference<
+                        ItRef
+                    >::type::iterator_type
+                >::type
+            type;
 
-                static type
-                call(ItRef it)
-                {
-                    return fusion::deref(it.it);
-                }
-            };
+            static type
+            call(ItRef it)
+            {
+                return fusion::deref(it.it);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

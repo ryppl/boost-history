@@ -11,53 +11,48 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct boost_tuple_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<boost_tuple_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<boost_tuple_tag>
+        template <typename>
+        struct apply
         {
-            template <typename>
-            struct apply 
+            typedef
+                boost_tuple_iterator<tuples::null_type const volatile&>
+            type;
+
+            //TODO volatile!
+            template<typename Seq>
+            static type
+            call(Seq const& seq, mpl::true_)
             {
-                typedef
-                    boost_tuple_iterator<tuples::null_type const volatile&>
-                type;
+                return type(seq,0);
+            }
 
-                //TODO volatile!
-                template<typename Seq>
-                static type
-                call(Seq const& seq, mpl::true_)
-                {
-                    return type(seq,0);
-                }
+            template<typename Seq>
+            static type
+            call(Seq const& seq, mpl::false_)
+            {
+                return call(seq.get_tail());
+            }
 
-                template<typename Seq>
-                static type
-                call(Seq const& seq, mpl::false_)
-                {
-                    return call(seq.get_tail());
-                }
-
-                template<typename Seq>
-                static type
-                call(Seq const& seq)
-                {
-                    return call(seq,
-                            typename is_convertible<
-                                Seq*
-                              , tuples::null_type const volatile*
-                            >::type());
-                }
-            };
+            template<typename Seq>
+            static type
+            call(Seq const& seq)
+            {
+                return call(seq,
+                        typename is_convertible<
+                            Seq*
+                          , tuples::null_type const volatile*
+                        >::type());
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

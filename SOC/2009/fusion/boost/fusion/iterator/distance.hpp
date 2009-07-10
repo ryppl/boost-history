@@ -27,26 +27,26 @@ namespace boost { namespace fusion
         struct distance_impl
         {
             // default implementation
-            template <typename First, typename Last>
+            template <typename FirstRef, typename LastRef>
             struct apply
-              : distance_detail::linear_distance<First, Last>::type
+              : distance_detail::linear_distance<FirstRef, LastRef>
             {
-                BOOST_FUSION_MPL_ASSERT_NOT(
-                        traits::is_random_access<First>,
+                /*BOOST_FUSION_MPL_ASSERT_NOT(
+                        traits::is_random_access<FirstRef>,
       "default implementation not available for random access iterators");
                 BOOST_FUSION_MPL_ASSERT_NOT(
-                        traits::is_random_access<Last>,
-      "default implementation not available for random access iterators");
+                        traits::is_random_access<FirstRef>,
+      "default implementation not available for random access iterators");*/
             };
         };
 
         template <>
         struct distance_impl<iterator_facade_tag>
         {
-            template <typename First, typename Last>
+            template <typename FirstRef, typename LastRef>
             struct apply
-              : detail::remove_reference<First>::type::
-                    template distance<First, Last>::type
+              : detail::remove_reference<FirstRef>::type::
+                  template distance<FirstRef, LastRef>
             {};
         };
     }

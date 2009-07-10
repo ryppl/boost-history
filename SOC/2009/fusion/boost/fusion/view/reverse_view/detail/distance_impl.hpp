@@ -11,37 +11,29 @@
 
 #include <boost/fusion/iterator/distance.hpp>
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct distance_impl;
 
-    struct reverse_view_iterator_tag;
-
-    template <typename First>
-    struct reverse_view_iterator;
-
-    namespace extension
+    template<>
+    struct distance_impl<reverse_view_iterator_tag>
     {
-        template<typename Tag>
-        struct distance_impl;
-
-        template<>
-        struct distance_impl<reverse_view_iterator_tag>
+        template<typename FirstRef, typename LastRef>
+        struct apply
         {
-            template<typename FirstRef, typename LastRef>
-            struct apply
-            {
-                typedef typename
-                    result_of::distance<
-                        typename detail::remove_reference<
-                            FirstRef
-                        >::type::first_type
-                      , typename detail::remove_reference<
-                            LastRef
-                        >::type::first_type
-                    >::type
-                type;
-            };
+            typedef typename
+                result_of::distance<
+                    typename detail::remove_reference<
+                        FirstRef
+                    >::type::first_type
+                  , typename detail::remove_reference<
+                        LastRef
+                    >::type::first_type
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

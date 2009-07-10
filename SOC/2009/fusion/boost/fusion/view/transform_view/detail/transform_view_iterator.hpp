@@ -5,19 +5,11 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_ITERATOR_HPP
-#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_ITERATOR_HPP
+#ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_TRANSFORM_VIEW_ITERATOR_HPP
+#define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_TRANSFORM_VIEW_ITERATOR_HPP
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
-
-#include <boost/fusion/view/transform_view/detail/deref_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/next_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/prior_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/value_of_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/advance_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/distance_impl.hpp>
-#include <boost/fusion/view/transform_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {

@@ -13,14 +13,13 @@
 #include <boost/fusion/algorithm/transformation/transform.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 #include <boost/fusion/support/unused.hpp>
+
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         template<typename N>

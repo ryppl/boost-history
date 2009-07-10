@@ -9,24 +9,19 @@
 #ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_SIZE_IMPL_HPP
 #define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_SIZE_IMPL_HPP
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct size_impl;
 
-    struct zip_view_tag;
-
-    namespace extension
+    template<>
+    struct size_impl<zip_view_tag>
     {
-        template<typename Tag>
-        struct size_impl;
-
-        template<>
-        struct size_impl<zip_view_tag>
-        {
-            template<typename SeqRef>
-            struct apply
-              : detail::remove_reference<SeqRef>::type::size
-            {};
-        };
-    }
-}}
+        template<typename SeqRef>
+        struct apply
+          : detail::remove_reference<SeqRef>::type::size
+        {};
+    };
+}}}
 
 #endif

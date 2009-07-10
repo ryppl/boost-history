@@ -41,7 +41,7 @@ namespace boost { namespace fusion
             typedef typename detail::identity<SeqRef>::type identity_struct;
 
             typedef typename
-                detail::result_of_forward_as<
+                detail::forward_as<
                     SeqRef
                   , typename extension::struct_member<identity_struct, N>::type
                 >::type

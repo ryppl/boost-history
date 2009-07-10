@@ -14,47 +14,42 @@
 #   include <boost/fusion/container/vector/detail/variadic_templates/as_vector_impl.hpp>
 #endif
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct vector_tag;
+    template <typename T>
+    struct convert_impl;
 
-    namespace extension
+    template <>
+    struct convert_impl<vector_tag>
     {
-        template <typename T>
-        struct convert_impl;
-
-        template <>
-        struct convert_impl<vector_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-                typedef typename
-                    detail::as_vector<result_of::size<SeqRef>::value>
-                gen;
+            typedef typename
+                detail::as_vector<result_of::size<SeqRef>::value>
+            gen;
 
-                typedef typename gen::template apply<
-                    typename result_of::begin<SeqRef>::type>::type
-                type;
+            typedef typename gen::template apply<
+                typename result_of::begin<SeqRef>::type>::type
+            type;
 
-                static type call(SeqRef seq)
-                {
-                    return gen::call(
-                            fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)));
-                }
+            static type call(SeqRef seq)
+            {
+                return gen::call(
+                        fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)));
+            }
 #else
-                typedef typename detail::as_vector_impl<SeqRef> gen;
-                typedef typename gen::apply::type type;
+            typedef typename detail::as_vector_impl<SeqRef> gen;
+            typedef typename gen::apply::type type;
 
-                static type call(SeqRef seq)
-                {
-                    return gen::call(seq);
-                }
+            static type call(SeqRef seq)
+            {
+                return gen::call(seq);
+            }
 #endif
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

@@ -9,11 +9,10 @@
 #ifndef BOOST_FUSION_ADAPTED_HPP
 #define BOOST_FUSION_ADAPTED_HPP
 
-//TODO!!!
 #include <boost/fusion/adapted/boost_tuple.hpp>
-//#include <boost/fusion/adapted/std_pair.hpp>
+#include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/adapted/array.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
-//#include <boost/fusion/adapted/struct.hpp>
+#include <boost/fusion/adapted/struct.hpp>
 
 #endif

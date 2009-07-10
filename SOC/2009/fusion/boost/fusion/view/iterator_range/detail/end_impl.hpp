@@ -8,33 +8,28 @@
 #ifndef BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_END_IMPL_HPP
 #define BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_END_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct iterator_range_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<iterator_range_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<iterator_range_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<SeqRef>::type::end_type
-                type;
+            typedef typename
+                detail::remove_reference<SeqRef>::type::end_type
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return seq.last;
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return seq.last;
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

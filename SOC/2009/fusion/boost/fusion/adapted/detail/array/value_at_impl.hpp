@@ -9,25 +9,20 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_VALUE_AT_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_VALUE_AT_IMPL_HPP
 
-namespace boost { namespace fusion {
-    
-    struct array_tag;
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct value_at_impl;
 
-    namespace extension
+    template <>
+    struct value_at_impl<array_tag>
     {
-        template<typename Tag>
-        struct value_at_impl;
-
-        template <>
-        struct value_at_impl<array_tag>
+        template <typename SeqRef, typename N>
+        struct apply
         {
-            template <typename SeqRef, typename N>
-            struct apply 
-            {
-                typedef typename SeqRef::value_type type;
-            };
+            typedef typename SeqRef::value_type type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

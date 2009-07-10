@@ -9,6 +9,5 @@
 #define BOOST_FUSION_VIEW_JOINT_VIEW_HPP
 
 #include <boost/fusion/view/joint_view/joint_view.hpp>
-#include <boost/fusion/view/joint_view/joint_view_iterator.hpp>
 
 #endif

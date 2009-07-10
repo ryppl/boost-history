@@ -8,24 +8,24 @@
 #ifndef BOOST_FUSION_SUPPORT_IS_SEQUENCE_HPP
 #define BOOST_FUSION_SUPPORT_IS_SEQUENCE_HPP
 
-#include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
 
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/not.hpp>
 
 namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename T>
+        template <typename Tag>
         struct is_sequence_impl
         {
-            template <typename Seq>
+            template <typename SeqRef>
             struct apply
               : is_base_of<
                     sequence_root
-                  , typename detail::remove_reference<Seq>::type
+                  , typename detail::identity<SeqRef>::type
                 >
             {};
         };
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
         template <typename T>
         struct is_sequence
           : extension::is_sequence_impl<typename traits::tag_of<T>::type>::
-                template apply<T>
+                template apply<typename detail::add_lref<T>::type>
         {};
     }
 }}

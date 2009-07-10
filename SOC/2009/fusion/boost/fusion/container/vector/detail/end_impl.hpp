@@ -8,34 +8,31 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_END_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_END_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    namespace extension
+    template <typename Tag>
+    struct end_impl;
+
+    template <>
+    struct end_impl<vector_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<vector_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    vector_iterator<
-                        SeqRef
-                      , detail::remove_reference<SeqRef>::type::size::value
-                    >
-                type;
+            typedef
+                vector_iterator<
+                    SeqRef
+                  , detail::remove_reference<SeqRef>::type::size::value
+                >
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(seq,0);
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(seq,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

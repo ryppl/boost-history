@@ -10,37 +10,32 @@
 
 #include <boost/mpl/prior.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct prior_impl;
 
-    namespace extension
+    template <>
+    struct prior_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct prior_impl;
-
-        template <>
-        struct prior_impl<mpl_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef
-                    mpl_iterator<
-                        typename mpl::prior<
-                            typename detail::identity<ItRef>::type
-                        >::type
-                    >
-                type;
+            typedef
+                mpl_iterator<
+                    typename mpl::prior<
+                        typename detail::identity<ItRef>::type
+                    >::type
+                >
+            type;
 
-                static type
-                call(ItRef)
-                {
-                    return type();
-                }
-            };
+            static type
+            call(ItRef)
+            {
+                return type();
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

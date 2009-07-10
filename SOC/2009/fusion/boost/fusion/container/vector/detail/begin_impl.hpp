@@ -8,29 +8,26 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_BEGIN_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_BEGIN_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    namespace extension
+    template <typename Tag>
+    struct begin_impl;
+
+    template <>
+    struct begin_impl<vector_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<vector_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef vector_iterator<SeqRef, 0> type;
+            typedef vector_iterator<SeqRef, 0> type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(seq,0);
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(seq,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

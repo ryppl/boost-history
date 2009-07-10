@@ -9,6 +9,5 @@
 #define BOOST_FUSION_VIEW_REVERSE_VIEW_HPP
 
 #include <boost/fusion/view/reverse_view/reverse_view.hpp>
-#include <boost/fusion/view/reverse_view/reverse_view_iterator.hpp>
 
 #endif

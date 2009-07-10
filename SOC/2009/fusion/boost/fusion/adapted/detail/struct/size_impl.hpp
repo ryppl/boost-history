@@ -11,30 +11,19 @@
 
 #include <boost/mpl/int.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    namespace extension
+    template<typename Tag>
+    struct size_impl;
+
+    template <>
+    struct size_impl<struct_tag>
     {
-        template <typename Struct>
-        struct struct_size;
-    }
-
-    struct struct_tag;
-
-    namespace extension
-    {
-        template<typename Tag>
-        struct size_impl;
-
-        template <>
-        struct size_impl<struct_tag>
-        {
-            template <typename SeqRef>
-            struct apply
-              : struct_size<typename detail::identity<SeqRef>::type>
-            {};
-        };
-    }
-}}
+        template <typename SeqRef>
+        struct apply
+          : struct_size<typename detail::identity<SeqRef>::type>
+        {};
+    };
+}}}
 
 #endif

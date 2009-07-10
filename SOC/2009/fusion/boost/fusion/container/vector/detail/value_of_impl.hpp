@@ -10,37 +10,32 @@
 
 #include <boost/mpl/at.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct vector_iterator_tag;
+    template <typename Tag>
+    struct value_of_impl;
 
-    namespace extension
+    template <>
+    struct value_of_impl<vector_iterator_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        template <>
-        struct value_of_impl<vector_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<ItRef>::type
-                it;
-                typedef typename
-                    it::vector
-                vector;
+            typedef typename
+                detail::remove_reference<ItRef>::type
+            it;
+            typedef typename
+                it::vector
+            vector;
 
-                typedef typename
-                    mpl::at<
-                        typename detail::remove_reference<vector>::type::types
-                      , typename it::index
-                    >::type
-                type;
-            };
+            typedef typename
+                mpl::at<
+                    typename detail::remove_reference<vector>::type::types
+                  , typename it::index
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

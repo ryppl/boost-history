@@ -13,6 +13,8 @@
 
 namespace boost { namespace fusion
 {
+    struct set_tag;
+
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_SET_SIZE)
     struct set;
 }}

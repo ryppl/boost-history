@@ -11,37 +11,32 @@
 
 #include <boost/mpl/begin.hpp>
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template <typename Tag>
+    struct begin_impl;
 
-    struct mpl_sequence_tag;
-
-    namespace extension
+    template <>
+    struct begin_impl<mpl_sequence_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<mpl_sequence_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    mpl_iterator<
-                        typename mpl::begin<
-                            typename detail::identity<SeqRef>::type
-                        >::type
-                    >
-                type;
+            typedef
+                mpl_iterator<
+                    typename mpl::begin<
+                        typename detail::identity<SeqRef>::type
+                    >::type
+                >
+            type;
 
-                static type
-                call(SeqRef)
-                {
-                    return type();
-                }
-            };
+            static type
+            call(SeqRef)
+            {
+                return type();
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

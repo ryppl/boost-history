@@ -293,15 +293,15 @@ __note_boost_ref__).
     template <typename T>
     struct holder
     {
-        typename traits::deduce<T const &>::type element;
+        typename traits::deduce<T const&>::type element;
 
-        holder(T const & a)
+        holder(T const& a)
           : element(a)
         { }
     };
 
     template <typename T>
-    holder<T> make_holder(T const & a)
+    holder<T> make_holder(T const& a)
     {
         return holder<T>(a);
     }
@@ -339,16 +339,16 @@ constructor accepting the original type as its argument.
     {
         typename traits::deduce_sequence<Seq>::type element;
 
-        holder(Seq const & a)
+        holder(Seq const& a)
           : element(a)
         { }
     };
 
     template <typename T0, typename T1>
-    holder< __vector__<T0 const &, T1 const &> >
-    make_holder(T0 const & a0, T1 const & a1)
+    holder< __vector__<T0 const&, T1 const&> >
+    make_holder(T0 const& a0, T1 const& a1)
     {
-        typedef __vector__<T0 const &, T1 const &> arg_vec_t;
+        typedef __vector__<T0 const&, T1 const&> arg_vec_t;
         return holder<arg_vec_t>( arg_vec_t(a0,a1) );
     }
 
@@ -384,7 +384,7 @@ It is used as elements in __map__s, for example.
 
     template <typename First, typename Second>
     typename result_of::make_pair<First,Second>::type
-    make_pair(Second const &);
+    make_pair(Second const&);
 
 [heading Template parameters]
 

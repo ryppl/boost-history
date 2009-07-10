@@ -5,11 +5,11 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_VIEW_JOINT_VIEW_JOINT_VIEW_ITERATOR_HPP
-#define BOOST_FUSION_VIEW_JOINT_VIEW_JOINT_VIEW_ITERATOR_HPP
+#ifndef BOOST_FUSION_VIEW_JOINT_VIEW_DETAIL_JOINT_VIEW_ITERATOR_HPP
+#define BOOST_FUSION_VIEW_JOINT_VIEW_DETAIL_JOINT_VIEW_ITERATOR_HPP
 
-#include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
+#include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion

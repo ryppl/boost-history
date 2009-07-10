@@ -9,27 +9,22 @@
 #ifndef BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_EQUAL_TO_IMPL_HPP
 #define BOOST_FUSION_VIEW_FILTER_VIEW_DETAIL_EQUAL_TO_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct filter_view_iterator_tag;
+    template<typename Tag>
+    struct equal_to_impl;
 
-    namespace extension
+    template<>
+    struct equal_to_impl<filter_view_iterator_tag>
     {
-        template<typename Tag>
-        struct equal_to_impl;
-
-        template<>
-        struct equal_to_impl<filter_view_iterator_tag>
-        {
-            template<typename It1Ref, typename It2Ref>
-            struct apply
-              : result_of::equal_to<
-                    typename detail::remove_reference<It1Ref>::type::first_type
-                  , typename detail::remove_reference<It2Ref>::type::first_type
-                >
-            {};
-        };
-    }
-}}
+        template<typename It1Ref, typename It2Ref>
+        struct apply
+          : result_of::equal_to<
+                typename detail::remove_reference<It1Ref>::type::first_type
+              , typename detail::remove_reference<It2Ref>::type::first_type
+            >
+        {};
+    };
+}}}
 
 #endif

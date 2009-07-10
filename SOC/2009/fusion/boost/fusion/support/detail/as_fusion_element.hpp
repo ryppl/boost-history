@@ -30,40 +30,40 @@ namespace boost { namespace fusion { namespace detail
     template <typename T>\
     struct as_fusion_element<T COMBINATION>\
       : as_fusion_element<T>\
-    {};
+    {};\
+    \
+    template <typename T>\
+    struct as_fusion_element<reference_wrapper<T> COMBINATION>\
+    {\
+        typedef T& type;\
+    };
 
     BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALISATION,_)
 
 #undef CV_REF_SPECIALISATION
 
-    template <typename T>
-    struct as_fusion_element<reference_wrapper<T> >
+    template <typename T, int N>
+    struct as_fusion_element<T(&)[N]>
     {
-        typedef T& type;
-    };
-
-    template <typename T>
-    struct as_fusion_element<reference_wrapper<T> const>
-    {
-        typedef T& type;
+        typedef T(&type)[N];
     };
 
     template <typename T, int N>
-    struct as_fusion_element<T[N]>
+    struct as_fusion_element<const T(&)[N]>
     {
-        typedef const typename as_fusion_element<T>::type(&type)[N];
+        typedef const T(&type)[N];
     };
 
     template <typename T, int N>
-    struct as_fusion_element<volatile T[N]>
+    struct as_fusion_element<volatile T(&)[N]>
     {
-        typedef const volatile typename as_fusion_element<T>::type(&type)[N];
+        typedef volatile T(&type)[N];
     };
 
     template <typename T, int N>
-    struct as_fusion_element<const volatile T[N]>
+    struct as_fusion_element<volatile const T(&)[N]>
     {
-        typedef const volatile typename as_fusion_element<T>::type(&type)[N];
+        typedef volatile const T(&type)[N];
     };
 
     template <typename T>

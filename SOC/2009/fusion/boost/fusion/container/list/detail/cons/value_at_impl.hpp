@@ -10,39 +10,34 @@
 
 #include <boost/mpl/eval_if.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_tag;
+    template <typename Tag>
+    struct value_at_impl;
 
-    namespace extension
+    template <>
+    struct value_at_impl<cons_tag>
     {
-        template <typename Tag>
-        struct value_at_impl;
-
-        template <>
-        struct value_at_impl<cons_tag>
+        template <typename Seq, typename N>
+        struct apply
         {
-            template <typename Seq, typename N>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<Seq>::type
-                identity_sequence;
+            typedef typename
+                detail::remove_reference<Seq>::type
+            identity_sequence;
 
-                typedef typename
-                    mpl::eval_if<
-                        N
-                      , mpl::identity<typename identity_sequence::car_type>
-                        //cschmidt: qualifiers could be moved here, though
-                        //this is not necessary!
-                      , apply<typename identity_sequence::cdr_type
-                            , mpl::int_<N::value-1>
-                        >
-                    >::type
-                type;
-            };
+            typedef typename
+                mpl::eval_if<
+                    N
+                  , mpl::identity<typename identity_sequence::car_type>
+                    //cschmidt: qualifiers could be moved here, though
+                    //this is not necessary!
+                  , apply<typename identity_sequence::cdr_type
+                        , mpl::int_<N::value-1>
+                    >
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

@@ -23,10 +23,8 @@
 #include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         template<typename Seq, typename M>

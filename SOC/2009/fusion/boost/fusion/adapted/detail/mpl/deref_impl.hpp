@@ -10,33 +10,28 @@
 
 #include <boost/mpl/deref.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct deref_impl;
 
-    namespace extension
+    template <>
+    struct deref_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct deref_impl;
-
-        template <>
-        struct deref_impl<mpl_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename
-                    mpl::deref<typename detail::identity<ItRef>::type>::type
-                type;
+            typedef typename
+                mpl::deref<typename detail::identity<ItRef>::type>::type
+            type;
 
-                static type
-                call(ItRef)
-                {
-                    return type();
-                }
-            };
+            static type
+            call(ItRef)
+            {
+                return type();
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

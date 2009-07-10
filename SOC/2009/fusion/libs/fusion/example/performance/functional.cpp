@@ -36,7 +36,7 @@ namespace
     struct fused_sum
     {
         template <typename Seq>
-        int operator()(Seq const & seq) const
+        int operator()(Seq const& seq) const
         {
             int state = 0;
             return boost::fusion::fold(seq, state, sum_op());
@@ -49,7 +49,7 @@ namespace
         struct sum_op
         {
             template <typename T>
-            int operator()(T const & elem, int value) const
+            int operator()(T const& elem, int value) const
             {
               return value + sizeof(T) * elem;
             }
@@ -72,22 +72,22 @@ namespace
             return 0;
         }
         template<typename T0>
-        inline int operator()(T0 const & a0) const
+        inline int operator()(T0 const& a0) const
         {
             return a0;
         } 
         template<typename T0, typename T1>
-        inline int operator()(T0 const & a0, T1 const & a1) const
+        inline int operator()(T0 const& a0, T1 const& a1) const
         {
             return a0 + a1;
         } 
         template<typename T0, typename T1, typename T2>
-        inline int operator()(T0 const & a0, T1 const & a1, T2 a2) const
+        inline int operator()(T0 const& a0, T1 const& a1, T2 a2) const
         {
             return a0 + a1 + a2;
         } 
         template<typename T0, typename T1, typename T2, typename T3>
-        inline int operator()(T0 const & a0, T1 const & a1, T2 const & a2, T3 const & a3) const
+        inline int operator()(T0 const& a0, T1 const& a1, T2 const& a2, T3 const& a3) const
         {
             return a0 + a1 + a2 + a3;
         } 
@@ -96,7 +96,7 @@ namespace
     };
 
     template<typename F>
-    double call_unfused(F const & func, int & j) 
+    double call_unfused(F const& func, int & j) 
     {
         boost::timer tim;
         int i = 0;
@@ -139,7 +139,7 @@ namespace
     }
 
     template<typename F>
-    double call_fused_ra(F const & func, int & j) 
+    double call_fused_ra(F const& func, int & j) 
     {
         boost::timer tim;
         int i = 0;
@@ -192,7 +192,7 @@ namespace
     }
 
     template<typename F>
-    double call_fused(F const & func, int & j) 
+    double call_fused(F const& func, int & j) 
     {
         boost::timer tim;
         int i = 0;

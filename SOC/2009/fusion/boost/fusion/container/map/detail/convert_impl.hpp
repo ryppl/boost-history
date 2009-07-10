@@ -9,53 +9,48 @@
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
-#   include <boost/fusion/container/map/detail/pp/as_set.hpp>
+#   include <boost/fusion/container/map/detail/pp/as_map.hpp>
 #else
 #   include <boost/fusion/container/map/detail/variadic_templates/as_map_impl.hpp>
 #endif
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct map_tag;
+    template <typename T>
+    struct convert_impl;
 
-    namespace extension
+    template <>
+    struct convert_impl<map_tag>
     {
-        template <typename T>
-        struct convert_impl;
-
-        template <>
-        struct convert_impl<map_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-                typedef typename
-                    detail::as_map<result_of::size<SeqRef>::value>
-                gen;
-                typedef typename
-                    gen::template apply<
-                        typename result_of::begin<SeqRef>::type
-                    >::type
-                type;
+            typedef typename
+                detail::as_map<result_of::size<SeqRef>::value>
+            gen;
+            typedef typename
+                gen::template apply<
+                    typename result_of::begin<SeqRef>::type
+                >::type
+            type;
 
-                static type call(SeqRef seq)
-                {
-                    return gen::call(
-                            fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)));
-                }
+            static type call(SeqRef seq)
+            {
+                return gen::call(
+                        fusion::begin(BOOST_FUSION_FORWARD(Sequence,seq)));
+            }
 #else
-                typedef typename detail::as_map_impl<SeqRef> gen;
-                typedef typename gen::apply::type type;
+            typedef typename detail::as_map_impl<SeqRef> gen;
+            typedef typename gen::apply::type type;
 
-                static type call(SeqRef seq)
-                {
-                    return gen::call(seq);
-                }
+            static type call(SeqRef seq)
+            {
+                return gen::call(seq);
+            }
 #endif
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

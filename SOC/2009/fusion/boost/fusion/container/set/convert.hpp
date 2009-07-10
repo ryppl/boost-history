@@ -9,8 +9,9 @@
 #define BOOST_FUSION_CONTAINER_SET_CONVERT_HPP
 
 #include <boost/fusion/container/set/set.hpp>
-#include <boost/fusion/container/set/detail/convert_impl.hpp>
 #include <boost/fusion/support/ref.hpp>
+
+#include <boost/fusion/container/set/detail/convert_impl.hpp>
 
 namespace boost { namespace fusion
 {

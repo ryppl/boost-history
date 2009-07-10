@@ -9,6 +9,5 @@
 #define BOOST_FUSION_VIEW_FILTER_VIEW_HPP
 
 #include <boost/fusion/view/filter_view/filter_view.hpp>
-#include <boost/fusion/view/filter_view/filter_view_iterator.hpp>
 
 #endif

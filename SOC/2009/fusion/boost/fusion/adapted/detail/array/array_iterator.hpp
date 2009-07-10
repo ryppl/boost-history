@@ -47,7 +47,7 @@ namespace boost { namespace fusion
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                detail::result_of_forward_as<
+                detail::forward_as<
                     typename it::array_type
                   , typename detail::remove_reference<
                         typename it::array_type

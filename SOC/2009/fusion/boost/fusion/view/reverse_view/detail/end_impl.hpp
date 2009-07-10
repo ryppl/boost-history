@@ -10,41 +10,34 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 
-//TODO: Forward view cv qualifiers?
-
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct reverse_view_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<reverse_view_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<reverse_view_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    reverse_view_iterator<
-                        typename result_of::begin<
-                            typename detail::remove_reference<
-                                SeqRef
-                            >::type::seq_type
-                        >::type
-                     >
-                type;
+            typedef
+                reverse_view_iterator<
+                    typename result_of::begin<
+                        typename detail::remove_reference<
+                            SeqRef
+                        >::type::seq_type
+                    >::type
+                 >
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(fusion::begin(seq.seq.get()));
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(fusion::begin(seq.seq.get()));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

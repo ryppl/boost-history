@@ -20,7 +20,7 @@ namespace Core
         std::tr1::shared_ptr<boost::any> t_;
 
     public:
-        AutoConverter(std::tr1::shared_ptr<boost::any> const & t)
+        AutoConverter(std::tr1::shared_ptr<boost::any> const& t)
           : t_(t)
         {}
 

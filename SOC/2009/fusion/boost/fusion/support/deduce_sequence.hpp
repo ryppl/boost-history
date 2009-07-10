@@ -24,18 +24,17 @@ namespace boost { namespace fusion { namespace traits
             template <typename Sig>
             struct result;
 
-            template <class Self, typename T>
-            struct result< Self(T) >
-                : fusion::traits::deduce<T>
-            { };
+            template<typename T>
+            struct result<deducer(T)>
+              : fusion::traits::deduce<T>
+            {};
         };
     }
 
-    template <class Sequence>
+    template <class Seq>
     struct deduce_sequence
-        : result_of::as_vector<
-            fusion::transform_view<Sequence, detail::deducer> >
-    { };
+      : result_of::as_vector<fusion::transform_view<Seq, detail::deducer> >
+    {};
 
 }}}
 

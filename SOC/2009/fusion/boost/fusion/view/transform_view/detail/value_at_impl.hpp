@@ -14,62 +14,56 @@
 
 #include <boost/mpl/apply.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct transform_view_tag;
-    struct transform_view2_tag;
+    template<typename Tag>
+    struct value_at_impl;
 
-    namespace extension
+    template<>
+    struct value_at_impl<transform_view_tag>
     {
-        template<typename Tag>
-        struct value_at_impl;
-
-        template<>
-        struct value_at_impl<transform_view_tag>
+        template<typename SeqRef, typename N>
+        struct apply
         {
-            template<typename SeqRef, typename N>
-            struct apply
-            {
-                typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<SeqRef>::type seq;
 
-                typedef typename
-                    mpl::apply<
-                        detail::apply_transform_result<
-                            typename seq::transform_type
-                        >
-                      , typename boost::fusion::result_of::value_at<
-                            typename seq::seq_type
-                          , N
-                        >::type
+            typedef typename
+                mpl::apply<
+                    detail::apply_transform_result<
+                        typename seq::transform_type
+                    >
+                  , typename boost::fusion::result_of::value_at<
+                        typename seq::seq_type
+                      , N
                     >::type
-                type;
-            };
+                >::type
+            type;
         };
+    };
 
-        template<>
-        struct value_at_impl<transform_view2_tag>
+    template<>
+    struct value_at_impl<transform_view2_tag>
+    {
+        template<typename SeqRef, typename N>
+        struct apply
         {
-            template<typename SeqRef, typename N>
-            struct apply
-            {
-                typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<SeqRef>::type seq;
 
-                typedef typename
-                    mpl::apply<
-                        detail::apply_transform_result<
-                            typename seq::transform_type
-                        >
-                      , typename boost::fusion::result_of::value_at<
-                            typename seq::seq1_type, N
-                        >::type
-                      , typename boost::fusion::result_of::value_at<
-                            typename seq::seq2_type, N
-                        >::type
+            typedef typename
+                mpl::apply<
+                    detail::apply_transform_result<
+                        typename seq::transform_type
+                    >
+                  , typename boost::fusion::result_of::value_at<
+                        typename seq::seq1_type, N
                     >::type
-                type;
-            };
+                  , typename boost::fusion::result_of::value_at<
+                        typename seq::seq2_type, N
+                    >::type
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

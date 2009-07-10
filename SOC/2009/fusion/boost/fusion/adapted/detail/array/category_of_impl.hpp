@@ -9,9 +9,8 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_CATEGORY_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_CATEGORY_OF_IMPL_HPP
 
-namespace boost { namespace fusion { 
-
-    struct array_tag;
+namespace boost { namespace fusion
+{
     struct random_access_traversal_tag;
 
     namespace extension

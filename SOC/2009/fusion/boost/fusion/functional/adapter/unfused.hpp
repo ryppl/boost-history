@@ -45,7 +45,7 @@ namespace boost { namespace fusion
         { }
 
         typedef typename boost::result_of<
-            function_c(fusion::vector0<> &) >::type call_const_0_result;
+            function_c(fusion::vector0<>&) >::type call_const_0_result;
 
         inline call_const_0_result operator()() const
         {
@@ -54,7 +54,7 @@ namespace boost { namespace fusion
         }
 
         typedef typename boost::result_of< 
-            function(fusion::vector0<> &) >::type call_0_result;
+            function(fusion::vector0<>&) >::type call_0_result;
 
         inline call_0_result operator()() 
         {
@@ -114,19 +114,19 @@ namespace boost
         struct result< Self const (BOOST_PP_ENUM_PARAMS(N,T)) >
             : boost::result_of< function_c(
                 BOOST_PP_CAT(fusion::vector,N)< BOOST_PP_ENUM_BINARY_PARAMS(N,
-                    typename detail::mref<T,>::type BOOST_PP_INTERCEPT) > & )>
+                    typename detail::mref<T,>::type BOOST_PP_INTERCEPT) >& )>
         { };
 
         template <class Self, BOOST_PP_ENUM_PARAMS(N,typename T)>
         struct result< Self(BOOST_PP_ENUM_PARAMS(N,T)) >
             : boost::result_of< function(
                 BOOST_PP_CAT(fusion::vector,N)< BOOST_PP_ENUM_BINARY_PARAMS(N,
-                    typename detail::mref<T,>::type BOOST_PP_INTERCEPT) > & )>
+                    typename detail::mref<T,>::type BOOST_PP_INTERCEPT) >& )>
         { };
 
         template <BOOST_PP_ENUM_PARAMS(N,typename T)>
         inline typename boost::result_of<function_c(BOOST_PP_CAT(fusion::vector,N)
-            <BOOST_PP_ENUM_BINARY_PARAMS(N,T,& BOOST_PP_INTERCEPT)> & )>::type
+            <BOOST_PP_ENUM_BINARY_PARAMS(N,T,& BOOST_PP_INTERCEPT)>& )>::type
         operator()(BOOST_PP_ENUM_BINARY_PARAMS(N,T,& a)) const
         {
             BOOST_PP_CAT(fusion::vector,N)<
@@ -137,7 +137,7 @@ namespace boost
 
         template <BOOST_PP_ENUM_PARAMS(N,typename T)>
         inline typename boost::result_of<function(BOOST_PP_CAT(fusion::vector,N)
-            <BOOST_PP_ENUM_BINARY_PARAMS(N,T,& BOOST_PP_INTERCEPT)> & )>::type
+            <BOOST_PP_ENUM_BINARY_PARAMS(N,T,& BOOST_PP_INTERCEPT)>& )>::type
         operator()(BOOST_PP_ENUM_BINARY_PARAMS(N,T,& a)) 
         {
             BOOST_PP_CAT(fusion::vector,N)<

@@ -38,7 +38,7 @@ namespace boost { namespace fusion
             it;
 
             typedef typename
-                detail::result_of_forward_as<
+                detail::forward_as<
                     typename it::cons_type
                   , typename detail::remove_reference<
                         typename it::cons_type
@@ -62,7 +62,7 @@ namespace boost { namespace fusion
 
             typedef
                 boost_tuple_iterator<
-                    typename detail::result_of_forward_as<
+                    typename detail::forward_as<
                         typename it::cons_type,
                         typename detail::remove_reference<
                             typename it::cons_type

@@ -10,21 +10,19 @@
 #define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_AT_IMPL_HPP
 
 #include <boost/fusion/container/vector.hpp>
-#include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/container/vector/convert.hpp>
+#include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
 #include <boost/fusion/support/assert.hpp>
-
-#include <boost/type_traits/is_reference.hpp>
 #include <boost/fusion/support/unused.hpp>
+
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
+
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
 {
-    struct zip_view_tag;
-
     namespace detail
     {
         template<typename N>

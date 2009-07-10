@@ -32,13 +32,13 @@ struct test_func
     };
 
     template <typename T0, typename T1>
-    int operator()(T0 const & x, T1 const & y) const
+    int operator()(T0 const& x, T1 const& y) const
     {
         return 1+x-y;
     }
 
     template <typename T0, typename T1>
-    int operator()(T0 const & x, T1 const & y) 
+    int operator()(T0 const& x, T1 const& y) 
     {
         return 2+x-y;
     }
@@ -60,10 +60,10 @@ int main()
 {
     test_func<noncopyable> f;
     fusion::fused_function_object< test_func<> > fused_func;
-    fusion::fused_function_object< test_func<noncopyable> & > fused_func_ref(f);
+    fusion::fused_function_object< test_func<noncopyable>& > fused_func_ref(f);
     fusion::fused_function_object< test_func<> const > fused_func_c;
     fusion::fused_function_object< test_func<> > const fused_func_c2;
-    fusion::fused_function_object< test_func<noncopyable> const & > fused_func_c_ref(f);
+    fusion::fused_function_object< test_func<noncopyable> const& > fused_func_c_ref(f);
 
     fusion::vector<int,char> lv_vec(1,'\004');
     BOOST_TEST(fused_func(lv_vec) == 1);

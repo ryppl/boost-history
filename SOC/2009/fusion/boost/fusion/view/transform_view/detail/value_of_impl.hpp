@@ -12,63 +12,57 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/view/transform_view/detail/apply_transform_result.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct transform_view_iterator_tag;
-    struct transform_view_iterator2_tag;
+    template <typename Tag>
+    struct value_of_impl;
 
-    namespace extension
+    // Unary Version
+    template <>
+    struct value_of_impl<transform_view_iterator_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        // Unary Version
-        template <>
-        struct value_of_impl<transform_view_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<ItRef>::type it;
 
-                typedef typename
-                    mpl::apply<
-                        detail::apply_transform_result<
-                            typename it::transform_type
-                        >
-                      , typename result_of::value_of<
-                            typename it::first_type
-                        >::type
+            typedef typename
+                mpl::apply<
+                    detail::apply_transform_result<
+                        typename it::transform_type
+                    >
+                  , typename result_of::value_of<
+                        typename it::first_type
                     >::type
-                type;
-            };
+                >::type
+            type;
         };
+    };
 
-        // Binary Version
-        template <>
-        struct value_of_impl<transform_view_iterator2_tag>
+    // Binary Version
+    template <>
+    struct value_of_impl<transform_view_iterator2_tag>
+    {
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<ItRef>::type it;
 
-                typedef typename
-                    mpl::apply<
-                        detail::apply_transform_result<
-                            typename it::transform_type
-                        >
-                      , typename result_of::value_of<
-                            typename it::first1_type
-                        >::type
-                      , typename result_of::value_of<
-                            typename it::first2_type
-                        >::type
+            typedef typename
+                mpl::apply<
+                    detail::apply_transform_result<
+                        typename it::transform_type
+                    >
+                  , typename result_of::value_of<
+                        typename it::first1_type
                     >::type
-                type;
-            };
+                  , typename result_of::value_of<
+                        typename it::first2_type
+                    >::type
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

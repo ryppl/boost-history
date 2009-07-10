@@ -10,79 +10,67 @@
 
 #include <boost/fusion/iterator/next.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct transform_view_iterator_tag;
-    struct transform_view_iterator2_tag;
+    template <typename Tag>
+    struct next_impl;
 
-    template<typename First, typename F>
-    struct transform_view_iterator;
-
-    template <typename First1, typename First2, typename F>
-    struct transform_view_iterator2;
-
-    namespace extension
+    // Unary Version
+    template <>
+    struct next_impl<transform_view_iterator_tag>
     {
-        template <typename Tag>
-        struct next_impl;
-
-        // Unary Version
-        template <>
-        struct next_impl<transform_view_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
+            typedef typename detail::remove_reference<ItRef>::type it;
+
+            typedef
+                transform_view_iterator<
+                    typename result_of::next<
+                        typename it::first_type
+                    >::type
+                  , typename it::transform_type
+                >
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename detail::remove_reference<ItRef>::type it;
-
-                typedef
-                    transform_view_iterator<
-                        typename result_of::next<
-                            typename it::first_type
-                        >::type
-                      , typename it::transform_type
-                    >
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return type(fusion::next(it.first), *it.f);
-                }
-            };
+                return type(fusion::next(it.first), *it.f);
+            }
         };
+    };
 
-        // Binary Version
-        template <>
-        struct next_impl<transform_view_iterator2_tag>
+    // Binary Version
+    template <>
+    struct next_impl<transform_view_iterator2_tag>
+    {
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
+            typedef typename detail::remove_reference<ItRef>::type it;
+
+            typedef
+                transform_view_iterator2<
+                    typename result_of::next<
+                        typename it::first1_type
+                    >::type
+                  , typename result_of::next<
+                        typename it::first2_type
+                    >::type
+                  , typename it::transform_type
+                >
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename detail::remove_reference<ItRef>::type it;
-
-                typedef
-                    transform_view_iterator2<
-                        typename result_of::next<
-                            typename it::first1_type
-                        >::type
-                      , typename result_of::next<
-                            typename it::first2_type
-                        >::type
-                      , typename it::transform_type
-                    >
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return type(fusion::next(it.first1),
-                            fusion::next(it.first2),
-                            *it.f);
-                }
-            };
+                return type(fusion::next(it.first1),
+                        fusion::next(it.first2),
+                        *it.f);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

@@ -33,13 +33,13 @@ struct test_func
     : Base
 {
     template <typename T0, typename T1>
-    int operator()(T0 const & x, T1 const & y) const
+    int operator()(T0 const& x, T1 const& y) const
     {
         return effect = 1+x-y;
     }
 
     template <typename T0, typename T1>
-    int operator()(T0 const & x, T1 const & y) 
+    int operator()(T0 const& x, T1 const& y) 
     {
         return effect = 2+x-y;
     }
@@ -58,7 +58,7 @@ struct test_func
 };
 
 template <typename T>
-inline T const & const_(T const & t)
+inline T const& const_(T const& t)
 {
     return t;
 }

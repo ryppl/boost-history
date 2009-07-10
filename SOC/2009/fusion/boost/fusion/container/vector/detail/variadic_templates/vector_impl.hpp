@@ -13,6 +13,7 @@
 #include <boost/fusion/support/variadic_templates/variadic_arguments_to_vector.hpp>
 #include <boost/fusion/support/sequence_assign.hpp>
 #include <boost/fusion/support/assign_tags.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
 
 #include <boost/mpl/int.hpp>
 

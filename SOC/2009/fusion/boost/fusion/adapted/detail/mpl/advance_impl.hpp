@@ -10,38 +10,33 @@
 
 #include <boost/mpl/advance.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct advance_impl;
 
-    namespace extension
+    template <>
+    struct advance_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct advance_impl;
-
-        template <>
-        struct advance_impl<mpl_iterator_tag>
+        template <typename ItRef, typename N>
+        struct apply
         {
-            template <typename ItRef, typename N>
-            struct apply
-            {
-                typedef
-                    mpl_iterator<
-                        typename mpl::advance<
-                            typename detail::identity<ItRef>::type
-                          , N
-                        >::type
-                    >
-               type;
+            typedef
+                mpl_iterator<
+                    typename mpl::advance<
+                        typename detail::identity<ItRef>::type
+                      , N
+                    >::type
+                >
+           type;
 
-                static type
-                call(ItRef)
-                {
-                    return type();
-                }
-            };
+            static type
+            call(ItRef)
+            {
+                return type();
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

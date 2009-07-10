@@ -16,8 +16,6 @@
 
 namespace boost { namespace fusion
 {
-    struct joint_view_iterator_tag;
-
     namespace detail
     {
         template<typename It1, typename It2>

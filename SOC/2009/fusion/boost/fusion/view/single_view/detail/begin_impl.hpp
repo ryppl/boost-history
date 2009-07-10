@@ -8,34 +8,26 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_BEGIN_IMPL_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_BEGIN_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct single_view_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    template <typename T>
-    struct single_view_iterator;
-
-    namespace extension
+    template <>
+    struct begin_impl<single_view_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<single_view_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef single_view_iterator<SeqRef> type;
+            typedef single_view_iterator<SeqRef> type;
 
-                static type
-                call(SeqRef s)
-                {
-                    return type(s,0);
-                }
-            };
+            static type
+            call(SeqRef s)
+            {
+                return type(s,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

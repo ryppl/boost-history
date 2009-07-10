@@ -11,42 +11,34 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct filter_view_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    template <typename First, typename Last, typename Pred>
-    struct filter_iterator;
-
-    namespace extension
+    template <>
+    struct begin_impl<filter_view_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<filter_view_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
+            typedef typename detail::remove_reference<SeqRef>::type seq;
+
+            typedef
+                filter_iterator<
+                    typename result_of::begin<typename seq::seq_type>::type
+                  , typename result_of::end<typename seq::seq_type>::type
+                  , typename seq::pred_type
+                >
+            type;
+
+            static type
+            call(SeqRef seq)
             {
-                typedef typename detail::remove_reference<SeqRef>::type seq;
-
-                typedef
-                    filter_iterator<
-                        typename result_of::begin<typename seq::seq_type>::type
-                      , typename result_of::end<typename seq::seq_type>::type
-                      , typename seq::pred_type
-                    >
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return type(fusion::begin(seq.seq.get()),0);
-                }
-            };
+                return type(fusion::begin(seq.seq.get()),0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

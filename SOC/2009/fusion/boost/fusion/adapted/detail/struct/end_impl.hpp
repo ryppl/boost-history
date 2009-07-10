@@ -9,38 +9,33 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_END_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_END_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct struct_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<struct_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<struct_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    struct_iterator<
-                        SeqRef
-                      , struct_size<
-                            typename detail::identity<SeqRef>::type
-                        >::value
-                    >
-                type;
+            typedef
+                struct_iterator<
+                    SeqRef
+                  , struct_size<
+                        typename detail::identity<SeqRef>::type
+                    >::value
+                >
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(seq,0);
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(seq,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

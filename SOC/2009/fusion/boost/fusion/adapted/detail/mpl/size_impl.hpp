@@ -11,24 +11,19 @@
 
 #include <boost/mpl/size.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_sequence_tag;
+    template<typename Tag>
+    struct size_impl;
 
-    namespace extension
+    template <>
+    struct size_impl<mpl_sequence_tag>
     {
-        template<typename Tag>
-        struct size_impl;
-
-        template <>
-        struct size_impl<mpl_sequence_tag>
-        {
-            template <typename SeqRef>
-            struct apply
-              : mpl::size<typename detail::identity<SeqRef>::type>
-            {};
-        };
-    }
-}}
+        template <typename SeqRef>
+        struct apply
+          : mpl::size<typename detail::identity<SeqRef>::type>
+        {};
+    };
+}}}
 
 #endif

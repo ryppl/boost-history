@@ -20,10 +20,8 @@
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_iterator_tag;
-
+namespace boost { namespace fusion
+{
     struct random_access_iterator_tag;
 
     namespace detail

@@ -9,31 +9,26 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_BEGIN_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_BEGIN_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct struct_tag;
+    template<typename Tag>
+    struct begin_impl;
 
-    namespace extension
+    template <>
+    struct begin_impl<struct_tag>
     {
-        template<typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<struct_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef struct_iterator<SeqRef, 0> type;
+            typedef struct_iterator<SeqRef, 0> type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(seq,0);
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(seq,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

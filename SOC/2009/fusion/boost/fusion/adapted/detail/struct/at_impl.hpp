@@ -13,46 +13,41 @@
 
 #include <boost/mpl/int.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct struct_tag;
+    template<typename Tag>
+    struct at_impl;
 
-    namespace extension
+    template <>
+    struct at_impl<struct_tag>
     {
-        template<typename Tag>
-        struct at_impl;
-
-        template <>
-        struct at_impl<struct_tag>
+        template <typename SeqRef, typename N>
+        struct apply
         {
-            template <typename SeqRef, typename N>
-            struct apply
-            {
-                //BOOST_FUSION_INDEX_CHECK(n_value,
-                //    struct_size<Sequence>::value);
+            //BOOST_FUSION_INDEX_CHECK(n_value,
+            //    struct_size<Sequence>::value);
 
-                typedef typename
-                    detail::result_of_forward_as<
-                        SeqRef
-                      , typename struct_member<
-                            typename detail::identity<SeqRef>::type
-                          , N::value
-                        >::type
+            typedef typename
+                detail::forward_as<
+                    SeqRef
+                  , typename struct_member<
+                        typename detail::identity<SeqRef>::type
+                      , N::value
                     >::type
-                type;
+                >::type
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return
-                        struct_member<
-                            typename detail::identity<SeqRef>::type
-                          , N::value
-                        >::call(seq);
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return
+                    struct_member<
+                        typename detail::identity<SeqRef>::type
+                      , N::value
+                    >::call(seq);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

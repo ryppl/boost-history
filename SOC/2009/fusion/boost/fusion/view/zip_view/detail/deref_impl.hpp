@@ -19,10 +19,8 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_iterator_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         struct poly_deref

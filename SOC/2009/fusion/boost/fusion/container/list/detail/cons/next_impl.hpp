@@ -9,48 +9,37 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_NEXT_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_NEXT_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_iterator_tag;
+    template <typename Tag>
+    struct next_impl;
 
-    template <typename Cons>
-    struct cons_iterator;
-
-    namespace extension
+    template <>
+    struct next_impl<cons_iterator_tag>
     {
-        template <typename Tag>
-        struct next_impl;
-
-        template <>
-        struct next_impl<cons_iterator_tag>
+        template <typename It>
+        struct apply
         {
-            template <typename It>
-            struct apply
+            typedef typename
+                detail::remove_reference<It>::type::cons_type
+            cons_type;
+            typedef typename
+                detail::remove_reference<cons_type>::type::cdr_type
+            cdr_type;
+
+            typedef
+                cons_iterator<
+                    typename detail::forward_as<cons_type, cdr_type>::type
+                >
+            type;
+
+            static type
+            call(It it)
             {
-                typedef typename
-                    detail::remove_reference<It>::type::cons_type
-                cons_type;
-                typedef typename
-                    detail::remove_reference<cons_type>::type::cdr_type
-                cdr_type;
-
-                typedef
-                    cons_iterator<
-                        typename detail::result_of_forward_as<
-                            cons_type
-                          , cdr_type
-                        >::type
-                    >
-                type;
-
-                static type
-                call(It it)
-                {
-                    return type(it.cons->cdr,0);
-                }
-            };
+                return type(it.cons->cdr,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

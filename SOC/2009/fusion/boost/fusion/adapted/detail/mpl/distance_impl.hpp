@@ -12,30 +12,25 @@
 
 #include <boost/mpl/distance.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct distance_to_impl;
 
-    namespace extension
+    template <>
+    struct distance_to_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct distance_to_impl;
-
-        template <>
-        struct distance_to_impl<mpl_iterator_tag>
+        template <typename It1Ref, typename It2Ref>
+        struct apply
+          : mpl::distance<
+                typename detail::identity<It1Ref>::type
+              , typename detail::get_mpl_it<
+                    typename detail::identity<It2Ref>::type
+                >::type
+            >
         {
-            template <typename It1Ref, typename It2Ref>
-            struct apply
-              : mpl::distance<
-                    typename detail::identity<It1Ref>::type
-                  , typename detail::get_mpl_it<
-                        typename detail::identity<It2Ref>::type
-                    >::type
-                >
-            {
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

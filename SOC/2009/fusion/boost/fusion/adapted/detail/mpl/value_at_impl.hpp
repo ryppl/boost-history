@@ -11,24 +11,19 @@
 
 #include <boost/mpl/at.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_sequence_tag;
+    template <typename Tag>
+    struct value_at_impl;
 
-    namespace extension
+    template <>
+    struct value_at_impl<mpl_sequence_tag>
     {
-        template <typename Tag>
-        struct value_at_impl;
-
-        template <>
-        struct value_at_impl<mpl_sequence_tag>
-        {
-            template <typename SeqRef, typename N>
-            struct apply
-              : mpl::at<typename detail::identity<SeqRef>::type, N>
-            {};
-        };
-    }
-}}
+        template <typename SeqRef, typename N>
+        struct apply
+          : mpl::at<typename detail::identity<SeqRef>::type, N>
+        {};
+    };
+}}}
 
 #endif

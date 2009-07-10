@@ -12,39 +12,34 @@
 
 #include <boost/mpl/if.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct joint_view_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<joint_view_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<joint_view_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    concat_iterator<
-                        typename result_of::end<
-                            typename detail::remove_reference<
-                                SeqRef
-                            >::type::seq2_type
-                        >::type
-                    >
-                type;
+            typedef
+                concat_iterator<
+                    typename result_of::end<
+                        typename detail::remove_reference<
+                            SeqRef
+                        >::type::seq2_type
+                    >::type
+                >
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return type(fusion::end(seq.seq2.get()));
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return type(fusion::end(seq.seq2.get()));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

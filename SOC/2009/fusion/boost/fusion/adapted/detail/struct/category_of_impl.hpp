@@ -13,7 +13,6 @@
 
 namespace boost { namespace fusion
 {
-    struct struct_tag;
     struct random_access_traversal_tag;
 
     namespace extension

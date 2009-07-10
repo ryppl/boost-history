@@ -20,7 +20,8 @@
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/bool.hpp>
 
-#include <boost/fusion/view/joint_view/joint_view_iterator.hpp>
+#include <boost/fusion/view/joint_view/detail/joint_view_fwd.hpp>
+#include <boost/fusion/view/joint_view/detail/joint_view_iterator.hpp>
 #include <boost/fusion/view/joint_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/joint_view/detail/deref_impl.hpp>
 #include <boost/fusion/view/joint_view/detail/end_impl.hpp>
@@ -30,7 +31,6 @@
 
 namespace boost { namespace fusion
 {
-    struct joint_view_tag;
     struct forward_traversal_tag;
     struct fusion_sequence_tag;
 

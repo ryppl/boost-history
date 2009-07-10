@@ -9,32 +9,26 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_VALUE_OF_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_VALUE_OF_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_iterator_tag;
+    template <typename Tag>
+    struct value_of_impl;
 
-    namespace extension
+    template <>
+    struct value_of_impl<cons_iterator_tag>
     {
-        template <typename Tag>
-        struct value_of_impl;
-
-        template <>
-        struct value_of_impl<cons_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<ItRef>::type::cons_type
-                cons_type;
+            typedef typename
+                detail::remove_reference<ItRef>::type::cons_type
+            cons_type;
 
-                typedef typename
-                    detail::remove_reference<cons_type>::type::car_type
-                type;
-            };
+            typedef typename
+                detail::remove_reference<cons_type>::type::car_type
+            type;
         };
-    }
-
-}}
+    };
+}}}
 
 #endif

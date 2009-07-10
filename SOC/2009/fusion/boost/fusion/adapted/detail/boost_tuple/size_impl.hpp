@@ -10,28 +10,23 @@
 
 #include <boost/mpl/int.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct boost_tuple_tag;
+    template<typename Tag>
+    struct size_impl;
 
-    namespace extension
+    template <>
+    struct size_impl<boost_tuple_tag>
     {
-        template<typename Tag>
-        struct size_impl;
-
-        template <>
-        struct size_impl<boost_tuple_tag>
-        {
-            template <typename SeqRef>
-            struct apply
-              : mpl::int_<
-                    tuples::length<
-                        typename detail::identity<SeqRef>::type
-                    >::value
-                >
-            {};
-        };
-    }
-}}
+        template <typename SeqRef>
+        struct apply
+          : mpl::int_<
+                tuples::length<
+                    typename detail::identity<SeqRef>::type
+                >::value
+            >
+        {};
+    };
+}}}
 
 #endif

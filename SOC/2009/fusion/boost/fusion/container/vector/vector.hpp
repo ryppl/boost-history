@@ -154,21 +154,22 @@ namespace boost { namespace fusion
     };
 }}
 #else
+#   include <boost/fusion/container/vector/vector_fwd.hpp>
 #   include <boost/fusion/support/ref.hpp>
-#   include <boost/fusion/container/vector/vector_iterator.hpp>
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
+
+#   include <boost/fusion/container/vector/detail/vector_iterator.hpp>
 #   include <boost/fusion/container/vector/detail/begin_impl.hpp>
 #   include <boost/fusion/container/vector/detail/end_impl.hpp>
-
-namespace boost { namespace fusion {
-
-struct vector_tag;
-struct fusion_sequence_tag;
-struct random_access_traversal_tag;
-
-}}
+#   include <boost/fusion/container/vector/detail/deref_impl.hpp>
+#   include <boost/fusion/container/vector/detail/value_of_impl.hpp>
+#   include <boost/fusion/container/vector/detail/next_impl.hpp>
+#   include <boost/fusion/container/vector/detail/prior_impl.hpp>
+#   include <boost/fusion/container/vector/detail/equal_to_impl.hpp>
+#   include <boost/fusion/container/vector/detail/distance_impl.hpp>
+#   include <boost/fusion/container/vector/detail/advance_impl.hpp>
 
 #   include <boost/fusion/container/vector/detail/variadic_templates/vector_impl.hpp>
 #endif

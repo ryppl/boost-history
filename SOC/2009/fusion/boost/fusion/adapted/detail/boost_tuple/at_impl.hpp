@@ -8,40 +8,35 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_AT_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_AT_IMPL_HPP
 
-namespace boost { namespace fusion 
+namespace boost { namespace fusion { namespace extension
 {
-    struct boost_tuple_tag;
+    template<typename Tag>
+    struct at_impl;
 
-    namespace extension
+    template <>
+    struct at_impl<boost_tuple_tag>
     {
-        template<typename Tag>
-        struct at_impl;
-
-        template <>
-        struct at_impl<boost_tuple_tag>
+        template <typename SeqRef, typename N>
+        struct apply
         {
-            template <typename SeqRef, typename N>
-            struct apply 
-            {
-                typedef typename
-                    detail::result_of_forward_as<
-                        SeqRef
-                      , typename tuples::element<
-                            N::value
-                          , typename detail::identity<SeqRef>::type
-                        >::type
+            typedef typename
+                detail::forward_as<
+                    SeqRef
+                  , typename tuples::element<
+                        N::value
+                      , typename detail::identity<SeqRef>::type
                     >::type
-                type;
-    
-                static type
-                call(SeqRef seq)
-                {
-                    return tuples::get<N::value>(
-                            BOOST_FUSION_FORWARD(SeqRef,seq));
-                }
-            };
+                >::type
+            type;
+
+            static type
+            call(SeqRef seq)
+            {
+                return tuples::get<N::value>(
+                        BOOST_FUSION_FORWARD(SeqRef,seq));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

@@ -8,45 +8,37 @@
 
 #include <boost/fusion/iterator/next.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    template<typename It, typename NewCategory>
-    struct iterator_adapter;
+    template <typename Tag>
+    struct next_impl;
 
-    struct iterator_adapter_tag;
-
-    namespace extension
+    template <>
+    struct next_impl<iterator_adapter_tag>
     {
-        template <typename Tag>
-        struct next_impl;
-
-        template <>
-        struct next_impl<iterator_adapter_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
+            typedef typename
+                detail::remove_reference<ItRef>::type
+            it;
+
+            typedef
+                iterator_adapter<
+                    typename result_of::next<
+                        typename it::iterator_type
+                    >::type
+                  , typename it::category
+                >
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename
-                    detail::remove_reference<ItRef>::type
-                it;
-
-                typedef
-                    iterator_adapter<
-                        typename result_of::next<
-                            typename it::iterator_type
-                        >::type
-                      , typename it::category
-                    >
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return type(fusion::next(it.it),0);
-                }
-            };
+                return type(fusion::next(it.it),0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

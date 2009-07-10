@@ -9,19 +9,17 @@
 #ifndef BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_NEXT_IMPL_HPP
 #define BOOST_FUSION_VIEW_ZIP_VIEW_DETAIL_NEXT_IMPL_HPP
 
-#include <boost/fusion/view/zip_view/zip_view_iterator_fwd.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
 #include <boost/fusion/support/unused.hpp>
+
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace boost { namespace fusion {
-
-    struct zip_view_iterator_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         struct poly_next

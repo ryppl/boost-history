@@ -11,7 +11,7 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    // const reference deduction for function templates that accept T const &
+    // const reference deduction for function templates that accept T const&
     template <typename T> struct cref               { typedef T const& type; };
     template <typename T> struct cref<T&>           { typedef T const& type; };
     template <typename T> struct cref<T const>      { typedef T const& type; };
@@ -21,7 +21,7 @@ namespace boost { namespace fusion { namespace detail
     template <typename T> struct mref<T&>           { typedef T      & type; };
 
     // generic reference deduction for function templates that are overloaded
-    // to accept both T const & and T &
+    // to accept both T const& and T &
     template <typename T> struct gref               { typedef T const& type; };
     template <typename T> struct gref<T&>           { typedef T      & type; };
     template <typename T> struct gref<T const>      { typedef T const& type; };

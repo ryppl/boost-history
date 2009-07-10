@@ -10,6 +10,5 @@
 #define BOOST_FUSION_VIEW_ZIP_VIEW_HPP
 
 #include <boost/fusion/view/zip_view/zip_view.hpp>
-#include <boost/fusion/view/zip_view/zip_view_iterator.hpp>
 
 #endif

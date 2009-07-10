@@ -35,14 +35,14 @@ namespace boost { namespace fusion
         { }
 
         template <class Seq> 
-        inline void operator()(Seq const & s) const
+        inline void operator()(Seq const& s) const
         {
             fusion::invoke_procedure<
                 func_const_fwd_t >(this->fnc_transformed,s);
         }
 
         template <class Seq> 
-        inline void operator()(Seq const & s) 
+        inline void operator()(Seq const& s) 
         {
             fusion::invoke_procedure<
                 func_fwd_t >(this->fnc_transformed,s);

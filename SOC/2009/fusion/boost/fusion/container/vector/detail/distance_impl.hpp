@@ -10,30 +10,25 @@
 
 #include <boost/mpl/minus.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct vector_iterator_tag;
+    template <typename Tag>
+    struct distance_impl;
 
-    namespace extension
+    template <>
+    struct distance_impl<vector_iterator_tag>
     {
-        template <typename Tag>
-        struct distance_impl;
-
-        template <>
-        struct distance_impl<vector_iterator_tag>
+        template <typename First, typename Last>
+        struct apply
         {
-            template <typename First, typename Last>
-            struct apply
-            {
-                typedef typename
-                    mpl::minus<
-                        typename detail::remove_reference<Last>::type::index
-                      , typename detail::remove_reference<First>::type::index
-                    >::type
-                type;
-            };
+            typedef typename
+                mpl::minus<
+                    typename detail::remove_reference<Last>::type::index
+                  , typename detail::remove_reference<First>::type::index
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

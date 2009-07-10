@@ -8,32 +8,27 @@
 
 #include <boost/fusion/iterator/equal_to.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct iterator_adapter_tag;
+    template <typename Tag>
+    struct equal_to_impl;
 
-    namespace extension
+    template <>
+    struct equal_to_impl<iterator_adapter_tag>
     {
-        template <typename Tag>
-        struct equal_to_impl;
-
-        template <>
-        struct equal_to_impl<iterator_adapter_tag>
+        template <typename It1Ref, typename It2Ref>
+        struct apply
+          : result_of::equal_to<
+                typename detail::remove_reference<
+                    It1Ref
+                >::type::iterator_type
+              , typename detail::remove_reference<
+                    It2Ref
+                >::type::iterator_type
+            >
         {
-            template <typename It1Ref, typename It2Ref>
-            struct apply
-              : result_of::equal_to<
-                    typename detail::remove_reference<
-                        It1Ref
-                    >::type::iterator_type
-                  , typename detail::remove_reference<
-                        It2Ref
-                    >::type::iterator_type
-                >
-            {
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

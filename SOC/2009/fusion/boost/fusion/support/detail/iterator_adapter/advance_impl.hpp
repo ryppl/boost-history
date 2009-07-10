@@ -8,45 +8,37 @@
 
 #include <boost/fusion/iterator/advance.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    template<typename It, typename NewCategory>
-    struct iterator_adapter;
+    template <typename Tag>
+    struct advance_impl;
 
-    struct iterator_adapter_tag;
-
-    namespace extension
+    template <>
+    struct advance_impl<iterator_adapter_tag>
     {
-        template <typename Tag>
-        struct advance_impl;
-
-        template <>
-        struct advance_impl<iterator_adapter_tag>
+        template <typename ItRef, typename N>
+        struct apply
         {
-            template <typename ItRef, typename N>
-            struct apply
+            //TODO cschmidt: category assert
+            typedef typename detail::remove_reference<ItRef>::type it;
+
+            typedef
+                iterator_adapter<
+                    typename result_of::advance<
+                        typename it::iterator_type
+                      , N
+                    >::type
+                  , typename it::category
+                >
+            type;
+
+            static type
+            call(ItRef it)
             {
-                //TODO cschmidt: category assert
-                typedef typename detail::remove_reference<ItRef>::type it;
-
-                typedef
-                    iterator_adapter<
-                        typename result_of::advance<
-                            typename it::iterator_type
-                          , N
-                        >::type
-                      , typename it::category
-                    >
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return type(fusion::advance<N>(it.it),0);
-                }
-            };
+                return type(fusion::advance<N>(it.it),0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

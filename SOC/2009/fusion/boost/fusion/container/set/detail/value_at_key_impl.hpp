@@ -9,28 +9,23 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_DETAIL_VALUE_AT_KEY_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_SET_DETAIL_VALUE_AT_KEY_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct set_tag;
+    template <typename Tag>
+    struct value_at_key_impl;
 
-    namespace extension
+    template <>
+    struct value_at_key_impl<set_tag>
     {
-        template <typename Tag>
-        struct value_at_key_impl;
-
-        template <>
-        struct value_at_key_impl<set_tag>
+        template <typename SeqRef, typename Key>
+        struct apply
         {
-            template <typename SeqRef, typename Key>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<SeqRef>::type::
-                        template meta_at_impl<Key>::type
-                type;
-            };
+            typedef typename
+                detail::remove_reference<SeqRef>::type::
+                    template meta_at_impl<Key>::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

@@ -9,15 +9,19 @@
 #define BOOST_FUSION_SUPPORT_TAG_OF_HPP
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
-#include <boost/fusion/support/detail/is_mpl_sequence.hpp>
 #include <boost/fusion/support/ref.hpp>
 
+#include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace fusion
 {
+    struct sequence_root;
     struct mpl_sequence_tag;
     struct mpl_iterator_tag;
 
@@ -30,6 +34,14 @@ namespace boost { namespace fusion
         {
             typedef typename Seq::fusion_tag type;
         };
+
+        template <typename Seq>
+        struct is_mpl_sequence
+          : mpl::and_<
+                mpl::not_<is_base_of<sequence_root, Seq> >
+              , mpl::is_sequence<Seq>
+            >
+        {};
     }
 
     namespace traits

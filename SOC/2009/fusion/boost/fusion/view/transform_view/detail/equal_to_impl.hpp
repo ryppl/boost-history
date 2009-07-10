@@ -10,40 +10,34 @@
 
 #include <boost/fusion/iterator/equal_to.hpp>
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct equal_to_impl;
 
-    struct transform_view_iterator_tag;
-    struct transform_view_iterator2_tag;
-
-    namespace extension
+    template<>
+    struct equal_to_impl<transform_view_iterator_tag>
     {
-        template<typename Tag>
-        struct equal_to_impl;
+        template<typename ItRef1, typename ItRef2>
+        struct apply
+          : result_of::equal_to<
+                typename detail::remove_reference<ItRef1>::type::first_type
+              , typename detail::remove_reference<ItRef2>::type::first_type
+            >
+        {};
+    };
 
-        template<>
-        struct equal_to_impl<transform_view_iterator_tag>
-        {
-            template<typename ItRef1, typename ItRef2>
-            struct apply
-              : result_of::equal_to<
-                    typename detail::remove_reference<ItRef1>::type::first_type
-                  , typename detail::remove_reference<ItRef2>::type::first_type
-                >
-            {};
-        };
-
-        template<>
-        struct equal_to_impl<transform_view_iterator2_tag>
-        {
-            template<typename ItRef1, typename ItRef2>
-            struct apply
-              : result_of::equal_to<
-                    typename detail::remove_reference<ItRef1>::type::first1_type
-                  , typename detail::remove_reference<ItRef2>::type::first1_type
-                >
-            {};
-        };
-    }
-}}
+    template<>
+    struct equal_to_impl<transform_view_iterator2_tag>
+    {
+        template<typename ItRef1, typename ItRef2>
+        struct apply
+          : result_of::equal_to<
+                typename detail::remove_reference<ItRef1>::type::first1_type
+              , typename detail::remove_reference<ItRef2>::type::first1_type
+            >
+        {};
+    };
+}}}
 
 #endif

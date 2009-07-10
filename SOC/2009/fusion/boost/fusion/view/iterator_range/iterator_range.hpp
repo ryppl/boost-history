@@ -15,6 +15,7 @@
 
 #include <boost/mpl/bool.hpp>
 
+#include <boost/fusion/view/iterator_range/detail/iterator_range_fwd.hpp>
 #include <boost/fusion/view/iterator_range/detail/begin_impl.hpp>
 #include <boost/fusion/view/iterator_range/detail/end_impl.hpp>
 #include <boost/fusion/view/iterator_range/detail/at_impl.hpp>

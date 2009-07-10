@@ -9,31 +9,26 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_BEGIN_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_BEGIN_IMPL_HPP
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct begin_impl;
 
-    struct array_tag;
-
-    namespace extension
+    template <>
+    struct begin_impl<array_tag>
     {
-        template<typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<array_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply 
+            typedef array_iterator<SeqRef, 0> type;
+
+            static type
+            call(SeqRef seq)
             {
-                typedef array_iterator<SeqRef, 0> type;
-    
-                static type
-                call(SeqRef seq)
-                {
-                    return type(seq,0);
-                }
-            };
+                return type(seq,0);
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

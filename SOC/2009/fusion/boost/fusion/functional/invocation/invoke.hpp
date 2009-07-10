@@ -63,7 +63,7 @@ namespace boost { namespace fusion
 
     template <typename Function, class Sequence>
     inline typename result_of::invoke<Function, Sequence const>::type
-    invoke(Function, Sequence const &);
+    invoke(Function, Sequence const&);
 
     //----- ---- --- -- - -  -   -
 
@@ -171,7 +171,7 @@ namespace boost { namespace fusion
 
     template <typename Function, class Sequence>
     inline typename result_of::invoke<Function,Sequence const>::type
-    invoke(Function f, Sequence const & s)
+    invoke(Function f, Sequence const& s)
     {
         return detail::invoke_impl<
                 typename boost::remove_reference<Function>::type,Sequence const

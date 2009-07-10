@@ -32,7 +32,7 @@ namespace boost { namespace fusion
 
     template <typename F>
     inline typename result_of::BOOST_FUSION_FUNC_NAME<F>::type
-    BOOST_FUSION_FUNC_NAME(F const & f)
+    BOOST_FUSION_FUNC_NAME(F const& f)
     {
         return typename result_of::BOOST_FUSION_FUNC_NAME<F>::type(f);
     }

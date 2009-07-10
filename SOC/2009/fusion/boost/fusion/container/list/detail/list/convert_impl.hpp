@@ -14,46 +14,41 @@
 #   include <boost/fusion/container/list/detail/list/variadic_templates/as_list_impl.hpp>
 #endif
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct list_tag;
+    template <typename T>
+    struct convert_impl;
 
-    namespace extension
+    template <>
+    struct convert_impl<list_tag>
     {
-        template <typename T>
-        struct convert_impl;
-
-        template <>
-        struct convert_impl<list_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-                typedef typename
-                    detail::as_list<result_of::size<Seq>::value>
-                gen;
-                typedef typename gen::template apply<
-                    typename result_of::begin<Seq>::type>::type
-                type;
+            typedef typename
+                detail::as_list<result_of::size<Seq>::value>
+            gen;
+            typedef typename gen::template apply<
+                typename result_of::begin<Seq>::type>::type
+            type;
 
-                static type call(SeqRef seq)
-                {
-                    return gen::call(
-                        fusion::begin(BOOST_FUSION_FORWARD(SeqRef,seq)));
-                }
+            static type call(SeqRef seq)
+            {
+                return gen::call(
+                    fusion::begin(BOOST_FUSION_FORWARD(SeqRef,seq)));
+            }
 #else
-                typedef typename detail::as_list_impl<SeqRef> gen;
-                typedef typename gen::apply::type type;
+            typedef typename detail::as_list_impl<SeqRef> gen;
+            typedef typename gen::apply::type type;
 
-                static type call(SeqRef seq)
-                {
-                    return gen::call(seq);
-                }
+            static type call(SeqRef seq)
+            {
+                return gen::call(seq);
+            }
 #endif
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

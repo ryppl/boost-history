@@ -21,7 +21,6 @@
 
 namespace boost { namespace fusion
 {
-    struct list_tag;
     struct fusion_sequence_tag;
 #ifndef BOOST_NO_VARIADIC_TEMPLATES
     struct void_;

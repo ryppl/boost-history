@@ -8,41 +8,35 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct set_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    namespace extension
+    template <>
+    struct begin_impl<set_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<set_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef typename
-                    detail::result_of_forward_as<SeqRef
+            typedef typename
+                result_of::begin<
+                    typename detail::forward_as<
+                        SeqRef
                       , typename detail::remove_reference<
                             SeqRef
                         >::type::storage_type
                     >::type
-                storage_type;
+                >::type
+            type;
 
-                typedef typename
-                    result_of::begin<storage_type>::type
-                type;
-
-                static type
-                call(SeqRef seq)
-                {
-                    return fusion::begin(seq.get_data());
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return fusion::begin(seq.get_data());
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

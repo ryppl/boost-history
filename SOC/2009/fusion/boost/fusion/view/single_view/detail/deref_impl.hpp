@@ -11,33 +11,28 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/type_traits/is_const.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct single_view_iterator_tag;
+    template <typename Tag>
+    struct deref_impl;
 
-    namespace extension
+    template <>
+    struct deref_impl<single_view_iterator_tag>
     {
-        template <typename Tag>
-        struct deref_impl;
-
-        template <>
-        struct deref_impl<single_view_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<ItRef>::type::value_type
-                type;
+            typedef typename
+                detail::remove_reference<ItRef>::type::value_type
+            type;
 
-                static type
-                call(ItRef const& it)
-                {
-                    return it.view->val;
-                }
-            };
+            static type
+            call(ItRef const& it)
+            {
+                return it.view->val;
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

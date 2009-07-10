@@ -9,6 +9,7 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 
+#include <boost/fusion/support/detail/iterator_adapter/iterator_adapter_fwd.hpp>
 #include <boost/fusion/support/detail/iterator_adapter/deref_impl.hpp>
 #include <boost/fusion/support/detail/iterator_adapter/value_of_impl.hpp>
 #include <boost/fusion/support/detail/iterator_adapter/next_impl.hpp>

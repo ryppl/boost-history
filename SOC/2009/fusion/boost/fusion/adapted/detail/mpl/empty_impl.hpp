@@ -11,24 +11,19 @@
 
 #include <boost/mpl/empty.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_sequence_tag;
+    template <typename Tag>
+    struct empty_impl;
 
-    namespace extension
+    template <>
+    struct empty_impl<mpl_sequence_tag>
     {
-        template <typename Tag>
-        struct empty_impl;
-
-        template <>
-        struct empty_impl<mpl_sequence_tag>
-        {
-            template <typename SeqRef>
-            struct apply
-              : mpl::empty<typename detail::identity<SeqRef>::type>
-            {};
-        };
-    }
-}}
+        template <typename SeqRef>
+        struct apply
+          : mpl::empty<typename detail::identity<SeqRef>::type>
+        {};
+    };
+}}}
 
 #endif

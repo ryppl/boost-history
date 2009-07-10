@@ -10,30 +10,25 @@
 
 #include <boost/mpl/at.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct vector_tag;
+    template <typename Tag>
+    struct value_at_impl;
 
-    namespace extension
+    template <>
+    struct value_at_impl<vector_tag>
     {
-        template <typename Tag>
-        struct value_at_impl;
-
-        template <>
-        struct value_at_impl<vector_tag>
+        template <typename SeqRef, typename N>
+        struct apply
         {
-            template <typename SeqRef, typename N>
-            struct apply
-            {
-                typedef typename
-                    mpl::at<
-                        typename detail::remove_reference<SeqRef>::type::types
-                      , N
-                    >::type
-                type;
-            };
+            typedef typename
+                mpl::at<
+                    typename detail::remove_reference<SeqRef>::type::types
+                  , N
+                >::type
+            type;
         };
-    }
-}}
+    };
+}}}
 
 #endif

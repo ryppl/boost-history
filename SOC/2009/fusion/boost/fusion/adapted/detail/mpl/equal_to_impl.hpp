@@ -12,30 +12,25 @@
 
 #include <boost/type_traits/is_same.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct equal_to_impl;
 
-    namespace extension
+    template <>
+    struct equal_to_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct equal_to_impl;
-
-        template <>
-        struct equal_to_impl<mpl_iterator_tag>
+        template <typename It1Ref, typename It2Ref>
+        struct apply
+          : is_same<
+                typename detail::identity<It1Ref>::type
+              , typename detail::get_mpl_it<
+                    typename detail::identity<It2Ref>::type
+                >::type
+            >
         {
-            template <typename It1Ref, typename It2Ref>
-            struct apply
-              : is_same<
-                    typename detail::identity<It1Ref>::type
-                  , typename detail::get_mpl_it<
-                        typename detail::identity<It2Ref>::type
-                    >::type
-                >
-            {
-            };
         };
-    }
-}}
+    };
+}}}
 
 #endif

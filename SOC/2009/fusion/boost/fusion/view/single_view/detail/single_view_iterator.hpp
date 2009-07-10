@@ -5,16 +5,10 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_ITERATOR_HPP
-#define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_ITERATOR_HPP
+#ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_SINGLE_VIEW_ITERATOR_HPP
+#define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_SINGLE_VIEW_ITERATOR_HPP
 
-#include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
-
-#include <boost/fusion/view/single_view/detail/deref_impl.hpp>
-#include <boost/fusion/view/single_view/detail/next_impl.hpp>
-#include <boost/fusion/view/single_view/detail/value_of_impl.hpp>
-#include <boost/fusion/view/single_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {
@@ -43,7 +37,7 @@ namespace boost { namespace fusion
 
         typedef SingleViewRef view_type;
         typedef typename
-            detail::result_of_forward_as<
+            detail::forward_as<
                 SingleViewRef,
                 typename detail::remove_reference<
                     SingleViewRef

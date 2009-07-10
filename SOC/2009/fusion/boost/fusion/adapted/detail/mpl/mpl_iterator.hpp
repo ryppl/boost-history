@@ -21,6 +21,9 @@
 
 namespace boost { namespace fusion
 {
+    struct mpl_iterator_tag;
+    struct mpl_sequence_tag;
+
     template <typename It>
     struct mpl_iterator
       : iterator_facade<

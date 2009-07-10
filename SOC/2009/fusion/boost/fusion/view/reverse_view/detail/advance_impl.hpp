@@ -12,45 +12,37 @@
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/mpl/negate.hpp>
 
-namespace boost { namespace fusion {
+namespace boost { namespace fusion { namespace extension
+{
+    template<typename Tag>
+    struct advance_impl;
 
-    struct reverse_view_iterator_tag;
-
-    template <typename It>
-    struct reverse_view_iterator;
-
-    namespace extension
+    template<>
+    struct advance_impl<reverse_view_iterator_tag>
     {
-        template<typename Tag>
-        struct advance_impl;
-
-        template<>
-        struct advance_impl<reverse_view_iterator_tag>
+        template<typename ItRef, typename Dist>
+        struct apply
         {
-            template<typename ItRef, typename Dist>
-            struct apply
+            typedef typename mpl::negate<Dist>::type neg_dist;
+
+            typedef
+                reverse_view_iterator<
+                    typename result_of::advance<
+                        typename detail::remove_reference<
+                            ItRef
+                        >::type::first_type
+                      , neg_dist
+                    >::type
+                >
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename mpl::negate<Dist>::type neg_dist;
-
-                typedef
-                    reverse_view_iterator<
-                        typename result_of::advance<
-                            typename detail::remove_reference<
-                                ItRef
-                            >::type::first_type
-                          , neg_dist
-                        >::type
-                    >
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return type(boost::fusion::advance<neg_dist>(it.first));
-                }
-            };
+                return type(boost::fusion::advance<neg_dist>(it.first));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

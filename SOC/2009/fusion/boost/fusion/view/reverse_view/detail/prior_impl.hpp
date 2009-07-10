@@ -10,39 +10,31 @@
 
 #include <boost/fusion/iterator/next.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct reverse_view_iterator_tag;
-
-    template <typename It>
-    struct reverse_view_iterator;
-
-    namespace extension
+    template <>
+    struct prior_impl<reverse_view_iterator_tag>
     {
-        template <>
-        struct prior_impl<reverse_view_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef
-                    reverse_view_iterator<
-                        typename result_of::next<
-                            typename detail::remove_reference<
-                                ItRef
-                            >::type::first_type
-                        >::type
-                    >
-                type;
+            typedef
+                reverse_view_iterator<
+                    typename result_of::next<
+                        typename detail::remove_reference<
+                            ItRef
+                        >::type::first_type
+                    >::type
+                >
+            type;
 
-                static type
-                call(ItRef it)
-                {
-                    return type(next(it.first));
-                }
-            };
+            static type
+            call(ItRef it)
+            {
+                return type(next(it.first));
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

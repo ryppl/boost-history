@@ -11,37 +11,32 @@
 
 #include <boost/mpl/end.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion{ namespace extension
 {
-    struct mpl_sequence_tag;
+    template <typename Tag>
+    struct end_impl;
 
-    namespace extension
+    template <>
+    struct end_impl<mpl_sequence_tag>
     {
-        template <typename Tag>
-        struct end_impl;
-
-        template <>
-        struct end_impl<mpl_sequence_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef
-                    mpl_iterator<
-                        typename mpl::end<
-                            typename detail::identity<SeqRef>::type
-                        >::type
-                    >
-                type;
+            typedef
+                mpl_iterator<
+                    typename mpl::end<
+                        typename detail::identity<SeqRef>::type
+                    >::type
+                >
+            type;
 
-                static type
-                call(SeqRef)
-                {
-                    return type();
-                }
-            };
+            static type
+            call(SeqRef)
+            {
+                return type();
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

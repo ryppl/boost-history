@@ -9,10 +9,12 @@
 #ifndef BOOST_FUSION_ADAPTED_ARRAY_HPP
 #define BOOST_FUSION_ADAPTED_ARRAY_HPP
 
+//TODO adapt std::tuple, std::array
+
 #include <boost/fusion/support/ref.hpp>
 
-#include <boost/fusion/adapted/detail/array/array_iterator.hpp>
 #include <boost/fusion/adapted/detail/array/tag_of.hpp>
+#include <boost/fusion/adapted/detail/array/array_iterator.hpp>
 #include <boost/fusion/adapted/detail/array/is_view_impl.hpp>
 #include <boost/fusion/adapted/detail/array/is_sequence_impl.hpp>
 #include <boost/fusion/adapted/detail/array/category_of_impl.hpp>

@@ -8,33 +8,28 @@
 #ifndef BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_BEGIN_IMPL_HPP
 #define BOOST_FUSION_VIEW_ITERATOR_RANGE_DETAIL_BEGIN_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct iterator_range_tag;
+    template <typename Tag>
+    struct begin_impl;
 
-    namespace extension
+    template <>
+    struct begin_impl<iterator_range_tag>
     {
-        template <typename Tag>
-        struct begin_impl;
-
-        template <>
-        struct begin_impl<iterator_range_tag>
+        template <typename SeqRef>
+        struct apply
         {
-            template <typename SeqRef>
-            struct apply
-            {
-                typedef typename
-                    detail::remove_reference<SeqRef>::type::begin_type
-                type;
+            typedef typename
+                detail::remove_reference<SeqRef>::type::begin_type
+            type;
 
-                static type
-                call(SeqRef seq)
-                {
-                    return seq.first;
-                }
-            };
+            static type
+            call(SeqRef seq)
+            {
+                return seq.first;
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

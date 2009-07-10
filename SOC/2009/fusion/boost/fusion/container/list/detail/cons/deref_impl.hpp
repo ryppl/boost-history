@@ -9,40 +9,35 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_DEREF_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_CONS_DEREF_IMPL_HPP
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct cons_iterator_tag;
+    template <typename Tag>
+    struct deref_impl;
 
-    namespace extension
+    template <>
+    struct deref_impl<cons_iterator_tag>
     {
-        template <typename Tag>
-        struct deref_impl;
-
-        template <>
-        struct deref_impl<cons_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
+            typedef typename
+                detail::remove_reference<ItRef>::type::cons_type
+            cons_type;
+            typedef typename
+                detail::remove_reference<cons_type>::type::car_type
+            car_type;
+
+            typedef typename
+                detail::forward_as<cons_type,car_type>::type
+            type;
+
+            static type
+            call(ItRef it)
             {
-                typedef typename
-                    detail::remove_reference<ItRef>::type::cons_type
-                cons_type;
-                typedef typename
-                    detail::remove_reference<cons_type>::type::car_type
-                car_type;
-
-                typedef typename
-                    detail::result_of_forward_as<cons_type,car_type>::type
-                type;
-
-                static type
-                call(ItRef it)
-                {
-                    return it.cons->car;
-                }
-            };
+                return it.cons->car;
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif

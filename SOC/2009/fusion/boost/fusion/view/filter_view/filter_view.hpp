@@ -17,14 +17,19 @@
 
 #include <boost/mpl/bool.hpp>
 
-#include <boost/fusion/view/filter_view/filter_view_iterator.hpp>
+#include <boost/fusion/view/filter_view/detail/filter_view_fwd.hpp>
+#include <boost/fusion/view/filter_view/detail/size_impl.hpp>
+
+#include <boost/fusion/view/filter_view/detail/filter_view_iterator.hpp>
 #include <boost/fusion/view/filter_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/filter_view/detail/end_impl.hpp>
-#include <boost/fusion/view/filter_view/detail/size_impl.hpp>
+#include <boost/fusion/view/filter_view/detail/deref_impl.hpp>
+#include <boost/fusion/view/filter_view/detail/next_impl.hpp>
+#include <boost/fusion/view/filter_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/filter_view/detail/equal_to_impl.hpp>
 
 namespace boost { namespace fusion
 {
-    struct filter_view_tag;
     struct forward_traversal_tag;
     struct fusion_sequence_tag;
 

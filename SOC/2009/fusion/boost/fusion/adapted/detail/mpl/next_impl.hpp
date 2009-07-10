@@ -10,37 +10,32 @@
 
 #include <boost/mpl/next.hpp>
 
-namespace boost { namespace fusion
+namespace boost { namespace fusion { namespace extension
 {
-    struct mpl_iterator_tag;
+    template <typename Tag>
+    struct next_impl;
 
-    namespace extension
+    template <>
+    struct next_impl<mpl_iterator_tag>
     {
-        template <typename Tag>
-        struct next_impl;
-
-        template <>
-        struct next_impl<mpl_iterator_tag>
+        template <typename ItRef>
+        struct apply
         {
-            template <typename ItRef>
-            struct apply
-            {
-                typedef
-                    mpl_iterator<
-                        typename mpl::next<
-                            typename detail::identity<ItRef>::type
-                        >::type
-                    >
-                type;
+            typedef
+                mpl_iterator<
+                    typename mpl::next<
+                        typename detail::identity<ItRef>::type
+                    >::type
+                >
+            type;
 
-                static type
-                call(ItRef)
-                {
-                    return type();
-                }
-            };
+            static type
+            call(ItRef)
+            {
+                return type();
+            }
         };
-    }
-}}
+    };
+}}}
 
 #endif
