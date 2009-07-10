@@ -5,8 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_ARRAY_IS_SEQUENCE_IMPL_HPP
-#define BOOST_FUSION_ADAPTED_DETAIL_BOOST_ARRAY_IS_SEQUENCE_IMPL_HPP
+#ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_IS_SEQUENCE_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_IS_SEQUENCE_IMPL_HPP
 
 #include <boost/mpl/bool.hpp>
 
