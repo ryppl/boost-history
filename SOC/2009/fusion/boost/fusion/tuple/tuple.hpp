@@ -18,8 +18,6 @@
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/support/ref.hpp>
 
-#include <boost/type_traits/is_const.hpp>
-
 namespace boost { namespace fusion
 {
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_VECTOR_SIZE)
@@ -33,13 +31,13 @@ namespace boost { namespace fusion
 
 #define TUPLE_CTOR(COMBINATION,_)\
         tuple(tuple COMBINATION other_tuple)\
-          : base_type(BOOST_FUSION_FORWARD(tuple COMBINATION,other_tuple).data)\
+          : base_type(static_cast<base_type COMBINATION>(other_tuple))\
         {}\
         \
-        template <typename U1, typename U2>\
-        tuple(std::pair<U1, U2> COMBINATION rhs)\
+        template <typename T1, typename T2>\
+        tuple(std::pair<T1, T2> COMBINATION rhs)\
           : base_type(sequence_assign(\
-                static_cast<std::pair<U1, U2> COMBINATION>(rhs)))\
+                static_cast<std::pair<T1, T2> COMBINATION>(rhs)))\
         {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TUPLE_CTOR,_)

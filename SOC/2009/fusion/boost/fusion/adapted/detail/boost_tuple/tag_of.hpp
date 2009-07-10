@@ -10,8 +10,6 @@
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
-#include <boost/preprocessor/facilities/empty.hpp>
-
 namespace boost { namespace fusion 
 {
     struct boost_tuple_tag;
@@ -42,11 +40,7 @@ namespace boost { namespace fusion
             typedef boost_tuple_tag type;\
         };
 
-        TAG_OF_SPECIALIZATION(BOOST_PP_EMPTY(),_);
-        TAG_OF_SPECIALIZATION(const,_);
-        TAG_OF_SPECIALIZATION(const volatile,_);
-        TAG_OF_SPECIALIZATION(volatile,_);
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TAG_OF_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(TAG_OF_SPECIALIZATION,_)
 
 #undef TAG_OF_SPECIALIZATION
     }

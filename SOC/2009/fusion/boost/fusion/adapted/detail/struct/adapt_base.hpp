@@ -5,18 +5,27 @@
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
+#include <boost/preprocessor/control/expr_if.hpp>
+#include <boost/preprocessor/array/elem.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/facilities/expand.hpp>
+
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_BASE_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_BASE_HPP
+
+#define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(COMBINATION, name)      \
+    template <>                                                                 \
+    struct tag_of<name COMBINATION>                                             \
+    {                                                                           \
+        typedef struct_tag type;                                                \
+    };
+
 
 #define BOOST_FUSION_ADAPT_STRUCT_BASE(name, seq)                               \
 namespace boost { namespace fusion { namespace traits                           \
 {                                                                               \
-        BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(BOOST_PP_EMPTY(),name); \
-        BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(const,name);            \
-        BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(const volatile,name);   \
-        BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(volatile,name);         \
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(                                   \
-            BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION,name)               \
+    BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(                               \
+        BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION,name)                   \
 }}}                                                                             \
                                                                                 \
 namespace boost { namespace fusion { namespace extension                        \

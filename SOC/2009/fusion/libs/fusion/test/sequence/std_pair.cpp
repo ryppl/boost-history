@@ -23,7 +23,10 @@
 #include <boost/fusion/sequence/comparison/greater.hpp>
 #include <boost/fusion/sequence/comparison/greater_equal.hpp>
 #include <boost/fusion/support/is_view.hpp>
+
 #include <boost/mpl/assert.hpp>
+#include <boost/static_assert.hpp>
+
 #include <iostream>
 #include <string>
 #include <utility>
@@ -76,13 +79,13 @@ main()
 
     {
         // conversion from pair to vector
-        fusion::vector<int, std::string> v(std::make_pair(123, "Hola!!!"));
+        fusion::vector<int, std::string> v(sequence_assign(std::make_pair(123, "Hola!!!")));
         v = std::make_pair(123, "Hola!!!");
     }
 
     {
         // conversion from pair to list
-        fusion::list<int, std::string> l(std::make_pair(123, "Hola!!!"));
+        fusion::list<int, std::string> l(sequence_assign(std::make_pair(123, "Hola!!!")));
         l = std::make_pair(123, "Hola!!!");
     }
 

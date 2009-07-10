@@ -11,6 +11,8 @@
 #include <boost/any.hpp>
 #include <iostream>
 
+//TODO cschmidt: In C++0x this won't work any more?!
+
 namespace Core
 {
     class AutoConverter
@@ -56,7 +58,7 @@ namespace Core
 
 int main(int argc, char* argv[])
 {
-    std::tr1::tuple<int, int, int, int> test = Core::Demo();
+    //std::tr1::tuple<int, int, int, int> test = Core::Demo();
     return 0;
 }
 

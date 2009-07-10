@@ -8,5 +8,8 @@
 #ifndef BOOST_FUSION_TUPLE_HPP
 #define BOOST_FUSION_TUPLE_HPP
 
+#include <boost/fusion/tuple/tuple_fwd.hpp>
 #include <boost/fusion/tuple/tuple.hpp>
+#include <boost/fusion/tuple/make_tuple.hpp>
+#include <boost/fusion/tuple/tuple_tie.hpp>
 #endif

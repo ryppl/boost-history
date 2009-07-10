@@ -9,45 +9,42 @@
 #ifndef BOOST_FUSION_ADAPTED_STD_PAIR_HPP
 #define BOOST_FUSION_ADAPTED_STD_PAIR_HPP
 
-#include <boost/fusion/support/ref.hpp>
-
-#include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/adapted/struct.hpp>
 
 #include <boost/mpl/int.hpp>
 #include <boost/config/no_tr1/utility.hpp>
 
+#define BOOST_FUSION_STD_PAIR_TAG_OF_SPECIALIZATION(COMBINATION, _)             \
+    template <typename T1, typename T2>                                         \
+    struct tag_of<std::pair<T1, T2> COMBINATION>                                \
+    {                                                                           \
+        typedef struct_tag type;                                                \
+    };
+
+namespace boost { namespace fusion { namespace traits                           \
+{                                                                               \
+    BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(                               \
+            BOOST_FUSION_STD_PAIR_TAG_OF_SPECIALIZATION,name)                   \
+}}}                                                                             \
+
+#undef BOOST_FUSION_STD_PAIR_TAG_OF_SPECIALIZATION
+
 namespace boost { namespace fusion
 {
-    struct struct_tag;
-
-    namespace traits
-    {
-        template <typename T1, typename T2>
-#if defined(BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS)
-        struct tag_of<std::pair<T1, T2>, void >
-#else
-        struct tag_of<std::pair<T1, T2> >
-#endif
-        {
-            typedef struct_tag type;
-        };
-    }
-
     namespace extension
     {
-        template <typename Struct, int N>
-        struct struct_member;
-
-        template <typename Struct>
-        struct struct_size;
-
         template <typename T1, typename T2>
         struct struct_member<std::pair<T1, T2>, 0>
         {
             typedef T1 type;
 
-            static type& call(std::pair<T1, T2>& pair)
+            template<typename Pair>
+            static typename
+                detail::result_of_forward_as<
+                    BOOST_FUSION_R_ELSE_LREF(Pair)
+                  , type
+                >::type
+            call(BOOST_FUSION_R_ELSE_LREF(Pair) pair)
             {
                 return pair.first;
             }
@@ -58,16 +55,22 @@ namespace boost { namespace fusion
         {
             typedef T2 type;
 
-            static type& call(std::pair<T1, T2>& pair)
+            template<typename Pair>
+            static typename
+                detail::result_of_forward_as<
+                    BOOST_FUSION_R_ELSE_LREF(Pair)
+                  , type
+                >::type
+            call(BOOST_FUSION_R_ELSE_LREF(Pair) pair)
             {
                 return pair.second;
             }
         };
 
         template <typename T1, typename T2>
-        struct struct_size<std::pair<T1, T2> > : mpl::int_<2>
-        {
-        };
+        struct struct_size<std::pair<T1, T2> >
+          : mpl::int_<2>
+        {};
     }
 }}
 

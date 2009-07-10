@@ -7,6 +7,8 @@
 #define BOOST_FUSION_TUPLE_TUPLE_TIE_HPP
 
 #include <boost/config.hpp>
+#include <boost/fusion/container/generation/ignore.hpp>
+
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   include <boost/fusion/tuple/detail/pp/tuple_tie.hpp>
 #else

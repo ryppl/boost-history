@@ -51,8 +51,8 @@ namespace boost { namespace fusion
             >::type
         value_type;
 
-        template<typename OtherSingleViewIt>
-        single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherSingleViewIt) it)
+        template<typename OtherIt>
+        single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
           : view(it.view)
         {}
 
@@ -60,9 +60,9 @@ namespace boost { namespace fusion
           : view(&view)
         {}
 
-        template<typename OtherSingleViewIt>
+        template<typename OtherIt>
         single_view_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherSingleViewIt) it)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
             view=it.view;
             return *this;

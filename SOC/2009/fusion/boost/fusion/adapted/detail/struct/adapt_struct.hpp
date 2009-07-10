@@ -30,14 +30,6 @@
 // BOOST_FUSION_ADAPT_STRUCT_I generates the overarching structure and uses
 // SEQ_FOR_EACH_I to generate the "linear" substructures.
 // Thanks to Paul Mensonides for the PP macro help
-
-#define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(COMBINATION, name)      \
-    template <>                                                                 \
-    struct tag_of<name COMBINATION>                                             \
-    {                                                                           \
-        typedef struct_tag type;                                                \
-    };                                                                          \
-
 #define BOOST_FUSION_ADAPT_STRUCT_I(name, seq)                                  \
     BOOST_FUSION_ADAPT_STRUCT_BASE(name, seq)                                   \
     BOOST_PP_SEQ_FOR_EACH_I(BOOST_FUSION_ADAPT_STRUCT_C, name, seq)

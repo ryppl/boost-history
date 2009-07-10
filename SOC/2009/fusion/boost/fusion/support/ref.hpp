@@ -8,6 +8,8 @@
 
 #include <boost/config.hpp>
 
+#include <boost/preprocessor/empty.hpp>
+
 #include <boost/mpl/eval_if.hpp>
 #ifndef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/mpl/or.hpp>
@@ -67,6 +69,12 @@
         MACRO(volatile&&,ARG)\
         MACRO(const volatile&&,ARG)
 #endif
+#define BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(MACRO,ARG)\
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
+    MACRO(BOOST_PP_EMPTY(),ARG)\
+    MACRO(const,ARG)\
+    MACRO(volatile,ARG)\
+    MACRO(const volatile,ARG)
 
 namespace boost { namespace fusion { namespace detail
 {
