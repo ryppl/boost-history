@@ -22,14 +22,19 @@ namespace boost { namespace numeric_adaptor {
 
 struct gmp_policy: default_policy<gmp_policy, mpf_t>
 {
-    static inline void init(value_type& value)
+    gmp_policy()
     {
         mpf_init(value);
     }
 
-    static inline void destruct(value_type& value)
+    ~gmp_policy()
     {
         mpf_clear(value);
+    }
+
+    gmp_policy(gmp_policy const& source)
+    {
+        mpf_set(value, source.value);
     }
 
     template <typename OtherType>
@@ -43,11 +48,6 @@ struct gmp_policy: default_policy<gmp_policy, mpf_t>
         mpf_set_str(value, v.c_str(), 10);
     }
 
-
-    static inline void copy(value_type const& source, value_type& dest)
-    {
-        mpf_set(dest, source);
-    }
 
     // TODO should we add specific overloads for function like mpf_add_ui?
 

@@ -22,12 +22,13 @@ struct default_policy
 {
     typedef T value_type;
 
-    // Default no initialization or pre-destruction is necessary
-    static inline void init(T& value) {}
-    static inline void destruct(T& value) {}
+    default_policy()
+    {}
 
     // Use the default assignment
-    static inline void copy(T const& source, T& dest) { dest = source; }
+    default_policy(default_policy const& source):
+    value(source.value)
+    {}
 
     // The default policy uses the default operators +, -, *, /
     static inline void add(default_policy& r, const default_policy& a, const default_policy& b)

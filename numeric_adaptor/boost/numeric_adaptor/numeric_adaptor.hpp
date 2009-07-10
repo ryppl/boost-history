@@ -43,27 +43,21 @@ struct numeric_adaptor:
     enable_cast<numeric_adaptor<Policy>, long double>
 {
     inline numeric_adaptor()
-    {
-        Policy::init(Policy::value);
-    }
+    {}
 
     // Copy constructor
-    inline numeric_adaptor(numeric_adaptor<Policy> const& v)
-    {
-        Policy::init(Policy::value);
-        Policy::copy(v.value, Policy::value);
-    }
+    inline numeric_adaptor(numeric_adaptor<Policy> const& v):
+    Policy(v)
+    {}
 
     // Constructor from a string
     inline numeric_adaptor(std::string const& v)
     {
-        Policy::init(Policy::value);
         Policy::set(Policy::value, v);
     }
 
     inline numeric_adaptor(const char* v)
     {
-        Policy::init(Policy::value);
         Policy::set(Policy::value, std::string(v));
     }
 
@@ -71,14 +65,7 @@ struct numeric_adaptor:
     template <typename FromType>
     inline numeric_adaptor(FromType const& v)
     {
-        Policy::init(Policy::value);
         Policy::template set<FromType>(Policy::value, v);
-    }
-
-
-    virtual ~numeric_adaptor()
-    {
-        Policy::destruct(Policy::value);
     }
 
     // Assignment from other value
@@ -197,7 +184,6 @@ struct numeric_adaptor:
     // is necessary for cases where type == OtherType
     inline numeric_adaptor<Policy>(typename Policy::value_type const& v, bool)
     {
-        Policy::init(Policy::value);
         Policy::copy(v, Policy::value);
     }
 };
