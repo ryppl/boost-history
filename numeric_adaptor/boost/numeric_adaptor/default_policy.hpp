@@ -22,6 +22,8 @@ struct default_policy
 {
     typedef T value_type;
 
+    value_type value;
+
     // Default no initialization or pre-destruction is necessary
     static inline void init(T& value) {}
     static inline void destruct(T& value) {}

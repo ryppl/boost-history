@@ -29,28 +29,9 @@ struct enable_cast
 };
 
 
-template <typename> struct numeric_adaptor;
-
-
-template <typename Policy>
-numeric_adaptor<Policy> abs(numeric_adaptor<Policy> const&);
-template <typename Policy>
-numeric_adaptor<Policy> sqrt(numeric_adaptor<Policy> const&);
-template <typename Policy>
-numeric_adaptor<Policy> sin(numeric_adaptor<Policy> const&);
-template <typename Policy>
-numeric_adaptor<Policy> cos(numeric_adaptor<Policy> const&);
-template <typename Policy>
-numeric_adaptor<Policy> tan(numeric_adaptor<Policy> const&);
-template <typename Policy>
-numeric_adaptor<Policy> atan(numeric_adaptor<Policy> const&);
-template <typename Policy>
-numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const&,
-                              numeric_adaptor<Policy> const&);
-
-
 template <typename Policy>
 struct numeric_adaptor:
+    Policy,
     enable_cast<numeric_adaptor<Policy>, int>,
     enable_cast<numeric_adaptor<Policy>, unsigned int>,
     enable_cast<numeric_adaptor<Policy>, short int>,
@@ -63,47 +44,47 @@ struct numeric_adaptor:
 {
     inline numeric_adaptor()
     {
-        Policy::init(value);
+        Policy::init(Policy::value);
     }
 
     // Copy constructor
     inline numeric_adaptor(numeric_adaptor<Policy> const& v)
     {
-        Policy::init(value);
-        Policy::copy(v.value, value);
+        Policy::init(Policy::value);
+        Policy::copy(v.value, Policy::value);
     }
 
     // Constructor from a string
     inline numeric_adaptor(std::string const& v)
     {
-        Policy::init(value);
-        Policy::set(value, v);
+        Policy::init(Policy::value);
+        Policy::set(Policy::value, v);
     }
 
     inline numeric_adaptor(const char* v)
     {
-        Policy::init(value);
-        Policy::set(value, std::string(v));
+        Policy::init(Policy::value);
+        Policy::set(Policy::value, std::string(v));
     }
 
     // Constructor with a normal IEEE type
     template <typename FromType>
     inline numeric_adaptor(FromType const& v)
     {
-        Policy::init(value);
-        Policy::template set<FromType>(value, v);
+        Policy::init(Policy::value);
+        Policy::template set<FromType>(Policy::value, v);
     }
 
 
     virtual ~numeric_adaptor()
     {
-        Policy::destruct(value);
+        Policy::destruct(Policy::value);
     }
 
     // Assignment from other value
     inline numeric_adaptor<Policy> operator=(numeric_adaptor<Policy> const& v)
     {
-        Policy::copy(v.value, this->value);
+        Policy::copy(v.value, Policy::value);
         return *this;
     }
 
@@ -111,37 +92,37 @@ struct numeric_adaptor:
     template <typename FromType>
     inline numeric_adaptor<Policy> operator=(FromType const& v)
     {
-        Policy::template set<FromType>(this->value, v);
+        Policy::template set<FromType>(Policy::value, v);
         return *this;
     }
 
     template <class ToType>
     inline ToType big_numeric_cast()
     {
-        return Policy::template big_numeric_cast<ToType>(this->value);
+        return Policy::template big_numeric_cast<ToType>(Policy::value);
     }
 
     // tuple/fusion/variant-like get template function
     inline operator std::string()
     {
-        return Policy::as_string(this->value);
+        return Policy::as_string(Policy::value);
     }
 
 
     // Comparisons
     inline bool operator<(numeric_adaptor<Policy> const& other) const
     {
-        return Policy::compare(value, other.value) < 0;
+        return Policy::compare(Policy::value, other.value) < 0;
     }
 
     inline bool operator>(numeric_adaptor<Policy> const& other) const
     {
-        return Policy::compare(value, other.value) > 0;
+        return Policy::compare(Policy::value, other.value) > 0;
     }
 
     inline bool operator==(numeric_adaptor<Policy> const& other) const
     {
-        return Policy::compare(value, other.value) == 0;
+        return Policy::compare(Policy::value, other.value) == 0;
     }
 
     // Operators
@@ -157,7 +138,7 @@ struct numeric_adaptor:
 
     numeric_adaptor<Policy>& operator+=(numeric_adaptor<Policy> const& other)
     {
-        Policy::add(value, other.value);
+        Policy::add(Policy::value, other.value);
         return *this;
     }
 
@@ -173,7 +154,7 @@ struct numeric_adaptor:
 
     numeric_adaptor<Policy>& operator*=(numeric_adaptor<Policy> const& other)
     {
-        Policy::multiply(value, other.value);
+        Policy::multiply(Policy::value, other.value);
         return *this;
     }
 
@@ -189,7 +170,7 @@ struct numeric_adaptor:
 
     numeric_adaptor<Policy>& operator-=(numeric_adaptor<Policy> const& other)
     {
-        Policy::subtract(value, other.value);
+        Policy::subtract(Policy::value, other.value);
         return *this;
     }
 
@@ -205,7 +186,7 @@ struct numeric_adaptor:
 
     numeric_adaptor<Policy>& operator/=(numeric_adaptor<Policy> const& other)
     {
-        Policy::divide(value, other.value);
+        Policy::divide(Policy::value, other.value);
         return *this;
     }
 
@@ -217,24 +198,12 @@ struct numeric_adaptor:
         return numeric_adaptor<Policy>(r, true);
     }
 
-private :
-    typename Policy::value_type value;
-
-    friend numeric_adaptor<Policy> abs<Policy>(numeric_adaptor<Policy> const&);
-    friend numeric_adaptor<Policy> sqrt<Policy>(numeric_adaptor<Policy> const&);
-    friend numeric_adaptor<Policy> cos<Policy>(numeric_adaptor<Policy> const&);
-    friend numeric_adaptor<Policy> sin<Policy>(numeric_adaptor<Policy> const&);
-    friend numeric_adaptor<Policy> tan<Policy>(numeric_adaptor<Policy> const&);
-    friend numeric_adaptor<Policy> atan<Policy>(numeric_adaptor<Policy> const&);
-    friend numeric_adaptor<Policy> hypot<Policy>(numeric_adaptor<Policy> const&,
-                                                 numeric_adaptor<Policy> const&);
-
     // Construct from a policy-type. Bool (or any other signature changing parameter)
     // is necessary for cases where type == OtherType
     inline numeric_adaptor<Policy>(typename Policy::value_type const& v, bool)
     {
-        Policy::init(value);
-        Policy::copy(v, value);
+        Policy::init(Policy::value);
+        Policy::copy(v, Policy::value);
     }
 };
 
