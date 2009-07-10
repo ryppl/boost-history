@@ -38,14 +38,14 @@ struct gmp_policy: default_policy<gmp_policy, mpf_t>
     }
 
     template <typename OtherType>
-    static inline void set(value_type& value, const OtherType& v)
+    static inline void set(gmp_policy& p, const OtherType& v)
     {
-        mpf_set_d(value, v);
+        mpf_set_d(p.value, v);
     }
 
-    static inline void set(value_type& value, const std::string& v)
+    static inline void set(gmp_policy& p, const std::string& v)
     {
-        mpf_set_str(value, v.c_str(), 10);
+        mpf_set_str(p.value, v.c_str(), 10);
     }
 
 
@@ -119,23 +119,17 @@ struct gmp_policy: default_policy<gmp_policy, mpf_t>
 
 
     template <typename OtherType>
-    static inline OtherType big_numeric_cast(value_type const& b)
-    {
-        return mpf_get_d(b);
-    }
-
-    template <typename OtherType>
     static inline OtherType big_numeric_cast(gmp_policy const& b)
     {
         return mpf_get_d(b.value);
     }
 
 
-    static inline std::string as_string(value_type const& a)
+    static inline std::string as_string(gmp_policy const& a)
     {
         mp_exp_t exponent;
         static char s[1024];
-        mpf_get_str (s, &exponent, 10, sizeof(s) - 1, a);
+        mpf_get_str (s, &exponent, 10, sizeof(s) - 1, a.value);
 
         std::string out;
         out.reserve(100);
@@ -155,9 +149,9 @@ struct gmp_policy: default_policy<gmp_policy, mpf_t>
     }
 
 
-    static inline int compare(value_type const& a, value_type const& b)
+    static inline int compare(gmp_policy const& a, gmp_policy const& b)
     {
-        return mpf_cmp(a, b);
+        return mpf_cmp(a.value, b.value);
     }
 };
 

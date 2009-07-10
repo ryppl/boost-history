@@ -53,43 +53,43 @@ struct default_policy
     static inline void cos(default_policy& r, default_policy const& a)
     {
         double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
-        Derived::set(r.value, std::cos(d));
+        Derived::set(static_cast<Derived&>(r), std::cos(d));
     }
 
     static inline void sin(default_policy& r, default_policy const& a)
     {
         double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
-        Derived::set(r.value, std::sin(d));
+        Derived::set(static_cast<Derived&>(r), std::sin(d));
     }
 
     static inline void tan(default_policy& r, default_policy const& a)
     {
         double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
-        Derived::set(r.value, std::tan(d));
+        Derived::set(static_cast<Derived&>(r), std::tan(d));
     }
 
     static inline void atan(default_policy& r, default_policy const& a)
     {
         double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
-        Derived::set(r.value, std::atan(d));
+        Derived::set(static_cast<Derived&>(r), std::atan(d));
     }
 
     static inline void sqrt(default_policy& r, default_policy const& a)
     {
         double d = Derived::template big_numeric_cast<double>(static_cast<const Derived&>(a));
-        Derived::set(r.value, std::sqrt(d));
+        Derived::set(static_cast<Derived&>(r), std::sqrt(d));
     }
 
     // Default use the comparison operators
-    static inline int compare(T const& a, T const& b)
+    static inline int compare(default_policy const& a, default_policy const& b)
     {
-        return a < b ? -1 : a > b ? 1 : 0;
+        return a.value < b.value ? -1 : a.value > b.value ? 1 : 0;
     }
 
-    static inline std::string as_string(T const& a)
+    static inline std::string as_string(default_policy const& a)
     {
         std::ostringstream out;
-        out << std::setprecision(20) << a;
+        out << std::setprecision(20) << a.value;
         return out.str();
     }
 

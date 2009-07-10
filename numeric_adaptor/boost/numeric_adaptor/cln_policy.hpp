@@ -33,20 +33,19 @@ struct cln_policy : public default_policy<cln_policy, cln::cl_F>
     typedef cln::cl_F value_type;
 
     template <typename FromType>
-    static inline void set(value_type& value, FromType const& v)
+    static inline void set(cln_policy& p, FromType const& v)
     {
         // Conversions from the C built-in type `double' are provided for the
         // classes cl_DF, cl_F, cl_R, cl_N and cl_number
-        value = cln::cl_float(v, cln::float_format(256));
+        p.value = cln::cl_float(v, cln::float_format(256));
     }
 
-    static inline void set(value_type& value, std::string const& v)
+    static inline void set(cln_policy& p, std::string const& v)
     {
         // CLN documentation 4.1.3 + 5.1 ("A precision specifier of the form prec may be appended")
         std::string copy(v);
         copy += "_256";
-        value = copy.c_str();
-        //value = cln::cl_float(atof(v.c_str()), cln::float_format(256));
+        p.value = copy.c_str();
     }
 
     static inline void abs(cln_policy& r, cln_policy const& a)
@@ -87,7 +86,7 @@ struct cln_policy : public default_policy<cln_policy, cln::cl_F>
 
 
     template <typename ToType>
-    static inline ToType big_numeric_cast(value_type const& b)
+    static inline ToType big_numeric_cast(cln_policy const& b)
     {
         /*
             Conversions from the classes cl_I, cl_RA, cl_SF, cl_FF,
@@ -103,7 +102,7 @@ struct cln_policy : public default_policy<cln_policy, cln::cl_F>
             0 is returned. If abs(x) is too large (overflow),
             an IEEE infinity is returned.
         */
-        return ToType(double_approx(b));
+        return ToType(double_approx(b.value));
     }
 
 };

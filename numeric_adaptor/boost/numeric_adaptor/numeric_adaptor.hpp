@@ -53,63 +53,56 @@ struct numeric_adaptor:
     // Constructor from a string
     inline numeric_adaptor(std::string const& v)
     {
-        Policy::set(Policy::value, v);
+        Policy::set(*this, v);
     }
 
     inline numeric_adaptor(const char* v)
     {
-        Policy::set(Policy::value, std::string(v));
+        Policy::set(*this, std::string(v));
     }
 
     // Constructor with a normal IEEE type
     template <typename FromType>
     inline numeric_adaptor(FromType const& v)
     {
-        Policy::template set<FromType>(Policy::value, v);
-    }
-
-    // Assignment from other value
-    inline numeric_adaptor<Policy> operator=(numeric_adaptor<Policy> const& v)
-    {
-        Policy::copy(v.value, Policy::value);
-        return *this;
+        Policy::template set<FromType>(*this, v);
     }
 
     // Assignment from normal IEEE type
     template <typename FromType>
     inline numeric_adaptor<Policy> operator=(FromType const& v)
     {
-        Policy::template set<FromType>(Policy::value, v);
+        Policy::template set<FromType>(*this, v);
         return *this;
     }
 
     template <class ToType>
     inline ToType big_numeric_cast()
     {
-        return Policy::template big_numeric_cast<ToType>(Policy::value);
+        return Policy::template big_numeric_cast<ToType>(*this);
     }
 
     // tuple/fusion/variant-like get template function
     inline operator std::string()
     {
-        return Policy::as_string(Policy::value);
+        return Policy::as_string(*this);
     }
 
 
     // Comparisons
     inline bool operator<(numeric_adaptor<Policy> const& other) const
     {
-        return Policy::compare(Policy::value, other.value) < 0;
+        return Policy::compare(*this, other) < 0;
     }
 
     inline bool operator>(numeric_adaptor<Policy> const& other) const
     {
-        return Policy::compare(Policy::value, other.value) > 0;
+        return Policy::compare(*this, other) > 0;
     }
 
     inline bool operator==(numeric_adaptor<Policy> const& other) const
     {
-        return Policy::compare(Policy::value, other.value) == 0;
+        return Policy::compare(*this, other) == 0;
     }
 
     // Operators
@@ -178,13 +171,6 @@ struct numeric_adaptor:
         numeric_adaptor<Policy> r;
         Policy::neg(r, n);
         return r;
-    }
-
-    // Construct from a policy-type. Bool (or any other signature changing parameter)
-    // is necessary for cases where type == OtherType
-    inline numeric_adaptor<Policy>(typename Policy::value_type const& v, bool)
-    {
-        Policy::copy(v, Policy::value);
     }
 };
 
