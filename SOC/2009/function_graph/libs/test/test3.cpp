@@ -132,5 +132,10 @@ int main()
         ++out_edges_wght.first;
     }
 
+
+
+    ////////
+    // Check adjacency iterators
+
     return 0;
 }
