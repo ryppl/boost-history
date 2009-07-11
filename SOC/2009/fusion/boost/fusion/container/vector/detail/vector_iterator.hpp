@@ -20,11 +20,11 @@ namespace boost { namespace fusion
     struct vector_iterator_tag;
     struct random_access_traversal_tag;
 
-    template <typename VecRef, int N>
+    template <typename VecRef, int Pos>
     struct vector_iterator
-      : iterator_base<vector_iterator<VecRef, N> >
+      : iterator_base<vector_iterator<VecRef, Pos> >
     {
-        typedef mpl::int_<N> index;
+        typedef mpl::int_<Pos> index;
         typedef VecRef vector;
         typedef vector_iterator_tag fusion_tag;
         typedef random_access_traversal_tag category;

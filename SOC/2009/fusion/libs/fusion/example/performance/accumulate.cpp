@@ -249,9 +249,8 @@ namespace
     {
         template<typename Lhs, typename Rhs>
         struct result
-        {
-            typedef Rhs type;
-        };
+          : boost::fusion::detail::remove_reference<Rhs>
+        {};
         
         template<typename Lhs, typename Rhs>
         typename result<Lhs,Rhs>::type

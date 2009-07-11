@@ -31,34 +31,20 @@ namespace boost { namespace fusion
           , typename traits::category_of<It>::type
         >
     {
-        //cschmidt: void typedef to enable fast SFINAE in equal_to_impl.hpp!
-        typedef void void_;
-
-        typedef It it_type;
-
         template <typename ItRef>
         struct value_of
-          : result_of::value_of<
-                typename detail::remove_reference<ItRef>::type::it_type
-            >
+          : result_of::value_of<It>
         {};
 
         template <typename It1Ref, typename It2Ref>
         struct equal_to
-          : result_of::equal_to<
-                typename detail::remove_reference<It1Ref>::type::it_type
-              , It2Ref
-            >
+          : result_of::equal_to<It, It2Ref>
         {};
 
         template <typename ItRef>
         struct deref
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type::it_type
-            it_type;
-
-            typedef typename result_of::deref<it_type>::type type;
+            typedef typename result_of::deref<It>::type type;
 
             static type
             call(ItRef)
@@ -70,11 +56,7 @@ namespace boost { namespace fusion
         template <typename ItRef>
         struct next
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type::it_type
-            it_type;
-
-            typedef typename result_of::next<it_type>::type type;
+            typedef typename result_of::next<It>::type type;
 
             static type
             call(ItRef)
@@ -86,11 +68,7 @@ namespace boost { namespace fusion
         template <typename ItRef>
         struct prior
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type::it_type
-            it_type;
-
-            typedef typename result_of::prior<it_type>::type type;
+            typedef typename result_of::prior<It>::type type;
 
             static type
             call(ItRef)
@@ -102,11 +80,7 @@ namespace boost { namespace fusion
         template <typename ItRef, typename N>
         struct advance
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type::it_type
-            it_type;
-
-            typedef typename fusion::result_of::advance<it_type,N>::type type;
+            typedef typename fusion::result_of::advance<It,N>::type type;
 
             static type
             call(ItRef)
@@ -117,12 +91,12 @@ namespace boost { namespace fusion
 
         template <typename It1Ref, typename It2Ref>
         struct distance
-          : result_of::distance<
-                typename detail::remove_reference<It1Ref>::type::it_type
-              , It2Ref
-            >
-
+          : result_of::distance<It, It2Ref>
         {};
+
+        //cschmidt: void typedef to enable fast SFINAE in equal_to_impl.hpp!
+        typedef void void_;
+        typedef It it_type;
     };
 }}
 

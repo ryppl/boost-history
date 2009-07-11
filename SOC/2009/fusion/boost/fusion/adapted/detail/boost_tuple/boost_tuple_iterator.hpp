@@ -24,9 +24,7 @@ namespace boost { namespace fusion
         struct value_of
         {
             typedef typename
-                detail::remove_reference<
-                    typename detail::remove_reference<ItRef>::type
-                >::type::cons_type::head_type
+                detail::remove_reference<ConsRef>::type::head_type
             type;
         };
 
@@ -34,14 +32,10 @@ namespace boost { namespace fusion
         struct deref
         {
             typedef typename
-                detail::remove_reference<ItRef>::type
-            it;
-
-            typedef typename
                 detail::forward_as<
-                    typename it::cons_type
+                    ConsRef
                   , typename detail::remove_reference<
-                        typename it::cons_type
+                        ConsRef
                     >::type::head_type
                 >::type
             type;
@@ -56,16 +50,12 @@ namespace boost { namespace fusion
         template <typename ItRef>
         struct next
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type
-            it;
-
             typedef
                 boost_tuple_iterator<
                     typename detail::forward_as<
-                        typename it::cons_type,
-                        typename detail::remove_reference<
-                            typename it::cons_type
+                        ConsRef
+                      , typename detail::remove_reference<
+                            ConsRef
                         >::type::tail_type
                     >::type
                 >
@@ -81,9 +71,7 @@ namespace boost { namespace fusion
         template <typename It1Ref, typename It2Ref>
         struct equal_to
           : is_same<
-                typename detail::identity<
-                    typename detail::remove_reference<It1Ref>::type::cons_type
-                >::type
+                typename detail::identity<ConsRef>::type
               , typename detail::identity<
                     typename detail::remove_reference<It2Ref>::type::cons_type
                 >::type

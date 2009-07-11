@@ -121,7 +121,7 @@ namespace
 
         template<typename Lhs, typename Rhs>
         struct result<poly_combine(Lhs, Rhs)>
-            : boost::remove_reference<Rhs>
+            : boost::fusion::detail::remove_reference<Rhs>
         {};
         
         template<typename Lhs, typename Rhs>

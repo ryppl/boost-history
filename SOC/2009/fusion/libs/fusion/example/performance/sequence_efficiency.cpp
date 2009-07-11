@@ -6,6 +6,7 @@
 ==============================================================================*/
 #include "measure.hpp"
 
+//TODO: BOOST_FUSION_MAX
 #define FUSION_MAX_LIST_SIZE 30
 #define FUSION_MAX_VECTOR_SIZE 30
 
@@ -66,7 +67,7 @@ namespace
 
         template<typename Lhs, typename Rhs>
         struct result<poly_add(Lhs, Rhs)>
-            : boost::remove_reference<Lhs>
+          : boost::remove_reference<Lhs>
         {};
 
         template<typename Lhs, typename Rhs>
@@ -81,7 +82,7 @@ namespace
     struct accumulator
     {
         accumulator()
-            : sum()
+          : sum()
         {}
         
         template <typename Sequence>
@@ -98,7 +99,7 @@ namespace
     struct plain_accumulator
     {
         plain_accumulator()
-            : sum()
+          : sum()
         {}
         
         template <typename X>
@@ -166,7 +167,9 @@ int main()
     > 
     lmedium(BOOST_PP_ENUM(10, INIT, _));
 
-    vector<
+    //TODO cschmidt: uncomment this once mpl got variadic templates
+    //and we are not limited to BOOST_MPL_MAX_VECTOR_SIZE any more!
+    /*vector<
         int, int, int, int, int, int, int, int, int, int
       , int, int, int, int, int, int, int, int, int, int
       , int, int, int, int, int, int, int, int, int, int
@@ -178,7 +181,7 @@ int main()
       , int, int, int, int, int, int, int, int, int, int
       , int, int, int, int, int, int, int, int, int, int
     > 
-    lbig(BOOST_PP_ENUM(30, INIT, _));
+    lbig(BOOST_PP_ENUM(30, INIT, _));*/
 
     // first decide how many repetitions to measure
     long repeats = 100;
@@ -194,8 +197,8 @@ int main()
         test::hammer<accumulator<int> >(lsmall, repeats);
         test::hammer<accumulator<int> >(vmedium, repeats);
         test::hammer<accumulator<int> >(lmedium, repeats);
-        test::hammer<accumulator<int> >(vbig, repeats);
-        test::hammer<accumulator<int> >(lbig, repeats);
+        //test::hammer<accumulator<int> >(vbig, repeats);
+        //test::hammer<accumulator<int> >(lbig, repeats);
 
         measured = time.elapsed();
     }
@@ -220,8 +223,8 @@ int main()
     check(lsmall,       "small list accumulated result:      ");
     check(vmedium,      "medium vector accumulated result:   ");
     check(lmedium,      "medium list accumulated result:     ");
-    check(vbig,         "big vector accumulated result:      "); 
-    check(lbig,         "big list accumulated result:        ");
+    //check(vbig,         "big vector accumulated result:      ");
+    //check(lbig,         "big list accumulated result:        ");
 
     std::cout 
         << "-------------------------------------------------------------------"
@@ -231,8 +234,8 @@ int main()
     measure(lsmall,     "small list time:                    ", repeats, base_time);
     measure(vmedium,    "medium vector time:                 ", repeats, base_time);
     measure(lmedium,    "medium list time:                   ", repeats, base_time);
-    measure(vbig,       "big vector time:                    ", repeats, base_time);
-    measure(lbig,       "big list time:                      ", repeats, base_time);
+    //measure(vbig,       "big vector time:                    ", repeats, base_time);
+    //measure(lbig,       "big list time:                      ", repeats, base_time);
 
     std::cout 
         << "-------------------------------------------------------------------"

@@ -24,47 +24,45 @@ namespace boost { namespace fusion
 {
     struct random_access_traversal_tag;
 
-    template <typename SeqRef, int N>
+    template <typename SeqRef, int Pos>
     struct struct_iterator
-      : iterator_facade<struct_iterator<SeqRef, N>, random_access_traversal_tag>
+      : iterator_facade<struct_iterator<SeqRef, Pos>, random_access_traversal_tag>
     {
         //BOOST_FUSION_INDEX_CHECK(N,struct_size<SeqRef>::value);
 
+        typedef typename detail::identity<SeqRef>::type identity_struct;
+
         template <typename ItRef>
         struct value_of
-          : extension::struct_member<SeqRef, N>
+          : extension::struct_member<identity_struct, Pos>
         {};
 
         template <typename ItRef>
         struct deref
         {
-            typedef typename detail::identity<SeqRef>::type identity_struct;
-
             typedef typename
                 detail::forward_as<
                     SeqRef
-                  , typename extension::struct_member<identity_struct, N>::type
+                  , typename extension::struct_member<
+                        identity_struct
+                      , Pos
+                    >::type
                 >::type
             type;
 
             static type
             call(ItRef it)
             {
-                return extension::struct_member<identity_struct, N>::call(
+                return extension::struct_member<identity_struct, Pos>::call(
                         *it.struct_);
             }
         };
 
-        template <typename ItRef, typename N_>
+        template <typename ItRef, typename N>
         struct advance
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
-
             typedef
-                struct_iterator<
-                    typename it::struct_type
-                  , it::index::value + N_::value
-                >
+                struct_iterator<SeqRef, Pos + N::value>
             type;
 
             static type
@@ -73,9 +71,6 @@ namespace boost { namespace fusion
                 return type(*it.struct_,0);
             }
         };
-
-        typedef mpl::int_<N> index;
-        typedef SeqRef struct_type;
 
         template <typename ItRef>
         struct next
@@ -90,11 +85,13 @@ namespace boost { namespace fusion
         template <typename It1Ref, typename It2Ref>
         struct distance
           : mpl::minus<
-                typename detail::remove_reference<It2Ref>::type::index
+                mpl::int_<Pos>
               , typename detail::remove_reference<It1Ref>::type::index
             >
         {
         };
+
+        typedef mpl::int_<Pos> index;
 
         template<typename OtherIt>
         struct_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)

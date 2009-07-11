@@ -48,9 +48,9 @@ namespace boost { namespace fusion
 
             typedef typename
                 detail::forward_as<
-                    typename it::array_type
+                    ArrayRef
                   , typename detail::remove_reference<
-                        typename it::array_type
+                        ArrayRef
                     >::type::value_type
                 >::type
             type;
@@ -65,12 +65,10 @@ namespace boost { namespace fusion
         template <typename ItRef, typename N>
         struct advance
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
-
             typedef
                 array_iterator<
-                    typename it::array_type
-                  , it::index::value + N::value
+                    ArrayRef
+                  , Pos + N::value
                 >
             type;
 
@@ -100,7 +98,6 @@ namespace boost { namespace fusion
         {};
 
         typedef mpl::int_<Pos> index;
-        typedef ArrayRef array_type;
 
         template<typename OtherIt>
         array_iterator(OtherIt const& it)
