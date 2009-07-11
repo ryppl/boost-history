@@ -8,6 +8,8 @@ namespace detail
 {
     struct block_find
     {
+        typedef bool result_type;
+
         bool operator()(const boost::unicode::ucd::unichar_blocks_internal& a, const boost::unicode::ucd::unichar_blocks_internal& b) const
         {
             return a.first < b.first;
@@ -16,6 +18,11 @@ namespace detail
         bool operator()(const boost::unicode::ucd::unichar_blocks_internal& a, char32 b) const
         {
             return a.first < b;
+        }
+        
+        bool operator()(char32 a, const boost::unicode::ucd::unichar_blocks_internal& b) const
+        {
+            return a < b.first;
         }
     };
 }

@@ -6,6 +6,7 @@
  * http://www.unicode.org/reports/tr15/ */
 
 #include <boost/cuchar.hpp>
+#include <boost/mpl/int.hpp>
 
 namespace boost
 {
@@ -31,7 +32,7 @@ namespace detail
 struct hangul_decomposer
 {
     typedef char32 output_type;
-    static const int max_output = 3;
+    typedef mpl::int_<3> max_output;
     
     template<typename Out>
     Out operator()(char32 ch, Out out)
@@ -66,7 +67,7 @@ struct hangul_decomposer
 struct hangul_composer
 {
     typedef char32 output_type;
-    static const int max_output = 1;
+    typedef mpl::int_<1> max_output;
     
     /*template<typename In, typename Out>
     std::pair<In, Out> ltr(In begin, In end, Out out)

@@ -3,6 +3,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/throw_exception.hpp>
+#include <boost/mpl/int.hpp>
 #include <stdexcept>
 #ifndef BOOST_NO_STD_LOCALE
 #include <sstream>
@@ -78,7 +79,7 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 struct u16_encoder
 {
 	typedef char16 output_type;
-    static const int max_output = 2;
+    typedef mpl::int_<2> max_output;
 	
     /** Throws std::out_of_range if \c v is not a valid code point. */
 	template<typename OutputIterator>
@@ -120,7 +121,7 @@ struct u16_encoder
 struct u16_decoder
 {
 	typedef char32 output_type;
-    static const int max_output = 1;
+    typedef mpl::int_<1> max_output;
 	
     /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
@@ -212,7 +213,7 @@ struct u16_boundary
 struct u8_encoder
 {
 	typedef char output_type;
-    static const int max_output = 4;
+    typedef mpl::int_<4> max_output;
 	
     /** Throws std::out_of_range if \c c is not a valid code point. */
 	template<typename OutputIterator>
@@ -253,7 +254,7 @@ struct u8_encoder
 struct u8_decoder
 {
 	typedef char32 output_type;
-    static const int max_output = 1;
+    typedef mpl::int_<1> max_output;
 
 private:
     template<typename In>

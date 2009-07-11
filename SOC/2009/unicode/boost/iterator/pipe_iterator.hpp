@@ -11,25 +11,26 @@
 
 #include <boost/introspection/has_member_data.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/mpl/has_xxx.hpp>
 
 namespace boost
 {
 namespace detail
 {
-    BOOST_HAS_STATIC_MEMBER_DATA(const int, max_output)
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(max_output)
 
     template<typename P, typename Enable = void>
     struct pipe_output_storage;
 
     template<typename P>
-    struct pipe_output_storage<P, typename ::boost::disable_if< has_static_member_data_max_output<P> >::type>
+    struct pipe_output_storage<P, typename ::boost::disable_if< has_max_output<P> >::type>
     {
 private:
         typedef std::vector<typename P::output_type> Values;
 public:
         typedef std::back_insert_iterator<Values> output_iterator;
         
-        const typename P::output_value& operator[](size_t i) const
+        const typename P::output_type& operator[](size_t i) const
         {
             return values[i];
         }
@@ -54,7 +55,7 @@ public:
     };
     
     template<typename P>
-    struct pipe_output_storage<P, typename boost::enable_if< has_static_member_data_max_output<P> >::type>
+    struct pipe_output_storage<P, typename boost::enable_if< has_max_output<P> >::type>
     {
 private:
         typedef typename P::output_type Value;
@@ -82,7 +83,7 @@ public:
         }
         
     private:
-        Value values[P::max_output];
+        Value values[P::max_output::value];
         size_t last;
     };
 }

@@ -23,7 +23,7 @@
       template<class X> static NotFound test( ... );                    \
                                                                         \
       static const bool value  = (sizeof(Found) == sizeof(test<T>(0))); \
-      typedef mpl::bool_<value> type;                                   \
+      typedef boost::mpl::bool_<value> type;                            \
     };                                                                  \
 /**/
 
@@ -33,13 +33,13 @@
       typedef char NotFound;                                            \
       struct Found { char x[2]; };                                      \
                                                                         \
-      template< class X, Type*> struct member {};                   \
+      template< class X, Type*> struct member {};                       \
                                                                         \
       template<class X> static Found test(member<X,&X::Name>*);         \
       template<class X> static NotFound test( ... );                    \
                                                                         \
       static const bool value  = (sizeof(Found) == sizeof(test<T>(0))); \
-      typedef mpl::bool_<value> type;                                   \
+      typedef boost::mpl::bool_<value> type;                            \
     };                                                                  \
 /**/
 
