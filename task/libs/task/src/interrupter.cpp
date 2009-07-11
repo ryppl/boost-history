@@ -8,8 +8,7 @@
 
 #include <boost/assert.hpp>
 
-namespace boost { namespace task
-{
+namespace boost { namespace task {
 namespace detail
 {
 

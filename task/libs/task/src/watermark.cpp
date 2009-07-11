@@ -10,6 +10,7 @@
 
 namespace boost { namespace task
 {
+
 high_watermark::high_watermark( std::size_t value)
 : value_( value)
 {
@@ -29,4 +30,5 @@ low_watermark::low_watermark( std::size_t value)
 
 low_watermark::operator std::size_t () const
 { return value_; }
-} }
+
+}}

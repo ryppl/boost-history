@@ -10,10 +10,10 @@
 
 #include <boost/task/detail/atomic.hpp>
 
-namespace boost { namespace task
-{
+namespace boost { namespace task {
 namespace detail
 {
+
 wsq::wsq()
 :
 initial_size_( 32),
@@ -114,6 +114,5 @@ wsq::try_steal( callable & ca)
 	}
 	return false;
 }
-} } }
 
-
+}}}

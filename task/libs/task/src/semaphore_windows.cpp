@@ -16,6 +16,7 @@
 
 namespace boost { namespace task
 {
+
 semaphore::semaphore( int value)
 : handle_()
 {
@@ -77,4 +78,5 @@ semaphore::value()
 	}
 	return value;
 }
+
 }}

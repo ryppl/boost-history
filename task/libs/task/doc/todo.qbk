@@ -39,16 +39,15 @@ dependencies or communicate with each other.
 
 [heading Interdepended task]
 
-* With special support of __boost_fiber__ interdepended tasks (using communication and synchronisation abstractions above) work in 
-__thread_pools__ without deadlocking the pool. 
+* integration of __boost_fiber__  - interdepended tasks (using communication and synchronisation abstractions above) work in 
+__thread_pools__ without deadlocking the pool
 
 
 [heading Optimizations]
  
-* two-lock-queue as global queue in __thread_pool__
+* finer-grainer bounded_channel and unbounded_channel using two-lock-queue
 
-* maybe lock-free-queue as global queue too (how to provide the scheduling policies fifo, priority, smart?)
-
+* lock-free-queue with fifo ordering as channel
 
 
 [endsect]

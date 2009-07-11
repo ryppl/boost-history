@@ -6,10 +6,10 @@
 
 #include "boost/task/detail/worker.hpp"
 
-namespace boost { namespace task
-{
+namespace boost { namespace task {
 namespace detail
 {
+
 thread_specific_ptr< worker > worker::tss_;
 
 const thread::id
@@ -51,6 +51,7 @@ worker::reschedule_until( function< bool() > const& pred)
 void
 worker::run()
 {
+	// FIXME: ugly
 	worker::tss_.reset( new worker( * this) );
 	impl_->run();
 }
@@ -58,5 +59,5 @@ worker::run()
 worker *
 worker::tss_get()
 { return worker::tss_.get(); }
-} } }
 
+}}}

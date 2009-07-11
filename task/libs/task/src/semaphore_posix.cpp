@@ -15,6 +15,7 @@
 
 namespace boost { namespace task
 {
+
 semaphore::semaphore( int value)
 : handle_()
 {
@@ -81,4 +82,5 @@ semaphore::value()
 		throw system::system_error( errno, system::system_category);
 	return value;
 }
+
 }}

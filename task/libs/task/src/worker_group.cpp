@@ -9,10 +9,10 @@
 #include <boost/foreach.hpp>
 #include <boost/utility.hpp>
 
-namespace boost { namespace task
-{
+namespace boost { namespace task {
 namespace detail
 {
+
 worker_group::worker_group()
 :
 cont_(),
@@ -99,5 +99,5 @@ worker_group::signal_shutdown_now_all()
 	BOOST_FOREACH( worker w, cont_)
 	{ w.signal_shutdown_now(); }
 }
-} } }
 
+}}}

@@ -133,6 +133,8 @@ Used namespaces are:
 
 [note __boost_task__ uses __boost_future__ from Anthony Williams (will be integrated in some of the next releases of __boost_thread__).]
 
+[warning This library is NOT an official Boost library]
+
 [note Please note that __boost_task__ is not optimized yet.]
 
 
