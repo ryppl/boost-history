@@ -287,8 +287,9 @@ ObjectT& operator +=
 {
     typedef interval_base_map<SubType,DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Interval,Alloc> operand_type;
+	typename ObjectT::iterator prior_ = object.end();
     const_FORALL(typename operand_type, elem_, operand) 
-        object.add(*elem_); 
+        prior_ = object.add(prior_, *elem_); 
 
     return object; 
 }

@@ -43,6 +43,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __spl_itv_sets__ [classref boost::itl::split_interval_set split_interval_sets]]
 [def __Spl_itv_set__  [classref boost::itl::split_interval_set Split_interval_set]]
 [def __sep_itv_set__  [classref boost::itl::separate_interval_set separate_interval_set]]
+[def __sep_itv_sets__ [classref boost::itl::separate_interval_set separate_interval_sets]]
 [def __Sep_itv_set__  [classref boost::itl::separate_interval_set Separate_interval_set]]
 [def __itv_map__      [classref boost::itl::interval_map interval_map]]
 [def __itv_maps__     [classref boost::itl::interval_map interval_maps]]
@@ -117,6 +118,10 @@ Distributed under the Boost Software License, Version 1.0.
 [def __iterative__     iterative]
 [def __Iterative__     Iterative]
 
+[def __On__            ['O(n)]]
+[def __Olgn__          ['O(log n)]]
+[def __Onlgn__         ['O(n log n)]]
+
 [/ Cited Boost resources ]
 
 [/ Other web resources ]
@@ -132,6 +137,7 @@ Distributed under the Boost Software License, Version 1.0.
 [include concepts.qbk]
 [include semantics.qbk]
 [include interface.qbk]
+[include implementation.qbk]
 [include acknowledgments.qbk]
 [xinclude itldoc.xml]
 

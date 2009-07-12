@@ -118,8 +118,8 @@ public:
         typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
         this->clear();
         // Can be implemented via _set.insert: Interval joining not necessary.
-        const_FORALL(typename base_set_type, it, src) 
-            this->_set.insert(*it); 
+        const_FORALL(typename base_set_type, it_, src) 
+            this->_set.insert(*it_); 
     }
 
 private:
@@ -132,13 +132,14 @@ private:
 
     /// Insertion of an interval <tt>x</tt>
     void add_(const value_type& x);
+    iterator add_(iterator prior_, const value_type& x);
 
     /// Removal of an interval <tt>x</tt>
     void subtract_(const value_type& x);
 
 private:
     /// Treatment of adjoint intervals on insertion
-    void handle_neighbours(const iterator& it){}
+    void handle_neighbours(const iterator& it_){}
 } ;
 
 
@@ -165,21 +166,53 @@ inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const va
         handle_neighbours(insertion.ITERATOR);
     else
     {
-        iterator fst_it = this->_set.lower_bound(addend),
-                 lst_it = insertion.ITERATOR,
-                 end_it = insertion.ITERATOR; end_it++;
-        //BOOST_ASSERT(end_it == this->_map.upper_bound(inter_val));
-        iterator snd_it = fst_it; ++snd_it;
+        iterator first_ = this->_set.lower_bound(addend),
+                 last_  = insertion.ITERATOR,
+                 end_   = insertion.ITERATOR; end_  ++;
+        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        iterator second_= first_; ++second_;
 
-        interval_type leftResid  = right_subtract(*fst_it, addend);
-        interval_type rightResid =  left_subtract(*lst_it, addend);
+        interval_type leftResid  = right_subtract(*first_, addend);
+        interval_type rightResid =  left_subtract(*last_ , addend);
 
-        this->_set.erase(snd_it, end_it);
+        this->_set.erase(second_, end_  );
 
         interval_type extended = addend;
         extended.extend(leftResid).extend(rightResid);
 
-        const_cast<value_type&>(*fst_it) = extended;
+        const_cast<value_type&>(*first_) = extended;
+    }
+}
+
+template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator 
+    separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
+{
+    if(addend.empty()) 
+		return prior_;
+
+    iterator insertion = this->_set.insert(prior_, addend);
+
+    if(*insertion == addend)
+        return insertion;
+    else
+    {
+        iterator first_ = this->_set.lower_bound(addend),
+                 last_  = insertion,
+                 end_   = insertion; end_  ++;
+        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        iterator second_= first_; ++second_;
+
+        interval_type leftResid  = right_subtract(*first_, addend);
+        interval_type rightResid =  left_subtract(*last_ , addend);
+
+        this->_set.erase(second_, end_  );
+
+        interval_type extended = addend;
+        extended.extend(leftResid).extend(rightResid);
+
+        const_cast<value_type&>(*first_) = extended;
+        return first_;
     }
 }
 
@@ -188,18 +221,18 @@ template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class In
 inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
     if(minuend.empty()) return;
-    iterator fst_it = this->_set.lower_bound(minuend);
-    if(fst_it==this->_set.end()) return;
-    iterator end_it = this->_set.upper_bound(minuend);
-    iterator snd_it = fst_it; ++snd_it;
-    iterator lst_it = end_it; --lst_it;
+    iterator first_ = this->_set.lower_bound(minuend);
+    if(first_==this->_set.end()) return;
+    iterator end_   = this->_set.upper_bound(minuend);
+    iterator second_= first_; ++second_;
+    iterator last_  = end_; --last_;
 
-    interval_type leftResid = right_subtract(*fst_it, minuend);
+    interval_type leftResid = right_subtract(*first_, minuend);
     interval_type rightResid; 
-    if(fst_it != end_it)
-        rightResid = left_subtract(*lst_it, minuend);
+    if(first_ != end_  )
+        rightResid = left_subtract(*last_ , minuend);
 
-    this->_set.erase(fst_it, end_it);
+    this->_set.erase(first_, end_  );
 
     if(!leftResid.empty())
         this->_set.insert(leftResid);

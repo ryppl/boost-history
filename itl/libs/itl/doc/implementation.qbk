@@ -1,0 +1,87 @@
+[/
+    Copyright (c) 2008-2009 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+[section Implementation]
+
+The implementation of the *itl's* conainers is based on 
+std::set and std::map. So the underlying datastructure of
+interval containers is a red black tree of intervals or
+interval value pairs. 
+
+The element containers itl::set and itl::map are wrapper
+classes of std::set and std::map using private inherience.
+Interval containers are then using itl::sets of intervals
+or itl::maps of interval value pairs as implementing
+containers.
+
+So all the complexity characteristics of itl conainers
+are based on and limited by the red-black tree implementation
+of the underlying std::AssociativeContainers.
+
+[section Complexity]
+
+This section gives an overview over the time complextity of
+the basic operations on interval containers. Since element
+containers __itl_set__ and __itl_map__ are only extensions of
+stl::set and stl::map, their complexity characteristics are
+accordingly. So their major operations insertion (addition),
+deletion and search are all using logarithmic time.
+
+The operations of interval containers behave differently
+due to the fact that intervals unlike elements can overlap
+any number of other inervals in a container. So as long as
+intervals are relatively small or just singleton, interval
+containers behave like an container of elements.
+
+This situation can be found in the first row of the next table,
+that gives the time complexities of the poymorphic 
+`operator +=` for ['*addition]. Adding an element or 
+element value pair is always done in /logarithmic time/,
+where /n/ is the number of intervals in the interval container.
+The same row of complexities applies to the insertion
+of a /segment/ (an interval or an interval value pair)
+in the ['*best case*], where the inserted segment does overlap
+with only a ['*small*] number of intervals in the container.
+
+[table Time Complexity of Addition
+[[]                                    [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
+[/ 1operation                          2granul.    3case        4itvset     5se_itvset  6sp_itvset  7itv_map    8sp_itvmap]
+[[`T& operator +=(      T&, const P&)`][element]   []           [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]   ]
+[[]                                    [segment]   [best case]  [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]      ]
+[[]                                    []          [worst case] [__On__]    [__On__]    [__On__]    [__On__]    [__On__]      ]
+[[]                                    []          [amortized]  [__Olgn__]  [__Olgn__]  []          []          []      ]
+[[]                                    [container] []           [__Onlgn__] [__Onlgn__] [__Onlgn__] [__Onlgn__] [__Onlgn__] ]
+]
+
+In the ['*worst case*], where the inserted segment overlaps with 
+all intervals in the container, the algorithms usually
+iterate over all the overlapped segments.
+Using inplace manipulations of segments and
+hinted inserts, it is possible to perform 
+all necessary operations on each iteration step
+in /constant time/. 
+This results in ['*linear worst case time*] complexity for 
+segment addition for all interval containers.
+
+After performing
+a worst case addition  
+for an __itv_set__ or a __sep_itv_sets__ 
+adding an interval that overlaps /n/ 
+intervals, we
+need /n/ non overlapping additions of
+/logarithmic time/ before we can launch 
+another __On__ worst case addition. 
+So we have only a ['*logarithmic amortized
+time*] for the addition of an interval.
+
+
+
+[endsect]
+
+[endsect]
+

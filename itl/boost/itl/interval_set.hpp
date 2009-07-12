@@ -121,8 +121,8 @@ public:
         typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
         this->clear();
         // Has to be implemented via add. there might be touching borders to be joined
-        const_FORALL(typename base_set_type, it, src) 
-            this->add(*it);
+        const_FORALL(typename base_set_type, it_, src) 
+            this->add(*it_);
     }
 
 private:
@@ -136,14 +136,16 @@ private:
     /// Insertion of an interval <tt>x</tt>
     void add_(const value_type& x);
 
+    iterator add_(iterator prior_, const value_type& x);
+
     /// Removal of an interval <tt>x</tt>
     void subtract_(const value_type& x);
 
 private:
     /// Treatment of adjoint intervals on insertion
-    void handle_neighbours(const iterator& it);
+    iterator handle_neighbours(iterator it_);
 
-    iterator join_segments(const iterator& left_it, const iterator& right_it);
+    iterator join_segments(const iterator& left_, const iterator& right_);
 } ;
 
 
@@ -162,52 +164,59 @@ bool interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type
     else if(this->upper() < x.lower())
         return false;
     {
-        typename ImplSetT::const_iterator it = this->_set.find(x);
-        if(it == this->_set.end())
+        typename ImplSetT::const_iterator it_ = this->_set.find(x);
+        if(it_ == this->_set.end())
             return false;
         else
-            return x.contained_in(*it);
+            return x.contained_in(*it_);
     }
 }
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-void interval_set<DomainT,Compare,Interval,Alloc>::handle_neighbours(const iterator& it)
+inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
+    interval_set<DomainT,Compare,Interval,Alloc>::handle_neighbours(iterator it_)
 {
-    if(it == this->_set.begin())
+    if(it_ == this->_set.begin())
     {
-        iterator it_nxt=it; it_nxt++;
-        if(it_nxt!=this->_set.end() && (*it).touches(*it_nxt)) 
-            join_segments(it, it_nxt);
+        iterator it_nxt=it_; it_nxt++;
+        if(it_nxt!=this->_set.end() && (*it_).touches(*it_nxt)) 
+            return join_segments(it_, it_nxt);
     }
     else
     {
         // there is a predecessor
-        iterator it_pred = it; it_pred-- ;
+        iterator pred_ = it_; pred_-- ;
 
-        if((*it_pred).touches(*it)) 
+        if((*pred_).touches(*it_)) 
         {
-            iterator it_extended = join_segments(it_pred, it);
+            iterator it_extended = join_segments(pred_, it_);
 
-            iterator it_succ=it_extended; it_succ++;
-            if(it_succ!=this->_set.end())
+            iterator succ_=it_extended; succ_++;
+            if(succ_!=this->_set.end())
             {
                 // it's a non border element that might have two touching neighbours
-                if((*it_extended).touches(*it_succ)) 
-                    join_segments(it_extended, it_succ);
+                if((*it_extended).touches(*succ_)) 
+                    return join_segments(it_extended, succ_);
+				else
+					return it_extended;
             }
+			else
+				return it_extended;
         }
         else
         {
-            iterator it_succ=it; it_succ++;
-            if(it_succ!=this->_set.end())
+            iterator succ_=it_; succ_++;
+            if(succ_!=this->_set.end())
             {
                 // it's a non border element that might have a right touching neighbours
-                if((*it).touches(*it_succ)) 
-                    join_segments(it, it_succ);
+                if((*it_).touches(*succ_)) 
+                    return join_segments(it_, succ_);
             }
         }
     }
+
+	return it_;
 }
 
 
@@ -215,17 +224,17 @@ void interval_set<DomainT,Compare,Interval,Alloc>::handle_neighbours(const itera
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>
-    ::join_segments(const iterator& left_it, const iterator& right_it)
+    ::join_segments(const iterator& left_, const iterator& right_)
 {
     // both left and right are in the set and they are neighbours
-    BOOST_ASSERT((*left_it).exclusive_less(*right_it));
-    BOOST_ASSERT((*left_it).touches(*right_it));
+    BOOST_ASSERT((*left_).exclusive_less(*right_));
+    BOOST_ASSERT((*left_).touches(*right_));
 
-    interval_type right_itv = (*right_it);
-    this->_set.erase(right_it);
-    const_cast<value_type&>(*left_it).extend(right_itv);
+    interval_type right_itv = (*right_);
+    this->_set.erase(right_);
+    const_cast<value_type&>(*left_).extend(right_itv);
 
-    return left_it;
+    return left_;
 }
 
 
@@ -240,41 +249,72 @@ void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend
         handle_neighbours(insertion.ITERATOR);
     else
     {
-        iterator fst_it = this->_set.lower_bound(addend),
-                 lst_it = insertion.ITERATOR,
-                 end_it = insertion.ITERATOR; end_it++;
-        //BOOST_ASSERT(end_it == this->_map.upper_bound(inter_val));
-        iterator snd_it = fst_it; ++snd_it;
+        iterator first_ = this->_set.lower_bound(addend),
+                 last_  = insertion.ITERATOR,
+                 end_   = insertion.ITERATOR; end_  ++;
+        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        iterator second_= first_; ++second_;
 
-        interval_type leftResid  = right_subtract(*fst_it, addend);
-        interval_type rightResid =  left_subtract(*lst_it, addend);
+        interval_type leftResid  = right_subtract(*first_, addend);
+        interval_type rightResid =  left_subtract(*last_ , addend);
 
-        this->_set.erase(snd_it, end_it);
+        this->_set.erase(second_, end_  );
 
         interval_type extended = addend;
         extended.extend(leftResid).extend(rightResid);
 
-        const_cast<value_type&>(*fst_it) = extended;
-        handle_neighbours(fst_it);
+        const_cast<value_type&>(*first_) = extended;
+        handle_neighbours(first_);
     }
 }
 
+template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
+    interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
+{
+    if(addend.empty()) 
+		return prior_;
+
+    iterator insertion = this->_set.insert(prior_, addend);
+
+    if(*insertion == addend)
+        return handle_neighbours(insertion);
+    else
+    {
+        iterator first_ = this->_set.lower_bound(addend),
+                 last_  = insertion,
+                 end_   = insertion; end_  ++;
+        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        iterator second_= first_; ++second_;
+
+        interval_type leftResid  = right_subtract(*first_, addend);
+        interval_type rightResid =  left_subtract(*last_ , addend);
+
+        this->_set.erase(second_, end_  );
+
+        interval_type extended = addend;
+        extended.extend(leftResid).extend(rightResid);
+
+        const_cast<value_type&>(*first_) = extended;
+        return handle_neighbours(first_);
+    }
+}
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 void interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const value_type& minuend)
 {
     if(minuend.empty()) return;
-    iterator fst_it = this->_set.lower_bound(minuend);
-    if(fst_it==this->_set.end()) return;
-    iterator end_it = this->_set.upper_bound(minuend);
-    iterator lst_it = end_it; --lst_it;
+    iterator first_ = this->_set.lower_bound(minuend);
+    if(first_==this->_set.end()) return;
+    iterator end_   = this->_set.upper_bound(minuend);
+    iterator last_  = end_; --last_;
 
-    interval_type leftResid = right_subtract(*fst_it, minuend);
+    interval_type leftResid = right_subtract(*first_, minuend);
     interval_type rightResid; 
-    if(fst_it != end_it)
-        rightResid = left_subtract(*lst_it, minuend);
+    if(first_ != end_  )
+        rightResid = left_subtract(*last_ , minuend);
 
-    this->_set.erase(fst_it, end_it);
+    this->_set.erase(first_, end_  );
 
     if(!leftResid.empty())
         this->_set.insert(leftResid);

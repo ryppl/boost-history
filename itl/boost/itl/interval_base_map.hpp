@@ -203,8 +203,8 @@ public:
     /** Does the map contain the domain element \c key? */
     bool contains(const domain_type& key)const
     { 
-        typename ImplMapT::const_iterator it = _map.find(interval_type(key)); 
-        return it != _map.end(); 
+        typename ImplMapT::const_iterator it_ = _map.find(interval_type(key)); 
+        return it_ != _map.end(); 
     }
 
     /** Does the map contain the <tt>key_value_pair = (key,value)</tt>? */
@@ -280,16 +280,16 @@ public:
     /** Find the interval value pair, that contains \c key */
     const_iterator find(const domain_type& key)const
     { 
-        const_iterator it = _map.find(interval_type(key)); 
-        return it; 
+        const_iterator it_ = _map.find(interval_type(key)); 
+        return it_; 
     }
 
     /** Total select function. */
     codomain_type operator()(const domain_type& key)const
     {
-        const_iterator it = _map.find(interval_type(key)); 
-        return it==end() ? neutron<codomain_type>::value()
-                         : it->CONT_VALUE;
+        const_iterator it_ = _map.find(interval_type(key)); 
+        return it_==end() ? neutron<codomain_type>::value()
+                         : it_->CONT_VALUE;
     }
 
 
@@ -313,6 +313,9 @@ public:
     /** Addition of an interval value pair to the map. */
     SubType& add(const segment_type& interval_value_pair) 
     { that()->template add_<codomain_combine>(interval_value_pair); return *that(); }
+
+    iterator add(iterator prior_, const segment_type& interval_value_pair) 
+    { return that()->template add_<codomain_combine>(prior_, interval_value_pair); }
 
     //==========================================================================
     //= Subtraction
@@ -469,9 +472,9 @@ public:
         if(!Set::common_range(common_lwb, common_upb, sectant, *this))
             return;
 
-        typename sectant_type::const_iterator it = common_lwb;
-        while(it != common_upb)
-            add_intersection(section, *it++);
+        typename sectant_type::const_iterator it_ = common_lwb;
+        while(it_ != common_upb)
+            add_intersection(section, *it_++);
     }
 
 
@@ -584,8 +587,8 @@ public:
     void domain(IntervalSet<DomainT,Compare,Interval,Alloc>& dom)const 
     { 
         dom.clear(); 
-        const_FOR_IMPLMAP(it) 
-            dom += (*it).KEY_VALUE; 
+        const_FOR_IMPLMAP(it_) 
+            dom += (*it_).KEY_VALUE; 
     } 
 
     /* Sum of associated elements of the map */
@@ -625,12 +628,7 @@ public:
 protected:
 
     iterator prior(iterator it_)
-    {
-        if(it_ == this->_map.begin())
-            return this->_map.end();
-        else
-            return --it_;
-    }
+	{ return it_ == this->_map.begin() ? this->_map.end() : --it_; }
 
     template <class Combiner>
     bool combine(iterator& it_, const codomain_type& co_val)
@@ -648,26 +646,41 @@ protected:
         {
             CodomainT added_val = Combiner::neutron();
             Combiner()(added_val, co_val);
-            if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
-                return std::pair<iterator,bool>(this->_map.end(), false);
-            else
-                return this->_map.insert(value_type(inter_val, added_val));
+            return this->_map.insert(value_type(inter_val, added_val));
         }
         else
             return this->_map.insert(value_type(inter_val, co_val));
     }
 
+	// Insertion with hint, that does report insertion failure
     template <class Combiner>
-    iterator map_insert(iterator& prior_, const interval_type& inter_val, const codomain_type& co_val)
+	std::pair<iterator, bool> 
+		map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
+		iterator inserted_ 
+			= this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
+
+		if(inserted_->KEY_VALUE == inter_val && inserted_->CONT_VALUE == Combiner::neutron())
+		{
+			Combiner()(inserted_->CONT_VALUE, co_val);
+			return std::pair<iterator,bool>(inserted_, true);
+		}
+		else
+			return std::pair<iterator,bool>(inserted_, false);
+    }
+
+    template <class Combiner>
+    iterator gap_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
+    {
+		// inter_val is not conained in this map. Insertion will be successful
+		BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
+		BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
+
         if(Traits::is_total)
         {
-            CodomainT added_val = Combiner::neutron();
-            Combiner()(added_val, co_val);
-            if(Traits::absorbs_neutrons && added_val == Combiner::neutron())
-                return this->_map.end();
-            else
-                return this->_map.insert(prior_, value_type(inter_val, added_val));
+            iterator inserted_ = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
+            Combiner()(inserted_->CONT_VALUE, co_val);
+			return inserted_;
         }
         else
             return this->_map.insert(prior_, value_type(inter_val, co_val));
@@ -711,8 +724,8 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,
                   Compare,Combine,Section,Interval,Alloc>::length()const
 {
     difference_type length = neutron<difference_type>::value();
-    const_FOR_IMPLMAP(it)
-        length += (*it).KEY_VALUE.length();
+    const_FOR_IMPLMAP(it_)
+        length += (*it_).KEY_VALUE.length();
     return length;
 }
 
@@ -760,9 +773,9 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
         typename sectant_type::const_iterator common_upb;
         if(!Set::common_range(common_lwb, common_upb, sectant, *this))
             return;
-        typename sectant_type::const_iterator it = common_lwb;
-        while(it != common_upb)
-            add_intersection(intersection, *it++);
+        typename sectant_type::const_iterator it_ = common_lwb;
+        while(it_ != common_upb)
+            add_intersection(intersection, *it_++);
     }
 }
 
@@ -786,16 +799,16 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
         interval_type sectant_interval = sectant.KEY_VALUE;
         if(sectant_interval.empty()) return;
 
-        typename ImplMapT::const_iterator fst_it = _map.lower_bound(sectant_interval);
-        typename ImplMapT::const_iterator end_it = _map.upper_bound(sectant_interval);
+        typename ImplMapT::const_iterator first_ = _map.lower_bound(sectant_interval);
+        typename ImplMapT::const_iterator end_   = _map.upper_bound(sectant_interval);
 
-        for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
+        for(typename ImplMapT::const_iterator it_=first_; it_ != end_; it_++) 
         {
-            interval_type common_interval = ((*it).KEY_VALUE) & sectant_interval; 
+            interval_type common_interval = ((*it_).KEY_VALUE) & sectant_interval; 
 
             if(!common_interval.empty())
             {
-                section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
+                section.that()->add( value_type(common_interval, (*it_).CONT_VALUE) );
                 if(is_set<CodomainT>::value)
                     section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.CONT_VALUE)); 
                 else
@@ -818,14 +831,14 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     if(sectant_interval.empty()) return;
 
-    typename ImplMapT::const_iterator fst_it = _map.lower_bound(sectant_interval);
-    typename ImplMapT::const_iterator end_it = _map.upper_bound(sectant_interval);
+    typename ImplMapT::const_iterator first_ = _map.lower_bound(sectant_interval);
+    typename ImplMapT::const_iterator end_   = _map.upper_bound(sectant_interval);
 
-    for(typename ImplMapT::const_iterator it=fst_it; it != end_it; it++) 
+    for(typename ImplMapT::const_iterator it_=first_; it_ != end_; it_++) 
     {
-        interval_type common_interval = ((*it).KEY_VALUE) & sectant_interval; 
+        interval_type common_interval = ((*it_).KEY_VALUE) & sectant_interval; 
         if(!common_interval.empty())
-            section.that()->add( value_type(common_interval, (*it).CONT_VALUE) );
+            section.that()->add( value_type(common_interval, (*it_).CONT_VALUE) );
     }
 }
 
@@ -864,20 +877,20 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
 
     interval_type span = interval_value_pair.KEY_VALUE;
 
-    typename ImplMapT::const_iterator fst_it = _map.lower_bound(span);
-    typename ImplMapT::const_iterator end_it = _map.upper_bound(span);
+    typename ImplMapT::const_iterator first_ = _map.lower_bound(span);
+    typename ImplMapT::const_iterator end_   = _map.upper_bound(span);
 
     interval_type covered, left_over, common_interval;
     const codomain_type& x_value = interval_value_pair.CONT_VALUE;
-    typename ImplMapT::const_iterator it = fst_it;
+    typename ImplMapT::const_iterator it_ = first_;
 
     interval_set<DomainT,Compare,Interval,Alloc> eraser;
     interval_base_map intersection;
 
-    while(it != end_it) 
+    while(it_ != end_  ) 
     {
-        const codomain_type& co_value = it->CONT_VALUE;
-        covered = (*it++).KEY_VALUE; 
+        const codomain_type& co_value = it_->CONT_VALUE;
+        covered = (*it_++).KEY_VALUE; 
         //[a      ...  : span
         //     [b ...  : covered
         //[a  b)       : left_over
@@ -904,7 +917,7 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
         // Because this is a collision free addition I don't have to distinguish codomain_types.
 
         //...      d) : span
-        //... c)      : (*it); span.left_subtract(*it);
+        //... c)      : (*it_); span.left_subtract(*it_);
         //     [c  d) : span'
         span.left_subtract(covered);
     }
@@ -957,17 +970,17 @@ SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Sect
     if(!Set::common_range(common_lwb, common_upb, operand, *this))
         return *that() += operand;
 
-    typename operand_type::const_iterator it = operand.begin();
+    typename operand_type::const_iterator it_ = operand.begin();
 
     // All elements of operand left of the common range are added
-    while(it != common_lwb)
-        add(*it++);
+    while(it_ != common_lwb)
+        add(*it_++);
     // All elements of operand in the common range are symmetrically subtracted
-    while(it != common_upb)
-        flip(*it++);
+    while(it_ != common_upb)
+        flip(*it_++);
     // All elements of operand right of the common range are added
-    while(it != operand.end())
-        add(*it++);
+    while(it_ != operand.end())
+        add(*it_++);
 
     if(Traits::is_total && !Traits::absorbs_neutrons)
         FORALL(typename ImplMapT, it_, _map)
@@ -986,42 +999,42 @@ template
 interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
     ::join()
 {
-    iterator it=_map.begin();
-    if(it==_map.end()) 
+    iterator it_=_map.begin();
+    if(it_==_map.end()) 
         return *this;
 
-    iterator nxt=it; nxt++;
+    iterator nxt=it_; nxt++;
     if(nxt==_map.end()) 
         return *this;
 
     while(nxt != _map.end())
     {
-        if(    (*it).KEY_VALUE.touches((*nxt).KEY_VALUE)
-            && (*it).CONT_VALUE == (*nxt).CONT_VALUE      )
+        if(    (*it_).KEY_VALUE.touches((*nxt).KEY_VALUE)
+            && (*it_).CONT_VALUE == (*nxt).CONT_VALUE      )
         {
-            iterator fst_mem = it;  // hold the fist member
+            iterator fst_mem = it_;  // hold the fist member
             
             // go noodling on while touchin members found
-            it++; nxt++;
+            it_++; nxt++;
             while(     nxt != _map.end()
-                    && (*it).KEY_VALUE.touches((*nxt).KEY_VALUE)
-                    && (*it).CONT_VALUE == (*nxt).CONT_VALUE     )
-            { it++; nxt++; }
+                    && (*it_).KEY_VALUE.touches((*nxt).KEY_VALUE)
+                    && (*it_).CONT_VALUE == (*nxt).CONT_VALUE     )
+            { it_++; nxt++; }
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-            iterator lst_mem = it, end_mem = nxt;
+            iterator lst_mem = it_, end_mem = nxt;
             interval_type joinedInterval((*fst_mem).KEY_VALUE);
             joinedInterval.extend((*lst_mem).KEY_VALUE);
             CodomainT value = (*fst_mem).CONT_VALUE; //CodomainT::OP =
             
             _map.erase(fst_mem, end_mem);
-            it = _map.insert(value_type(joinedInterval, value)).ITERATOR;
+            it_ = _map.insert(value_type(joinedInterval, value)).ITERATOR;
 
-            it++; // go on for the next after the currently inserted
-            nxt=it; if(nxt!=_map.end())nxt++;
+            it_++; // go on for the next after the currently inserted
+            nxt=it_; if(nxt!=_map.end())nxt++;
         }
-        else { it++; nxt++; }
+        else { it_++; nxt++; }
     }
     return *this;
 }
@@ -1035,11 +1048,11 @@ template
 std::string interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::as_string()const
 {
     std::string res(""); 
-    const_FOR_IMPLMAP(it) {
+    const_FOR_IMPLMAP(it_) {
         std::string cur("("); 
-        cur += (*it).KEY_VALUE.as_string();
+        cur += (*it_).KEY_VALUE.as_string();
         cur += ",";
-        cur += itl::to_string<CodomainT>::apply((*it).CONT_VALUE);
+        cur += itl::to_string<CodomainT>::apply((*it_).CONT_VALUE);
         cur += ")";
         res += cur;
     }
@@ -1056,8 +1069,8 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     ::sum(codomain_type& total)const
 {
     total = codomain_combine::neutron();
-    const_FOR_IMPLMAP(it) 
-        total += (*it).CONT_VALUE;
+    const_FOR_IMPLMAP(it_) 
+        total += (*it_).CONT_VALUE;
 }
 
 
@@ -1070,7 +1083,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
 {
     // I can do this only, because I am shure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPLMAP(it) const_cast<interval_type&>((*it).KEY_VALUE).as(bounded);
+    FOR_IMPLMAP(it_) const_cast<interval_type&>((*it_).KEY_VALUE).as(bounded);
 }
 
 
@@ -1085,43 +1098,43 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
     if(minuend.empty()) 
         return *that();
 
-    iterator fst_it = _map.lower_bound(minuend);
-    if(fst_it==_map.end()) 
+    iterator first_ = _map.lower_bound(minuend);
+    if(first_==_map.end()) 
         return *that();
-    iterator end_it = _map.upper_bound(minuend);
-    if(fst_it==end_it)
+    iterator end_   = _map.upper_bound(minuend);
+    if(first_==end_  )
         return *that();
 
-    iterator lst_it = end_it; --lst_it;
+    iterator last_  = end_; --last_;
 
-    interval_type left_resid  = right_subtract(fst_it->KEY_VALUE, minuend);
-    interval_type right_resid =  left_subtract(lst_it->KEY_VALUE, minuend);
+    interval_type left_resid  = right_subtract(first_->KEY_VALUE, minuend);
+    interval_type right_resid =  left_subtract(last_ ->KEY_VALUE, minuend);
 
-    if(fst_it == lst_it)
+    if(first_ == last_ )
         if(!left_resid.empty())
         {
-            const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
+            const_cast<interval_type&>(first_->KEY_VALUE).right_subtract(minuend);
             if(!right_resid.empty())
-                this->_map.insert(fst_it, value_type(right_resid, fst_it->CONT_VALUE));
+                this->_map.insert(first_, value_type(right_resid, first_->CONT_VALUE));
         }
         else if(!right_resid.empty())
-            const_cast<interval_type&>(fst_it->KEY_VALUE).left_subtract(minuend);
+            const_cast<interval_type&>(first_->KEY_VALUE).left_subtract(minuend);
         else
-            this->_map.erase(fst_it);
+            this->_map.erase(first_);
     else
-    {    //            [-------- minuend ---------)
+    {   //            [-------- minuend ---------)
         // [left_resid   fst)   . . . .    [lst  right_resid)
-        iterator snd_it = fst_it; ++snd_it;
+        iterator second_= first_; ++second_;
 
-        iterator start_ = left_resid.empty()? fst_it: snd_it;
-        iterator stop_  = right_resid.empty()? end_it: lst_it;
+        iterator start_ = left_resid.empty()? first_: second_;
+        iterator stop_  = right_resid.empty()? end_  : last_ ;
         this->_map.erase(start_, stop_); //erase [start_, stop_)
 
         if(!left_resid.empty())
-            const_cast<interval_type&>(fst_it->KEY_VALUE).right_subtract(minuend);
+            const_cast<interval_type&>(first_->KEY_VALUE).right_subtract(minuend);
 
         if(!right_resid.empty())
-            const_cast<interval_type&>(lst_it->KEY_VALUE).left_subtract(minuend);
+            const_cast<interval_type&>(last_ ->KEY_VALUE).left_subtract(minuend);
     }
     return *that();
 }
@@ -1299,8 +1312,8 @@ std::basic_ostream<CharType, CharTraits>& operator <<
     typedef interval_base_map<SubType,DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Interval,Alloc> IntervalMapT;
     stream << "{";
-    const_FORALL(typename IntervalMapT, it, object)
-        stream << "(" << (*it).KEY_VALUE << "->" << (*it).CONT_VALUE << ")";
+    const_FORALL(typename IntervalMapT, it_, object)
+        stream << "(" << (*it_).KEY_VALUE << "->" << (*it_).CONT_VALUE << ")";
 
     return stream << "}";
 }

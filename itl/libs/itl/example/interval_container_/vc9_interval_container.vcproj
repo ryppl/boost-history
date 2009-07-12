@@ -198,6 +198,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\..\boost\itl\interval_map.hpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\..\boost\itl\interval_set.hpp"
 				>
 			</File>

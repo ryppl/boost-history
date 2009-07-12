@@ -232,8 +232,8 @@ public:
     /** Find the interval value pair, that contains element \c key */
     const_iterator find(const element_type& key)const
     { 
-        typename ImplSetT::const_iterator it = this->_set.find(interval_type(key)); 
-        return it; 
+        typename ImplSetT::const_iterator it_ = this->_set.find(interval_type(key)); 
+        return it_; 
     }
 
     //==========================================================================
@@ -247,6 +247,9 @@ public:
     /** Add an interval of elements \c inter_val to the set */
     SubType& add(const segment_type& inter_val) 
     { that()->add_(inter_val); return *that(); }
+
+    iterator add(iterator prior_, const segment_type& inter_val) 
+    { return that()->add_(prior_, inter_val); }
 
     //==========================================================================
     //= Subtraction
@@ -371,7 +374,7 @@ public:
     
     /** Interval container's string representation */
     const std::string as_string()const
-    { std::string res(""); const_FOR_IMPL(it) res += (*it).as_string(); return res; }
+    { std::string res(""); const_FOR_IMPL(it_) res += (*it_).as_string(); return res; }
 
     
     //==========================================================================
@@ -398,6 +401,10 @@ protected:
 
 public:
     sub_type& self() { return *that(); }
+
+protected:
+    iterator prior(iterator it_)
+    { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
 protected:
     ImplSetT _set;
@@ -446,8 +453,8 @@ typename
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::length()const
 {
     difference_type length = neutron<difference_type>::value();
-    const_FOR_IMPL(it)
-        length += (*it).length();
+    const_FOR_IMPL(it_)
+        length += (*it_).length();
     return length;
 }
 
@@ -460,11 +467,11 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
     if(inter_val.empty()) 
         return;
 
-    typename ImplSetT::const_iterator fst_it = _set.lower_bound(inter_val);
-    typename ImplSetT::const_iterator end_it = _set.upper_bound(inter_val);
+    typename ImplSetT::const_iterator first_ = _set.lower_bound(inter_val);
+    typename ImplSetT::const_iterator end_   = _set.upper_bound(inter_val);
 
-    for(typename ImplSetT::const_iterator it=fst_it; it != end_it; it++) 
-        section.add((*it) & inter_val);
+    for(typename ImplSetT::const_iterator it_=first_; it_ != end_; it_++) 
+        section.add((*it_) & inter_val);
 }
 
 
@@ -494,9 +501,9 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     if(!Set::common_range(common_lwb, common_upb, operand, *this))
         return;
 
-    typename operand_type::const_iterator it = common_lwb;
-    while(it != common_upb)
-        add_intersection(intersection, *it++);
+    typename operand_type::const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+        add_intersection(intersection, *it_++);
 }
 
 //==============================================================================
@@ -528,12 +535,12 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
         add(left_over);                //That which is not shall be added
 
         //...      d) : span
-        //... c)      : (*it); span.left_subtract(*it);
+        //... c)      : (*it_); span.left_subtract(*it_);
         //     [c  d) : span'
         span.left_subtract(covered);
     }
 
-    //If span is not empty here, it is not in the set so it shall be added
+    //If span is not empty here, it_ is not in the set so it_ shall be added
     add(span);
     return *that();
 }
@@ -559,17 +566,17 @@ SubType& interval_base_set<SubType,DomainT,Compare,Interval,Alloc>
     if(!Set::common_range(common_lwb, common_upb, operand, *this))
         return *that() += operand;
 
-    typename operand_type::const_iterator it = operand.begin();
+    typename operand_type::const_iterator it_ = operand.begin();
 
     // All elements of operand left of the common range are added
-    while(it != common_lwb)
-        add(*it++);
+    while(it_ != common_lwb)
+        add(*it_++);
     // All elements of operand in the common range are symmertrically subtracted
-    while(it != common_upb)
-        flip(*it++);
+    while(it_ != common_upb)
+        flip(*it_++);
     // All elements of operand right of the common range are added
-    while(it != operand.end())
-        add(*it++);
+    while(it_ != operand.end())
+        add(*it_++);
 
     return *that();
 }
@@ -580,39 +587,39 @@ template<class SubType,
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
 interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
 {
-    iterator it=_set.begin();
-    if(it==_set.end()) 
+    iterator it_=_set.begin();
+    if(it_==_set.end()) 
         return *this;
 
-    iterator nxt=it; nxt++;
+    iterator nxt=it_; nxt++;
     if(nxt==_set.end()) 
         return *this;
 
     while(nxt != _set.end())
     {
-        if( (*it).touches(*nxt) )
+        if( (*it_).touches(*nxt) )
         {
-            iterator fst_mem = it;  // hold the fist member
+            iterator fst_mem = it_;  // hold the fist member
             
             // go noodling on while touchin members found
-            it++; nxt++;
+            it_++; nxt++;
             while(     nxt != _set.end()
-                    && (*it).touches(*nxt) )
-            { it++; nxt++; }
+                    && (*it_).touches(*nxt) )
+            { it_++; nxt++; }
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-            iterator lst_mem = it, end_mem = nxt;
+            iterator lst_mem = it_, end_mem = nxt;
             interval_type joinedInterval(*fst_mem);
             joinedInterval.extend(*lst_mem);
             
             _set.erase(fst_mem, end_mem);
-            it = _set.insert(joinedInterval).ITERATOR;
+            it_ = _set.insert(joinedInterval).ITERATOR;
 
-            it++; // go on for the next after the currently inserted
-            nxt=it; if(nxt!=_set.end())nxt++;
+            it_++; // go on for the next after the currently inserted
+            nxt=it_; if(nxt!=_set.end())nxt++;
         }
-        else { it++; nxt++; }
+        else { it_++; nxt++; }
     }
     return *this;
 }
@@ -625,7 +632,7 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::uniform_bounds(i
 {
     // I can do this only, because I am shure that the contents and the
     // ordering < on interval is invariant wrt. this transformation on bounds
-    FOR_IMPL(it) const_cast<interval_type&>(*it).as(bounded);
+    FOR_IMPL(it_) const_cast<interval_type&>(*it_).as(bounded);
 }
 
 
@@ -690,8 +697,8 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 {
     typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> IntervalSetT;
     stream << "{";
-    const_FORALL(typename IntervalSetT, it, object)
-        stream << (*it);
+    const_FORALL(typename IntervalSetT, it_, object)
+        stream << (*it_);
 
     return stream << "}";
 }
