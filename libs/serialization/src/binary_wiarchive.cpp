@@ -1,5 +1,5 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
-// binary_iarchive.cpp:
+// binary_wiarchive.cpp:
 
 // (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
 // Use, modification and distribution is subject to the Boost Software
@@ -8,10 +8,14 @@
 
 //  See http://www.boost.org for updates, documentation, and revision history.
 
-#include <istream>
+#include <boost/config.hpp>
 
-#define BOOST_ARCHIVE_SOURCE
-#include <boost/archive/binary_iarchive.hpp>
+#ifdef BOOST_NO_STD_WSTREAMBUF
+#error "wide char i/o not supported on this platform"
+#else
+
+#define BOOST_WARCHIVE_SOURCE
+#include <boost/archive/binary_wiarchive.hpp>
 
 #include <boost/archive/impl/basic_binary_iprimitive.ipp>
 #include <boost/archive/impl/basic_binary_iarchive.ipp>
@@ -19,31 +23,34 @@
 namespace boost {
 namespace archive {
 
-// explicitly instantiate for this type of stream
+// explicitly instantiate for this type of text stream
 template class basic_binary_iprimitive<
-    naked_binary_iarchive,
-    std::istream::char_type, 
-    std::istream::traits_type
+    naked_binary_wiarchive,
+    wchar_t, 
+    std::char_traits<wchar_t> 
 >;
-template class basic_binary_iarchive<naked_binary_iarchive> ;
+template class basic_binary_iarchive<naked_binary_wiarchive> ;
 template class binary_iarchive_impl<
-    naked_binary_iarchive, 
-    std::istream::char_type, 
-    std::istream::traits_type
+    naked_binary_wiarchive, 
+    wchar_t, 
+    std::char_traits<wchar_t> 
 >;
 
-// explicitly instantiate for this type of stream
+// explicitly instantiate for this type of text stream
 template class basic_binary_iprimitive<
-    binary_iarchive,
-    std::istream::char_type, 
-    std::istream::traits_type
+    binary_wiarchive,
+    wchar_t, 
+    std::char_traits<wchar_t> 
 >;
-template class basic_binary_iarchive<binary_iarchive> ;
+template class basic_binary_iarchive<binary_wiarchive> ;
 template class binary_iarchive_impl<
-    binary_iarchive, 
-    std::istream::char_type, 
-    std::istream::traits_type
+    binary_wiarchive, 
+    wchar_t, 
+    std::char_traits<wchar_t> 
 >;
 
 } // namespace archive
 } // namespace boost
+
+#endif  // BOOST_NO_STD_WSTREAMBUF
+

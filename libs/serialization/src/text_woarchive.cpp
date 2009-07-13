@@ -1,5 +1,5 @@
 /////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
-// xml_woarchive.cpp:
+// text_woarchive.cpp:
 
 // (C) Copyright 2002 Robert Ramey - http://www.rrsd.com . 
 // Use, modification and distribution is subject to the Boost Software
@@ -14,19 +14,16 @@
 #else
 
 #define BOOST_WARCHIVE_SOURCE
-#include <boost/archive/xml_woarchive.hpp>
+#include <boost/archive/text_woarchive.hpp>
 
-/////////1/////////2/////////3/////////4/////////5/////////6/////////7/////////8
-// implemenations of functions specific to wide char archives
-
-#include <boost/archive/impl/basic_xml_oarchive.ipp>
-#include <boost/archive/impl/xml_woarchive_impl.ipp>
+#include <boost/archive/impl/basic_text_oarchive.ipp>
+#include <boost/archive/impl/text_woarchive_impl.ipp>
 
 namespace boost {
 namespace archive {
 
-template class basic_xml_oarchive<xml_woarchive> ;
-template class xml_woarchive_impl<xml_woarchive> ;
+template class basic_text_oarchive<text_woarchive> ;
+template class text_woarchive_impl<text_woarchive> ;
 
 } // namespace archive
 } // namespace boost
