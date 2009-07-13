@@ -7,8 +7,8 @@
  *
  */
 
-/** @todo Rethink the edge handling mechanism. The need to call a version of
- * bind edge or edge(u,v,g)
+/** @todo Remember that all iterators contain references to the graphs from
+ *  whence they come from. This means begin and end never need to be stored.
  */
 
 #ifndef FUNCTION_GRAPH_HPP_
@@ -591,7 +591,7 @@ bool operator!=(function_graph_out_edge_iterator<Graph> const& lhs,
  *  v.
  *  @todo
  */
-template <typename Graph>
+template<typename Graph>
 struct function_graph_adjacency_iterator {
 private:
     typedef function_graph_adjacency_iterator<Graph> This;
@@ -599,8 +599,6 @@ private:
 public:
     typedef Graph graph_type;
     typedef typename graph_type::vertex_iterator vertex_iterator;
-    typedef typename graph_type::in_edge_iterator in_edge_iterator;
-    typedef typename graph_type::out_edge_iterator out_edge_iterator;
     typedef typename graph_type::edge_descriptor edge_descriptor;
     typedef typename graph_type::vertex_descriptor vertex_descriptor;
 
@@ -614,78 +612,66 @@ public:
     /** @name Constructor */
     //@{
     function_graph_adjacency_iterator(graph_type const& g,
-                                      vertex_descriptor const& vertex,
-                                      vertex_iterator const& i_begin,
-                                      vertex_iterator const& i_end)
+                                      vertex_descriptor const& vertex)
         : g_(g),
           vertex_(vertex),
-          i_in_edges_(g, vertex, i_begin, i_end),
-          i_out_edges_(g, vertex, i_begin, i_end),
-          use_in_edges_(true)
-    { }
+          i_at_(begin(g_.range_)),
+          in_edge_check_(true)
+    {
+        const vertex_iterator i_end = end(g_.range_);
+        const vertex_iterator i_begin = begin(g_.range_);
+
+        while(i_at_ != i_end && !edge(*i_begin, vertex_, g_).second)
+        { ++i_at_; }
+        if(i_at_ == i_end)
+        {
+            in_edge_check_ = false;
+            i_at_ = i_begin;
+            while(i_begin != i_end && !edge(vertex_, *i_begin, g_).second)
+            {  ++i_at_; }
+        }
+    }
 
     function_graph_adjacency_iterator(This const& cp)
         : g_(cp.g_),
           vertex_(cp.vertex_),
-          i_in_edges_(cp.i_begin_),
-          i_out_edges_(cp.i_end_),
-          use_in_edges_(cp.use_in_edges_)
+          i_at_(cp.i_at_),
+          in_edge_check_(cp.in_edge_check_)
     { }
+    //@}
 
     This& operator++()
     {
-        if(use_in_edges_)
+        const vertex_iterator i_end = end(g_.range_);
+        const vertex_iterator i_begin = begin(g_.range_);
+
+        if(in_edge_check_)
         {
-            ++i_in_edges_;
-            if(i_in_edges_.i_begin_ == i_in_edges_.i_end_)
-            { use_in_edges_ = false; }
+            do {
+                ++i_at_;
+            } while(i_at_ != i_end && !edge(*i_begin, vertex_, g_).second);
+            if(i_at_ == i_end) in_edge_check_ = false;
         }
-        else
+        if(!in_edge_check_)
         {
-            ++i_out_edges_;
+            do {
+                ++i_at_;
+            } while(i_at_ != i_end && !edge(vertex_, *i_begin, g_).second);
         }
+
+        return *this;
     }
 
-    edge_descriptor operator*()
-    { return use_in_edges_ ? (*i_in_edges_).source_ : (*i_out_edges_).source_; }
-    //@}
-private:
+    vertex_descriptor operator*()
+    {
+        return *i_at_;
+    }
+
     graph_type const& g_;
     vertex_descriptor vertex_;
-    in_edge_iterator i_in_edges_;
-    out_edge_iterator i_out_edges_;
-    bool use_in_edges_;
+    vertex_iterator i_at_;
+    bool in_edge_check_;
 };
-
-template<typename Graph>
-bool operator==(function_graph_adjacency_iterator<Graph> const& lhs,
-                function_graph_adjacency_iterator<Graph> const& rhs)
-{
-    return lhs.vertex_ == rhs.vertex_ &&
-           lhs.i_in_edges_ == rhs.i_in_edges_ &&
-           lhs.i_out_edges_ == rhs.i_out_edges_ &&
-           lhs.use_in_edges_ == rhs.use_in_edges_;
-}
-
-template<typename Graph>
-bool operator!=(function_graph_adjacency_iterator<Graph> const& lhs,
-                function_graph_adjacency_iterator<Graph> const& rhs)
-{ return !(lhs == rhs); }
-
-/** adjacent_vertices function */
-template<typename Result, typename Vertex, typename Range>
-std::pair<
-    typename FUNC_GRAPH::adjacent_iterator,
-    typename FUNC_GRAPH::adjacent_iterator
->
-adjacent_vertices(typename FUNC_GRAPH::vertex_descriptor const& v,
-                  FUNC_GRAPH const& g)
-{
-    typedef FUNC_GRAPH graph_type;
-    typedef typename graph_type::adjacent_iterator adjacent_iterator;
-    
-    return std::make_pair(,);
-}
 
 #undef FUNC_GRAPH
 
