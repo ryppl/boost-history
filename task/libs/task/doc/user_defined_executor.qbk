@@ -53,7 +53,7 @@ In the sample code below the task is executed in a fiber (__boost_fiber__).
 			callable ca( ctx.get_callable( boost::move( t) ) );
 
 			// apply the callable to the executor == fiber-scheduler
-			sched_.submit( fiber::fiber( ca) );
+			sched_.submit( ca);
 
 			// return the handle
 			return h;

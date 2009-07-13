@@ -82,18 +82,15 @@ Used namespaces are:
 			>
 		> pool( boost::task::poolsize( 5) );
 
-		// create two tasks, computing fibonacci numbers
-		boost::task< long > t1( fibonacci, 10);
-		boost::task< long > t2( fibonacci, 5);
-
 		// execute tasks in thread-pool
 		// move tasks ownership to executor
 		boost::task::handle< long > h1(
 			boost::task::async(
-				boost::move( t1),
+				boost::task::make_task( fibonacci, 10),
 				pool);
 		boost::task::handle< long > h2(
 			boost::task::async(
+				boost::task::make_task( fibonacci, 5),
 				boost::move( t2),
 				pool);
 

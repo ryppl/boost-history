@@ -8,6 +8,13 @@
 
 [section:todo Appendix A: Future development]
 
+[heading Optimizations]
+ 
+* finer-grained locking for bounded_channel and unbounded_channel using two-lock-queue
+
+* lock-free-queue with fifo ordering as channel
+
+
 [heading Dynamic thread-pool]
 
 * __dynamic_pool__ adds or removes __worker_threads__ from the __thread_pool__ depending on the work-load (undersubscription/
@@ -41,13 +48,6 @@ dependencies or communicate with each other.
 
 * integration of __boost_fiber__  - interdepended tasks (using communication and synchronisation abstractions above) work in 
 __thread_pools__ without deadlocking the pool
-
-
-[heading Optimizations]
- 
-* finer-grainer bounded_channel and unbounded_channel using two-lock-queue
-
-* lock-free-queue with fifo ordering as channel
 
 
 [endsect]
