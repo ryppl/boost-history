@@ -81,7 +81,7 @@ modpow_ctx<ApInt>::do_detect(const ApInt& m) const
     return mod_restricted_dr;
 
   // if all bits until the most significant digit are set
-  if (count == m.size() - 2)
+  if (count && count == m.size() - 2)
   {
     bool all_bits_set = true;
 
@@ -97,7 +97,9 @@ modpow_ctx<ApInt>::do_detect(const ApInt& m) const
       mask <<= 1;
     }
     if (all_bits_set)
+    {
       return mod_unrestricted_dr;
+    }
   }
 
   // if more than half of the bits are set

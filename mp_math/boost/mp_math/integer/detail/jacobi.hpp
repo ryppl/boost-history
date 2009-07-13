@@ -1,31 +1,31 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Tom St Denis 2002 - 2007.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MP_MATH_MP_INT_JACOBI_HPP
-#define BOOST_MP_MATH_MP_INT_JACOBI_HPP
-
-#include <boost/mp_math/mp_int/mp_int_fwd.hpp>
+#ifndef BOOST_MP_MATH_INTEGER_DETAIL_JACOBI_HPP
+#define BOOST_MP_MATH_INTEGER_DETAIL_JACOBI_HPP
 
 
 namespace boost {
 namespace mp_math {
+namespace detail {
 
 // computes the jacobi c = (a | p) (or Legendre if p is prime)
 // HAC pp. 73 Algorithm 2.149
-template<class A, class T>
-int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
+template<class ApInt>
+int jacobi(const ApInt& a, const ApInt& p)
 {
-  typedef typename mp_int<A,T>::digit_type digit_type;
-  typedef typename mp_int<A,T>::size_type  size_type;
+  typedef typename ApInt::digit_type digit_type;
+  typedef typename ApInt::size_type  size_type;
 
   if (p <= digit_type(0))
     throw std::domain_error("jacobi: p must be greater than 0");
 
   if (!a)
     return 0;
-  
+
   if (a == digit_type(1))
     return 1;
 
@@ -33,19 +33,19 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   int s = 0;
 
   // write a = a1 * 2**k
-  mp_int<A,T> a1(a);
+  ApInt a1(a);
 
   // find largest power of two that divides a1
-  const size_type k = a1.count_lsb();
+  const size_type k = a1.count_trailing_zero_bits();
   // now divide by it
-  a1.shift_right(k,0);
+  a1 >>= k;
 
   // if k is even set s=1
   if ((k & 1) == 0)
     s = 1;
   else
   {
-    // calculate p.digits_[0] mod 8
+    // calculate p[0] mod 8
     const digit_type residue = p[0] & 7;
 
     if (residue == 1 || residue == 7)
@@ -61,13 +61,11 @@ int jacobi(const mp_int<A,T>& a, const mp_int<A,T>& p)
   if (a1 == digit_type(1))
     return s;
   else
-  {
-    const mp_int<A,T> p1(p % a1);
-    return s * jacobi(p1, a1);
-  }
+    return s * jacobi(p % a1, a1);
 }
 
 
+} // namespace detail
 } // namespace mp_math
 } // namespace boost
 

@@ -85,6 +85,22 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(op_to_string11, uint_type, UIntTypes)
   BOOST_CHECK_EQUAL(s, "1256042682070");
 }
 
+BOOST_AUTO_TEST_CASE_TEMPLATE(op_to_string12, int_type, IntTypes)
+{
+  const int_type x("0x123456789abcdef");
+  const std::string s = x.template to_string<std::string>(
+      std::ios_base::hex | std::ios_base::showbase);
+  BOOST_CHECK_EQUAL(s, "0x123456789abcdef");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(op_to_string13, int_type, IntTypes)
+{
+  const int_type x("0x123456789ABCDEF");
+  const std::string s = x.template to_string<std::string>(
+      std::ios_base::hex | std::ios_base::showbase | std::ios_base::uppercase);
+  BOOST_CHECK_EQUAL(s, "0X123456789ABCDEF");
+}
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(op_assign1, uint_type, UIntTypes)
 {
   uint_type x;

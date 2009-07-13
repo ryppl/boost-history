@@ -8,6 +8,7 @@
 
 #include <boost/config.hpp>
 #include <boost/mp_math/integer/contexts.hpp>
+#include <boost/mp_math/integer/multiprecision_integer_tag.hpp>
 #include <boost/mp_math/integer/unbounded_traits.hpp>
 #include <boost/mp_math/integer/detail/adder.hpp>
 #include <boost/mp_math/integer/detail/bitwise_ops.hpp>
@@ -18,6 +19,7 @@
 #include <boost/mp_math/integer/detail/multiplier.hpp>
 #include <boost/mp_math/integer/detail/power.hpp>
 #include <boost/mp_math/integer/detail/root.hpp>
+#include <boost/mp_math/integer/detail/stream_io.hpp>
 #include <boost/mp_math/integer/detail/string_conversion.hpp>
 #include <boost/mp_math/integer/detail/unbounded_uint_integral.hpp>
 #include <boost/mp_math/integer/detail/base/unbounded_uint.hpp>
@@ -31,7 +33,7 @@ template<
 >
 struct unbounded_uint
 :
-  /*typename*/ Alloc::template rebind<typename Traits::digit_type>::other,
+  Alloc::template rebind<typename Traits::digit_type>::other,
   detail::base::unbounded_uint<Traits>
 {
 protected:
@@ -42,6 +44,8 @@ protected:
     rebind<typename Traits::digit_type>::other base_allocator_type;
 
 public:
+
+  typedef multiprecision_integer_tag tag;
 
   template<typename IntegralT>
   struct integral_ops
@@ -131,11 +135,7 @@ public:
   void assign(RandomAccessIterator first, RandomAccessIterator last,
               std::ios_base::fmtflags);
 
-  #ifndef BOOST_NO_RVALUE_REFERENCES
-  void swap(unbounded_uint&& other)
-  #else
   void swap(unbounded_uint& other)
-  #endif
   {
     base_type::swap(other);
   }
@@ -1500,85 +1500,7 @@ template<class A, class T, typename charT, class traits>
 std::basic_istream<charT, traits>&
 operator >> (std::basic_istream<charT, traits>& is, unbounded_uint<A,T>& x)
 {
-  typename std::basic_istream<charT, traits>::sentry sentry(is);
-  if (!sentry)
-    return is;
-
-  // TODO we read into a string first which costs memory and std::string
-  // allocator is not under user control. We should convert incoming digits
-  // directly. Actually we should check what is the fastest way.
-  std::string s;
-
-  const std::istreambuf_iterator<charT, traits> end;
-  std::istreambuf_iterator<charT, traits> c(is);
-
-  // TODO we should stop if we see a minus sign
-  if (*c == '+' || *c == '-')
-  {
-    s.push_back(*c);
-    ++c;
-  }
-
-  int base;
-  if (*c == '0')
-  {
-    base = 8;
-    s.push_back(*c);
-    ++c;
-    if (*c == 'x' || *c == 'X')
-    {
-      base = 16;
-      s.push_back(*c);
-      ++c;
-    }
-  }
-  else if (*c >= '0' && *c <= '9')
-    base = 10;
-  else
-  {
-    is.setstate(std::ios_base::failbit);
-    return is;
-  }
-
-  switch (base)
-  {
-    case 8:
-      while (c != end)
-      {
-        if (*c >= '0' && *c <= '7')
-          s.push_back(*c);
-        else
-          break;
-        ++c;
-      }
-      break;
-    case 10:
-      while (c != end)
-      {
-        if (*c >= '0' && *c <= '9')
-          s.push_back(*c);
-        else
-          break;
-        ++c;
-      }
-      break;
-    case 16:
-      while (c != end)
-      {
-        if ((*c >= '0' && *c <= '9') ||
-            (*c >= 'A' && *c <= 'F') ||
-            (*c >= 'a' && *c <= 'f'))
-          s.push_back(*c);
-        else
-          break;
-        ++c;
-      }
-      break;
-  }
-
-  const unbounded_uint<A,T> tmp(s.begin(), s.end());
-  x = tmp;
-
+  detail::stream_io<unbounded_uint<A,T> >::read(x, is);
   return is;
 }
 

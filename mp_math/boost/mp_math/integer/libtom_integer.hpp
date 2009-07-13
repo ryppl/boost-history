@@ -9,9 +9,12 @@
 #include <tommath.h>
 #include <boost/config.hpp>
 #include <boost/mp_math/integer/contexts.hpp>
+#include <boost/mp_math/integer/libtom_integer_fwd.hpp>
+#include <boost/mp_math/integer/multiprecision_integer_tag.hpp>
+#include <boost/mp_math/integer/detail/stream_io.hpp>
+#include <boost/mp_math/integer/detail/base/print_digits.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
-#include <cstring> // strlen
 #include <iostream>
 #include <limits>
 #include <stdexcept>
@@ -21,33 +24,35 @@ namespace mp_math {
 
 struct boost_behavior
 {
-  static void bitwise_or(mp_int* z, mp_int* x, mp_int* y);
-  static void bitwise_and(mp_int* z, mp_int* x, mp_int* y);
-  static void bitwise_xor(mp_int* z, mp_int* x, mp_int* y);
+  static void bitwise_or(mp_int* z, const mp_int* x, const mp_int* y);
+  static void bitwise_and(mp_int* z, const mp_int* x, const mp_int* y);
+  static void bitwise_xor(mp_int* z, const mp_int* x, const mp_int* y);
+  static void compl_bits(mp_int* z, const mp_int* x);
 };
 
 
 struct libtom_behavior
 {
-  static void bitwise_or(mp_int* z, mp_int* x, mp_int* y)
+  static void bitwise_or(mp_int* z, const mp_int* x, const mp_int* y)
   {
     mp_or(x, y, z);
   }
 
-  static void bitwise_and(mp_int* z, mp_int* x, mp_int* y)
+  static void bitwise_and(mp_int* z, const mp_int* x, const mp_int* y)
   {
     mp_and(x, y, z);
   }
 
-  static void bitwise_xor(mp_int* z, mp_int* x, mp_int* y)
+  static void bitwise_xor(mp_int* z, const mp_int* x, const mp_int* y)
   {
     mp_xor(x, y, z);
   }
+
+  static void compl_bits(mp_int* z, const mp_int* x)
+  {
+    mp_compl(x, z);
+  }
 };
-
-
-template<class Behavior = libtom_behavior>
-class libtom_integer;
 
 
 namespace detail {
@@ -56,11 +61,9 @@ template<
   class B,
   typename IntegralT,
   bool IsSigned = std::numeric_limits<IntegralT>::is_signed,
-  bool FitsIntoLongInt =
-    IsSigned ? (std::numeric_limits<IntegralT>::digits <=
-                std::numeric_limits<signed long int>::digits)
-             : (std::numeric_limits<IntegralT>::digits <=
-                std::numeric_limits<unsigned long int>::digits)
+  bool FitsIntoMpDigit =
+             (std::numeric_limits<IntegralT>::digits <=
+              std::numeric_limits<mp_digit>::digits)
 >
 struct libtom_integer_integral_ops;
 
@@ -72,51 +75,51 @@ template<
 struct libtom_integer_integral_ops<libtom_integer<B>, IntegralT, false, true>
 {
   typedef libtom_integer<B> libtom_integer_type;
-  typedef IntegralT      integral_type;
+  typedef IntegralT         integral_type;
 
   static void init(libtom_integer_type& z, integral_type x)
   {
-    mpz_init_set_ui(z.get_mp_int(), x);
+    mp_init_set(&z.get_mp_int(), x);
   }
 
   static void assign(libtom_integer_type& z, integral_type x)
   {
-    mpz_set_ui(z.get_mp_int(), x);
+    mp_set(&z.get_mp_int(), x);
   }
 
   static bool equal(const libtom_integer_type& z, integral_type x)
   {
-    return mpz_cmp_ui(z.get_mp_int(), x) == 0;
+    return mp_cmp_d(&z.get_mp_int(), x) == MP_EQ;
   }
 
   static bool less(const libtom_integer_type& z, integral_type x)
   {
-    return mpz_cmp_ui(z.get_mp_int(), x) < 0;
+    return mp_cmp_d(&z.get_mp_int(), x) == MP_LT;
   }
 
   static void add(libtom_integer_type& z, integral_type x)
   {
-    mpz_add_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_add_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void subtract(libtom_integer_type& z, integral_type x)
   {
-    mpz_sub_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_sub_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void multiply(libtom_integer_type& z, integral_type x)
   {
-    mpz_mul_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_mul_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void divide(libtom_integer_type& z, integral_type x)
   {
-    mp_intdiv_q_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_div_d(&z.get_mp_int(), x, z.get_mp_int(), 0);
   }
 
   static void modulo(libtom_integer_type& z, integral_type x)
   {
-    mpz_mod_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_mod_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void bitwise_or(libtom_integer_type& z, integral_type x);
@@ -132,51 +135,51 @@ template<
 struct libtom_integer_integral_ops<libtom_integer<B>, IntegralT, true, true>
 {
   typedef libtom_integer<B> libtom_integer_type;
-  typedef IntegralT      integral_type;
+  typedef IntegralT         integral_type;
 
   static void init(libtom_integer_type& z, integral_type x)
   {
-    mpz_init_set_si(z.get_mp_int(), x);
+    mp_init_set(&z.get_mp_int(), x);
   }
 
   static void assign(libtom_integer_type& z, integral_type x)
   {
-    mpz_set_si(z.get_mp_int(), x);
+    mp_set(&z.get_mp_int(), x);
   }
 
   static bool equal(const libtom_integer_type& z, integral_type x)
   {
-    return mpz_cmp_si(z.get_mp_int(), x) == 0;
+    return mp_cmp_d(&z.get_mp_int(), x) == MP_EQ;
   }
 
   static bool less(const libtom_integer_type& z, integral_type x)
   {
-    return mpz_cmp_si(z.get_mp_int(), x) < 0;
+    return mp_cmp_d(&z.get_mp_int(), x) == MP_LT;
   }
 
   static void add(libtom_integer_type& z, integral_type x)
   {
-    mpz_add_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_add_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void subtract(libtom_integer_type& z, integral_type x)
   {
-    mpz_sub_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_sub_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void multiply(libtom_integer_type& z, integral_type x)
   {
-    mpz_mul_si(z.get_mp_int(), z.get_mp_int(), x);
+    mp_mul_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void divide(libtom_integer_type& z, integral_type x)
   {
-    mp_intdiv_q_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_div_d(&z.get_mp_int(), x, z.get_mp_int(), 0);
   }
 
   static void modulo(libtom_integer_type& z, integral_type x)
   {
-    mpz_mod_ui(z.get_mp_int(), z.get_mp_int(), x);
+    mp_mod_d(&z.get_mp_int(), x, z.get_mp_int());
   }
 
   static void bitwise_or(libtom_integer_type& z, integral_type x);
@@ -203,7 +206,8 @@ struct libtom_integer_to_integral<B, IntegralT, false, true>
 {
   static IntegralT convert(const libtom_integer<B>& x)
   {
-    return static_cast<IntegralT>(mpz_get_ui(x.get_mp_int()));
+    const unsigned long y = mp_get_int(&x.get_mp_int());
+    return static_cast<IntegralT>(y);
   }
 };
 
@@ -213,7 +217,11 @@ struct libtom_integer_to_integral<B, IntegralT, true, true>
 {
   static IntegralT convert(const libtom_integer<B>& x)
   {
-    return static_cast<IntegralT>(mpz_get_si(x.get_mp_int()));
+    unsigned long y = mp_get_int(&x.get_mp_int());
+    std::cout << "y = " << y << std::endl;
+    if (x.is_negative())
+      y = -y;
+    return static_cast<IntegralT>(y);
   }
 };
 
@@ -224,32 +232,25 @@ struct libtom_integer_traits
   typedef mp_digit    digit_type;
   typedef std::size_t size_type;
 
-  static const size_type  digit_bits      = GMP_LIMB_BITS;
-  static const size_type  radix_bits      = GMP_NUMB_BITS;
-  static const digit_type max_digit_value = GMP_NUMB_MAX;
+  static const size_type  digit_bits      = CHAR_BIT * sizeof(mp_digit);
+  static const size_type  radix_bits      = DIGIT_BIT;
+  static const digit_type max_digit_value = MP_DIGIT_MAX;
 };
 
 
-extern "C"
-{
-  typedef void (*libtom_free_func)(void *, size_t);
-}
-
 struct libtom_allocated_string
 {
-  char*             str;
-  const std::size_t len;
-
-  libtom_allocated_string(char *s)
+  char* str;
+  libtom_allocated_string(const mp_int* a, int radix, int length)
   :
-    str(s), len(std::strlen(s) + 1)
-  {}
+    str(static_cast<char*>(XMALLOC(length)))
+  {
+    mp_toradix(a, str, radix);
+  }
 
   ~libtom_allocated_string()
   {
-    libtom_free_func f;
-    mp_get_memory_functions (0, 0, &f);
-    (*f)(str, len);
+    XFREE(str);
   }
 };
 
@@ -259,13 +260,15 @@ struct libtom_allocated_string
 
 
 // libtom_original or libtom_boost
-// differences: bitwise ops
+// differences: TODO
 template<class Behavior>
 class libtom_integer
 {
   mp_int val_;
 
 public:
+
+  typedef multiprecision_integer_tag tag;
 
   static const bool is_signed = true;
   static const bool is_bounded = false;
@@ -326,11 +329,12 @@ public:
   #ifndef BOOST_NO_RVALUE_REFERENCES
   libtom_integer(libtom_integer&& copy)
   {
-    val_.alloc = copy.val_.alloc;
     val_.used  = copy.val_.used;
+    val_.alloc = copy.val_.alloc;
+    val_.sign  = copy.val_.sign;
     val_.dp    = copy.val_.dp;
-    copy.val_.alloc = 0;
     copy.val_.used  = 0;
+    copy.val_.alloc = 0;
     copy.val_.dp    = 0;
   }
   #endif
@@ -342,7 +346,7 @@ public:
 
   libtom_integer& operator = (const libtom_integer& rhs)
   {
-    mp_copy(&rhs.val_, &val);
+    mp_copy(&rhs.val_, &val_);
     return *this;
   }
 
@@ -366,7 +370,7 @@ public:
   template<typename charT>
   libtom_integer& operator = (const charT* s)
   {
-    if (mpz_set_str(val_, s, 0) == 0)
+    if (mp_read_radix(&val_, s, 0) == MP_OKAY)
       return *this;
     else
       throw std::invalid_argument(
@@ -376,45 +380,28 @@ public:
   template<typename charT, class traits, class alloc>
   libtom_integer& operator = (const std::basic_string<charT,traits,alloc>& s)
   {
-    if (mpz_set_str(val_, s.c_str(), 0) == 0)
+    if (mp_read_radix(&val_, s, 0) == MP_OKAY)
       return *this;
     else
       throw std::invalid_argument(
-          "boost::mp_math::libtom_integer: operator = (const charT*)");
+          "boost::mp_math::libtom_integer: "
+          "operator = (const std::basic_string<charT,traits,alloc>&)");
   }
 
   template<typename charT>
   void assign(const charT* s, std::ios_base::fmtflags f)
   {
-    unsigned radix;
-    if (f & std::ios_base::hex)
-      radix = 16;
-    else if (f & std::ios_base::oct)
-      radix = 8;
-    else
-      radix = 10;
-    if (mp_read_radix(&val_, s, radix) == -1)
-      throw std::invalid_argument(
-          "boost::mp_math::libtom_integer::assign: illformatted string)");
+    construct_from_string(s, f);
   }
 
-  // TODO dispatch std::string to mpz_set_string, but dispatch other string
+  // TODO dispatch std::string to mp_read_radix, but dispatch other string
   // types to detail/string_converter? Could do that but would need support for
-  // NAIL bits.
+  // nail bits.
   template<typename charT, class traits, class alloc>
   void assign(const std::basic_string<charT,traits,alloc>& s,
               std::ios_base::fmtflags f)
   {
-    unsigned radix;
-    if (f & std::ios_base::hex)
-      radix = 16;
-    else if (f & std::ios_base::oct)
-      radix = 8;
-    else
-      radix = 10;
-    if (mp_read_radix(&val_, s.c_str(), radix) == -1)
-      throw std::invalid_argument(
-          "boost::mp_math::libtom_integer::assign: illformatted string)");
+    construct_from_string(s.c_str(), f);
   }
 
 
@@ -422,11 +409,7 @@ public:
   void assign(RandomAccessIterator first, RandomAccessIterator last,
               std::ios_base::fmtflags);
 
-  #ifndef BOOST_NO_RVALUE_REFERENCES
-  void swap(libtom_integer&& other)
-  #else
   void swap(libtom_integer& other)
-  #endif
   {
     mp_exch(&val_, &other.val_);
   }
@@ -449,14 +432,22 @@ public:
   bool is_even() const { return mp_iseven(&val_); }
   bool is_odd () const { return mp_isodd(&val_); }
 
-  bool is_positive() const { return val_.sign >= 0; }
-  bool is_negative() const { return val_.sign < 0; }
+  bool is_positive() const { return val_.sign == MP_ZPOS; }
+  bool is_negative() const { return val_.sign == MP_NEG; }
 
   // These two functions use the same signature as GMP's mpz_class
   mp_int&       get_mp_int()       { return val_; }
   const mp_int& get_mp_int() const { return val_; }
 
-  size_type size() const { return statc_cast<size_type>(val_.used); }
+  size_type size() const { return static_cast<size_type>(val_.used); }
+
+  void set_size(size_type s) { val_.used = static_cast<int>(s); }
+
+  size_type capacity() const { return static_cast<size_type>(val_.alloc); }
+
+  void reserve(size_type n) { mp_grow(&val_, static_cast<int>(n)); }
+
+  void clamp() { mp_clamp(&val_); }
 
   digit_type*       digits()       { return val_.dp; }
   const digit_type* digits() const { return val_.dp; }
@@ -502,13 +493,11 @@ public:
 
   libtom_integer& operator >>= (size_type n)
   {
-    mp_mul_2d(&val_, n, &val_, 0);
+    mp_div_2d(&val_, n, &val_, 0);
     return *this;
   }
 
   libtom_integer& operator - () { mp_neg(&val_, &val_); return *this; }
-
-  libtom_integer& operator ~ () { mpz_cmp(val_, val_); return *this; }
 
   libtom_integer& operator += (const libtom_integer& rhs)
   {
@@ -601,33 +590,41 @@ public:
     else
       radix = 10;
 
-    const detail::libtom_allocated_string tmp(mpz_get_str(0, radix, val_));
-    return StringT(tmp.str, tmp.str + tmp.len - 1);
+    int length;
+    mp_radix_size(&val_, radix, &length);
+    const detail::libtom_allocated_string tmp(&val_, radix, length);
+    return StringT(tmp.str, tmp.str + length - 1);
   }
+
+  void print(bool all = false) const
+  {
+    detail::base::print_digits(*this, all);
+  }
+
+private:
+
+  void construct_from_string(const char*);
+  void construct_from_string(const char*, std::ios_base::fmtflags);
 };
 
 
+
 template<class B>
-libtom_integer<B>::libtom_integer(const char* s)
+void libtom_integer<B>::construct_from_string(const char* s)
 {
-  mp_init(&val_);
-  if (*s != '\0')
+  if (mp_read_radix(&val_, s, 0) != MP_OKAY)
   {
-    if (mpz_init_set_str(val_, s, 0))
-    {
-      if (val_->_mp_d)
-        mpz_clear(val_);
-      throw std::invalid_argument(
-          "boost::mp_math::libtom_integer::libtom_integer(const char*)");
-    }
+    if (val_.dp)
+      mp_clear(&val_);
+    throw std::invalid_argument(
+        "boost::mp_math::libtom_integer::construct_from_string(const char*)");
   }
 }
 
 template<class B>
-libtom_integer<B>::libtom_integer(const char* s, std::ios_base::fmtflags f)
+void libtom_integer<B>::construct_from_string(const char* s, std::ios_base::fmtflags f)
 {
-  mp_init(&val_);
-  unsigned radix;
+  int radix;
   if (f & std::ios_base::hex)
     radix = 16;
   else if (f & std::ios_base::oct)
@@ -635,17 +632,79 @@ libtom_integer<B>::libtom_integer(const char* s, std::ios_base::fmtflags f)
   else
     radix = 10;
 
+  static const char* msg =
+    "boost::mp_math::libtom_integer::"
+    "construct_from_string(const char*, std::ios_base::fmtflags)";
+
+  int sign;
   if (*s != '\0')
   {
-    if (mpz_init_set_str(val_, s, radix))
+    if (*s == '-')
     {
-      if (val_->_mp_d)
-        mpz_clear(val_);
-      throw std::invalid_argument(
-          "boost::mp_math::libtom_integer::"
-          "libtom_integer(const char*, std::ios_base::fmtflags)");
+      sign = MP_NEG;
+      ++s;
+    }
+    else
+    {
+      if (f & std::ios_base::showpos)
+      {
+        if (*s == '+')
+          ++s;
+        else
+          throw std::invalid_argument(msg);
+      }
+      sign = MP_ZPOS;
     }
   }
+
+  if (f & std::ios_base::showbase)
+  {
+    bool err = false;
+    if (*s != '\0')
+    {
+      if (*s == '0')
+      {
+        if (radix == 10)
+          err = true;
+        else if (radix == 16)
+        {
+          ++s;
+          if (*s != '\0' && (*s == 'x' || *s == 'X'))
+            ++s;
+          else
+            err = true;
+        }
+      }
+      else if (radix == 8 || radix == 16)
+        err = true;
+    }
+
+    if (err)
+      throw std::invalid_argument(msg);
+  }
+
+  if (mp_read_radix(&val_, s, radix) != MP_OKAY)
+  {
+    if (val_.dp)
+      mp_clear(&val_);
+    throw std::invalid_argument(msg);
+  }
+
+  val_.sign = sign;
+}
+
+template<class B>
+libtom_integer<B>::libtom_integer(const char* s)
+{
+  mp_init(&val_);
+  construct_from_string(s);
+}
+
+template<class B>
+libtom_integer<B>::libtom_integer(const char* s, std::ios_base::fmtflags f)
+{
+  mp_init(&val_);
+  construct_from_string(s, f);
 }
 
 template<class B>
@@ -653,40 +712,15 @@ libtom_integer<B>::libtom_integer(const std::string& s)
 {
   mp_init(&val_);
   if (!s.empty())
-  {
-    if (mpz_init_set_str(val_, s.c_str(), 0))
-    {
-      if (val_->_mp_d)
-        mpz_clear(val_);
-      throw std::invalid_argument(
-          "boost::mp_math::libtom_integer::libtom_integer(const std::string&)");
-    }
-  }
+    construct_from_string(s.c_str());
 }
 
 template<class B>
 libtom_integer<B>::libtom_integer(const std::string& s, std::ios_base::fmtflags f)
 {
   mp_init(&val_);
-  unsigned radix;
-  if (f & std::ios_base::hex)
-    radix = 16;
-  else if (f & std::ios_base::oct)
-    radix = 8;
-  else
-    radix = 10;
-
   if (!s.empty())
-  {
-    if (mpz_init_set_str(val_, s.c_str(), radix))
-    {
-      if (val_->_mp_d)
-        mpz_clear(val_);
-      throw std::invalid_argument(
-          "boost::mp_math::libtom_integer::"
-          "libtom_integer(const std::string&, std::ios_base::fmtflags)");
-    }
-  }
+    construct_from_string(s.c_str());
 }
 
 template<class B>
@@ -695,19 +729,6 @@ inline void swap(libtom_integer<B>& lhs, libtom_integer<B>& rhs)
   lhs.swap(rhs);
 }
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-template<class B>
-inline void swap(libtom_integer<B>&& lhs, libtom_integer<B>& rhs)
-{
-  lhs.swap(rhs);
-}
-template<class B>
-inline void swap(libtom_integer<B>& lhs, libtom_integer<B>&& rhs)
-{
-  lhs.swap(rhs);
-}
-#endif
-
 
 template<class B>
 inline libtom_integer<B>
@@ -715,7 +736,7 @@ operator << (const libtom_integer<B>& x,
              typename libtom_integer<B>::size_type n)
 {
   libtom_integer<B> nrv;
-  mpz_mul_2exp(nrv.get_mp_int(), x.get_mp_int(), n);
+  mp_mul_2d(&x.get_mp_int(), n, &nrv.get_mp_int());
   return nrv;
 }
 
@@ -725,7 +746,7 @@ operator >> (const libtom_integer<B>& x,
              typename libtom_integer<B>::size_type n)
 {
   libtom_integer<B> nrv;
-  mp_intdiv_q_2exp(nrv.get_mp_int(), x.get_mp_int(), n);
+  mp_div_2d(&x.get_mp_int(), n, &nrv.get_mp_int(), 0);
   return nrv;
 }
 
@@ -775,7 +796,7 @@ libtom_integer<B>
 operator % (const libtom_integer<B>& lhs, const libtom_integer<B>& rhs)
 {
   libtom_integer<B> nrv;
-  mp_div(&lhs.get_mp_int(), &rhs.get_mp_int(), 0, &nrv.get_mp_int());
+  mp_mod(&lhs.get_mp_int(), &rhs.get_mp_int(), &nrv.get_mp_int());
   return nrv;
 }
 
@@ -785,7 +806,7 @@ libtom_integer<B>
 operator | (const libtom_integer<B>& lhs, const libtom_integer<B>& rhs)
 {
   libtom_integer<B> nrv;
-  B::bitwise_or(nrv.get_mp_int(), lhs.get_mp_int(), rhs.get_mp_int());
+  B::bitwise_or(&nrv.get_mp_int(), &lhs.get_mp_int(), &rhs.get_mp_int());
   return nrv;
 }
 
@@ -795,7 +816,7 @@ libtom_integer<B>
 operator & (const libtom_integer<B>& lhs, const libtom_integer<B>& rhs)
 {
   libtom_integer<B> nrv;
-  B::bitwise_and(nrv.get_mp_int(), lhs.get_mp_int(), rhs.get_mp_int());
+  B::bitwise_and(&nrv.get_mp_int(), &lhs.get_mp_int(), &rhs.get_mp_int());
   return nrv;
 }
 
@@ -805,9 +826,19 @@ libtom_integer<B>
 operator ^ (const libtom_integer<B>& lhs, const libtom_integer<B>& rhs)
 {
   libtom_integer<B> nrv;
-  B::bitwise_xor(nrv.get_mp_int(), lhs.get_mp_int(), rhs.get_mp_int());
+  B::bitwise_xor(&nrv.get_mp_int(), &lhs.get_mp_int(), &rhs.get_mp_int());
   return nrv;
 }
+
+template<class B>
+inline
+libtom_integer<B> operator ~ (const libtom_integer<B>& x)
+{
+  libtom_integer<B> nrv;
+  B::compl_bits(&nrv.get_mp_int(), &x.get_mp_int());
+  return nrv;
+}
+
 
 // Arithmetic and bitwise operators involving integral types
 template<class B>
@@ -1008,12 +1039,12 @@ inline bool operator >= (const libtom_integer<B>& lhs, const libtom_integer<B>& 
 }
 
 // compare unbounded_int to integral
-/*template<class B, typename IntegralT>
+template<class B, typename IntegralT>
 inline
 typename enable_if<is_integral<IntegralT>, bool>::type
 operator == (const libtom_integer<B>& lhs, IntegralT rhs)
 {
-  return detail::unbounded_int_integral_ops<
+  return detail::libtom_integer_integral_ops<
     libtom_integer<B>, IntegralT>::equal(lhs, rhs);
 }
 
@@ -1030,7 +1061,7 @@ inline
 typename enable_if<is_integral<IntegralT>, bool>::type
 operator < (const libtom_integer<B>& lhs, IntegralT rhs)
 {
-  return detail::unbounded_int_integral_ops<
+  return detail::libtom_integer_integral_ops<
     libtom_integer<B>, IntegralT>::less(lhs, rhs);
 }
 
@@ -1105,7 +1136,7 @@ typename enable_if<is_integral<IntegralT>, bool>::type
 operator >= (IntegralT lhs, const libtom_integer<B>& rhs)
 {
   return rhs <= lhs;
-}*/
+}
 
 // compare unbounded_int to const charT*
 template<class B, typename charT>
@@ -1294,8 +1325,9 @@ operator >= (const std::basic_string<charT,Traits,Alloc>& lhs,
 // Input/Output
 template<class B, typename charT, class traits>
 std::basic_istream<charT, traits>&
-operator >> (std::basic_istream<charT, traits>& is, libtom_integer<B>&)
+operator >> (std::basic_istream<charT, traits>& is, libtom_integer<B>& x)
 {
+  detail::stream_io<libtom_integer<B> >::read(x, is);
   return is;
 }
 
@@ -1399,7 +1431,7 @@ libtom_integer<B>
 nth_root(const libtom_integer<B>& n, const libtom_integer<B>& x)
 {
   libtom_integer<B> nrv;
-  mp_n_root(&x.get_mp_int(), n, &nrv.get_mp_int());
+  mp_n_root(&x.get_mp_int(), n.template to_integral<mp_digit>(), &nrv.get_mp_int());
   return nrv;
 }
 

@@ -9,12 +9,12 @@
 
 #include <algorithm> // swap
 #include <cassert>
-#include <iostream>
 #include <iterator> // reverse_iterator
 #include <boost/config.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mp_math/integer/detail/base/adder.hpp>
 #include <boost/mp_math/integer/detail/base/bitwise_ops.hpp>
+#include <boost/mp_math/integer/detail/base/print_digits.hpp>
 #include <boost/mp_math/integer/detail/base/shifter.hpp>
 #include <boost/mp_math/integer/detail/base/to_integral.hpp>
 #include <boost/mp_math/integer/detail/base/unbounded_uint_integral.hpp>
@@ -65,11 +65,7 @@ public:
     digits_(d), size_(size), capacity_(capacity)
   {}
 
-  #ifdef BOOST_HAS_RVALUE_REFS
-  void swap(unbounded_uint_common&& rhs);
-  #else
   void swap(unbounded_uint_common& rhs);
-  #endif
 
   iterator       begin()       { return digits_;         }
   iterator       end  ()       { return digits_ + size_; }
@@ -299,11 +295,7 @@ protected:
 
 
 template<class Traits>
-#ifdef BOOST_HAS_RVALUE_REFS
-void unbounded_uint_common<Traits>::swap(unbounded_uint_common&& rhs)
-#else
 void unbounded_uint_common<Traits>::swap(unbounded_uint_common& rhs)
-#endif
 {
   std::swap(digits_,   rhs.digits_  );
   std::swap(size_,     rhs.size_    );
@@ -316,22 +308,6 @@ inline void swap(unbounded_uint_common<Traits>& x,
 {
   x.swap(y);
 }
-
-#ifdef BOOST_HAS_RVALUE_REFS
-template<class Traits>
-inline void swap(unbounded_uint_common<Traits>&& x,
-                 unbounded_uint_common<Traits>& y)
-{
-  x.swap(y);
-}
-
-template<class Traits>
-inline void swap(unbounded_uint_common<Traits>& x,
-                 unbounded_uint_common<Traits>&& y)
-{
-  x.swap(y);
-}
-#endif
 
 // This is used to ensure that leading zero digits are trimmed.
 template<class Traits>
@@ -491,30 +467,10 @@ unbounded_uint_common<Traits>::count_trailing_zero_bits() const
 }
 
 template<class Traits>
+inline
 void unbounded_uint_common<Traits>::print(bool all) const
 {
-  using std::cout;
-  cout << size_ << "{";
-  for (size_type i = 0; i < size(); ++i)
-  {
-    cout << static_cast<typename traits_type::word_type>(digits()[i]);
-    if (i < size()  - 1)
-      cout << ",";
-  }
-  cout << "}";
-
-  if (all)
-  {
-    cout << capacity() - size() << "{";
-    for (size_type i = size(); i < capacity(); ++i)
-    {
-      cout << static_cast<typename traits_type::word_type>(digits()[i]);
-      if (i < capacity()  - 1)
-        cout << ",";
-    }
-    cout << "}";
-  }
-  cout << "\n";
+  print_digits(*this, all);
 }
 
 

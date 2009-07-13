@@ -86,6 +86,7 @@ bitwise_ops<ApInt,false>::compl_bits(ApInt& z, const ApInt& x)
   for (; i < x.size() - 1; ++i)
     z[i] = ~x[i];
 
+  // handle last digit
   unsigned count = 0;
   digit_type bit = digit_type(1) << (ApInt::traits_type::radix_bits - 1);
 
@@ -94,8 +95,6 @@ bitwise_ops<ApInt,false>::compl_bits(ApInt& z, const ApInt& x)
     {
       bit >>= 1;
       ++count;
-      if (count > 40)
-        break;
     }
   else
     count = ApInt::traits_type::radix_bits - 1;

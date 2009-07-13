@@ -37,7 +37,7 @@ void divider<ApInt>::modulo_pow2(ApInt& z, size_type n)
 
   // clear high bits
   const digit_type mask =
-    (1 << (static_cast<digit_type>(n % traits_type::radix_bits))) - 1;
+    (digit_type(1) << (static_cast<digit_type>(n % traits_type::radix_bits))) - 1;
 
   z[n / traits_type::radix_bits] &= mask;
 
@@ -60,40 +60,9 @@ inline void divider<ApInt>::divide_by_2(ApInt& z)
 template<class ApInt>
 inline void divider<ApInt>::divide_by_3(ApInt& z)
 {
-  typedef typename traits_type::word_type word_type;
+  ApInt::traits_type::ops_type::divide_by_3(z.digits(), z.size());
 
-  // b = 2^radix_bits / 3
-  static const word_type b = (word_type(1) << traits_type::radix_bits) / 3;
-
-  word_type w = 0;
-  for (typename ApInt::reverse_iterator d = z.rbegin(); d != z.rend(); ++d)
-  {
-    w = (w << static_cast<word_type>(traits_type::radix_bits))
-      | static_cast<word_type>(*d);
-
-    word_type t;
-    if (w >= 3U)
-    {
-      // multiply w by [1/3]
-      t = (w * b) >> static_cast<word_type>(traits_type::radix_bits);
-
-      // now subtract 3 * [w/3] from w, to get the remainder
-      w -= t+t+t;
-
-      // fixup the remainder as required since the optimization is not exact.
-      while (w >= 3U)
-      {
-        t += 1;
-        w -= 3;
-      }
-    }
-    else
-      t = 0;
-
-    *d = static_cast<digit_type>(t);
-  }
-
-  z.clamp(); // TODO clamp_high_digit should suffice
+  z.clamp_high_digit();
 }
 
 

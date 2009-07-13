@@ -9,12 +9,12 @@
 [section General use]
 
 The only header you need to include to use the library is
-`<boost/mp_math/mp_int.hpp>`. This is a header-only library so deployment is easy.
-All functions and objects of this library live in namespace `boost::mp_math`.
+`<boost/mp_math/integer.hpp>`. This is a header-only library so deployment is easy.
+All functions and types of this library live in namespace `boost::mp_math`.
 
   #include <iostream>
   #include <string>
-  #include <boost/mp_math/mp_int.hpp>
+  #include <boost/mp_math/integer.hpp>
 
   using namespace boost::mp_math;
   using namespace std;
@@ -22,17 +22,17 @@ All functions and objects of this library live in namespace `boost::mp_math`.
   int main()
   {
     // init from string
-    mp_int<> x("93423894782394782347823947289374");
+    integer<> x("93423894782394782347823947289374");
     // init from integral type
-    mp_int<> y = 2340;
-    mp_int<> z = x * y;
+    integer<> y = 2340;
+    integer<> z = x * y;
 
     // stream output reacts to stream flags
     cout << hex << z << endl;
 
     // automatic detection of radix using the base prefix 0x
     z = "0xaaaabbbbccccddddeeeeffff222255557777";
-    
+
     z /= y;
 
     // explicit conversion to string according to formatting flags
@@ -45,11 +45,11 @@ All functions and objects of this library live in namespace `boost::mp_math`.
     // std::overflow_error if int does not have enough precision to hold the
     // result
     int result = z.to_integral<int>();
-    
+
     return result;
   }
 
-In most cases the `mp_int` type will behave like a built in integral type.
+In most cases the `integer` type will behave like a built in integral type.
 
 [endsect][/General use]
 
@@ -58,20 +58,20 @@ In most cases the `mp_int` type will behave like a built in integral type.
 
 The random number generators have interfaces similar to Boost.Random. Including
 `<boost/random.hpp>` is not necessary because it is used internally by the
-`mp_int` random machinery. The random number engine `mt19937` that we use from
+`integer` random machinery. The random number engine `mt19937` that we use from
 here on lives in namespace `boost`.
 
 
-  const mp_int<> min(0U);
-  const mp_int<> max("0x8974651231456456564");
-  
+  const integer<> min(0U);
+  const integer<> max("0x8974651231456456564");
+
   uniform_mp_int<> generator(min, max);
-  
+
   // Choose a random number engine.
   mt19937 e;
 
   // Now generate a random number.
-  mp_int<> r = generator(e);
+  integer<> r = generator(e);
 
 
 Another probably more useful alternative is to generate random numbers of a
@@ -82,7 +82,7 @@ certain precision measured in bits.
   uniform_mp_int_bits<> generator(2048);
 
   mt19937 e;
-  mp_int<> r = generator(e);
+  integer<> r = generator(e);
 
 Note that the numbers will always be 2048 bits large, i.e. the 2048th bit is
 always set to 1.
@@ -102,7 +102,7 @@ primality test. We use boost::bind to bind the random number engine to the test
 functor. That is necessary because the test functor's function invocation
 operator needs the random number engine. The operator looks like this:
 
-  bool operator()(Engine& e, const mp_int<>& p) const;
+  bool operator()(Engine& e, const integer<>& p) const;
 
 We need to bind the random number engine to the first parameter slot. Let's do
 it!
@@ -114,7 +114,7 @@ it!
   mt19937 rng;
 
   // Create a random 1024 bit candidate number.
-  mp_int<> p = uniform_mp_int_bits<>(1024)(rng);
+  integer<> p = uniform_mp_int_bits<>(1024)(rng);
 
   bool is_p_prime = is_prime(p, bind(test, rng, _1));
 
@@ -140,7 +140,7 @@ that passes this test.
   mt19937 rng;
 
   // Now create a prime.
-  mp_int<> prime = generator(rng);
+  integer<> prime = generator(rng);
 
 
 [endsect][/prime_generator]
@@ -166,7 +166,7 @@ test the candidate effectively.
   // lead to lifetime problems.
   template<
     class Engine = mt19937,
-    class Distribution = uniform_mp_int_bits<>
+    class Distribution = uniform_integer_bits<>
   >
   struct primality_test
   {
@@ -176,7 +176,7 @@ test the candidate effectively.
 
     explicit tester(const Engine& e = Engine()) : rng(e) {}
 
-    bool operator()(const mp_int<>& p)
+    bool operator()(const integer<>& p)
     {
       return test1(p) && test2(rng, p);
     }
@@ -187,20 +187,47 @@ test the candidate effectively.
   mt19937 rng;
 
   // Create a generator for safe primes with 128 bits precision.
-  typedef safe_prime_generator<primality_test<>, uniform_mp_int_bits<> >
+  typedef safe_prime_generator<primality_test<>, uniform_integer_bits<> >
     generator_type;
-  
+
   generator_type generator(128, primality_test<>(rng));
 
-  mp_int<> prime = generator(rng);
+  integer<> prime = generator(rng);
 
 Remember, the generated numbers are ['probably] prime.
 
 [endsect][/safe_prime_generator]
 
 
-
 [endsect][/Prime number generation]
+
+
+[section Using the GMP backend]
+First, in addition to `<boost/mp_math/integer.hpp>` include the file
+`<boost/mp_math/gmp.hpp>`. Then define your integer type like this:
+
+  typedef boost::mp_math::integer<boost::mp_math::gmp_integer<> > gmp_int_type;
+
+You then need to link manually to the GMP library.
+
+This type is more limited than the native backend:
+
+* does not work with the primality tests and the random number generation
+  templates
+* a few other things don't work yet or don't work correctly
+
+and features slightly different semantics:
+
+* will default initialize to zero
+* will behave on bitwise operations like a two's complement integer
+
+and it has the annoying C gotcha of raising a signal on
+division by zero. I am not sure about the repercussions of catching that signal
+and translating it to a C++ exception, so I'm just leaving it as it is right
+now. In addition to that you will have to be prepared to catch exceptions
+thrown by the C++ wrapper code.
+
+[endsect][/Using the GMP backend]
 
 
 

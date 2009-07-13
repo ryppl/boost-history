@@ -1,24 +1,24 @@
-[/ Copyright Kevin Sopp 2008.
+[/ Copyright Kevin Sopp 2008 - 2009.
  / Distributed under the Boost Software License, Version 1.0.
  / (See accompanying file LICENSE_1_0.txt or copy at
  / http://www.boost.org/LICENSE_1_0.txt)]
 
 [section Implementation notes]
 
-[section mp_int structure]
+[section integer structure]
 
-An `mp_int` is handled in a sign plus magnitude representation which looks like
+An `integer` is handled in a sign plus magnitude representation which looks like
 this:
 
-  struct mp_int
+  struct integer
   {
     digit_type* digits_;
-    size_type used_, capacity_;
-    int sign_;
+    size_type size_, capacity_;
   };
 
-The least significant digit of the number always lives at `digits_[0]` while the
-most significant lives at `digits_[used_ - 1]`.
+The sign is stored in the high bit of `capacity_` which is 0 for positive and 1
+for negative integers. The least significant digit of the number always lives at `digits_[0]` while the
+most significant lives at `digits_[size_ - 1]`.
 
 Libtommath on which this code is ultimately based chose a `digit_type`
 representation which does not use all of its bits, instead some bits are
@@ -27,18 +27,18 @@ multiplication routines. I chose a different representation which uses all the
 bits in the `digit_type` but needs explicit carry handling in the code. This
 makes normal c++ code a tad slower. However it makes it much easier to write
 assembler routines since most CPUs provide instructions that allow the handling
-of carries in place. This is what GMP does as well. It is possible that a
-`digit_type` representation similar to libtommath's returns someday which can
-then be enabled via a different `mp_int_traits` class template.
+of carries in place. It is possible that a `digit_type` representation similar
+to libtommath's returns someday which can then be enabled via a different
+traits class template.
 
-[endsect][/How mp_int structure]
+[endsect][/integer structure]
 
 
 [section Semantics]
 
-* An integer with a value of zero has a `used_` count of 1 and `digits_[0]`
+* An `integer` with a value of zero has a `size_` of 1 and `digits_[0]`
 holds the value 0.
-* An unitialized integer has no value and all operations on it except for
+* An unitialized `integer` has no value and all operations on it except for
 initializing or swapping are undefined.
 
 [endsect][/Semantics]

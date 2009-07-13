@@ -276,7 +276,39 @@ struct unbounded_int_integral_ops_impl<
     if (lhs.sign_bit() == get_sign_bit(rhs))
       magnitude_type_integral_ops::add(lhs, get_absolute(rhs));
     else
-      impl_type::subtract(lhs, get_absolute(rhs));
+    {
+      if (lhs.is_positive())
+      {
+        const typename unbounded_int_type::digit_type x = get_absolute(rhs);
+        if (lhs.size() == 1)
+        {
+          if (lhs[0] >= x)
+            lhs[0] -= x;
+          else
+          {
+            lhs[0] = x - lhs[0];
+            lhs.set_sign_bit(1);
+          }
+        }
+        else
+          magnitude_type_integral_ops::subtract(lhs, x);
+      }
+      else
+      {
+        if (lhs.size() == 1)
+        {
+          if (lhs[0] > rhs)
+            lhs[0] -= rhs;
+          else
+          {
+            lhs[0] = rhs - lhs[0];
+            lhs.set_sign_bit(0);
+          }
+        }
+        else
+          magnitude_type_integral_ops::add(lhs, rhs);
+      }
+    }
   }
 
   static void subtract(unbounded_int_type& lhs, integral_type rhs);

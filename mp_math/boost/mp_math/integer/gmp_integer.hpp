@@ -9,6 +9,10 @@
 #include <gmp.h>
 #include <boost/config.hpp>
 #include <boost/mp_math/integer/contexts.hpp>
+#include <boost/mp_math/integer/gmp_integer_fwd.hpp>
+#include <boost/mp_math/integer/multiprecision_integer_tag.hpp>
+#include <boost/mp_math/integer/detail/stream_io.hpp>
+#include <boost/mp_math/integer/detail/base/print_digits.hpp>
 #include <boost/type_traits/is_integral.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <cstring> // strlen
@@ -45,9 +49,6 @@ struct gmp_behavior
   }
 };
 
-
-template<class Behavior = gmp_behavior>
-class gmp_integer;
 
 
 namespace detail {
@@ -119,9 +120,29 @@ struct gmp_integer_integral_ops<gmp_integer<B>, IntegralT, false, true>
     mpz_mod_ui(z.get_mpz_t(), z.get_mpz_t(), x);
   }
 
-  static void bitwise_or(gmp_integer_type& z, integral_type x);
-  static void bitwise_and(gmp_integer_type& z, integral_type x);
-  static void bitwise_xor(gmp_integer_type& z, integral_type x);
+  static void bitwise_or(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_or(z.get_mpz_t(),
+                                                z.get_mpz_t(),
+                                                tmp.get_mpz_t());
+  }
+
+  static void bitwise_and(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_and(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
+
+  static void bitwise_xor(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_xor(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
 };
 
 
@@ -156,12 +177,18 @@ struct gmp_integer_integral_ops<gmp_integer<B>, IntegralT, true, true>
 
   static void add(gmp_integer_type& z, integral_type x)
   {
-    mpz_add_ui(z.get_mpz_t(), z.get_mpz_t(), x);
+    if (x >= 0)
+      mpz_add_ui(z.get_mpz_t(), z.get_mpz_t(), x);
+    else
+      mpz_sub_ui(z.get_mpz_t(), z.get_mpz_t(), -x);
   }
 
   static void subtract(gmp_integer_type& z, integral_type x)
   {
-    mpz_sub_ui(z.get_mpz_t(), z.get_mpz_t(), x);
+    if (x >= 0)
+      mpz_sub_ui(z.get_mpz_t(), z.get_mpz_t(), x);
+    else
+      mpz_add_ui(z.get_mpz_t(), z.get_mpz_t(), -x);
   }
 
   static void multiply(gmp_integer_type& z, integral_type x)
@@ -179,9 +206,219 @@ struct gmp_integer_integral_ops<gmp_integer<B>, IntegralT, true, true>
     mpz_mod_ui(z.get_mpz_t(), z.get_mpz_t(), x);
   }
 
-  static void bitwise_or(gmp_integer_type& z, integral_type x);
-  static void bitwise_and(gmp_integer_type& z, integral_type x);
-  static void bitwise_xor(gmp_integer_type& z, integral_type x);
+  static void bitwise_or(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_or(z.get_mpz_t(),
+                                                z.get_mpz_t(),
+                                                tmp.get_mpz_t());
+  }
+
+  static void bitwise_and(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_and(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
+
+  static void bitwise_xor(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_xor(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
+};
+
+
+template<
+  class B,
+  typename IntegralT
+>
+struct gmp_integer_integral_ops<gmp_integer<B>, IntegralT, false, false>
+{
+  typedef gmp_integer<B> gmp_integer_type;
+  typedef IntegralT      integral_type;
+
+  static void init(gmp_integer_type& z, integral_type x)
+  {
+    mpz_init(z.get_mpz_t());
+    mpz_import(z.get_mpz_t(),
+               1,  // count
+               -1, // -1 = least significant first
+               sizeof(integral_type),
+               0,  // 0 = host endianness
+               0,  // no nail bits
+               &x);
+  }
+
+  static void assign(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z = tmp;
+  }
+
+  static bool equal(const gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    return z == tmp;
+  }
+
+  static bool less(const gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    return z < tmp;
+  }
+
+  static void add(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z += tmp;
+  }
+
+  static void subtract(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z -= tmp;
+  }
+
+  static void multiply(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z *= tmp;
+  }
+
+  static void divide(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z /= tmp;
+  }
+
+  static void modulo(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z %= tmp;
+  }
+
+  static void bitwise_or(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_or(z.get_mpz_t(),
+                                                z.get_mpz_t(),
+                                                tmp.get_mpz_t());
+  }
+
+  static void bitwise_and(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_and(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
+
+  static void bitwise_xor(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_xor(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
+};
+
+
+template<
+  class B,
+  typename IntegralT
+>
+struct gmp_integer_integral_ops<gmp_integer<B>, IntegralT, true, false>
+{
+  typedef gmp_integer<B> gmp_integer_type;
+  typedef IntegralT      integral_type;
+
+  static void init(gmp_integer_type& z, integral_type x)
+  {
+    mpz_init(z.get_mpz_t());
+    mpz_import(z.get_mpz_t(),
+               1,  // count
+               -1, // -1 = least significant first
+               sizeof(integral_type),
+               0,  // 0 = host endianness
+               0,  // no nail bits
+               &x);
+  }
+
+  static void assign(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z = tmp;
+  }
+
+  static bool equal(const gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    return z == tmp;
+  }
+
+  static bool less(const gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    return z < tmp;
+  }
+
+  static void add(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z += tmp;
+  }
+
+  static void subtract(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z -= tmp;
+  }
+
+  static void multiply(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z *= tmp;
+  }
+
+  static void divide(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z /= tmp;
+  }
+
+  static void modulo(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    z %= tmp;
+  }
+
+  static void bitwise_or(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_or(z.get_mpz_t(),
+                                                z.get_mpz_t(),
+                                                tmp.get_mpz_t());
+  }
+
+  static void bitwise_and(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_and(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
+
+  static void bitwise_xor(gmp_integer_type& z, integral_type x)
+  {
+    const gmp_integer_type tmp(x);
+    gmp_integer_type::behavior_type::bitwise_xor(z.get_mpz_t(),
+                                                 z.get_mpz_t(),
+                                                 tmp.get_mpz_t());
+  }
 };
 
 
@@ -214,6 +451,47 @@ struct gmp_integer_to_integral<B, IntegralT, true, true>
   static IntegralT convert(const gmp_integer<B>& x)
   {
     return static_cast<IntegralT>(mpz_get_si(x.get_mpz_t()));
+  }
+};
+
+
+template<class B, typename IntegralT>
+struct gmp_integer_to_integral<B, IntegralT, false, false>
+{
+  static IntegralT convert(const gmp_integer<B>& x)
+  {
+    // need to init to zero because GMP will early out in mpz_export and not
+    // write to value if the value of x is zero.
+    IntegralT value = 0;
+    mpz_export(&value,
+               0, // count
+               -1, // -1 = least significant first
+               sizeof(IntegralT),
+               0, // 0 = host endianness
+               0, // 0 nail bits
+               x.get_mpz_t());
+    return value;
+  }
+};
+
+
+template<class B, typename IntegralT>
+struct gmp_integer_to_integral<B, IntegralT, true, false>
+{
+  static IntegralT convert(const gmp_integer<B>& x)
+  {
+    IntegralT value;
+    mpz_export(&value,
+               0, // count
+               -1, // -1 = least significant first
+               sizeof(IntegralT),
+               0, // 0 = host endianness
+               0, // 0 nail bits
+               x.get_mpz_t());
+    if (x.sign() == 1)
+      return value;
+    else
+      return -value;
   }
 };
 
@@ -268,6 +546,8 @@ class gmp_integer
   mpz_t val_;
 
 public:
+
+  typedef multiprecision_integer_tag tag;
 
   static const bool is_signed = true;
   static const bool is_bounded = false;
@@ -424,11 +704,7 @@ public:
   void assign(RandomAccessIterator first, RandomAccessIterator last,
               std::ios_base::fmtflags);
 
-  #ifndef BOOST_NO_RVALUE_REFERENCES
-  void swap(gmp_integer&& other)
-  #else
   void swap(gmp_integer& other)
-  #endif
   {
     mpz_swap(val_, other.val_);
   }
@@ -454,11 +730,20 @@ public:
   bool is_positive() const { return mpz_sgn(val_) >= 0; }
   bool is_negative() const { return mpz_sgn(val_) < 0; }
 
+  int sign() const { return is_positive() ? 1 : -1; }
+  bool sign_bit() const { return is_positive() ? 0 : 1; }
+
   // These two functions use the same signature as GMP's mpz_class
   mpz_ptr    get_mpz_t()       { return val_; }
   mpz_srcptr get_mpz_t() const { return val_; }
 
-  size_type size() const { return mpz_size(val_); }
+  size_type size    () const { return mpz_size(val_); }
+
+  void set_size(size_type s) { val_->_mp_size = static_cast<int>(s); }
+
+  size_type capacity() const { return static_cast<size_type>(val_->_mp_alloc); }
+
+  void reserve(size_type n) { mpz_realloc(val_, n); }
 
   digit_type*       digits()       { return val_->_mp_d; }
   const digit_type* digits() const { return val_->_mp_d; }
@@ -606,6 +891,11 @@ public:
     const detail::gmp_allocated_string tmp(mpz_get_str(0, radix, val_));
     return StringT(tmp.str, tmp.str + tmp.len - 1);
   }
+
+  void print(bool all = false) const
+  {
+    detail::base::print_digits(*this, all);
+  }
 };
 
 
@@ -700,19 +990,6 @@ inline void swap(gmp_integer<B>& lhs, gmp_integer<B>& rhs)
 {
   lhs.swap(rhs);
 }
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-template<class B>
-inline void swap(gmp_integer<B>&& lhs, gmp_integer<B>& rhs)
-{
-  lhs.swap(rhs);
-}
-template<class B>
-inline void swap(gmp_integer<B>& lhs, gmp_integer<B>&& rhs)
-{
-  lhs.swap(rhs);
-}
-#endif
 
 
 template<class B>
@@ -1300,8 +1577,9 @@ operator >= (const std::basic_string<charT,Traits,Alloc>& lhs,
 // Input/Output
 template<class B, typename charT, class traits>
 std::basic_istream<charT, traits>&
-operator >> (std::basic_istream<charT, traits>& is, gmp_integer<B>&)
+operator >> (std::basic_istream<charT, traits>& is, gmp_integer<B>& x)
 {
+  detail::stream_io<gmp_integer<B> >::read(x, is);
   return is;
 }
 
@@ -1438,8 +1716,6 @@ int jacobi(const gmp_integer<B>& x, const gmp_integer<B>& y)
 {
   return mpz_jacobi(x.get_mpz_t(), y.get_mpz_t());
 }
-
-
 
 
 

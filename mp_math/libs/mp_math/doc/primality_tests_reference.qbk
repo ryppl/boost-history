@@ -15,20 +15,20 @@ less than 100 eliminates 70%, for all primes less than 256 it is 80%.
 
 [heading Synopsis]
 
-  // <boost/mp_math/mp_int.hpp>
+  // <boost/mp_math/integer.hpp>
   struct primality_division_test
   {
     typedef bool result_type;
 
     template<class A, class T>
-    bool operator()(const mp_int<A,T>& p) const;
+    bool operator()(const integer<A,T>& p) const;
   };
 
 
 [h3 Members]
 
   template<class A, class T>
-  bool operator()(const mp_int<A,T>& p) const;
+  bool operator()(const integer<A,T>& p) const;
 
 * [*Effects:] Returns true if `p` is probably prime. Returns false if `p`
 is definitely composite.
@@ -54,8 +54,8 @@ though not impossible with enough rounds to be detected by this test.
 
 [heading Synopsis]
 
-  // <boost/mp_math/mp_int.hpp>
-  template<class Distribution = uniform_mp_int<> >
+  // <boost/mp_math/integer.hpp>
+  template<class Distribution = uniform_integer<> >
   struct primality_fermat_test
   {
     typedef Distribution distribution_type;
@@ -64,7 +64,7 @@ though not impossible with enough rounds to be detected by this test.
     explicit primality_fermat_test(unsigned int rounds);
 
     template<class Engine, class A, class T>
-    bool operator()(Engine& e, const mp_int<A,T>& p) const;
+    bool operator()(Engine& e, const integer<A,T>& p) const;
   };
 
 
@@ -76,7 +76,7 @@ though not impossible with enough rounds to be detected by this test.
 of test rounds given by `r`.
 
   template<class Engine, class A, class T>
-  bool operator()(Engine& e, const mp_int<A,T>& p) const;
+  bool operator()(Engine& e, const integer<A,T>& p) const;
 
 * [*Effects:] Returns true if `p` is probably prime. Returns false if `p`
 is definitely composite.
@@ -91,8 +91,8 @@ detect carmichael numbers.
 
 [heading Synopsis]
 
-  // <boost/mp_math/mp_int.hpp>
-  template<class Distribution = uniform_mp_int<> >
+  // <boost/mp_math/integer.hpp>
+  template<class Distribution = uniform_integer<> >
   struct primality_miller_rabin_test
   {
     typedef Distribution distribution_type;
@@ -101,7 +101,7 @@ detect carmichael numbers.
     explicit primality_miller_rabin_test(unsigned int r = 0);
 
     template<class Engine, class A, class T>
-    bool operator()(Engine& e, const mp_int<A,T>& p) const;
+    bool operator()(Engine& e, const integer<A,T>& p) const;
 
     static unsigned int recommended_number_of_rounds(unsigned bits);
   };
@@ -116,7 +116,7 @@ of test rounds given by `r`. If `r == 0` then each invocation of this function
 object will use the recommended number of rounds.
 
   template<class Engine, class A, class T>
-  bool operator()(Engine& e, const mp_int<A,T>& p) const;
+  bool operator()(Engine& e, const integer<A,T>& p) const;
 
 * [*Requires: ] `p` is odd.
 * [*Effects:] Returns true if `p` is probably prime. Returns false if `p`
@@ -132,5 +132,5 @@ is definitely composite.
 
 
 
-[endsect][/uniform_mp_int_bits reference]
+[endsect][/Primality Tests reference]
 

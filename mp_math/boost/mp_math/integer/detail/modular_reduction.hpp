@@ -74,9 +74,10 @@ barrett_reduce(ApInt& x, const ApInt& m, const ApInt& mu)
 
   // q = q * m mod radix^(k+1)
   //q.mul_digits(m, k + 1);
+
   ApInt tmp; tmp.reserve(k + 1);
-  ops_type::comba_mul_lo(tmp.digits(), q.digits(), q.size(),
-                                       m.digits(), m.size(), k + 1);
+  ops_type::comba_mul_lo(tmp.digits(), m.digits(), m.size(),
+                                       q.digits(), q.size(), k + 1);
   swap(tmp, q);
 
   x -= q;

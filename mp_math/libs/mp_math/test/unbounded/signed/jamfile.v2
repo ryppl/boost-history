@@ -9,16 +9,9 @@ alias boost_test
 alias boost_serialization
 : $(BOOST_ROOT)/libs/serialization/build//boost_serialization/<link>shared ;
 
-project
-  : requirements
-    <include>../../..
-    <link>static
-    <define>BOOST_TEST_DYN_LINK
-    <define>BOOST_TEST_MAIN
-    <define>BOOST_MP_MATH_MP_INT_USE_ASM
-  ;
-
+unit-test abs             : abs.cpp             boost_test ;
 unit-test add             : add.cpp             boost_test ;
+unit-test assign          : assign.cpp          boost_test ;
 unit-test bitmanipulation : bitmanipulation.cpp boost_test ;
 unit-test bitwise_ops     : bitwise_ops.cpp     boost_test ;
 unit-test bool_conversion : bool_conversion.cpp boost_test ;
@@ -32,6 +25,7 @@ unit-test lcm             : lcm.cpp             boost_test ;
 unit-test modinv          : modinv.cpp          boost_test ;
 unit-test modpow          : modpow.cpp          boost_test ;
 unit-test mul             : mul.cpp             boost_test ;
+unit-test numeric_limits  : numeric_limits.cpp  boost_test ;
 unit-test pow             : pow.cpp             boost_test ;
 unit-test prime           : prime.cpp           boost_test ;
 unit-test random          : random.cpp          boost_test ;
@@ -41,8 +35,7 @@ unit-test shift           : shift.cpp           boost_test ;
 unit-test sqr             : sqr.cpp             boost_test ;
 unit-test sub             : sub.cpp             boost_test ;
 unit-test stream_io       : stream_io.cpp       boost_test ;
-unit-test string_ops      : string_ops.cpp      boost_test ;
+unit-test swap            : swap.cpp            boost_test ;
 unit-test to_integral     : to_integral.cpp     boost_test ;
-unit-test traits          : traits.cpp          boost_test ;
-#unit-test compile_all     : compile_all.cpp     boost_test ;
+unit-test to_string       : to_string.cpp       boost_test ;
 

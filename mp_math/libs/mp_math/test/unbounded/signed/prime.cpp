@@ -1,4 +1,4 @@
-// Copyright Kevin Sopp 2008.
+// Copyright Kevin Sopp 2008 - 2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -74,7 +74,7 @@ fixture<MpInt>::fixture()
 
   // composites with small factors
   composites.push_back("2530121");
-  
+
   // composites with large factors
   // from http://web.mit.edu/kenta/www/three/prime/composites.html.gz
   /*composites.push_back("241999944999997");
@@ -151,60 +151,62 @@ fixture<MpInt>::fixture()
 
 
 // primality tests
-BOOST_AUTO_TEST_CASE_TEMPLATE(prime_is_divisible1, mp_int_type, mp_int_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(prime_is_divisible1, int_type, IntTypes)
 {
   using namespace boost::mp_math;
 
-  fixture<mp_int_type> f;
-  typedef typename std::vector<mp_int_type>::const_iterator iter;
+  fixture<int_type> f;
+  typedef typename std::vector<int_type>::const_iterator iter;
 
   for (iter i = f.primes.begin(); i != f.primes.end(); ++i)
     BOOST_CHECK_EQUAL(is_prime(*i, primality_division_test()), true);
-  
+
   for (iter i = f.composites.begin(); i != f.composites.end(); ++i)
     BOOST_CHECK_EQUAL(is_prime(*i, primality_division_test()), false);
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(prime_fermat_test1, mp_int_type, mp_int_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(prime_fermat_test1, int_type, IntTypes)
 {
   using namespace boost;
 
   mp_math::primality_fermat_test<
-    mp_math::uniform_mp_int<mp_int_type>
+    mp_math::uniform_integer<int_type>
   > fermat_test(1);
 
   mt19937 rng;
 
-  fixture<mp_int_type> f;
-  typedef typename std::vector<mp_int_type>::const_iterator iter;
+  fixture<int_type> f;
+  typedef typename std::vector<int_type>::const_iterator iter;
 
   for (iter i = f.primes.begin(); i != f.primes.end(); ++i)
-    BOOST_CHECK_EQUAL(boost::mp_math::is_prime(*i, bind(fermat_test, rng, _1)), true);
-  
+    BOOST_CHECK_EQUAL(
+        boost::mp_math::is_prime(*i, bind(fermat_test, rng, _1)), true);
+
   for (iter i = f.composites.begin(); i != f.composites.end(); ++i)
-    BOOST_CHECK_EQUAL(boost::mp_math::is_prime(*i, bind(fermat_test, rng, _1)), false);
+    BOOST_CHECK_EQUAL(
+        boost::mp_math::is_prime(*i, bind(fermat_test, rng, _1)), false);
 }
 
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(prime_miller_rabin_test1, mp_int_type, mp_int_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(prime_miller_rabin_test1, int_type, IntTypes)
 {
   using namespace boost;
 
   mp_math::primality_miller_rabin_test<
-    mp_math::uniform_mp_int<mp_int_type>
+    mp_math::uniform_integer<int_type>
   > mr_test;
 
   mt19937 rng;
 
-  fixture<mp_int_type> f;
-  typedef typename std::vector<mp_int_type>::const_iterator iter;
+  fixture<int_type> f;
+  typedef typename std::vector<int_type>::const_iterator iter;
   for (iter i = f.primes.begin(); i != f.primes.end(); ++i)
     BOOST_CHECK_EQUAL(mp_math::is_prime(*i, bind(mr_test, rng, _1)), true);
-  
+
   for (iter i = f.composites.begin(); i != f.composites.end(); ++i)
     BOOST_CHECK_EQUAL(mp_math::is_prime(*i, bind(mr_test, rng, _1)), false);
-  
+
   for (iter i = f.carmichaels.begin(); i != f.carmichaels.end(); ++i)
     BOOST_CHECK_EQUAL(mp_math::is_prime(*i, bind(mr_test, rng, _1)), false);
 }
@@ -220,24 +222,29 @@ struct tester
 
   explicit tester(const Engine& e) : rng(e) {}
 
-  template<class A, class T>
-  bool operator()(const boost::mp_math::mp_int<A,T>& p)
+  template<class ApInt>
+  bool operator()(const ApInt& p)
   {
-    return test1(p) && test2(rng, p);
+    const bool a = test1(p);
+    const bool b = test2(rng, p);
+    return a && b;
   }
 };
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(generate_safe_prime_128bits, mp_int_type, mp_int_types)
+BOOST_AUTO_TEST_CASE_TEMPLATE(generate_safe_prime_128bits, int_type, IntTypes)
 {
-  typedef tester<boost::mt19937, boost::mp_math::uniform_mp_int<mp_int_type> > tester_type;
-  typedef boost::mp_math::uniform_mp_int_bits<mp_int_type> distribution_type;
-  
+  typedef tester<
+    boost::mt19937, boost::mp_math::uniform_integer<int_type>
+  > tester_type;
+
+  typedef boost::mp_math::uniform_integer_bits<int_type> distribution_type;
+
   boost::mt19937 rng;
 
   boost::mp_math::safe_prime_generator<tester_type, distribution_type>
     generator(128U, tester_type(rng));
 
-  const mp_int_type safe_prime = generator(rng);
+  const int_type safe_prime = generator(rng);
 
   BOOST_CHECK_EQUAL(safe_prime.precision(), 128U);
 }

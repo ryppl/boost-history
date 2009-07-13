@@ -174,6 +174,8 @@ struct unbounded_int_integral_ops_impl<
     typename unbounded_int_type::digit_type
   >::type                                         integral_type;
 
+  typedef typename unbounded_int_type::traits_type traits_type;
+
   typedef typename unbounded_int_type::digit_type unsigned_integral_type;
 
   typedef base::unbounded_int_integral_ops<
@@ -213,30 +215,9 @@ struct unbounded_int_integral_ops_impl<
     return base_integral_ops_type::less(lhs, rhs);
   }
 
-  static void add(unbounded_int_type& lhs, integral_type rhs)
-  {
-    if (rhs >= 0)
-    {
-      lhs.reserve(lhs.size() + 1);
-      base::unbounded_int_integral_ops<
-        unbounded_int_type,
-        unsigned_integral_type
-      >::add(lhs, static_cast<unsigned_integral_type>(rhs));
-    }
-    else
-      base::unbounded_int_integral_ops<
-        unbounded_int_type,
-        unsigned_integral_type
-      >::subtract(lhs, static_cast<unsigned_integral_type>(-rhs));
-  }
+  static void add(unbounded_int_type& lhs, integral_type rhs);
 
-  static void subtract(unbounded_int_type& lhs, integral_type rhs)
-  {
-    if (rhs >= 0)
-      base_integral_ops_type::subtract(lhs, static_cast<unsigned_integral_type>(rhs));
-    else
-      base_integral_ops_type::add(lhs, static_cast<unsigned_integral_type>(-rhs));
-  }
+  static void subtract(unbounded_int_type& lhs, integral_type rhs);
 
   static void multiply(unbounded_int_type& lhs, integral_type rhs)
   {
@@ -282,6 +263,83 @@ struct unbounded_int_integral_ops_impl<
     base_integral_ops_type::bitwise_xor(lhs, rhs);
   }
 };
+
+
+template<class UnboundedInt>
+void unbounded_int_integral_ops_impl<
+  UnboundedInt,
+  typename make_signed<typename UnboundedInt::digit_type>::type,
+  true
+>::add(unbounded_int_type& lhs, integral_type rhs)
+{
+  if (rhs >= 0)
+  {
+    lhs.reserve(lhs.size() + 1);
+    base::unbounded_int_integral_ops<
+      unbounded_int_type,
+      unsigned_integral_type
+    >::add(lhs, static_cast<unsigned_integral_type>(rhs));
+  }
+  else
+    base::unbounded_int_integral_ops<
+      unbounded_int_type,
+      unsigned_integral_type
+    >::subtract(lhs, static_cast<unsigned_integral_type>(-rhs));
+}
+
+template<class UnboundedInt>
+void unbounded_int_integral_ops_impl<
+  UnboundedInt,
+  typename make_signed<typename UnboundedInt::digit_type>::type,
+  true
+>::subtract(unbounded_int_type& lhs, integral_type rhs)
+{
+  if (lhs.is_positive())
+  {
+    if (rhs >= 0)
+      base_integral_ops_type::subtract(lhs, static_cast<unsigned_integral_type>(rhs));
+    else
+    {
+      lhs.reserve(lhs.size() + 1);
+      base::unbounded_uint_integral_ops<
+        unbounded_int_type,
+        unsigned_integral_type
+      >::add(lhs, static_cast<unsigned_integral_type>(-rhs));
+    }
+  }
+  else
+  {
+    if (rhs >= 0)
+    {
+      lhs.reserve(lhs.size() + 1);
+      base::unbounded_uint_integral_ops<
+        unbounded_int_type,
+        unsigned_integral_type
+      >::add(lhs, static_cast<unsigned_integral_type>(rhs));
+    }
+    else
+    {
+      const unsigned_integral_type abs_rhs =
+        static_cast<unsigned_integral_type>(-rhs);
+
+      if (lhs.size() == 1)
+      {
+        if (lhs[0] < abs_rhs) // example: -4 - (-5) = 1
+        {
+          lhs[0] = abs_rhs - lhs[0];
+          lhs.set_sign_bit(0);
+        }
+        else // example -4 - (-1) = -3
+          lhs[0] -= abs_rhs;
+      }
+      else
+        base::unbounded_uint_integral_ops<
+          unbounded_int_type,
+          unsigned_integral_type
+        >::subtract(lhs, abs_rhs);
+    }
+  }
+}
 
 
 // 3
@@ -458,7 +516,7 @@ struct unbounded_int_integral_ops_impl<
     if (lhs.sign_bit() == get_sign_bit(rhs))
       unbounded_uint_integral_ops_type::add(lhs, get_absolute(rhs));
     else
-      subtract_smaller(lhs, get_absolute(rhs), get_sign_bit(rhs));
+      subtract_smaller(lhs, get_absolute(rhs));
   }
 
   static void subtract(unbounded_int_type& lhs, integral_type rhs)
@@ -466,7 +524,7 @@ struct unbounded_int_integral_ops_impl<
     if (lhs.sign_bit() != get_sign_bit(rhs))
       unbounded_uint_integral_ops_type::add(lhs, get_absolute(rhs));
     else
-      subtract_smaller(lhs, get_absolute(rhs), ~lhs.sign_bit());
+      subtract_smaller(lhs, get_absolute(rhs));
   }
 
   static void multiply(unbounded_int_type& lhs, integral_type rhs)
@@ -519,8 +577,7 @@ struct unbounded_int_integral_ops_impl<
   }
 
   static void subtract_smaller(unbounded_int_type& lhs,
-                               unsigned_integral_type rhs,
-                               bool final_sign);
+                               unsigned_integral_type rhs);
 };
 
 
@@ -533,10 +590,8 @@ template<class UnboundedInt, typename IntegralT>
 void
 unbounded_int_integral_ops_impl<
   UnboundedInt, IntegralT, true
->::subtract_smaller(unbounded_int_type& lhs,
-                    unsigned_integral_type rhs,
-                    bool final_sign)
-{
+>::subtract_smaller(unbounded_int_type& lhs, unsigned_integral_type rhs)
+{ // need helper class that holds these constants...?
   static const unsigned radix_bits = traits_type::radix_bits;
 
   static const unsigned q =
@@ -566,7 +621,7 @@ unbounded_int_integral_ops_impl<
     x = &tmp;
     y = &lhs;
     lhs.reserve(tmp.size());
-    lhs.set_sign_bit(final_sign);
+    lhs.set_sign_bit(!lhs.sign_bit());
   }
 
   traits_type::ops_type::sub_smaller_magnitude(

@@ -33,6 +33,8 @@ struct unbounded
     unbounded_uint<Alloc,Traits>
   >::type base_type;
 
+  typedef typename base_type::tag tag;
+
   // these constants are used by the numeric_limits specialization
   static const bool is_signed = IsSigned;
   static const bool is_bounded = false;

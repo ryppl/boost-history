@@ -178,8 +178,8 @@ uniform_integer_bits<Integer>::max() const
 }
 
 
-}
-}
+} // namespace mp_math
+} // namespace boost
 
 #endif
 

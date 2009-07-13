@@ -1,4 +1,4 @@
-# Copyright Kevin Sopp 2008.
+# Copyright Kevin Sopp 2008 - 2009.
 # Distributed under the Boost Software License, Version 1.0.
 # (See accompanying file LICENSE_1_0.txt or copy at
 # http://www.boost.org/LICENSE_1_0.txt)
@@ -6,16 +6,16 @@
 
 import quickbook ;
 
-xml mp_int : mp_int.qbk ;
+xml integer : integer.qbk ;
 
 #boostbook standalone
 #  :
-#    mp_int mp_int
+#    integer integer
 #  ;
 
 boostbook standalone
   :
-    mp_int
+    integer
   :
     <xsl:param>boost.root=../../../..
     <xsl:param>boost.libraries=../../../../libs/libraries.htm

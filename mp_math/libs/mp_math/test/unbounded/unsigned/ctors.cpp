@@ -144,28 +144,11 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_hexadecimal_string5, uint_type, UIntType
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_hexadecimal_string6, uint_type, UIntTypes)
 {
-  const uint_type x("0x123456789abcdef");
-  BOOST_CHECK_EQUAL(x.template to_string<std::string>(std::ios_base::hex |
-                                                      std::ios_base::showbase),
-                    "0x123456789abcdef");
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_hexadecimal_string7, uint_type, UIntTypes)
-{
-  const uint_type x("0x123456789ABCDEF");
-  BOOST_CHECK_EQUAL(x.template to_string<std::string>(std::ios_base::hex |
-                                                      std::ios_base::showbase |
-                                                      std::ios_base::uppercase),
-                    "0X123456789ABCDEF");
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_hexadecimal_string8, uint_type, UIntTypes)
-{
   const uint_type x("0xA0000000");
   BOOST_CHECK_EQUAL(x.template to_string<std::string>(), "2684354560");
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_hexadecimal_string9, uint_type, UIntTypes)
+BOOST_AUTO_TEST_CASE_TEMPLATE(ctor_from_hexadecimal_string7, uint_type, UIntTypes)
 {
   BOOST_CHECK_THROW(uint_type("0x15656abg56"), std::invalid_argument);
 }

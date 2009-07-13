@@ -322,17 +322,13 @@ safe_prime_generator<PrimalityTest,Dist>::operator()(Engine& eng) const
 {
   prime_generator<PrimalityTest, Dist> prime_gen(bits_-1, test_);
   result_type p;
+
   do
   {
-    do
-    {
-      p = prime_gen(eng);
-      detail::multiplier<result_type>::multiply_by_2(p);
-      ++p;
-    } while (!is_prime(p, test_));
-  // Catch extremely rare case, this occurs if the carry from ++p ripples
-  // through the whole number thereby adding one more bit to it.
-  } while (p.precision() > bits_);
+    p = prime_gen(eng);
+    detail::multiplier<result_type>::multiply_by_2(p);
+    ++p;
+  } while (!is_prime(p, test_));
 
   return p;
 }

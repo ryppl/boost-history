@@ -1,23 +1,35 @@
-[/ Copyright Kevin Sopp 2008.
+[/ Copyright Kevin Sopp 2008 - 2009.
  / Distributed under the Boost Software License, Version 1.0.
  / (See accompanying file LICENSE_1_0.txt or copy at
  / http://www.boost.org/LICENSE_1_0.txt)]
 
 [section Introduction]
-This library provides the `mp_int` class template for arbitrary precision signed
-integers. These integers grow dynamically as needed. Additionally, special
-functions which are necessary for the implementation of public key cryptography
-such as prime generation are provided.
+Note: This library is not an official boost library, it has not been reviewed
+yet.
+
+The `mp_math` library is the namespace for all multiple precision arithmetic
+types. Such types have the ability to grow dynamically as needed and thus
+provide arbitrary precision. Currently, only unbounded integer types are provided
+via the `integer` class template.
+
+This class template acts as a frontend for different backends. The most complete
+backend is the native Boost one that you get without any effort on your part by
+simply including the `<boost/mp_math/integer.hpp>` header file. It is also the
+slowest. The other backends are a GMP backend and a backend that is based on the
+libtommath library. Since I have become the new maintainer of libtommath I am in
+the process of making custom adjustments to libtommath in order for it to
+provide a more complete C++ experience.
+
+Read on in order to find out how to use the different backends and of course
+about how to use these integer types.
+
 
 [heading Acknowledgement]
 
 This library originally started as a port of the C code of libtommath. Without
-the huge amount of work done by its author Tom St. Denis, this library wouldn't
+the huge amount of work done by its author Tom St Denis, this library wouldn't
 have been possible. Not only does he provide free C code, but also a very
 detailed pdf document of over 200 pages explaining the algorithms used in his
-code. Both his documentation and his code were placed in the public domain. In
-the spirit of his work the code of the `mp_int` library and its documentation
-are placed in the [*public domain] as well.
-
+code.
 [endsect]
 

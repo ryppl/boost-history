@@ -19,7 +19,7 @@ project
 # be installed for the benchmark to work
 lib gmp : : <name>gmp ;
 
-lib tommath : tommath.cpp : <variant>release ;
+lib tommath : : <name>tommath ;
 
 exe benchmark
   :

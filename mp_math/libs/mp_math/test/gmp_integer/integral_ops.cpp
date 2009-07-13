@@ -68,6 +68,36 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(equal_unsigned_int_max, int_type, IntTypes)
   BOOST_CHECK_EQUAL(x, y);
 }
 
+#ifdef BOOST_HAS_LONG_LONG
+BOOST_AUTO_TEST_CASE_TEMPLATE(equal_long_long_int_min, int_type, IntTypes)
+{
+  const long long int x = std::numeric_limits<long long int>::min();
+  const int_type y(x);
+  BOOST_CHECK_EQUAL(x, y);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(equal_long_long_int_max, int_type, IntTypes)
+{
+  const long long int x = std::numeric_limits<long long int>::max();
+  const int_type y(x);
+  BOOST_CHECK_EQUAL(x, y);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(equal_unsigned_long_long_int_min, int_type, IntTypes)
+{
+  const unsigned long long int x = std::numeric_limits<unsigned long long int>::min();
+  const int_type y(x);
+  BOOST_CHECK_EQUAL(x, y);
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE(equal_unsigned_long_long_int_max, int_type, IntTypes)
+{
+  const unsigned long long int x = std::numeric_limits<unsigned long long int>::max();
+  const int_type y(x);
+  BOOST_CHECK_EQUAL(x, y);
+}
+#endif
+
 BOOST_AUTO_TEST_CASE_TEMPLATE(add_signed_integral1, int_type, IntTypes)
 {
   const int_type x("987777");
@@ -162,19 +192,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral4, int_type, IntTypes)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral5, int_type, IntTypes)
 {
-  const int_type x("-1");
-  const int_type z = x - (-5);
-  BOOST_CHECK_EQUAL(z, "4");
-}
-
-BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral6, int_type, IntTypes)
-{
   const int_type x("-0x23489328938ababba000909909");
   const int_type z = x - (-2);
   BOOST_CHECK_EQUAL(z, "-0x23489328938ababba000909907");
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral7, int_type, IntTypes)
+BOOST_AUTO_TEST_CASE_TEMPLATE(subtract_signed_integral6, int_type, IntTypes)
 {
   const int_type x("-0x23489328938ababba000909909");
   const int_type z = x - 0x200;
