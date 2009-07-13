@@ -1,0 +1,134 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>integer reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.74.0">
+<link rel="home" href="../index.html" title="Chapter 1. integer">
+<link rel="up" href="../index.html" title="Chapter 1. integer">
+<link rel="prev" href="implementation_notes.html" title="Implementation notes">
+<link rel="next" href="unbounded_int_reference.html" title="unbounded_int reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="implementation_notes.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="unbounded_int_reference.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="integer.integer_reference"></a><a class="link" href="integer_reference.html" title="integer reference">integer reference</a>
+</h2></div></div></div>
+<a name="integer.integer_reference.synopsis"></a><h4>
+<a name="id2663117"></a>
+      <a class="link" href="integer_reference.html#integer.integer_reference.synopsis">Synopsis</a>
+    </h4>
+<pre class="programlisting"><span class="comment">// &lt;boost/mp_math/integer.hpp&gt;
+</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Type</span> <span class="special">=</span> <span class="identifier">unbounded</span><span class="special">&lt;&gt;</span> <span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">integer</span> <span class="special">:</span> <span class="identifier">Type</span>
+<span class="special">{</span>
+  <span class="keyword">typedef</span> <span class="identifier">Type</span> <span class="identifier">type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">traits_type</span>            <span class="identifier">traits_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">digit_type</span>             <span class="identifier">digit_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">size_type</span>              <span class="identifier">size_type</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">iterator</span>               <span class="identifier">iterator</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">const_iterator</span>         <span class="identifier">const_iterator</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">reverse_iterator</span>       <span class="identifier">reverse_iterator</span><span class="special">;</span>
+  <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">type</span><span class="special">::</span><span class="identifier">const_reverse_iterator</span> <span class="identifier">const_reverse_iterator</span><span class="special">;</span>
+
+  <span class="identifier">integer</span><span class="special">(){}</span>
+
+  <span class="preprocessor">#if</span> <span class="special">!</span><span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_NO_VARIADIC_TEMPLATES</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">defined</span><span class="special">(</span><span class="identifier">BOOST_NO_RVALUE_REFERENCES</span><span class="special">)</span>
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span><span class="special">...</span> <span class="identifier">Args</span><span class="special">&gt;</span>
+  <span class="identifier">integer</span><span class="special">(</span><span class="identifier">Args</span><span class="special">&amp;&amp;...</span> <span class="identifier">args</span><span class="special">)</span>
+  <span class="special">:</span>
+    <span class="identifier">type</span><span class="special">(</span><span class="identifier">args</span><span class="special">...)</span>
+  <span class="special">{}</span>
+
+  <span class="preprocessor">#else</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">&gt;</span>
+  <span class="identifier">integer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T1</span><span class="special">&amp;</span> <span class="identifier">t1</span><span class="special">)</span>
+  <span class="special">:</span> <span class="identifier">type</span><span class="special">(</span><span class="identifier">t1</span><span class="special">)</span> <span class="special">{}</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">&gt;</span>
+  <span class="identifier">integer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T1</span><span class="special">&amp;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span><span class="special">&amp;</span> <span class="identifier">t2</span><span class="special">)</span>
+  <span class="special">:</span> <span class="identifier">type</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">)</span> <span class="special">{}</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">&gt;</span>
+  <span class="identifier">integer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T1</span><span class="special">&amp;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span><span class="special">&amp;</span> <span class="identifier">t2</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span><span class="special">&amp;</span> <span class="identifier">t3</span><span class="special">)</span>
+  <span class="special">:</span> <span class="identifier">type</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">,</span> <span class="identifier">t3</span><span class="special">)</span> <span class="special">{}</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T4</span><span class="special">&gt;</span>
+  <span class="identifier">integer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T1</span><span class="special">&amp;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span><span class="special">&amp;</span> <span class="identifier">t2</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span><span class="special">&amp;</span> <span class="identifier">t3</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T4</span><span class="special">&amp;</span> <span class="identifier">t4</span><span class="special">)</span>
+  <span class="special">:</span> <span class="identifier">type</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">,</span> <span class="identifier">t3</span><span class="special">,</span> <span class="identifier">t4</span><span class="special">)</span> <span class="special">{}</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T3</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T4</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T5</span><span class="special">&gt;</span>
+  <span class="identifier">integer</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T1</span><span class="special">&amp;</span> <span class="identifier">t1</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T2</span><span class="special">&amp;</span> <span class="identifier">t2</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T3</span><span class="special">&amp;</span> <span class="identifier">t3</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T4</span><span class="special">&amp;</span> <span class="identifier">t4</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">T5</span><span class="special">&amp;</span> <span class="identifier">t5</span><span class="special">)</span>
+  <span class="special">:</span> <span class="identifier">type</span><span class="special">(</span><span class="identifier">t1</span><span class="special">,</span> <span class="identifier">t2</span><span class="special">,</span> <span class="identifier">t3</span><span class="special">,</span> <span class="identifier">t4</span><span class="special">,</span> <span class="identifier">t5</span><span class="special">)</span> <span class="special">{}</span>
+  <span class="preprocessor">#endif</span>
+
+  <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+  <span class="preprocessor">#ifndef</span> <span class="identifier">BOOST_NO_RVALUE_REFERENCES</span>
+  <span class="identifier">integer</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">T</span><span class="special">&amp;&amp;</span> <span class="identifier">t</span><span class="special">)</span>
+  <span class="preprocessor">#else</span>
+  <span class="identifier">integer</span><span class="special">&amp;</span> <span class="keyword">operator</span> <span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">)</span>
+  <span class="preprocessor">#endif</span>
+  <span class="special">{</span>
+    <span class="identifier">type</span><span class="special">::</span><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span>
+  <span class="special">}</span>
+
+  <span class="keyword">operator</span> <span class="identifier">type</span><span class="special">&amp;</span>       <span class="special">()</span>       <span class="special">{</span> <span class="keyword">return</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span> <span class="special">}</span>
+  <span class="keyword">operator</span> <span class="keyword">const</span> <span class="identifier">type</span><span class="special">&amp;</span> <span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span> <span class="keyword">return</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span> <span class="special">}</span>
+<span class="special">};</span>
+
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Type</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">modpow_ctx</span><span class="special">&lt;</span><span class="identifier">integer</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;</span> <span class="special">&gt;</span>
+<span class="special">:</span>
+  <span class="identifier">modpow_ctx</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;</span>
+<span class="special">{};</span>
+
+<span class="comment">// returns base^exp % mod
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Type</span><span class="special">&gt;</span>
+<span class="keyword">inline</span>
+<span class="identifier">integer</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;</span> <span class="identifier">modpow</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">integer</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;&amp;</span> <span class="identifier">base</span><span class="special">,</span>
+                     <span class="keyword">const</span> <span class="identifier">integer</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;&amp;</span> <span class="identifier">exp</span><span class="special">,</span>
+                     <span class="keyword">const</span> <span class="identifier">integer</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;&amp;</span> <span class="identifier">mod</span><span class="special">,</span>
+                     <span class="identifier">modpow_ctx</span><span class="special">&lt;</span><span class="identifier">integer</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;</span> <span class="special">&gt;*</span> <span class="identifier">ctx</span> <span class="special">=</span> <span class="number">0</span><span class="special">)</span>
+<span class="special">{</span>
+  <span class="keyword">return</span> <span class="identifier">modpow</span><span class="special">(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">Type</span><span class="special">&amp;&gt;(</span><span class="identifier">base</span><span class="special">),</span>
+                <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">Type</span><span class="special">&amp;&gt;(</span><span class="identifier">exp</span><span class="special">),</span>
+                <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">Type</span><span class="special">&amp;&gt;(</span><span class="identifier">mod</span><span class="special">),</span>
+                <span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">modpow_ctx</span><span class="special">&lt;</span><span class="identifier">Type</span><span class="special">&gt;*&gt;(</span><span class="identifier">ctx</span><span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<p>
+      The <code class="computeroutput"><span class="identifier">integer</span></code> class template
+      acts as a frontend for a backend type which is given by the <code class="computeroutput"><span class="identifier">Type</span></code>
+      parameter. It simply forwards all member functions and does constructor forwarding.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 - 2009 Kevin Sopp<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="implementation_notes.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="unbounded_int_reference.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
