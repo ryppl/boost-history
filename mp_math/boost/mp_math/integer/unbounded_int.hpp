@@ -25,6 +25,8 @@
 #include <boost/mp_math/integer/detail/string_conversion.hpp>
 #include <boost/mp_math/integer/detail/unbounded_int_integral.hpp>
 #include <boost/mp_math/integer/detail/base/unbounded_int.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 
 namespace boost {
 namespace mp_math {
@@ -365,7 +367,7 @@ unbounded_int<A,T>::unbounded_int(
   base_type(0, 0, 0)
 {
   detail::digit_converter<unbounded_int<A,T>, ApInt>::convert(*this, x);
-  //set_sign_bit(x.sign_bit());
+  set_sign_bit(x.sign_bit()); // FIXME works for signed types only
 }
 
 

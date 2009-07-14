@@ -600,6 +600,16 @@ public:
   gmp_integer(const char* s,        std::ios_base::fmtflags);
   gmp_integer(const std::string& s, std::ios_base::fmtflags);
 
+
+  template<class ApInt>
+  gmp_integer(const ApInt& x,
+              typename enable_if<
+                mpl::and_<
+                  mpl::not_<is_same<traits_type, typename ApInt::traits_type> >,
+                  is_same<typename ApInt::tag, multiprecision_integer_tag>
+                >
+                >::type* dummy = 0);
+
   gmp_integer(const gmp_integer& copy)
   {
     mpz_init_set(val_, copy.val_);
@@ -733,17 +743,32 @@ public:
   int sign() const { return is_positive() ? 1 : -1; }
   bool sign_bit() const { return is_positive() ? 0 : 1; }
 
+  void set_sign_bit(bool s)
+  {
+    if (sign_bit() != s)
+      mpz_neg(val_, val_);
+  }
+
   // These two functions use the same signature as GMP's mpz_class
   mpz_ptr    get_mpz_t()       { return val_; }
   mpz_srcptr get_mpz_t() const { return val_; }
 
-  size_type size    () const { return mpz_size(val_); }
+  size_type size() const { return mpz_size(val_); }
 
   void set_size(size_type s) { val_->_mp_size = static_cast<int>(s); }
 
   size_type capacity() const { return static_cast<size_type>(val_->_mp_alloc); }
 
   void reserve(size_type n) { mpz_realloc(val_, n); }
+
+  void push(digit_type d)
+  {
+    val_->_mp_d[__GMP_ABS(val_->_mp_size)] = d;
+    if (val_->_mp_size > 0)
+      ++(val_->_mp_size);
+    else
+      --(val_->_mp_size);
+  }
 
   digit_type*       digits()       { return val_->_mp_d; }
   const digit_type* digits() const { return val_->_mp_d; }
@@ -983,6 +1008,21 @@ gmp_integer<B>::gmp_integer(const std::string& s, std::ios_base::fmtflags f)
   }
   else
     mpz_init(val_);
+}
+
+template<class B>
+template<class ApInt>
+gmp_integer<B>::gmp_integer(
+    const ApInt& x,
+    typename enable_if<
+      mpl::and_<
+        mpl::not_<is_same<traits_type, typename ApInt::traits_type> >,
+        is_same<typename ApInt::tag, multiprecision_integer_tag>
+      >
+    >::type*)
+{
+  detail::digit_converter<gmp_integer<B>, ApInt>::convert(*this, x);
+  set_sign_bit(x.sign_bit()); // FIXME works for signed types only
 }
 
 template<class B>
