@@ -207,6 +207,7 @@ public:
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
     typedef function_graph_edge_iterator<This> edge_iterator;
+    typedef std::size_t edges_size_type;
     typedef function_graph_in_edge_iterator<This> in_edge_iterator;
     typedef function_graph_out_edge_iterator<This> out_edge_iterator;
     typedef function_graph_adjacency_iterator<This> adjacency_iterator;
@@ -692,10 +693,7 @@ bool operator!=(function_graph_adjacency_iterator<Graph> const& lhs,
 }
 
 
-/** Adjacency Iterator - iterates through all of the edges adjacent to a vector
- *  v.
- *  @todo
- */
+/** Edge Iterator - iterates through all edges */
 template<typename Graph>
 struct function_graph_edge_iterator {
 private:
@@ -714,69 +712,122 @@ public:
     typedef value_type* pointer;
     typedef value_type& reference;
 
-    /** @name Constructor */
+    /** @name Constructors */
     //@{
-    function_graph_edge_iterator(graph_type const& g,
-                                      vertex_descriptor const& vertex)
-        : g_(g),
-          vertex_(vertex),
-          i_at_(begin(g_.range_)),
-          in_edge_check_(true)
+    function_graph_edge_iterator(graph_type const& g)
+        : g_(g), i_at_1_(begin(g_.range_)), i_at_2_(begin(g_.range_))
     {
+        const vertex_iterator i_begin = begin(g_.range_);
         const vertex_iterator i_end = end(g_.range_);
+        bool not_done = true;
 
-        while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second)
-        { ++i_at_; }
-        if(i_at_ == i_end)
+        for(vertex_iterator i_at_1 = i_begin;
+            i_at_1 != i_end && not_done;
+            ++i_at_1)
         {
-            in_edge_check_ = false;
-            i_at_ = begin(g_.range_);
-            while(i_at_ != i_end && !edge(vertex_, *i_at_, g_).second)
-            {  ++i_at_; }
+            for(vertex_iterator i_at_2 = i_begin;
+                i_at_2 != i_end && not_done;
+                ++i_at_2)
+            {
+                if(edge(*i_at_1, *i_at_2, g).second) not_done = false;
+            }
         }
     }
 
+    // initialize to the end
+    function_graph_edge_iterator(graph_type const& g, bool overload)
+        : g_(g), i_at_1_(end(g.range_)), i_at_2_(end(g.range_))
+    { }
+
     function_graph_edge_iterator(This const& cp)
-        : g_(cp.g_),
-          vertex_(cp.vertex_),
-          i_at_(cp.i_at_),
-          in_edge_check_(cp.in_edge_check_)
+        : g_(cp.g_), i_at_1_(cp.i_at_1_), i_at_2_(cp.i_at_2_)
     { }
     //@}
 
     This& operator++()
     {
+        const vertex_iterator i_begin = begin(g_.range_);
         const vertex_iterator i_end = end(g_.range_);
+        bool not_done = true;
 
-        if(in_edge_check_)
-        {
+        do {
             do {
-                ++i_at_;
-            } while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second);
-            if(i_at_ == i_end) in_edge_check_ = false;
-        }
-        if(!in_edge_check_)
-        {
-            do {
-                ++i_at_;
-            } while(i_at_ != i_end && !edge(vertex_, *i_at_, g_).second);
-        }
+                ++i_at_2_;
+                not_done = !edge(*i_at_1_, *i_at_2_ , g_).second;
+            } while(i_at_2_ != i_end && not_done);
+            ++i_at_1_;
+            i_at_2_ = i_begin;
+        } while(i_at_1_ != i_end && not_done);
 
         return *this;
     }
 
     edge_descriptor operator*()
     {
-        return in_edge_check_ ?
-                   edge(vertex_, *i_at_, g_).first :
-                   edge(*i_at_, vertex_, g_).first;
+        return edge(*i_at_1_, *i_at_2_, g_).first;
     }
 
     graph_type const& g_;
-    vertex_descriptor vertex_;
-    vertex_iterator i_at_;
-    bool in_edge_check_;
+    vertex_iterator i_at_1_;
+    vertex_iterator i_at_2_;
 };
+
+template<typename Graph>
+bool operator==(function_graph_edge_iterator<Graph> const& lhs,
+                function_graph_edge_iterator<Graph> const& rhs)
+{
+    return lhs.i_at_1_ == rhs.i_at_1_ &&
+           lhs.i_at_2_ == rhs.i_at_2_;
+}
+
+template<typename Graph>
+bool operator!=(function_graph_edge_iterator<Graph> const& lhs,
+                function_graph_edge_iterator<Graph> const& rhs)
+{
+    return !(lhs == rhs);
+}
+
+/** edges(g) - part of the EdgeList concept
+ *  @notes This algorithm is O(n^2) and, along with some other algorithms, is
+ *         why the integration of closures should be considered.
+ */
+template<typename Result, typename Vertex, typename Range>
+std::pair<
+    typename FUNC_GRAPH::edge_iterator,
+    typename FUNC_GRAPH::edge_iterator
+>
+edges(FUNC_GRAPH const& g)
+{
+    typedef FUNC_GRAPH graph_type;
+    typedef typename graph_type::edge_iterator edge_iterator;
+    typedef typename graph_type::vertex_iterator vertex_iterator;
+
+    return std::make_pair(edge_iterator(g),edge_iterator(g,true));
+}
+
+template<typename Result, typename Vertex, typename Range>
+typename FUNC_GRAPH::edges_size_type
+num_edges(FUNC_GRAPH const& g)
+{
+    typedef FUNC_GRAPH graph_type;
+    typedef typename FUNC_GRAPH::edges_size_type edges_size_type;
+    typedef typename FUNC_GRAPH::vertex_iterator vertex_iterator;
+
+    const vertex_iterator i_begin = begin(g.range_);
+    const vertex_iterator i_end = end(g.range_);
+
+    edges_size_type edges_count();
+
+    for(vertex_iterator i_at_1 = i_begin; i_at_1 != i_end; ++i_at_1)
+    {
+        for(vertex_iterator i_at_2 = i_begin; i_at_2 != i_end; ++i_at_2)
+        {
+            if(edge(*i_at_1, *i_at_2, g).second) ++edges_count;
+        }
+    }
+
+    return edges_count;
+}
 
 #undef FUNC_GRAPH
 
