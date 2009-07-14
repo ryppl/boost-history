@@ -52,15 +52,6 @@ namespace boost
 		shared_ptr(shared_ptr<Y> const & r, T *p): base_type(static_cast<const generic_shared<Y*> &>(r), p)
 		{}
 		template<typename Y>
-		shared_ptr(shared_ptr<Y> const & r, boost::gs_detail::static_cast_tag t): base_type(static_cast<const generic_shared<Y*> &>(r), t)
-		{}
-		template<typename Y>
-		shared_ptr(shared_ptr<Y> const & r, boost::gs_detail::const_cast_tag t): base_type(static_cast<const generic_shared<Y*> &>(r), t)
-		{}
-		template<typename Y>
-		shared_ptr(shared_ptr<Y> const & r, boost::gs_detail::dynamic_cast_tag t): base_type(static_cast<const generic_shared<Y*> &>(r), t)
-		{}
-		template<typename Y>
 		explicit shared_ptr(std::auto_ptr<Y> & r): base_type(r)
 		{}
 		template<typename Ap>
@@ -109,17 +100,17 @@ namespace boost
 	};
 	template<class T, class U> shared_ptr<T> static_pointer_cast(shared_ptr<U> const & r)
 	{
-		return shared_ptr<T>(r, boost::gs_detail::static_cast_tag());
+		return shared_ptr<T>(static_pointer_cast<generic_shared<U*> const &>(r));
 	}
 
 	template<class T, class U> shared_ptr<T> const_pointer_cast(shared_ptr<U> const & r)
 	{
-		return shared_ptr<T>(r, boost::gs_detail::const_cast_tag());
+		return shared_ptr<T>(const_pointer_cast<generic_shared<U*> const &>(r));
 	}
 
 	template<class T, class U> shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const & r)
 	{
-		return shared_ptr<T>(r, boost::gs_detail::dynamic_cast_tag());
+		return shared_ptr<T>(dynamic_pointer_cast<generic_shared<U*> const &>(r));
 	}
 }
 
