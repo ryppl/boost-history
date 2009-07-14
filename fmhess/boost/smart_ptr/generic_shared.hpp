@@ -17,9 +17,12 @@
 
 // requirements for generic pointer type:
 // Must be either ordinary pointer, or provide:
-//  value_type/reference/pointer member typedefs and a null_value member constant (or specialization of boost::smart_pointer_traits)
+//  operator->() and operator*()
+//  value_type/reference/pointer member typedefs (or specialization of boost::smart_pointer_traits)
+//  is_null_pointer() free function findable by ADL
 //  (in)equality comparison
-//  static/const/dynamic_pointer_cast support (if you want support for casting)
+
+// FIXME: how to make boost::static/const/dynamic_pointer_cast support more types?
 
 #include <boost/config.hpp>   // for broken compiler workarounds
 
@@ -74,56 +77,51 @@ template<class T> struct smart_pointer_traits
     typedef typename T::value_type value_type;
     typedef typename T::pointer pointer;
     typedef typename T::reference reference;
-    static const pointer null_value;
 };
-template<class T>
-const typename smart_pointer_traits<T>::pointer smart_pointer_traits<T>::null_value = T::null_value;
 
 template<class T> struct smart_pointer_traits<T*>
 {
     typedef T value_type;
     typedef T * pointer;
     typedef T & reference;
-    static const pointer null_value;
 };
-template<class T>
-T * const smart_pointer_traits<T*>::null_value = 0;
 
 template<> struct smart_pointer_traits<void*>
 {
     typedef void value_type;
     typedef void * pointer;
     typedef void reference;
-    static const pointer null_value;
 };
-void * const smart_pointer_traits<void*>::null_value = 0;
 
 template<> struct smart_pointer_traits<const void*>
 {
     typedef void value_type;
     typedef const void * pointer;
     typedef void reference;
-    static const pointer null_value;
 };
-const void * const smart_pointer_traits<const void*>::null_value = 0;
 
 template<> struct smart_pointer_traits<volatile void*>
 {
     typedef void value_type;
     typedef volatile void * pointer;
     typedef void reference;
-    static const pointer null_value;
 };
-volatile void * const smart_pointer_traits<volatile void*>::null_value = 0;
 
 template<> struct smart_pointer_traits<const volatile void*>
 {
     typedef void value_type;
     typedef const volatile void * pointer;
     typedef void reference;
-    static const pointer null_value;
 };
-const volatile void * const smart_pointer_traits<const volatile void*>::null_value = 0;
+
+template<typename T> bool is_null_pointer(const generic_shared<T> &p)
+{
+    return !p;
+}
+template<typename T> bool is_null_pointer(T * p)
+{
+    return p == 0;
+}
 
 namespace gs_detail
 {
@@ -131,7 +129,6 @@ namespace gs_detail
 struct static_cast_tag {};
 struct const_cast_tag {};
 struct dynamic_cast_tag {};
-struct polymorphic_cast_tag {};
 
 template<typename T, typename U, typename V>
 inline void sp_enable_shared_from_this(T, U, V)
@@ -158,6 +155,15 @@ class sp_enable_if_convertible: public
     detail::sp_enable_if_convertible<typename smart_pointer_traits<Y>::value_type, typename smart_pointer_traits<T>::value_type>
 {};
 
+template<typename T>
+void set_plain_pointer_to_null(const T&)
+{}
+template<typename T>
+void set_plain_pointer_to_null(T * &p)
+{
+	p = 0;
+}
+
 } // namespace gs_detail
 
 
@@ -182,7 +188,6 @@ public:
     typedef typename boost::smart_pointer_traits<T>::value_type value_type;
     typedef T pointer;
     typedef typename boost::smart_pointer_traits<T>::reference reference;
-    static const pointer null_value;
 
     generic_shared(): px(), pn()
     {
@@ -235,30 +240,28 @@ public:
     }
 
     template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::static_cast_tag): px(static_pointer_cast<element_type>(r.px)), pn(r.pn)
+    generic_shared(generic_shared<Y> const & r, boost::gs_detail::static_cast_tag):
+        px(static_pointer_cast<value_type>(r.px)),
+        pn(r.pn)
     {
     }
 
     template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::const_cast_tag): px(const_pointer_cast<element_type>(r.px)), pn(r.pn)
+    generic_shared(generic_shared<Y> const & r, boost::gs_detail::const_cast_tag):
+        px(const_pointer_cast<value_type>(r.px)),
+        pn(r.pn)
     {
     }
 
     template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::dynamic_cast_tag): px(dynamic_pointer_cast<element_type>(r.px)), pn(r.pn)
+    generic_shared(generic_shared<Y> const & r, boost::gs_detail::dynamic_cast_tag):
+        px(dynamic_pointer_cast<value_type>(r.px)),
+        pn(r.pn)
     {
-        if(px == null_value) // need to allocate new counter -- the cast failed
+        using boost::is_null_pointer;
+        if(is_null_pointer(px)) // need to allocate new counter -- the cast failed
         {
             pn = boost::detail::shared_count();
-        }
-    }
-
-    template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::polymorphic_cast_tag): px(dynamic_pointer_cast<element_type>(r.px)), pn(r.pn)
-    {
-        if(px == null_value)
-        {
-            boost::throw_exception(std::bad_cast());
         }
     }
 
@@ -336,7 +339,7 @@ public:
     generic_shared( generic_shared && r ): px( r.px ), pn() // never throws
     {
         pn.swap( r.pn );
-        r.px = null_value;
+        gs_detail::set_plain_pointer_to_null(r.px);
     }
 
     template<class Y>
@@ -352,7 +355,7 @@ public:
     : px( r.px ), pn() // never throws
     {
         pn.swap( r.pn );
-        r.px = null_value;
+        gs_detail::set_plain_pointer_to_null(r.px);
     }
 
     generic_shared & operator=( generic_shared && r ) // never throws
@@ -377,7 +380,6 @@ public:
 
     template<class Y> void reset(Y p) // Y must be complete
     {
-        BOOST_ASSERT(p == null_value || p != px); // catch self-reset errors
         this_type(p).swap(*this);
     }
 
@@ -398,13 +400,15 @@ public:
 
     reference operator* () const // never throws
     {
-        BOOST_ASSERT(px != null_value);
+        using boost::is_null_pointer;
+        BOOST_ASSERT(!is_null_pointer(px));
         return *px;
     }
 
     pointer operator-> () const // never throws
     {
-        BOOST_ASSERT(px != null_value);
+        using boost::is_null_pointer;
+        BOOST_ASSERT(!is_null_pointer(px));
         return px;
     }
 
@@ -429,7 +433,8 @@ public:
 
     operator bool () const
     {
-        return px != null_value;
+        using boost::is_null_pointer;
+        return !is_null_pointer(px);
     }
 
 #elif defined( _MANAGED )
@@ -442,7 +447,8 @@ public:
 
     operator unspecified_bool_type() const // never throws
     {
-        return px == null_value? 0: unspecified_bool;
+        using boost::is_null_pointer;
+        return is_null_pointer(px) ? 0: unspecified_bool;
     }
 
 #elif \
@@ -454,7 +460,8 @@ public:
 
     operator unspecified_bool_type() const // never throws
     {
-        return px == null_value? 0: &this_type::get;
+        using boost::is_null_pointer;
+        return is_null_pointer(px) ? 0: &this_type::get;
     }
 
 #else
@@ -463,7 +470,8 @@ public:
 
     operator unspecified_bool_type() const // never throws
     {
-        return px == null_value? 0: &this_type::px;
+        using boost::is_null_pointer;
+        return is_null_pointer(px) ? 0: &this_type::px;
     }
 
 #endif
@@ -471,7 +479,8 @@ public:
     // operator! is redundant, but some compilers need it
     bool operator! () const // never throws
     {
-        return px == null_value;
+        using boost::is_null_pointer;
+        return is_null_pointer(px);
     }
 #endif // end implicit conversion to "bool" support
 
@@ -523,8 +532,6 @@ private:
     boost::detail::shared_count pn;    // reference counter
 
 };  // generic_shared
-template<typename T>
-const typename generic_shared<T>::pointer generic_shared<T>::null_value = boost::smart_pointer_traits<T>::null_value;
 
 template<class T, class U> inline bool operator==(generic_shared<T> const & a, generic_shared<U> const & b)
 {
@@ -570,29 +577,6 @@ template<class T, class U> generic_shared<T> const_pointer_cast(generic_shared<U
 template<class T, class U> generic_shared<T> dynamic_pointer_cast(generic_shared<U> const & r)
 {
     return generic_shared<T>(r, boost::gs_detail::dynamic_cast_tag());
-}
-
-// shared_*_cast names are deprecated. Use *_pointer_cast instead.
-
-template<class T, class U> generic_shared<T> shared_static_cast(generic_shared<U> const & r)
-{
-    return generic_shared<T>(r, boost::gs_detail::static_cast_tag());
-}
-
-template<class T, class U> generic_shared<T> shared_dynamic_cast(generic_shared<U> const & r)
-{
-    return generic_shared<T>(r, boost::gs_detail::dynamic_cast_tag());
-}
-
-template<class T, class U> generic_shared<T> shared_polymorphic_cast(generic_shared<U> const & r)
-{
-    return generic_shared<T>(r, boost::gs_detail::polymorphic_cast_tag());
-}
-
-template<class T, class U> generic_shared<T> shared_polymorphic_downcast(generic_shared<U> const & r)
-{
-    BOOST_ASSERT(dynamic_cast<T *>(r.get()) == r.get());
-    return shared_static_cast<T>(r);
 }
 
 // get_pointer() enables boost::mem_fn to recognize generic_shared
