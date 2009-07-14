@@ -3,7 +3,7 @@
     Copyright 2009-2010 Intel Corporation
     license banner
 -->
-<title>Boost Polygon Library: Connectivity Extraction 90</title>
+<title>Boost Polygon Library: Connectivity Extraction 45</title>
     <meta http-equiv="content-type" content="text/html;charset=ISO-8859-1">
     <!-- <link type="text/css" rel="stylesheet" href="adobe_source.css"> -->
 <table style="margin: 0pt; padding: 0pt; width: 100%;" border="0" cellpadding="0" cellspacing="0"><tbody><tr>
@@ -32,9 +32,9 @@
 			<li><a href="gtl_polygon_90_set_concept.htm">Polygon 90 Set Concept</a></li>
 			<li><a href="gtl_polygon_45_set_concept.htm">Polygon 45 Set Concept</a></li>
 			<li><a href="gtl_polygon_set_concept.htm">Polygon Set Concept</a></li>
-			<li>Connectivity Extraction 90</li>
+			<li><a href="gtl_connectivity_extraction_90.htm">Connectivity Extraction 90</a></li>
 			<li><a href="gtl_connectivity_extraction_45.htm">Connectivity Extraction 45</a></li>
-			<li><a href="gtl_connectivity_extraction.htm">Connectivity Extraction</a></li>
+			<li>Connectivity Extraction</li>
 			<li><a href="gtl_property_merge_90.htm">Property Merge 90</a></li>
 			<li><a href="gtl_property_merge_45.htm">Property Merge_45</a></li>
 			<li><a href="gtl_property_merge.htm">Property Merge</a></li>
@@ -58,7 +58,7 @@
 
 <br>
 <p>
-</p><h1>Connectivity Extraction 90</h1>
+</p><h1>Connectivity Extraction</h1>
 
 <p> 
 <p>The connectivity extraction algorithm constructs the connectivity graph where 
@@ -74,23 +74,23 @@ work with, but potentially more expensive.&nbsp; Improving the interface to
 support more generic graph concepts is deferred to future work.<p>The following 
 is the declaration of the connectivity extraction algorithm.<p>
 <font face="Courier New">template &lt;typename coordinate_type&gt;<br>
-class connectivity_extraction_90;</font><p>
+class connectivity_extraction;</font><p>
 Example code <a href="gtl_connectivity_extraction_usage.htm">connectivity_extraction_usage.cpp</a> 
 		demonstrates using the connectivity extraction algorithm to build a 
 connectivity graph on geometry.<h2>Member Functions</h2>
 <table border="1" width="100%" id="table1">
 	<tr>
-		<td width="586"><b><font face="Courier New">connectivity_extraction_90</font></b><font face="Courier New">()</font></td>
+		<td width="586"><b><font face="Courier New">connectivity_extraction</font></b><font face="Courier New">()</font></td>
 		<td>Default constructor. </td>
 	</tr>
 	<tr>
-		<td width="586"><b><font face="Courier New">connectivity_extraction_90</font></b><font face="Courier New">(<br>&nbsp;&nbsp;&nbsp;&nbsp; const 
-		connectivity_extraction_90&amp; that)</font></td>
+		<td width="586"><b><font face="Courier New">connectivity_extraction</font></b><font face="Courier New">(<br>&nbsp;&nbsp;&nbsp;&nbsp; const 
+		connectivity_extraction&amp; that)</font></td>
 		<td>Copy construct.</td>
 	</tr>
 	<tr>
 		<td width="586">
-<font face="Courier New">unsigned int <br><b>insert</b>(const polygon_90_set_data&lt;coordinate_type&gt;&amp; ps)</font></td>
+<font face="Courier New">unsigned int <br><b>insert</b>(const polygon_set_data&lt;coordinate_type&gt;&amp; ps)</font></td>
 		<td>I<font face="Times New Roman">nsert a polygon set graph node, the 
 		value returned is the id of the graph node.</font></td>
 	</tr>
@@ -99,7 +99,7 @@ connectivity graph on geometry.<h2>Member Functions</h2>
 <font face="Courier New">
 template &lt;class GeoObjT&gt;<br>
 unsigned int <b>insert</b>(const GeoObjT&amp; geoObj)</font></td>
-		<td>Insert a geometry object that is a refinement of polygon 90 set as a 
+		<td>Insert a geometry object that is a refinement of polygon set as a 
 		graph node, the return value is the id of the graph node.</td>
 	</tr>
 	<tr>

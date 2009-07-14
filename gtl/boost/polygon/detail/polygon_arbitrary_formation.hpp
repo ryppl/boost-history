@@ -590,7 +590,7 @@ namespace boost { namespace polygon{
     };
 
     class active_tail_arbitrary {
-    private:
+    protected:
       //data
       poly_line_arbitrary* tailp_; 
       active_tail_arbitrary *otherTailp_;
@@ -1012,7 +1012,7 @@ namespace boost { namespace polygon{
 //       return o;
 //     }
 
-  private:
+  protected:
     //definitions
     typedef std::map<vertex_half_edge, active_tail_arbitrary*, less_vertex_half_edge> scanline_data;
     typedef typename scanline_data::iterator iterator;
@@ -1029,7 +1029,7 @@ namespace boost { namespace polygon{
       less_vertex_half_edge lessElm(&x_, &justBefore_);
       scanData_ = scanline_data(lessElm);
     }
-    inline polygon_arbitrary_formation(bool fractureHoles = false) : 
+    inline polygon_arbitrary_formation(bool fractureHoles) : 
       scanData_(), x_((std::numeric_limits<Unit>::min)()), justBefore_(false), fractureHoles_(fractureHoles) {
       less_vertex_half_edge lessElm(&x_, &justBefore_);
       scanData_ = scanline_data(lessElm);
@@ -1066,7 +1066,7 @@ namespace boost { namespace polygon{
       //std::cout << "scan line size: " << scanData_.size() << std::endl;
     }
 
-  private:
+  protected:
     //functions
     template <class cT, class cT2>
     inline std::pair<std::pair<Point, int>, active_tail_arbitrary*> processPoint_(cT& output, cT2& elements, Point point, 
@@ -1929,6 +1929,686 @@ namespace boost { namespace polygon{
     template<class iT>
     inline poly_line_arbitrary_polygon_data& set_holes(iT inputBegin, iT inputEnd) {
       return *this;
+    }
+  };
+
+  template <typename Unit>
+  class trapezoid_arbitrary_formation : public polygon_arbitrary_formation<Unit> {
+  private:
+    typedef typename scanline_base<Unit>::Point Point;
+    typedef typename scanline_base<Unit>::half_edge half_edge;
+    typedef typename scanline_base<Unit>::vertex_half_edge vertex_half_edge;
+    typedef typename scanline_base<Unit>::less_vertex_half_edge less_vertex_half_edge;
+    
+    typedef typename polygon_arbitrary_formation<Unit>::poly_line_arbitrary poly_line_arbitrary;
+
+    typedef typename polygon_arbitrary_formation<Unit>::active_tail_arbitrary active_tail_arbitrary;
+
+    typedef std::vector<std::pair<Point, int> > vertex_arbitrary_count;
+
+    typedef typename polygon_arbitrary_formation<Unit>::less_half_edge_count less_half_edge_count;
+
+    typedef std::vector<std::pair<std::pair<std::pair<Point, Point>, int>, active_tail_arbitrary*> > incoming_count;
+
+    typedef typename polygon_arbitrary_formation<Unit>::less_incoming_count less_incoming_count;
+
+    typedef typename polygon_arbitrary_formation<Unit>::vertex_arbitrary_compact vertex_arbitrary_compact;
+
+  private:
+    //definitions
+    typedef std::map<vertex_half_edge, active_tail_arbitrary*, less_vertex_half_edge> scanline_data;
+    typedef typename scanline_data::iterator iterator;
+    typedef typename scanline_data::const_iterator const_iterator;
+   
+    //data
+  public:
+    inline trapezoid_arbitrary_formation() : polygon_arbitrary_formation<Unit>() {}
+    inline trapezoid_arbitrary_formation(const trapezoid_arbitrary_formation& that) : polygon_arbitrary_formation<Unit>(that) {}
+    inline trapezoid_arbitrary_formation& operator=(const trapezoid_arbitrary_formation& that) {
+      * static_cast<polygon_arbitrary_formation<Unit>*>(this) = * static_cast<polygon_arbitrary_formation<Unit>*>(&that);
+    }
+   
+    //cT is an output container of Polygon45 or Polygon45WithHoles
+    //iT is an iterator over vertex_half_edge elements
+    //inputBegin - inputEnd is a range of sorted iT that represents
+    //one or more scanline stops worth of data
+    template <class cT, class iT>
+    void scan(cT& output, iT inputBegin, iT inputEnd) {
+      //std::cout << "1\n";
+      while(inputBegin != inputEnd) {
+        //std::cout << "2\n";
+        polygon_arbitrary_formation<Unit>::x_ = (*inputBegin).pt.get(HORIZONTAL);
+        //std::cout << "SCAN FORMATION " << x_ << std::endl;
+        //std::cout << "x_ = " << x_ << std::endl;
+        //std::cout << "scan line size: " << scanData_.size() << std::endl;
+        inputBegin = processEvent_(output, inputBegin, inputEnd);
+      }
+      //std::cout << "scan line size: " << scanData_.size() << std::endl;
+    }
+
+  private:
+    //functions
+    inline void getVerticalPair_(std::pair<active_tail_arbitrary*, 
+                                 active_tail_arbitrary*>& verticalPair, 
+                                 iterator previter) {
+      active_tail_arbitrary* iterTail = (*previter).second;
+      Point prevPoint(polygon_arbitrary_formation<Unit>::x_, 
+                      previter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
+      iterTail->pushPoint(prevPoint);
+      std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
+        active_tail_arbitrary::createActiveTailsAsPair(prevPoint, true, 0, false);
+      verticalPair.first = iterTail;
+      verticalPair.second = tailPair.first;
+      (*previter).second = tailPair.second;
+    }
+
+    template <class cT, class cT2>
+    inline std::pair<std::pair<Point, int>, active_tail_arbitrary*> 
+    processPoint_(cT& output, cT2& elements, 
+                  std::pair<active_tail_arbitrary*, active_tail_arbitrary*>& verticalPair,
+                  iterator previter, Point point, incoming_count& counts_from_scanline, 
+                  vertex_arbitrary_count& incoming_count) { 
+      //std::cout << "\nAT POINT: " <<  point << std::endl;
+      //join any closing solid corners
+      std::vector<int> counts;
+      std::vector<int> incoming;
+      std::vector<active_tail_arbitrary*> tails;
+      counts.reserve(counts_from_scanline.size());
+      tails.reserve(counts_from_scanline.size());
+      incoming.reserve(incoming_count.size());
+      for(std::size_t i = 0; i < counts_from_scanline.size(); ++i) {
+        counts.push_back(counts_from_scanline[i].first.second);
+        tails.push_back(counts_from_scanline[i].second);
+      }
+      for(std::size_t i = 0; i < incoming_count.size(); ++i) {
+        incoming.push_back(incoming_count[i].second);
+        if(incoming_count[i].first < point) {
+          incoming.back() = 0;
+        }
+      }
+        
+      active_tail_arbitrary* returnValue = 0;
+      std::pair<active_tail_arbitrary*, active_tail_arbitrary*> verticalPairOut;
+      verticalPairOut.first = 0;
+      verticalPairOut.second = 0;
+      std::pair<Point, int> returnCount(Point(0, 0), 0);
+      int i_size_less_1 = (int)(incoming.size()) -1;
+      int c_size_less_1 = (int)(counts.size()) -1;
+      int i_size = incoming.size();
+      int c_size = counts.size();
+
+      bool have_vertical_tail_from_below = false;
+      if(c_size &&
+         is_vertical(counts_from_scanline.back().first.first)) {
+        have_vertical_tail_from_below = true;
+      }
+      //assert size = size_less_1 + 1
+      //std::cout << tails.size() << " " << incoming.size() << " " << counts_from_scanline.size() << " " << incoming_count.size() << std::endl;
+      //         for(std::size_t i = 0; i < counts.size(); ++i) {
+      //           std::cout << counts_from_scanline[i].first.first.first.get(HORIZONTAL) << ",";
+      //           std::cout << counts_from_scanline[i].first.first.first.get(VERTICAL) << " ";
+      //           std::cout << counts_from_scanline[i].first.first.second.get(HORIZONTAL) << ",";
+      //           std::cout << counts_from_scanline[i].first.first.second.get(VERTICAL) << ":";
+      //           std::cout << counts_from_scanline[i].first.second << " ";
+      //         } std::cout << std::endl;
+      //         print(incoming_count);
+      {
+        for(int i = 0; i < c_size_less_1; ++i) {
+          //std::cout << i << std::endl;
+          if(counts[i] == -1) {
+            //std::cout << "fixed i\n";
+            for(int j = i + 1; j < c_size; ++j) {
+              //std::cout << j << std::endl;
+              if(counts[j]) {
+                if(counts[j] == 1) {
+                  //std::cout << "case1: " << i << " " << j << std::endl;
+                  //if a figure is closed it will be written out by this function to output
+                  active_tail_arbitrary::joinChains(point, tails[i], tails[j], true, output); 
+                  counts[i] = 0;
+                  counts[j] = 0;
+                  tails[i] = 0;
+                  tails[j] = 0;
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+      //find any pairs of incoming edges that need to create pair for leading solid
+      //std::cout << "checking case2\n";
+      {
+        for(int i = 0; i < i_size_less_1; ++i) {
+          //std::cout << i << std::endl;
+          if(incoming[i] == 1) {
+            //std::cout << "fixed i\n";
+            for(int j = i + 1; j < i_size; ++j) {
+              //std::cout << j << std::endl;
+              if(incoming[j]) {
+                //std::cout << incoming[j] << std::endl;
+                if(incoming[j] == -1) {
+                  //std::cout << "case2: " << i << " " << j << std::endl;
+                  //std::cout << "creating active tail pair\n";
+                  std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
+                    active_tail_arbitrary::createActiveTailsAsPair(point, true, 0, polygon_arbitrary_formation<Unit>::fractureHoles_);
+                  //tailPair.first->print();
+                  //tailPair.second->print();
+                  if(j == i_size_less_1 && incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
+                    //vertical active tail becomes return value
+                    returnValue = tailPair.first;
+                    returnCount.first = point;
+                    returnCount.second = 1;
+                  } else {
+                    //std::cout << "new element " << j-1 << " " << -1 << std::endl;
+                    //std::cout << point << " " <<  incoming_count[j].first << std::endl;
+                    elements.push_back(std::pair<vertex_half_edge, 
+                                       active_tail_arbitrary*>(vertex_half_edge(point,
+                                                                                incoming_count[j].first, -1), tailPair.first));
+                  }
+                  //std::cout << "new element " << i-1 << " " << 1 << std::endl;
+                  //std::cout << point << " " <<  incoming_count[i].first << std::endl;
+                  elements.push_back(std::pair<vertex_half_edge, 
+                                     active_tail_arbitrary*>(vertex_half_edge(point,
+                                                                              incoming_count[i].first, 1), tailPair.second));
+                  incoming[i] = 0;
+                  incoming[j] = 0;
+                }
+                break;
+              }
+            }
+          }
+        }
+      }
+      //find any active tail that needs to pass through to an incoming edge
+      //we expect to find no more than two pass through
+
+      //find pass through with solid on top
+      {
+        //std::cout << "checking case 3\n";
+        for(int i = 0; i < c_size; ++i) {
+          //std::cout << i << std::endl;
+          if(counts[i] != 0) {
+            if(counts[i] == 1) {
+              //std::cout << "fixed i\n";
+              for(int j = i_size_less_1; j >= 0; --j) {
+                if(incoming[j] != 0) {
+                  if(incoming[j] == 1) {
+                    //std::cout << "case3: " << i << " " << j << std::endl;
+                    //tails[i]->print();
+                    //pass through solid on top
+                    tails[i]->pushPoint(point);
+                    //std::cout << "after push\n";
+                    if(j == i_size_less_1 && incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
+                      returnValue = tails[i];
+                      returnCount.first = point;
+                      returnCount.second = -1;
+                    } else {
+                      std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
+                        active_tail_arbitrary::createActiveTailsAsPair(point, true, 0, false);
+                      verticalPairOut.first = tails[i];
+                      verticalPairOut.second = tailPair.first;
+                      elements.push_back(std::pair<vertex_half_edge, 
+                                         active_tail_arbitrary*>(vertex_half_edge(point, 
+                                                                                  incoming_count[j].first, incoming[j]), tailPair.second));
+                    }
+                    tails[i] = 0;
+                    counts[i] = 0;
+                    incoming[j] = 0;
+                  }
+                  break;
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+      //std::cout << "checking case 4\n";
+      //find pass through with solid on bottom
+      {
+        for(int i = c_size_less_1; i >= 0; --i) {
+          //std::cout << "i = " << i << " with count " << counts[i] << std::endl;
+          if(counts[i] != 0) {
+            if(counts[i] == -1) {
+              for(int j = 0; j < i_size; ++j) {
+                if(incoming[j] != 0) {
+                  if(incoming[j] == -1) {
+                    //std::cout << "case4: " << i << " " << j << std::endl;
+                    //pass through solid on bottom
+                    
+                    //if count from scanline is vertical
+                    if(i == c_size_less_1 && 
+                       counts_from_scanline[i].first.first.first.get(HORIZONTAL) == 
+                       point.get(HORIZONTAL)) {
+                       //if incoming count is vertical
+                       if(j == i_size_less_1 && 
+                          incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
+                         returnValue = tails[i];
+                         returnCount.first = point;
+                         returnCount.second = 1;
+                       } else {
+                         tails[i]->pushPoint(point);
+                         elements.push_back(std::pair<vertex_half_edge,
+                                         active_tail_arbitrary*>(vertex_half_edge(point,
+                                                                                  incoming_count[j].first, incoming[j]), tails[i]));
+                       }
+                    } else if(j == i_size_less_1 && 
+                              incoming_count[j].first.get(HORIZONTAL) == 
+                              point.get(HORIZONTAL)) {
+                      if(verticalPair.first == 0) {
+                        getVerticalPair_(verticalPair, previter);
+                      }
+                      active_tail_arbitrary::joinChains(point, tails[i], verticalPair.first, true, output); 
+                      returnValue = verticalPair.second;
+                      returnCount.first = point;
+                      returnCount.second = 1;
+                    } else {
+                      //neither is vertical
+                      if(verticalPair.first == 0) {
+                        getVerticalPair_(verticalPair, previter);
+                      }
+                      active_tail_arbitrary::joinChains(point, tails[i], verticalPair.first, true, output); 
+                      verticalPair.second->pushPoint(point);
+                      elements.push_back(std::pair<vertex_half_edge,
+                                         active_tail_arbitrary*>(vertex_half_edge(point,
+                                                                                  incoming_count[j].first, incoming[j]), verticalPair.second));
+                    }
+                    tails[i] = 0;
+                    counts[i] = 0;
+                    incoming[j] = 0;
+                  }
+                  break;
+                }
+              }
+            }
+            break;
+          }
+        }
+      }
+      //find the end of a hole or the beginning of a hole
+
+      //find end of a hole
+      {
+        for(int i = 0; i < c_size_less_1; ++i) {
+          if(counts[i] != 0) {
+            for(int j = i+1; j < c_size; ++j) {
+              if(counts[j] != 0) {
+                //std::cout << "case5: " << i << " " << j << std::endl;
+                //we are ending a hole and may potentially close a figure and have to handle the hole
+                tails[i]->pushPoint(point);
+                verticalPairOut.first = tails[i];
+                if(j == c_size_less_1 &&
+                   counts_from_scanline[j].first.first.first.get(HORIZONTAL) == 
+                   point.get(HORIZONTAL)) { 
+                  verticalPairOut.second = tails[j];
+                } else {
+                  //need to close a trapezoid below
+                  if(verticalPair.first == 0) {
+                    getVerticalPair_(verticalPair, previter);
+                  }
+                  active_tail_arbitrary::joinChains(point, tails[j], verticalPair.first, true, output);
+                  verticalPairOut.second = verticalPair.second;
+                }
+                tails[i] = 0;
+                tails[j] = 0;
+                counts[i] = 0;
+                counts[j] = 0;
+                break;
+              }
+            }
+            break;
+          }
+        } 
+      }
+      //find beginning of a hole
+      {
+        for(int i = 0; i < i_size_less_1; ++i) {
+          if(incoming[i] != 0) {
+            for(int j = i+1; j < i_size; ++j) {
+              if(incoming[j] != 0) {
+                //std::cout << "case6: " << i << " " << j << std::endl;
+                //we are beginning a empty space
+                if(verticalPair.first == 0) {
+                  getVerticalPair_(verticalPair, previter);
+                }
+                verticalPair.second->pushPoint(point);
+                if(j == i_size_less_1 &&
+                   incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
+                  returnValue = verticalPair.first;
+                  returnCount.first = point;
+                  returnCount.second = -1;
+                } else {
+                  std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
+                  active_tail_arbitrary::createActiveTailsAsPair(point, false, 0, false);
+                  elements.push_back(std::pair<vertex_half_edge, 
+                                     active_tail_arbitrary*>(vertex_half_edge(point,
+                                                                              incoming_count[j].first, incoming[j]), tailPair.second));
+                  verticalPairOut.second = tailPair.first;
+                  verticalPairOut.first = verticalPair.first;
+                }
+                elements.push_back(std::pair<vertex_half_edge, 
+                                   active_tail_arbitrary*>(vertex_half_edge(point,
+                                                                            incoming_count[i].first, incoming[i]), verticalPair.second));
+                incoming[i] = 0;
+                incoming[j] = 0;
+                break;
+              }
+            }
+            break;
+          }
+        }
+      }
+      if(have_vertical_tail_from_below) {
+        if(tails.back()) {
+          tails.back()->pushPoint(point);
+          returnValue = tails.back();
+          returnCount.first = point;
+          returnCount.second = counts.back();
+        }
+      }
+      verticalPair = verticalPairOut;
+      //assert that tails, counts and incoming are all null
+      return std::pair<std::pair<Point, int>, active_tail_arbitrary*>(returnCount, returnValue);
+    }
+
+    static inline void print(const vertex_arbitrary_count& count) {
+      for(unsigned i = 0; i < count.size(); ++i) {
+        //std::cout << count[i].first.get(HORIZONTAL) << ",";
+        //std::cout << count[i].first.get(VERTICAL) << ":";
+        //std::cout << count[i].second << " ";
+      } //std::cout << std::endl;
+    }
+
+    static inline void print(const scanline_data& data) {
+      for(typename scanline_data::const_iterator itr = data.begin(); itr != data.end(); ++itr){
+        //std::cout << itr->first.pt << ", " << itr->first.other_pt << "; ";
+      } //std::cout << std::endl;
+    }
+
+    template <class cT, class iT>
+    inline iT processEvent_(cT& output, iT inputBegin, iT inputEnd) {
+      typedef typename high_precision_type<Unit>::type high_precision;
+      //std::cout << "processEvent_\n";
+      polygon_arbitrary_formation<Unit>::justBefore_ = true;
+      //collect up all elements from the tree that are at the y
+      //values of events in the input queue
+      //create vector of new elements to add into tree
+      active_tail_arbitrary* verticalTail = 0;
+      std::pair<active_tail_arbitrary*, active_tail_arbitrary*> verticalPair;
+      std::pair<Point, int> verticalCount(Point(0, 0), 0);
+      iT currentIter = inputBegin;
+      std::vector<iterator> elementIters;
+      std::vector<std::pair<vertex_half_edge, active_tail_arbitrary*> > elements;
+      while(currentIter != inputEnd && currentIter->pt.get(HORIZONTAL) == polygon_arbitrary_formation<Unit>::x_) {
+        //std::cout << "loop\n";
+        Unit currentY = (*currentIter).pt.get(VERTICAL);
+        //std::cout << "current Y " << currentY << std::endl;
+        //std::cout << "scanline size " << scanData_.size() << std::endl;
+        //print(scanData_);
+        iterator iter = lookUp_(currentY);
+        //std::cout << "found element in scanline " << (iter != scanData_.end()) << std::endl;
+        //int counts[4] = {0, 0, 0, 0};
+        incoming_count counts_from_scanline;
+        //std::cout << "finding elements in tree\n";
+        //if(iter != scanData_.end())
+        //  std::cout << "first iter y is " << iter->first.evalAtX(x_) << std::endl;
+        iterator previter = iter;
+        if(previter != polygon_arbitrary_formation<Unit>::scanData_.end() &&
+             previter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_) >= currentY &&
+             previter != polygon_arbitrary_formation<Unit>::scanData_.begin())
+           --previter;
+        while(iter != polygon_arbitrary_formation<Unit>::scanData_.end() &&
+              iter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_) == (high_precision)currentY) {
+          //std::cout << "loop2\n";
+          elementIters.push_back(iter);
+          counts_from_scanline.push_back(std::pair<std::pair<std::pair<Point, Point>, int>, active_tail_arbitrary*>
+                                         (std::pair<std::pair<Point, Point>, int>(std::pair<Point, Point>(iter->first.pt,
+                                                                                                          iter->first.other_pt), 
+                                                                                  iter->first.count),
+                                          iter->second));
+          ++iter;
+        }
+        Point currentPoint(polygon_arbitrary_formation<Unit>::x_, currentY);
+        //std::cout << "counts_from_scanline size " << counts_from_scanline.size() << std::endl;
+        sort_incoming_count(counts_from_scanline, currentPoint);
+
+        vertex_arbitrary_count incoming;
+        //std::cout << "aggregating\n";
+        do {
+          //std::cout << "loop3\n";
+          const vertex_half_edge& elem = *currentIter;
+          incoming.push_back(std::pair<Point, int>(elem.other_pt, elem.count));
+          ++currentIter;
+        } while(currentIter != inputEnd && currentIter->pt.get(VERTICAL) == currentY &&
+                currentIter->pt.get(HORIZONTAL) == polygon_arbitrary_formation<Unit>::x_);
+        //print(incoming);
+        sort_vertex_arbitrary_count(incoming, currentPoint);
+        //std::cout << currentPoint.get(HORIZONTAL) << "," << currentPoint.get(VERTICAL) << std::endl;
+        //print(incoming);
+        //std::cout << "incoming counts from input size " << incoming.size() << std::endl;
+        //compact_vertex_arbitrary_count(currentPoint, incoming);
+        vertex_arbitrary_count tmp;
+        tmp.reserve(incoming.size());
+        for(std::size_t i = 0; i < incoming.size(); ++i) {
+          if(currentPoint < incoming[i].first) {
+            tmp.push_back(incoming[i]);
+          }
+        }
+        incoming.swap(tmp);
+        //std::cout << "incoming counts from input size " << incoming.size() << std::endl;
+        //now counts_from_scanline has the data from the left and
+        //incoming has the data from the right at this point
+        //cancel out any end points
+        if(verticalTail) {
+          //std::cout << "adding vertical tail to counts from scanline\n";
+          //std::cout << -verticalCount.second << std::endl;
+          counts_from_scanline.push_back(std::pair<std::pair<std::pair<Point, Point>, int>, active_tail_arbitrary*>
+                                         (std::pair<std::pair<Point, Point>, int>(std::pair<Point, Point>(verticalCount.first, 
+                                                                                                          currentPoint), 
+                                                                                  -verticalCount.second),
+                                          verticalTail));
+        }
+        if(!incoming.empty() && incoming.back().first.get(HORIZONTAL) == polygon_arbitrary_formation<Unit>::x_) {
+          //std::cout << "inverted vertical event\n";
+          incoming.back().second *= -1;
+        }
+        //std::cout << "calling processPoint_\n";
+           std::pair<std::pair<Point, int>, active_tail_arbitrary*> result = processPoint_(output, elements, verticalPair, previter, Point(polygon_arbitrary_formation<Unit>::x_, currentY), counts_from_scanline, incoming);
+        verticalCount = result.first;
+        verticalTail = result.second;
+        if(verticalPair.first != 0 && iter != polygon_arbitrary_formation<Unit>::scanData_.end() &&
+           (currentIter == inputEnd || currentIter->pt.x() != polygon_arbitrary_formation<Unit>::x_ ||
+            currentIter->pt.y() > (*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_))) {
+          //splice vertical pair into edge above
+          active_tail_arbitrary* tailabove = (*iter).second;
+          Point point(polygon_arbitrary_formation<Unit>::x_, (*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
+          verticalPair.second->pushPoint(point);
+          active_tail_arbitrary::joinChains(point, tailabove, verticalPair.first, true, output);
+          (*iter).second = verticalPair.second;
+          verticalPair.first = 0;
+          verticalPair.second = 0;
+        }
+      }
+      //std::cout << "erasing\n";
+      //erase all elements from the tree
+      for(typename std::vector<iterator>::iterator iter = elementIters.begin();
+          iter != elementIters.end(); ++iter) {
+        //std::cout << "erasing loop\n";
+        polygon_arbitrary_formation<Unit>::scanData_.erase(*iter);
+      }
+      //switch comparison tie breaking policy
+      polygon_arbitrary_formation<Unit>::justBefore_ = false;
+      //add new elements into tree
+      //std::cout << "inserting\n";
+      for(typename std::vector<std::pair<vertex_half_edge, active_tail_arbitrary*> >::iterator iter = elements.begin();
+          iter != elements.end(); ++iter) {
+        //std::cout << "inserting loop\n";
+        polygon_arbitrary_formation<Unit>::scanData_.insert(polygon_arbitrary_formation<Unit>::scanData_.end(), *iter);
+      }
+      //std::cout << "end processEvent\n";
+      return currentIter;
+    }
+  public:
+    template <typename stream_type>
+    static inline bool testTrapezoidArbitraryFormationRect(stream_type& stdcout) {
+      stdcout << "testing trapezoid formation\n";
+      trapezoid_arbitrary_formation pf;
+      std::vector<polygon_data<Unit> > polys;
+      std::vector<vertex_half_edge> data;
+      data.push_back(vertex_half_edge(Point(0, 0), Point(10, 0), 1));
+      data.push_back(vertex_half_edge(Point(0, 0), Point(0, 10), 1));
+      data.push_back(vertex_half_edge(Point(0, 10), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(0, 10), Point(10, 10), -1));
+      data.push_back(vertex_half_edge(Point(10, 0), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(10, 0), Point(10, 10), -1));
+      data.push_back(vertex_half_edge(Point(10, 10), Point(10, 0), 1));
+      data.push_back(vertex_half_edge(Point(10, 10), Point(0, 10), 1));
+      std::sort(data.begin(), data.end());
+      pf.scan(polys, data.begin(), data.end());
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
+      }
+      stdcout << "done testing trapezoid formation\n";
+      return true;
+    }
+    template <typename stream_type>
+    static inline bool testTrapezoidArbitraryFormationP1(stream_type& stdcout) {
+      stdcout << "testing trapezoid formation P1\n";
+      trapezoid_arbitrary_formation pf;
+      std::vector<polygon_data<Unit> > polys;
+      std::vector<vertex_half_edge> data;
+      data.push_back(vertex_half_edge(Point(0, 0), Point(10, 10), 1));
+      data.push_back(vertex_half_edge(Point(0, 0), Point(0, 10), 1));
+      data.push_back(vertex_half_edge(Point(0, 10), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(0, 10), Point(10, 20), -1));
+      data.push_back(vertex_half_edge(Point(10, 10), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(10, 10), Point(10, 20), -1));
+      data.push_back(vertex_half_edge(Point(10, 20), Point(10, 10), 1));
+      data.push_back(vertex_half_edge(Point(10, 20), Point(0, 10), 1));
+      std::sort(data.begin(), data.end());
+      pf.scan(polys, data.begin(), data.end());
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
+      }
+      stdcout << "done testing trapezoid formation\n";
+      return true;
+    }
+    template <typename stream_type>
+    static inline bool testTrapezoidArbitraryFormationP2(stream_type& stdcout) {
+      stdcout << "testing trapezoid formation P2\n";
+      trapezoid_arbitrary_formation pf;
+      std::vector<polygon_data<Unit> > polys;
+      std::vector<vertex_half_edge> data;
+      data.push_back(vertex_half_edge(Point(-3, 1), Point(2, -4), 1));
+      data.push_back(vertex_half_edge(Point(-3, 1), Point(-2, 2), -1));
+      data.push_back(vertex_half_edge(Point(-2, 2), Point(2, 4), -1));
+      data.push_back(vertex_half_edge(Point(-2, 2), Point(-3, 1), 1));
+      data.push_back(vertex_half_edge(Point(2, -4), Point(-3, 1), -1));
+      data.push_back(vertex_half_edge(Point(2, -4), Point(2, 4), -1));
+      data.push_back(vertex_half_edge(Point(2, 4), Point(-2, 2), 1));
+      data.push_back(vertex_half_edge(Point(2, 4), Point(2, -4), 1));
+      std::sort(data.begin(), data.end());
+      pf.scan(polys, data.begin(), data.end());
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
+      }
+      stdcout << "done testing trapezoid formation\n";
+      return true;
+    }
+
+    template <typename stream_type>
+    static inline bool testTrapezoidArbitraryFormationPolys(stream_type& stdcout) {
+      stdcout << "testing trapezoid formation polys\n";
+      trapezoid_arbitrary_formation pf;
+      std::vector<polygon_with_holes_data<Unit> > polys;
+      //trapezoid_arbitrary_formation pf2(true);
+      //std::vector<polygon_with_holes_data<Unit> > polys2;
+      std::vector<vertex_half_edge> data;
+      data.push_back(vertex_half_edge(Point(0, 0), Point(100, 1), 1));
+      data.push_back(vertex_half_edge(Point(0, 0), Point(1, 100), -1));
+      data.push_back(vertex_half_edge(Point(1, 100), Point(0, 0), 1));
+      data.push_back(vertex_half_edge(Point(1, 100), Point(101, 101), -1));
+      data.push_back(vertex_half_edge(Point(100, 1), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(100, 1), Point(101, 101), 1));
+      data.push_back(vertex_half_edge(Point(101, 101), Point(100, 1), -1));
+      data.push_back(vertex_half_edge(Point(101, 101), Point(1, 100), 1));
+
+      data.push_back(vertex_half_edge(Point(2, 2), Point(10, 2), -1));
+      data.push_back(vertex_half_edge(Point(2, 2), Point(2, 10), -1));
+      data.push_back(vertex_half_edge(Point(2, 10), Point(2, 2), 1));
+      data.push_back(vertex_half_edge(Point(2, 10), Point(10, 10), 1));
+      data.push_back(vertex_half_edge(Point(10, 2), Point(2, 2), 1));
+      data.push_back(vertex_half_edge(Point(10, 2), Point(10, 10), 1));
+      data.push_back(vertex_half_edge(Point(10, 10), Point(10, 2), -1));
+      data.push_back(vertex_half_edge(Point(10, 10), Point(2, 10), -1));
+
+      data.push_back(vertex_half_edge(Point(2, 12), Point(10, 12), -1));
+      data.push_back(vertex_half_edge(Point(2, 12), Point(2, 22), -1));
+      data.push_back(vertex_half_edge(Point(2, 22), Point(2, 12), 1));
+      data.push_back(vertex_half_edge(Point(2, 22), Point(10, 22), 1));
+      data.push_back(vertex_half_edge(Point(10, 12), Point(2, 12), 1));
+      data.push_back(vertex_half_edge(Point(10, 12), Point(10, 22), 1));
+      data.push_back(vertex_half_edge(Point(10, 22), Point(10, 12), -1));
+      data.push_back(vertex_half_edge(Point(10, 22), Point(2, 22), -1));
+
+      std::sort(data.begin(), data.end());
+      pf.scan(polys, data.begin(), data.end());
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
+      }
+      //pf2.scan(polys2, data.begin(), data.end());
+      //stdcout << "result size: " << polys2.size() << std::endl;
+      //for(std::size_t i = 0; i < polys2.size(); ++i) {
+      //  stdcout << polys2[i] << std::endl;
+      //}
+      stdcout << "done testing trapezoid formation\n";
+      return true;
+    }
+
+    template <typename stream_type>
+    static inline bool testTrapezoidArbitraryFormationSelfTouch1(stream_type& stdcout) {
+      stdcout << "testing trapezoid formation self touch 1\n";
+      trapezoid_arbitrary_formation pf;
+      std::vector<polygon_data<Unit> > polys;
+      std::vector<vertex_half_edge> data;
+      data.push_back(vertex_half_edge(Point(0, 0), Point(10, 0), 1));
+      data.push_back(vertex_half_edge(Point(0, 0), Point(0, 10), 1));
+
+      data.push_back(vertex_half_edge(Point(0, 10), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(0, 10), Point(5, 10), -1));
+
+      data.push_back(vertex_half_edge(Point(10, 0), Point(0, 0), -1));
+      data.push_back(vertex_half_edge(Point(10, 0), Point(10, 5), -1));
+
+      data.push_back(vertex_half_edge(Point(10, 5), Point(10, 0), 1));
+      data.push_back(vertex_half_edge(Point(10, 5), Point(5, 5), 1));
+
+      data.push_back(vertex_half_edge(Point(5, 10), Point(5, 5), 1));
+      data.push_back(vertex_half_edge(Point(5, 10), Point(0, 10), 1));
+      
+      data.push_back(vertex_half_edge(Point(5, 2), Point(5, 5), -1));
+      data.push_back(vertex_half_edge(Point(5, 2), Point(7, 2), -1));
+      
+      data.push_back(vertex_half_edge(Point(5, 5), Point(5, 10), -1));
+      data.push_back(vertex_half_edge(Point(5, 5), Point(5, 2), 1));
+      data.push_back(vertex_half_edge(Point(5, 5), Point(10, 5), -1));
+      data.push_back(vertex_half_edge(Point(5, 5), Point(7, 2), 1));
+      
+      data.push_back(vertex_half_edge(Point(7, 2), Point(5, 5), -1));
+      data.push_back(vertex_half_edge(Point(7, 2), Point(5, 2), 1));
+      
+      std::sort(data.begin(), data.end());
+      pf.scan(polys, data.begin(), data.end());
+      stdcout << "result size: " << polys.size() << std::endl;
+      for(std::size_t i = 0; i < polys.size(); ++i) {
+        stdcout << polys[i] << std::endl;
+      }
+      stdcout << "done testing trapezoid formation\n";
+      return true;
     }
   };
     

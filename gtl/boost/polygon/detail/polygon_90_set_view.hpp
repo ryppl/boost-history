@@ -267,11 +267,11 @@ namespace boost { namespace polygon{
   }
   
   struct y_ps90_a : gtl_yes {};
-#if 0
+
   template <typename geometry_type_1, typename geometry_type_2>
-  typename enable_if< typename gtl_if<typename gtl_and_3< y_ps90_a,
+  typename enable_if< typename gtl_and_3< y_ps90_a,
     typename is_polygon_90_set_type<geometry_type_1>::type,
-    typename is_polygon_90_set_type<geometry_type_2>::type>::type>::type,
+    typename is_polygon_90_set_type<geometry_type_2>::type>::type,
                        polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> >::type
   operator&(const geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return polygon_90_set_view<geometry_type_1, geometry_type_2, boolean_op::BinaryAnd> 
@@ -279,7 +279,7 @@ namespace boost { namespace polygon{
        polygon_90_set_traits<geometry_type_1>::orient(lvalue),
        boolean_op::BinaryAnd());
   }
-#endif
+
   struct y_ps90_x : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>

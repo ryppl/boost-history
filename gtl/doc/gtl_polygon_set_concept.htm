@@ -34,7 +34,9 @@
 			<li>Polygon Set Concept</li>
 			<li><a href="gtl_connectivity_extraction_90.htm">Connectivity Extraction 90</a></li>
 			<li><a href="gtl_connectivity_extraction_45.htm">Connectivity Extraction 45</a></li>
+			<li><a href="gtl_connectivity_extraction.htm">Connectivity Extraction</a></li>
 			<li><a href="gtl_property_merge_90.htm">Property Merge 90</a></li>
+			<li><a href="gtl_property_merge_45.htm">Property Merge_45</a></li>
 			<li><a href="gtl_property_merge.htm">Property Merge</a></li>
         </ul>
         <h3 class="navbar">Other Resources</h3>
@@ -79,6 +81,19 @@ or library provided polygon_set_data&lt;coordinate_type&gt; objects.&nbsp; Lists
 and vectors of models of polygon_concept or polygon_with_holes_concept are automatically models of polygon_set_concept.</p>
 <p>Example code <a href="gtl_custom_polygon_set.htm">custom_polygon_set.cpp</a> 
 		demonstrates mapping a user defined class to the library polygon_set_concept</p>
+<p>An object that is a model of <font face="Courier New">
+polygon_set_concept</font> can be viewed as a model of <font face="Courier New">
+polygon_90_set_concept</font> or <font face="Courier New">
+polygon_45_set_concept</font> if it is determined at runtime to conform to the 
+restrictions of those concepts.&nbsp; This concept casting is accomplished 
+through the <font face="Courier New">view_as&lt;&gt;()</font> function.</p>
+<p><font face="Courier New">view_as&lt;polygon_90_set_concept&gt;(polygon_set_object)<br>
+view_as&lt;polygon_45_set_concept&gt;(polygon_set_object)</font></p>
+<p>The return value of <font face="Courier New">view_as&lt;&gt;()</font> can be passed 
+into any interface that expects an object of the conceptual type specified in 
+its template parameter.&nbsp; Polygon sets cannot be viewed as single polygons 
+or rectangles since it generally cannot be known whether a polygon set contains 
+only a single polygon without converting to polygons.</p>
 <h2>Operators</h2>
 <p>The return type of some operators is the <font face="Courier New">polygon_set_view</font> 
 operator template type.&nbsp; This type is itself a model of the polygon 90 set 
@@ -173,6 +188,37 @@ together.</p>
 		<td>Same as operator-, but with self assignment, left operand must model 
 		polygon_set and not one of it's refinements.</td>
 	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T1&gt;<br>
+		T1 <b>operator</b>+(const T1&amp;, coordinate_type bloating)</font></td>
+		<td>Performs resize operation, inflating by bloating ammount.&nbsp; If 
+		negative the result is a shrink instead of bloat.&nbsp; Note: returns 
+		result by value.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
+		T2&gt;<br>
+		T1 <b>operator</b>-(const T1&amp;, coordinate_type shrinking)</font></td>
+		<td>Performs resize operation, deflating by bloating ammount.&nbsp; If 
+		negative the result is a bloat instead of shrink.&nbsp; Note: returns 
+		result by value.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
+		T2&gt;<br>
+		T1&amp; <b>operator</b>+=(const T1&amp;, coordinate_type bloating)</font></td>
+		<td>Performs resize operation, inflating by bloating ammount.&nbsp; If 
+		negative the result is a shrink instead of bloat.&nbsp; Returns 
+		reference to modified argument.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
+		T2&gt;<br>
+		T1&amp; <b>operator</b>-=(const T1&amp;, coordinate_type shrinking)</font></td>
+		<td>Performs resize operation, deflating by bloating ammount.&nbsp; If 
+		negative the result is a bloat instead of shrink.&nbsp; Returns 
+		reference to modified argument.</td>
+	</tr>
 	</table>
 <h2>Functions</h2>
 <table border="1" width="100%" id="table6">
@@ -192,6 +238,30 @@ together.</p>
 		refinements covers the exact same geometric regions as another object 
 		that models polygon_set or one of its refinements.&nbsp; For example: 
 		two of polygon objects.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename 
+		output_container_type, typename T&gt;<br>
+		void <b>get_trapezoids</b>(output_container_type&amp; output, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		const T&amp; polygon_set)</font></td>
+		<td>Output container is expected to be a standard container.&nbsp; 
+		Slices geometry of an object that models polygon_set or one of its 
+		refinements into non overlapping trapezoids along a vertical slicing 
+		orientation and appends them to the 
+		output, which must have a value type that models polygon or polygon_with_holes. </td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename 
+		output_container_type, typename T&gt;<br>
+		void <b>get_trapezoids</b>(output_container_type&amp; output, <br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		const T&amp; polygon_set,<br> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; orientation_2d orient)</font></td>
+		<td>Output container is expected to be a standard container.&nbsp; 
+		Slices geometry of an object that models polygon_set or one of its 
+		refinements into non overlapping trapezoids along a the specified slicing 
+		orientation and appends them to the 
+		output, which must have a value type that models polygon or polygon_with_holes. </td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename 
@@ -222,6 +292,32 @@ together.</p>
 		area_type <b>area</b>(const T&amp; polygon_set)</font></td>
 		<td>Computes the area covered by geometry in an object that models 
 		polygon_set</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
+		T&amp; <b>bloat</b>(T&amp; polygon_set, unsigned_area_type bloating)</font></td>
+		<td>Same as getting all the polygons, bloating them and putting them 
+		back.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
+		T&amp; <b>shrink</b>(T&amp; polygon_set, unsigned_area_type shrinking)</font></td>
+		<td>Same as getting all the polygons, shrinking them and overwriting 
+		the polygon set with the resulting regions.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">template &lt;typename T, typename 
+		coord_type&gt;<br>
+		T&amp; <b>resize</b>(T&amp; polygon_set, coord_type resizing,<br> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		bool corner_fill_arc = false, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		unsigned int num_circle_segments = 0)</font></td>
+		<td>Same as bloat if resizing is positive, same as shrink if resizing is 
+		negative.&nbsp; Original topology at acute angle vertices is preserved 
+		by default, segmented circular arcs are inserted if corner_fill_arc is 
+		true.&nbsp; num_circle_segments specifies number of segments to 
+		introduce on a full circle when filling acute angle corners with 
+		circular arcs.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
@@ -358,6 +454,25 @@ void <b>get</b>(output_container&amp; output) const</font></td>
 		boundary introduced by this fracture will be truncated downward.</td>
 	</tr>
 	<tr>
+		<td width="586"><font face="Courier New">
+template &lt;typename output_container&gt;<br>
+void <b>get_trapezoids</b>(output_container&amp; output) const</font></td>
+		<td>Expects a standard container of polygon objects.&nbsp; Will scan 
+		and eliminate overlaps.&nbsp; Slices polygon set geometry to trapezoids 
+		vertically and appends them to the container.</td>
+	</tr>
+	<tr>
+		<td width="586">
+<font face="Courier New">
+template &lt;typename output_container&gt;<br>
+void <b>get_trapezoids</b>(output_container&amp; output, <br>&nbsp; orientation_2d 
+slicing_orientation) const </font>
+		</td>
+		<td>Expects a standard container of polygon objects.&nbsp; Will scan 
+		and eliminate overlaps.&nbsp; Slices polygon set geometry to trapezoids 
+		along the given orientation and appends them to the container.</td>
+	</tr>
+	<tr>
 		<td width="586">
 <font face="Courier New">
 bool <b>operator==</b>(const polygon_set_data&amp; p) const</font></td>
@@ -403,6 +518,20 @@ bool <b>extents</b>(rectangle_type&amp; extents_rectangle) const</font></td>
 		<td>Given an object that models rectangle, scans and eliminates overlaps 
 		in the polygon set because subtractive regions may alter its extents 
 		then computes the bounding box and assigns it to extents_rectangle.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">
+polygon_set_data&amp;<br>
+<b>resize</b>(coord_type resizing,<br> 
+		&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; bool corner_fill_arc = false, <br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
+		unsigned int num_circle_segments = 0)</font></td>
+		<td>Inflates if resizing is positive, deflates if resizing is 
+		negative.&nbsp; Original topology at acute angle vertices is preserved 
+		by default, segmented circular arcs are inserted if corner_fill_arc is 
+		true.&nbsp; num_circle_segments specifies number of segments to 
+		introduce on a full circle when filling acute angle corners with 
+		circular arcs.&nbsp; Specifying zero for num_circle_segments results in 
+		only a single segment being inserted at acute corners.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">

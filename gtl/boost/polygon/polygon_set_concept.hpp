@@ -59,17 +59,28 @@ namespace boost { namespace polygon{
     return lvalue;
   }
 
-  //   //get trapezoids
-  //   template <typename output_container_type, typename polygon_set_type>
-  //   typename enable_if< typename gtl_if<typename is_polygon_set_type<polygon_set_type>::type>::type,
-  //                        void>::type
-  //   get_trapezoids(output_container_type& output, const polygon_set_type& polygon_set) {
-  //     //TODO
-  // //     clean(polygon_set);
-  // //     polygon_set_data<typename polygon_set_traits<polygon_set_type>::coordinate_type> ps;
-  // //     assign(ps, polygon_set);
-  // //     ps.get_trapezoids(output);
-  //   }
+  //get trapezoids
+  template <typename output_container_type, typename polygon_set_type>
+  template <typename polygon_set_type>
+  typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
+                      void>::type
+  get_trapezoids(output_container_type& output, const polygon_set_type& polygon_set) {
+    polygon_set_data<typename polygon_set_traits<polygon_set_type>::coordinate_type> ps;
+    assign(ps, polygon_set);
+    ps.get_trapezoids(output);
+  }
+
+  //get trapezoids
+  template <typename output_container_type, typename polygon_set_type>
+  template <typename polygon_set_type>
+  typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
+                      void>::type
+  get_trapezoids(output_container_type& output, const polygon_set_type& polygon_set,
+                 orientation_2d orient) {
+    polygon_set_data<typename polygon_set_traits<polygon_set_type>::coordinate_type> ps;
+    assign(ps, polygon_set);
+    ps.get_trapezoids(output, orient);
+  }
 
   //equivalence
   template <typename polygon_set_type_1, typename polygon_set_type_2>
@@ -137,6 +148,23 @@ namespace boost { namespace polygon{
       retval += area(polys[i]);
     }
     return retval;
+  }
+
+  //interact
+  template <typename polygon_set_type_1, typename polygon_set_type_2>
+  typename enable_if< typename gtl_and_3 < 
+    typename is_any_polygon_set_type<polygon_set_type_1>::type,
+    typename is_any_polygon_set_type<polygon_set_type_2>::type,
+    typename is_either_polygon_set_type<polygon_set_type_1, polygon_set_type_2>::type>::type,
+    polygon_set_type_1>::type&
+  interact(polygon_set_type_1& polygon_set_1, const polygon_set_type_2& polygon_set_2) {
+    polygon_set_data<typename polygon_set_traits<polygon_set_type_1>::coordinate_type> ps1;
+    assign(ps1, polygon_set_1);
+    polygon_set_data<typename polygon_set_traits<polygon_set_type_2>::coordinate_type> ps2;
+    assign(ps2, polygon_set_2);
+    ps1.interact(ps2);
+    assign(polygon_set_1, ps1);
+    return polygon_set_1;
   }
 
   template <typename polygon_set_type>
@@ -258,7 +286,7 @@ namespace boost { namespace polygon{
   }
 
   struct yes_ps_oa : gtl_yes {};
-#if 0
+
   template <typename geometry_type_1, typename geometry_type_2>
   typename enable_if< typename gtl_and_4 < yes_ps_oa,
     typename is_any_polygon_set_type<geometry_type_1>::type,
@@ -269,7 +297,7 @@ namespace boost { namespace polygon{
     return polygon_set_view<geometry_type_1, geometry_type_2, 1>
       (lvalue, rvalue);
   }
-#endif
+
   struct yes_ps_ox : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>

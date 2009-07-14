@@ -2542,6 +2542,163 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
     return true;
   }
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+  template <typename Unit, typename property_type>
+  class arbitrary_connectivity_extraction : public scanline_base<Unit> {
+  private:
+    
+    typedef typename scanline_base<Unit>::Point Point;
+    
+    //the first point is the vertex and and second point establishes the slope of an edge eminating from the vertex
+    //typedef std::pair<Point, Point> half_edge;
+    typedef typename scanline_base<Unit>::half_edge half_edge;
+
+    //scanline comparator functor
+    typedef typename scanline_base<Unit>::less_half_edge less_half_edge;
+    typedef typename scanline_base<Unit>::less_point less_point;
+
+    //this data structure assocates a property and count to a half edge
+    typedef std::pair<half_edge, std::pair<property_type, int> > vertex_property;
+    //this data type stores the combination of many half edges
+    typedef std::vector<vertex_property> property_merge_data;
+
+    //this is the data type used internally to store the combination of property counts at a given location
+    typedef std::vector<std::pair<property_type, int> > property_map;
+    //this data type is used internally to store the combined property data for a given half edge
+    typedef std::pair<half_edge, property_map> vertex_data;
+
+    property_merge_data pmd;
+
+    template<typename vertex_data_type>
+    class less_vertex_data {
+    public:
+      less_vertex_data() {}
+      bool operator()(const vertex_data_type& lvalue, const vertex_data_type& rvalue) {
+        less_point lp;
+        if(lp(lvalue.first.first, rvalue.first.first)) return true;
+        if(lp(rvalue.first.first, lvalue.first.first)) return false;
+        Unit x = lvalue.first.first.get(HORIZONTAL);
+        int just_before_ = 0;
+        less_half_edge lhe(&x, &just_before_);
+        return lhe(lvalue.first, rvalue.first);
+      }
+    };
+
+
+    template <typename cT>
+    static void process_previous_x(cT& output) {
+      std::map<point_data<Unit>, std::set<property_type> >& y_prop_map = output.first.second;
+      if(y_prop_map.empty()) return;
+      Unit x = output.first.first;
+      for(typename std::map<point_data<Unit>, std::set<property_type> >::iterator itr = 
+            y_prop_map.begin(); itr != y_prop_map.end(); ++itr) {
+        if((*itr).first.x() != x) {
+          y_prop_map.erase(y_prop_map.begin(), itr);
+          break;
+        }
+        for(typename std::set<property_type>::iterator inner_itr = itr->second.begin();
+            inner_itr != itr->second.end(); ++inner_itr) {
+          std::set<property_type>& output_edges = (*(output.second))[*inner_itr];
+          typename std::set<property_type>::iterator inner_inner_itr = inner_itr;
+          ++inner_inner_itr;
+          for( ; inner_inner_itr != itr->second.end(); ++inner_inner_itr) {
+            output_edges.insert(output_edges.end(), *inner_inner_itr);
+            std::set<property_type>& output_edges_2 = (*(output.second))[*inner_inner_itr];
+            output_edges_2.insert(output_edges_2.end(), *inner_itr);
+          }
+        }
+      }
+    }
+    
+    template <typename result_type, typename key_type>
+    class connectivity_extraction_output_functor {
+    public:
+      connectivity_extraction_output_functor() {}
+      void operator()(result_type& result, const half_edge& edge, const key_type& left, const key_type& right) {
+        Unit& x = result.first.first;
+        std::map<point_data<Unit>, std::set<property_type> >& y_prop_map = result.first.second;
+        point_data<Unit> pt = edge.first;
+        if(pt.x() != x) process_previous_x(result);
+        x = pt.x();
+        std::set<property_type>& output_set = y_prop_map[pt];
+        {
+          for(typename key_type::const_iterator itr1 = 
+                left.begin(); itr1 != left.end(); ++itr1) {
+            output_set.insert(output_set.end(), *itr1);
+          }
+          for(typename key_type::const_iterator itr2 = 
+                right.begin(); itr2 != right.end(); ++itr2) {
+            output_set.insert(output_set.end(), *itr2);
+          }
+        }
+        std::set<property_type>& output_set2 = y_prop_map[edge.second];
+        for(typename key_type::const_iterator itr1 = 
+              left.begin(); itr1 != left.end(); ++itr1) {
+          output_set2.insert(output_set2.end(), *itr1);
+        }
+        for(typename key_type::const_iterator itr2 = 
+              right.begin(); itr2 != right.end(); ++itr2) {
+          output_set2.insert(output_set2.end(), *itr2);
+        }
+      }
+    };
+
+    inline void sort_property_merge_data() {
+      less_vertex_data<vertex_property> lvd;
+      std::sort(pmd.begin(), pmd.end(), lvd);
+    }
+  public:
+    inline arbitrary_connectivity_extraction() : pmd() {}
+    inline arbitrary_connectivity_extraction
+    (const arbitrary_connectivity_extraction& pm) : pmd(pm.pmd) {}
+    inline arbitrary_connectivity_extraction& operator=
+      (const arbitrary_connectivity_extraction& pm) { pmd = pm.pmd; return *this; }
+
+    template <typename result_type>
+    inline void execute(result_type& result) {
+      //intersect data
+      property_merge_data tmp_pmd;
+      line_intersection<Unit>::validate_scan(tmp_pmd, pmd.begin(), pmd.end());
+      pmd.swap(tmp_pmd);
+      sort_property_merge_data();
+      scanline<Unit, property_type, std::vector<property_type> > sl;
+      std::pair<std::pair<Unit, std::map<point_data<Unit>, std::set<property_type> > >, 
+        result_type*> output
+        (std::make_pair(std::make_pair((std::numeric_limits<Unit>::max)(), 
+                                       std::map<point_data<Unit>, 
+                                       std::set<property_type> >()), &result));
+      connectivity_extraction_output_functor<std::pair<std::pair<Unit, 
+        std::map<point_data<Unit>, std::set<property_type> > >, result_type*>, 
+        std::vector<property_type> > ceof;
+      sl.scan(output, ceof, pmd.begin(), pmd.end());
+      process_previous_x(output);
+    }
+
+    inline void clear() {*this = arbitrary_connectivity_extraction();}
+
+    template <typename iT>
+    void populateTouchSetData(iT begin, iT end, 
+                                     property_type property) {
+      for( ; begin != end; ++begin) {
+        pmd.push_back(vertex_property(half_edge((*begin).first.first, (*begin).first.second), 
+                                      std::pair<property_type, int>(property, (*begin).second)));
+      }
+    }
+
+  };
+
 }  
 }
 #endif

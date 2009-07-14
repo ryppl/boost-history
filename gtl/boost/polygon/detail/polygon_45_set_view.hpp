@@ -205,7 +205,7 @@ namespace boost { namespace polygon{
   }
 
   struct y_ps45_a : gtl_yes {};
-#if 0
+
   template <typename geometry_type_1, typename geometry_type_2>
   typename enable_if< typename gtl_and_4< y_ps45_a, typename is_polygon_45_or_90_set_type<geometry_type_1>::type,
                                            typename is_polygon_45_or_90_set_type<geometry_type_2>::type,
@@ -215,7 +215,7 @@ namespace boost { namespace polygon{
     return polygon_45_set_view<geometry_type_1, geometry_type_2, 1>
       (lvalue, rvalue);
   }
-#endif
+
   struct y_ps45_x : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>

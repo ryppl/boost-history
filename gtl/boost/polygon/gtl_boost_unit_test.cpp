@@ -1291,6 +1291,143 @@ bool test_45_concept_interact() {
   return true;
 }
 
+bool test_aa_touch() {
+  using namespace gtl;
+  connectivity_extraction<int> ce;
+  rectangle_data<int> rect1(0, 0, 10, 10);
+  rectangle_data<int> rect2(5, 5, 15, 15);
+  rectangle_data<int> rect3(5, 20, 15, 25);
+  ce.insert(rect1);
+  ce.insert(rect2);
+  ce.insert(rect3);
+  std::vector<std::set<int> > graph(3);
+  ce.extract(graph);
+  if(graph[0].size() == 1 && graph[1].size() == 1 && graph[2].size() == 0) {
+    std::set<int>::iterator itr = graph[0].begin();
+    std::cout << *itr << std::endl;
+    std::set<int>::iterator itr1 = graph[1].begin();
+    std::cout << *itr1 << std::endl;
+    return true;
+  }
+  std::cout << "test failed\n";
+  return false;
+}
+
+bool test_aa_touch_ur() {
+  using namespace gtl;
+  connectivity_extraction<int> ce;
+  rectangle_data<int> rect1(0, 0, 5, 5);
+  rectangle_data<int> rect2(5, 5, 10, 10);
+  ce.insert(rect1);
+  ce.insert(rect2);
+  std::vector<std::set<int> > graph(2);
+  ce.extract(graph);
+  if(graph[0].size() == 1 && graph[1].size() == 1) {
+    std::set<int>::iterator itr = graph[0].begin();
+    std::cout << *itr << std::endl;
+    std::set<int>::iterator itr1 = graph[1].begin();
+    std::cout << *itr1 << std::endl;
+    return true;
+  }
+  std::cout << "test failed\n";
+  return false;
+}
+
+bool test_aa_touch_ur2() {
+  using namespace gtl;
+  connectivity_extraction<int> ce;
+  rectangle_data<int> rect2(5, 5, 10, 10);
+  point_data<int> pts[3] = {
+    point_data<int>(0, 0),
+    point_data<int>(5, 5),
+    point_data<int>(0, 5)
+  };
+  polygon_data<int> poly;
+  poly.set(pts, pts+3);
+  ce.insert(poly);
+  ce.insert(rect2);
+  std::vector<std::set<int> > graph(2);
+  ce.extract(graph);
+  if(graph[0].size() == 1 && graph[1].size() == 1) {
+    std::set<int>::iterator itr = graph[0].begin();
+    std::cout << *itr << std::endl;
+    std::set<int>::iterator itr1 = graph[1].begin();
+    std::cout << *itr1 << std::endl;
+    return true;
+  }
+  std::cout << "test failed\n";
+  return false;
+}
+
+bool test_aa_touch_r() {
+  using namespace gtl;
+  connectivity_extraction<int> ce;
+  rectangle_data<int> rect1(0, 0, 5, 5);
+  rectangle_data<int> rect2(5, 0, 10, 5);
+  ce.insert(rect1);
+  ce.insert(rect2);
+  std::vector<std::set<int> > graph(2);
+  ce.extract(graph);
+  if(graph[0].size() == 1 && graph[1].size() == 1) {
+    std::set<int>::iterator itr = graph[0].begin();
+    std::cout << *itr << std::endl;
+    std::set<int>::iterator itr1 = graph[1].begin();
+    std::cout << *itr1 << std::endl;
+    return true;
+  }
+  std::cout << "test failed\n";
+  return false;
+}
+
+bool test_aa_touch_boundaries() {
+  using namespace gtl;
+  connectivity_extraction<int> ce;
+  rectangle_data<int> rect1(0, 0, 10, 10);
+  rectangle_data<int> rect2(10, 0, 20, 10);
+  rectangle_data<int> rect3(20, 0, 30, 10);
+  rectangle_data<int> rect4(0, 10, 10, 20);
+  rectangle_data<int> rect5(10, 10, 20, 20);
+  rectangle_data<int> rect6(20, 10, 30, 20);
+  rectangle_data<int> rect7(0, 20, 10, 30);
+  rectangle_data<int> rect8(10, 20, 20, 30);
+  rectangle_data<int> rect9(20, 20, 30, 30);
+  ce.insert(rect1);
+  ce.insert(rect2);
+  ce.insert(rect3);
+  ce.insert(rect4);
+  ce.insert(rect5);
+  ce.insert(rect6);
+  ce.insert(rect7);
+  ce.insert(rect8);
+  ce.insert(rect9);
+  std::vector<std::set<int> > graph(9);
+  ce.extract(graph);
+  for(unsigned int i = 0; i < 9; ++i) {
+    std::cout << i << ": ";
+    for(std::set<int>::iterator itr = graph[i].begin(); itr != graph[i].end(); ++itr) {
+      std::cout << *itr << " ";
+    } std::cout << std::endl;
+  }
+  if(graph[0].size() == 3 && graph[1].size() == 5 && graph[2].size() == 3 &&
+     graph[3].size() == 5 && graph[4].size() == 8 && graph[5].size() == 5 &&
+     graph[6].size() == 3 && graph[7].size() == 5 && graph[8].size() == 3) {
+    return true;
+  }
+  std::cout << "test failed\n";
+  return false;
+}
+
+bool test_aa_concept_interact() {
+  using namespace gtl;
+  std::vector<polygon_data<int> > polys;
+  polys += rectangle_data<int>(10, 10, 20, 20);
+  polys += rectangle_data<int>(15, 15, 25, 25);
+  polys += rectangle_data<int>(5, 25, 10, 35);
+  interact(polys, rectangle_data<int>(0, 0, 13, 13));
+  if(polys.size() != 1) return false;
+  return true;
+}
+
 bool test_get_rectangles() {
   using namespace gtl;
   polygon_90_set_data<int> ps(VERTICAL);
@@ -3089,7 +3226,7 @@ int main() {
   int i = 0;
   for(std::map<std::set<int>, polygon_45_set_data<int> >::iterator itr = result.begin();
       itr != result.end(); ++itr) {
-    for(std::set<int>::iterator itr2 = (*itr).first.begin();
+    for(std::set<int>::const_iterator itr2 = (*itr).first.begin();
         itr2 != (*itr).first.end(); ++itr2) {
       std::cout << *itr2 << " ";
     } std::cout << " : ";
@@ -3138,6 +3275,60 @@ int main() {
     ++i;
   }
   }
+  {
+  std::cout << trapezoid_arbitrary_formation<int>::testTrapezoidArbitraryFormationRect(std::cout) << std::endl;
+  std::cout << trapezoid_arbitrary_formation<int>::testTrapezoidArbitraryFormationP1(std::cout) << std::endl;
+  std::cout << trapezoid_arbitrary_formation<int>::testTrapezoidArbitraryFormationP2(std::cout) << std::endl;
+  std::cout << trapezoid_arbitrary_formation<int>::testTrapezoidArbitraryFormationPolys(std::cout) << std::endl;
+  std::cout << polygon_arbitrary_formation<int>::testPolygonArbitraryFormationSelfTouch1(std::cout) << std::endl;
+  std::cout << trapezoid_arbitrary_formation<int>::testTrapezoidArbitraryFormationSelfTouch1(std::cout) << std::endl;
+  typedef rectangle_data<int> Rectangle;
+  polygon_set_data<int> ps;
+  ps += Rectangle(0, 1, 10, 11);
+  ps += Rectangle(5, 6, 15, 16);
+  std::vector<polygon_data<int> > polys;
+  ps.get_trapezoids(polys);
+  for(unsigned int i = 0; i < polys.size(); ++i) {
+    std::cout << polys[i] << std::endl;
+  }
+  ps.transform(axis_transformation(axis_transformation::FLIP_X));
+  polys.clear();
+  ps.get_trapezoids(polys);
+  for(unsigned int i = 0; i < polys.size(); ++i) {
+    std::cout << polys[i] << std::endl;
+  }
+  polys.clear();
+  ps.get_trapezoids(polys, HORIZONTAL);
+  for(unsigned int i = 0; i < polys.size(); ++i) {
+    std::cout << polys[i] << std::endl;
+  }
+  }
+
+  if(!test_aa_touch()) {
+    std::cout << "test_aa_touch failed\n";
+    return 1;
+  }
+  if(!test_aa_touch_ur()) {
+    std::cout << "test_aa_touch_ur failed\n";
+    return 1;
+  }
+  if(!test_aa_touch_ur2()) {
+    std::cout << "test_aa_touch_ur failed\n";
+    return 1;
+  }
+  if(!test_aa_touch_r()) {
+    std::cout << "test_aa_touch_r failed\n";
+    return 1;
+  }
+  if(!test_aa_touch_boundaries()) {
+    std::cout << "test_aa_touch_boundaries failed\n";
+    return 1;
+  }
+  if(!test_aa_concept_interact()) {
+    std::cout << "test_aa_concept_interact failed\n";
+    return 1;
+  }
+
   std::cout << "ALL TESTS COMPLETE\n";
   return 0;
 }

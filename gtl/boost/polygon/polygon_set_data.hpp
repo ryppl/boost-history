@@ -205,6 +205,40 @@ namespace boost { namespace polygon{
       get_dispatch(output, typename geometry_concept<typename output_container::value_type>::type());
     }
 
+    // append to the container cT with polygons of three or four verticies
+    // slicing orientation is vertical
+    template <class cT>
+    void get_trapezoids(cT& container) const {
+      clean();
+      trapezoid_arbitrary_formation<coordinate_type> pf;
+      typedef typename polygon_arbitrary_formation<coordinate_type>::vertex_half_edge vertex_half_edge;
+      std::vector<vertex_half_edge> data;
+      for(iterator_type itr = data_.begin(); itr != data_.end(); ++itr){
+        data.push_back(vertex_half_edge((*itr).first.first, (*itr).first.second, (*itr).second));
+        data.push_back(vertex_half_edge((*itr).first.second, (*itr).first.first, -1 * (*itr).second));
+      }
+      std::sort(data.begin(), data.end());
+      pf.scan(container, data.begin(), data.end());
+      //std::cout << "DONE FORMING POLYGONS\n";
+    }
+
+    // append to the container cT with polygons of three or four verticies
+    template <class cT>
+    void get_trapezoids(cT& container, orientation_2d slicing_orientation) const {
+      if(slicing_orientation == VERTICAL) {
+        get_trapezoids(container);
+      } else {
+        polygon_set_data<T> ps(*this);
+        ps.transform(axis_transformation(axis_transformation::SWAP_XY));
+        cT result;
+        ps.get_trapezoids(result);
+        for(typename cT::iterator itr = result.begin(); itr != result.end(); ++itr) {
+          ::boost::polygon::transform(*itr, axis_transformation(axis_transformation::SWAP_XY));
+        }
+        container.insert(container.end(), result.begin(), result.end());
+      }
+    }
+
     // equivalence operator 
     inline bool operator==(const polygon_set_data& p) const {
       clean();
@@ -296,9 +330,12 @@ namespace boost { namespace polygon{
     template <typename transform_type>
     inline polygon_set_data& 
     transform(const transform_type& tr) {
-      for(typename value_type::iterator itr = data_.begin(); itr != data_.end(); ++itr) {
-        ::boost::polygon::transform((*itr).first.first, tr);
-        ::boost::polygon::transform((*itr).first.second, tr);
+      std::vector<polygon_with_holes_data<T> > polys;
+      get(polys);
+      clear();
+      for(std::size_t i = 0 ; i < polys.size(); ++i) {
+        ::boost::polygon::transform(polys[i], tr);
+        insert(polys[i]);
       }
       unsorted_ = true;
       dirty_ = true;
@@ -336,6 +373,9 @@ namespace boost { namespace polygon{
       dirty_ = true;
       return *this;
     }
+
+    inline polygon_set_data&
+    interact(const polygon_set_data& that); 
 
     inline bool downcast(polygon_45_set_data<coordinate_type>& result) const {
       if(!is_45_) return false;
@@ -415,8 +455,6 @@ namespace boost { namespace polygon{
     }
   };
 
-
-
   struct polygon_set_concept;
   template <typename T>
   struct geometry_concept<polygon_set_data<T> > {
@@ -425,6 +463,70 @@ namespace boost { namespace polygon{
 }
 }
 #include "detail/scan_arbitrary.hpp"
+
+namespace boost { namespace polygon {
+  //ConnectivityExtraction computes the graph of connectivity between rectangle, polygon and
+  //polygon set graph nodes where an edge is created whenever the geometry in two nodes overlap
+  template <typename coordinate_type>
+  class connectivity_extraction{
+  private:
+    typedef arbitrary_connectivity_extraction<coordinate_type, int> ce;
+    ce ce_;
+    unsigned int nodeCount_;
+  public:
+    inline connectivity_extraction() : ce_(), nodeCount_(0) {}
+    inline connectivity_extraction(const connectivity_extraction& that) : ce_(that.ce_),
+                                                                          nodeCount_(that.nodeCount_) {}
+    inline connectivity_extraction& operator=(const connectivity_extraction& that) { 
+      ce_ = that.ce_; 
+      nodeCount_ = that.nodeCount_; {}
+      return *this;
+    }
+    
+    //insert a polygon set graph node, the value returned is the id of the graph node
+    inline unsigned int insert(const polygon_set_data<coordinate_type>& ps) {
+      ps.clean();
+      ce_.populateTouchSetData(ps.begin(), ps.end(), nodeCount_);
+      return nodeCount_++;
+    }
+    template <class GeoObjT>
+    inline unsigned int insert(const GeoObjT& geoObj) {
+      polygon_set_data<coordinate_type> ps;
+      ps.insert(geoObj);
+      return insert(ps);
+    }
+    
+    //extract connectivity and store the edges in the graph
+    //graph must be indexable by graph node id and the indexed value must be a std::set of
+    //graph node id
+    template <class GraphT>
+    inline void extract(GraphT& graph) {
+      ce_.execute(graph);
+    }
+  };
+
+  template <typename T>
+  polygon_set_data<T>&
+  polygon_set_data<T>::interact(const polygon_set_data<T>& that) {
+    connectivity_extraction<coordinate_type> ce;
+    std::vector<polygon_with_holes_data<T> > polys;
+    get(polys);
+    clear();
+    for(std::size_t i = 0; i < polys.size(); ++i) {
+      ce.insert(polys[i]);
+    }
+    int id = ce.insert(that);
+    std::vector<std::set<int> > graph(id+1);
+    ce.extract(graph);
+    for(std::set<int>::iterator itr = graph[id].begin();
+        itr != graph[id].end(); ++itr) {
+      insert(polys[*itr]);
+    }
+    return *this;
+  }
+}
+}
+
 #include "polygon_set_traits.hpp"
 #include "detail/polygon_set_view.hpp"
 

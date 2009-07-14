@@ -34,7 +34,9 @@
 			<li><a href="gtl_polygon_set_concept.htm">Polygon Set Concept</a></li>
 			<li><a href="gtl_connectivity_extraction_90.htm">Connectivity Extraction 90</a></li>
 			<li><a href="gtl_connectivity_extraction_45.htm">Connectivity Extraction 45</a></li>
+			<li><a href="gtl_connectivity_extraction.htm">Connectivity Extraction</a></li>
 			<li><a href="gtl_property_merge_90.htm">Property Merge 90</a></li>
+			<li><a href="gtl_property_merge_45.htm">Property Merge_45</a></li>
 			<li><a href="gtl_property_merge.htm">Property Merge</a></li>
         </ul>
         <h3 class="navbar">Other Resources</h3>
@@ -132,7 +134,19 @@ object is used with that type.&nbsp; For example, a triangle type could be
 registered as a polygon_concept and the read only traits but not the mutable 
 traits defined for that triangle type.&nbsp; This would allow the triangle type 
 to be passed into any API that expects a const reference to an object that models 
-polygon.&nbsp; <tr>
+polygon.&nbsp; 
+<p>An object that is a model of a given concept can usually be viewed as a model of any of its 
+refinements if it is determined at runtime to conform to the restrictions of 
+those concepts.&nbsp; This concept casting is accomplished through the
+<font face="Courier New">view_as&lt;&gt;()</font> function.&nbsp; For example if 
+an object of conceptual type polygon 90 has four sides it must be a rectangle, 
+and can be viewed as a rectangle with the following syntax:</p>
+<p><font face="Courier New">view_as&lt;rectangle_concept&gt;(polygon_90_object)</font></p>
+<p>The return value of <font face="Courier New">view_as&lt;&gt;()</font> can be 
+passed into any interface that expects an object of the conceptual type 
+specified in its template parameter.&nbsp; The exception to this ability to 
+concept cast geometric objects is that polygon set objects cannot be viewed as 
+individual polygons or rectangles.</p> <tr>
 <td style="background-color: rgb(238, 238, 238);" nowrap="1" valign="top">
     &nbsp;</td>
 <td style="padding-left: 10px; padding-right: 10px; padding-bottom: 10px;" valign="top" width="100%">
