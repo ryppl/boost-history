@@ -18,8 +18,8 @@ namespace test3 {
 template<typename Graph>
 void print_edge(typename Graph::edge_descriptor const& e, Graph const& g)
 {
-    std::cout << "\nEdge:\n" << "  Source: " << e.source_ << "\n";
-    std::cout << "  Target: " << e.target_ << "\n";
+    std::cout << "\nEdge:\n" << "  Source: " << e.source << "\n";
+    std::cout << "  Target: " << e.target << "\n";
 }
 } // namespace
 
@@ -56,6 +56,13 @@ int main()
                 weighted_graph::out_edge_iterator,
                 weighted_graph::out_edge_iterator
             > out_edge_wght_range;
+
+
+
+    ////////
+    // Concept checking
+
+
 
     ////////
     // Create function graphs
@@ -101,7 +108,7 @@ int main()
     while(in_edges_wght.first != in_edges_wght.second)
     {
         std::cout << boost::source(*in_edges_wght.first, weightedGraph)
-                  << " - 572 = " << (*in_edges_wght.first).result_
+                  << " - 572 = " << (*in_edges_wght.first).result
                   << "\n";
         ++in_edges_wght.first;
     }
@@ -127,7 +134,7 @@ int main()
         std::cout << "-2 - "
                   << boost::target(*out_edges_wght.first, weightedGraph)
                   << " = "
-                  << (*out_edges_wght.first).result_
+                  << (*out_edges_wght.first).result
                   << "\n";
         ++out_edges_wght.first;
     }

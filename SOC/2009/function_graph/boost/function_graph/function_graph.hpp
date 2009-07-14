@@ -29,6 +29,8 @@ namespace boost {
 
 template<typename Graph> struct function_graph_in_edge_iterator;
 template<typename Graph> struct function_graph_out_edge_iterator;
+template<typename Graph> struct function_graph_edge_iterator;
+template<typename Graph> struct function_graph_adjacency_iterator;
 
 /** @name Domain Tags
  * @description Traits that identify the function_graph as either having a
@@ -49,15 +51,15 @@ struct func_graph_edge {
     typedef Result result_type;
     typedef Vertex vertex_descriptor;
 
-    func_graph_edge(result_type result,
-                    vertex_descriptor source,
-                    vertex_descriptor target)
-        : result_(result), source_(source), target_(target)
+    func_graph_edge(result_type rslt,
+                    vertex_descriptor src,
+                    vertex_descriptor trg)
+        : result(rslt), source(src), target(trg)
     { }
 
-    result_type result_;
-    vertex_descriptor source_;
-    vertex_descriptor target_;
+    result_type result;
+    vertex_descriptor source;
+    vertex_descriptor target;
 };
 
 
@@ -103,9 +105,10 @@ bind_edge(optional<OptType> const& r, Vertex u, Vertex v)
 
 
 /** @name Function Graph Base
- * @description function_graph_base handles the edge function. A user can
- * define the function as a boost::function, but the user may only have access
- * to this function through the function graph via edge().
+ *
+ *  @description function_graph_base handles the edge function. A user can
+ *  define the function as a boost::function, but the user may only have access
+ *  to this function through the function graph via edge().
  */
 
 //@{
@@ -203,8 +206,10 @@ public:
     typedef Range vertex_iterator_range;
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
+    typedef function_graph_edge_iterator<This> edge_iterator;
     typedef function_graph_in_edge_iterator<This> in_edge_iterator;
     typedef function_graph_out_edge_iterator<This> out_edge_iterator;
+    typedef function_graph_adjacency_iterator<This> adjacency_iterator;
     typedef finite_domain_tag domain_category;
 
     /** Constructor: takes a functor and range */
@@ -272,12 +277,12 @@ struct function_graph<Result(Vertex, Vertex), infinite_domain_tag>
 template <typename Result, typename Vertex, typename Range>
 Vertex source(detail::func_graph_edge<Result, Vertex> const& e,
               function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
-{ return e.source_; }
+{ return e.source; }
 
 template <typename Result, typename Vertex, typename Range>
 Vertex target(detail::func_graph_edge<Result, Vertex> const& e,
               function_graph<function<Result(Vertex, Vertex)>, Range > const& g)
-{ return e.target_; }
+{ return e.target; }
 
 
 
@@ -619,15 +624,14 @@ public:
           in_edge_check_(true)
     {
         const vertex_iterator i_end = end(g_.range_);
-        const vertex_iterator i_begin = begin(g_.range_);
 
-        while(i_at_ != i_end && !edge(*i_begin, vertex_, g_).second)
+        while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second)
         { ++i_at_; }
         if(i_at_ == i_end)
         {
             in_edge_check_ = false;
-            i_at_ = i_begin;
-            while(i_begin != i_end && !edge(vertex_, *i_begin, g_).second)
+            i_at_ = begin(g_.range_);
+            while(i_at_ != i_end && !edge(vertex_, *i_at_, g_).second)
             {  ++i_at_; }
         }
     }
@@ -643,20 +647,19 @@ public:
     This& operator++()
     {
         const vertex_iterator i_end = end(g_.range_);
-        const vertex_iterator i_begin = begin(g_.range_);
 
         if(in_edge_check_)
         {
             do {
                 ++i_at_;
-            } while(i_at_ != i_end && !edge(*i_begin, vertex_, g_).second);
+            } while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second);
             if(i_at_ == i_end) in_edge_check_ = false;
         }
         if(!in_edge_check_)
         {
             do {
                 ++i_at_;
-            } while(i_at_ != i_end && !edge(vertex_, *i_begin, g_).second);
+            } while(i_at_ != i_end && !edge(vertex_, *i_at_, g_).second);
         }
 
         return *this;
@@ -665,6 +668,108 @@ public:
     vertex_descriptor operator*()
     {
         return *i_at_;
+    }
+
+    graph_type const& g_;
+    vertex_descriptor vertex_;
+    vertex_iterator i_at_;
+    bool in_edge_check_;
+};
+
+template<typename Graph>
+bool operator==(function_graph_adjacency_iterator<Graph> const& lhs,
+                function_graph_adjacency_iterator<Graph> const& rhs)
+{
+    return lhs.vertex_ == rhs.vertex_ &&
+           lhs.i_at_ == rhs.i_at_;
+}
+
+template<typename Graph>
+bool operator!=(function_graph_adjacency_iterator<Graph> const& lhs,
+                function_graph_adjacency_iterator<Graph> const& rhs)
+{
+    return !(lhs == rhs);
+}
+
+
+/** Adjacency Iterator - iterates through all of the edges adjacent to a vector
+ *  v.
+ *  @todo
+ */
+template<typename Graph>
+struct function_graph_edge_iterator {
+private:
+    typedef function_graph_edge_iterator<Graph> This;
+
+public:
+    typedef Graph graph_type;
+    typedef typename graph_type::vertex_iterator vertex_iterator;
+    typedef typename graph_type::edge_descriptor edge_descriptor;
+    typedef typename graph_type::vertex_descriptor vertex_descriptor;
+
+    /** Iterator traits */
+    typedef std::input_iterator_tag iterator_category;
+    typedef edge_descriptor value_type;
+    typedef std::size_t different_type;
+    typedef value_type* pointer;
+    typedef value_type& reference;
+
+    /** @name Constructor */
+    //@{
+    function_graph_edge_iterator(graph_type const& g,
+                                      vertex_descriptor const& vertex)
+        : g_(g),
+          vertex_(vertex),
+          i_at_(begin(g_.range_)),
+          in_edge_check_(true)
+    {
+        const vertex_iterator i_end = end(g_.range_);
+
+        while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second)
+        { ++i_at_; }
+        if(i_at_ == i_end)
+        {
+            in_edge_check_ = false;
+            i_at_ = begin(g_.range_);
+            while(i_at_ != i_end && !edge(vertex_, *i_at_, g_).second)
+            {  ++i_at_; }
+        }
+    }
+
+    function_graph_edge_iterator(This const& cp)
+        : g_(cp.g_),
+          vertex_(cp.vertex_),
+          i_at_(cp.i_at_),
+          in_edge_check_(cp.in_edge_check_)
+    { }
+    //@}
+
+    This& operator++()
+    {
+        const vertex_iterator i_end = end(g_.range_);
+
+        if(in_edge_check_)
+        {
+            do {
+                ++i_at_;
+            } while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second);
+            if(i_at_ == i_end) in_edge_check_ = false;
+        }
+        if(!in_edge_check_)
+        {
+            do {
+                ++i_at_;
+            } while(i_at_ != i_end && !edge(vertex_, *i_at_, g_).second);
+        }
+
+        return *this;
+    }
+
+    edge_descriptor operator*()
+    {
+        return in_edge_check_ ?
+                   edge(vertex_, *i_at_, g_).first :
+                   edge(*i_at_, vertex_, g_).first;
     }
 
     graph_type const& g_;
