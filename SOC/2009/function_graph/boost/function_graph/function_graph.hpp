@@ -22,7 +22,7 @@
 #include <boost/range/iterator.hpp>
 #include <iterator>
 
-/** Error checking */
+/** @todo REMOVE Error checking */
 #include <iostream>
 
 namespace boost {
@@ -32,13 +32,24 @@ template<typename Graph> struct function_graph_out_edge_iterator;
 template<typename Graph> struct function_graph_edge_iterator;
 template<typename Graph> struct function_graph_adjacency_iterator;
 
-/** @name Domain Tags
+/** function_graph tags
  * @description Traits that identify the function_graph as either having a
  * finite domain, a range, or having an infinite domain, no range.
  */
 
 struct finite_domain_tag { };
 struct infinite_domain_tag { };
+struct function_graph_traversal_tag
+    : public virtual incidence_graph_tag,
+      public virtual adjacency_graph_tag,
+      public virtual bidirectional_graph_tag,
+      public virtual vertex_list_graph_tag,
+      public virtual edge_list_graph_tag,
+      public virtual adjacency_matrix_tag
+{ };
+
+
+// @todo Is a meta-function has_finite_domain<G>::value useful?
 
 
 
@@ -161,7 +172,6 @@ struct function_graph_base_range {
 
 
 
-
 /** @name Function Graph
  * @description function_graph is a data structure that implements implicit
  * graphs and more.
@@ -202,7 +212,7 @@ public:
     typedef std::size_t vertices_size_type;
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
-    typedef adjacency_matrix_tag traversal_category;
+    typedef function_graph_traversal_tag traversal_category;
     typedef Range vertex_iterator_range;
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;

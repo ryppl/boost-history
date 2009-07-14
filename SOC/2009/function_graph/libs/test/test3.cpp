@@ -12,6 +12,10 @@
 #include "function_graph.hpp"
 #include <boost/range.hpp>
 #include <cassert>
+#include <boost/assert.hpp>
+#include <boost/graph/graph_traits.hpp>
+
+#define META_ASSERT(x) BOOST_ASSERT(x::value)
 
 namespace test3 {
 // print an edge
@@ -61,6 +65,20 @@ int main()
 
     ////////
     // Concept checking
+    META_ASSERT(boost::is_directed_graph<boolean_graph>);
+    META_ASSERT(boost::is_directed_graph<weighted_graph>);
+    META_ASSERT(!boost::is_multigraph<boolean_graph>);
+    META_ASSERT(!boost::is_multigraph<weighted_graph>);
+    META_ASSERT(boost::is_incidence_graph<boolean_graph>);
+    META_ASSERT(boost::is_incidence_graph<weighted_graph>);
+    META_ASSERT(boost::is_bidirectional_graph<boolean_graph>);
+    META_ASSERT(boost::is_bidirectional_graph<weighted_graph>);
+    META_ASSERT(boost::is_vertex_list_graph<boolean_graph>);
+    META_ASSERT(boost::is_vertex_list_graph<weighted_graph>);
+    META_ASSERT(boost::is_edge_list_graph<boolean_graph>);
+    META_ASSERT(boost::is_edge_list_graph<weighted_graph>);
+    META_ASSERT(boost::is_directed_bidirectional_graph<boolean_graph>);
+    META_ASSERT(boost::is_directed_bidirectional_graph<weighted_graph>);
 
 
 
