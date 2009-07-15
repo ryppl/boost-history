@@ -1,5 +1,6 @@
 * boost.task-0.2.2:
 -------------------
+- allow user-defined execution policies
 - private inheritance from noncopyable removed from task< R > and static_pool< R >
   copy-ctor and assignment-op private and unimplemented
   allowing correct move-semantics

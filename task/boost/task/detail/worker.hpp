@@ -49,8 +49,6 @@ struct worker_base
 
 	virtual void put( callable const&) = 0;
 
-	virtual bool try_take( callable &) = 0;
-
 	virtual bool try_steal( callable &) = 0;
 
 	virtual void signal_shutdown() = 0;
@@ -103,7 +101,7 @@ private:
 	void execute_( callable & ca)
 	{
 		BOOST_ASSERT( ! ca.empty() );
-		guard grd( get_pool().active_worker_);
+		guard grd( pool_.active_worker_);
 		{
 			context_guard lk( ca, thrd_);
 			ca();
@@ -112,56 +110,24 @@ private:
 		BOOST_ASSERT( ca.empty() );
 	}
 
-	void next_callable_( callable & ca)
-	{
-		if ( ! try_take( ca) )
-		{
-			if ( ! get_pool().channel_.try_take( ca) )
-			{
-				std::size_t idx( rnd_idx_() );
-				for ( std::size_t j( 0); j < get_pool().wg_.size(); ++j)
-				{
-					Worker other( get_pool().wg_[idx]);
-					if ( this_thread::get_id() == other.get_id() ) continue;
-					if ( ++idx >= get_pool().wg_.size() ) idx = 0;
-					if ( other.try_steal( ca) ) break;
-				}
+	bool next_global_callable_( callable & ca)
+	{ return pool_.channel_.try_take( ca); }
 
-				if ( ca.empty() )
-				{
-					guard grd( get_pool().idle_worker_);
-					if ( shutdown_() ) return;
-					++scns_;
-					if ( scns_ >= max_scns_)
-					{
-						if ( get_pool().size_() == get_pool().idle_worker_)
-							get_pool().channel_.take( ca, asleep_);
-						else
-							this_thread::sleep( asleep_);
-						scns_ = 0;
-					}
-					else
-						this_thread::yield();
-				}
-			}
-		}
-	}
-
-	void next_local_callable_( callable & ca)
+	bool next_local_callable_( callable & ca)
+	{ return wsq_.try_take( ca); }
+	
+	bool next_stolen_callable_( callable & ca)
 	{
-		if ( ! try_take( ca) )
+		std::size_t idx( rnd_idx_() );
+		for ( std::size_t j( 0); j < pool_.wg_.size(); ++j)
 		{
-			guard grd( get_pool().idle_worker_);
-			if ( shutdown_() ) return;
-			++scns_;
-			if ( scns_ >= max_scns_)
-			{
-				this_thread::sleep( asleep_);
-				scns_ = 0;
-			}
-			else
-				this_thread::yield();
+			Worker other( pool_.wg_[idx]);
+			if ( this_thread::get_id() == other.get_id() ) continue;
+			if ( ++idx >= pool_.wg_.size() ) idx = 0;
+			if ( other.try_steal( ca) )
+				return true;
 		}
+		return false;
 	}
 
 	bool shutdown_()
@@ -225,23 +191,8 @@ public:
 		wsq_.put( ca);
 	}
 
-	bool try_take( callable & ca)
-	{
-		callable tmp;
-		bool result( wsq_.try_take( tmp) );
-		if ( result)
-			ca = tmp;
-		return result;
-	}
-	
 	bool try_steal( callable & ca)
-	{
-		callable tmp;
-		bool result( wsq_.try_steal( tmp) );
-		if ( result)
-			ca = tmp;
-		return result;
-	}
+	{ return wsq_.try_steal( ca); }
 
 	Pool & get_pool() const
 	{ return pool_; }
@@ -253,11 +204,33 @@ public:
 		callable ca;
 		while ( ! shutdown_() )
 		{
-			next_callable_( ca);
-			if( ! ca.empty() )
+			if ( next_local_callable_( ca) || 
+				 next_global_callable_( ca) ||
+				 next_stolen_callable_( ca) )
 			{
+				BOOST_ASSERT( ! ca.empty() );
+
 				execute_( ca);
 				scns_ = 0;
+			}
+			else
+			{
+				guard grd( pool_.idle_worker_);
+				if ( shutdown_() ) return;
+				++scns_;
+				if ( scns_ >= max_scns_)
+				{
+					if ( pool_.size_() == pool_.idle_worker_)
+					{
+						pool_.channel_.take( ca, asleep_);
+						if ( ! ca.empty() ) execute_( ca);
+					}
+					else
+						this_thread::sleep( asleep_);
+					scns_ = 0;
+				}
+				else
+					this_thread::yield();
 			}
 		}
 	}
@@ -265,13 +238,25 @@ public:
 	void reschedule_until( function< bool() > const& pred)
 	{
 		callable ca;
-		while ( ! pred() )
+		while ( ! pred() && ! shutdown_() )
 		{
-			next_local_callable_( ca);
-			if( ! ca.empty() )
+			if ( next_local_callable_( ca) )
 			{
 				execute_( ca);
 				scns_ = 0;
+			}
+			else
+			{
+				guard grd( get_pool().idle_worker_);
+				if ( shutdown_() ) return;
+				++scns_;
+				if ( scns_ >= max_scns_)
+				{
+					this_thread::sleep( asleep_);
+					scns_ = 0;
+				}
+				else
+					this_thread::yield();
 			}
 		}
 	}
@@ -310,10 +295,7 @@ public:
 	void signal_shutdown_now();
 
 	void put( callable const&);
-	bool try_take( callable &);
 	bool try_steal( callable &);
-
-	void reschedule_until( function< bool() > const&);
 
 	template< typename Pool >
 	Pool & get_pool() const
@@ -324,6 +306,7 @@ public:
 	}
 
 	void run();
+	void reschedule_until( function< bool() > const&);
 
 	static worker * tss_get();
 };

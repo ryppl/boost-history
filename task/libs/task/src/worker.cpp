@@ -37,10 +37,6 @@ worker::put( callable const& ca)
 { impl_->put( ca); }
 
 bool
-worker::try_take( callable & ca)
-{ return impl_->try_take( ca); }
-
-bool
 worker::try_steal( callable & ca)
 { return impl_->try_steal( ca); }
 
