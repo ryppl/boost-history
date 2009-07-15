@@ -46,7 +46,10 @@ public:
         Laws_size 
     };
 
-    itl_set_validater() {setProfile();}
+    itl_set_validater() 
+	{
+		setProfile();
+	}
 
     void setProfile()
     {
@@ -121,7 +124,6 @@ public:
         summary += _violationsCount; 
         collector += _violations;  
     }
-
 
 private:
     ChoiceT        _lawChoice;

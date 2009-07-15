@@ -11,17 +11,20 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <iostream>
 #include <stdio.h>
+#include <boost/date_time/posix_time/posix_time.hpp>
+
 #include <boost/validate/loki_xt/Tuple.h>
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/validate/gentor/randomgentor.hpp>
 
+#include <boost/validate/validation_counts.hpp>
 #include <boost/validate/laws/monoid.hpp>
 #include <boost/validate/laws/law_violations.hpp>
 
 namespace boost{namespace itl
 {
-    typedef itl::map<std::string, int> ValidationCounterT;
+    typedef itl::map<std::string, validation_counts> ValidationCounterT;
     typedef itl::map<std::string, int> ViolationCounterT;
     typedef itl::map<std::string, PolyLawViolations> ViolationMapT;
 
@@ -50,19 +53,30 @@ namespace boost{namespace itl
 
     public:
 #ifdef _DEBUG
-        static const int default_trials_count = 20;
+        static const int default_trials_count = 10;
+        static const int default_repeat_count = 20;
 #else
-        static const int default_trials_count = 250;
+        static const int default_trials_count = 20;
+        static const int default_repeat_count = 10;
 #endif
-        LawValidater(){ setTrialsCount(default_trials_count); }
+        LawValidater()
+		{ 
+			_repeat_count   = GentorProfileSgl::it()->repeat_count(); 
+			_trials_count   = GentorProfileSgl::it()->trials_count(); 
+		}
 
-        void setTrialsCount(int trials) 
+        void settrials_count(int trials) 
         {
-            _trialsCount = trials;
-            _silentTrialsCount = std::max(1, _trialsCount / 10);
+            _trials_count = trials;
+            _silent_trials_count = std::max(1, _trials_count / 10);
         }
 
-        void setSilentTrialsCount(int trials) { _trialsCount = trials; }
+        void set_repeat_count(int repeats) 
+        {
+            _repeat_count = std::max(1, repeats);
+        }
+
+        void set_silent_trials_count(int trials) { _trials_count = trials; }
 
         void init();
         void run();
@@ -89,8 +103,9 @@ namespace boost{namespace itl
         input_gentor _gentor;
         LawT         _law;
 
-        int _trialsCount;
-        int _silentTrialsCount;
+        int _trials_count;
+        int _silent_trials_count;
+		int _repeat_count;
 
         LawViolationsT     _lawViolations;
         ValidationCounterT _frequencies;
@@ -107,6 +122,8 @@ namespace boost{namespace itl
         _violations.clear();
     }
 
+	// Runs law_instance_count * repeat_count validations on the law LawT
+	// law_instance_count: Number of instances that are validated for LawT
     template <class LawT, template<typename>class GentorT>
     void LawValidater<LawT, GentorT>::run()
     {
@@ -117,16 +134,31 @@ namespace boost{namespace itl
 
         // Input values that are to be generated on every iteration
         input_tuple values;
+		posix_time::ptime start, stop;
+		double validation_time = 0.0; //microseconds
 
-        for(int idx=0; idx<_trialsCount; idx++)
+        for(int idx=0; idx<_trials_count; idx++)
         {
-            // Apply the function SomeVale to each component of the input tuple
+            // Apply the function SomeValue to each component of the input tuple
             _gentor.template map_template<GentorT, SomeValue>(values);
             _law.setInstance(values);
 
-            if(!_law.holds())
+			bool law_is_violated = false;
+			start = posix_time::ptime(posix_time::microsec_clock::local_time());
+			// In order to measure small time intervals, evaluation must be repeated.
+			for(int repeat=0; repeat<_repeat_count; repeat++)
+				law_is_violated = !_law.holds();
+
+			stop = posix_time::ptime(posix_time::microsec_clock::local_time());
+			validation_time += static_cast<double>((stop - start).total_microseconds());
+
+            if(law_is_violated)
                 _lawViolations.insert(_law);
+
         }
+
+		// Average time for one law evaluation in micro seconds
+		double avg_validation_time = validation_time/(_trials_count * _repeat_count);
 
         if(!_lawViolations.empty())
         {
@@ -146,7 +178,9 @@ namespace boost{namespace itl
         else
         {
             //reportSuccess();
-            _frequencies.insert(ValidationCounterT::value_type(lawType(), 1));
+            _frequencies +=
+				ValidationCounterT::value_type(lawType(), 
+				                               validation_counts(avg_validation_time));
         }
 
     }
@@ -178,7 +212,7 @@ namespace boost{namespace itl
     template <class LawT, template<typename>class GentorT>
     void LawValidater<LawT, GentorT>::reportSuccess()const
     {
-        std::cout << "Law successfully validated for " << _trialsCount << " cases" << std::endl;
+        std::cout << "Law successfully validated for " << _trials_count << " cases" << std::endl;
     }
 
 }} // namespace itl boost

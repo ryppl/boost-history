@@ -314,6 +314,9 @@ public:
     SubType& add(const segment_type& interval_value_pair) 
     { that()->template add_<codomain_combine>(interval_value_pair); return *that(); }
 
+	/** Addition of an interval value pair \c interval_value_pair to the map. 
+	    Iterator \c prior_ is a hint to the position \c interval_value_pair can be 
+		inserted after. */
     iterator add(iterator prior_, const segment_type& interval_value_pair) 
     { return that()->template add_<codomain_combine>(prior_, interval_value_pair); }
 

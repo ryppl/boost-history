@@ -46,6 +46,11 @@ namespace boost{namespace itl
     class itl_driver
     {
     public:
+		itl_driver()
+		{
+			_laws_per_cycle = GentorProfileSgl::it()->laws_per_cycle();
+		}
+
         bool hasValidProfile()const { return _isValid; }
 
         virtual void setProfile() = 0;
@@ -59,9 +64,9 @@ namespace boost{namespace itl
 
             for(int idx=0; hasValidProfile(); idx++)
             {
-                if(idx>0 && idx % 100 == 0)
-                    reportFrequencies();
                 validateType();
+                if(idx>0 && idx % _laws_per_cycle == 0)
+                    reportFrequencies();
             }
         }
 
@@ -81,12 +86,23 @@ namespace boost{namespace itl
         {
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             int valid_count = 1;
+			double avg_evaluation_time = 0.0;
+			long   instance_count      = 0;
             FORALL(ValidationCounterT, it, _frequencies)
             {
-                printf("%3d %-66s%8d\n", valid_count, it->KEY_VALUE.c_str(), it->CONT_VALUE);
+				long law_validation_count = it->CONT_VALUE.count();
+				double avg_law_evaluation_time = 
+					it->CONT_VALUE.time()/(law_validation_count);
+                printf("%3d %-58s%9d%7.0lf\n", 
+					valid_count, it->KEY_VALUE.c_str(), law_validation_count, avg_law_evaluation_time);
+
+				avg_evaluation_time += avg_law_evaluation_time;
+				instance_count      += law_validation_count;
                 valid_count++;
             }
             std::cout << "------------------------------------------------------------------------------" << std::endl;
+                printf("    %-60s%7d%7.0lf\n", " ", instance_count, avg_evaluation_time/_frequencies.size());
+
             int violation_count = 1;
             FORALL(ViolationMapT, it, _violations)
             {
@@ -124,7 +140,10 @@ namespace boost{namespace itl
         }
 
     protected:
-        void setValid(bool truth) { _isValid = truth; }
+        void setValid(bool truth) 
+		{ 
+			_isValid = truth;
+		}
 
         void setRootTypeNames()
         {
@@ -178,11 +197,15 @@ namespace boost{namespace itl
         ChoiceT            _neutronizerChoice;
 
     private:
-        algebra_validater*  _validater;
+        algebra_validater* _validater;
         ValidationCounterT _frequencies;
         ViolationCounterT  _violationsCount;
         ViolationMapT      _violations;
         bool               _isValid;
+
+		int _laws_per_cycle; // After _laws_per_cycle times a cycle is
+		                     // done and times and frequencies of law 
+		                     // validations are reported for all instances.
     };
 
 

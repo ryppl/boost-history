@@ -169,7 +169,7 @@ inline void separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(const va
         iterator first_ = this->_set.lower_bound(addend),
                  last_  = insertion.ITERATOR,
                  end_   = insertion.ITERATOR; end_  ++;
-        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
         interval_type leftResid  = right_subtract(*first_, addend);
@@ -200,7 +200,7 @@ typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator
         iterator first_ = this->_set.lower_bound(addend),
                  last_  = insertion,
                  end_   = insertion; end_  ++;
-        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
         interval_type leftResid  = right_subtract(*first_, addend);

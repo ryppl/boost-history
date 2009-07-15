@@ -145,7 +145,7 @@ private:
     /// Treatment of adjoint intervals on insertion
     iterator handle_neighbours(iterator it_);
 
-    iterator join_segments(const iterator& left_, const iterator& right_);
+    iterator join_on_left(iterator& left_, const iterator& right_);
 } ;
 
 
@@ -181,7 +181,7 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
     {
         iterator it_nxt=it_; it_nxt++;
         if(it_nxt!=this->_set.end() && (*it_).touches(*it_nxt)) 
-            return join_segments(it_, it_nxt);
+            return join_on_left(it_, it_nxt);
     }
     else
     {
@@ -190,14 +190,14 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
 
         if((*pred_).touches(*it_)) 
         {
-            iterator it_extended = join_segments(pred_, it_);
+            iterator it_extended = join_on_left(pred_, it_);
 
             iterator succ_=it_extended; succ_++;
             if(succ_!=this->_set.end())
             {
                 // it's a non border element that might have two touching neighbours
                 if((*it_extended).touches(*succ_)) 
-                    return join_segments(it_extended, succ_);
+                    return join_on_left(it_extended, succ_);
 				else
 					return it_extended;
             }
@@ -211,7 +211,7 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
             {
                 // it's a non border element that might have a right touching neighbours
                 if((*it_).touches(*succ_)) 
-                    return join_segments(it_, succ_);
+                    return join_on_left(it_, succ_);
             }
         }
     }
@@ -224,7 +224,7 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator 
     interval_set<DomainT,Compare,Interval,Alloc>
-    ::join_segments(const iterator& left_, const iterator& right_)
+    ::join_on_left(iterator& left_, const iterator& right_)
 {
     // both left and right are in the set and they are neighbours
     BOOST_ASSERT((*left_).exclusive_less(*right_));
@@ -252,7 +252,7 @@ void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend
         iterator first_ = this->_set.lower_bound(addend),
                  last_  = insertion.ITERATOR,
                  end_   = insertion.ITERATOR; end_  ++;
-        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
         interval_type leftResid  = right_subtract(*first_, addend);
@@ -284,7 +284,7 @@ typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
         iterator first_ = this->_set.lower_bound(addend),
                  last_  = insertion,
                  end_   = insertion; end_  ++;
-        //BOOST_ASSERT(end_   == this->_map.upper_bound(inter_val));
+        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
         interval_type leftResid  = right_subtract(*first_, addend);

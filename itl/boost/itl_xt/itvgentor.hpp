@@ -31,6 +31,8 @@ class ItvGentorT
 #ifndef __ITVGENTOR_H_JOFA_000714__
 #define __ITVGENTOR_H_JOFA_000714__
 
+#undef min
+#undef max
 
 #include <boost/itl_xt/gentorit.hpp>
 #include <boost/itl_xt/numbergentor.hpp>

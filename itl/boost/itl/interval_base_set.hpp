@@ -248,6 +248,9 @@ public:
     SubType& add(const segment_type& inter_val) 
     { that()->add_(inter_val); return *that(); }
 
+	/** Add an interval of elements \c inter_val to the set. Iterator 
+	    \c prior_ is a hint to the position \c inter_val can be 
+		inserted after. */
     iterator add(iterator prior_, const segment_type& inter_val) 
     { return that()->add_(prior_, inter_val); }
 

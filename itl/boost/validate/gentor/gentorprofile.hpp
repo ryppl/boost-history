@@ -18,7 +18,11 @@ namespace boost{namespace itl
     class GentorProfile
     {
     public:
-        GentorProfile();
+		GentorProfile();
+
+		void set_defaults();
+		void set_debug_defaults();
+		void set_release_defaults();
 
         void set_range_int(int lwb, int upb) 
         { _range_int = interval<int>::rightopen(lwb, upb); }
@@ -36,6 +40,9 @@ namespace boost{namespace itl
         { _maxIntervalLength = val; }
         void set_range_element_ContainerSize(int lwb, int upb) 
         { _range_element_ContainerSize = interval<int>::rightopen(lwb, upb); }
+        void set_repeat_count(int repeat) { _repeat_count = repeat; }
+        void set_trials_count(int trials) { _trials_count = trials; }
+        void set_laws_per_cycle(int count){ _laws_per_cycle = count; }
 
         interval<int>       range_int()             { return _range_int; }
         interval<nat>       range_nat()             { return _range_nat; }
@@ -46,6 +53,9 @@ namespace boost{namespace itl
         int                 maxIntervalLength()     { return _maxIntervalLength; }
         interval<int>       range_element_ContainerSize()
                                                     { return _range_element_ContainerSize; }
+		int                 repeat_count()          { return _repeat_count; }
+		int                 trials_count()          { return _trials_count; }
+		int                 laws_per_cycle()            { return _laws_per_cycle; }
 
     private:
         interval<int>       _range_int;
@@ -58,7 +68,11 @@ namespace boost{namespace itl
         int                 _maxIntervalLength;
 
         interval<int>       _range_element_ContainerSize;
+		int                 _repeat_count;
+		int                 _trials_count;
+		int                 _laws_per_cycle;
     };
+
 
     class GentorProfileSgl // SINGLETON PATTERN
     {
@@ -67,8 +81,8 @@ namespace boost{namespace itl
         static GentorProfileSgl* it(); // function to call the unique instance
 
     protected:
-        GentorProfileSgl();            // default constructor is not callable from outside
-                        // preventing illegal instances
+        GentorProfileSgl(); // default constructor is not callable from outside
+                            // preventing illegal instances
 
     // specific interface ---------------------------------------------------------
     public:
@@ -81,6 +95,9 @@ namespace boost{namespace itl
         void set_maxIntervalLength(int val)            { m_profile.set_maxIntervalLength(val); }
         void set_range_element_ContainerSize(int lwb, int upb)   
                                                        { m_profile.set_range_element_ContainerSize(lwb, upb); }
+        void set_repeat_count(int repeat)              { m_profile.set_repeat_count(repeat); }
+        void set_trials_count(int trials)              { m_profile.set_trials_count(trials); }
+        void set_laws_per_cycle(int count)              { m_profile.set_laws_per_cycle(count); }
 
         interval<int>       range_int()                { return m_profile.range_int();           }
         interval<nat>       range_nat()                { return m_profile.range_nat();           }
@@ -90,6 +107,9 @@ namespace boost{namespace itl
         interval<double>    range_interval_double()    { return m_profile.range_interval_double();}
         int                 maxIntervalLength()        { return m_profile.maxIntervalLength();   }
         interval<int>       range_element_ContainerSize(){ return m_profile.range_element_ContainerSize(); }
+		int                 repeat_count()             { return m_profile.repeat_count(); }
+		int                 trials_count()             { return m_profile.trials_count(); }
+		int                 laws_per_cycle()           { return m_profile.laws_per_cycle(); }
 
 
     private:
