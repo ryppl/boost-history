@@ -21,8 +21,8 @@
 //  value_type/reference/pointer member typedefs (or specialization of boost::smart_pointer_traits)
 //  is_null_pointer() free function findable by ADL
 //  (in)equality comparison
-
-// FIXME: how to make boost::static/const/dynamic_pointer_cast support more types?
+//  adl_static/const/dynamic_pointer_cast findable by ADL if you want support for
+//   boost::static/const/dynamic_pointer_cast
 
 #include <boost/config.hpp>   // for broken compiler workarounds
 
@@ -39,6 +39,7 @@
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/get_pointer.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/pointer_cast.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/smart_ptr/detail/shared_count.hpp>
@@ -241,21 +242,21 @@ public:
 
     template<class Y>
     generic_shared(generic_shared<Y> const & r, boost::gs_detail::static_cast_tag):
-        px(static_pointer_cast<value_type>(r.px)),
+        px(adl_static_pointer_cast(r.px, boost::mpl::identity<pointer>())),
         pn(r.pn)
     {
     }
 
     template<class Y>
     generic_shared(generic_shared<Y> const & r, boost::gs_detail::const_cast_tag):
-        px(const_pointer_cast<value_type>(r.px)),
+        px(adl_const_pointer_cast(r.px, boost::mpl::identity<pointer>())),
         pn(r.pn)
     {
     }
 
     template<class Y>
     generic_shared(generic_shared<Y> const & r, boost::gs_detail::dynamic_cast_tag):
-        px(dynamic_pointer_cast<value_type>(r.px)),
+        px(adl_dynamic_pointer_cast(r.px, boost::mpl::identity<pointer>())),
         pn(r.pn)
     {
         using boost::is_null_pointer;
@@ -566,17 +567,53 @@ template<class T> inline void swap(generic_shared<T> & a, generic_shared<T> & b)
 
 template<class T, class U> generic_shared<T> static_pointer_cast(generic_shared<U> const & r)
 {
-    return generic_shared<T>(r, boost::gs_detail::static_cast_tag());
+    return adl_static_pointer_cast(r, boost::mpl::identity<generic_shared<T> >());
 }
 
 template<class T, class U> generic_shared<T> const_pointer_cast(generic_shared<U> const & r)
 {
-    return generic_shared<T>(r, boost::gs_detail::const_cast_tag());
+    return adl_const_pointer_cast(r, boost::mpl::identity<generic_shared<T> >());
 }
 
 template<class T, class U> generic_shared<T> dynamic_pointer_cast(generic_shared<U> const & r)
 {
+    return adl_dynamic_pointer_cast(r, boost::mpl::identity<generic_shared<T> >());
+}
+
+template<typename T, typename U>
+generic_shared<T> adl_static_pointer_cast(generic_shared<U> const & r, boost::mpl::identity<generic_shared<T> >)
+{
+    return generic_shared<T>(r, boost::gs_detail::static_cast_tag());
+}
+
+template<typename T, typename U>
+generic_shared<T> adl_const_pointer_cast(generic_shared<U> const & r, boost::mpl::identity<generic_shared<T> >)
+{
+    return generic_shared<T>(r, boost::gs_detail::const_cast_tag());
+}
+
+template<typename T, typename U>
+generic_shared<T> adl_dynamic_pointer_cast(generic_shared<U> const & r, boost::mpl::identity<generic_shared<T> >)
+{
     return generic_shared<T>(r, boost::gs_detail::dynamic_cast_tag());
+}
+
+template<typename T, typename U>
+T* adl_static_pointer_cast(U *r, boost::mpl::identity<T*>)
+{
+    return static_cast<T*>(r);
+}
+
+template<typename T, typename U>
+T* adl_const_pointer_cast(U *r, boost::mpl::identity<T*>)
+{
+    return const_cast<T*>(r);
+}
+
+template<typename T, typename U>
+T* adl_dynamic_pointer_cast(U *r, boost::mpl::identity<T*>)
+{
+    return dynamic_cast<T*>(r);
 }
 
 // get_pointer() enables boost::mem_fn to recognize generic_shared

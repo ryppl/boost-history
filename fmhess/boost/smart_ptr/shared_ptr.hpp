@@ -98,19 +98,20 @@ namespace boost
 			base_type::reset(static_cast<generic_shared<Y*> const &>(r), p);
 		}
 	};
+
 	template<class T, class U> shared_ptr<T> static_pointer_cast(shared_ptr<U> const & r)
 	{
-		return shared_ptr<T>(static_pointer_cast<generic_shared<U*> const &>(r));
+		return static_pointer_cast<T*>(static_cast<generic_shared<U*> const &>(r));
 	}
 
 	template<class T, class U> shared_ptr<T> const_pointer_cast(shared_ptr<U> const & r)
 	{
-		return shared_ptr<T>(const_pointer_cast<generic_shared<U*> const &>(r));
+		return const_pointer_cast<T*>(static_cast<generic_shared<U*> const &>(r));
 	}
 
 	template<class T, class U> shared_ptr<T> dynamic_pointer_cast(shared_ptr<U> const & r)
 	{
-		return shared_ptr<T>(dynamic_pointer_cast<generic_shared<U*> const &>(r));
+		return dynamic_pointer_cast<T*>(static_cast<generic_shared<U*> const &>(r));
 	}
 }
 
