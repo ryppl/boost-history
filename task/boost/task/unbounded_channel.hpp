@@ -135,7 +135,7 @@ private:
 		}
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		ca = queue_.pop();
+		queue_.pop( ca);
 		return ! ca.empty();
 	}
 
@@ -164,7 +164,7 @@ private:
 		}
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		ca = queue_.pop();
+		queue_.pop( ca);
 		return ! ca.empty();
 	}
 
@@ -172,7 +172,7 @@ private:
 	{
 		if ( deactive_now_() || empty_() )
 			return false;
-		ca = queue_.pop();
+		queue_.pop( ca);
 		return ! ca.empty();
 	}
 

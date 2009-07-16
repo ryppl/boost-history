@@ -33,4 +33,8 @@ void
 callable::reset( shared_ptr< thread > const& thrd)
 { impl_->reset( thrd); }
 
+void
+callable::swap( callable & other)
+{ impl_.swap( other.impl_); }
+
 }}

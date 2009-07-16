@@ -192,7 +192,7 @@ private:
 		}
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		ca = queue_.pop();
+		queue_.pop( ca);
 		if ( size_() <= lwm_)
 		{
 			if ( lwm_ == hwm_)
@@ -230,7 +230,7 @@ private:
 		}
 		if ( deactive_now_() || ( deactive_() && empty_() ) )
 			return false;
-		ca = queue_.pop();
+		queue_.pop( ca);
 		if ( size_() <= lwm_)
 		{
 			if ( lwm_ == hwm_)
@@ -247,7 +247,7 @@ private:
 	{
 		if ( deactive_now_() || empty_() )
 			return false;
-		ca = queue_.pop();
+		queue_.pop( ca);
 		bool valid = ! ca.empty();
 		if ( valid && size_() <= lwm_)
 		{

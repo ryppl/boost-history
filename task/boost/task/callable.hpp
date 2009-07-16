@@ -85,6 +85,8 @@ public:
 	void reset();
 
 	void reset( shared_ptr< thread > const&);
+
+	void swap( callable &);
 };
 
 class context_guard : private noncopyable

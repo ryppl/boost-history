@@ -11,7 +11,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/multi_index_container.hpp>
-#include <boost/multi_index/mem_fun.hpp>
+#include <boost/multi_index/member.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
 #include <boost/task/callable.hpp>
@@ -41,28 +41,26 @@ struct smart
 		typedef Ord			ordering;
 
 	public:
-		class item
+		struct item
 		{
-		private:
-			callable	ca_;
-			attribute	attr_;
+			callable	ca;
+			attribute	attr;
 	
-		public:
 			item()
-			: ca_(), attr_()
+			: ca(), attr()
 			{}
 
 			item(
-				callable const& ca,
-				attribute const& attr)
-			: ca_( ca), attr_( attr)
-			{ BOOST_ASSERT( ! ca_.empty() ); }
-	
-			const callable ca() const
-			{ return ca_; }
-	
-			const attribute attr() const
-			{ return attr_; }
+				callable const& ca_,
+				attribute const& attr_)
+			: ca( ca_), attr( attr_)
+			{ BOOST_ASSERT( ! ca.empty() ); }
+
+			void swap( item & other)
+			{
+				ca.swap( other.ca);
+				std::swap( attr, other.attr);
+			}
 		};
 	
 	private:
@@ -70,9 +68,9 @@ struct smart
 			item,
 			multi_index::indexed_by<
 				multi_index::ordered_non_unique<
-					multi_index::const_mem_fun<
+					multi_index::member<
 						item,
-						const attribute,
+						attribute,
 						& item::attr
 					>,
 					ordering
@@ -103,11 +101,11 @@ struct smart
 		void push( item const& itm)
 		{ enq_op_( idx_, itm); }
 	
-		const callable pop()
+		void pop( callable & ca)
 		{
 			item itm;
 			deq_op_( idx_, itm);
-			return itm.ca();
+			ca.swap( itm.ca);
 		}
 	
 		std::size_t size() const
@@ -142,7 +140,7 @@ struct replace_oldest
 	void operator()( Index & idx, Item const& itm)
 	{
 		typedef typename Index::iterator iterator;
-		iterator i( idx.find( itm.attr() ) );
+		iterator i( idx.find( itm.attr) );
 		if ( i == idx.end() )
 			idx.insert( itm);
 		else
@@ -152,6 +150,21 @@ struct replace_oldest
 
 struct take_oldest
 {
+	template< typename Item >
+	class swapper
+	{
+	private:
+		Item	&	itm_;
+
+	public:
+		swapper( Item & itm)
+		: itm_( itm)
+		{}
+
+		void operator()( Item & itm)
+		{ itm_.swap( itm); }
+	};
+
 	template<
 		typename Index,
 		typename Item
@@ -161,7 +174,7 @@ struct take_oldest
 		typedef typename Index::iterator	iterator;
 		iterator i( idx.begin() );
 		BOOST_ASSERT( i != idx.end() );
-		itm = * i;
+		idx.modify( i, swapper< Item >( itm) );
 		idx.erase( i);
 	}
 };

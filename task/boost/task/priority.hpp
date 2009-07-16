@@ -12,7 +12,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/multi_index_container.hpp>
-#include <boost/multi_index/mem_fun.hpp>
+#include <boost/multi_index/member.hpp>
 #include <boost/multi_index/ordered_index.hpp>
 
 #include <boost/task/callable.hpp>
@@ -38,24 +38,16 @@ struct priority
 		typedef Ord			ordering;
 
 	public:
-		class item
+		struct item
 		{
-		private:
-			callable	ca_;
-			attribute	attr_;
+			callable	ca;
+			attribute	attr;
 	
-		public:
 			item(
-				callable const& ca,
-				attribute const& attr)
-			: ca_( ca), attr_( attr)
-			{ BOOST_ASSERT( ! ca_.empty() ); }
-	
-			const callable ca() const
-			{ return ca_; }
-	
-			const attribute attr() const
-			{ return attr_; }
+				callable const& ca_,
+				attribute const& attr_)
+			: ca( ca_), attr( attr_)
+			{ BOOST_ASSERT( ! ca.empty() ); }
 		};
 	
 	private:
@@ -63,9 +55,9 @@ struct priority
 			item,
 			multi_index::indexed_by<
 				multi_index::ordered_non_unique<
-					multi_index::const_mem_fun<
+					multi_index::member<
 						item,
-						const attribute,
+						attribute,
 						& item::attr
 					>,
 					ordering
@@ -73,6 +65,20 @@ struct priority
 			>
 		>														list;
 		typedef typename list::template nth_index< 0 >::type	index;
+
+		class swapper
+		{
+		private:
+			callable	&	ca_;
+
+		public:
+			swapper( callable & ca)
+			: ca_( ca)
+			{}
+
+			void operator()( item & itm)
+			{ ca_.swap( itm.ca); }
+		};
 	
 		list		lst_;
 		index	&	idx_;
@@ -88,15 +94,14 @@ struct priority
 		{}
 	
 		void push( item const& itm)
-		{ idx_.insert( itm); }
+		{ lst_.insert( itm); }
 	
-		const callable pop()
+		void pop( callable & ca)
 		{
 			iterator i( lst_.begin() );
 			BOOST_ASSERT( i != lst_.end() );
-			item itm( * i);
+			lst_.modify( i, swapper( ca) );
 			lst_.erase( i);
-			return itm.ca();
 		}
 	
 		std::size_t size() const

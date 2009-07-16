@@ -110,13 +110,18 @@ private:
 		BOOST_ASSERT( ca.empty() );
 	}
 
-	bool next_global_callable_( callable & ca)
+	bool take_global_callable_(
+			callable & ca,
+			posix_time::time_duration const& asleep)
+	{ return pool_.channel_.take( ca, asleep); }
+
+	bool try_take_global_callable_( callable & ca)
 	{ return pool_.channel_.try_take( ca); }
 
-	bool next_local_callable_( callable & ca)
+	bool try_take_local_callable_( callable & ca)
 	{ return wsq_.try_take( ca); }
 	
-	bool next_stolen_callable_( callable & ca)
+	bool try_steal_other_callable_( callable & ca)
 	{
 		std::size_t idx( rnd_idx_() );
 		for ( std::size_t j( 0); j < pool_.wg_.size(); ++j)
@@ -204,12 +209,10 @@ public:
 		callable ca;
 		while ( ! shutdown_() )
 		{
-			if ( next_local_callable_( ca) || 
-				 next_global_callable_( ca) ||
-				 next_stolen_callable_( ca) )
+			if ( try_take_local_callable_( ca) || 
+				 try_take_global_callable_( ca) ||
+				 try_steal_other_callable_( ca) )
 			{
-				BOOST_ASSERT( ! ca.empty() );
-
 				execute_( ca);
 				scns_ = 0;
 			}
@@ -220,10 +223,12 @@ public:
 				++scns_;
 				if ( scns_ >= max_scns_)
 				{
+					// should the comparation be atomic or
+					// at least the read of idle_worker_ be atomic ?
 					if ( pool_.size_() == pool_.idle_worker_)
 					{
-						pool_.channel_.take( ca, asleep_);
-						if ( ! ca.empty() ) execute_( ca);
+						if ( take_global_callable_( ca, asleep_) )
+							execute_( ca);
 					}
 					else
 						this_thread::sleep( asleep_);
@@ -238,9 +243,9 @@ public:
 	void reschedule_until( function< bool() > const& pred)
 	{
 		callable ca;
-		while ( ! pred() && ! shutdown_() )
+		while ( ! pred() /* && ! shutdown_() */)
 		{
-			if ( next_local_callable_( ca) )
+			if ( try_take_local_callable_( ca) )
 			{
 				execute_( ca);
 				scns_ = 0;

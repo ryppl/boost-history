@@ -35,11 +35,10 @@ struct fifo
 		void push( item const& itm)
 		{ lst_.push_back( itm); }
 	
-		const item pop()
+		void pop( callable & ca)
 		{
-			item itm( lst_.front() );
+			ca.swap( lst_.front() );
 			lst_.pop_front();
-			return itm;
 		}
 	
 		std::size_t size() const
