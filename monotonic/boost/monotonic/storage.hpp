@@ -93,6 +93,7 @@ namespace boost
                 chain.clear();
             }
 
+/*
             struct Allocation
             {
                 size_t cursor;
@@ -146,7 +147,7 @@ namespace boost
                 //void *ptr = from_heap(num_bytes, alignment);
                 //return Allocation(&chain.front(), restore_point, ptr);
             }
-
+*/
         public:
             void *allocate(size_t num_bytes, size_t alignment = 1)
             {
