@@ -41,8 +41,8 @@ struct finite_domain_tag { };
 struct infinite_domain_tag { };
 struct function_graph_traversal_tag
     : public virtual incidence_graph_tag,
-      public virtual adjacency_graph_tag,
       public virtual bidirectional_graph_tag,
+      public virtual adjacency_graph_tag,
       public virtual vertex_list_graph_tag,
       public virtual edge_list_graph_tag,
       public virtual adjacency_matrix_tag
@@ -208,19 +208,19 @@ public:
     typedef typename Base::vertex_type vertex_descriptor;
     typedef typename Base::edge_type edge_descriptor;
     typedef typename Base::result_type result_type;
-    typedef std::size_t degree_size_type;
-    typedef std::size_t vertices_size_type;
+    typedef unsigned int degree_size_type;
+    typedef unsigned int vertices_size_type;
+    typedef unsigned int edges_size_type;
     typedef directed_tag directed_category;
     typedef disallow_parallel_edge_tag edge_parallel_category;
     typedef function_graph_traversal_tag traversal_category;
     typedef Range vertex_iterator_range;
     typedef typename range_iterator<vertex_iterator_range>::type
                          vertex_iterator;
-    typedef function_graph_edge_iterator<This> edge_iterator;
-    typedef std::size_t edges_size_type;
     typedef function_graph_in_edge_iterator<This> in_edge_iterator;
     typedef function_graph_out_edge_iterator<This> out_edge_iterator;
     typedef function_graph_adjacency_iterator<This> adjacency_iterator;
+    typedef function_graph_edge_iterator<This> edge_iterator;
     typedef finite_domain_tag domain_category;
 
     /** Constructor: takes a functor and range */
@@ -310,12 +310,12 @@ out_degree(typename FUNC_GRAPH::vertex_descriptor const& u, FUNC_GRAPH const& g)
     typedef typename Graph::vertex_iterator vertex_iterator;
     typedef typename FUNC_GRAPH::degree_size_type degree_size_type;
 
-    degree_size_type out_edges();
+    degree_size_type out_edges = 0;
     vertex_iterator vertex_at(begin(g.range_));
     vertex_iterator vertex_end(end(g.range_));
     for(;vertex_at != vertex_end; ++vertex_at)
     {
-        if(g.edge_(u, *vertex_at)) ++out_edges;
+        if(edge(u, *vertex_at, g).second) ++out_edges;
     }
 
     return out_edges;
@@ -329,17 +329,18 @@ in_degree(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
     typedef typename Graph::vertex_iterator vertex_iterator;
     typedef typename FUNC_GRAPH::degree_size_type degree_size_type;
 
-    degree_size_type in_edges();
+    degree_size_type in_edges = 0;
     vertex_iterator vertex_at(begin(g.range_));
     vertex_iterator vertex_end(end(g.range_));
     for(;vertex_at != vertex_end; ++vertex_at)
     {
-        if(g.edge_(*vertex_at, v)) ++in_edges;
+        if(edge(*vertex_at, v, g).second) ++in_edges;
     }
 
     return in_edges;
 }
 
+/** @note Should not rely on in_degree and out_degree */
 template<typename Result, typename Vertex, typename Range>
 typename FUNC_GRAPH::degree_size_type
 degree(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
@@ -629,10 +630,7 @@ public:
     //@{
     function_graph_adjacency_iterator(graph_type const& g,
                                       vertex_descriptor const& vertex)
-        : g_(g),
-          vertex_(vertex),
-          i_at_(begin(g_.range_)),
-          in_edge_check_(true)
+        : g_(g), vertex_(vertex), i_at_(begin(g_.range_)), in_edge_check_(true)
     {
         const vertex_iterator i_end = end(g_.range_);
 
@@ -646,6 +644,15 @@ public:
             {  ++i_at_; }
         }
     }
+
+    function_graph_adjacency_iterator(graph_type const& g,
+                                      vertex_descriptor const& vertex,
+                                      bool overload)
+        : g_(g),
+          vertex_(vertex),
+          i_at_(end(g.range_)),
+          in_edge_check_(false)
+    { }
 
     function_graph_adjacency_iterator(This const& cp)
         : g_(cp.g_),
@@ -702,6 +709,22 @@ bool operator!=(function_graph_adjacency_iterator<Graph> const& lhs,
     return !(lhs == rhs);
 }
 
+/** adjacent_vertices - returns a pair of adjacency iterators relative to v. */
+template <typename Graph>
+std::pair<
+    typename Graph::adjacency_iterator,
+    typename Graph::adjacency_iterator
+>
+adjacent_vertices(typename Graph::vertex_descriptor const& v, Graph const& g)
+{
+    typedef Graph graph_type;
+    typedef typename graph_type::adjacency_iterator adjacency_iterator;
+
+    return std::make_pair(adjacency_iterator(g, v),
+                          adjacency_iterator(g, v, true));
+}
+
+
 
 /** Edge Iterator - iterates through all edges */
 template<typename Graph>
@@ -729,18 +752,19 @@ public:
     {
         const vertex_iterator i_begin = begin(g_.range_);
         const vertex_iterator i_end = end(g_.range_);
-        bool not_done = true;
+        bool done = true;
 
-        for(vertex_iterator i_at_1 = i_begin;
-            i_at_1 != i_end && not_done;
-            ++i_at_1)
+        for(; i_at_1_ != i_end; ++i_at_1_)
         {
-            for(vertex_iterator i_at_2 = i_begin;
-                i_at_2 != i_end && not_done;
-                ++i_at_2)
+            for(; i_at_2_ != i_end; ++i_at_2_)
             {
-                if(edge(*i_at_1, *i_at_2, g).second) not_done = false;
+                if(edge(*i_at_1_, *i_at_2_, g).second)
+                {
+                    done = true;
+                    break;
+                }
             }
+            if(done) break;
         }
     }
 
@@ -758,16 +782,27 @@ public:
     {
         const vertex_iterator i_begin = begin(g_.range_);
         const vertex_iterator i_end = end(g_.range_);
-        bool not_done = true;
+        bool done = false;
 
-        do {
-            do {
-                ++i_at_2_;
-                not_done = !edge(*i_at_1_, *i_at_2_ , g_).second;
-            } while(i_at_2_ != i_end && not_done);
+        
+        if(++i_at_2_ == i_end)
+        {
             ++i_at_1_;
-            i_at_2_ = i_begin;
-        } while(i_at_1_ != i_end && not_done);
+            if(i_at_1_ != i_end) i_at_2_ = i_begin;
+        }
+
+        for(; i_at_1_ != i_end; ++i_at_1_)
+        {
+            for(; i_at_2_ != i_end; ++i_at_2_)
+            {
+                if(edge(*i_at_1_, *i_at_2_, g_).second)
+                {
+                    done = true;
+                    break;
+                }
+            }
+            if(done) break;
+        }
 
         return *this;
     }
@@ -826,7 +861,7 @@ num_edges(FUNC_GRAPH const& g)
     const vertex_iterator i_begin = begin(g.range_);
     const vertex_iterator i_end = end(g.range_);
 
-    edges_size_type edges_count();
+    edges_size_type edges_count = 0;
 
     for(vertex_iterator i_at_1 = i_begin; i_at_1 != i_end; ++i_at_1)
     {

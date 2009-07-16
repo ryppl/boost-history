@@ -1,8 +1,19 @@
 /**
  * Testing a function that has a range
  *
- * Functions used in test:
- *   vertices(g)
+ * Functions checklist:
+ *  [X] source(e, g)
+ *  [X] target(e, g)
+ *  [X] out_edges(u, g)
+ *  [X] out_degree(u, g)
+ *  [X] in_edges(v, g)
+ *  [X] in_degree(v, g)
+ *  [ ] degree(v, g)
+ *  [ ] adjacent_vertices(v, g)
+ *  [X] vertices(g)
+ *  [X] num_vertives(g)
+ *  [X] edegs(g)
+ *  [X] num_edges(g)
  */
 
 #include <iostream>
@@ -24,6 +35,11 @@ void print_edge(typename Graph::edge_descriptor const& e, Graph const& g)
 {
     std::cout << "\nEdge:\n" << "  Source: " << e.source << "\n";
     std::cout << "  Target: " << e.target << "\n";
+}
+template<typename Graph>
+void print_edge_alt(typename Graph::edge_descriptor const& e, Graph const& g)
+{
+    std::cout << "\n(" << e.source << ", " << e.target << ")";
 }
 } // namespace
 
@@ -60,6 +76,14 @@ int main()
                 weighted_graph::out_edge_iterator,
                 weighted_graph::out_edge_iterator
             > out_edge_wght_range;
+    typedef std::pair<
+                boolean_graph::edge_iterator,
+                boolean_graph::edge_iterator
+            > edge_bool_range;
+    typedef std::pair<
+                weighted_graph::edge_iterator,
+                weighted_graph::edge_iterator
+            > edge_wght_range;
 
 
 
@@ -114,39 +138,52 @@ int main()
     in_edge_bool_range in_edges_bool = boost::in_edges(*aVertex, booleanGraph);
     // Print all in_edges from booleanGraph to 572
     // In other words, print pairs of numbers that are less than 572
+    unsigned int in_edges_count = 0;
     while(in_edges_bool.first != in_edges_bool.second)
     {
         test3::print_edge(*in_edges_bool.first, booleanGraph);
         ++in_edges_bool.first;
+        ++in_edges_count;
     }
+    assert(in_edges_count == in_degree(*aVertex, booleanGraph));
 
     in_edge_wght_range in_edges_wght = boost::in_edges(*aVertex, weightedGraph);
     // Print all in_edges from weightedGraph to 572
     // By the function, this prints in_edge - 572
+    in_edges_count = 0;
     while(in_edges_wght.first != in_edges_wght.second)
     {
         std::cout << boost::source(*in_edges_wght.first, weightedGraph)
                   << " - 572 = " << (*in_edges_wght.first).result
                   << "\n";
         ++in_edges_wght.first;
+        ++in_edges_count;
     }
+    assert(in_edges_count == in_degree(*aVertex, weightedGraph));
+    std::cout << "\n\n";
 
 
     ////////
     // Check out edges
-    ++ ++ ++aVertex; // aVertex now holds -2
-     out_edge_bool_range out_edges_bool = boost::out_edges(*aVertex, booleanGraph);
+    ++++++aVertex; // aVertex now holds -2
+     out_edge_bool_range out_edges_bool = boost::out_edges(*aVertex,
+                                                           booleanGraph);
     // Print all out_edges from booleanGraph to -2
     // In other words, print pairs of numbers that are not less than -2
+    unsigned int out_edges_count = 0;
     while(out_edges_bool.first != out_edges_bool.second)
     {
         test3::print_edge(*out_edges_bool.first, booleanGraph);
         ++out_edges_bool.first;
+        ++out_edges_count;
     }
+    assert(out_edges_count == out_degree(*aVertex, booleanGraph));
 
-    out_edge_wght_range out_edges_wght = boost::out_edges(*aVertex, weightedGraph);
+    out_edge_wght_range out_edges_wght = boost::out_edges(*aVertex,
+                                                          weightedGraph);
     // Print all in_edges from weightedGraph to 572
     // By the function, this prints in_edge - 572
+    out_edges_count = 0;
     while(out_edges_wght.first != out_edges_wght.second)
     {
         std::cout << "-2 - "
@@ -155,12 +192,42 @@ int main()
                   << (*out_edges_wght.first).result
                   << "\n";
         ++out_edges_wght.first;
+        ++out_edges_count;
     }
+    
+    assert(out_edges_count == out_degree(*aVertex, weightedGraph));
+    std::cout << "\n";
 
 
 
     ////////
-    // Check adjacency iterators
+    // Check edges
+    edge_bool_range edges_bool = boost::edges(booleanGraph);
+    unsigned int edges_count = 0;
+    while(edges_bool.first != edges_bool.second)
+    {
+        //test3::print_edge_alt(*edges_bool.first, booleanGraph);
+        ++edges_bool.first;
+        ++edges_count;  //TEMP: is 4
+    }
+    assert(edges_count == boost::num_edges(booleanGraph));
+
+    edge_wght_range edges_wght = boost::edges(weightedGraph);
+    edges_count = 0;
+    while(edges_wght.first != edges_wght.second)
+    {
+        test3::print_edge_alt(*edges_wght.first, weightedGraph);
+        ++edges_wght.first;
+        ++edges_count;
+    }
+    // Since this checks all possible pairs, the number of edges = 8 * 8 = 64
+    assert(edges_count == num_edges(weightedGraph));
+
+
+
+    ////////
+    // Check adjacent edges
+    ++++aVertex;
 
     return 0;
 }
