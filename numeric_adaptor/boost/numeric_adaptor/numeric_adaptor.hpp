@@ -11,9 +11,9 @@
 #define NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP
 
 
-#include <boost/static_assert.hpp>
-
+#include <cmath>
 #include <string>
+#include <boost/static_assert.hpp>
 
 
 namespace boost { namespace numeric_adaptor {
@@ -234,7 +234,13 @@ inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
 }
 
 
-}} // namespace boost::numeric_adaptor
+} // namespace numeric_adaptor
+
+template <class T>
+T sqrt(T value)
+{ return std::sqrt(value); }
+
+} // namespace boost
 
 
 #endif
