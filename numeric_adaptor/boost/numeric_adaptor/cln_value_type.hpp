@@ -41,7 +41,7 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
     m_value(v)
     {}
 
-    operator double()
+    operator double() const
     {
         return cln::double_approx(m_value);
     }
@@ -108,6 +108,35 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
 numeric_adaptor::cln_value_type sqrt(numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::sqrt(v.m_value));
+}
+
+numeric_adaptor::cln_value_type cos(numeric_adaptor::cln_value_type const& v)
+{
+    return numeric_adaptor::cln_value_type(cln::cos(v.m_value));
+}
+
+numeric_adaptor::cln_value_type sin(numeric_adaptor::cln_value_type const& v)
+{
+    return numeric_adaptor::cln_value_type(cln::sin(v.m_value));
+}
+
+numeric_adaptor::cln_value_type tan(numeric_adaptor::cln_value_type const& v)
+{
+    return numeric_adaptor::cln_value_type(cln::tan(v.m_value));
+}
+
+numeric_adaptor::cln_value_type atan(numeric_adaptor::cln_value_type const& v)
+{
+    return numeric_adaptor::cln_value_type(cln::atan(v.m_value));
+}
+
+numeric_adaptor::cln_value_type hypot(
+    numeric_adaptor::cln_value_type const& a,
+    numeric_adaptor::cln_value_type const& b)
+{
+    return numeric_adaptor::cln_value_type(
+               cln::sqrt(a.m_value*a.m_value + b.m_value*b.m_value)
+           );
 }
 
 

@@ -14,6 +14,7 @@
 #include <cmath>
 #include <string>
 #include <boost/static_assert.hpp>
+#include <boost/math/special_functions/hypot.hpp>
 
 
 namespace boost { namespace numeric_adaptor {
@@ -236,9 +237,31 @@ inline numeric_adaptor<Policy> hypot(numeric_adaptor<Policy> const& a,
 
 } // namespace numeric_adaptor
 
+
 template <class T>
 T sqrt(T value)
 { return std::sqrt(value); }
+
+template <class T>
+T cos(T value)
+{ return std::cos(value); }
+
+template <class T>
+T sin(T value)
+{ return std::sin(value); }
+
+template <class T>
+T tan(T value)
+{ return std::tan(value); }
+
+template <class T>
+T atan(T value)
+{ return std::atan(value); }
+
+template <class T>
+T hypot(T a, T b)
+{ return boost::math::hypot(a, b); }
+
 
 } // namespace boost
 
