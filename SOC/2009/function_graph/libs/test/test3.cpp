@@ -28,7 +28,7 @@
 
 #define META_ASSERT(x) BOOST_ASSERT(x::value)
 
-namespace test3 {
+namespace t3 {
 // print an edge
 template<typename Graph>
 void print_edge(typename Graph::edge_descriptor const& e, Graph const& g)
@@ -46,7 +46,7 @@ void print_edge_alt(typename Graph::edge_descriptor const& e, Graph const& g)
 int main()
 {
     ////////
-    // Data for graph
+    // Data for graphh
     long arr[8] = {56233, 572, -7851, 956242, -2, 893437, 63, 4474443};
     std::vector<long> numbers(arr, arr + 8);
 
@@ -84,6 +84,14 @@ int main()
                 weighted_graph::edge_iterator,
                 weighted_graph::edge_iterator
             > edge_wght_range;
+    typedef std::pair<
+                boolean_graph::adjacency_iterator,
+                boolean_graph::adjacency_iterator
+            > adjacency_bool_range;
+    typedef std::pair<
+                weighted_graph::adjacency_iterator,
+                weighted_graph::adjacency_iterator
+            > adjacency_wght_range;
 
 
 
@@ -141,7 +149,7 @@ int main()
     unsigned int in_edges_count = 0;
     while(in_edges_bool.first != in_edges_bool.second)
     {
-        test3::print_edge(*in_edges_bool.first, booleanGraph);
+        t3::print_edge(*in_edges_bool.first, booleanGraph);
         ++in_edges_bool.first;
         ++in_edges_count;
     }
@@ -165,6 +173,8 @@ int main()
 
     ////////
     // Check out edges
+    std::cout << "\n\n////Out Edges Check////\n\n";
+
     ++++++aVertex; // aVertex now holds -2
      out_edge_bool_range out_edges_bool = boost::out_edges(*aVertex,
                                                            booleanGraph);
@@ -173,10 +183,11 @@ int main()
     unsigned int out_edges_count = 0;
     while(out_edges_bool.first != out_edges_bool.second)
     {
-        test3::print_edge(*out_edges_bool.first, booleanGraph);
+        t3::print_edge(*out_edges_bool.first, booleanGraph);
         ++out_edges_bool.first;
         ++out_edges_count;
     }
+    std::cerr << "\n\nout_edges_count : " << out_edges_count << "\n";
     assert(out_edges_count == out_degree(*aVertex, booleanGraph));
 
     out_edge_wght_range out_edges_wght = boost::out_edges(*aVertex,
@@ -202,11 +213,13 @@ int main()
 
     ////////
     // Check edges
+    std::cout << "\n\n////Edges Check////\n\n";
+
     edge_bool_range edges_bool = boost::edges(booleanGraph);
     unsigned int edges_count = 0;
     while(edges_bool.first != edges_bool.second)
     {
-        //test3::print_edge_alt(*edges_bool.first, booleanGraph);
+        t3::print_edge_alt(*edges_bool.first, booleanGraph);
         ++edges_bool.first;
         ++edges_count;  //TEMP: is 4
     }
@@ -216,18 +229,33 @@ int main()
     edges_count = 0;
     while(edges_wght.first != edges_wght.second)
     {
-        test3::print_edge_alt(*edges_wght.first, weightedGraph);
+        t3::print_edge_alt(*edges_wght.first, weightedGraph);
         ++edges_wght.first;
         ++edges_count;
     }
-    // Since this checks all possible pairs, the number of edges = 8 * 8 = 64
-    assert(edges_count == num_edges(weightedGraph));
+    // Since this is all pairings of all vertices, num_edges = 8*8 = 64
+    assert(edges_count == num_edges(weightedGraph) && edges_count == 64);
 
 
 
     ////////
     // Check adjacent edges
-    ++++aVertex;
+    std::cout << "\n\n////Adjacency Check////\n\n";
+
+    ++++aVertex;    // vertex is now 63
+    adjacency_bool_range adjacent_bool =
+                             boost::adjacent_vertices(*aVertex, booleanGraph);
+    unsigned int adjacent_vertices_count = 0;
+    while(adjacent_bool.first != adjacent_bool.second)
+    {
+        if(adjacent_bool.first.in_edge_check_)
+            std::cout << "(" << *adjacent_bool.first << ", " << *aVertex << ")\n";
+        else
+            std::cout << "(" << *aVertex << ", " << *adjacent_bool.first << ")\n";
+        ++adjacent_bool.first;
+        ++adjacent_vertices_count;
+    }
+    assert(adjacent_vertices_count == degree(*aVertex, booleanGraph));
 
     return 0;
 }

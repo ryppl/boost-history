@@ -344,7 +344,9 @@ in_degree(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
 template<typename Result, typename Vertex, typename Range>
 typename FUNC_GRAPH::degree_size_type
 degree(typename FUNC_GRAPH::vertex_descriptor const& v, FUNC_GRAPH const& g)
-{ return in_degree(v, g) + out_degree(v, g); }
+{
+    return in_degree(v, g) + out_degree(v, g);
+}
 
 
 
@@ -632,6 +634,7 @@ public:
                                       vertex_descriptor const& vertex)
         : g_(g), vertex_(vertex), i_at_(begin(g_.range_)), in_edge_check_(true)
     {
+        const vertex_iterator i_begin = begin(g_.range_);
         const vertex_iterator i_end = end(g_.range_);
 
         while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second)
@@ -671,7 +674,13 @@ public:
             do {
                 ++i_at_;
             } while(i_at_ != i_end && !edge(*i_at_, vertex_, g_).second);
-            if(i_at_ == i_end) in_edge_check_ = false;
+            if(i_at_ == i_end)
+            {
+                in_edge_check_ = false;
+                i_at_ = begin(g_.range_);
+                if(edge(vertex_, *i_at_, g_).second)
+                { return *this; }
+            }
         }
         if(!in_edge_check_)
         {
