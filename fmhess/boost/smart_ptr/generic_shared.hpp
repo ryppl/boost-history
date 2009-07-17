@@ -71,6 +71,7 @@ namespace boost
 {
 
 template<class T> class generic_shared;
+template<class T> class generic_weak;
 
 template<class T> struct smart_pointer_traits
 {
@@ -207,6 +208,7 @@ public:
     typedef typename boost::smart_pointer_traits<T>::value_type value_type;
     typedef T pointer;
     typedef typename boost::smart_pointer_traits<T>::reference reference;
+    typedef generic_weak<T> weak_type;
 
     generic_shared(): px(), pn()
     {
@@ -237,6 +239,22 @@ public:
     }
 
 //  generated copy constructor, destructor are fine
+
+    template<class Y>
+    explicit generic_shared(generic_weak<Y> const & r): pn(r.pn) // may throw
+    {
+        // it is now safe to copy r.px, as pn(r.pn) did not throw
+        px = r.px;
+    }
+
+    template<class Y>
+    generic_shared( generic_weak<Y> const & r, boost::detail::sp_nothrow_tag ): px( 0 ), pn( r.pn, boost::detail::sp_nothrow_tag() ) // never throws
+    {
+        if( !pn.empty() )
+        {
+            px = r.px;
+        }
+    }
 
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
@@ -542,7 +560,7 @@ public:
 private:
 
     template<class Y> friend class generic_shared;
-    template<class Y> friend class weak_ptr;
+    template<class Y> friend class generic_weak;
 
 
 #endif

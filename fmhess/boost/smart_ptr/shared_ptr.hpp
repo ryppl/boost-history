@@ -23,6 +23,8 @@ namespace boost
 		}
 	}
 
+	template<typename T> class weak_ptr;
+
 	template<typename T>
 	class shared_ptr: public generic_shared<T*>
 	{
@@ -54,9 +56,16 @@ namespace boost
 		template<typename Y>
 		explicit shared_ptr(std::auto_ptr<Y> & r): base_type(r)
 		{}
-		template<typename Ap>
-		explicit shared_ptr( Ap r): base_type(r)
+#if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
+		template<class Ap>
+		explicit shared_ptr( Ap r, typename boost::gs_detail::sp_enable_if_auto_ptr<Ap, int>::type = 0 ):
+			base_type(r)
 		{}
+#endif // BOOST_NO_SFINAE, BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION
+		template<class Y>
+		explicit shared_ptr(weak_ptr<Y> const & r): base_type(static_cast<generic_weak<Y*> const &>(r))
+		{}
+
 		template<typename Y>
 		shared_ptr & operator=( std::auto_ptr<Y> & r )
 		{
