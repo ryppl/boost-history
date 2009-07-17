@@ -123,7 +123,7 @@ template<typename T> bool is_null_pointer(T * p)
     return p == 0;
 }
 
-// two-argument casts findable by ADL for raw pointers (really belongs in boost/pointer_cast.hpp)
+// two-argument cast overloads for raw pointers (really belongs in boost/pointer_cast.hpp)
 template<typename T, typename U>
 T* static_pointer_cast(U *r, boost::mpl::identity<T*>)
 {
