@@ -53,11 +53,23 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
         return cln_value_type(a.m_value + b.m_value);
     }
 
+    cln_value_type& operator+=(cln_value_type const& other)
+    {
+        m_value += other.m_value;
+        return *this;
+    }
+
     friend inline cln_value_type operator-(
         cln_value_type const& a,
         cln_value_type const& b)
     {
         return cln_value_type(a.m_value - b.m_value);
+    }
+
+    cln_value_type& operator-=(cln_value_type const& other)
+    {
+        m_value -= other.m_value;
+        return *this;
     }
 
     friend inline cln_value_type operator*(
@@ -67,11 +79,23 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
         return cln_value_type(a.m_value * b.m_value);
     }
 
+    cln_value_type& operator*=(cln_value_type const& other)
+    {
+        m_value *= other.m_value;
+        return *this;
+    }
+
     friend inline cln_value_type operator/(
         cln_value_type const& a,
         cln_value_type const& b)
     {
         return cln_value_type(a.m_value / b.m_value);
+    }
+
+    cln_value_type& operator/=(cln_value_type const& other)
+    {
+        m_value /= other.m_value;
+        return *this;
     }
 
     cln::cl_F m_value;

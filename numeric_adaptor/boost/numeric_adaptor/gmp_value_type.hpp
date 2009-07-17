@@ -49,6 +49,12 @@ struct gmp_value_type
         return r;
     }
 
+    gmp_value_type& operator+=(gmp_value_type const& other)
+    {
+        mpf_add(m_value, m_value, other.m_value);
+        return *this;
+    }
+
     friend inline gmp_value_type operator-(
         gmp_value_type const& a,
         gmp_value_type const& b)
@@ -56,6 +62,12 @@ struct gmp_value_type
         gmp_value_type r;
         mpf_sub(r.m_value, a.m_value, b.m_value);
         return r;
+    }
+
+    gmp_value_type& operator-=(gmp_value_type const& other)
+    {
+        mpf_sub(m_value, m_value, other.m_value);
+        return *this;
     }
 
     friend inline gmp_value_type operator*(
@@ -67,6 +79,12 @@ struct gmp_value_type
         return r;
     }
 
+    gmp_value_type& operator*=(gmp_value_type const& other)
+    {
+        mpf_mul(m_value, m_value, other.m_value);
+        return *this;
+    }
+
     friend inline gmp_value_type operator/(
         gmp_value_type const& a,
         gmp_value_type const& b)
@@ -74,6 +92,12 @@ struct gmp_value_type
         gmp_value_type r;
         mpf_div(r.m_value, a.m_value, b.m_value);
         return r;
+    }
+
+    gmp_value_type& operator/=(gmp_value_type const& other)
+    {
+        mpf_div(m_value, m_value, other.m_value);
+        return *this;
     }
 
     mpf_t m_value;
