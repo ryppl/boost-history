@@ -105,6 +105,11 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
 } // namespace numeric_adaptor
 
 
+numeric_adaptor::cln_value_type abs(numeric_adaptor::cln_value_type const& v)
+{
+    return numeric_adaptor::cln_value_type(cln::abs(v.m_value));
+}
+
 numeric_adaptor::cln_value_type sqrt(numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::sqrt(v.m_value));

@@ -119,6 +119,13 @@ struct gmp_value_type
 } // namespace numeric_adaptor
 
 
+numeric_adaptor::gmp_value_type abs(numeric_adaptor::gmp_value_type const& v)
+{
+    numeric_adaptor::gmp_value_type r;
+    mpf_abs(r.m_value, v.m_value);
+    return r;
+}
+
 numeric_adaptor::gmp_value_type sqrt(numeric_adaptor::gmp_value_type const& v)
 {
     numeric_adaptor::gmp_value_type r;

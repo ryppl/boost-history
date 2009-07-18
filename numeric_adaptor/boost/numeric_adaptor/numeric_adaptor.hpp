@@ -20,6 +20,10 @@ namespace boost {
 
 
 template <class T>
+T abs(T value)
+{ return std::abs(value); }
+
+template <class T>
 T sqrt(T value)
 { return std::sqrt(value); }
 
