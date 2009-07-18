@@ -8,8 +8,8 @@
  *  [X] out_degree(u, g)
  *  [X] in_edges(v, g)
  *  [X] in_degree(v, g)
- *  [X] degree(v, g)
- *  [X] adjacent_vertices(v, g)
+ *  [ ] degree(v, g)
+ *  [ ] adjacent_vertices(v, g)
  *  [X] vertices(g)
  *  [X] num_vertives(g)
  *  [X] edegs(g)
@@ -22,6 +22,7 @@
 #include <vector>
 #include "function_graph.hpp"
 #include <boost/range.hpp>
+#include <cassert>
 #include <boost/assert.hpp>
 #include <boost/graph/graph_traits.hpp>
 
