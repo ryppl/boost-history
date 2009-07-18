@@ -16,43 +16,51 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <typename Wanted>
+    template<typename WantedRef>
     struct that_ptr
     {
-      private:
+    private:
+        typedef typename detail::remove_reference<WantedRef>::type* wanted;
 
-        typedef typename remove_reference<Wanted>::type pointee;
-
-        template <typename T> 
-        static inline pointee * do_get_pointer(T &, pointee * x) 
+        template<typename T>
+        static inline wanted
+        do_get_pointer(BOOST_FUSION_R_ELSE_LREF(T), wanted ptr)
         {
-            return x;
-        }
-        template <typename T> 
-        static inline pointee * do_get_pointer(T & x, void const *) 
-        {
-            return get_pointer(x); 
+            return ptr;
         }
 
-      public:
-
-        static inline pointee * get(pointee * x)
+        template<typename T>
+        static inline wanted
+        do_get_pointer(BOOST_FUSION_R_ELSE_LREF(T) t, void const*)
         {
-            return x; 
+            return get_pointer(BOOST_FUSION_FORWARD(T,t));
         }
 
-        static inline pointee * get(pointee & x)
+    public:
+        static inline wanted
+        get(WantedRef x)
         {
-            return boost::addressof(x); 
+            return boost::addressof(x);
         }
 
-        template <typename T> static inline pointee * get(T & x)
+        static inline wanted
+        get(wanted ptr)
         {
-            return do_get_pointer(x, boost::addressof(x)); 
+            return ptr;
+        }
+
+        template <typename T>
+        static inline wanted
+        get(BOOST_FUSION_R_ELSE_LREF(T) t)
+        {
+            return do_get_pointer(
+                    BOOST_FUSION_FORWARD(T,t),
+                    boost::addressof(BOOST_FUSION_FORWARD(T,t)));
         }
     };
 
-    template <typename PtrOrSmartPtr> struct non_const_pointee;
+    /*template <typename PtrOrSmartPtr>
+    struct non_const_pointee;
 
     namespace adl_barrier
     {
@@ -79,8 +87,7 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef non_const_pointee type;
         typedef bool value_type;
-    };
-
+    };*/
 }}}
 
 #endif

@@ -1,69 +1,18 @@
-/*=============================================================================
-    Copyright (c) 2006-2007 Tobias Schwinger
-  
-    Use modification and distribution are subject to the Boost Software 
-    License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-    http://www.boost.org/LICENSE_1_0.txt).
-==============================================================================*/
+// Copyright Christopher Schmidt 2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
 #ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_PROCEDURE_HPP
 #define BOOST_FUSION_FUNCTIONAL_ADAPTER_FUSED_PROCEDURE_HPP
 
-#include <boost/type_traits/add_reference.hpp>
-
-#include <boost/fusion/functional/adapter/detail/access.hpp>
-#include <boost/fusion/functional/invocation/invoke_procedure.hpp>
-
-namespace boost { namespace fusion
-{
-    template <typename Function> class fused_procedure;
-
-    //----- ---- --- -- - -  -   -
-
-    template <typename Function>
-    class fused_procedure
-    {
-        Function fnc_transformed;
-
-        typedef typename detail::qf_c<Function>::type & func_const_fwd_t;
-        typedef typename detail::qf<Function>::type & func_fwd_t;
-
-    public:
-
-        inline explicit fused_procedure(func_const_fwd_t f = Function())
-            : fnc_transformed(f)
-        { }
-
-        template <class Seq> 
-        inline void operator()(Seq const& s) const
-        {
-            fusion::invoke_procedure<
-                func_const_fwd_t >(this->fnc_transformed,s);
-        }
-
-        template <class Seq> 
-        inline void operator()(Seq const& s) 
-        {
-            fusion::invoke_procedure<
-                func_fwd_t >(this->fnc_transformed,s);
-        }
-
-        template <class Seq> 
-        inline void operator()(Seq & s) const
-        {
-            fusion::invoke_procedure<
-                func_const_fwd_t >(this->fnc_transformed,s);
-        }
-
-        template <class Seq> 
-        inline void operator()(Seq & s) 
-        {
-            return fusion::invoke_procedure<
-                func_fwd_t >(this->fnc_transformed,s);
-        }
-
-        typedef void result_type;
-    };
-}}
+#include <boost/config.hpp>
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES)
+#   include <boost/fusion/functional/adapter/detail/no_decltype_or_variadic_templates/fused_procedure.hpp>
+#elif !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#   define BOOST_FUSION_ADAPTER_NAME fused_procedure
+#   include <boost/fusion/functional/adapter/detail/decltype_and_variadic_templates/fused_impl.hpp>
+#   undef BOOST_FUSION_ADAPTER_NAME
+#endif
 
 #endif

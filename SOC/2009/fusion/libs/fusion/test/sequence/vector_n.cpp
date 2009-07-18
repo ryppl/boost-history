@@ -35,10 +35,10 @@ main()
     using std::endl;
 
     {
-        vector0 vec;
+        vector0<> vec;
         (void) vec;
         cout << "(): " << sizeof(vec) << endl;
-        cout << (boost::is_empty<vector0>::value ? "is empty" : "is not empty") << endl;
+        cout << (boost::is_empty<vector0<> >::value ? "is empty" : "is not empty") << endl;
     }
 
     {
@@ -211,7 +211,7 @@ main()
 
     {
         // testing copy and assign from a view
-        vector0 empty;
+        vector0<> empty;
         fusion::vector2<int, long> v(sequence_assign(fusion::push_back(fusion::push_back(empty, 123), 456)));
         cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);

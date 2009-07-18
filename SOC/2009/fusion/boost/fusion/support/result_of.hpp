@@ -12,7 +12,16 @@
 //Therefore we emulate the old behavior if (and only if) the boost
 //implementation falls back to decltype by default.
 
-#ifndef BOOST_NO_DECLTYPE
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/mpl/bool.hpp>
+#else
+#   include <boost/fusion/support/ref.hpp>
+
+#   include <boost/type_traits/remove_pointer.hpp>
+#   include <boost/type_traits/is_function.hpp>
+#   include <boost/type_traits/is_member_function_pointer.hpp>
+#endif
+#if !defined(BOOST_NO_DECLTYPE) && !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
 #   include <boost/fusion/support/ref.hpp>
 
 #   include <boost/mpl/has_xxx.hpp>
@@ -23,7 +32,109 @@
 
 namespace boost { namespace fusion { namespace support
 {
-#ifdef BOOST_NO_DECLTYPE
+//cschmidt: a pp implementation won't be worth the effort
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+    template<typename FRef>
+    struct is_preevaluable
+      : mpl::false_
+    {};
+
+    template<typename FRef>
+    struct preevaluate;
+#else
+    //cschmidt: These metafunction needs to handle
+    //T()
+    //T(&)()
+    //T(cv&)()
+    //T(*)()
+    //T(*cv)()
+    //T(*cv&)()
+    //T(C::*)()
+    //T(C::*cv)()
+    //T(C::*&)()
+    //T(C::*cv&)()
+    //T(C::*)()cv
+    //T(C::*cv)()cv
+    //T(C::*&)()cv
+    //T(C::*cv&)()cv
+    //T(C::*)()cv&
+    //T(C::*cv)()cv&
+    //T(C::*&)()cv&
+    //T(C::*cv&)()cv&
+    //& -> &&
+
+    template<typename FRef>
+    struct is_preevaluable
+    {
+         typedef typename
+             remove_pointer<
+                 typename detail::identity<FRef>::type
+             >::type
+         f;
+
+         typedef typename
+             mpl::or_<
+                typename is_function<f>::type
+              , typename is_member_function_pointer<f>::type
+             >::type
+          type;
+    };
+
+    template<typename FRef>
+    struct preevaluate_impl;
+
+    template<typename Result,typename... Args>
+    struct preevaluate_impl<Result (Args...)>
+    {
+        typedef Result type;
+    };
+
+    template<typename Result,typename Class,typename... Args>
+    struct preevaluate_impl<Result(Class::*)(Args...)>
+    {
+        typedef Class& class_type;
+
+        typedef Result type;
+    };
+
+    //TODO cschmidt: Once we got a macro to find out whether the compiler
+    //supports rvalue references for this, use
+    //BOOST_FUSION_ALL_CV_REF_COMBINATIONS
+    template<typename Result,typename Class,typename... Args>
+    struct preevaluate_impl<Result(Class::*)(Args...) const>
+    {
+        typedef Class const& class_type;
+
+        typedef Result type;
+    };
+
+    template<typename Result,typename Class,typename... Args>
+    struct preevaluate_impl<Result(Class::*)(Args...) const volatile>
+    {
+        typedef Class const volatile& class_type;
+
+        typedef Result type;
+    };
+
+    template<typename Result,typename Class,typename... Args>
+    struct preevaluate_impl<Result(Class::*)(Args...) volatile>
+    {
+        typedef Class volatile& class_type;
+
+        typedef Result type;
+    };
+
+    template<typename FRef>
+    struct preevaluate
+      : preevaluate_impl<
+            typename remove_pointer<
+                typename detail::identity<FRef>::type
+            >::type
+        >
+    {};
+#endif
+
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
     using boost::result_of;
 #else
     namespace detail

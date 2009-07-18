@@ -30,7 +30,7 @@ if "%1" == "conceptgcc" (
 )
 
 rem compile...
-%BOOST_ROOT%\bjam --without-python --toolset=%TOOLSET% %2 %3 %4 %5 %6 %7 %8 %9
+%BOOST_ROOT%\bjam -sHOME="z:\projekte\cl_link_frontend\util\boost" --without-python --toolset=%TOOLSET% %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :conceptgcc

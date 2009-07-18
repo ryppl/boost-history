@@ -6,8 +6,12 @@
 #define N BOOST_PP_ITERATION()
 
 //TODO cschmidt: template typedefs
+#if !N
+struct void_;
 
-#if N != 0
+//TODO cschmidt: assert !N -> T0 == void_
+template <class T0=void_>
+#else
 template <BOOST_PP_ENUM_PARAMS(N, typename T)>
 #endif
 struct BOOST_PP_CAT(vector, N)

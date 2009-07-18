@@ -13,6 +13,7 @@ callable through a function object interface.
 [heading Header]
 
   #include <boost/fusion/functional.hpp>
+  #include <boost/fusion/include/functional.hpp>
 
 [heading Fused and unfused forms]
 
@@ -299,6 +300,7 @@ the result of the call expression.
 [heading Header]
 
   #include <boost/fusion/functional/invocation/invoke.hpp>
+  #include <boost/fusion/include/invoke.hpp>
 
 [heading Example]
     __std_plus_doc__<int> add;
@@ -365,6 +367,7 @@ implemented).
 [heading Header]
 
   #include <booost/fusion/functional/invocation/invoke_procedure.hpp>
+  #include <boost/fusion/include/invoke_procedure.hpp>
 
 [heading Example]
     __vector__<int,int> v(1,2);
@@ -427,6 +430,7 @@ result of the call expression.
 [heading Header]
 
   #include <boost/fusion/functional/invocation/invoke_function_object.hpp>
+  #include <boost/fusion/include/invoke_function_object.hpp>
 
 [heading Example]
     struct sub
@@ -543,6 +547,7 @@ Returns the result type of __invoke_function_object__.
 [heading Header]
 
   #include <boost/fusion/functional/invocation/limits.hpp>
+  #include <boost/fusion/include/limits.hpp>
 
 [heading Macros]
 
@@ -589,6 +594,7 @@ __boost_shared_ptr_call__).
 [heading Header]
 
   #include <boost/fusion/functional/adapter/fused.hpp>
+  #include <boost/fusion/include/fused.hpp>
 
 [heading Synopsis]
     template <typename Function>
@@ -668,6 +674,7 @@ is not implemented).
 [heading Header]
 
   #include <boost/fusion/functional/adapter/fused_procedure.hpp>
+  #include <boost/fusion/include/fused_procedure.hpp>
 
 [heading Synopsis]
     template <typename Function>
@@ -744,6 +751,7 @@ is held by value, the adapter is const).
 [heading Header]
 
   #include <boost/fusion/functional/adapter/fused_function_object.hpp>
+  #include <boost/fusion/include/fused_function_object.hpp>
 
 [heading Synopsis]
     template <class Function>
@@ -849,6 +857,7 @@ object is held by value, the adapter is const.
 [heading Header]
 
   #include <boost/fusion/functional/adapter/unfused.hpp>
+  #include <boost/fusion/include/unfused.hpp>
 
 [heading Synopsis]
     template <class Function, bool AllowNullary = true>
@@ -922,7 +931,7 @@ An n-ary __poly_func_obj__ adapter template for an unary __poly_func_obj__
 target function. When called, its arguments are bundled to a
 __random_access_sequence__ that is passed to the target function object.
 
-The call operators of  esulting function objects are strictly typed
+The call operators of the resulting function objects are strictly typed
 (in other words, non-templatized) with the types from a __sequence__.
 
 The type of the target function is allowed to be const qualified or a
@@ -942,6 +951,7 @@ signature is optimized automatically to avoid by-value parameters.]
 [heading Header]
 
   #include <boost/fusion/functional/adapter/unfused_typed.hpp>
+  #include <boost/fusion/include/unfused_typed.hpp>
 
 [heading Synopsis]
     template <class Function, class Sequence>
@@ -1057,6 +1067,7 @@ signature is optimized automatically to avoid by-value parameters.]
 [heading Header]
 
   #include <boost/fusion/functional/adapter/limits.hpp>
+  #include <boost/fusion/include/limits.hpp>
 
 [heading Macros]
 

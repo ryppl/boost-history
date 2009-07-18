@@ -139,7 +139,7 @@ void test_sequence_n(Sequence & seq, mpl::int_<0>)
 
     // Note: The function object is taken by value, so we request the copy
     // to be const with an explicit template argument. We can also request
-    // the function object to be pased by reference...
+    // the function object to be passed by reference...
     COMPARE_EFFECT(const_(f)(), fusion::invoke_procedure<fobj const  >(const_(f),        seq ));
     COMPARE_EFFECT(const_(f)(), fusion::invoke_procedure<fobj const&>(const_(f), const_(seq)));
 

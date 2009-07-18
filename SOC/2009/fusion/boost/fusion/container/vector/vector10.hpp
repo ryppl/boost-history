@@ -45,35 +45,13 @@
 namespace boost { namespace fusion
 {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-    struct vector_tag;
-    struct fusion_sequence_tag;
-    struct random_access_traversal_tag;
-
-    struct vector0 : sequence_base<vector0>
-    {
-        typedef mpl::vector0<> types;
-        typedef vector_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::false_ is_view;
-        typedef random_access_traversal_tag category;
-        typedef mpl::int_<0> size;
-
-        vector0()
-        {}
-
-        template<typename Seq>
-        vector0(Seq const& seq)
-        {}
-    };
-
 #   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/vector_n.hpp>
-#   define BOOST_PP_ITERATION_LIMITS (1, 10)
 #else
 #   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/variadic_templates/vector_n.hpp>
-#   define BOOST_PP_ITERATION_LIMITS (0, 10)
 #endif
 
 // expand vector1 to vector10
+#   define BOOST_PP_ITERATION_LIMITS (0, 10)
 #   include BOOST_PP_ITERATE()
 
 }}

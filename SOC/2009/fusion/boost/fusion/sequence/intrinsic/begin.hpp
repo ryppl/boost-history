@@ -40,8 +40,6 @@ namespace boost { namespace fusion
         {};
     }
 
-    //TODO cschmidt: const retval?!
-
     template <typename Seq>
     inline typename
         result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type

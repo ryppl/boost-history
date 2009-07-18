@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
-//TODO save views directly
 //TODO as fusion element?!
 //TODO bidirectional
 
