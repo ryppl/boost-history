@@ -24,8 +24,8 @@ namespace boost { namespace fusion { namespace traits
             template <typename Sig>
             struct result;
 
-            template<typename T>
-            struct result<deducer(T)>
+            template<typename Self,typename T>
+            struct result<Self(T)>
               : fusion::traits::deduce<T>
             {};
         };

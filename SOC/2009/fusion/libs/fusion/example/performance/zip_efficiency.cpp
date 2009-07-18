@@ -30,7 +30,7 @@ namespace
         struct result
         {
             typedef typename 
-                boost::remove_reference<
+            fusion::detail::remove_reference<
                     typename boost::fusion::result_of::value_at_c<Lhs, 0>::type 
                 >::type
             type;

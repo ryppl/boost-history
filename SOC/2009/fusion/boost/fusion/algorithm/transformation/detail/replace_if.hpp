@@ -51,8 +51,8 @@ namespace boost { namespace fusion { namespace detail
         template<typename Params>
         struct result;
 
-        template <typename U>
-        struct result<replace_if_helper<F, NewValue>(U)>
+        template<typename Self, typename U>
+        struct result<Self(U)>
         {
             typedef typename
                 mpl::if_<

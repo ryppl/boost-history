@@ -28,8 +28,8 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename ItRef>
-            struct result<poly_deref(ItRef)>
+            template<typename Self, typename ItRef>
+            struct result<Self(ItRef)>
             {
                 //TODO cschmidt: ?!
                 typedef typename

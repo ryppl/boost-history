@@ -125,13 +125,23 @@ namespace boost { namespace fusion { namespace detail
 
     template <typename It, typename StateRef, typename FRef>
     struct fold_apply
-      : support::result_of<
-            FRef(
-                typename result_of::deref<It>::type
-              , StateRef
-            )
-        >
-    {};
+    {
+        typedef typename result_of::deref<It>::type deref_type;
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        typedef typename
+            support::result_of<FRef(deref_type, StateRef)>::type
+        type;
+#else
+        typedef typename
+            mpl::eval_if<
+                typename detail::is_lrref<deref_type>::type
+              , support::result_of<FRef(deref_type, StateRef)>
+              , support::result_of<FRef(deref_type&&, StateRef)>
+            >::type
+        type;
+#endif
+    };
 
     template<typename It0, typename StateRef, typename FRef, int N>
     struct result_of_unrolled_fold
@@ -193,20 +203,23 @@ namespace boost { namespace fusion { namespace detail
 
     template<int SeqSize, typename It0, typename StateRef, typename FRef>
     struct fold_impl
-      : result_of_unrolled_fold<It0, StateRef, FRef, SeqSize>
     {
-          typedef typename
-              result_of_unrolled_fold<It0, StateRef, FRef, SeqSize>::type
-          type;
+        typedef typename
+            mpl::eval_if<
+                typename support::is_preevaluable<FRef>::type
+              , support::preevaluate<FRef>
+              , result_of_unrolled_fold<It0, StateRef, FRef, SeqSize>
+            >::type
+        type;
 
-          static type
-          call(It0 const& it0, StateRef state, FRef f)
-          {
-              return unrolled_fold<SeqSize>::template call<type>(
-                      it0,
-                      BOOST_FUSION_FORWARD(StateRef,state),
-                      BOOST_FUSION_FORWARD(FRef,f));
-          }
+        static type
+        call(It0 const& it0, StateRef state, FRef f)
+        {
+            return unrolled_fold<SeqSize>::template call<type>(
+                    it0,
+                    BOOST_FUSION_FORWARD(StateRef,state),
+                    BOOST_FUSION_FORWARD(FRef,f));
+        }
     };
 
     template<typename It0, typename StateRef, typename FRef>

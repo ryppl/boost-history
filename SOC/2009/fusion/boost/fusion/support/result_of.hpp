@@ -141,19 +141,19 @@ namespace boost { namespace fusion { namespace support
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
 
-        template<typename F>
+        template<typename IdentityF>
         struct get_result_type
         {
-            typedef typename F::result_type type;
+            typedef typename IdentityF::result_type type;
         };
 
-        template<typename F, typename Sig>
+        template<typename IdentityF, typename Sig>
         struct get_result
-          : F::template result<Sig>
+          : IdentityF::template result<Sig>
         {};
 
         //TODO cschmidt: non-native variadic templates version
-        template<typename IdentityF, typename... Args>
+        template<typename F,typename IdentityF, typename... Args>
         struct result_of_class_type
         {
             typedef typename
@@ -163,7 +163,7 @@ namespace boost { namespace fusion { namespace support
                     //TODO cschmidt: fallback to boost::result_of (decltype) if
                     //'F::template result' does not exist.
                     //Is this even possible?
-                  , detail::get_result<IdentityF,IdentityF(Args...)>
+                  , detail::get_result<IdentityF,F(Args...)>
                 >::type
             type;
         };
@@ -185,7 +185,7 @@ namespace boost { namespace fusion { namespace support
             mpl::eval_if<
                 is_function<f>
               , boost::result_of<F(Args...)>
-              , detail::result_of_class_type<f,Args...>
+              , detail::result_of_class_type<F,f,Args...>
             >::type
         type;
     };

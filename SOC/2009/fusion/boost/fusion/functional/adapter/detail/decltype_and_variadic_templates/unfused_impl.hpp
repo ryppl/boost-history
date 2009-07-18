@@ -18,6 +18,8 @@
 #   define BOOST_FUSION_ADAPTER_NAME unfused
 #endif
 
+//TODO cschmidt: handle rvalue ref F
+
 namespace boost { namespace fusion
 {
     template<
@@ -73,7 +75,8 @@ namespace boost { namespace fusion
 #   define CALL_OPERATOR(COMBINATION)\
         template<typename... Args>\
         typename support::result_of<\
-            F(typename result_of::as_vector<TransformSeq&&>::type)\
+            typename detail::forward_as<int COMBINATION, F>::type\
+                (typename result_of::as_vector<TransformSeq&&>::type&&)\
         >::type\
         operator()(Args&&... args) COMBINATION\
         {\
@@ -84,7 +87,8 @@ namespace boost { namespace fusion
 #   define CALL_OPERATOR(COMBINATION)\
         template<typename... Args>\
         typename support::result_of<\
-            F(typename result_of::vector_tie<Args&&...>::type)\
+            typename detail::forward_as<int COMBINATION, F>::type\
+                (typename result_of::vector_tie<Args&&...>::type&&)\
         >::type\
         operator()(Args&&... args) COMBINATION\
         {\
@@ -96,9 +100,8 @@ namespace boost { namespace fusion
         CALL_OPERATOR(const);
         CALL_OPERATOR(volatile);
         CALL_OPERATOR(const volatile);
-#
+
 #undef CALL_OPERATOR
-#undef OUTER_GEENRATOR
 
         F f;
     };

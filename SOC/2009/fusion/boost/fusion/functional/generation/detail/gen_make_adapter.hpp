@@ -6,8 +6,6 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-// No include guard - this file is included multiple times intentionally.
-
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
@@ -30,7 +28,7 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename F>
+    template<typename F>
     inline typename
         result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_R_ELSE_LREF(F)>::type
     BOOST_FUSION_FUNC_NAME(BOOST_FUSION_R_ELSE_LREF(F) f)
@@ -42,5 +40,4 @@ namespace boost { namespace fusion
 }}
 
 #undef BOOST_FUSION_CLASS_TPL_NAME
-#undef BOOST_FUSION_FUNC_NAME
 

@@ -34,8 +34,8 @@ struct add_ints_only
     template<typename T>
     struct result;
 
-    template <typename T, typename State>
-    struct result<add_ints_only(T,State)>
+    template <typename Self,typename T, typename State>
+    struct result<Self(T,State)>
     {
         //TODO cschmidt: remove_reference does not support rvalue refs yet,
         //therefore we use the internal function of fusion!
@@ -63,10 +63,9 @@ struct count_ints
     template<typename T>
     struct result;
 
-    template <typename T, typename CountT>
-    struct result<count_ints(T,CountT)>
+    template <typename Self,typename T, typename CountT>
+    struct result<Self(T,CountT)>
     {
-        //TODO !!!
         typedef typename boost::fusion::detail::identity<T>::type elem;
         typedef typename boost::fusion::detail::identity<CountT>::type state;
         //typedef typename boost::remove_const<
@@ -107,10 +106,9 @@ struct lvalue_adder
     template<typename Sig>
     struct result;
 
-    template<typename T0, typename T1>
-    struct result<lvalue_adder(T0&, T1)>
+    template<typename Self,typename T0, typename T1>
+    struct result<Self(T0&, T1)>
     {
-        // Second argument still needs to support rvalues - see definition of fusion::fold
         typedef T0 type;
     };
 

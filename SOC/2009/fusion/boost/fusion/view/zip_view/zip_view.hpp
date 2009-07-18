@@ -67,8 +67,8 @@ namespace boost { namespace fusion {
             template<typename Params>
             struct result;
 
-            template<typename Seq>
-            struct result<seq_size(Seq)>
+            template<typename Self,typename Seq>
+            struct result<Self(Seq)>
             {
                 typedef typename
                     mpl::eval_if<
@@ -87,9 +87,12 @@ namespace boost { namespace fusion {
             template<typename T>
             struct result;
 
-            template<typename MinSize, typename SeqSize>
-            struct result<poly_min(MinSize, SeqSize)>
-              : mpl::min<MinSize, typename detail::remove_reference<SeqSize>::type >
+            template<typename Self,typename MinSize, typename SeqSize>
+            struct result<Self(MinSize, SeqSize)>
+              : mpl::min<
+                    typename detail::remove_reference<MinSize>::type,
+                    typename detail::remove_reference<SeqSize>::type
+                >
             {
             };
         };

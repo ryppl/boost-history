@@ -22,8 +22,8 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename N1, typename It>
-            struct result<poly_advance<N1>(It)>
+            template<typename Self, typename It>
+            struct result<Self(It)>
             {
                 typedef typename result_of::advance<It,N>::type type;
             };

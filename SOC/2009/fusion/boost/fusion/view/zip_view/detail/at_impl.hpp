@@ -31,8 +31,8 @@ namespace boost { namespace fusion
             template<typename T>
             struct result;
 
-            template<typename N1, typename SeqRef>
-            struct result<poly_at<N1>(SeqRef)>
+            template<typename Self, typename SeqRef>
+            struct result<Self(SeqRef)>
               : mpl::eval_if<is_same<SeqRef, unused_type const&>
                            , mpl::identity<unused_type const&>
                            , result_of::at<SeqRef, N>

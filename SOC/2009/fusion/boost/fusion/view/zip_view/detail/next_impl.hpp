@@ -27,8 +27,8 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename It>
-            struct result<poly_next(It)>
+            template<typename Self, typename It>
+            struct result<Self(It)>
             {
                 typedef typename
                     mpl::eval_if<

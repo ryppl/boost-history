@@ -23,6 +23,7 @@ namespace boost { namespace fusion
         };
     }
 
+    //TODO cschmidt: ?!?
     template <typename F, typename Seq>
     inline typename result_of::BOOST_FUSION_INVOKE_NAME<F, Seq&&>::type
     BOOST_FUSION_INVOKE_NAME(F f, Seq&& seq)

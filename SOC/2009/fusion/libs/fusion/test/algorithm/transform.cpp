@@ -19,14 +19,7 @@
 
 struct square
 {
-    template<typename Sig>
-    struct result;
-
-    template <typename T>
-    struct result<square(T)>
-    {
-        typedef int type;
-    };
+    typedef int result_type;
 
     template <typename T>
     int operator()(T x) const
@@ -37,14 +30,7 @@ struct square
 
 struct add
 {
-    template<typename Sig>
-    struct result;
-
-    template <typename A, typename B>
-    struct result<add(A, B)>
-    {
-        typedef int type;
-    };
+    typedef int result_type;
 
     template <typename A, typename B>
     int operator()(A a, B b) const
@@ -58,8 +44,8 @@ struct unary_lvalue_transform
     template<typename Sig>
     struct result;
 
-    template<typename T>
-    struct result<unary_lvalue_transform(T&)>
+    template<typename Self,typename T>
+    struct result<Self(T&)>
     {
         typedef T* type;
     };
@@ -81,8 +67,8 @@ struct binary_lvalue_transform
     template<typename Sig>
     struct result;
 
-    template<typename T0, typename T1>
-    struct result<binary_lvalue_transform(T0&,T1&)>
+    template<typename Self,typename T0, typename T1>
+    struct result<Self(T0&,T1&)>
     {
         typedef T0* type;
     };

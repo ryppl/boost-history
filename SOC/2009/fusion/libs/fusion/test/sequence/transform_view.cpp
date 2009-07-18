@@ -26,14 +26,7 @@
 
 struct square
 {
-    template<typename T>
-    struct result;
-
-    template <typename T>
-    struct result<square(T)>
-    {
-        typedef int type;
-    };
+    typedef int result_type;
 
     template <typename T>
     int operator()(T x) const
@@ -44,14 +37,7 @@ struct square
 
 struct add
 {
-    template<typename T>
-    struct result;
-
-    template <typename A, typename B>
-    struct result<add(A,B)>
-    {
-        typedef int type;
-    };
+    typedef int result_type;
 
     template <typename A, typename B>
     int operator()(A a, B b) const

@@ -165,7 +165,7 @@ fusion::single_view<members const  > sv_obj_c_ctx(  that);
 fusion::single_view<members const&> sv_ref_c_ctx(  that);
 fusion::single_view<members const *> sv_ptr_c_ctx(& that);
 fusion::single_view<std::auto_ptr<members> const&> sv_spt_ctx(spt_that);
-fusion::single_view< std::auto_ptr<members const> const&> sv_spt_c_ctx(spt_that_c);
+fusion::single_view<std::auto_ptr<members const> const&> sv_spt_c_ctx(spt_that_c);
 
 derived derived_that;
 

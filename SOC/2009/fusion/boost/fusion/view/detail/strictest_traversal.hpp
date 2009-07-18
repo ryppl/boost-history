@@ -43,8 +43,8 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename Next, typename StrictestSoFar>
-            struct result<strictest_traversal_impl(Next, StrictestSoFar)>
+            template<typename Self, typename Next, typename StrictestSoFar>
+            struct result<Self(Next, StrictestSoFar)>
             {
                 typedef typename traits::category_of<Next>::type next_tag;
 

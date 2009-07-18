@@ -27,8 +27,8 @@ namespace boost { namespace fusion
             template<typename T>
             struct result;
 
-            template<typename ItRef>
-            struct result<poly_value_of(ItRef)>
+            template<typename Self, typename ItRef>
+            struct result<Self(ItRef)>
               : mpl::eval_if<
                     is_same<ItRef, unused_type const&>
                   , mpl::identity<unused_type const&>

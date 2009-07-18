@@ -399,8 +399,8 @@ __traversal_concept__) of its underlying sequence or sequences.
         template<typename Sig>
         struct result;
 
-        template<typename U>
-        struct result<square(U)>
+        template<typename Self,typename U>
+        struct result<Self(U)>
         : remove_reference<U>
         {};
 
