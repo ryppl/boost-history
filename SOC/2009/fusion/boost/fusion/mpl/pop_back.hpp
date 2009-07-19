@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_POP_BACK_HPP
 #define BOOST_FUSION_MPL_POP_BACK_HPP
 
-#include <boost/mpl/pop_back.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/pop_back.hpp>
 #include <boost/fusion/sequence/convert.hpp>

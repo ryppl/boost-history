@@ -8,9 +8,8 @@
 #ifndef BOOST_FUSION_MPL_CLEAR_HPP
 #define BOOST_FUSION_MPL_CLEAR_HPP
 
-#include <boost/mpl/clear.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/mpl/detail/clear.hpp>
+#include <boost/fusion/algorithm/transformation/clear.hpp>
 
 namespace boost { namespace mpl
 {
@@ -22,13 +21,8 @@ namespace boost { namespace mpl
     {
         template <typename Seq>
         struct apply
-        {
-            typedef typename
-                fusion::detail::clear<
-                    typename fusion::traits::tag_of<Seq>::type
-                >::type
-            type;
-        };
+          : fusion::result_of::clear<Seq>
+        {};
     };
 }}
 

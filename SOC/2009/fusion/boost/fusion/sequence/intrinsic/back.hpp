@@ -17,16 +17,15 @@
 
 namespace boost { namespace fusion
 {
-    // Special tags:
-    struct fusion_sequence_tag;
+    struct sequence_facade_tag;
 
     namespace result_of
     {
         template <typename Seq>
         struct back
-            : result_of::deref<typename result_of::prior<
+          : result_of::deref<typename result_of::prior<
                 typename result_of::end<Seq>::type>::type
-                >
+            >
         {};
     }
 

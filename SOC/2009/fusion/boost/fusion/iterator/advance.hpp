@@ -17,9 +17,7 @@
 namespace boost { namespace fusion
 {
     struct random_access_traversal_tag;
-
-    // Special tags:
-    struct iterator_facade_tag; // iterator facade tag
+    struct iterator_facade_tag;
 
     namespace extension
     {

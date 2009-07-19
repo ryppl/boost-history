@@ -91,6 +91,20 @@ namespace boost { namespace fusion
                   , replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0)
                   , BOOST_FUSION_FORWARD(NewValue,new_value));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename OldValue, typename NewValue>
+    inline typename
+        result_of::replace<Seq&, OldValue const&, NewValue const&>::type
+    replace(Seq& seq,OldValue const& old_value,NewValue const& new_value)
+    {
+        typedef typename
+            result_of::replace<Seq&, OldValue const&, NewValue const&>::replacer
+        replacer;
+
+        return replace_if(seq, replacer(old_value,0), new_value);
+    }
+#endif
 }}
 
 #endif

@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_INSERT_HPP
 #define BOOST_FUSION_MPL_INSERT_HPP
 
-#include <boost/mpl/insert.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/insert.hpp>
 #include <boost/fusion/sequence/convert.hpp>

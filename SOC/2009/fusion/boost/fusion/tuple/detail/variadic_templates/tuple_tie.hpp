@@ -12,10 +12,10 @@
 namespace boost { namespace fusion
 {
     template <typename... Types>
-    inline tuple<typename detail::as_fusion_element_lref<Types>::type...>
+    inline tuple<typename detail::as_fusion_element_ref<Types>::type...>
     tie(BOOST_FUSION_R_ELSE_LREF(Types)... types)
     {
-        return tuple<typename detail::as_fusion_element_lref<Types>::type...>(
+        return tuple<typename detail::as_fusion_element_ref<Types>::type...>(
                    BOOST_FUSION_FORWARD(Types, types)...);
     }
 

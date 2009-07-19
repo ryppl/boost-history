@@ -17,7 +17,7 @@ namespace boost { namespace fusion
         struct list_tie
         {
             typedef
-                list<typename detail::as_fusion_element_lref<Types>::type...>
+                list<typename detail::as_fusion_element_ref<Types>::type...>
             type;
         };
     }

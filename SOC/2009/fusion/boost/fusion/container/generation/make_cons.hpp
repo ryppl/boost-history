@@ -9,8 +9,8 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_MAKE_CONS_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_CONS_HPP
 
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/container/list/cons.hpp>
+#include <boost/fusion/support/detail/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {
@@ -18,7 +18,6 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        //TODO cschmidt: add_lref
         template <typename Car, typename Cdr = nil>
         struct make_cons
         {
@@ -37,20 +36,26 @@ namespace boost { namespace fusion
         typedef typename
             result_of::make_cons<BOOST_FUSION_R_ELSE_CLREF(Car)>::type
         type;
+
         return type(BOOST_FUSION_FORWARD(Car,car));
     }
 
     template <typename Car, typename Cdr>
-    inline typename result_of::make_cons<BOOST_FUSION_R_ELSE_CLREF(Car)
-                                       , BOOST_FUSION_R_ELSE_CLREF(Cdr)>::type
+    inline typename
+        result_of::make_cons<
+            BOOST_FUSION_R_ELSE_CLREF(Car)
+          , BOOST_FUSION_R_ELSE_CLREF(Cdr)
+        >::type
     make_cons(BOOST_FUSION_R_ELSE_CLREF(Car) car,
               BOOST_FUSION_R_ELSE_CLREF(Cdr) cdr)
     {
         typedef typename
-            result_of::make_cons<BOOST_FUSION_R_ELSE_CLREF(Car)
-                               , BOOST_FUSION_R_ELSE_CLREF(Cdr)
+            result_of::make_cons<
+                BOOST_FUSION_R_ELSE_CLREF(Car)
+              , BOOST_FUSION_R_ELSE_CLREF(Cdr)
             >::type
         type;
+
         return type(BOOST_FUSION_FORWARD(Car,car)
                   , BOOST_FUSION_FORWARD(Cdr,cdr));
     }

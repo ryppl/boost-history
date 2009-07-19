@@ -16,7 +16,6 @@
 
 namespace boost { namespace fusion
 {
-    // Special tags:
     struct sequence_facade_tag;
 
     namespace extension

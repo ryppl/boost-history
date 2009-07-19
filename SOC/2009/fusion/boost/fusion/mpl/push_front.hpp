@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_PUSH_FRONT_HPP
 #define BOOST_FUSION_MPL_PUSH_FRONT_HPP
 
-#include <boost/mpl/push_front.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/push_front.hpp>
 #include <boost/fusion/sequence/convert.hpp>

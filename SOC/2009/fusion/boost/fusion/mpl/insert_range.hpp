@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_INSERT_RANGE_HPP
 #define BOOST_FUSION_MPL_INSERT_RANGE_HPP
 
-#include <boost/mpl/insert_range.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/insert_range.hpp>
 #include <boost/fusion/sequence/convert.hpp>

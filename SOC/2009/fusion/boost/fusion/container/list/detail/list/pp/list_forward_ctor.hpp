@@ -5,9 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#ifndef BOOST_PP_IS_ITERATING
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_PP_LIST_FORWARD_CTOR_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_PP_LIST_FORWARD_CTOR_HPP
-#define FUSION_LIST_FORWARD_CTOR_07172005_0113
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -38,8 +38,7 @@
 #if N == 1
     explicit
 #endif
-    list(BOOST_PP_ENUM_BINARY_PARAMS(
-        N, typename detail::call_param<T, >::type _))
+    list(BOOST_PP_ENUM_BINARY_PARAMS(N, T, const& _))
         : inherited_type(list_to_cons::call(BOOST_PP_ENUM_PARAMS(N, _)))
     {}
 

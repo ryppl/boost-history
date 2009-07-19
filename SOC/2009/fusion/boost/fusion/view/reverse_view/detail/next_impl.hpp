@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_NEXT_IMPL_HPP
 #define BOOST_FUSION_VIEW_REVERSE_VIEW_DETAIL_NEXT_IMPL_HPP
 
-#include <boost/fusion/iterator/prior.hpp>
+#include <boost/fusion/iterator/next.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {

@@ -8,6 +8,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVERT_HPP
 #define BOOST_FUSION_SEQUENCE_CONVERT_HPP
 
+#include <boost/fusion/support/ref.hpp>
+
 namespace boost { namespace fusion
 {
     namespace extension
@@ -30,19 +32,13 @@ namespace boost { namespace fusion
     }
 
     template <typename Tag, typename Seq>
-    inline typename result_of::convert<
-        Tag
-      , BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    inline typename
+        result_of::convert<Tag, BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     convert(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        typedef typename result_of::convert<
-            Tag
-          , BOOST_FUSION_R_ELSE_CLREF(Seq)>::gen
-        gen;
-
-        return gen::call(seq);
+        return result_of::convert<Tag, BOOST_FUSION_R_ELSE_CLREF(Seq)>::
+            gen::call(seq);
     }
-
 }}
 
 #endif

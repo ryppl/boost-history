@@ -8,10 +8,8 @@
 #ifndef BOOST_FUSION_MPL_END_HPP
 #define BOOST_FUSION_MPL_END_HPP
 
+#include <boost/fusion/mpl/fusion_iterator.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
-#include <boost/fusion/mpl/detail/fusion_iterator.hpp>
-
-#include <boost/mpl/end.hpp>
 
 namespace boost { namespace mpl
 {

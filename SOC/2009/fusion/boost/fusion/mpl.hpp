@@ -8,6 +8,7 @@
 #ifndef BOOST_FUSION_MPL_HPP
 #define BOOST_FUSION_MPL_HPP
 
+#include <boost/fusion/mpl/at.hpp>
 #include <boost/fusion/mpl/back.hpp>
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/clear.hpp>

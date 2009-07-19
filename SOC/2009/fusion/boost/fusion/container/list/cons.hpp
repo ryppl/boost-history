@@ -141,12 +141,11 @@ namespace boost { namespace fusion
         */
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        explicit cons(typename detail::call_param<Car>::type car)
+        explicit cons(Car const& car)
           : car(car), cdr()
         {}
 
-        cons(typename detail::call_param<Car>::type car
-           , typename detail::call_param<Cdr>::type cdr)
+        cons(Car const& car, Cdr const& cdr)
           : car(car), cdr(cdr)
         {}
 #else

@@ -5,9 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#ifndef BOOST_PP_IS_ITERATING
 #ifndef BOOST_FUSION_CONTAINER_MAP_DETAIL_PP_AS_MAP_HPP
 #define BOOST_FUSION_CONTAINER_MAP_DETAIL_PP_AS_MAP_HPP
-#define FUSION_AS_MAP_0932005_1339
 
 #include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/iterator/value_of.hpp>

@@ -5,9 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#ifndef BOOST_PP_IS_ITERATING
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_AS_VECTOR_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_AS_VECTOR_HPP
-#define FUSION_AS_VECTOR_09222005_0950
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
@@ -26,23 +26,6 @@ namespace boost { namespace fusion { namespace detail
     template <int size>
     struct as_vector;
 
-    template <>
-    struct as_vector<0>
-    {
-        template <typename Iterator>
-        struct apply
-        {
-            typedef vector0 type;
-        };
-
-        template <typename Iterator>
-        static typename apply<Iterator>::type
-        call(Iterator)
-        {
-            return vector0();
-        }
-    };
-
 #define BOOST_FUSION_NEXT_ITERATOR(z, n, data)                                  \
     typedef typename fusion::result_of::next<BOOST_PP_CAT(I, n)>::type          \
         BOOST_PP_CAT(I, BOOST_PP_INC(n));
@@ -56,7 +39,7 @@ namespace boost { namespace fusion { namespace detail
         BOOST_PP_CAT(T, n);
 
 #define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/as_vector.hpp>
-#define BOOST_PP_ITERATION_LIMITS (1, FUSION_MAX_VECTOR_SIZE)
+#define BOOST_PP_ITERATION_LIMITS (0, FUSION_MAX_VECTOR_SIZE)
 #include BOOST_PP_ITERATE()
 
 #undef BOOST_FUSION_NEXT_ITERATOR

@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_HAS_KEY_HPP
 #define BOOST_FUSION_MPL_HAS_KEY_HPP
 
-#include <boost/mpl/has_key.hpp>
 #include <boost/fusion/sequence/intrinsic/has_key.hpp>
 
 namespace boost { namespace mpl

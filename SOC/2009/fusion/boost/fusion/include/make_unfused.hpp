@@ -5,9 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_INCLUDE_UNFUSED_GENERIC_HPP
-#define BOOST_FUSION_INCLUDE_UNFUSED_GENERIC_HPP
+#ifndef BOOST_FUSION_INCLUDE_MAKE_UNFUSED_HPP
+#define BOOST_FUSION_INCLUDE_MAKE_UNFUSED_HPP
 
-#include <boost/fusion/functional/adapter/unfused_generic.hpp>
+#include <boost/fusion/functional/generation/make_unfused.hpp>
 
 #endif

@@ -8,9 +8,6 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
-//TODO as fusion element?!
-//TODO bidirectional
-
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>

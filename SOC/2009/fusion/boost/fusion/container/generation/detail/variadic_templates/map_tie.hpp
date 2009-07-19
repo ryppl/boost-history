@@ -53,7 +53,7 @@ namespace boost { namespace fusion
                     mpl::zip_view<mpl::vector<keys,types> >
                   , mpl::unpack_args<
                         pair<mpl::_1
-                           , detail::as_fusion_element_lref<mpl::_2>
+                           , detail::as_fusion_element_ref<mpl::_2>
                         >
                     >
                 >

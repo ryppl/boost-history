@@ -17,7 +17,7 @@ namespace boost { namespace fusion
         struct vector_tie
         {
             typedef
-                vector<typename detail::as_fusion_element_lref<Types>::type...>
+                vector<typename detail::as_fusion_element_ref<Types>::type...>
             type;
         };
     }

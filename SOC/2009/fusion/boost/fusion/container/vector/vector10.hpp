@@ -11,36 +11,46 @@
 #include <boost/config.hpp>
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
-//TODO!!!
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/vector/vector_fwd.hpp>
+#   include <boost/fusion/iterator/deref.hpp>
+#   include <boost/fusion/iterator/next.hpp>
+#   include <boost/fusion/support/sequence_base.hpp>
+#   include <boost/fusion/support/ref.hpp>
+#   include <boost/fusion/support/sequence_assign.hpp>
+
+#   include <boost/preprocessor/cat.hpp>
+#   include <boost/preprocessor/dec.hpp>
+#   include <boost/preprocessor/repetition/enum.hpp>
+#   include <boost/preprocessor/repetition/enum_params.hpp>
+#   include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#   include <boost/preprocessor/repetition/repeat.hpp>
+#   include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#   include <boost/preprocessor/iteration/iterate.hpp>
+
+#   include <boost/mpl/int.hpp>
+#   include <boost/mpl/bool.hpp>
+#   include <boost/mpl/vector.hpp>
+#   include <boost/mpl/at.hpp>
+
+#   include <boost/type_traits/add_reference.hpp>
+#   include <boost/type_traits/add_const.hpp>
+
+#   include <boost/fusion/container/vector/detail/at_impl.hpp>
+#   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
+#   include <boost/fusion/container/vector/detail/vector_iterator.hpp>
+#   include <boost/fusion/container/vector/detail/begin_impl.hpp>
+#   include <boost/fusion/container/vector/detail/end_impl.hpp>
+#   include <boost/fusion/container/vector/detail/deref_impl.hpp>
+#   include <boost/fusion/container/vector/detail/value_of_impl.hpp>
+#   include <boost/fusion/container/vector/detail/next_impl.hpp>
+#   include <boost/fusion/container/vector/detail/prior_impl.hpp>
+#   include <boost/fusion/container/vector/detail/equal_to_impl.hpp>
+#   include <boost/fusion/container/vector/detail/distance_impl.hpp>
+#   include <boost/fusion/container/vector/detail/advance_impl.hpp>
+#else
 #   include <boost/fusion/container/vector/vector.hpp>
 #endif
-
-#include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/ref.hpp>
-
-#include <boost/fusion/container/vector/detail/at_impl.hpp>
-#include <boost/fusion/container/vector/detail/value_at_impl.hpp>
-#include <boost/fusion/container/vector/detail/begin_impl.hpp>
-#include <boost/fusion/container/vector/detail/end_impl.hpp>
-
-#include <boost/mpl/int.hpp>
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/at.hpp>
-#include <boost/mpl/vector/vector10.hpp>
-#include <boost/type_traits/is_convertible.hpp>
-#include <boost/utility/enable_if.hpp>
-
-#include <boost/preprocessor/dec.hpp>
-#include <boost/preprocessor/iteration/iterate.hpp>
-#include <boost/preprocessor/repetition/enum.hpp>
-#include <boost/preprocessor/repetition/enum_shifted.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/preprocessor/repetition/enum_binary_params.hpp>
-#include <boost/preprocessor/repetition/repeat_from_to.hpp>
 
 namespace boost { namespace fusion
 {
@@ -50,10 +60,8 @@ namespace boost { namespace fusion
 #   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/variadic_templates/vector_n.hpp>
 #endif
 
-// expand vector1 to vector10
 #   define BOOST_PP_ITERATION_LIMITS (0, 10)
 #   include BOOST_PP_ITERATE()
-
 }}
 #else
 #   include <boost/fusion/container/vector/vector.hpp>

@@ -44,7 +44,14 @@ namespace boost { namespace fusion
                 , make_single_view(BOOST_FUSION_FORWARD(T,x)));
     }
 
-    //TODO cref
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename Pos, typename T>
+    inline typename result_of::insert<Seq&, Pos const&, T const&>::type
+    insert(Seq& seq,Pos const& pos,T const& x)
+    {
+        return insert_range(seq, pos, make_single_view(x));
+    }
+#endif
 }}
 
 #endif

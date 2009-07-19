@@ -8,8 +8,6 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VECTOR_ITERATOR_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VECTOR_ITERATOR_HPP
 
-//TODO cschmidt: move in detail
-
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>

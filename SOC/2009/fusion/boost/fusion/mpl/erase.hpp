@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_ERASE_HPP
 #define BOOST_FUSION_MPL_ERASE_HPP
 
-#include <boost/mpl/erase.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/erase.hpp>
 #include <boost/fusion/sequence/convert.hpp>

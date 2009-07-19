@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_EMPTY_HPP
 #define BOOST_FUSION_MPL_EMPTY_HPP
 
-#include <boost/mpl/empty.hpp>
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
 
 namespace boost { namespace mpl

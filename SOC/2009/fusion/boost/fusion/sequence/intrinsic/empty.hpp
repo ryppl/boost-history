@@ -16,7 +16,6 @@
 
 namespace boost { namespace fusion
 {
-    // Special tags:
     struct sequence_facade_tag;
 
     namespace extension
@@ -44,7 +43,7 @@ namespace boost { namespace fusion
     {
         template <typename Seq>
         struct empty
-            : extension::empty_impl<typename traits::tag_of<Seq>::type>::
+          : extension::empty_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type>
         {};
     }

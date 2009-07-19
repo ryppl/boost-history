@@ -6,7 +6,7 @@
 #ifndef BOOST_FUSION_ADAPTED_STRUCT_ADAPT_ASSOC_STRUCT_HPP
 #define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_ASSOC_STRUCT_HPP
 
-//TODO remove this header?
+//cschmidt: this header is only provided for backwards compatibility
 
 #include <boost/fusion/adapted/struct.hpp>
 

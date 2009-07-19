@@ -5,9 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#ifndef BOOST_PP_IS_ITERATING
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAKE_MAP_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAKE_MAP_HPP
-#define FUSION_MAKE_MAP_07222005_1247
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>

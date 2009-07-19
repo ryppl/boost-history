@@ -5,11 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_INCLUDE_VOID_HPP
-#define BOOST_FUSION_INCLUDE_VOID_HPP
+#ifndef BOOST_FUSION_INCLUDE_UNFUSED_HPP
+#define BOOST_FUSION_INCLUDE_UNFUSED_HPP
 
-//TODO cschmidt: is this file needed?
-
-#include <boost/fusion/support/void.hpp>
+#include <boost/fusion/functional/adapter/unfused.hpp>
 
 #endif

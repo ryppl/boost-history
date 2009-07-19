@@ -5,32 +5,33 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
+#ifndef BOOST_PP_IS_ITERATING
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
-#define FUSION_VECTOR_N_CHOOSER_07072005_1248
 
 #include <boost/fusion/container/vector/limits.hpp>
 
 //  include vector0..N where N is FUSION_MAX_VECTOR_SIZE
 #include <boost/fusion/container/vector/vector10.hpp>
 #if (FUSION_MAX_VECTOR_SIZE > 10)
-#include <boost/fusion/container/vector/vector20.hpp>
+#   include <boost/fusion/container/vector/vector20.hpp>
 #endif
 #if (FUSION_MAX_VECTOR_SIZE > 20)
-#include <boost/fusion/container/vector/vector30.hpp>
+#   include <boost/fusion/container/vector/vector30.hpp>
 #endif
 #if (FUSION_MAX_VECTOR_SIZE > 30)
-#include <boost/fusion/container/vector/vector40.hpp>
+#   include <boost/fusion/container/vector/vector40.hpp>
 #endif
 #if (FUSION_MAX_VECTOR_SIZE > 40)
-#include <boost/fusion/container/vector/vector50.hpp>
+#   include <boost/fusion/container/vector/vector50.hpp>
 #endif
+
+#include <boost/preprocessor/cat.hpp>
+#include <boost/preprocessor/repetition/enum_params.hpp>
 
 #include <boost/mpl/distance.hpp>
 #include <boost/mpl/find.hpp>
 #include <boost/mpl/begin_end.hpp>
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
 
 namespace boost { namespace fusion
 {
@@ -42,19 +43,9 @@ namespace boost { namespace fusion { namespace detail
     template <int N>
     struct get_vector_n;
 
-    template <>
-    struct get_vector_n<0>
-    {
-        template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename T)>
-        struct call
-        {
-            typedef vector0 type;
-        };
-    };
-
 #define BOOST_PP_FILENAME_1 \
-    <boost/fusion/container/vector/detail/vector_n_chooser.hpp>
-#define BOOST_PP_ITERATION_LIMITS (1, FUSION_MAX_VECTOR_SIZE)
+    <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
+#define BOOST_PP_ITERATION_LIMITS (0, FUSION_MAX_VECTOR_SIZE)
 #include BOOST_PP_ITERATE()
 
     template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename T)>

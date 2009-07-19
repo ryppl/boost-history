@@ -99,25 +99,15 @@ namespace boost { namespace fusion
                 static_cast<base*>(this)->assign(fusion::next(it));
             }
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-            vector_impl(assign_directly,
-                    typename detail::call_param<Head>::type head,
-                    typename detail::call_param<OtherElements>::type... others)
-                : base(assign_directly(),assign_directly,others...),
-                , _element(head)
-            {
-            }
-#else
             template<typename OtherHead,typename... OtherElements>
             vector_impl(assign_directly,
-                    OtherHead&& other_head,
-                    OtherElements&&... other_elements)
+                    BOOST_FUSION_R_ELSE_CLREF(OtherHead) other_head,
+                    BOOST_FUSION_R_ELSE_CLREF(OtherElements)... other_elements)
                 : base(assign_directly(),
-                        std::forward<OtherElements>(other_elements)...)
-                , _element(std::forward<OtherHead>(other_head))
+                        BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
+                , _element(BOOST_FUSION_FORWARD(OtherHead,other_head))
             {
             }
-#endif
 
             typename detail::add_lref<Head>::type
             at_impl(mpl::int_<Index>)
@@ -179,19 +169,11 @@ namespace boost { namespace fusion
         {}
         */
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-        vector(typename detail::call_param<Head>::type head,
-               typename detail::call_param<OtherElements>::type... others)
-          : base(assign_directly(),others...)
-          , _element(head)
-        {}
-#else
         template<typename... OtherElements>
-        vector(OtherElements&&... other_elements)
+        vector(BOOST_FUSION_R_ELSE_CLREF(OtherElements)... other_elements)
           : base(detail::assign_directly(),
-                 std::forward<OtherElements>(other_elements)...)
+                 BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
         {}
-#endif
 
         template<typename Seq>
         vector&

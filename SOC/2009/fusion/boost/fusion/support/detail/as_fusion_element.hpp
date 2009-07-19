@@ -73,7 +73,7 @@ namespace boost { namespace fusion { namespace detail
     };
 
     template <typename T>
-    struct as_fusion_element_lref
+    struct as_fusion_element_ref
     {
         typedef typename as_fusion_element<T>::type element;
 

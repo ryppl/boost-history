@@ -23,8 +23,6 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
 
-//TODO cschmidt: is this really worth the effort?
-
 namespace boost { namespace fusion {
     struct random_access_traversal_tag;
 

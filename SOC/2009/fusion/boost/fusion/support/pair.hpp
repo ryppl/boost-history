@@ -22,14 +22,10 @@ namespace boost { namespace fusion
           : second()
         {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
-        pair(typename detail::call_param<Second>::type val)
-          : second(val)
-        {}
-#elif defined(BOOST_NO_VARIADIC_TEMPLATES)
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
         template<typename Arg>
-        pair(Arg&& arg)
-          : second(std::forward<Arg>(arg))
+        pair(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
+          : second(BOOST_FUSION_FORWARD(Arg,arg))
         {}
 #else
         template<typename Arg1,typename... Args>

@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_FRONT_HPP
 #define BOOST_FUSION_MPL_FRONT_HPP
 
-#include <boost/mpl/front.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
 

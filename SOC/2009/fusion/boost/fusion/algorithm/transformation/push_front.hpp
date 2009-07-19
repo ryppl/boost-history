@@ -19,7 +19,6 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct push_front
         {
-            //TODO cschmidt: move as_fusion_element inside single_view
             typedef
                 joint_view<
                     fusion::single_view<

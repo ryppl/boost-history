@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_BACK_HPP
 #define BOOST_FUSION_MPL_BACK_HPP
 
-#include <boost/mpl/back.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/iterator/value_of.hpp>

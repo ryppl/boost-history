@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_ERASE_KEY_HPP
 #define BOOST_FUSION_MPL_ERASE_KEY_HPP
 
-#include <boost/mpl/erase_key.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/erase_key.hpp>
 #include <boost/fusion/sequence/convert.hpp>

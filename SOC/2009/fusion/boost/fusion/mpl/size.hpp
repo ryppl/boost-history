@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_SIZE_HPP
 #define BOOST_FUSION_MPL_SIZE_HPP
 
-#include <boost/mpl/size.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 
 namespace boost { namespace mpl

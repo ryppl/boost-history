@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_MPL_DETAIL_AT_HPP
 #define BOOST_FUSION_MPL_DETAIL_AT_HPP
 
-#include <boost/mpl/at.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 
 namespace boost {

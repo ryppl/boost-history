@@ -40,7 +40,7 @@ namespace boost{namespace fusion{
     };
 
     template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq>>
+    struct is_sequence_assign<detail::sequence_assign_type<Seq> >
        : mpl::true_
     {
     };
