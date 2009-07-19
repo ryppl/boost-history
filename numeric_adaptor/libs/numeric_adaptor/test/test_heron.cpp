@@ -32,10 +32,11 @@ double heron()
 
 int test_main(int, char*[])
 {
+    double big_epsilon = 0.0001;
     double epsilon = 0.0000001;
 
-    BOOST_CHECK_CLOSE(heron<float>(), 0.0, epsilon);
-    BOOST_CHECK_CLOSE(heron<double>(), 0.32749053277825713, epsilon);
+    BOOST_CHECK_CLOSE(heron<float>(), 0.0, big_epsilon);
+    BOOST_CHECK_CLOSE(heron<double>(), 0.32749053277825713, big_epsilon);
 #if ! defined(_MSC_VER)
     BOOST_CHECK_CLOSE(heron<long double>(), 0.327490459921098, epsilon);
 #endif
