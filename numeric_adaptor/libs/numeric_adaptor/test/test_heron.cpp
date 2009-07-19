@@ -35,8 +35,10 @@ int test_main(int, char*[])
     double epsilon = 0.0000001;
 
     BOOST_CHECK_CLOSE(heron<float>(), 0.0, epsilon);
-    BOOST_CHECK_CLOSE(heron<double>(), 0.32749040502871557, epsilon);
+    BOOST_CHECK_CLOSE(heron<double>(), 0.32749053277825713, epsilon);
+#if ! defined(_MSC_VER)
     BOOST_CHECK_CLOSE(heron<long double>(), 0.327490459921098, epsilon);
+#endif
 
 #if defined(HAVE_CLN)
     BOOST_CHECK_CLOSE(heron<boost::numeric_adaptor::cln_value_type>(), 0.32749045994262366, epsilon);

@@ -1,14 +1,14 @@
 // Numeric Adaptor Library
 //
-// Copyright Barend Gehrels 2009, Geodan, Amsterdam
 // Copyright Bruno Lalande 2009
+// Copyright Barend Gehrels 2009, Geodan, Amsterdam
 // Use, modification and distribution is subject to the Boost Software License,
 // Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
 
-#ifndef NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
-#define NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
+#ifndef BOOST_NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
+#define BOOST_NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
 
 
 #include <cln/cln.h>
@@ -148,4 +148,4 @@ numeric_adaptor::cln_value_type hypot(
 } // namespace boost
 
 
-#endif
+#endif // BOOST_NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
