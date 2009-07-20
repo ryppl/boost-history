@@ -426,8 +426,8 @@ Moves an iterator by a specified distance.
 [*Semantics]: Returns an iterator to the element `N` positions from `i`. If `i` is a __bidirectional_iterator__ then `N` may be negative.
 
 [heading Header]
-    #include <boost/fusion/iterator/advance.hpp>
-    #include <boost/fusion/include/advance.hpp>
+    #include <boost/fusion/iterator/advance_c.hpp>
+    #include <boost/fusion/include/advance_c.hpp>
 
 [heading Example]
     typedef __vector__<int,int,int> vec;
@@ -863,8 +863,8 @@ Moves an iterator by a specified distance.
 [*Semantics]: Returns an iterator a distance `N` from `I`. If `I` is a __bidirectional_iterator__ then `N` may be negative. Equivalent to `__result_of_advance__<I, boost::mpl::int_<N> >::type`.
 
 [heading Header]
-    #include <boost/fusion/iterator/advance.hpp>
-    #include <boost/fusion/include/advance.hpp>
+    #include <boost/fusion/iterator/advance_c.hpp>
+    #include <boost/fusion/include/advance_c.hpp>
 
 [heading Example]
     typedef __vector__<int,double,char> vec;

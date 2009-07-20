@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_CONTAINER_VECTOR_CONVERT_HPP
 #define BOOST_FUSION_CONTAINER_VECTOR_CONVERT_HPP
 
-#include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/vector/detail/convert_impl.hpp>
 #include <boost/fusion/support/ref.hpp>
 

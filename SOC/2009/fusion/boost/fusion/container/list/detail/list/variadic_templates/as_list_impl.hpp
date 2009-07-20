@@ -6,6 +6,7 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_VARIADIC_TEMPLATES_AS_LIST_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_VARIADIC_TEMPLATES_AS_LIST_IMPL_HPP
 
+#include <boost/fusion/container/list.hpp>
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/end.hpp>
 #include <boost/fusion/support/variadic_templates/variadic_quote.hpp>

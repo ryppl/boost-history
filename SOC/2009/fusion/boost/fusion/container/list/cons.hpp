@@ -115,7 +115,7 @@ namespace boost { namespace fusion
 #undef CONS_CTOR
 
         template<typename SeqAssign>
-        cons(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq,
+        cons(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
              typename enable_if<
                  is_sequence_assign<SeqAssign> >::type* =NULL)
           : car(fusion::front(seq.get()))

@@ -38,23 +38,19 @@ namespace boost { namespace fusion
             typedef void_ head;
 
             vector_impl()
-            {
-            }
+            {}
 
             vector_impl(assign_directly)
-            {
-            }
+            {}
 
             template<typename It>
             vector_impl(assign_by_deref,It const&)
-            {
-            }
+            {}
 
             template<typename It>
             void
             assign(It const&)
-            {
-            }
+            {}
 
             void at_impl();
         };
@@ -79,17 +75,15 @@ namespace boost { namespace fusion
             Head _element;
 
         protected:
-            vector_impl():
-                _element()
-            {
-            }
+            vector_impl()
+              : _element()
+            {}
 
             template<typename It>
             vector_impl(assign_by_deref,It const& it)
               : base(assign_by_deref(),fusion::next(it))
               , _element(fusion::deref(it))
-            {
-            }
+            {}
 
             template<typename It>
             void
@@ -106,8 +100,7 @@ namespace boost { namespace fusion
                 : base(assign_directly(),
                         BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
                 , _element(BOOST_FUSION_FORWARD(OtherHead,other_head))
-            {
-            }
+            {}
 
             typename detail::add_lref<Head>::type
             at_impl(mpl::int_<Index>)
@@ -146,15 +139,14 @@ namespace boost { namespace fusion
         vector(vector COMBINATION vec)\
           : base(detail::assign_by_deref(),\
                 fusion::begin(BOOST_FUSION_FORWARD(vector COMBINATION,vec)))\
-        {\
-        }
+        {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
 
 #undef VECTOR_CTOR
 
         template<typename SeqAssign>
-        vector(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq,
+        vector(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
                typename enable_if<
                    is_sequence_assign<SeqAssign> >::type* =NULL)
           : base(detail::assign_by_deref(),fusion::begin(seq.get()))

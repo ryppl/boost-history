@@ -1,76 +1,59 @@
-/*=============================================================================
-    Copyright (c) 2001-2006 Joel de Guzman
+// Copyright Christopher Schmidt 2009.
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
+// http://www.boost.org/LICENSE_1_0.txt)
 
-    Distributed under the Boost Software License, Version 1.0. (See accompanying
-    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
-==============================================================================*/
+#ifndef BOOST_PP_IS_ITERATING
+#   include <boost/fusion/container/vector/vector_fwd.hpp>
+#   include <boost/fusion/sequence/intrinsic/begin.hpp>
+#   include <boost/fusion/iterator/deref.hpp>
+#   include <boost/fusion/iterator/next.hpp>
+#   include <boost/fusion/iterator/advance_c.hpp>
+#   include <boost/fusion/support/sequence_base.hpp>
+#   include <boost/fusion/support/ref.hpp>
+#   include <boost/fusion/support/sequence_assign.hpp>
 
-//TODO!!!
-#define FUSION_MEMBER_DEFAULT_INIT(z, n, _)     m##n(T##n())
-#define FUSION_MEMBER_INIT(z, n, _)             m##n(_##n)
-#define FUSION_COPY_INIT(z, n, _)               m##n(other.m##n)
-#define FUSION_MEMBER_DECL(z, n, _)             T##n m##n;
+#   include <boost/preprocessor/cat.hpp>
+#   include <boost/preprocessor/dec.hpp>
+#   include <boost/preprocessor/empty.hpp>
+#   include <boost/preprocessor/repetition/enum.hpp>
+#   include <boost/preprocessor/repetition/enum_params.hpp>
+#   include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#   include <boost/preprocessor/repetition/repeat.hpp>
+#   include <boost/preprocessor/repetition/repeat_from_to.hpp>
+#   include <boost/preprocessor/iteration/iterate.hpp>
 
-#define FUSION_MEMBER_ASSIGN(z, n, _)                                           \
-    this->BOOST_PP_CAT(m, n) = vec.BOOST_PP_CAT(m, n);
+#   include <boost/mpl/int.hpp>
+#   include <boost/mpl/bool.hpp>
+#   include <boost/mpl/vector.hpp>
+#   include <boost/mpl/at.hpp>
 
-#define FUSION_DEREF_MEMBER_ASSIGN(z, n, _)                                     \
-    this->BOOST_PP_CAT(m, n) = *BOOST_PP_CAT(i, n);
+#   include <boost/type_traits/add_const.hpp>
+#   include <boost/utility/enable_if.hpp>
 
-#define FUSION_AT_IMPL(z, n, _)                                                 \
-    typename add_reference<T##n>::type                                          \
-        at_impl(mpl::int_<n>) { return this->m##n; }                            \
-    typename add_reference<typename add_const<T##n>::type>::type                \
-        at_impl(mpl::int_<n>) const { return this->m##n; }
+#   include <boost/fusion/container/vector/detail/at_impl.hpp>
+#   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
+#   include <boost/fusion/container/vector/detail/vector_iterator.hpp>
+#   include <boost/fusion/container/vector/detail/begin_impl.hpp>
+#   include <boost/fusion/container/vector/detail/end_impl.hpp>
+#   include <boost/fusion/container/vector/detail/deref_impl.hpp>
+#   include <boost/fusion/container/vector/detail/value_of_impl.hpp>
+#   include <boost/fusion/container/vector/detail/next_impl.hpp>
+#   include <boost/fusion/container/vector/detail/prior_impl.hpp>
+#   include <boost/fusion/container/vector/detail/equal_to_impl.hpp>
+#   include <boost/fusion/container/vector/detail/distance_impl.hpp>
+#   include <boost/fusion/container/vector/detail/advance_impl.hpp>
 
-#define FUSION_ITER_DECL_VAR(z, n, _)                                           \
-    typedef typename result_of::next<                                           \
-        BOOST_PP_CAT(I, BOOST_PP_DEC(n))>::type BOOST_PP_CAT(I, n);             \
-    BOOST_PP_CAT(I, n) BOOST_PP_CAT(i, n)                                       \
-        = fusion::next(BOOST_PP_CAT(i, BOOST_PP_DEC(n)));
+#   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/vector_n.hpp>
+#   define BOOST_PP_ITERATION_LIMITS (BOOST_FUSION_FROM, BOOST_FUSION_TO)
+#   include BOOST_PP_ITERATE()
 
-#define BOOST_FUSION_DEREF_I(Z,N,_) fusion::deref(*BOOST_PP_CAT(i,N))
+#else
+#   define N BOOST_PP_ITERATION()
 
-#define N BOOST_PP_ITERATION()
-
-#if N
-    template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-    struct BOOST_PP_CAT(vector_data, N)
-    {
-        BOOST_PP_CAT(vector_data, N)()
-            : BOOST_PP_ENUM(N, FUSION_MEMBER_DEFAULT_INIT, _) {}
-
-        BOOST_PP_CAT(vector_data, N)
-            (BOOST_PP_ENUM_BINARY_PARAMS(N, const T,& _))
-          : BOOST_PP_ENUM(N, FUSION_MEMBER_INIT, _)
-        {}
-
-        BOOST_PP_CAT(vector_data, N)(
-            BOOST_PP_CAT(vector_data, N) const& other)
-            : BOOST_PP_ENUM(N, FUSION_COPY_INIT, _) {}
-
-        BOOST_PP_CAT(vector_data, N)&
-        operator=(BOOST_PP_CAT(vector_data, N) const& vec)
-        {
-            BOOST_PP_REPEAT(N, FUSION_MEMBER_ASSIGN, _)
-            return *this;
-        }
-
-        template <typename Sequence>
-        static BOOST_PP_CAT(vector_data, N)
-        init_from_sequence(Sequence const& seq)
-        {
-            typedef typename result_of::begin<Sequence const>::type I0;
-            I0 i0 = fusion::begin(seq);
-            BOOST_PP_REPEAT_FROM_TO(1, N, FUSION_ITER_DECL_VAR, _)
-            return BOOST_PP_CAT(vector_data, N) (BOOST_PP_ENUM(N, BOOST_FUSION_DEREF_I,_));
-        }
-
-        BOOST_PP_REPEAT(N, FUSION_MEMBER_DECL, _)
-    };
-#endif
-
-#if !N
+namespace boost { namespace fusion
+{
+#   if !N
     struct void_;
 
     template <class T0=void_>
@@ -79,17 +62,12 @@
     template<>
     struct vector0<void_>
       : sequence_base<vector0<void_> >
-#else
+#   else
     template <BOOST_PP_ENUM_PARAMS(N, typename T)>
     struct BOOST_PP_CAT(vector, N)
       : sequence_base<BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N,T)> >
-      , BOOST_PP_CAT(vector_data, N)<BOOST_PP_ENUM_PARAMS(N, T)>
-#endif
+#   endif
     {
-        typedef BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> this_type;
-#if N
-        typedef BOOST_PP_CAT(vector_data, N)<BOOST_PP_ENUM_PARAMS(N, T)> base_type;
-#endif
         typedef mpl::BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> types;
         typedef vector_tag fusion_tag;
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
@@ -97,81 +75,148 @@
         typedef random_access_traversal_tag category;
         typedef mpl::int_<N> size;
 
+#   define BOOST_FUSION_DEFAULT_MEMBER_INIT(Z, N, _) BOOST_PP_CAT(m,N)()
+
         BOOST_PP_CAT(vector, N)()
+#if N
+          : BOOST_PP_ENUM(N, BOOST_FUSION_DEFAULT_MEMBER_INIT, _)
+#endif
         {}
 
-#if N
-#if (N == 1)
+#   undef BOOST_FUSION_DEFAULT_MEMBER_INIT
+
+        //TODO macro names
+#   if N
+#       define BOOST_FUSION_SELF_TYPE\
+            BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N,T)>
+
+#       define BOOST_FUSION_MEMBER_INIT(Z, N, COMBINATION)\
+            BOOST_PP_CAT(m,N)(\
+                BOOST_FUSION_FORWARD(BOOST_FUSION_SELF_TYPE COMBINATION,vec).\
+                    BOOST_PP_CAT(m,N))
+
+#       define VECTOR_CTOR(COMBINATION,_)\
+        BOOST_PP_CAT(vector, N)(\
+            BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N,T)> COMBINATION vec)\
+          : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, COMBINATION)\
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
+
+#       undef BOOST_FUSION_MEMBER_INIT
+#       undef BOOST_FUSION_SELF_TYPE
+#   else
+#       define VECTOR_CTOR(COMBINATION,_)\
+        BOOST_PP_CAT(vector, N)(BOOST_PP_CAT(vector, N)<void_> COMBINATION vec)\
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
+
+#   endif
+#   undef VECTOR_CTOR
+
+#   if N
+#       define BOOST_FUSION_MEMBER_INIT(Z, N, _)\
+        BOOST_PP_CAT(m,N)(\
+            BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,N), BOOST_PP_CAT(_,N)))
+
+        template <BOOST_PP_ENUM_PARAMS(N, typename A)>
+#       if (N == 1)
         explicit
-#endif
-        BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, const T,& _))
-          : base_type(BOOST_PP_ENUM_PARAMS(N, _))
-        {}
-#endif
-
-#if N
-        template <BOOST_PP_ENUM_PARAMS(N, typename U)>
-#endif
+#       endif
         BOOST_PP_CAT(vector, N)(
-            BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, U)> const& vec)
-#if N
-          : base_type(BOOST_PP_ENUM_PARAMS(N, vec.m))
-#endif
+            BOOST_PP_ENUM_BINARY_PARAMS(
+                    N,
+                    A,
+                    BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()) _)
+            )
+          : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)
         {}
 
-        template<typename Seq>
-        BOOST_PP_CAT(vector, N)(detail::sequence_assign_type<Seq> const& seq)
-#if N
-          : base_type(base_type::init_from_sequence(seq.get()))
-#endif
+#       undef BOOST_FUSION_MEMBER_INIT
+#   endif
+
+#   define BOOST_FUSION_MEMBER_INIT(Z, N, _)\
+        BOOST_PP_CAT(m,N)(\
+            fusion::deref(fusion::advance_c<N>(fusion::begin(seq.get()))))
+
+        template<typename SeqAssign>
+        BOOST_PP_CAT(vector,N)(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
+               typename enable_if<
+                   is_sequence_assign<SeqAssign> >::type* =NULL)
+#   if N
+          : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)
+#   endif
         {}
 
-#if N
-        template <BOOST_PP_ENUM_PARAMS(N, typename U)>
-#endif
-        BOOST_PP_CAT(vector, N)&
-        operator=(BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, U)> const& vec)
+#   undef BOOST_FUSION_MEMBER_INIT
+
+        template <typename Seq>
+        BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)>&
+        operator=(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
         {
-            BOOST_PP_REPEAT(N, FUSION_MEMBER_ASSIGN, _)
+#   if N
+            typedef typename
+                result_of::begin<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
+            It0;
+            It0 it0 = fusion::begin(seq);
+
+#       define BOOST_FUSION_DEREF_MEMBER_ASSIGN(Z, N, _)\
+            typedef typename\
+                result_of::next<BOOST_PP_CAT(It, BOOST_PP_DEC(N))>::type\
+            BOOST_PP_CAT(It, N);\
+            BOOST_PP_CAT(It, N) BOOST_PP_CAT(it, N)=\
+                fusion::next(BOOST_PP_CAT(it, BOOST_PP_DEC(N)));\
+                \
+            BOOST_PP_CAT(m, N) = fusion::deref(BOOST_PP_CAT(it, N));
+
+            BOOST_PP_REPEAT_FROM_TO(1, N, BOOST_FUSION_DEREF_MEMBER_ASSIGN, _)
+
+#       undef BOOST_FUSION_DEREF_MEMBER_ASSIGN
+#   endif
+
             return *this;
         }
-
-        template <typename Sequence>
-        this_type&
-        operator=(Sequence const& seq)
-        {
-            typedef typename result_of::begin<Sequence const>::type I0;
-            I0 i0 = fusion::begin(seq);
-            BOOST_PP_REPEAT_FROM_TO(1, N, FUSION_ITER_DECL_VAR, _)
-            BOOST_PP_REPEAT(N, FUSION_DEREF_MEMBER_ASSIGN, _)
-            return *this;
-        }
-
-        BOOST_PP_REPEAT(N, FUSION_AT_IMPL, _)
 
         template<typename I>
         typename detail::add_lref<typename mpl::at<types, I>::type>::type
-        at_impl(I i)
+        at_impl(I)
         {
-            return this->at_impl(mpl::int_<I::value>());
+            return at_impl(mpl::int_<I::value>());
         }
 
         template<typename I>
-        typename detail::add_lref<typename add_const<typename mpl::at<types, I>::type>::type>::type
-        at_impl(I i) const
+        typename detail::add_lref<
+            typename add_const<typename mpl::at<types, I>::type>::type
+        >::type
+        at_impl(I) const
         {
-            return this->at_impl(mpl::int_<I::value>());
+            return at_impl(mpl::int_<I::value>());
         }
-    };
 
-#undef N
-#undef FUSION_MEMBER_DEFAULT_INIT
-#undef FUSION_MEMBER_INIT
-#undef FUSION_COPY_INIT
-#undef FUSION_MEMBER_DECL
-#undef FUSION_MEMBER_ASSIGN
-#undef FUSION_DEREF_MEMBER_ASSIGN
-#undef FUSION_AT_IMPL
-#undef FUSION_ITER_DECL_VAR
-#undef BOOST_FUSION_DEREF_I
+        //TODO: no add_reference
+#   define BOOST_FUSION_MEMBER_DECL(Z, N, _)\
+        typename detail::add_lref<BOOST_PP_CAT(T,N)>::type\
+        at_impl(mpl::int_<N>)\
+        {\
+            return BOOST_PP_CAT(m,N);\
+        }\
+        \
+        typename detail::add_lref<\
+            typename add_const<BOOST_PP_CAT(T,N)>::type\
+        >::type\
+        at_impl(mpl::int_<N>) const\
+        {\
+            return BOOST_PP_CAT(m,N);\
+        }\
+        \
+        BOOST_PP_CAT(T,N) BOOST_PP_CAT(m,N);
+
+        BOOST_PP_REPEAT(N, BOOST_FUSION_MEMBER_DECL, _)
+
+#   undef BOOST_FUSION_MEMBER_DECL
+    };
+}}
+#   undef N
+#endif
 

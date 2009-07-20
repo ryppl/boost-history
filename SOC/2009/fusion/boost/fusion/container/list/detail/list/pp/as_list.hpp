@@ -87,14 +87,14 @@ namespace boost { namespace fusion { namespace detail
             typedef list<BOOST_PP_ENUM_PARAMS(N, T)> type;
         };
 
-        template <typename Iterator>
-        static typename apply<Iterator>::type
-        call(Iterator const& i0)
+        template <typename Ito>
+        static typename apply<Ito>::type
+        call(Ito const& it0)
         {
-            typedef apply<Iterator> gen;
-            typedef typename gen::type result;
+            typedef apply<It> gen;
             BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_CALL_ITERATOR, _)
-            return result(BOOST_PP_ENUM_PARAMS(N, fusion::deref(i)));
+            return typename gen::type(
+                    BOOST_PP_ENUM_PARAMS(N, fusion::deref(i)));
         }
     };
 

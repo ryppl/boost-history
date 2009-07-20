@@ -6,7 +6,7 @@
 #ifndef BOOST_FUSION_CONTAINER_MAP_DETAIL_VARIADIC_TEMPLATES_AS_MAP_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_MAP_DETAIL_VARIADIC_TEMPLATES_AS_MAP_IMPL_HPP
 
-//TODO cschmidt: ?!
+#include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/end.hpp>
 #include <boost/fusion/support/variadic_templates/variadic_quote.hpp>

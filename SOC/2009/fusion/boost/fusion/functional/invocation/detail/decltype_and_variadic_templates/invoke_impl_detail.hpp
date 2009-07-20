@@ -11,7 +11,7 @@
 #include <boost/fusion/sequence/intrinsic/back.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/iterator/advance.hpp>
+#include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/algorithm/transformation/pop_back.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/ref.hpp>

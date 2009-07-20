@@ -9,8 +9,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_EXTENSION_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_EXTENSION_HPP
 
-#include <boost/type_traits/add_const.hpp>
-
 namespace boost { namespace fusion
 {
     struct struct_tag;

@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_CONVERT_HPP
 #define BOOST_FUSION_CONTAINER_LIST_CONVERT_HPP
 
-#include <boost/fusion/container/list/list.hpp>
 #include <boost/fusion/support/ref.hpp>
 
 #include <boost/fusion/container/list/detail/list/convert_impl.hpp>

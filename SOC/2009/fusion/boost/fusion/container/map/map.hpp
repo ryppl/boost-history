@@ -187,7 +187,7 @@ public:
         template <class Key>
         typename detail::add_lref<
             typename add_const<typename meta_at_impl<Key>::type>::type
-            >::type
+        >::type
         at_impl(mpl::identity<Key>) const
         {
             return data.at_impl(

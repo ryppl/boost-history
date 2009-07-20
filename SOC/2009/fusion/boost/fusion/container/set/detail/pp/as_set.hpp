@@ -9,6 +9,11 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_DETAIL_PP_AS_SET_HPP
 #define BOOST_FUSION_CONTAINER_SET_DETAIL_PP_AS_SET_HPP
 
+#include <boost/fusion/container/set/set.hpp>
+#include <boost/fusion/iterator/value_of.hpp>
+#include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/iterator/next.hpp>
+
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
@@ -16,10 +21,6 @@
 #include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/inc.hpp>
 #include <boost/preprocessor/dec.hpp>
-#include <boost/fusion/container/set/set.hpp>
-#include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/iterator/next.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -86,14 +87,14 @@ namespace boost { namespace fusion { namespace detail
             typedef set<BOOST_PP_ENUM_PARAMS(N, T)> type;
         };
 
-        template <typename Iterator>
-        static typename apply<Iterator>::type
-        call(Iterator const& i0)
+        template <typename It>
+        static typename apply<It>::type
+        call(It const& it0)
         {
             typedef apply<Iterator> gen;
-            typedef typename gen::type result;
             BOOST_PP_REPEAT(BOOST_PP_DEC(N), BOOST_FUSION_NEXT_CALL_ITERATOR, _)
-            return result(BOOST_PP_ENUM_PARAMS(N, fusion::deref(i)));
+            return typename gen::type(
+                    BOOST_PP_ENUM_PARAMS(N, fusion::deref(i)));
         }
     };
 

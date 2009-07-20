@@ -10,7 +10,6 @@
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
 
 #include <boost/fusion/container/vector/limits.hpp>
-
 //  include vector0..N where N is FUSION_MAX_VECTOR_SIZE
 #include <boost/fusion/container/vector/vector10.hpp>
 #if (FUSION_MAX_VECTOR_SIZE > 10)

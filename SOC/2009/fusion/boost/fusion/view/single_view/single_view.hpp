@@ -58,9 +58,9 @@ namespace boost { namespace fusion
 #undef SINGLE_VIEW_CTOR
 
         template<typename SeqAssign>
-        single_view(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq,
+        single_view(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
             typename enable_if<
-                 is_sequence_assign<BOOST_FUSION_R_ELSE_CLREF(SeqAssign)>
+                 is_sequence_assign<BOOST_FUSION_R_ELSE_LREF(SeqAssign)>
             >::type* =NULL)
           : val(fusion::front(seq.get()))
         {}
@@ -88,10 +88,10 @@ namespace boost { namespace fusion
         template<typename SeqAssign>
         typename
             enable_if<
-                is_sequence_assign<BOOST_FUSION_R_ELSE_CLREF(SeqAssign)>
+                is_sequence_assign<BOOST_FUSION_R_ELSE_LREF(SeqAssign)>
               , single_view&
             >::type
-        operator=(BOOST_FUSION_R_ELSE_CLREF(SeqAssign) seq)
+        operator=(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq)
         {
             val=fusion::front(seq.get());
             return *this;
