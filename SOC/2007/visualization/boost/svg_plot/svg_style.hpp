@@ -304,7 +304,8 @@ class text_style
   friend bool operator== (const text_style&, const text_style&);
   friend bool operator!= (const text_style&, const text_style&);
 
-private:
+//protected:
+public:
   int font_size_; //!< Font size (SVG units, default pixels).
   std::string font_family_; //!< Font family, examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode".
   std::string weight_; //!< Font style, examples: "bold", "normal".
@@ -1112,6 +1113,7 @@ public:
     bool major_grid_on_;  //!< Draw X grid at major ticks.
     bool minor_grid_on_; //!< Draw X grid at minor ticks.
     svg_color values_color_; //!< Color of tick values labels.
+    // (just fill_color for now (stroke makes characters fuzzy.)
     int value_precision_; //!< Precision for tick value labels, usually 3 will suffice.
     std::ios_base::fmtflags value_ioflags_;  //!< IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; //!< If redundant zero, + and e are to be stripped.
@@ -1123,7 +1125,7 @@ public:
     // For X-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
     const text_style& value_label_style_; //!< text style (font, size...) for value labels.
 
-    ticks_labels_style( //! Constructor, providng defaults values for all member data.
+    ticks_labels_style( //! Constructor, providing defaults values for all member data.
       dim d = X,
       const text_style& style = no_style, // Default style.
       double max = 10., double min = -10.,

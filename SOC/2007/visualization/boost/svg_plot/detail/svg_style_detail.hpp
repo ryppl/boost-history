@@ -1,7 +1,7 @@
 /*! \file svg_style_detail.hpp
     \brief Plot document structure whose order controls the painting order,
     later layers overwriting earlier layers.
-
+    \date Jul 2009
     \author Jacob Voytko and Paul A. Bristow
 */
 
@@ -48,8 +48,8 @@ enum plot_doc_structure
     PLOT_X_MINOR_TICKS, //! X minor ticks
     PLOT_Y_MAJOR_TICKS, //! Y major ticks.
     PLOT_X_MAJOR_TICKS, //! X major ticks.
-    PLOT_X_TICK_VALUE_LABELS, //! X-axis tick values labels, for example 10, 20, 30 ...
-    PLOT_Y_TICK_VALUE_LABELS, //! Y-axis tick values labels, for example 1, 2, 3 ...
+    PLOT_X_TICKS_VALUES, //! X-axis tick values labels, for example 10, 20, 30 ...
+    PLOT_Y_TICKS_VALUES, //! Y-axis tick values labels, for example 1, 2, 3 ...
     PLOT_Y_LABEL, //! Y axis text labels "length (cm)".
     PLOT_X_LABEL, //! X axis text labels "height (m)".
     PLOT_DATA_LINES, //! Lines joining data points.
@@ -83,8 +83,8 @@ std::string document_ids_[]= //!< Strings used describe and identify SVG layers 
     "xMinorTicks",
     "yMajorTicks",
     "xMajorTicks",
-    "xTicksValueLabels", //! X-axis tick values labels, for example 10, 20, 30 ...
-    "yTicksValueLabels", //! Y-axis tick values labels, for example 1, 2, 3 ...
+    "xTicksValues", //! X-axis tick values labels, for example 10, 20, 30 ...
+    "yTicksValues", //! Y-axis tick values labels, for example 1, 2, 3 ...
     "yLabel",
     "xLabel",   // axis text labels "length (cm)"
     "plotLines", // normal data point markers.

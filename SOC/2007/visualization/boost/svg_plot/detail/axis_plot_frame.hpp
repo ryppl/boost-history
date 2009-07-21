@@ -410,7 +410,7 @@ namespace boost
               { // External to plot window style bottom or top.
                 // Always want all values including "0", if labeling external to plot window.
                 // x_ticks_.ticks_on_window_or_axis_ == true != 0
-                derived().image.g(detail::PLOT_X_TICK_VALUE_LABELS).text(
+                derived().image.g(detail::PLOT_X_TICKS_VALUES).text(
                   x,
                   y,
                   label.str(), derived().x_value_label_style_, alignment, derived().x_ticks_.label_rotation_);
@@ -419,7 +419,7 @@ namespace boost
               {
                 if ((value != 0) && derived().x_axis_.axis_line_on_)
                 { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
-                  derived().image.g(detail::PLOT_X_TICK_VALUE_LABELS).text(
+                  derived().image.g(detail::PLOT_X_TICKS_VALUES).text(
                     x,
                     y,
                     label.str(),
@@ -1493,7 +1493,7 @@ namespace boost
             derived().image.g(PLOT_X_MINOR_TICKS).clear();
             derived().image.g(PLOT_X_MAJOR_TICKS).clear();
             derived().image.g(PLOT_X_LABEL).clear();
-            derived().image.g(PLOT_X_TICK_VALUE_LABELS).clear();
+            derived().image.g(PLOT_X_TICKS_VALUES).clear();
           }
 
           void clear_y_axis()
@@ -1648,14 +1648,18 @@ namespace boost
           const std::string& x_label_font_family();
           Derived& x_axis_label_color(const svg_color& col);
           svg_color x_axis_label_color();
-          // X-axis label values style.
-          Derived& x_axis_values_color(const svg_color& col);
-          svg_color x_axis_values_color();
+          // X-axis ticks values label style.
+          Derived& x_ticks_values_color(const svg_color& col);
+          svg_color x_ticks_values_color();
+          Derived& x_ticks_values_precision(int p);
+          int x_ticks_values_precision();
+          Derived& x_ticks_values_ioflags(std::ios_base::fmtflags f);
+          std::ios_base::fmtflags x_ticks_values_ioflags();
 
-          Derived& x_axis_values_precision(int p);
-          int x_axis_values_precision();
-          Derived& x_axis_values_ioflags(std::ios_base::fmtflags f);
-          std::ios_base::fmtflags x_axis_values_ioflags();
+          Derived& x_ticks_values_font_family(const std::string& family);
+          const std::string& x_ticks_values_font_family();
+          Derived& x_ticks_values_font_size(unsigned int i);
+          unsigned int x_ticks_values_font_size();
 
           Derived& x_ticks_on_window_or_axis(int cmd);
           int x_ticks_on_window_or_axis();
@@ -2702,10 +2706,10 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           // X-axis tick label style.
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::x_axis_values_color(const svg_color& col)
+          Derived& axis_plot_frame<Derived>::x_ticks_values_color(const svg_color& col)
           { //! Set X axis tick value label color.
             // Set BOTH stroke and fill to the same color.
-            derived().image.g(detail::PLOT_X_TICK_VALUE_LABELS).style().fill_color(col);
+            derived().image.g(detail::PLOT_X_TICKS_VALUES).style().fill_color(col);
             //derived().image.g(detail::PLOT_X_TICK_VALUE_LABELS).style().stroke_color(col);
             // Setting the stroke color produces fuzzy characters :-(
             //derived().x_ticks_.color_ = col; 
@@ -2713,29 +2717,29 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           }
 
           template <class Derived>
-          svg_color axis_plot_frame<Derived>::x_axis_values_color()
-          { //! \return  X axis tick value label color.
+          svg_color axis_plot_frame<Derived>::x_ticks_values_color()
+          { //! \return  X-axis ticks value label color.
             // But only return the fill color.
-            return derived().image.g(detail::PLOT_X_TICK_VALUE_LABELS).style().fill_color();
+            return derived().image.g(detail::PLOT_X_TICKS_VALUES).style().fill_color();
             //return x_ticks_.color_ ;
           }
 
           // ticks_labels_style  x_ticks
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::x_axis_values_precision(int p)
+          Derived& axis_plot_frame<Derived>::x_ticks_values_precision(int p)
           { //! Set iostream decimal digits precision of data point X values near data points markers.
             derived().x_ticks_.value_precision_ = p;
             return derived();
           }
 
           template <class Derived>
-          int axis_plot_frame<Derived>::x_axis_values_precision()
+          int axis_plot_frame<Derived>::x_ticks_values_precision()
           { //! \return  iostream decimal digits precision of data point X values near data points markers.
             return derived().x_ticks_.value_precision_;
           }
 
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::x_axis_values_ioflags(std::ios_base::fmtflags f)
+          Derived& axis_plot_frame<Derived>::x_ticks_values_ioflags(std::ios_base::fmtflags f)
           { //! Set iostream format flags of data point X values near data points markers.
             //! Useful to set hexadecimal, fixed and scientific, (std::ios::scientific).
             derived().x_ticks_.value_ioflags_ = f;
@@ -2743,10 +2747,40 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           }
 
           template <class Derived>
-          std::ios_base::fmtflags axis_plot_frame<Derived>::x_axis_values_ioflags()
+          std::ios_base::fmtflags axis_plot_frame<Derived>::x_ticks_values_ioflags()
           { //! \return  iostream format flags of data point X values near data points markers.
             //! Might be used to set hexadecimal, fixed and scientific, (std::ios::scientific).
             return derived().x_ticks_.value_ioflags_;
+          }
+
+
+
+          template <class Derived>
+          Derived& axis_plot_frame<Derived>::x_ticks_values_font_size(unsigned int i)
+          { //! Set X tick value label font size (svg units, default pixels).
+            derived().x_ticks_.value_label_style_.font_size(i);
+            return derived();
+          }
+
+          template <class Derived>
+          unsigned int axis_plot_frame<Derived>::x_ticks_values_font_size()
+          { //! \return  X tick value label font size (svg units, default pixels).
+            return derived().x_ticks_.value_label_style_.font_size();
+          }
+
+          template <class Derived>
+          Derived& axis_plot_frame<Derived>::x_ticks_values_font_family(const std::string& family)
+          { //! Set X tick value label font family.
+
+
+            derived().x_ticks_.value_label_style_.font_family(family);
+            return derived();
+          }
+
+          template <class Derived>
+          const std::string& axis_plot_frame<Derived>::x_ticks_values_font_family()
+          { //! \return  X tick value label font family.
+            return derived().x_ticks_.value_label_style_.font_family();
           }
 
 

@@ -193,13 +193,16 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "x_values_on "  << plot.x_values_on() << endl;
   cout << "x_values_font_size "  << plot.x_values_font_size() << endl;
   cout << "x_values_font_family "  << plot.x_values_font_family() << endl;
-
-  cout << "x_value_precision " << plot.x_value_precision() << endl;
-  cout << "x_value_ioflags " << hex << plot.x_value_ioflags() << dec << ' ';
+  cout << "x_values_precision " << plot.x_values_precision() << endl;
+  cout << "x_values_ioflags " << hex << plot.x_values_ioflags() << dec << ' ';
   outFmtFlags(plot.x_value_ioflags(), cout,  ".\n");
-  cout << "y_value_precision " << plot.y_value_precision() << endl;
-  cout << "y_value_ioflags " << hex << plot.y_value_ioflags() << dec << ' ';
-  outFmtFlags(plot.y_value_ioflags(), cout,  ".\n");
+  cout << "y_values_precision " << plot.y_values_precision() << endl;
+  cout << "y_values_font_size() " << plot.y_value_precision() << endl; // duplicate????
+  cout << "y_values_ioflags " << hex << plot.y_values_ioflags() << dec << ' ';
+  outFmtFlags(plot.y_values_ioflags(), cout,  ".\n");
+  cout << "y_values_color " << plot.y_values_color() << endl;
+  cout << "y_values_font_family() " << plot.y_values_font_family() << endl;
+  cout << "y_values_font_size() " << plot.y_values_font_size() << endl;
 
   cout << "x_max " << plot.x_max() << endl;
   cout << "x_min " << plot.x_min() << endl;
@@ -210,7 +213,7 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "x_axis_on " << plot.x_axis_on() << endl;
   cout << "x_axis_color() " << plot.x_axis_color() << endl;
   cout << "x_axis_label_color " << plot.x_axis_label_color() << endl;
-  cout << "x_axis_value_color " << plot.x_axis_value_color() << endl;
+  cout << "x_values_color " << plot.x_values_color() << endl;
   cout << "x_axis_width " << plot.x_axis_width() << endl;
   cout << "x_label_on " << plot.x_label_on() << endl;
   cout << "x_label " << plot.x_label() << endl;

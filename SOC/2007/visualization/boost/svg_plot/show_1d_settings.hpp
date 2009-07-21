@@ -262,7 +262,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "x_axis_on " << plot.x_axis_on() << endl;
   cout << "x_axis_color() " << plot.x_axis_color() << endl;
   cout << "x_axis_label_color " << plot.x_axis_label_color() << endl;
-  cout << "x_axis_value_color " << plot.x_axis_value_color() << endl;
+  cout << "x_values_color " << plot.x_values_color() << endl;
   cout << "x_axis_width " << plot.x_axis_width() << endl;
   cout << "x_label_on " << plot.x_label_on() << endl;
   cout << "x_label " << plot.x_label() << endl;
