@@ -15,15 +15,40 @@
 
 namespace boost
 {
+	template<typename T> class enable_shared_from_this;
+	template<typename T> class shared_ptr;
+	template<typename T> class weak_ptr;
+
 	namespace detail
 	{
-		template<typename T, typename U, typename V>
-		inline void sp_enable_shared_from_this(T, U, V)
+		// enable_shared_from_this support
+
+		template< class X, class Y, class T > inline void sp_enable_shared_from_this( boost::shared_ptr<X> const * ppx, Y const * py, boost::enable_shared_from_this< T > const * pe )
+		{
+			gs_detail::sp_enable_shared_from_this(static_cast<generic_shared<X*> const *>(ppx), &py, pe);
+		}
+
+		#ifdef _MANAGED
+
+		// Avoid C4793, ... causes native code generation
+
+		struct sp_any_pointer
+		{
+			template<class T> sp_any_pointer( T* ) {}
+		};
+
+		inline void sp_enable_shared_from_this( sp_any_pointer, sp_any_pointer, sp_any_pointer )
 		{
 		}
-	}
 
-	template<typename T> class weak_ptr;
+		#else // _MANAGED
+
+		inline void sp_enable_shared_from_this( ... )
+		{
+		}
+
+		#endif // _MANAGED
+	}
 
 	template<typename T>
 	class shared_ptr: public generic_shared<T*>
