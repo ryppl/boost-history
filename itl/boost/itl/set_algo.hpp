@@ -135,6 +135,28 @@ namespace boost{namespace itl
             return true;
         }
 
+		template<class SetType>
+        bool is_disjoint(const SetType& left, const SetType& right)
+        {
+            typename SetType::const_iterator common_lwb_right_;
+            typename SetType::const_iterator common_upb_right_;
+
+            if(!common_range(common_lwb_right_, common_upb_right_, right, left))
+                return true;
+
+            typename SetType::const_iterator right_ = common_lwb_right_, found_;
+
+            while(right_ != common_upb_right_)
+            {
+                found_ = left.find(*right_++);
+                if(found_ != left.end()) 
+					return false; // found a common element
+            }
+            // found no common element
+            return true;    
+        }
+
+
         /** Function template <tt>lexicographical_equal</tt> implements 
         lexicographical equality. */
         template<class SetType>

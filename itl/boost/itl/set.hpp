@@ -134,7 +134,7 @@ public:
     bool contains(const set& sub)const { return Set::contained_in(sub, *this); }
 
     /** <tt>*this</tt> and <tt>x2</tt> are disjoint, if their intersection is empty */
-    bool disjoint(const set& x2)const { return Set::disjoint(*this, x2); }
+    bool is_disjoint(const set& x2)const { return Set::is_disjoint(*this, x2); }
 
     //==========================================================================
     //= Size
