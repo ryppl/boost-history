@@ -1123,7 +1123,8 @@ public:
     //! (rather than on X or Y-axis).
     // For Y-axis -1 = left, 0 = false, +1 = right. Default -1 to left of plot window.
     // For X-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
-    const text_style& value_label_style_; //!< text style (font, size...) for value labels.
+    //const text_style& value_label_style_; //!< text style (font, size...) for value labels.
+    text_style value_label_style_; //!< text style (font, size...) for value labels.
 
     ticks_labels_style( //! Constructor, providing defaults values for all member data.
       dim d = X,
