@@ -322,7 +322,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   axis_line_style y_axis_; //!< style of Y axis line.
 
   ticks_labels_style x_ticks_; //!< style of X axis tick value labels.
-  ticks_labels_style y_ticks_; //!< style of Y axis tick value labels. ( Meaningless of 1D but added to permit shared code!)
+  ticks_labels_style y_ticks_; //!< style of Y axis tick value labels. (Meaningless for 1D but added to permit shared code!)
 
   bool title_on_; //!< If true include a title for the whole plot.
   bool legend_on_; //!< If true include a legend box.

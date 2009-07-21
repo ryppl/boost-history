@@ -91,6 +91,18 @@ inline bool pair_is_limit(std::pair<double, double> a)
     || limit_max(a.second) || limit_min(a.second) || limit_NaN(a.second);
 }
 
+inline bool pair_is_limit(std::pair<const int, double> a)
+{ //! Check on both x int and y double data points. Return false if either or both are at limit.
+  return limit_max(a.first) || limit_min(a.first) // || limit_NaN(a.first) - can't be NaN if int.
+    || limit_max(a.second) || limit_min(a.second) || limit_NaN(a.second);
+}
+
+inline bool pair_is_limit(std::pair<int, double> a)
+{ //! Check on both x int and y double data points. Return false if either or both are at limit.
+  return limit_max(a.first) || limit_min(a.first) // || limit_NaN(a.first) - can't be NaN if int.
+    || limit_max(a.second) || limit_min(a.second) || limit_NaN(a.second);
+}
+
 inline bool pair_is_limit(std::pair<const unc, unc> a)
 { //! Check on values of both x and y unc data points.
   // \return false if either or both are at limit.

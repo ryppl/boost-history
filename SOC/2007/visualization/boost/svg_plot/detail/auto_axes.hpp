@@ -252,7 +252,7 @@ void scale_axis(
   double* axis_tick_increment,//!< Updated with
   int* auto_ticks, //!< Updated with
   bool check_limits, //!< Whether to check all values for infinity, NaN etc.
-  double autoscale_plusminus = 3., //!< Multiplier of uncertainty or standard deviations to allow fo confidence ellipses.
+  double autoscale_plusminus = 3., //!< Multiplier of uncertainty or standard deviations to allow for confidence ellipses.
   bool origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
   double tight = 0., //!< tightest - fraction of 'overrun' allowed before another tick used.
   //! for visual effect up to about 0.001 might suit a 1000 pixel wide image,
@@ -275,7 +275,7 @@ void scale_axis(
   }
   else
   { // It is necessary to inspect all values individually.
-    //cout << container.size() << " values." << endl;
+    // cout << container.size() << " values." << endl;
     // Work out min and max, ignoring non-finite, +-infinity, max & min, & NaN).
     // If can't find a max and a min, then will throw exception.
     int good = mnmx(container.begin(), container.end(), &x_min, &x_max);

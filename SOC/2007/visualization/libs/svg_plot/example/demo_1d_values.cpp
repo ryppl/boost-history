@@ -1,7 +1,7 @@
 /*! \file demo_1d_values.cpp
     \brief Demonstration of some simple 1D value formatting.
     \details Quickbook markup to include in documentation.
-    \date 11 Feb 2009
+    \date 19 Jul 2009
     \author Paul A. Bristow
 */
 
@@ -118,7 +118,7 @@ but for 2-D plots all writing orientations can be useful).
 */
    my_1d_plot.x_values_rotation(steepup); // Orientation for the X-axis value labels.
 
-   my_1d_plot.x_decor("[ x = ", "", "&#x00A0;sec]"); // Note the need for a Unicode space.
+   my_1d_plot.x_decor("[ x = ", "", "&#x00A0;sec]"); // Note the need for a Unicode space A0.
 
 /*`To use all these settings, finally write the plot to file.
 */

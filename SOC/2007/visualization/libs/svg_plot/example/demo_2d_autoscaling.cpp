@@ -4,8 +4,8 @@
      See also auto_2d_plot.cpp for a wider range of use.
 
     \date 20 Mar 2009
-    \author Paul A. Bristow 
-*/ 
+    \author Paul A. Bristow
+*/
 // Copyright Paul A Bristow 2009
 
 // Use, modification and distribution are subject to the
@@ -56,7 +56,7 @@ int main()
   my_data[5.47] = 5.3861;
 
   try
-  { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
+  { // try'n'catch blocks are needed to ensure error messages from any exceptions are shown.
     svg_2d_plot my_2d_plot; // Construct a plot with all the default constructor values.
     my_2d_plot.title("Autoscaling 2d Values"); // Add a string title of the plot.
 
@@ -66,11 +66,11 @@ int main()
   Or we can use autoscaling.
 
 */
-   my_2d_plot.xy_autoscale(my_data); // Autoscale both x and Y axes. 
+   my_2d_plot.xy_autoscale(my_data); // Autoscale both x and Y axes.
 
    /*`This says use the entire STL container my_data to set both X and Y ranges.
 (The data used to autoscale the range(s) does not have to be the same as the data being plotted.
-For example, if we have analysed a product and know that an attribute like strength can only decline as the product ages, 
+For example, if we have analysed a product and know that an attribute like strength can only decline as the product ages,
 it would make sense to use the reference 'as new' data to scale the plot for the 'aged' product samples).
 
 The add the (one but could be more) data series, `my_data` and a description, and how the data points are to be marked,

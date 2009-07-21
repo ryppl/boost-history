@@ -677,7 +677,7 @@ public:
 
   plot_point_style( //!< Constructor with all defaults.
     const svg_color& stroke = black, const svg_color& fill = blank,
-    int size = 10, point_shape shape = round, const std::string& symbols = "X");
+    int size = 5, point_shape shape = round, const std::string& symbols = "X");
 
   plot_point_style& size(int i);
   int size();
@@ -1072,9 +1072,9 @@ public:
 
 class ticks_labels_style
 { /*! \class boost::svg::ticks_labels_style
-   \brief Style of the x and y axes ticks, grids and their value labels.
+   \brief Style of the X and Y axes ticks, grids and their tick value labels.
    \details
-   But NOT the x and y axes lines.
+   But NOT the X and Y axes lines.
    These can be either on the axis lines or on the plot window edge(s),
    (because different styles for x and y are possible).
   */
@@ -1111,7 +1111,8 @@ public:
     rotate_style label_rotation_; //!< Direction axis value labels written.
     bool major_grid_on_;  //!< Draw X grid at major ticks.
     bool minor_grid_on_; //!< Draw X grid at minor ticks.
-    int value_precision_; //!< precision for tick value labels, usually 3 will suffice.
+    svg_color values_color_; //!< Color of tick values labels.
+    int value_precision_; //!< Precision for tick value labels, usually 3 will suffice.
     std::ios_base::fmtflags value_ioflags_;  //!< IO formatting flags for the axis default std::ios::dec.
     bool strip_e0s_; //!< If redundant zero, + and e are to be stripped.
     double label_max_length_;  //!< width (in SVG units) of longest value label text on axis.
@@ -1124,7 +1125,7 @@ public:
 
     ticks_labels_style( //! Constructor, providng defaults values for all member data.
       dim d = X,
-      const text_style& style = no_style,
+      const text_style& style = no_style, // Default style.
       double max = 10., double min = -10.,
       double major_interval = 2.,
       unsigned int num_minor_ticks = 4)
@@ -1152,6 +1153,7 @@ public:
     minor_grid_color_(svg_color(200, 220, 255)),
     major_grid_width_(1.), // pixels.
     minor_grid_width_(0.5), // pixels.
+
     up_ticks_on_(false), // Draw ticks up from horizontal X-axis line.
     down_ticks_on_(true), // Draw ticks down from horizontal X-axis line.
     left_ticks_on_(true), // Draw ticks left from vertical Y-axis line.
@@ -1162,7 +1164,9 @@ public:
     label_rotation_(horizontal), // Direction axis value labels written.
     major_grid_on_(false),  // Draw grid at major ticks.
     minor_grid_on_(false),// Draw grid at minor ticks.
+    values_color_(black),
     value_precision_(3), // precision for tick value labels, usually 3 will suffice.
+    // 4 might be better to permit thousands without using e format?
     value_ioflags_(std::ios::dec),  // IO formatting flags for the axis.
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
     strip_e0s_(true), // strip superflous zeros and signs.

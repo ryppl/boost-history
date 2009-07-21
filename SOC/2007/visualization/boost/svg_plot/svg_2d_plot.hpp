@@ -136,8 +136,8 @@ namespace boost
     :
     title_(title), //!< Title of a series of data values.
     // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
-    // int size = 10, point_shape shape = round, const std::string& symbols = "X")
-    point_style_(black, white, 10, round), // Default point style (default fill white).
+    // int size = 5, point_shape shape = round, const std::string& symbols = "X")
+    point_style_(black, white, 5, round), // Default point style (default fill white).
     limit_point_style_(grey, blank, 10, cone), // Default limit (infinity or NaN) point style.
     line_style_(black, blank, 2, false, false), // Default line style, no fill, width 2, no line_on, no bezier.
     bar_style_(black, blank, 3, no_bar), // Default black, no fill, stick width 3, no bar.
@@ -440,8 +440,8 @@ namespace boost
       double x_auto_min_value_; //!< Values calculated by scale_axis (used only if x_autoscale == true).
       double x_auto_max_value_; //!< Values calculated by scale_axis (used only if x_autoscale == true).
 
-      double x_auto_tick_interval_; //!< tick major interval.
-      int x_auto_ticks_; //!< Number of ticks.
+      double x_auto_tick_interval_; //!< X tick major interval.
+      int x_auto_ticks_; //!< Number of X ticks.
 
       bool y_autoscale_; //!< true if to use any y_axis autoscale values.
       bool y_include_zero_; //!< true if autoscale to include zero.
@@ -1263,7 +1263,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           { // External to plot window style left or right.
             // Always want all values including "0", if labeling external to plot window.
             // y_ticks_.ticks_on_window_or_axis_ == true != 0
-            image.g(detail::PLOT_VALUE_LABELS).text(
+            image.g(detail::PLOT_Y_TICK_VALUE_LABELS).text(
               x,
               y,
               label.str(), y_value_label_style_, alignment, y_ticks_.label_rotation_);
@@ -1272,7 +1272,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           { // ! y_ticks_.y_ticks_on_plot_window_ == 0 'Internal' - value labels either side of vertical Y-axis.
             if ((value != 0) && y_axis_.axis_line_on_)
             { // Avoid a zero ON the Y-axis if it would be cut through by any horizontal X-axis line.
-              image.g(detail::PLOT_VALUE_LABELS).text(
+              image.g(detail::PLOT_Y_TICK_VALUE_LABELS).text(
                 x,
                 y,
                 label.str(),
@@ -1978,6 +1978,16 @@ my_plot.background_color(ghostwhite) // Whole image.
       const std::string& y_label_weight();
       svg_2d_plot& y_label_font_family(const std::string& family);
       const std::string& y_label_font_family();
+
+      svg_2d_plot& y_axis_values_color(const svg_color& col);
+      svg_color y_axis_values_color();
+
+      svg_2d_plot& y_axis_values_precision(int p);
+      int y_axis_values_precision();
+
+      svg_2d_plot& y_axis_values_ioflags(std::ios_base::fmtflags f);
+      std::ios_base::fmtflags y_axis_values_ioflags();
+
       svg_2d_plot& y_values_font_size(unsigned int i);
       unsigned int y_values_font_size();
       svg_2d_plot& y_values_font_family(const std::string& family);
@@ -2142,14 +2152,14 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
 
       svg_2d_plot& svg_2d_plot::y_axis_label_color(const svg_color& col)
       { //! Set stroke color.
-        image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
+        image.g(detail::PLOT_Y_TICK_VALUE_LABELS).style().stroke_color(col);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_label_color()
       { //! \return the y axis label stroke color.
         //  y_label_info_.style().stroke_color();
-        return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
+        return image.g(detail::PLOT_Y_TICK_VALUE_LABELS).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_units_on(bool b)
@@ -2166,14 +2176,14 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
 
       svg_2d_plot& svg_2d_plot::y_axis_value_color(const svg_color& col)
       { //! Set color of Y axis value labels.
-        image.g(detail::PLOT_VALUE_LABELS).style().stroke_color(col);
+        image.g(detail::PLOT_Y_TICK_VALUE_LABELS).style().stroke_color(col);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       svg_color svg_2d_plot::y_axis_value_color()
-      { //! \return color of Y axis value labels.
+      { //! \return color of Y-axis tick value labels.
         // Only return the stroke color.
-        return image.g(detail::PLOT_VALUE_LABELS).style().stroke_color();
+        return image.g(detail::PLOT_Y_TICK_VALUE_LABELS).style().stroke_color();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_width(double width)
@@ -2701,6 +2711,51 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         return y_axis_label_style_.font_family();
       }
 
+      // Y-axis tick value labels style.
+
+      svg_2d_plot& svg_2d_plot::y_axis_values_color(const svg_color& col)
+      { //! Set color for Y_axis tick values.
+        // Function could set both fill (middle) and stroke (outside),
+        // but just setting fill if simplest,
+        // but does not allow separate inside & outside colors.
+        y_ticks_.values_color_ = col;
+        //image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color(col);
+        //svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color(col);
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      svg_color svg_2d_plot::y_axis_values_color()
+      { //! \return color for Y-axis tick values.
+        // Function could get either fill and stroke,
+        // return svg_2d_plot().image.g(PLOT_Y_POINT_VALUES).style().stroke_color();
+        // return image.g(detail::PLOT_Y_POINT_VALUES).style().fill_color();
+        return y_ticks_.values_color_;
+      }
+
+      svg_2d_plot& svg_2d_plot::y_axis_values_precision(int p)
+      { //! Set iostream decimal digits precision of data point Y values near data points markers.
+         y_ticks_.value_precision_ = p;
+         return *this;
+      }
+
+      int svg_2d_plot::y_axis_values_precision()
+      { //! \return  iostream decimal digits precision of data point Y values near data points markers.
+        return y_ticks_.value_precision_;
+      }
+
+      svg_2d_plot& svg_2d_plot::y_axis_values_ioflags(std::ios_base::fmtflags f)
+      { //! Set iostream format flags of data point Y values near data points markers.
+        //! Useful to set hexadecimal, fixed and scientific, (std::ios::scientific).
+        y_ticks_.value_ioflags_ = f;
+        return *this;
+      }
+
+      std::ios_base::fmtflags svg_2d_plot::y_axis_values_ioflags()
+      { //! \return  iostream format flags of data point X values near data points markers.
+        //! Might be used to set hexadecimal, fixed and scientific, (std::ios::scientific).
+        return y_ticks_.value_ioflags_;
+      }
+
       svg_2d_plot& svg_2d_plot::y_values_font_size(unsigned int i)
       { //! \return  font size for Y axis values.
         y_values_style_.values_text_style_.font_size(i);
@@ -2719,7 +2774,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       const std::string& svg_2d_plot::y_values_font_family()
-      { //! \return font family for Y axis valuess.
+      { //! \return font family for Y axis values.
         return y_values_style_.values_text_style_.font_family();
       }
 

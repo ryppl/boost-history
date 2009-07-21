@@ -48,7 +48,8 @@ enum plot_doc_structure
     PLOT_X_MINOR_TICKS, //! X minor ticks
     PLOT_Y_MAJOR_TICKS, //! Y major ticks.
     PLOT_X_MAJOR_TICKS, //! X major ticks.
-    PLOT_VALUE_LABELS, //! tick values labels, for example 10, 20, 30 ...
+    PLOT_X_TICK_VALUE_LABELS, //! X-axis tick values labels, for example 10, 20, 30 ...
+    PLOT_Y_TICK_VALUE_LABELS, //! Y-axis tick values labels, for example 1, 2, 3 ...
     PLOT_Y_LABEL, //! Y axis text labels "length (cm)".
     PLOT_X_LABEL, //! X axis text labels "height (m)".
     PLOT_DATA_LINES, //! Lines joining data points.
@@ -82,7 +83,8 @@ std::string document_ids_[]= //!< Strings used describe and identify SVG layers 
     "xMinorTicks",
     "yMajorTicks",
     "xMajorTicks",
-    "plotLabels", // TODO tickValueLabels better name???
+    "xTicksValueLabels", //! X-axis tick values labels, for example 10, 20, 30 ...
+    "yTicksValueLabels", //! Y-axis tick values labels, for example 1, 2, 3 ...
     "yLabel",
     "xLabel",   // axis text labels "length (cm)"
     "plotLines", // normal data point markers.

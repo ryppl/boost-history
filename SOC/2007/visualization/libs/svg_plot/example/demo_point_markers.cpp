@@ -1,7 +1,7 @@
 /*! \file demo_point_markers.cpp
   \brief Demonstration of some marking data point options.
   \details Includes Quickbook markup.
-  \author Paul A Bristow 
+  \author Paul A Bristow
 */
 
 // Copyright Jacob Voytko 2007
@@ -54,7 +54,7 @@ int main()
 //[demo_point_markers_2
 
   try
-  { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
+  { // try'n'catch blocks are needed to ensure error messages from any exceptions are shown.
     svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
     my_1d_plot.title("Demo point markers Demo") // Add a string title of the plot.

@@ -3,8 +3,8 @@
     \details Contains Quickbook Markup to be included in documentation.
 
     \date 11 Feb 2009
-    \author Jacob Voytko and Paul A. Bristow 
-*/ 
+    \author Jacob Voytko and Paul A. Bristow
+*/
 // Copyright Jacob Voytko 2007
 // Copyright Paul A Bristow 2008
 
@@ -63,7 +63,7 @@ int main()
   my_data[5.47] = 5.3861;
 
   try
-  { // try'n'catch clocks are needed to ensure error messages from any exceptions are shown.
+  { // try'n'catch blocks are needed to ensure error messages from any exceptions are shown.
     svg_2d_plot my_2d_plot; // Construct a plot with all the default constructor values.
 
     my_2d_plot.title("Default 2d Values Demo") // Add a string title of the plot.
