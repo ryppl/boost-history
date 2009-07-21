@@ -1,21 +1,22 @@
-#ifndef BOOST_SMART_PTR_WEAK_PTR_HPP_INCLUDED
-#define BOOST_SMART_PTR_WEAK_PTR_HPP_INCLUDED
+#ifndef BOOST_SMART_PTR_GENERIC_WEAK_HPP_INCLUDED
+#define BOOST_SMART_PTR_GENERIC_WEAK_HPP_INCLUDED
 
 //
-//  weak_ptr.hpp
+//  generic_weak.hpp
 //
 //  Copyright (c) 2001, 2002, 2003 Peter Dimov
+//  Copyright (c) 2009 Frank Mori Hess
 //
 // Distributed under the Boost Software License, Version 1.0. (See
 // accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/smart_ptr/weak_ptr.htm for documentation.
+//  See http://www.boost.org/libs/smart_ptr/generic_weak.htm for documentation.
 //
 
 #include <memory> // boost.TR1 include order fix
 #include <boost/smart_ptr/detail/shared_count.hpp>
-#include <boost/smart_ptr/shared_ptr.hpp>
+#include <boost/smart_ptr/generic_shared.hpp>
 
 #ifdef BOOST_MSVC  // moved here to work around VC++ compiler crash
 # pragma warning(push)
@@ -25,18 +26,20 @@
 namespace boost
 {
 
-template<class T> class weak_ptr
+template<class T> class generic_weak
 {
 private:
 
     // Borland 5.5.1 specific workarounds
-    typedef weak_ptr<T> this_type;
+    typedef generic_weak<T> this_type;
 
 public:
 
-    typedef T element_type;
+    typedef typename generic_pointer_traits<T>::value_type element_type;
+    typedef typename generic_pointer_traits<T>::value_type value_type;
+    typedef generic_shared<T> shared_type;
 
-    weak_ptr(): px(0), pn() // never throws in 1.30+
+    generic_weak(): px(), pn() // never throws in 1.30+
     {
     }
 
@@ -47,7 +50,7 @@ public:
 //  The "obvious" converting constructor implementation:
 //
 //  template<class Y>
-//  weak_ptr(weak_ptr<Y> const & r): px(r.px), pn(r.pn) // never throws
+//  generic_weak(generic_weak<Y> const & r): px(r.px), pn(r.pn) // never throws
 //  {
 //  }
 //
@@ -63,11 +66,11 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    weak_ptr( weak_ptr<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+    generic_weak( generic_weak<Y> const & r, typename gs_detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
 
 #else
 
-    weak_ptr( weak_ptr<Y> const & r )
+    generic_weak( generic_weak<Y> const & r )
 
 #endif
     : px(r.lock().get()), pn(r.pn) // never throws
@@ -79,26 +82,26 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    weak_ptr( weak_ptr<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+    generic_weak( generic_weak<Y> && r, typename gs_detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
 
 #else
 
-    weak_ptr( weak_ptr<Y> && r )
+    generic_weak( generic_weak<Y> && r )
 
 #endif
     : px(r.lock().get()), pn(std::move(r.pn)) // never throws
     {
-        r.px = 0;
+        gs_detail::set_plain_pointer_to_null(r.px);
     }
 
     // for better efficiency in the T == Y case
-    weak_ptr( weak_ptr && r ): px( r.px ), pn(std::move(r.pn)) // never throws
+    generic_weak( generic_weak && r ): px( r.px ), pn(std::move(r.pn)) // never throws
     {
-        r.px = 0;
+        gs_detail::set_plain_pointer_to_null(r.px);
     }
 
     // for better efficiency in the T == Y case
-    weak_ptr & operator=( weak_ptr && r ) // never throws
+    generic_weak & operator=( generic_weak && r ) // never throws
     {
         this_type( std::move( r ) ).swap( *this );
         return *this;
@@ -110,11 +113,11 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    weak_ptr( shared_ptr<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+    generic_weak( generic_shared<Y> const & r, typename gs_detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
 
 #else
 
-    weak_ptr( shared_ptr<Y> const & r )
+    generic_weak( generic_shared<Y> const & r )
 
 #endif
     : px( r.px ), pn( r.pn ) // never throws
@@ -124,7 +127,7 @@ public:
 #if !defined(BOOST_MSVC) || (BOOST_MSVC >= 1300)
 
     template<class Y>
-    weak_ptr & operator=(weak_ptr<Y> const & r) // never throws
+    generic_weak & operator=(generic_weak<Y> const & r) // never throws
     {
         px = r.lock().get();
         pn = r.pn;
@@ -134,7 +137,7 @@ public:
 #if defined( BOOST_HAS_RVALUE_REFS )
 
     template<class Y>
-    weak_ptr & operator=(weak_ptr<Y> && r)
+    generic_weak & operator=(generic_weak<Y> && r)
     {
         this_type( std::move( r ) ).swap( *this );
         return *this;
@@ -143,7 +146,7 @@ public:
 #endif
 
     template<class Y>
-    weak_ptr & operator=(shared_ptr<Y> const & r) // never throws
+    generic_weak & operator=(generic_shared<Y> const & r) // never throws
     {
         px = r.px;
         pn = r.pn;
@@ -152,9 +155,9 @@ public:
 
 #endif
 
-    shared_ptr<T> lock() const // never throws
+    generic_shared<T> lock() const // never throws
     {
-        return shared_ptr<element_type>( *this, boost::detail::sp_nothrow_tag() );
+        return generic_shared<T>( *this, boost::detail::sp_nothrow_tag() );
     }
 
     long use_count() const // never throws
@@ -183,13 +186,13 @@ public:
         pn.swap(other.pn);
     }
 
-    void _internal_assign(T * px2, boost::detail::shared_count const & pn2)
+    void _internal_assign(T px2, boost::detail::shared_count const & pn2)
     {
         px = px2;
         pn = pn2;
     }
 
-    template<class Y> bool _internal_less(weak_ptr<Y> const & rhs) const
+    template<class Y> bool _internal_less(generic_weak<Y> const & rhs) const
     {
         return pn < rhs.pn;
     }
@@ -201,22 +204,22 @@ public:
 
 private:
 
-    template<class Y> friend class weak_ptr;
-    template<class Y> friend class shared_ptr;
+    template<class Y> friend class generic_weak;
+    template<class Y> friend class generic_shared;
 
 #endif
 
-    T * px;                       // contained pointer
+    T px;                       // contained pointer
     boost::detail::weak_count pn; // reference counter
 
-};  // weak_ptr
+};  // generic_weak
 
-template<class T, class U> inline bool operator<(weak_ptr<T> const & a, weak_ptr<U> const & b)
+template<class T, class U> inline bool operator<(generic_weak<T> const & a, generic_weak<U> const & b)
 {
     return a._internal_less(b);
 }
 
-template<class T> void swap(weak_ptr<T> & a, weak_ptr<T> & b)
+template<class T> void swap(generic_weak<T> & a, generic_weak<T> & b)
 {
     a.swap(b);
 }
@@ -225,6 +228,6 @@ template<class T> void swap(weak_ptr<T> & a, weak_ptr<T> & b)
 
 #ifdef BOOST_MSVC
 # pragma warning(pop)
-#endif    
+#endif
 
-#endif  // #ifndef BOOST_SMART_PTR_WEAK_PTR_HPP_INCLUDED
+#endif  // #ifndef BOOST_SMART_PTR_GENERIC_WEAK_HPP_INCLUDED

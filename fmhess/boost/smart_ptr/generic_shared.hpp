@@ -18,11 +18,12 @@
 // requirements for generic pointer type:
 // Must be either ordinary pointer, or provide:
 //  operator->() and operator*()
-//  value_type/reference/pointer member typedefs (or specialization of boost::smart_pointer_traits)
+//  value_type/reference/pointer member typedefs (or specialization of boost::generic_pointer_traits)
 //  is_null_pointer() free function findable by ADL
 //  (in)equality comparison
 //  2 argument static/const/dynamic_pointer_cast findable by ADL if you want support for casting
 //  get_pointer support
+//  rebind member template for changing a pointer's value_type
 
 #include <boost/config.hpp>   // for broken compiler workarounds
 
@@ -77,42 +78,42 @@ template<typename T> class generic_shared;
 template<typename T> class generic_weak;
 template<typename T> class enable_generic_shared_from_this;
 
-template<typename T> struct smart_pointer_traits
+template<typename T> struct generic_pointer_traits
 {
     typedef typename T::value_type value_type;
     typedef typename T::pointer pointer;
     typedef typename T::reference reference;
 };
 
-template<typename T> struct smart_pointer_traits<T*>
+template<typename T> struct generic_pointer_traits<T*>
 {
     typedef T value_type;
     typedef T * pointer;
     typedef T & reference;
 };
 
-template<> struct smart_pointer_traits<void*>
+template<> struct generic_pointer_traits<void*>
 {
     typedef void value_type;
     typedef void * pointer;
     typedef void reference;
 };
 
-template<> struct smart_pointer_traits<const void*>
+template<> struct generic_pointer_traits<const void*>
 {
     typedef void value_type;
     typedef const void * pointer;
     typedef void reference;
 };
 
-template<> struct smart_pointer_traits<volatile void*>
+template<> struct generic_pointer_traits<volatile void*>
 {
     typedef void value_type;
     typedef volatile void * pointer;
     typedef void reference;
 };
 
-template<> struct smart_pointer_traits<const volatile void*>
+template<> struct generic_pointer_traits<const volatile void*>
 {
     typedef void value_type;
     typedef const volatile void * pointer;
@@ -120,28 +121,29 @@ template<> struct smart_pointer_traits<const volatile void*>
 };
 
 template<typename GenericPtr, typename ValueType>
-struct rebind_generic_ptr
+struct rebind_generic_pointer
 {
     typedef typename GenericPtr::template rebind<ValueType>::other other;
 };
 
 template<typename T, typename ValueType>
-struct rebind_generic_ptr<T*, ValueType>
+struct rebind_generic_pointer<T*, ValueType>
 {
     typedef ValueType * other;
 };
 
-template<typename GenericPtr>
-typename smart_pointer_traits<GenericPtr>::value_type *
-    get_plain_old_pointer(GenericPtr gp)
-{
-	return get_plain_old_pointer(get_pointer(gp));
-}
-
 template<typename T>
 T * get_plain_old_pointer(T * p)
 {
-	return p;
+    return p;
+}
+
+template<typename GenericPtr>
+typename generic_pointer_traits<GenericPtr>::value_type *
+    get_plain_old_pointer(GenericPtr gp)
+{
+    using boost::get_pointer;
+    return get_plain_old_pointer(get_pointer(gp));
 }
 
 template<typename T> bool is_null_pointer(const generic_shared<T> &p)
@@ -155,19 +157,19 @@ template<typename T> bool is_null_pointer(T * p)
 
 // two-argument cast overloads for raw pointers (really belongs in boost/pointer_cast.hpp)
 template<typename T, typename U>
-T* static_pointer_cast(U *r, boost::mpl::identity<T*>)
+T* static_pointer_cast(U *r, boost::mpl::identity<T>)
 {
     return static_cast<T*>(r);
 }
 
 template<typename T, typename U>
-T* const_pointer_cast(U *r, boost::mpl::identity<T*>)
+T* const_pointer_cast(U *r, boost::mpl::identity<T>)
 {
     return const_cast<T*>(r);
 }
 
 template<typename T, typename U>
-T* dynamic_pointer_cast(U *r, boost::mpl::identity<T*>)
+T* dynamic_pointer_cast(U *r, boost::mpl::identity<T>)
 {
     return dynamic_cast<T*>(r);
 }
@@ -186,9 +188,8 @@ template< class X, class Y, class T > inline void sp_enable_shared_from_this( bo
 {
     if( pe != 0 )
     {
-//FIXME: yikes! this const cast is painful
-        typedef typename rebind_generic_ptr<Y, typename remove_const<typename smart_pointer_traits<Y>::value_type>::type>::other nonconst_y_type;
-        pe->_internal_accept_owner( ppx, const_pointer_cast<typename smart_pointer_traits<nonconst_y_type>::value_type>( *py ) );
+        typedef typename remove_const<typename generic_pointer_traits<Y>::value_type>::type nonconst_y_value_type;
+        pe->_internal_accept_owner( ppx, const_pointer_cast<nonconst_y_value_type>( *py ) );
     }
 }
 
@@ -230,7 +231,7 @@ template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R
 
 template<typename Y, typename T>
 class sp_enable_if_convertible: public
-    detail::sp_enable_if_convertible<typename smart_pointer_traits<Y>::value_type, typename smart_pointer_traits<T>::value_type>
+    detail::sp_enable_if_convertible<typename generic_pointer_traits<Y>::value_type, typename generic_pointer_traits<T>::value_type>
 {};
 
 template<typename T>
@@ -262,16 +263,16 @@ private:
 
 public:
 
-    typedef typename boost::smart_pointer_traits<T>::value_type element_type;
-    typedef typename boost::smart_pointer_traits<T>::value_type value_type;
+    typedef typename boost::generic_pointer_traits<T>::value_type element_type;
+    typedef typename boost::generic_pointer_traits<T>::value_type value_type;
     typedef T pointer;
-    typedef typename boost::smart_pointer_traits<T>::reference reference;
+    typedef typename boost::generic_pointer_traits<T>::reference reference;
     typedef generic_weak<T> weak_type;
 
     template<typename ValueType>
     struct rebind
     {
-        typedef generic_shared<typename rebind_generic_ptr<pointer, ValueType>::other > other;
+        typedef generic_shared<typename rebind_generic_pointer<pointer, ValueType>::other > other;
     };
 
     generic_shared(): px(), pn()
@@ -342,21 +343,21 @@ public:
 
     template<class Y>
     generic_shared(generic_shared<Y> const & r, boost::gs_detail::static_cast_tag):
-        px(static_pointer_cast(r.px, boost::mpl::identity<pointer>())),
+        px(static_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
     }
 
     template<class Y>
     generic_shared(generic_shared<Y> const & r, boost::gs_detail::const_cast_tag):
-        px(const_pointer_cast(r.px, boost::mpl::identity<pointer>())),
+        px(const_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
     }
 
     template<class Y>
     generic_shared(generic_shared<Y> const & r, boost::gs_detail::dynamic_cast_tag):
-        px(dynamic_pointer_cast(r.px, boost::mpl::identity<pointer>())),
+        px(dynamic_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
         using boost::is_null_pointer;
@@ -665,25 +666,28 @@ template<class T> inline void swap(generic_shared<T> & a, generic_shared<T> & b)
     a.swap(b);
 }
 
-template<typename T, typename U>
-generic_shared<T> static_pointer_cast(generic_shared<U> const & r,
-    boost::mpl::identity<generic_shared<T> > = boost::mpl::identity<generic_shared<T> >())
+template<typename ToValueType, typename U>
+typename generic_shared<U>::template rebind<ToValueType>::other static_pointer_cast(generic_shared<U> const & r,
+    boost::mpl::identity<ToValueType> = boost::mpl::identity<ToValueType>())
 {
-    return generic_shared<T>(r, boost::gs_detail::static_cast_tag());
+    typedef typename generic_shared<U>::template rebind<ToValueType>::other result_type;
+    return result_type(r, boost::gs_detail::static_cast_tag());
 }
 
-template<typename T, typename U>
-generic_shared<T> const_pointer_cast(generic_shared<U> const & r,
-    boost::mpl::identity<generic_shared<T> > = boost::mpl::identity<generic_shared<T> >())
+template<typename ToValueType, typename U>
+typename generic_shared<U>::template rebind<ToValueType>::other const_pointer_cast(generic_shared<U> const & r,
+    boost::mpl::identity<ToValueType> = boost::mpl::identity<ToValueType>())
 {
-    return generic_shared<T>(r, boost::gs_detail::const_cast_tag());
+    typedef typename generic_shared<U>::template rebind<ToValueType>::other result_type;
+    return result_type(r, boost::gs_detail::const_cast_tag());
 }
 
-template<typename T, typename U>
-generic_shared<T> dynamic_pointer_cast(generic_shared<U> const & r,
-    boost::mpl::identity<generic_shared<T> > = boost::mpl::identity<generic_shared<T> >())
+template<typename ToValueType, typename U>
+typename generic_shared<U>::template rebind<ToValueType>::other dynamic_pointer_cast(generic_shared<U> const & r,
+    boost::mpl::identity<ToValueType> = boost::mpl::identity<ToValueType>())
 {
-    return generic_shared<T>(r, boost::gs_detail::dynamic_cast_tag());
+    typedef typename generic_shared<U>::template rebind<ToValueType>::other result_type;
+    return result_type(r, boost::gs_detail::dynamic_cast_tag());
 }
 
 // get_pointer() enables boost::mem_fn to recognize generic_shared
