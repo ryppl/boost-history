@@ -430,20 +430,6 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::cardinality()const
                 discrete_interval_container
               >
               ::type::cardinality(*this);
-
-    /*JODO BOOST: This more simple implementention fails because ptime::duration has no infinity
-    size_type size = neutron<size_type>::value();
-    size_type interval_size;
-    const_FOR_IMPL(it)
-    {
-        interval_size = (*it).cardinality();
-        if(interval_size == std::numeric_limits<size_type>::infinity())
-            return interval_size;
-        else
-            size += interval_size;
-    }
-    return size;
-    */
 }
 
 template
@@ -470,11 +456,12 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
     if(inter_val.empty()) 
         return;
 
-    typename ImplSetT::const_iterator first_ = _set.lower_bound(inter_val);
-    typename ImplSetT::const_iterator end_   = _set.upper_bound(inter_val);
+    const_iterator first_ = _set.lower_bound(inter_val);
+    const_iterator end_   = _set.upper_bound(inter_val);
 
-    for(typename ImplSetT::const_iterator it_=first_; it_ != end_; it_++) 
-        section.add((*it_) & inter_val);
+	iterator prior_ = section.end();
+    for(const_iterator it_=first_; it_ != end_; it_++) 
+        prior_ = section.add(prior_, (*it_) & inter_val);
 }
 
 
@@ -594,35 +581,32 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
     if(it_==_set.end()) 
         return *this;
 
-    iterator nxt=it_; nxt++;
-    if(nxt==_set.end()) 
-        return *this;
+    iterator next_=it_; next_++;
+    //if(next_==_set.end()) 
+    //    return *this;
 
-    while(nxt != _set.end())
+    while(next_ != _set.end())
     {
-        if( (*it_).touches(*nxt) )
+        if( (*it_).touches(*next_) )
         {
             iterator fst_mem = it_;  // hold the fist member
             
-            // go noodling on while touchin members found
-            it_++; nxt++;
-            while(     nxt != _set.end()
-                    && (*it_).touches(*nxt) )
-            { it_++; nxt++; }
+            // Go on while touching members are found
+            it_++; next_++;
+            while(     next_ != _set.end()
+                    && (*it_).touches(*next_) )
+            { it_++; next_++; }
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-            iterator lst_mem = it_, end_mem = nxt;
-            interval_type joinedInterval(*fst_mem);
-            joinedInterval.extend(*lst_mem);
-            
-            _set.erase(fst_mem, end_mem);
-            it_ = _set.insert(joinedInterval).ITERATOR;
+			const_cast<interval_type&>(*it_).extend(*fst_mem);
+            _set.erase(fst_mem, it_);
 
-            it_++; // go on for the next after the currently inserted
-            nxt=it_; if(nxt!=_set.end())nxt++;
+            it_++; next_=it_; 
+			if(next_!=_set.end())
+				next_++;
         }
-        else { it_++; nxt++; }
+        else { it_++; next_++; }
     }
     return *this;
 }

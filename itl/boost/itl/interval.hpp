@@ -198,17 +198,17 @@ public:
     interval& extend(const interval& x2);
 
     /** Extend \c *this interval to the minimum of the lower bounds of 
-        \c this and \c left_extesion */
-    interval& left_extend(const interval& left_extesion);
+        \c this and \c left_extension. */
+    interval& left_extend(const interval& left_extension);
 
     /** Extend \c *this interval to the maximum of the upper bounds of 
-        \c this and \c right_extesion */
-    interval& right_extend(const interval& right_extesion);
+        \c this and \c right_extension. */
+    interval& right_extend(const interval& right_extension);
 
-    /** Set the lower bound and bound type according to \c left */
+    /** Set the lower bound and bound type according to interval \c left. */
     interval& left_set(const interval& left);
 
-    /** Set the upper bound and bound type according to \c right */
+    /** Set the upper bound and bound type according to interval \c right. */
     interval& right_set(const interval& right);
 
     /** Interval spanning from lower bound of \c *this interval to the upper bound of \c rhs.
@@ -1004,14 +1004,16 @@ inline interval<DomainT,Compare> left_subtract(interval<DomainT,Compare>  right,
     return right.left_subtract(left_minuend);
 }
 
-// ----------------------------------------------------------------------------
-// operators
-// ----------------------------------------------------------------------------
+//==============================================================================
+//= Intersection
+//==============================================================================
+
+/** Returns the intersection of \c left and \c right interval. */
 template <class DomainT, ITL_COMPARE Compare>
-inline itl::interval<DomainT,Compare> operator & (const itl::interval<DomainT,Compare>& left, 
-                                                  const itl::interval<DomainT,Compare>& right)
+inline itl::interval<DomainT,Compare> operator & (itl::interval<DomainT,Compare>  left, 
+                                            const itl::interval<DomainT,Compare>& right)
 {
-    return itl::interval<DomainT,Compare>(left) &= right;
+    return left &= right;
 }
 
 template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>

@@ -23,7 +23,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <math.h>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/interval.hpp>
-#include "../toytime.h"
+#include "../toytime.hpp"
 
 using namespace std;
 using namespace boost::itl;

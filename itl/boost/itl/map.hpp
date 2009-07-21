@@ -221,6 +221,11 @@ public:
         value is added to the data value already found in the map. */
     map& add(const value_type& value_pair) { return add<codomain_combine>(value_pair); }
 
+    /** \c add add \c value_pair into the map using \c prior as a hint to
+	    insert \c value_pair after the position \c prior is pointing to. */
+    iterator add(iterator prior, const value_type& value_pair) 
+	{ return add<codomain_combine>(prior, value_pair); }
+
     /** If the \c value_pair's key value is in the map, it's data value is
         subtraced from the data value stored in the map. */
     map& subtract(const value_type& value_pair)
@@ -329,6 +334,9 @@ private:
     map& add(const value_type& value_pair);
 
     template<class Combiner>
+    iterator add(iterator prior, const value_type& value_pair);
+
+    template<class Combiner>
     map& subtract(const value_type& value_pair);
 };
 
@@ -364,6 +372,29 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
         return *this;
     }
 }
+
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    template <class Combiner>
+typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+	::add(iterator prior_, const value_type& val)
+{
+    if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
+        return prior_;
+
+	iterator inserted_ = insert(prior_, value_type(val.KEY_VALUE, Combiner::neutron()));
+	Combiner()(inserted_->CONT_VALUE, val.CONT_VALUE);
+    if(Traits::absorbs_neutrons && inserted_->CONT_VALUE == Combiner::neutron())
+	{
+        erase(inserted_);
+		return prior_;
+	}
+	else
+		return inserted_;
+}
+
+
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::size_type 
@@ -620,13 +651,11 @@ operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 { return object.add(operand); }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator + ( const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator + (       itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>                object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand)
 {
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result += operand; 
+    return object += operand; 
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
@@ -649,13 +678,11 @@ operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator +  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator +  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 {
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result += operand; 
+    return object += operand; 
 }
 
 //--------------------------------------------------------------------------
@@ -667,13 +694,11 @@ operator |= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 { return object.add(operand); }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator | ( const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator | (       itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>              object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::value_type& operand)
 {
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result |= operand; 
+    return object |= operand; 
 }
 
 
@@ -698,12 +723,10 @@ operator |= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator |  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+operator |  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>  object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 {
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result |= operand; 
+    return object |= operand; 
 }
 
 //--------------------------------------------------------------------------
@@ -723,13 +746,11 @@ operator -= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator -  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator -  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>  object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result -= operand; 
+    return object -= operand; 
 }
 
 /** Subtract a set \c x2 from this map. Every element of \c this map that
@@ -742,13 +763,11 @@ operator -= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator -  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator -  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&           object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result -= operand; 
+    return object -= operand; 
 }
 
 
@@ -772,12 +791,10 @@ operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+operator &  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result &= operand; 
+    return object &= operand; 
 }
 
 /** Intersect set \c x2 and \c *this.
@@ -791,22 +808,18 @@ operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+operator &  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>            object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result &= operand; 
+    return object &= operand; 
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 operator & (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand,
-                     const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object               )
+                           itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>            object  )
 {
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result &= operand; 
+    return object &= operand; 
 }
 
 
@@ -823,13 +836,11 @@ operator ^= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-operator ^  (const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
+inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+operator ^  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>  object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result ^= operand; 
+    return object ^= operand; 
 }
 
 

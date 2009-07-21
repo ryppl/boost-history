@@ -66,15 +66,13 @@ namespace boost{namespace itl
                 return result;
 
             typedef typename ObjectT::const_iterator Object_const_iterator;
+			typename ObjectT::iterator prior_ = result.end();
             for(Object_const_iterator x2_ = x2.begin(); x2_ != x2.end(); x2_++)
-                result += *x2_;
+				prior_ = result.add(prior_, *x2_);
 
             return result;
         }
 
-        template<class ObjectT>
-        ObjectT& operator += (ObjectT& result, const ObjectT& x2)
-        { return Set::add(result, x2); }
 
         template<class ObjectT, class CoObjectT>
         ObjectT& subtract(ObjectT& result, const CoObjectT& x2)
@@ -162,37 +160,6 @@ namespace boost{namespace itl
         }
 
 
-        /** */
-        template<class SetType>
-        void intersect(SetType& result, const SetType& x1, const SetType& x2)
-        {
-            typename SetType::const_iterator common_lwb_;
-            typename SetType::const_iterator common_upb_;
-
-            result.clear();
-            if(!common_range(common_lwb_, common_upb_, x1, x2))
-                return;
-
-            typename SetType::const_iterator x1_ = common_lwb_, x2_;
-
-            while(x1_ != common_upb_)
-            {
-                x2_ = x2.find(*x1_++);
-                if(x2_ != x2.end())
-                    result.insert(*x2_);
-            }
-        }
-
-        template<class SetType>
-        SetType& intersect(SetType& result, const SetType& x2)
-        {
-            SetType aux;
-            intersect(aux, result, x2);
-            aux.swap(result);
-            return result;
-        }
-
-
         template<class SetType>
         void flip(SetType& result, const SetType& x2)
         {
@@ -203,45 +170,6 @@ namespace boost{namespace itl
                 if(!insertion.WAS_SUCCESSFUL)
                     result.erase(insertion.ITERATOR);
             }
-        }
-
-
-
-        template<class SetType>
-        bool disjoint(const SetType& x1, const SetType& x2)
-        {
-            typename SetType::const_iterator common_lwb_;
-            typename SetType::const_iterator common_upb_;
-
-            if(!common_range(common_lwb_, common_upb_, x1, x2))
-                return true;
-
-            typename SetType::const_iterator x1_ = common_lwb_, x2_;
-
-            while(x1_ != common_upb_)
-            {
-                x2_ = x2.find(*x1_++);
-                if(x2_ != x2.end()) return false; // found a common element
-            }
-            // found no common element
-            return true;    
-        }
-
-        template<class SetType>
-        void subtract(SetType& result, const SetType& x1, const SetType& x2)
-        {
-            SetType temp;
-            typename SetType::const_iterator x1_ = x1.begin(), x2_;
-
-            if(&x1 != &x2)
-                while(x1_ != x1.end())
-                {
-                    x2_ = x2.find(*x1_);
-                    if(x2_ == x2.end())
-                        temp.insert(*x1_);
-                    ++x1_;
-                }
-                temp.swap(result);
         }
 
     } // namespace Set

@@ -17,7 +17,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifdef ITL_NEUTRONS_PROVIDED
 #pragma message("error: No neutral element provided for type boost::gregorian::date")
 #pragma message(".. please #include <boost/itl/gregorian.hpp> PRIOR TO other itl/* classes")
-"JODO: Compiletime error has to be produced, but in a nicer way."
 #endif
 
 #ifdef ITL_DIFFERENCE_TYPES_PROVIDED

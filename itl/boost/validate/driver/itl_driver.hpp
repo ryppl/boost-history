@@ -64,9 +64,9 @@ namespace boost{namespace itl
 
             for(int idx=0; hasValidProfile(); idx++)
             {
-                validateType();
                 if(idx>0 && idx % _laws_per_cycle == 0)
                     reportFrequencies();
+                validateType();
             }
         }
 

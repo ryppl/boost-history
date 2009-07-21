@@ -43,7 +43,7 @@ namespace boost{namespace itl
         std::string typeString()const
         {
             return
-                "InducedRelation<"+type_to_string<SourceT>::apply()+","
+                "InducedRel<"+type_to_string<SourceT>::apply()+","
                           +type_to_string<TargetT>::apply()+","
                           +binary_template_to_string<FunctionT>::apply()+","
                           +unary_template_to_string<RelationT>::apply()+">";

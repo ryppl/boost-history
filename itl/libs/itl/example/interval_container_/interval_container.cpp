@@ -26,7 +26,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>
 #include <boost/itl/split_interval_map.hpp>
-#include "../toytime.h"
+#include "../toytime.hpp"
 
 using namespace std;
 using namespace boost::itl;

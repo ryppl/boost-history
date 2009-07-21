@@ -65,7 +65,7 @@ namespace boost{namespace itl
 			_trials_count   = GentorProfileSgl::it()->trials_count(); 
 		}
 
-        void settrials_count(int trials) 
+        void set_trials_count(int trials) 
         {
             _trials_count = trials;
             _silent_trials_count = std::max(1, _trials_count / 10);

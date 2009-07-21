@@ -11,7 +11,7 @@ namespace boost{namespace itl
 {
 
 /** Time is a toy-class to demonstrate a class that conforms the requirements of
-    a template parameter for class IntervalT. 
+    a template parameter for class template itl::interval. 
 
     In real world applications you may want to use the integer representation of a
     time variable. That way intervals and their containers are working most efficiently. 

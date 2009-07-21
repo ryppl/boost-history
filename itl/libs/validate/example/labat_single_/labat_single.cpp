@@ -72,7 +72,7 @@ void test_LawValidater()
     int test_count = 1000;
     ptime start, stop;
 
-    test_law.setTrialsCount(test_count);
+    test_law.set_trials_count(test_count);
 
     std::cout << "Start\n";
     start = ptime(microsec_clock::local_time());

@@ -223,11 +223,6 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
     // both left and right are in the map and they are neighbours
     BOOST_ASSERT(joinable(left_, right_));
 
-    //JODO: This implementation does not work in very rare cases. Causes are not clear
-    //interval_type left_interval = left_->KEY_VALUE;
-    //this->_map.erase(left_);
-    //const_cast<interval_type&>(right_->KEY_VALUE).extend(left_interval);
-
     interval_type right_interval = right_->KEY_VALUE;
     this->_map.erase(right_);
     const_cast<interval_type&>(left_->KEY_VALUE).extend(right_interval);

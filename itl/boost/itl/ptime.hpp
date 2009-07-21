@@ -21,13 +21,9 @@ w.r.t. addition (neutron()).
 
 #include <boost/date_time/posix_time/posix_time.hpp>
 
-//JODO Produce a better compietime error here. 
-//JODO (Write Macro to reduce codereplication. Generate line info.) not needed if compile-time error is nifty.
-//JODO Make it complete for all date_time classes. check portability.
 #ifdef ITL_NEUTRONS_PROVIDED
 #pragma message("error: No neutral element provided for type boost::posix_time::ptime")
 #pragma message(".. please #include <boost/itl/ptime.hpp> PRIOR TO other itl/* classes")
-"JODO: Compiletime error has to be produced, but in a nicer way."
 #endif
 
 #ifdef ITL_DIFFERENCE_TYPES_PROVIDED
