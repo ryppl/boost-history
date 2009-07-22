@@ -19,7 +19,6 @@
 // Must be either ordinary pointer, or provide:
 //  operator->() and operator*()
 //  value_type/reference/pointer member typedefs (or specialization of boost::generic_pointer_traits)
-//  is_null_pointer() free function findable by ADL
 //  (in)equality comparison
 //  2 argument static/const/dynamic_pointer_cast findable by ADL if you want support for casting
 //  get_pointer support
@@ -144,15 +143,6 @@ typename generic_pointer_traits<GenericPtr>::value_type *
 {
     using boost::get_pointer;
     return get_plain_old_pointer(get_pointer(gp));
-}
-
-template<typename T> bool is_null_pointer(const generic_shared<T> &p)
-{
-    return !p;
-}
-template<typename T> bool is_null_pointer(T * p)
-{
-    return p == 0;
 }
 
 // two-argument cast overloads for raw pointers (really belongs in boost/pointer_cast.hpp)
@@ -360,8 +350,7 @@ public:
         px(dynamic_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
-        using boost::is_null_pointer;
-        if(is_null_pointer(px)) // need to allocate new counter -- the cast failed
+        if(get_plain_old_pointer(px) == 0) // need to allocate new counter -- the cast failed
         {
             pn = boost::detail::shared_count();
         }
@@ -502,15 +491,13 @@ public:
 
     reference operator* () const // never throws
     {
-        using boost::is_null_pointer;
-        BOOST_ASSERT(!is_null_pointer(px));
+        BOOST_ASSERT(get_plain_old_pointer(px));
         return *px;
     }
 
     pointer operator-> () const // never throws
     {
-        using boost::is_null_pointer;
-        BOOST_ASSERT(!is_null_pointer(px));
+        BOOST_ASSERT(get_plain_old_pointer(px));
         return px;
     }
 
@@ -535,8 +522,7 @@ public:
 
     operator bool () const
     {
-        using boost::is_null_pointer;
-        return !is_null_pointer(px);
+        return get_plain_old_pointer(px) != 0;
     }
 
 #elif defined( _MANAGED )
@@ -549,8 +535,7 @@ public:
 
     operator unspecified_bool_type() const // never throws
     {
-        using boost::is_null_pointer;
-        return is_null_pointer(px) ? 0: unspecified_bool;
+        return get_plain_old_pointer(px) == 0 ? 0: unspecified_bool;
     }
 
 #elif \
@@ -562,8 +547,7 @@ public:
 
     operator unspecified_bool_type() const // never throws
     {
-        using boost::is_null_pointer;
-        return is_null_pointer(px) ? 0: &this_type::get;
+        return get_plain_old_pointer(px) == 0 ? 0: &this_type::get;
     }
 
 #else
@@ -572,8 +556,7 @@ public:
 
     operator unspecified_bool_type() const // never throws
     {
-        using boost::is_null_pointer;
-        return is_null_pointer(px) ? 0: &this_type::px;
+        return get_plain_old_pointer(px) == 0 ? 0: &this_type::px;
     }
 
 #endif
@@ -581,8 +564,7 @@ public:
     // operator! is redundant, but some compilers need it
     bool operator! () const // never throws
     {
-        using boost::is_null_pointer;
-        return is_null_pointer(px);
+        return get_plain_old_pointer(px) == 0;
     }
 #endif // end implicit conversion to "bool" support
 
