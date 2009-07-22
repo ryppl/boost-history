@@ -6,7 +6,7 @@
   This is useful for diagnosing why your plot doesn't look as you hoped!
   \warning This creates about 100 lines of output, so should be used sparingly!
 
-  \author Paul A. Bristow 
+  \author Paul A. Bristow
   \date Mar 2009
   \see show_2d_settings.cpp for 2-D plot.
  */
@@ -37,7 +37,7 @@ namespace svg
 
 //! Strings describing each bit in std::ios_base::fmtflags.
 const char* fmtFlagWords[16] =
-{ 
+{
   "skipws", "unitbuf", "uppercase","showbase","showpoint","showpos","left","right",
     "internal","dec","oct","hex","scientific","fixed","boolalpha", "?"
     /*
@@ -145,7 +145,7 @@ void outFmtFlags(std::ios_base::fmtflags fmtFlags, std::ostream& os, const char*
 
 //! Outputs strings to show horizontal orientation: left, right or none.
 const std::string l_or_r(int i)
-{ 
+{
  return ((i < 0) ? "left" : ((i == 0) ? "none" : "right"));
 }
 
@@ -302,50 +302,8 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "x_axis_position " << plot.x_axis_position() << endl;
   cout << "x_autoscale " << plot.x_autoscale() << endl;
   cout << "x_autoscale_check_limits " << plot.autoscale_check_limits() << endl;
-
-  //cout << "y_axis_position " << plot.y_axis_position() << endl;
-  //cout << "y_label_on " << plot.y_label_on() << endl;
-  //cout << "y_label_axis " << plot.y_label_axis() << endl;
-  //cout << "y_axis_color " << plot.y_axis_color() << endl;
-  //cout << "y_axis_label_color " << plot.y_axis_label_color() << endl;
-  //cout << "y_axis_on " << plot.y_axis_on() << endl;
-  //cout << "axes_on " << plot.axes_on() << endl; // Both x and y axes on
-  //cout << "y_axis_value_color " << plot.y_axis_value_color() << endl;
-  //cout << "y_axis_width " << plot.y_axis_width() << endl;
-  //cout << "y_label " << plot.y_label() << endl;
-  //cout << "y_label_color " << plot.y_label_color() << endl;//
-  //cout << "y_label_font_family " << plot.y_label_font_family() << endl;
-  //cout << "y_label_font_size " << plot.y_label_font_size() << endl;
-  //cout << "y_label_on " << plot.y_label_on() << endl;
-  //cout << "y_label_units " << plot.y_label_units() << endl;
-  //cout << "y_label_units_on " << plot.y_label_units_on() << endl;
-  //cout << "y_label_width " << plot.y_label_width() << endl;
-  //cout << "y_major_grid_on "  << plot.y_major_grid_on() << endl;
-  //cout << "y_major_grid_color " << plot.y_major_grid_color() << endl;
-  //cout << "y_major_grid_width " << plot.y_major_grid_width() << endl;
-  //cout << "y_major_interval " << plot.y_major_interval() << endl;
-  //cout << "y_major_labels_side " << t_or_b(plot.y_major_labels_side()) << endl;
-  //cout << "y_major_label_rotation " << plot.y_major_label_rotation() << endl;
-  //cout << "y_major_tick_color " << plot.y_major_tick_color() << endl;
-  //cout << "y_major_tick_length  " << plot.y_major_tick_length() << endl;
-  //cout << "y_major_tick_width  " << plot.y_major_tick_width() << endl;
-  //cout << "y_minor_grid_on " << plot.y_minor_grid_on() << endl;
-  //cout << "y_minor_grid_color  " << plot.y_minor_grid_color() << endl;
-  //cout << "y_minor_grid_width " << plot.y_minor_grid_width() << endl;
-  //cout << "y_minor_interval " << plot.y_minor_interval() << endl;
-  ////cout << "y_minor_labels_on " << plot.y_minor_labels_on() << endl; // Not implemented yet.
-  //cout << "y_minor_tick_color " << plot.y_minor_tick_color() << endl;
-  //cout << "y_minor_tick_length " << plot.y_minor_tick_length() << endl;
-  //cout << "y_minor_tick_width " << plot.y_minor_tick_width() << endl;
-  //cout << "y_range() " << plot.y_range() << endl;
-  //cout << "y_num_minor_ticks " << endl;
-  //cout << "y_ticks_left_on " << plot.y_ticks_left_on() << endl;
-  //cout << "y_ticks_right_on " << plot.y_ticks_right_on() << endl;
-  //cout << "y_ticks_on_window_or_axis " << l_or_r(plot.y_ticks_on_window_or_axis()) << endl;
-  //cout << "y_max " << plot.y_max() << endl;
-  //cout << "y_min " << plot.y_min() << endl;
   cout << "data lines width " << plot.data_lines_width() << endl;
- cout.flags(iostate); // Restore.
+  cout.flags(iostate); // Restore.
 } // void show_plot_settings(svg_1d_plot& plot)
 
 } // svg

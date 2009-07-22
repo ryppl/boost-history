@@ -337,7 +337,7 @@ namespace boost
                 }
               }
               else if (derived().x_ticks_.label_rotation_ == downward)
-              {
+              {  // Should handle other directions too.
                 x -= derived().x_value_label_style_.font_size() * 0.3;
                 if (derived().x_ticks_.major_value_labels_side_ < 0)
                 { // labels to bottom, so start a little below y_down.
@@ -355,7 +355,7 @@ namespace boost
                 x += derived().x_value_label_style_.font_size() * 0.5;
                 if (derived().x_ticks_.major_value_labels_side_ < 0)
                 { // labels to bottom, so start a little to bottom of y_bottom.
-                  y = y_down + derived().x_value_label_style_.font_size() * 0.7;
+                  y = y_down + derived().x_value_label_style_.font_size() * sin45;
                   // Seems to need a bit more space for top than bottom if rotated.
                   alignment = right_align;
                 }
@@ -405,7 +405,7 @@ namespace boost
               {
                 throw std::runtime_error("X-tick Y value wrong!");
               }
-
+              // Draw the X ticks value labels, "1", "2" "3" ...
               if(derived().x_ticks_.ticks_on_window_or_axis_ != 0)
               { // External to plot window style bottom or top.
                 // Always want all values including "0", if labeling external to plot window.
@@ -413,7 +413,9 @@ namespace boost
                 derived().image.g(detail::PLOT_X_TICKS_VALUES).text(
                   x,
                   y,
-                  label.str(), derived().x_value_label_style_, alignment, derived().x_ticks_.label_rotation_);
+                  label.str(),
+                  //derived().x_value_label_style_, alignment, derived().x_ticks_.label_rotation_); doesn't work!
+                  derived().x_value_label_info_.textstyle(), alignment, derived().x_ticks_.label_rotation_);
               }
               else
               {
@@ -423,7 +425,8 @@ namespace boost
                     x,
                     y,
                     label.str(),
-                    derived().x_value_label_style_,
+                    //derived().x_value_label_style_, doesn't work!
+                    derived().x_value_label_info_.textstyle(),
                     alignment,
                     derived().x_ticks_.label_rotation_);
                 }
@@ -822,7 +825,7 @@ namespace boost
                   }
                   else
                   { // Use point stroke color instead.
-                    g_inner_ptr->style() .stroke_color(derived().serieses_[i].point_style_.stroke_color_); // OK with 1D
+                    g_inner_ptr->style().stroke_color(derived().serieses_[i].point_style_.stroke_color_); // OK with 1D
                   }
                   //std::cout << "line g_inner_ptr->style().stroke_color() " << g_inner_ptr->style().stroke_color() << std::endl;
 
@@ -847,11 +850,11 @@ namespace boost
           } // void draw_legend()
 
           void draw_x_label()
-          { //! Draw the X-axis label text (for example, length), and append any required units (for example. km).
+          { //! Draw the X-axis label text (for example, length),
+            //! and append any required units (for example. km).
             // X-label color is set in constructor thus:
             // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
             // and changed using x_label_color(color);
-
 
             std::string label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
             if (derived().x_axis_.label_units_on_ && (derived().x_units_info_.text() != ""))
@@ -864,8 +867,19 @@ namespace boost
             if (derived().x_ticks_.ticks_on_window_or_axis_ < 0) // bottom
             { // Ticks & value labels below X-axis.
               if (derived().x_ticks_.major_value_labels_side_ < 0) // bottom
-              { // Shift down to allow for any value labels.
-                y += derived().x_ticks_.label_max_space_;
+              { // Shift down to allow for any tick value labels.
+                // SHould handle other directions too.
+                if (derived().x_ticks_.label_rotation_ == downward)
+                { // tick value label direction down .
+                  y += derived().x_ticks_.label_max_space_;
+                }
+                else if (derived().x_ticks_.label_rotation_ == uphill)
+                { // sloping
+                  y += derived().x_ticks_.label_max_space_ * sin45;
+                }
+                else
+                { // horizontal
+                }
               }
               if (derived().x_ticks_.down_ticks_on_)
               { // Shift down for biggest of any ticks.
@@ -877,7 +891,7 @@ namespace boost
               ( // x position relative to the x-axis which is middle of plot window.
               derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
               y, // Down from plot window.
-              label,
+              label, // for the X-axis.
               derived().x_label_info_.textstyle(),
               center_align, horizontal)
               );
@@ -1007,7 +1021,6 @@ namespace boost
               break;
             case symbol:
               g_ptr.text(x, y + half_size, sty.symbols(), sty.style(), center_align, horizontal); // symbol(s), size and centre.
-              // TODO Need to provide way to set style.symbols when Boost.Parameter is unravelled.
 
               // Unicode symbols that work on most browsers are listed at
               // boost\math_toolkit\libs\math\doc\sf_and_dist\html4_symbols.qbk,
@@ -2690,11 +2703,11 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_axis_label_color(const svg_color& col)
           { //! Set X axis label color.
-            // Set BOTH stroke and fill to the same color.
             derived().image.g(detail::PLOT_X_LABEL).style().fill_color(col);
             //derived().image.g(detail::PLOT_X_LABEL).style().stroke_color(col);
             // Setting the stroke color produces fuzzy characters :-(
-            return derived();
+            // Set BOTH stroke and fill to the same color?
+           return derived();
           }
 
           template <class Derived>
@@ -2753,38 +2766,36 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             return derived().x_ticks_.value_ioflags_;
           }
 
-
-
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_ticks_values_font_size(unsigned int i)
-          { //! Set X tick value label font size (svg units, default pixels).
+          { //! Set X ticks value label font size (svg units, default pixels).
             derived().x_ticks_.value_label_style_.font_size(i);
+         // derived().image.g(detail::PLOT_X_TICKS_VALUES).style().fill_color(col);
+
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::x_ticks_values_font_size()
-          { //! \return  X tick value label font size (svg units, default pixels).
-            return derived().x_ticks_.value_label_style_.font_size();
+          { //! \return  X ticks value label font size (svg units, default pixels).
+            // return derived().x_ticks_.value_label_style_.font_size();
+            return derived().x_value_label_info_.textstyle().font_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_ticks_values_font_family(const std::string& family)
-          { //! Set X tick value label font family.
+          { //! Set X ticks value label font family.
+            //derived().x_ticks_.value_label_style_.font_family(family); // is effect same as:
+            derived().x_value_label_info_.textstyle().font_family(family);
 
-
-            derived().x_ticks_.value_label_style_.font_family(family);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::x_ticks_values_font_family()
-          { //! \return  X tick value label font family.
+          { //! \return  X ticks value label font family.
             return derived().x_ticks_.value_label_style_.font_family();
           }
-
-
-
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_ticks_on_window_or_axis(int cmd)

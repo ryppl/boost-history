@@ -304,8 +304,7 @@ class text_style
   friend bool operator== (const text_style&, const text_style&);
   friend bool operator!= (const text_style&, const text_style&);
 
-//protected:
-public:
+private:
   int font_size_; //!< Font size (SVG units, default pixels).
   std::string font_family_; //!< Font family, examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode".
   std::string weight_; //!< Font style, examples: "bold", "normal".
@@ -541,7 +540,7 @@ class value_style
      Prefix, separator and suffix are ignored when X or Y are shown separately using draw_plot_point_value.
   */
 public:
-  //private:  // ??
+// private: // would require lots of set/get functions or lots of friend statements.
   rotate_style value_label_rotation_; //< Direction point value labels written.
   int value_precision_; //!< Decimal digits of precision of value.
   std::ios_base::fmtflags value_ioflags_; //!< Control of scientific, fixed, hex etc.
@@ -1172,6 +1171,7 @@ public:
     // 4 might be better to permit thousands without using e format?
     value_ioflags_(std::ios::dec),  // IO formatting flags for the axis.
     // Note that ALL the flags are set, overwriting any defaults, so std::dec is wise.
+    // This should give the default 'normal' iosflags with neither fixed, scientific nor showpoint set.
     strip_e0s_(true), // strip superflous zeros and signs.
     label_max_length_(0.), // length (estimated in SVG units) of longest label on axis.
     label_max_space_(0.), // Space (estimated in SVG units) of longest label on axis

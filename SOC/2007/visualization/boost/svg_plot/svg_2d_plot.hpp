@@ -21,7 +21,7 @@
 
 #ifdef _MSC_VER
 #pragma warning(push)
-#  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning)
+#  pragma warning (disable : 4800) // forcing value to bool 'true' or 'false' (performance warning
 #  pragma warning (disable : 4512) // assignment operator could not be generated
 #endif
 
@@ -367,11 +367,12 @@ namespace boost
       text_element title_info_; //!< Plot title text.
       text_element legend_header_; //!< Legend box header or title (if any).
       text_element x_label_info_; //!< X axis label text, for example: "length".
-      text_element x_label_value_; //!< X axis value text, for example: "1.2" or "1.2e+001"
+      text_element x_value_label_info_; //!< X axis tick value text, for example: "1.2" or "1.2e+001"
+
       text_element y_label_info_; //!< Y axis label text, for example: "volume".
       text_element x_units_info_; //!< X axis units, for example: "mm".
       text_element y_units_info_; //!<  Y axis units, for example: "min". (2-D only).
-      text_element y_label_value_; //!< Y axis value text, for example: "1.2" or "1.2e+001"
+      text_element y_value_label_info_; //!< Y axis tick value text, for example: "1.2" or "1.2e+001"
 
       text_style value_style_; //!< Style used for data point value label.
       value_style x_values_style_; //!< Data point X value marking, font, size etc.
@@ -497,7 +498,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         title_info_(0, 0, "", title_style_, center_align, horizontal),
         x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal),
         x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
-        x_label_value_(0, 0, "", x_value_label_style_, center_align, horizontal),
+        x_value_label_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
         x_axis_(X, -10., +10., black, 1, 0, true, false, true),
         y_axis_(Y, -10., +10., black, 1, 0, true, false, true),
         // Might fill in all values, but there are rather many for ticks_labels_style,
@@ -506,7 +507,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         y_ticks_(Y, y_value_label_style_),
         y_label_info_(0, 0, "", y_axis_label_style_, center_align, upward),
         y_units_info_(0, 0, "", y_axis_label_style_, center_align, upward),
-        y_label_value_(0, 0, "", y_value_label_style_, center_align, upward), //
+        y_value_label_info_(0, 0, "", y_value_label_style_, center_align, upward), //
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
         plot_window_border_(lightslategray, svg_color(255, 255, 255), 2, 3, true, false),
@@ -1266,7 +1267,10 @@ my_plot.background_color(ghostwhite) // Whole image.
             image.g(detail::PLOT_Y_TICKS_VALUES).text(
               x,
               y,
-              label.str(), y_value_label_style_, alignment, y_ticks_.label_rotation_);
+              label.str(),
+              //y_value_label_style_, doesn't work
+              y_value_label_info_.textstyle(),
+              alignment, y_ticks_.label_rotation_);
           }
           else
           { // ! y_ticks_.y_ticks_on_plot_window_ == 0 'Internal' - value labels either side of vertical Y-axis.
@@ -1275,8 +1279,9 @@ my_plot.background_color(ghostwhite) // Whole image.
               image.g(detail::PLOT_Y_TICKS_VALUES).text(
                 x,
                 y,
-                label.str(),
-                y_value_label_style_,
+                label.str(), // "1.23"
+                //y_value_label_style_, doesn't work
+                y_value_label_info_.textstyle(), // font etc.
                 alignment,
                 y_ticks_.label_rotation_);
             }
@@ -1981,12 +1986,15 @@ my_plot.background_color(ghostwhite) // Whole image.
 
       svg_2d_plot& y_ticks_values_color(const svg_color& col);
       svg_color y_ticks_values_color();
-
       svg_2d_plot& y_ticks_values_precision(int p);
       int y_ticks_values_precision();
-
       svg_2d_plot& y_ticks_values_ioflags(std::ios_base::fmtflags f);
       std::ios_base::fmtflags y_ticks_values_ioflags();
+
+      svg_2d_plot& y_ticks_values_font_size(unsigned int i);
+      unsigned int y_ticks_values_font_size();
+      svg_2d_plot& y_ticks_values_font_family(const std::string& family);
+      const std::string& y_ticks_values_font_family();
 
       svg_2d_plot& y_values_font_size(unsigned int i);
       unsigned int y_values_font_size();
@@ -2758,8 +2766,32 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
         return y_ticks_.value_ioflags_;
       }
 
+      svg_2d_plot& svg_2d_plot::y_ticks_values_font_size(unsigned int i)
+      { //! Set font size for Y axis ticks values (svg units, default pixels).
+        y_ticks_.value_label_style_.font_size(i);
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      unsigned int svg_2d_plot::y_ticks_values_font_size()
+      {//! \return font size for Y axis values.
+        // return derived().y_ticks_.value_label_style_.font_size();
+        return y_ticks_.value_label_style_.font_size();
+      }
+
+      svg_2d_plot& svg_2d_plot::y_ticks_values_font_family(const std::string& family)
+      { //! Set font family for Y axis ticks values.
+        y_ticks_.value_label_style_.font_family(family);
+        return *this; //! \return reference to svg_2d_plot to make chainable.
+      }
+
+      const std::string& svg_2d_plot::y_ticks_values_font_family()
+      { //! \return font family for Y axis ticks values.
+        return y_ticks_.value_label_style_.font_family();
+      }
+
+      // Y axis values.
       svg_2d_plot& svg_2d_plot::y_values_font_size(unsigned int i)
-      { //! \return  font size for Y axis values.
+      { //! Set font size for Y axis values.
         y_values_style_.values_text_style_.font_size(i);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }

@@ -276,7 +276,7 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   text_style legend_style_; //!<  style (font etc of legend.
   text_style x_axis_label_style_; //!< style of X axis label.
   text_style y_axis_label_style_;  //!< Not used for 1D but needed by axis_plot_frame.hpp.
-  text_style x_value_label_style_; //!< style of X value label.
+  text_style x_value_label_style_; //!< style of X ticks value label.
   text_style y_value_label_style_; //!< Not used for 1D but needed by axis_plot_frame.hpp.
   text_style point_symbols_style_; //!< Used for data point marking.
   text_style value_style_; //!< Used for data point value label.
@@ -286,14 +286,14 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   //int x_value_precision_;
   //std::ios_base::fmtflags x_value_ioflags_;
 
+  // text_elements hold position & alignment, and indirectly via text_style, font_family, font_size, bold, italic...
   text_element title_info_; //!< Title of whole plot.
   text_element legend_header_; //!< legend box header or title (if any).
   text_element x_label_info_; //!< X-axis label, Example: "length of widget"
-  text_element x_label_value_; //!< For example: "1.2" or "1.2e1"
+  text_element x_value_label_info_; //!< X-axis tick value label, for example: "1.2" or "1.2e1"
   text_element x_units_info_; //!< For example, to display, "length (meter)"
 
   // No Y-axis info for 1D.
-  // Note that text_elements hold font_size, bold, italic...
 
   // Border information for the plot window (not the full image size).
   box_style image_border_; //!< rectangular border of all image width, color...
@@ -379,8 +379,8 @@ public:
     //x_label_info_(0, 0, "X Axis", x_axis_label_style_, center_align, horizontal),
     //x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
     x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal), // Null strings for now.
-    x_label_value_(0, 0, "", x_value_label_style_, center_align, horizontal),
-    x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
+    x_value_label_info_(0, 0, "", x_value_label_style_, center_align, horizontal), // X-axis tick value label, for example: "1.2" or "1.2e1".
+    x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal), 
     x_axis_(X, -10., +10., black, 1, 0, true, false, true),
     y_axis_(Y, 0., +1., black, 1, 0, false, false, false), // Not used for 1D.
 
