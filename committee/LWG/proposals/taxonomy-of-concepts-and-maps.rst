@@ -88,7 +88,7 @@ such concepts have two main uses:
          template <typename ...Args>
             requires Callable<Lambda, Args...>
               && **HasPlus<Callable<Lambda, Args...>::result_type, RHS>**
-         auto operator()(Args ...args) -> decltype(f(args...) + r)
+         auto operator()(Args ...args) -> decltype((\*(Lambda\*)0)(args...) + (\*(RHS const \*)0))
          {
              return f(args...) + r;
          }
