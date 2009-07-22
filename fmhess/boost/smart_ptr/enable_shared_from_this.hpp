@@ -12,14 +12,14 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
-#include <boost/smart_ptr/enable_generic_shared_from_this.hpp>
+#include <boost/generic_ptr/enable_shared_from_this.hpp>
 
 namespace boost
 {
 	template<typename T>
-	class enable_shared_from_this: public enable_generic_shared_from_this<T*>
+	class enable_shared_from_this: public generic_ptr::enable_shared_from_this<T*>
 	{
-		typedef enable_generic_shared_from_this<T*> base_type;
+		typedef generic_ptr::enable_shared_from_this<T*> base_type;
 		public:
 		boost::shared_ptr<T> shared_from_this()
 		{
