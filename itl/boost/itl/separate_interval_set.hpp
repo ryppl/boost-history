@@ -191,22 +191,22 @@ typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator
     if(addend.empty()) 
 		return prior_;
 
-    iterator insertion = this->_set.insert(prior_, addend);
+    std::pair<iterator,bool> insertion = this->_set.insert(addend);
 
-    if(*insertion == addend)
-        return insertion;
+    if(insertion.WAS_SUCCESSFUL)
+        return insertion.ITERATOR;
     else
     {
         iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion,
-                 end_   = insertion; end_  ++;
+                 last_  = insertion.ITERATOR,
+                 end_   = last_; ++end_;
         //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
         interval_type leftResid  = right_subtract(*first_, addend);
         interval_type rightResid =  left_subtract(*last_ , addend);
 
-        this->_set.erase(second_, end_  );
+        this->_set.erase(second_, end_);
 
         interval_type extended = addend;
         extended.extend(leftResid).extend(rightResid);

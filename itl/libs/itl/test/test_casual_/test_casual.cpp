@@ -38,13 +38,17 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef interval_set<int> IntervalSetT;
     typedef split_interval_set<int> SplitIntervalSetT;
     
-    SplitIntervalSetT left;
-    left.add(I_I(0,2)).add(I_I(3,3)).add(I_I(4,4)).add(I_I(5,5)).add(I_I(6,8));
-    cout << endl;
+    SplitIntervalMapT map_a, map_b;
+    map_a.add(IDv(8,9,1)).add(IIv(6,11,3));
+	cout << ">>> map_a = " << map_a << endl;
+    map_b.add(IDv(0,9,2)).add(IIv(3,6,1));
+	cout << ">>> map_b = " << map_b << endl;
 
-    left.add(I_I(1,7));
+	SplitIntervalMapT map_a_b = map_a + map_b;
+	SplitIntervalMapT map_b_a = map_b + map_a;
+	cout << ">>> map_a_b = " << map_a_b << endl;
+	cout << ">>> map_b_a = " << map_b_a << endl;
 
-
-    BOOST_CHECK_EQUAL(I_I(0,2).contains(I_I(0,2).lower()), true);
+    BOOST_CHECK_EQUAL(map_a_b, map_b_a);
 
 }

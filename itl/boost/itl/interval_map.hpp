@@ -321,7 +321,7 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
         return prior_;
 
     std::pair<iterator,bool> insertion 
-        = this->template map_insert<Combiner>(prior_, inter_val, co_val);
+        = this->template map_insert<Combiner>(inter_val, co_val);
 
     if(insertion.WAS_SUCCESSFUL)
         return join_neighbours(insertion.ITERATOR);
