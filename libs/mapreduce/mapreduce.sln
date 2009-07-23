@@ -1,0 +1,26 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 9.00
+# Visual Studio 2005
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "mapreduce", "mapreduce.vcproj", "{F1A9A9FC-ACE9-4F93-8162-B888697FD81B}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wordcount", "test\wordcount\wordcount.vcproj", "{AB0444E8-E927-470A-BF0B-A60E67F91B06}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Win32 = Debug|Win32
+		Release|Win32 = Release|Win32
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F1A9A9FC-ACE9-4F93-8162-B888697FD81B}.Debug|Win32.ActiveCfg = Debug|Win32
+		{F1A9A9FC-ACE9-4F93-8162-B888697FD81B}.Debug|Win32.Build.0 = Debug|Win32
+		{F1A9A9FC-ACE9-4F93-8162-B888697FD81B}.Release|Win32.ActiveCfg = Release|Win32
+		{F1A9A9FC-ACE9-4F93-8162-B888697FD81B}.Release|Win32.Build.0 = Release|Win32
+		{AB0444E8-E927-470A-BF0B-A60E67F91B06}.Debug|Win32.ActiveCfg = Debug|Win32
+		{AB0444E8-E927-470A-BF0B-A60E67F91B06}.Debug|Win32.Build.0 = Debug|Win32
+		{AB0444E8-E927-470A-BF0B-A60E67F91B06}.Release|Win32.ActiveCfg = Release|Win32
+		{AB0444E8-E927-470A-BF0B-A60E67F91B06}.Release|Win32.Build.0 = Release|Win32
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+EndGlobal
