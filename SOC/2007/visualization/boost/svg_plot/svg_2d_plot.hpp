@@ -1065,7 +1065,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           text_element(x,
           (plot_bottom_ + plot_top_) / 2., // center on the plot window.
           label, // "Y-Axis" for example.
-          y_axis_label_style_,
+          y_axis_label_style_, // font and size
           center_align, // One might want it to left or right_align?
           upward)); // Y label must be drawn vertically.
 
@@ -1260,6 +1260,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         {
           throw std::runtime_error("Y-tick Y value wrong!");
         }
+
         if(y_ticks_.ticks_on_window_or_axis_ != 0)
           { // External to plot window style left or right.
             // Always want all values including "0", if labeling external to plot window.
@@ -1268,8 +1269,7 @@ my_plot.background_color(ghostwhite) // Whole image.
               x,
               y,
               label.str(),
-              //y_value_label_style_, doesn't work
-              y_value_label_info_.textstyle(),
+              y_ticks_.value_label_style_, // text_style - font etc
               alignment, y_ticks_.label_rotation_);
           }
           else
@@ -1280,8 +1280,7 @@ my_plot.background_color(ghostwhite) // Whole image.
                 x,
                 y,
                 label.str(), // "1.23"
-                //y_value_label_style_, doesn't work
-                y_value_label_info_.textstyle(), // font etc.
+                y_ticks_.value_label_style_, // text_style - font etc
                 alignment,
                 y_ticks_.label_rotation_);
             }
@@ -2687,7 +2686,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       svg_2d_plot& svg_2d_plot::y_label_font_size(unsigned int i)
       { //! Set Y axis label text font size.
         // May be best to tie label & unit font sizes together?
-        x_axis_label_style_.font_size(i);
+        y_axis_label_style_.font_size(i);
         // y_units_info_.font_size(i);
         return *this;
       }
@@ -2700,18 +2699,18 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       svg_2d_plot& svg_2d_plot::y_label_weight(std::string s)
       { //! Set Y axis label text font weight (for example: "bold").
         //! ("bold" is only one that works so far, and quality may be poor for some browsers).
-        x_axis_label_style_.font_weight(s);
+        y_axis_label_style_.font_weight(s);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const std::string& svg_2d_plot::y_label_weight()
       { //! \return Y axis label text font weight (for example: "bold").
-        return x_axis_label_style_.font_weight();
+        return y_axis_label_style_.font_weight();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_font_family(const std::string& family)
       { //! Set Y axis label text font family (for example: "Lucida console sans").
-        x_axis_label_style_.font_family(family);
+        y_axis_label_style_.font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
