@@ -321,18 +321,17 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
         return prior_;
 
     std::pair<iterator,bool> insertion 
-        = this->template map_insert<Combiner>(inter_val, co_val);
+        = this->template map_insert<Combiner>(prior_, inter_val, co_val);
 
     if(insertion.WAS_SUCCESSFUL)
         return join_neighbours(insertion.ITERATOR);
     else
     {
         // Detect the first and the end iterator of the collision sequence
-        iterator first_ = this->_map.lower_bound(inter_val),
-                 last_  = insertion.ITERATOR;
-        //assert(end_ == this->_map.upper_bound(inter_val));
-
-        iterator it_ = first_;
+		std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
+        iterator it_   = overlap.first,
+				 last_ = overlap.second;
+				 --last_;
         interval_type rest_interval = inter_val;
 
         add_front         (rest_interval, co_val, it_);

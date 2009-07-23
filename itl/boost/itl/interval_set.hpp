@@ -251,7 +251,7 @@ void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend
     {
         iterator first_ = this->_set.lower_bound(addend),
                  last_  = insertion.ITERATOR,
-                 end_   = insertion.ITERATOR; end_  ++;
+                 end_   = insertion.ITERATOR; ++end_;
         //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 
@@ -275,16 +275,17 @@ typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
     if(addend.empty()) 
 		return prior_;
 
-    std::pair<iterator,bool> insertion = this->_set.insert(addend);
+    iterator insertion = this->_set.insert(prior_, addend);
 
-    if(insertion.WAS_SUCCESSFUL)
-        return handle_neighbours(insertion.ITERATOR);
+    if(*insertion == addend)
+        return handle_neighbours(insertion);
     else
     {
-        iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion.ITERATOR,
-                 end_   = last_; ++end_;
-        //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
+		std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
+        iterator first_ = overlap.first,
+                 end_   = overlap.second,
+                 last_  = end_; --last_;
+
         iterator second_= first_; ++second_;
 
         interval_type leftResid  = right_subtract(*first_, addend);

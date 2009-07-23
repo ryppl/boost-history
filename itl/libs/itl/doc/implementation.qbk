@@ -36,11 +36,11 @@ The operations of interval containers behave differently
 due to the fact that intervals unlike elements can overlap
 any number of other inervals in a container. So as long as
 intervals are relatively small or just singleton, interval
-containers behave like an container of elements.
+containers behave like containers of elements.
 
 This situation can be found in the first row of the next table,
 that gives the time complexities of the poymorphic 
-`operator +=` for ['*addition]. Adding an element or 
+`operator +=` for ['*addition*]. Adding an element or 
 element value pair is always done in /logarithmic time/,
 where /n/ is the number of intervals in the interval container.
 The same row of complexities applies to the insertion
@@ -48,14 +48,14 @@ of a /segment/ (an interval or an interval value pair)
 in the ['*best case*], where the inserted segment does overlap
 with only a ['*small*] number of intervals in the container.
 
-[table Time Complexity of Addition
-[[]                                    [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
-[/ 1operation                          2granul.    3case        4itvset     5se_itvset  6sp_itvset  7itv_map    8sp_itvmap]
-[[`T& operator +=(      T&, const P&)`][element]   []           [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]   ]
-[[]                                    [segment]   [best case]  [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]  [__Olgn__]      ]
-[[]                                    []          [worst case] [__On__]    [__On__]    [__On__]    [__On__]    [__On__]      ]
-[[]                                    []          [amortized]  [__Olgn__]  [__Olgn__]  []          []          []      ]
-[[]                                    [container] []           [__Onlgn__] [__Onlgn__] [__Onlgn__] [__Onlgn__] [__Onlgn__] ]
+[table Time Complexity of Addition:
+[[]                                             [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
+[/ 1operation                                   2granul.    3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
+[[`T& operator +=(T& object, const P& addend)`] [element]   []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                             [segment]   [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[where]                                        []          [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
+[[ /n/ = `object.interval_count()`]             []          [amortized]  [__Olgn__]    [__Olgn__]    []            []            []            ]
+[[ /m/ = `addend.interval_count()`]             [container] []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
 ]
 
 In the ['*worst case*], where the inserted segment overlaps with 

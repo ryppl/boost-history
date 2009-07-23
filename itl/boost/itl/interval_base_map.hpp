@@ -854,7 +854,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     {
         interval_type common_interval = it_->KEY_VALUE & sectant_interval; 
         if(!common_interval.empty())
-            prior_ = section.that()->add(prior_, value_type(common_interval, it_->CONT_VALUE) );
+            prior_ = section.that()->gap_insert<codomain_combine>(prior_, common_interval, it_->CONT_VALUE );
     }
 }
 

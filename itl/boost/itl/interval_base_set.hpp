@@ -409,6 +409,13 @@ protected:
     iterator prior(iterator it_)
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
+    iterator gap_insert(iterator prior_, const interval_type& inter_val)
+    {
+		// inter_val is not conained in this map. Insertion will be successful
+		BOOST_ASSERT(this->_set.find(inter_val) == this->_set.end());
+        return this->_set.insert(prior_, inter_val);
+    }
+
 protected:
     ImplSetT _set;
 } ;
@@ -461,7 +468,11 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
 
 	iterator prior_ = section.end();
     for(const_iterator it_=first_; it_ != end_; it_++) 
-        prior_ = section.add(prior_, (*it_) & inter_val);
+	{
+		interval_type common_interval = (*it_) & inter_val;
+		if(!common_interval.empty())
+			prior_ = section.gap_insert(prior_, common_interval);
+	}
 }
 
 

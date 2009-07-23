@@ -188,15 +188,16 @@ inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
     if(addend.empty()) 
 		return prior_;
 
-    std::pair<iterator,bool> insertion = this->_set.insert(addend);
+    iterator insertion = this->_set.insert(prior_, addend);
 
-    if(insertion.WAS_SUCCESSFUL)
-		return insertion.ITERATOR;
-	else
+    if(*insertion == addend)
+        return insertion;
+    else
     {
-        iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion.ITERATOR;
-        //BOOST_ASSERT(next(last_) == this->_set.upper_bound(inter_val));
+		std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
+        iterator first_ = overlap.first,
+                 end_   = overlap.second,
+                 last_  = end_; --last_;
 
         iterator it_ = first_;
         interval_type rest_interval = addend;

@@ -121,6 +121,8 @@ Distributed under the Boost Software License, Version 1.0.
 [def __On__            ['O(n)]]
 [def __Olgn__          ['O(log n)]]
 [def __Onlgn__         ['O(n log n)]]
+[def __Omlgn__         ['O(m log n)]]
+[def __Omlgnpm__       ['O(m log(n+m))]]
 
 [/ Cited Boost resources ]
 

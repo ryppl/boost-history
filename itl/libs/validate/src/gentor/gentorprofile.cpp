@@ -111,10 +111,10 @@ GentorProfile::GentorProfile()
 
     set_range_element_ContainerSize(0,20);
 	set_repeat_count(1);
-	set_trials_count(10);
+	set_trials_count(20);
 	set_laws_per_cycle(100);
 
-	set_debug_defaults();
+	//set_debug_defaults();
 
     //--------------------------------------------------------------------------
     // values for novial_tree test
