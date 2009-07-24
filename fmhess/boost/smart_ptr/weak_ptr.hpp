@@ -37,8 +37,23 @@ namespace boost
 #else
 		weak_ptr( shared_ptr<Y> const & r )
 #endif
-		:base_type(static_cast<generic_ptr::shared<Y*> const &>(r))
+		: base_type(static_cast<generic_ptr::shared<Y*> const &>(r))
 		{}
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    template<class Y>
+#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+    weak_ptr( weak_ptr<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+#else
+    weak_ptr( weak_ptr<Y> && r )
+#endif
+    : base_type(std::move<generic_ptr::weak<Y*> >(r))
+    {}
+    template<class Y>
+    weak_ptr & operator=(weak_ptr<Y> && r)
+    {
+        return static_cast<weak_ptr&>(base_type::operator=(std::move<generic_ptr::weak<Y*> >(r)));
+    }
+#endif
 		shared_ptr<T> lock() const
 		{
 			return base_type::lock();

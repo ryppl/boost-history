@@ -69,7 +69,7 @@ namespace boost
 		{}
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
-		shared_ptr( shared_ptr<Y> const & r, typename generic_ptr::detail::sp_enable_if_convertible<Y*,T*>::type = detail::sp_empty() )
+		shared_ptr( shared_ptr<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
 #else
 		shared_ptr( shared_ptr<Y> const & r )
 #endif
@@ -90,7 +90,27 @@ namespace boost
 		template<class Y>
 		explicit shared_ptr(weak_ptr<Y> const & r): base_type(static_cast<generic_ptr::weak<Y*> const &>(r))
 		{}
-
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    shared_ptr( shared_ptr && r ): base_type(std::move<base_type>(r))
+    {}
+    template<class Y>
+#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+    shared_ptr( shared_ptr<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+#else
+    shared_ptr( shared_ptr<Y> && r )
+#endif
+    : base_type(std::move<generic_ptr::shared<Y*> >(r))
+    {}
+    shared_ptr & operator=( shared_ptr && r )
+    {
+        return static_cast<shared_ptr&>(base_type::operator=(std::move<base_type>(r)));
+    }
+    template<class Y>
+    shared_ptr & operator=( shared_ptr<Y> && r )
+    {
+        return static_cast<shared_ptr&>(base_type::operator=(std::move<generic_ptr::shared<Y*> >(r)));
+    }
+#endif // BOOST_NO_RVALUE_REFERENCES
 		template<typename Y>
 		shared_ptr & operator=( std::auto_ptr<Y> & r )
 		{
