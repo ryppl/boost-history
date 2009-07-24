@@ -1,8 +1,8 @@
-#ifndef BOOST_SMART_PTR_GENERIC_SHARED_HPP_INCLUDED
-#define BOOST_SMART_PTR_GENERIC_SHARED_HPP_INCLUDED
+#ifndef BOOST_GENERIC_PTR_SHARED_HPP_INCLUDED
+#define BOOST_GENERIC_PTR_SHARED_HPP_INCLUDED
 
 //
-//  generic_shared.hpp
+//  generic_ptr/shared.hpp
 //
 //  (C) Copyright Greg Colvin and Beman Dawes 1998, 1999.
 //  Copyright (c) 2001-2008 Peter Dimov
@@ -12,13 +12,13 @@
 //  accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 //
-//  See http://www.boost.org/libs/smart_ptr/generic_shared.htm for documentation.
+//  See http://www.boost.org/libs/generic_ptr for documentation.
 //
 
 // requirements for generic pointer type:
 // Must be either ordinary pointer, or provide:
 //  operator->() and operator*()
-//  value_type/reference/pointer member typedefs (or specialization of boost::generic_pointer_traits)
+//  value_type/reference/pointer member typedefs (or specialization of boost::generic_ptr::pointer_traits)
 //  (in)equality comparison
 //  2 argument static/const/dynamic_pointer_cast findable by ADL if you want support for casting
 //  get_pointer support
@@ -38,7 +38,8 @@
 
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
-#include <boost/get_pointer.hpp>
+#include <boost/generic_ptr/detail/util.hpp>
+#include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/pointer_cast.hpp>
 #include <boost/throw_exception.hpp>
@@ -72,99 +73,14 @@
 
 namespace boost
 {
-
-template<typename T> class generic_shared;
-template<typename T> class generic_weak;
-template<typename T> class enable_generic_shared_from_this;
-
-template<typename T> struct generic_pointer_traits
+namespace generic_ptr
 {
-    typedef typename T::value_type value_type;
-    typedef typename T::pointer pointer;
-    typedef typename T::reference reference;
-};
 
-template<typename T> struct generic_pointer_traits<T*>
-{
-    typedef T value_type;
-    typedef T * pointer;
-    typedef T & reference;
-};
+template<typename T> class shared;
+template<typename T> class weak;
+template<typename T> class enable_shared_from_this;
 
-template<> struct generic_pointer_traits<void*>
-{
-    typedef void value_type;
-    typedef void * pointer;
-    typedef void reference;
-};
-
-template<> struct generic_pointer_traits<const void*>
-{
-    typedef void value_type;
-    typedef const void * pointer;
-    typedef void reference;
-};
-
-template<> struct generic_pointer_traits<volatile void*>
-{
-    typedef void value_type;
-    typedef volatile void * pointer;
-    typedef void reference;
-};
-
-template<> struct generic_pointer_traits<const volatile void*>
-{
-    typedef void value_type;
-    typedef const volatile void * pointer;
-    typedef void reference;
-};
-
-template<typename GenericPtr, typename ValueType>
-struct rebind_generic_pointer
-{
-    typedef typename GenericPtr::template rebind<ValueType>::other other;
-};
-
-template<typename T, typename ValueType>
-struct rebind_generic_pointer<T*, ValueType>
-{
-    typedef ValueType * other;
-};
-
-template<typename T>
-T * get_plain_old_pointer(T * p)
-{
-    return p;
-}
-
-template<typename GenericPtr>
-typename generic_pointer_traits<GenericPtr>::value_type *
-    get_plain_old_pointer(GenericPtr gp)
-{
-    using boost::get_pointer;
-    return get_plain_old_pointer(get_pointer(gp));
-}
-
-// two-argument cast overloads for raw pointers (really belongs in boost/pointer_cast.hpp)
-template<typename T, typename U>
-T* static_pointer_cast(U *r, boost::mpl::identity<T>)
-{
-    return static_cast<T*>(r);
-}
-
-template<typename T, typename U>
-T* const_pointer_cast(U *r, boost::mpl::identity<T>)
-{
-    return const_cast<T*>(r);
-}
-
-template<typename T, typename U>
-T* dynamic_pointer_cast(U *r, boost::mpl::identity<T>)
-{
-    return dynamic_cast<T*>(r);
-}
-
-namespace gs_detail
+namespace detail
 {
 
 struct static_cast_tag {};
@@ -173,13 +89,13 @@ struct dynamic_cast_tag {};
 
 // enable_shared_from_this support
 
-template< class X, class Y, class T > inline void sp_enable_shared_from_this( boost::generic_shared<X> const * ppx, Y const * py,
-    boost::enable_generic_shared_from_this< T > const * pe )
+template< class X, class Y, class T > inline void sp_enable_shared_from_this( shared<X> const * ppx, Y const * py,
+    enable_shared_from_this< T > const * pe )
 {
     if( pe != 0 )
     {
-        typedef typename remove_const<typename generic_pointer_traits<Y>::value_type>::type nonconst_y_value_type;
-        pe->_internal_accept_owner( ppx, const_pointer_cast<nonconst_y_value_type>( *py ) );
+        typedef typename remove_const<typename pointer_traits<Y>::value_type>::type nonconst_y_value_type;
+        pe->_internal_accept_owner( ppx, const_pointer_cast( *py, mpl::identity<nonconst_y_value_type>()) );
     }
 }
 
@@ -221,89 +137,78 @@ template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R
 
 template<typename Y, typename T>
 class sp_enable_if_convertible: public
-    detail::sp_enable_if_convertible<typename generic_pointer_traits<Y>::value_type, typename generic_pointer_traits<T>::value_type>
+    boost::detail::sp_enable_if_convertible<typename pointer_traits<Y>::value_type, typename pointer_traits<T>::value_type>
 {};
 
-template<typename T>
-void set_plain_pointer_to_null(const T&)
-{}
-template<typename T>
-void set_plain_pointer_to_null(T * &p)
-{
-	p = 0;
-}
-
-} // namespace gs_detail
+} // namespace detail
 
 
 //
-//  generic_shared
+//  generic_ptr::shared
 //
-//  An enhanced relative of scoped_ptr with reference counted copy semantics.
-//  The object pointed to is deleted when the last generic_shared pointing to it
-//  is destroyed or reset.
-//
+//  A generalization of boost::shared_ptr which accepts a generic pointer type as
+//  its wrapped pointer.
 
-template<class T> class generic_shared
+template<class T> class shared
 {
 private:
 
     // Borland 5.5.1 specific workaround
-    typedef generic_shared<T> this_type;
+    typedef shared<T> this_type;
 
 public:
 
-    typedef typename boost::generic_pointer_traits<T>::value_type element_type;
-    typedef typename boost::generic_pointer_traits<T>::value_type value_type;
+    typedef typename pointer_traits<T>::value_type value_type;
+    typedef value_type element_type;
     typedef T pointer;
-    typedef typename boost::generic_pointer_traits<T>::reference reference;
-    typedef generic_weak<T> weak_type;
+    typedef typename pointer_traits<T>::reference reference;
+    typedef weak<T> weak_type;
 
     template<typename ValueType>
     struct rebind
     {
-        typedef generic_shared<typename rebind_generic_pointer<pointer, ValueType>::other > other;
+        typedef shared<typename generic_ptr::rebind<pointer, ValueType>::other > other;
     };
 
-    generic_shared(): px(), pn()
+    shared(): px(), pn()
     {
     }
 
     template<class Y>
-    explicit generic_shared( Y p ): px( p ), pn( p ) // Y must be complete
+    explicit shared( Y p ): px( p ), pn( get_plain_old_pointer(p) ) // Y must be complete
     {
-        boost::gs_detail::sp_enable_shared_from_this( this, &p, get_plain_old_pointer(p) );
+        detail::sp_enable_shared_from_this( this, &p, get_plain_old_pointer(p) );
     }
 
     //
     // Requirements: D's copy constructor must not throw
     //
-    // generic_shared will release p by calling d(p)
+    // shared will release p by calling d(p)
     //
 
-    template<class Y, class D> generic_shared(Y p, D d): px(p), pn(p, d)
+    template<class Y, class D> shared(Y p, D d): px(p), pn(p, d)
     {
-        boost::gs_detail::sp_enable_shared_from_this( this, &p, get_plain_old_pointer(p) );
+        detail::sp_enable_shared_from_this( this, &p, get_plain_old_pointer(p) );
     }
 
     // As above, but with allocator. A's copy constructor shall not throw.
 
-    template<class Y, class D, class A> generic_shared( Y p, D d, A a ): px( p ), pn( p, d, a )
+    template<class Y, class D, class A> shared( Y p, D d, A a ): px( p ), pn( p, d, a )
     {
-        boost::gs_detail::sp_enable_shared_from_this( this, &p, get_plain_old_pointer(p) );
+        detail::sp_enable_shared_from_this( this, &p, get_plain_old_pointer(p) );
     }
 
 //  generated copy constructor, destructor are fine
 
     template<class Y>
-    explicit generic_shared(generic_weak<Y> const & r): pn(r.pn) // may throw
+    explicit shared(weak<Y> const & r): pn(r.pn) // may throw
     {
         // it is now safe to copy r.px, as pn(r.pn) did not throw
         px = r.px;
     }
 
     template<class Y>
-    generic_shared( generic_weak<Y> const & r, boost::detail::sp_nothrow_tag ): px( 0 ), pn( r.pn, boost::detail::sp_nothrow_tag() ) // never throws
+    shared( weak<Y> const & r, boost::detail::sp_nothrow_tag ): px( 0 ), pn( r.pn, boost::detail::sp_nothrow_tag() ) // never throws
     {
         if( !pn.empty() )
         {
@@ -314,11 +219,11 @@ public:
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    generic_shared( generic_shared<Y> const & r, typename gs_detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+    shared( shared<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
 
 #else
 
-    generic_shared( generic_shared<Y> const & r )
+    shared( shared<Y> const & r )
 
 #endif
     : px( r.px ), pn( r.pn ) // never throws
@@ -327,26 +232,26 @@ public:
 
     // aliasing
     template< class Y, class Z >
-    generic_shared( generic_shared<Y> const & r, Z p ): px( p ), pn( r.pn ) // never throws
+    shared( shared<Y> const & r, Z p ): px( p ), pn( r.pn ) // never throws
     {
     }
 
     template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::static_cast_tag):
+    shared(shared<Y> const & r, detail::static_cast_tag):
         px(static_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
     }
 
     template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::const_cast_tag):
+    shared(shared<Y> const & r, detail::const_cast_tag):
         px(const_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
     }
 
     template<class Y>
-    generic_shared(generic_shared<Y> const & r, boost::gs_detail::dynamic_cast_tag):
+    shared(shared<Y> const & r, detail::dynamic_cast_tag):
         px(dynamic_pointer_cast(r.px, boost::mpl::identity<value_type>())),
         pn(r.pn)
     {
@@ -359,21 +264,21 @@ public:
 #ifndef BOOST_NO_AUTO_PTR
 
     template<class Y>
-    explicit generic_shared(std::auto_ptr<Y> & r): px(r.get()), pn()
+    explicit shared(std::auto_ptr<Y> & r): px(r.get()), pn()
     {
         Y * tmp = r.get();
         pn = boost::detail::shared_count(r);
-        boost::gs_detail::sp_enable_shared_from_this( this, &tmp, get_plain_old_pointer(tmp) );
+        detail::sp_enable_shared_from_this( this, &tmp, get_plain_old_pointer(tmp) );
     }
 
 #if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
     template<class Ap>
-    explicit generic_shared( Ap r, typename boost::gs_detail::sp_enable_if_auto_ptr<Ap, int>::type = 0 ): px( r.get() ), pn()
+    explicit shared( Ap r, typename detail::sp_enable_if_auto_ptr<Ap, int>::type = 0 ): px( r.get() ), pn()
     {
         typename Ap::element_type * tmp = r.get();
         pn = boost::detail::shared_count( r );
-        boost::gs_detail::sp_enable_shared_from_this( this, &tmp, get_plain_old_pointer(tmp) );
+        detail::sp_enable_shared_from_this( this, &tmp, get_plain_old_pointer(tmp) );
     }
 
 
@@ -383,7 +288,7 @@ public:
 
     // assignment
 
-    generic_shared & operator=( generic_shared const & r ) // never throws
+    shared & operator=( shared const & r ) // never throws
     {
         this_type(r).swap(*this);
         return *this;
@@ -392,7 +297,7 @@ public:
 #if !defined(BOOST_MSVC) || (BOOST_MSVC >= 1400)
 
     template<class Y>
-    generic_shared & operator=(generic_shared<Y> const & r) // never throws
+    shared & operator=(shared<Y> const & r) // never throws
     {
         this_type(r).swap(*this);
         return *this;
@@ -403,7 +308,7 @@ public:
 #ifndef BOOST_NO_AUTO_PTR
 
     template<class Y>
-    generic_shared & operator=( std::auto_ptr<Y> & r )
+    shared & operator=( std::auto_ptr<Y> & r )
     {
         this_type(r).swap(*this);
         return *this;
@@ -412,7 +317,7 @@ public:
 #if !defined( BOOST_NO_SFINAE ) && !defined( BOOST_NO_TEMPLATE_PARTIAL_SPECIALIZATION )
 
     template<class Ap>
-    typename boost::gs_detail::sp_enable_if_auto_ptr< Ap, generic_shared & >::type operator=( Ap r )
+    typename detail::sp_enable_if_auto_ptr< Ap, shared & >::type operator=( Ap r )
     {
         this_type( r ).swap( *this );
         return *this;
@@ -425,38 +330,38 @@ public:
 
 // Move support
 
-#if defined( BOOST_HAS_RVALUE_REFS )
+#ifndef BOOST_NO_RVALUE_REFERENCES
 
-    generic_shared( generic_shared && r ): px( r.px ), pn() // never throws
+    shared( shared && r ): px( r.px ), pn() // never throws
     {
         pn.swap( r.pn );
-        gs_detail::set_plain_pointer_to_null(r.px);
+        detail::set_plain_old_pointer_to_null(r.px);
     }
 
     template<class Y>
 #if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
 
-    generic_shared( generic_shared<Y> && r, typename gs_detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+    shared( shared<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
 
 #else
 
-    generic_shared( generic_shared<Y> && r )
+    shared( shared<Y> && r )
 
 #endif
     : px( r.px ), pn() // never throws
     {
         pn.swap( r.pn );
-        gs_detail::set_plain_pointer_to_null(r.px);
+        detail::set_plain_old_pointer_to_null(r.px);
     }
 
-    generic_shared & operator=( generic_shared && r ) // never throws
+    shared & operator=( shared && r ) // never throws
     {
         this_type( std::move( r ) ).swap( *this );
         return *this;
     }
 
     template<class Y>
-    generic_shared & operator=( generic_shared<Y> && r ) // never throws
+    shared & operator=( shared<Y> && r ) // never throws
     {
         this_type( std::move( r ) ).swap( *this );
         return *this;
@@ -484,7 +389,7 @@ public:
         this_type( p, d, a ).swap( *this );
     }
 
-    template<class Y> void reset( generic_shared<Y> const & r, T p )
+    template<class Y> void reset( shared<Y> const & r, T p )
     {
         this_type( r, p ).swap( *this );
     }
@@ -507,66 +412,7 @@ public:
     }
 
 // implicit conversion to "bool"
-#if 0
-#include <boost/smart_ptr/detail/generic_operator_bool.hpp>
-#else
-//  This header intentionally has no include guards.
-//
-//  Copyright (c) 2001-2009 Peter Dimov
-//
-//  Distributed under the Boost Software License, Version 1.0.
-//  See accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt
-
-#if ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, < 0x570) ) || defined(__CINT__)
-
-    operator bool () const
-    {
-        return get_plain_old_pointer(px) != 0;
-    }
-
-#elif defined( _MANAGED )
-
-    static void unspecified_bool( this_type*** )
-    {
-    }
-
-    typedef void (*unspecified_bool_type)( this_type*** );
-
-    operator unspecified_bool_type() const // never throws
-    {
-        return get_plain_old_pointer(px) == 0 ? 0: unspecified_bool;
-    }
-
-#elif \
-    ( defined(__MWERKS__) && BOOST_WORKAROUND(__MWERKS__, < 0x3200) ) || \
-    ( defined(__GNUC__) && (__GNUC__ * 100 + __GNUC_MINOR__ < 304) ) || \
-    ( defined(__SUNPRO_CC) && BOOST_WORKAROUND(__SUNPRO_CC, <= 0x590) )
-
-    typedef T (this_type::*unspecified_bool_type)() const;
-
-    operator unspecified_bool_type() const // never throws
-    {
-        return get_plain_old_pointer(px) == 0 ? 0: &this_type::get;
-    }
-
-#else
-
-    typedef T this_type::*unspecified_bool_type;
-
-    operator unspecified_bool_type() const // never throws
-    {
-        return get_plain_old_pointer(px) == 0 ? 0: &this_type::px;
-    }
-
-#endif
-
-    // operator! is redundant, but some compilers need it
-    bool operator! () const // never throws
-    {
-        return get_plain_old_pointer(px) == 0;
-    }
-#endif // end implicit conversion to "bool" support
+#include <boost/generic_ptr/detail/operator_bool.hpp>
 
     bool unique() const // never throws
     {
@@ -578,23 +424,23 @@ public:
         return pn.use_count();
     }
 
-    void swap(generic_shared<T> & other) // never throws
+    void swap(shared<T> & other) // never throws
     {
         std::swap(px, other.px);
         pn.swap(other.pn);
     }
 
-    template<class Y> bool _internal_less(generic_shared<Y> const & rhs) const
+    template<class Y> bool _internal_less(shared<Y> const & rhs) const
     {
         return pn < rhs.pn;
     }
 
-    void * _internal_get_deleter( detail::sp_typeinfo const & ti ) const
+    void * _internal_get_deleter( boost::detail::sp_typeinfo const & ti ) const
     {
         return pn.get_deleter( ti );
     }
 
-    bool _internal_equiv( generic_shared const & r ) const
+    bool _internal_equiv( shared const & r ) const
     {
         return px == r.px && pn == r.pn;
     }
@@ -606,8 +452,8 @@ public:
 
 private:
 
-    template<class Y> friend class generic_shared;
-    template<class Y> friend class generic_weak;
+    template<class Y> friend class shared;
+    template<class Y> friend class weak;
 
 
 #endif
@@ -615,14 +461,14 @@ private:
     T px;                     // contained pointer
     boost::detail::shared_count pn;    // reference counter
 
-};  // generic_shared
+};  // shared
 
-template<class T, class U> inline bool operator==(generic_shared<T> const & a, generic_shared<U> const & b)
+template<class T, class U> inline bool operator==(shared<T> const & a, shared<U> const & b)
 {
     return a.get() == b.get();
 }
 
-template<class T, class U> inline bool operator!=(generic_shared<T> const & a, generic_shared<U> const & b)
+template<class T, class U> inline bool operator!=(shared<T> const & a, shared<U> const & b)
 {
     return a.get() != b.get();
 }
@@ -631,49 +477,50 @@ template<class T, class U> inline bool operator!=(generic_shared<T> const & a, g
 
 // Resolve the ambiguity between our op!= and the one in rel_ops
 
-template<class T> inline bool operator!=(generic_shared<T> const & a, generic_shared<T> const & b)
+template<class T> inline bool operator!=(shared<T> const & a, shared<T> const & b)
 {
     return a.get() != b.get();
 }
 
 #endif
 
-template<class T, class U> inline bool operator<(generic_shared<T> const & a, generic_shared<U> const & b)
+template<class T, class U> inline bool operator<(shared<T> const & a, shared<U> const & b)
 {
     return a._internal_less(b);
 }
 
-template<class T> inline void swap(generic_shared<T> & a, generic_shared<T> & b)
+template<class T> inline void swap(shared<T> & a, shared<T> & b)
 {
     a.swap(b);
 }
 
 template<typename ToValueType, typename U>
-typename generic_shared<U>::template rebind<ToValueType>::other static_pointer_cast(generic_shared<U> const & r,
+typename shared<U>::template rebind<ToValueType>::other static_pointer_cast(shared<U> const & r,
     boost::mpl::identity<ToValueType> = boost::mpl::identity<ToValueType>())
 {
-    typedef typename generic_shared<U>::template rebind<ToValueType>::other result_type;
-    return result_type(r, boost::gs_detail::static_cast_tag());
+    typedef typename shared<U>::template rebind<ToValueType>::other result_type;
+    return result_type(r, detail::static_cast_tag());
 }
 
 template<typename ToValueType, typename U>
-typename generic_shared<U>::template rebind<ToValueType>::other const_pointer_cast(generic_shared<U> const & r,
+typename shared<U>::template rebind<ToValueType>::other const_pointer_cast(shared<U> const & r,
     boost::mpl::identity<ToValueType> = boost::mpl::identity<ToValueType>())
 {
-    typedef typename generic_shared<U>::template rebind<ToValueType>::other result_type;
-    return result_type(r, boost::gs_detail::const_cast_tag());
+    typedef typename shared<U>::template rebind<ToValueType>::other result_type;
+    return result_type(r, detail::const_cast_tag());
 }
 
 template<typename ToValueType, typename U>
-typename generic_shared<U>::template rebind<ToValueType>::other dynamic_pointer_cast(generic_shared<U> const & r,
+typename shared<U>::template rebind<ToValueType>::other dynamic_pointer_cast(shared<U> const & r,
     boost::mpl::identity<ToValueType> = boost::mpl::identity<ToValueType>())
 {
-    typedef typename generic_shared<U>::template rebind<ToValueType>::other result_type;
-    return result_type(r, boost::gs_detail::dynamic_cast_tag());
+    typedef typename shared<U>::template rebind<ToValueType>::other result_type;
+    return result_type(r, detail::dynamic_cast_tag());
 }
 
-// get_pointer() enables boost::mem_fn to recognize generic_shared
-template<class T> inline T get_pointer(generic_shared<T> const & p)
+// get_pointer() enables boost::mem_fn to recognize generic_ptr::shared
+// and is required by generic_ptr::get_plain_old_pointer()
+template<class T> inline T get_pointer(shared<T> const & p)
 {
     return p.get();
 }
@@ -684,7 +531,7 @@ template<class T> inline T get_pointer(generic_shared<T> const & p)
 
 #if defined(BOOST_NO_TEMPLATED_IOSTREAMS) || ( defined(__GNUC__) &&  (__GNUC__ < 3) )
 
-template<class Y> std::ostream & operator<< (std::ostream & os, generic_shared<Y> const & p)
+template<class Y> std::ostream & operator<< (std::ostream & os, shared<Y> const & p)
 {
     os << p.get();
     return os;
@@ -698,9 +545,9 @@ template<class Y> std::ostream & operator<< (std::ostream & os, generic_shared<Y
 # if defined(BOOST_MSVC) && BOOST_WORKAROUND(BOOST_MSVC, < 1300 && __SGI_STL_PORT)
 // MSVC6 has problems finding std::basic_ostream through the using declaration in namespace _STL
 using std::basic_ostream;
-template<class E, class T, class Y> basic_ostream<E, T> & operator<< (basic_ostream<E, T> & os, generic_shared<Y> const & p)
+template<class E, class T, class Y> basic_ostream<E, T> & operator<< (basic_ostream<E, T> & os, shared<Y> const & p)
 # else
-template<class E, class T, class Y> std::basic_ostream<E, T> & operator<< (std::basic_ostream<E, T> & os, generic_shared<Y> const & p)
+template<class E, class T, class Y> std::basic_ostream<E, T> & operator<< (std::basic_ostream<E, T> & os, shared<Y> const & p)
 # endif
 {
     os << p.get();
@@ -722,7 +569,7 @@ template<class E, class T, class Y> std::basic_ostream<E, T> & operator<< (std::
 // g++ 2.9x doesn't allow static_cast<X const *>(void *)
 // apparently EDG 2.38 and HP aCC A.03.35 also don't accept it
 
-template<class D, class T> D * get_deleter(generic_shared<T> const & p)
+template<class D, class T> D * get_deleter(shared<T> const & p)
 {
     void const * q = p._internal_get_deleter(BOOST_SP_TYPEID(D));
     return const_cast<D *>(static_cast<D const *>(q));
@@ -730,7 +577,7 @@ template<class D, class T> D * get_deleter(generic_shared<T> const & p)
 
 #else
 
-template<class D, class T> D * get_deleter(generic_shared<T> const & p)
+template<class D, class T> D * get_deleter(shared<T> const & p)
 {
     return static_cast<D *>(p._internal_get_deleter(BOOST_SP_TYPEID(D)));
 }
@@ -741,34 +588,34 @@ template<class D, class T> D * get_deleter(generic_shared<T> const & p)
 
 #if !defined(BOOST_SP_NO_ATOMIC_ACCESS)
 
-template<class T> inline bool atomic_is_lock_free( generic_shared<T> const * /*p*/ )
+template<class T> inline bool atomic_is_lock_free( shared<T> const * /*p*/ )
 {
     return false;
 }
 
-template<class T> generic_shared<T> atomic_load( generic_shared<T> const * p )
+template<class T> shared<T> atomic_load( shared<T> const * p )
 {
     boost::detail::spinlock_pool<2>::scoped_lock lock( p );
     return *p;
 }
 
-template<class T> inline generic_shared<T> atomic_load_explicit( generic_shared<T> const * p, memory_order /*mo*/ )
+template<class T> inline shared<T> atomic_load_explicit( shared<T> const * p, memory_order /*mo*/ )
 {
     return atomic_load( p );
 }
 
-template<class T> void atomic_store( generic_shared<T> * p, generic_shared<T> r )
+template<class T> void atomic_store( shared<T> * p, shared<T> r )
 {
     boost::detail::spinlock_pool<2>::scoped_lock lock( p );
     p->swap( r );
 }
 
-template<class T> inline void atomic_store_explicit( generic_shared<T> * p, generic_shared<T> r, memory_order /*mo*/ )
+template<class T> inline void atomic_store_explicit( shared<T> * p, shared<T> r, memory_order /*mo*/ )
 {
     atomic_store( p, r ); // std::move( r )
 }
 
-template<class T> generic_shared<T> atomic_exchange( generic_shared<T> * p, generic_shared<T> r )
+template<class T> shared<T> atomic_exchange( shared<T> * p, shared<T> r )
 {
     boost::detail::spinlock & sp = boost::detail::spinlock_pool<2>::spinlock_for( p );
 
@@ -779,12 +626,12 @@ template<class T> generic_shared<T> atomic_exchange( generic_shared<T> * p, gene
     return r; // return std::move( r )
 }
 
-template<class T> generic_shared<T> atomic_exchange_explicit( generic_shared<T> * p, generic_shared<T> r, memory_order /*mo*/ )
+template<class T> shared<T> atomic_exchange_explicit( shared<T> * p, shared<T> r, memory_order /*mo*/ )
 {
     return atomic_exchange( p, r ); // std::move( r )
 }
 
-template<class T> bool atomic_compare_exchange( generic_shared<T> * p, generic_shared<T> * v, generic_shared<T> w )
+template<class T> bool atomic_compare_exchange( shared<T> * p, shared<T> * v, shared<T> w )
 {
     boost::detail::spinlock & sp = boost::detail::spinlock_pool<2>::spinlock_for( p );
 
@@ -800,7 +647,7 @@ template<class T> bool atomic_compare_exchange( generic_shared<T> * p, generic_s
     }
     else
     {
-        generic_shared<T> tmp( *p );
+        shared<T> tmp( *p );
 
         sp.unlock();
 
@@ -809,13 +656,14 @@ template<class T> bool atomic_compare_exchange( generic_shared<T> * p, generic_s
     }
 }
 
-template<class T> inline bool atomic_compare_exchange_explicit( generic_shared<T> * p, generic_shared<T> * v, generic_shared<T> w, memory_order /*success*/, memory_order /*failure*/ )
+template<class T> inline bool atomic_compare_exchange_explicit( shared<T> * p, shared<T> * v, shared<T> w, memory_order /*success*/, memory_order /*failure*/ )
 {
     return atomic_compare_exchange( p, v, w ); // std::move( w )
 }
 
 #endif
 
+} // namespace generic_ptr
 } // namespace boost
 
 #ifdef BOOST_MSVC
@@ -824,4 +672,4 @@ template<class T> inline bool atomic_compare_exchange_explicit( generic_shared<T
 
 #endif  // #if defined(BOOST_NO_MEMBER_TEMPLATES) && !defined(BOOST_MSVC6_MEMBER_TEMPLATES)
 
-#endif  // #ifndef BOOST_SMART_PTR_SHARED_HPP_INCLUDED
+#endif  // #ifndef BOOST_GENERIC_PTR_SHARED_HPP_INCLUDED
