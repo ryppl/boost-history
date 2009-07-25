@@ -1,41 +1,31 @@
 ////////////////////////////////////////////////////////////////////////////
-// acvf
-//  (C) Copyright 2008 Erwann Rogard
-//  Use, modification and distribution are subject to the
-//  Boost Software License, Version 1.0. (See accompanying file
-//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+// acvf									  //
+//								          //
+//  (C) Copyright 2008 Erwann Rogard					  //
+//  Use, modification and distribution are subject to the	          //
+//  Boost Software License, Version 1.0. (See accompanying file		  //
+//  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)	  //
 ////////////////////////////////////////////////////////////////////////////
 
-///////////
-/ Contact /
-///////////
+[ Contact ]
 
-Please send questions or suggestions to erwann.rogard@gmail.com
+erwann.rogard@gmail.com
 
-////////////////
-/ Requirements /
-////////////////
-
-Compiles fine under
+[Compiler]
 
 gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 
-The compiler search path must include
-boost_1_37_0
-sandbox/acvf
+[Dependencies]
+
+boost_1_39_0
 sandbox/accumulators_filters
 
-////////////
-/ Overview /
-////////////
+[ Overview ]
 
-Provides autocovariance and related statistics within the Boost.Accumulator
-framework.
+Provides autocovariance and related statistics within the Boost.Accumulator framework.
 
 
-/////////
-/ Usage /
-/////////
+[ Usage ]
 
     typedef mpl::void_ discr_t;
     typedef accumulator_set<
@@ -62,9 +52,10 @@ framework.
     bundle.percentage_effective_sample_size();
     bundle.print(out);
 
-////////////////////////
-/ Output from main.cpp /
-////////////////////////
+[ Output ]
+
+Here's the output from main.cpp
+
 ->true_acvf: 1.29 -0.6 0.2 <-
 ->true_acf: 1 -0.465116 0.155039 <-
 ->true var: 0.49<-

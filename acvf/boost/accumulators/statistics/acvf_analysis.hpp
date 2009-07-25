@@ -11,7 +11,7 @@
 #include <iterator>
 #include <functional>
 #include <stdexcept>
-#include <boost/assert.hpp>
+//#include <boost/assert.hpp>
 #include <boost/assign/std/vector.hpp>
 #include <boost/parameter/parameters.hpp>
 #include <boost/parameter/keyword.hpp>
@@ -138,6 +138,7 @@ namespace statistics{
                 << max_lag() << ": "
                 << standard_error_autocorrelated() << std::endl;
         };
+
     private:
 
         std::size_t K;

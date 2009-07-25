@@ -17,7 +17,7 @@
 #include <boost/mpl/placeholders.hpp>
 
 #include <boost/call_traits.hpp>
-#include <boost/assert.hpp>
+//#include <boost/assert.hpp>
 #include <boost/array.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/type_traits/add_const.hpp>

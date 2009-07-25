@@ -13,7 +13,7 @@
 #include <algorithm>
 #include <stdexcept>
 #include <boost/call_traits.hpp>
-#include <boost/assert.hpp>
+//#include <boost/assert.hpp>
 #include <boost/range.hpp>
 #include <boost/range/iterator_range.hpp>
 #include <boost/iterator/iterator_traits.hpp>
