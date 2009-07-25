@@ -55,7 +55,7 @@
     <type name="Pipe" />
     </get-member-type>
     <description>
-      <simpara>Optional integral constant that states how many
+      <simpara>Optional MPL integral constant that states how many
     elements may be added to <code>out</code> at maximum in a call to
     the function object.</simpara>
     </description>

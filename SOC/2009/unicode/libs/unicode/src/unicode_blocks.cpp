@@ -1,3 +1,4 @@
+#define BOOST_UNICODE_SOURCE
 #include <boost/unicode/ucd/properties.hpp>
 #include <algorithm>
 
@@ -27,7 +28,7 @@ namespace detail
     };
 }
 
-boost::unicode::ucd::block::type boost::unicode::ucd::get_block(char32 ch)
+BOOST_UNICODE_DECL boost::unicode::ucd::block::type boost::unicode::ucd::get_block(char32 ch)
 {
     const unichar_blocks_internal* end = __uni_block_data + __uni_block_data_size;
     
@@ -46,7 +47,7 @@ boost::unicode::ucd::block::type boost::unicode::ucd::get_block(char32 ch)
     return (boost::unicode::ucd::block::type)b->first;
 }
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::block::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::block::type type)
 {
     const unichar_blocks_internal* b = std::lower_bound(
         __uni_block_data, __uni_block_data + __uni_block_data_size,

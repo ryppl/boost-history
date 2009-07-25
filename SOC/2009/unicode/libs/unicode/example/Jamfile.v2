@@ -8,9 +8,13 @@
 
 project
     : requirements 
-      <include>../../..
-      <include>$(BOOST_ROOT)
-      <library>../src//boost-unicode
+        <include>../../..
+        <include>$(BOOST_ROOT)
+        <define>BOOST_ALL_NO_LIB=1
+        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        <toolset>gcc:<cxxflags>-Wno-multichar
+        <library>../build//boost_unicode/
+		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1
     ;
 
 exe test : test.cpp ;

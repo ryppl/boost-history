@@ -12,6 +12,10 @@
 
 #include <boost/unicode/surrogates.hpp>
 
+#include <boost/iterator/pipe_iterator.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/bool.hpp>
 
 namespace boost
 {
@@ -20,10 +24,6 @@ namespace unicode
 
 namespace detail
 {
-    
-static const char16 high_surrogate_base = 0xD7C0u;
-static const char16 low_surrogate_base = 0xDC00u;
-static const char32 ten_bit_mask = 0x3FFu;
 
 inline unsigned utf8_byte_count(uint8_t c)
 {
@@ -143,7 +143,7 @@ struct u16_decoder
          	if(!unicode::is_low_surrogate(lo))
             	detail::invalid_code_point(lo);
 				
-         	value = code_point(value, lo);
+         	value = code_point((char16)value, lo);
       	}
       	// postcondition; result must not be a surrogate:
       	if(unicode::is_surrogate(value))
@@ -175,7 +175,7 @@ struct u16_decoder
          	if(!unicode::is_high_surrogate(hi))
             	detail::invalid_code_point(hi);
 			
-			value = code_point(hi, value);
+			value = code_point(hi, (char16)value);
       	}
       	// postcondition; result must not be a surrogate:
       	if(unicode::is_surrogate(value))
@@ -372,7 +372,6 @@ public:
 	}
 };
 
-
 /** Model of \c BoundaryChecker that tells whether a position lies on a code
  * point boundary within a range of UTF-8 code units. */
 struct u8_boundary
@@ -386,6 +385,154 @@ struct u8_boundary
         
         unsigned char c = *pos;
         return (c & 0x80) == 0 || (c & 0xc0) == 0xc0;
+    }
+};
+
+/** Model of \c OneManyPipe that casts its input to its template
+ * parameter and writes it to its output. */
+template<typename T>
+struct cast_pipe
+{
+    typedef T output_type;
+    typedef mpl::int_<1> max_output;
+    
+    template<typename U, typename Out>
+    Out operator()(U in, Out out)
+    {
+        *out++ = static_cast<output_type>(in);
+        return out;
+    }
+};
+
+namespace detail
+{
+
+template<typename T, typename Enable = void>
+struct is_u32 : mpl::false_ {};
+template<> struct is_u32<char32> : mpl::true_ {};
+template<typename T>
+struct is_u32<T, typename enable_if<
+    mpl::and_<
+        is_same<T, wchar_t>,
+        mpl::bool_<sizeof(T) == 4>
+    >
+>::type> : mpl::true_ {};
+
+template<typename T, typename Enable = void>
+struct is_u16 : mpl::false_ {};
+template<> struct is_u16<char16> : mpl::true_ {};
+template<typename T>
+struct is_u16<T, typename enable_if<
+    mpl::and_<
+        is_same<T, wchar_t>,
+        mpl::bool_<sizeof(T) == 2>
+    >
+>::type> : mpl::true_ {};
+
+template<typename T, typename Enable = void>
+struct is_u8 : mpl::false_ {};
+template<> struct is_u8<char> : mpl::true_ {};
+
+} // namespace detail
+
+/** Model of \c Pipe, either behaves like \c u16_decoder or
+ * \c u8_decoder depending on the value type of the input range. */
+struct utf_decoder
+{
+    typedef char32 output_type;
+    typedef mpl::int_<1> max_output;
+    
+private:
+    template<typename Iterator, typename Enable = void>
+    struct decoder
+    {
+    };
+    
+    template<typename Iterator>
+    struct decoder<Iterator, typename enable_if<
+        detail::is_u32<
+            typename std::iterator_traits<Iterator>::value_type
+        >
+    >::type>
+    {
+        typedef one_many_pipe< cast_pipe<char32> > type;
+    };
+    
+    
+    template<typename Iterator>
+    struct decoder<Iterator, typename enable_if<
+        detail::is_u16<
+            typename std::iterator_traits<Iterator>::value_type
+        >
+    >::type>
+    {
+        typedef u16_decoder type;
+    };
+    
+    template<typename Iterator>
+    struct decoder<Iterator, typename enable_if<
+        detail::is_u8<
+            typename std::iterator_traits<Iterator>::value_type
+        >
+    >::type>
+    {
+        typedef u8_decoder type;
+    };
+
+public:
+    template<typename In, typename Out>
+    std::pair<In, Out>
+	ltr(In begin, In end, Out out)
+    {
+        return typename decoder<In>::type().ltr(begin, end, out);
+    }
+    
+    template<typename In, typename Out>
+    std::pair<In, Out>
+	rtl(In begin, In end, Out out)
+    {
+        return typename decoder<In>::type().ltr(begin, end, out);
+    }
+};
+
+/** Model of \c BoundaryChecker, either behaves like \c u16_boundary or
+ * \c u8_boundary depending on the value type of the input range. */
+struct utf_boundary
+{
+    template<typename In>
+    typename enable_if<
+        detail::is_u32<
+            typename std::iterator_traits<In>::value_type
+        >,
+        bool
+    >::type
+    operator()(In, In, In)
+    {
+        return true;
+    }
+    
+    template<typename In>
+    typename enable_if<
+        detail::is_u16<
+            typename std::iterator_traits<In>::value_type
+        >,
+        bool
+    >::type
+    operator()(In begin, In end, In pos)
+    {
+        return u16_boundary()(begin, end, pos);
+    }
+    
+    template<typename In>
+    typename enable_if<
+        detail::is_u8<
+            typename std::iterator_traits<In>::value_type
+        >,
+        bool
+    >::type
+    operator()(In begin, In end, In pos)
+    {
+        return u8_boundary()(begin, end, pos);
     }
 };
 

@@ -205,7 +205,7 @@ namespace boost { namespace unicode { namespace ucd {
 			};
 		};
 
-		const char* as_string(block::type);
+		BOOST_UNICODE_DECL const char* as_string(block::type);
 
 }}} // namespaces
 

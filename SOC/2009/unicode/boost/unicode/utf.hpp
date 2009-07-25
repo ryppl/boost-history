@@ -7,102 +7,106 @@
 
 namespace boost
 {
+namespace unicode
+{
 
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_ONE_MANY_PIPE_FUNC_DEF(Action)                   \
-/** Eagerly evaluates unicode::Action##r until the whole input range
-   \c range has been treated, copying the result to \c out and
+#define BOOST_UNICODE_ENCODER_DEF(Name)                                \
+/** Eagerly evaluates unicode::Name##_encoder until the whole input
+   range \c range has been treated, copying the result to \c out and
    returning the past-the-end output iterator */                       \
 template<typename Range, typename OutputIterator>                      \
-OutputIterator Action(const Range& range, OutputIterator out)          \
+OutputIterator Name##_encode(const Range& range, OutputIterator out)   \
 {                                                                      \
-    return pipe(range, make_one_many_pipe(unicode::Action##r()), out); \
+    return pipe(                                                       \
+        range,                                                         \
+        make_one_many_pipe(unicode::Name##_encoder()), out             \
+    );                                                                 \
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Action##r by returning a range adapter
+/** Lazily evalutes unicode::Name##_encoder by returning a range adapter
    that wraps the range \c range and converts it step-by-step as
    the range is advanced */                                            \
 template<typename Range>                                               \
 iterator_range<                                                        \
     pipe_iterator<                                                     \
         typename range_iterator<const Range>::type,                    \
-        one_many_pipe<unicode::Action##r>                              \
+        one_many_pipe<unicode::Name##_encoder>                         \
     >                                                                  \
 >                                                                      \
-Action##d(const Range& range)                                          \
+Name##_encoded(const Range& range)                                     \
 {                                                                      \
-    return piped(range, make_one_many_pipe(unicode::Action##r()));     \
+    return piped(range, make_one_many_pipe(unicode::Name##_encoder()));\
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Action##r by returning an output iterator
-  that wraps \c out and converts every pushed element. */              \
+/** Lazily evalutes unicode::Name##_encoder by returning an output
+  iterator that wraps \c out and converts every pushed element. */     \
 template<typename OutputIterator>                                      \
 pipe_output_iterator<                                                  \
     OutputIterator,                                                    \
-    unicode::Action##r                                                 \
-> Action##d_out(OutputIterator out)                                    \
+    unicode::Name##_encoder                                            \
+> Name##_encoded_out(OutputIterator out)                               \
 {                                                                      \
-	return piped_output(out, unicode::Action##r());                    \
+	return piped_output(out, unicode::Name##_encoder());               \
 }                                                                      \
 
+
+/* */
+
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_PIPE_FUNC_DEF(Action)                            \
-/** Eagerly evaluates unicode::Action##r until the whole input range
-   \c range has been treated, copying the result to \c out and
+#define BOOST_UNICODE_DECODER_DEF(Name)                                \
+/** Eagerly evaluates unicode::Name##_decoder until the whole input
+   range \c range has been treated, copying the result to \c out and
    returning the past-the-end output iterator */                       \
 template<typename Range, typename OutputIterator>                      \
-OutputIterator Action(const Range& range, OutputIterator out)          \
+OutputIterator Name##_decode(const Range& range, OutputIterator out)   \
 {                                                                      \
-    return pipe(range, unicode::Action##r(), out);                     \
+    return pipe(range, unicode::Name##_decoder(), out);                \
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Action##r by returning a range adapter
+/** Lazily evalutes unicode::Name##_decoder by returning a range adapter
    that wraps the range \c range and converts it step-by-step as
    the range is advanced */                                            \
 template<typename Range>                                               \
 iterator_range<                                                        \
     pipe_iterator<                                                     \
         typename range_iterator<const Range>::type,                    \
-        unicode::Action##r                                             \
+        unicode::Name##_decoder                                        \
     >                                                                  \
 >                                                                      \
-Action##d(const Range& range)                                          \
+Name##_decoded(const Range& range)                                     \
 {                                                                      \
-    return piped(range, unicode::Action##r());                         \
+    return piped(range, unicode::Name##_decoder());                    \
+}                                                                      \
+                                                                       \
+/** Adapts the range of X \c range into a range of ranges of X,
+ * each subrange being a decoded unit. */                              \
+template<typename Range>                                               \
+iterator_range<                                                        \
+    consumer_iterator<                                                 \
+        typename range_iterator<const Range>::type,                    \
+        pipe_consumer<unicode::Name##_decoder>                         \
+    >                                                                  \
+> Name##_bounded(const Range& range)                                   \
+{                                                                      \
+    return consumed(                                                   \
+        range,                                                         \
+        make_pipe_consumer(unicode::Name##_decoder())                  \
+    );                                                                 \
 }                                                                      \
 
-BOOST_UNICODE_ONE_MANY_PIPE_FUNC_DEF(u16_encode)
-BOOST_UNICODE_PIPE_FUNC_DEF(u16_decode)
+BOOST_UNICODE_ENCODER_DEF(u16)
+BOOST_UNICODE_DECODER_DEF(u16)
 
-BOOST_UNICODE_ONE_MANY_PIPE_FUNC_DEF(u8_encode)
-BOOST_UNICODE_PIPE_FUNC_DEF(u8_decode)
+BOOST_UNICODE_ENCODER_DEF(u8)
+BOOST_UNICODE_DECODER_DEF(u8)
 
-/** Adapts the range of UTF-16 code units \c range into a range of ranges of UTF-16 code units,
- * each subrange being a code point. */
-template<typename Range>
-iterator_range<
-    consumer_iterator<
-        typename range_iterator<const Range>::type,
-        pipe_consumer<unicode::u16_decoder>
-    >
-> u16_bounded(const Range& range)
-{
-    return consumed(range, make_pipe_consumer(unicode::u16_decoder()));
-}
+BOOST_UNICODE_DECODER_DEF(utf)
 
-/** Adapts the range of UTF-8 code units \c range into a range of ranges of UTF-8 code units,
- * each subrange being a code point. */
-template<typename Range>
-iterator_range<
-    consumer_iterator<
-        typename range_iterator<const Range>::type,
-        pipe_consumer<unicode::u8_decoder>
-    >
-> u8_bounded(const Range& range)
-{
-    return consumed(range, make_pipe_consumer(unicode::u8_decoder()));
-}
+typedef cast_pipe<char> latin1_encoder;
+BOOST_UNICODE_ENCODER_DEF(latin1);
 
+} // namespace unicode
 } // namespace boost
 
 #endif

@@ -2,14 +2,12 @@
 #define BOOST_PIPE_ITERATOR_HPP
 
 #include <boost/iterator/iterator_facade.hpp>
-#include <iterator>
 #include <vector>
 #include <utility>
 
 #include <boost/range.hpp>
 #include <boost/assert.hpp>
 
-#include <boost/introspection/has_member_data.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
 

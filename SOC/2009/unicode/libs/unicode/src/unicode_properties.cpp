@@ -7,6 +7,7 @@
 // License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
+#define BOOST_UNICODE_SOURCE
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/unicode/ucd/properties_types.hpp>
@@ -54,7 +55,7 @@ static const char* g_category[] =
 
 BOOST_STATIC_ASSERT(element_count(g_category) == category::_count); // check g_category matched category
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::category::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::category::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::category::_count);
 	return g_category[type];
@@ -74,7 +75,7 @@ static const char* g_join_type[] =
 
 BOOST_STATIC_ASSERT(element_count(g_join_type) == join_type::_count); // check g_join_type matched join_type
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::join_type::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::join_type::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::join_type::_count);
 	return g_join_type[type];
@@ -108,7 +109,7 @@ static const char* g_bidi_class[] =
 
 BOOST_STATIC_ASSERT(element_count(g_bidi_class) == bidi_class::_count); // check g_bidi_class matched bidi_class
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::bidi_class::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::bidi_class::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::bidi_class::_count);
 	return g_bidi_class[type];
@@ -158,7 +159,7 @@ static const char* g_line_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_line_break) == line_break::_count); // check g_line_break matched line_break
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::line_break::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::line_break::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::line_break::_count);
 	return g_line_break[type];
@@ -178,7 +179,7 @@ const char* boost::unicode::ucd::as_string(boost::unicode::ucd::line_break::type
 
 BOOST_STATIC_ASSERT(element_count(g_break_action) == break_action::_count); // check g_break_action matched break_action
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_action::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::break_action::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::break_action::_count);
 	return g_break_action[type];
@@ -210,7 +211,7 @@ static const char* g_decomposition[] =
 
 BOOST_STATIC_ASSERT(element_count(g_decomposition) == decomposition_type::_count); // check g_decomposition matched decomposition
 
-const char* boost::unicode::ucd::as_string(
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::decomposition_type::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::decomposition_type::_count);
@@ -237,7 +238,7 @@ static const char* g_grapheme_cluster_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_grapheme_cluster_break) == grapheme_cluster_break::_count); // check g_grapheme_cluster_break matched grapheme_cluster_break
 
-const char* boost::unicode::ucd::as_string(
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::grapheme_cluster_break::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::grapheme_cluster_break::_count);
@@ -265,7 +266,7 @@ static const char* g_word_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_word_break) == word_break::_count); // check g_word_break matched word_break
 
-const char* boost::unicode::ucd::as_string(
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::word_break::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::word_break::_count);
@@ -295,7 +296,7 @@ static const char* g_sentence_break[] =
 
 BOOST_STATIC_ASSERT(element_count(g_sentence_break) == sentence_break::_count); // check g_sentence_break matched sentence_break
 
-const char* boost::unicode::ucd::as_string(
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(
 	boost::unicode::ucd::sentence_break::type type)
 {
 	BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::sentence_break::_count);
@@ -312,7 +313,7 @@ static const char* g_sort_type[] =
 
 BOOST_STATIC_ASSERT(element_count(g_sort_type) == boost::unicode::ucd::sort_type::_count); // check g_sort_type matched sort_type
 
-const char* boost::unicode::ucd::as_string(boost::unicode::ucd::sort_type::type type)
+BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::sort_type::type type)
 {
     BOOST_ASSERT(type >= 0 && type < boost::unicode::ucd::sort_type::_count);
 	return g_sort_type[type];

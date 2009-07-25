@@ -8,6 +8,8 @@
 #include <boost/cuchar.hpp>
 #include <boost/unicode/ucd/properties_types.hpp>
 
+#include <boost/config/abi_prefix.hpp> // must be the last #include
+
 #define BOOST_UNICODE_ENUM_SIZE(en) (boost::static_log2<boost::unicode::ucd::en::_count>::value + 1)
 
 //#define BOOST_UNICODE_UCD_BIG 1
@@ -80,7 +82,7 @@ namespace ucd
         };
         enum {  data_0x0020_0x000D_cp_offset = 5   };
     };
-    const char* as_string(sort_type::type);
+    BOOST_UNICODE_DECL const char* as_string(sort_type::type);
 
     struct unichar_data_internal
     {
@@ -131,13 +133,13 @@ namespace ucd
         const char*      name;
     };
 
-    extern const boost::unicode::ucd::unichar_data_internal* __uni_char_data[];
-    extern const boost::unicode::ucd::unichar_blocks_internal __uni_block_data[];
+    BOOST_UNICODE_DECL extern const boost::unicode::ucd::unichar_data_internal* __uni_char_data[];
+    BOOST_UNICODE_DECL extern const boost::unicode::ucd::unichar_blocks_internal __uni_block_data[];
 #ifdef BOOST_UNICODE_UCD_BIG
-    extern const boost::unicode::ucd::unichar_sort_data_entry __uni_sort_entry[];
+    BOOST_UNICODE_DECL extern const boost::unicode::ucd::unichar_sort_data_entry __uni_sort_entry[];
 #endif
     
-    extern const size_t __uni_block_data_size;
+    BOOST_UNICODE_DECL extern const size_t __uni_block_data_size;
     
     inline const unichar_data_internal& get_data_internal(char32 ch)
     {
@@ -151,5 +153,7 @@ namespace ucd
 } // namespace ucd
 } // namespace unicode
 } // namespace boost
+
+#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif

@@ -1,0 +1,23 @@
+#==============================================================================
+#    Copyright (c) 2009 Mathias Gaunard
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
+
+project
+    : requirements 
+		<include>../../..
+		<include>$(BOOST_ROOT)
+    ;
+
+lib boost_unicode
+    :
+		../src/unicode_properties.cpp
+		../src/unicode_blocks.cpp
+		../src/unicode_graphemes.cpp
+		../src/ucd/uni_ucd_interface_impl_data.cpp
+	:
+		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1
+	;

@@ -8,6 +8,13 @@ namespace boost
 namespace unicode
 {
 
+namespace detail
+{
+    static const char16 high_surrogate_base = 0xD7C0u;
+    static const char16 low_surrogate_base = 0xDC00u;
+    static const char32 ten_bit_mask = 0x3FFu;
+}
+
 inline bool is_high_surrogate(char32 v)
 {
    return (v & 0xFC00u) == 0xd800u;

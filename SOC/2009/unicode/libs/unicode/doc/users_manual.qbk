@@ -210,9 +210,9 @@ The naming scheme of the utilities within the library reflect this; here is
 for example what is provided to convert UTF-32 to UTF-8:
 
 * [classref boost::unicode::u8_encoder] is a model of the =OneManyPipe= concept.
-* [funcref boost::u8_encode] is an eager encoding algorithm.
-* [funcref boost::u8_encoded] returns a range adapter that does on-the-fly encoding.
-* [funcref boost::u8_encoded_out] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
+* [funcref boost::unicode::u8_encode] is an eager encoding algorithm.
+* [funcref boost::unicode::u8_encoded] returns a range adapter that does on-the-fly encoding.
+* [funcref boost::unicode::u8_encoded_out] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
 
 
 [heading Segmentation]
@@ -234,9 +234,9 @@ The naming scheme is as follows:
 
 * [classref boost::unicode::u8_boundary] is a =BoundaryChecker= that tells whether a position is the start of a code point in a range of UTF-8 code units.
 * [classref boost::unicode::grapheme_boundary] is a =BoundaryChecker= that tells whether a position is the start of a grapheme cluster in a range of code points.
-* [funcref boost::u8_bounded] adapts its input range in UTF-8 into a range of ranges of code units, each range being a code point.
-* [funcref boost::grapheme_bounded] adapts its input range in UTF-32 into a range of ranges of code points, each range being a grapheme cluster.
-* [funcref boost::u8_grapheme_bounded] adapts its input range in UTF-8 into a range of code units, each range being a grapheme cluster.
+* [funcref boost::unicode::u8_bounded] adapts its input range in UTF-8 into a range of ranges of code units, each range being a code point.
+* [funcref boost::unicode::grapheme_bounded] adapts its input range in UTF-32 into a range of ranges of code points, each range being a grapheme cluster.
+* [funcref boost::unicode::u8_grapheme_bounded] adapts its input range in UTF-8 into a range of code units, each range being a grapheme cluster.
 
 [heading UTF type deduction with SFINAE]
 
@@ -246,7 +246,7 @@ possible, additional ones are added that will automatically forward to it.
 
 The naming scheme is as follows:
 
-* [funcref boost::utf_decode] either calls [funcref boost::u8_decode] or [funcref boost::u16_decode]
+* [funcref boost::unicode::utf_decode] either calls [funcref boost::unicode::u8_decode] or [funcref boost::unicode::u16_decode]
 depending on the =value_type= of its input range.
 * [classref boost::unicode::utf_boundary] either behaves like
 [classref boost::unicode::u8_boundary] or [classref boost::unicode::u16_boundary]
@@ -315,13 +315,117 @@ will need to be the same for them to compare equal.
 
 [endsect]
 
-[section Examples]
+[section Unicode in source files]
+
+It is often quite useful to embed strings of text directly into source
+files, and C++, as of the 2003 standard, provides the following ways to
+do so: string literals, wide string literals, character and
+wide character literals, and finally type lists that form
+compile-time strings. One has to be aware, however, of the various
+portability issues associated with character encoding within source
+files.
+
+The first limitation is that of what character encoding the compiler
+expects the source files to be in, the source character set. The second
+one is what character encoding narrow and wide string literals will
+have at runtime: the execution character set, which may be different for
+narrow and wide strings.
+
+Indeed, while certain compilers remain encoding-agnostic as long as the
+source is ASCII-compatible, certain will convert the string literals
+from the source character set to their appropriate execution character
+sets.
+This is the case of MSVC which, when it detects a source file is in
+UTF-8 or UTF-16, will convert narrow string literals to ANSI and wide
+string literals to UTF-16. Furthermore, if it doesn't detect the
+character encoding of the source file, it will still convert wide string
+literals from ANSI to UTF-16 while leaving narrow ones untouched.
+
+Also, regardless of whether the compiler detects the character
+encoding of the source file or not, Unicode escape sequences,
+[^\u['xxxx]] and [^\U['xxxxxxxx]], will be translated to the execution
+character set of the literal type they're embedded in.
+Unfortunately, that makes them unusable portably within narrow strings,
+as there is no way to set the narrow execution character set to UTF-8
+with MSVC, and UTF-8 is the way Unices are going.
+
+Finally, wide characters are not well defined. In practice, they're
+either UTF-16 or UTF-32 code units, but their use is quite discouraged
+as the size of =wchar_t= is very variable: 16 bits on MS Windows,
+usually 32 bits on Unices.
+Nevertheless, in the lack of UTF-16 and UTF-32 literals that are coming
+with C++0x, wide string literals are probably the closest thing there is
+to native Unicode in the compiler. The library tools that automatically
+deduce the UTF encoding based on the size of the value
+type will therefore work as expected as they will expect =wchar_t= to
+represent either UTF-16 or UTF-32 depending on its size.
+
+Alternatively, compile-time strings may be used, which allow a great
+deal of flexibility as arbitrary character encoding conversion may
+then be performed at compile-time, but which remain more verbose to
+declare and increase compilation times.
+
+We can then infer certain guidelines to write Unicode data within
+C++ source files in a portable way while taking a few reasonable
+assumptions.
+
+[heading Portability guidelines]
+
+* Source file encoding: use UTF-8 without a Byte Order Mark or use
+ASCII. This ensures most compilers will run in an encoding-agnostic mode
+and not perform translations, plus most compilers only support
+ASCII-compatible input.
+* Narrow character literals: use ASCII only; if you use escape sequences
+such as =\x= treat the data you're inputting as UTF-8 code units. Ban
+=\u= and =\U=.
+* Narrow string literals: freely input UTF-8; if you use escape
+sequences such as =\x= treat the data you're inputting as UTF-8 code
+units. Ban =\u= and =\U=.
+* Wide character literals: use ASCII only; if you use escape sequences
+such as =\x= treat the data you're inputting as UTF-32 code units,
+but don't input anything higher than =0xD800=. Use heavily =\u= but ban
+=\U=.
+* Wide string literals: use ASCII only; if you use escape sequences
+such as =\x= treat the data you're inputting as UTF-32 code units,
+but don't input anything higher than =0xD800=. Use heavily both =\u= and
+=\U=.
+
+[heading Compile-time strings]
+
+Option one is to use =boost::mpl::string= as a UTF-8 compile-time
+string. Its support for multi-char character literals allows it to not
+be too verbose, and it can be coupled with [classref boost::unicode::string_cp]
+to insert Unicode code points in stead of the Unicode escape sequences.
+Any non-ASCII character shall be put as its own character literal. Note
+multi-char character literals require =int= to be at least 32 bits
+however.
+
+A second option is to use =boost::mpl::u32string= as a UTF-32 compile-time
+string, and use [classref boost::unicode::static_u8_encode] or
+[classref boost::unicode::static_u16_encode] to eventually encode it
+at compile-time to UTF-8 or UTF-16. =boost::mpl::u16string= may also be
+used to directly input UTF-16.
+However, none of these two sequence types provide support for easier
+declaration with multi-char character literals.
+
+Then, the =boost::mpl::c_str= meta-function may be used to convert
+any compile-time string into a zero-terminated equivalent.
+
 [endsect]
 
 [section Unicode String type]
 
 A Unicode string type may be added in future versions that maintains
-its data in Normalized C form.
+its data in Normalized C form on top of a valid UTF encoding.
+
+[endsect]
+
+[section Examples]
+
+[section test]
+[import ../example/test.cpp]
+[file]
+[endsect]
 
 [endsect]
 

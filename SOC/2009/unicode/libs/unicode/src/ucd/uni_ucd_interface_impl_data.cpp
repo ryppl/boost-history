@@ -17,6 +17,7 @@
 /**** through the single published interface as documented in Boost   ****/
 
 
+#define BOOST_UNICODE_SOURCE
 #include <boost/assert.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/unicode/ucd/properties.hpp>
@@ -34,7 +35,7 @@
 
 namespace boost { namespace unicode { namespace ucd {
 
-const unichar_blocks_internal __uni_block_data[]=
+BOOST_UNICODE_DECL const unichar_blocks_internal __uni_block_data[]=
 {
 	{ 0x0, 0x7f, "Basic Latin" },
 	{ 0x80, 0xff, "Latin-1 Supplement" },
@@ -209,9 +210,9 @@ const unichar_blocks_internal __uni_block_data[]=
 	{ 0x100000, 0x10ffff, "Supplementary Private Use Area-B" },
 };
 
-const size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];
+BOOST_UNICODE_DECL const size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];
 
-const unichar_data_internal* __uni_char_data[]=
+BOOST_UNICODE_DECL const unichar_data_internal* __uni_char_data[]=
 {
 	__uni_char_data_0,
 	__uni_char_data_80,

@@ -15,7 +15,7 @@ namespace unicode
     
 namespace detail
 {
-    extern bool grapheme_is_break
+    BOOST_UNICODE_DECL extern bool grapheme_is_break
         [boost::unicode::ucd::grapheme_cluster_break::_count]
         [boost::unicode::ucd::grapheme_cluster_break::_count];
     
@@ -34,8 +34,6 @@ struct grapheme_boundary
     }
 };
 
-} // unicode
-
 /** Adapts the range of code points \c range into a range of ranges of code points,
  * each subrange being a grapheme cluster. */
 template<typename Range>
@@ -50,40 +48,36 @@ grapheme_bounded(const Range& range)
     return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
 }
 
-/** Adapts the range of UTF-8 code units \c range into a range of ranges of UTF-8 code units,
- * each subrange being a grapheme cluster. */
-template<typename Range>
-iterator_range<
-    consumer_iterator<
-        typename range_iterator<const Range>::type,
-        piped_consumer<
-            unicode::u8_decoder,
-            boundary_consumer<unicode::grapheme_boundary>
-        >
-    >
->
-u8_grapheme_bounded(const Range& range)
-{
-    return consumed(range, make_piped_consumer(unicode::u8_decoder(), make_boundary_consumer(unicode::grapheme_boundary())));
-}
+/** INTERNAL ONLY */
+#define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
+/** Adapts the range of X \c range into a range of ranges of X,
+ * each subrange being a grapheme cluster. */                          \
+template<typename Range>                                               \
+iterator_range<                                                        \
+    consumer_iterator<                                                 \
+        typename range_iterator<const Range>::type,                    \
+        piped_consumer<                                                \
+            unicode::Name##_decoder,                                   \
+            boundary_consumer<unicode::grapheme_boundary>              \
+        >                                                              \
+    >                                                                  \
+>                                                                      \
+Name##_grapheme_bounded(const Range& range)                            \
+{                                                                      \
+    return consumed(                                                   \
+        range,                                                         \
+        make_piped_consumer(                                           \
+            unicode::Name##_decoder(),                                 \
+            make_boundary_consumer(unicode::grapheme_boundary())       \
+        )                                                              \
+    );                                                                 \
+}                                                                      \
 
-/** Adapts the range of UTF-16 code units \c range into a range of ranges of UTF-16 code units,
- * each subrange being a grapheme cluster. */
-template<typename Range>
-iterator_range<
-    consumer_iterator<
-        typename range_iterator<const Range>::type,
-        piped_consumer<
-            unicode::u16_decoder,
-            boundary_consumer<unicode::grapheme_boundary>
-        >
-    >
->
-u16_grapheme_bounded(const Range& range)
-{
-    return consumed(range, make_piped_consumer(unicode::u16_decoder(), make_boundary_consumer(unicode::grapheme_boundary())));
-}
+BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u16)
+BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u8)
+BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(utf)
 
+} // unicode
 } // boost
 
 #endif

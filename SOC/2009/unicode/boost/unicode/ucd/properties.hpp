@@ -10,6 +10,9 @@
 #include <algorithm>
 #include <iostream>
 
+/** BOOST_UNICODE_UCD_VERSION / 1000 is the major version
+ * BOOST_UNICODE_UCD_VERSION % 1000 is the minor version */
+#define BOOST_UNICODE_UCD_VERSION 5001
 #define BOOST_UNICODE_UCD_VERSION_MAJOR 5
 #define BOOST_UNICODE_UCD_VERSION_MINOR 1
 
@@ -69,7 +72,7 @@ inline int get_combining_class(char32 ch)
 
 /** Returns the block the code point designated by \c ch is in, or
  * \c block::none if the code point does not lie in any block. */
-block::type get_block(char32 ch);
+BOOST_UNICODE_DECL block::type get_block(char32 ch);
 
 /** Returns the decomposition associated with \c ch as a zero-terminated
  * sequence of code points.

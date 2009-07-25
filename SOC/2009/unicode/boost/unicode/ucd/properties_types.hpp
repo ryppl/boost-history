@@ -10,11 +10,12 @@
 #ifndef BOOST_UNICODE_CHARACTER_PROPERTIES_HPP_INCLUDED
 #define BOOST_UNICODE_CHARACTER_PROPERTIES_HPP_INCLUDED
 
+#include <boost/unicode/ucd/detail/unicode_decl.hpp>
+
 namespace boost
 {
 namespace unicode
 {
-
 	namespace ucd
 	{
 		/*
@@ -63,7 +64,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(category::type);
+		BOOST_UNICODE_DECL const char* as_string(category::type);
 
 		struct join_type
 		{
@@ -80,7 +81,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(join_type::type);
+		BOOST_UNICODE_DECL const char* as_string(join_type::type);
 
 		struct bidi_class
 		{
@@ -114,7 +115,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(bidi_class::type);
+		BOOST_UNICODE_DECL const char* as_string(bidi_class::type);
 
 		struct line_break
 		{
@@ -161,7 +162,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(line_break::type);
+		BOOST_UNICODE_DECL const char* as_string(line_break::type);
 
 #if 0		 
 		struct break_action
@@ -178,7 +179,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(break_action::type);
+		BOOST_UNICODE_DECL const char* as_string(break_action::type);
 #endif
 
 		struct decomposition_type
@@ -209,7 +210,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
 			};
 		};
-		const char* as_string(decomposition_type::type);
+		BOOST_UNICODE_DECL const char* as_string(decomposition_type::type);
 
         
         struct grapheme_cluster_break
@@ -233,7 +234,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
             };
         };
-		const char* as_string(grapheme_cluster_break::type);
+		BOOST_UNICODE_DECL const char* as_string(grapheme_cluster_break::type);
 
         struct word_break
         {
@@ -257,7 +258,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
             };
         };
-		const char* as_string(word_break::type);
+		BOOST_UNICODE_DECL const char* as_string(word_break::type);
 
         struct sentence_break
         {
@@ -283,7 +284,7 @@ namespace unicode
 				_count /**< INTERNAL ONLY */
             };
         };
-		const char* as_string(sentence_break::type);
+		BOOST_UNICODE_DECL const char* as_string(sentence_break::type);
 
 	}	// namespace ucd
 

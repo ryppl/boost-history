@@ -1,6 +1,7 @@
+#define BOOST_UNICODE_SOURCE
 #include <boost/unicode/graphemes.hpp>
 
-bool boost::unicode::detail::grapheme_is_break
+BOOST_UNICODE_DECL bool boost::unicode::detail::grapheme_is_break
     [boost::unicode::ucd::grapheme_cluster_break::_count]
     [boost::unicode::ucd::grapheme_cluster_break::_count] =
 {

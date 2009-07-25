@@ -447,7 +447,8 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
 	file << "/**** Data in this file should not be accessed directly except        ****/\n";
 	file << "/**** through the single published interface as documented in Boost   ****/\n";
     
-	file << "\n\n#include <boost/assert.hpp>\n";
+	file << "\n\n#define BOOST_UNICODE_SOURCE\n";
+    file << "#include <boost/assert.hpp>\n";
 	file << "#include <boost/static_assert.hpp>\n";
 	file << "#include <boost/unicode/ucd/properties.hpp>\n";
 	size_t n;
@@ -460,7 +461,7 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
 
 	// ---- block table -------------------------------------------------------
 
-	file << "const unichar_blocks_internal __uni_block_data[]=\n{\n";
+	file << "BOOST_UNICODE_DECL const unichar_blocks_internal __uni_block_data[]=\n{\n";
 
 	for (n = 0; n < tbl_block.size(); n++)
 	{
@@ -474,12 +475,12 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
     terminating_data.name = "";
     file << terminating_data;*/
 
-	file << "};\n\nconst size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
+	file << "};\n\nBOOST_UNICODE_DECL const size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
 
 	// ---- block table -------------------------------------------------------
 	
 	// ---- block refs --------------------------------------------------------
-	file << "const unichar_data_internal* __uni_char_data[]=\n{\n";
+	file << "BOOST_UNICODE_DECL const unichar_data_internal* __uni_char_data[]=\n{\n";
 
 	for (n = 0; n < tbl_block_ident.size(); n++)
 	{
@@ -552,7 +553,7 @@ void write_block_enum(
 	file << "\t\t\t};\n";
 	file << "\t\t};\n";
     
-    file << "\n\t\tconst char* as_string(block::type);\n\n";
+    file << "\n\t\tBOOST_UNICODE_DECL const char* as_string(block::type);\n\n";
 
 	file << "}}} // namespaces\n\n";
     file << "#endif // BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
@@ -1261,7 +1262,7 @@ void write_sort(const write_data& data, const char * dest_path)
     
 	// ---- sort data entry table ------------------------------------------------
 
-	file << "\n\nextern const unichar_sort_data_entry __uni_sort_entry[]= {\n";
+	file << "\n\nBOOST_UNICODE_DECL extern const unichar_sort_data_entry __uni_sort_entry[]= {\n";
 
     // write the dummy entry
     file << "\t{  // entry means use canonical decomp";
