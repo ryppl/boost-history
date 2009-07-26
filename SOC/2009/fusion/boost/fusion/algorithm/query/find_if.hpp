@@ -21,13 +21,15 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pred>
         struct find_if
         {
-            typedef typename
+            typedef
                 detail::static_find_if<
                     typename result_of::begin<Seq>::type
                   , typename result_of::end<Seq>::type
                   , Pred
-                >::type
-            type;
+                >
+            gen;
+
+            typedef typename gen::type type;
         };
     }
 
@@ -36,16 +38,20 @@ namespace boost { namespace fusion
         result_of::find_if<BOOST_FUSION_R_ELSE_CLREF(Seq), Pred>::type
     find_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        typedef
-            detail::static_find_if<
-                typename result_of::begin<Seq>::type
-              , typename result_of::end<Seq>::type
-              , Pred
-            >
-        gen;
-
-        return gen::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
+        return
+            result_of::find_if<
+                BOOST_FUSION_R_ELSE_CLREF(Seq), Pred
+            >::gen::call(fusion::begin(seq));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Pred, typename Seq>
+    inline typename result_of::find_if<Seq&, Pred>::type
+    find_if(Seq& seq)
+    {
+        return result_of::find_if<Seq&, Pred>::gen::call(fusion::begin(seq));
+    }
+#endif
 }}
 
 #endif

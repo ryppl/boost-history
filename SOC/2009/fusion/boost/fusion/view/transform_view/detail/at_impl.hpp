@@ -10,10 +10,7 @@
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_AT_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/at.hpp>
-
-#include <boost/mpl/apply.hpp>
-
-#include <boost/fusion/view/transform_view/detail/apply_transform_result.hpp>
+#include <boost/fusion/support/result_of.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -29,14 +26,12 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                mpl::apply<
-                    detail::apply_transform_result<
+                support::result_of<
+                    typename support::get_func_base<
                         typename seq::transform_type
-                    >
-                  , typename result_of::at<
-                        typename seq::seq_type
-                      , N
-                    >::type
+                    >::type(
+                    typename result_of::at<typename seq::seq_type, N>::type
+                    )
                 >::type
             type;
 
@@ -57,18 +52,18 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                mpl::apply<
-                    detail::apply_transform_result<
+                support::result_of<
+                    typename support::get_func_base<
                         typename seq::transform_type
-                    >
-                  , typename boost::fusion::result_of::at<
+                    >::type(
+                   typename boost::fusion::result_of::at<
                         typename seq::seq1_type
                       , N
                     >::type
                   , typename boost::fusion::result_of::at<
                         typename seq::seq2_type
                       , N
-                    >::type
+                    >::type)
                 >::type
             type;
 

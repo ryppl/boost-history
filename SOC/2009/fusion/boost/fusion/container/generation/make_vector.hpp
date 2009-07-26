@@ -6,11 +6,12 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_MAKE_VECTOR_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_VECTOR_HPP
 
-#include <boost/config.hpp>
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/container/generation/detail/pp/make_vector.hpp>
-#else
-#   include <boost/fusion/container/generation/detail/variadic_templates/make_vector.hpp>
-#endif
+#include <boost/fusion/container/vector/vector.hpp>
+
+#define BOOST_FUSION_SEQ_NAME vector
+#define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
+#include <boost/fusion/container/generation/detail/make_seq.hpp>
+#undef BOOST_FUSION_MAX_SEQ_SIZE
+#undef BOOST_FUSION_SEQ_NAME
 
 #endif

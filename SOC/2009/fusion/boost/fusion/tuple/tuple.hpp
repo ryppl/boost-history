@@ -18,13 +18,19 @@
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/support/ref.hpp>
 
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#endif
+
 namespace boost { namespace fusion
 {
-    VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_VECTOR_SIZE)
+    VARIADIC_TEMPLATE(FUSION_MAX_VECTOR_SIZE)
     struct tuple
-      : vector<EXPAND_ARGUMENTS(FUSION_MAX_LIST_SIZE)>
+      : vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_VECTOR_SIZE)>
     {
-        typedef vector<EXPAND_ARGUMENTS(FUSION_MAX_LIST_SIZE)> base_type;
+        typedef
+            vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_VECTOR_SIZE)>
+        base_type;
 
         tuple()
         {}
@@ -34,18 +40,24 @@ namespace boost { namespace fusion
           : base_type(static_cast<base_type COMBINATION>(other_tuple))\
         {}\
         \
-        template <typename T1, typename T2>\
-        tuple(std::pair<T1, T2> COMBINATION rhs)\
+        template <typename A1, typename A2>\
+        tuple(std::pair<A1, A2> COMBINATION rhs)\
           : base_type(sequence_assign(\
-                static_cast<std::pair<T1, T2> COMBINATION>(rhs)))\
+                static_cast<std::pair<A1, A2> COMBINATION>(rhs)))\
         {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TUPLE_CTOR,_)
 
-#undef LIST_CTOR
+#undef TUPLE_CTOR
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-        #include <boost/fusion/tuple/detail/pp/tuple_expand.hpp>
+#   define BOOST_FUSION_USE_BASE_TYPE
+#   define BOOST_FUSION_SEQ_NAME tuple
+#   define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
+#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#   undef BOOST_FUSION_MAX_SEQ_SIZE
+#   undef BOOST_FUSION_SEQ_NAME
+#   undef BOOST_FUSION_USE_BASE_TYPE
 #else
         template <typename... OtherArguments>
         tuple(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
@@ -73,11 +85,20 @@ namespace boost { namespace fusion
     {};
 
     template <int N, typename Tuple>
-    inline typename result_of::at_c<BOOST_FUSION_R_ELSE_LREF(Tuple), N>::type
-    get(BOOST_FUSION_R_ELSE_LREF(Tuple) tup)
+    inline typename result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Tuple), N>::type
+    get(BOOST_FUSION_R_ELSE_CLREF(Tuple) tuple)
     {
-        return at_c<N>(tup);
+        return at_c<N>(tuple);
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <int N, typename Tuple>
+    inline typename result_of::at_c<Tuple&, N>::type
+    get(Tuple& tuple)
+    {
+        return at_c<N>(tuple);
+    }
+#endif
 }}
 
 #endif

@@ -41,11 +41,20 @@ namespace boost { namespace fusion
 
     template <typename Seq>
     inline typename
-        result_of::begin<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
-    begin(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+        result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    begin(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::begin<BOOST_FUSION_R_ELSE_LREF(Seq)>::call(seq);
+        return result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(seq);
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq>
+    inline typename result_of::begin<Seq&>::type
+    begin(Seq& seq)
+    {
+        return result_of::begin<Seq&>::call(seq);
+    }
+#endif
 
 }}
 

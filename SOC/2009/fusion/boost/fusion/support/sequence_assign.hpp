@@ -13,13 +13,13 @@
 
 namespace boost{namespace fusion{
 
-    namespace detail
+    namespace support
     {
         template<typename Seq>
         struct sequence_assign_type
         {
-            sequence_assign_type(Seq seq_):
-                seq(seq_)
+            sequence_assign_type(Seq seq)
+              : seq(seq)
             {
             }
 
@@ -33,36 +33,9 @@ namespace boost{namespace fusion{
         };
     }
 
-    template<typename>
-    struct is_sequence_assign
-      : mpl::false_
-    {
-    };
-
     template<typename Seq>
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> >
-       : mpl::true_
-    {
-    };
-
-#   define IS_SEQUENCE_ASSIGN_SPECIALIZATION(COMBINATION,_)\
-    template<typename Seq>\
-    struct is_sequence_assign<detail::sequence_assign_type<Seq> COMBINATION>\
-      : mpl::true_\
-    {\
-    };
-
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(IS_SEQUENCE_ASSIGN_SPECIALIZATION,_);
-
-#   undef IS_SEQUENCE_ASSIGN
-
-    template<typename Seq>
-    typename mpl::if_<
-        is_sequence_assign<BOOST_FUSION_R_ELSE_LREF(Seq)>
-      , BOOST_FUSION_R_ELSE_LREF(Seq)
-      , detail::sequence_assign_type<BOOST_FUSION_R_ELSE_LREF(Seq)>
-    >::type
-    sequence_assign(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+    support::sequence_assign_type<BOOST_FUSION_R_ELSE_CLREF(Seq)>
+    sequence_assign(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return seq;
     }

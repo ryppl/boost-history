@@ -24,12 +24,21 @@ namespace boost { namespace fusion
 
     template <typename Seq, typename F>
     inline bool
-    none(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(F) f)
+    none(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return !fusion::any(
                 BOOST_FUSION_FORWARD(Seq,seq),
                 BOOST_FUSION_FORWARD(F,f));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename F>
+    inline bool
+    none(Seq& seq, F const& f)
+    {
+        return !fusion::any(seq,f);
+    }
+#endif
 }}
 
 #endif

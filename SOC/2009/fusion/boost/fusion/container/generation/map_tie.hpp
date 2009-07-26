@@ -7,6 +7,8 @@
 #define BOOST_FUSION_CONTAINER_GENERATION_MAP_TIE_HPP
 
 #include <boost/config.hpp>
+#include <boost/fusion/container/generation/ignore.hpp>
+
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   include <boost/fusion/container/generation/detail/pp/map_tie.hpp>
 #else

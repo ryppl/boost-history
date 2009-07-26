@@ -8,9 +8,9 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_PUSH_BACK_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_PUSH_BACK_HPP
 
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/view/joint_view/joint_view.hpp>
 #include <boost/fusion/view/single_view/single_view.hpp>
+#include <boost/fusion/support/detail/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {
@@ -31,17 +31,28 @@ namespace boost { namespace fusion
     template <typename Seq, typename T>
     inline typename
         result_of::push_back<
-            BOOST_FUSION_R_ELSE_LREF(Seq)
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_R_ELSE_CLREF(T)
         >::type
-    push_back(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(T) x)
+    push_back(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
         return typename
             result_of::push_back<
-                BOOST_FUSION_R_ELSE_LREF(Seq)
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(T)
-            >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(T,x));
+            >::type(BOOST_FUSION_FORWARD(Seq,seq),
+                  fusion::make_single_view(BOOST_FUSION_FORWARD(T,x)));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename T>
+    inline typename result_of::push_back<Seq&, T const&>::type
+    push_back(Seq& seq, T const& x)
+    {
+        return typename result_of::push_back<Seq&, T const&>::type(
+                seq,fusion::make_single_view(x));
+    }
+#endif
 }}
 
 #endif

@@ -6,11 +6,12 @@
 #ifndef BOOST_FUSION_TUPLE_MAKE_TUPLE_HPP
 #define BOOST_FUSION_TUPLE_MAKE_TUPLE_HPP
 
-#include <boost/config.hpp>
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/tuple/detail/pp/make_tuple.hpp>
-#else
-#   include <boost/fusion/tuple/detail/variadic_templates/make_tuple.hpp>
-#endif
+#include <boost/fusion/tuple/tuple.hpp>
+
+#define BOOST_FUSION_SEQ_NAME tuple
+#define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
+#include <boost/fusion/container/generation/detail/make_seq.hpp>
+#undef BOOST_FUSION_MAX_SEQ_SIZE
+#undef BOOST_FUSION_SEQ_NAME
 
 #endif

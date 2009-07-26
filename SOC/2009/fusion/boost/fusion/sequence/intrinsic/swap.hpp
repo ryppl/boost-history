@@ -10,7 +10,7 @@
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_SWAP_HPP
 
 #include <boost/config.hpp>
-#ifndef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/fusion/view/zip_view.hpp>
 #   include <boost/fusion/algorithm/iteration/for_each.hpp>
 #   include <boost/fusion/sequence/intrinsic/front.hpp>
@@ -30,8 +30,7 @@ namespace boost { namespace fusion {
             template<typename Elem>
             void operator()(Elem const& e) const
             {
-                using std::swap;
-                swap(front(e), back(e));
+                std::swap(fusion::front(e), fusion::back(e));
             }
         };
     }
@@ -49,10 +48,11 @@ namespace boost { namespace fusion {
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename Seq1, typename Seq2>
     void
-    swap(Seq1& lhs, Seq2& rhs)
+    swap(Seq1& seq1, Seq2& seq2)
     {
+        //TODO zip()
         typedef vector<Seq1&, Seq2&> references;
-        for_each(zip_view<references>(references(lhs, rhs)), detail::swap());
+        for_each(zip_view<references>(references(seq1, seq2)), detail::swap());
     }
 #else
     using std::swap;

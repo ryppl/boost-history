@@ -55,6 +55,15 @@ namespace boost { namespace fusion
             >::call(seq);
     }
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Key, typename Seq>
+    inline typename result_of::at_key<Seq&, Key>::type
+    at_key(Seq& seq)
+    {
+        return result_of::at_key<Seq&, Key>::call(seq);
+    }
+#endif
+
 }}
 
 #endif

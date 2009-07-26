@@ -11,6 +11,7 @@
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/type_traits/add_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace fusion { namespace detail
@@ -23,7 +24,7 @@ namespace boost { namespace fusion { namespace detail
         static typename
             enable_if<
                 traits::is_view<T>
-              , BOOST_FUSION_R_ELSE_LREF(OtherT)
+              , BOOST_FUSION_R_ELSE_CLREF(OtherT)
             >::type
         get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t)
         {
@@ -50,6 +51,16 @@ namespace boost { namespace fusion { namespace detail
             >::type
         type;
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        typedef typename
+            mpl::if_<
+                traits::is_view<T>
+              , typename detail::add_lref<typename add_const<T>::type>::type
+              , type
+            >::type
+        call_param;
+#endif
+
 #define VIEW_STORAGE_CTOR(COMBINATION,_)\
         template<typename OtherT>\
         view_storage(view_storage<OtherT> COMBINATION storage)\
@@ -60,26 +71,26 @@ namespace boost { namespace fusion { namespace detail
 
 #undef VIEW_STORAGE_CTOR
 
-        template<typename OtherT>
-        view_storage(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t)
-          : t(get_init_type(BOOST_FUSION_FORWARD(OtherT,other_t)))
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        view_storage(call_param other_t)
+          : t(get_init_type(other_t))
         {}
+#else
+        template<typename OtherT>
+        view_storage(OtherT&& other_t)
+          : t(get_init_type(std::forward<OtherT>(other_t)))
+        {}
+#endif
 
         template<typename OtherViewStorage>
         view_storage&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherViewStorage) other_storage)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherViewStorage) other_storage)
         {
             t=BOOST_FUSION_FORWARD(OtherViewStorage,other_storage).t;
             return *this;
         }
 
         //TODO cschmidt: volatile?
-        //typename detail::add_lref<type>::type
-        //get()
-        //{
-        //    return get(typename traits::is_view<T>::type());
-        //}
-
         typename mpl::if_<traits::is_view<T>, type&, type>::type
         get() const
         {
@@ -87,18 +98,6 @@ namespace boost { namespace fusion { namespace detail
         }
 
     private:
-        //type&
-        //get(mpl::true_ /*is_view*/)
-        //{
-        //    return t;
-        //}
-
-        //type
-        //get(mpl::false_ /*is_view*/)
-        //{
-        //    return *t;
-        //}
-
         type&
         get(mpl::true_ /*is_view*/)const
         {

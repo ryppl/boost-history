@@ -9,15 +9,21 @@
 //workaround to get variadic template arguments into fixed-length template
 //argument list. We definitely need a boost config macro for this issue though.
 
+#include <boost/preprocessor/cat.hpp>
 #include <boost/preprocessor/iteration/iterate.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
-#include <boost/mpl/vector.hpp>
+
+#include <boost/mpl/vector/vector10.hpp>
+#include <boost/mpl/vector/vector20.hpp>
+#include <boost/mpl/vector/vector30.hpp>
+#include <boost/mpl/vector/vector40.hpp>
+#include <boost/mpl/vector/vector50.hpp>
 
 namespace boost{namespace fusion
 {
 template<typename...> struct variadic_arguments_to_vector;
 #define BOOST_PP_ITERATION_PARAMS_1\
-    (3, (0, BOOST_MPL_LIMIT_VECTOR_SIZE, <boost/fusion/support/variadic_templates/detail/variadic_arguments_to_vector_n.hpp>))
+    (3, (0, 50, <boost/fusion/support/variadic_templates/detail/variadic_arguments_to_vector_n.hpp>))
 #include BOOST_PP_ITERATE()
 
 }}

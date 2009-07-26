@@ -23,7 +23,7 @@ namespace boost { namespace fusion
         struct clear
         {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-            typedef vector0 type;
+            typedef vector0<> type;
 #else
             typedef vector<> type;
 #endif
@@ -31,10 +31,11 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq>
-    inline typename result_of::clear<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
-    clear(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+    inline typename result_of::clear<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    clear(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return typename result_of::clear<BOOST_FUSION_R_ELSE_LREF(Seq)>::type();
+        return typename
+            result_of::clear<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type();
     }
 }}
 

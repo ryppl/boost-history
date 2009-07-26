@@ -43,8 +43,10 @@ namespace boost { namespace fusion
         typedef forward_traversal_tag category;
         typedef mpl::true_ is_view;
 
-        typedef typename detail::view_storage<Seq1>::type seq1_type;
-        typedef typename detail::view_storage<Seq2>::type seq2_type;
+        typedef detail::view_storage<Seq1> storage1_type;
+        typedef typename storage1_type::type seq1_type;
+        typedef detail::view_storage<Seq2> storage2_type;
+        typedef typename storage2_type::type seq2_type;
 
         typedef typename
             mpl::plus<
@@ -54,29 +56,37 @@ namespace boost { namespace fusion
         size;
 
         template<typename OtherJointView>
-        joint_view(BOOST_FUSION_R_ELSE_LREF(OtherJointView) other_view)
+        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) other_view)
           : seq1(BOOST_FUSION_FORWARD(OtherJointView,other_view).seq1)
           , seq2(BOOST_FUSION_FORWARD(OtherJointView,other_view).seq2)
         {}
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        joint_view(typename storage1_type::call_param seq1,
+               typename storage2_type::call_param seq2)
+          : seq1(seq1)
+          , seq2(seq2)
+        {}
+#else
         template<typename OtherSeq1, typename OtherSeq2>
-        joint_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq1) other_seq1,
-                BOOST_FUSION_R_ELSE_LREF(OtherSeq2) other_seq2)
+        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq1) other_seq1,
+                BOOST_FUSION_R_ELSE_CLREF(OtherSeq2) other_seq2)
           : seq1(BOOST_FUSION_FORWARD(OtherSeq1,other_seq1))
           , seq2(BOOST_FUSION_FORWARD(OtherSeq2,other_seq2))
         {}
+#endif
 
         template<typename OtherJointView>
         OtherJointView&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherJointView) other_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) other_view)
         {
             seq1=BOOST_FUSION_FORWARD(OtherJointView,other_view).seq1;
             seq2=BOOST_FUSION_FORWARD(OtherJointView,other_view).seq2;
             return *this;
         }
 
-        detail::view_storage<Seq1> seq1;
-        detail::view_storage<Seq2> seq2;
+        storage1_type seq1;
+        storage2_type seq2;
     };
 }}
 

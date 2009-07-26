@@ -35,6 +35,15 @@ namespace boost { namespace fusion
     {
         return *fusion::prior(fusion::end(seq));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq>
+    inline typename result_of::back<Seq&>::type
+    back(Seq& seq)
+    {
+        return *fusion::prior(fusion::end(seq));
+    }
+#endif
 }}
 
 #endif

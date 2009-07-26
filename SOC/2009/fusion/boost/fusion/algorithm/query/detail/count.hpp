@@ -21,7 +21,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename T1, typename T2>
         static bool
-        call(BOOST_FUSION_R_ELSE_LREF(T1) x, BOOST_FUSION_R_ELSE_LREF(T2) y)
+        call(BOOST_FUSION_R_ELSE_CLREF(T1) x, BOOST_FUSION_R_ELSE_CLREF(T2) y)
         {
             return BOOST_FUSION_FORWARD(T1,x) == BOOST_FUSION_FORWARD(T2,y);
         }
@@ -33,7 +33,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename T1, typename T2>
         static bool
-        call(BOOST_FUSION_R_ELSE_LREF(T1), BOOST_FUSION_R_ELSE_LREF(T2))
+        call(BOOST_FUSION_R_ELSE_CLREF(T1), BOOST_FUSION_R_ELSE_CLREF(T2))
         {
             return false;
         }
@@ -48,10 +48,14 @@ namespace boost { namespace fusion { namespace detail
 
         template <typename T2>
         bool
-        operator()(BOOST_FUSION_R_ELSE_LREF(T2) y)
+        operator()(BOOST_FUSION_R_ELSE_CLREF(T2) y)const
         {
             typedef typename remove_reference<T1Ref>::type T1_nonref;
+#ifdef BOOST_NO_RVALUE_REFERENCES
+            typedef T2 T2_nonref;
+#else
             typedef typename remove_reference<T2>::type T2_nonref;
+#endif
 
             typedef
                 compare_convertible<

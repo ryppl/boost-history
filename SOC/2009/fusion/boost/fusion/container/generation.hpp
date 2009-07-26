@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_HPP
 
-//TODO move ignore.hpp in the _tie-headers?
 #include <boost/fusion/container/generation/ignore.hpp>
 #include <boost/fusion/container/generation/cons_tie.hpp>
 #include <boost/fusion/container/generation/list_tie.hpp>

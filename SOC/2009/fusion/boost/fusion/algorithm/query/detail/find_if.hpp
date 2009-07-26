@@ -212,8 +212,10 @@ namespace boost { namespace fusion {
             static type
             call(It const& it)
             {
-                typedef typename result_of::distance<It, type>::type N;
-                return fusion::advance<N>(it);
+                return
+                    fusion::advance<
+                        typename result_of::distance<It, type>::type
+                    >(it);
             }
         };
 
@@ -223,11 +225,10 @@ namespace boost { namespace fusion {
         {
             template <typename Seq>
             static typename static_find_if<First, Last, Pred>::type
-            call(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
+            call(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
             {
-                typedef static_find_if<First, Last, Pred> gen;
-
-                return gen::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
+                return static_find_if<First, Last, Pred>::call(
+                        fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             }
         };
     }

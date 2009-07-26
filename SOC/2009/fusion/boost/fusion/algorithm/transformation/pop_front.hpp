@@ -30,14 +30,25 @@ namespace boost { namespace fusion
     }
 
     template <typename Seq>
-    inline typename result_of::pop_front<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
-    pop_front(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+    inline typename result_of::pop_front<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
+    pop_front(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return typename
             result_of::pop_front<
-                BOOST_FUSION_R_ELSE_LREF(Seq)
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
             >::type(fusion::next(fusion::begin(seq)), fusion::end(seq));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq>
+    inline typename result_of::pop_front<Seq&>::type
+    pop_front(Seq& seq)
+    {
+        return typename
+            result_of::pop_front<Seq&>::type(
+                fusion::next(fusion::begin(seq)), fusion::end(seq));
+    }
+#endif
 }}
 
 #endif

@@ -12,20 +12,19 @@
 //Therefore we emulate the old behavior if (and only if) the boost
 //implementation falls back to decltype by default.
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/mpl/bool.hpp>
+#include <boost/fusion/support/ref.hpp>
+
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/is_function.hpp>
+#include <boost/type_traits/is_member_function_pointer.hpp>
+
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#   include <boost/mpl/if.hpp>
 #else
 #   include <boost/fusion/support/ref.hpp>
 
-#   include <boost/type_traits/remove_pointer.hpp>
-#   include <boost/type_traits/is_function.hpp>
-#   include <boost/type_traits/is_member_function_pointer.hpp>
-#endif
-#if !defined(BOOST_NO_DECLTYPE) && !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
-#   include <boost/fusion/support/ref.hpp>
-
-#   include <boost/mpl/has_xxx.hpp>
 #   include <boost/mpl/eval_if.hpp>
+#   include <boost/mpl/has_xxx.hpp>
 
 #   include <boost/type_traits/is_function.hpp>
 #endif
@@ -136,7 +135,34 @@ namespace boost { namespace fusion { namespace support
 
 #if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
     using boost::result_of;
+
+    template<typename FRef>
+    struct get_func_base
+    {
+        typedef typename
+            remove_pointer<
+                typename detail::identity<FRef>::type
+            >::type
+        f;
+
+        typedef typename
+            mpl::if_<
+                mpl::or_<
+                    typename is_function<f>::type
+                  , typename is_member_function_pointer<f>::type
+                >
+              , FRef
+              , f
+            >::type
+        type;
+    };
 #else
+    template<typename F>
+    struct get_func_base
+    {
+        typedef F f;
+    };
+
     namespace detail
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
@@ -184,7 +210,7 @@ namespace boost { namespace fusion { namespace support
         typedef typename
             mpl::eval_if<
                 is_function<f>
-              , boost::result_of<F(Args...)>
+              , boost::result_of<f(Args...)>
               , detail::result_of_class_type<F,f,Args...>
             >::type
         type;

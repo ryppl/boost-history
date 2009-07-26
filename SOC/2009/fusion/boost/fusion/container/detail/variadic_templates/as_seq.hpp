@@ -3,10 +3,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_MAP_DETAIL_VARIADIC_TEMPLATES_AS_MAP_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_MAP_DETAIL_VARIADIC_TEMPLATES_AS_MAP_IMPL_HPP
-
-#include <boost/fusion/container/map/map.hpp>
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/end.hpp>
 #include <boost/fusion/support/variadic_templates/variadic_quote.hpp>
@@ -18,27 +14,18 @@
 namespace boost { namespace fusion { namespace detail
 {
     template<typename SeqRef>
-    struct as_map_impl
+    struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)
     {
         struct apply
         {
             typedef typename
                 mpl::apply<
-                    mpl::unpack_args<variadic_quote<map> >
+                    mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
                   , typename detail::to_random_access_mpl_seq<
                         typename detail::remove_reference<SeqRef>::type
                     >::type
                 >::type
             type;
         };
-
-        static typename apply::type
-        call(SeqRef seq)
-        {
-            return typename apply::type(
-                    sequence_assign(BOOST_FUSION_FORWARD(SeqRef,seq)));
-        }
     };
 }}}
-
-#endif

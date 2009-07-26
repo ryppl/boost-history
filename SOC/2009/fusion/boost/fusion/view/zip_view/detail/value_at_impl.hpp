@@ -28,12 +28,12 @@ namespace boost { namespace fusion
             template<typename T>
             struct result;
 
-            template<typename Self, typename Seq>
-            struct result<Self(Seq)>
+            template<typename Self, typename SeqRef>
+            struct result<Self(SeqRef)>
               : mpl::eval_if<
-                    is_same<Seq, unused_type const&>
+                    is_same<SeqRef, unused_type const&>
                   , mpl::identity<unused_type const&>
-                  , result_of::value_at<Seq, N>
+                  , result_of::value_at<SeqRef, N>
                 >
             {};
         };

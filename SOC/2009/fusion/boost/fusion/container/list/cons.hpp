@@ -18,10 +18,13 @@
 #include <boost/fusion/support/assign_tags.hpp>
 #include <boost/fusion/support/sequence_assign.hpp>
 
-#include <boost/utility/enable_if.hpp>
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
+//#include <boost/utility/enable_if.hpp>
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/call_traits.hpp>
+#endif
 
 #include <boost/fusion/container/list/detail/cons/cons_fwd.hpp>
 #include <boost/fusion/container/list/detail/cons/at_impl.hpp>
@@ -61,7 +64,7 @@ namespace boost { namespace fusion
         {}
 
         template<typename SeqAssign>
-        nil(BOOST_FUSION_R_ELSE_LREF(SeqAssign))
+        nil(BOOST_FUSION_R_ELSE_CLREF(SeqAssign))
         {
             //TODO cschmidt: assert!
         }
@@ -114,22 +117,36 @@ namespace boost { namespace fusion
 
 #undef CONS_CTOR
 
-        template<typename SeqAssign>
-        cons(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
-             typename enable_if<
-                 is_sequence_assign<SeqAssign> >::type* =NULL)
-          : car(fusion::front(seq.get()))
-          , cdr(detail::assign_by_deref(),
-                  fusion::next(fusion::begin(seq.get())))
-        {}
-
         //cschmidt: rvalue ref if possible, so this does not collide with
         //cons(OtherCar&&,OtherCdr&&)
         template<typename It>
-        cons(detail::assign_by_deref,BOOST_FUSION_R_ELSE_LREF(It) it)
+        cons(detail::assign_by_deref,BOOST_FUSION_R_ELSE_CLREF(It) it)
           : car(fusion::deref(it))
           , cdr(detail::assign_by_deref(),fusion::next(it))
         {}
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit cons(typename call_traits<Car>::param_type car)
+          : car(car)
+        {}
+#else
+        template<typename OtherCar>
+        explicit cons(OtherCar&& car)
+          : car(std::forward<OtherCar>(car))
+        {}
+#endif
+
+#define CONS_ASSIGN_CTOR(COMBINATION,_)\
+        template<typename SeqRef>\
+        cons(support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+          : car(fusion::front(seq_assign.get()))\
+          , cdr(detail::assign_by_deref(),\
+                  fusion::next(fusion::begin(seq_assign.get())))\
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CONS_ASSIGN_CTOR,_);
+
+#undef CONS_ASSIGN_CTOR
 
         /*
         template<typename Seq>
@@ -141,25 +158,16 @@ namespace boost { namespace fusion
         */
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        explicit cons(Car const& car)
-          : car(car), cdr()
-        {}
-
-        cons(Car const& car, Cdr const& cdr)
-          : car(car), cdr(cdr)
+        cons(typename call_traits<Car>::param_type car,Cdr const& cdr)
+          : car(car)
+          , cdr(cdr)
         {}
 #else
-        template<typename OtherCar>
-        explicit cons(OtherCar&& other_car,
-                typename disable_if<is_sequence_assign<OtherCar> >::type* =NULL)
-          : car(std::forward<OtherCar>(other_car))
-          , cdr()
-        {}
-
         template<typename OtherCar,typename OtherCdr>
-        cons(OtherCar&& other_car,OtherCdr&& other_cdr)
-          : car(std::forward<OtherCar>(other_car))
-          , cdr(std::forward<OtherCdr>(other_cdr))
+        cons(BOOST_FUSION_R_ELSE_CLREF(OtherCar) car,
+             BOOST_FUSION_R_ELSE_CLREF(OtherCdr) cdr)
+          : car(BOOST_FUSION_FORWARD(OtherCar,car))
+          , cdr(BOOST_FUSION_FORWARD(OtherCdr,cdr))
         {}
 #endif
 

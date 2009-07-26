@@ -25,7 +25,6 @@
 
 #   include <boost/mpl/int.hpp>
 #   include <boost/mpl/bool.hpp>
-#   include <boost/mpl/vector.hpp>
 #   include <boost/mpl/at.hpp>
 
 #   include <boost/type_traits/add_const.hpp>
@@ -78,9 +77,9 @@ namespace boost { namespace fusion
 #   define BOOST_FUSION_DEFAULT_MEMBER_INIT(Z, N, _) BOOST_PP_CAT(m,N)()
 
         BOOST_PP_CAT(vector, N)()
-#if N
+#   if N
           : BOOST_PP_ENUM(N, BOOST_FUSION_DEFAULT_MEMBER_INIT, _)
-#endif
+#   endif
         {}
 
 #   undef BOOST_FUSION_DEFAULT_MEMBER_INIT
@@ -120,14 +119,20 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(m,N)(\
             BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,N), BOOST_PP_CAT(_,N)))
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
         template <BOOST_PP_ENUM_PARAMS(N, typename A)>
+#endif
 #       if (N == 1)
         explicit
 #       endif
         BOOST_PP_CAT(vector, N)(
             BOOST_PP_ENUM_BINARY_PARAMS(
                     N,
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                    T,
+#else
                     A,
+#endif
                     BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()) _)
             )
           : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)
@@ -136,30 +141,44 @@ namespace boost { namespace fusion
 #       undef BOOST_FUSION_MEMBER_INIT
 #   endif
 
-#   define BOOST_FUSION_MEMBER_INIT(Z, N, _)\
-        BOOST_PP_CAT(m,N)(\
-            fusion::deref(fusion::advance_c<N>(fusion::begin(seq.get()))))
-
-        template<typename SeqAssign>
-        BOOST_PP_CAT(vector,N)(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
-               typename enable_if<
-                   is_sequence_assign<SeqAssign> >::type* =NULL)
 #   if N
-          : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)
-#   endif
+#       define BOOST_FUSION_MEMBER_INIT(Z, N, _)\
+        BOOST_PP_CAT(m,N)(fusion::deref(\
+            fusion::advance_c<N>(fusion::begin(seq_assign.get()))))
+#       define VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+        template<typename SeqRef>\
+        BOOST_PP_CAT(vector,N)(\
+            support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+          : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)\
         {}
 
-#   undef BOOST_FUSION_MEMBER_INIT
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+
+#       undef VECTOR_ASSIGN_CTOR
+#       undef BOOST_FUSION_MEMBER_INIT
+#   else
+#       define VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+        template<typename SeqRef>\
+        BOOST_PP_CAT(vector,N)(\
+            support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+
+#       undef VECTOR_ASSIGN_CTOR
+#   endif
 
         template <typename Seq>
         BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)>&
-        operator=(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
 #   if N
             typedef typename
-                result_of::begin<BOOST_FUSION_R_ELSE_LREF(Seq)>::type
+                result_of::begin<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
             It0;
             It0 it0 = fusion::begin(seq);
+
+            m0=fusion::deref(it0);
 
 #       define BOOST_FUSION_DEREF_MEMBER_ASSIGN(Z, N, _)\
             typedef typename\
@@ -167,7 +186,7 @@ namespace boost { namespace fusion
             BOOST_PP_CAT(It, N);\
             BOOST_PP_CAT(It, N) BOOST_PP_CAT(it, N)=\
                 fusion::next(BOOST_PP_CAT(it, BOOST_PP_DEC(N)));\
-                \
+            \
             BOOST_PP_CAT(m, N) = fusion::deref(BOOST_PP_CAT(it, N));
 
             BOOST_PP_REPEAT_FROM_TO(1, N, BOOST_FUSION_DEREF_MEMBER_ASSIGN, _)
@@ -176,6 +195,20 @@ namespace boost { namespace fusion
 #   endif
 
             return *this;
+        }
+
+        BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)>&
+        operator=(BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)>const& seq)
+        {
+#ifdef BOOST_NO_RVALUE_REFERENCES
+            return this->operator=<
+                    BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)>
+                >(seq);
+#else
+            return this->operator=<
+                    BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> const&
+                >(seq);
+#endif
         }
 
         template<typename I>

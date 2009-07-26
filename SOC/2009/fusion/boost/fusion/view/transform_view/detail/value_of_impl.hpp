@@ -8,9 +8,8 @@
 #ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 
-#include <boost/mpl/apply.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/view/transform_view/detail/apply_transform_result.hpp>
+#include <boost/fusion/support/result_of.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -27,13 +26,11 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                mpl::apply<
-                    detail::apply_transform_result<
+                support::result_of<
+                    typename support::get_func_base<
                         typename it::transform_type
-                    >
-                  , typename result_of::value_of<
-                        typename it::first_type
-                    >::type
+                    >::type(
+                    typename result_of::value_of<typename it::first_type>::type)
                 >::type
             type;
         };
@@ -49,16 +46,12 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                mpl::apply<
-                    detail::apply_transform_result<
+                support::result_of<
+                    typename support::get_func_base<
                         typename it::transform_type
-                    >
-                  , typename result_of::value_of<
-                        typename it::first1_type
-                    >::type
-                  , typename result_of::value_of<
-                        typename it::first2_type
-                    >::type
+                    >::type(
+                   typename result_of::value_of<typename it::first1_type>::type
+                 , typename result_of::value_of<typename it::first2_type>::type)
                 >::type
             type;
         };

@@ -6,14 +6,14 @@
 #ifndef BOOST_FUSION_TUPLE_TUPLE_TIE_HPP
 #define BOOST_FUSION_TUPLE_TUPLE_TIE_HPP
 
-#include <boost/fusion/container/generation/ignore.hpp>
+#include <boost/fusion/tuple/tuple.hpp>
 
-#include <boost/config.hpp>
-
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/tuple/detail/pp/tuple_tie.hpp>
-#else
-#   include <boost/fusion/tuple/detail/variadic_templates/tuple_tie.hpp>
-#endif
+#define BOOST_FUSION_FUNCTION_NAME tie
+#define BOOST_FUSION_SEQ_NAME tuple
+#define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
+#include <boost/fusion/container/generation/detail/seq_tie.hpp>
+#undef BOOST_FUSION_MAX_SEQ_SIZE
+#undef BOOST_FUSION_SEQ_NAME
+#undef BOOST_FUSION_FUNCTION_NAME
 
 #endif

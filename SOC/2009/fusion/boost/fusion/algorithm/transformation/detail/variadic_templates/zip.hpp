@@ -27,11 +27,11 @@ namespace boost { namespace fusion {
     }
 
     template<typename... Seqs>
-    inline typename result_of::zip<BOOST_FUSION_R_ELSE_LREF(Seqs)...>::type
-    zip(BOOST_FUSION_R_ELSE_LREF(Seqs)... seqs)
+    inline typename result_of::zip<BOOST_FUSION_R_ELSE_CLREF(Seqs)...>::type
+    zip(BOOST_FUSION_R_ELSE_CLREF(Seqs)... seqs)
     {
         return typename
-            result_of::zip<BOOST_FUSION_R_ELSE_LREF(Seqs)...>::type(
+            result_of::zip<BOOST_FUSION_R_ELSE_CLREF(Seqs)...>::type(
                     vector_tie(seqs...));
     }
 

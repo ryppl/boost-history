@@ -30,18 +30,18 @@ namespace boost { namespace fusion
     template <typename Seq, typename Pos, typename T>
     inline typename
         result_of::insert<
-            BOOST_FUSION_R_ELSE_LREF(Seq)
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
           , Pos const&
-          , BOOST_FUSION_R_ELSE_LREF(T)
+          , BOOST_FUSION_R_ELSE_CLREF(T)
         >::type
-    insert(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+    insert(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
             Pos const& pos,
-            BOOST_FUSION_R_ELSE_LREF(T) x)
+            BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
         return insert_range(
                   BOOST_FUSION_FORWARD(Seq,seq)
                 , pos
-                , make_single_view(BOOST_FUSION_FORWARD(T,x)));
+                , fusion::make_single_view(BOOST_FUSION_FORWARD(T,x)));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -49,7 +49,7 @@ namespace boost { namespace fusion
     inline typename result_of::insert<Seq&, Pos const&, T const&>::type
     insert(Seq& seq,Pos const& pos,T const& x)
     {
-        return insert_range(seq, pos, make_single_view(x));
+        return insert_range(seq, pos, fusion::make_single_view(x));
     }
 #endif
 }}

@@ -22,38 +22,33 @@ namespace boost { namespace fusion
           : second()
         {}
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-        template<typename Arg>
-        pair(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
-          : second(BOOST_FUSION_FORWARD(Arg,arg))
+#define PAIR_CTOR(COMBINATION,_)\
+        template<typename OtherFirst,typename OtherSecond>\
+        pair(pair<OtherFirst,OtherSecond> COMBINATION pair_)\
+          : second(static_cast<pair<OtherFirst,OtherSecond> COMBINATION>(pair_)\
+                  .second)\
         {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(PAIR_CTOR,_)
+
+#undef PAIR_CTOR
+
+
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   ifdef BOOST_NO_RVALUE_REFERENCES
+        pair(Second const& second)
+          : second(second)
+        {}
+#   else
+        template<typename Arg>
+        pair(Arg&& arg)
+          : second(std::forward<Arg>(arg))
+        {}
+#   endif
 #else
         template<typename Arg1,typename... Args>
         pair(Arg1&& arg1, Args&&... args)
           : second(std::forward<Arg1>(arg1),std::forward<Args>(args)...)
-        {}
-#endif
-
-        template <typename Second2>
-        pair(pair<First, Second2> const& rhs)
-          : second(rhs.second)
-        {}
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-        //TODO cschmidt: needed?
-        template <typename Second2>
-        pair(pair<First, Second2> const&& rhs)
-          : second(std::forward<const Second2>(rhs.second))
-        {}
-
-        template <typename Second2>
-        pair(pair<First, Second2>& rhs)
-          : second(rhs.second)
-        {}
-
-        template <typename Second2>
-        pair(pair<First, Second2>&& rhs)
-          : second(std::forward<Second2>(rhs.second))
         {}
 #endif
 

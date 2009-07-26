@@ -37,13 +37,24 @@ namespace boost { namespace fusion
 
     template <typename Key, typename Seq>
     inline typename
-        result_of::erase_key<BOOST_FUSION_R_ELSE_LREF(Seq), Key>::type
-    erase_key(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+        result_of::erase_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::type
+    erase_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        typedef result_of::erase_key<BOOST_FUSION_R_ELSE_LREF(Seq), Key> result;
-
-        return erase(BOOST_FUSION_FORWARD(Seq,seq), result::gen::call(seq));
+        return erase(
+                BOOST_FUSION_FORWARD(Seq,seq),
+                result_of::erase_key<
+                    BOOST_FUSION_R_ELSE_CLREF(Seq), Key
+                >::gen::call(seq));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Key, typename Seq>
+    inline typename result_of::erase_key<Seq&, Key>::type
+    erase_key(Seq& seq)
+    {
+        return erase(seq,result_of::erase_key<Seq, Key>::gen::call(seq));
+    }
+#endif
 }}
 
 #endif

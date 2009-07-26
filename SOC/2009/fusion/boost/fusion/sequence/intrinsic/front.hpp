@@ -33,6 +33,14 @@ namespace boost { namespace fusion
         return *fusion::begin(seq);
     }
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq>
+    inline typename result_of::front<Seq&>::type
+    front(Seq& seq)
+    {
+        return *fusion::begin(seq);
+    }
+#endif
 }}
 
 #endif

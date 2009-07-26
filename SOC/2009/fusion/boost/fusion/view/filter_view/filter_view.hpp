@@ -42,7 +42,8 @@ namespace boost { namespace fusion
         typedef forward_traversal_tag category;
         typedef mpl::true_ is_view;
 
-        typedef typename detail::view_storage<Seq>::type seq_type;
+        typedef detail::view_storage<Seq> storage_type;
+        typedef typename storage_type::type seq_type;
         typedef Pred pred_type;
 
 #define FILTER_VIEW_CTOR(COMBINATION,_)\
@@ -55,20 +56,26 @@ namespace boost { namespace fusion
 
 #undef FILTER_VIEW_CTOR
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit filter_view(typename storage_type::call_param seq)
+          : seq(seq)
+        {}
+#else
         template<typename OtherSeq>
-        explicit filter_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq) other_seq)
+        explicit filter_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq) other_seq)
           : seq(BOOST_FUSION_FORWARD(OtherSeq,other_seq))
         {}
+#endif
 
         template<typename OtherFilterView>
         filter_view&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherFilterView) other_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherFilterView) other_view)
         {
             seq=BOOST_FUSION_FORWARD(OtherFilterView,other_view).seq;
             return *this;
         }
 
-        detail::view_storage<Seq> seq;
+        storage_type seq;
     };
 }}
 

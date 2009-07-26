@@ -45,7 +45,8 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::true_ is_view;
 
-        typedef typename detail::view_storage<Seq>::type seq_type;
+        typedef detail::view_storage<Seq> storage_type;
+        typedef typename storage_type::type seq_type;
         typedef typename traits::category_of<seq_type>::type category;
         typedef typename result_of::size<seq_type>::type size;
 
@@ -65,14 +66,20 @@ namespace boost { namespace fusion
 
 #undef REVERSE_VIEW_CTOR
 
-        template<typename OtherSeq>
-        explicit reverse_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq) other_seq)
-          : seq(BOOST_FUSION_FORWARD(OtherSeq,other_seq))
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit reverse_view(typename storage_type::call_param seq)
+          : seq(seq)
         {}
+#else
+        template<typename OtherSeq>
+        explicit reverse_view(OtherSeq&& other_seq)
+          : seq(std::forward<OtherSeq>(other_seq))
+        {}
+#endif
 
         template<typename OtherReverseView>
         OtherReverseView&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherReverseView) other_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherReverseView) other_view)
         {
             seq=BOOST_FUSION_FORWARD(OtherReverseView,other_view).seq;
             return *this;

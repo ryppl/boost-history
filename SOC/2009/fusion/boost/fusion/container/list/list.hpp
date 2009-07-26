@@ -19,6 +19,10 @@
 #include <boost/fusion/container/list/detail/list/at_impl.hpp>
 #include <boost/fusion/container/list/detail/list/value_at_impl.hpp>
 
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#endif
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -28,7 +32,7 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE(FUSION_MAX_LIST_SIZE)
     struct list
-      : sequence_base<list<EXPAND_ARGUMENTS(FUSION_MAX_LIST_SIZE)> >
+      : sequence_base<list<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_LIST_SIZE)> >
     {
         typedef forward_traversal_tag category;
 
@@ -36,7 +40,7 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::false_ is_view;
 
-        typedef vector<EXPAND_ARGUMENTS(FUSION_MAX_LIST_SIZE)> storage_type;
+        typedef vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_LIST_SIZE)> storage_type;
         typedef typename storage_type::size size;
 
         list()
@@ -52,12 +56,11 @@ namespace boost { namespace fusion
 #undef LIST_CTOR
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-        template <typename Arg>
-        list(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
-          : data(BOOST_FUSION_FORWARD(Arg,arg))
-        {}
-
-#   include <boost/fusion/container/list/detail/list/pp/list_forward_ctor.hpp>
+#   define BOOST_FUSION_SEQ_NAME list
+#   define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_LIST_SIZE
+#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#   undef BOOST_FUSION_MAX_SEQ_SIZE
+#   undef BOOST_FUSION_SEQ_NAME
 #else
         template <typename... OtherArguments>
         list(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
@@ -77,7 +80,6 @@ namespace boost { namespace fusion
         storage_type const& get_data() const { return data; }
 
     private:
-
         storage_type data;
     };
 }}

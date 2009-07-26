@@ -75,8 +75,9 @@ namespace boost { namespace fusion
 #   define CALL_OPERATOR(COMBINATION)\
         template<typename... Args>\
         typename support::result_of<\
-            typename detail::forward_as<int COMBINATION, F>::type\
-                (typename result_of::as_vector<TransformSeq&&>::type&&)\
+            typename support::get_func_base<\
+                typename detail::forward_as<int COMBINATION, F>::type\
+            >::type(typename result_of::as_vector<TransformSeq&&>::type&&)\
         >::type\
         operator()(Args&&... args) COMBINATION\
         {\
@@ -87,8 +88,9 @@ namespace boost { namespace fusion
 #   define CALL_OPERATOR(COMBINATION)\
         template<typename... Args>\
         typename support::result_of<\
-            typename detail::forward_as<int COMBINATION, F>::type\
-                (typename result_of::vector_tie<Args&&...>::type&&)\
+            typename support::get_func_base<\
+                typename detail::forward_as<int COMBINATION, F>::type\
+            >::type(typename result_of::vector_tie<TransformSeq&&>::type&&)\
         >::type\
         operator()(Args&&... args) COMBINATION\
         {\

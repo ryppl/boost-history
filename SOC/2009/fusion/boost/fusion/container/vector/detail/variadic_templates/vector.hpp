@@ -3,8 +3,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_VECTOR_IMPL_HPP
-#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_VECTOR_IMPL_HPP
+#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_VECTOR_HPP
+#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_VARIADIC_TEMPLATES_VECTOR_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
@@ -116,7 +116,8 @@ namespace boost { namespace fusion
         };
     }
 
-    template<typename... Elements>struct vector
+    template<typename... Elements>
+    struct vector
       : sequence_base<vector<Elements...> >
       , detail::vector_impl<0,Elements...>
     {
@@ -145,12 +146,22 @@ namespace boost { namespace fusion
 
 #undef VECTOR_CTOR
 
-        template<typename SeqAssign>
-        vector(BOOST_FUSION_R_ELSE_LREF(SeqAssign) seq,
-               typename enable_if<
-                   is_sequence_assign<SeqAssign> >::type* =NULL)
-          : base(detail::assign_by_deref(),fusion::begin(seq.get()))
+        template<typename... OtherElements>
+        explicit
+        vector(BOOST_FUSION_R_ELSE_CLREF(OtherElements)... other_elements)
+          : base(detail::assign_directly(),
+                 BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
         {}
+
+#define VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+        template<typename SeqRef>\
+        vector(support::sequence_assgin_type<SeqRef> COMBINATION seq_assign)\
+          : base(detail::assign_by_deref(),seq_assign.get())
+        {}
+
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+
+#undef VECTOR_ASSIGN_CTOR
 
         /*
         template<typename Seq>
@@ -160,12 +171,6 @@ namespace boost { namespace fusion
                  fusion::begin(BOOST_FUSION_FORWARD(Seq,seq.seq)))
         {}
         */
-
-        template<typename... OtherElements>
-        vector(BOOST_FUSION_R_ELSE_CLREF(OtherElements)... other_elements)
-          : base(detail::assign_directly(),
-                 BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
-        {}
 
         template<typename Seq>
         vector&

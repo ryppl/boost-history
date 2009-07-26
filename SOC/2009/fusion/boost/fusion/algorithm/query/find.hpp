@@ -24,8 +24,7 @@ namespace boost { namespace fusion
         template<
             typename Seq
           , typename T
-          , bool is_associative_sequence=
-                traits::is_associative<Seq>::value
+          , bool is_associative_sequence=traits::is_associative<Seq>::value
         >
         struct find;
 
@@ -59,12 +58,21 @@ namespace boost { namespace fusion
         result_of::find<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type const
     find(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        typedef typename
-            result_of::find<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::filter
-        gen;
-
-        return gen::call(seq);
+        return
+            result_of::find<
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
+              , T
+            >::filter::call(seq);
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename T, typename Seq>
+    inline typename result_of::find<Seq&, T>::type const
+    find(Seq& seq)
+    {
+        return result_of::find<Seq&, T>::filter::call(seq);
+    }
+#endif
 }}
 
 #endif

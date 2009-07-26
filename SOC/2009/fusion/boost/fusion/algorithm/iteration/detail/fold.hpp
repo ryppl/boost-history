@@ -33,7 +33,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(It0 const& it0,
                 BOOST_FUSION_R_ELSE_CLREF(State) state,
-                BOOST_FUSION_R_ELSE_LREF(F) f)
+                BOOST_FUSION_R_ELSE_CLREF(F) f)
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1 = fusion::next(it0);
@@ -64,7 +64,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(It0 const& it0,
                 BOOST_FUSION_R_ELSE_CLREF(State) state,
-                BOOST_FUSION_R_ELSE_LREF(F) f)
+                BOOST_FUSION_R_ELSE_CLREF(F) f)
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1 = fusion::next(it0);
@@ -89,7 +89,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(It0 const& it0,
                 BOOST_FUSION_R_ELSE_CLREF(State) state,
-                BOOST_FUSION_R_ELSE_LREF(F) f)
+                BOOST_FUSION_R_ELSE_CLREF(F) f)
         {
             return f(fusion::deref(fusion::next(it0)),
                     f(fusion::deref(it0),
@@ -104,7 +104,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(It0 const& it0,
                 BOOST_FUSION_R_ELSE_CLREF(State) state,
-                BOOST_FUSION_R_ELSE_LREF(F) f)
+                BOOST_FUSION_R_ELSE_CLREF(F) f)
         {
             return f(fusion::deref(it0), BOOST_FUSION_FORWARD(State,state));
         }
@@ -117,7 +117,7 @@ namespace boost { namespace fusion { namespace detail
         static Result
         call(It0 const&,
                 BOOST_FUSION_R_ELSE_CLREF(State) state,
-                BOOST_FUSION_R_ELSE_LREF(F))
+                BOOST_FUSION_R_ELSE_CLREF(F))
         {
             return state;
         }
@@ -130,14 +130,23 @@ namespace boost { namespace fusion { namespace detail
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         typedef typename
-            support::result_of<FRef(deref_type, StateRef)>::type
+            support::result_of<
+                typename support::get_func_base<FRef>::type
+                (deref_type, StateRef)
+            >::type
         type;
 #else
         typedef typename
             mpl::eval_if<
                 typename detail::is_lrref<deref_type>::type
-              , support::result_of<FRef(deref_type, StateRef)>
-              , support::result_of<FRef(deref_type&&, StateRef)>
+              , support::result_of<
+                    typename support::get_func_base<FRef>::type
+                    (deref_type, StateRef)
+                >
+              , support::result_of<
+                    typename support::get_func_base<FRef>::type
+                    (deref_type&&, StateRef)
+                >
             >::type
         type;
 #endif

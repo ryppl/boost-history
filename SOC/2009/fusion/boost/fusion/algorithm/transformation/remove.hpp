@@ -28,13 +28,22 @@ namespace boost { namespace fusion
     }
 
     template <typename T, typename Seq>
-    inline typename result_of::remove<BOOST_FUSION_R_ELSE_LREF(Seq), T>::type
-    remove(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+    inline typename result_of::remove<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type
+    remove(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return typename
-            result_of::remove<BOOST_FUSION_R_ELSE_LREF(Seq), T>::type(
+            result_of::remove<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type(
                 BOOST_FUSION_FORWARD(Seq,seq));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename T, typename Seq>
+    inline typename result_of::remove<Seq&, T>::type
+    remove_if(Seq& seq)
+    {
+        return typename result_of::remove<Seq&, T>::type(seq);
+    }
+#endif
 }}
 
 #endif

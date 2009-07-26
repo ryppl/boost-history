@@ -47,6 +47,15 @@ namespace boost { namespace fusion
         return result_of::end<BOOST_FUSION_R_ELSE_CLREF(Seq)>::call(seq);
     }
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq>
+    inline typename result_of::end<Seq&>::type
+    end(Seq& seq)
+    {
+        return result_of::end<Seq&>::call(seq);
+    }
+#endif
+
 }}
 
 #endif

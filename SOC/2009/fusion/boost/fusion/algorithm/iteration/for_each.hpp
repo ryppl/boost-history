@@ -29,14 +29,24 @@ namespace boost { namespace fusion
 
     template <typename Seq, typename F>
     inline void
-    for_each(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
-             BOOST_FUSION_R_ELSE_LREF(F) f)
+    for_each(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+             BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         detail::for_each_unrolled<
-            result_of::size<BOOST_FUSION_R_ELSE_LREF(Seq)>::value
+            result_of::size<BOOST_FUSION_R_ELSE_CLREF(Seq)>::value
         >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
                 BOOST_FUSION_FORWARD(F,f));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename F>
+    inline void
+    for_each(Seq& seq,F const& f)
+    {
+        detail::for_each_unrolled<result_of::size<Seq&>::value>::call(
+                fusion::begin(seq),f);
+    }
+#endif
 }}
 
 #endif

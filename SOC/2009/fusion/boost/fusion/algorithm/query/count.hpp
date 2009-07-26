@@ -27,12 +27,21 @@ namespace boost { namespace fusion
 
     template <typename Seq, typename T>
     inline int
-    count(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(T) x)
+    count(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
         return fusion::count_if(
                 BOOST_FUSION_FORWARD(Seq,seq),
-                detail::count_helper<BOOST_FUSION_R_ELSE_LREF(T)>(x));
+                detail::count_helper<BOOST_FUSION_R_ELSE_CLREF(T)>(x));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename T>
+    inline int
+    count(Seq& seq, T const& x)
+    {
+        return fusion::count_if(seq,detail::count_helper<T const&>(x));
+    }
+#endif
 }}
 
 #endif

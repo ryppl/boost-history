@@ -33,17 +33,17 @@ namespace boost { namespace fusion {
     }
 
     template<typename Key, typename T>
-    typename result_of::pair_tie<Key, BOOST_FUSION_R_ELSE_LREF(T)>::type
-    pair_tie(BOOST_FUSION_R_ELSE_LREF(T) t)
+    typename result_of::pair_tie<Key, BOOST_FUSION_R_ELSE_CLREF(T)>::type
+    pair_tie(BOOST_FUSION_R_ELSE_CLREF(T) t)
     {
         return typename
             result_of::pair_tie<
                 Key
-              , BOOST_FUSION_R_ELSE_LREF(T)
+              , BOOST_FUSION_R_ELSE_CLREF(T)
             >::type(BOOST_FUSION_FORWARD(T,t));
     }
 
-#ifdef BOOST_NO_RVALUE_REFERENCE
+#ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename Key, typename T>
     typename result_of::pair_tie<Key, T const&>::type
     pair_tie(T const& t)

@@ -30,11 +30,11 @@ namespace boost { namespace fusion
 
     template<typename F>
     inline typename
-        result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_R_ELSE_LREF(F)>::type
-    BOOST_FUSION_FUNC_NAME(BOOST_FUSION_R_ELSE_LREF(F) f)
+        result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_R_ELSE_CLREF(F)>::type
+    BOOST_FUSION_FUNC_NAME(BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return typename
-            result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_R_ELSE_LREF(F)>::
+            result_of::BOOST_FUSION_FUNC_NAME<BOOST_FUSION_R_ELSE_CLREF(F)>::
                 type(BOOST_FUSION_FORWARD(F,f));
     }
 }}

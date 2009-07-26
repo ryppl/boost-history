@@ -15,6 +15,8 @@
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/support/ref.hpp>
 
+#include <boost/preprocessor/empty.hpp>
+
 namespace boost { namespace fusion
 {
     namespace result_of
@@ -45,42 +47,54 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename Pos, typename Range>
-    inline typename
-        result_of::insert_range<
-            BOOST_FUSION_R_ELSE_LREF(Seq)
-          , Pos const&
-          , BOOST_FUSION_R_ELSE_LREF(Range)
-        >::type
-    insert_range(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
-            Pos const& pos,
-            BOOST_FUSION_R_ELSE_LREF(Range) range)
-    {
-        typedef
-            result_of::insert_range<
-                BOOST_FUSION_R_ELSE_LREF(Seq)
-              , Pos const&
-              , BOOST_FUSION_R_ELSE_LREF(Range)
-            >
-        result;
-        typedef typename result::left_type left_type;
-        typedef typename result::right_type right_type;
-        typedef typename result::left_insert_type left_insert_type;
-
-        return typename result::type(
-                left_insert_type(
-                    left_type(
-                        fusion::begin(seq),
-                        pos
-                    ),
-                    BOOST_FUSION_FORWARD(Range,range)
-                ),
-                right_type(
-                    pos,
-                    fusion::end(seq)
-                )
-               );
+#define BOOST_FUSION_INSERT_RANGE(SEQ_CV_REF_MODIFIER,RANGE_CV_REF_MODIFIER)\
+    template <typename Seq, typename Pos, typename Range>\
+    inline typename\
+        result_of::insert_range<\
+            Seq SEQ_CV_REF_MODIFIER\
+          , Pos const&\
+          , Range RANGE_CV_REF_MODIFIER\
+        >::type\
+    insert_range(Seq SEQ_CV_REF_MODIFIER seq,\
+            Pos const& pos,\
+            Range RANGE_CV_REF_MODIFIER range)\
+    {\
+        typedef\
+            result_of::insert_range<\
+                Seq SEQ_CV_REF_MODIFIER\
+              , Pos const&\
+              , Range RANGE_CV_REF_MODIFIER\
+            >\
+        result;\
+        typedef typename result::left_type left_type;\
+        typedef typename result::right_type right_type;\
+        typedef typename result::left_insert_type left_insert_type;\
+        \
+        return typename result::type(\
+                left_insert_type(\
+                    left_type(\
+                        fusion::begin(seq),\
+                        pos\
+                    ),\
+                    BOOST_FUSION_FORWARD(Range RANGE_CV_REF_MODIFIER,range)\
+                ),\
+                right_type(\
+                    pos,\
+                    fusion::end(seq)\
+                )\
+               );\
     }
+
+    BOOST_FUSION_INSERT_RANGE(
+            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()),
+            BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()));
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    BOOST_FUSION_INSERT_RANGE(&,const&);
+    BOOST_FUSION_INSERT_RANGE(const&,&);
+    BOOST_FUSION_INSERT_RANGE(&,&);
+#endif
+
+#undef BOOST_FUSION_INSERT_RANGE
 }}
 
 #endif

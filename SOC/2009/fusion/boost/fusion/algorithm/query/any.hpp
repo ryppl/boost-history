@@ -28,7 +28,7 @@ namespace boost { namespace fusion
 
             template<typename E>
             inline bool
-            operator()(BOOST_FUSION_R_ELSE_LREF(E) e)
+            operator()(BOOST_FUSION_R_ELSE_CLREF(E) e)const
             {
                 return !f(BOOST_FUSION_FORWARD(E,e));
             }
@@ -48,12 +48,21 @@ namespace boost { namespace fusion
 
     template <typename Seq, typename F>
     inline bool
-    any(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(F) f)
+    any(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
-        return !all(
+        return !fusion::all(
                 BOOST_FUSION_FORWARD(Seq,seq),
-                detail::any_helper<BOOST_FUSION_R_ELSE_LREF(F)>(f));
+                detail::any_helper<BOOST_FUSION_R_ELSE_CLREF(F)>(f));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename F>
+    inline bool
+    any(Seq& seq, F const& f)
+    {
+        return !fusion::all(seq,detail::any_helper<F const&>(f));
+    }
+#endif
 }}
 
 #endif

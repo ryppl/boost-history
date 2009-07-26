@@ -41,21 +41,33 @@ namespace boost { namespace fusion {
     template <typename Seq, typename State, typename F>
     inline typename
         result_of::fold<
-            BOOST_FUSION_R_ELSE_LREF(Seq)
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_R_ELSE_CLREF(State)
-          , BOOST_FUSION_R_ELSE_LREF(F)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
         >::type
-    fold(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+    fold(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
          BOOST_FUSION_R_ELSE_CLREF(State) state,
-         BOOST_FUSION_R_ELSE_LREF(F) f)
+         BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return
             result_of::fold<
-                BOOST_FUSION_R_ELSE_LREF(Seq)
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(State)
-              , BOOST_FUSION_R_ELSE_LREF(F)
+              , BOOST_FUSION_R_ELSE_CLREF(F)
             >::gen::call(fusion::begin(seq), state, f);
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename State, typename F>
+    inline typename result_of::fold<Seq&,State const&,F const&>::type
+    fold(Seq& seq,
+         State const& state,
+         F const& f)
+    {
+        return result_of::fold<Seq&,State const&,F const&>::gen::call(
+                fusion::begin(seq), state, f);
+    }
+#endif
 }}
 
 #endif

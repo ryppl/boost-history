@@ -11,7 +11,9 @@
 #include <boost/fusion/support/is_sequence.hpp>
 #include <boost/fusion/mpl.hpp>
 
+#include <boost/mpl/push_back.hpp>
 #include <boost/mpl/push_front.hpp>
+#include <boost/mpl/size.hpp>
 #include <boost/mpl/equal.hpp>
 #include <boost/mpl/deref.hpp>
 #include <boost/mpl/back.hpp>

@@ -36,6 +36,10 @@
 #include <boost/fusion/container/map/detail/at_key_impl.hpp>
 #include <boost/fusion/container/map/detail/value_at_key_impl.hpp>
 
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#endif
+
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
@@ -44,7 +48,8 @@ namespace boost { namespace fusion
 #endif
 
     VARIADIC_TEMPLATE(FUSION_MAX_MAP_SIZE)
-    struct map : sequence_base<map<EXPAND_ARGUMENTS(FUSION_MAX_MAP_SIZE)> >
+    struct map
+      : sequence_base<map<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_MAP_SIZE)> >
     {
         struct category : forward_traversal_tag, associative_sequence_tag {};
 
@@ -52,7 +57,9 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::false_ is_view;
 
-        typedef vector<EXPAND_ARGUMENTS(FUSION_MAX_MAP_SIZE)> storage_type;
+        typedef
+            vector<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_MAP_SIZE)>
+        storage_type;
         typedef typename storage_type::size size;
 
 private:
@@ -132,20 +139,18 @@ public:
 #define MAP_CTOR(COMBINATION,_)\
         map(map COMBINATION map_)\
           : data(BOOST_FUSION_FORWARD(map COMBINATION,map_).data)\
-        {\
-        }
+        {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MAP_CTOR,_)
 
 #undef MAP_CTOR
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
-        template <typename Arg>
-        map(BOOST_FUSION_R_ELSE_CLREF(Arg) arg)
-            : data(BOOST_FUSION_FORWARD(Arg,arg))
-        {}
-
-#   include <boost/fusion/container/map/detail/pp/map_forward_ctor.hpp>
+#   define BOOST_FUSION_SEQ_NAME map
+#   define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_MAP_SIZE
+#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#   undef BOOST_FUSION_MAX_SEQ_SIZE
+#   undef BOOST_FUSION_SEQ_NAME
 #else
         template <typename... OtherArguments>
         map(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
@@ -161,7 +166,6 @@ public:
             return *this;
         }
 
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
         template <typename Key>
         typename meta_find_impl_const<Key>::type
         find_impl(mpl::identity<Key>) const
@@ -193,13 +197,11 @@ public:
             return data.at_impl(
                     typename meta_find_impl_const<Key>::type::index()).second;
         }
-#endif
 
         storage_type& get_data() { return data; }
         storage_type const& get_data() const { return data; }
 
     private:
-
         storage_type data;
     };
 }}

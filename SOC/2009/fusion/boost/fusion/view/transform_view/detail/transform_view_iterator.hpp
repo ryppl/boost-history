@@ -18,7 +18,7 @@ namespace boost { namespace fusion
 
     template <typename First, typename FRef>
     struct transform_view_iterator
-        : iterator_base<transform_view_iterator<First, FRef> >
+      : iterator_base<transform_view_iterator<First, FRef> >
     {
         //TODO !!!
         typedef FRef transform_type;
@@ -56,7 +56,7 @@ namespace boost { namespace fusion
 
     template <typename First1, typename First2, typename FRef>
     struct transform_view_iterator2
-        : iterator_base<transform_view_iterator2<First1, First2, FRef> >
+      : iterator_base<transform_view_iterator2<First1, First2, FRef> >
     {
         typedef First1 first1_type;
         typedef First2 first2_type;

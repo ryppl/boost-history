@@ -10,41 +10,15 @@
 
 #include <boost/fusion/support/result_of.hpp>
 
+#include <boost/mpl/bool.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
     //TODO cschmidt: update doc. according to real behavior!
-    template <bool is_convertible>
-    struct replacer_if_helper;
-
-    template <>
-    struct replacer_if_helper<false>
-    {
-        template <typename U, typename F, typename NewValue>
-        static BOOST_FUSION_R_ELSE_LREF(U)
-        call(BOOST_FUSION_R_ELSE_LREF(U) x,
-             BOOST_FUSION_R_ELSE_LREF(F),
-             BOOST_FUSION_R_ELSE_LREF(NewValue))
-        {
-            return x;
-        }
-    };
-
-    template <>
-    struct replacer_if_helper<true>
-    {
-        template <typename U, typename F, typename NewValue>
-        static typename remove_reference<U>::type
-        call(BOOST_FUSION_R_ELSE_LREF(U) x,
-             BOOST_FUSION_R_ELSE_LREF(F) f,
-             BOOST_FUSION_R_ELSE_LREF(NewValue) new_value)
-        {
-            return f(BOOST_FUSION_FORWARD(U,x)) ? new_value : x;
-        }
-    };
-
+    //TODO cschmidt: conv based on ptrs?!
+    //TODO const?!
     template <typename F, typename NewValue>
     struct replace_if_helper
     {
@@ -54,35 +28,30 @@ namespace boost { namespace fusion { namespace detail
         template<typename Self, typename U>
         struct result<Self(U)>
         {
+            typedef typename detail::identity<U>::type u;
+
             typedef typename
-                mpl::if_<
-                    is_convertible<
-                        NewValue
-                      , typename remove_reference<U>::type
-                    >
-                  , NewValue
-                  , U
-                >::type
+                mpl::if_<is_convertible<NewValue, u>, u, U>::type
             type;
         };
 
         template<typename OtherF, typename OtherNewValue>
         replace_if_helper(
-                BOOST_FUSION_R_ELSE_LREF(OtherF) other_f,
-                BOOST_FUSION_R_ELSE_LREF(OtherNewValue) other_new_value)
-          : f(BOOST_FUSION_FORWARD(OtherF,other_f))
-          , new_value(BOOST_FUSION_FORWARD(OtherNewValue,other_new_value))
+            BOOST_FUSION_R_ELSE_CLREF(OtherF) f,
+            BOOST_FUSION_R_ELSE_CLREF(OtherNewValue) new_value)
+          : f(BOOST_FUSION_FORWARD(OtherF,f))
+          , new_value(BOOST_FUSION_FORWARD(OtherNewValue,new_value))
         {}
 
         template<typename Replacer>
-        replace_if_helper(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+        replace_if_helper(BOOST_FUSION_R_ELSE_CLREF(Replacer) replacer)
           : f(BOOST_FUSION_FORWARD(Replacer,replacer).f)
           , new_value(BOOST_FUSION_FORWARD(Replacer,replacer).new_value)
         {}
 
         template<typename Replacer>
         replace_if_helper&
-        operator=(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(Replacer) replacer)
         {
             f=BOOST_FUSION_FORWARD(Replacer,replacer).f;
             new_value=BOOST_FUSION_FORWARD(Replacer,replacer).new_value;
@@ -90,22 +59,33 @@ namespace boost { namespace fusion { namespace detail
         }
 
         template <typename U>
-        typename result<replace_if_helper(U)>::type
+        BOOST_FUSION_R_ELSE_LREF(U)
+        call_impl(BOOST_FUSION_R_ELSE_LREF(U) x, mpl::false_) const
+        {
+            return x;
+        }
+
+        template <typename U>
+        typename result<replace_if_helper(BOOST_FUSION_R_ELSE_LREF(U))>::type
+        call_impl(BOOST_FUSION_R_ELSE_LREF(U) x, mpl::true_) const
+        {
+            return f(BOOST_FUSION_FORWARD(U,x)) ? new_value : x;
+        }
+
+        template <typename U>
+        typename result<replace_if_helper(BOOST_FUSION_R_ELSE_LREF(U))>::type
         operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
         {
-            typedef
-                replacer_if_helper<
-                    is_convertible<
-                        NewValue
-                      , typename remove_reference<U>::type
-                    >::value
-                >
-            gen;
-
-            return gen::call(
-                    BOOST_FUSION_FORWARD(U, x),
-                    f,
-                    new_value);
+            return call_impl(
+                BOOST_FUSION_FORWARD(U, x),
+                typename is_convertible<
+                    NewValue
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                  , U
+#else
+                  , typename detail::remove_reference<U>::type
+#endif
+                >::type());
         }
 
         F f;

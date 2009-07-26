@@ -27,7 +27,7 @@ namespace boost { namespace fusion
 
             template<typename E>
             inline int
-            operator()(BOOST_FUSION_R_ELSE_LREF(E) e, int count)
+            operator()(BOOST_FUSION_R_ELSE_CLREF(E) e, int count)const
             {
                 return f(BOOST_FUSION_FORWARD(E,e)) ? ++count : count;
             }
@@ -47,13 +47,23 @@ namespace boost { namespace fusion
 
     template <typename Seq, typename F>
     inline int
-    count_if(BOOST_FUSION_R_ELSE_LREF(Seq) seq, BOOST_FUSION_R_ELSE_LREF(F) f)
+    count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
-        return fold(
-            BOOST_FUSION_FORWARD(Seq,seq),
+        return fold(BOOST_FUSION_FORWARD(Seq,seq),
             0,
-            detail::count_if_helper<BOOST_FUSION_R_ELSE_LREF(F)>(f));
+            detail::count_if_helper<BOOST_FUSION_R_ELSE_CLREF(F)>(f));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename F>
+    inline int
+    count_if(Seq& seq, F const& f)
+    {
+        return fold(seq,
+            0,
+            detail::count_if_helper<F const&>(f));
+    }
+#endif
 }}
 
 #endif

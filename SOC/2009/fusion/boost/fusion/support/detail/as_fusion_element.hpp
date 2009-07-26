@@ -32,7 +32,7 @@ namespace boost { namespace fusion { namespace detail
         typedef T& type;
     };
 
-#define CV_REF_SPECIALISATION(COMBINATION,_)\
+#define CV_REF_SPECIALIZATION(COMBINATION,_)\
     template <typename T>\
     struct as_fusion_element<T COMBINATION>\
       : as_fusion_element<T>\
@@ -44,9 +44,9 @@ namespace boost { namespace fusion { namespace detail
         typedef T& type;\
     };
 
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALISATION,_)
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALIZATION,_)
 
-#undef CV_REF_SPECIALISATION
+#undef CV_REF_SPECIALIZATION
 
     template <typename T, int N>
     struct as_fusion_element<T(&)[N]>

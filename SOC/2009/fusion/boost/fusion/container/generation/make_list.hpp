@@ -6,11 +6,12 @@
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_MAKE_LIST_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_LIST_HPP
 
-#include <boost/config.hpp>
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/container/generation/detail/pp/make_list.hpp>
-#else
-#   include <boost/fusion/container/generation/detail/variadic_templates/make_list.hpp>
-#endif
+#include <boost/fusion/container/list/list.hpp>
+
+#define BOOST_FUSION_SEQ_NAME list
+#define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_LIST_SIZE
+#include <boost/fusion/container/generation/detail/make_seq.hpp>
+#undef BOOST_FUSION_MAX_SEQ_SIZE
+#undef BOOST_FUSION_SEQ_NAME
 
 #endif

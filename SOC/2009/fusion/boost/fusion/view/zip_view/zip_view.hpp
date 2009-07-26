@@ -157,13 +157,14 @@ namespace boost { namespace fusion {
 #undef ZIP_VIEW_CTOR
 
         template<typename OtherSeqs>
-        explicit zip_view(BOOST_FUSION_R_ELSE_LREF(OtherSeqs) other_seqs)
-          : seqs(sequence_assign(BOOST_FUSION_FORWARD(OtherSeqs,other_seqs)))
+        explicit zip_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeqs) other_seqs)
+          : seqs(fusion::sequence_assign(
+              BOOST_FUSION_FORWARD(OtherSeqs,other_seqs)))
         {}
 
         template<typename OtherZipView>
         zip_view&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherZipView) other_zip_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherZipView) other_zip_view)
         {
             seqs=BOOST_FUSION_FORWARD(OtherZipView,other_zip_view).seqs;
             return *this;

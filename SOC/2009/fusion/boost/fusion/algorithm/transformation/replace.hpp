@@ -21,19 +21,19 @@ namespace boost { namespace fusion
         {
             template <typename OtherOldValue>
             replace_helper(
-                    BOOST_FUSION_R_ELSE_LREF(OtherOldValue) old_value
+                    BOOST_FUSION_R_ELSE_CLREF(OtherOldValue) old_value
                   , int)
               : old_value(BOOST_FUSION_FORWARD(OtherOldValue,old_value))
             {}
 
             template<typename Replacer>
-            replace_helper(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+            replace_helper(BOOST_FUSION_R_ELSE_CLREF(Replacer) replacer)
               : old_value(BOOST_FUSION_FORWARD(Replacer,replacer).old_value)
             {}
 
             template<typename Replacer>
             replace_helper&
-            operator=(BOOST_FUSION_R_ELSE_LREF(Replacer) replacer)
+            operator=(BOOST_FUSION_R_ELSE_CLREF(Replacer) replacer)
             {
                 old_value=BOOST_FUSION_FORWARD(Replacer,replacer).old_value;
                 return *this;
@@ -41,7 +41,7 @@ namespace boost { namespace fusion
 
             template <typename U>
             bool
-            operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
+            operator()(BOOST_FUSION_R_ELSE_CLREF(U) x) const
             {
                 return x==old_value;
             }
@@ -70,17 +70,17 @@ namespace boost { namespace fusion
     template <typename Seq, typename OldValue, typename NewValue>
     inline typename
         result_of::replace<
-            BOOST_FUSION_R_ELSE_LREF(Seq)
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_R_ELSE_CLREF(OldValue)
           , BOOST_FUSION_R_ELSE_CLREF(NewValue)
         >::type
-    replace(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+    replace(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
             BOOST_FUSION_R_ELSE_CLREF(OldValue) old_value,
             BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
     {
         typedef typename
             result_of::replace<
-                BOOST_FUSION_R_ELSE_LREF(Seq)
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(OldValue)
               , BOOST_FUSION_R_ELSE_CLREF(NewValue)
             >::replacer
@@ -91,20 +91,6 @@ namespace boost { namespace fusion
                   , replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0)
                   , BOOST_FUSION_FORWARD(NewValue,new_value));
     }
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename OldValue, typename NewValue>
-    inline typename
-        result_of::replace<Seq&, OldValue const&, NewValue const&>::type
-    replace(Seq& seq,OldValue const& old_value,NewValue const& new_value)
-    {
-        typedef typename
-            result_of::replace<Seq&, OldValue const&, NewValue const&>::replacer
-        replacer;
-
-        return replace_if(seq, replacer(old_value,0), new_value);
-    }
-#endif
 }}
 
 #endif

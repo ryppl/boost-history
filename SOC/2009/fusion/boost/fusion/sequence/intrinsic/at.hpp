@@ -48,19 +48,37 @@ namespace boost { namespace fusion
     }
 
     template <typename N, typename Seq>
-    inline typename result_of::at<BOOST_FUSION_R_ELSE_LREF(Seq), N>::type
-    at(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+    inline typename result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::type
+    at(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return result_of::at<BOOST_FUSION_R_ELSE_LREF(Seq), N>::call(seq);
+        return result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::call(seq);
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename N, typename Seq>
+    inline typename result_of::at<Seq&, N>::type
+    at(Seq& seq)
+    {
+        return result_of::at<Seq&, N>::call(seq);
+    }
+#endif
 
     template <int N, typename Seq>
     inline typename
-        result_of::at_c<BOOST_FUSION_R_ELSE_LREF(Seq), N>::type
-    at_c(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
+        result_of::at_c<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::type
+    at_c(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
         return fusion::at<mpl::int_<N> >(seq);
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <int N, typename Seq>
+    inline typename result_of::at_c<Seq&, N>::type
+    at_c(Seq& seq)
+    {
+        return fusion::at<mpl::int_<N> >(seq);
+    }
+#endif
 }}
 
 #endif

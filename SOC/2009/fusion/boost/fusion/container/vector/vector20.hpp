@@ -7,6 +7,7 @@
 #define BOOST_FUSION_CONTAINER_VECTOR_VECTOR20_HPP
 
 #include <boost/config.hpp>
+#include <boost/mpl/vector/vector20.hpp>
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
 #   define BOOST_FUSION_FROM 11
@@ -23,4 +24,5 @@
 #else
 #   include <boost/fusion/container/vector/vector.hpp>
 #endif
+
 #endif

@@ -58,8 +58,10 @@ namespace boost { namespace fusion
         //       result_of::size<Sequence1>,==,result_of::size<Sequence2>,
         //       "both sequences must have the same length");
 
-        typedef typename detail::view_storage<Seq1>::type seq1_type;
-        typedef typename detail::view_storage<Seq2>::type seq2_type;
+        typedef detail::view_storage<Seq1> storage1_type;
+        typedef typename storage1_type::type seq1_type;
+        typedef detail::view_storage<Seq2> storage2_type;
+        typedef typename storage2_type::type seq2_type;
         typedef F transform_type;
 
         typedef transform_view2_tag fusion_tag;
@@ -77,24 +79,34 @@ namespace boost { namespace fusion
         typedef typename result_of::size<seq1_type>::type size;
 
         template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_LREF(OtherTransformView) other_view)
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) other_view)
           : seq1(BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq1)
           , seq2(BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq2)
           , f(BOOST_FUSION_FORWARD(OtherTransformView,other_view).f)
         {}
 
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        transform_view(typename storage1_type::call_param seq1,
+                typename storage2_type::call_param seq2,
+                F const& f)
+          : seq1(seq1)
+          , seq2(seq2)
+          , f(f)
+        {}
+#else
         template<typename OtherSeq1, typename OtherSeq2,typename OtherF>
-        transform_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq1) seq1,
-                BOOST_FUSION_R_ELSE_LREF(OtherSeq2) seq2,
-                BOOST_FUSION_R_ELSE_LREF(OtherF) f)
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq1) seq1,
+                BOOST_FUSION_R_ELSE_CLREF(OtherSeq2) seq2,
+                BOOST_FUSION_R_ELSE_CLREF(OtherF) f)
           : seq1(BOOST_FUSION_FORWARD(OtherSeq1,seq1))
           , seq2(BOOST_FUSION_FORWARD(OtherSeq2,seq2))
           , f(BOOST_FUSION_FORWARD(OtherF,f))
         {}
+#endif
 
         template<typename OtherTransformView>
         OtherTransformView&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherTransformView) other_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) other_view)
         {
             seq1=BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq1;
             seq2=BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq2;
@@ -102,8 +114,8 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        detail::view_storage<Seq1> seq1;
-        detail::view_storage<Seq2> seq2;
+        storage1_type seq1;
+        storage2_type seq2;
         transform_type f;
     };
 
@@ -117,44 +129,45 @@ namespace boost { namespace fusion
       : sequence_base<transform_view<Seq, F> >
 #endif
     {
-        typedef typename
-            mpl::if_<
-                traits::is_view<Seq>
-              , typename detail::remove_reference<Seq>::type
-              , typename detail::add_lref<Seq>::type
-            >::type
-        seq_type;
-        typedef typename traits::category_of<seq_type>::type category;
-        typedef typename result_of::size<seq_type>::type size;
+        typedef detail::view_storage<Seq> storage_type;
+        typedef typename storage_type::type seq_type;
         typedef F transform_type;
 
+        typedef typename traits::category_of<seq_type>::type category;
+        typedef typename result_of::size<seq_type>::type size;
         typedef transform_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::true_ is_view;
 
         template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_LREF(OtherTransformView) view)
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
           : seq(BOOST_FUSION_FORWARD(OtherTransformView,view).seq)
           , f(BOOST_FUSION_FORWARD(OtherTransformView,view).f)
         {}
 
-        template<typename OtherSeq, typename OtherF>
-        transform_view(BOOST_FUSION_R_ELSE_LREF(OtherSeq) seq,
-                BOOST_FUSION_R_ELSE_LREF(OtherF) f)
-          : seq(BOOST_FUSION_FORWARD(OtherSeq,seq))
-          , f(BOOST_FUSION_FORWARD(OtherF,f))
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        transform_view(typename storage_type::call_param seq,F const& f)
+          : seq(seq)
+          , f(f)
         {}
+#else
+        template<typename OtherSeq, typename OtherF>
+        transform_view(OtherSeq&& seq,OtherF&& f)
+          : seq(std::forward<OtherSeq>(seq))
+          , f(std::forward<OtherF>(f))
+        {}
+#endif
 
         template<typename OtherTransformView>
         OtherTransformView&
-        operator=(BOOST_FUSION_R_ELSE_LREF(OtherTransformView) view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
         {
             seq=BOOST_FUSION_FORWARD(OtherTransformView,view).seq;
             f=BOOST_FUSION_FORWARD(OtherTransformView,view).f;
             return *this;
         }
 
-        detail::view_storage<Seq> seq;
+        storage_type seq;
         transform_type f;
     };
 }}
