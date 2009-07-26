@@ -86,7 +86,12 @@ map_task<
         {
             if ((ch < 'A' || ch > 'Z') && ch != '\'')
             {
-                runtime.emit_intermediate(std::string(word,ptr-word), 1);
+                std::string w(word,ptr-word);
+                std::transform(w.begin(), w.end(), w.begin(),
+                               std::bind1st(
+                                   std::mem_fun(&std::ctype<char>::tolower),
+                                   &std::use_facet<std::ctype<char> >(std::locale::classic())));
+                runtime.emit_intermediate(w, 1);
                 in_word = false;
             }
         }
@@ -102,7 +107,12 @@ map_task<
     if (in_word)
     {
         BOOST_ASSERT(ptr-word > 0);
-        runtime.emit_intermediate(std::string(word,ptr-word), 1);
+        std::string w(word,ptr-word);
+        std::transform(w.begin(), w.end(), w.begin(),
+                       std::bind1st(
+                           std::mem_fun(&std::ctype<char>::tolower),
+                           &std::use_facet<std::ctype<char> >(std::locale::classic())));
+        runtime.emit_intermediate(w, 1);
     }
 }
 
@@ -227,6 +237,7 @@ int main(int argc, char **argv)
         std::cout << "\nRunning Sequential MapReduce...";
 
         spec.map_tasks = 1;
+        spec.reduce_tasks = 1;
 
         wordcount::job      job(datasource, spec);
         job.run<boost::mapreduce::schedule_policy::sequential<wordcount::job> >(result);
