@@ -50,6 +50,95 @@ for each word, and produce a final list of words with their totals.
 map (filename; string, file stream; ifstream) --&gt; list(word; string, count; unsigned int)
 reduce (word; string, list(count; unsigned int)) --&gt; list(count; unsigned int)</pre>
 
+<h2>MapTask</h2>
+<p>
+  The MapTask will be implemented by a function-object <code>wordcount::map_task</code>. There are four required
+  data types to be defined by the MapTask. These are defined by the base class via template parameters. The types
+  are the <code>key</code>/<code>value</code> types of the input and output of the map task.
+</p>
+<p>
+  The <code>map</code> function takes three parameters; the <code>runtime</code> which is passed by the MapReduce
+  library to be used as a callback to <em>emit</em> intermediate key/value pairs. The other two parameters are the
+  <code>key</code> and <code>value</code> for the map task to process. Normally these parameters would be expected
+  to be passed as a reference-to-const, but this is not a requirement. For example, if the <code>value</code> type
+  was to be defined as a file stream <code>std::ifstream</code>, then reference-to-const is not possible as the
+  function would not be able to read from the file as the read operation modifies the state of the object.
+</p>
+<p>
+  The function simply loops through the character array (defined by begin/end pointers in the <code>value</code>
+  parameter), defining a <em>word</em> to be a contiguous set of alphabetic characters or an apostrophe. The
+  <em>word</em> is then stored as an intermediate <code>key</code> with a <code>value</code> of <code>1</code>,
+  by calling the <code>emit_intermediate()</code> function of the <code>runtime</code> parameter object.
+</p>
+<pre>
+struct map_task : public boost::mapreduce::map_task&lt;
+                             std::string,                           // MapKey
+                             std::pair&lt;char const *, char const *&gt;, // MapValue
+                             std::string,                           // IntermediateKey
+                             unsigned&gt;                              // IntermediateValue
+{
+    template&lt;typename Runtime&gt;
+    static void map(Runtime &runtime, std::string const &/*key*/, value_type &value)
+    {
+        bool in_word = false;
+        char const *ptr = value.first;
+        char const *end = value.second;
+        char const *word = ptr;
+        for (; ptr != end; ++ptr)
+        {
+            char const ch = std::toupper(*ptr);
+            if (in_word)
+            {
+                if ((ch < 'A' || ch > 'Z') && ch != '\'')
+                {
+                    runtime.emit_intermediate(std::string(word,ptr-word), 1);
+                    in_word = false;
+                }
+            }
+            else
+            {
+                if (ch >= 'A'  &&  ch <= 'Z')
+                {
+                    word = ptr;
+                    in_word = true;
+                }
+            }
+        }
+        if (in_word)
+        {
+            BOOST_ASSERT(ptr-word > 0);
+            runtime.emit_intermediate(std::string(word,ptr-word), 1);
+        }
+    }
+};
+</pre>
+
+<h2>ReduceTask</h2>
+<p>
+  The ReduceTask will be implemented by a function-object <code>wordcount::reduce_task</code>. This
+  functor is derived from the library's <code>reduce_task</code> class which takes a single template
+  parameter to define the <code>value</code> type output of the reduce task.
+</p>
+<p>
+  The <code>reduce</code> function takes four parameters; the <code>runtime</code> object is the library's
+  callback as described above. The second parametrer is the <code>key</code> of the reduce task and the
+  third and fourth parameters are a pair of iterators dictating the range of <code>value</code> objects
+  for the reduce task. In this Word Count example, the <code>key</code> is a text string containing the
+  <em>word</em>, and the iterators contain a list of frequencies for the word. The ReduceTask simply sums
+  the frequencies by calling <code>std::accumulate</code> and stores the final result by calling the
+  <code>emit()</code> function of the <code>job::reduce_task_runner</code> object which was passed to the
+  constructor of the <code>reduce_task</code> object.
+</p>
+<pre>
+struct reduce_task : public boost::mapreduce::reduce_task&lt;unsigned&gt;
+{
+    template&lt;typename Runtime, typename It&gt;
+    static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
+    {
+        runtime.emit(key, std::accumulate(it, ite, 0));
+    }
+};
+</pre>
 
 <h2>Type Definitions</h2>
 <p>
@@ -66,115 +155,25 @@ mapreduce::job&lt;
 job;
 </pre>
 <p>The class <code>mapreduce::job</code> actually has 5 template parameters. The first two must be supplied, the last
-three have default values. The definition above is therefore equivalent to</p>
+three have default values. The definition above is actually equivalent to</p>
 <pre>
 typedef
-mapreduce::job&lt;
-    class wordcount::map_task,
-    class wordcount::reduce_task,
-    struct mapreduce::null_combiner,
-    class mapreduce::datasource::directory_iterator&lt;class wordcount::map_task&gt;,
-    class mapreduce::intermediates::local_disk&lt;
-        class wordcount::map_task,
-        struct mapreduce::detail::file_sorter,
-        struct mapreduce::detail::file_merger&gt;
-    &gt
+class boost::mapreduce::job&lt;
+    struct wordcount::map_task,
+    struct wordcount::reduce_task,
+    class wordcount::combiner,
+    class boost::mapreduce::datasource::directory_iterator&lt;
+        struct wordcount::map_task,
+        class boost::mapreduce::datasource::file_handler&lt;
+            class stlp_std::basic_string&lt;char,class stlp_std::char_traits&lt;char&gt;,
+            class stlp_std::allocator&lt;char&gt; &gt;,
+        struct stlp_std::pair&lt;char const *,char const *&gt; &gt; &gt;,
+    class boost::mapreduce::intermediates::local_disk&lt;
+        struct wordcount::map_task,
+        struct boost::mapreduce::detail::file_sorter,
+        struct boost::mapreduce::detail::file_merger,
+        struct boost::mapreduce::hash_partitioner&gt; &gt;
 job;
-</pre>
-
-<h2>MapTask</h2>
-<p>
-  The MapTask will be implemented by a function-object <code>wordcount::map_task</code>. There are four required
-  data types to be defined in the functor for the <code>key</code>/<code>value</code> types of the input and
-  output of the map task.
-</p>
-<pre>
-typedef std::string   key_type;
-typedef std::ifstream value_type;
-typedef std::string   intermediate_key_type;
-typedef unsigned      intermediate_value_type;
-</pre>
-<p>
-  Now the function-call operator, which takes two parameters; the <code>key</code> and <code>value</code> for the
-  map task to process. Normally these parameters would be expected to be passed as a reference-to-const, but in
-  the Word Count example, the <code>value</code> parameter is defined as an <code>std::ifstream</code> object. If
-  this was passed as reference-to-const, then the function would not be able to read from the file as the read
-  operation modifies the state of the object. As a result, the <code>value</code> parameter is passed as a plain
-  reference.
-</p>
-<p>
-  The function simply loops until the end-of-file is reached on the supplied <code>std::ifstream</code> object.
-  In each iteration a <em>word</em> is read into a <code>string</code> object, converted to lowercase text and
-  non-alphanumeric characters are stripped from the beginning and end. The <em>word</em> is then stored as an
-  intermediate <code>key</code> with a <code>value</code> of <code>1</code>, by calling the
-  <code>emit_intermediate()</code> function of the <code>job::map_task_runner</code> object which was passed to
-  the constructor of the <code>map_task</code> object.
-</p>
-<pre>
-// not a reference to const to enable streams to be passed
-void operator()(key_type const &/*key*/, value_type &value) 
-{
-    while (!value.eof())
-    {
-        std::string word;
-        value &gt;&gt; word;
-        std::transform(word.begin(), word.end(), word.begin(),
-                       std::bind1st(
-                           std::mem_fun(&std::ctype&lt;char&gt;::tolower),
-                           &std::use_facet&lt;std::ctype&lt;char&gt; &gt;(std::locale::classic())));
-
-        size_t length = word.length();
-        size_t const original_length = length;
-        std::string::const_iterator it;
-        for (it=word.begin();
-             it!=word.end()  &&  !std::isalnum(*it, std::locale::classic());
-             ++it)
-        {
-            --length;
-        }
-
-        for (std::string::const_reverse_iterator rit=word.rbegin();
-             length&gt;0  &&  !std::isalnum(*rit, std::locale::classic());
-             ++rit)
-        {
-            --length;
-        }
-
-        if (length &gt; 0)
-        {
-            if (length == original_length)
-                runner_.emit_intermediate(word, 1);
-            else
-                runner_.emit_intermediate(std::string(&*it,length), 1);
-        }
-    }
-}
-</pre>
-
-<h2>ReduceTask</h2>
-<p>
-  The ReduceTask will be implemented by a function-object <code>wordcount::reduce_task</code>. There
-  is one required data type to be defined in the functor for the <code>value</code> type output of
-  the reduce task.
-</p>
-<pre>
-typedef unsigned value_type;
-</pre>
-<p>
-  The function-call operator takes three parameters; the <code>key</code> of the reduce task and a pair
-  of iterators dictating the range of <code>value</code> objects for the reduce task. In this Word Count
-  example, the <code>key</code> is a text string containing the <em>word</em>, and the iterators contain
-  a list of frequencies for the word. The ReduceTask simply sums the frequencies by calling
-  <code>std::accumulate</code> and stores the final result by calling the <code>emit()</code> function of
-  the <code>job::reduce_task_runner</code> object which was passed to the constructor of the
-  <code>reduce_task</code> object.
-</p>
-<pre>
-template&lt;typename It&gt;
-void operator()(typename map_task::intermediate_key_type const &key, It it, It const ite)
-{
-    runner_.emit(key, std::accumulate(it, ite, reduce_task::value_type()));
-}
 </pre>
 
 <h2>Program</h2>
@@ -187,7 +186,7 @@ void operator()(typename map_task::intermediate_key_type const &key, It it, It c
   A <code>datasource</code> object is created to iterate through a directory of files and
   pass each file into a map task. A <code>mapreduce::specification</code> object is then
   created. This is used to specify system parameters such a the number of map tasks to run.
-  <em>Note that this is a hint to the MapReduce runtime, and may differ from th actual
+  <em>Note that this is a hint to the MapReduce runtime, and may differ from the actual
   number of maps that are used.</em> The final supporting object that is created is an
   instance of <code>mapreduce::results</code>. This structure will be populated by the
   runtime to provide metrics and timings of the MapReduce job execution.
@@ -211,19 +210,51 @@ void operator()(typename map_task::intermediate_key_type const &key, It it, It c
   See <a href='./schedule_policies.html'>Schedule Policies</a> for more information.
 </p>
 
+<p>
+    To reduce the complexity of dealing with the compexity of MapReduce, the library provides a
+    very simple interface to running a system with default values. In this example, we want to
+    run the Job without any specific configuration, so we can use the function
+</p>
+<pre>
+template&lt;typename Job&gt;
+void run(boost::mapreduce::specification &spec, boost::mapreduce::results &result);
+</pre>
+<p>
+    This function will default construct the objects required using the type definitions provide -
+    or defaulted - in the <code>job</code> definition. The user-defined program is therefore very
+    simple, with all the generic complexity being handled by the library:
+</p>
+
 <pre>
 int main(int argc, char **argv)
 {
-    wordcount::job::datasource_type datasource;
-    datasource.set_directory(argv[1]);
+    std::cout &lt;&lt; "MapReduce Wordcount Application";
+    if (argc &lt; 2)
+    {
+        std::cerr &lt;&lt; "Usage: wordcount directory [num_map_tasks]\n";
+        return 1;
+    }
 
-    mapreduce::specification spec;
-    spec.map_tasks = atoi(argv[2]);
+    boost::mapreduce::specification spec;
+    spec.input_directory = argv[1];
 
-    mapreduce::results result;
-    wordcount::job     mr2(datasource);
+    std::cout &lt;&lt; "\n" &lt;&lt; std::max(1,(int)boost::thread::hardware_concurrency()) &lt;&lt; " CPU cores";
+    std::cout &lt;&lt; "\n" &lt;&lt; typeid(wordcount::job).name() &lt;&lt; "\n";
 
-    mr2.run&lt;mapreduce::schedule_policy::cpu_parallel&lt;wordcount::job&gt; &gt;(spec, result);
+    boost::mapreduce::results result;
+    try
+    {
+        if (argc &gt; 2)
+            spec.map_tasks = atoi(argv[2]);
+
+        std::cout &lt;&lt; "\nRunning CPU Parallel MapReduce...";
+        boost::mapreduce::run&lt;wordcount::job&gt;(spec, result);
+        std::cout &lt;&lt; "\nCPU Parallel MapReduce Finished.";
+    }
+    catch (std::exception &e)
+    {
+        std::cout &lt;&lt; std::endl &lt;&lt; "Error: " &lt;&lt; e.what();
+    }
 
 ...
 </pre>
@@ -255,42 +286,47 @@ std::cout << "\n    " << "Average time to process Reduce keys     : " << std::ac
 <h2>Output</h2>
 <p>
   The wordcount program was run on a sample dataset consists of six plain text files consisting
-  a total of 90.8 MB (95,284,354 bytes). The smallest file is 163 KB (167,529 bytes) and the largest
+  a total of 96 MB (100,628,434 bytes). The smallest file is 163 KB (167,529 bytes) and the largest
   is 88.1 MB (92,392,601 bytes).
 </p>
 <pre>
 MapReduce Wordcount Application
 2 CPU cores
-class mapreduce::job&lt;class wordcount::map_task,class wordcount::reduce_task,stru
-ct mapreduce::null_combiner,class mapreduce::datasource::directory_iterator&lt;clas
-s wordcount::map_task&gt;,class mapreduce::intermediates::local_disk&lt;class wordcoun
-t::map_task,struct mapreduce::detail::file_sorter,struct mapreduce::detail::file
-_merger&gt; &gt;
+class boost::mapreduce::job&lt;struct wordcount::map_task,struct wordcount::reduce_
+task,struct boost::mapreduce::null_combiner,class boost::mapreduce::datasource::
+directory_iterator&lt;struct wordcount::map_task,class boost::mapreduce::datasource
+::file_handler&lt;class stlp_std::basic_string&lt;char,class stlp_std::char_traits&lt;cha
+r&gt;,class stlp_std::allocator&lt;char&gt; &gt;,struct stlp_std::pair&lt;char const *,char con
+st *&gt; &gt; &gt;,class boost::mapreduce::intermediates::local_disk&lt;struct wordcount::ma
+p_task,struct boost::mapreduce::detail::file_sorter,struct boost::mapreduce::det
+ail::file_merger,struct boost::mapreduce::hash_partitioner&gt; &gt;
 
 Running CPU Parallel MapReduce...
 CPU Parallel MapReduce Finished.
 
 MapReduce statistics:
-  MapReduce job runtime                     : 141 seconds, of which...
-    Map phase runtime                       : 44 seconds
-    Reduce phase runtime                    : 97 seconds
+  MapReduce job runtime                     : 220 seconds, of which...
+    Map phase runtime                       : 82 seconds
+    Reduce phase runtime                    : 138 seconds
 
   Map:
-    Total Map keys                          : 6
-    Map keys processed                      : 6
+    Total Map keys                          : 100
+    Map keys processed                      : 100
     Map key processing errors               : 0
     Number of Map Tasks run (in parallel)   : 2
     Fastest Map key processed in            : 0 seconds
-    Slowest Map key processed in            : 43 seconds
-    Average time to process Map keys        : 7 seconds
+    Slowest Map key processed in            : 3 seconds
+    Average time to process Map keys        : 1 seconds
 
   Reduce:
+    Total Reduce keys                       : 153784
+    Reduce keys processed                   : 0
+    Reduce key processing errors            : 0
     Number of Reduce Tasks run (in parallel): 2
     Number of Result Files                  : 10
-    Fastest Reduce key processed in         : 12 seconds
-    Slowest Reduce key processed in         : 36 seconds
-    Average time to process Reduce keys     : 30 seconds
-</pre>
+    Fastest Reduce key processed in         : 16 seconds
+    Slowest Reduce key processed in         : 44 seconds
+    Average time to process Reduce keys     : 2 seconds</pre>
 
 <h2>Adding a Combiner</h2>
 <p>
@@ -338,39 +374,49 @@ of a combiner, but the Reduce phase is reduce almost no time at all.
 <pre>
 MapReduce Wordcount Application
 2 CPU cores
-class mapreduce::job&lt;class wordcount::map_task,class wordcount::reduce_task,clas
-s wordcount::combiner,class mapreduce::datasource::directory_iterator&lt;class word
-count::map_task&gt;,class mapreduce::intermediates::local_disk&lt;class wordcount::map
-_task,struct mapreduce::detail::file_sorter,struct mapreduce::detail::file_merge
-r&gt; &gt;
+class boost::mapreduce::job&lt;struct wordcount::map_task,struct wordcount::reduce_
+task,class wordcount::combiner,class boost::mapreduce::datasource::directory_ite
+rator&lt;struct wordcount::map_task,class boost::mapreduce::datasource::file_handle
+r&lt;class stlp_std::basic_string&lt;char,class stlp_std::char_traits&lt;char&gt;,class stlp
+_std::allocator&lt;char&gt; &gt;,struct stlp_std::pair&lt;char const *,char const *&gt; &gt; &gt;,cla
+ss boost::mapreduce::intermediates::local_disk&lt;struct wordcount::map_task,struct
+ boost::mapreduce::detail::file_sorter,struct boost::mapreduce::detail::file_mer
+ger,struct boost::mapreduce::hash_partitioner&gt; &gt;
 
 Running CPU Parallel MapReduce...
 CPU Parallel MapReduce Finished.
 
 MapReduce statistics:
-  MapReduce job runtime                     : 116 seconds, of which...
-    Map phase runtime                       : 114 seconds
-    Reduce phase runtime                    : 2 seconds
+  MapReduce job runtime                     : 136 seconds, of which...
+    Map phase runtime                       : 125 seconds
+    Reduce phase runtime                    : 11 seconds
 
   Map:
-    Total Map keys                          : 6
-    Map keys processed                      : 6
+    Total Map keys                          : 100
+    Map keys processed                      : 100
     Map key processing errors               : 0
     Number of Map Tasks run (in parallel)   : 2
-    Fastest Map key processed in            : 1 seconds
-    Slowest Map key processed in            : 112 seconds
-    Average time to process Map keys        : 19 seconds
+    Fastest Map key processed in            : 0 seconds
+    Slowest Map key processed in            : 4 seconds
+    Average time to process Map keys        : 2 seconds
 
   Reduce:
+    Total Reduce keys                       : 153784
+    Reduce keys processed                   : 0
+    Reduce key processing errors            : 0
     Number of Reduce Tasks run (in parallel): 2
     Number of Result Files                  : 10
-    Fastest Reduce key processed in         : 0 seconds
-    Slowest Reduce key processed in         : 1 seconds
-    Average time to process Reduce keys     : 0 seconds
-</pre>
+    Fastest Reduce key processed in         : 2 seconds
+    Slowest Reduce key processed in         : 3 seconds
+    Average time to process Reduce keys     : 0 seconds</pre>
 
 <h2>Source Code</h2>
-<p>The full source code for the Word Count example can be found <code>libs/mapreduce/test/wordcount/wordcount.cpp</code>.</p>
+<p>The full source code for the Word Count example can be found in
+<code>
+    <a href='https://svn.boost.org/svn/boost/sandbox/libs/mapreduce/examples/wordcount/wordcount.cpp'>
+    libs/mapreduce/examples/wordcount/wordcount.cpp
+    </a>
+</code></p>
 
             </div> 
           </div> 

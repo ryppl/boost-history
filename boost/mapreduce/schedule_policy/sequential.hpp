@@ -23,10 +23,8 @@ template<typename Job>
 class sequential
 {
   public:
-    void operator()(Job &job, specification const &spec, results &result)
+    void operator()(Job &job, results &result)
     {
-        job.number_of_partitions(spec.reduce_tasks);
-
         // Map Tasks
         time_t start_time = time(NULL);
         void *key = 0;

@@ -19,20 +19,29 @@
 #   endif
 #endif
 
+#include <string>
 #include <vector>
+#include <boost/config.hpp>
+#include <boost/noncopyable.hpp>
+#include <boost/cstdint.hpp>
 
 namespace boost {
 
 namespace mapreduce {
 
-struct specification
+struct specification : boost::noncopyable
 {
-    unsigned map_tasks;
-    unsigned reduce_tasks;
+    unsigned         map_tasks;             // ideal number of map tasks to use
+    unsigned         reduce_tasks;          // ideal number of reduce tasks to use
+    boost::uintmax_t max_file_segment_size; // ideal maximum number of bytes in each input file segment
+    std::string      output_filespec;       // filespec of the output files - can contain a directory path if required
+    std::string      input_directory;       // directory path to scan for input files
 
     specification()
-      : map_tasks(0),                   // ideal number of map tasks to use
-        reduce_tasks(10)                // ideal number of reduce tasks to use
+      : map_tasks(0),                   
+        reduce_tasks(10),
+        max_file_segment_size(1048576L),    // default 1Gb               
+        output_filespec("mapreduce_")   
     {
     }
 };
@@ -43,21 +52,39 @@ struct results
     {
         unsigned actual_map_tasks;      // number of map tasks actually used
         unsigned actual_reduce_tasks;   // number of reduce tasks actually used
-        unsigned map_tasks;
-        unsigned map_tasks_error;
-        unsigned map_tasks_completed;
+
+        // counters for map key processing
+        unsigned map_keys_executed;
+        unsigned map_key_errors;
+        unsigned map_keys_completed;
+
+        // counters for reduce key processing
+        unsigned reduce_keys_executed;
+        unsigned reduce_key_errors;
+        unsigned reduce_keys_completed;
+
         unsigned num_result_files;      // number of result files created
 
         tag_counters()
           : actual_map_tasks(0),
             actual_reduce_tasks(0),
-            map_tasks(0),
-            map_tasks_error(0),
-            map_tasks_completed(0),
+            map_keys_executed(0),
+            map_key_errors(0),
+            map_keys_completed(0),
+            reduce_keys_executed(0),
+            reduce_key_errors(0),
+            reduce_keys_completed(0),
             num_result_files(0)
         {
         }
     } counters;
+
+    results()
+      : job_runtime(0),
+        map_runtime(0),
+        reduce_runtime(0)
+    {
+    }
 
     time_t                job_runtime;
     time_t                map_runtime;
@@ -65,6 +92,14 @@ struct results
     std::vector<time_t>   map_times;
     std::vector<time_t>   reduce_times;
 };
+
+template<typename Job>
+void run(boost::mapreduce::specification &spec, boost::mapreduce::results &result)
+{
+    Job::datasource_type datasource(spec);
+    Job job(datasource, spec);
+    job.run<boost::mapreduce::schedule_policy::cpu_parallel<Job> >(result);
+}
 
 }   // namespace mapreduce
 

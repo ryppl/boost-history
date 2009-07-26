@@ -154,6 +154,33 @@ inline bool const delete_file(std::string const &pathname)
     return boost::filesystem::remove(pathname);
 }
 
+template<typename Filenames>
+class temporary_file_manager : boost::noncopyable
+{
+  public:
+    temporary_file_manager(Filenames &filenames)
+      : filenames_(filenames)
+    {
+    }
+
+    ~temporary_file_manager()
+    {
+        try
+        {
+            // bind to the pass-though delete_file function because boost::filesystem::remove
+            // takes a boost::filesystem::path parameter and not a std::string parameter - the
+            // compiler will understandably not bind using an implicit conversion
+            std::for_each(filenames_.begin(), filenames_.end(), boost::bind(delete_file, _1));
+        }
+        catch (std::exception &)
+        {
+        }
+    }
+
+  private:
+    Filenames &filenames_;
+};
+
 }   // namespace detail
 
 
@@ -163,7 +190,10 @@ inline bool const merge_sort(char     const *in,
                              unsigned const  offset,
                              unsigned const  max_lines = 1000000)
 {
-    std::deque<std::string> temporary_files;
+    std::deque<std::string>         temporary_files;
+    detail::temporary_file_manager<
+        std::deque<std::string> >   tfm(temporary_files);
+    
     std::ifstream infile(in, std::ios_base::in | std::ios_base::binary);
     if (!infile.is_open())
     {
@@ -203,9 +233,7 @@ inline bool const merge_sort(char     const *in,
         }
     }
     infile.close();
-
     detail::do_file_merge(temporary_files.begin(), temporary_files.end(), out, offset);
-    std::for_each(temporary_files.begin(), temporary_files.end(), boost::bind(detail::delete_file, _1));
 
 	return true;
 }

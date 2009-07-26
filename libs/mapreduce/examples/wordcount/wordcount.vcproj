@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="8.00"
-	Name="mapreduce"
-	ProjectGUID="{F1A9A9FC-ACE9-4F93-8162-B888697FD81B}"
-	RootNamespace="mapreduce"
+	Name="wordcount"
+	ProjectGUID="{AB0444E8-E927-470A-BF0B-A60E67F91B06}"
+	RootNamespace="wordcount"
 	Keyword="Win32Proj"
 	>
 	<Platforms>
@@ -17,9 +17,9 @@
 	<Configurations>
 		<Configuration
 			Name="Debug|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\compiler\$(ProjectName)"
-			ConfigurationType="4"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)\compiler"
+			ConfigurationType="1"
 			CharacterSet="1"
 			>
 			<Tool
@@ -40,13 +40,14 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="../.."
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
 				RuntimeLibrary="3"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"
+				WarnAsError="true"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -60,10 +61,19 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="2"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeForWindows98="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -75,14 +85,20 @@
 				Name="VCFxCopTool"
 			/>
 			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
+			/>
+			<Tool
 				Name="VCPostBuildEventTool"
 			/>
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(SolutionDir)$(ConfigurationName)\compiler\$(ProjectName)"
-			ConfigurationType="4"
+			OutputDirectory="$(ConfigurationName)"
+			IntermediateDirectory="$(ConfigurationName)\compiler"
+			ConfigurationType="1"
 			CharacterSet="1"
 			WholeProgramOptimization="1"
 			>
@@ -103,11 +119,13 @@
 			/>
 			<Tool
 				Name="VCCLCompilerTool"
-				AdditionalIncludeDirectories="../.."
-				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
+				InlineFunctionExpansion="2"
+				AdditionalIncludeDirectories=""
+				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;BOOST_LIB_DIAGNOSTIC"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
-				WarningLevel="3"
+				WarningLevel="4"
+				WarnAsError="true"
 				Detect64BitPortabilityProblems="true"
 				DebugInformationFormat="3"
 			/>
@@ -121,10 +139,21 @@
 				Name="VCPreLinkEventTool"
 			/>
 			<Tool
-				Name="VCLibrarianTool"
+				Name="VCLinkerTool"
+				LinkIncremental="1"
+				AdditionalLibraryDirectories=""
+				GenerateDebugInformation="true"
+				SubSystem="1"
+				OptimizeReferences="2"
+				EnableCOMDATFolding="2"
+				OptimizeForWindows98="1"
+				TargetMachine="1"
 			/>
 			<Tool
 				Name="VCALinkTool"
+			/>
+			<Tool
+				Name="VCManifestTool"
 			/>
 			<Tool
 				Name="VCXDCMakeTool"
@@ -134,6 +163,12 @@
 			/>
 			<Tool
 				Name="VCFxCopTool"
+			/>
+			<Tool
+				Name="VCAppVerifierTool"
+			/>
+			<Tool
+				Name="VCWebDeploymentTool"
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
@@ -148,74 +183,16 @@
 			Filter="cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx"
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
+			<File
+				RelativePath=".\wordcount.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
+			Filter="h;hpp;hxx;hm;inl;inc;xsd"
+			UniqueIdentifier="{93995380-89BD-4b04-88EB-625FBE52EBFB}"
 			>
-			<File
-				RelativePath="..\..\boost\mapreduce.hpp"
-				>
-			</File>
-			<Filter
-				Name="mapreduce"
-				>
-				<File
-					RelativePath="..\..\boost\mapreduce\datasource.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\hash_partitioner.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\intermediates.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\job.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\mergesort.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\null_combiner.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\platform.hpp"
-					>
-				</File>
-				<File
-					RelativePath="..\..\boost\mapreduce\schedule_policy.hpp"
-					>
-				</File>
-				<Filter
-					Name="schedule_policy"
-					>
-					<File
-						RelativePath="..\..\boost\mapreduce\schedule_policy\cpu_parallel.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\boost\mapreduce\schedule_policy\sequential.hpp"
-						>
-					</File>
-				</Filter>
-				<Filter
-					Name="intermediates"
-					>
-					<File
-						RelativePath="..\..\boost\mapreduce\intermediates\in_memory.hpp"
-						>
-					</File>
-					<File
-						RelativePath="..\..\boost\mapreduce\intermediates\local_disk.hpp"
-						>
-					</File>
-				</Filter>
-			</Filter>
 		</Filter>
 		<Filter
 			Name="Resource Files"
@@ -223,10 +200,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath=".\test\mrtest.vcproj"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

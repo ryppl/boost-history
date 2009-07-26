@@ -13,14 +13,7 @@
 #ifndef BOOST_MAPREDUCE_CPU_PARALLEL_HPP
 #define BOOST_MAPREDUCE_CPU_PARALLEL_HPP
 
-#ifdef BOOST_MSVC
-#pragma warning(push)
-#pragma warning(disable: 4244)  //  warning C4244: 'argument' : conversion from 'X' to 'Y', possible loss of data 
-#endif
 #include <boost/thread.hpp>
-#ifdef BOOST_MSVC
-#pragma warning(pop)
-#endif
 
 namespace boost {
 
@@ -85,10 +78,9 @@ template<typename Job>
 class cpu_parallel
 {
   public:
-    void operator()(Job &job, specification const &spec, results &result)
+    void operator()(Job &job, results &result)
     {
-        unsigned const num_cpus = std::max(1,boost::thread::hardware_concurrency());
-        job.number_of_partitions(spec.reduce_tasks);
+        unsigned const num_cpus = std::max(1U,boost::thread::hardware_concurrency());
 
         typedef std::vector<boost::shared_ptr<results> > all_results_t;
         all_results_t all_results;
@@ -98,7 +90,7 @@ class cpu_parallel
         time_t start_time = time(NULL);
         boost::thread_group map_threads;
 
-        unsigned const map_tasks = (spec.map_tasks==0)? num_cpus : std::min(num_cpus, spec.map_tasks);
+        unsigned const map_tasks = std::max(num_cpus,std::min(num_cpus, job.number_of_map_tasks()));
 
         for (unsigned loop=0; loop<map_tasks; ++loop)
         {
@@ -146,9 +138,12 @@ class cpu_parallel
              it!=all_results.end();
              ++it)
         {
-            result.counters.map_tasks           += (*it)->counters.map_tasks;
-            result.counters.map_tasks_error     += (*it)->counters.map_tasks_error;
-            result.counters.map_tasks_completed += (*it)->counters.map_tasks_completed;
+            result.counters.map_keys_executed     += (*it)->counters.map_keys_executed;
+            result.counters.map_key_errors        += (*it)->counters.map_key_errors;
+            result.counters.map_keys_completed    += (*it)->counters.map_keys_completed;
+            result.counters.reduce_keys_executed  += (*it)->counters.reduce_keys_executed;
+            result.counters.reduce_key_errors     += (*it)->counters.reduce_key_errors;
+            result.counters.reduce_keys_completed += (*it)->counters.reduce_keys_completed;
 
             std::copy(
                 (*it)->map_times.begin(),

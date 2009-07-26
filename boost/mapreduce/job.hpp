@@ -19,6 +19,27 @@ namespace mapreduce {
 
 template<typename T> size_t length(T const &str);
 
+template<
+    typename MapKey,
+    typename MapValue,
+    typename IntermediateKey,
+    typename IntermediateValue>
+class map_task
+{
+  public:
+    typedef MapKey              key_type;
+    typedef MapValue            value_type;             
+    typedef IntermediateKey     intermediate_key_type;
+    typedef IntermediateValue   intermediate_value_type;
+};
+
+template<typename ReduceValue>
+class reduce_task
+{
+  public:
+    typedef ReduceValue value_type;
+};
+
 template<typename MapTask,
          typename ReduceTask,
          typename Combiner=null_combiner,
@@ -47,7 +68,7 @@ class job : private boost::noncopyable
         // 'value' parameter is not a reference to const to enable streams to be passed
         map_task_runner &operator()(typename map_task_type::key_type const &key, typename map_task_type::value_type &value)
         {
-            map_task_type(*this)(key, value);
+            map_task_type::map(*this, key, value);
 
             // consolidating map intermediate results can save network time by
             // aggregating the mapped valued at mapper
@@ -87,7 +108,10 @@ class job : private boost::noncopyable
     class reduce_task_runner : boost::noncopyable
     {
       public:
-        reduce_task_runner(std::string const &output_filespec, size_t const partition, size_t const num_partitions)
+        reduce_task_runner(
+            std::string   const &output_filespec,
+            size_t        const  partition,
+            size_t        const  num_partitions)
         {
             std::ostringstream filename;
             filename << output_filespec << partition+1 << "_of_" << num_partitions;
@@ -104,8 +128,7 @@ class job : private boost::noncopyable
         template<typename It>
         void operator()(typename map_task_type::intermediate_key_type const &key, It it, It ite)
         {
-            reduce_task_type reduce_task(*this);
-            reduce_task(key, it, ite);
+            reduce_task_type::reduce(*this, key, it, ite);
         }
 
         std::string const &filename(void) const
@@ -118,10 +141,9 @@ class job : private boost::noncopyable
         std::ofstream output_file_;
     };
 
-    job(datasource_type &datasource)
-      : num_partitions_(0),
-        datasource_(datasource),
-        output_filespec_(".\\mapreduce_")
+    job(datasource_type &datasource, specification const &spec)
+      : datasource_(datasource),
+        specification_(spec)
      {
      }
 
@@ -139,11 +161,6 @@ class job : private boost::noncopyable
         partition_files_.clear();
     }
 
-    void set_output_filespec(std::string const &output_filespec)
-    {
-        output_filespec_ = output_filespec;
-    }
-
     bool const get_next_map_key(void *&key)
     {
         std::auto_ptr<typename map_task_type::key_type> next_key(new typename map_task_type::key_type);
@@ -159,62 +176,69 @@ class job : private boost::noncopyable
     }
 
     template<typename SchedulePolicy>
-    void run(specification const &spec, results &result)
+    void run(results &result)
     {
         SchedulePolicy schedule;
-        this->run(schedule, spec, result);
+        this->run(schedule, result);
     }
 
     template<typename SchedulePolicy>
-    void run(SchedulePolicy &schedule, specification const &spec, results &result)
+    void run(SchedulePolicy &schedule, results &result)
     {
         time_t const start_time = time(NULL);
-        schedule(*this, spec, result);
+        schedule(*this, result);
         result.job_runtime = time(NULL) - start_time;
     }
 
     bool const run_map_task(void *key, results &result)
     {
+        bool success = false;
         time_t const start_time = time(NULL);
 
-        ++result.counters.map_tasks;
-
-        std::auto_ptr<typename map_task_type::key_type> map_key_ptr(reinterpret_cast<typename map_task_type::key_type *>(key));
-        typename map_task_type::key_type &map_key = *map_key_ptr;
-
-        // get the data
-        typename map_task_type::value_type value;
-        if (!datasource_.get_data(map_key, value))
+        try
         {
-            ++result.counters.map_tasks_error;
-            return false;
-        }
+            std::auto_ptr<typename map_task_type::key_type> map_key_ptr(reinterpret_cast<typename map_task_type::key_type *>(key));
+            typename map_task_type::key_type &map_key = *map_key_ptr;
 
-        // Map Task
-        if (map_key == typename map_task_type::key_type()  ||  value == typename map_task_type::value_type())
+            // get the data
+            typename map_task_type::value_type value;
+            if (!datasource_.get_data(map_key, value))
+                return false;
+
+            ++result.counters.map_keys_executed;
+
+            // Map Task
+            if (map_key == typename map_task_type::key_type()  ||  value == typename map_task_type::value_type())
+            {
+                BOOST_ASSERT(map_key != typename map_task_type::key_type());
+                BOOST_ASSERT(value != typename map_task_type::value_type());
+                ++result.counters.map_key_errors;
+                return false;
+            }
+
+            map_task_runner runner(*this);
+            runner(map_key, value);
+
+            ++result.counters.map_keys_completed;
+        }
+        catch (std::exception &)
         {
-            BOOST_ASSERT(map_key != typename map_task_type::key_type());
-            BOOST_ASSERT(value != typename map_task_type::value_type());
-            ++result.counters.map_tasks_error;
-            return false;
+            ++result.counters.map_key_errors;
+            success = false;
         }
-        map_task_runner runner(*this);
-        runner(map_key, value);
-
         result.map_times.push_back(time(NULL)-start_time);
 
-        ++result.counters.map_tasks_completed;
-        return true;
+        return success;
     }
 
     unsigned const number_of_partitions(void) const
     {
-        return num_partitions_;
+        return specification_.reduce_tasks;
     }
 
-    void number_of_partitions(unsigned const partitions)
+    unsigned const number_of_map_tasks(void) const
     {
-        num_partitions_ = partitions;
+        return specification_.map_tasks;
     }
 
     // the caller must synchronise calls to this function from multiple threads
@@ -233,38 +257,53 @@ class job : private boost::noncopyable
     bool const run_reduce_task(unsigned const partition, filenames_t const &filenames, results &result)
     {
         time_t const start_time = time(NULL);
-        std::string const filename = intermediate_store_type::merge_and_sort(filenames);
 
-        reduce_task_runner runner(output_filespec_, partition, num_partitions_);
-
-        typename map_task_type::intermediate_key_type   key;
-        typename map_task_type::intermediate_key_type   last_key;
-        typename map_task_type::intermediate_value_type value;
-        std::list<typename map_task_type::intermediate_value_type> values;
-
-        std::ifstream infile(filename.c_str());
-        while (intermediate_store_type::read_record(infile, key, value))
+        try
         {
-            if (key != last_key  &&  length(key) > 0)
+            std::string const filename = intermediate_store_type::merge_and_sort(filenames);
+
+            typename map_task_type::intermediate_key_type   key;
+            typename map_task_type::intermediate_key_type   last_key;
+            typename map_task_type::intermediate_value_type value;
+            std::list<typename map_task_type::intermediate_value_type> values;
+
+            reduce_task_runner runner(
+                specification_.output_filespec,
+                partition,
+                number_of_partitions());
+
+            std::ifstream infile(filename.c_str());
+            while (intermediate_store_type::read_record(infile, key, value))
             {
-                if (length(last_key) > 0)
+                if (key != last_key  &&  length(key) > 0)
                 {
-                    runner(last_key, values.begin(), values.end());
-                    values.clear();
+                    if (length(last_key) > 0)
+                    {
+                        ++result.counters.reduce_keys_executed;
+                        runner(last_key, values.begin(), values.end());
+                        values.clear();
+                    }
+                    if (length(key) > 0)
+                        std::swap(key, last_key);
                 }
-                if (length(key) > 0)
-                    std::swap(key, last_key);
+
+                values.push_back(value);
             }
 
-            values.push_back(value);
+            if (length(last_key) > 0)
+            {
+                ++result.counters.reduce_keys_executed;
+                runner(last_key, values.begin(), values.end());
+            }
+
+            infile.close();
+            boost::filesystem::remove(filename.c_str());
         }
-
-        if (length(last_key) > 0)
-            runner(last_key, values.begin(), values.end());
-
-        infile.close();
-        boost::filesystem::remove(filename.c_str());
-
+        catch (std::exception &)
+        {
+             ++result.counters.reduce_key_errors;
+        }
+        
         result.reduce_times.push_back(time(NULL)-start_time);
 
         return true;
@@ -277,10 +316,9 @@ class job : private boost::noncopyable
         filenames_t>    // file names
     partition_files_t;
 
-    unsigned            num_partitions_;
-    datasource_type    &datasource_;
-    std::string         output_filespec_;
-    partition_files_t   partition_files_;
+    datasource_type         &datasource_;
+    partition_files_t        partition_files_;
+    specification     const &specification_;
 };
 
 template<>

@@ -79,55 +79,52 @@ class job;
                   <code>key_type</code> and <code> value_type</code></li>
                 <li>Provide type definitions for Intermediate Key (<code>k2</code>) and Intermediate Value (<code>v2</code>);
                   <code>intermediate_key_type</code> and <code> intermediate_value_type</code></li>
-                <li>Define a constructor taking a <code>job::map_task_runner</code> object by reference</li>
-                <li>Store a reference to the <code>job::map_task_runner</code> object passed to the constructor,
-                  to be used to emit intermediate results</li>
-                <li>Define a function-call operator <code>void operator()(key_type const &key, value_type
-                    const &value);</code> Note that the <code>const</code> qualifiers on these parameters
-                    are optional, but recommended where possible.</li>
+                <li>Implement a static mapper function <code>map()</code></li>
               </ul>
 <pre>
-class map_task
+struct map_task : public boost::mapreduce::map_task&lt;
+                             std::string,                           // MapKey
+                             std::pair&lt;char const *, char const *&gt;, // MapValue
+                             std::string,                           // IntermediateKey
+                             unsigned&gt;                              // IntermediateValue
 {
-  public:
-    typedef std::string   key_type;
-    typedef std::ifstream value_type;
-    typedef std::string   intermediate_key_type;
-    typedef unsigned      intermediate_value_type;
-
-    map_task(job::map_task_runner &runner);
-    void operator()(key_type const &key, value_type const &value);
-
-  private:
-    job::map_task_runner &runner_;
+    template&lt;typename Runtime&gt;
+    static void map(Runtime &runtime, std::string const &key, value_type const &value);
 };
 </pre>
+<p>The MapTask functor is derived from the <code>boost::mapreduce::map_task</code> to define the
+types required by the Boost.MapReduce library.</p>
+
+<p>The <code>map</code> function is implemented as a template function with the first function parameter
+being a template type <code>Runtime</code>. This parameter is passed by the library to be used as a callback
+to <em>emit</em> intermediate key/value pairs. The other two parameters <code>key</code> and <code>value</code>
+are of types defined in the <code>map_task</code> template parameter list. Note that the <code>const</code>
+qualifiers on these parametersare optional, but recommended where possible.</p>
+
               <h2>ReduceTask</h2>
               <p>Requirements of a ReduceTask function object are</p>
               <ul>
                 <li>Provide type definitions for Reduce Value (<code>v2</code>);
                   <code> value_type</code></li>
-                <li>Define a constructor taking a <code>job::reduce_task_runner</code> object by reference</li>
-                <li>Store a reference to the <code>job::reduce_task_runner</code> object passed to the constructor,
-                  to be used to emit results</li>
-                <li>Define a function-call operator <code>void operator()(typename map_task::intermediate_key_type
-                    const &key, It it, It ite);</code> where It is an iterator type.</li>
+                <li>Implement a static reducer function <code>reduce()</code></li>
               </ul>
 <pre>
-class reduce_task
+struct reduce_task : public boost::mapreduce::reduce_task&lt;unsigned&gt;
 {
-  public:
-    typedef unsigned value_type;
-
-    reduce_task(job::reduce_task_runner &runner);
-
-    template&lt;typename It&gt;
-    void operator()(typename map_task::intermediate_key_type const &key, It it, It ite);
-
-  private:
-    job::reduce_task_runner &runner_;
+    template&lt;typename Runtime, typename It&gt;
+    static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
+    {
+        runtime.emit(key, std::accumulate(it, ite, 0));
+    }
 };
 </pre>
+<p>The ReduceTask functor is derived from the <code>boost::mapreduce::reduce_task</code> to define the
+types required by the Boost.MapReduce library.</p>
+<p>The <code>reduce</code> function is implemented as a template function with the first function parameter
+being a template type <code>Runtime</code>, as with the <code>map</code> function above. The second template
+parameter defines an <em>iterator type</em> for function parameters 3 and 4 to bound the <em>list</em> of
+value pairs.</p>
+
 <p>See the <a href='./wordcount.html'>Word Count example</a> for a detailed breakdown of a simple implementation.</p>
             </div> 
           </div> 
