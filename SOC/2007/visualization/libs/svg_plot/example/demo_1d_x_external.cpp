@@ -47,8 +47,8 @@ int main()
          .title("Race Times")
          .x_range(-1, 10);
 
-/*`We add tastelessly colored grids for bother major and minor ticks, and switch both grids on.
-*/    // Styling grid.
+/*`We add tastelessly color the grids for both major and minor ticks, and switch both grids on.
+*/   
   my_plot.x_major_grid_color(pink)
          .x_minor_grid_color(lightgray);
 

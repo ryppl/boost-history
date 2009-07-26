@@ -2,7 +2,7 @@
 //  derived from Copyright Gennadiy Rozental 2001-2007.
 
 //  Distributed under the Boost Software License, Version 1.0.
-//  (See accompanying file LICENSE_1_0.txt or copy at 
+//  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
 //  See http://www.boost.org/libs/test for the library home page.
@@ -27,7 +27,7 @@ enum floating_point_comparison_type
   // equations in Dougles E. Knuth, Seminumerical algorithms (3rd Ed) section 4.2.4, Vol II,
   // pp 213-225, Addison-Wesley, 1997, ISBN: 0201896842.
   // Strong requires closeness relative to BOTH values begin compared,
-  // Weak only requires only closeness to EITHER ONE value. 
+  // Weak only requires only closeness to EITHER ONE value.
 };
 
 // GNU int gsl_fcmp (double x, double y, double epsilon) provides similar function.
@@ -42,7 +42,7 @@ enum floating_point_comparison_type
 // www.boost.org/libs/test/doc/components/test_tools/floating_point_comparison.html
 // Comparison of Floating Point Numbers, Matthias Ruppwww.mrupp.info/Data/2007floatingcomp.pdf, July 2007.
 // The pitfalls of verifying floating-point computations, David Monniaux
-// CNRS Ecole normale sup´erieure, 1 Feb 2008, http://arxiv.org/abs/cs/0701192v4
+// CNRS Ecole normale superieure, 1 Feb 2008, http://arxiv.org/abs/cs/0701192v4
 // submitted to ACM TOPLAS.
 
 // FPT is Floating-Point Type: float, double, long double, or User-Defined like NTL quad_float or RR.
@@ -52,7 +52,7 @@ template <class T> T min_value(T);
 template <class T> T epsilon(T);
 
 template<typename FPT> FPT
-fpt_abs(FPT arg) 
+fpt_abs(FPT arg)
 { // abs function (just in case abs is not defined for FPT).
   return arg <static_cast<FPT>(0) ? -arg : arg;
 }
@@ -61,7 +61,7 @@ template<typename FPT> FPT
 safe_fpt_division(FPT f1, FPT f2)
 { // Safe from under and overflow.
   // Both f1 and f2 must be unsigned here.
- 
+
   if( (f2 < static_cast<FPT>(1))  && (f1 > f2 * boost::math::tools::max_value<FPT>()) )
   { // Avoid overflow.
     return boost::math::tools::max_value<FPT>();
@@ -85,13 +85,13 @@ public:
 
   // One constructor for fraction tolerance only.
   template<typename FPT>
-  explicit close_to(FPT tolerance, 
-    floating_point_comparison_type fpc_type = FPC_STRONG) 
+  explicit close_to(FPT tolerance,
+    floating_point_comparison_type fpc_type = FPC_STRONG)
   :
     fraction_tolerance_(tolerance),
       strong_or_weak_(fpc_type)
   { // Fraction.
-    // Check that tolerance isn't negative - which doesn't make sense,
+    // Check that tolerance isn't negative - which does not make sense,
     // and can be assumed to be a programmer error?
     BOOST_ASSERT(tolerance >= static_cast<FPT>(0));
   }
@@ -110,7 +110,7 @@ public:
     FPT d1   = safe_fpt_division(diff, fpt_abs(right));
     FPT d2   = safe_fpt_division(diff, fpt_abs(left));
 
-    return strong_or_weak_ 
+    return strong_or_weak_
       ? ((d1 <= fraction_tolerance_) && (d2 <= fraction_tolerance_)) // Strong.
       : ((d1 <= fraction_tolerance_) || (d2 <= fraction_tolerance_)); // Weak.
   }
@@ -141,7 +141,7 @@ private:
 // that will most probably result in overflows later.
 // Another objection, which few programmers know about and that we wish to draw attention
 // to, is that it may actually fail to work, depending on what the compiler
-// does — that is, the program may actually test that x 6= 0, then, further down,
+// does - that is, the program may actually test that x 6= 0, then, further down,
 // find that x = 0 without any apparent change to x!
 
 template<typename FPT = double>
@@ -149,13 +149,13 @@ class smallest
 {
 public:
   template<typename FPT>
-  explicit smallest(FPT s) 
+  explicit smallest(FPT s)
   :
   smallest_(s)
   { // Constructor.
   }
 
-  smallest() 
+  smallest()
   :
   smallest_(2 * boost::math::tools::min_value<FPT>())
   { // Default Constructor.
@@ -182,7 +182,7 @@ public:
   template<typename FPT>
   bool operator()(FPT fp_value)
   {
-   
+
     if (fpt_abs(fp_value) == static_cast<FPT>(0))
     { // Test for zero first in case FPT is actually an integer type,
       // when the comparison < below would fail because

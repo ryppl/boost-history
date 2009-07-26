@@ -47,7 +47,7 @@ class value_style; // Data series point value information, text, color, uncertai
 class plot_point_style; // Shape, color, (optional value & uncertainty) of data point markers.
 class plot_line_style; // Style of line joining data series values.
 class axis_line_style; // Style of the x and/or y axes lines. But NOT the ticks and value labels.
-class ticks_labels_style; // Style of the x and y axes ticks, grids and their value labels..
+class ticks_labels_style; // Style of the x and y axes ticks, grids and tick value labels.
 class box_style; //  Box colors, size and border switches.
 class histogram_style;  // Options for histograms.
 class bar_style;  // Style of bars.
@@ -1107,7 +1107,9 @@ public:
     // Simplest to have all of these although only one pair (up or down) or (left or right) is used.
     // Unused are always false.
     int major_value_labels_side_; //!< Which side of axis for label values for major ticks.
-    // < 0 means to left or down (default), 0 (false) means none, > 0 means to right (or top)/
+    // < 0 means to left (for Y) or down (for X) (default),
+    // 0 (false) means no ticks value labels (just ticks),
+    // > 0 means to right (for Y) or top(for X).
     rotate_style label_rotation_; //!< Direction axis value labels written.
     bool major_grid_on_;  //!< Draw X grid at major ticks.
     bool minor_grid_on_; //!< Draw X grid at minor ticks.
@@ -1115,14 +1117,16 @@ public:
     // (just fill_color for now (stroke makes characters fuzzy.)
     int value_precision_; //!< Precision for tick value labels, usually 3 will suffice.
     std::ios_base::fmtflags value_ioflags_;  //!< IO formatting flags for the axis default std::ios::dec.
-    bool strip_e0s_; //!< If redundant zero, + and e are to be stripped.
-    double label_max_length_;  //!< width (in SVG units) of longest value label text on axis.
-    double label_max_space_;  //!< Space needed for value label adjusted for rotation.
-    int ticks_on_window_or_axis_; //!< Value labels & ticks on the plot window border
-    //! (rather than on X or Y-axis).
-    // For Y-axis -1 = left, 0 = false, +1 = right. Default -1 to left of plot window.
-    // For X-axis -1 = bottom, 0 = false, +1 = top. Default -1 below bottom of plot window.
-    //const text_style& value_label_style_; //!< text style (font, size...) for value labels.
+    bool strip_e0s_; //!< If redundant zero, + and e are to be stripped, for example "+1.000e3" to "1e3".
+    double label_max_length_;  //!< width (in SVG units, pixels) of longest value label text on axis.
+    double label_max_space_;  //!< Space (SVG units, pixels) needed for value label adjusted for rotation.
+    int ticks_on_window_or_on_axis_; //!< Value labels & ticks on a plot window border (rather than on X or Y-axis).
+    //! For Y-axis -1 = left, 0 = false = on X-axis, +1 = right. Default -1 to left of plot window.
+    //! For X-axis -1 = bottom, 0 = false = on Y-axis, +1 = top. Default -1 below bottom of plot window.
+    //! 0 = false puts the ticks and their labels on the X or Y axis line which may be in the middle of the plot.
+    //! For 1D the default overrides the constructor default of -1 below, to tick and value label the X-axis.
+    //! For 2D the default is left at -1, to use bottom and left of plot window to ticka nd value label X and Y-axis.
+
     text_style value_label_style_; //!< text style (font, size...) for value labels.
 
     ticks_labels_style( //! Constructor, providing defaults values for all member data.
@@ -1176,9 +1180,10 @@ public:
     label_max_length_(0.), // length (estimated in SVG units) of longest label on axis.
     label_max_space_(0.), // Space (estimated in SVG units) of longest label on axis
     // adjusted for rotation.
-    ticks_on_window_or_axis_(-1) // Value labels & ticks on the plot window
+    ticks_on_window_or_on_axis_(-1) // Value labels & ticks on the plot window,
     // rather than on X or Y-axis.
-    // Default -1 means left or bottom.
+    // Default -1 means left or bottom of plot window.
+
   {
       if(max_ <= min_)
       { // max_ <= min_.
@@ -1226,11 +1231,10 @@ public:
       // Check length of label for the ticks on the positive side (right or above zero).
       for(double v = 0.; v <= max_; v += major_interval_)
       {
-        if (v != 0. || ticks_on_window_or_axis_)
+        if (v != 0. || ticks_on_window_or_on_axis_ != 0)
         { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line,
           // or avoid a major tick at y == 0 where there *is* a horizontal X-axis line.
-          // (won't be a Y-axis line for 1-D,
-          // where both the zero tick & value label is always wanted).
+          // (won't be a Y-axis line for 1-D, where both the zero tick & value label is always wanted).
           double l = label_length(v);
           if (l > longest)
           {
@@ -1241,7 +1245,7 @@ public:
       // Check length of label of the ticks on the negative side (left of zero).
       for(double v = 0.; v >= min_; v -= major_interval_)
       {
-        if (v != 0. || ticks_on_window_or_axis_)
+        if (v != 0. || ticks_on_window_or_on_axis_ != 0)
         { // Avoid a major tick at x == 0 where there *is* a vertical Y-axis line.
           // (won't be Y-axis line for 1-D where the zero tick is always wanted).
           // But no tick means no value label 0 either unless on_plot_window.
@@ -1611,9 +1615,13 @@ const std::string strip_e0s(std::string s)
 } // const std::string strip(double d)
 
  static const double wh = 0.7; //!< font text width/height ratio.
-  /*! \details Even after reading http://www.w3.org/TR/SVG/fonts.html,\n
-     unclear how to determine the exact width of digits, so an
-    arbitrary average width height ratio wh = 0.7 is used as a good approximation.
+  /*! \details 
+  http://www.w3.org/TR/SVG/text.html#FontSizeProperty
+  Font size is the height of the text's font, so width = wh * font_size.
+  
+  Even after reading http://www.w3.org/TR/SVG/fonts.html,\n
+  unclear how to determine the exact width of digits, so an
+  arbitrary average width height ratio wh = 0.7 is used as a good approximation.
   */
 
 double string_svg_length(const std::string& s, const text_style& style)

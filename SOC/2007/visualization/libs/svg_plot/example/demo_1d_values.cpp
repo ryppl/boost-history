@@ -1,6 +1,12 @@
 /*! \file demo_1d_values.cpp
-    \brief Demonstration of some simple 1D value formatting.
-    \details Quickbook markup to include in documentation.
+    \brief Demonstration of showing the 1D values.
+    \details  Showing the 1D values of items from the data set.
+    
+    Some of the many possible formatting options are demonstrated,
+    including controlling the precision and iosflags,
+    and prefix and suffix also useful for giving units.
+    
+    Quickbook markup to include in documentation.
     \date 19 Jul 2009
     \author Paul A. Bristow
 */
@@ -13,8 +19,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// An example to demonstrate simplest 1D *default* settings.
-// See also demo_1d_plot.cpp for a wider range of use.
+// An example to demonstrate labelling data values
 
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
@@ -25,7 +30,10 @@
 
 //[demo_1d_values_1
 
-/*`As ever, we need a few includes to use Boost.Plot
+/*` Showing the 1D values of items from the data set.
+    Some of the many possible formatting options are demonstrated.
+
+    As ever, we need a few includes to use Boost.Plot
 */
 
 #include <boost/svg_plot/svg_1d_plot.hpp>
@@ -124,7 +132,7 @@ but for 2-D plots all writing orientations can be useful).
 */
     my_1d_plot.write("demo_1d_values.svg");
 
-/*`If chosen settings do not have the effect that you expect, it may be helpful to display them.
+/*`If chosen settings do not have the effect that you expect, it may be helpful to display them!
 
 (All the myriad settings can be displayed with `show_1d_plot_settings(my_1d_plot)`.)
 */
@@ -133,7 +141,6 @@ but for 2-D plots all writing orientations can be useful).
     cout << "my_1d_plot.image_size() " << my_1d_plot.image_size() << endl;
     cout << "my_1d_plot.image_x_size() " << my_1d_plot.image_x_size() << endl;
     cout << "my_1d_plot.image_y_size() " << my_1d_plot.image_y_size() << endl;
-    //cout << "my_1d_plot.image_size() " << my_1d_plot.image_size() << endl;
     cout << "my_1d_plot.x_values_font_size() " << my_1d_plot.x_values_font_size() << endl;
     cout << "my_1d_plot.x_values_font_family() " << my_1d_plot.x_values_font_family() << endl;
     cout << "my_1d_plot.x_values_color() " << my_1d_plot.x_values_color() << endl;

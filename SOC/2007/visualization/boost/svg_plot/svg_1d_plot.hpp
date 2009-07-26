@@ -388,7 +388,7 @@ public:
     x_ticks_(X, x_value_label_style_),// so for defaults see ticks_labels_style.
     text_margin_(2.), // for text as a multiplier of the font size.
     image_border_(yellow, white, 1, 10, true, true), // margin should be about axis label font size.
-    plot_window_border_(yellow, svg_color(255, 255, 255), 1, 3, true, false),
+    plot_window_border_(lightgoldenrodyellow, svg_color(255, 255, 255), 1, 3, true, false),
     legend_box_(yellow, white, 1, 2, true, true),
     legend_header_(0, 0, "", legend_style_, center_align, horizontal),
     legend_width_(200), // width of legend box (pixels) // TODO isn't this calculated?
@@ -422,7 +422,7 @@ public:
     size(500, 200); // Default image size.
     // Only needs to be quite shallow (y_size) for a 1-D plot.
     // (But may need more height if long value labels are used, for example: "[time = 1.23 +-0.02 sec]").
-    // 200 barely leaves enough room for five data series in the legend).
+    // 200 barely leaves enough room for five data series in any legend box).
     // (2-D usually needs to be much more rectangular).
 
     using namespace boost::svg::detail; // Avoid detail:: specification.
@@ -473,7 +473,21 @@ public:
 
     x_ticks_on_ = x_ticks_.up_ticks_on_ || x_ticks_.down_ticks_on_;
     // Only 2D has left and right y ticks.
-    x_ticks_.ticks_on_window_or_axis_ = 0; // Make ticks (and value labels) on axis the default.
+    x_ticks_.ticks_on_window_or_on_axis_ = 0; // Make ticks (and ticks value labels) on X-axis line the default.
+    // This will place the labels just under the horizontal X-axis line,
+    // rather than below the plot window border.
+    // This over-rides the default in class ticks_labels_style.
+    // 
+
+    if (title_info_.text() == "")
+    { // Avoid leaving unnecessary space etc for a title.
+      title_on_ = false;
+    }
+    else
+    { 
+      title_on_ = true; // Can be switched off later with `my_1d_plot.title_on(true);`
+    }
+
   } // svg_1d_plot() Default constructor.
 
   void set_ids()
@@ -497,28 +511,29 @@ public:
     plot_right_ = image.x_size() - image_border_width(); // Bottom right of image.
     plot_bottom_ = image.y_size() - image_border_width();
 
-    if(title_on_)
+    if(title_on_ && title_info_.text() != "")
     { // Leave space at top for title.
-      // TODO what if want to put title at bottom?
+      // Title at bottom (or sides even) option not implemented.
       plot_top_ += title_font_size() * (text_margin_ + 0.5);
     }
 
     // Assume that X-axis labels are always at bottom for 1D plot.
-    if(x_axis_.label_on_)
-    { // Leave space at bottom for X axis label.
+    if(x_axis_.label_on_ == true && x_label_info_.text() != "")
+    { // Leave space below plot window at bottom for X axis label (unless empty string).
        plot_bottom_ -= x_axis_label_style_.font_size() * text_margin_;
     }
-    if(plot_window_on_)
+    if(plot_window_on_ == true)
     { // Needed to allow any plot window border rectangle to show OK.
       // A small margin is to prevent it overlapping the image border.
       // Also allows for axis value labels that mark the min and max
-      // that must extend half a font width beyond the plot window border.
+      // that must extend about half a font width beyond the plot window border.
       plot_left_ +=  image_border_.margin_;
       plot_right_ -=  image_border_.margin_;
       plot_top_ += image_border_.margin_;
       plot_bottom_ -=  image_border_.margin_;
     }
 
+    // Size if necessary - else (re-)initialise to zero.
     size_legend_box(); // depending on its contents.
     place_legend_box();
 
@@ -535,26 +550,29 @@ public:
       x_axis_.min_ = x_auto_min_value_;
       x_axis_.max_ = x_auto_max_value_;
       x_ticks_.major_interval_  = x_auto_tick_interval_;
-      // else ignore auto values, even if have been calculated.
     }
-    // Copy min & max to ticks.
+    else
+    { // Ignore auto values, even if they have been calculated.
+    }
+    // Copy X-axis min & max to ticks.
     x_ticks_.min_ = x_axis_.min_;
     x_ticks_.max_ = x_axis_.max_;
-
-    x_axis_.axis_ = (plot_bottom_ + plot_top_) / 2.; // Put X-axis halfway up plot window.
     // Ensure both axis and ticks have the *same* range.
-    // (To use the separation, made to give the potential for different ranges,
+    // (To use them separately (designed to give the potential for different ranges)
     // one would have to *not* do this,
     // but to make sure they are both assigned correctly).
 
-    if(plot_window_on_) //
-    {
-      // Calculate the number of chars of the longest value label.
+    x_axis_.axis_ = (plot_bottom_ + plot_top_) / 2.; // Put X-axis halfway up plot window.
+
+    if(plot_window_on_ == true)
+    { // Using a plot window and NOT using all image.
+      // Calculate the number of chars of the longest tick value label.
       x_ticks_.longest_label(); // Updates label_max_length_
-      x_ticks_.label_max_space_ = 0; // Work out the longest value label for X-Axis.
+      x_ticks_.label_max_space_ = 0; // Work out the longest tick value label for X-Axis.
       if (x_ticks_.label_rotation_ == horizontal)
       { // Only 1 char height & 1 space needed if labels are horizontal.
-        x_ticks_.label_max_space_ = 2 * x_value_label_style_.font_size() * wh; // SVG chars
+        x_ticks_.label_max_space_ = 2 * x_value_label_style_.font_size() * wh; // SVG chars.
+        // Should this be just 2 * font_size
       }
       else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
       { // ! horizontal so will need more than 2 chars worth.
@@ -565,43 +583,27 @@ public:
           x_ticks_.label_max_space_+= x_ticks_.label_max_length_ * x_value_label_style_.font_size() * wh * sin45; // SVG 'chars'.
       }
 
-      if (x_ticks_.major_value_labels_side_ != 0)
-      { // Some value labels.
-        if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
-           && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
-        {  // Contract plot window bottom edge up to make space for x value labels on bottom.
-          plot_bottom_ -= x_ticks_.label_max_space_; // Move up.
-        }
-        else if ((x_ticks_.ticks_on_window_or_axis_ > 0) //
-           && (x_ticks_.major_value_labels_side_ > 0) ) // & x labels to top.
-        { // Move top of plot window down to give space for x value labels.
-          plot_top_ += x_ticks_.label_max_space_; // Move down.
-        }
-        else
-        { // no labels on plot window (may be on mid-plot X-axis).
-        }
-      } // x_ticks_. major_value_labels_side
-
-      // Make space for any ticks.
+      // Make space for any ticks pointing below the plot window.
       if(x_ticks_.down_ticks_on_)
       { // Start bottom of plot higher to give space for any external down ticks.
-        plot_bottom_ -= (std::max)(x_ticks_.major_tick_length_, x_ticks_.minor_tick_length_);// Avoid macro max trap!
+        plot_bottom_ -= (std::max)(x_ticks_.major_tick_length_, x_ticks_.minor_tick_length_);// And avoid macro max trap!
       }
+
       if (x_axis_.axis_line_on_)
-      { // Want a X-axis line, so check if range includes zero, so axes intersect,
+      { // Want a X-axis line, so check if range includes zero, meaning that X and Y axes intersect,
         // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
         // If not fix axis to bottom of the plot window.
-        if ((x_axis_position_ == bottom) // All definitely > zero.
-          && !(x_ticks_.ticks_on_window_or_axis_ < 0) ) // & not already at bottom.
-        { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
+        if ((x_axis_position_ == bottom) // All X data values definitely > zero.
+          && !(x_ticks_.ticks_on_window_or_on_axis_ < 0) ) // & not already on bottom of plot window.
+        { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window border.
           plot_bottom_ -= x_ticks_.label_max_space_; // Move up for the value labels.
-          x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
+          x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom on plot window.
         }
-        else if ((x_axis_position_ == top)  // definitely < zero.
-          && !(x_ticks_.ticks_on_window_or_axis_ > 0) ) // & not already at top.
-        { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
+        else if ((x_axis_position_ == top)  // All x data values definitely < zero.
+          && !(x_ticks_.ticks_on_window_or_on_axis_ > 0) ) // & not already on top of plot window.
+        { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window border.
            plot_top_ += x_ticks_.label_max_space_; // Move down for labels.
-           x_axis_.axis_ = plot_top_; // Put X-axis on top.
+           x_axis_.axis_ = plot_top_; // Put X-axis on top of plot window border.
         }
         else
         { // y_axis_position_ == y_intersects_x
@@ -609,10 +611,31 @@ public:
         }
       } // if (use_x_axis_line_)
 
+      // Make space for any tick value labels.
+      if (x_ticks_.major_value_labels_side_ != 0)
+      { // There are some tick value labels.
+        // If ticks and value labels are on plot window border, the need to allow space for them.
+        if ((x_ticks_.ticks_on_window_or_on_axis_ < 0) // ticks on bottom of plot window.
+           && (x_ticks_.major_value_labels_side_ < 0) ) // & tick value labels below axis line too.
+        {  // Contract plot window bottom edge up to make space for X tick value labels on bottom.
+          plot_bottom_ -= x_ticks_.label_max_space_; // Move up.
+        }
+        else if ((x_ticks_.ticks_on_window_or_on_axis_ > 0) //
+           && (x_ticks_.major_value_labels_side_ > 0) ) // & X tick value labels to top of plot window.
+        { // Move top of plot window down to give space for X tick value labels.
+          plot_top_ += x_ticks_.label_max_space_; // Move window top down.
+        }
+        else // (x_ticks_.major_value_labels_side_ == 0)
+        { // X-ticks on the X-axis line (not on plot window border).
+          // Don't need to allow any extra space.
+          // (But if X axis is near plot window border, may overlap it, and any X axis labels!)
+        }
+      } // x_ticks_. major_value_labels_side
+
     } // plot_window_on_
 
-    if(plot_window_on_)
-    { // Draw plot window rectangle box.
+    if(plot_window_on_ == true)
+    { // Draw plot window border as a rectangular box.
       image.g(detail::PLOT_WINDOW_BACKGROUND).push_back(
         new rect_element(plot_left_, plot_top_, (plot_right_ - plot_left_), plot_bottom_ - plot_top_));
     } // plot_window_on_

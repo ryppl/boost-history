@@ -132,6 +132,8 @@ and plot adds a (unamed) data series (naming isn't very useful if there is only 
   svg_1d_plot my_plot;
   my_plot.title("deque&lt;double&gt; example");
   my_plot.plot(values);
+  my_plot.x_label("X values as doubles");
+
   my_plot.write("./demo_1d_deque_double.svg");
 //] [/demo_1d_containers_6]
   }

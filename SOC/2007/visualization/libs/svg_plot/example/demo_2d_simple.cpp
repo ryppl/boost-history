@@ -84,7 +84,6 @@ int main()
 
     // Add the data series to the plot:
     my_plot.title("demo_2d_simple");
-    my_plot.title(" title");
     cout << " my_plot.title() " << my_plot.title() << endl;
     my_plot.x_label("X-axis").y_label("Y-axis"); // Note chaining.
 

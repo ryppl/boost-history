@@ -107,6 +107,7 @@ the standard.
 
 [include how_to_use.qbk]
 [include colors.qbk]
+[include fonts.qbk]
 [include 1d_tutorial.qbk] [/ All 1d examples]
 [include 2d_tutorial.qbk] [/ All 2d examples]
 [include boxplot_tutorial.qbk] [/ All boxplot examples]

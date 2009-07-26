@@ -74,7 +74,7 @@ For example, if we have analysed a product and know that an attribute like stren
 it would make sense to use the reference 'as new' data to scale the plot for the 'aged' product samples).
 
 The add the (one but could be more) data series, `my_data` and a description, and how the data points are to be marked,
-here a circle with a diameter of 5 pixels, without a line joining the points.
+here a circle with a diameter of 5 pixels, without a line joining the points (also the default).
 */
     my_2d_plot.plot(my_data, "2d Values").shape(round).size(6).line_on(false);
 

@@ -198,7 +198,6 @@ This is controlled using the `enum x_axis_intersect` and function
 
 [demo_1d_x_external_1]
 
-
 [h4 X-Axis Grid Lines]
 
 If you would like vertical grid lines that go on the graph,
@@ -215,14 +214,18 @@ To color style it, you might add the following calls:
 This will produce the following image:
 [$images/1d_x_grid.svg]
 
-[h4 X-Axis ticks and tick value label position]
+[h4 X-Axis Tick value labels precision, iosflags, font family and size]
 
-[demo_1d_x_external_1]
-producing this plot
-[$images/demo_1d_x_external.svg]
+[import ..\example\demo_2d_tick_values.cpp]
 
-See [@../../example/demo_1d_x_external.cpp demo_1d_x_external.cpp]
+[demo_2d_tick_values_1]
+[demo_2d_tick_values_2]
+
+producing this plot [$images/demo_2d_tick_values.svg]
+
+See [@../../example/demo_2d_x_external.cpp demo_2d_tick_values.cpp]
 for full source code.
+
 [endsect] [/section:1d_special Tutorial: 1D Gridlines & Axes]
 
 [/include demo_1d_axis_scaling.qbk]

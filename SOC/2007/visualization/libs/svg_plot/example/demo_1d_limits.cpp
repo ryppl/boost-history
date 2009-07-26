@@ -81,7 +81,7 @@ to something more conspicuous for this demonstration:
     my_1d_plot.write("demo_1d_limits.svg");
 
 /*`
-[note the +infinity point is marked on the far right of the plot, the -infinity on the far left, but the NaN (Not A Number is at zero).]
+[note the +infinity point is marked on the far right of the plot, the -infinity on the far left, but the NaN (Not A Number) is at zero.]
 
 To echo the new marker colors chosen:
 */

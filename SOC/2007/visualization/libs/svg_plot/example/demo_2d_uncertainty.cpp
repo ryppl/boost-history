@@ -100,7 +100,7 @@ the order of data values is important.
 
   map<unc, unc> data1; // Container for XY points.
   data1.insert(mp1); // u1, u2 = 1.23+-0.056 (7), 2.345+-0.067 (9)
-  data1.insert(make_pair(unc(4.1, 0.4F, 7), unc(3.1, 0.3F, 18))); // 
+  data1.insert(make_pair(unc(4.1, 0.4F, 7), unc(3.1, 0.3F, 18))); //
   data1.insert(make_pair(unc(-2.234, 0.03F, 7), unc(-8.76, 0.9F, 9)));
 
   /*`Make very sure you don't forget either unc() like this
@@ -115,22 +115,20 @@ the order of data values is important.
   cout << endl;
 
   svg_2d_plot my_plot;
-  /*`if you can be confident taht the data set only contains normal, valid data,
-  so none are 'at limits' too big or too small to be meaningful, infinite or NaN (NotANumber)
+  /*`If you can be confident that the data set(s) only contains normal, valid data,
+  so none are 'at limits' - too big or too small to be meaningful, infinite or NaN (NotANumber),
   then these checks can be skipped (for speed).
-  An instrument or operator input might provide only normal data.
+  An instrument or operator input might be known to provide only normal data.
   For this example, we know this is true, so override the default autoscale_check_limits(true).
   */
   //my_plot.autoscale_check_limits(false);
   /*`The default is autoscale_plusminus(3.) so that confidence ellipses
   at 1, 2 and 3 (uncertainty nominally standard deviations)
-  are all within the plot window, 
+  are all within the plot window,
   but if you are less interested in seeing the 2 and 3 ellipses,
   you could risk the outer edges spilling over the borders
   by reducing autoscale_plusminus, for example, to 1.5, down to zero.*/
   my_plot.autoscale_plusminus(1.5); // default is 3.
-
-  my_plot.autoscale(true);
 
   /*`Use data set `data` to autoscale (you can use a different data set to scale from the one you chose to plot).
   */
@@ -150,19 +148,21 @@ the order of data values is important.
     .x_plusminus_color(cyan)
     .x_df_on(true)
     .x_df_color(magenta)
+    .x_values_font_family("Times New Roman")
 
+    .y_label("distance (km)")
     .y_values_rotation(uphill)
-    .x_values_font_family("sans")
+    .y_values_font_family("Arial") // Different from X just to show effect.
     .y_plusminus_on(true)
     .y_plusminus_color(red)
     .y_df_on(true)
     .y_df_color(green)
-  /*`The default uncertainty ellipse colors (that apply to both x and y axes)
+  /*`The default uncertainty ellipse colors (that apply to both X and Y axes)
   can be changed thus:
   */
     .one_sd_color(lightblue)
-    .two_sd_color(svg_color(200, 230, 255))//  	rgb(176, 224, 230)
-    .three_sd_color(svg_color(230, 255, 255)) // rgb(240, 255, 255)
+    .two_sd_color(svg_color(200, 230, 255))
+    .three_sd_color(svg_color(230, 255, 255))
    ;
 
   my_plot.plot(data1, "data1").shape(unc_ellipse);
@@ -172,7 +172,7 @@ the order of data values is important.
   //show_2d_plot_settings(my_plot);
 
   //] [/demo_2d_uncertainty_2]
-  
+
   }
   catch (const std::exception& e)
   {

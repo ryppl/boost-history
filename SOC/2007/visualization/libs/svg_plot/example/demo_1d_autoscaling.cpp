@@ -88,14 +88,14 @@ int main()
   /*`Construct a plot , and add some data to the plot. */
 
   svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
-
+  my_1d_plot.title("Demo 1D autoscaling").x_label("X values"); // Add a title and X axis label.
   my_1d_plot.plot(my_data, "Auto 1D my_data"); // Add whole data series from my_data.
 
   /*`Use x_autoscale to scale the axis, in this most common and simplest case, using all the values.*/
   my_1d_plot.x_autoscale(my_data); 
 
   /*` and finally write the SVG to a file.*/
-  my_1d_plot.write("demo_1d_autoscaling.svg"); // Write the plot to file.
+  my_1d_plot.write("demo_1d_autoscaling_1.svg"); // Write the plot to file.
 
 //] [/demo_1d_autoscaling_2]
 
@@ -156,7 +156,7 @@ int main()
   */
    my_1d_plot.plot(++my_set.begin(),--my_set.end(), "Auto 1D my_set"); // Add 'top and tailed' data series from my_set.
  //my_1d_plot.plot(my_set, "Auto 1D my_set"); // Add whole data series from my_set.
-  my_1d_plot.write("demo_1d_autoscaling.svg"); // Write the plot to file.
+  my_1d_plot.write("demo_1d_autoscaling_2.svg"); // Write the plot to file.
   
   /*`If we want, we can check the autoscale range used, noting that zero *is* included because we demanded it.*/
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 0, 8

@@ -1,6 +1,6 @@
 /*! \file demo_1d_simple.cpp
     \brief Example of a simple 1D plot of two vectors of data.
-    \details Creates file 1d_simple.svg
+    \details Creates file demo_1d_simple.svg
     \author Jacob Voytko and Paul A. Bristow
     \date 2007
   */
@@ -11,7 +11,7 @@
 // Distributed under the Boost Software License, Version 1.0.
 // For more information, see http://www.boost.org
 
-// An example to demonstrate simplest 1D *default* settings.
+// An example to demonstrate very simple 1D settings.
 // See also demo_1d_plot.cpp for a wider range of use.
 
 // This file is written to be included from a Quickbook .qbk document.
@@ -45,15 +45,18 @@ int main()
 
   svg_1d_plot my_plot; // Construct a plot.
 
-  my_plot.legend_on(true) // Set title and legend, and X axis range.
+  my_plot.legend_on(true) // Set title and legend, and X-axis range and label.
          .title("Race Times")
-         .x_range(-1, 11); // There are hundreds of other options here!
+         .x_label("time (sec)")
+         .x_range(-1, 11);
+  // There are hundreds of other possible options here!
 
   // Add the two containers of data to the plot, choosing two different colors.
   my_plot.plot(dan_times, "Dan").stroke_color(blue);
   my_plot.plot(elaine_times, "Elaine").stroke_color(orange);
 
   my_plot.write("./demo_1d_simple.svg"); // Finally write the plot to a file.
+
   return 0;
 } // int main()
 

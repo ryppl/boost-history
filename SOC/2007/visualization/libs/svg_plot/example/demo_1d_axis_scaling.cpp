@@ -260,9 +260,9 @@ A number of variations are shown below, mianly by way of testing.
   my_1d_plot.plot(&my_data[1], &my_data[4], "Auto 1D"); // Add part (1,2 3 but *not* 4) of the one data series.
   //my_1d_plot.plot(&my_set[1], &my_set[4], "Auto 1D"); // operator[] is not defined for set container!
 
-  my_1d_plot.write("auto_1d_plot.svg"); // Write the plot to file.
+  my_1d_plot.write("demo_1d_axis_scaling.svg"); // Write the plot to file.
 
-  using boost::svg::detail::operator<<;
+  using boost::svg::detail::operator<<; // Needed for output a pair.
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 1, 5.5
 
   //show_1d_plot_settings(my_1d_plot);
@@ -283,9 +283,9 @@ A number of variations are shown below, mianly by way of testing.
 
 //[demo_1d_axis_scaling_output
 
-Autorun "j:\Cpp\SVG\debug\demo_1d_axis_scaling.exe"
-6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
-8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
+Autorun "j:\Cpp\SVG\Debug\demo_1d_axis_scaling.exe"
+6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
+8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
 0.2 1.1 4.2 3.3 5.4 : 5 values used.
 1.1 4.2 3.3 5.4 : 4 values used.
 0.2 1.1 4.2 3.3 5.4 6.5 : 6 values used.
@@ -294,21 +294,18 @@ Autorun "j:\Cpp\SVG\debug\demo_1d_axis_scaling.exe"
 1.1 4.2 3.3 5.4 : 4 values used.
 The smallest element is 0.2
 The largest element is  6.5
-axis_scaling min 0.2, max = 6.5
-Axis_scaled min 0, max = 7, increment 1
-Axis_scaled min 0, max = 7, increment 1
-Axis_scaled min 0, max = 7, increment 1
-Axis_scaled min 1, max = 6, increment 1
-Axis_scaled min 0, max = 7, increment 1
+axis_scaling 1 min 0.2, max = 6.5
+Axis_scaled 2 min 0, max = 7, increment 1
+Axis_scaled 3 min 0, max = 7, increment 1
+Axis_scaled 4 min 0, max = 7, increment 1
+Axis_scaled 5 min 0, max = 6, increment 1
+Axis_scaled 6 min 0, max = 7, increment 1
 not x_with_zero, 10 x_min_ticks, 0 x_steps, 0.001 tightness.
 Axis_scaled min 0, max 6.5, interval 0.5
 Axis_scaled min 0, max 6.5, interval 0.5
 Axis_scaled min 1, max 5.5, interval 0.5
 Axis_scaled  min 1, max 5.5, interval 0.5
 x_range() 1, 5.5
-Build Time 0:03
-
-
 
 //] [/demo_1d_axis_scaling_output]
 

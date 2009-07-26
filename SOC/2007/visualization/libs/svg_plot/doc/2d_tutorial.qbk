@@ -192,6 +192,30 @@ A little bit of color customization goes a *very* long way!
 [/include 2d_special_tutorial.qbk]
 [section:2d_special Tutorial: 2D Special Features]
 
+[h4 Y-Axis ticks and tick value label position]
+
+[demo_2d_x_external_1]
+producing this plot
+[$images/demo_2d_x_external.svg]
+
+See [@../../example/demo_1d_x_external.cpp demo_1d_x_external.cpp]
+for full source code.
+
+[h4 X-Axis Tick value labels precision, iosflags, font family and size]
+
+[import ..\example\demo_1d_tick_values.cpp]
+
+[demo_1d_tick_values_1]
+[demo_1d_tick_values_2]
+
+producing this plot  [$images/demo_1d_tick_values_1.svg]
+
+See [@../../example/demo_1d_x_external.cpp demo_1d_tick_values.cpp]
+for full source code.
+
+
+
+
 [h4 Y-Axis Grid Lines]
 
 If you would like horizontal Y grid lines that go across the graph,

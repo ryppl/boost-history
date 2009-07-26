@@ -12,7 +12,7 @@
 // (See accompanying file LICENSE_1_0.txt
 // or copy at http://www.boost.org/LICENSE_1_0.txt)
 
-// An example to demonstrate 2D values including NaN and + and - infinity.
+// An example to demonstrate plotting 2D 'at limts' values including NaN and + and - infinity.
 
 // This file is written to be included from a Quickbook .qbk document.
 // It can be compiled by the C++ compiler, and run. Any output can
@@ -23,13 +23,17 @@
 
 //[demo_2d_limits_1
 
-/*`As ever, we need a few includes to use Boost.Plot
+/*`An example to demonstrate plotting 2D 'at limts' values
+including NaN and + and - infinity.
+
+As ever, we need the usuall includes to use Boost.Plot.
+
 */
+//] [demo_2d_limits_1]
 
 #include <boost/svg_plot/svg_2d_plot.hpp>
   using namespace boost::svg;
   using boost::svg::svg_2d_plot;
-
 #include <iostream>
   using std::cout;
   using std::endl;
@@ -43,7 +47,6 @@
 #include <utility>
   using std::make_pair;
 
-//] [demo_2d_limits_1]
 
 int main()
 {
@@ -78,7 +81,7 @@ int main()
   my_data[-numeric_limits<double>::infinity()] = -numeric_limits<double>::infinity(); // Bottom left.
 
 /*`
-  [caution using map (rather than multimap that allows duplicates) some assignments values overwrite,
+  [caution Using map (rather than multimap that allows duplicates) some assignments values overwrite,
   and so not all display as they do individually.
   In particular, an X value of quiet_NaN() causes a overwrite of the lowerest value (because NaNs never compare equal).
   So avoid NaN as an X value.]
@@ -102,8 +105,8 @@ here a circle with a diameter of 5 pixels.
 /*`
 We can also keep note of the plot series and use this to interrogate how many normal and how many 'at limit' values.
 */
-    cout << my_series.values_count() << " Normal data values in series." << endl;
-    cout << my_series.limits_count() << " 'At limits' data values in series."<< endl;
+    cout << my_series.values_count() << " normal data values in series." << endl;
+    cout << my_series.limits_count() << " 'at limits' data values in series."<< endl;
 
 /*`To put a value label against each data point, switch on the option:
 */

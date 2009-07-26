@@ -944,12 +944,12 @@ public:
     if (y_axis_.min_ > std::numeric_limits<double>::min()) // all Y values definitely > zero.
     { // y_min_ > 0, so X-axis will not intersect Y-axis, so use bottom plot window.
       x_axis_position_ = bottom; // X-axis to bottom of plot window.
-      x_ticks_.ticks_on_window_or_axis_ = -1; // bottom = true;
+      x_ticks_.ticks_on_window_or_on_axis_ = -1; // bottom = true;
     }
     else if(y_axis_.max_ < -std::numeric_limits<double>::min())  // all Y values definitely < zero.
     { // // y_max_ < 0, so X-axis will not intersect Y-axis, so use top plot window.
       x_axis_position_ = top; // X-axis to top of plot window.
-      x_ticks_.ticks_on_window_or_axis_ = +1; // top = true;
+      x_ticks_.ticks_on_window_or_on_axis_ = +1; // top = true;
     }
     // Y axis position is NOT determined by the range of X values.
     //x_axis_position_ = bottom;  // Assume X-axis will intersect Y-axis (X range includes zero).
@@ -1007,18 +1007,18 @@ public:
 
     if (y_ticks_.major_value_labels_side_ != 0) // != none
     { // Major tick value labels wanted left or right.
-      if ((y_ticks_.ticks_on_window_or_axis_ < 0) // On left of plot window.
+      if ((y_ticks_.ticks_on_window_or_on_axis_ < 0) // On left of plot window.
         && (y_ticks_.major_value_labels_side_ < 0) ) // & labels on left.
       {  // Contract plot window left edge to right to make space for value labels on left.
         plot_left_ += y_ticks_.label_max_space_;
       }
-      else if ((y_ticks_.ticks_on_window_or_axis_ > 0) // On right of plot window.
+      else if ((y_ticks_.ticks_on_window_or_on_axis_ > 0) // On right of plot window.
         && (y_ticks_.major_value_labels_side_ > 0) ) // & labels to right.
       {  // Contract plot window right to left to make space for value labels on right.
        plot_right_ -= y_ticks_.label_max_space_;
       }
       else
-      { // y_ticks_.ticks_on_window_or_axis_ == 0
+      { // y_ticks_.ticks_on_window_or_on_axis_ == 0
         // no value labels on plot window (may be on mid-plot Y-axis line).
         // Ignore the unusual case of Y-axis line too close to the axis label.
         // In this case the value labels may overflow the plot window
@@ -1045,12 +1045,12 @@ public:
 
     if (x_ticks_.major_value_labels_side_ != 0)
     { // Some tick value labels.
-      if ((x_ticks_.ticks_on_window_or_axis_ < 0) // on bottom of plot window.
+      if ((x_ticks_.ticks_on_window_or_on_axis_ < 0) // on bottom of plot window.
          && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
       {  // Contract plot window bottom edge up to make space for x value labels on bottom.
         plot_bottom_ -= x_ticks_.label_max_space_; // Move up.
       }
-      else if ((x_ticks_.ticks_on_window_or_axis_ > 0) //
+      else if ((x_ticks_.ticks_on_window_or_on_axis_ > 0) //
          && (x_ticks_.major_value_labels_side_ > 0) ) // & x labels to top.
       { // Move top of plot window down to give space for x value labels.
         plot_top_ += x_ticks_.label_max_space_; // Move down.
@@ -1076,12 +1076,12 @@ public:
       // and x_axis_ is svg coordinate of Y-axis (usually y = 0).
       // If not fix axis to bottom (or top) of the plot window.
       if ((x_axis_position_ == bottom) // All Y values definitely > zero.
-        )// && !(x_ticks_.ticks_on_window_or_axis_ < 0) ) // & not already at bottom.
+        )// && !(x_ticks_.ticks_on_window_or_on_axis_ < 0) ) // & not already at bottom.
       { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
         x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
       }
       else if ((x_axis_position_ == top)  // All Y values definitely < zero.
-        && !(x_ticks_.ticks_on_window_or_axis_ > 0) ) // & not already at top.
+        && !(x_ticks_.ticks_on_window_or_on_axis_ > 0) ) // & not already at top.
       { // // y_max_ < 0 so X-axis will not intersect Y-axis, so use plot window.
          x_axis_.axis_ = plot_top_; // Put X-axis on top.
       }
@@ -1097,14 +1097,14 @@ public:
       // and y_axis_ is svg coordinate of X-axis (usually x = 0).
       // Instead fix axis to left (or right) of the plot window.
       if ((y_axis_position_ == left) // All X values definitely > zero.
-         //&& !(y_ticks_.ticks_on_window_or_axis_ < 0) // & not already at left.
+         //&& !(y_ticks_.ticks_on_window_or_on_axis_ < 0) // & not already at left.
          )
       { // Y-axis will not intersect X -axis, so put Y-axis line on plot window.
         y_axis_.axis_ = plot_left_; // Y-axis to left,
         //plot_left_ += 2 * y_label_info_.font_size(); // with a space.
       }
       else if ((y_axis_position_ == right) // All X values definitely < zero.
-        //&& !(y_ticks_.ticks_on_window_or_axis_ > 0) // & not already at right.
+        //&& !(y_ticks_.ticks_on_window_or_on_axis_ > 0) // & not already at right.
         )
       {
         y_axis_.axis_ = plot_right_; // Y-axis to right of plot window,
@@ -1314,17 +1314,17 @@ public:
 
     // Draw major ticks & tick value label, if necessary.
     double y_tick_length = y_ticks_.major_tick_length_;
-    if (y_ticks_.ticks_on_window_or_axis_ < 0)
+    if (y_ticks_.ticks_on_window_or_on_axis_ < 0)
     { // Start ticks on the plot window border left.
       x_left = plot_left_; // x_left = left,
       x_right = plot_left_; //  x_right = right.
     }
-    else if (y_ticks_.ticks_on_window_or_axis_ > 0)
+    else if (y_ticks_.ticks_on_window_or_on_axis_ > 0)
     { // Start ticks on the plot window border right.
       x_left = plot_right_;
       x_right = plot_right_;
     }
-    else // y_ticks_.ticks_on_window_or_axis_== 0
+    else // y_ticks_.ticks_on_window_or_on_axis_== 0
     { // Internal style ticks on vertical Y-axis.
       x_left = y_axis_.axis_; // Y-axis line.
       x_right = y_axis_.axis_;
@@ -1463,10 +1463,10 @@ public:
     { // Sanity checks on svg coordinate.
       throw std::runtime_error("Y-tick Y value wrong!");
     }
-    if(y_ticks_.ticks_on_window_or_axis_ != 0)
+    if(y_ticks_.ticks_on_window_or_on_axis_ != 0)
       { // External to plot window style left or right.
         // Always want all values including "0", if labeling external to plot window.
-        // y_ticks_.ticks_on_window_or_axis_ == true != 0
+        // y_ticks_.ticks_on_window_or_on_axis_ == true != 0
         image.g(boxplot::VALUE_LABELS).text(
           x,
           y,
@@ -1522,18 +1522,18 @@ public:
     } // y_minor_grid
 
     // Draw y minor ticks.
-    if(y_ticks_.ticks_on_window_or_axis_ < 0)
+    if(y_ticks_.ticks_on_window_or_on_axis_ < 0)
     { // Put y minor ticks on the plot window border left.
       x_left = plot_left_;
       x_right = plot_left_;
     }
-    else if (y_ticks_.ticks_on_window_or_axis_ > 0)
+    else if (y_ticks_.ticks_on_window_or_on_axis_ > 0)
     { // Put y minor ticks on the plot window border left.
       x_left = plot_right_;
       x_right = plot_right_;
     }
     else
-    { // Internal style, y_ticks_.ticks_on_window_or_axis_ == 0
+    { // Internal style, y_ticks_.ticks_on_window_or_on_axis_ == 0
       x_left = y_axis_.axis_; // On the Y-axis line itself.
       x_right = y_axis_.axis_;
     }
@@ -1571,7 +1571,7 @@ public:
 
     double y = plot_bottom_;
     y += x_ticks_.value_label_style_.font_size() * 2.; // Shift down to suit ticks?
-    if (x_ticks_.ticks_on_window_or_axis_ < 0) // bottom == -1
+    if (x_ticks_.ticks_on_window_or_on_axis_ < 0) // bottom == -1
     { // Ticks & value labels below X-axis.
       if (x_ticks_.major_value_labels_side_ < 0) // - is bottom.
       { // Shift down to allow for any value labels.
@@ -1607,7 +1607,7 @@ public:
 
     double x = plot_left_;
     x -= y_axis_label_style_.font_size() * 0.7; // Shift left to suit.
-    if (y_ticks_.ticks_on_window_or_axis_ < 0)
+    if (y_ticks_.ticks_on_window_or_on_axis_ < 0)
     { // Ticks & value labels to left of Y-axis.
       if (y_ticks_.down_ticks_on_)
       { // Shift left for biggest of any ticks.
