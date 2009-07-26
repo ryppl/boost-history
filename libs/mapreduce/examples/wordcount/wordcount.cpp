@@ -48,7 +48,12 @@ struct map_task : public boost::mapreduce::map_task<
             {
                 if ((ch < 'A' || ch > 'Z') && ch != '\'')
                 {
-                    runtime.emit_intermediate(std::string(word,ptr-word), 1);
+                    std::string w(word,ptr-word);
+                    std::transform(w.begin(), w.end(), w.begin(),
+                                   std::bind1st(
+                                       std::mem_fun(&std::ctype<char>::tolower),
+                                       &std::use_facet<std::ctype<char> >(std::locale::classic())));
+                    runtime.emit_intermediate(w, 1);
                     in_word = false;
                 }
             }
@@ -64,7 +69,12 @@ struct map_task : public boost::mapreduce::map_task<
         if (in_word)
         {
             BOOST_ASSERT(ptr-word > 0);
-            runtime.emit_intermediate(std::string(word,ptr-word), 1);
+            std::string w(word,ptr-word);
+            std::transform(w.begin(), w.end(), w.begin(),
+                           std::bind1st(
+                               std::mem_fun(&std::ctype<char>::tolower),
+                               &std::use_facet<std::ctype<char> >(std::locale::classic())));
+            runtime.emit_intermediate(w, 1);
         }
     }
 };
