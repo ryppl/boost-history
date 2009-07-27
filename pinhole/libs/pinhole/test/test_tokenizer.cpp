@@ -176,6 +176,29 @@ BOOST_AUTO_TEST_CASE( TestTokenizer_ValidPaths )
 
         ++ct;
     }
+
+    // obscure values
+
+    BOOST_CHECK_EQUAL( process_path("name.pro.perty=value", path), 1u);
+    BOOST_CHECK_EQUAL( path.relative_path, true );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).name,     "name" );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).property, "pro.perty" );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).value,    "value" );
+
+    BOOST_CHECK_EQUAL( process_path("name.property=va.lue", path), 1u);
+    BOOST_CHECK_EQUAL( path.relative_path, true );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).name,     "name" );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).property, "property" );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).value,    "va.lue" );
+
+    BOOST_CHECK_EQUAL( process_path("name.property=va=lue", path), 1u);
+    BOOST_CHECK_EQUAL( path.relative_path, true );
+    BOOST_CHECK_EQUAL( path.tokens.size(), 1u );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).name,     "name" );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).property, "property" );
+    BOOST_CHECK_EQUAL( (*path.tokens.begin()).value,    "va=lue" );
 }
 
 BOOST_AUTO_TEST_CASE( TestTokenizer_InvalidPaths )

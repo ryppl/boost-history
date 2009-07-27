@@ -15,18 +15,12 @@
 #include "property_manager.hpp"
 #include <sstream>
 
-#if defined(BOOST_MSVC)
-    #pragma warning(push)
-    #pragma warning( disable: 4561)
-#endif
 #include <boost/bind.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/function.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/any.hpp>
-#if defined(BOOST_MSVC)
-    #pragma warning(pop)
-#endif
+#include <boost/throw_exception.hpp>
 
 #define BOOST_SETTER(c) boost::bind(c, this, _1)
 #if defined(BOOST_MSVC) && (_MSC_VER > 1310) && (_MSC_VER <= 1400)
@@ -95,6 +89,7 @@ namespace boost { namespace pinhole
      */
     class property_group
     {
+
     public:
         /**
          * Constructor.
@@ -334,19 +329,20 @@ namespace boost { namespace pinhole
                 {
                     detail::property_info_base* propInfo = (*itemItr).second;
                     
-                    // throws boost::bad_function_call if there isn't a get_as_string
-                    // function associated with this property.
-                    if( NULL != propInfo && typeid(Return_Type) == propInfo->m_type )
+                    if( typeid(Return_Type) == propInfo->m_type )
                     {
+                        // throws boost::bad_function_call if there isn't a get_as_string
+                        // function associated with this property.
                         return static_cast<detail::property_info<Return_Type>*>(propInfo)->getter();
                     }
                     
-                    throw std::bad_cast();
+                    throw ::boost::enable_error_info(std::bad_cast("Attempted to get a property using a type different from the properties type."))
+                                << ::boost::pinhole::exception_property_name(property)
+                                << ::boost::pinhole::exception_requested_type(typeid(Return_Type).name())
+                                << ::boost::pinhole::exception_property_type(propInfo->m_type.name());
                 }
                 
-                std::stringstream err;
-                err << "The requested property \"" << property << "\" does not exist.";
-                throw std::out_of_range(err.str().c_str());                
+                throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
             }
             
             /**
@@ -377,12 +373,13 @@ namespace boost { namespace pinhole
                         return static_cast<detail::property_info<Set_Type>*>(propInfo)->setter(value);
                     }
                     
-                    throw std::bad_cast();
+                    throw ::boost::enable_error_info(std::bad_cast("Attempted to set a property using a type different from the properties type."))
+                            << ::boost::pinhole::exception_property_name(property)
+                            << ::boost::pinhole::exception_requested_type(typeid(Set_Type).name())
+                            << ::boost::pinhole::exception_property_type(propInfo->m_type.name());
                 }
                 
-                std::stringstream err;
-                err << "The requested property \"" << property << "\" does not exist.";
-                throw std::out_of_range(err.str().c_str());                
+                throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
             }
 
             /**
@@ -406,9 +403,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    std::stringstream err;
-                    err << "The requested property \"" << property << "\" does not exist.";
-                    throw std::out_of_range(err.str().c_str());
+                    throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
                 }
             }
 
@@ -433,9 +428,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    std::stringstream err;
-                    err << "The requested property \"" << property << "\" does not exist.";
-                    throw std::out_of_range(err.str().c_str());
+                    throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
                 }
             }
 
@@ -457,9 +450,7 @@ namespace boost { namespace pinhole
                     return (*itemItr).second->get_as_string();
                 }
                 
-                std::stringstream err;
-                err << "The requested property \"" << property << "\" does not exist.";
-                throw std::out_of_range(err.str().c_str());    
+                throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);    
             }
 
             /**
@@ -480,9 +471,7 @@ namespace boost { namespace pinhole
                     return (*itemItr).second->get_as_wstring();
                 }
 
-                std::stringstream err;
-                err << "The requested property \"" << property << "\" does not exist.";
-                throw std::out_of_range(err.str().c_str());    
+                throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);    
             }
 
             /**
@@ -502,9 +491,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    std::stringstream err;
-                    err << "The requested property \"" << property << "\" does not exist.";
-                    throw std::out_of_range(err.str().c_str());
+                    throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
                 }
             }
 
@@ -524,9 +511,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    std::stringstream err;
-                    err << "The requested property \"" << property << "\" does not exist.";
-                    throw std::out_of_range(err.str().c_str());
+                    throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
                 }
             }
 
@@ -547,9 +532,7 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    std::stringstream err;
-                    err << "The requested property \"" << property << "\" does not exist.";
-                    throw std::out_of_range(err.str().c_str());
+                    throw ::boost::enable_error_info(std::out_of_range("The requested property does not exist.")) << ::boost::pinhole::exception_property_name(property);
                 }
             }
         //@}
@@ -627,9 +610,8 @@ namespace boost { namespace pinhole
                 }
                 else
                 {
-                    std::stringstream err;
-                    err << "The requested action \"" << action << "\" does not exist.";
-                    throw std::out_of_range(err.str().c_str());
+                    throw ::boost::enable_error_info(std::out_of_range("The requested action does not exist."))
+                        << ::boost::pinhole::exception_action_name(action);
                 }
             }
 
@@ -758,14 +740,10 @@ namespace boost { namespace pinhole
                                     boost::function<Value_Type ()> getter,
                                     boost::any &metadata )
         {
-            property_collection::iterator previousInstance = m_properties.find(name);
-            if( m_properties.end() != previousInstance )
-            {
-                delete (*previousInstance).second;
-            }
-
             // If you get an error here, then the type you are using for the property likely doesn't have a proper operator<< for it
             detail::property_info<Value_Type> *prop = new detail::property_info<Value_Type>();
+
+            // Fill out property information
 
             prop->m_name        = name;
             prop->m_description = description;
@@ -779,7 +757,19 @@ namespace boost { namespace pinhole
             }
             prop->m_metadata = metadata;
 
-            m_properties.insert( std::make_pair(name, prop) );
+            // Store property information
+
+            property_collection::iterator previousInstance = m_properties.find(name);
+            if( m_properties.end() != previousInstance )
+            {
+                // Object already exists. Destroy existing instance and replace it.
+                delete (*previousInstance).second;
+                (*previousInstance).second = prop;
+            }
+            else
+            {
+                m_properties.insert( std::make_pair(name, prop) );
+            }
         }
 
     private:

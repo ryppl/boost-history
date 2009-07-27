@@ -24,6 +24,19 @@
     #pragma warning(pop)
 #endif
 
+#if defined(BOOST_HAS_DECLSPEC) && (defined(BOOST_PINHOLE_DYN_LINK) || defined(BOOST_ALL_DYN_LINK)) && !defined(BOOST_PINHOLE_STATIC_LINK)
+#  if defined(BOOST_PINHOLE_SOURCE)
+#     define BOOST_PINHOLE_DECL __declspec(dllexport)
+#     define BOOST_PINHOLE_BUILD_DLL
+#  else
+#     define BOOST_PINHOLE_DECL __declspec(dllimport)
+#  endif
+#endif
+
+#ifndef BOOST_PINHOLE_DECL
+#  define BOOST_PINHOLE_DECL
+#endif
+
 namespace boost { namespace pinhole
 {
     class property_group;
@@ -31,10 +44,10 @@ namespace boost { namespace pinhole
     typedef std::set<std::string> category_collection;
     typedef std::list<property_group*> children_collection;
     
-    class event_source
+    class BOOST_PINHOLE_DECL event_source
     {
     public :
-        static event_source* instance()
+        inline static event_source* instance()
         {
             static boost::shared_ptr<boost::pinhole::event_source> instance;
 
@@ -55,6 +68,7 @@ namespace boost { namespace pinhole
         #if defined(BOOST_MSVC)
             #pragma warning(pop)
         #endif
+
         void raise_on_add_event( property_group *group )
         {
             add_event( group );
@@ -71,7 +85,7 @@ namespace boost { namespace pinhole
         
     };
 
-    class property_manager
+    class BOOST_PINHOLE_DECL property_manager
     {
     public:
         typedef boost::shared_ptr<property_manager> instance_type;
@@ -88,7 +102,7 @@ namespace boost { namespace pinhole
         typedef boost::pinhole::category_iterator<boost::pinhole::children_collection::iterator> filtered_iterator;
         typedef boost::pinhole::category_iterator<boost::pinhole::children_collection::const_iterator> const_filtered_iterator;
         
-        static instance_type instance()
+        inline static instance_type instance()
         {
             if ( !exists() )  // is it the first call?
             {  

@@ -46,13 +46,17 @@ namespace boost { namespace pinhole { namespace detail
         template<typename Set_Type>
         inline void operator()( Set_Type setter, String_Type value )
         {
+            typedef boost::error_info< struct tag_requested_value, const String_Type > exception_requested_value;
+
             try
             {
                 setter( boost::lexical_cast<Value_Type>(value) );
             }
             catch(boost::bad_lexical_cast &)
             {
-                throw std::invalid_argument( "An invalid property value was used to set." );
+                throw ::boost::enable_error_info(std::invalid_argument("Could not convert string to the property's type."))
+                            << exception_requested_value(value)
+                            << ::boost::pinhole::exception_property_type(typeid(Value_Type).name());
             }
         }
     };

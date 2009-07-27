@@ -17,19 +17,18 @@ namespace boost { namespace pinhole
     /**
      * Finds specified property_group and returns the value of one of its properties as the
      * type specified. Finds property_group based on a path that describes where that property_group
-     * exists within the property group hierarchy. This version does not allow for relative
-     * path accessing.
-     * @n
+     * exists within the property group hierarchy.
+     * @n@n
      * Path format one: /A/X.Y=Z @n
      * A represents a property group name. The assumption is that A is the only property
      * group in the current level. The path search will start from root\
-     * @n
+     * @n@n
      * Path format two: /A.B=C/X.Y=Z @n
      * A and X represent property group names. B and Y represent property names. C and Z
      * represent property values. The path search will start from root.
      *
      * @param current_property_group The property_group in which to search.
-     * @param path The path to search with.
+     * @param path The path to search with. See format above.
      * @param property The name of the property.
      * @return The value of the property.
      * @throw invalid_path The path does not meet the requirements for a valid path.
@@ -45,18 +44,23 @@ namespace boost { namespace pinhole
         property_group* pGroup = select_single_node(current_property_group, path);
         if( NULL == pGroup )
         {
-            throw boost::pinhole::failed_to_find_group();
+            throw ::boost::pinhole::failed_to_find_group("Property Group doesn't exist at requested path.")
+                        << ::boost::pinhole::exception_path(path);
         }
         return pGroup->get<T>(property);
     }
 
+    /**
+     * @overload
+     */
     template<typename T>
     T get_single_value(const std::string& path, const std::string& property)
     {
         property_group* pGroup = select_single_node(path);
         if( NULL == pGroup )
         {
-            throw boost::pinhole::failed_to_find_group();
+            throw ::boost::pinhole::failed_to_find_group("Property Group doesn't exist at requested path.")
+                        << ::boost::pinhole::exception_path(path);
         }
         return pGroup->get<T>(property);
     }
@@ -64,21 +68,20 @@ namespace boost { namespace pinhole
     /**
      * Finds specified property_group and sets the value of one of its properties.
      * Finds property_group based on a path that describes where that property_group
-     * exists within the property group hierarchy. This version does not allow for relative
-     * path accessing.
-     * @n
+     * exists within the property group hierarchy.
+     * @n@n
      * Path format one: /A/X.Y=Z @n
      * A represents a property group name. The assumption is that A is the only property
      * group in the current level. The path search will start from root\
-     * @n
+     * @n@n
      * Path format two: /A.B=C/X.Y=Z @n
      * A and X represent property group names. B and Y represent property names. C and Z
      * represent property values. The path search will start from root.
      *
      * @param current_property_group The property_group in which to search.
-     * @param path The path to search with.
+     * @param path The path to search with. See format above.
      * @param property The name of the property.
-     * @return The value to set on the property.
+     * @param value the value to set on the property.
      * @throw invalid_path The path does not meet the requirements for a valid path.
      * @throw multiple_property_groups There were multiple property groups matching this path.
      * @throw failed_to_find_group The path is not found.
@@ -92,18 +95,23 @@ namespace boost { namespace pinhole
         property_group* pGroup = select_single_node(current_property_group, path);
         if( NULL == pGroup )
         {
-            throw boost::pinhole::failed_to_find_group();
+            throw ::boost::pinhole::failed_to_find_group("Property Group doesn't exist at requested path.")
+                        << ::boost::pinhole::exception_path(path);
         }
         pGroup->set<T>(property, value);
     }
 
+    /**
+     * @overload
+     */
     template<typename T>
     void set_single_value(const std::string& path, const std::string& property, T value)
     {
         property_group* pGroup = select_single_node(path);
         if( NULL == pGroup )
         {
-            throw boost::pinhole::failed_to_find_group();
+            throw ::boost::pinhole::failed_to_find_group("Property Group doesn't exist at requested path.")
+                        << ::boost::pinhole::exception_path(path);
         }
         pGroup->set<T>(property, value);
     }

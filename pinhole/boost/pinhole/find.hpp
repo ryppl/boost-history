@@ -10,11 +10,24 @@
 
 #include <vector>
 
-#include "./detail/path.hpp"
+#include "./detail/tokenizer.hpp"
 #include "path_filtered_iterator.hpp"
 
 namespace boost { namespace pinhole
 {
+    namespace detail
+    {
+        inline
+            void ThrowIfPathIsRelative(const std::string& path)
+        {
+            if( path.length() > 0 && path[0] != '/' )
+            {
+                throw boost::pinhole::invalid_path("A relative path was requested, but no property_group to search from was given.")
+                    << ::boost::pinhole::exception_path(path);
+            }
+        }
+    }
+
     /** 
      * Returns a property_group based on a path that describes where that property_group
      * exists within the property group hierarchy. This path can either be from the
@@ -45,87 +58,62 @@ namespace boost { namespace pinhole
      */
     inline boost::pinhole::property_group* select_single_node(boost::pinhole::property_group* current_property_group, const std::string& path)
     {
-        std::pair<boost::pinhole::children_collection::iterator,boost::pinhole::children_collection::iterator> range;
+        typedef boost::iterator_range< boost::pinhole::children_collection::iterator > child_range;
+        
+        child_range range;
 
         if( NULL != current_property_group )
         {
-            range.first  = current_property_group->get_children_collection().begin();
-            range.second = current_property_group->get_children_collection().end();
+            range = child_range( current_property_group->get_children_collection().begin(),
+                                 current_property_group->get_children_collection().end() );
         }
         else
         {
             detail::ThrowIfPathIsRelative(path);
         }
-        boost::pinhole::children_collection* root_property_group_collection = 0; //The root collection might not be needed if it is not referred.
-        
-        typedef std::vector< std::string > split_vector_type;
-        split_vector_type vecproperty_groups; 
-        boost::split( vecproperty_groups, path, boost::is_any_of("/") ); //Note: "/" is the separator for a property group
-        try
+
+        detail::token_path token_path;
+        process_path( path, token_path );
+
+        if( false == token_path.relative_path )
         {
-            for(split_vector_type::const_iterator iter_property_group = vecproperty_groups.begin(); iter_property_group != vecproperty_groups.end(); iter_property_group++)
+            boost::pinhole::property_manager::instance_type manager = boost::pinhole::property_manager::instance();
+            range = child_range(manager->begin(), manager->end() );
+        }
+
+        boost::pinhole::property_group* property_group_found = NULL;
+
+        BOOST_FOREACH( const boost::pinhole::detail::token_path::token& token, token_path.tokens )
+        {
+            property_group_found = NULL;
+            
+            BOOST_FOREACH( property_group* group, range )
             {
-                std::string strproperty_group = *iter_property_group;
-                split_vector_type properties;
-                boost::split( properties, strproperty_group, boost::is_any_of(".=") ); 
-                //Note: "." is the separator between Property group name and Property name.
-                //"=" is the separator between property name and property value. If there's no "." or "=",
-                //we will just use this property group.
-                size_t nNumOfItems = properties.size();
-                switch(nNumOfItems)
+                if( token.name == group->get_name() &&
+                    (true == token.property.empty() || 
+                    (group->is_valid_property(token.property) && token.value == group->get_as_string(token.property)) ))
                 {
-                    case 1:
+                    if( NULL == property_group_found )
                     {
-                        std::string strItem = properties[0]; //It either is "/" or the property group name.
-                        boost::trim(strItem);
-                        if(strItem.empty()) //It is "/"
-                        {
-                            boost::pinhole::property_manager::instance_type manager = boost::pinhole::property_manager::instance();
-                            range.first  = manager->begin();
-                            range.second = manager->end();
-                        }
-                        else
-                        {
-                            //strItem here must be a property group name.
-                            //If multiple or none is found ,exception will be thrown.
-                            current_property_group = detail::search_single_property_group_based_on_name(range.first, range.second, strItem);
-                            
-                            range.first  = current_property_group->get_children_collection().begin();
-                            range.second = current_property_group->get_children_collection().end();
-                        }
+                        property_group_found = group;
                     }
-                        break;
-                    case 3:
+                    else
                     {
-                        std::string property_group_name = properties[0];
-                        boost::trim(property_group_name);
-                        
-                        std::string property_name = properties[1];
-                        boost::trim(property_name);
-                        
-                        std::string property_value = properties[2];
-                        boost::trim(property_value);
-                        current_property_group = detail::search_single_property_group_based_on_property_value(range.first, range.second, property_group_name, property_name, property_value);
-                        
-                        range.first  = current_property_group->get_children_collection().begin();
-                        range.second = current_property_group->get_children_collection().end();
-                    }
-                        break;
-                    default:
-                    {
-                        std::string strError = path + " is not a valid path. Details: " + strproperty_group + " should be either A.B=C or A format";
-                        throw invalid_path(strError.c_str());
+                        throw ::boost::pinhole::multiple_property_groups("Requested path does not lead to a unique property group."); 
                     }
                 }
             }
+
+            if( NULL == property_group_found )
+            {
+                break;
+            }
+
+            range = child_range( property_group_found->get_children_collection().begin(),
+                                 property_group_found->get_children_collection().end() );
         }
-        catch(no_metadata_defined_error&)
-        {
-            current_property_group = NULL;
-        }
-        
-        delete root_property_group_collection;
-        return current_property_group;
+
+        return property_group_found;
     }
 
     inline property_group* select_single_node(boost::pinhole::property_group& current_property_group, const std::string& path)

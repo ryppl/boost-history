@@ -29,11 +29,12 @@ project
   [ run test_string_properties.cpp  ]
   
   [ run test_actions.cpp  ]
-  
+ 
   [ run test_tokenizer.cpp ]
   [ run test_depth_first_iterator.cpp ]
   [ run test_path_filtered_iterator.cpp ]
   [ run test_category_iterator.cpp ]
   [ run test_find.cpp  ]
+  [ run test_value.cpp  ]
  ;
 }
