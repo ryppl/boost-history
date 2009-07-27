@@ -192,7 +192,7 @@ class job : private boost::noncopyable
 
     bool const run_map_task(void *key, results &result)
     {
-        bool success = false;
+        bool success = true;
         time_t const start_time = time(NULL);
 
         try
