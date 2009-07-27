@@ -20,55 +20,52 @@
 
 namespace boost
 {
-	namespace generic_ptr
-	{
-		template<typename T, typename PointerToMutex>
-		class monitor
-		{
-			typedef monitor this_type;
-			//FIXME: take advantage of rvalue refs if available
-			template<typename Mutex>
-			class temporary_monitor_lock
-			{
-			public:
-				temporary_monitor_lock(T p, Mutex &m): _object_p(p),
-					_lock(new detail::unique_lock<Mutex>(m))
-				{}
-#ifndef BOOST_NO_RVALUE_REFERENCES
-				temporary_monitor_lock(temporary_monitor_lock &&other):
-					_object_p(std::move(other._object_p),
-					_lock(std::move(other._lock))
-				{}
-#endif
-				T operator->() const
-				{
-					return _object_p;
-				}
-			private:
-				T _object_p;
-				shared<detail::unique_lock<Mutex> *> _lock;
-			};
+  class mutex;
+
+  namespace generic_ptr
+  {
+    template<typename T, typename Mutex = boost::mutex>
+    class monitor
+    {
+      typedef monitor this_type; // for detail/operator_bool.hpp
+#ifdef BOOST_NO_RVALUE_REFERENCES
+      class moveable_monitor_lock
+      {
+      public:
+        moveable_monitor_lock(T p, Mutex &m): _object_p(p),
+          _lock(new detail::unique_lock<Mutex>(m))
+        {}
+        T operator->() const
+        {
+          return _object_p;
+        }
+      private:
+        T _object_p;
+        shared<detail::unique_lock<Mutex> *> _lock;
+      };
+#else
+      typedef monitor_unique_lock<monitor> moveable_monitor_lock;
+#endif // BOOST_NO_RVALUE_REFERENCES
 
 		public:
 			typedef typename pointer_traits<T>::value_type value_type;
 			typedef T pointer;
 			typedef typename pointer_traits<T>::reference reference;
-			typedef PointerToMutex pointer_to_mutex_type;
-			typedef typename pointer_traits<PointerToMutex>::value_type mutex_type;
+			typedef Mutex mutex_type;
 
 			template<typename ValueType>
 			struct rebind
 			{
-				typedef monitor<typename generic_ptr::rebind<pointer, ValueType>::other, PointerToMutex > other;
+				typedef monitor<typename generic_ptr::rebind<pointer, ValueType>::other, Mutex > other;
 			};
 
 			monitor(): px(), _mutex_p()
 			{}
 			template<typename U>
-			monitor( U p, PointerToMutex mutex_p ): px( p ), _mutex_p(mutex_p)
+			monitor( U p, const shared<Mutex*> & mutex_p = shared<Mutex*>(new Mutex()) ): px( p ), _mutex_p(mutex_p)
 			{}
 			template<typename U>
-			monitor(const monitor<U, pointer_to_mutex_type> & other): px(other.px), _mutex_p(other._mutex_p)
+			monitor(const monitor<U, Mutex> & other): px(other.px), _mutex_p(other._mutex_p)
 			{}
 #ifndef BOOST_NO_RVALUE_REFERENCES
 			monitor(monitor && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p)
@@ -91,7 +88,7 @@ namespace boost
 			}
 
 			template<typename U>
-			monitor & operator=(const monitor<U, pointer_to_mutex_type> & other)
+			monitor & operator=(const monitor<U, mutex_type> & other)
 			{
 				monitor(other).swap(*this);
 				return *this;
@@ -103,7 +100,7 @@ namespace boost
 				return *this;
 			}
 			template<typename U>
-			monitor & operator=(monitor<U, pointer_to_mutex_type> && other)
+			monitor & operator=(monitor<U, mutex_type> && other)
 			{
 				monitor(std::move(other)).swap(*this);
 				return *this;
@@ -113,31 +110,34 @@ namespace boost
 			{
 				monitor().swap(*this);
 			}
-			template<typename U> void reset(U object_p, pointer_to_mutex_type mutex_p)
+			template<typename U> void reset(U object_p, const shared<mutex_type*> &mutex_p)
 			{
 				monitor(object_p, mutex_p).swap(*this);
 			}
 
 			pointer get() const {return px;}
-			pointer_to_mutex_type get_mutex() const {return _mutex_p;}
+			shared<mutex_type*> get_shared_mutex() const {return _mutex_p;}
+      mutex_type& get_mutex_ref() const {return *_mutex_p;}
 
 // implicit conversion to "bool"
 #include <boost/generic_ptr/detail/operator_bool.hpp>
 
-			temporary_monitor_lock<mutex_type> operator->() const
+			moveable_monitor_lock operator->() const
 			{
-				return temporary_monitor_lock<mutex_type>(px, *_mutex_p);
+				return moveable_monitor_lock(px, *_mutex_p);
 			}
+
 		private:
 			pointer px;
-			pointer_to_mutex_type _mutex_p;
+			shared<mutex_type*> _mutex_p;
 		};
 
-		template<typename T, typename PointerToMutex>
-		T get_pointer(const monitor<T, PointerToMutex> &mp)
+		template<typename T, typename Mutex>
+		T get_pointer(const monitor<T, Mutex> &mp)
 		{
 			return mp.get();
 		}
+//TODO: casts, comparisons
 	} // namespace generic_ptr
 } // namespace boost
 
