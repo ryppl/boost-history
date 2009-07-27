@@ -17,6 +17,7 @@
 #include <memory> // boost.TR1 include order fix
 #include <boost/smart_ptr/detail/shared_count.hpp>
 #include <boost/generic_ptr/shared.hpp>
+#include <boost/utility/swap.hpp>
 
 #ifdef BOOST_MSVC  // moved here to work around VC++ compiler crash
 # pragma warning(push)
@@ -97,7 +98,7 @@ public:
     }
 
     // for better efficiency in the T == Y case
-    weak( weak && r ): px( r.px ), pn(std::move(r.pn)) // never throws
+    weak( weak && r ): px( std::move(r.px) ), pn(std::move(r.pn)) // never throws
     {
         detail::set_plain_old_pointer_to_null(r.px);
     }
@@ -184,7 +185,7 @@ public:
 
     void swap(this_type & other) // never throws
     {
-        std::swap(px, other.px);
+        boost::swap(px, other.px);
         pn.swap(other.pn);
     }
 

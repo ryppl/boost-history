@@ -48,13 +48,13 @@
 #include <boost/smart_ptr/detail/sp_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/enable_if.hpp>
+#include <boost/utility/swap.hpp>
 
 #if !defined(BOOST_SP_NO_ATOMIC_ACCESS)
 #include <boost/smart_ptr/detail/spinlock_pool.hpp>
 #include <boost/memory_order.hpp>
 #endif
 
-#include <algorithm>            // for std::swap
 #include <functional>           // for std::less
 #include <typeinfo>             // for std::bad_cast
 
@@ -332,7 +332,7 @@ public:
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
-    shared( shared && r ): px( r.px ), pn() // never throws
+    shared( shared && r ): px( std::move(r.px) ), pn() // never throws
     {
         pn.swap( r.pn );
         detail::set_plain_old_pointer_to_null(r.px);
@@ -348,7 +348,7 @@ public:
     shared( shared<Y> && r )
 
 #endif
-    : px( r.px ), pn() // never throws
+    : px( std::move(r.px) ), pn() // never throws
     {
         pn.swap( r.pn );
         detail::set_plain_old_pointer_to_null(r.px);
@@ -426,7 +426,7 @@ public:
 
     void swap(shared<T> & other) // never throws
     {
-        std::swap(px, other.px);
+        boost::swap(px, other.px);
         pn.swap(other.pn);
     }
 
