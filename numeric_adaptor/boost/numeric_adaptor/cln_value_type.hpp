@@ -98,6 +98,11 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
         return *this;
     }
 
+    friend inline cln_value_type operator-(cln_value_type const& v)
+    {
+        return cln_value_type(-v.m_value);
+    }
+
     cln::cl_F m_value;
 };
 

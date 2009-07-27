@@ -112,6 +112,13 @@ struct gmp_value_type
         return *this;
     }
 
+    friend inline gmp_value_type operator-(gmp_value_type const& v)
+    {
+        gmp_value_type r;
+        mpf_neg(r.m_value, v.m_value);
+        return r;
+    }
+
     mpf_t m_value;
 };
 
