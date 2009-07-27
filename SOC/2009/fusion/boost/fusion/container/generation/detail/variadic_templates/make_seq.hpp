@@ -12,7 +12,7 @@ namespace boost { namespace fusion
     namespace result_of
     {
         template <typename... Types>
-        struct BOOST_PP_CAT(make,BOOST_FUSION_SEQ_NAME)
+        struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)
         {
             typedef
                 BOOST_FUSION_SEQ_NAME<
@@ -24,17 +24,16 @@ namespace boost { namespace fusion
 
     template <typename... Types>
     inline typename
-        result_of::BOOST_PP_CAT(make,BOOST_FUSION_SEQ_NAME)<
+        result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
             BOOST_FUSION_R_ELSE_CLREF(Types)...
         >::type
-    BOOST_PP_CAT(make,BOOST_FUSION_SEQ_NAME)(
+    BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)(
         BOOST_FUSION_R_ELSE_CLREF(Types)... types)
     {
         return typename
-            result_of::BOOST_PP_CAT(make,BOOST_FUSION_SEQ_NAME)<
+            result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
                 BOOST_FUSION_R_ELSE_CLREF(Types)...
             >::type(BOOST_FUSION_FORWARD(Types, types)...);
     }
-
 }}
 

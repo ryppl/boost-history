@@ -26,6 +26,7 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/is_reference.hpp>
+#include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_volatile.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -44,9 +45,10 @@
 
 #   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
         MACRO(&,ARG)\
-        MACRO(const&,ARG)\
-        MACRO(volatile&,ARG)\
-        MACRO(const volatile&,ARG)
+        MACRO(const&,ARG)
+
+        //MACRO(volatile&,ARG)\
+        //MACRO(const volatile&,ARG)
 #else
 #   include <utility>
 
@@ -64,12 +66,13 @@
 #   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
         MACRO(&,ARG)\
         MACRO(const&,ARG)\
-        MACRO(volatile&,ARG)\
-        MACRO(const volatile&,ARG)\
         MACRO(&&,ARG)\
-        MACRO(const&&,ARG)\
-        MACRO(volatile&&,ARG)\
-        MACRO(const volatile&&,ARG)
+        MACRO(const&&,ARG)
+
+        //MACRO(volatile&,ARG)\
+        //MACRO(const volatile&,ARG)\
+        //MACRO(volatile&&,ARG)\
+        //MACRO(const volatile&&,ARG)
 #endif
 #define BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(MACRO,ARG)\
     BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
@@ -80,6 +83,7 @@
 
 namespace boost { namespace fusion { namespace detail
 {
+    //cschmidt: workaround until boost::is_reference supports rvalues
     template<typename T>
     struct is_lrref
       : mpl::false_
@@ -112,6 +116,7 @@ namespace boost { namespace fusion { namespace detail
     };
 #endif
 
+    //cschmidt: workaround until boost::is_reference supports rvalues
     template<typename T>
     struct remove_reference
     {
@@ -134,15 +139,8 @@ namespace boost { namespace fusion { namespace detail
 
     template <typename T>
     struct add_lref
-    {
-        typedef T& type;
-    };
-
-    template <typename T>
-    struct add_lref<T&>
-    {
-        typedef T& type;
-    };
+      : add_reference<T>
+    {};
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
     template <typename T>
@@ -158,7 +156,7 @@ namespace boost { namespace fusion { namespace detail
         typedef typename remove_const<
             typename remove_cv<
                 typename remove_reference<T>::type
-           >::type
+            >::type
         >::type type;
     };
 
@@ -174,21 +172,23 @@ namespace boost { namespace fusion { namespace detail
         typedef typename remove_reference<TestType>::type test_type;
 
         typedef typename
-            mpl::if_<is_const<test_type>
-               , typename add_const<Type>::type
-               , Type
+            mpl::if_<
+                is_const<test_type>
+              , typename add_const<Type>::type
+              , Type
             >::type
         const_type;
 
         typedef typename
-            mpl::if_<is_volatile<test_type>
-               , typename add_volatile<const_type>::type
-               , const_type
+            mpl::if_<
+                is_volatile<test_type>
+              , typename add_volatile<const_type>::type
+              , const_type
             >::type
         cv_type;
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        typedef cv_type& type;
+        typedef typename add_reference<cv_type>::type type;
 #else
         typedef typename
             mpl::eval_if<

@@ -27,12 +27,12 @@ namespace boost { namespace fusion
             typedef
                 iterator_range<
                     typename result_of::begin<Seq>::type
-                  , typename detail::add_lref<Pos>::type
+                  , typename detail::identity<Pos>::type
                 >
             left_type;
             typedef
                 iterator_range<
-                    typename detail::add_lref<Pos>::type
+                    typename detail::identity<Pos>::type
                   , typename result_of::end<Seq>::type
                 >
             right_type;

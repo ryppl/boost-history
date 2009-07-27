@@ -15,7 +15,8 @@ project
     : requirements <include>.
                    <toolset>gcc-conceptgcc:<include>workaround/conceptgcc
                    <include>$(BOOST_INCLUDES_PATH)
-#                   <toolset>gcc:<cxxflags>-std=c++0x
+                   <toolset>gcc:<cxxflags>-std=c++0x
+                   <toolset>msvc:<cxxflags>/w
     : build-dir ../bin
     : default-build debug <link>shared <runtime-link>shared <threading>multi
     ;

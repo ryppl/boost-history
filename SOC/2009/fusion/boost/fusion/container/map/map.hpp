@@ -74,11 +74,10 @@ public:
         template <typename Key>
         struct meta_at_impl
         {
-            template<class Iterator>struct get_type
+            template<class It>
+            struct get_type
             {
-                typedef typename
-                    mpl::deref<Iterator>::type::second_type
-                type;
+                typedef typename mpl::deref<It>::type::second_type type;
             };
 
             typedef typename
@@ -90,7 +89,8 @@ public:
 
             typedef typename
                 mpl::eval_if<
-                    is_same<iterator
+                    is_same<
+                        iterator
                       , typename mpl::end<typename storage_type::types>::type
                     >
                   , mpl::identity<void_>
@@ -153,8 +153,8 @@ public:
 #   undef BOOST_FUSION_SEQ_NAME
 #else
         template <typename... OtherArguments>
-        map(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
-            : data(BOOST_FUSION_FORWARD(OtherArguments,other_arguments)...)
+        map(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... arguments)
+            : data(BOOST_FUSION_FORWARD(OtherArguments,arguments)...)
         {}
 #endif
 

@@ -80,12 +80,12 @@ namespace boost { namespace fusion
             typedef
                 iterator_range<
                     seq_first_type
-                  , First
+                  , typename detail::identity<First>::type
                 >
             left_type;
             typedef
                 iterator_range<
-                    Last
+                    typename detail::identity<Last>::type
                   , seq_last_type
                 >
             right_type;

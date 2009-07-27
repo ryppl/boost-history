@@ -11,7 +11,7 @@
 
 #include <boost/type_traits/add_reference.hpp>
 
-#include <boost/fusion/functional/adapter/detail/access.hpp>
+#include <boost/fusion/functional/adapter/detail/no_decltype_or_variadic_templates/access.hpp>
 #include <boost/fusion/functional/invocation/invoke_function_object.hpp>
 
 namespace boost { namespace fusion

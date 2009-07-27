@@ -6,6 +6,7 @@
 #ifndef BOOST_PP_IS_ITERATING
 
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/template.hpp>
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/cat.hpp>

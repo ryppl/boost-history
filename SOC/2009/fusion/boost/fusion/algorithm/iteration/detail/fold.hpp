@@ -23,6 +23,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/add_const.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -152,16 +153,29 @@ namespace boost { namespace fusion { namespace detail
 #endif
     };
 
+    template <typename It, typename State, typename FRef>
+    struct fold_apply_r_else_clref
+#ifdef BOOST_NO_RVALUE_REFERENCES
+      : fold_apply<
+            It
+          , typename detail::add_lref<typename add_const<State>::type>::type
+          , FRef
+        >
+#else
+      : fold_apply<It,State&&,FRef>
+#endif
+    {};
+
     template<typename It0, typename StateRef, typename FRef, int N>
     struct result_of_unrolled_fold
     {
         typedef typename fold_apply<It0, StateRef, FRef>::type rest1;
         typedef typename result_of::next<It0>::type it1;
-        typedef typename fold_apply<it1, BOOST_FUSION_R_ELSE_CLREF(rest1), FRef>::type rest2;
+        typedef typename fold_apply_r_else_clref<it1, rest1, FRef>::type rest2;
         typedef typename result_of::next<it1>::type it2;
-        typedef typename fold_apply<it2, BOOST_FUSION_R_ELSE_CLREF(rest2), FRef>::type rest3;
+        typedef typename fold_apply_r_else_clref<it2, rest2, FRef>::type rest3;
         typedef typename result_of::next<it2>::type it3;
-        typedef typename fold_apply<it3, BOOST_FUSION_R_ELSE_CLREF(rest3), FRef>::type rest4;
+        typedef typename fold_apply_r_else_clref<it3, rest3, FRef>::type rest4;
         typedef typename result_of::next<it3>::type it4;
 
         typedef typename
@@ -183,12 +197,10 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef typename fold_apply<It0, StateRef, FRef>::type rest1;
         typedef typename result_of::next<It0>::type it1;
-        typedef typename fold_apply<it1, BOOST_FUSION_R_ELSE_CLREF(rest1), FRef>::type rest2;
+        typedef typename fold_apply_r_else_clref<it1, rest1, FRef>::type rest2;
         typedef typename result_of::next<it1>::type it2;
 
-        typedef typename
-            fold_apply<it2, BOOST_FUSION_R_ELSE_CLREF(rest2), FRef>::type
-        type;
+        typedef typename fold_apply_r_else_clref<it2, rest2, FRef>::type type;
     };
 
     template<typename It0, typename StateRef, typename FRef>
@@ -197,16 +209,14 @@ namespace boost { namespace fusion { namespace detail
         typedef typename fold_apply<It0, StateRef, FRef>::type rest;
         typedef typename result_of::next<It0>::type it1;
 
-        typedef typename
-            fold_apply<it1, BOOST_FUSION_R_ELSE_CLREF(rest), FRef>::type
-        type;
+        typedef typename fold_apply_r_else_clref<it1, rest, FRef>::type type;
     };
 
     template<typename It0, typename StateRef, typename FRef>
     struct result_of_unrolled_fold<It0, StateRef, FRef, 1>
     {
         typedef typename
-            fold_apply<It0, BOOST_FUSION_R_ELSE_CLREF(StateRef), FRef>::type
+            fold_apply_r_else_clref<It0, StateRef, FRef>::type
         type;
     };
 

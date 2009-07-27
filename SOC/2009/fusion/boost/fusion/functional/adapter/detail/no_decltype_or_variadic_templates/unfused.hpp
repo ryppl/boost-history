@@ -20,7 +20,7 @@
 #include <boost/fusion/container/vector/vector.hpp>
 
 #include <boost/fusion/functional/adapter/limits.hpp>
-#include <boost/fusion/functional/adapter/detail/access.hpp>
+#include <boost/fusion/functional/adapter/detail/no_decltype_or_variadic_templates/access.hpp>
 
 namespace boost { namespace fusion
 {

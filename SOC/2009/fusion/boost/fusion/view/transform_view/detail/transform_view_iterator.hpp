@@ -20,7 +20,6 @@ namespace boost { namespace fusion
     struct transform_view_iterator
       : iterator_base<transform_view_iterator<First, FRef> >
     {
-        //TODO !!!
         typedef FRef transform_type;
         typedef First first_type;
 

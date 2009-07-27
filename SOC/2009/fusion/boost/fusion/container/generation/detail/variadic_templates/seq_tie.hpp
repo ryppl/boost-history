@@ -30,10 +30,9 @@ namespace boost { namespace fusion
     BOOST_FUSION_FUNCTION_NAME(BOOST_FUSION_R_ELSE_CLREF(Types)... types)
     {
         return typename
-            BOOST_FUSION_FUNCTION_NAME<
+            result_of::BOOST_FUSION_FUNCTION_NAME<
                 BOOST_FUSION_R_ELSE_CLREF(Types)...
             >::type(BOOST_FUSION_FORWARD(Types, types)...);
     }
-
 }}
 

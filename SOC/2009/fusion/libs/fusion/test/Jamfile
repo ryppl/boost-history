@@ -38,9 +38,9 @@ import testing ;
     [ run algorithm/replace.cpp :  :  :  : ]
     [ run algorithm/reverse.cpp :  :  :  : ]
     [ run algorithm/transform.cpp :  :  :  : ]
-#    [ run algorithm/zip_ignore.cpp : : : : ]
-#    [ run algorithm/zip.cpp : : : : ]
-#    [ run algorithm/zip2.cpp : : : : ]
+    [ run algorithm/zip_ignore.cpp : : : : ]
+    [ run algorithm/zip.cpp : : : : ]
+    [ run algorithm/zip2.cpp : : : : ]
 
     [ run sequence/adapt_struct.cpp : : : : ]
     [ run sequence/adapt_assoc_struct.cpp : : : : ]

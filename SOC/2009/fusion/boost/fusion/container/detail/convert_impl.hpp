@@ -44,9 +44,8 @@ namespace boost { namespace fusion
                 type;
 #else
                 typedef typename
-                    detail::detail::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
-                        SeqRef
-                    >
+                    detail::BOOST_PP_CAT(
+                        BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<SeqRef>
                 gen;
                 typedef typename gen::apply::type type;
 #endif
@@ -71,7 +70,7 @@ namespace boost { namespace fusion
                 >::template apply<typename detail::add_lref<Seq>::type>
             gen;
 
-            typedef typename gen::apply::type type;
+            typedef typename gen::type type;
         };
     }
 

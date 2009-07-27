@@ -81,6 +81,7 @@ namespace boost { namespace fusion
                 static type
                 call(SeqRef seq)
                 {
+                    //TODO inside transform_view transform_type rref->llref
                     return type(sequence_assign(fusion::transform(
                             seq.seqs, detail::poly_at<N>())));
                 }

@@ -19,9 +19,7 @@ namespace boost { namespace fusion {
         struct zip
         {
             typedef
-                zip_view<
-                    vector<typename detail::add_lref<Seqs>::type...>
-                >
+                zip_view<typename result_of::vector_tie<Seqs...>::type>
             type;
         };
     }

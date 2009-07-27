@@ -13,7 +13,9 @@
 //implementation falls back to decltype by default.
 
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/ref.hpp>
 
+#include <boost/mpl/if.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
@@ -21,12 +23,8 @@
 #if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
 #   include <boost/mpl/if.hpp>
 #else
-#   include <boost/fusion/support/ref.hpp>
-
 #   include <boost/mpl/eval_if.hpp>
 #   include <boost/mpl/has_xxx.hpp>
-
-#   include <boost/type_traits/is_function.hpp>
 #endif
 
 namespace boost { namespace fusion { namespace support
@@ -71,12 +69,12 @@ namespace boost { namespace fusion { namespace support
              >::type
          f;
 
-         typedef typename
+         typedef
              mpl::or_<
                 typename is_function<f>::type
               , typename is_member_function_pointer<f>::type
-             >::type
-          type;
+             >
+         type;
     };
 
     template<typename FRef>
@@ -136,6 +134,8 @@ namespace boost { namespace fusion { namespace support
 #if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
     using boost::result_of;
 
+    //cschmidt: The non-decltype result_of does not like ref-qualified
+    //'class type' functions
     template<typename FRef>
     struct get_func_base
     {
@@ -148,21 +148,16 @@ namespace boost { namespace fusion { namespace support
         typedef typename
             mpl::if_<
                 mpl::or_<
-                    typename is_function<f>::type
-                  , typename is_member_function_pointer<f>::type
+                   typename is_function<f>::type
+                 , typename is_member_function_pointer<f>::type
                 >
               , FRef
               , f
             >::type
         type;
     };
-#else
-    template<typename F>
-    struct get_func_base
-    {
-        typedef F f;
-    };
 
+#else
     namespace detail
     {
         BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
@@ -179,7 +174,7 @@ namespace boost { namespace fusion { namespace support
         {};
 
         //TODO cschmidt: non-native variadic templates version
-        template<typename F,typename IdentityF, typename... Args>
+        template<typename IdentityF,typename F,typename... Args>
         struct result_of_class_type
         {
             typedef typename
@@ -204,19 +199,23 @@ namespace boost { namespace fusion { namespace support
     template<typename F, typename... Args>
     struct result_of<F(Args...)>
     {
-        //TODO cschmidt: workaround until is_function supports rvalues
         typedef typename fusion::detail::identity<F>::type f;
 
         typedef typename
             mpl::eval_if<
                 is_function<f>
-              , boost::result_of<f(Args...)>
-              , detail::result_of_class_type<F,f,Args...>
+              , boost::result_of<F(Args...)>
+              , detail::result_of_class_type<f,F,Args...>
             >::type
         type;
     };
-#endif
 
+    template<typename FRef>
+    struct get_func_base
+    {
+        typedef FRef type;
+    };
+#endif
 }}}
 
 #endif

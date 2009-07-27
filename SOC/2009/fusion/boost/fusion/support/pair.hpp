@@ -12,6 +12,8 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
+#include <boost/call_traits.hpp>
+
 namespace boost { namespace fusion
 {
     // A half runtime pair where the first type does not have data
@@ -36,7 +38,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   ifdef BOOST_NO_RVALUE_REFERENCES
-        pair(Second const& second)
+        pair(typename call_traits<Second>::param_type second)
           : second(second)
         {}
 #   else

@@ -26,6 +26,7 @@
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/bool.hpp>
+#include <boost/call_traits.hpp>
 
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
 #include <boost/fusion/view/transform_view/detail/at_impl.hpp>
@@ -79,16 +80,16 @@ namespace boost { namespace fusion
         typedef typename result_of::size<seq1_type>::type size;
 
         template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) other_view)
-          : seq1(BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq1)
-          , seq2(BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq2)
-          , f(BOOST_FUSION_FORWARD(OtherTransformView,other_view).f)
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+          : seq1(BOOST_FUSION_FORWARD(OtherTransformView,view).seq1)
+          , seq2(BOOST_FUSION_FORWARD(OtherTransformView,view).seq2)
+          , f(BOOST_FUSION_FORWARD(OtherTransformView,view).f)
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         transform_view(typename storage1_type::call_param seq1,
                 typename storage2_type::call_param seq2,
-                F const& f)
+                typename call_traits<F>::param_type f)
           : seq1(seq1)
           , seq2(seq2)
           , f(f)
@@ -146,7 +147,9 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        transform_view(typename storage_type::call_param seq,F const& f)
+        transform_view(
+            typename storage_type::call_param seq,
+            typename call_traits<F>::param_type f)
           : seq(seq)
           , f(f)
         {}

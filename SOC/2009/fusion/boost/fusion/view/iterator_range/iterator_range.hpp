@@ -40,9 +40,9 @@ namespace boost { namespace fusion
         typedef typename traits::category_of<First>::type category;
 
         template<typename OtherIteratorRange>
-        iterator_range(BOOST_FUSION_R_ELSE_CLREF(OtherIteratorRange) other_range)
-          : first(other_range.first)
-          , last(other_range.last)
+        iterator_range(BOOST_FUSION_R_ELSE_CLREF(OtherIteratorRange) range)
+          : first(range.first)
+          , last(range.last)
         {}
 
         iterator_range(First const& first, Last const& last)

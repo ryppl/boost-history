@@ -12,6 +12,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/add_const.hpp>
+#include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace fusion { namespace detail
@@ -72,13 +73,13 @@ namespace boost { namespace fusion { namespace detail
 #undef VIEW_STORAGE_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        view_storage(call_param other_t)
-          : t(get_init_type(other_t))
+        view_storage(call_param t)
+          : t(get_init_type(t))
         {}
 #else
         template<typename OtherT>
-        view_storage(OtherT&& other_t)
-          : t(get_init_type(std::forward<OtherT>(other_t)))
+        view_storage(OtherT&& t)
+          : t(get_init_type(std::forward<OtherT>(t)))
         {}
 #endif
 
@@ -91,14 +92,18 @@ namespace boost { namespace fusion { namespace detail
         }
 
         //TODO cschmidt: volatile?
-        typename mpl::if_<traits::is_view<T>, type&, type>::type
+        typename mpl::if_<
+            traits::is_view<T>
+          , typename detail::add_lref<type>::type
+          , type
+        >::type
         get() const
         {
             return get(typename traits::is_view<T>::type());
         }
 
     private:
-        type&
+        typename detail::add_lref<type>::type
         get(mpl::true_ /*is_view*/)const
         {
             return t;
@@ -112,7 +117,11 @@ namespace boost { namespace fusion { namespace detail
 
         typedef typename detail::remove_reference<T>::type non_ref_t;
         mutable typename
-            mpl::if_<traits::is_view<T>, non_ref_t, non_ref_t*>::type
+            mpl::if_<
+                traits::is_view<T>
+              , typename remove_const<non_ref_t>::type
+              , non_ref_t*
+            >::type
         t;
     };
 }}}

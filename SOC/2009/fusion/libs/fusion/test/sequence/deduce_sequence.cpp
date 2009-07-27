@@ -63,7 +63,7 @@ template struct test_seq_ctor<args4>;
 int main()
 {
     TEST_SAME_TYPE(deduce<int &>::type, int &);
-    TEST_SAME_TYPE(deduce<int volatile &>::type,  int volatile &);
+    TEST_SAME_TYPE(deduce<int volatile &>::type, int volatile &);
 
     //TODO rvalue tests
     TEST_SAME_TYPE(deduce<int>::type, int);

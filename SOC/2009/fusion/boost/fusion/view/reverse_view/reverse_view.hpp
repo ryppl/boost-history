@@ -57,9 +57,9 @@ namespace boost { namespace fusion
 
 #define REVERSE_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeq>\
-        reverse_view(reverse_view<OtherSeq> COMBINATION other_view)\
+        reverse_view(reverse_view<OtherSeq> COMBINATION view)\
           : seq(BOOST_FUSION_FORWARD(\
-                reverse_view<OtherSeq> COMBINATION,other_view).seq)\
+                reverse_view<OtherSeq> COMBINATION,view).seq)\
         {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(REVERSE_VIEW_CTOR,_)
@@ -72,8 +72,8 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq>
-        explicit reverse_view(OtherSeq&& other_seq)
-          : seq(std::forward<OtherSeq>(other_seq))
+        explicit reverse_view(OtherSeq&& seq)
+          : seq(std::forward<OtherSeq>(seq))
         {}
 #endif
 

@@ -21,6 +21,7 @@
 #include <boost/mpl/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/unpack_args.hpp>
+#include <boost/mpl/vector.hpp>
 #include <boost/mpl/zip_view.hpp>
 #include <boost/mpl/transform_view.hpp>
 
@@ -35,15 +36,18 @@ namespace boost { namespace fusion
                 variadic_arguments_to_vector<KeysTypes...>::type
             args;
             typedef typename
-                mpl::iterator_range<typename mpl::begin<args>::type
+                mpl::iterator_range<
+                    typename mpl::begin<args>::type
                   , typename mpl::advance<typename mpl::begin<args>::type
-                      , mpl::divides<mpl::size<args>, mpl::int_<2> > >::type
+                  , mpl::divides<mpl::size<args>, mpl::int_<2> > >::type
                 >
             keys;
             typedef typename
                 mpl::iterator_range<
-                    typename mpl::advance<typename mpl::begin<args>::type,
-                        mpl::divides<mpl::size<args>, mpl::int_<2> > >::type
+                    typename mpl::advance<
+                        typename mpl::begin<args>::type
+                      , mpl::divides<mpl::size<args>, mpl::int_<2> >
+                    >::type
                   , typename mpl::end<args>::type
                 >
             types;
@@ -51,8 +55,8 @@ namespace boost { namespace fusion
             typedef
                 mpl::transform_view<
                     mpl::zip_view<mpl::vector<keys,types> >
-                  , mpl::unpack_args<pair<mpl::_1
-                                        , detail::as_fusion_element<mpl::_2> >
+                  , mpl::unpack_args<
+                        pair<mpl::_1, detail::as_fusion_element<mpl::_2> >
                     >
                 >
             map_args;

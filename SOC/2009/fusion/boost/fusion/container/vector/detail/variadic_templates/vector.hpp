@@ -95,11 +95,11 @@ namespace boost { namespace fusion
 
             template<typename OtherHead,typename... OtherElements>
             vector_impl(assign_directly,
-                    BOOST_FUSION_R_ELSE_CLREF(OtherHead) other_head,
-                    BOOST_FUSION_R_ELSE_CLREF(OtherElements)... other_elements)
+                    BOOST_FUSION_R_ELSE_CLREF(OtherHead) head,
+                    BOOST_FUSION_R_ELSE_CLREF(OtherElements)... elements)
                 : base(assign_directly(),
-                        BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
-                , _element(BOOST_FUSION_FORWARD(OtherHead,other_head))
+                        BOOST_FUSION_FORWARD(OtherElements,elements)...)
+                , _element(BOOST_FUSION_FORWARD(OtherHead,head))
             {}
 
             typename detail::add_lref<Head>::type
@@ -146,17 +146,17 @@ namespace boost { namespace fusion
 
 #undef VECTOR_CTOR
 
-        template<typename... OtherElements>
+        template<typename... OtherArguments>
         explicit
-        vector(BOOST_FUSION_R_ELSE_CLREF(OtherElements)... other_elements)
+        vector(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... arguments)
           : base(detail::assign_directly(),
-                 BOOST_FUSION_FORWARD(OtherElements,other_elements)...)
+                 BOOST_FUSION_FORWARD(OtherArguments,arguments)...)
         {}
 
 #define VECTOR_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
-        vector(support::sequence_assgin_type<SeqRef> COMBINATION seq_assign)\
-          : base(detail::assign_by_deref(),seq_assign.get())
+        vector(support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+          : base(detail::assign_by_deref(),fusion::begin(seq_assign.get()))\
         {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);

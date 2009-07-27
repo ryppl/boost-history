@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_DETAIL_ACCESS_HPP
-#define BOOST_FUSION_FUNCTIONAL_ADAPTER_DETAIL_ACCESS_HPP
+#ifndef BOOST_FUSION_FUNCTIONAL_ADAPTER_DETAIL_NO_DECLTYPE_OR_VARIADIC_TEMPLATES_ACCESS_HPP
+#define BOOST_FUSION_FUNCTIONAL_ADAPTER_DETAIL_NO_DECLTYPE_OR_VARIADIC_TEMPLATES_ACCESS_HPP
 
 namespace boost { namespace fusion { namespace detail
 {

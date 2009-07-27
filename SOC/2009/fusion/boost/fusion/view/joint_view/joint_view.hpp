@@ -56,9 +56,9 @@ namespace boost { namespace fusion
         size;
 
         template<typename OtherJointView>
-        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) other_view)
-          : seq1(BOOST_FUSION_FORWARD(OtherJointView,other_view).seq1)
-          , seq2(BOOST_FUSION_FORWARD(OtherJointView,other_view).seq2)
+        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) view)
+          : seq1(BOOST_FUSION_FORWARD(OtherJointView,view).seq1)
+          , seq2(BOOST_FUSION_FORWARD(OtherJointView,view).seq2)
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -69,10 +69,10 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq1, typename OtherSeq2>
-        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq1) other_seq1,
-                BOOST_FUSION_R_ELSE_CLREF(OtherSeq2) other_seq2)
-          : seq1(BOOST_FUSION_FORWARD(OtherSeq1,other_seq1))
-          , seq2(BOOST_FUSION_FORWARD(OtherSeq2,other_seq2))
+        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq1) seq1,
+                BOOST_FUSION_R_ELSE_CLREF(OtherSeq2) seq2)
+          : seq1(BOOST_FUSION_FORWARD(OtherSeq1,seq1))
+          , seq2(BOOST_FUSION_FORWARD(OtherSeq2,seq2))
         {}
 #endif
 

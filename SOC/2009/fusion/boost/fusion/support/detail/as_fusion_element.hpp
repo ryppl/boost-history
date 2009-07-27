@@ -44,6 +44,8 @@ namespace boost { namespace fusion { namespace detail
         typedef T& type;\
     };
 
+    CV_REF_SPECIALIZATION(volatile&,_)
+    CV_REF_SPECIALIZATION(const volatile&,_)
     BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CV_REF_SPECIALIZATION,_)
 
 #undef CV_REF_SPECIALIZATION

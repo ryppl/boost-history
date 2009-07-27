@@ -14,7 +14,7 @@
 namespace boost { namespace fusion { namespace detail
 {
     template<typename SeqRef>
-    struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)
+    struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)
     {
         struct apply
         {

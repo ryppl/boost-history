@@ -62,8 +62,8 @@ namespace boost { namespace fusion
         {}
 #else
         template<typename OtherSeq>
-        explicit filter_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq) other_seq)
-          : seq(BOOST_FUSION_FORWARD(OtherSeq,other_seq))
+        explicit filter_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq) seq)
+          : seq(BOOST_FUSION_FORWARD(OtherSeq,seq))
         {}
 #endif
 

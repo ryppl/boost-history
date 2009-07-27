@@ -123,8 +123,8 @@ namespace boost { namespace fusion
 #   undef BOOST_FUSION_SEQ_NAME
 #else
         template <typename... OtherArguments>
-        set(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
-            : data(BOOST_FUSION_FORWARD(OtherArguments,other_arguments)...)
+        set(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... arguments)
+            : data(BOOST_FUSION_FORWARD(OtherArguments,arguments)...)
         {}
 #endif
 

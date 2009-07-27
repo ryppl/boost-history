@@ -13,10 +13,8 @@
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/view/transform_view.hpp>
 
-namespace boost { namespace fusion { namespace traits
+namespace boost { namespace fusion
 {
-    template <class Sequence> struct deduce_sequence;
-
     namespace detail
     {
         struct deducer
@@ -31,11 +29,13 @@ namespace boost { namespace fusion { namespace traits
         };
     }
 
-    template <class Seq>
-    struct deduce_sequence
-      : result_of::as_vector<fusion::transform_view<Seq, detail::deducer> >
-    {};
-
-}}}
+    namespace traits
+    {
+        template <class Seq>
+        struct deduce_sequence
+          : result_of::as_vector<fusion::transform_view<Seq, detail::deducer> >
+        {};
+    }
+}}
 
 #endif

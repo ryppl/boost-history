@@ -36,14 +36,14 @@ namespace boost { namespace fusion
         {}
 
 #define TUPLE_CTOR(COMBINATION,_)\
-        tuple(tuple COMBINATION other_tuple)\
-          : base_type(static_cast<base_type COMBINATION>(other_tuple))\
+        tuple(tuple COMBINATION tuple)\
+          : base_type(static_cast<base_type COMBINATION>(tuple))\
         {}\
         \
         template <typename A1, typename A2>\
-        tuple(std::pair<A1, A2> COMBINATION rhs)\
+        tuple(std::pair<A1, A2> COMBINATION pair)\
           : base_type(sequence_assign(\
-                static_cast<std::pair<A1, A2> COMBINATION>(rhs)))\
+                static_cast<std::pair<A1, A2> COMBINATION>(pair)))\
         {}
 
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TUPLE_CTOR,_)

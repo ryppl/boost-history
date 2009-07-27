@@ -29,6 +29,9 @@
 
 #   include <boost/type_traits/add_const.hpp>
 #   include <boost/utility/enable_if.hpp>
+#   ifdef BOOST_NO_RVALUE_REFERENCES
+#       include <boost/call_traits.hpp>
+#   endif
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
@@ -126,14 +129,17 @@ namespace boost { namespace fusion
         explicit
 #       endif
         BOOST_PP_CAT(vector, N)(
+#ifdef BOOST_NO_RVALUE_REFERENCES
             BOOST_PP_ENUM_BINARY_PARAMS(
                     N,
-#ifdef BOOST_NO_RVALUE_REFERENCES
-                    T,
+                    typename call_traits<T,
+                    >::param_type _)
 #else
+            BOOST_PP_ENUM_BINARY_PARAMS(
+                    N,
                     A,
-#endif
                     BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()) _)
+#endif
             )
           : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)
         {}

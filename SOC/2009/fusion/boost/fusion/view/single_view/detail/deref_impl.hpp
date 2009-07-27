@@ -27,7 +27,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef const& it)
+            call(ItRef it)
             {
                 return it.view->val;
             }

@@ -7,6 +7,9 @@
 #   include <boost/fusion/container/vector/vector.hpp>
 
 #   include <boost/preprocessor/iteration/iterate.hpp>
+#   include <boost/preprocessor/cat.hpp>
+#   include <boost/preprocessor/repetition/enum.hpp>
+#   include <boost/preprocessor/repetition/enum_binary_params.hpp>
 
 #   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/variadic_templates/vector_n.hpp>
 #   define BOOST_PP_ITERATION_LIMITS (BOOST_FUSION_FROM, BOOST_FUSION_TO)
@@ -29,8 +32,8 @@ namespace boost { namespace fusion
     struct vector0<void_>
 #   else
     template <BOOST_PP_ENUM_PARAMS(N, typename T)>
-#   endif
     struct BOOST_PP_CAT(vector, N)
+#   endif
       : vector<BOOST_PP_ENUM_PARAMS(N, T)>
     {
     private:
@@ -56,21 +59,21 @@ namespace boost { namespace fusion
         {}
 
 #   if N > 1
-#    ifdef BOOST_NO_RVALUE_REFERENCES
-        BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, const T, & a))
+#       ifdef BOOST_NO_RVALUE_REFERENCES
+        BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, T, const& a))
           : base(BOOST_PP_ENUM_PARAMS(N, a))
         {}
-#    else
-#         define FORWARD_ARGUMENT(Z, INDEX, _) std::forward<\
-                BOOST_PP_CAT(OtherT,INDEX)>(BOOST_PP_CAT(other,INDEX))
+#       else
+#           define FORWARD_ARGUMENT(Z, N, __) std::forward<\
+                BOOST_PP_CAT(A,N)>(BOOST_PP_CAT(_,N))
 
-        template <BOOST_PP_ENUM_PARAMS(N, typename OtherT)>
-        BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, OtherT,&& other))
+        template <BOOST_PP_ENUM_PARAMS(N, typename A)>
+        BOOST_PP_CAT(vector, N)(BOOST_PP_ENUM_BINARY_PARAMS(N, A,&& _))
           : base(BOOST_PP_ENUM(N, FORWARD_ARGUMENT, _))
         {}
 
-#         undef FORWARD_ARGUMENT
-#     endif
+#           undef FORWARD_ARGUMENT
+#       endif
 #   endif
 
         template<typename Seq>
