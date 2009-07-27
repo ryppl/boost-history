@@ -4,8 +4,8 @@
 
 // Copyright Eric Niebler 2009
 //
-// Distributed under the Boost Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or copy at 
+// Distributed under the Boost Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/mpl for documentation.
@@ -13,46 +13,96 @@
 // $Id: string.hpp 49239 2009-04-01 09:10:26Z eric_niebler $
 // $Date: 2009-04-01 02:10:26 -0700 (Wed, 1 Apr 2009) $
 // $Revision: 49239 $
+//
+// Thanks to:
+//   Dmitry Goncharov for porting this to the Sun compiler
 
+#include <boost/config.hpp>
+#include <boost/detail/workaround.hpp>
+#include <boost/detail/endian.hpp>
+#include <boost/mpl/limits/string.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/char.hpp>
-#include <boost/mpl/long.hpp>
-#include <boost/mpl/back.hpp>
 #include <boost/mpl/copy.hpp>
+#include <boost/mpl/size.hpp>
+#include <boost/mpl/empty.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/size_t.hpp>
+#include <boost/mpl/begin_end.hpp>
 #include <boost/mpl/joint_view.hpp>
 #include <boost/mpl/insert_range.hpp>
 #include <boost/mpl/back_inserter.hpp>
+#include <boost/mpl/front_inserter.hpp>
 #include <boost/mpl/iterator_range.hpp>
 #include <boost/preprocessor/arithmetic/dec.hpp>
 #include <boost/preprocessor/arithmetic/add.hpp>
 #include <boost/preprocessor/arithmetic/div.hpp>
-#include <boost/preprocessor/repetition/enum.hpp>
 #include <boost/preprocessor/punctuation/comma_if.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #include <boost/preprocessor/repetition/enum_shifted_params.hpp>
 #include <boost/preprocessor/repetition/enum_trailing_params.hpp>
 #include <boost/preprocessor/repetition/enum_params_with_a_default.hpp>
+#include <iterator>
+
+#include <iterator> // for bidirectional_iterator_tag
+#include <climits>
 
 namespace boost { namespace mpl
 {
-    #ifndef BOOST_MPL_STRING_MAX_LENGTH
-    # define BOOST_MPL_STRING_MAX_LENGTH 32
-    #endif
-    
-    #define BOOST_MPL_STRING_MAX_PARAMS BOOST_PP_DIV(BOOST_PP_ADD(BOOST_MPL_STRING_MAX_LENGTH, 3), 4)
+    #define BOOST_MPL_STRING_MAX_PARAMS                                                             \
+      BOOST_PP_DIV(BOOST_PP_ADD(BOOST_MPL_LIMIT_STRING_SIZE, 3), 4)
 
-    #define BOOST_MPL_MULTICHAR_LENGTH(c)   (std::size_t)((c>0xffffff)+(c>0xffff)+(c>0xff)+1)
-    #define BOOST_MPL_MULTICHAR_AT(c,i)     (char)(0xff&(c>>(8*(BOOST_MPL_MULTICHAR_LENGTH(c)-(std::size_t)(i)-1))))
+    // Low-level bit-twiddling is done by macros. Any implementation-defined behavior of
+    // multi-character literals should be localized to these macros.
+
+    #define BOOST_MPL_MULTICHAR_LENGTH(c)                                                           \
+      (std::size_t)((c<CHAR_MIN) ? 4 : ((c>0xffffff)+(c>0xffff)+(c>0xff)+1))
+
+    #if defined(BOOST_LITTLE_ENDIAN) && defined(__SUNPRO_CC)
+
+        #define BOOST_MPL_MULTICHAR_AT(c,i)                                                         \
+          (char)(0xff&((unsigned)(c)>>(8*(std::size_t)(i))))
+
+        #define BOOST_MPL_MULTICHAR_PUSH_BACK(c,i)                                                  \
+          ((((unsigned char)(i))<<(BOOST_MPL_MULTICHAR_LENGTH(c)*8))|(unsigned)(c))
+
+        #define BOOST_MPL_MULTICHAR_PUSH_FRONT(c,i)                                                 \
+          (((unsigned)(c)<<8)|(unsigned char)(i))
+
+        #define BOOST_MPL_MULTICHAR_POP_BACK(c)                                                     \
+          (((1<<((BOOST_MPL_MULTICHAR_LENGTH(c)-1)*8))-1)&(unsigned)(c))
+
+        #define BOOST_MPL_MULTICHAR_POP_FRONT(c)                                                    \
+          ((unsigned)(c)>>8)
+
+    #else
+
+        #define BOOST_MPL_MULTICHAR_AT(c,i)                                                         \
+          (char)(0xff&((unsigned)(c)>>(8*(BOOST_MPL_MULTICHAR_LENGTH(c)-(std::size_t)(i)-1))))
+
+        #define BOOST_MPL_MULTICHAR_PUSH_BACK(c,i)                                                  \
+          (((unsigned)(c)<<8)|(unsigned char)(i))
+
+        #define BOOST_MPL_MULTICHAR_PUSH_FRONT(c,i)                                                 \
+          ((((unsigned char)(i))<<(BOOST_MPL_MULTICHAR_LENGTH(c)*8))|(unsigned)(c))
+
+        #define BOOST_MPL_MULTICHAR_POP_BACK(c)                                                     \
+          ((unsigned)(c)>>8)
+
+        #define BOOST_MPL_MULTICHAR_POP_FRONT(c)                                                    \
+          (((1<<((BOOST_MPL_MULTICHAR_LENGTH(c)-1)*8))-1)&(unsigned)(c))
+
+    #endif
 
     struct string_tag;
     struct string_iterator_tag;
 
-    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C, 0)>
+    template<BOOST_PP_ENUM_PARAMS_WITH_A_DEFAULT(BOOST_MPL_STRING_MAX_PARAMS, int C, 0)>
     struct string;
 
-    template<typename Sequence, long N>
+    template<typename Sequence, int I, int J>
     struct string_iterator;
 
     template<typename Sequence>
@@ -62,36 +112,40 @@ namespace boost { namespace mpl
     struct size_impl;
 
     template<>
-    struct size_impl<string_tag>
+    struct size_impl<mpl::string_tag>
     {
         template<typename Sequence>
-        struct apply
-          : mpl::size_t<Sequence::size>
-        {};
-    };
+        struct apply;
 
-    template<typename Tag>
-    struct at_impl;
+        #define M0(z, n, data)                                                                      \
+        + BOOST_MPL_MULTICHAR_LENGTH(BOOST_PP_CAT(C,n))
+
+        #define M1(z, n, data)                                                                      \
+        template<BOOST_PP_ENUM_PARAMS_Z(z, n, int C)>                                               \
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)> >                                 \
+          : mpl::size_t<(0 BOOST_PP_REPEAT_ ## z(n, M0, ~))>                                        \
+        {};
+
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(BOOST_MPL_STRING_MAX_PARAMS), M1, ~)
+        #undef M0
+        #undef M1
+    };
 
     template<>
-    struct at_impl<string_tag>
-    {
-        template<typename Sequence, typename N>
-        struct apply
-          : Sequence::template at<N::value>
-        {};
-    };
+    struct size_impl<mpl::string_tag>::apply<mpl::string<> >
+      : mpl::size_t<0>
+    {};
 
     template<typename Tag>
     struct begin_impl;
 
     template<>
-    struct begin_impl<string_tag>
+    struct begin_impl<mpl::string_tag>
     {
         template<typename Sequence>
         struct apply
         {
-            typedef string_iterator<Sequence, 0> type;
+            typedef mpl::string_iterator<Sequence, 0, 0> type;
         };
     };
 
@@ -99,102 +153,226 @@ namespace boost { namespace mpl
     struct end_impl;
 
     template<>
-    struct end_impl<string_tag>
+    struct end_impl<mpl::string_tag>
     {
         template<typename Sequence>
-        struct apply
-        {
-            typedef string_iterator<Sequence, Sequence::size> type;
+        struct apply;
+
+        #define M0(z,n,data)                                                                        \
+        template<BOOST_PP_ENUM_PARAMS_Z(z, n, int C)>                                               \
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)> >                                 \
+        {                                                                                           \
+            typedef mpl::string_iterator<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)>, n, 0> type;  \
         };
+
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(BOOST_MPL_STRING_MAX_PARAMS), M0, ~)
+        #undef M0
+    };
+
+    template<>
+    struct end_impl<mpl::string_tag>::apply<mpl::string<> >
+    {
+        typedef mpl::string_iterator<mpl::string<>, 0, 0> type;
     };
 
     template<typename Tag>
     struct push_back_impl;
 
     template<>
-    struct push_back_impl<string_tag>
+    struct push_back_impl<mpl::string_tag>
     {
         template<typename Sequence, typename Value, bool B = (4==BOOST_MPL_MULTICHAR_LENGTH(Sequence::back_))>
         struct apply
         {
-            BOOST_MPL_ASSERT_MSG(false, PUSH_BACK_FAILED_MPL_STRING_IS_FULL, (Sequence));
-            typedef void type;
+            BOOST_MPL_ASSERT_MSG(
+                (BOOST_MPL_LIMIT_STRING_SIZE != mpl::size<Sequence>::type::value)
+              , PUSH_BACK_FAILED_MPL_STRING_IS_FULL
+              , (Sequence)
+            );
+            // If the above assertion didn't fire, then the string is sparse.
+            // Repack the string and retry the push_back
+            typedef
+                typename mpl::push_back<
+                    typename mpl::copy<
+                        Sequence
+                      , mpl::back_inserter<mpl::string<> >
+                    >::type
+                  , Value
+                >::type
+            type;
         };
 
         template<typename Value>
-        struct apply<string<>, Value, false>
+        struct apply<mpl::string<>, Value, false>
         {
-            typedef string<(char)Value::value> type;
+            typedef mpl::string<(char)Value::value> type;
         };
 
         #define M0(z,n,data)                                                                        \
-        template<BOOST_PP_ENUM_PARAMS_Z(z, n, unsigned int C), typename Value>                      \
-        struct apply<string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)>, Value, false>                         \
+        template<BOOST_PP_ENUM_PARAMS_Z(z, n, int C), typename Value>                               \
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)>, Value, false>                    \
         {                                                                                           \
-            typedef string<                                                                         \
-                BOOST_PP_ENUM_PARAMS_Z(z, BOOST_PP_DEC(n), C)                                       \
-                BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                                  \
-                (BOOST_PP_CAT(C,BOOST_PP_DEC(n))>0xffffff)                                          \
-                ?BOOST_PP_CAT(C,BOOST_PP_DEC(n))                                                    \
-                :(BOOST_PP_CAT(C,BOOST_PP_DEC(n))<<8)|(unsigned char)Value::value                   \
-              , (BOOST_PP_CAT(C,BOOST_PP_DEC(n))>0xffffff)                                          \
-                ?(char)Value::value                                                                 \
-                :0                                                                                  \
-            > type;                                                                                 \
+            typedef                                                                                 \
+                mpl::string<                                                                        \
+                    BOOST_PP_ENUM_PARAMS_Z(z, BOOST_PP_DEC(n), C)                                   \
+                    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                              \
+                    ((unsigned)BOOST_PP_CAT(C,BOOST_PP_DEC(n))>0xffffff)                            \
+                    ?BOOST_PP_CAT(C,BOOST_PP_DEC(n))                                                \
+                    :BOOST_MPL_MULTICHAR_PUSH_BACK(BOOST_PP_CAT(C,BOOST_PP_DEC(n)), Value::value)   \
+                  , ((unsigned)BOOST_PP_CAT(C,BOOST_PP_DEC(n))>0xffffff)                            \
+                    ?(char)Value::value                                                             \
+                    :0                                                                              \
+                >                                                                                   \
+            type;                                                                                   \
         };
 
-        BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS), M0, ~)
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_STRING_MAX_PARAMS, M0, ~)
         #undef M0
 
-        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C), typename Value>
-        struct apply<string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, Value, false>
+        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C), typename Value>
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, Value, false>
         {
-            typedef string<
-                BOOST_PP_ENUM_PARAMS(BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS), C)
-              , (BOOST_PP_CAT(C,BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS))<<8)|(unsigned char)Value::value
-            > type;
+            typedef
+                mpl::string<
+                    BOOST_PP_ENUM_PARAMS(BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS), C)
+                  , BOOST_MPL_MULTICHAR_PUSH_BACK(BOOST_PP_CAT(C,BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS)), Value::value)
+                >
+            type;
         };
+    };
+
+    template<typename Tag>
+    struct pop_back_impl;
+
+    template<>
+    struct pop_back_impl<mpl::string_tag>
+    {
+        template<typename Sequence>
+        struct apply;
+
+        #define M0(z,n,data)                                                                        \
+        template<BOOST_PP_ENUM_PARAMS_Z(z, n, int C)>                                               \
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)> >                                 \
+        {                                                                                           \
+            BOOST_MPL_ASSERT_MSG((C0 != 0), POP_BACK_FAILED_MPL_STRING_IS_EMPTY, (mpl::string<>));  \
+            typedef                                                                                 \
+                mpl::string<                                                                        \
+                    BOOST_PP_ENUM_PARAMS_Z(z, BOOST_PP_DEC(n), C)                                   \
+                    BOOST_PP_COMMA_IF(BOOST_PP_DEC(n))                                              \
+                    BOOST_MPL_MULTICHAR_POP_BACK(BOOST_PP_CAT(C,BOOST_PP_DEC(n)))                   \
+                >                                                                                   \
+            type;                                                                                   \
+        };
+
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_INC(BOOST_MPL_STRING_MAX_PARAMS), M0, ~)
+        #undef M0
     };
 
     template<typename Tag>
     struct push_front_impl;
 
     template<>
-    struct push_front_impl<string_tag>
+    struct push_front_impl<mpl::string_tag>
     {
         template<typename Sequence, typename Value, bool B = (4==BOOST_MPL_MULTICHAR_LENGTH(Sequence::front_))>
         struct apply
         {
-            BOOST_MPL_ASSERT_MSG(false, PUSH_FRONT_FAILED_MPL_STRING_IS_FULL, (Sequence));
-            typedef void type;
+            BOOST_MPL_ASSERT_MSG(
+                (BOOST_MPL_LIMIT_STRING_SIZE != mpl::size<Sequence>::type::value)
+              , PUSH_FRONT_FAILED_MPL_STRING_IS_FULL
+              , (Sequence)
+            );
+            // If the above assertion didn't fire, then the string is sparse.
+            // Repack the string and retry the push_front.
+            typedef
+                typename mpl::push_front<
+                    typename mpl::reverse_copy<
+                        Sequence
+                      , mpl::front_inserter<string<> >
+                    >::type
+                  , Value
+                >::type
+            type;
         };
 
+        #if !BOOST_WORKAROUND(__SUNPRO_CC, BOOST_TESTED_AT(0x590))
         template<typename Value>
-        struct apply<string<>, Value, false>
+        struct apply<mpl::string<>, Value, false>
         {
-            typedef string<(char)Value::value> type;
+            typedef mpl::string<(char)Value::value> type;
         };
+        #endif
 
         #define M0(z,n,data)                                                                        \
-        template<BOOST_PP_ENUM_PARAMS_Z(z, n, unsigned int C), typename Value>                      \
-        struct apply<string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)>, Value, true>                          \
+        template<BOOST_PP_ENUM_PARAMS_Z(z, n, int C), typename Value>                               \
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)>, Value, true>                     \
         {                                                                                           \
-            typedef string<                                                                         \
-                (char)Value::value                                                                  \
-                BOOST_PP_ENUM_TRAILING_PARAMS_Z(z, n, C)                                            \
-            > type;                                                                                 \
+            typedef                                                                                 \
+                mpl::string<                                                                        \
+                    (char)Value::value                                                              \
+                    BOOST_PP_ENUM_TRAILING_PARAMS_Z(z, n, C)                                        \
+                >                                                                                   \
+            type;                                                                                   \
         };
 
-        BOOST_PP_REPEAT_FROM_TO(1, BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS), M0, ~)
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_STRING_MAX_PARAMS, M0, ~)
         #undef M0
 
-        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C), typename Value>
-        struct apply<string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, Value, false>
+        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C), typename Value>
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, Value, false>
         {
-            typedef string<
-                ((((unsigned char)Value::value)<<(BOOST_MPL_MULTICHAR_LENGTH(C0)*8))|C0)
-              , BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)
-            > type;
+            typedef
+                mpl::string<
+                    BOOST_MPL_MULTICHAR_PUSH_FRONT(C0, Value::value)
+                  , BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)
+                >
+            type0;
+
+            #if BOOST_WORKAROUND(__SUNPRO_CC, BOOST_TESTED_AT(0x590))
+            typedef
+                typename mpl::if_<
+                    mpl::empty<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> >
+                  , mpl::string<(char)Value::value>
+                  , type0
+                >::type
+            type;
+            #else
+            typedef type0 type;
+            #endif
+        };
+    };
+
+    template<typename Tag>
+    struct pop_front_impl;
+
+    template<>
+    struct pop_front_impl<mpl::string_tag>
+    {
+        template<typename Sequence, bool B = (1==BOOST_MPL_MULTICHAR_LENGTH(Sequence::front_))>
+        struct apply;
+
+        #define M0(z,n,data)                                                                        \
+        template<BOOST_PP_ENUM_PARAMS_Z(z, n, int C)>                                               \
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS_Z(z, n, C)>, true>                            \
+        {                                                                                           \
+            BOOST_MPL_ASSERT_MSG((C0 != 0), POP_FRONT_FAILED_MPL_STRING_IS_EMPTY, (mpl::string<>)); \
+            typedef                                                                                 \
+                mpl::string<BOOST_PP_ENUM_SHIFTED_PARAMS_Z(z, n, C)>                                \
+            type;                                                                                   \
+        };
+
+        BOOST_PP_REPEAT_FROM_TO(1, BOOST_MPL_STRING_MAX_PARAMS, M0, ~)
+        #undef M0
+
+        template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
+        struct apply<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, false>
+        {
+            typedef
+                mpl::string<
+                    BOOST_MPL_MULTICHAR_POP_FRONT(C0)
+                  , BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)
+                >
+            type;
         };
     };
 
@@ -202,25 +380,25 @@ namespace boost { namespace mpl
     struct insert_range_impl;
 
     template<>
-    struct insert_range_impl<string_tag>
+    struct insert_range_impl<mpl::string_tag>
     {
         template<typename Sequence, typename Pos, typename Range>
         struct apply
-          : copy<
-                joint_view<
-                    iterator_range<
-                        string_iterator<Sequence, 0>
+          : mpl::copy<
+                mpl::joint_view<
+                    mpl::iterator_range<
+                        mpl::string_iterator<Sequence, 0, 0>
                       , Pos
                     >
-                  , joint_view<
+                  , mpl::joint_view<
                         Range
-                      , iterator_range<
+                      , mpl::iterator_range<
                             Pos
-                          , string_iterator<Sequence, Sequence::size>
+                          , typename mpl::end<Sequence>::type
                         >
                     >
                 >
-              , back_inserter<string<> >
+              , mpl::back_inserter<mpl::string<> >
             >
         {};
     };
@@ -229,11 +407,11 @@ namespace boost { namespace mpl
     struct insert_impl;
 
     template<>
-    struct insert_impl<string_tag>
+    struct insert_impl<mpl::string_tag>
     {
         template<typename Sequence, typename Pos, typename Value>
         struct apply
-          : insert_range<Sequence, Pos, string<(char)Value::value> >
+          : mpl::insert_range<Sequence, Pos, mpl::string<(char)Value::value> >
         {};
     };
 
@@ -241,22 +419,22 @@ namespace boost { namespace mpl
     struct erase_impl;
 
     template<>
-    struct erase_impl<string_tag>
+    struct erase_impl<mpl::string_tag>
     {
         template<typename Sequence, typename First, typename Last>
         struct apply
-          : copy<
-                joint_view<
-                    iterator_range<
-                        string_iterator<Sequence, 0>
+          : mpl::copy<
+                mpl::joint_view<
+                    mpl::iterator_range<
+                        mpl::string_iterator<Sequence, 0, 0>
                       , First
                     >
-                  , iterator_range<
-                        typename if_na<Last, typename next<First>::type>::type
-                      , string_iterator<Sequence, Sequence::size>
+                  , mpl::iterator_range<
+                        typename mpl::if_na<Last, typename mpl::next<First>::type>::type
+                      , typename mpl::end<Sequence>::type
                     >
                 >
-              , back_inserter<string<> >
+              , mpl::back_inserter<mpl::string<> >
             >
         {};
     };
@@ -265,131 +443,116 @@ namespace boost { namespace mpl
     struct clear_impl;
 
     template<>
-    struct clear_impl<string_tag>
+    struct clear_impl<mpl::string_tag>
     {
         template<typename>
         struct apply
         {
-            typedef string<> type;
+            typedef mpl::string<> type;
         };
     };
 
-    template<typename Tag>
-    struct advance_impl;
-
-    template<>
-    struct advance_impl<string_iterator_tag>
-    {
-        template<typename Iterator, typename N>
-        struct apply
-        {
-            typedef string_iterator<
-                typename Iterator::string_type
-              , Iterator::index + N::value
-            > type;
-        };
+    #define M0(z, n, data)                                                                            \
+    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C), int J>                         \
+    struct string_iterator<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, n, J>   \
+    {                                                                                                 \
+        enum { eomc_ = (BOOST_MPL_MULTICHAR_LENGTH(BOOST_PP_CAT(C, n)) == J + 1) };                   \
+        typedef mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> string;             \
+        typedef std::bidirectional_iterator_tag category;                                             \
+        typedef                                                                                       \
+            mpl::string_iterator<string, n + eomc_, eomc_ ? 0 : J + 1>                                \
+        next;                                                                                         \
+        typedef                                                                                       \
+            mpl::string_iterator<string, n, J - 1>                                                    \
+        prior;                                                                                        \
+        typedef mpl::char_<BOOST_MPL_MULTICHAR_AT(BOOST_PP_CAT(C, n), J)> type;                       \
+    };                                                                                                \
+    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>                                \
+    struct string_iterator<mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>, n, 0>   \
+    {                                                                                                 \
+        enum { eomc_ = (BOOST_MPL_MULTICHAR_LENGTH(BOOST_PP_CAT(C, n)) == 1) };                       \
+        typedef mpl::string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> string;             \
+        typedef std::bidirectional_iterator_tag category;                                             \
+        typedef                                                                                       \
+            mpl::string_iterator<string, n + eomc_, !eomc_>                                           \
+        next;                                                                                         \
+        typedef                                                                                       \
+            mpl::string_iterator<                                                                     \
+                string                                                                                \
+              , n - 1                                                                                 \
+              , BOOST_MPL_MULTICHAR_LENGTH(BOOST_PP_CAT(C, BOOST_PP_DEC(n))) - 1                      \
+            >                                                                                         \
+        prior;                                                                                        \
+        typedef mpl::char_<BOOST_MPL_MULTICHAR_AT(BOOST_PP_CAT(C, n), 0)> type;                       \
     };
 
-    template<typename Tag>
-    struct distance_impl;
+    BOOST_PP_REPEAT(BOOST_MPL_STRING_MAX_PARAMS, M0, ~)
+    #undef M0
 
-    template<>
-    struct distance_impl<string_iterator_tag>
-    {
-        template<typename First, typename Last>
-        struct apply
-        {
-            typedef mpl::long_<Last::index - First::index> type;
-        };
-    };
-
-    template<typename Sequence, long N>
-    struct string_iterator
-      : Sequence::template at<N>
-    {
-        typedef string_iterator_tag tag;
-        typedef std::random_access_iterator_tag category;
-        typedef Sequence string_type;
-        static long const index = N;
-        typedef string_iterator<Sequence, N+1> next;
-        typedef string_iterator<Sequence, N-1> prior;
-    };
-
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C)>
+    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, int C)>
     struct string
     {
         /// INTERNAL ONLY
-        static unsigned int const front_ = C0;
-        /// INTERNAL ONLY
-        static unsigned int const back_ = BOOST_PP_CAT(C, BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS));
-        /// INTERNAL ONLY
-        typedef string<BOOST_PP_ENUM_SHIFTED_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)> rest_;
+        enum
+        {
+            front_  = C0
+          , back_   = BOOST_PP_CAT(C, BOOST_PP_DEC(BOOST_MPL_STRING_MAX_PARAMS))
+        };
 
-        typedef string type;
-
-        typedef string_tag tag;
-
-        static std::size_t const size = BOOST_MPL_MULTICHAR_LENGTH(C0) + rest_::size;
-
-        template<long Pos, bool B = (Pos < BOOST_MPL_MULTICHAR_LENGTH(C0))>
-        struct at
-          : boost::mpl::char_<BOOST_MPL_MULTICHAR_AT(C0,Pos)>
-        {};
-
-        template<long Pos>
-        struct at<Pos, false>
-          : rest_::template at<Pos-BOOST_MPL_MULTICHAR_LENGTH(C0)>
-        {};
-
-        static char const c_str[];
+        typedef string      type;
+        typedef string_tag  tag;
     };
 
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C)>
-    char const string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>::c_str[] =
+    namespace aux_
     {
-    #define M0(z, n, data) at<n>::value
-        BOOST_PP_ENUM(BOOST_MPL_STRING_MAX_LENGTH, M0, ~)
-    #undef M0
-      , '\0' // to ensure the string is null-terminated
-    };
-
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C)>
-    std::size_t const string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>::size;
-
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C)>
-    unsigned int const string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>::front_;
-
-    template<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, unsigned int C)>
-    unsigned int const string<BOOST_PP_ENUM_PARAMS(BOOST_MPL_STRING_MAX_PARAMS, C)>::back_;
-
-    template<>
-    struct string<>
-    {
-        /// INTERNAL ONLY
-        static unsigned int const front_ = 0;
-        /// INTERNAL ONLY
-        static unsigned int const back_ = 0;
-        /// INTERNAL ONLY
-        typedef string rest_;
-
-        typedef string type;
-
-        typedef string_tag tag;
-
-        static std::size_t const size = 0;
-
-        template<unsigned int>
-        struct at
-          : boost::mpl::char_<'\0'>
+        template<typename It, typename End>
+        struct next_unless
+          : mpl::next<It>
         {};
 
-        static char const c_str[];
+        template<typename End>
+        struct next_unless<End, End>
+        {
+            typedef End type;
+        };
+
+        template<typename It, typename End>
+        struct deref_unless
+          : mpl::deref<It>
+        {};
+
+        template<typename End>
+        struct deref_unless<End, End>
+        {
+            typedef mpl::char_<'\0'> type;
+        };
+    }
+
+    template<typename Sequence>
+    struct c_str
+    {
+        typedef typename mpl::end<Sequence>::type iend;
+        typedef typename mpl::begin<Sequence>::type i0;
+        #define M0(z, n, data)                                                                      \
+        typedef                                                                                     \
+            typename mpl::aux_::next_unless<BOOST_PP_CAT(i, n), iend>::type                         \
+        BOOST_PP_CAT(i, BOOST_PP_INC(n));
+        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_STRING_SIZE, M0, ~)
+        #undef M0
+
+        typedef c_str type;
+        static char const value[];
     };
 
-    char const string<>::c_str[] = {'\0'};
-    std::size_t const string<>::size;
-    unsigned int const string<>::front_;
-    unsigned int const string<>::back_;
+    template<typename Sequence>
+    char const c_str<Sequence>::value[] =
+    {
+        #define M0(z, n, data)                                                                      \
+        mpl::aux_::deref_unless<BOOST_PP_CAT(i, n), iend>::type::value,
+        BOOST_PP_REPEAT(BOOST_MPL_LIMIT_STRING_SIZE, M0, ~)
+        #undef M0
+        '\0'
+    };
 
 }} // namespace boost
 
