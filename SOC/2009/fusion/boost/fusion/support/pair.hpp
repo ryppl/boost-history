@@ -31,7 +31,7 @@ namespace boost { namespace fusion
                   .second)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(PAIR_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(PAIR_CTOR,_)
 
 #undef PAIR_CTOR
 
@@ -107,8 +107,10 @@ namespace boost { namespace fusion
     }
 
     template <typename OStream, typename First, typename Second>
-    inline OStream&
-    operator<<(OStream& os, pair<First, Second> const& p)
+    inline BOOST_FUSION_R_ELSE_LREF(OStream)
+    operator<<(
+            BOOST_FUSION_R_ELSE_LREF(OStream) os,
+            pair<First, Second> const& p)
     {
         os << p.second;
         return os;
@@ -116,10 +118,14 @@ namespace boost { namespace fusion
 
     //TODO cschmidt: rref?!
     template <typename IStream, typename First, typename Second>
-    inline IStream&
-    operator>>(IStream& is, pair<First, Second> p)
+    inline BOOST_FUSION_R_ELSE_LREF(IStream)
+    operator>>(
+            BOOST_FUSION_R_ELSE_LREF(IStream) is
+#define BOOST_FUSION_ARG pair<First, Second>
+          , BOOST_FUSION_R_ELSE_LREF(BOOST_FUSION_ARG) p)
     {
-        is >> p.second;
+        is >> BOOST_FUSION_FORWARD(BOOST_FUSION_ARG,p).second;
+#undef BOOST_FUSION_ARG
         return is;
     }
 

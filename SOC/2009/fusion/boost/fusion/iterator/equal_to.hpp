@@ -21,8 +21,6 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        //TODO: doc no default any more!
-
         template <typename Tag>
         struct equal_to_impl;
 

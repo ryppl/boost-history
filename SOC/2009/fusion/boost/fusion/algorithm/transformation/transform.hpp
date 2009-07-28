@@ -55,7 +55,14 @@ namespace boost { namespace fusion
     inline typename result_of::transform<Seq&, F const&>::type
     transform(Seq& seq, F const& f)
     {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+#   pragma warning(disable: 4180)
+#endif
         return typename result_of::transform<Seq&, F const&>::type(seq, f);
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
     }
 #endif
 

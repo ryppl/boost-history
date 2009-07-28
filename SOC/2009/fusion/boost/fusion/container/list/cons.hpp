@@ -113,7 +113,7 @@ namespace boost { namespace fusion
                         BOOST_FUSION_FORWARD(cons COMBINATION,cons_))))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CONS_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(CONS_CTOR,_);
 
 #undef CONS_CTOR
 
@@ -144,7 +144,7 @@ namespace boost { namespace fusion
                   fusion::next(fusion::begin(seq_assign.get())))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CONS_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(CONS_ASSIGN_CTOR,_);
 
 #undef CONS_ASSIGN_CTOR
 

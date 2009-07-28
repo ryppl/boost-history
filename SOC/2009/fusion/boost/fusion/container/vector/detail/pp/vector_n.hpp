@@ -87,7 +87,6 @@ namespace boost { namespace fusion
 
 #   undef BOOST_FUSION_DEFAULT_MEMBER_INIT
 
-        //TODO macro names
 #   if N
 #       define BOOST_FUSION_SELF_TYPE\
             BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N,T)>
@@ -103,7 +102,7 @@ namespace boost { namespace fusion
           : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, COMBINATION)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_)
 
 #       undef BOOST_FUSION_MEMBER_INIT
 #       undef BOOST_FUSION_SELF_TYPE
@@ -112,7 +111,7 @@ namespace boost { namespace fusion
         BOOST_PP_CAT(vector, N)(BOOST_PP_CAT(vector, N)<void_> COMBINATION vec)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_)
 
 #   endif
 #   undef VECTOR_CTOR
@@ -158,7 +157,7 @@ namespace boost { namespace fusion
           : BOOST_PP_ENUM(N, BOOST_FUSION_MEMBER_INIT, _)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
 
 #       undef VECTOR_ASSIGN_CTOR
 #       undef BOOST_FUSION_MEMBER_INIT
@@ -169,7 +168,7 @@ namespace boost { namespace fusion
             support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
 
 #       undef VECTOR_ASSIGN_CTOR
 #   endif
@@ -233,7 +232,6 @@ namespace boost { namespace fusion
             return at_impl(mpl::int_<I::value>());
         }
 
-        //TODO: no add_reference
 #   define BOOST_FUSION_MEMBER_DECL(Z, N, _)\
         typename detail::add_lref<BOOST_PP_CAT(T,N)>::type\
         at_impl(mpl::int_<N>)\

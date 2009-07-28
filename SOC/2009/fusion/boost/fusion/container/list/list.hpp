@@ -51,7 +51,7 @@ namespace boost { namespace fusion
           : data(BOOST_FUSION_FORWARD(list COMBINATION,list_).data)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(LIST_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(LIST_CTOR,_)
 
 #undef LIST_CTOR
 

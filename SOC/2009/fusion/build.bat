@@ -16,7 +16,7 @@ if "%1" == "gcc" (
         call :msvc
     ) else (
         if "%1" == "" (
-            call :msvc
+            call :gcc
         ) else (
             echo Unknown toolset '%1'
             goto :eof

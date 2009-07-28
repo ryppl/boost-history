@@ -49,7 +49,7 @@ namespace boost { namespace fusion
                 BOOST_FUSION_FORWARD(BOOST_PP_CAT(vector, N) COMBINATION,vec)))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_)
 
 #   undef VECTOR_CTOR
 

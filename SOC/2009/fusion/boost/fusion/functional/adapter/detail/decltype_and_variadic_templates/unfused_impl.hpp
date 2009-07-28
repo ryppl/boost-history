@@ -46,7 +46,7 @@ namespace boost { namespace fusion
           : f(std::forward<BOOST_FUSION_ADAPTER_NAME COMBINATION>(adapter).f)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(CTOR_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(CTOR_SPECIALIZATION,_)
 
 #undef CTOR_SPECIALIZATION
 
@@ -67,7 +67,7 @@ namespace boost { namespace fusion
             return *this;\
         }
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(ASSIGN_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(ASSIGN_SPECIALIZATION,_)
 
 #undef ASSIGN_SPECIALIZATION
 
@@ -100,8 +100,6 @@ namespace boost { namespace fusion
 
         CALL_OPERATOR(BOOST_PP_EMPTY());
         CALL_OPERATOR(const);
-        CALL_OPERATOR(volatile);
-        CALL_OPERATOR(const volatile);
 
 #undef CALL_OPERATOR
 

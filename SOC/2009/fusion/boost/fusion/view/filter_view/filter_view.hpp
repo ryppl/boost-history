@@ -43,7 +43,7 @@ namespace boost { namespace fusion
         typedef mpl::true_ is_view;
 
         typedef detail::view_storage<Seq> storage_type;
-        typedef typename storage_type::type seq_type;
+        typedef typename storage_type::type sequence_type;
         typedef Pred pred_type;
 
 #define FILTER_VIEW_CTOR(COMBINATION,_)\
@@ -52,7 +52,7 @@ namespace boost { namespace fusion
           : seq(static_cast<filter_view<OtherSeq, Pred> COMBINATION>(view).seq)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(FILTER_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(FILTER_VIEW_CTOR,_)
 
 #undef FILTER_VIEW_CTOR
 

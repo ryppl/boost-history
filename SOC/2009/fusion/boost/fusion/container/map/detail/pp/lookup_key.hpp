@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_CONTAINER_MAP_DETAIL_PP_LOOKUP_KEY_HPP
 #define BOOST_FUSION_CONTAINER_MAP_DETAIL_PP_LOOKUP_KEY_HPP
 
-#include <boost/type_traits/add_reference.hpp>
+#include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/pp/unknown_key.hpp>
 
 namespace boost { namespace fusion
@@ -22,7 +22,7 @@ namespace boost { namespace fusion { namespace detail
     struct map_data_type
     {
         typedef typename
-            add_reference<
+            detail::add_lref<
                 typename T::second_type
             >::type
         type;
@@ -38,7 +38,7 @@ namespace boost { namespace fusion { namespace detail
     struct map_const_data_type
     {
         typedef typename
-            add_reference<
+            detail::add_lref<
                 typename add_const<
                     typename T::second_type
                 >::type

@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace extension
                         typename seq::transform_type
                     >::type(
                     typename boost::fusion::result_of::value_at<
-                        typename seq::seq_type
+                        typename seq::sequence_type
                       , N
                     >::type)
                 >::type

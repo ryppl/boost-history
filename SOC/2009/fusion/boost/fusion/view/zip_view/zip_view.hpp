@@ -152,7 +152,7 @@ namespace boost { namespace fusion {
                 zip_view<OtherSeqs> COMBINATION,view).seqs))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(ZIP_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(ZIP_VIEW_CTOR,_)
 
 #undef ZIP_VIEW_CTOR
 

@@ -141,7 +141,7 @@ public:
           : data(BOOST_FUSION_FORWARD(map COMBINATION,map_).data)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MAP_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(MAP_CTOR,_)
 
 #undef MAP_CTOR
 

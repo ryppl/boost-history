@@ -52,7 +52,7 @@ namespace boost { namespace fusion
           : val(BOOST_FUSION_FORWARD(single_view COMBINATION,view).val)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SINGLE_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SINGLE_VIEW_CTOR,_)
 
 #undef SINGLE_VIEW_CTOR
 
@@ -68,7 +68,7 @@ namespace boost { namespace fusion
           : val(fusion::front(seq_assign.get()))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SINGLE_VIEW_ASSIGN_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SINGLE_VIEW_ASSIGN_CTOR,_)
 
 #undef SINGLE_VIEW_ASSIGN_CTOR
 
@@ -89,7 +89,7 @@ namespace boost { namespace fusion
             return *this;\
         }
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SINGLE_VIEW_SEQ_ASSIGN,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SINGLE_VIEW_SEQ_ASSIGN,_)
 
 #undef SINGLE_VIEW_SEQ_ASSIGN
 

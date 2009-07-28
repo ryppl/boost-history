@@ -46,7 +46,7 @@ namespace boost { namespace fusion
                 static_cast<std::pair<A1, A2> COMBINATION>(pair)))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(TUPLE_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(TUPLE_CTOR,_)
 
 #undef TUPLE_CTOR
 

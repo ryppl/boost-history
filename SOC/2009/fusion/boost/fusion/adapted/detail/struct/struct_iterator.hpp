@@ -12,8 +12,6 @@
 #include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/iterator/iterator_facade.hpp>
 
-#include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/add_reference.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/int.hpp>
@@ -26,7 +24,10 @@ namespace boost { namespace fusion
 
     template <typename SeqRef, int Pos>
     struct struct_iterator
-      : iterator_facade<struct_iterator<SeqRef, Pos>, random_access_traversal_tag>
+      : iterator_facade<
+            struct_iterator<SeqRef, Pos>
+          , random_access_traversal_tag
+        >
     {
         //BOOST_FUSION_INDEX_CHECK(N,struct_size<SeqRef>::value);
 

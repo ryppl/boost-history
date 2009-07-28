@@ -142,7 +142,7 @@ namespace boost { namespace fusion
                 fusion::begin(BOOST_FUSION_FORWARD(vector COMBINATION,vec)))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_)
 
 #undef VECTOR_CTOR
 
@@ -159,7 +159,7 @@ namespace boost { namespace fusion
           : base(detail::assign_by_deref(),fusion::begin(seq_assign.get()))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
 
 #undef VECTOR_ASSIGN_CTOR
 

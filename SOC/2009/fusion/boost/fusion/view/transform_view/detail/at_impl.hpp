@@ -30,7 +30,7 @@ namespace boost { namespace fusion { namespace extension
                     typename support::get_func_base<
                         typename seq::transform_type
                     >::type(
-                    typename result_of::at<typename seq::seq_type, N>::type
+                    typename result_of::at<typename seq::sequence_type, N>::type
                     )
                 >::type
             type;

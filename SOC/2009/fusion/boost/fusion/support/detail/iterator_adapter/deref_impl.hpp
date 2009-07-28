@@ -8,8 +8,6 @@
 
 #include <boost/fusion/iterator/deref.hpp>
 
-//TODO seq_type -> sequence_type
-
 namespace boost { namespace fusion { namespace extension
 {
     template <typename Tag>

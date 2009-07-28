@@ -26,7 +26,6 @@ namespace boost { namespace fusion { namespace extension
                 boost_tuple_iterator<tuples::null_type const volatile&>
             type;
 
-            //TODO volatile!
             template<typename Seq>
             static type
             call(Seq const& seq, mpl::true_)

@@ -64,8 +64,15 @@ namespace boost { namespace fusion {
          State const& state,
          F const& f)
     {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+#   pragma warning(disable: 4180)
+#endif
         return result_of::fold<Seq&,State const&,F const&>::gen::call(
                 fusion::begin(seq), state, f);
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
     }
 #endif
 }}

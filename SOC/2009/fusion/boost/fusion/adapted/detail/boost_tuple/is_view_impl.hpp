@@ -10,8 +10,6 @@
 
 #include <boost/mpl/bool.hpp>
 
-//TODO: implement through is_sequence
-
 namespace boost { namespace fusion { namespace extension
 {
     template<typename Tag>

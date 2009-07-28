@@ -46,9 +46,9 @@ namespace boost { namespace fusion
         typedef mpl::true_ is_view;
 
         typedef detail::view_storage<Seq> storage_type;
-        typedef typename storage_type::type seq_type;
-        typedef typename traits::category_of<seq_type>::type category;
-        typedef typename result_of::size<seq_type>::type size;
+        typedef typename storage_type::type sequence_type;
+        typedef typename traits::category_of<sequence_type>::type category;
+        typedef typename result_of::size<sequence_type>::type size;
 
         //BOOST_FUSION_STATIC_ASSERT(
         //    (is_base_of<bidirectional_traversal_tag,
@@ -62,7 +62,7 @@ namespace boost { namespace fusion
                 reverse_view<OtherSeq> COMBINATION,view).seq)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(REVERSE_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(REVERSE_VIEW_CTOR,_)
 
 #undef REVERSE_VIEW_CTOR
 

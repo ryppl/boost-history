@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace extension
                     typename result_of::end<
                         typename detail::remove_reference<
                             SeqRef
-                        >::type::seq_type
+                        >::type::sequence_type
                     >::type
                 >
             type;

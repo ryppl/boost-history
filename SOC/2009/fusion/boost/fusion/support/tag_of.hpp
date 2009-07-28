@@ -34,14 +34,6 @@ namespace boost { namespace fusion
         {
             typedef typename Seq::fusion_tag type;
         };
-
-        template <typename Seq>
-        struct is_mpl_sequence
-          : mpl::and_<
-                mpl::not_<is_base_of<sequence_root, Seq> >
-              , mpl::is_sequence<Seq>
-            >
-        {};
     }
 
     namespace traits
@@ -56,8 +48,7 @@ namespace boost { namespace fusion
                     detail::has_fusion_tag<seq>
                   , detail::get_fusion_tag<seq>
                   , mpl::if_<
-                        //???
-                        detail::is_mpl_sequence<seq>
+                        mpl::is_sequence<seq>
                       , mpl_sequence_tag
                       , mpl_iterator_tag
                     >

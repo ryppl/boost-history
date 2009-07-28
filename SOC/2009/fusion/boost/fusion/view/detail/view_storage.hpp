@@ -68,7 +68,7 @@ namespace boost { namespace fusion { namespace detail
           : t(get_init_type(storage.get()))\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(VIEW_STORAGE_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VIEW_STORAGE_CTOR,_)
 
 #undef VIEW_STORAGE_CTOR
 
@@ -91,7 +91,6 @@ namespace boost { namespace fusion { namespace detail
             return *this;
         }
 
-        //TODO cschmidt: volatile?
         typename mpl::if_<
             traits::is_view<T>
           , typename detail::add_lref<type>::type

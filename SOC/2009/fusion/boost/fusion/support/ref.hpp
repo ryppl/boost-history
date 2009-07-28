@@ -32,6 +32,10 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+//cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
+//get a lot of problems with older compilers. On top of that, fusion
+//types are not meant to be volatile anyway.
+
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/mpl/bool.hpp>
 
@@ -43,12 +47,11 @@
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) ARGUMENT
 
-#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
-        MACRO(&,ARG)\
+#   define BOOST_FUSION_ALL_CTOR_COMBINATIONS(MACRO,ARG)\
         MACRO(const&,ARG)
-
-        //MACRO(volatile&,ARG)\
-        //MACRO(const volatile&,ARG)
+#   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
+        MACRO(const&,ARG)\
+        MACRO(&,ARG)
 #else
 #   include <utility>
 
@@ -60,26 +63,22 @@
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) std::forward<TYPE>(ARGUMENT)
 
-    //cschmidt: This macro could be workaround with a single function using
+    //cschmidt: InstThis macro could be replaced with a single function using
     //enable if and is_convertible. This is a lot slower than five overloads/
     //specialisations though.
+#   define BOOST_FUSION_ALL_CTOR_COMBINATIONS(MACRO,ARG)\
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)
+
 #   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
         MACRO(&,ARG)\
         MACRO(const&,ARG)\
         MACRO(&&,ARG)\
         MACRO(const&&,ARG)
-
-        //MACRO(volatile&,ARG)\
-        //MACRO(const volatile&,ARG)\
-        //MACRO(volatile&&,ARG)\
-        //MACRO(const volatile&&,ARG)
 #endif
 #define BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(MACRO,ARG)\
     BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
     MACRO(BOOST_PP_EMPTY(),ARG)\
-    MACRO(const,ARG)\
-    MACRO(volatile,ARG)\
-    MACRO(const volatile,ARG)
+    MACRO(const,ARG)
 
 namespace boost { namespace fusion { namespace detail
 {

@@ -131,11 +131,11 @@ namespace boost { namespace fusion
 #endif
     {
         typedef detail::view_storage<Seq> storage_type;
-        typedef typename storage_type::type seq_type;
+        typedef typename storage_type::type sequence_type;
         typedef F transform_type;
 
-        typedef typename traits::category_of<seq_type>::type category;
-        typedef typename result_of::size<seq_type>::type size;
+        typedef typename traits::category_of<sequence_type>::type category;
+        typedef typename result_of::size<sequence_type>::type size;
         typedef transform_view_tag fusion_tag;
         typedef fusion_sequence_tag tag; // this gets picked up by MPL
         typedef mpl::true_ is_view;

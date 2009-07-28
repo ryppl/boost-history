@@ -111,7 +111,7 @@ namespace boost { namespace fusion
           : data(BOOST_FUSION_FORWARD(set COMBINATION,set_).data)\
         {}
 
-        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(SET_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SET_CTOR,_)
 
 #undef SET_CTOR
 
