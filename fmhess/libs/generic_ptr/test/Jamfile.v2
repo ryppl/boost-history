@@ -1,0 +1,19 @@
+#  Boost.GenericPtr Library test Jamfile
+#
+#  Copyright (c) 2009 Frank Mori Hess
+#  Copyright (c) 2003-2007 Peter Dimov
+#  Copyright (c) 2003 Dave Abrahams
+#
+#  Distributed under the Boost Software License, Version 1.0. (See
+#  accompanying file LICENSE_1_0.txt or copy at
+#  http://www.boost.org/LICENSE_1_0.txt)
+
+# bring in rules for testing
+import testing ;
+
+{
+    test-suite "generic_ptr"
+        : [ run cloning_test.cpp ]
+        ;
+}
+
