@@ -18,13 +18,16 @@
 #include <boost/thread/condition.hpp>
 #include <boost/thread/exceptions.hpp>
 #include <boost/thread/locks.hpp>
-#include <boost/utillity/addressof.hpp>
-#include <boost/utillity/swap.hpp>
+#include <boost/utility/addressof.hpp>
+#include <boost/utility/swap.hpp>
 
 namespace boost
 {
   namespace generic_ptr
   {
+    template<typename MutexPtr>
+    class monitor_upgrade_lock;
+
     namespace detail
     {
       template<typename MonitorPtr, typename Lock>
@@ -37,12 +40,12 @@ namespace boost
 
         lock_wrapper()
         {}
-        explicit lock_wrapper(MonitorPtr &mon):
+        explicit lock_wrapper(const MonitorPtr &mon):
           _mon(mon),
           _lock(_mon.get_mutex_ref())
         {}
         template<typename U>
-        lock_wrapper(MonitorPtr &mon, const U &arg):
+        lock_wrapper(const MonitorPtr &mon, const U &arg):
           _mon(mon),
           _lock(_mon.get_mutex_ref(), arg)
         {}
@@ -98,22 +101,19 @@ namespace boost
         {
           return !_lock;
         }
-        MonitorPtr* mutex() const
+        MonitorPtr monitor() const
         {
-          if(!_mon) return 0;
-          return addressof(*_mon);
+          return _mon;
         }
-        MonitorPtr* release()
+        MonitorPtr release()
         {
-          if(!_mon) return 0;
-          MonitorPtr * result = addressof(_mon);
           _mon.reset();
           _lock.release();
-          return result;
+          return _mon;
         }
 
         // monitor extensions to lock interface
-        pointer_traits<MonitorPtr>::pointer operator->() const
+        typename pointer_traits<MonitorPtr>::pointer operator->() const
         {
           if(owns_lock() == false)
           {
@@ -146,7 +146,7 @@ namespace boost
         friend class monitor_upgrade_lock;
         template<typename UpgradeLock>
         friend class monitor_upgrade_to_unique_lock;
-        template<typename M, typename MH, typename L>
+        template<typename M, typename L>
         friend class lock_wrapper;
   #endif // BOOST_NO_MEMBER_TEMPLATE_FRIENDS
 
@@ -170,10 +170,10 @@ namespace boost
     public:
       monitor_unique_lock()
       {}
-      explicit monitor_unique_lock(MonitorPtr &mon): base_class(mon)
+      explicit monitor_unique_lock(const MonitorPtr &mon): base_class(mon)
       {}
       template<typename U>
-      monitor_unique_lock(MonitorPtr &mon, const U &arg):
+      monitor_unique_lock(const MonitorPtr &mon, const U &arg):
         base_class(mon, arg)
       {}
       // move constructors
@@ -243,10 +243,10 @@ namespace boost
     public:
       monitor_shared_lock()
       {}
-      explicit monitor_shared_lock(MonitorPtr &mon): base_class(mon)
+      explicit monitor_shared_lock(const MonitorPtr &mon): base_class(mon)
       {}
       template<typename U>
-      monitor_shared_lock(MonitorPtr &mon, const U &arg):
+      monitor_shared_lock(const MonitorPtr &mon, const U &arg):
         base_class(mon, arg)
       {}
       // move constructors
@@ -338,10 +338,10 @@ namespace boost
     public:
       monitor_upgrade_lock()
       {}
-      explicit monitor_upgrade_lock(MonitorPtr &mon): base_class(mon)
+      explicit monitor_upgrade_lock(const MonitorPtr &mon): base_class(mon)
       {}
       template<typename U>
-      monitor_upgrade_lock(MonitorPtr &mon, const U &arg):
+      monitor_upgrade_lock(const MonitorPtr &mon, const U &arg):
         base_class(mon, arg)
       {}
       // move constructors
@@ -458,7 +458,7 @@ namespace boost
       }
 
       // monitor extensions to lock interface
-      MonitorPtr::pointer operator->() const
+      typename MonitorPtr::pointer operator->() const
       {
         if(this->owns_lock() == false)
         {
@@ -466,7 +466,7 @@ namespace boost
         }
         return _mon.get();
       }
-      MonitorPtr::reference operator*() const
+      typename MonitorPtr::reference operator*() const
       {
         if(this->owns_lock() == false)
         {
@@ -502,7 +502,7 @@ namespace boost
       }
 #endif // BOOST_NO_RVALUE_REFERENCES
     private:
-      monitor_ptr_type _mon;
+      monitor_pointer_type _mon;
       wrapped_lock_type _lock;
     };
 
