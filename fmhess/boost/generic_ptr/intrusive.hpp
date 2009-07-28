@@ -25,6 +25,7 @@
 #include <boost/detail/workaround.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/smart_ptr/detail/sp_convertible.hpp>
 #include <boost/utility/swap.hpp>
 

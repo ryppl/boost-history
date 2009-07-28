@@ -2,6 +2,7 @@
 //  generic_ptr/monitor.hpp
 //
 //  Copyright (c) 2009 Frank Mori Hess
+//  Copyright (c) 2001, 2002 Peter Dimov
 //
 //  Distributed under the Boost Software License, Version 1.0. (See
 //  accompanying file LICENSE_1_0.txt or copy at
@@ -16,6 +17,7 @@
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/generic_ptr/detail/unique_lock.hpp>
 #include <boost/generic_ptr/shared.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/utility/swap.hpp>
 
 namespace boost
@@ -137,7 +139,72 @@ namespace boost
     {
       return mp.get();
     }
-//TODO: casts, comparisons
+
+    // casts
+    template<typename ToValueType, typename U, typename Mutex>
+    monitor<T, Mutex> static_pointer_cast
+    (
+      monitor<U, Mutex> const & p,
+      mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
+    )
+    {
+        return static_pointer_cast(p.get(), to_type_iden);
+    }
+    template<typename ToValueType, typename U, typename Mutex>
+    monitor<T, Mutex> const_pointer_cast
+    (
+      monitor<U, Mutex> const & p,
+      mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
+    )
+    {
+        return const_pointer_cast(p.get(), to_type_iden);
+    }
+    template<typename ToValueType, typename U, typename Mutex>
+    monitor<T, Mutex> dynamic_pointer_cast
+    (
+      monitor<U, Mutex> const & p,
+      mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
+    )
+    {
+        return dynamic_pointer_cast(p.get(), to_type_iden);
+    }
+
+    // comparisons
+    template<class T, class U, typename Mutex> inline bool operator==(monitor<T, Mutex> const & a, monitor<U, Mutex> const & b)
+    {
+      return a.get() == b.get();
+    }
+    template<class T, class U, typename Mutex> inline bool operator!=(monitor<T, Mutex> const & a, monitor<U, Mutex> const & b)
+    {
+      return a.get() != b.get();
+    }
+    template<class T, class U, typename Mutex> inline bool operator==(monitor<T, Mutex> const & a, U const & b)
+    {
+      return a.get() == b;
+    }
+    template<class T, class U, typename Mutex> inline bool operator!=(monitor<T, Mutex> const & a, U const & b)
+    {
+      return a.get() != b;
+    }
+    template<class T, class U, typename Mutex> inline bool operator==(T const & a, monitor<U, Mutex> const & b)
+    {
+      return a == b.get();
+    }
+    template<class T, class U, typename Mutex> inline bool operator!=(T const & a, monitor<U, Mutex> const & b)
+    {
+      return a != b.get();
+    }
+    #if __GNUC__ == 2 && __GNUC_MINOR__ <= 96
+    // Resolve the ambiguity between our op!= and the one in rel_ops
+    template<class T, typename Mutex> inline bool operator!=(monitor<T, Mutex> const & a, monitor<T, Mutex> const & b)
+    {
+      return a.get() != b.get();
+    }
+    #endif
+    template<class T, typename Mutex> inline bool operator<(monitor<T, Mutex> const & a, monitor<T, Mutex> const & b)
+    {
+      return std::less<typename monitor<T, Mutex>::pointer>()(a.get(), b.get());
+    }
   } // namespace generic_ptr
 } // namespace boost
 
