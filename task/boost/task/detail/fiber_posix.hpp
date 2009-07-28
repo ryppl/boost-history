@@ -20,8 +20,6 @@ extern "C"
 #include <boost/shared_array.hpp>
 #include <boost/system/system_error.hpp>
 
-#include <boost/fibers/detail/context.hpp>
-
 namespace boost { namespace task {
 namespace detail
 {
@@ -29,13 +27,12 @@ template< typename Fiber >
 void trampoline( Fiber * fib)
 {
 	BOOST_ASSERT( fib);
-	context< Fiber > ctxt( * fib);
 	BOOST_ASSERT( ! fib->fn_.empty() );
-	fib->fn_( ctxt);
+	fib->fn_();
 	fib->exit();
 }
 
-class fiber_base
+class fiber
 {
 private:
 	enum st_state
@@ -50,12 +47,12 @@ private:
 	friend
 	void trampoline( Fiber *);
 
-	function< void( context< fiber_base > &) >	fn_;
-	std::size_t									stack_size_;
-	::ucontext_t								caller_;
-	::ucontext_t								callee_;
-	shared_array< char >						stack_;
-	st_state									state_;
+	function< void() >		fn_;
+	std::size_t				stack_size_;
+	::ucontext_t			caller_;
+	::ucontext_t			callee_;
+	shared_array< char >	stack_;
+	st_state				state_;
 
 	bool uninitialized_() const
 	{ return state_ == st_uninitialized; }
@@ -78,10 +75,11 @@ private:
 					system::system_category) );
 	}
 
-	void yield_to_( fiber_base & to)
+	void yield_to_( fiber & to)
 	{
 		std::swap( caller_, to.caller_);
 		std::swap( state_, to.state_);
+
 		if ( ::swapcontext( & callee_, & to.callee_) == -1)
 			throw system::system_error(
 				system::error_code(
@@ -116,9 +114,9 @@ private:
 		callee_.uc_stack.ss_sp = stack_.get();
 		callee_.uc_stack.ss_size = stack_size_;
 		callee_.uc_link = 0;
-		typedef void fn_type( fiber_base *);
+		typedef void fn_type( fiber *);
 		typedef void ( * st_fn)();
-		fn_type * fn_ptr( trampoline< fiber_base >);
+		fn_type * fn_ptr( trampoline< fiber >);
 
 		::makecontext(
 			& callee_,
@@ -130,8 +128,10 @@ private:
 	}
 
 public:
-	fiber_base(
-		function< void( context< fiber_base > &) > fn,
+	static void convert_thread_to_fiber() {}
+
+	fiber(
+		function< void() > fn,
 		std::size_t stack_size)
 	:
 	fn_( fn),
@@ -145,7 +145,7 @@ public:
 		BOOST_ASSERT( stack_size_ > 0);
 	}
 
-	~fiber_base()
+	~fiber()
 	{ BOOST_ASSERT( ! running_() ); }
 
 	bool ready() const
@@ -165,7 +165,7 @@ public:
 		BOOST_ASSERT( running_() );
 	}
 
-	void yield_to( fiber_base & to)
+	void yield_to( fiber & to)
 	{
 		BOOST_ASSERT( running_() );
 		if ( to.uninitialized_() ) to.init_();

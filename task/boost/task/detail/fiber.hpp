@@ -18,7 +18,7 @@
 #include <boost/task/detail/fiber_windows.hpp>
 
 # elif defined(_POSIX_VERSION)
-#include <boost/fibers/detail/fiber_posix.hpp>
+#include <boost/task/detail/fiber_posix.hpp>
 
 # endif
 

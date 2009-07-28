@@ -19,7 +19,6 @@ extern "C"
 #include <boost/function.hpp>
 #include <boost/system/system_error.hpp>
 
-
 namespace boost { namespace task {
 namespace detail
 {
@@ -28,13 +27,12 @@ VOID CALLBACK trampoline( LPVOID vp)
 {
 	Fiber * fib( static_cast< Fiber * >( vp) );
 	BOOST_ASSERT( fib);
-	context< Fiber > ctxt( * fib);
 	BOOST_ASSERT( ! fib->fn_.empty() );
-	fib->fn_( ctxt);
+	fib->fn_();
 	fib->exit();
 }
 
-class fiber_base
+class fiber
 {
 private:
 	enum st_state
@@ -49,11 +47,11 @@ private:
 	friend
 	VOID CALLBACK trampoline( LPVOID);
 
-    function< void( context< fiber_base > &) >	fn_;
-	std::size_t									stack_size_;
-	LPVOID										caller_;
-	LPVOID										callee_;
-	st_state									state_;
+    function< void() >	fn_;
+	std::size_t			stack_size_;
+	LPVOID				caller_;
+	LPVOID				callee_;
+	st_state			state_;
 
 	bool uninitialized_() const
 	{ return state_ == st_uninitialized; }
@@ -67,115 +65,33 @@ private:
 	bool exited_() const
 	{ return state_ == st_exited; }
 
-	bool is_fiber_()
-	{
-#if (_WIN32_WINNT >= 0x0600)
-		return ::IsThreadAFiber() == TRUE;
-#else
-		LPVOID current( ::GetCurrentFiber() );
-		return current != 0 && current != reinterpret_cast< LPVOID >( 0x1E00);
-#endif
-	}
-
 	void yield_()
-	{
-		if( ! is_fiber_() )
-		{
-			BOOST_ASSERT( ! callee_);
-			callee_ = ::ConvertThreadToFiber( 0);
-			if ( ! callee_)
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
-			::SwitchToFiber( caller_);
-			BOOL result = ::ConvertFiberToThread();
-			if ( ! result)
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
-			caller_ = 0;
-		}
-		else
-		{
-			if ( ! callee_)
-				callee_ = ::GetCurrentFiber();
-			::SwitchToFiber( caller_);
-			if ( ! callee_)
-				callee_ = 0;
-		}
-	}
+	{ ::SwitchToFiber( caller_); }
 
-	void yield_to_( fiber_base & to)
+	void yield_to_( fiber & to)
 	{
 		std::swap( caller_, to.caller_);
 		std::swap( state_, to.state_);
-		if( ! is_fiber_() )
-		{
-			BOOST_ASSERT( ! callee_);
-			callee_ = ::ConvertThreadToFiber( 0);
-			if ( ! callee_)
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
-			::SwitchToFiber( to.callee_);
-			BOOL result = ::ConvertFiberToThread();
-			if ( ! result)
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
-			caller_ = 0;
-		}
-		else
-		{
-			if ( ! callee_)
-				callee_ = ::GetCurrentFiber();
-			::SwitchToFiber( to.callee_);
-			if ( ! callee_)
-				callee_ = 0;
-		}
+
+		::SwitchToFiber( to.callee_);
 	}
 
 	void run_()
-	{
-		if( ! is_fiber_() )
-		{
-			BOOST_ASSERT( ! caller_);
-			caller_ = ::ConvertThreadToFiber( 0);
-			if ( ! caller_)
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
-			::SwitchToFiber( callee_);
-			BOOL result = ::ConvertFiberToThread();
-			if ( ! result)
-				throw system::system_error(
-					system::error_code(
-						::GetLastError(),
-						system::system_category) );
-			caller_ = 0;
-		}
-		else
-		{
-			if ( ! caller_)
-				caller_ = ::GetCurrentFiber();
-			::SwitchToFiber( callee_);
-			if ( ! caller_)
-				caller_ = 0;
-		}
-	}
+	{ ::SwitchToFiber( callee_); }
 
 	void init_()
 	{
 		BOOST_ASSERT( state_ == st_uninitialized);
 
+		caller_ = ::GetCurrentFiber();
+		if ( ! caller_)
+			throw system::system_error(
+				system::error_code(
+					::GetLastError(),
+					system::system_category) );
 		callee_ = ::CreateFiber(
 			stack_size_,
-			static_cast< LPFIBER_START_ROUTINE >( & trampoline< fiber_base >),
+			static_cast< LPFIBER_START_ROUTINE >( & trampoline< fiber >),
 			static_cast< LPVOID >( this) );
 		if ( ! callee_)
 			throw system::system_error(
@@ -187,8 +103,18 @@ private:
 	}
 
 public:
-	fiber_base(
-		function< void( context< fiber_base > &) > fn,
+	static void convert_thread_to_fiber()
+	{
+		if ( ! ::ConvertThreadToFiber( 0) )
+			throw system::system_error(
+				system::error_code(
+					::GetLastError(),
+					system::system_category) );
+	
+	}
+
+	fiber(
+		function< void() > fn,
 		std::size_t stack_size)
 	:
 	fn_( fn),
@@ -201,7 +127,7 @@ public:
 		BOOST_ASSERT( stack_size_ > 0);
 	}
 
-	~fiber_base()
+	~fiber()
 	{
 		BOOST_ASSERT( ! running_() );
 		::DeleteFiber( callee_);
@@ -224,7 +150,7 @@ public:
 		BOOST_ASSERT( running_() );
 	}
 
-	void yield_to( fiber_base & to)
+	void yield_to( fiber & to)
 	{
 		BOOST_ASSERT( running_() );
 		if ( to.uninitialized_() ) to.init_();

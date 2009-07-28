@@ -19,6 +19,7 @@
 
 #include <boost/task/callable.hpp>
 #include <boost/task/detail/config.hpp>
+#include <boost/task/detail/fiber.hpp>
 #include <boost/task/detail/guard.hpp>
 #include <boost/task/detail/interrupter.hpp>
 #include <boost/task/detail/wsq.hpp>
@@ -89,6 +90,7 @@ private:
 
 	Pool					&	pool_;
 	shared_ptr< thread >		thrd_;
+	shared_ptr< fiber >			fib_;
 	wsq				 			wsq_;
 	semaphore					shtdwn_sem_;
 	semaphore					shtdwn_now_sem_;
@@ -135,6 +137,45 @@ private:
 		return false;
 	}
 
+	void run_()
+	{
+		callable ca;
+		while ( ! shutdown_() )
+		{
+			if ( try_take_local_callable_( ca) || 
+				 try_take_global_callable_( ca) ||
+				 try_steal_other_callable_( ca) )
+			{
+				execute_( ca);
+				scns_ = 0;
+			}
+			else
+			{
+				guard grd( pool_.idle_worker_);
+				if ( shutdown_() ) return;
+				++scns_;
+				if ( scns_ >= max_scns_)
+				{
+					// should the comparation be atomic or
+					// at least the read of idle_worker_ be atomic ?
+					if ( pool_.size_() == pool_.idle_worker_)
+					{
+						if ( take_global_callable_( ca, asleep_) )
+							execute_( ca);
+					}
+					else
+						try
+						{ this_thread::sleep( asleep_); }
+						catch ( thread_interrupted const&)
+						{ return; }
+					scns_ = 0;
+				}
+				else
+					this_thread::yield();
+			}
+		}
+	}
+
 	bool shutdown_()
 	{
 		if ( shutdown__() && get_pool().channel_.empty() )
@@ -164,6 +205,7 @@ public:
 	:
 	pool_( pool),
 	thrd_( new thread( fn) ),
+	fib_(),
 	wsq_(),
 	shtdwn_sem_( 0),
 	shtdwn_now_sem_( 0),
@@ -206,38 +248,17 @@ public:
 	{
 		BOOST_ASSERT( get_id() == this_thread::get_id() );
 
-		callable ca;
-		while ( ! shutdown_() )
-		{
-			if ( try_take_local_callable_( ca) || 
-				 try_take_global_callable_( ca) ||
-				 try_steal_other_callable_( ca) )
-			{
-				execute_( ca);
-				scns_ = 0;
-			}
-			else
-			{
-				guard grd( pool_.idle_worker_);
-				if ( shutdown_() ) return;
-				++scns_;
-				if ( scns_ >= max_scns_)
-				{
-					// should the comparation be atomic or
-					// at least the read of idle_worker_ be atomic ?
-					if ( pool_.size_() == pool_.idle_worker_)
-					{
-						if ( take_global_callable_( ca, asleep_) )
-							execute_( ca);
-					}
-					else
-						this_thread::sleep( asleep_);
-					scns_ = 0;
-				}
-				else
-					this_thread::yield();
-			}
-		}
+		fiber::convert_thread_to_fiber();
+		shared_ptr< fiber > fib(
+			new fiber(
+				bind(
+					& worker_object::run_,
+					this),
+				64000) );
+		fib_.swap( fib);
+		fib_->run();
+		BOOST_ASSERT( fib_->exited() );
+		fib_.reset();
 	}
 
 	void reschedule_until( function< bool() > const& pred)
