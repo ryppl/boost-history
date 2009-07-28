@@ -56,9 +56,11 @@ struct worker_base
 
 	virtual void signal_shutdown_now() = 0;
 
+	virtual void run() = 0;
+
 	virtual void reschedule_until( function< bool() > const&) = 0;
 
-	virtual void run() = 0;
+	virtual bool block() = 0;
 };
 
 template<
@@ -286,6 +288,9 @@ public:
 			}
 		}
 	}
+
+	bool block()
+	{ return ! shutdown_(); }
 };
 
 class BOOST_TASK_DECL worker
@@ -333,6 +338,7 @@ public:
 
 	void run();
 	void reschedule_until( function< bool() > const&);
+	bool block();
 
 	static worker * tss_get();
 };

@@ -30,7 +30,6 @@ exe fork_join : fork_join.cpp ;
 exe interrupt : interrupt.cpp ;
 exe pending : pending.cpp ;
 exe priority : priority.cpp ;
-exe reschedule_until : reschedule_until.cpp ;
 exe shutdonw_now : shutdown_now.cpp ;
 exe smart : smart.cpp ;
 exe submit : submit.cpp ;

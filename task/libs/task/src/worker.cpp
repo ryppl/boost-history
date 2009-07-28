@@ -41,16 +41,20 @@ worker::try_steal( callable & ca)
 { return impl_->try_steal( ca); }
 
 void
-worker::reschedule_until( function< bool() > const& pred)
-{ return impl_->reschedule_until( pred); }
-
-void
 worker::run()
 {
 	// FIXME: ugly
 	worker::tss_.reset( new worker( * this) );
 	impl_->run();
 }
+
+void
+worker::reschedule_until( function< bool() > const& pred)
+{ impl_->reschedule_until( pred); }
+
+bool
+worker::block()
+{ return impl_->block(); }
 
 worker *
 worker::tss_get()

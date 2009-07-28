@@ -54,14 +54,6 @@ public:
 };
 }
 
-template< typename Pred >
-void reschedule_until( Pred const& pred)
-{
-	task::detail::worker * w( task::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	w->reschedule_until( pred);
-}
-
 template< typename Pool >
 Pool & get_pool()
 {
@@ -88,7 +80,9 @@ void delay( system_time abs_time)
 	if ( runs_in_pool() )
 	{
 		detail::time_reached t( abs_time);
-		reschedule_until( t);
+		task::detail::worker * w( task::detail::worker::tss_get() );
+		BOOST_ASSERT( w);
+		w->reschedule_until( t);
 	}
 	else
 		this_thread::sleep( abs_time);
@@ -104,7 +98,9 @@ void yield()
 	if ( runs_in_pool() )
 	{
 		detail::once_false t;
-		reschedule_until( t);
+		task::detail::worker * w( task::detail::worker::tss_get() );
+		BOOST_ASSERT( w);
+		w->reschedule_until( t);
 	}
 	else
 		this_thread::yield();
