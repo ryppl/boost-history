@@ -1105,7 +1105,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         }
       } // draw_y_axis
 
-      void draw_y_label()
+      void draw_y_axis_label()
       { //! Draw a vertical Y-axis label, and optional y units.
         // Y-label color is set in constructor thus:
         // image.g(detail::PLOT_Y_LABEL).style().stroke_color(black);
@@ -1124,7 +1124,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         double y = (plot_bottom_ + plot_top_) / 2.; // center on the plot window.
         if (y_ticks_.ticks_on_window_or_on_axis_ < 0) // -1 means left
         { // Ticks value labels left of plot window.
-          if (y_ticks_.major_value_labels_side_ < 0) // -1 means left
+          if (y_ticks_.major_value_labels_side_ < 0) // -1 means value label to left of Y-axis.
           { // tick values labels are to left of Y axis.
             // Shift right to allow for any tick value labels.
             if ((y_ticks_.label_rotation_ == downward) || (y_ticks_.label_rotation_ == upward))
@@ -1185,11 +1185,19 @@ my_plot.background_color(ghostwhite) // Whole image.
               x -= y_ticks_.label_max_space_; // Move left for the longest tick value label. (Might be zero?)
               //x -= y_label_info_.textstyle().font_size() * 1.0; // Shift left to suit Y labels.
               x -= 0.6 * (y_label_info_.textstyle().font_size() + y_value_label_info_.textstyle().font_size()); // best compromise?
-           }
+            }
             else
             {
               cout << " Rotation of Y label rotation" << y_ticks_.label_rotation_ << "not yet implemented" << endl;
             }
+          }
+          else if (y_ticks_.major_value_labels_side_ > 0)
+          { // +1 means Y Tick labels to right of Y-axis.
+             x -= y_label_info_.textstyle().font_size() * 1.7;  // Move left from Y-axis.
+          }
+          else
+          { // y_ticks_.y_major_value_labels_side_ == 0 means no tick value labels.
+            x -= y_label_info_.textstyle().font_size() * 1.7;  // Move left from Y-axis.
           }
           if (y_ticks_.left_ticks_on_)
           { // Shift right for biggest of any leftward ticks.
@@ -1222,7 +1230,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           upward) // Y label must be drawn vertically.
           ); 
 
-      } // draw_y_label
+      } // draw_y_axis_label
 
       void draw_y_major_tick(double value, path_element& tick_path, path_element& grid_path)
       { //! Draw a Y axis major tick, tick value labels & grids.
@@ -1815,7 +1823,7 @@ my_plot.background_color(ghostwhite) // Whole image.
               //else X axis includes zero, so x is OK.
             }
             else
-            { // x Not NaN
+            { // x Not NaN (so is inf or max)
               transform_x(x);
               if (x < plot_left_)
               {
@@ -1843,7 +1851,7 @@ my_plot.background_color(ghostwhite) // Whole image.
               //else y axis includes zero, so y is OK.
             }
             else
-            { // y Not NaN.
+            { // y Not NaN (so is inf or max).
               transform_y(y);
               if (y < plot_top_)
               {
@@ -1856,6 +1864,9 @@ my_plot.background_color(ghostwhite) // Whole image.
               // else is inside plot window, so draw a limit point marker.
               // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
             }
+            serieses_[i].limit_point_style_.stroke_color_ = image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color();
+            serieses_[i].limit_point_style_.fill_color_ = image.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
+            // This is a kludge.  limit_point_style_ should probably be common to all data series.
 
             draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, unc(0.), unc(0.));  // No uncertainty info for values at limit infinity & NaN.
 
@@ -2060,11 +2071,11 @@ my_plot.background_color(ghostwhite) // Whole image.
         }
         if(x_axis_.label_on_)
         {
-          draw_x_label();
+          draw_x_axis_label();
         }
         if(y_axis_.label_on_)
         {
-          draw_y_label();
+          draw_y_axis_label();
         }
 
         draw_plot_lines(); // Draw lines between points.

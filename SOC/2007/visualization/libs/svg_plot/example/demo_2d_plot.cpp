@@ -255,13 +255,13 @@ int main()
 
    // Demonstrate/test plots with various range of x and y, some *not* including zero.
 
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_XYPM.svg", "X-axis", -10., +10., "Y-axis", -10., +10.); // Both X & Y include zero.
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_XN.svg", "X-axis", -10., -1., "Y-axis", -10., 10.); // x all < 0
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_YP.svg", "X-axis", -1., +10., "Y-axis", +1., +10.); // Y all > 0
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_YN.svg", "X-axis", -1., +10., "Y-axis", -10., -1.); // y all < 0
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_XYP.svg", "X-axis", +1., +10., "Y-axis", +1., +10.); // x & y all > 0
-   plot("Plot of Mathematical Functions", "./demo_2d_plot_XYN.svg", "X-axis", -10., -1., "Y-axis", -10., -1.); // x & y all < 0
+   plot("Plot of Mathematical Functions XYPM", "./demo_2d_plot_XYPM.svg", "X-axis", -10., +10., "Y-axis", -10., +10.); // Both X & Y include zero.
+   plot("Plot of Mathematical Functions XP", "./demo_2d_plot_XP.svg", "X-axis", +1., +10., "Y-axis", -10., 10.); // X all > 0
+   plot("Plot of Mathematical Functions XN", "./demo_2d_plot_XN.svg", "X-axis", -10., -1., "Y-axis", -10., 10.); // x all < 0
+   plot("Plot of Mathematical Functions YP", "./demo_2d_plot_YP.svg", "X-axis", -1., +10., "Y-axis", +1., +10.); // Y all > 0
+   plot("Plot of Mathematical Functions YN", "./demo_2d_plot_YN.svg", "X-axis", -1., +10., "Y-axis", -10., -1.); // y all < 0
+   plot("Plot of Mathematical Functions XYP", "./demo_2d_plot_XYP.svg", "X-axis", +1., +10., "Y-axis", +1., +10.); // x & y all > 0
+   plot("Plot of Mathematical Functions XYN", "./demo_2d_plot_XYN.svg", "X-axis", -10., -1., "Y-axis", -10., -1.); // x & y all < 0
    plot("Title with Unicode <sup>-&#945; </sup> &#x3A9; &#x3A6; &#x221A; &#x221E; &#x3B6; &#x00B1;", "./demo_2d_plot_XYPM.svg", "X-axis &#x00B1;&#x3A9;", -10., +10., "Y-axis &#x221E;&#x221A;", -10., +10.); // Both X & Y include zero.
   }
   catch (const std::exception& e)
@@ -276,17 +276,14 @@ int main()
 
 Output :
 
-Compiling...
-demo_2d_plot.cpp
-Linking...
-Embedding manifest...
-Autorun "j:\Cpp\SVG\debug\demo_2d_plot.exe"
+
+Autorun "j:\Cpp\SVG\Debug\demo_2d_plot.exe"
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYPM.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -295,17 +292,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -315,12 +316,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 50, 513
-plot_window_x_left 50
-plot_window_x_right 512.6
-plot_window_y 62, 450
-plot_window_y_top 62
-plot_window_y_bottom 450
+plot_window_x 46, 524.1
+plot_window_x_left 46
+plot_window_x_right 524.1
+plot_window_y 58, 454
+plot_window_y_top 58
+plot_window_y_bottom 454
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -332,10 +333,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max 10
 x_min -10
 x_autoscale false
@@ -344,8 +352,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -378,10 +386,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis none
 y_axis_position y_axis_position intersects X axis (X range includes zero)
 x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -417,13 +433,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis none
 y_max 10
 y_min -10
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XP.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -432,17 +456,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -452,12 +480,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 92, 513
-plot_window_x_left 92
-plot_window_x_right 512.6
-plot_window_y 62, 450
-plot_window_y_top 62
-plot_window_y_bottom 450
+plot_window_x 88, 524.1
+plot_window_x_left 88
+plot_window_x_right 524.1
+plot_window_y 58, 454
+plot_window_y_top 58
+plot_window_y_bottom 454
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -469,10 +497,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max 10
 x_min 1
 x_autoscale false
@@ -481,8 +516,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -515,10 +550,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis none
 y_axis_position y_axis_position left (all X values < 0)
 x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -554,13 +597,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis left
 y_max 10
 y_min -10
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XN.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -569,17 +620,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -589,12 +644,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 50, 513
-plot_window_x_left 50
-plot_window_x_right 512.6
-plot_window_y 62, 450
-plot_window_y_top 62
-plot_window_y_bottom 450
+plot_window_x 46, 524.1
+plot_window_x_left 46
+plot_window_x_right 524.1
+plot_window_y 58, 454
+plot_window_y_top 58
+plot_window_y_bottom 454
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -606,10 +661,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max -1
 x_min -10
 x_autoscale false
@@ -618,8 +680,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -652,10 +714,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis none
 y_axis_position y_axis_position right (all X values > 0)
 x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -691,13 +761,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis right
 y_max 10
 y_min -10
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_YP.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -706,17 +784,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -726,12 +808,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 50, 513
-plot_window_x_left 50
-plot_window_x_right 512.6
-plot_window_y 62, 430
-plot_window_y_top 62
-plot_window_y_bottom 430.4
+plot_window_x 46, 524.1
+plot_window_x_left 46
+plot_window_x_right 524.1
+plot_window_y 58, 436
+plot_window_y_top 58
+plot_window_y_bottom 436
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -743,10 +825,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max 10
 x_min -1
 x_autoscale false
@@ -755,8 +844,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -789,10 +878,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis bottom
 y_axis_position y_axis_position intersects X axis (X range includes zero)
 x_axis_position x_axis_position bottom (all Y values > 0)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -828,13 +925,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis none
 y_max 10
 y_min 1
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_YN.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -843,17 +948,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -863,12 +972,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 50, 513
-plot_window_x_left 50
-plot_window_x_right 512.6
-plot_window_y 62, 450
-plot_window_y_top 62
-plot_window_y_bottom 450
+plot_window_x 46, 524.1
+plot_window_x_left 46
+plot_window_x_right 524.1
+plot_window_y 58, 454
+plot_window_y_top 58
+plot_window_y_bottom 454
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -880,10 +989,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max 10
 x_min -1
 x_autoscale false
@@ -892,8 +1008,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -926,10 +1042,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis top
 y_axis_position y_axis_position intersects X axis (X range includes zero)
 x_axis_position x_axis_position top (all Y values < 0)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -965,13 +1089,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis none
 y_max -1
 y_min -10
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYP.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -980,17 +1112,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -1000,12 +1136,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 83.6, 513
-plot_window_x_left 83.6
-plot_window_x_right 512.6
-plot_window_y 62, 430
-plot_window_y_top 62
-plot_window_y_bottom 430.4
+plot_window_x 79.6, 524.1
+plot_window_x_left 79.6
+plot_window_x_right 524.1
+plot_window_y 58, 436
+plot_window_y_top 58
+plot_window_y_bottom 436
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -1017,10 +1153,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max 10
 x_min 1
 x_autoscale false
@@ -1029,8 +1172,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -1063,10 +1206,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis bottom
 y_axis_position y_axis_position left (all X values < 0)
 x_axis_position x_axis_position bottom (all Y values > 0)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -1102,13 +1253,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis left
 y_max 10
 y_min 1
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYN.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -1117,17 +1276,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -1137,12 +1300,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 50, 513
-plot_window_x_left 50
-plot_window_x_right 512.6
-plot_window_y 62, 450
-plot_window_y_top 62
-plot_window_y_bottom 450
+plot_window_x 46, 524.1
+plot_window_x_left 46
+plot_window_x_right 524.1
+plot_window_y 58, 454
+plot_window_y_top 58
+plot_window_y_bottom 454
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -1154,10 +1317,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max -1
 x_min -10
 x_autoscale false
@@ -1166,8 +1336,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis
@@ -1200,10 +1370,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis top
 y_axis_position y_axis_position right (all X values > 0)
 x_axis_position x_axis_position top (all Y values < 0)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -1239,13 +1417,21 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis right
 y_max -1
 y_min -10
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
 >>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>> ./demo_2d_plot_XYPM.svg
 axes_on true
 background_border_width 2
 background_border_color RGB(255,255,0)
 background_color RGB(248,248,255)
-image_border_margin() 10
+image_border_margin() 3
 image_border_width() 2
 coord_precision 3
 copyright_date  
@@ -1254,17 +1440,21 @@ description
 document_title 
 image_x_size 700
 image_y_size 500
+image_size 700, 500
+image_filename 
 legend_on true
 legend_place 2
-legend_top_left 527, 62, legend_bottom_right 688, 206
+legend_top_left 538.1, 58, legend_bottom_right 692, 202
 legend_background_color RGB(255,255,224)
 legend_border_color RGB(255,255,0)
 legend_color blank
 legend_title 
 legend_title_font_size 16
 legend_font_weight 
-legend_width 161.4
+legend_width 153.9
 legend_lines true
+limit points stroke color RGB(128,128,128)
+limit points fill color blank
 license_on false
 license_reproduction permits
 license_distribution permits
@@ -1274,12 +1464,12 @@ plot_background_color RGB(255,255,255)
 plot_border_color RGB(0,128,0)
 plot_border_width 1
 plot_window_on true
-plot_window_x 50, 513
-plot_window_x_left 50
-plot_window_x_right 512.6
-plot_window_y 62, 450
-plot_window_y_top 62
-plot_window_y_bottom 450
+plot_window_x 46, 524.1
+plot_window_x_left 46
+plot_window_x_right 524.1
+plot_window_y 58, 454
+plot_window_y_top 58
+plot_window_y_bottom 454
 title_on true
 title ""
 title_color RGB(255,0,0)
@@ -1291,10 +1481,17 @@ title_font_size 20
 title_font_stretch 
 title_font_style 
 title_font_weight 
-x_value_precision 2
-x_value_ioflags 1200 IOS format flags (0x1200) dec, scientific.
-y_value_precision 1
-y_value_ioflags 2200 IOS format flags (0x2200) dec, fixed.
+x_values_on false
+x_values_font_size 12
+x_values_font_family 
+x_values_precision 3
+x_values_ioflags 200 IOS format flags (0x1200) dec, scientific.
+y_values_precision 3
+y_values_font_size() 1
+y_values_ioflags 200 IOS format flags (0x200) dec.
+y_values_color blank
+y_values_font_family() 
+y_values_font_size() 12
 x_max 10
 x_min -10
 x_autoscale false
@@ -1303,8 +1500,8 @@ xy_autoscale false
 x_autoscale_check_limits true
 x_axis_on true
 x_axis_color() RGB(0,0,0)
-x_axis_label_color RGB(0,0,0)
-x_axis_value_color RGB(0,0,0)
+x_axis_label_color blank
+x_values_color blank
 x_axis_width 1
 x_label_on true
 x_label X-axis &#x00B1;&#x3A9;
@@ -1337,10 +1534,18 @@ x_ticks_up_on false
 x_ticks_on_window_or_axis none
 y_axis_position y_axis_position intersects X axis (X range includes zero)
 x_axis_position x_axis_position intersects Y axis (Y range includes zero)
+x_plusminus_on false
+x_plusminus_color RGB(0,0,255)
+x_df_on false
+x_df_color RGB(0,0,255)
+x_prefix 
+x_separator 
+x_suffix 
+xy_values_on false
 y_label_on true
 y_label_axis Y-axis &#x221E;&#x221A;
 y_axis_color RGB(0,0,0)
-y_axis_label_color RGB(0,0,0)
+y_axis_label_color blank
 y_axis_on true
 axes_on true
 y_axis_value_color RGB(0,0,0)
@@ -1376,7 +1581,16 @@ y_ticks_right_on false
 y_ticks_on_window_or_axis none
 y_max 10
 y_min -10
+y_values_on false
+y_plusminus_on false
+y_plusminus_color RGB(0,0,255)
+y_df_on false
+y_df_color RGB(0,0,255)
+y_prefix 
+y_separator 
+y_suffix 
 data lines width 2
+Build Time 0:05
 
 */
 

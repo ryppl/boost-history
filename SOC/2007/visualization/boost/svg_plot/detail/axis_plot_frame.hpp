@@ -604,7 +604,7 @@ namespace boost
           }
         } // void draw_x_axis()
 
-        void draw_x_label()
+        void draw_x_axis_label()
         { //! Draw the X-axis label text (for example, length),
           //! and append any optional units (for example, km).
           // X-label color default is set in constructor thus:
@@ -672,7 +672,7 @@ namespace boost
               { // horizontal X ticks value labels (default).
                 if (derived().x_ticks_.major_value_labels_side_ < 0)
                 { //  Move down to allow space for font size of tick value labels below X-axis.
-                  y += derived().x_value_label_info_.textstyle().font_size();
+                  y += derived().x_value_label_info_.textstyle().font_size() ;
                 }
                 y += derived().x_label_info_.textstyle().font_size() * 1.3; // Allow for the X-axis label font and space.
                 // See also 1.3 factor drawing ticks.
@@ -682,18 +682,34 @@ namespace boost
                 std::cout << " Rotation of X label rotation" << derived().x_ticks_.label_rotation_ << "not yet implemented!" << std::endl;
               }
             }
+            else if (derived().x_ticks_.major_value_labels_side_ > 0)
+            { // Tick labels above, only ticks below, so just move down for height of label font.
+              y += derived().x_label_info_.textstyle().font_size() * 1.3; // Allow for the X-axis label font and space.
+            }
+            else
+            { // derived().x_ticks_.major_value_labels_side_ == 0
+              // So no change for labels.
+              y += derived().x_label_info_.textstyle().font_size() * 1.3; // Allow for the X-axis label font and space.
+            }
+
             if (derived().x_ticks_.down_ticks_on_)
             { // Shift down for biggest of any ticks, and bit of space.
               y += 1.1 * (std::max)(derived().x_ticks_.minor_tick_length_, derived().x_ticks_.major_tick_length_);
-            // y += derived().x_ticks_.value_label_style_.font_size() * 1.; // Shift down to suit tick labels.
+            // y += derived().x_ticks_.value_label_style_.font_size() * 1.; // Shift down to suit tick labels?
             }
+          }
+          else if (derived().x_ticks_.ticks_on_window_or_on_axis_ > 0)
+          {  // = +1 means ticks are on top of plot window.
+             // Shift down from plot window bottom to suit X-axis label.
+             y += derived().x_label_info_.textstyle().font_size() * 1.7; 
           }
           else if (derived().x_ticks_.ticks_on_window_or_on_axis_ == 0)
           { // Ticks are ON the X-axis line, so X label is just below the plot bottom.
-             //y += derived().x_label_info_.textstyle().font_size() * 0.8; // Shift down to suit X labels.
+            // No space needed for ticks.
              // Character starts at bottom of capital letter, so allow for descenders.
-             y = derived().image.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
-             y -= derived().image_border_.margin_;
+             //y = derived().image.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
+             //y -= derived().image_border_.margin_;
+             y += derived().x_label_info_.textstyle().font_size() * 1.7; 
           }
 
           derived().image.g(PLOT_X_LABEL).push_back(new text_element(
@@ -704,7 +720,7 @@ namespace boost
             derived().x_label_info_.textstyle(),
             center_align, horizontal)
             );
-        } // void draw_x_label()
+        } // void draw_x_axis_label()
 
           void adjust_limits(double& x, double& y)
           { //! If value of a data point reaches limit of max, min, infinity,
@@ -3961,8 +3977,9 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         template <class Derived>
         Derived& axis_plot_frame<Derived>::limit_color(const svg_color& col)
         { //! Set the color for 'at limit' point stroke color.
-          //derived().plot_window_border_.stroke_ = col;
+          // Need to set the series 
           derived().image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color(col);
+          // derived().serieses_[0].limit_point_color(col); // Would require to add some data first!
           return derived();
         }
 
@@ -3977,6 +3994,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         { //! Set the color for 'at limit' point fill color.
           derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_on(true);
           derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color(col);
+          //derived().serieses_[0].limit_point_style_.fill_color(col);
           return derived();
         }
 

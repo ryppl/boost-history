@@ -138,6 +138,7 @@ namespace svg
         constant_to_rgb(col, r_, g_, b_);
       }
     }
+
     void write(std::ostream& os)
     { //! Write to ostream a color in svg format.
       //! \details Usage: my_color.write(cout); Outputs: rgb(127,255,212)

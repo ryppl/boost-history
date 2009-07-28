@@ -41,7 +41,7 @@ int main()
          .x_minor_grid_on(true);
 
   // Styling the grid lines.
-  my_plot.x_major_grid_color(black)
+  my_plot.x_major_grid_color(blue)
          .x_minor_grid_color(lightgray);
 
   // Write to plot.

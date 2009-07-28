@@ -189,7 +189,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "copyright_date  " << plot.copyright_date() << endl;
   cout << "copyright_holder " << plot.copyright_holder() << endl;
   cout << "description "<< plot.description() << endl;
-  cout << "document_title " << plot.document_title() << endl;
+  cout << "document_title \"" << plot.document_title()  << '"' << endl;
   //cout << plot.draw_bezier_lines() << endl;
   cout << "image_x_size " << plot.image_x_size() << endl;
   cout << "image_y_size " << plot.image_y_size() << endl;
@@ -203,7 +203,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "legend_background_color " << plot.legend_background_color() << endl;
   cout << "legend_border_color " << plot.legend_border_color() << endl;
   cout << "legend_color " << plot.legend_color() << endl;
-  cout << "legend_title " << plot.legend_title() << endl;
+  cout << "legend_title \"" << plot.legend_title()  << '"' << endl;
   cout << "legend_title_font_size " << plot.legend_title_font_size() << endl;
   // Not implemented yet.
   //cout << "legend_font_weight " << plot.legend_font_weight() << endl;
@@ -249,9 +249,9 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "x_plusminus_color " << plot.x_plusminus_color() << endl;
   cout << "x_df_on " << plot.x_df_on() << endl;
   cout << "x_df_color " << plot.x_df_color() << endl;
-  cout << "x_prefix " << plot.x_prefix() << endl;
-  cout << "x_separator " << plot.x_separator() << endl;
-  cout << "x_suffix " << plot.x_suffix() << endl;
+  cout << "x_prefix \"" << plot.x_prefix()  << '"' << endl;
+  cout << "x_separator \"" << plot.x_separator()  << '"' << endl;
+  cout << "x_suffix \"" << plot.x_suffix()  << '"' << endl;
 
   // Not applicable to 1D
   //cout << "y_value_precision " << plot.y_value_precision() << endl;
@@ -265,7 +265,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "x_values_color " << plot.x_values_color() << endl;
   cout << "x_axis_width " << plot.x_axis_width() << endl;
   cout << "x_label_on " << plot.x_label_on() << endl;
-  cout << "x_label " << plot.x_label() << endl;
+  cout << "x_label \"" << plot.x_label()  << '"' << endl;
   cout << "x_label_color " << plot.x_label_color() << endl;
   cout << "x_label_font_family " << plot.x_label_font_family() << endl;
   cout << "x_label_font_size " << plot.x_label_font_size() << endl;

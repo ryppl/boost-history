@@ -1557,7 +1557,7 @@ public:
     }
   } // void draw_y_minor_tick
 
-  void draw_x_label()
+  void draw_x_axis_label()
   { //! Draw an axis label (and optional units) for example "length (km)".
     // X-label color is set in constructor thus:
     // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
@@ -1591,9 +1591,9 @@ public:
       x_label_info_.textstyle(),
       center_align, horizontal)
       );
-  } // void draw_x_label()
+  } // void draw_x_axis_label()
 
-  void draw_y_label()
+  void draw_y_axis_label()
   { //! Draw vertical y_axis label, and optional y units.
     // Y-label color is set in constructor thus:
     // image.g(boxplot::Y_LABEL).style().fill_color(black);
@@ -1627,7 +1627,7 @@ public:
       center_align, // One might want it to left or right_align?
       upward)); // Y label must be drawn vertically.
 
-  } // draw_y_label
+  } // draw_y_axis_label
 
   void draw_box(double q1, double q3, // Quartiles
   double x, double width,
@@ -1816,11 +1816,11 @@ public:
 
     if(x_axis_.label_on_)
     {
-      draw_x_label();
+      draw_x_axis_label();
     }
     if(y_axis_.label_on_)
     {
-      draw_y_label();
+      draw_y_axis_label();
     }
     for(unsigned int i=0; i < series.size(); ++i)
     { // Draw box'n'whiskers for each data series.

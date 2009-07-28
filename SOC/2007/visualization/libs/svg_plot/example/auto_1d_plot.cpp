@@ -87,7 +87,7 @@ int main()
   my_data.push_back(6.5); // [5]
 
   /*`Also included is an 'at limit' value that could confuse autoscaling.
-  Obviously we do not want the plot range to include infinity.*/
+  Obviously, we do *not* want the plot range to include infinity.*/
   my_data.push_back(numeric_limits<double>::infinity()); // [6]
 
   try
@@ -100,8 +100,13 @@ int main()
     using boost::svg::detail::operator<<; // For displaying std::pair.
     svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
     my_1d_plot.x_autoscale(my_data);  // Compute autoscale values for the plot.
+    my_1d_plot.limit_color(blue).limit_fill_color(green); // Add limit value styling.
+
+    cout << "my_1d_plot.limit_color() " << my_1d_plot.limit_color() << endl;
+    cout << "my_1d_plot.limit_fill_color() " << my_1d_plot.limit_fill_color() << endl;
+
     my_1d_plot.plot(my_data, "Default 1D"); // Add the one data series, and give it a title.
-    my_1d_plot.write("auto_1d_plot.svg"); // Write the plot to file.
+    my_1d_plot.write("auto_1d_plot_1.svg"); // Write the plot to file.
 
     /*`It may be useful to display that range chosen by autoscaling. */
     cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range()
@@ -197,7 +202,7 @@ It accepts parameters controlling the scaling and updates 4 items. Its signature
   // scale_axis does finding min and max.
   scale_axis(my_data.begin(), my_data.end(),
     &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    true, false, tol100eps, 6); // Display range.
+    true, 3., false, tol100eps, 6); // Display range.
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
 
@@ -212,14 +217,14 @@ It accepts parameters controlling the scaling and updates 4 items. Its signature
   // Scaling using whole  STL vector container,
   // scale_axis does finding min and max.
   scale_axis(my_data, &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    true, false, tol100eps, 6); // Display range.
+    true, 3., false, tol100eps, 6); // Display range.
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
 
   // Scaling using whole STL set container,
   // scale_axis does finding min and max.
   scale_axis(my_set, &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks,
-    true, false, tol100eps, 6); // Display range.
+    true, 3., false, tol100eps, 6); // Display range.
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
 
@@ -315,7 +320,7 @@ aesthetically pleasing ranges. One can:
   my_1d_plot.plot(&my_data[1], &my_data[4], "Auto 1D"); // Add part (1,2 3 but *not* 4) of the one data series.
   //my_1d_plot.plot(&my_set[1], &my_set[4], "Auto 1D"); // operator[] is not defined for set container!
 
-  my_1d_plot.write("auto_1d_plot.svg"); // Write the plot to file.
+  my_1d_plot.write("auto_1d_plot_2.svg"); // Write the plot to file.
 
   using boost::svg::detail::operator<<;
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 1, 5.5

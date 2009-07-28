@@ -107,6 +107,7 @@ public:
   svg_1d_plot_series& line_width(double wid_); //!< Set line width for plot point marker(s) (chainable).
   svg_1d_plot_series& line_on(bool on_); //!< Set true for line joining points for plot point marker(s) (chainable).
   svg_1d_plot_series& bezier_on(bool on_); //!< Set true for curve joining points for plot point marker(s) (chainable).
+  svg_1d_plot_series& limit_point_color(const svg_color& col_); //!< Set stroke color for 'at limits' point marker.
 
   // Get functions for the plot series.
   svg_color fill_color(); //!< Get fill color for plot point marker(s).
@@ -241,6 +242,13 @@ size_t svg_1d_plot_series::series_limits_count()
 { //!  Number of  'at limit' values: too big, too small or NaN data values in data series.
   return series_limits_.size();
 }
+
+svg_1d_plot_series& svg_1d_plot_series::limit_point_color(const svg_color& col_)
+{ //! Set of stroke color of 'at limits' points.
+  limit_point_style_.stroke_color_ = col_;
+  return *this; // Make chainable.
+}
+
 
 // End Definitions of svg_plot_series Public Member Functions.
 
@@ -703,7 +711,7 @@ public:
     }
     if(x_axis_.label_on_)
     {
-      draw_x_label();
+      draw_x_axis_label();
     }
     double y(0.); // All 1-D points are plotted are on the horizontal X axis (y = 0) axis.
     transform_y(y);
@@ -780,6 +788,10 @@ public:
           }
           // else is inside plot window, so draw a limit point marker.
           // draw_plot_point(x, y, g_ptr, plot_point_style(lightgray, whitesmoke, s, cone)); default.
+          serieses_[i].limit_point_style_.stroke_color_ = image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color();
+          serieses_[i].limit_point_style_.fill_color_ = image.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
+          // This is a kludge.  limit_point_style_ should probably be common to all data series.
+
           draw_plot_point(x, y, g_ptr, serieses_[i].limit_point_style_, 0, 0);
         }
       } // for j
