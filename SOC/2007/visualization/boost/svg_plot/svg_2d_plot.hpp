@@ -366,11 +366,11 @@ namespace boost
       text_style y_axis_label_style_; //!< Style for tick labels on Y axis.
       text_style y_value_label_style_;//!< Style for data point value labels on Y axis.
       text_style point_symbols_style_; //!< Style used for symbol marking a data point.
+
       text_element title_info_; //!< Plot title text.
       text_element legend_header_; //!< Legend box header or title (if any).
       text_element x_label_info_; //!< X axis label text, for example: "length".
       text_element x_value_label_info_; //!< X axis tick value text, for example: "1.2" or "1.2e+001"
-
       text_element y_label_info_; //!< Y axis label text, for example: "volume".
       text_element x_units_info_; //!< X axis units, for example: "mm".
       text_element y_units_info_; //!<  Y axis units, for example: "min". (2-D only).
@@ -493,7 +493,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         legend_style_(14, "Verdana", "", ""), // 2nd "italic"?
         x_axis_label_style_(14, "Verdana", "", ""),
         x_value_label_style_(12, "Verdana", "", ""), // X-axis tick labels.
-        // Separate x and y to allow axes to have different styles.
+        // Separate X and Y to allow axes to have different styles.
         y_axis_label_style_(14, "Verdana", "", ""),
         y_value_label_style_(12, "Verdana", "", ""), // Y-axis tick labels.
         point_symbols_style_(12, "Lucida Sans Unicode"), // Used for data point marking.
@@ -512,7 +512,13 @@ my_plot.background_color(ghostwhite) // Whole image.
         y_value_label_info_(0, 0, "", y_value_label_style_, center_align, upward), //
         text_margin_(2.), // for axis label text, as a multiplier of the font size.
         // Should allow a 'half line space' above and below the label text.
-        image_border_(yellow, white, 2, 10, true, true), // margin should be about axis label font size.
+        image_border_(yellow, white, 2, 3, true, true),
+        // margin (parameter 4) needs to be at least the width of the border (parameter 3) to ensure any border color shows.
+        // margin should be about axis tick label font size to
+        // allow for axis value labels that mark the min and max
+        // that must extend about half a font width beyond the plot window border.
+        // This is set dynamically in calculate_plot_window because user can change tick value label font size.
+
         plot_window_border_(lightslategray, svg_color(255, 255, 255), 2, 3, true, false),
         legend_box_(yellow, white, 1, 2, true, true),
         legend_header_(0, 0, "", legend_style_, center_align, horizontal),
@@ -681,26 +687,58 @@ my_plot.background_color(ghostwhite) // Whole image.
           plot_top_ += title_font_size() * (text_margin_ + 0.5);
         }
 
+        // Deal with muddle where text_style is stored in two places
+        // by copying to ensure they are the same.
+        // TODO Sort this out properly by a major class reorganisation!
+        x_axis_label_style_ = x_label_info_.textstyle();
+        if (x_label_info_.textstyle() != x_axis_label_style_ )
+        {
+          cout << "x_label_info_.textstyle() != x_axis_label_style_" << endl;
+        }
+
+        y_axis_label_style_ = y_label_info_.textstyle();
+        if (y_label_info_.textstyle() != y_axis_label_style_ )
+        {
+          cout << "y_label_info_.textstyle() != y_axis_label_style_!" << endl;
+        }
+
         // Assume that X-axis labels are always at bottom.
         if(x_axis_.label_on_ == true == true && x_label_info_.text() != "")
         { // Leave space at bottom for X-axis label.
+          if (x_label_info_.textstyle().font_size() != x_axis_label_style_.font_size())
+          { // Temporary check.
+            cout << "x_label_info_.textstyle().font_size() "<< x_label_info_.textstyle().font_size() << endl;
+            cout << "x_axis_label_style_.font_size() " << x_axis_label_style_.font_size() << endl;
+          }
+
           plot_bottom_ -= x_axis_label_style_.font_size() * text_margin_;
+          // plot_bottom_ -= x_label_info_.textstyle().font_size() * text_margin_; // OK
         }
-        // Assume that Y- axis labels are always at left.
+        // Assume that Y-axis labels are always at left.
         if(y_axis_.label_on_ == true == true && y_label_info_.text() != "")
         { // Leave space at left for Y-axis label.
+          if (y_label_info_.textstyle().font_size() != y_axis_label_style_.font_size())
+          { // Temporary check.
+            cout << "y_label_info_.textstyle().font_size() "<< y_label_info_.textstyle().font_size() << endl;
+            cout << "y_axis_label_style_.font_size() " << y_axis_label_style_.font_size() << endl;
+          }
           plot_left_ += y_axis_label_style_.font_size() * text_margin_;
         }
 
         if(plot_window_on_)
-        { // Needed to allow any plot window border rectangle to show OK.
-          // A small margin is to prevent it overlapping the image border.
-          // Also allows for axis value labels that mark the min and max
-          // that must extend half a font width beyond the plot window border.
-          plot_left_ +=  image_border_.margin_;
-          plot_right_ -=  image_border_.margin_;
-          plot_top_ += image_border_.margin_;
-          plot_bottom_ -=  image_border_.margin_;
+        { 
+       // A margin is needed to allow any plot window border rectangle to show OK. 
+        // A small margin is to prevent it overlapping the image border.
+        // Also allows for axis value labels that mark the min and max
+        // that must extend half a font width beyond the plot window border.
+
+          double margin = (std::max)(image_border_.margin_, static_cast<double>(x_value_label_style_.font_size()/2) );
+          plot_left_ += margin;
+          plot_right_ -= margin;
+
+          margin = (std::max)(image_border_.margin_, static_cast<double>(y_value_label_style_.font_size()/2) );
+          plot_top_ += margin;
+          plot_bottom_ -= margin;
         }
         size_legend_box(); // Size depends on its contents.
         place_legend_box(); // according to options chosen.
@@ -772,8 +810,8 @@ my_plot.background_color(ghostwhite) // Whole image.
         x_ticks_.longest_label(); // Updates label_max_length_
         y_ticks_.longest_label();
 
-        // Check that labels won't collide and advise if they will?
-        // Change rotation to avoid collision?
+        // Check that labels won't collide and advise if they will - seems very difficult.
+        // Change rotation to avoid collision - not practical.
 
         y_ticks_.label_max_space_ = 0.; // Work out space for y labels, depending on orientation.
         if (y_ticks_.label_rotation_ == horizontal)
@@ -781,8 +819,8 @@ my_plot.background_color(ghostwhite) // Whole image.
            y_ticks_.label_max_space_ += y_ticks_.label_max_length_; // SVG units (default pixels).
         }
         else if((y_ticks_.label_rotation_ == upward) || (y_ticks_.label_rotation_ == downward))
-        { // Only need one char & 1 space width from Y-axis label.
-          y_ticks_.label_max_space_ += 2 * y_value_label_style_.font_size() * wh;
+        { // Only need one char & 1 space width from Y-axis value label.
+          y_ticks_.label_max_space_ += 2 * y_value_label_style_.font_size();
         }
         else
         { // Assume some slope 45, so diagonally down from tick,
@@ -814,10 +852,10 @@ my_plot.background_color(ghostwhite) // Whole image.
           }
         } // y_ticks_. major_value_labels_side
 
-        x_ticks_.label_max_space_ = 0; // Work out the longest ticks values label for X-Axis.
+        x_ticks_.label_max_space_ = 0.; // Work out the longest ticks values label for X-Axis.
         if (x_ticks_.label_rotation_ == horizontal)
-        { // Only 1 char height & 1 space needed if labels are horizontal.
-          x_ticks_.label_max_space_ += 2. * x_value_label_style_.font_size(); // 2 SVG chars
+        { // Only 1 char height & small space needed if labels are horizontal.
+          x_ticks_.label_max_space_ += 1.5 * x_value_label_style_.font_size(); // 2 SVG chars
         }
         else if ((x_ticks_.label_rotation_ == upward) || (x_ticks_.label_rotation_ == downward))
         { // ! X_axis ticks labels vertical so will need enough for all the characters in the label.
@@ -830,9 +868,9 @@ my_plot.background_color(ghostwhite) // Whole image.
 
         if (x_ticks_.major_value_labels_side_ != 0)
         { // Some tick value labels.
-          if ((x_ticks_.ticks_on_window_or_on_axis_ < 0) // on bottom of plot window.
-             && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom.
-          {  // Contract plot window bottom edge up to make space for x value labels on bottom.
+          if ((x_ticks_.ticks_on_window_or_on_axis_ < 0) // ticks on bottom of plot window.
+             && (x_ticks_.major_value_labels_side_ < 0) ) // & labels on bottom too.
+          {  // Contract plot window bottom edge up to make space for X value labels on bottom.
             plot_bottom_ -= x_ticks_.label_max_space_; // Move up.
           }
           else if ((x_ticks_.ticks_on_window_or_on_axis_ > 0) //
@@ -864,7 +902,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           if ((x_axis_position_ == bottom) // All Y values definitely > zero.
             && !(x_ticks_.ticks_on_window_or_on_axis_ < 0) ) // & not already at bottom.
           { // y_min_ > 0 so X-axis will not intersect Y-axis, so use plot window.
-            plot_bottom_ -= x_ticks_.label_max_space_; // Move up for the value labels.
+            plot_bottom_ -= x_ticks_.label_max_space_; // Move up for the ticks value labels.
             x_axis_.axis_ = plot_bottom_; // Put X-axis on bottom.
           }
           else if ((x_axis_position_ == top)  // All Y values definitely < zero.
@@ -1089,35 +1127,65 @@ my_plot.background_color(ghostwhite) // Whole image.
           if (y_ticks_.major_value_labels_side_ < 0) // -1 means left
           { // tick values labels are to left of Y axis.
             // Shift right to allow for any tick value labels.
-            if ((y_ticks_.label_rotation_ == downward) || (y_ticks_.label_rotation_ == upward)
-                || (y_ticks_.label_rotation_ == steepdown) || (y_ticks_.label_rotation_ == steepup))
-            { // downward tick value label direction 90 up or down, or 60 steep degrees (might handle 60 separately).
-              if (y_ticks_.major_value_labels_side_ < 0) // left of plot window
+            if ((y_ticks_.label_rotation_ == downward) || (y_ticks_.label_rotation_ == upward))
+            { // downward tick value label direction 90 vertical up or down, or 60 steep degrees (might handle 60 separately).
+              if (y_ticks_.major_value_labels_side_ < 0) // tick value labels are to left of plot window.
               { // Allow space for tick value labels font size to left of Y-axis or plot window.
-                x += y_value_label_info_.textstyle().font_size() * 1.1;
+                x -= y_value_label_info_.textstyle().font_size() * 1.3; // 
               }
               if (y_ticks_.left_ticks_on_ == true)
               {  // Allow for any leftward ticks.
-                x += (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_);// And avoid macro max trap!
+                x -= 1.1 * (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_);// And avoid macro max trap!
               }
+              x -= 0.7 * (y_label_info_.textstyle().font_size() + y_value_label_info_.textstyle().font_size()); // best compromise?
+
             }
-            else if ((y_ticks_.label_rotation_ == uphill)  || (y_ticks_.label_rotation_ == downhill) 
-                     || (y_ticks_.label_rotation_ == slopeup)  || (y_ticks_.label_rotation_ == slopedownhill))
-            { // sloping 45 or 30 degrees (might handle 30 separately).
-               // x -= y_ticks_.label_may_space_ * sin45;
-               // x -= y_ticks_.label_max_space_;
+            else if ((y_ticks_.label_rotation_ == steepdown) || (y_ticks_.label_rotation_ == steepup))
+            { // downward tick value label direction 90 vertical up or down, or 60 steep degrees (might handle 60 separately).
+              if (y_ticks_.major_value_labels_side_ < 0) // tick value labels are to left of plot window.
+              { // Allow space for tick value labels font size to left of Y-axis or plot window.
+                x -= y_value_label_info_.textstyle().font_size() * 1.3; // 
+              }
+              if (y_ticks_.left_ticks_on_ == true)
+              {  // Allow for any leftward ticks.
+                x -= 1.1 * (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_);// And avoid macro max trap!
+              }
+              x -= 0.4 * (y_label_info_.textstyle().font_size() + y_value_label_info_.textstyle().font_size()); // best compromise?
+            }
+            else if ((y_ticks_.label_rotation_ == uphill)  || (y_ticks_.label_rotation_ == downhill))
+            { // sloping 45 degrees .
+               x -= y_ticks_.label_max_space_ * sin45;
+              if (y_ticks_.left_ticks_on_ == true)
+              {  // Move left for any leftward ticks, and a small space.
+                x -= 1.1 * (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_); // And avoid macro max trap!
+                //x -= 1.2 * y_label_info_.textstyle().font_size() ; // Shift left to suit Y labels.
+                //x -= 1.2 * y_value_label_info_.textstyle().font_size() ; // Shift left to suit Y labels.
+                //x -= 1.2 * (std::min)(y_label_info_.textstyle().font_size(), y_value_label_info_.textstyle().font_size() ); // better
+                x -= 0.7 * (y_label_info_.textstyle().font_size() + y_value_label_info_.textstyle().font_size()); // best compromise?
+             }
+            }
+            else if ((y_ticks_.label_rotation_ == slopeup) || (y_ticks_.label_rotation_ == slopedownhill))
+            { // sloping 30 degrees.
+               x -= y_ticks_.label_max_space_ * sin45;
+              if (y_ticks_.left_ticks_on_ == true)
+              {  // Move left for any leftward ticks, and a small space.
+                x -= 1.1 * (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_); // And avoid macro max trap!
+                //x -= 1.2 * y_label_info_.textstyle().font_size() ; // Shift left to suit Y labels.
+                //x -= 1.2 * y_value_label_info_.textstyle().font_size() ; // Shift left to suit Y labels.
+                //x -= 1.2 * (std::min)(y_label_info_.textstyle().font_size(), y_value_label_info_.textstyle().font_size() ); // better
+                x -= 0.7 * (y_label_info_.textstyle().font_size() + y_value_label_info_.textstyle().font_size()); // best compromise?
+             }
             }
             else if  (y_ticks_.label_rotation_ == horizontal)
             { // horizontal
-               // x -= y_value_label_info_.textstyle().font_size() * y_ticks_.label_max_space_; // Might be zero?
-               x -= y_ticks_.label_max_space_; // Might be zero?
               if (y_ticks_.left_ticks_on_ == true)
-              {  // Allow for any leftward ticks.
-                x -= (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_);// And avoid macro max trap!
+              {  // Move left for any leftward ticks, and a small space.
+                x -= 1.1 * (std::max)(y_ticks_.major_tick_length_, y_ticks_.minor_tick_length_); // And avoid macro max trap!
               }
-              x -= y_label_info_.textstyle().font_size() * 1.2; // Shift left to suit Y labels possible descenders.
-
-            }
+              x -= y_ticks_.label_max_space_; // Move left for the longest tick value label. (Might be zero?)
+              //x -= y_label_info_.textstyle().font_size() * 1.0; // Shift left to suit Y labels.
+              x -= 0.6 * (y_label_info_.textstyle().font_size() + y_value_label_info_.textstyle().font_size()); // best compromise?
+           }
             else
             {
               cout << " Rotation of Y label rotation" << y_ticks_.label_rotation_ << "not yet implemented" << endl;
@@ -1286,6 +1354,22 @@ my_plot.background_color(ghostwhite) // Whole image.
               alignment = left_align;
             }
           }
+          else if (y_ticks_.label_rotation_ == slopeup)
+          { // Assume some 30 slope, so need about sqrt(2) less space.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y -= y_value_label_style_.font_size() * 0.2;
+              x = x_left - y_value_label_style_.font_size() * 0.2;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = right_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              y += y_value_label_style_.font_size() * 0.2;
+              x = x_right + y_value_label_style_.font_size() * 0.7;
+              alignment = left_align;
+            }
+          }
           else if (y_ticks_.label_rotation_ == downhill)
           { // Assume some 45 slope, so need about sqrt(2) less space.
             if (y_ticks_.major_value_labels_side_ < 0)
@@ -1302,12 +1386,60 @@ my_plot.background_color(ghostwhite) // Whole image.
               alignment = left_align;
             }
           }
+          else if (y_ticks_.label_rotation_ == slopedownhill)
+          { // Assume some 30 slope, so need about sqrt(2) less space.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y += y_value_label_style_.font_size() * 0.3;
+              x = x_left - y_value_label_style_.font_size() * 0.7;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = right_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              y -= y_value_label_style_.font_size() * 0.3;
+              x = x_right + y_value_label_style_.font_size() * 0.1;
+              alignment = left_align;
+            }
+          }
+          else if (y_ticks_.label_rotation_ == steepdown)
+          { // Assume some 45 slope, so need about sqrt(2) less space.
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              y += y_value_label_style_.font_size() * 0.3;
+              x = x_left - y_value_label_style_.font_size() * 0.5;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = right_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              y -= y_value_label_style_.font_size() * 0.3;
+              x = x_right + y_value_label_style_.font_size() * 0.1;
+              alignment = left_align;
+            }
+          }
+
           else if (y_ticks_.label_rotation_ == upward)
           { // Tick value label straight up vertically on Y-axis.
             y -= y_value_label_style_.font_size() * 0.1;
             if (y_ticks_.major_value_labels_side_ < 0)
             { // labels to left, so start a little to left of x_left.
               x = x_left - y_value_label_style_.font_size() * 0.7;
+              // Seems to need a bit more space for right than left if rotated.
+              alignment = center_align;
+            }
+            else if(y_ticks_.major_value_labels_side_ > 0)
+            { // labels to right, so start a little to right of x_right.
+              x = x_right + y_value_label_style_.font_size() * 1.5;
+              alignment = center_align;
+            }
+          }
+          else if (y_ticks_.label_rotation_ == steepup)
+          { // Tick value label straight up vertically on Y-axis.
+            y -= y_value_label_style_.font_size() * 0.1;
+            if (y_ticks_.major_value_labels_side_ < 0)
+            { // labels to left, so start a little to left of x_left.
+              x = x_left - y_value_label_style_.font_size() * 0.5;
               // Seems to need a bit more space for right than left if rotated.
               alignment = center_align;
             }
@@ -2168,7 +2300,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       svg_2d_plot& svg_2d_plot::y_major_label_rotation(rotate_style rot)
       { /*! Rotation of labels for major ticks on vertical Y axis line.
         \arg \c rot Default is horizontal.
-        \see rotate_style for possible values.
+        \see rotate_style for possible values: horizontal, uphill...
         */
         y_ticks_.label_rotation_ = rot;
         return *this; //! \return reference to svg_2d_plot to make chainable.
@@ -2771,37 +2903,43 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       svg_2d_plot& svg_2d_plot::y_label_font_size(unsigned int i)
       { //! Set Y axis label text font size.
         // May be best to tie label & unit font sizes together?
-        y_axis_label_style_.font_size(i);
-        // y_units_info_.font_size(i);
+        // y_axis_label_style_.font_size(i);
+        y_units_info_.textstyle().font_size(i);
+        y_label_info_.textstyle().font_size(i);
         return *this;
       }
 
       unsigned int svg_2d_plot::y_label_font_size()
       { //! \return Y axis label text font size.
-        return y_axis_label_style_.font_size();
+        // return y_axis_label_style_.font_size();
+        return y_label_info_.textstyle().font_size();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_weight(std::string s)
       { //! Set Y axis label text font weight (for example: "bold").
         //! ("bold" is only one that works so far, and quality may be poor for some browsers).
-        y_axis_label_style_.font_weight(s);
+        //y_axis_label_style_.font_weight(s);
+        y_label_info_.textstyle().font_weight(s);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const std::string& svg_2d_plot::y_label_weight()
       { //! \return Y axis label text font weight (for example: "bold").
-        return y_axis_label_style_.font_weight();
+        // return y_axis_label_style_.font_weight();
+        return y_label_info_.textstyle().font_weight();
       }
 
       svg_2d_plot& svg_2d_plot::y_label_font_family(const std::string& family)
       { //! Set Y axis label text font family (for example: "Lucida console sans").
         y_axis_label_style_.font_family(family);
+        y_label_info_.textstyle().font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       const std::string& svg_2d_plot::y_label_font_family()
       { //! \return the font family for label on Y axis.
-        return y_axis_label_style_.font_family();
+        // return y_axis_label_style_.font_family();
+        return y_label_info_.textstyle().font_family();
       }
 
       // Y-axis tick value labels style.

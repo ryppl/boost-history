@@ -79,7 +79,7 @@ double string_svg_length(const std::string& s, const text_style& style);
 
 /*!
  This is the style information for any group (g) tag.
- This may be expanded to include more data from the SVG standard.
+ This could be expanded to include more data from the SVG standard.
 
  There are some strange effects for text on some browsers
  (Firefox especially) when only stroke is specified.
@@ -298,7 +298,7 @@ public:
 
 class text_style
 { /*! \class boost::svg::text_style
-     \brief font family, size, weight, style, stretch, decoration.
+     \brief font family, font size, weight, style, stretch & decoration.
   */
   friend std::ostream& operator<< (std::ostream&, const text_style&);
   friend bool operator== (const text_style&, const text_style&);
@@ -914,18 +914,18 @@ std::ostream& operator<< (std::ostream& os, plot_line_style p)
 
 enum dim
 { //! \enum dim dimension of plot. (Used so that an axis knows what type it is, or none = N).
-  N = 0, X = 1, Y = 2, Z = 3
+  N = 0, X = 1, Y = 2
 };
 
 class axis_line_style
 { /*! \class boost::svg::axis_line_style
-    \brief Style of the X and/or Y axes lines.
-    \details (But NOT the ticks and value labels because different styles for X and Y are possible).
+    \brief Style of the X or Y-axes lines.
+    \details (But NOT the ticks and value labels because different styles for X and Y-axes are possible).
   */
 public:
-  dim dim_; //!< X, Y or none.
-  double min_; //!< minimum x value (Cartesian units).
-  double max_; //!< maximum x value (Cartesian units).
+  dim dim_; //!< None, X or Y.
+  double min_; //!< minimum X value (Cartesian units).
+  double max_; //!< maximum Y value (Cartesian units).
   // Note that these duplicate the same named in ticks_labels_style,
   // but they might have different uses, so are left pro tem.
   // TODO reconsider the implications of this (largely accidental) decision.

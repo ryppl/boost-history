@@ -316,11 +316,9 @@ namespace boost
                 std::string v = strip_e0s(tick_value_label.str());
                 tick_value_label.str(v);
               }
-
               double y = 0; // Where to start writing from, at end of bottom or top tick, if any.
               // = 0 is only to avoid unitialised warning.
               align_style alignment = center_align;
-              // rotate_style rot = derived().x_ticks_.label_rotation_;  // TODO for debug only.
               // Adjustments to provide space from end of tick before or after writing label.
               if (derived().x_ticks_.label_rotation_ == upward) // vertical writing up.
               {  // Shift to center value digits and minus sign on tick.
@@ -350,8 +348,37 @@ namespace boost
                   alignment = right_align;
                 }
               }
+              else if (derived().x_ticks_.label_rotation_ == steepup)
+              {  // Should handle other directions too.
+                x -= derived().x_value_label_style_.font_size() * 0.3;
+                if (derived().x_ticks_.major_value_labels_side_ < 0)
+                { // labels upward, so start a little below y_down.
+                  y = y_down + derived().x_value_label_style_.font_size() * 0.5;
+                  alignment = left_align;
+                }
+                else if(derived().x_ticks_.major_value_labels_side_ > 0)
+                { // labels to top, so start a little above y_up.
+                  y = y_up - derived().x_value_label_style_.font_size() * 0.5;
+                  alignment = right_align;
+                }
+              }
               else if (derived().x_ticks_.label_rotation_ == uphill)
               { // Assume some 45 slope, so need about sqrt(2) less space.
+                x += derived().x_value_label_style_.font_size() * 0.5;
+                if (derived().x_ticks_.major_value_labels_side_ < 0)
+                { // labels to bottom, so start a little to bottom of y_bottom.
+                  y = y_down + derived().x_value_label_style_.font_size() * sin45;
+                  // Seems to need a bit more space for top than bottom if rotated.
+                  alignment = right_align;
+                }
+                else if(derived().x_ticks_.major_value_labels_side_ > 0)
+                { // labels to top, so start a little to top of y_top.
+                  y = y_up - derived().x_value_label_style_.font_size() * 0.3;
+                  alignment = left_align;
+                }
+              }
+              else if (derived().x_ticks_.label_rotation_ == slopeup)
+              { // Assume for 30 degree slope, need about sqrt(2) less space.
                 x += derived().x_value_label_style_.font_size() * 0.5;
                 if (derived().x_ticks_.major_value_labels_side_ < 0)
                 { // labels to bottom, so start a little to bottom of y_bottom.
@@ -380,12 +407,44 @@ namespace boost
                   alignment = right_align;
                 }
               }
-              else if (derived().x_ticks_.label_rotation_ == horizontal)
-              { // Tick value label on X axis is normal default horizontal.
+              else if (derived().x_ticks_.label_rotation_ == slopedownhill)
+              { // Assume some 30 slope, so need about sqrt(2) less space.
+                x -= derived().x_value_label_style_.font_size() * 0.3;
                 if (derived().x_ticks_.major_value_labels_side_ < 0)
                 { // labels to bottom, so start a little to bottom of y_down.
-                  y = y_down + derived().x_value_label_style_.font_size() * 1.2;
-                  alignment = center_align; // on the tick.
+                  y = y_down + derived().x_value_label_style_.font_size() * 0.7;
+                  // Seems to need a bit more space for top than bottom if rotated.
+                  alignment = left_align;
+                }
+                else if(derived().x_ticks_.major_value_labels_side_ > 0)
+                { // labels to top, so start a little to top of y_up.
+                 y = y_up - derived().x_value_label_style_.font_size() * 0.3;
+                  alignment = right_align;
+                }
+              }
+
+
+              else if (derived().x_ticks_.label_rotation_ == steepdown)
+              {  // Should handle other directions too.
+                x -= derived().x_value_label_style_.font_size() * 0.3;
+                if (derived().x_ticks_.major_value_labels_side_ < 0)
+                { // labels to bottom, so start a little below y_down.
+                  y = y_down + derived().x_value_label_style_.font_size() * 0.5;
+                  alignment = left_align;
+                }
+                else if(derived().x_ticks_.major_value_labels_side_ > 0)
+                { // labels to top, so start a little above y_up.
+                  y = y_up - derived().x_value_label_style_.font_size() * 0.5;
+                  alignment = right_align;
+                }
+              }
+
+              else if (derived().x_ticks_.label_rotation_ == horizontal)
+              { // Tick value label on X-axis is normal default horizontal.
+                if (derived().x_ticks_.major_value_labels_side_ < 0)
+                { // labels to bottom of tick, so start a little below bottom of y_down.
+                  y = y_down + derived().x_value_label_style_.font_size() * 1.3; // 1.3 allows 1/3 font space.
+                  alignment = center_align; // center on the tick.
                 }
                 else if(derived().x_ticks_.major_value_labels_side_ > 0)
                 { // labels to top, so start a little to top of y_up.
@@ -439,9 +498,9 @@ namespace boost
         } // draw_x_major_tick
 
         void draw_x_axis()
-        { //! Draw horizontal X-axis line & plot window line to hold.
+        { //! Draw horizontal X-axis line & plot window line to hold, and ticks and grids.
           if(derived().x_axis_.axis_line_on_)
-          { // Want a horiztonal X-axis line drawn.
+          { // Want a horizontal X-axis line drawn.
             double xleft = derived().plot_left_;
             double xright = derived().plot_right_;
             if (derived().x_axis_position_ == x_intersects_y)
@@ -544,6 +603,142 @@ namespace boost
             }
           }
         } // void draw_x_axis()
+
+        void draw_x_label()
+        { //! Draw the X-axis label text (for example, length),
+          //! and append any optional units (for example, km).
+          // X-label color default is set in constructor thus:
+          // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
+          // and changed using x_label_color(color);
+          // Similarly for font family and size etc (must be same for both label and units).
+
+          std::string x_label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
+          if (derived().x_axis_.label_units_on_ && (derived().x_units_info_.text() != ""))
+          { // Append the units, if any, user providing brackets () if required. 
+            x_label += derived().x_units_info_.text(); // for example: "time (sec)".
+          }
+
+          double y = derived().plot_bottom_;
+          // Glyphs for western characters are aligned with the left bottom of capital letter,
+          // so need to allow 1/3 more below for any descenders.
+
+          // cout << "derived().x_ticks_.ticks_on_window_or_on_axis_ " << derived().x_ticks_.ticks_on_window_or_on_axis_ << endl;
+          // using derived(0 means debugging doesn't work!  So resort to old-fashioned print statements.
+          if (derived().x_ticks_.ticks_on_window_or_on_axis_ < 0) // -1 means bottom
+          { // Ticks value labels below plot window.
+            if (derived().x_ticks_.major_value_labels_side_ < 0) // bottom
+            { // Shift down to allow for any tick value labels.
+              if ((derived().x_ticks_.label_rotation_ == downward) || (derived().x_ticks_.label_rotation_ == upward))
+              { // downward tick value label direction 90 up or down.
+                y += derived().x_ticks_.label_max_space_;
+                if (derived().x_ticks_.down_ticks_on_ == true)
+                {  // Move down for any downward ticks.
+                  y += 1.1 * (std::max)(derived().x_ticks_.major_tick_length_, derived().x_ticks_.minor_tick_length_); // And avoid macro max trap!
+                  // and a small space.
+                  y += 0.7 * (derived().x_label_info_.textstyle().font_size() + derived().x_value_label_info_.textstyle().font_size()); // best compromise?
+                }
+              }
+              else if ((derived().x_ticks_.label_rotation_ == steepdown) || (derived().x_ticks_.label_rotation_ == steepup))
+              { // downward tick value label direction 60 up or down.
+                y += derived().x_ticks_.label_max_space_;
+                if (derived().x_ticks_.down_ticks_on_ == true)
+                {  // Move down for any downward ticks.
+                  y += 1.1 * (std::max)(derived().x_ticks_.major_tick_length_, derived().x_ticks_.minor_tick_length_); // And avoid macro max trap!
+                  // and a small space.
+                  y += 0.5 * (derived().x_label_info_.textstyle().font_size() + derived().x_value_label_info_.textstyle().font_size()); // best compromise?
+                }
+              }
+              else if ((derived().x_ticks_.label_rotation_ == uphill)  || (derived().x_ticks_.label_rotation_ == downhill))
+              { // sloping 45 degrees up or down.
+                y += derived().x_ticks_.label_max_space_ * sin45; // Move down from end of tick.
+                if (derived().x_ticks_.down_ticks_on_ == true)
+                {  // Move down for any downward ticks.
+                  y += 1.1 * (std::max)(derived().x_ticks_.major_tick_length_, derived().x_ticks_.minor_tick_length_); // And avoid macro max trap!
+                  // and a small space.
+                  y += 0.7 * (derived().x_label_info_.textstyle().font_size() + derived().x_value_label_info_.textstyle().font_size()); // best compromise?
+                }
+              }
+              else if ((derived().x_ticks_.label_rotation_ == slopeup)  || (derived().x_ticks_.label_rotation_ == slopedownhill))
+              { // sloping 30 degrees.
+                y += derived().x_ticks_.label_max_space_ * sin45; // Move down from end of tick.
+                if (derived().x_ticks_.down_ticks_on_ == true)
+                {  // Move down for any downward ticks.
+                  y += 1.1 * (std::max)(derived().x_ticks_.major_tick_length_, derived().x_ticks_.minor_tick_length_); // And avoid macro max trap!
+                  // and a small space.
+                  y += 0.5 * (derived().x_label_info_.textstyle().font_size() + derived().x_value_label_info_.textstyle().font_size()); // best compromise?
+                }
+              }
+              else if (derived().x_ticks_.label_rotation_ == horizontal)
+              { // horizontal X ticks value labels (default).
+                if (derived().x_ticks_.major_value_labels_side_ < 0)
+                { //  Move down to allow space for font size of tick value labels below X-axis.
+                  y += derived().x_value_label_info_.textstyle().font_size();
+                }
+                y += derived().x_label_info_.textstyle().font_size() * 1.3; // Allow for the X-axis label font and space.
+                // See also 1.3 factor drawing ticks.
+              }
+              else
+              {
+                std::cout << " Rotation of X label rotation" << derived().x_ticks_.label_rotation_ << "not yet implemented!" << std::endl;
+              }
+            }
+            if (derived().x_ticks_.down_ticks_on_)
+            { // Shift down for biggest of any ticks, and bit of space.
+              y += 1.1 * (std::max)(derived().x_ticks_.minor_tick_length_, derived().x_ticks_.major_tick_length_);
+            // y += derived().x_ticks_.value_label_style_.font_size() * 1.; // Shift down to suit tick labels.
+            }
+          }
+          else if (derived().x_ticks_.ticks_on_window_or_on_axis_ == 0)
+          { // Ticks are ON the X-axis line, so X label is just below the plot bottom.
+             //y += derived().x_label_info_.textstyle().font_size() * 0.8; // Shift down to suit X labels.
+             // Character starts at bottom of capital letter, so allow for descenders.
+             y = derived().image.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
+             y -= derived().image_border_.margin_;
+          }
+
+          derived().image.g(PLOT_X_LABEL).push_back(new text_element(
+            ( // x position relative to the x-axis which is middle of plot window.
+            derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
+            y, // Down from plot window.
+            x_label,
+            derived().x_label_info_.textstyle(),
+            center_align, horizontal)
+            );
+        } // void draw_x_label()
+
+          void adjust_limits(double& x, double& y)
+          { //! If value of a data point reaches limit of max, min, infinity,
+            //! use the appropriate plot min or max value instead.
+            if(detail::limit_max(x))
+            {
+              x = derived().plot_right_;
+            }
+            if(detail::limit_max(y))
+            {
+              y = derived().plot_top_;
+            }
+            if(detail::limit_min(x))
+            {
+              x = derived().plot_left_;
+            }
+            if(detail::limit_min(y))
+            {
+              y = derived().plot_top_;
+            }
+            // If value is NaN, use zero instead.
+            // TODO Do we want/get a different color or shape for NaNs?
+            if(detail::limit_NaN(x))
+            {
+              x = 0.;
+              transform_x(x);
+            }
+            if(detail::limit_NaN(y))
+            {
+              y = 0.;
+              transform_y(y);
+            }
+          } // void adjust_limits
+
 
         void draw_title()
         { /*! Draw title (for the whole plot).
@@ -847,114 +1042,6 @@ namespace boost
               legend_y_pos += 2 * spacing;
             } // for
           } // void draw_legend()
-
-          void draw_x_label()
-          { //! Draw the X-axis label text (for example, length),
-            //! and append any optional units (for example, km).
-            // X-label color default is set in constructor thus:
-            // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
-            // and changed using x_label_color(color);
-            // Similarly for font family and size.
-
-            std::string x_label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
-            if (derived().x_axis_.label_units_on_ && (derived().x_units_info_.text() != ""))
-            { // Append the units, if any, user providing brackets () if required. 
-              x_label += derived().x_units_info_.text(); // for example: "time (sec)".
-            }
-
-            double y = derived().plot_bottom_;
-            // Glyphs for western characters are aligned with the left bottom of capital letter,
-            // so need to allow for any descenders.
-
-            // cout << "derived().x_ticks_.ticks_on_window_or_on_axis_ " << derived().x_ticks_.ticks_on_window_or_on_axis_ << endl;
-            // using derived(0 means debugging doesn't work!  So resort to old-fashioned print statements.
-            if (derived().x_ticks_.ticks_on_window_or_on_axis_ < 0) // -1 means bottom
-            { // Ticks value labels below plot window.
-              if (derived().x_ticks_.major_value_labels_side_ < 0) // bottom
-              { // Shift down to allow for any tick value labels.
-                if ((derived().x_ticks_.label_rotation_ == downward) || (derived().x_ticks_.label_rotation_ == upward)
-                    || (derived().x_ticks_.label_rotation_ == steepdown) || (derived().x_ticks_.label_rotation_ == steepup))
-                { // downward tick value label direction 90 up or down, or 60 steep degrees (might handle 60 separately).
-                  y += derived().x_ticks_.label_max_space_;
-                }
-                else if ((derived().x_ticks_.label_rotation_ == uphill)  || (derived().x_ticks_.label_rotation_ == downhill) 
-                         || (derived().x_ticks_.label_rotation_ == slopeup)  || (derived().x_ticks_.label_rotation_ == slopedownhill))
-                { // sloping 45 or 30 degrees (might handle 30 separately).
-                  y += derived().x_ticks_.label_max_space_ * sin45;
-                }
-                else if (derived().x_ticks_.label_rotation_ == horizontal)
-                { // horizontal
-                  if (derived().x_ticks_.major_value_labels_side_ < 0)
-                  { // Allow space for tick value labels below X-axis font size.
-                    y += derived().x_value_label_info_.textstyle().font_size();
-                  }
-                  if (derived().x_ticks_.down_ticks_on_ == true)
-                  {  // Allow for the downward ticks.
-                    y += (std::max)(derived().x_ticks_.major_tick_length_, derived().x_ticks_.minor_tick_length_);// And avoid macro max trap!
-                  }
-                  y += derived().x_label_info_.textstyle().font_size() * 0.8; // Allow for the X-axis label font.
-                }
-                else
-                {
-                  std::cout << " Rotation of X label rotation" << derived().x_ticks_.label_rotation_ << "not yet implemented!" << std::endl;
-                }
-              }
-              if (derived().x_ticks_.down_ticks_on_)
-              { // Shift down for biggest of any ticks.
-                y += (std::max)(derived().x_ticks_.minor_tick_length_, derived().x_ticks_.major_tick_length_);
-              // y += derived().x_ticks_.value_label_style_.font_size() * 1.; // Shift down to suit tick labels.
-              }
-            }
-            if (derived().x_ticks_.ticks_on_window_or_on_axis_ == 0)
-            { // ticks ON the X-axis line, so X label is just below the plot bottom.
-               //y += derived().x_label_info_.textstyle().font_size() * 0.8; // Shift down to suit X labels.
-               // Character starts at bottom of capital letter, so allow for descenders.
-               y = derived().image.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
-               y -= derived().image_border_.margin_;
-            }
-
-            derived().image.g(PLOT_X_LABEL).push_back(new text_element(
-              ( // x position relative to the x-axis which is middle of plot window.
-              derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
-              y, // Down from plot window.
-              x_label,
-              derived().x_label_info_.textstyle(),
-              center_align, horizontal)
-              );
-          } // void draw_x_label()
-
-          void adjust_limits(double& x, double& y)
-          { //! If value of a data point reaches limit of max, min, infinity,
-            //! use the appropriate plot min or max value instead.
-            if(detail::limit_max(x))
-            {
-              x = derived().plot_right_;
-            }
-            if(detail::limit_max(y))
-            {
-              y = derived().plot_top_;
-            }
-            if(detail::limit_min(x))
-            {
-              x = derived().plot_left_;
-            }
-            if(detail::limit_min(y))
-            {
-              y = derived().plot_top_;
-            }
-            // If value is NaN, use zero instead.
-            // TODO Do we want/get a different color or shape for NaNs?
-            if(detail::limit_NaN(x))
-            {
-              x = 0.;
-              transform_x(x);
-            }
-            if(detail::limit_NaN(y))
-            {
-              y = 0.;
-              transform_y(y);
-            }
-          } // void adjust_limits
 
           void draw_plot_point(double x, double y, // SVG coordinates.
           //void draw_plot_point(unc x, unc y, // SVG coordinates.
@@ -2691,6 +2778,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_label_font_size(unsigned int i)
           { //! Set X axis label font size (svg units, default pixels).
             derived().x_label_info_.textstyle().font_size(i);
+            // Also duplicated at 
+            // derived().x_axis_label_style_.font_size(i);
             return derived();
           }
 

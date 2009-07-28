@@ -881,7 +881,7 @@ class text_element : public svg_element
       \brief Holds text with position, size, font, (& styles) & orientation.
       \details
       \verbatim
-      Not necessarily shown correctly by all browsers, alas.
+      Not necessarily shown correctly (or nicely) by all browsers, alas.
       SVG Coordinates of 1st character EM box, see
       http://www.w3.org/TR/SVG/text.html#TextElement 10.2
       So any text with y coordinate = 0 shows only any roman lower case descenders!\n\n
@@ -903,7 +903,7 @@ class text_element : public svg_element
       \endverbatim
 
   */
- private: // Access only via member functions below.
+ private: // Access only via member functions below:
   double x_; //!< Left edge.
   double y_; //!< Bottom of roman capital character.
   ptr_vector<text_parent> data_; //!< Stores all of the containing data.
@@ -921,23 +921,23 @@ class text_element : public svg_element
     }
   }
 public:
-  // Set
-  //void alignment(align_style a);
-  //void rotation(rotate_style rot);
-  //void x(double x);
-  //void y(double y);
-  //void text(const std::string& t);
-  //tspan_element& tspan(const std::string& t);
-  //text_element(double x, double y, const std::string text,text_style ts,align_style align, rotate_style rotate);
-  //text_element(const text_element& rhs);
+  // Set member functions.
+  // void alignment(align_style a);
+  // void rotation(rotate_style rot);
+  // void x(double x);
+  // void y(double y);
+  // void text(const std::string& t);
+  // tspan_element& tspan(const std::string& t);
+  // text_element(double x, double y, const std::string text,text_style ts,align_style align, rotate_style rotate);
+  // text_element(const text_element& rhs);
 
-  // Get
-  //text_style& style();
-  //const text_style& style() const;
-  //align_style alignment();
-  //rotate_style rotation() const;
-  //double x() const;
-  //double y() const;
+  // Get member functions.
+  // text_style& style();
+  // const text_style& style() const;
+  // align_style alignment();
+  // rotate_style rotation() const;
+  // double x() const;
+  // double y() const;
 
   text_style& textstyle()
   { //! Get text style for font size, family, decoration ...
@@ -1023,9 +1023,10 @@ public:
   text_element(
     //! Coordinates of 1st character EM box, see
     //! http://www.w3.org/TR/SVG/text.html#TextElement 10.2
-    double x = 0., // Left edge.
-    double y = 0., // Bottom of character (roman capital).
-    // So any text with y coordinate = 0  shows only the roman lower case descenders!
+    double x = 0., //! X = Left edge.
+    double y = 0., //! Y =  Bottom left of (western) character (roman capital).
+    //! So any text with Y coordinate = 0 shows only the roman lower case descenders!
+    //! One must increase Y to allow for the height (font size) of the character.
     const std::string text = "",
     text_style ts = no_style, // Left to SVG defaults.
     align_style align = left_align,
@@ -1033,8 +1034,9 @@ public:
     : // Constructor.
     x_(x), y_(y), // location.
     data_(ptr_vector<text_parent>()),
+    style_(ts), // Simpler to include all these as members?
+    // These is a muddle requiring copying members at present.
     //size(size), font(font), style_(style), weight(weight), stretch(stretch), decoration(decoration),
-    style_(ts),
     align_(align),
     rotate_(rotate)
   { //! text_element Default Constructor, defines defaults for all private members.
