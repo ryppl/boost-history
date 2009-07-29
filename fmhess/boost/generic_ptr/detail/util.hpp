@@ -16,6 +16,10 @@ namespace boost
   {
     namespace detail
     {
+      struct static_cast_tag {};
+      struct const_cast_tag {};
+      struct dynamic_cast_tag {};
+
       template<typename T>
       void set_plain_old_pointer_to_null(T * &p)
       {

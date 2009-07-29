@@ -83,10 +83,6 @@ template<typename T> class enable_shared_from_this;
 namespace detail
 {
 
-struct static_cast_tag {};
-struct const_cast_tag {};
-struct dynamic_cast_tag {};
-
 // enable_shared_from_this support
 
 template< class X, class Y, class T > inline void sp_enable_shared_from_this( shared<X> const * ppx, Y const * py,

@@ -16,6 +16,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
+#include <boost/generic_ptr/detail/util.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/generic_ptr/shared.hpp>
 #include <boost/mpl/identity.hpp>
@@ -84,7 +85,7 @@ namespace boost
           boost::swap(_impl, other._impl);
         }
       private:
-        clone_factory& operator=(const clone_factory &);  // could be implemented if we need it
+        clone_factory& operator=(const clone_factory &);  // could be implemented and made public if we needed it
 
         scoped_ptr<clone_factory_impl_base> _impl;
       };
@@ -134,6 +135,65 @@ namespace boost
           >(_cloner.get_pointer())
         )
       {}
+
+      // casts
+      template<typename U>
+      cloning(const cloning<U> & other, detail::static_cast_tag):
+        _cloner(other._cloner),
+        px
+        (
+          static_cast
+          <
+            value_type *
+          >
+          (
+            static_cast
+            <
+              typename pointer_traits<U>::value_type *
+            >(_cloner.get_pointer())
+          )
+        )
+      {}
+      template<typename U>
+      cloning(const cloning<U> & other, detail::const_cast_tag):
+        _cloner(other._cloner),
+        px
+        (
+          const_cast
+          <
+            value_type *
+          >
+          (
+            static_cast
+            <
+              typename pointer_traits<U>::value_type *
+            >(_cloner.get_pointer())
+          )
+        )
+      {}
+      template<typename U>
+      cloning(const cloning<U> & other, detail::dynamic_cast_tag):
+        _cloner(other._cloner),
+        px
+        (
+          dynamic_cast
+          <
+            value_type *
+          >
+          (
+            static_cast
+            <
+              typename pointer_traits<U>::value_type *
+            >(_cloner.get_pointer())
+          )
+        )
+      {
+        if(get_plain_pointer(px) == 0)
+        {
+          detail::clone_factory().swap(_cloner);
+        }
+      }
+
 #ifndef BOOST_NO_RVALUE_REFERENCES
       cloning(cloning && other): _cloner(std::move(other._cloner)), px(std::move(other.px))
       {}
@@ -214,42 +274,32 @@ namespace boost
     template<typename ToValueType, typename U>
     typename rebind<cloning<U>, ToValueType>::other static_pointer_cast
     (
-      cloning<U> const & p,
+      cloning<U> const & cp,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
       typedef typename rebind<cloning<U>, ToValueType>::other result_type;
-      typename result_type::pointer wrapped_p(static_pointer_cast(p.get(), to_type_iden));
-      typename result_type::value_type *plain_p = get_plain_old_pointer(wrapped_p);
-      if(plain_p == 0) return result_type(plain_p);
-      return result_type(new_clone(*plain_p));
+      return result_type(cp, detail::static_cast_tag());
     }
     template<typename ToValueType, typename U>
     typename rebind<cloning<U>, ToValueType>::other const_pointer_cast
     (
-      cloning<U> const & p,
+      cloning<U> const & cp,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
       typedef typename rebind<cloning<U>, ToValueType>::other result_type;
-      typename result_type::pointer wrapped_p(const_pointer_cast(p.get(), to_type_iden));
-      typename result_type::value_type *plain_p = get_plain_old_pointer(wrapped_p);
-      if(plain_p == 0) return result_type(plain_p);
-      return result_type(new_clone(*plain_p));
+      return result_type(cp, detail::const_cast_tag());
     }
     template<typename ToValueType, typename U>
     typename rebind<cloning<U>, ToValueType>::other dynamic_pointer_cast
     (
-      cloning<U> const & p,
+      cloning<U> const & cp,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
       typedef typename rebind<cloning<U>, ToValueType>::other result_type;
-      return result_type(dynamic_pointer_cast(p.get(), to_type_iden));
-      typename result_type::pointer wrapped_p(static_pointer_cast(p.get(), to_type_iden));
-      typename result_type::value_type *plain_p = get_plain_old_pointer(wrapped_p);
-      if(plain_p == 0) return result_type(plain_p);
-      return result_type(new_clone(*plain_p));
+      return result_type(cp, detail::dynamic_cast_tag());
     }
 
     // comparisons

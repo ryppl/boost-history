@@ -98,10 +98,9 @@ void cast_test()
   boost::generic_ptr::cloning<X*> cp2 = boost::generic_ptr::static_pointer_cast<X>(cp);
   BOOST_TEST(X::instances == 2);
   BOOST_TEST(cp != cp2);
-/*  boost::generic_ptr::cloning<X*> cp3(boost::generic_ptr::dynamic_pointer_cast<X>(cp));
+  boost::generic_ptr::cloning<X_base*> cp3(boost::generic_ptr::static_pointer_cast<X_base>(cp2));
   BOOST_TEST(X::instances == 3);
-  BOOST_TEST(get_plain_old_pointer(cp3) != 0);
-  BOOST_TEST(cp != cp3);*/
+  BOOST_TEST(cp2 != cp3);
 }
 
 int main()
