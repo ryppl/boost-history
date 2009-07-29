@@ -26,12 +26,25 @@ GentorProfileSgl::GentorProfileSgl(){}
 
 void GentorProfile::set_defaults()
 {
+	set_debug_slowdown(8.45);
+	set_trials_count_release(100);
 #ifdef _DEBUG
 	set_debug_defaults();
 #else
 	set_release_defaults();
 #endif
 }
+
+
+int GentorProfile::adjusted_trials_count()const 
+{ 
+#ifdef _DEBUG
+	return static_cast<int>(floor(0.5+(_trials_count_release / _debug_slowdown))); 
+#else
+	return _trials_count_release;
+#endif
+}
+
 
 void GentorProfile::set_debug_defaults()
 {
@@ -44,10 +57,10 @@ void GentorProfile::set_debug_defaults()
 	set_range_interval_double(-5.0, 5.0);
 	set_maxIntervalLength(5);
 
-	set_range_element_ContainerSize(0,4);
+	set_range_codomain_ContainerSize(0,4);
 
 	set_repeat_count(1);
-	set_trials_count(20);
+	set_trials_count(adjusted_trials_count());
 	set_laws_per_cycle(100);
 }
 
@@ -62,80 +75,52 @@ void GentorProfile::set_release_defaults()
 	set_range_interval_double(-20.0, 20.0);
 	set_maxIntervalLength(10);
 
-	set_range_element_ContainerSize(0,20);
+	set_range_codomain_ContainerSize(0,20);
 
 	set_repeat_count(1);
-	set_trials_count(20);
+	set_trials_count(trials_count_release());
 	set_laws_per_cycle(100);
 }
 
+
+void GentorProfile::set_std_profile(int unit, int factor)
+{
+	int value = unit*factor;
+	_unit     = unit;
+	_scaling  = factor;
+	set_defaults();
+
+	// Codomain values
+    set_range_int(-5, 5);
+    set_range_nat(0, 16);
+    set_range_double(0.0, 1.0);
+    set_range_codomain_ContainerSize(0,4);
+
+	// Parameter that influence speed
+    set_range_ContainerSize(0, value);
+    set_range_interval_int(-value, value);
+    set_range_interval_double(-value, value);
+    set_maxIntervalLength(value);
+
+	// Parameter to influence frequencies of output update.
+	set_repeat_count(1);
+	set_trials_count(adjusted_trials_count());
+	set_laws_per_cycle(std::max(1, 100/factor));
+}
 
 
 
 GentorProfile::GentorProfile()
 {
-	set_defaults();
-    //---------------------------------
-    //standard values
-    //set_range_int(-10, 10);
-    //set_range_nat(0, 20);
-    //set_range_double(0.0, 1.0);
-    //set_range_ContainerSize(0,10);
+	set_std_profile(4, 1);
+}
 
-    //set_range_interval_int(-10, 10);
-    //set_maxIntervalLength(8);
-
-    //set_range_element_ContainerSize(0,5);
-
-    //---------------------------------
-    //small values
-    //set_range_int(-5, 5);
-    //set_range_nat(0, 16);
-    //set_range_double(0.0, 1.0);
-    //set_range_ContainerSize(0,4);
-
-    //set_range_interval_int(-5, 5);
-    //set_maxIntervalLength(5);
-    //set_range_element_ContainerSize(0,4);
-
-    //---------------------------------
-    //current values
-    set_range_int(-5, 5);
-    set_range_nat(0, 16);
-    set_range_double(0.0, 1.0);
-    set_range_ContainerSize(0,20);
-
-    set_range_interval_int(-20, 20);
-    set_range_interval_double(-20.0, 20.0);
-    set_maxIntervalLength(10);
-
-    set_range_element_ContainerSize(0,20);
-	set_repeat_count(1);
-	set_trials_count(20);
-	set_laws_per_cycle(100);
-
-	//set_debug_defaults();
-
-    //--------------------------------------------------------------------------
-    // values for novial_tree test
-    //set_range_int(-5, 5);
-    //set_range_nat(0, 16);
-    //set_range_double(0.0, 1.0);
-    //set_range_ContainerSize(0,1000);
-
-    //set_range_interval_int(0, 100000);
-    //set_maxIntervalLength(1200);
-    //set_range_element_ContainerSize(0,10);
-
-    //set_range_int(-5, 5);
-    //set_range_nat(0, 16);
-    //set_range_double(0.0, 1.0);
-    //set_range_ContainerSize(0,40);
-
-    //set_range_interval_int(0, 1000);
-    //set_maxIntervalLength(50);
-    //set_range_element_ContainerSize(0,10);
-
+void GentorProfile::report_profile()
+{
+	printf("(cycl=%d trls=%d rep=%d unit=%d scale=%d)\n", 
+		laws_per_cycle(), trials_count(), repeat_count(),
+		unit(), scaling()
+		);
 }
 
 // -------------------------------------

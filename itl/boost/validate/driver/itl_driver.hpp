@@ -100,8 +100,12 @@ namespace boost{namespace itl
 				instance_count      += law_validation_count;
                 valid_count++;
             }
+
             std::cout << "------------------------------------------------------------------------------" << std::endl;
-                printf("    %-60s%7d%7.0lf\n", " ", instance_count, avg_evaluation_time/_frequencies.size());
+			// Summary for the current cycle
+			double avg_evaluation_time_per_law = avg_evaluation_time/_frequencies.size();
+            printf( "    %10.3lf%-50s%7d%7.0lf\n", 
+				    avg_evaluation_time_per_law, " ", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
             FORALL(ViolationMapT, it, _violations)

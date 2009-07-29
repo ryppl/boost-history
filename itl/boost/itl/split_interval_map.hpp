@@ -88,12 +88,8 @@ public:
     void assign(const interval_base_map<SubType,DomainT,CodomainT,
                                         Traits,Compare,Combine,Section,Interval,Alloc>& src)
     {
-        typedef interval_base_map<SubType,DomainT,CodomainT,
-                                  Traits,Compare,Combine,Section,Interval,Alloc> base_map_type;
-        this->clear();
-        // Can be implemented via _map.insert: Interval joining not necessary.
-        const_FORALL(typename base_map_type, it_, src) 
-            this->_map.insert(*it_); 
+		this->clear();
+		this->_map.insert(src.begin(), src.end());
     }
 
     //==========================================================================

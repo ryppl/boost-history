@@ -112,11 +112,8 @@ public:
     template<class SubType>
     void assign(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     {
-        typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
-        this->clear();
-        // Can be implemented via _set.insert: Interval joining not necessary.
-        const_FORALL(typename base_set_type, it_, src) 
-            this->_set.insert(*it_); 
+		this->clear();
+		this->_set.insert(src.begin(), src.end());
     }
     
 private:

@@ -14,14 +14,27 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-//------------------------------------------------------------------------------
-// Addability +=, +
-//------------------------------------------------------------------------------
+//==============================================================================
+//= Addition
+//==============================================================================
+/** \par \b Requires: Types \c ObjectT and \c OperandT are addable.
+	\par \b Effects: \c operand is added to \c object.
+	\par \b Returns: A reference to \c object.
+	\par \b Complexity: For <tt>n = object.interval_count()</tt> and all 
+	possible combinations of interval containers, segment and element types:
+\code
+                                             interval
+OperandT:                   element  segment container
+ObjectT: interval container O(log n)   O(n)  O(n log n)
+\endcode
+*/
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
-{ return object.add(operand); }
+{ 
+	return object.add(operand); 
+}
 
 
 template<class ObjectT, class OperandT>

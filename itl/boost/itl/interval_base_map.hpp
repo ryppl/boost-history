@@ -177,7 +177,7 @@ public:
     /** Assignment operator */
     interval_base_map& operator = (const interval_base_map& src) 
     { 
-        if(this!=&src) that()->assign(src);
+		this->_map = src._map;
         return *this; 
     }
 

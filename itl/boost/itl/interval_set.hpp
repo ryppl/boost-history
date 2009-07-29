@@ -121,8 +121,9 @@ public:
         typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
         this->clear();
         // Has to be implemented via add. there might be touching borders to be joined
+		iterator prior_ = this->_set.end();
         const_FORALL(typename base_set_type, it_, src) 
-            this->add(*it_);
+            prior_ = this->add(prior_, *it_);
     }
 
 private:

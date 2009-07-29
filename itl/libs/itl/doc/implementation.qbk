@@ -12,41 +12,48 @@ The implementation of the *itl's* conainers is based on
 std::set and std::map. So the underlying datastructure of
 interval containers is a red black tree of intervals or
 interval value pairs. 
-
 The element containers itl::set and itl::map are wrapper
-classes of std::set and std::map using private inherience.
+classes of std::set and std::map.
 Interval containers are then using itl::sets of intervals
 or itl::maps of interval value pairs as implementing
 containers.
-
 So all the complexity characteristics of itl conainers
-are based on and limited by the red-black tree implementation
+are based on and limited by the ['*red-black tree implementation*]
 of the underlying std::AssociativeContainers.
 
 [section Complexity]
 
 This section gives an overview over the time complextity of
-the basic operations on interval containers. Since element
-containers __itl_set__ and __itl_map__ are only extensions of
+the basic operations of ['itl containers].
+
+[h5 Complexity of element containers]
+
+Since ['element containers] __itl_set__ and __itl_map__ are only extensions of
 stl::set and stl::map, their complexity characteristics are
 accordingly. So their major operations insertion (addition),
-deletion and search are all using logarithmic time.
+deletion and search are all using logarithmic time. 
 
-The operations of interval containers behave differently
+[h5 Complexity of interval containers]
+
+The operations of ['interval containers] behave differently
 due to the fact that intervals unlike elements can overlap
-any number of other inervals in a container. So as long as
+any number of other intervals in a container. So as long as
 intervals are relatively small or just singleton, interval
 containers behave like containers of elements.
 
 This situation can be found in the first row of the next table,
 that gives the time complexities of the poymorphic 
-`operator +=` for ['*addition*]. Adding an element or 
-element value pair is always done in /logarithmic time/,
-where /n/ is the number of intervals in the interval container.
-The same row of complexities applies to the insertion
-of a /segment/ (an interval or an interval value pair)
-in the ['*best case*], where the inserted segment does overlap
-with only a ['*small*] number of intervals in the container.
+`operator +=` for ['*addition*]. 
+In this table `T` is a placeholder for the type of the operation's
+first argument `object` that can be an /interval container/. 
+Instance types of `T` appear as headers of columns 4 to 8.
+`P` is a placeholder for the type of the operation's second 
+argument. `P` can be an `element_type`, a `segment_type` of `T` or
+an appropriate interval container type. This is denoted in
+column 2 as /element/, /segment/ or /container/.
+Column 3 containes the specific kind of complexity statement. 
+If column 3 is empty ['*worst case*] complexity is given
+in the related row. 
 
 [table Time Complexity of Addition:
 [[]                                             [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
@@ -58,8 +65,16 @@ with only a ['*small*] number of intervals in the container.
 [[ /m/ = `addend.interval_count()`]             [container] []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
 ]
 
+Adding an /element/ or 
+/element value pair/ is always done in /logarithmic time/,
+where /n/ is the number of intervals in the interval container.
+The same row of complexities applies to the insertion
+of a /segment/ (an interval or an interval value pair)
+in the ['*best case*], where the inserted segment does overlap
+with only a ['*small*] number of intervals in the container.
+
 In the ['*worst case*], where the inserted segment overlaps with 
-all intervals in the container, the algorithms usually
+all intervals in the container, the algorithms
 iterate over all the overlapped segments.
 Using inplace manipulations of segments and
 hinted inserts, it is possible to perform 
@@ -77,9 +92,48 @@ need /n/ non overlapping additions of
 /logarithmic time/ before we can launch 
 another __On__ worst case addition. 
 So we have only a ['*logarithmic amortized
-time*] for the addition of an interval.
+time*] for the addition of an interval or interval value pair.
+
+For the addition of ['*interval containers*] complexity is __Omlgnpm__.
+So for the ['*worst case*], where the container sizes /n/ and /m/ 
+are equal and both containers cover the same ranges, 
+the complexity of container addition is ['*loglinear*].
+For other cases, that occur frequently in realworld applications
+performance can be much better.
+If the added container `addend` is much smaller than 
+`object` and the intervals in `addend` are relatively
+small, performance can be /logarithmic/.
+If /m/ is small compared with /n/ and intervals in `addend`
+are large, performance tends to be /linear/.
 
 
+The next table denotes the time complexity characteristics of
+the ['*subtraction*] on interval containers.
+The table shows almost the same patterns of complexities
+that has been stated for ['*addition*].
+
+[table Time Complexity of Subtraction:
+[[]                                              [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
+[/ 1operation                                    2granul.    3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
+[[`T& operator -=(T& object, const P& minuend)`] [element]   []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                              [segment]   [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[where]                                         []          [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
+[[ /n/ = `object.interval_count()`]              []          [amortized]  [__Olgn__]    [__Olgn__]    [__Olgn__]    []            []            ]
+[[ /m/ = `addend.interval_count()`]              [container] []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
+]
+
+For __spl_itv_sets__, subtraction of an interval reduces the 
+__spl_itv_set_s__ size particularly in the worst case, where
+the subracted interval `minuend` overlaps with the whole 
+all intervals in `object`.
+After a worst case subtraction only 0 to 2 intervals are
+left in `object` after subtraction. That leads to a
+['*logarithmic amortized time*].
+
+While this section covers the complexity characteristics of
+the most important operations only, more complexity statements
+are included in the doxygen generated 
+[link interval_template_library_reference reference documentation].
 
 [endsect]
 

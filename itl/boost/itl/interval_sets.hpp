@@ -66,9 +66,16 @@ inline bool is_element_greater
     return Interval_Set::is_element_greater(left, right);
 }
 
-//-----------------------------------------------------------------------------
-// addition +=
-//-----------------------------------------------------------------------------
+//==============================================================================
+//= Addition
+//==============================================================================
+/** \c operator \c += adds an interval_base_set \c operand to an interval set
+    \c object. 
+
+	\b Returns: A reference to \c object. 
+
+	\b Complexity: loglinear.
+*/
 template 
 <
     class ObjectT,
@@ -204,7 +211,7 @@ erase
 
 
 //-----------------------------------------------------------------------------
-// enclosure
+// hull
 //-----------------------------------------------------------------------------
 template 
 <
@@ -212,7 +219,7 @@ template
     ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
 inline typename interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::interval_type 
-enclosure(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object)
+hull(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object)
 {
     typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> IntervalSetT;
     typedef typename IntervalSetT::interval_type interval_type;

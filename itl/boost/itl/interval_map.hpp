@@ -103,8 +103,9 @@ public:
                                   Traits,Compare,Combine,Section,Interval,Alloc> base_map_type;
         this->clear();
         // Can be implemented via _map.insert: Interval joining not necessary.
+		iterator prior_ = this->_map.end();
         const_FORALL(typename base_map_type, it_, src) 
-            this->add(*it_); 
+            prior_ = this->add(prior_, *it_); 
     }
  
 private:

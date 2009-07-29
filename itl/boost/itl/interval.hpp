@@ -58,24 +58,34 @@ typedef unsigned char bound_type;
 
 /** A class template for intervals */
 template <class DomainT, ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, DomainT)>
-#ifdef USE_CONCEPTS
-    requires std::LessThanComparable<DomainT>
-#endif
 class interval
 {
 public:
+    //==========================================================================
+    //= Associated types
+    //==========================================================================
     typedef interval<DomainT,Compare> type;
 
-    /// Domain type or element type
+    //--------------------------------------------------------------------------
+    //- Associated types: Data
+    //--------------------------------------------------------------------------
+    /// The domain type of the interval
     typedef DomainT domain_type;
+    /// The codomaintype is the same as domain_type
     typedef DomainT codomain_type;
+    /// The element type of the interval
     typedef DomainT element_type;
+    /// The segment type is the interval's type
     typedef type    segment_type;
+    /// The interval type is the interval's type
+    typedef type    interval_type;
 
+    //--------------------------------------------------------------------------
+    //- Associated types: Implementation and stl related
+    //--------------------------------------------------------------------------
     typedef DomainT key_type;
     typedef DomainT data_type;
     typedef DomainT value_type;
-    typedef type    interval_type;
 
     /// Compare order on the data
     typedef ITL_COMPARE_DOMAIN(Compare,DomainT) domain_compare;
@@ -267,6 +277,9 @@ public:
     /** Object as string */
     const std::string as_string()const;
 
+    //==========================================================================
+    //= Predicates
+    //==========================================================================
 
     /** What type is the interval?
 \code
@@ -969,6 +982,18 @@ struct exclusive_less {
 
 
 //==============================================================================
+//= Addition
+//==============================================================================
+
+/** \c hull returns the smallest interval containing \c left and \c right. */
+template <class DomainT, ITL_COMPARE Compare>
+inline interval<DomainT,Compare> hull(interval<DomainT,Compare>  left, 
+                                const interval<DomainT,Compare>& right)
+{
+    return left.extend(right);
+}
+
+//==============================================================================
 //= Subtraction
 //==============================================================================
 
@@ -1015,6 +1040,10 @@ inline itl::interval<DomainT,Compare> operator & (itl::interval<DomainT,Compare>
 {
     return left &= right;
 }
+
+//==============================================================================
+//= Representation
+//==============================================================================
 
 template<class CharType, class CharTraits, class DomainT, ITL_COMPARE Compare>
 std::basic_ostream<CharType, CharTraits> &operator<<

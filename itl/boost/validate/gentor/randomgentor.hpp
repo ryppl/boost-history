@@ -371,7 +371,7 @@ namespace boost{namespace itl
             elementGentor->setRange(GentorProfileSgl::it()->range_int());
 
             codomainGentor->setDomainGentor(elementGentor);            
-            codomainGentor->setRangeOfSampleSize(GentorProfileSgl::it()->range_element_ContainerSize());
+            codomainGentor->setRangeOfSampleSize(GentorProfileSgl::it()->range_codomain_ContainerSize());
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);
@@ -426,7 +426,7 @@ namespace boost{namespace itl
             elementGentor->setRange(GentorProfileSgl::it()->range_int());
 
             codomainGentor->setDomainGentor(elementGentor);            
-            codomainGentor->setRangeOfSampleSize(GentorProfileSgl::it()->range_element_ContainerSize());
+            codomainGentor->setRangeOfSampleSize(GentorProfileSgl::it()->range_codomain_ContainerSize());
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);

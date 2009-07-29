@@ -9,6 +9,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 +-----------------------------------------------------------------------------*/
 #pragma once
 
+#include <math.h>
 #include <boost/validate/type/nat.hpp>
 #include <boost/itl/interval.hpp>
 
@@ -24,6 +25,8 @@ namespace boost{namespace itl
 		void set_debug_defaults();
 		void set_release_defaults();
 
+		void set_std_profile(int unit, int factor);
+
         void set_range_int(int lwb, int upb) 
         { _range_int = interval<int>::rightopen(lwb, upb); }
         void set_range_nat(nat lwb, nat upb) 
@@ -38,11 +41,13 @@ namespace boost{namespace itl
         { _range_interval_double = interval<double>::rightopen(lwb, upb); }
         void set_maxIntervalLength(int val) 
         { _maxIntervalLength = val; }
-        void set_range_element_ContainerSize(int lwb, int upb) 
-        { _range_element_ContainerSize = interval<int>::rightopen(lwb, upb); }
+        void set_range_codomain_ContainerSize(int lwb, int upb) 
+        { _range_codomain_ContainerSize = interval<int>::rightopen(lwb, upb); }
         void set_repeat_count(int repeat) { _repeat_count = repeat; }
         void set_trials_count(int trials) { _trials_count = trials; }
+        void set_trials_count_release(int trials) { _trials_count_release = trials; }
         void set_laws_per_cycle(int count){ _laws_per_cycle = count; }
+        void set_debug_slowdown(double factor){ _debug_slowdown = factor; }
 
         interval<int>       range_int()             { return _range_int; }
         interval<nat>       range_nat()             { return _range_nat; }
@@ -51,11 +56,21 @@ namespace boost{namespace itl
         interval<int>       range_interval_int()    { return _range_interval_int; }
         interval<double>    range_interval_double() { return _range_interval_double; }
         int                 maxIntervalLength()     { return _maxIntervalLength; }
-        interval<int>       range_element_ContainerSize()
-                                                    { return _range_element_ContainerSize; }
+        interval<int>       range_codomain_ContainerSize()
+                                                    { return _range_codomain_ContainerSize; }
 		int                 repeat_count()          { return _repeat_count; }
 		int                 trials_count()          { return _trials_count; }
-		int                 laws_per_cycle()            { return _laws_per_cycle; }
+		int                 trials_count_release()  { return _trials_count_release; }
+		int                 laws_per_cycle()        { return _laws_per_cycle; }
+
+		int                 unit()                  { return _unit; }
+		int                 scaling()               { return _scaling; }
+
+		double              debug_slowdown()const   { return _debug_slowdown; }
+
+		int adjusted_trials_count()const;
+
+		void report_profile();
 
     private:
         interval<int>       _range_int;
@@ -67,10 +82,16 @@ namespace boost{namespace itl
         interval<double>    _range_interval_double;
         int                 _maxIntervalLength;
 
-        interval<int>       _range_element_ContainerSize;
+        interval<int>       _range_codomain_ContainerSize;
 		int                 _repeat_count;
 		int                 _trials_count;
+		int                 _trials_count_release;
 		int                 _laws_per_cycle;
+
+		double              _debug_slowdown;
+
+		int                 _unit;
+		int                 _scaling;
     };
 
 
@@ -93,8 +114,8 @@ namespace boost{namespace itl
         void set_range_interval_int(int lwb, int upb)  { m_profile.set_range_interval_int(lwb, upb); }
         void set_range_interval_double(double lwb, double upb){ m_profile.set_range_interval_double(lwb, upb); }
         void set_maxIntervalLength(int val)            { m_profile.set_maxIntervalLength(val); }
-        void set_range_element_ContainerSize(int lwb, int upb)   
-                                                       { m_profile.set_range_element_ContainerSize(lwb, upb); }
+        void set_range_codomain_ContainerSize(int lwb, int upb)   
+                                                       { m_profile.set_range_codomain_ContainerSize(lwb, upb); }
         void set_repeat_count(int repeat)              { m_profile.set_repeat_count(repeat); }
         void set_trials_count(int trials)              { m_profile.set_trials_count(trials); }
         void set_laws_per_cycle(int count)              { m_profile.set_laws_per_cycle(count); }
@@ -102,14 +123,18 @@ namespace boost{namespace itl
         interval<int>       range_int()                { return m_profile.range_int();           }
         interval<nat>       range_nat()                { return m_profile.range_nat();           }
         interval<double>    range_double()             { return m_profile.range_double();        }
-        interval<int>       range_ContainerSize()      { return m_profile.range_ContainerSize(); }
+        interval<int>       range_ContainerSize(){ return m_profile.range_ContainerSize(); }
         interval<int>       range_interval_int()       { return m_profile.range_interval_int();  }
         interval<double>    range_interval_double()    { return m_profile.range_interval_double();}
         int                 maxIntervalLength()        { return m_profile.maxIntervalLength();   }
-        interval<int>       range_element_ContainerSize(){ return m_profile.range_element_ContainerSize(); }
+        interval<int>       range_codomain_ContainerSize(){ return m_profile.range_codomain_ContainerSize(); }
 		int                 repeat_count()             { return m_profile.repeat_count(); }
 		int                 trials_count()             { return m_profile.trials_count(); }
 		int                 laws_per_cycle()           { return m_profile.laws_per_cycle(); }
+
+		void                report_profile()           { return m_profile.report_profile(); }
+
+		void set_std_profile(int unit, int factor){ return m_profile.set_std_profile(unit, factor); }
 
 
     private:

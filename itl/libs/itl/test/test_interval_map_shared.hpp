@@ -60,7 +60,7 @@ void interval_map_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
     (mt_map += mt_u1) += mt_u1;
     BOOST_CHECK_EQUAL(mt_map, IntervalMapT());
-    BOOST_CHECK_EQUAL(enclosure(mt_map), neutron<interval<T> >::value());
+    BOOST_CHECK_EQUAL(hull(mt_map), neutron<interval<T> >::value());
 
     //subtracting emptieness
     mt_map.subtract(mt_u1).subtract(mt_u1);
@@ -113,7 +113,7 @@ void interval_map_fundamentals_4_ordered_types()
 
     BOOST_CHECK_EQUAL(single_I0_0I_u1_from_element, single_I0_0I_u1_from_interval);
     BOOST_CHECK_EQUAL(single_I0_0I_u1_from_element, single_I0_0I_u1);
-    BOOST_CHECK_EQUAL(enclosure(single_I0_0I_u1), I0_0I);
+    BOOST_CHECK_EQUAL(hull(single_I0_0I_u1), I0_0I);
     BOOST_CHECK_EQUAL(single_I0_0I_u1.lower(), I0_0I.lower());
     BOOST_CHECK_EQUAL(single_I0_0I_u1.upper(), I0_0I.upper());
 
@@ -128,7 +128,7 @@ void interval_map_fundamentals_4_ordered_types()
     IntervalMapT single_I0_1I_u1(single_I0_1I_u1_from_interval);
 
     BOOST_CHECK_EQUAL(single_I0_1I_u1_from_interval, single_I0_1I_u1);
-    BOOST_CHECK_EQUAL(enclosure(single_I0_1I_u1), I0_1I);
+    BOOST_CHECK_EQUAL(hull(single_I0_1I_u1), I0_1I);
     BOOST_CHECK_EQUAL(single_I0_1I_u1.lower(), I0_1I.lower());
     BOOST_CHECK_EQUAL(single_I0_1I_u1.upper(), I0_1I.upper());
 
@@ -253,7 +253,7 @@ void interval_map_add_sub_4_bicremental_types()
     IntervalMapT map_A = IntervalMapT(I5_6I_u1).add(v0_u1).add(v9_u1);
     IntervalMapT map_B = IntervalMapT().insert(v9_u1).insert(I5_6I_u1).insert(v0_u1);
     BOOST_CHECK_EQUAL( map_A, map_B );
-    BOOST_CHECK_EQUAL( enclosure(map_A), I0_9I );
+    BOOST_CHECK_EQUAL( hull(map_A), I0_9I );
     BOOST_CHECK_EQUAL( map_A.lower(), I0_9I.lower() );
     BOOST_CHECK_EQUAL( map_A.upper(), I0_9I.upper() );
 

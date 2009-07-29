@@ -128,13 +128,12 @@ public:
     interval_base_set(){}
 
     /** Copy constructor */
-    interval_base_set(const interval_base_set& src): _set() 
-    { that()->assign(src); }
+	interval_base_set(const interval_base_set& src): _set(src._set){}
 
     /** Assignment operator */
     interval_base_set& operator = (const interval_base_set& src) 
     { 
-        if(this!=&src) that()->assign(src);
+		this->_set = src._set;
         return *this; 
     }
 

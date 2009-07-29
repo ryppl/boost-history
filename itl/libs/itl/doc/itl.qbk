@@ -41,6 +41,7 @@ Distributed under the Boost Software License, Version 1.0.
 [def __Itv_sets__     [classref boost::itl::interval_set Interval_sets]]
 [def __spl_itv_set__  [classref boost::itl::split_interval_set split_interval_set]]
 [def __spl_itv_sets__ [classref boost::itl::split_interval_set split_interval_sets]]
+[def __spl_itv_set_s__ [classref boost::itl::split_interval_set split_interval_set's]]
 [def __Spl_itv_set__  [classref boost::itl::split_interval_set Split_interval_set]]
 [def __sep_itv_set__  [classref boost::itl::separate_interval_set separate_interval_set]]
 [def __sep_itv_sets__ [classref boost::itl::separate_interval_set separate_interval_sets]]

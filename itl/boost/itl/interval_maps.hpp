@@ -407,7 +407,7 @@ erase
 
 
 //-----------------------------------------------------------------------------
-// enclosure
+// hull
 //-----------------------------------------------------------------------------
 template 
 <
@@ -415,7 +415,7 @@ template
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
 typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::interval_type 
-enclosure(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object)
+hull(const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& object)
 {
     typedef interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> IntervalMapT;
     typedef typename IntervalMapT::interval_type interval_type;

@@ -53,7 +53,7 @@ void interval_set_fundamentals_4_ordered_types()
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
     (mt_set += mt_interval) += mt_interval;
     BOOST_CHECK_EQUAL(mt_set, IntervalSet<T>());
-    BOOST_CHECK_EQUAL(enclosure(mt_set), neutron<interval<T> >::value());
+    BOOST_CHECK_EQUAL(hull(mt_set), neutron<interval<T> >::value());
 
     //subtracting emptieness
     mt_set.subtract(mt_interval).subtract(mt_interval);
@@ -114,7 +114,7 @@ void interval_set_fundamentals_4_ordered_types()
     IntervalSet<T> single_I0_1I(single_I0_1I_from_interval);
 
     BOOST_CHECK_EQUAL(single_I0_1I_from_interval, single_I0_1I);
-    BOOST_CHECK_EQUAL(enclosure(single_I0_1I), I0_1I);
+    BOOST_CHECK_EQUAL(hull(single_I0_1I), I0_1I);
     BOOST_CHECK_EQUAL(single_I0_1I.lower(), I0_1I.lower());
     BOOST_CHECK_EQUAL(single_I0_1I.upper(), I0_1I.upper());
 
@@ -213,7 +213,7 @@ void interval_set_add_sub_4_bicremental_types()
     IntervalSet<T> set_A = IntervalSet<T>(I5_6I).add(v0).add(v9);
     IntervalSet<T> set_B = IntervalSet<T>().insert(v9).insert(I5_6I).insert(v0);
     BOOST_CHECK_EQUAL( set_A, set_B );
-    BOOST_CHECK_EQUAL( enclosure(set_A), I0_9I );
+    BOOST_CHECK_EQUAL( hull(set_A), I0_9I );
     BOOST_CHECK_EQUAL( set_A.lower(), I0_9I.lower() );
     BOOST_CHECK_EQUAL( set_A.upper(), I0_9I.upper() );
 

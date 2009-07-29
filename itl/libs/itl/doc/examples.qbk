@@ -54,7 +54,7 @@
 [endsect]
 
 [section Party]
-[import ../example/boost_party/boost_party.cpp]
+[import ../example/boost_party_/boost_party.cpp]
 
 Example *party* demonstrates the possibilities of an interval map 
 (__itv_map__ or __spl_itv_map__). 
@@ -108,7 +108,7 @@ Example *interval* shows some basic functionality of __itvs__.
 * Some borderline functions calls on open interval borders are tested e.g.:
   `interval<double>::rightopen(1/sqrt(2.0), sqrt(2.0)).contains(sqrt(2.0));`
 
-[import ../example/interval/interval.cpp]
+[import ../example/interval_/interval.cpp]
 [example_interval]
 [endsect]
 
@@ -118,7 +118,7 @@ Example [*interval container] demonstrates the characteristic behaviors
 of different interval containers that are also summarized
 in the introductory [link boost_itl.introduction.interval_combining_styles Interval Combining Styles].
 
-[import ../example/interval_container/interval_container.cpp]
+[import ../example/interval_container_/interval_container.cpp]
 [example_interval_container]
 [endsect]
 
@@ -135,7 +135,7 @@ Doing so, the associated values that are accumulated in
 the interval_map are just the number of overlaps of all added
 intervals.
 
-[import ../example/overlap_counter/overlap_counter.cpp]
+[import ../example/overlap_counter_/overlap_counter.cpp]
 [example_overlap_counter]
 [endsect]
 
@@ -149,7 +149,7 @@ via an `operator +=`.
 Based on the `operator +=` we can aggregate counted sums on addition
 of interval value pairs into an interval_map.
 
-[import ../example/partys_height_average/partys_height_average.cpp]
+[import ../example/partys_height_average_/partys_height_average.cpp]
 [example_partys_height_average]
 
 Required for `class counted_sum` is a default constructor 
@@ -189,7 +189,7 @@ that joins intervals for equal associated values and a
 __spl_itv_map__ that preserves all borders of inserted
 intervals.
 
-[import ../example/partys_tallest_guests/partys_tallest_guests.cpp]
+[import ../example/partys_tallest_guests_/partys_tallest_guests.cpp]
 [example_partys_tallest_guests]
 
 [endsect]
@@ -213,7 +213,7 @@ changes of interval borders.
 In this example we provide an intersection of two __spl_itv_sets__
 representing a month and week time grid. 
 
-[import ../example/month_and_week_grid/month_and_week_grid.cpp]
+[import ../example/month_and_week_grid_/month_and_week_grid.cpp]
 [example_month_and_week_grid]
 [endsect]
 
@@ -228,7 +228,7 @@ demonstrated in the process of calculation the available working
 times (man-power) of a company's employees accounting for weekends,
 holidays, sickness times and vacations.
 
-[import ../example/man_power/man_power.cpp]
+[import ../example/man_power_/man_power.cpp]
 [example_man_power]
 [endsect]
 
@@ -251,7 +251,7 @@ interval of validity. The group membership begins and ends.
 * Computing an intersection `&` shows who is member of both med_users 
   and admin_users at what times.
 
-[import ../example/user_groups/user_groups.cpp]
+[import ../example/user_groups_/user_groups.cpp]
 [example_user_groups]
 [endsect]
 
