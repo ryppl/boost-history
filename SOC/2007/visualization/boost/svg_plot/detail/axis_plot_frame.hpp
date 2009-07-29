@@ -624,7 +624,7 @@ namespace boost
 
           // cout << "derived().x_ticks_.ticks_on_window_or_on_axis_ " << derived().x_ticks_.ticks_on_window_or_on_axis_ << endl;
           // using derived(0 means debugging doesn't work!  So resort to old-fashioned print statements.
-          if (derived().x_ticks_.ticks_on_window_or_on_axis_ < 0) // -1 means bottom
+          if (derived().x_ticks_.ticks_on_window_or_on_axis_ < 0) // -1 means ticks on bottom of plot window.
           { // Ticks value labels below plot window.
             if (derived().x_ticks_.major_value_labels_side_ < 0) // bottom
             { // Shift down to allow for any tick value labels.
