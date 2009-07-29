@@ -18,6 +18,12 @@ struct static_u8_encoder_type
 {
 };
 
+template<typename I>
+struct static_u16_encoder_type
+  : static_u16_encoder<I::value>
+{
+};
+
 template<typename S1, typename S2>
 struct concat
   : mpl::fold<

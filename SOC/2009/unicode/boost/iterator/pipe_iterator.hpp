@@ -10,6 +10,7 @@
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/mpl/has_xxx.hpp>
+#include <boost/mpl/int.hpp>
 
 namespace boost
 {
@@ -122,6 +123,22 @@ one_many_pipe<OneManyPipe> make_one_many_pipe(OneManyPipe p)
 {
 	return one_many_pipe<OneManyPipe>(p);
 }
+
+/** Model of \c OneManyPipe that casts its input to its template
+ * parameter and writes it to its output. */
+template<typename T>
+struct cast_pipe
+{
+    typedef T output_type;
+    typedef mpl::int_<1> max_output;
+    
+    template<typename U, typename Out>
+    Out operator()(U in, Out out)
+    {
+        *out++ = static_cast<output_type>(in);
+        return out;
+    }
+};
 
 /** Iterator adapter that wraps a range to make it appear like a converted
  * one, by converting it step-by-step as it is advanced. */ 

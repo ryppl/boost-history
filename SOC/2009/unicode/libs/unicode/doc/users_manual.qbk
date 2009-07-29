@@ -411,6 +411,11 @@ declaration with multi-char character literals.
 Then, the =boost::mpl::c_str= meta-function may be used to convert
 any compile-time string into a zero-terminated equivalent.
 
+[heading Example]
+
+See the [link unicode.examples.source_input source_input] example for
+demonstrations.
+
 [endsect]
 
 [section Unicode String type]
@@ -422,9 +427,29 @@ its data in Normalized C form on top of a valid UTF encoding.
 
 [section Examples]
 
-[section test]
-[import ../example/test.cpp]
-[file]
+[section convert]
+[import ../example/convert.cpp]
+[convert]
+[endsect]
+
+[section characters]
+[import ../example/characters.cpp]
+[characters]
+[endsect]
+
+[section compose]
+[import ../example/compose.cpp]
+[compose]
+[endsect]
+
+[section search]
+[import ../example/search.cpp]
+[search]
+[endsect]
+
+[section source_input]
+[import ../example/source_input.cpp]
+[source_input]
 [endsect]
 
 [endsect]

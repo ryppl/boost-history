@@ -3,6 +3,7 @@
 
 #include <boost/unicode/ucd/properties.hpp>
 #include <boost/utility.hpp>
+#include <boost/detail/unspecified.hpp>
 
 #include <boost/iterator/consumer_iterator.hpp>
 
@@ -37,12 +38,12 @@ struct grapheme_boundary
 /** Adapts the range of code points \c range into a range of ranges of code points,
  * each subrange being a grapheme cluster. */
 template<typename Range>
-iterator_range<
+iterator_range<typename boost::detail::unspecified<
     consumer_iterator<
         typename range_iterator<const Range>::type,
         boundary_consumer<unicode::grapheme_boundary>
     >
->
+>::type>
 grapheme_bounded(const Range& range)
 {
     return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
@@ -50,10 +51,10 @@ grapheme_bounded(const Range& range)
 
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
-/** Adapts the range of X \c range into a range of ranges of X,
- * each subrange being a grapheme cluster. */                          \
+/** Adapts the range of Name units \c range into a range of ranges of
+Name units, each subrange being a grapheme cluster. */                 \
 template<typename Range>                                               \
-iterator_range<                                                        \
+iterator_range<typename boost::detail::unspecified<                    \
     consumer_iterator<                                                 \
         typename range_iterator<const Range>::type,                    \
         piped_consumer<                                                \
@@ -61,7 +62,7 @@ iterator_range<                                                        \
             boundary_consumer<unicode::grapheme_boundary>              \
         >                                                              \
     >                                                                  \
->                                                                      \
+>::type>                                                               \
 Name##_grapheme_bounded(const Range& range)                            \
 {                                                                      \
     return consumed(                                                   \
@@ -72,6 +73,13 @@ Name##_grapheme_bounded(const Range& range)                            \
         )                                                              \
     );                                                                 \
 }                                                                      \
+                                                                       \
+/** Model of \c BoundaryChecker that tells whether a position lies on a
+grapheme cluster boundary within a range of Name units. */             \
+typedef multi_boundary<                                                \
+    Name##_boundary, Name##_decoder,                                   \
+    grapheme_boundary                                                  \
+> Name##_grapheme_boundary;                                            \
 
 BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u16)
 BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u8)

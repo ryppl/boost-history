@@ -17,4 +17,8 @@ project
 		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1
     ;
 
-exe test : test.cpp ;
+exe convert : convert.cpp ;
+exe characters : characters.cpp ;
+exe compose : compose.cpp ;
+exe search : search.cpp ;
+exe source_input : source_input.cpp ;

@@ -17,6 +17,8 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/bool.hpp>
 
+#include <boost/detail/unspecified.hpp>
+
 namespace boost
 {
 namespace unicode
@@ -388,22 +390,6 @@ struct u8_boundary
     }
 };
 
-/** Model of \c OneManyPipe that casts its input to its template
- * parameter and writes it to its output. */
-template<typename T>
-struct cast_pipe
-{
-    typedef T output_type;
-    typedef mpl::int_<1> max_output;
-    
-    template<typename U, typename Out>
-    Out operator()(U in, Out out)
-    {
-        *out++ = static_cast<output_type>(in);
-        return out;
-    }
-};
-
 namespace detail
 {
 
@@ -441,7 +427,8 @@ struct utf_decoder
 {
     typedef char32 output_type;
     typedef mpl::int_<1> max_output;
-    
+
+#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
 private:
     template<typename Iterator, typename Enable = void>
     struct decoder
@@ -478,6 +465,7 @@ private:
     {
         typedef u8_decoder type;
     };
+#endif
 
 public:
     template<typename In, typename Out>
@@ -499,6 +487,7 @@ public:
  * \c u8_boundary depending on the value type of the input range. */
 struct utf_boundary
 {
+#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
     template<typename In>
     typename enable_if<
         detail::is_u32<
@@ -530,11 +519,18 @@ struct utf_boundary
         >,
         bool
     >::type
+#else
+    bool
+#endif
     operator()(In begin, In end, In pos)
     {
         return u8_boundary()(begin, end, pos);
     }
 };
+
+/** Model of \c OneManyPipe that converts from UTF-32 to ISO-8859-1
+ * alias latin-1. */
+typedef boost::detail::unspecified< cast_pipe<char> >::type latin1_encoder;
 
 } // namespace unicode
 

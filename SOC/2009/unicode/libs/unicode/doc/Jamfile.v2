@@ -31,7 +31,8 @@ doxygen autodoc
         ../../../boost/cuchar.hpp
 	:
         <doxygen:param>EXTRACT_ALL=YES
-        <doxygen:param>"PREDEFINED=\"BOOST_UNICODE_DOXYGEN_INVOKED\""
+        <doxygen:param>"PREDEFINED=\"BOOST_UNICODE_DOXYGEN_INVOKED\" \\
+                                   \"BOOST_UNICODE_DECL= \""
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES
