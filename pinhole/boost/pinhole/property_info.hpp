@@ -279,6 +279,9 @@ namespace boost { namespace pinhole { namespace detail
         virtual std::string get_as_string() const = 0;
         virtual std::wstring get_as_wstring() const = 0;
         virtual bool is_read_only() const = 0;
+
+    private:
+        property_info_base(const property_info_base&):m_type(typeid(void)){;} // this would be bad
     };
 
     template<typename T>
@@ -398,6 +401,9 @@ namespace boost { namespace pinhole { namespace detail
         {
             return( !setter );
         }
+
+    private:
+        property_info(const property_info<T>&) : property_info_base(typeid(void)){;} // this would be bad
     };
 }}}
 

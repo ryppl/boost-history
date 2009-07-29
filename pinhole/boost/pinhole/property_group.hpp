@@ -705,7 +705,17 @@ namespace boost { namespace pinhole
             action_info->m_description = description;
             action_info->m_action      = action;
             
-            m_actions.insert( std::make_pair(name, action_info) );
+            action_collection::iterator previousInstance = m_actions.find(name);
+            if( m_actions.end() != previousInstance )
+            {
+                // Object already exists. Destroy existing instance and replace it.
+                delete (*previousInstance).second;
+                (*previousInstance).second = action_info;
+            }
+            else
+            {
+                m_actions.insert( std::make_pair(name, action_info) );
+            }
         }
 
         /**
