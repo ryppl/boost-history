@@ -14,6 +14,8 @@
 #ifndef BOOST_GENERIC_PTR_MONITOR_HPP_INCLUDED
 #define BOOST_GENERIC_PTR_MONITOR_HPP_INCLUDED
 
+#include <boost/generic_ptr/monitor_locks.hpp>  // for monitor_unique_lock
+#include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/generic_ptr/detail/unique_lock.hpp>
 #include <boost/generic_ptr/shared.hpp>
@@ -34,8 +36,8 @@ namespace boost
       class moveable_monitor_lock
       {
       public:
-        moveable_monitor_lock(T p, Mutex &m): _object_p(p),
-          _lock(new detail::unique_lock<Mutex>(m))
+        moveable_monitor_lock(const monitor& mon): _object_p(mon.px),
+          _lock(new detail::unique_lock<Mutex>(mon.get_mutex_ref()))
         {}
         T operator->() const
         {
@@ -70,10 +72,10 @@ namespace boost
       monitor(const monitor<U, Mutex> & other): px(other.px), _mutex_p(other._mutex_p)
       {}
 #ifndef BOOST_NO_RVALUE_REFERENCES
-      monitor(monitor && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p)
+      monitor(monitor && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p))
       {}
       template<typename U>
-      monitor(monitor<U> && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p)
+      monitor(monitor<U> && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p))
       {}
 #endif
 
@@ -126,7 +128,7 @@ namespace boost
 
       moveable_monitor_lock operator->() const
       {
-        return moveable_monitor_lock(px, *_mutex_p);
+        return moveable_monitor_lock(*this);
       }
 
     private:
@@ -148,25 +150,28 @@ namespace boost
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
-        return static_pointer_cast(p.get(), to_type_iden);
+       typedef typename rebind<monitor<U, Mutex>, ToValueType>::other result_type;
+       return result_type(static_pointer_cast(p.get(), to_type_iden), p.get_shared_mutex());
     }
     template<typename ToValueType, typename U, typename Mutex>
     typename rebind<monitor<U, Mutex>, ToValueType>::other const_pointer_cast
     (
-      monitor<U, Mutex> const & p,
-      mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
+       monitor<U, Mutex> const & p,
+       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
-        return const_pointer_cast(p.get(), to_type_iden);
+       typedef typename rebind<monitor<U, Mutex>, ToValueType>::other result_type;
+       return result_type(const_pointer_cast(p.get(), to_type_iden), p.get_shared_mutex());
     }
     template<typename ToValueType, typename U, typename Mutex>
     typename rebind<monitor<U, Mutex>, ToValueType>::other dynamic_pointer_cast
     (
-      monitor<U, Mutex> const & p,
-      mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
+       monitor<U, Mutex> const & p,
+        mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
-        return dynamic_pointer_cast(p.get(), to_type_iden);
+       typedef typename rebind<monitor<U, Mutex>, ToValueType>::other result_type;
+        return result_type(dynamic_pointer_cast(p.get(), to_type_iden), p.get_shared_mutex());
     }
 
     // comparisons
