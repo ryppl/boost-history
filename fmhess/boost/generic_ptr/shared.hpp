@@ -36,7 +36,6 @@
 // rather than including <memory> directly:
 #include <boost/config/no_tr1/memory.hpp>  // std::auto_ptr
 
-#include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
 #include <boost/generic_ptr/pointer_cast.hpp>
@@ -393,13 +392,11 @@ public:
 
     reference operator* () const // never throws
     {
-        BOOST_ASSERT(get_plain_old_pointer(px));
         return *px;
     }
 
     pointer operator-> () const // never throws
     {
-        BOOST_ASSERT(get_plain_old_pointer(px));
         return px;
     }
 

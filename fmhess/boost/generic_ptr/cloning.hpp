@@ -14,7 +14,6 @@
 #ifndef BOOST_GENERIC_PTR_CLONING_HPP_INCLUDED
 #define BOOST_GENERIC_PTR_CLONING_HPP_INCLUDED
 
-#include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
 #include <boost/generic_ptr/pointer_cast.hpp>
@@ -313,13 +312,11 @@ namespace boost
 
       pointer operator->() const
       {
-        BOOST_ASSERT(get_plain_old_pointer(px) != 0);
         return px;
       }
 
       reference operator*() const
       {
-        BOOST_ASSERT(get_plain_old_pointer(px) != 0);
         return *px;
       }
 

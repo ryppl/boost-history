@@ -21,7 +21,6 @@
 # pragma warning(disable:4284) // odd return type for operator->
 #endif
 
-#include <boost/assert.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
 #include <boost/generic_ptr/pointer_cast.hpp>
@@ -193,13 +192,11 @@ public:
 
     reference operator*() const
     {
-        BOOST_ASSERT( get_plain_old_pointer(px) != 0 );
         return *px;
     }
 
     pointer operator->() const
     {
-        BOOST_ASSERT( get_plain_old_pointer(px) != 0 );
         return px;
     }
 
