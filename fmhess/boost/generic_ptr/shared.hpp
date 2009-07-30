@@ -39,6 +39,7 @@
 #include <boost/assert.hpp>
 #include <boost/checked_delete.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
+#include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/pointer_cast.hpp>
