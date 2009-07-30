@@ -59,6 +59,27 @@ namespace boost
         T * px;
       };
 
+      template<typename GenericPointer, typename Deleter, typename Cloner>
+      class clone_factory_pdc_impl: public clone_factory_impl_base
+      {
+      public:
+        clone_factory_pdc_impl(GenericPointer p, Deleter d, Cloner c): px(p), deleter(d), cloner(c)
+        {}
+        ~clone_factory_pdc_impl()
+        {
+          deleter(px);
+        }
+        virtual void * get_pointer() { return get_plain_old_pointer(px); }
+        virtual clone_factory_pdc_impl* make_clone()
+        {
+          return new clone_factory_pdc_impl(cloner(px), deleter, cloner);
+        }
+      private:
+        GenericPointer px;
+        Deleter deleter;
+        Cloner cloner;
+      };
+
       class clone_factory
       {
       public:
@@ -66,6 +87,9 @@ namespace boost
         {}
         template<typename T>
         explicit clone_factory(T * p): _impl(new clone_factory_impl<T>(p))
+        {}
+        template<typename T, typename Deleter, typename Cloner>
+        clone_factory(T p, Deleter d, Cloner c): _impl(new clone_factory_pdc_impl<T, Deleter, Cloner>(p, d, c))
         {}
         clone_factory(const clone_factory &other): _impl(other._impl->make_clone())
         {}
@@ -95,6 +119,27 @@ namespace boost
       }
     }
 
+    class default_cloning_deleter
+    {
+    public:
+      template<typename GenericPointer>
+      void operator()(const GenericPointer &p) const
+      {
+        delete_clone(get_plain_old_pointer(p));
+      }
+    };
+
+    class default_cloner
+    {
+    public:
+      template<typename GenericPointer>
+      GenericPointer operator()(const GenericPointer & p) const
+      {
+        if(get_plain_old_pointer(p) == 0) return p;
+        return GenericPointer(new_clone(*p));
+      }
+    };
+
     template<typename T>
     class cloning
     {
@@ -116,6 +161,9 @@ namespace boost
       {}
       template<typename U>
       cloning( U p ): _cloner(get_plain_old_pointer(p)), px( p )
+      {}
+      template<typename U, typename Deleter, typename Cloner = default_cloner>
+      cloning(U p, Deleter d, Cloner c = default_cloner()): _cloner(p, d, c), px( p )
       {}
       cloning(const cloning & other):
         _cloner(other._cloner),

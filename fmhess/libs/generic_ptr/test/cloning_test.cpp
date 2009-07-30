@@ -11,6 +11,7 @@
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/generic_ptr/cloning.hpp>
+#include <boost/generic_ptr/null_deleter.hpp>
 
 class X_base
 {
@@ -103,11 +104,61 @@ void cast_test()
   BOOST_TEST(cp2 != cp3);
 }
 
+void deleter_test()
+{
+  BOOST_TEST(X::instances == 0);
+  X *x0 = new X();
+  X *x1 = 0;
+  {
+    boost::generic_ptr::cloning<X*> cp0(x0, boost::generic_ptr::null_deleter());
+    BOOST_TEST(X::instances == 1);
+    {
+      boost::generic_ptr::cloning<X*> cp1 = cp0;
+      BOOST_TEST(X::instances == 2);
+      x1 = get_plain_old_pointer(cp1);
+    }
+    BOOST_TEST(X::instances == 2);
+  }
+  BOOST_TEST(X::instances == 2);
+  using boost::delete_clone;
+  delete_clone(x0);
+  delete_clone(x1);
+  BOOST_TEST(X::instances == 0);
+}
+
+class null_cloner
+{
+public:
+  template<typename GenericPointer>
+  GenericPointer operator()(const GenericPointer &p)
+  {
+    return p;
+  }
+};
+
+void custom_cloner_test()
+{
+  X *x0 = new X();
+  BOOST_TEST(X::instances == 1);
+  {
+    boost::generic_ptr::cloning<X*> cp0(x0, boost::generic_ptr::null_deleter(), null_cloner());
+    BOOST_TEST(X::instances == 1);
+    boost::generic_ptr::cloning<X*> cp1 = cp0;
+    BOOST_TEST(X::instances == 1);
+  }
+  BOOST_TEST(X::instances == 1);
+  using boost::delete_clone;
+  delete_clone(x0);
+  BOOST_TEST(X::instances == 0);
+}
+
 int main()
 {
   clone_test();
   move_test();
   no_slice_test();
   cast_test();
+  deleter_test();
+  custom_cloner_test();
   return 0;
 }
