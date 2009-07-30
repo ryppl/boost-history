@@ -249,7 +249,7 @@ namespace boost
           )
         )
       {
-        if(get_plain_pointer(px) == 0)
+        if(get_plain_old_pointer(px) == 0)
         {
           detail::clone_factory().swap(_cloner);
         }
