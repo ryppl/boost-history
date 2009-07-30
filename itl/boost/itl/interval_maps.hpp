@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_interval_maps_h_JOFA_081008__
-#define __itl_interval_maps_h_JOFA_081008__
+#ifndef __itl_interval_maps_hpp_JOFA_081008__
+#define __itl_interval_maps_hpp_JOFA_081008__
 
 #include <boost/itl/interval_base_map.hpp>
 #include <boost/itl/interval_map_algo.hpp>
@@ -279,7 +279,10 @@ template
     class SubType, class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-ObjectT& operator +=
+inline 
+typename boost::enable_if<is_interval_map<ObjectT>, 
+                          ObjectT>::type&
+operator +=
 (
           ObjectT& object,
     const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
@@ -303,7 +306,10 @@ template
     class SubType, class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-ObjectT& operator -=
+inline 
+typename boost::enable_if<is_interval_map<ObjectT>, 
+                          ObjectT>::type&
+operator -=
 (
           ObjectT& object,
     const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
@@ -326,7 +332,10 @@ template
     class SubType, class DomainT, class CodomainT, class Traits,
     ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-ObjectT& operator ^=
+inline 
+typename boost::enable_if<is_interval_map<ObjectT>, 
+                          ObjectT>::type&
+operator ^=
 (
           ObjectT& object,
     const interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& operand
@@ -334,31 +343,6 @@ ObjectT& operator ^=
 {
     return object.flip(operand); 
 }
-
-//-----------------------------------------------------------------------------
-// erasure -= of elements given by an interval_set
-//-----------------------------------------------------------------------------
-template 
-<
-    class ObjectT, 
-    class DomainT, class CodomainT, class Traits,
-    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class,  ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
->
-ObjectT& 
-operator -=
-(
-          ObjectT& object,
-    const IntervalSet<DomainT,Compare,Interval,Alloc>& erasure
-)
-{
-    typedef IntervalSet<DomainT,Compare,Interval,Alloc> set_type;
-    const_FORALL(typename set_type, interval_, erasure) 
-        object.erase(*interval_); 
-
-    return object; 
-}
-
 
 //-----------------------------------------------------------------------------
 // insert  

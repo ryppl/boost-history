@@ -26,14 +26,14 @@ of the underlying std::AssociativeContainers.
 This section gives an overview over the time complextity of
 the basic operations of ['itl containers].
 
-[h5 Complexity of element containers]
+[h4 Complexity of element containers]
 
 Since ['element containers] __itl_set__ and __itl_map__ are only extensions of
 stl::set and stl::map, their complexity characteristics are
 accordingly. So their major operations insertion (addition),
 deletion and search are all using logarithmic time. 
 
-[h5 Complexity of interval containers]
+[h4 Complexity of interval containers]
 
 The operations of ['interval containers] behave differently
 due to the fact that intervals unlike elements can overlap
@@ -41,28 +41,51 @@ any number of other intervals in a container. So as long as
 intervals are relatively small or just singleton, interval
 containers behave like containers of elements.
 
-This situation can be found in the first row of the next table,
-that gives the time complexities of the poymorphic 
-`operator +=` for ['*addition*]. 
-In this table `T` is a placeholder for the type of the operation's
-first argument `object` that can be an /interval container/. 
-Instance types of `T` appear as headers of columns 4 to 8.
-`P` is a placeholder for the type of the operation's second 
-argument. `P` can be an `element_type`, a `segment_type` of `T` or
-an appropriate interval container type. This is denoted in
-column 2 as /element/, /segment/ or /container/.
-Column 3 containes the specific kind of complexity statement. 
-If column 3 is empty ['*worst case*] complexity is given
+In order to present complexity characteristics of the overloaded
+/inplace/ or /op-assign/ `operators o=` in a concise way we use a 
+couple of placeholders.
+
+For an operator
+``
+T& operator o= (T& object, const P& operand)
+``
+
+[table
+[[Placeholder]    []]
+[[`T`]            [an interval container]]
+[[`P`]            [`T::element_type` or]]
+[[]               [`T::segment_type` or]]
+[[]               [an interval container]]
+[[`interval_sets`][__itv_set__ or __sep_itv_set__ or __spl_itv_set__]]
+[[`interval_maps`][__itv_map__ or __spl_itv_map__]]
+[[ /n/ ]          [ /n/ = `object.interval_count()`]]
+[[ /m/ ]          [ /m/ = `operand.interval_count()`, if `operand` is an interval container]]
+]
+
+
+[h5 Time Complexity of Addition]
+
+The next table
+gives the time complexities for the overloaded 
+`operator +=` on interval containers.
+The instance types of `T` are given as headers
+of columns 4 to 8.
+Instances of type parameter `P` are denoted in
+the second column.
+The third column containes the specific kind of complexity statement. 
+If column three is empty ['*worst case*] complexity is given
 in the related row. 
 
+
 [table Time Complexity of Addition:
-[[]                                             [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
-[/ 1operation                                   2granul.    3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
-[[`T& operator +=(T& object, const P& addend)`] [element]   []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[]                                             [segment]   [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[where]                                        []          [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
-[[ /n/ = `object.interval_count()`]             []          [amortized]  [__Olgn__]    [__Olgn__]    []            []            []            ]
-[[ /m/ = `addend.interval_count()`]             [container] []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
+[[]                                             [`P`]               [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
+[/ 1operation                                   2granul.            3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
+[[`T& operator +=(T& object, const P& addend)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                             [`T::segment_type`] [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                             []                  [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
+[[]                                             []                  [amortized]  [__Olgn__]    [__Olgn__]    []            []            []            ]
+[[]                                             [`interval_sets`]   []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [           ] [           ] ]
+[[]                                             [`interval_maps`]   []           [           ] [           ] [           ] [__Omlgnpm__] [__Omlgnpm__] ]
 ]
 
 Adding an /element/ or 
@@ -100,12 +123,13 @@ are equal and both containers cover the same ranges,
 the complexity of container addition is ['*loglinear*].
 For other cases, that occur frequently in realworld applications
 performance can be much better.
-If the added container `addend` is much smaller than 
-`object` and the intervals in `addend` are relatively
+If the added container `operand` is much smaller than 
+`object` and the intervals in `operand` are relatively
 small, performance can be /logarithmic/.
-If /m/ is small compared with /n/ and intervals in `addend`
+If /m/ is small compared with /n/ and intervals in `operand`
 are large, performance tends to be /linear/.
 
+[h5 Time Complexity of Subtraction]
 
 The next table denotes the time complexity characteristics of
 the ['*subtraction*] on interval containers.
@@ -113,27 +137,53 @@ The table shows almost the same patterns of complexities
 that has been stated for ['*addition*].
 
 [table Time Complexity of Subtraction:
-[[]                                              [`P`]       [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
-[/ 1operation                                    2granul.    3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
-[[`T& operator -=(T& object, const P& minuend)`] [element]   []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[]                                              [segment]   [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[where]                                         []          [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
-[[ /n/ = `object.interval_count()`]              []          [amortized]  [__Olgn__]    [__Olgn__]    [__Olgn__]    []            []            ]
-[[ /m/ = `addend.interval_count()`]              [container] []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
+[[]                                              [`P`]               [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
+[/ 1operation                                    2granul.            3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
+[[`T& operator -=(T& object, const P& operand)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                              [`T::segment_type`] [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                              []                  [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
+[[]                                              []                  [amortized]  [__Olgn__]    [__Olgn__]    [__Olgn__]    []            []            ]
+[[]                                              [`interval_sets`]   []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
+[[]                                              [`interval_maps`]   []           [           ] [           ] [           ] [__Omlgnpm__] [__Omlgnpm__] ]
 ]
 
 For __spl_itv_sets__, subtraction of an interval reduces the 
 __spl_itv_set_s__ size particularly in the worst case, where
-the subracted interval `minuend` overlaps with the whole 
+the subracted interval `operand` overlaps with 
 all intervals in `object`.
 After a worst case subtraction only 0 to 2 intervals are
 left in `object` after subtraction. That leads to a
 ['*logarithmic amortized time*].
+[/ JODO check this]
+
+
+[h5 Time Complexity of Intersection]
+
+The /complexity patterns/ for ['*intersection*] are identical to those for ['*subtraction*].
+
+[table Time Complexity of Intersection:
+[[]                                              [`P`]               [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
+[/ 1operation                                    2granul.            3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
+[[`T& operator -=(T& object, const P& operand)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                              [`T::segment_type`] [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[]                                              []                  [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
+[[]                                              [`interval_sets`]   []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
+[[]                                              [`interval_maps`]   []           [           ] [           ] [           ] [__Omlgnpm__] [__Omlgnpm__] ]
+]
+
+We can observe a general pattern, that the major operations on
+interval containers are of ['*logarithmic*], ['*linear*], and ['*loglinear*] time
+complexity for the combination of ['*elements*], ['*segments*] and ['*containers*]
+respectively.
+
+
 
 While this section covers the complexity characteristics of
 the most important operations only, more complexity statements
 are included in the doxygen generated 
 [link interval_template_library_reference reference documentation].
+
+
 
 [endsect]
 

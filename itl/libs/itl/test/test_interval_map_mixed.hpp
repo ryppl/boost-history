@@ -504,10 +504,12 @@ void interval_map_mixed_erase2_4_bicremental_types()
 
     //--------------------------------------------------------------------------
     // Test for split_interval_map
-    SplitIntervalMapT     split_diff = split_map;
-    IntervalMapT          join_diff  = join_map;
+    SplitIntervalMapT     split_diff  = split_map;
+    IntervalMapT          join_diff   = join_map;
+    SplitIntervalMapT     split_diff2 = split_map;
+    IntervalMapT          join_diff2  = join_map;
 
-    //subtraction combinations
+    //erase combinations
     erase(split_diff, split_sub);
     erase(join_diff,  split_sub);
 
@@ -518,12 +520,25 @@ void interval_map_mixed_erase2_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_element_equal(split_diff, join_diff),  true );
     BOOST_CHECK_EQUAL( is_element_equal(join_diff,  split_diff), true );
 
+    //subtraction combinations
+    split_diff2 -= split_sub;
+    join_diff2  -= split_sub;
+
+    BOOST_CHECK_EQUAL( split_diff2.iterative_size(), 5 );
+    BOOST_CHECK_EQUAL( join_diff2.iterative_size(), 4 );
+
+    BOOST_CHECK_EQUAL( is_element_equal(split_diff2, split_diff2), true );
+    BOOST_CHECK_EQUAL( is_element_equal(split_diff2, join_diff2),  true );
+    BOOST_CHECK_EQUAL( is_element_equal(join_diff2,  split_diff2), true );
+
     //--------------------------------------------------------------------------
     // Test for interval_map. Reinitialize
-    split_diff = split_map;
-    join_diff  = join_map;
+    split_diff  = split_map;
+    join_diff   = join_map;
+    split_diff2 = split_map;
+    join_diff2  = join_map;
 
-    //subtraction combinations
+    //erase combinations
     erase(split_diff, join_sub);
     erase(join_diff, join_sub);
 
@@ -533,6 +548,17 @@ void interval_map_mixed_erase2_4_bicremental_types()
     BOOST_CHECK_EQUAL( is_element_equal(join_diff,  join_diff),   true );
     BOOST_CHECK_EQUAL( is_element_equal(join_diff,  split_diff),  true );
     BOOST_CHECK_EQUAL( is_element_equal(split_diff, join_diff),   true );
+
+    //subtraction combinations
+    split_diff2 -= join_sub;
+    join_diff2  -= join_sub;
+
+    BOOST_CHECK_EQUAL( split_diff2.iterative_size(), 5 );
+    BOOST_CHECK_EQUAL( join_diff2.iterative_size(),  4 );
+
+    BOOST_CHECK_EQUAL( is_element_equal(join_diff2,  join_diff2),   true );
+    BOOST_CHECK_EQUAL( is_element_equal(join_diff2,  split_diff2),  true );
+    BOOST_CHECK_EQUAL( is_element_equal(split_diff2, join_diff2),   true );
 }
 
 

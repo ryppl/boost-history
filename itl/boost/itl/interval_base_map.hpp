@@ -414,14 +414,24 @@ public:
 
     /** Erase all value pairs for a set of intervals. */
     template<class SetSubType>
-    SubType& erase(const interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc>& eraser)
+    SubType& erase(const interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc>& operand)
     {
-        typedef interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc> interval_base_set_type;
-        for(typename interval_base_set_type::const_iterator interval_ = eraser.begin(); 
-            interval_ != eraser.end(); ++interval_)
-            erase(*interval_);
-    
-        return *that();
+		typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
+
+		if(operand.empty())
+			return *that();
+
+		typename operand_type::const_iterator common_lwb;
+		typename operand_type::const_iterator common_upb;
+
+		if(!Set::common_range(common_lwb, common_upb, operand, *this))
+			return *that();
+
+		typename operand_type::const_iterator it_ = common_lwb;
+		while(it_ != common_upb)
+			erase(*it_++);
+
+		return *that(); 
     }
 
 

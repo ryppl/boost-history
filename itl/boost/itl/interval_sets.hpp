@@ -81,7 +81,10 @@ template
     class ObjectT,
     class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-inline ObjectT& operator +=
+inline
+typename boost::enable_if<is_interval_set<ObjectT>, 
+                          ObjectT>::type&
+operator +=
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
@@ -95,26 +98,42 @@ inline ObjectT& operator +=
     return object; 
 }
 
-//-----------------------------------------------------------------------------
-// difference -=
-//-----------------------------------------------------------------------------
+/*CL?
+//==============================================================================
+//= Subtraction
+//==============================================================================
 template 
 <
     class ObjectT,
     class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-inline ObjectT& operator -=
+inline
+typename boost::enable_if<is_interval_set_companion<ObjectT, SubType>,
+                          ObjectT>::type&
+operator -=
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
 )
 {
     typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
-    const_FORALL(typename operand_type, elem_, operand) 
-        object.erase(*elem_); 
+
+    if(operand.empty())
+        return object;
+
+    typename operand_type::const_iterator common_lwb;
+    typename operand_type::const_iterator common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, object))
+        return object;
+
+    typename operand_type::const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+		object.erase(*it_++);
 
     return object; 
 }
+*/
 
 //-----------------------------------------------------------------------------
 // symmetric difference ^=
@@ -124,7 +143,10 @@ template
     class ObjectT,
     class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-inline ObjectT& operator ^=
+inline 
+typename boost::enable_if<is_interval_set<ObjectT>, 
+                          ObjectT>::type&
+operator ^=
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
@@ -206,7 +228,23 @@ erase
     const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    return object -= operand; 
+    typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
+
+    if(operand.empty())
+        return object;
+
+    typename operand_type::const_iterator common_lwb;
+    typename operand_type::const_iterator common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, object))
+        return object;
+
+    typename operand_type::const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+		object.erase(*it_++);
+
+    return object; 
+    //CL return object -= operand; 
 }
 
 

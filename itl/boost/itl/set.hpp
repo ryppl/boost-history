@@ -385,7 +385,7 @@ operator +  (const typename itl::set<DomainT,Compare,Alloc>::element_type& opera
     return object += operand; 
 }
 
-/// Add a set \c operand to this set \object.
+/// Add a set \c operand to set \c object.
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 inline itl::set<DomainT,Compare,Alloc>& 
 operator += (      itl::set<DomainT,Compare,Alloc>& object,

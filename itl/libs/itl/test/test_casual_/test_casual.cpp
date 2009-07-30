@@ -49,6 +49,21 @@ BOOST_AUTO_TEST_CASE(casual_test)
 	cout << ">>> map_a_b = " << map_a_b << endl;
 	cout << ">>> map_b_a = " << map_b_a << endl;
 
+    IntervalSetT set_a;
+	set_a.add(I_D(2,4));
+	map_a -= set_a;
+	SplitIntervalMapT map_c;
+	map_c = map_a - set_a;
+
+	BOOST_CHECK_EQUAL(is_interval_container<interval_set<int> >::value, true);
+	BOOST_CHECK_EQUAL(is_interval_container<split_interval_set<int> >::value, true);
+	BOOST_CHECK_EQUAL(is_interval_container<separate_interval_set<int> >::value, true);
+	BOOST_CHECK_EQUAL(is_interval_container<std::string >::value, false);
+
+	bool interval_set_companion 
+		= is_interval_set_companion< interval_map<int,int>, interval_set<int> >::value;
+	BOOST_CHECK_EQUAL(interval_set_companion, true);
+
     BOOST_CHECK_EQUAL(map_a_b, map_b_a);
 
 }
