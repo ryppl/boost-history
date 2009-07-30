@@ -437,7 +437,7 @@ struct utf_decoder
     typedef char32 output_type;
     typedef mpl::int_<1> max_output;
 
-#ifndef DOXYGEN
+#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
 private:
     template<typename Iterator, typename Enable = void>
     struct decoder
@@ -503,7 +503,7 @@ struct utf_boundary
         return impl(begin, end, pos, (void*)0);
     }
     
-#ifndef DOXYGEN
+#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
 private:
     template<typename In>
     bool impl(
