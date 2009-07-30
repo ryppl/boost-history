@@ -1,10 +1,13 @@
-#ifndef BOOST_CONSUMER_ITERATOR_HPP
-#define BOOST_CONSUMER_ITERATOR_HPP
+#ifndef BOOST_ITERATOR_CONSUMER_ITERATOR_HPP
+#define BOOST_ITERATOR_CONSUMER_ITERATOR_HPP
 
-#include <boost/iterator/iterator_facade.hpp>
 #include <boost/iterator/dummy_output_iterator.hpp>
 
-#include <boost/range.hpp>
+#include <boost/concept/requires.hpp>
+#include <boost/range/concepts.hpp>
+#include <boost/iterator/pipe_concept.hpp>
+
+#include <boost/iterator/consumer_iterator_fwd.hpp>
 
 namespace boost
 {
@@ -13,6 +16,10 @@ namespace boost
 template<typename Pipe>
 struct pipe_consumer : private Pipe
 {
+    BOOST_CONCEPT_ASSERT((PipeConcept<Pipe>));
+    
+    typedef typename Pipe::input_type input_type;
+    
     pipe_consumer() {} // singular
     
     pipe_consumer(Pipe p_) : Pipe(p_)
@@ -33,7 +40,10 @@ struct pipe_consumer : private Pipe
 };
 
 template<typename Pipe>
-pipe_consumer<Pipe> make_pipe_consumer(Pipe p)
+BOOST_CONCEPT_REQUIRES(
+    ((PipeConcept<Pipe>)),
+    (pipe_consumer<Pipe>)
+) make_pipe_consumer(Pipe p)
 {
     return pipe_consumer<Pipe>(p);
 }
@@ -42,6 +52,10 @@ pipe_consumer<Pipe> make_pipe_consumer(Pipe p)
 template<typename BoundaryChecker>
 struct boundary_consumer : private BoundaryChecker
 {
+    BOOST_CONCEPT_ASSERT((BoundaryCheckerConcept<BoundaryChecker>));
+    
+    typedef typename BoundaryChecker::input_type input_type;
+    
     boundary_consumer() {} // singular
     
     boundary_consumer(BoundaryChecker b_) : BoundaryChecker(b_)
@@ -72,7 +86,10 @@ struct boundary_consumer : private BoundaryChecker
 };
 
 template<typename BoundaryChecker>
-boundary_consumer<BoundaryChecker> make_boundary_consumer(BoundaryChecker b)
+BOOST_CONCEPT_REQUIRES(
+    ((BoundaryCheckerConcept<BoundaryChecker>)),
+    (boundary_consumer<BoundaryChecker>)
+) make_boundary_consumer(BoundaryChecker b)
 {
     return boundary_consumer<BoundaryChecker>(b);
 }
@@ -82,6 +99,15 @@ boundary_consumer<BoundaryChecker> make_boundary_consumer(BoundaryChecker b)
 template<typename B1, typename Pipe, typename B2>
 struct multi_boundary
 {
+    BOOST_CONCEPT_ASSERT((BoundaryCheckerConcept<B1>));
+    BOOST_CONCEPT_ASSERT((PipeConcept<Pipe>));
+    BOOST_CONCEPT_ASSERT((BoundaryCheckerConcept<B2>));
+    
+    BOOST_CONCEPT_ASSERT((Convertible<typename B1::input_type, typename Pipe::input_type>));
+    BOOST_CONCEPT_ASSERT((Convertible<typename Pipe::output_type, typename B2::input_type>));
+    
+    typedef typename B1::input_type input_type;
+    
     multi_boundary() // singular
     {
     }
@@ -108,7 +134,14 @@ private:
 };
 
 template<typename B1, typename Pipe, typename B2>
-multi_boundary<B1, Pipe, B2> make_multi_boundary(B1 b1, Pipe p, B2 b2)
+BOOST_CONCEPT_REQUIRES(
+    ((BoundaryCheckerConcept<B1>))
+    ((PipeConcept<Pipe>))
+    ((BoundaryCheckerConcept<B2>))
+    ((Convertible<typename B1::input_type, typename Pipe::input_type>))
+    ((Convertible<typename Pipe::output_type, typename B2::input_type>)),
+    (multi_boundary<B1, Pipe, B2>)
+) make_multi_boundary(B1 b1, Pipe p, B2 b2)
 {
     return multi_boundary<B1, Pipe, B2>(b1, p, b2);
 }
@@ -118,6 +151,13 @@ multi_boundary<B1, Pipe, B2> make_multi_boundary(B1 b1, Pipe p, B2 b2)
 template<typename Pipe, typename Consumer>
 struct piped_consumer
 {
+    BOOST_CONCEPT_ASSERT((PipeConcept<Pipe>));
+    BOOST_CONCEPT_ASSERT((ConsumerConcept<Consumer>));
+    
+    BOOST_CONCEPT_ASSERT((Convertible<typename Pipe::output_type, typename Consumer::input_type>));
+    
+    typedef typename Pipe::input_type input_type;
+    
     piped_consumer() // singular
     {
     }
@@ -150,81 +190,38 @@ private:
 };
 
 template<typename Pipe, typename Consumer>
-piped_consumer<Pipe, Consumer> make_piped_consumer(Pipe p, Consumer c)
+BOOST_CONCEPT_REQUIRES(
+    ((PipeConcept<Pipe>))
+    ((ConsumerConcept<Consumer>))
+    ((Convertible<typename Pipe::output_type, typename Consumer::input_type>)),
+    (piped_consumer<Pipe, Consumer>)   
+) make_piped_consumer(Pipe p, Consumer c)
 {
     return piped_consumer<Pipe, Consumer>(p, c);
 }
 
-/** Iterator adapter that wraps a range to make it appear like a range
- * of subranges, each subrange being a step of a \c Consumer invocation. */    
-template<typename It, typename Consumer>
-struct consumer_iterator
-	: boost::iterator_facade<
-		consumer_iterator<It, Consumer>,
-		boost::iterator_range<It>,
-		std::bidirectional_iterator_tag,
-		const boost::iterator_range<It>
-	>
-{
-    consumer_iterator() {} // singular
-    
-	consumer_iterator(It begin_, It end_, It pos_, Consumer c_) : pos(pos_), begin(begin_), end(end_), p(c_)
-	{
-		if(pos != end)
-            next_pos = p.ltr(pos, end);
-	}
-	
-	It base() const
-	{
-		return pos;
-	}
 
-private:
-	friend class boost::iterator_core_access;
-
-	boost::iterator_range<It> dereference() const
-	{
-		return boost::make_iterator_range(pos, next_pos);
-	}
-	
-	void increment()
-	{
-        pos = next_pos;	
-		if(pos != end)
-            next_pos = p.ltr(pos, end);
-	}
-	
-	void decrement()
-	{
-        next_pos = pos;	
-            
-        pos = p.rtl(begin, pos);
-	}
-	
-	bool equal(const consumer_iterator& other) const
-	{
-		return pos == other.pos;
-	}
-	
-	It pos;
-	It next_pos;
-	
-	It begin;
-	It end;
-	
-	Consumer p;
-};
 
 template<typename It, typename Consumer>
-consumer_iterator<It, Consumer> make_consumer_iterator(It begin, It end, It pos, Consumer c)
+BOOST_CONCEPT_REQUIRES(
+    ((InputIterator<It>))
+    ((ConsumerConcept<Consumer>))
+    ((Convertible<typename InputIterator<It>::value_type, typename Consumer::input_type>)),
+    (consumer_iterator<It, Consumer>)
+) make_consumer_iterator(It begin, It end, It pos, Consumer c)
 {
 	return consumer_iterator<It, Consumer>(begin, end, pos, c);
 }
 
 template<typename Range, typename Consumer>
-boost::iterator_range<
-	consumer_iterator<typename boost::range_iterator<const Range>::type, Consumer>
-> consumed(const Range& range, Consumer c)
+BOOST_CONCEPT_REQUIRES(
+    ((SinglePassRangeConcept<Range>))
+    ((ConsumerConcept<Consumer>))
+    ((Convertible<typename range_value<const Range>::type, typename Consumer::input_type>)),
+    (iterator_range<
+	    consumer_iterator<typename range_iterator<const Range>::type, Consumer>
+    >)
+) consumed(const Range& range, Consumer c)
 {
 	return boost::make_iterator_range(
 		make_consumer_iterator(boost::begin(range), boost::end(range), boost::begin(range), c),
@@ -233,9 +230,14 @@ boost::iterator_range<
 }
 
 template<typename Range, typename Consumer>
-boost::iterator_range<
-	consumer_iterator<typename boost::range_iterator<Range>::type, Consumer>
-> consumed(Range& range, Consumer c)
+BOOST_CONCEPT_REQUIRES(
+    ((SinglePassRangeConcept<Range>))
+    ((ConsumerConcept<Consumer>))
+    ((Convertible<typename range_value<Range>::type, typename Consumer::input_type>)),
+    (iterator_range<
+	    consumer_iterator<typename range_iterator<Range>::type, Consumer>
+    >)
+) consumed(Range& range, Consumer c)
 {
 	return boost::make_iterator_range(
 		make_consumer_iterator(boost::begin(range), boost::end(range), boost::begin(range), c),

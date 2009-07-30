@@ -8,8 +8,8 @@
   file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
   -->
   <param name="Pipe" role="model of Pipe" />
-  <param name="In" role="model of Input Iterator" />
-  <param name="Out" role="model of Output Iterator" />
+  <param name="In" role="model of Bidirectional Iterator with elements convertible to input_type" />
+  <param name="Out" role="model of OutputIterator&lt;output_type&gt;" />
 
   <models-sentence>
     The type <arg num="1" /> must be a model of <self/>.
@@ -40,6 +40,15 @@
       <type name="Out" />
     </sample-value>
   </notation>
+  
+  <associated-type name="input_type">
+    <get-member-type name="input_type">
+    <type name="Pipe" />
+    </get-member-type>
+    <description>
+      <simpara>The type of elements the pipe converts from.</simpara>
+    </description>
+  </associated-type>
 
   <associated-type name="output_type">
     <get-member-type name="output_type">

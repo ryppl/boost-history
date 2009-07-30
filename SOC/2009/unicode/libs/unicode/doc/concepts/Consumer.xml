@@ -8,7 +8,7 @@
   file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
   -->
   <param name="Consumer" role="model of Consumer" />
-  <param name="In" role="model of Input Iterator" />
+  <param name="In" role="model of Bidirectional Iterator with elements convertible to input_type" />
 
   <models-sentence>
     The type <arg num="1" /> must be a model of <self/>.
@@ -32,6 +32,15 @@
       <type name="In" />
     </sample-value>
   </notation>
+
+  <associated-type name="input_type">
+    <get-member-type name="input_type">
+    <type name="Consumer" />
+    </get-member-type>
+    <description>
+      <simpara>The type of elements the consumer consumes.</simpara>
+    </description>
+  </associated-type>
   
   <valid-expression name="Construction">
     <construct template-parameters="">

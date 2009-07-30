@@ -27,7 +27,8 @@ boostbook quickbook
 
 doxygen autodoc 
     :
-		[ path.glob-tree ../../../boost/unicode ../../../boost/iterator : *.hpp : .svn detail ]
+        [ path.glob-tree ../../../boost/iterator : pipe_*.hpp consumer_*.hpp : .svn detail ]
+		[ path.glob-tree ../../../boost/unicode : *.hpp : .svn detail ]
         ../../../boost/cuchar.hpp
 	:
         <doxygen:param>EXTRACT_ALL=YES

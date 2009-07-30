@@ -80,6 +80,7 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
  * of UTF-16 code units. */
 struct u16_encoder
 {
+    typedef char32 input_type;
 	typedef char16 output_type;
     typedef mpl::int_<2> max_output;
 	
@@ -122,6 +123,7 @@ struct u16_encoder
  * a single code point. */
 struct u16_decoder
 {
+    typedef char16 input_type;
 	typedef char32 output_type;
     typedef mpl::int_<1> max_output;
 	
@@ -199,6 +201,8 @@ private:
  * point boundary within a range of UTF-16 code units. */
 struct u16_boundary
 {
+    typedef char16 input_type;
+    
     template<typename In>
     bool operator()(In begin, In end, In pos)
     {
@@ -214,6 +218,7 @@ struct u16_boundary
  * of UTF-8 code units. */
 struct u8_encoder
 {
+    typedef char32 input_type;
 	typedef char output_type;
     typedef mpl::int_<4> max_output;
 	
@@ -255,6 +260,7 @@ struct u8_encoder
  * a single code point. */
 struct u8_decoder
 {
+    typedef char input_type;
 	typedef char32 output_type;
     typedef mpl::int_<1> max_output;
 
@@ -378,6 +384,8 @@ public:
  * point boundary within a range of UTF-8 code units. */
 struct u8_boundary
 {
+    typedef char input_type;
+    
     template<typename In>
     bool operator()(In begin, In end, In pos)
     {
@@ -425,6 +433,7 @@ template<> struct is_u8<char> : mpl::true_ {};
  * \c u8_decoder depending on the value type of the input range. */
 struct utf_decoder
 {
+    typedef char32 input_type;
     typedef char32 output_type;
     typedef mpl::int_<1> max_output;
 
@@ -433,7 +442,16 @@ private:
     template<typename Iterator, typename Enable = void>
     struct decoder
     {
-        typedef one_many_pipe< cast_pipe<output_type> > type;
+    };
+    
+    template<typename Iterator>
+    struct decoder<Iterator, typename enable_if<
+        detail::is_u32<
+            typename std::iterator_traits<Iterator>::value_type
+        >
+    >::type>
+    {
+        typedef one_many_pipe< cast_pipe<char32> > type;
     };
     
     template<typename Iterator>
@@ -477,16 +495,25 @@ public:
  * \c u8_boundary depending on the value type of the input range. */
 struct utf_boundary
 {
+    typedef char32 input_type;
+    
     template<typename In>
     bool operator()(In begin, In end, In pos)
     {
-        return impl(begin, end, pos, 0);
+        return impl(begin, end, pos, (void*)0);
     }
     
 #ifndef BOOST_UNICODE_DOXYGEN_INVOKED
 private:
     template<typename In>
-    bool impl(In, In, In, ...)
+    bool impl(
+        In begin, In end, In pos,
+        typename enable_if<
+            detail::is_u32<
+                typename std::iterator_traits<In>::value_type
+            >
+        >::type*
+    )
     {
         return true;
     }

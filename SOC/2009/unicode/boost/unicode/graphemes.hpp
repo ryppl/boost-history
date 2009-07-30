@@ -26,6 +26,8 @@ namespace detail
  * grapheme cluster boundary within a range of code points. */
 struct grapheme_boundary
 {
+    typedef char32 input_type;
+    
     template<typename Iterator>
     bool operator()(Iterator begin, Iterator end, Iterator pos)
     {
