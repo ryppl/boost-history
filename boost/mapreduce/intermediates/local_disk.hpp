@@ -102,7 +102,11 @@ class local_disk : boost::noncopyable
 {
   private:
     typedef
+#ifdef _DEBUG
+    std::map<
+#else
     boost::unordered_map<
+#endif
         size_t,                                     // hash value of intermediate key (R)
         std::pair<
             std::string,                            // filename
@@ -111,7 +115,6 @@ class local_disk : boost::noncopyable
 
   public:
     typedef MapTask map_task_type;
-    typedef typename intermediates_t::const_iterator const_iterator;
 
     local_disk(unsigned const num_partitions)
       : num_partitions_(num_partitions)
@@ -125,12 +128,12 @@ class local_disk : boost::noncopyable
             this->close_files();
 
             // delete the temporary files
-            for (intermediates_t::iterator it=intermediates_.begin(); it!=intermediates_.end(); ++it)
+            for (intermediates_t::iterator it=intermediate_files_.begin(); it!=intermediate_files_.end(); ++it)
                 boost::filesystem::remove(it->second.first);
         }
-        catch (std::exception const &/*e*/)
+        catch (std::exception const &e)
         {
-//            std::cerr << "\nError: " << e.what() << "\n";
+            std::cerr << "\nError: " << e.what() << "\n";
         }
     }
 
@@ -138,7 +141,7 @@ class local_disk : boost::noncopyable
                       typename map_task_type::intermediate_value_type const &value)
     {
         unsigned const partition = partitioner_(key, num_partitions_);
-        intermediates_t::iterator it = intermediates_.insert(make_pair(partition, intermediates_t::mapped_type())).first;
+        intermediates_t::iterator it = intermediate_files_.insert(make_pair(partition, intermediates_t::mapped_type())).first;
         if (it->second.first.empty())
         {
             it->second.first = platform::get_temporary_filename();
@@ -156,20 +159,11 @@ class local_disk : boost::noncopyable
         return !(it->second.second->bad()  ||  it->second.second->fail());
     }
 
-    bool const get_partition_filename(size_t const partition, std::string &filename) const
-    {
-        intermediates_t::const_iterator it=completed_intermediates_.find(partition);
-        if (it == completed_intermediates_.end())
-            return false;
-        filename = it->second.first;
-        return true;
-    }
-
     template<typename FnObj>
     void combine(FnObj &fn_obj)
     {
         this->close_files();
-        for (intermediates_t::iterator it=intermediates_.begin(); it!=intermediates_.end(); ++it)
+        for (intermediates_t::iterator it=intermediate_files_.begin(); it!=intermediate_files_.end(); ++it)
         {
             std::string infilename  = it->second.first;
             std::string outfilename = platform::get_temporary_filename();
@@ -208,19 +202,88 @@ class local_disk : boost::noncopyable
 
             boost::filesystem::remove(infilename);
         }
-        this->close_files();
 
-        assert(completed_intermediates_.size() == 0);
-        std::swap(completed_intermediates_, intermediates_);
+        this->close_files();
     }
 
     void combine(mapreduce::null_combiner &/*fn_obj*/)
     {
         this->close_files();
-        assert(completed_intermediates_.size() == 0);
-        std::swap(completed_intermediates_, intermediates_);
     }
 
+    void merge_from(local_disk &other)
+    {
+        BOOST_ASSERT(num_partitions_ == other.num_partitions_);
+
+        for (unsigned partition=0; partition<num_partitions_; ++partition)
+        {
+            intermediates_t::iterator ito = other.intermediate_files_.find(partition);
+            BOOST_ASSERT(ito != other.intermediate_files_.end());
+
+            intermediates_t::iterator it = intermediate_files_.find(partition);
+            if (it == intermediate_files_.end())
+            {
+                intermediate_files_.insert(
+                    make_pair(
+                        partition,
+                        std::make_pair(
+                            ito->second.first,
+                            boost::shared_ptr<std::ofstream>(new std::ofstream))));
+            }
+            else
+            {
+                std::list<std::string> filenames;
+                filenames.push_back(it->second.first);
+                filenames.push_back(ito->second.first);
+                it->second.first = merge_and_sort(filenames);
+                it->second.second->close();
+            }
+            other.intermediate_files_.erase(partition);
+        }
+    }
+
+    template<typename Callback>
+    void reduce(unsigned const partition, Callback &callback, results &result)
+    {
+        typename map_task_type::intermediate_key_type   key;
+        typename map_task_type::intermediate_key_type   last_key;
+        typename map_task_type::intermediate_value_type value;
+        std::list<typename map_task_type::intermediate_value_type> values;
+
+        std::list<std::string> filenames;
+        intermediates_t::const_iterator it = intermediate_files_.find(partition);
+        BOOST_ASSERT(it != intermediate_files_.end());
+
+        std::string const &filename = it->second.first;
+        std::ifstream infile(filename.c_str());
+        while (read_record(infile, key, value))
+        {
+            if (key != last_key  &&  length(key) > 0)
+            {
+                if (length(last_key) > 0)
+                {
+                    ++result.counters.reduce_keys_executed;
+                    callback(last_key, values.begin(), values.end());
+                    values.clear();
+                }
+                if (length(key) > 0)
+                    std::swap(key, last_key);
+            }
+
+            values.push_back(value);
+        }
+
+        if (length(last_key) > 0)
+        {
+            ++result.counters.reduce_keys_executed;
+            callback(last_key, values.begin(), values.end());
+        }
+
+        infile.close();
+        boost::filesystem::remove(filename.c_str());
+    }
+
+  protected:
     static bool const read_record(std::ifstream &infile,
                                   typename map_task_type::intermediate_key_type   &key,
                                   typename map_task_type::intermediate_value_type &value)
@@ -269,15 +332,14 @@ class local_disk : boost::noncopyable
   private:
     void close_files(void)
     {
-        for (intermediates_t::iterator it=intermediates_.begin(); it!=intermediates_.end(); ++it)
+        for (intermediates_t::iterator it=intermediate_files_.begin(); it!=intermediate_files_.end(); ++it)
             if (it->second.second  &&  it->second.second->is_open())
                 it->second.second->close();
     }
 
   private:
     unsigned const  num_partitions_;
-    intermediates_t intermediates_;
-    intermediates_t completed_intermediates_;
+    intermediates_t intermediate_files_;
     PartitionFn     partitioner_;
 };
 

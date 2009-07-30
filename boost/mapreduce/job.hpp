@@ -75,9 +75,6 @@ class job : private boost::noncopyable
             combiner_type combiner;
             intermediate_store_.combine(combiner);
 
-            // notify the job of the final partition files
-            notify_runtime_partition_files();
-
             return *this;
         }
 
@@ -87,17 +84,9 @@ class job : private boost::noncopyable
             return intermediate_store_.insert(key, value);
         }
 
-    protected:
-        void notify_runtime_partition_files(void) const
+        intermediate_store_type &intermediate_store(void)
         {
-            for (unsigned partition=0; partition<job_.number_of_partitions(); ++partition)
-            {
-                std::string filename;
-                if (intermediate_store_.get_partition_filename(partition, filename))
-                {
-                    job_.new_partition_file(partition, filename);
-                }
-            }
+            return intermediate_store_;
         }
 
       private:
@@ -143,23 +132,10 @@ class job : private boost::noncopyable
 
     job(datasource_type &datasource, specification const &spec)
       : datasource_(datasource),
-        specification_(spec)
+        specification_(spec),
+        intermediate_store_(specification_.reduce_tasks)
      {
      }
-
-    ~job()
-    {
-        try
-        {
-            for (partition_files_t::iterator itp=partition_files_.begin(); itp!=partition_files_.end(); ++itp)
-                std::for_each(itp->second.begin(), itp->second.end(), boost::bind(detail::delete_file, _1));
-        }
-        catch (std::exception const &e)
-        {
-            std::cerr << "\nError: " << e.what() << "\n";
-        }
-        partition_files_.clear();
-    }
 
     bool const get_next_map_key(void *&key)
     {
@@ -168,11 +144,6 @@ class job : private boost::noncopyable
             return false;
         key = next_key.release();
         return true;
-    }
-
-    void new_partition_file(unsigned const partition, std::string const &filename)
-    {
-        partition_files_.insert(std::make_pair(partition, partition_files_t::mapped_type())).first->second.push_back(filename);
     }
 
     template<typename SchedulePolicy>
@@ -190,14 +161,19 @@ class job : private boost::noncopyable
         result.job_runtime = time(NULL) - start_time;
     }
 
-    bool const run_map_task(void *key, results &result)
+    template<typename Sync>
+    bool const run_map_task(void *key, results &result, Sync &sync)
     {
         bool success = true;
         time_t const start_time = time(NULL);
 
         try
         {
-            std::auto_ptr<typename map_task_type::key_type> map_key_ptr(reinterpret_cast<typename map_task_type::key_type *>(key));
+            std::auto_ptr<typename map_task_type::key_type>
+                map_key_ptr(
+                    reinterpret_cast<
+                        typename map_task_type::key_type *>(key));
+
             typename map_task_type::key_type &map_key = *map_key_ptr;
 
             // get the data
@@ -208,7 +184,8 @@ class job : private boost::noncopyable
             ++result.counters.map_keys_executed;
 
             // Map Task
-            if (map_key == typename map_task_type::key_type()  ||  value == typename map_task_type::value_type())
+            if (map_key == typename map_task_type::key_type()
+            ||  value == typename map_task_type::value_type())
             {
                 BOOST_ASSERT(map_key != typename map_task_type::key_type());
                 BOOST_ASSERT(value != typename map_task_type::value_type());
@@ -218,6 +195,11 @@ class job : private boost::noncopyable
 
             map_task_runner runner(*this);
             runner(map_key, value);
+
+            // merge the map task intermediate results into the job
+            sync.lock();
+            intermediate_store_.merge_from(runner.intermediate_store());
+            sync.unlock();
 
             ++result.counters.map_keys_completed;
         }
@@ -241,67 +223,23 @@ class job : private boost::noncopyable
         return specification_.map_tasks;
     }
 
-    // the caller must synchronise calls to this function from multiple threads
-    bool const get_partition_filenames(unsigned &partition, filenames_t &filenames)
-    {
-        partition_files_t::iterator itp = partition_files_.find(partition);
-        if (itp == partition_files_.end())
-            return false;
-        else if (itp->second.size() == 0)
-            return get_partition_filenames(++partition, filenames);
-
-        std::swap(itp->second, filenames);
-        return true;
-    }
-
-    bool const run_reduce_task(unsigned const partition, filenames_t const &filenames, results &result)
+    bool const run_reduce_task(unsigned const partition, results &result)
     {
         time_t const start_time = time(NULL);
 
         try
         {
-            std::string const filename = intermediate_store_type::merge_and_sort(filenames);
-
-            typename map_task_type::intermediate_key_type   key;
-            typename map_task_type::intermediate_key_type   last_key;
-            typename map_task_type::intermediate_value_type value;
-            std::list<typename map_task_type::intermediate_value_type> values;
-
             reduce_task_runner runner(
                 specification_.output_filespec,
                 partition,
                 number_of_partitions());
 
-            std::ifstream infile(filename.c_str());
-            while (intermediate_store_type::read_record(infile, key, value))
-            {
-                if (key != last_key  &&  length(key) > 0)
-                {
-                    if (length(last_key) > 0)
-                    {
-                        ++result.counters.reduce_keys_executed;
-                        runner(last_key, values.begin(), values.end());
-                        values.clear();
-                    }
-                    if (length(key) > 0)
-                        std::swap(key, last_key);
-                }
-
-                values.push_back(value);
-            }
-
-            if (length(last_key) > 0)
-            {
-                ++result.counters.reduce_keys_executed;
-                runner(last_key, values.begin(), values.end());
-            }
-
-            infile.close();
-            boost::filesystem::remove(filename.c_str());
+            intermediate_store_.reduce(partition, runner, result);
         }
-        catch (std::exception &)
+        catch (std::exception &e)
         {
-             ++result.counters.reduce_key_errors;
+            std::cerr << "\nError: " << e.what() << "\n";
+            ++result.counters.reduce_key_errors;
         }
         
         result.reduce_times.push_back(time(NULL)-start_time);
@@ -310,15 +248,9 @@ class job : private boost::noncopyable
     }
 
   private:
-    typedef
-    boost::unordered_map<
-        unsigned,       // partition
-        filenames_t>    // file names
-    partition_files_t;
-
     datasource_type         &datasource_;
-    partition_files_t        partition_files_;
     specification     const &specification_;
+    intermediate_store_type  intermediate_store_;
 };
 
 template<>

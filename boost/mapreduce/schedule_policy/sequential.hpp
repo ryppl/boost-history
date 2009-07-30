@@ -19,6 +19,17 @@ namespace mapreduce {
 
 namespace schedule_policy {
 
+namespace detail {
+
+struct null_lock
+{
+    void lock(void)   { }
+    void unlock(void) { }
+};
+
+}   // namespace detail
+
+
 template<typename Job>
 class sequential
 {
@@ -28,18 +39,15 @@ class sequential
         // Map Tasks
         time_t start_time = time(NULL);
         void *key = 0;
-        while (job.get_next_map_key(key)  &&  job.run_map_task(key, result))
+        detail::null_lock nolock;
+        while (job.get_next_map_key(key)  &&  job.run_map_task(key, result, nolock))
             ;
         result.map_runtime = time(NULL) - start_time;
 
         // Reduce Tasks
         start_time = time(NULL);
         for (unsigned partition=0; partition<job.number_of_partitions(); ++partition)
-        {
-            typename Job::filenames_t filenames;
-            if (job.get_partition_filenames(partition, filenames))
-                job.run_reduce_task(partition, filenames, result);
-        }
+            job.run_reduce_task(partition, result);
         result.reduce_runtime = time(NULL) - start_time;
 
         result.counters.actual_map_tasks    = 1;

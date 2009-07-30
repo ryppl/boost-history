@@ -24,7 +24,7 @@ namespace schedule_policy {
 namespace detail {
 
 template<typename Job>
-inline void run_next_map_task(Job &job, results &result, boost::mutex &m)
+inline void run_next_map_task(Job &job, results &result, boost::mutex &m1, boost::mutex &m2)
 {
     try
     {
@@ -33,12 +33,12 @@ inline void run_next_map_task(Job &job, results &result, boost::mutex &m)
         {
             void *key = 0;
 
-            m.lock();
+            m1.lock();
             run = job.get_next_map_key(key);
-            m.unlock();
+            m1.unlock();
 
             if (run)
-                job.run_map_task(key, result);
+                job.run_map_task(key, result, m2);
         }
     }
     catch (std::exception &e)
@@ -48,22 +48,11 @@ inline void run_next_map_task(Job &job, results &result, boost::mutex &m)
 }
 
 template<typename Job>
-inline void run_next_reduce_task(Job &job, unsigned &partition, results &result, boost::mutex &m)
+inline void run_next_reduce_task(Job &job, unsigned &partition, results &result)
 {
     try
     {
-        bool run = true;
-        while (run)
-        {
-            typename Job::filenames_t filenames;
-
-            m.lock();
-            run = job.get_partition_filenames(partition, filenames);
-            m.unlock();
-
-            if (run)
-                job.run_reduce_task(partition, filenames, result);
-        }
+        job.run_reduce_task(partition, result);
     }
     catch (std::exception &e)
     {
@@ -84,7 +73,7 @@ class cpu_parallel
 
         typedef std::vector<boost::shared_ptr<results> > all_results_t;
         all_results_t all_results;
-        boost::mutex  m;
+        boost::mutex  m1, m2;
 
         // run the Map Tasks
         time_t start_time = time(NULL);
@@ -102,7 +91,8 @@ class cpu_parallel
                     detail::run_next_map_task<Job>,
                     boost::ref(job),
                     boost::ref(*this_result),
-                    boost::ref(m));
+                    boost::ref(m1),
+                    boost::ref(m2));
             map_threads.add_thread(thread);
         }
         map_threads.join_all();
@@ -126,8 +116,7 @@ class cpu_parallel
                     detail::run_next_reduce_task<Job>,
                     boost::ref(job),
                     boost::ref(partition),
-                    boost::ref(*this_result),
-                    boost::ref(m));
+                    boost::ref(*this_result));
             reduce_threads.add_thread(thread);
         }
         reduce_threads.join_all();

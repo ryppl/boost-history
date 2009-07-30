@@ -10,5 +10,9 @@
 // For more information, see http://www.boost.org/libs/mapreduce/
 //
  
-//#include <boost/mapreduce/intermediates/in_memory.hpp>
+//!!!
+#ifdef USE_IN_MEMORY_INTERMEDIATES
+#include <boost/mapreduce/intermediates/in_memory.hpp>
+#endif  // USE_IN_MEMORY_INTERMEDIATES
+
 #include <boost/mapreduce/intermediates/local_disk.hpp>
