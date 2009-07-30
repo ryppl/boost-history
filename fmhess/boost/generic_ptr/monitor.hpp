@@ -64,7 +64,7 @@ namespace boost
       monitor(): px(), _mutex_p()
       {}
       template<typename U>
-      monitor( U p, const shared<Mutex*> & mutex_p = shared<Mutex*>(new Mutex()) ): px( p ), _mutex_p(mutex_p)
+      explicit monitor( U p, const shared<Mutex*> & mutex_p = shared<Mutex*>(new Mutex()) ): px( p ), _mutex_p(mutex_p)
       {}
       template<typename U>
       monitor(const monitor<U, Mutex> & other): px(other.px), _mutex_p(other._mutex_p)
@@ -142,7 +142,7 @@ namespace boost
 
     // casts
     template<typename ToValueType, typename U, typename Mutex>
-    monitor<ToValueType, Mutex> static_pointer_cast
+    typename rebind<monitor<U, Mutex>, ToValueType>::other static_pointer_cast
     (
       monitor<U, Mutex> const & p,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
@@ -151,7 +151,7 @@ namespace boost
         return static_pointer_cast(p.get(), to_type_iden);
     }
     template<typename ToValueType, typename U, typename Mutex>
-    monitor<ToValueType, Mutex> const_pointer_cast
+    typename rebind<monitor<U, Mutex>, ToValueType>::other const_pointer_cast
     (
       monitor<U, Mutex> const & p,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
@@ -160,7 +160,7 @@ namespace boost
         return const_pointer_cast(p.get(), to_type_iden);
     }
     template<typename ToValueType, typename U, typename Mutex>
-    monitor<ToValueType, Mutex> dynamic_pointer_cast
+    typename rebind<monitor<U, Mutex>, ToValueType>::other dynamic_pointer_cast
     (
       monitor<U, Mutex> const & p,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
