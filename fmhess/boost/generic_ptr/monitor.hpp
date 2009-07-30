@@ -142,7 +142,7 @@ namespace boost
 
     // casts
     template<typename ToValueType, typename U, typename Mutex>
-    monitor<T, Mutex> static_pointer_cast
+    monitor<ToValueType, Mutex> static_pointer_cast
     (
       monitor<U, Mutex> const & p,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
@@ -151,7 +151,7 @@ namespace boost
         return static_pointer_cast(p.get(), to_type_iden);
     }
     template<typename ToValueType, typename U, typename Mutex>
-    monitor<T, Mutex> const_pointer_cast
+    monitor<ToValueType, Mutex> const_pointer_cast
     (
       monitor<U, Mutex> const & p,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
@@ -160,7 +160,7 @@ namespace boost
         return const_pointer_cast(p.get(), to_type_iden);
     }
     template<typename ToValueType, typename U, typename Mutex>
-    monitor<T, Mutex> dynamic_pointer_cast
+    monitor<ToValueType, Mutex> dynamic_pointer_cast
     (
       monitor<U, Mutex> const & p,
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()

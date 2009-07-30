@@ -243,7 +243,7 @@ template<class T> T get_pointer(intrusive<T> const & p)
     return p.get();
 }
 
-template<class ToValueType, class U> intrusive<T> static_pointer_cast
+template<class ToValueType, class U> intrusive<ToValueType> static_pointer_cast
 (
   intrusive<U> const & p,
   mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
@@ -252,7 +252,7 @@ template<class ToValueType, class U> intrusive<T> static_pointer_cast
     return static_pointer_cast(p.get(), to_type_iden);
 }
 
-template<class ToValueType, class U> intrusive<T> const_pointer_cast
+template<class ToValueType, class U> intrusive<ToValueType> const_pointer_cast
 (
   intrusive<U> const & p,
   mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
@@ -261,7 +261,7 @@ template<class ToValueType, class U> intrusive<T> const_pointer_cast
     return const_pointer_cast(p.get(), to_type_iden);
 }
 
-template<class ToValueType, class U> intrusive<T> dynamic_pointer_cast
+template<class ToValueType, class U> intrusive<ToValueType> dynamic_pointer_cast
 (
   intrusive<U> const & p,
   mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
