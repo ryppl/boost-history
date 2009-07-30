@@ -29,6 +29,19 @@ namespace boost
 {
   namespace generic_ptr
   {
+    template<typename T>
+    T* new_clone(T *p)
+    {
+      if(p == 0) return 0;
+      using boost::new_clone;
+      return new_clone(*p);
+    }
+    template<typename GenericPointer>
+    GenericPointer new_clone(const GenericPointer &p, typename pointer_traits<GenericPointer>::value_type * = 0)
+    {
+      return GenericPointer(new_clone(get_pointer(p)));
+    }
+
     namespace detail
     {
       class clone_factory_impl_base
@@ -53,7 +66,7 @@ namespace boost
         virtual clone_factory_impl* make_clone()
         {
           if(px == 0) return new clone_factory_impl(0);
-          return new clone_factory_impl(new_clone(*px));
+          return new clone_factory_impl(new_clone(px));
         }
       private:
         T * px;
@@ -136,7 +149,7 @@ namespace boost
       GenericPointer operator()(const GenericPointer & p) const
       {
         if(get_plain_old_pointer(p) == 0) return p;
-        return GenericPointer(new_clone(*p));
+        return new_clone(p);
       }
     };
 
