@@ -23,8 +23,34 @@ void implicit_conversion_test()
   BOOST_TEST(p == &x);
 }
 
+class X
+{
+public:
+  void f() {}
+};
+
+void throw_test()
+{
+  boost::generic_ptr::throwing<X*> tp(static_cast<X*>(0));
+  try
+  {
+    *tp;
+    BOOST_TEST(false);
+  }catch(const std::invalid_argument &)
+  {
+  }
+  try
+  {
+    tp->f();
+    BOOST_TEST(false);
+  }catch(const std::invalid_argument &)
+  {
+  }
+}
+
 int main()
 {
   implicit_conversion_test();
+  throw_test();
   return 0;
 }

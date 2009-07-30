@@ -10,9 +10,11 @@
 
 #include <boost/config.hpp>
 #include <boost/detail/lightweight_test.hpp>
+#include <boost/generic_ptr/asserting.hpp>
 #include <boost/generic_ptr/cloning.hpp>
 #include <boost/generic_ptr/intrusive.hpp>
 #include <boost/generic_ptr/monitor.hpp>
+#include <boost/generic_ptr/nonnull.hpp>
 #include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/generic_ptr/shared.hpp>
@@ -95,7 +97,23 @@ int main()
   }
   {
     X x;
+    boost::generic_ptr::asserting<X*> p(&x);
+    member_access_test(p);
+    dereference_test(p);
+    rebind_test(p);
+    cast_test(p);
+  }
+  {
+    X x;
     boost::generic_ptr::throwing<X*> p(&x);
+    member_access_test(p);
+    dereference_test(p);
+    rebind_test(p);
+    cast_test(p);
+  }
+  {
+    X x;
+    boost::generic_ptr::nonnull<X*> p(&x);
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);

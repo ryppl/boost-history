@@ -17,6 +17,7 @@
 #include <boost/assert.hpp>
 #include <boost/config.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
+#include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/generic_ptr/shared.hpp>
 #include <boost/mpl/identity.hpp>
@@ -48,6 +49,7 @@ namespace boost
       {
       public:
         virtual ~clone_factory_impl_base() {}
+        //FIXME: this isn't adequate.  We need to return a generic pointer to void instead
         virtual void * get_pointer() = 0;
         virtual clone_factory_impl_base* make_clone() = 0;
       };
@@ -249,6 +251,7 @@ namespace boost
           )
         )
       {
+        // reset _cloner if dynamic cast failed
         if(get_plain_old_pointer(px) == 0)
         {
           detail::clone_factory().swap(_cloner);

@@ -14,7 +14,6 @@
 #ifndef BOOST_GENERIC_PTR_THROWING_HPP_INCLUDED
 #define BOOST_GENERIC_PTR_THROWING_HPP_INCLUDED
 
-#include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/utility/swap.hpp>
@@ -55,11 +54,15 @@ namespace boost
       {}
 #endif
 
-      // default copy constructor and assignment operator are fine
-
       void swap(throwing & other)
       {
         boost::swap(px, other.px);
+      }
+
+      throwing & operator=(const throwing & other)
+      {
+        throwing(other).swap(*this);
+        return *this;
       }
 
       template<typename U>

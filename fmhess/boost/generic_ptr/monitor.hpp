@@ -79,16 +79,12 @@ namespace boost
       {}
 #endif
 
+      // default copy constructor and assignment operator are fine
+
       void swap(monitor & other)
       {
         boost::swap(px, other.px);
         boost::swap(_mutex_p, other._mutex_p);
-      }
-
-      monitor & operator=(const monitor & other)
-      {
-        monitor(other).swap(*this);
-        return *this;
       }
 
       template<typename U>
