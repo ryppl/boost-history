@@ -25,7 +25,6 @@ project boost/task/example
     ;
 
 exe bind_to_processors : bind_to_processors.cpp ;
-exe delay : delay.cpp ;
 exe fork_join : fork_join.cpp ;
 exe interrupt : interrupt.cpp ;
 exe pending : pending.cpp ;
@@ -33,4 +32,3 @@ exe priority : priority.cpp ;
 exe shutdonw_now : shutdown_now.cpp ;
 exe smart : smart.cpp ;
 exe submit : submit.cpp ;
-exe yield : yield.cpp ;

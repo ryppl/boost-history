@@ -1,3 +1,11 @@
+* boost.task-0.3.0:
+-------------------
+- worker creates fiber
+- worker with new function block()
+- this::reschedule_until(), this_task::yield(), this_task:delay() removed
+- pool_base catches thread_interrupted exception if worker gets interrupted while sleeping
+
+
 * boost.task-0.2.2:
 -------------------
 - allow user-defined execution policies

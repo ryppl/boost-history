@@ -17,43 +17,6 @@
 
 namespace boost { namespace this_task
 {
-namespace detail
-{
-struct time_reached
-{
-	system_time	abs_time;
-
-	time_reached( system_time & abs_time_)
-	: abs_time( abs_time_)
-	{}
-
-	bool operator()()
-	{ return get_system_time() >= abs_time; }
-};
-
-class once_false
-{
-private:
-	bool	result_;
-
-public:
-	once_false()
-	: result_( false)
-	{}
-	
-	bool operator()()
-	{
-		if ( ! result_)
-		{
-			result_ = true;
-			return false;
-		}
-		else
-			return true;
-	}
-};
-}
-
 template< typename Pool >
 Pool & get_pool()
 {
@@ -67,52 +30,19 @@ bool runs_in_pool()
 { return task::detail::worker::tss_get() != 0; }
 
 inline
+bool block()
+{
+	task::detail::worker * w( task::detail::worker::tss_get() );
+	BOOST_ASSERT( w);
+	return w->block();
+}
+
+inline
 thread::id worker_id()
 {
 	task::detail::worker * w( task::detail::worker::tss_get() );
 	BOOST_ASSERT( w);
 	return w->get_id();
-}
-
-inline
-void delay( system_time abs_time)
-{
-	if ( runs_in_pool() )
-	{
-		detail::time_reached t( abs_time);
-		task::detail::worker * w( task::detail::worker::tss_get() );
-		BOOST_ASSERT( w);
-		w->reschedule_until( t);
-	}
-	else
-		this_thread::sleep( abs_time);
-}
-
-template< typename Duration >
-void delay( Duration const& rel_time)
-{ delay( get_system_time() + rel_time); }
-
-inline
-void yield()
-{
-	if ( runs_in_pool() )
-	{
-		detail::once_false t;
-		task::detail::worker * w( task::detail::worker::tss_get() );
-		BOOST_ASSERT( w);
-		w->reschedule_until( t);
-	}
-	else
-		this_thread::yield();
-}
-
-inline
-void interrupt()
-{
-	task::detail::worker * w( task::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	w->interrupt();
-	this_thread::interruption_point();
 }
 }}
 
