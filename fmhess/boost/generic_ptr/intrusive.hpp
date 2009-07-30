@@ -24,9 +24,12 @@
 #include <boost/assert.hpp>
 #include <boost/detail/workaround.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
+#include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/smart_ptr/detail/sp_convertible.hpp>
+#include <boost/type_traits/is_pointer.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
 #include <boost/config/no_tr1/functional.hpp>           // for std::less
@@ -44,6 +47,28 @@ namespace boost
 {
 namespace generic_ptr
 {
+
+template<typename GenericPtr>
+void intrusive_ptr_add_ref
+(
+    const GenericPtr &p,
+    typename pointer_traits<GenericPtr>::value_type * = 0,
+    typename disable_if<is_pointer<GenericPtr> >::type * = 0
+)
+{
+  intrusive_ptr_add_ref(get_pointer(p));
+}
+template<typename GenericPtr>
+void intrusive_ptr_release
+(
+    const GenericPtr &p,
+    typename pointer_traits<GenericPtr>::value_type * = 0,
+    typename disable_if<is_pointer<GenericPtr> >::type * = 0
+)
+{
+  intrusive_ptr_release(get_pointer(p));
+}
+
 //
 //  generic_ptr::intrusive
 //
@@ -63,6 +88,12 @@ public:
     typedef T pointer;
     typedef typename pointer_traits<T>::reference reference;
 
+    template<typename ValueType>
+    struct rebind
+    {
+      typedef intrusive<typename generic_ptr::rebind<pointer, ValueType>::other> other;
+    };
+
     intrusive(): px()
     {
     }
@@ -70,7 +101,7 @@ public:
 
     intrusive( T p, bool add_ref = true ): px( p )
     {
-        if( get_plain_old_pointer(px) != 0 && add_ref ) intrusive_ptr_add_ref( get_plain_old_pointer(px) );
+        if( get_plain_old_pointer(px) != 0 && add_ref ) intrusive_ptr_add_ref( px );
     }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES) || defined(BOOST_MSVC6_MEMBER_TEMPLATES)
@@ -91,19 +122,19 @@ public:
 #endif
     : px( rhs.get() )
     {
-        if( get_plain_old_pointer(px) != 0 ) intrusive_ptr_add_ref( get_plain_old_pointer(px) );
+        if( get_plain_old_pointer(px) != 0 ) intrusive_ptr_add_ref( px );
     }
 
 #endif
 
     intrusive(intrusive const & rhs): px( rhs.px )
     {
-        if( get_plain_old_pointer(px) != 0 ) intrusive_ptr_add_ref( get_plain_old_pointer(px) );
+        if( get_plain_old_pointer(px) != 0 ) intrusive_ptr_add_ref( px );
     }
 
     ~intrusive()
     {
-        if( get_plain_old_pointer(px) != 0 ) intrusive_ptr_release( get_plain_old_pointer(px) );
+        if( get_plain_old_pointer(px) != 0 ) intrusive_ptr_release( px );
     }
 
 #if !defined(BOOST_NO_MEMBER_TEMPLATES) || defined(BOOST_MSVC6_MEMBER_TEMPLATES)
