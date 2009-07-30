@@ -11,9 +11,19 @@
 # bring in rules for testing
 import testing ;
 
+rule thread-run ( sources )
+{
+    return
+    [ run $(sources) : : : <library>../../thread/build//boost_thread/
+        <threading>multi ]
+    ;
+}
+
 {
     test-suite "generic_ptr"
-        : [ run cloning_test.cpp ]
+        : [ thread-run basic_generic_pointer_test.cpp ]
+          [ run cloning_test.cpp ]
+          [ run throwing_test.cpp ]
         ;
 }
 
