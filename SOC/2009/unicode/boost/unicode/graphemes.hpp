@@ -49,6 +49,20 @@ grapheme_bounded(const Range& range)
     return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
 }
 
+/** Adapts the range of code points \c range into a range of ranges of code points,
+ * each subrange being a grapheme cluster. */
+template<typename Range>
+iterator_range<typename boost::detail::unspecified<
+    consumer_iterator<
+        typename range_iterator<Range>::type,
+        boundary_consumer<unicode::grapheme_boundary>
+    >
+>::type>
+grapheme_bounded(Range& range)
+{
+    return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
+}
+
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
 /** Adapts the range of Name units \c range into a range of ranges of
@@ -64,6 +78,29 @@ iterator_range<typename boost::detail::unspecified<                    \
     >                                                                  \
 >::type>                                                               \
 Name##_grapheme_bounded(const Range& range)                            \
+{                                                                      \
+    return consumed(                                                   \
+        range,                                                         \
+        make_piped_consumer(                                           \
+            unicode::Name##_decoder(),                                 \
+            make_boundary_consumer(unicode::grapheme_boundary())       \
+        )                                                              \
+    );                                                                 \
+}                                                                      \
+                                                                       \
+/** Adapts the range of Name units \c range into a range of ranges of
+Name units, each subrange being a grapheme cluster. */                 \
+template<typename Range>                                               \
+iterator_range<typename boost::detail::unspecified<                    \
+    consumer_iterator<                                                 \
+        typename range_iterator<Range>::type,                          \
+        piped_consumer<                                                \
+            unicode::Name##_decoder,                                   \
+            boundary_consumer<unicode::grapheme_boundary>              \
+        >                                                              \
+    >                                                                  \
+>::type>                                                               \
+Name##_grapheme_bounded(Range& range)                                  \
 {                                                                      \
     return consumed(                                                   \
         range,                                                         \

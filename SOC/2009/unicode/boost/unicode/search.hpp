@@ -4,7 +4,6 @@
 #include <boost/range.hpp>
 #include <boost/algorithm/string/compare.hpp>
 
-
 namespace boost
 {
 

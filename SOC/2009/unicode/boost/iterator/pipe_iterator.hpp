@@ -252,6 +252,17 @@ boost::iterator_range<
 	);
 }
 
+template<typename Range, typename Pipe>
+boost::iterator_range<
+	pipe_iterator<typename boost::range_iterator<Range>::type, Pipe>
+> piped(Range& range, Pipe p)
+{
+	return boost::make_iterator_range(
+		make_pipe_iterator(boost::begin(range), boost::end(range), boost::begin(range), p),
+		make_pipe_iterator(boost::begin(range), boost::end(range), boost::end(range), p)
+	);
+}
+
 template<typename Range, typename Pipe, typename OutputIterator>
 OutputIterator pipe(const Range& range, Pipe pipe, OutputIterator out)
 {

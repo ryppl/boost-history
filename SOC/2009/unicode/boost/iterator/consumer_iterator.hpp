@@ -231,6 +231,17 @@ boost::iterator_range<
 		make_consumer_iterator(boost::begin(range), boost::end(range), boost::end(range), c)
 	);
 }
+
+template<typename Range, typename Consumer>
+boost::iterator_range<
+	consumer_iterator<typename boost::range_iterator<Range>::type, Consumer>
+> consumed(Range& range, Consumer c)
+{
+	return boost::make_iterator_range(
+		make_consumer_iterator(boost::begin(range), boost::end(range), boost::begin(range), c),
+		make_consumer_iterator(boost::begin(range), boost::end(range), boost::end(range), c)
+	);
+}
     
 } // namespace boost
 
