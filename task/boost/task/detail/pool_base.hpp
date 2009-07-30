@@ -29,6 +29,7 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
 
@@ -71,7 +72,8 @@ private:
 	void create_worker_(
 		poolsize const& psize,
 		posix_time::time_duration const& asleep,
-		scanns const& max_scns)
+		scanns const& max_scns,
+		stacksize const& stack_size)
 	{
 		wg_.insert(
 			worker(
@@ -79,6 +81,7 @@ private:
 				psize,
 				asleep,
 				max_scns,
+				stack_size,
 				boost::bind(
 					& pool_base::worker_entry_,
 					this) ) );
@@ -95,6 +98,7 @@ private:
 		poolsize const& psize,
 		posix_time::time_duration const& asleep,
 		scanns const& max_scns,
+		stacksize const& stack_size,
 		std::size_t n)
 	{
 		wg_.insert(
@@ -103,6 +107,7 @@ private:
 				psize,
 				asleep,
 				max_scns,
+				stack_size,
 				boost::bind(
 					& pool_base::worker_entry_,
 					this,
@@ -128,8 +133,9 @@ private:
 public:
 	explicit pool_base(
 		poolsize const& psize,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& max_scns = scanns( 20) )
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns,
+		stacksize const& stack_size)
 	:
 	wg_(),
 	mtx_wg_(),
@@ -143,15 +149,16 @@ public:
 		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns);
+			create_worker_( psize, asleep, max_scns, stack_size);
 	}
 
 	explicit pool_base(
 		poolsize const& psize,
 		high_watermark const& hwm,
 		low_watermark const& lwm,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& max_scns = scanns( 20) )
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns,
+		stacksize const& stack_size)
 	:
 	wg_(),
 	mtx_wg_(),
@@ -167,13 +174,14 @@ public:
 		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns);
+			create_worker_( psize, asleep, max_scns, stack_size);
 	}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	explicit pool_base(
-		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& max_scns = scanns( 20) )
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns,
+		stacksize const& stack_size)
 	:
 	wg_(),
 	mtx_wg_(),
@@ -189,14 +197,15 @@ public:
 		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns, i);
+			create_worker_( psize, asleep, max_scns, stack_size, i);
 	}
 
 	explicit pool_base(
 		high_watermark const& hwm,
 		low_watermark const& lwm,
-		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& max_scns = scanns( 20) )
+		posix_time::time_duration const& asleep,
+		scanns const& max_scns,
+		stacksize const& stack_size)
 	:
 	wg_(),
 	mtx_wg_(),
@@ -214,7 +223,7 @@ public:
 		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
-			create_worker_( psize, asleep, max_scns, i);
+			create_worker_( psize, asleep, max_scns, stack_size, i);
 	}
 # endif
 

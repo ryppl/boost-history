@@ -8,6 +8,7 @@
 #define BOOST_TASK_DETAIL_WORKER_H
 
 #include <cstddef>
+#include <list>
 #include <utility>
 
 #include <boost/assert.hpp>
@@ -25,6 +26,7 @@
 #include <boost/task/detail/wsq.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/stacksize.hpp>
 #include <boost/task/semaphore.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -90,16 +92,22 @@ private:
 		{ return die_(); }
 	};
 
+	typedef shared_ptr< fiber >		fiber_t;
+	typedef shared_ptr< thread >	thread_t;
+
 	Pool					&	pool_;
-	shared_ptr< thread >		thrd_;
-	shared_ptr< fiber >			fib_;
-	wsq				 			wsq_;
+	thread_t					thrd_;
+	fiber_t						fib_;
+	wsq							wsq_;
+	std::list< fiber_t >		blocked_fibers_;
+	std::list< fiber_t >		runnable_fiber_lst;
 	semaphore					shtdwn_sem_;
 	semaphore					shtdwn_now_sem_;
 	bool						shtdwn_;
 	posix_time::time_duration	asleep_;
 	scanns						max_scns_;
 	std::size_t					scns_;
+	std::size_t					stack_size_;
 	random_idx					rnd_idx_;
 
 	void execute_( callable & ca)
@@ -112,6 +120,11 @@ private:
 		}
 		ca.clear();
 		BOOST_ASSERT( ca.empty() );
+	}
+
+	void try_blocked_fibers_()
+	{
+		td::list< fiber_t > 	
 	}
 
 	bool take_global_callable_(
@@ -144,6 +157,7 @@ private:
 		callable ca;
 		while ( ! shutdown_() )
 		{
+			try_runnable_fibers_();
 			if ( try_take_local_callable_( ca) || 
 				 try_take_global_callable_( ca) ||
 				 try_steal_other_callable_( ca) )
@@ -203,18 +217,22 @@ public:
 		poolsize const& psize,
 		posix_time::time_duration const& asleep,
 		scanns const& max_scns,
+		stacksize const& stack_size,
 		function< void() > const& fn)
 	:
 	pool_( pool),
 	thrd_( new thread( fn) ),
 	fib_(),
 	wsq_(),
+	blocked_fibers_(),
+	runnable_fiber_lst(),
 	shtdwn_sem_( 0),
 	shtdwn_now_sem_( 0),
 	shtdwn_( false),
 	asleep_( asleep),
 	max_scns_( max_scns),
 	scns_( 0),
+	stack_size_( stack_size),
 	rnd_idx_( psize)
 	{ BOOST_ASSERT( ! fn.empty() ); }
 
@@ -251,12 +269,13 @@ public:
 		BOOST_ASSERT( get_id() == this_thread::get_id() );
 
 		fiber::convert_thread_to_fiber();
-		shared_ptr< fiber > fib(
+
+		fiber_t fib(
 			new fiber(
 				bind(
 					& worker_object::run_,
 					this),
-				64000) );
+				stack_size_) );
 		fib_.swap( fib);
 		fib_->run();
 		BOOST_ASSERT( fib_->exited() );
@@ -290,7 +309,29 @@ public:
 	}
 
 	bool block()
-	{ return ! shutdown_(); }
+	{
+		blocked_fibers_.push_back( fib_);
+		fiber_t fib;
+		if ( runnable_fibers_.empty() )
+		{
+			fib.reset(
+				new fiber(
+					bind(
+						& worker_object::run_,
+						this),
+					stack_size_) );
+		}
+		else
+		{
+			fib = runnable_fibers_.front();
+			runnable_fibers_.pop_front();
+		}
+		fib_.swap( fib);
+		fib_->run();
+		runnable_fibers_.push_back( fib);
+		
+		return ! shutdown_();
+	}
 };
 
 class BOOST_TASK_DECL worker
@@ -307,6 +348,7 @@ public:
 		poolsize const& psize,
 		posix_time::time_duration const& asleep,
 		scanns const& max_scns,
+		stacksize const& stack_size,
 		function< void() > const& fn)
 	:
 	impl_(
@@ -315,6 +357,7 @@ public:
 			psize,
 			asleep,
 			max_scns,
+			stack_size,
 			fn) )
 	{}
 

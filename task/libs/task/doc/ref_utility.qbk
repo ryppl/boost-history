@@ -50,7 +50,22 @@
 ``
 
 [variablelist
-[[Effects:] [returns returns the thread-id of the worker-thread]]
+[[Effects:] [returns the thread-id of the worker-thread]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
+]
+
+
+[section:worker_id Non-member function `block()`]
+
+``
+	#include <boost/task/utility.hpp>
+
+	bool block()
+``
+
+[variablelist
+[[Effects:] [blocks current context of execution and returns true if threadpool was shutdown]]
 [[Throws:] [nothing]]
 [[Note:] [this function resides in namespace `boost::this_task`]]
 ]

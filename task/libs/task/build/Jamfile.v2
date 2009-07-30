@@ -41,6 +41,7 @@ alias task_sources
 	poolsize.cpp
 	scanns.cpp
 	semaphore_windows.cpp
+	stacksize.cpp
 	watermark.cpp
 	worker.cpp
 	worker_group.cpp
@@ -57,6 +58,7 @@ alias task_sources
 	poolsize.cpp
 	scanns.cpp
 	semaphore_posix.cpp
+	stacksize.cpp
 	watermark.cpp
 	worker.cpp
 	worker_group.cpp

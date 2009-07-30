@@ -30,6 +30,14 @@ public:
 	{}
 };
 
+class invalid_stacksize : public std::invalid_argument
+{
+public:
+    invalid_stacksize()
+	: std::invalid_argument("stacksize must be greater than zero")
+	{}
+};
+
 class invalid_timeduration : public std::invalid_argument
 {
 public:

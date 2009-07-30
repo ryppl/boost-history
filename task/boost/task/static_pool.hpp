@@ -21,6 +21,7 @@
 #include <boost/task/handle.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
+#include <boost/task/stacksize.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/watermark.hpp>
 
@@ -55,8 +56,9 @@ public:
 	explicit static_pool(
 		poolsize const& psize,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& max_scns = scanns( 20) )
-	: pool_( new detail::pool_base< Channel >( psize, asleep, max_scns) )
+		scanns const& max_scns = scanns( 20),
+		stacksize const& stack_size = stacksize( 64000) )
+	: pool_( new detail::pool_base< Channel >( psize, asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
@@ -64,16 +66,18 @@ public:
 		high_watermark const& hwm,
 		low_watermark const& lwm,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& max_scns = scanns( 20) )
-	: pool_( new detail::pool_base< Channel >( psize, hwm, lwm, asleep, max_scns) )
+		scanns const& max_scns = scanns( 20),
+		stacksize const& stack_size = stacksize( 64000) )
+	: pool_( new detail::pool_base< Channel >( psize, hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	explicit static_pool(
 		tag_bind_to_processors,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
-		scanns const& max_scns = scanns( 20) )
-	: pool_( new detail::pool_base< Channel >( asleep, max_scns) )
+		scanns const& max_scns = scanns( 20),
+		stacksize const& stack_size = stacksize( 64000) )
+	: pool_( new detail::pool_base< Channel >( asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
@@ -81,8 +85,9 @@ public:
 		high_watermark const& hwm,
 		low_watermark const& lwm,
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
-		scanns const& max_scns = scanns( 20) )
-	: pool_( new detail::pool_base< Channel >( hwm, lwm, asleep, max_scns) )
+		scanns const& max_scns = scanns( 20),
+		stacksize const& stack_size = stacksize( 64000) )
+	: pool_( new detail::pool_base< Channel >( hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 	static tag_bind_to_processors bind_to_processors()

@@ -23,6 +23,7 @@
 #include <boost/task/priority.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/semaphore.hpp>
+#include <boost/task/stacksize.hpp>
 #include <boost/task/static_pool.hpp>
 #include <boost/task/smart.hpp>
 #include <boost/task/task.hpp>

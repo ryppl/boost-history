@@ -11,6 +11,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 
+#include "boost/task/exceptions.hpp"
 #include "boost/task/utility.hpp"
 
 namespace boost { namespace task
@@ -39,13 +40,11 @@ semaphore::wait()
 	int ret( -1);
 	if ( this_task::runs_in_pool() )
 	{
-		// TODO: use semaphore::try_wait(), create a fiber and do a reschedule until
-		// semaphore::try_wait() returns true
-		do
-		{ ret = ::sem_wait( & handle_); }
-		while ( ret == -1 && errno == EINTR);
-		if ( ret == -1)
-			throw system::system_error( errno, system::system_category);
+		while ( ! try_wait() )
+		{
+			if ( ! this_task::block() )
+				throw task_interrupted();
+		}
 	}
 	else
 	{
