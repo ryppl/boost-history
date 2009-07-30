@@ -105,23 +105,6 @@ namespace boost
       return get_plain_old_pointer(get_pointer(gp));
     }
 
-    // two-argument cast overloads for raw pointers (really belongs in boost/pointer_cast.hpp)
-    template<typename T, typename U>
-    T* static_pointer_cast(U *r, boost::mpl::identity<T>)
-    {
-      return static_cast<T*>(r);
-    }
-    template<typename T, typename U>
-    T* const_pointer_cast(U *r, boost::mpl::identity<T>)
-    {
-      return const_cast<T*>(r);
-    }
-    template<typename T, typename U>
-    T* dynamic_pointer_cast(U *r, boost::mpl::identity<T>)
-    {
-      return dynamic_cast<T*>(r);
-    }
-
     template<typename GenericPtr, typename ValueType>
     struct rebind
     {
