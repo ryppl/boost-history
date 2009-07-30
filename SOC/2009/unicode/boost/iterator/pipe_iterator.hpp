@@ -12,8 +12,64 @@
 #include <boost/mpl/has_xxx.hpp>
 #include <boost/mpl/int.hpp>
 
+#include <boost/concept_check.hpp>
+#include <boost/concept/requires.hpp>
+#include <boost/concept_archetype.hpp>
+#include <boost/range/concepts.hpp>
+
 namespace boost
 {
+    
+struct any_type
+{    
+    operator bool() const
+    {
+        return false;
+    }
+};
+    
+template<typename X>
+struct PipeConcept : CopyConstructible<X>
+{
+    typedef typename X::output_type output_type;
+    
+    BOOST_CONCEPT_USAGE(PipeConcept)
+    {
+        X pipe;
+        std::pair<in1_type, out_type> p1 = pipe.ltr(begin1, end1, out);
+        std::pair<in2_type, out_type> p2 = pipe.rtl(begin2, end2, out);
+        (void)p1;
+        (void)p2;
+    }
+    
+private:
+    typedef input_iterator_archetype_no_proxy<any_type> in1_type;
+    typedef bidirectional_iterator_archetype<any_type> in2_type;
+    typedef output_iterator_archetype<output_type> out_type;
+
+    in1_type begin1;
+    in1_type end1;
+    in2_type begin2;
+    in2_type end2;
+    out_type out;
+};
+
+template<typename X>
+struct OneManyPipeConcept : CopyConstructible<X>
+{
+    typedef typename X::output_type output_type;
+    
+    BOOST_CONCEPT_USAGE(OneManyPipeConcept)
+    {
+        X pipe;
+        out = pipe(any_type(), out);
+    }
+    
+private:
+    typedef output_iterator_archetype<output_type> out_type;
+    out_type out;
+};
+    
 namespace detail
 {
     BOOST_MPL_HAS_XXX_TRAIT_DEF(max_output)
@@ -24,6 +80,7 @@ namespace detail
     template<typename P>
     struct pipe_output_storage<P, typename ::boost::disable_if< has_max_output<P> >::type>
     {
+        BOOST_CONCEPT_ASSERT((PipeConcept<P>));
 private:
         typedef std::vector<typename P::output_type> Values;
 public:
@@ -56,6 +113,7 @@ public:
     template<typename P>
     struct pipe_output_storage<P, typename boost::enable_if< has_max_output<P> >::type>
     {
+        BOOST_CONCEPT_ASSERT((PipeConcept<P>));
 private:
         typedef typename P::output_type Value;
 public:
@@ -91,6 +149,8 @@ public:
 template<typename OneManyPipe>
 struct one_many_pipe : OneManyPipe
 {
+    BOOST_CONCEPT_ASSERT((OneManyPipeConcept<OneManyPipe>));
+    
     one_many_pipe() {} // singular
     
 	one_many_pipe(OneManyPipe p_) : OneManyPipe(p_)
@@ -103,7 +163,7 @@ struct one_many_pipe : OneManyPipe
 	{
 		BOOST_ASSERT(begin != end);
 		
-		out = (*this)(*begin, out);
+		out = ((OneManyPipe&)(*this))(*begin, out);
 		return std::make_pair(++begin, out);
 	}
 	
@@ -113,13 +173,16 @@ struct one_many_pipe : OneManyPipe
 	{
 		BOOST_ASSERT(begin != end);
 		
-		out = (*this)(*--end, out);
+		out = ((OneManyPipe&)(*this))(*--end, out);
 		return std::make_pair(end, out);
 	}
 };
 
 template<typename OneManyPipe>
-one_many_pipe<OneManyPipe> make_one_many_pipe(OneManyPipe p)
+BOOST_CONCEPT_REQUIRES(
+    ((OneManyPipeConcept<OneManyPipe>)),
+    (one_many_pipe<OneManyPipe>)
+) make_one_many_pipe(OneManyPipe p)
 {
 	return one_many_pipe<OneManyPipe>(p);
 }
@@ -151,6 +214,9 @@ struct pipe_iterator
 		const typename Pipe::output_type
 	>
 {
+    BOOST_CONCEPT_ASSERT((InputIterator<It>));
+    BOOST_CONCEPT_ASSERT((PipeConcept<Pipe>));
+    
     pipe_iterator() {} // singular
     
 	pipe_iterator(It begin_, It end_, It pos_, Pipe p_) : pos(pos_), begin(begin_), end(end_), index(0), p(p_)
@@ -166,6 +232,8 @@ struct pipe_iterator
 	
 	It base() const
 	{
+        BOOST_CONCEPT_ASSERT((ForwardIterator<It>));
+        
 		return pos;
 	}
 
@@ -201,6 +269,8 @@ private:
 	
 	void decrement()
 	{
+        BOOST_CONCEPT_ASSERT((BidirectionalIterator<It>));
+        
 		if(index != 0)
 		{
 			index--;
@@ -236,15 +306,22 @@ private:
 };
 
 template<typename It, typename Pipe>
-pipe_iterator<It, Pipe> make_pipe_iterator(It begin, It end, It pos, Pipe p)
+BOOST_CONCEPT_REQUIRES(
+    ((InputIterator<It>)),
+    (pipe_iterator<It, Pipe>)
+) make_pipe_iterator(It begin, It end, It pos, Pipe p)
 {
 	return pipe_iterator<It, Pipe>(begin, end, pos, p);
 }
 
 template<typename Range, typename Pipe>
-boost::iterator_range<
-	pipe_iterator<typename boost::range_iterator<const Range>::type, Pipe>
-> piped(const Range& range, Pipe p)
+BOOST_CONCEPT_REQUIRES(
+    ((SinglePassRangeConcept<Range>))
+    ((PipeConcept<Pipe>)),
+    (boost::iterator_range<
+	    pipe_iterator<typename boost::range_iterator<const Range>::type, Pipe>
+    >)
+) piped(const Range& range, Pipe p)
 {
 	return boost::make_iterator_range(
 		make_pipe_iterator(boost::begin(range), boost::end(range), boost::begin(range), p),
@@ -253,9 +330,13 @@ boost::iterator_range<
 }
 
 template<typename Range, typename Pipe>
-boost::iterator_range<
-	pipe_iterator<typename boost::range_iterator<Range>::type, Pipe>
-> piped(Range& range, Pipe p)
+BOOST_CONCEPT_REQUIRES(
+    ((SinglePassRangeConcept<Range>))
+    ((PipeConcept<Pipe>)),
+    (boost::iterator_range<
+	    pipe_iterator<typename boost::range_iterator<Range>::type, Pipe>
+    >)
+) piped(Range& range, Pipe p)
 {
 	return boost::make_iterator_range(
 		make_pipe_iterator(boost::begin(range), boost::end(range), boost::begin(range), p),
@@ -264,7 +345,12 @@ boost::iterator_range<
 }
 
 template<typename Range, typename Pipe, typename OutputIterator>
-OutputIterator pipe(const Range& range, Pipe pipe, OutputIterator out)
+BOOST_CONCEPT_REQUIRES(
+    ((SinglePassRangeConcept<Range>))
+    ((PipeConcept<Pipe>))
+    ((OutputIteratorConcept<OutputIterator, typename Pipe::output_type>)),
+    (OutputIterator)
+) pipe(const Range& range, Pipe pipe, OutputIterator out)
 {
     typedef typename boost::range_iterator<const Range>::type Iterator;
     
@@ -286,6 +372,8 @@ OutputIterator pipe(const Range& range, Pipe pipe, OutputIterator out)
 template<typename It, typename OneManyPipe>
 struct pipe_output_iterator
 {
+    BOOST_CONCEPT_ASSERT((OneManyPipeConcept<OneManyPipe>));
+    
     typedef void                                   difference_type;
     typedef void                                   value_type;
     typedef pipe_output_iterator<It, OneManyPipe>*        pointer;
@@ -340,7 +428,11 @@ private:
 };
 
 template<typename OutputIterator, typename OneManyPipe>
-pipe_output_iterator<OutputIterator, OneManyPipe> piped_output(OutputIterator out, OneManyPipe p)
+BOOST_CONCEPT_REQUIRES(
+    ((OneManyPipeConcept<OneManyPipe>))
+    ((OutputIteratorConcept<OutputIterator, typename OneManyPipe::output_type>)),
+    (pipe_output_iterator<OutputIterator, OneManyPipe>)
+) piped_output(OutputIterator out, OneManyPipe p)
 {
 	return pipe_output_iterator<OutputIterator, OneManyPipe>(out, p);
 }

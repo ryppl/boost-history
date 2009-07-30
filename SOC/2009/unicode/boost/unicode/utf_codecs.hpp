@@ -433,18 +433,8 @@ private:
     template<typename Iterator, typename Enable = void>
     struct decoder
     {
+        typedef one_many_pipe< cast_pipe<output_type> > type;
     };
-    
-    template<typename Iterator>
-    struct decoder<Iterator, typename enable_if<
-        detail::is_u32<
-            typename std::iterator_traits<Iterator>::value_type
-        >
-    >::type>
-    {
-        typedef one_many_pipe< cast_pipe<char32> > type;
-    };
-    
     
     template<typename Iterator>
     struct decoder<Iterator, typename enable_if<
@@ -487,45 +477,46 @@ public:
  * \c u8_boundary depending on the value type of the input range. */
 struct utf_boundary
 {
-#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
     template<typename In>
-    typename enable_if<
-        detail::is_u32<
-            typename std::iterator_traits<In>::value_type
-        >,
-        bool
-    >::type
-    operator()(In, In, In)
+    bool operator()(In begin, In end, In pos)
+    {
+        return impl(begin, end, pos, 0);
+    }
+    
+#ifndef BOOST_UNICODE_DOXYGEN_INVOKED
+private:
+    template<typename In>
+    bool impl(In, In, In, ...)
     {
         return true;
     }
     
     template<typename In>
-    typename enable_if<
-        detail::is_u16<
-            typename std::iterator_traits<In>::value_type
-        >,
-        bool
-    >::type
-    operator()(In begin, In end, In pos)
+    bool impl(
+        In begin, In end, In pos,
+        typename enable_if<
+            detail::is_u16<
+                typename std::iterator_traits<In>::value_type
+            >
+        >::type*
+    )
     {
         return u16_boundary()(begin, end, pos);
     }
     
     template<typename In>
-    typename enable_if<
-        detail::is_u8<
-            typename std::iterator_traits<In>::value_type
-        >,
-        bool
-    >::type
-#else
-    bool
-#endif
-    operator()(In begin, In end, In pos)
+    bool impl(
+        In begin, In end, In pos,
+        typename enable_if<
+            detail::is_u8<
+                typename std::iterator_traits<In>::value_type
+            >
+        >::type*
+    )
     {
         return u8_boundary()(begin, end, pos);
     }
+#endif
 };
 
 /** Model of \c OneManyPipe that converts from UTF-32 to ISO-8859-1

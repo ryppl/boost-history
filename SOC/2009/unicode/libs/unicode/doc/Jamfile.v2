@@ -32,12 +32,13 @@ doxygen autodoc
 	:
         <doxygen:param>EXTRACT_ALL=YES
         <doxygen:param>"PREDEFINED=\"BOOST_UNICODE_DOXYGEN_INVOKED\" \\
-                                   \"BOOST_UNICODE_DECL= \""
+                                   \"BOOST_UNICODE_DECL= \" \\
+                                   \"BOOST_CONCEPT_REQUIRES(a,b)=/** Requires: a */ b \""
         <doxygen:param>HIDE_UNDOC_MEMBERS=NO
         <doxygen:param>EXTRACT_PRIVATE=NO
         <doxygen:param>ENABLE_PREPROCESSING=YES
         <doxygen:param>MACRO_EXPANSION=YES
 #        <doxygen:param>EXPAND_ONLY_PREDEF=YES
-        <doxygen:param>SEARCH_INCLUDES=YES
-        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
+#        <doxygen:param>SEARCH_INCLUDES=YES
+#        <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
 	;
