@@ -17,28 +17,24 @@ namespace boost{namespace itl
 //==============================================================================
 //= Addition
 //==============================================================================
-//------------------------------------------------------------------------------
-//- Addition +=, + 
-//------------------------------------------------------------------------------
-/** \par \b Requires: Types \c ObjectT and \c OperandT are addable.
-	\par \b Effects: \c operand is added to \c object.
+/** \par \b Requires: \c OperandT is an addable derivative type of \c ObjectT. 
+	\b Effects: \c operand is added to \c object.
 	\par \b Returns: A reference to \c object.
 	\b Complexity:
 \code
-                  \ OperandT:                      interval
-                   \         element     segment   container
+                  \ OperandT:                    
+                   \         element     segment 
 ObjectT:
-       interval container    O(log n)     O(n)     O(m log(n+m))
+       interval container    O(log n)     O(n)   
 
              interval_set               amortized
     spearate_interval_set                O(log n) 
 
 n = object.interval_count()
-m = operand.interval_count()
 \endcode
 
 For the addition of \b elements, \b segments and \b interval \b containers
-complexity is \b logarithmic, \b linear and \b loglinear respectively.
+complexity is \b logarithmic and \b linear respectively.
 For \c interval_sets and \c separate_interval_sets addition of segments
 is \b amortized \b logarithmic.
 */
@@ -173,20 +169,19 @@ operator -= (ObjectT& object, const OperandT& operand)
 
 template 
 <
-    class ObjectT,
-    class SubType, class DomainT, ITL_COMPARE Compare, 
+    class ObjectT, class SetT, class DomainT, ITL_COMPARE Compare, 
 	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
 inline
-typename boost::enable_if<is_interval_set_companion<ObjectT, SubType>,
+typename boost::enable_if<is_interval_set_companion<ObjectT, SetT>,
                           ObjectT>::type&
 operator -=
 (
           ObjectT& object,
-    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
+    const interval_base_set<SetT,DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
+    typedef interval_base_set<SetT,DomainT,Compare,Interval,Alloc> operand_type;
 
     if(operand.empty())
         return object;
@@ -248,6 +243,7 @@ ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& o
 {
     return object &= operand; 
 }
+
 
 //==============================================================================
 //= Symmetric difference

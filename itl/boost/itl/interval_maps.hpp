@@ -26,6 +26,7 @@ class interval_map;
 //==============================================================================
 //= Emptieness, containment
 //==============================================================================
+/*CL
 template 
 <
     class DomainT, class CodomainT, class Traits,
@@ -61,12 +62,15 @@ bool contains
 {
     return Interval_Set::contains(left, right);
 }
-
+*/
 //-----------------------------------------------------------------------------
 // is_disjoint
 //-----------------------------------------------------------------------------
 
 //--- IntervalMap -------------------------------------------------------------
+/** \par \b Returns true, if \c object and \c operand have no common elements (key value pairs).
+    Segments are interpreted as sequence of elements (key value pairs).
+	\par \b Complexity: loglinear. */
 template 
 <
     class DomainT, class CodomainT, class Traits,

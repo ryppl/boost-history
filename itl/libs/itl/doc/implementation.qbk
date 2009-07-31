@@ -176,14 +176,10 @@ interval containers are of ['*logarithmic*], ['*linear*], and ['*loglinear*] tim
 complexity for the combination of ['*elements*], ['*segments*] and ['*containers*]
 respectively.
 
-
-
 While this section covers the complexity characteristics of
 the most important operations only, more complexity statements
 are included in the doxygen generated 
 [link interval_template_library_reference reference documentation].
-
-
 
 [endsect]
 

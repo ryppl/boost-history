@@ -24,6 +24,8 @@ class interval_set;
 //------------------------------------------------------------------------------
 // is_element_equal
 //------------------------------------------------------------------------------
+/** \par \b Returns true, if \c left and \c right contain the same elements. 
+	\par \b Complexity: linear. */
 template 
 <
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
@@ -38,6 +40,9 @@ inline bool is_element_equal
     return Interval_Set::is_element_equal(left, right);
 }
 
+/** \b Returns true, if \c left is lexicographically less than \c right. 
+	\par Intervals are interpreted as sequence of elements.
+	\par \b Complexity: linear. */
 template 
 <
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
@@ -52,6 +57,9 @@ inline bool is_element_less
     return Interval_Set::is_element_less(left, right);
 }
 
+/** \b Returns true, if \c left is lexicographically greater than \c right. 
+    \par Intervals are interpreted as sequence of elements.
+	\par \b Complexity: linear. */
 template 
 <
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
@@ -69,17 +77,14 @@ inline bool is_element_greater
 //==============================================================================
 //= Addition
 //==============================================================================
-/** \c operator \c += adds an interval_base_set \c operand to an interval set
-    \c object. 
-
-	\b Returns: A reference to \c object. 
-
-	\b Complexity: loglinear.
-*/
+/** \par \c operator \c += adds an interval_base_set \c operand to an interval set \c object. 
+	\par \b Returns: A reference to \c object. 
+	\par \b Complexity: loglinear. */
 template 
 <
-    class ObjectT,
-    class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+    class ObjectT, class SubType, 
+	class DomainT, ITL_COMPARE Compare, 
+	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
 inline
 typename boost::enable_if<is_interval_set<ObjectT>, 
@@ -98,50 +103,42 @@ operator +=
     return object; 
 }
 
-/*CL?
-//==============================================================================
-//= Subtraction
-//==============================================================================
+//-----------------------------------------------------------------------------
+// insert
+//-----------------------------------------------------------------------------
+/** Inserts an interval_base_set \c operand to an interval set \c object. 
+    In the itl \c insert and \c += have the same effect for all \c Sets. 
+	\par \b Returns: A reference to \c object. 
+	\par \b Complexity: loglinear. */
 template 
 <
-    class ObjectT,
-    class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+    class ObjectT, class SubType, 
+	class DomainT, ITL_COMPARE Compare, 
+	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-inline
-typename boost::enable_if<is_interval_set_companion<ObjectT, SubType>,
-                          ObjectT>::type&
-operator -=
+inline typename boost::enable_if<is_interval_set<ObjectT>, ObjectT>::type&
+insert
 (
           ObjectT& object,
     const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
-
-    if(operand.empty())
-        return object;
-
-    typename operand_type::const_iterator common_lwb;
-    typename operand_type::const_iterator common_upb;
-
-    if(!Set::common_range(common_lwb, common_upb, operand, object))
-        return object;
-
-    typename operand_type::const_iterator it_ = common_lwb;
-    while(it_ != common_upb)
-		object.erase(*it_++);
-
-    return object; 
+    return object += operand; 
 }
-*/
+    
 
-//-----------------------------------------------------------------------------
-// symmetric difference ^=
-//-----------------------------------------------------------------------------
+//==============================================================================
+//= Symmetric difference ^=
+//==============================================================================
+/** \c operator \c ^= symmetrically subtracts an interval_base_set \c operand from an interval set \c object. 
+	\par \b Returns: A reference to \c object. 
+	\par \b Complexity: loglinear.
+*/
 template 
 <
-    class ObjectT,
-    class SubType, class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+    class ObjectT, class SubType, 
+	class DomainT, ITL_COMPARE Compare, 
+	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
 inline 
 typename boost::enable_if<is_interval_set<ObjectT>, 
@@ -158,6 +155,9 @@ operator ^=
 //-----------------------------------------------------------------------------
 // is_disjoint
 //-----------------------------------------------------------------------------
+/** \b Returns true, if \c object and \c operand have no common elements.
+    Intervals are interpreted as sequence of elements.
+	\par \b Complexity: loglinear. */
 template 
 <
     class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
@@ -194,57 +194,26 @@ bool is_disjoint
 }
 
 //-----------------------------------------------------------------------------
-// insert
-//-----------------------------------------------------------------------------
-template 
-<
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
->
-inline interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
-insert
-(
-          interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
-)
-{
-    return object += operand; 
-}
-    
-//-----------------------------------------------------------------------------
 // erase
 //-----------------------------------------------------------------------------
+/** Erases an interval_base_set \c operand from an interval set \c object. 
+    In the itl \c erase and \c -= have the same effect for all \c Sets. 
+	\par \b Returns: A reference to \c object. 
+	\par \b Complexity: loglinear. */
 template 
 <
-    class SubType, class DomainT, 
-    ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
-    template<class, ITL_COMPARE, template<class,ITL_COMPARE>class, ITL_ALLOC>class IntervalSet
+    class ObjectT, class SubType, 
+	class DomainT, ITL_COMPARE Compare, 
+	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
 >
-inline interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& 
+inline typename boost::enable_if<is_interval_set<ObjectT>, ObjectT>::type&
 erase
 (
-          interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& object,
-    const IntervalSet              <DomainT,Compare,Interval,Alloc>& operand
+          ObjectT& object,
+    const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& operand
 )
 {
-    typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
-
-    if(operand.empty())
-        return object;
-
-    typename operand_type::const_iterator common_lwb;
-    typename operand_type::const_iterator common_upb;
-
-    if(!Set::common_range(common_lwb, common_upb, operand, object))
-        return object;
-
-    typename operand_type::const_iterator it_ = common_lwb;
-    while(it_ != common_upb)
-		object.erase(*it_++);
-
-    return object; 
-    //CL return object -= operand; 
+    return object -= operand; 
 }
 
 

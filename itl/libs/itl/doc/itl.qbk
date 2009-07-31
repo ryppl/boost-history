@@ -125,6 +125,10 @@ Distributed under the Boost Software License, Version 1.0.
 [def __Omlgn__         ['O(m log n)]]
 [def __Omlgnpm__       ['O(m log(n+m))]]
 
+[def __inpops__        `+= -= &= ^=`]
+[def __ainpop__        `o=`]
+
+
 [/ Cited Boost resources ]
 
 [/ Other web resources ]
