@@ -88,9 +88,8 @@ void cast_test(GenericPointer &p)
 }
 
 template<typename GenericPointer>
-void conversion_test(GenericPointer &p, bool is_cloning_pointer = false)
+void conversion_to_base_test(GenericPointer &p, bool is_cloning_pointer = false)
 {
-  // conversion to base pointer
   typedef typename boost::generic_ptr::rebind<GenericPointer, Y>::other pointer_to_base_type;
   pointer_to_base_type base_p(p);
   BOOST_TEST(p == base_p ||
@@ -100,6 +99,32 @@ void conversion_test(GenericPointer &p, bool is_cloning_pointer = false)
     is_cloning_pointer);
 }
 
+template<typename GenericPointer>
+void conversion_to_void_test(GenericPointer &p, bool is_cloning_pointer = false)
+{
+  typedef typename boost::generic_ptr::rebind<GenericPointer, void>::other pointer_to_void_type;
+  pointer_to_void_type void_p(p);
+  BOOST_TEST(p == void_p ||
+    is_cloning_pointer);
+  void_p = p;
+  BOOST_TEST(p == void_p ||
+    is_cloning_pointer);
+
+  typedef typename boost::generic_ptr::rebind
+  <
+    GenericPointer,
+    const typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type
+  >::other pointer_to_const_type;
+  pointer_to_const_type cp(p);
+
+  typedef typename boost::generic_ptr::rebind
+  <
+    GenericPointer,
+    const void
+  >::other pointer_to_const_void_type;
+  pointer_to_const_void_type const_void_p(cp);
+}
+
 int main()
 {
   {
@@ -107,7 +132,8 @@ int main()
     X *p = &x;
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   {
     X x;
@@ -116,7 +142,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   {
     X x;
@@ -125,7 +152,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   {
     X x;
@@ -134,7 +162,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   {
     X x;
@@ -143,7 +172,8 @@ int main()
     // dereference_test(p); // monitors don't support dereference
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   {
     boost::generic_ptr::shared<X*> p(new X());
@@ -151,7 +181,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   {
     X x;
@@ -160,7 +191,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_test(p);
+    conversion_to_base_test(p);
+    // conversion_to_void_test(p); // intrusive doesn't support void pointers
   }
   {
     boost::generic_ptr::cloning<X*> p(new X());
@@ -168,7 +200,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_test(p, true);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
   }
   return 0;
 }

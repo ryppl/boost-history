@@ -72,24 +72,26 @@ namespace boost
       typedef void * pointer;
       typedef void reference;
     };
-    template<> struct pointer_traits<const void*>
+#if !defined(BOOST_NO_CV_VOID_SPECIALIZATIONS)
+   template<> struct pointer_traits<const void*>
     {
-      typedef void value_type;
+      typedef const void value_type;
       typedef const void * pointer;
       typedef void reference;
     };
     template<> struct pointer_traits<volatile void*>
     {
-      typedef void value_type;
+      typedef volatile void value_type;
       typedef volatile void * pointer;
       typedef void reference;
     };
     template<> struct pointer_traits<const volatile void*>
     {
-      typedef void value_type;
+      typedef const volatile void value_type;
       typedef const volatile void * pointer;
       typedef void reference;
     };
+#endif
 
     template<typename T>
     T * get_plain_old_pointer(T * p)
