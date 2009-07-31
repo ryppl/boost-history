@@ -23,6 +23,7 @@
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/clone_allocator.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/swap.hpp>
 
 namespace boost
@@ -69,8 +70,13 @@ namespace boost
         }
         virtual typename rebind<GenericPointer, void>::other get_pointer()
         {
-          //FIXME: remove const from px's value_type
-          return px;
+          return const_pointer_cast
+            <
+              typename remove_const
+              <
+                typename pointer_traits<GenericPointer>::value_type
+              >::type
+            >(px);
         }
         virtual clone_factory_pdc_impl* make_clone()
         {
@@ -337,6 +343,14 @@ namespace boost
       template<typename U> void reset(U p)
       {
         cloning(p).swap(*this);
+      }
+      template<typename U, typename D> void reset(U p, D d)
+      {
+        cloning(p, d).swap(*this);
+      }
+      template<typename U, typename D, typename C> void reset(U p, D d, C c)
+      {
+        cloning(p, d, c).swap(*this);
       }
 
       pointer get() const {return px;}

@@ -48,12 +48,16 @@ void clone_test()
   boost::generic_ptr::cloning<X*> cp2(cp);
   BOOST_TEST(X::instances == 2);
   BOOST_TEST(cp != cp2);
-  boost::generic_ptr::cloning<X*> cp3;
+  boost::generic_ptr::cloning<const X*> cp3;
   BOOST_TEST(X::instances == 2);
   cp3 = cp2;
   BOOST_TEST(X::instances == 3);
   BOOST_TEST(cp3->num_instances() == X::instances);
   BOOST_TEST(cp2 != cp3);
+
+  const X* p_to_const = new X();
+  cp3.reset(p_to_const);
+  BOOST_TEST(X::instances == 3);
 }
 
 void move_test()
