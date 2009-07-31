@@ -73,9 +73,6 @@ class in_memory
 
     void merge_from(unsigned partition, in_memory &other)
     {
-        BOOST_ASSERT(intermediates_.find(partition) != intermediates_.end());
-        BOOST_ASSERT(other.intermediates_.find(partition) != other.intermediates_.end());
-
         typedef typename intermediates_t::value_type map_type;
 
         map_type &map       = intermediates_[partition];
@@ -115,22 +112,11 @@ class in_memory
         return true;
     }
 
-//!!!
-    //bool const replace(typename map_task_type::intermediate_key_type   const &key,
-    //                   typename map_task_type::intermediate_value_type const &value)
-    //{
-    //    intermediates_t::iterator it = intermediates_.find(key);
-    //    if (it == intermediates_.end())
-    //        return false;
-    //    it->second.clear();
-    //    it->second.push_back(value);
-    //    return true;
-    //}
-
     template<typename FnObj>
     void combine(FnObj &fn_obj)
     {
         intermediates_t intermediates;
+        intermediates.resize(num_partitions_);
         std::swap(intermediates_, intermediates);
 
         for (typename intermediates_t::const_iterator it=intermediates.begin(); it!=intermediates.end(); ++it)
@@ -146,9 +132,9 @@ class in_memory
                 fn_obj.finish(it1->first, *this);
             }
         }
-
-        if (intermediates_.size() == 0)
-            std::swap(intermediates_, intermediates);
+//!!!null_combiner
+        //if (intermediates_.size() == 0)
+        //    std::swap(intermediates_, intermediates);
     }
 
   private:
