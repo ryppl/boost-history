@@ -52,5 +52,5 @@ int main()
 {
   implicit_conversion_test();
   throw_test();
-  return 0;
+  return boost::report_errors();
 }

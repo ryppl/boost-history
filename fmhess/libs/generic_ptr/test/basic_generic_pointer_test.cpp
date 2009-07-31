@@ -70,6 +70,7 @@ void cast_test(GenericPointer &p)
     <typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type>(yp);
 
   yp = boost::generic_ptr::dynamic_pointer_cast<Y>(p);
+  BOOST_TEST(boost::generic_ptr::get_plain_old_pointer(yp) != 0);
   xp = boost::generic_ptr::dynamic_pointer_cast
     <typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type>(yp);
   BOOST_TEST(boost::generic_ptr::get_plain_old_pointer(xp) != 0);
@@ -123,6 +124,11 @@ void conversion_to_void_test(GenericPointer &p, bool is_cloning_pointer = false)
     const void
   >::other pointer_to_const_void_type;
   pointer_to_const_void_type const_void_p(cp);
+  BOOST_TEST(cp == const_void_p ||
+    is_cloning_pointer);
+  void_p = p;
+  BOOST_TEST(cp == const_void_p ||
+    is_cloning_pointer);
 }
 
 int main()
@@ -200,8 +206,8 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
-    conversion_to_base_test(p);
-    conversion_to_void_test(p);
+    conversion_to_base_test(p, true);
+    conversion_to_void_test(p, true);
   }
-  return 0;
+  return boost::report_errors();
 }

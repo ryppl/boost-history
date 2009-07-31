@@ -160,5 +160,5 @@ int main()
   cast_test();
   deleter_test();
   custom_cloner_test();
-  return 0;
+  return boost::report_errors();
 }

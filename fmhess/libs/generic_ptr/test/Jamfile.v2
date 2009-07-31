@@ -23,6 +23,7 @@ rule thread-run ( sources )
     test-suite "generic_ptr"
         : [ thread-run basic_generic_pointer_test.cpp ]
           [ run cloning_test.cpp ]
+          [ run cloning_monitor_test.cpp ]
           [ run throwing_test.cpp ]
         ;
 }
