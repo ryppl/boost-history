@@ -174,10 +174,13 @@ boost::mapreduce::job<
 #else
   , boost::mapreduce::null_combiner
 #endif
-#ifndef USE_IN_MEMORY_INTERMEDIATES
   , boost::mapreduce::datasource::directory_iterator<wordcount::map_task_type>
+#ifdef USE_IN_MEMORY_INTERMEDIATES
   , boost::mapreduce::intermediates::local_disk<wordcount::map_task_type, wordcount::reduce_task>
+#else
+  , boost::mapreduce::intermediates::in_memory<wordcount::map_task_type, wordcount::reduce_task>
 #endif
+  , boost::mapreduce::intermediates::reduce_file_output<wordcount::map_task_type, wordcount::reduce_task>
 > job;
 
 
