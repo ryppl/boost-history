@@ -87,6 +87,19 @@ void cast_test(GenericPointer &p)
     >(xp_const);
 }
 
+template<typename GenericPointer>
+void conversion_test(GenericPointer &p, bool is_cloning_pointer = false)
+{
+  // conversion to base pointer
+  typedef typename boost::generic_ptr::rebind<GenericPointer, Y>::other pointer_to_base_type;
+  pointer_to_base_type base_p(p);
+  BOOST_TEST(p == base_p ||
+    is_cloning_pointer);
+  base_p = p;
+  BOOST_TEST(p == base_p ||
+    is_cloning_pointer);
+}
+
 int main()
 {
   {
@@ -94,6 +107,7 @@ int main()
     X *p = &x;
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     X x;
@@ -102,6 +116,7 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     X x;
@@ -110,6 +125,7 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     X x;
@@ -118,6 +134,7 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     X x;
@@ -126,6 +143,7 @@ int main()
     // dereference_test(p); // monitors don't support dereference
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     boost::generic_ptr::shared<X*> p(new X());
@@ -133,6 +151,7 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     X x;
@@ -141,6 +160,7 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
+    conversion_test(p);
   }
   {
     boost::generic_ptr::cloning<X*> p(new X());
@@ -148,6 +168,7 @@ int main()
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
+    conversion_test(p, true);
   }
   return 0;
 }
