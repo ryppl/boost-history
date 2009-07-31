@@ -42,7 +42,8 @@ public:
 
 void clone_test()
 {
-  typedef boost::generic_ptr::cloning<boost::generic_ptr::monitor<int*, event_counting_mutex> > cloning_monitor_type;
+  typedef boost::generic_ptr::monitor<int*, event_counting_mutex> monitor_type;
+  typedef boost::generic_ptr::cloning<monitor_type> cloning_monitor_type;
   cloning_monitor_type p0(new int());
   BOOST_TEST(p0.get().get_mutex_ref().lock_count == 0);
   BOOST_TEST(p0.get().get_mutex_ref().unlock_count == 0);

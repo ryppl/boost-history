@@ -41,40 +41,25 @@ namespace boost
     {
       return GenericPointer(new_clone(get_pointer(p)));
     }
+    //FIXME: add similar delete_clone functions
 
     namespace detail
     {
+      template<typename GenericVoidPointer>
       class clone_factory_impl_base
       {
       public:
         virtual ~clone_factory_impl_base() {}
-        //FIXME: this isn't adequate.  We need to return a generic pointer to void instead
-        virtual void * get_pointer() = 0;
+        virtual GenericVoidPointer get_pointer() = 0;
         virtual clone_factory_impl_base* make_clone() = 0;
       };
 
-      template<typename T>
-      class clone_factory_impl: public clone_factory_impl_base
-      {
-      public:
-        explicit clone_factory_impl(T *p): px(p)
-        {}
-        ~clone_factory_impl()
-        {
-          delete_clone(px);
-        }
-        virtual void * get_pointer() { return px; }
-        virtual clone_factory_impl* make_clone()
-        {
-          if(px == 0) return new clone_factory_impl(0);
-          return new clone_factory_impl(new_clone(px));
-        }
-      private:
-        T * px;
-      };
-
       template<typename GenericPointer, typename Deleter, typename Cloner>
-      class clone_factory_pdc_impl: public clone_factory_impl_base
+      class clone_factory_pdc_impl: public
+        clone_factory_impl_base
+        <
+          typename rebind<GenericPointer, void>::other
+        >
       {
       public:
         clone_factory_pdc_impl(GenericPointer p, Deleter d, Cloner c): px(p), deleter(d), cloner(c)
@@ -83,7 +68,11 @@ namespace boost
         {
           deleter(px);
         }
-        virtual void * get_pointer() { return get_plain_old_pointer(px); }
+        virtual typename rebind<GenericPointer, void>::other get_pointer()
+        {
+          //FIXME: remove const from px's value_type
+          return px;
+        }
         virtual clone_factory_pdc_impl* make_clone()
         {
           return new clone_factory_pdc_impl(cloner(px), deleter, cloner);
@@ -94,13 +83,11 @@ namespace boost
         Cloner cloner;
       };
 
+      template<typename GenericVoidPointer>
       class clone_factory
       {
       public:
         clone_factory(): _impl()
-        {}
-        template<typename T>
-        explicit clone_factory(T * p): _impl(new clone_factory_impl<T>(p))
         {}
         template<typename T, typename Deleter, typename Cloner>
         clone_factory(T p, Deleter d, Cloner c): _impl(new clone_factory_pdc_impl<T, Deleter, Cloner>(p, d, c))
@@ -113,9 +100,9 @@ namespace boost
           swap(other);
         }
 #endif
-        void * get_pointer()
+        GenericVoidPointer get_pointer()
         {
-          if(_impl.get() == 0) return 0;
+          if(_impl.get() == 0) return GenericVoidPointer();
           return _impl->get_pointer();
         }
         void swap(clone_factory &other)
@@ -125,9 +112,10 @@ namespace boost
       private:
         clone_factory& operator=(const clone_factory &);  // could be implemented and made public if we needed it
 
-        scoped_ptr<clone_factory_impl_base> _impl;
+        scoped_ptr<clone_factory_impl_base<GenericVoidPointer> > _impl;
       };
-      void swap(clone_factory &a, clone_factory &b)
+      template<typename T>
+      void swap(clone_factory<T> &a, clone_factory<T> &b)
       {
         a.swap(b);
       }
@@ -160,6 +148,7 @@ namespace boost
       typedef cloning this_type; // for detail/operator_bool.hpp
       template<typename U>
       friend class cloning;
+      typedef detail::clone_factory<typename generic_ptr::rebind<T, void>::other> clone_factory_type;
     public:
       typedef typename pointer_traits<T>::value_type value_type;
       typedef T pointer;
@@ -171,104 +160,150 @@ namespace boost
         typedef cloning<typename generic_ptr::rebind<pointer, ValueType>::other> other;
       };
 
-      cloning(): _cloner(), px()
+      cloning(): _clone_factory(), px()
       {}
       template<typename U>
-      cloning( U p ): _cloner(get_plain_old_pointer(p)), px( p )
-      {}
-      template<typename U, typename Deleter, typename Cloner = default_cloner>
-      cloning(U p, Deleter d, Cloner c = default_cloner()): _cloner(p, d, c), px( p )
-      {}
-      cloning(const cloning & other):
-        _cloner(other._cloner),
+      cloning( U p ):
+        _clone_factory
+        (
+          typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
+          default_cloning_deleter(),
+          default_cloner()
+        ),
         px
         (
-          static_cast<value_type *>(_cloner.get_pointer())
+          static_pointer_cast
+          <
+            typename pointer_traits<U>::value_type
+          >(_clone_factory.get_pointer())
+        )
+      {}
+      template<typename U, typename Deleter>
+      cloning(U p, Deleter d):
+        _clone_factory
+        (
+          typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
+          d,
+          default_cloner()
+        ),
+        px
+        (
+          static_pointer_cast
+          <
+            typename pointer_traits<U>::value_type
+          >(_clone_factory.get_pointer())
+        )
+      {}
+      template<typename U, typename Deleter, typename Cloner>
+      cloning(U p, Deleter d, Cloner c):
+        _clone_factory
+        (
+          typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
+          d,
+          c
+        ),
+        px
+        (
+          static_pointer_cast
+          <
+            typename pointer_traits<U>::value_type
+          >(_clone_factory.get_pointer())
+        )
+      {}
+      cloning(const cloning & other):
+        _clone_factory(other._clone_factory),
+        px
+        (
+          static_pointer_cast<value_type>(_clone_factory.get_pointer())
         )
       {}
       template<typename U>
       cloning(const cloning<U> & other):
-        _cloner(other._cloner),
+        _clone_factory(other._clone_factory),
         px
         (
-          static_cast
+          static_pointer_cast
           <
-            typename pointer_traits<U>::value_type *
-          >(_cloner.get_pointer())
+            typename pointer_traits<U>::value_type
+          >(_clone_factory.get_pointer())
         )
       {}
 
       // casts
       template<typename U>
       cloning(const cloning<U> & other, detail::static_cast_tag):
-        _cloner(other._cloner),
+        _clone_factory(other._clone_factory),
         px
         (
-          static_cast
+          static_pointer_cast
           <
-            value_type *
+            value_type
           >
           (
-            static_cast
+            static_pointer_cast
             <
-              typename pointer_traits<U>::value_type *
-            >(_cloner.get_pointer())
+              typename pointer_traits<U>::value_type
+            >(_clone_factory.get_pointer())
           )
         )
       {}
       template<typename U>
       cloning(const cloning<U> & other, detail::const_cast_tag):
-        _cloner(other._cloner),
+        _clone_factory(other._clone_factory),
         px
         (
-          const_cast
+          const_pointer_cast
           <
-            value_type *
+            value_type
           >
           (
-            static_cast
+            static_pointer_cast
             <
-              typename pointer_traits<U>::value_type *
-            >(_cloner.get_pointer())
+              typename pointer_traits<U>::value_type
+            >(_clone_factory.get_pointer())
           )
         )
       {}
       template<typename U>
       cloning(const cloning<U> & other, detail::dynamic_cast_tag):
-        _cloner(other._cloner),
+        _clone_factory(other._clone_factory),
         px
         (
-          dynamic_cast
+          dynamic_pointer_cast
           <
-            value_type *
+            value_type
           >
           (
-            static_cast
+            static_pointer_cast
             <
-              typename pointer_traits<U>::value_type *
-            >(_cloner.get_pointer())
+              typename pointer_traits<U>::value_type
+            >(_clone_factory.get_pointer())
           )
         )
       {
-        // reset _cloner if dynamic cast failed
+        // reset _clone_factory if dynamic cast failed
         if(get_plain_old_pointer(px) == 0)
         {
-          detail::clone_factory().swap(_cloner);
+          clone_factory_type().swap(_clone_factory);
         }
       }
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-      cloning(cloning && other): _cloner(std::move(other._cloner)), px(std::move(other.px))
-      {}
+      cloning(cloning && other): _clone_factory(std::move(other._clone_factory)), px(std::move(other.px))
+      {
+        detail::set_plain_old_pointer_to_null(other.px);
+      }
       template<typename U>
-      cloning(cloning<U> && other): _cloner(std::move(other._cloner)), px(std::move(other.px))
-      {}
+      cloning(cloning<U> && other): _clone_factory(std::move(other._clone_factory)), px(std::move(other.px))
+      {
+        detail::set_plain_old_pointer_to_null(other.px);
+      }
 #endif
 
       void swap(cloning & other)
       {
         boost::swap(px, other.px);
-        boost::swap(_cloner, other._cloner);
+        boost::swap(_clone_factory, other._clone_factory);
       }
 
       cloning & operator=(const cloning & other)
@@ -321,7 +356,7 @@ namespace boost
       }
 
     private:
-      detail::clone_factory _cloner;
+      clone_factory_type _clone_factory;
       pointer px;
     };
 

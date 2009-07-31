@@ -212,6 +212,17 @@ namespace boost
     {
       return std::less<typename monitor<T, Mutex>::pointer>()(a.get(), b.get());
     }
+
+    // new_clone overload for safe (mutex locked) use with generic_ptr::cloning
+    template<typename GenericPointer, typename Mutex>
+    monitor<GenericPointer, Mutex> new_clone(const monitor<GenericPointer, Mutex> &p)
+    {
+      if(get_plain_old_pointer(p) == 0) return p;
+      monitor_unique_lock<monitor<GenericPointer, Mutex> > lock(p);
+      using boost::generic_ptr::new_clone;
+      return monitor<GenericPointer, Mutex>(new_clone(p.get()));
+    }
+    // FIXME: add similar delete_clone overload
   } // namespace generic_ptr
 } // namespace boost
 
