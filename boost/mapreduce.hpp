@@ -93,14 +93,6 @@ struct results
     std::vector<time_t>   reduce_times;
 };
 
-template<typename Job>
-void run(boost::mapreduce::specification &spec, boost::mapreduce::results &result)
-{
-    Job::datasource_type datasource(spec);
-    Job job(datasource, spec);
-    job.run<boost::mapreduce::schedule_policy::cpu_parallel<Job> >(result);
-}
-
 }   // namespace mapreduce
 
 }   // namespace boost
@@ -113,5 +105,21 @@ void run(boost::mapreduce::specification &spec, boost::mapreduce::results &resul
 #include <boost/mapreduce/datasource.hpp>
 #include <boost/mapreduce/null_combiner.hpp>
 #include <boost/mapreduce/job.hpp>
+
+namespace boost {
+
+namespace mapreduce {
+
+template<typename Job>
+void run(boost::mapreduce::specification &spec, boost::mapreduce::results &result)
+{
+    typename Job::datasource_type datasource(spec);
+    Job job(datasource, spec);
+    job.run<boost::mapreduce::schedule_policy::cpu_parallel<Job> >(result);
+}
+
+}   // namespace mapreduce
+
+}   // namespace boost
 
 #endif  // BOOST_MAPREDUCE_HPP

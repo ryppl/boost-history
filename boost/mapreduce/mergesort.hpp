@@ -21,7 +21,7 @@
 #include <boost/bind.hpp>
 #include <boost/filesystem.hpp>
 
-#ifdef GNU_GCC
+#ifdef __GNUC__
 #include <cstring> // ubuntu linux
 #include <fstream> // ubuntu linux
 #endif

@@ -14,7 +14,10 @@
 #define BOOST_MAPREDUCE_LOCAL_DISK_INTERMEDIATES_HPP
 
 #include <iomanip>      // setw
-#include <fstream>      // linux
+#ifdef __GNUC__
+#include <iostream>     // ubuntu linux
+#include <fstream>      // ubuntu linux
+#endif
 
 namespace boost {
 

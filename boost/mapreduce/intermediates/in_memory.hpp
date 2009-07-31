@@ -63,7 +63,7 @@ class in_memory
     template<typename Callback>
     void reduce(unsigned const partition, Callback &callback, results &result)
     {
-        intermediates_t::value_type &map = intermediates_[partition];
+        typename intermediates_t::value_type &map = intermediates_[partition];
         for (typename intermediates_t::value_type::const_iterator it1=map.begin(); it1!=map.end(); ++it1)
         {
             callback(it1->first, it1->second.begin(), it1->second.end());
@@ -76,7 +76,7 @@ class in_memory
         BOOST_ASSERT(intermediates_.find(partition) != intermediates_.end());
         BOOST_ASSERT(other.intermediates_.find(partition) != other.intermediates_.end());
 
-        typedef intermediates_t::value_type map_type;
+        typedef typename intermediates_t::value_type map_type;
 
         map_type &map       = intermediates_[partition];
         map_type &other_map = other.intermediates_[partition];
@@ -87,9 +87,9 @@ class in_memory
             return;
         }
 
-        for (map_type::iterator it=other_map.begin(); it!=other_map.end(); ++it)
+        for (typename map_type::iterator it=other_map.begin(); it!=other_map.end(); ++it)
         {
-            map_type::iterator iti = map.insert(make_pair(it->first, map_type::mapped_type())).first;
+            typename map_type::iterator iti = map.insert(make_pair(it->first, typename map_type::mapped_type())).first;
             std::copy(it->second.begin(), it->second.end(), std::back_inserter(iti->second));
         }
     }
@@ -105,12 +105,12 @@ class in_memory
     bool const insert(typename map_task_type::intermediate_key_type   const &key,
                       typename map_task_type::intermediate_value_type const &value)
     {
-        intermediates_t::value_type &map = intermediates_[partitioner_(key, num_partitions_)];
+        typename intermediates_t::value_type &map = intermediates_[partitioner_(key, num_partitions_)];
 
         map.insert(
             make_pair(
                 key,
-                intermediates_t::value_type::mapped_type())).first->second.push_back(value);
+                typename intermediates_t::value_type::mapped_type())).first->second.push_back(value);
 
         return true;
     }
@@ -133,9 +133,9 @@ class in_memory
         intermediates_t intermediates;
         std::swap(intermediates_, intermediates);
 
-        for (intermediates_t::const_iterator it=intermediates.begin(); it!=intermediates.end(); ++it)
+        for (typename intermediates_t::const_iterator it=intermediates.begin(); it!=intermediates.end(); ++it)
         {
-            for (intermediates_t::value_type::const_iterator it1=it->begin(); it1!=it->end(); ++it1)
+            for (typename intermediates_t::value_type::const_iterator it1=it->begin(); it1!=it->end(); ++it1)
             {
                 fn_obj.start(it1->first);
                 std::for_each<
