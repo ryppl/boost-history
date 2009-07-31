@@ -41,7 +41,6 @@ namespace boost
     {
       return GenericPointer(new_clone(get_pointer(p)));
     }
-    //FIXME: add similar delete_clone functions
 
     namespace detail
     {

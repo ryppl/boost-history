@@ -222,7 +222,6 @@ namespace boost
       using boost::generic_ptr::new_clone;
       return monitor<GenericPointer, Mutex>(new_clone(p.get()));
     }
-    // FIXME: add similar delete_clone overload
   } // namespace generic_ptr
 } // namespace boost
 

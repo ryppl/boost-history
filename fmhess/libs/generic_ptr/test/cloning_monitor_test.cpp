@@ -47,7 +47,7 @@ void clone_test()
   cloning_monitor_type p0(new int());
   BOOST_TEST(p0.get().get_mutex_ref().lock_count == 0);
   BOOST_TEST(p0.get().get_mutex_ref().unlock_count == 0);
-  cloning_monitor_type p1(p0);
+  cloning_monitor_type p1(p0); // should lock p0's mutex during copy
   BOOST_TEST(p0.get().get_mutex_ref().lock_count == 1);
   BOOST_TEST(p0.get().get_mutex_ref().unlock_count == 1);
   BOOST_TEST(p1.get().get_mutex_ref().lock_count == 0);
