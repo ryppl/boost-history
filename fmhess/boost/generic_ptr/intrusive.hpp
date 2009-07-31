@@ -150,9 +150,9 @@ public:
 
 #if defined( BOOST_HAS_RVALUE_REFS )
 
-    intrusive(intrusive && rhs): px( rhs.px )
+    intrusive(intrusive && rhs): px( std::move(rhs.px) )
     {
-        detail::set_plain_old_pointer_to_null(px);
+        detail::set_plain_old_pointer_to_null(rhs.px);
     }
 
     intrusive & operator=(intrusive && rhs)
