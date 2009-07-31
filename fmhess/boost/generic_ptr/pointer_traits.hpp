@@ -21,8 +21,18 @@
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 
+namespace std
+{
+  template<typename T> class shared_ptr;
+  template<typename T> class unique_ptr;
+}
+
 namespace boost
 {
+  template<typename T> class shared_ptr;
+  template<typename T> class scoped_ptr;
+  template<typename T> class intrusive_ptr;
+
   namespace generic_ptr
   {
     namespace detail
@@ -118,6 +128,56 @@ namespace boost
       typedef ValueType * other;
     };
 
+    // pointer traits for some external smart pointers
+    namespace detail
+    {
+      template<typename T> struct value_templated_ptr_pointer_traits
+      {
+        typedef T value_type;
+        typedef T * pointer;
+        typedef typename pointer_traits<T*>::reference reference;
+      };
+    } // namespace detail
+    template<typename T> struct pointer_traits<boost::shared_ptr<T> > :
+      public detail::value_templated_ptr_pointer_traits<T>
+    {};
+    template<typename T, typename ValueType>
+    struct rebind<boost::shared_ptr<T>, ValueType>
+    {
+      typedef boost::shared_ptr<ValueType> other;
+    };
+    template<typename T> struct pointer_traits<boost::scoped_ptr<T> > :
+      public detail::value_templated_ptr_pointer_traits<T>
+    {};
+    template<typename T, typename ValueType>
+    struct rebind<boost::scoped_ptr<T>, ValueType>
+    {
+      typedef boost::scoped_ptr<ValueType> other;
+    };
+    template<typename T> struct pointer_traits<boost::intrusive_ptr<T> > :
+      public detail::value_templated_ptr_pointer_traits<T>
+    {};
+    template<typename T, typename ValueType>
+    struct rebind<boost::intrusive_ptr<T>, ValueType>
+    {
+      typedef boost::intrusive_ptr<ValueType> other;
+    };
+    template<typename T> struct pointer_traits<std::shared_ptr<T> > :
+      public detail::value_templated_ptr_pointer_traits<T>
+    {};
+    template<typename T, typename ValueType>
+    struct rebind<std::shared_ptr<T>, ValueType>
+    {
+      typedef std::shared_ptr<ValueType> other;
+    };
+    template<typename T> struct pointer_traits<std::unique_ptr<T> > :
+      public detail::value_templated_ptr_pointer_traits<T>
+    {};
+    template<typename T, typename ValueType>
+    struct rebind<std::unique_ptr<T>, ValueType>
+    {
+      typedef std::unique_ptr<ValueType> other;
+    };
   } // namespace generic_ptr
 } // namespace boost
 
