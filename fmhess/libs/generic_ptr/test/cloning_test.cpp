@@ -113,7 +113,7 @@ void deleter_test()
     boost::generic_ptr::cloning<X*> cp0(x0, boost::generic_ptr::null_deleter());
     BOOST_TEST(X::instances == 1);
     {
-      boost::generic_ptr::cloning<X*> cp1 = cp0;
+      boost::generic_ptr::cloning<X*> cp1(cp0);
       BOOST_TEST(X::instances == 2);
       x1 = get_plain_old_pointer(cp1);
     }
