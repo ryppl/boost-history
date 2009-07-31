@@ -111,7 +111,7 @@ namespace boost
 
     template<typename GenericPtr>
     typename pointer_traits<GenericPtr>::value_type *
-        get_plain_old_pointer(GenericPtr gp)
+        get_plain_old_pointer(const GenericPtr &gp)
     {
       using boost::get_pointer;
       return get_plain_old_pointer(get_pointer(gp));
