@@ -13,10 +13,8 @@
 #ifndef BOOST_MAPREDUCE_LOCAL_DISK_INTERMEDIATES_HPP
 #define BOOST_MAPREDUCE_LOCAL_DISK_INTERMEDIATES_HPP
 
-#include <iomanip>                  // setw
-#include <fstream>		// linux
-#include <boost/unordered_map.hpp>
-#include <boost/mapreduce/hash_partitioner.hpp>
+#include <iomanip>      // setw
+#include <fstream>      // linux
 
 namespace boost {
 
@@ -93,8 +91,35 @@ struct file_sorter
 
 namespace intermediates {
 
+template<typename MapTask, typename ReduceTask>
+class reduce_file_output
+{
+  public:
+    reduce_file_output(std::string const &output_filespec,
+                       unsigned    const  partition,
+                       unsigned    const  num_partitions)
+    {
+        std::ostringstream filename;
+        filename << output_filespec << partition+1 << "_of_" << num_partitions;
+        filename_ = filename.str();
+        output_file_.open(filename_.c_str());
+    }
+
+    void operator()(typename MapTask::intermediate_key_type const &key,
+                    typename ReduceTask::value_type         const &value)
+    {
+        output_file_ << key << "\t" << value << "\n";
+    }
+
+  private:
+    std::string   filename_;
+    std::ofstream output_file_;
+};
+
+
 template<
     typename MapTask,
+    typename ReduceTask,
     typename SortFn=mapreduce::detail::file_sorter,
     typename MergeFn=mapreduce::detail::file_merger,
     typename PartitionFn=mapreduce::hash_partitioner>
@@ -102,11 +127,7 @@ class local_disk : boost::noncopyable
 {
   private:
     typedef
-#ifdef _DEBUG
     std::map<
-#else
-    boost::unordered_map<
-#endif
         size_t,                                     // hash value of intermediate key (R)
         std::pair<
             std::string,                            // filename
@@ -115,6 +136,7 @@ class local_disk : boost::noncopyable
 
   public:
     typedef MapTask map_task_type;
+    typedef reduce_file_output<MapTask, ReduceTask> store_result_type;
 
     local_disk(unsigned const num_partitions)
       : num_partitions_(num_partitions)
@@ -141,7 +163,13 @@ class local_disk : boost::noncopyable
                       typename map_task_type::intermediate_value_type const &value)
     {
         unsigned const partition = partitioner_(key, num_partitions_);
-        intermediates_t::iterator it = intermediate_files_.insert(make_pair(partition, intermediates_t::mapped_type())).first;
+
+        intermediates_t::iterator it =
+            intermediate_files_.insert(
+                make_pair(
+                    partition,
+                    intermediates_t::mapped_type())).first;
+
         if (it->second.first.empty())
         {
             it->second.first = platform::get_temporary_filename();

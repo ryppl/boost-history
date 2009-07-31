@@ -44,7 +44,8 @@ template<typename MapTask,
          typename ReduceTask,
          typename Combiner=null_combiner,
          typename Datasource=datasource::directory_iterator<MapTask>,
-         typename IntermediateStore=intermediates::local_disk<MapTask> >
+         typename IntermediateStore=intermediates::in_memory<MapTask, ReduceTask>,
+         typename StoreResult=typename IntermediateStore::store_result_type>
 class job : private boost::noncopyable
 {
   public:
@@ -99,19 +100,16 @@ class job : private boost::noncopyable
       public:
         reduce_task_runner(
             std::string   const &output_filespec,
-            size_t        const  partition,
-            size_t        const  num_partitions)
+            unsigned      const  partition,
+            unsigned      const  num_partitions)
+          : store_result_(output_filespec, partition, num_partitions)
         {
-            std::ostringstream filename;
-            filename << output_filespec << partition+1 << "_of_" << num_partitions;
-            filename_ = filename.str();
-            output_file_.open(filename_.c_str());
         }
 
         void emit(typename map_task_type::intermediate_key_type const &key,
                   typename reduce_task_type::value_type         const &value)
         {
-            output_file_ << key << "\t" << value << "\n";
+            store_result_(key, value);
         }
 
         template<typename It>
@@ -120,14 +118,8 @@ class job : private boost::noncopyable
             reduce_task_type::reduce(*this, key, it, ite);
         }
 
-        std::string const &filename(void) const
-        {
-            return filename_;
-        }
-
       private:
-        std::string   filename_;
-        std::ofstream output_file_;
+        StoreResult store_result_;
     };
 
     job(datasource_type &datasource, specification const &spec)

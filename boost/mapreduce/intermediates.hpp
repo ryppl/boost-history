@@ -10,9 +10,6 @@
 // For more information, see http://www.boost.org/libs/mapreduce/
 //
  
-//!!!
-#ifdef USE_IN_MEMORY_INTERMEDIATES
-#include <boost/mapreduce/intermediates/in_memory.hpp>
-#endif  // USE_IN_MEMORY_INTERMEDIATES
-
+#include <boost/mapreduce/hash_partitioner.hpp>
 #include <boost/mapreduce/intermediates/local_disk.hpp>
+#include <boost/mapreduce/intermediates/in_memory.hpp>

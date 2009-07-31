@@ -9,6 +9,17 @@
 //
 // For more information, see http://www.boost.org/libs/mapreduce/
 //
+
+// configuration options
+#define WORD_COUNT_MEMORY_MAP_FILE
+#define USE_WORDCOUNT_COMBINER
+#define USE_IN_MEMORY_INTERMEDIATES
+
+#if defined(_DEBUG)
+#   define RUN_SEQUENTIAL_MAP_REDUCE
+#else
+#   define BOOST_DISABLE_ASSERTS
+#endif
  
 #if !defined(_DEBUG) &&  !defined(BOOST_DISABLE_ASSERTS)
 #   pragma message("Warning: BOOST_DISABLE_ASSERTS not defined")
@@ -24,15 +35,6 @@
 
 #if defined(BOOST_MSVC)  && defined(_DEBUG)
 #include <crtdbg.h>
-#endif
-
-// configuration options
-#define WORD_COUNT_MEMORY_MAP_FILE
-#define USE_WORDCOUNT_COMBINER
-//#define USE_IN_MEMORY_INTERMEDIATES
-
-#if defined(_DEBUG)
-#define RUN_SEQUENTIAL_MAP_REDUCE
 #endif
 
 namespace wordcount {
@@ -172,9 +174,9 @@ boost::mapreduce::job<
 #else
   , boost::mapreduce::null_combiner
 #endif
-#ifdef USE_IN_MEMORY_INTERMEDIATES
+#ifndef USE_IN_MEMORY_INTERMEDIATES
   , boost::mapreduce::datasource::directory_iterator<wordcount::map_task_type>
-  , boost::mapreduce::intermediates::in_memory<wordcount::map_task_type>
+  , boost::mapreduce::intermediates::local_disk<wordcount::map_task_type, wordcount::reduce_task>
 #endif
 > job;
 
@@ -244,6 +246,7 @@ int main(int argc, char **argv)
         std::cout << "\nFinished.";
 #else
         std::cout << "\nRunning CPU Parallel MapReduce...";
+        spec.reduce_tasks = 1;
 
         if (argc > 2)
             spec.map_tasks = atoi(argv[2]);

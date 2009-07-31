@@ -12,6 +12,8 @@
 
 #ifndef BOOST_MAPREDUCE_HASH_PARTITONER_HPP
 #define BOOST_MAPREDUCE_HASH_PARTITONER_HPP
+
+#include <boost/functional/hash.hpp>
  
 namespace boost {
 
