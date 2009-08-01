@@ -26,6 +26,8 @@
 ]
 
 [def (tm) '''&#8482;''']
+[def __code_rep__ [@https://svn.boost.org/svn/boost/sandbox/SOC/2006/tree]]
+[def __browse_rep__ [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2006/tree]]
 
 [section Introduction]
 
@@ -51,10 +53,10 @@ hierarchies or xml files).
 [section Download]
 
 This library's current state is only available via [@http://subversion.tigris.org/ svn] from the
-Boost Sandbox repository at [@https://svn.boost.org/svn/boost/sandbox/SOC/2006/tree]
+Boost Sandbox repository at __code_rep__.
 (This obsoletes the old Boost Consulting repository for Google Summer of Code 2006(tm) at
-https://www.boost-consulting.com/svn/main/boost/soc/2006.) The source code can be 
-browsed online at [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2006/tree].
+ https://www.boost-consulting.com/svn/main/boost/soc/2006.) The source code can be 
+browsed online at __browse_rep__.
 
 A [@http://boost-consulting.com/vault/index.php?action=downloadfile&filename=tree-soc2006.zip&directory=Containers& snapshot]
  of the final GSoC 2006 state (kindly provided by René Rivera) can be found at the 
@@ -87,7 +89,7 @@ my place) on to Dubai, UAE, so it could catch some sun first.
 [include concepts.qbk]
 [include algorithms.qbk]
 
-[include proposal.qbk]
+[/include proposal.qbk]
 [include implementation.qbk]
 [include glossary.qbk]
 [include references.qbk]

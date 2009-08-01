@@ -4,6 +4,7 @@
 //  (See accompanying file LICENSE_1_0.txt or copy at
 //  http://www.boost.org/LICENSE_1_0.txt)
 
+#include <boost/tree/balance.hpp>
 #include <boost/tree/binary_tree.hpp>
 #include <boost/tree/detail/balancers/treap.hpp>
 #include <boost/tree/detail/augmentors/unaugmented.hpp>
@@ -15,8 +16,6 @@
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 
-
-
 //TODO: Make this a test suite.
 
 BOOST_AUTO_TEST_CASE( treap_test )
@@ -26,7 +25,7 @@ BOOST_AUTO_TEST_CASE( treap_test )
     std::vector<int> my_vector;
     typedef binary_tree<int> tree_t;
     //typedef test_searcher<false, tree_t> searcher_t;
-    typedef test_balancer<binary_tree<int>, balancers::treap> treap_t;
+    typedef balance<binary_tree<int>, balancers::treap> treap_t;
     
     //searcher_t my_searcher;
     treap_t my_balancer;
@@ -34,7 +33,7 @@ BOOST_AUTO_TEST_CASE( treap_test )
     
     //create_test_data_searcher(my_searcher);
     create_test_data_sequence(my_balancer);
-    create_test_data_sequence(my_vector);
+    //create_test_data_sequence(my_vector);
 
 //    Segfaults:    
 //    BOOST_CHECK(std::equal(my_balancer.begin(), my_balancer.end(), my_vector.begin()));

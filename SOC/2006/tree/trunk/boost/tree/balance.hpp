@@ -183,10 +183,10 @@ class balance {
                             typename metadata<value_type>::type > data_type;
     typedef typename Hierarchy::template rebind<data_type>::other hierarchy_type;
 
- protected:
+protected:
     hierarchy_type h;
 
- private:
+private:
     typedef balance<Hierarchy, Balance> self_type;
     
     typedef typename hierarchy_type::cursor cursor;
@@ -243,7 +243,7 @@ class balance {
      */      
     iterator begin()
     {
-        return iterator(h.inorder_first());
+        return iterator(first(inorder(), h.root()));
 
     }
     

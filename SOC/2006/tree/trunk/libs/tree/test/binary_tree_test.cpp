@@ -362,6 +362,19 @@ BOOST_AUTO_TEST_CASE( comparison_operator_test )
     BOOST_CHECK(bt == bt2);
 }
 
+BOOST_AUTO_TEST_CASE( splice_subtree_test )
+{
+    binary_tree<int> bt0;
+    bt0.insert(bt0.root(), 8);
+    bt0.splice(bt0.root().begin(), bt, bt.root().begin());
+    BOOST_CHECK(bt.root().begin().is_leaf());
+    bt0.splice(bt0.root().end(), bt, bt.root().end());
+    BOOST_CHECK(bt.root().end().is_leaf());
+
+    BOOST_CHECK_EQUAL(*bt.root().begin(), 8);
+    validate_test_dataset1_tree(bt0.root());
+}
+
 BOOST_AUTO_TEST_CASE( splice_test )
 {
     binary_tree<int> bt0;

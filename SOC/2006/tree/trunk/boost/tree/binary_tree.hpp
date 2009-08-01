@@ -352,13 +352,12 @@ public:
      }
      
     // splice operations
-    
-    //TODO: check for equal allocators...
+
     /**
-     * @brief  Insert contents of another %binary_tree.
-     * @param  position  Empty cursor that is going to be the root of the newly
-     *                   inserted subtree.
-     * @param  x  Source binary_tree.
+     * @brief   Insert contents of another %binary_tree.
+     * @param   position    Empty cursor that is going to be the root of the newly
+     *                      inserted subtree.
+     * @param   x   Source binary_tree.
      * 
      * The elements of @a x are inserted in constant time as the subtree whose
      * root is referenced by @a position.  @a x becomes an empty
@@ -366,45 +365,29 @@ public:
      */
     void splice(cursor position, binary_tree& x)
     {
-        if (!x.empty()) {
-//            if (position == inorder_first()) // Readjust inorder_first to x's
-//                m_header.m_children[1] = x.m_header.m_children[1];
-                
-            position.base_node()->m_children[position.m_pos] = x.m_header.m_children[0];
-            //TODO: replace the following by some temporary-swapping?
-            x.m_header.m_children[0] = 0;
-            x.m_header.m_children[1] = &x.m_header;
-            x.m_header.m_parent = &x.m_header;
-        }
+        splice(position, x, x.root());
     }
-    
-    // Does this splice *p or the subtree?
-    // Maybe only *p, as the subtree would require knowledge about
-    // inorder_first in order to remain O(1)
-    // But what if p has children?... Then this would require some defined
-    // re-linking (splicing-out, actually) in turn!
-//    void splice(cursor pos, binary_tree& x, cursor p)
-//    {
-//    }
 
-    void splice(cursor position, binary_tree& x, 
-                cursor root, cursor inorder_first)
+    /**
+     * @brief   Insert contents of another %binary_tree's subtree.
+     * @param   position    Empty cursor that is going to be the root of the newly
+     *                      inserted subtree.
+     * @param   x           Source binary_tree.
+     * @param   root        The source subtree.
+     * 
+     * The elements of @a root (which is subtree of @a x) are inserted in
+     * constant time as the subtree whose root is referenced by @a position.
+     * @a x becomes an empty binary_tree.
+     */
+    void splice(cursor position, binary_tree& x, cursor root)
     {
-        if (!x.is_leaf()) {
-            if (inorder_first == x.inorder_first())
-                x.m_header.m_children[1] = inorder_first.base_node();
-            if (position == inorder_first()) // Readjust inorder_first to x's
-                m_header.m_children[1] = inorder_first.base_node();
-                
-            position.base_node()->node_base_type::operator[](position.m_pos) = root.base_node();
-            
-            root.base_node()->m_children[0] = 0;
-            if (root == x.root()) {
-                x.m_header.m_children[1] = &x.m_header;
-                x.m_header.m_parent = &x.m_header;            
-            } else
-                root.base_node()->m_children[1] = 0;
-        }        
+        static_cast<node_base_pointer>(root.base_node()->m_children[position.m_pos])->m_parent
+        = position.base_node();
+
+        position.base_node()->m_children[position.m_pos]
+        = root.base_node()->m_children[position.m_pos];
+        
+        root.base_node()->m_children[position.m_pos] = 0;       
     }
 
     /**
