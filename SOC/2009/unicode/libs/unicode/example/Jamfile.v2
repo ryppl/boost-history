@@ -6,6 +6,8 @@
 #   http://www.boost.org/LICENSE_1_0.txt)
 #==============================================================================
 
+import testing ;
+
 project
     : requirements 
         <include>../../..
@@ -17,8 +19,10 @@ project
 		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1
     ;
 
-exe convert : convert.cpp ;
-exe characters : characters.cpp ;
-exe compose : compose.cpp ;
-exe search : search.cpp ;
-exe source_input : source_input.cpp ;
+test-suite unicode-examples :
+    [ run convert.cpp ]
+    [ run characters.cpp ]
+    [ run compose.cpp ]
+    [ run search.cpp ]
+    [ run source_input.cpp ]
+;

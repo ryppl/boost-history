@@ -22,7 +22,7 @@ namespace detail
     
 } // namespace detail
 
-/** Model of \c BoundaryChecker that tells whether a position lies on a
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly that tells whether a position lies on a
  * grapheme cluster boundary within a range of code points. */
 struct grapheme_boundary
 {
@@ -113,8 +113,9 @@ Name##_grapheme_bounded(Range& range)                                  \
     );                                                                 \
 }                                                                      \
                                                                        \
-/** Model of \c BoundaryChecker that tells whether a position lies on a
-grapheme cluster boundary within a range of Name units. */             \
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
+that tells whether a position lies on a grapheme cluster boundary
+within a range of Name units. */                                       \
 typedef multi_boundary<                                                \
     Name##_boundary, Name##_decoder,                                   \
     grapheme_boundary                                                  \

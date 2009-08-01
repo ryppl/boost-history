@@ -26,8 +26,9 @@ namespace detail
     static const char32 SCount = LCount * NCount; // 11172
 }
 
-/** \c OneManyPipe that transforms a single Hangul syllable (LV or LVT)
- * into its decomposed form since those decompositions are not part of the UCD.
+/** \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly that
+ * transforms a single Hangul syllable (LV or LVT) into its decomposed
+ * form since those decompositions are not part of the UCD.
  * Other code points are left unchanged. */
 struct hangul_decomposer
 {
@@ -60,9 +61,10 @@ struct hangul_decomposer
     
 };
 
-/** \c Pipe that transforms <L, V> and <LV, T> Hangul code points sequences
- * into the LV and LVT Hangul syllables, since those compositions
- * are not part of the UCD.
+/** \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
+ * transforms <L, V> and <LV, T> Hangul code points sequences into the
+ * LV and LVT Hangul syllables, since those compositions are not part
+ * of the UCD.
  * Other code points are left unchanged. */
 struct hangul_composer
 {

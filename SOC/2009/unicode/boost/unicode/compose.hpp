@@ -17,8 +17,9 @@ namespace unicode
 #undef BOOST_UNICODE_OPTION
 #endif
 
-/** Model of \c OneManyPipe that decomposes a code point, i.e. it
- * converts a code point into a sequence of code points.
+/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+ * that decomposes a code point, i.e. it converts a code point into a
+ * sequence of code points.
  * It applies UCD decompositions that match \c mask as well as the Hangul decompositions. */
 template<unsigned mask = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical)>
 struct decomposer

@@ -12,7 +12,8 @@
 namespace boost
 {
 
-/** Model of \c Consumer constructed from a model of \c Pipe */    
+/** Model of \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
+ * constructed from a model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly. */    
 template<typename Pipe>
 struct pipe_consumer : private Pipe
 {
@@ -48,7 +49,8 @@ BOOST_CONCEPT_REQUIRES(
     return pipe_consumer<Pipe>(p);
 }
 
-/** Model of \c Consumer constructed from a model of \c BoundaryChecker */    
+/** Model of \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
+ * constructed from a model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly. */    
 template<typename BoundaryChecker>
 struct boundary_consumer : private BoundaryChecker
 {
@@ -94,8 +96,9 @@ BOOST_CONCEPT_REQUIRES(
     return boundary_consumer<BoundaryChecker>(b);
 }
 
-/** Model of \c BoundaryChecker constructed from two models of \c BoundaryChecker
- * with a model of \c Pipe applied in the middle. */    
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
+ * constructed from two models of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
+ * with a model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly applied in the middle. */    
 template<typename B1, typename Pipe, typename B2>
 struct multi_boundary
 {
@@ -146,8 +149,9 @@ BOOST_CONCEPT_REQUIRES(
     return multi_boundary<B1, Pipe, B2>(b1, p, b2);
 }
 
-/** Model of \c Consumer that adapts the elements another \c Consumer
- * sees with a model of \c Pipe. */
+/** Model of \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
+ * that adapts the elements another \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
+ * sees with a model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly. */
 template<typename Pipe, typename Consumer>
 struct piped_consumer
 {

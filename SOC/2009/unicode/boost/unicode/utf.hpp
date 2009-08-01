@@ -14,7 +14,7 @@ namespace unicode
 
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_ENCODER_DEF(Name)                                \
-/** Eagerly evaluates unicode::Name##_encoder until the whole input
+/** Eagerly evaluates \c unicode::##Name##_encoder until the whole input
    range \c range has been treated, copying the result to \c out and
    returning the past-the-end output iterator */                       \
 template<typename Range, typename OutputIterator>                      \
@@ -26,8 +26,8 @@ OutputIterator Name##_encode(const Range& range, OutputIterator out)   \
     );                                                                 \
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Name##_encoder by returning a range adapter
-   that wraps the range \c range and converts it step-by-step as
+/** Lazily evalutes \c unicode::##Name##_encoder by returning a range
+   adapter that wraps the range \c range and converts it step-by-step as
    the range is advanced */                                            \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
@@ -41,8 +41,8 @@ Name##_encoded(const Range& range)                                     \
     return piped(range, make_one_many_pipe(unicode::Name##_encoder()));\
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Name##_encoder by returning a range adapter
-   that wraps the range \c range and converts it step-by-step as
+/** Lazily evalutes \c unicode::##Name##_encoder by returning a range
+   adapter that wraps the range \c range and converts it step-by-step as
    the range is advanced */                                            \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
@@ -56,7 +56,7 @@ Name##_encoded(Range& range)                                           \
     return piped(range, make_one_many_pipe(unicode::Name##_encoder()));\
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Name##_encoder by returning an output
+/** Lazily evalutes \c unicode::##Name##_encoder by returning an output
   iterator that wraps \c out and converts every pushed element. */     \
 template<typename OutputIterator>                                      \
 typename boost::detail::unspecified<pipe_output_iterator<              \
@@ -72,7 +72,7 @@ typename boost::detail::unspecified<pipe_output_iterator<              \
 
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_DECODER_DEF(Name)                                \
-/** Eagerly evaluates unicode::Name##_decoder until the whole input
+/** Eagerly evaluates \c unicode::##Name##_decoder until the whole input
    range \c range has been treated, copying the result to \c out and
    returning the past-the-end output iterator */                       \
 template<typename Range, typename OutputIterator>                      \
@@ -81,8 +81,8 @@ OutputIterator Name##_decode(const Range& range, OutputIterator out)   \
     return pipe(range, unicode::Name##_decoder(), out);                \
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Name##_decoder by returning a range adapter
-   that wraps the range \c range and converts it step-by-step as
+/** Lazily evalutes \c unicode::##Name##_decoder by returning a range
+   adapter that wraps the range \c range and converts it step-by-step as
    the range is advanced */                                            \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
@@ -96,8 +96,8 @@ Name##_decoded(const Range& range)                                     \
     return piped(range, unicode::Name##_decoder());                    \
 }                                                                      \
                                                                        \
-/** Lazily evalutes unicode::Name##_decoder by returning a range adapter
-   that wraps the range \c range and converts it step-by-step as
+/** Lazily evalutes \c unicode::##Name##_decoder by returning a range
+   adapter that wraps the range \c range and converts it step-by-step as
    the range is advanced */                                            \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \

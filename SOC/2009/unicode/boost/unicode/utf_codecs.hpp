@@ -76,15 +76,15 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 
 } // namespace detail
 
-/** Model of \c OneManyPipe that converts a code point to a sequence
- * of UTF-16 code units. */
+/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+ * that converts a code point to a sequence of UTF-16 code units. */
 struct u16_encoder
 {
     typedef char32 input_type;
 	typedef char16 output_type;
     typedef mpl::int_<2> max_output;
 	
-    /** Throws std::out_of_range if \c v is not a valid code point. */
+    /** Throws \c std::out_of_range if \c v is not a valid code point. */
 	template<typename OutputIterator>
 	OutputIterator operator()(char32 v, OutputIterator out)
 	{
@@ -119,15 +119,15 @@ struct u16_encoder
 	}
 };
 
-/** Model of \c Pipe that converts a sequence of UTF-16 code units into
- * a single code point. */
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
+ * converts a sequence of UTF-16 code units into a single code point. */
 struct u16_decoder
 {
     typedef char16 input_type;
 	typedef char32 output_type;
     typedef mpl::int_<1> max_output;
 	
-    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
+    /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	ltr(In begin, In end, Out out)
@@ -157,7 +157,7 @@ struct u16_decoder
 		return std::make_pair(++it, out);
 	}
 	
-    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
+    /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-16 range. */
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	rtl(In begin, In end, Out out)
@@ -197,8 +197,9 @@ private:
 	}
 };
 
-/** Model of \c BoundaryChecker that tells whether a position lies on a code
- * point boundary within a range of UTF-16 code units. */
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
+ * that tells whether a position lies on a code point boundary within
+ * a range of UTF-16 code units. */
 struct u16_boundary
 {
     typedef char16 input_type;
@@ -214,15 +215,15 @@ struct u16_boundary
     }
 };
 
-/** Model of \c OneManyPipe that converts a code point to a sequence
- * of UTF-8 code units. */
+/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+ * that converts a code point to a sequence of UTF-8 code units. */
 struct u8_encoder
 {
     typedef char32 input_type;
 	typedef char output_type;
     typedef mpl::int_<4> max_output;
 	
-    /** Throws std::out_of_range if \c c is not a valid code point. */
+    /** Throws \c std::out_of_range if \c c is not a valid code point. */
 	template<typename OutputIterator>
 	OutputIterator operator()(char32 c, OutputIterator out)
 	{
@@ -256,8 +257,8 @@ struct u8_encoder
 	}
 };
 
-/** Model of \c Pipe that converts a sequence of UTF-8 code units into
- * a single code point. */
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
+ * converts a sequence of UTF-8 code units into a single code point. */
 struct u8_decoder
 {
     typedef char input_type;
@@ -273,7 +274,7 @@ private:
     }
 
 public:	
-    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */
+    /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	ltr(In begin, In end, Out out)
@@ -326,7 +327,7 @@ public:
         return std::make_pair(p, out);
 	}
 
-    /** Throws std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */	
+    /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not a valid UTF-8 range. */	
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	rtl(In begin, In end, Out out)
@@ -380,8 +381,9 @@ public:
 	}
 };
 
-/** Model of \c BoundaryChecker that tells whether a position lies on a code
- * point boundary within a range of UTF-8 code units. */
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
+ * that tells whether a position lies on a code point boundary within
+ * a range of UTF-8 code units. */
 struct u8_boundary
 {
     typedef char input_type;
@@ -429,8 +431,9 @@ template<> struct is_u8<char> : mpl::true_ {};
 
 } // namespace detail
 
-/** Model of \c Pipe, either behaves like \c u16_decoder or
- * \c u8_decoder depending on the value type of the input range. */
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly,
+ * either behaves like \c u16_decoder or \c u8_decoder depending on the
+ * value type of the input range. */
 struct utf_decoder
 {
     typedef char32 input_type;
@@ -491,8 +494,9 @@ public:
     }
 };
 
-/** Model of \c BoundaryChecker, either behaves like \c u16_boundary or
- * \c u8_boundary depending on the value type of the input range. */
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly,
+ * either behaves like \c u16_boundary or \c u8_boundary depending on
+ * the value type of the input range. */
 struct utf_boundary
 {
     typedef char32 input_type;
@@ -546,8 +550,8 @@ private:
 #endif
 };
 
-/** Model of \c OneManyPipe that converts from UTF-32 to ISO-8859-1
- * alias latin-1. */
+/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+ * that converts from UTF-32 to ISO-8859-1 alias latin-1. */
 typedef boost::detail::unspecified< cast_pipe<char> >::type latin1_encoder;
 
 } // namespace unicode

@@ -15,7 +15,8 @@
 namespace boost
 {
 
-/** Model of \c Pipe constructed from a model of \c OneManyPipe */
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+ * constructed from a model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly. */
 template<typename OneManyPipe>
 struct one_many_pipe : OneManyPipe
 {
@@ -57,8 +58,8 @@ BOOST_CONCEPT_REQUIRES(
 	return one_many_pipe<OneManyPipe>(p);
 }
 
-/** Model of \c OneManyPipe that casts its input to its template
- * parameter and writes it to its output. */
+/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
+ * that casts its input to its template parameter and writes it to its output. */
 template<typename T>
 struct cast_pipe
 {
