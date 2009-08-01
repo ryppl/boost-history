@@ -91,6 +91,13 @@ struct reduce_task : public boost::mapreduce::reduce_task<unsigned>
 class combiner
 {
   public:
+    template<typename IntermediateStore>
+    static void run(IntermediateStore &intermediate_store)
+    {
+        combiner instance;
+        intermediate_store.combine(instance);
+    }
+
     void start(map_task::intermediate_key_type const &)
     {
         total_ = 0;
@@ -107,6 +114,9 @@ class combiner
     {
         total_ += value;
     }
+        
+  private:
+    combiner() { }
 
   private:
     unsigned total_;
