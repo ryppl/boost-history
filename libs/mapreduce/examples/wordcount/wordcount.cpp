@@ -29,10 +29,8 @@
 namespace wordcount {
 
 struct map_task : public boost::mapreduce::map_task<
-                             std::string,                           // MapKey
-                             std::pair<char const *, char const *>, // MapValue
-                             std::string,                           // IntermediateKey
-                             unsigned>                              // IntermediateValue
+                             std::string,                            // MapKey
+                             std::pair<char const *, char const *> > // MapValue
 {
     template<typename Runtime>
     static void map(Runtime &runtime, std::string const &/*key*/, value_type &value)
@@ -79,7 +77,7 @@ struct map_task : public boost::mapreduce::map_task<
     }
 };
 
-struct reduce_task : public boost::mapreduce::reduce_task<unsigned>
+struct reduce_task : public boost::mapreduce::reduce_task<std::string, unsigned>
 {
     template<typename Runtime, typename It>
     static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
@@ -98,19 +96,19 @@ class combiner
         intermediate_store.combine(instance);
     }
 
-    void start(map_task::intermediate_key_type const &)
+    void start(reduce_task::key_type const &)
     {
         total_ = 0;
     }
 
     template<typename IntermediateStore>
-    void finish(map_task::intermediate_key_type const &key, IntermediateStore &intermediate_store)
+    void finish(reduce_task::key_type const &key, IntermediateStore &intermediate_store)
     {
         if (total_ > 0)
             intermediate_store.insert(key, total_);
     }
 
-    void operator()(map_task::intermediate_value_type const &value)
+    void operator()(reduce_task::value_type const &value)
     {
         total_ += value;
     }

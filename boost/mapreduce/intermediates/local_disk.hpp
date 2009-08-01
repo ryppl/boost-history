@@ -108,8 +108,8 @@ class reduce_file_output
         output_file_.open(filename_.c_str());
     }
 
-    void operator()(typename MapTask::intermediate_key_type const &key,
-                    typename ReduceTask::value_type         const &value)
+    void operator()(typename ReduceTask::key_type   const &key,
+                    typename ReduceTask::value_type const &value)
     {
         output_file_ << key << "\t" << value << "\n";
     }
@@ -138,7 +138,8 @@ class local_disk : boost::noncopyable
     intermediates_t;
 
   public:
-    typedef MapTask map_task_type;
+    typedef MapTask    map_task_type;
+    typedef ReduceTask reduce_task_type;
     typedef reduce_file_output<MapTask, ReduceTask> store_result_type;
 
     local_disk(unsigned const num_partitions)
@@ -162,8 +163,8 @@ class local_disk : boost::noncopyable
         }
     }
 
-    bool const insert(typename map_task_type::intermediate_key_type   const &key,
-                      typename map_task_type::intermediate_value_type const &value)
+    bool const insert(typename reduce_task_type::key_type   const &key,
+                      typename reduce_task_type::value_type const &value)
     {
         unsigned const partition = partitioner_(key, num_partitions_);
 
@@ -208,7 +209,7 @@ class local_disk : boost::noncopyable
             std::ifstream infile(infilename.c_str());
             while (!infile.eof())
             {
-                typename map_task_type::intermediate_value_type value;
+                typename reduce_task_type::value_type value;
                 if (read_record(infile, key, value))
                 {
                     if (key != last_key  &&  key.length() > 0)
@@ -276,10 +277,10 @@ class local_disk : boost::noncopyable
     template<typename Callback>
     void reduce(unsigned const partition, Callback &callback, results &result)
     {
-        typename map_task_type::intermediate_key_type   key;
-        typename map_task_type::intermediate_key_type   last_key;
-        typename map_task_type::intermediate_value_type value;
-        std::list<typename map_task_type::intermediate_value_type> values;
+        typename reduce_task_type::key_type   key;
+        typename reduce_task_type::key_type   last_key;
+        typename reduce_task_type::value_type value;
+        std::list<typename reduce_task_type::value_type> values;
 
         std::list<std::string> filenames;
         intermediates_t::const_iterator it = intermediate_files_.find(partition);
@@ -316,8 +317,8 @@ class local_disk : boost::noncopyable
 
   protected:
     static bool const read_record(std::ifstream &infile,
-                                  typename map_task_type::intermediate_key_type   &key,
-                                  typename map_task_type::intermediate_value_type &value)
+                                  typename reduce_task_type::key_type   &key,
+                                  typename reduce_task_type::value_type &value)
     {
 #if defined(__SGI_STL_PORT)
         size_t keylen;

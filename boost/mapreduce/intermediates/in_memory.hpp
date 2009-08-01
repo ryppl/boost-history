@@ -29,8 +29,8 @@ class reduce_null_output
     {
     }
 
-    void operator()(typename MapTask::intermediate_key_type const &/*key*/,
-                    typename ReduceTask::value_type         const &/*value*/)
+    void operator()(typename ReduceTask::key_type   const &/*key*/,
+                    typename ReduceTask::value_type const &/*value*/)
     {
     }
 };
@@ -46,12 +46,13 @@ class in_memory
     typedef
     std::vector<
         std::map<
-            typename MapTask::intermediate_key_type,
-            std::list<typename MapTask::intermediate_value_type> > >
+            typename ReduceTask::key_type,
+            std::list<typename ReduceTask::value_type> > >
     intermediates_t;
 
   public:
-    typedef MapTask map_task_type;
+    typedef MapTask    map_task_type;
+    typedef ReduceTask reduce_task_type;
     typedef reduce_null_output<MapTask, ReduceTask> store_result_type;
 
     in_memory(unsigned const num_partitions)
@@ -99,8 +100,8 @@ class in_memory
     }
 
 
-    bool const insert(typename map_task_type::intermediate_key_type   const &key,
-                      typename map_task_type::intermediate_value_type const &value)
+    bool const insert(typename reduce_task_type::key_type   const &key,
+                      typename reduce_task_type::value_type const &value)
     {
         typename intermediates_t::value_type &map = intermediates_[partitioner_(key, num_partitions_)];
 

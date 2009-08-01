@@ -50,18 +50,14 @@ typedef
 map_value_type;
 
 template<typename T>
-struct map_task : public boost::mapreduce::map_task<
-                             std::string,            // MapKey
-                             map_value_type,         // MapValue
-                             std::string,            // IntermediateKey
-                             unsigned>               // IntermediateValue
+struct map_task
+  : public boost::mapreduce::map_task<std::string, map_value_type>
 {
     template<typename Runtime>
     static void map(Runtime &runtime, std::string const &key, T &value);
 };
-typedef map_task<map_value_type> map_task_type;
 
-struct reduce_task : public boost::mapreduce::reduce_task<unsigned>
+struct reduce_task : public boost::mapreduce::reduce_task<std::string, unsigned>
 {
     template<typename Runtime, typename It>
     static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
@@ -167,6 +163,8 @@ map_task<std::ifstream>::map(
 
 class combiner;
 
+typedef map_task<map_value_type> map_task_type;
+
 typedef
 boost::mapreduce::job<
     wordcount::map_task_type
@@ -197,19 +195,19 @@ class combiner
         intermediate_store.combine(instance);
     }
 
-    void start(job::map_task_type::intermediate_key_type const &)
+    void start(job::reduce_task_type::key_type const &)
     {
         total_ = 0;
     }
 
     template<typename IntermediateStore>
-    void finish(job::map_task_type::intermediate_key_type const &key, IntermediateStore &intermediate_store)
+    void finish(job::reduce_task_type::key_type const &key, IntermediateStore &intermediate_store)
     {
         if (total_ > 0)
             intermediate_store.insert(key, total_);
     }
 
-    void operator()(job::map_task_type::intermediate_value_type const &value)
+    void operator()(job::reduce_task_type::value_type const &value)
     {
         total_ += value;
     }
@@ -256,7 +254,7 @@ int main(int argc, char **argv)
         spec.map_tasks = 1;
         spec.reduce_tasks = 1;
 
-        wordcount::job      job(datasource, spec);
+        wordcount::job job(datasource, spec);
         job.run<boost::mapreduce::schedule_policy::sequential<wordcount::job> >(result);
         std::cout << "\nFinished.";
 #else
@@ -266,7 +264,12 @@ int main(int argc, char **argv)
         if (argc > 2)
             spec.map_tasks = atoi(argv[2]);
 
-        boost::mapreduce::run<wordcount::job>(spec, result);
+        // this method can be called, but since we want access to the result data,
+        // we need to have a job object to interrogate
+        //boost::mapreduce::run<wordcount::job>(spec, result);
+
+        wordcount::job job(datasource, spec);
+        job.run<boost::mapreduce::schedule_policy::cpu_parallel<wordcount::job> >(result);
         std::cout << "\nCPU Parallel MapReduce Finished.";
 #endif
     }
@@ -274,6 +277,8 @@ int main(int argc, char **argv)
     {
         std::cout << std::endl << "Error: " << e.what();
     }
+
+    typedef std::pair<wordcount::reduce_task::key_type, wordcount::reduce_task::value_type> keyvalue_t;
 
     std::cout << std::endl << "\n" << "MapReduce statistics:";
     std::cout << "\n  " << "MapReduce job runtime                     : " << result.job_runtime << " seconds, of which...";

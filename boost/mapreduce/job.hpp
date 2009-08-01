@@ -19,24 +19,19 @@ namespace mapreduce {
 
 template<typename T> size_t length(T const &str);
 
-template<
-    typename MapKey,
-    typename MapValue,
-    typename IntermediateKey,
-    typename IntermediateValue>
+template<typename MapKey, typename MapValue>
 class map_task
 {
   public:
     typedef MapKey              key_type;
     typedef MapValue            value_type;             
-    typedef IntermediateKey     intermediate_key_type;
-    typedef IntermediateValue   intermediate_value_type;
 };
 
-template<typename ReduceValue>
+template<typename ReduceKey, typename ReduceValue>
 class reduce_task
 {
   public:
+    typedef ReduceKey   key_type;
     typedef ReduceValue value_type;
 };
 
@@ -78,8 +73,8 @@ class job : private boost::noncopyable
             return *this;
         }
 
-        bool const emit_intermediate(typename map_task_type::intermediate_key_type   const &key,
-                                     typename map_task_type::intermediate_value_type const &value)
+        bool const emit_intermediate(typename reduce_task_type::key_type   const &key,
+                                     typename reduce_task_type::value_type const &value)
         {
             return intermediate_store_.insert(key, value);
         }
@@ -105,14 +100,14 @@ class job : private boost::noncopyable
         {
         }
 
-        void emit(typename map_task_type::intermediate_key_type const &key,
-                  typename reduce_task_type::value_type         const &value)
+        void emit(typename reduce_task_type::key_type   const &key,
+                  typename reduce_task_type::value_type const &value)
         {
             store_result_(key, value);
         }
 
         template<typename It>
-        void operator()(typename map_task_type::intermediate_key_type const &key, It it, It ite)
+        void operator()(typename reduce_task_type::key_type const &key, It it, It ite)
         {
             reduce_task_type::reduce(*this, key, it, ite);
         }
