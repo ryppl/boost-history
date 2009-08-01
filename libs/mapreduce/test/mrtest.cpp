@@ -16,7 +16,9 @@
 #define USE_IN_MEMORY_INTERMEDIATES
 
 #if defined(_DEBUG)
-#   define RUN_SEQUENTIAL_MAP_REDUCE
+#   if 0
+#       define RUN_SEQUENTIAL_MAP_REDUCE
+#   endif
 #else
 #   define BOOST_DISABLE_ASSERTS
 #endif
@@ -176,9 +178,9 @@ boost::mapreduce::job<
 #endif
   , boost::mapreduce::datasource::directory_iterator<wordcount::map_task_type>
 #ifdef USE_IN_MEMORY_INTERMEDIATES
-  , boost::mapreduce::intermediates::local_disk<wordcount::map_task_type, wordcount::reduce_task>
-#else
   , boost::mapreduce::intermediates::in_memory<wordcount::map_task_type, wordcount::reduce_task>
+#else
+  , boost::mapreduce::intermediates::local_disk<wordcount::map_task_type, wordcount::reduce_task>
 #endif
   , boost::mapreduce::intermediates::reduce_file_output<wordcount::map_task_type, wordcount::reduce_task>
 > job;
@@ -188,6 +190,13 @@ boost::mapreduce::job<
 class combiner
 {
   public:
+    template<typename IntermediateStore>
+    static void run(IntermediateStore &intermediate_store)
+    {
+        combiner instance;
+        intermediate_store.combine(instance);
+    }
+
     void start(job::map_task_type::intermediate_key_type const &)
     {
         total_ = 0;
@@ -204,6 +213,9 @@ class combiner
     {
         total_ += value;
     }
+
+  private:
+    combiner() { }
 
   private:
     unsigned total_;

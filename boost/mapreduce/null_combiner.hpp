@@ -19,6 +19,11 @@ namespace mapreduce {
 
 struct null_combiner
 {
+    template<typename IntermediateStore>
+    static void run(IntermediateStore &/*intermediate_store*/)
+    {
+    }
+
     template<typename IntermediateValueType>
     void start(IntermediateValueType const &)
     { }

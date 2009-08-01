@@ -125,16 +125,13 @@ class in_memory
             {
                 fn_obj.start(it1->first);
                 std::for_each<
-                    intermediates_t::value_type::mapped_type::const_iterator, FnObj &>(
+                    typename intermediates_t::value_type::mapped_type::const_iterator, FnObj &>(
                         it1->second.begin(),
                         it1->second.end(),
                         fn_obj);
                 fn_obj.finish(it1->first, *this);
             }
         }
-//!!!null_combiner
-        //if (intermediates_.size() == 0)
-        //    std::swap(intermediates_, intermediates);
     }
 
   private:

@@ -73,8 +73,7 @@ class job : private boost::noncopyable
 
             // consolidating map intermediate results can save network time by
             // aggregating the mapped valued at mapper
-            combiner_type combiner;
-            intermediate_store_.combine(combiner);
+            combiner_type::run(intermediate_store_);
 
             return *this;
         }
