@@ -3655,7 +3655,7 @@ text.
 </rationale>
 </comment>
 
-<comment nb="UK" num="78" uknum="130" type="Te" owner="LWG" issue="1001" disp="" date="" extdoc="">
+<comment nb="UK" num="78" uknum="130" type="Te" owner="LWG" issue="1001" disp="rejected" date="" extdoc="">
 <section>
 6.5.4
 </section>
@@ -3678,6 +3678,7 @@ text.
 to LWG for their response to the library aspects of the comment.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -8331,7 +8332,7 @@ Footnote 188
 </rationale>
 </comment>
 
-<comment nb="FR" num="32" uknum="" type="te" owner="LWG" issue="902" disp="" date="" extdoc="">
+<comment nb="FR" num="32" uknum="" type="te" owner="LWG" issue="902" disp="rejected" date="" extdoc="">
 <section>
 18.2.1
 [Numeric
@@ -8359,10 +8360,11 @@ limits]
 </suggestion>
 <notes>Alisdair and Gaby will work on a resolution.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="DE" num="16" uknum="" type="te" owner="LWG" issue="902" disp="" date="" extdoc="">
+<comment nb="DE" num="16" uknum="" type="te" owner="LWG" issue="902" disp="rejected" date="" extdoc="">
 <section>
 18.2.1
 </section>
@@ -8386,10 +8388,11 @@ limits]
 </suggestion>
 <notes>Alisdair and Gaby will work on a resolution.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="JP" num="26" uknum="" type="te" owner="LWG" issue="1005" disp="" date="" extdoc="">
+<comment nb="JP" num="26" uknum="" type="te" owner="LWG" issue="1005" disp="rejected" date="" extdoc="">
 <section>
 18.2.1.1
 </section>
@@ -8429,10 +8432,11 @@ limits]
 </suggestion>
 <notes>Alisdair will work on a resolution.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="DE" num="17" uknum="" type="te" owner="LWG" issue="1078" disp="" date="" extdoc="">
+<comment nb="DE" num="17" uknum="" type="te" owner="LWG" issue="1078" disp="rejected" date="" extdoc="">
 <section>
 18.2.6
 </section>
@@ -8450,6 +8454,7 @@ limits]
 </suggestion>
 <notes>Doug will open an issue.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -8774,7 +8779,7 @@ N2886</a>
 </rationale>
 </comment>
 
-<comment nb="JP" num="29" uknum="" type="te" owner="LWG" issue="1007" disp="" date="" extdoc="">
+<comment nb="JP" num="29" uknum="" type="te" owner="LWG" issue="1007" disp="rejected" date="" extdoc="">
 <section>
 18.7.6
 </section>
@@ -8799,6 +8804,7 @@ N2886</a>
 </suggestion>
 <notes>Alisdair will open an issue.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -9089,7 +9095,7 @@ N2840</a> and was accepted into the WP in Summit.
 </rationale>
 </comment>
 
-<comment nb="UK" num="199" uknum="127" type="Te" owner="LWG" issue="1015" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="199" uknum="127" type="Te" owner="LWG" issue="1015" disp="rejected" date="" extdoc="">
 <section>
 20.1.1, 20.1.2
 </section>
@@ -9111,6 +9117,7 @@ N2840</a> and was accepted into the WP in Summit.
 </suggestion>
 <notes>Agree change 'program' to 'user' in clauses 20.1.1 and 20.1.2</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -9163,10 +9170,11 @@ N2840</a> and was accepted into the WP in Summit.
 <notes>Done</notes>
 <rationale>After consultation with the submitter, we agreed that the suggestion was in 
     error and there is nothing else to be done.
+
 </rationale>
 </comment>
 
-<comment nb="JP" num="33" uknum="" type="te" owner="LWG" issue="1016" disp="" date="" extdoc="">
+<comment nb="JP" num="33" uknum="" type="te" owner="LWG" issue="1016" disp="rejected" date="" extdoc="">
 <section>
 20.1.5
 </section>
@@ -9185,10 +9193,11 @@ N2840</a> and was accepted into the WP in Summit.
     participate in the axioms. For example, pointers are dereferenceable even if 
     some pointers (e.g. the null pointer) should not be dereferenced.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="US" num="66" uknum="" type="te" owner="LWG" issue="1017" disp="" date="" extdoc="">
+<comment nb="US" num="66" uknum="" type="te" owner="LWG" issue="1017" disp="rejected" date="" extdoc="">
 <section>
 20.1.10
 </section>
@@ -9205,6 +9214,7 @@ N2840</a> and was accepted into the WP in Summit.
 </suggestion>
 <notes>Recommend that we handle the same as JP 33.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -9545,7 +9555,7 @@ Table 41
 </rationale>
 </comment>
 
-<comment nb="US" num="70" uknum="" type="te" owner="LWG" issue="1018" disp="" date="" extdoc="">
+<comment nb="US" num="70" uknum="" type="te" owner="LWG" issue="1018" disp="rejected" date="" extdoc="">
 <section>
 20.5
 </section>
@@ -9570,6 +9580,7 @@ Table 41
     meeting.</notes>
 <rationale>
 Section reference corrected from 20.6.
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -9647,7 +9658,7 @@ return them when F or a type in BoundArgs is move-only.
 </rationale>
 </comment>
 
-<comment nb="JP" num="39" uknum="" type="te" owner="LWG" issue="1024" disp="modified" date="" extdoc="">
+<comment nb="JP" num="39" uknum="" type="te" owner="LWG" issue="1024" disp="rejected" date="" extdoc="">
 <section>
 20.6.16.2
 </section>
@@ -9719,6 +9730,7 @@ Correct as follows.<BR/><BR/>
 </PRE>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -9913,7 +9925,7 @@ Correct as follows.<BR/><BR/>
 </rationale>
 </comment>
 
-<comment nb="UK" num="209" uknum="111" type="Te" owner="LWG" issue="1026" disp="" date="" extdoc="">
+<comment nb="UK" num="209" uknum="111" type="Te" owner="LWG" issue="1026" disp="rejected" date="" extdoc="">
 <section>
 20.7
 </section>
@@ -9935,10 +9947,11 @@ Correct as follows.<BR/><BR/>
     enable_shared_from_this.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="UK" num="213" uknum="357" type="Te" owner="LWG" issue="1027" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="213" uknum="357" type="Te" owner="LWG" issue="1027" disp="rejected" date="" extdoc="">
 <section>
 20.7.6
 </section>
@@ -9964,10 +9977,11 @@ Correct as follows.<BR/><BR/>
 
     Agree as stated. A future paper will address additional related issues.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="UK" num="214" uknum="125" type="Te" owner="LWG" issue="1028" disp="" date="" extdoc="">
+<comment nb="UK" num="214" uknum="125" type="Te" owner="LWG" issue="1028" disp="rejected" date="" extdoc="">
 <section>
 20.7.8
 </section>
@@ -9983,10 +9997,11 @@ Correct as follows.<BR/><BR/>
 <notes>We look forward to a paper on this topic. We recommend no action until a 
     paper is available.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="UK" num="210" uknum="124" type="Te" owner="LWG" issue="1029" disp="" date="" extdoc="">
+<comment nb="UK" num="210" uknum="124" type="Te" owner="LWG" issue="1029" disp="rejected" date="" extdoc="">
 <section>
 20.7.11
 </section>
@@ -10004,6 +10019,7 @@ Correct as follows.<BR/><BR/>
 <notes>We look forward to a paper on this topic. We recommend no action until a 
     paper is available.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -10503,7 +10519,7 @@ Section reference corrected from 20.8.13.6.
 </rationale>
 </comment>
 
-<comment nb="JP" num="45" uknum="" type="te" owner="LWG" issue="1032" disp="" date="" extdoc="">
+<comment nb="JP" num="45" uknum="" type="te" owner="LWG" issue="1032" disp="rejected" date="" extdoc="">
 <section>
 20.9
 </section>
@@ -10529,6 +10545,7 @@ look forward to a paper on this topic. We recommend no action until a
 paper is available.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -10659,7 +10676,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="UK" num="216" uknum="282" type="Te" owner="LWG" issue="1081" disp="" date="" extdoc="">
+<comment nb="UK" num="216" uknum="282" type="Te" owner="LWG" issue="1081" disp="rejected" date="" extdoc="">
 <section>
 21
 </section>
@@ -10678,10 +10695,11 @@ after &#182; 1
     <a href="#JP46">JP46</a> supplies extensive 
     proposed wording; start there.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="JP" num="46" uknum="" type="te" owner="LWG" issue="1081" disp="" date="" extdoc="">
+<comment nb="JP" num="46" uknum="" type="te" owner="LWG" issue="1081" disp="rejected" date="" extdoc="">
 <section>
 21.2, 21.3
 </section>
@@ -11390,6 +11408,7 @@ after &#182; 1
 </suggestion>
 <notes>See UK 216</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -11421,7 +11440,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="48" uknum="" type="te" owner="LWG" issue="1081" disp="" date="" extdoc="">
+<comment nb="JP" num="48" uknum="" type="te" owner="LWG" issue="1081" disp="rejected" date="" extdoc="">
 <section>
 21.3
 </section>
@@ -11447,6 +11466,7 @@ after &#182; 1
 </suggestion>
 <notes>See <a href="#UK216">UK 216</a></notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -11569,7 +11589,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="49" uknum="" type="te" owner="LWG" issue="1082" disp="" date="" extdoc="">
+<comment nb="JP" num="49" uknum="" type="te" owner="LWG" issue="1082" disp="rejected" date="" extdoc="">
 <section>
 22.1.3.2.2
 </section>
@@ -11588,6 +11608,7 @@ after &#182; 1
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -11795,7 +11816,7 @@ after &#182; 1
 </rationale>
 </comment>
 
-<comment nb="JP" num="52" uknum="" type="te" owner="LWG" issue="1083" disp="" date="" extdoc="">
+<comment nb="JP" num="52" uknum="" type="te" owner="LWG" issue="1083" disp="rejected" date="" extdoc="">
 <section>
 22.2.5.1,
         22.2.5.2,
@@ -11922,10 +11943,11 @@ after &#182; 1
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="JP" num="53" uknum="" type="te" owner="LWG" issue="1083" disp="" date="" extdoc="">
+<comment nb="JP" num="53" uknum="" type="te" owner="LWG" issue="1083" disp="rejected" date="" extdoc="">
 <section>
 22.2.5.3 ,
         22.2.5.4
@@ -12014,6 +12036,7 @@ after &#182; 1
 </suggestion>
 <notes>to be handled by Howard Hinnant, Dave Abrahams, Martin Sebor, PJ Plauger</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -12336,7 +12359,7 @@ Table 80
 </rationale>
 </comment>
 
-<comment nb="UK" num="231" uknum="300" type="Te" owner="LWG" issue="1036" disp="" date="" extdoc="">
+<comment nb="UK" num="231" uknum="300" type="Te" owner="LWG" issue="1036" disp="rejected" date="" extdoc="">
 <section>
 23.1.3
 </section>
@@ -12356,6 +12379,7 @@ Table 80
 <notes>Agree with issue and change to [sequence.reqmts]. The changes required to 
     [strings] will be part of the general concept support for that clause.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -12922,7 +12946,7 @@ has classified it as technical.
 </rationale>
 </comment>
 
-<comment nb="UK" num="250" uknum="50" type="Te" owner="LWG" issue="1084" disp="" date="" extdoc="">
+<comment nb="UK" num="250" uknum="50" type="Te" owner="LWG" issue="1084" disp="rejected" date="" extdoc="">
 <section>
 24.1.1
 </section>
@@ -12941,6 +12965,7 @@ has classified it as technical.
 <notes>Howard will open an issue.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -13108,7 +13133,7 @@ has classified it as technical.
 </rationale>
 </comment>
 
-<comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="1085" disp="" date="" extdoc="">
+<comment nb="UK" num="258" uknum="50" type="Te" owner="LWG" issue="1085" disp="rejected" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -13127,6 +13152,7 @@ has classified it as technical.
 <notes>Howard will open an issue.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -13251,7 +13277,7 @@ deferred.
 </rationale>
 </comment>
 
-<comment nb="UK" num="263" uknum="66" type="Te" owner="LWG" issue="1010" disp="" date="" extdoc="">
+<comment nb="UK" num="263" uknum="66" type="Te" owner="LWG" issue="1010" disp="rejected" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13272,6 +13298,7 @@ deferred.
 <notes>Alisdair will open an issue, axiom part deferred.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -13909,7 +13936,7 @@ consensus for change.
 </rationale>
 </comment>
 
-<comment nb="UK" num="284" uknum="26" type="Te" owner="LWG" issue="1086" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="284" uknum="26" type="Te" owner="LWG" issue="1086" disp="rejected" date="" extdoc="">
 <section>
 24.5
 </section>
@@ -13926,6 +13953,7 @@ consensus for change.
 <notes>We agree. To be handled by Howard, Martin and PJ.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -14379,7 +14407,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="1087" disp="" date="" extdoc="">
+<comment nb="UK" num="301" uknum="184" type="Te" owner="LWG" issue="1087" disp="rejected" date="" extdoc="">
 <section>
 25.2.5
 </section>
@@ -14401,6 +14429,7 @@ is editorial.
 <notes>agreed. Howard will open an issue.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -14502,7 +14531,7 @@ issue.
 </rationale>
 </comment>
 
-<comment nb="US" num="84" uknum="" type="ge" owner="LWG" issue="1140" disp="" date="" extdoc="">
+<comment nb="US" num="84" uknum="" type="ge" owner="LWG" issue="1140" disp="rejected" date="" extdoc="">
 <section>
 26
 </section>
@@ -14518,6 +14547,7 @@ with random numbers are resolved by
 N2836</a>, which was accepted in New Jersey.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -14654,7 +14684,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="US" num="85" uknum="" type="ge" owner="LWG" issue="1141" disp="" date="" extdoc="">
+<comment nb="US" num="85" uknum="" type="ge" owner="LWG" issue="1141" disp="rejected" date="" extdoc="">
 <section>
 27
 </section>
@@ -14668,10 +14698,11 @@ Footnote 288
 <notes>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="UK" num="308" uknum="114" type="Te" owner="LWG" issue="1141" disp="" date="" extdoc="">
+<comment nb="UK" num="308" uknum="114" type="Te" owner="LWG" issue="1141" disp="rejected" date="" extdoc="">
 <section>
 27
 </section>
@@ -14688,6 +14719,7 @@ Footnote 288
 <notes>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -14787,7 +14819,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="67" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
+<comment nb="JP" num="67" uknum="" type="te" owner="LWG" issue="1141" disp="rejected" date="" extdoc="">
 <section>
 27.7.1
 </section>
@@ -14883,10 +14915,11 @@ Footnote 288
 <notes>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="JP" num="68" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
+<comment nb="JP" num="68" uknum="" type="te" owner="LWG" issue="1141" disp="rejected" date="" extdoc="">
 <section>
 27.7.2
 </section>
@@ -15007,10 +15040,11 @@ Footnote 288
 <notes>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="JP" num="69" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
+<comment nb="JP" num="69" uknum="" type="te" owner="LWG" issue="1141" disp="rejected" date="" extdoc="">
 <section>
 27.7.3
 </section>
@@ -15131,6 +15165,7 @@ Footnote 288
 <notes>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -15164,7 +15199,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="JP" num="72" uknum="" type="te" owner="LWG" issue="1141" disp="" date="" extdoc="">
+<comment nb="JP" num="72" uknum="" type="te" owner="LWG" issue="1141" disp="rejected" date="" extdoc="">
 <section>
 27.7.4
 </section>
@@ -15282,6 +15317,7 @@ Footnote 288
 <notes>
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -15306,7 +15342,7 @@ Footnote 288
 </rationale>
 </comment>
 
-<comment nb="US" num="86" uknum="" type="ge" owner="LWG" issue="1142" disp="" date="" extdoc="">
+<comment nb="US" num="86" uknum="" type="ge" owner="LWG" issue="1142" disp="rejected" date="" extdoc="">
 <section>
 28
 </section>
@@ -15321,10 +15357,11 @@ Footnote 288
 opened and we await a volunteer.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="UK" num="309" uknum="115" type="Te" owner="LWG" issue="1142" disp="" date="" extdoc="">
+<comment nb="UK" num="309" uknum="115" type="Te" owner="LWG" issue="1142" disp="rejected" date="" extdoc="">
 <section>
 28
 </section>
@@ -15342,10 +15379,11 @@ opened and we await a volunteer.
 opened and we await a volunteer.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="UK" num="310" uknum="281" type="Te" owner="LWG" issue="1142" disp="" date="" extdoc="">
+<comment nb="UK" num="310" uknum="281" type="Te" owner="LWG" issue="1142" disp="rejected" date="" extdoc="">
 <section>
 28
 </section>
@@ -15363,6 +15401,7 @@ opened and we await a volunteer.
 <notes>US86, UK309, UK310: We believe that an issue can be 
 opened and we await a volunteer.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -15551,7 +15590,7 @@ is already covered by issue 909.
 </rationale>
 </comment>
 
-<comment nb="US" num="87" uknum="" type="ge" owner="LWG" issue="1143" disp="" date="" extdoc="">
+<comment nb="US" num="87" uknum="" type="ge" owner="LWG" issue="1143" disp="rejected" date="" extdoc="">
 <section>
 29
 </section>
@@ -15569,6 +15608,7 @@ N2427. Needs to also consider issues
 <a href="http://www.open-std.org/jtc1/sc22/wg21/docs/lwg-active.html#924">924</a>.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -15589,6 +15629,7 @@ N2427. Needs to also consider issues
 <notes>Duplicate of US 87.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -15974,7 +16015,7 @@ attached note.
 </rationale>
 </comment>
 
-<comment nb="US" num="93" uknum="" type="ge" owner="LWG" issue="1139" disp="" date="" extdoc="">
+<comment nb="US" num="93" uknum="" type="ge" owner="LWG" issue="1139" disp="rejected" date="" extdoc="">
 <section>
 30
 </section>
@@ -15989,6 +16030,7 @@ attached note.
 this.
 </notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -16481,7 +16523,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="JP" num="79" uknum="" type="te" owner="LWG" issue="1139" disp="" date="" extdoc="">
+<comment nb="JP" num="79" uknum="" type="te" owner="LWG" issue="1139" disp="rejected" date="" extdoc="">
 <section>
 30.5.1
 </section>
@@ -16518,6 +16560,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -16572,7 +16615,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="UK" num="333" uknum="195" type="Ge" owner="LWG" issue="1139" disp="" date="" extdoc="">
+<comment nb="UK" num="333" uknum="195" type="Ge" owner="LWG" issue="1139" disp="rejected" date="" extdoc="">
 <section>
 30.5.4
 </section>
@@ -16590,6 +16633,7 @@ async(), but I don't think it was a specific design constraint.
 </suggestion>
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
@@ -16865,7 +16909,7 @@ async(), but I don't think it was a specific design constraint.
 </rationale>
 </comment>
 
-<comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="1139" disp="" date="" extdoc="">
+<comment nb="JP" num="81" uknum="" type="ed" owner="LWG" issue="1139" disp="rejected" date="" extdoc="">
 <section>
 30.5.8
 </section>
@@ -16955,6 +16999,7 @@ async(), but I don't think it was a specific design constraint.
 <notes>Subset of <a href="#US93">US 93</a>. Should be addressed under the issue corresponding to US 93. 
     We do not consider this to be an editorial change.</notes>
 <rationale>
+The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
