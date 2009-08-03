@@ -9,10 +9,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #ifndef __itl_interval_JOFA_000626_H__
 #define __itl_interval_JOFA_000626_H__
 
-#ifdef USE_CONCEPTS
-#include <bits/concepts.h>
-#endif
-
 #include <ostream>
 #include <functional>
 #include <limits>

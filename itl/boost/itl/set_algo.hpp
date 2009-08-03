@@ -136,13 +136,13 @@ namespace boost{namespace itl
         }
 
 		template<class SetType>
-        bool is_disjoint(const SetType& left, const SetType& right)
+        bool intersects(const SetType& left, const SetType& right)
         {
             typename SetType::const_iterator common_lwb_right_;
             typename SetType::const_iterator common_upb_right_;
 
             if(!common_range(common_lwb_right_, common_upb_right_, right, left))
-                return true;
+                return false;
 
             typename SetType::const_iterator right_ = common_lwb_right_, found_;
 
@@ -150,10 +150,16 @@ namespace boost{namespace itl
             {
                 found_ = left.find(*right_++);
                 if(found_ != left.end()) 
-					return false; // found a common element
+					return true; // found a common element
             }
             // found no common element
-            return true;    
+            return false;    
+        }
+
+		template<class SetType>
+        inline bool is_disjoint(const SetType& left, const SetType& right)
+        {
+			return !intersects(left, right);
         }
 
 

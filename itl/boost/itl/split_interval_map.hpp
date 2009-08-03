@@ -12,7 +12,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/interval_base_map.hpp>
-#include <boost/itl/interval_maps.hpp>
 #include <boost/itl/split_interval_set.hpp>
 
 namespace boost{namespace itl

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_operators_JOFA_090115_H__
-#define __itl_operators_JOFA_090115_H__
+#ifndef __itl_functions_JOFA_090803_H__
+#define __itl_functions_JOFA_090803_H__
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
@@ -15,8 +15,59 @@ namespace boost{namespace itl
 {
 
 //==============================================================================
+//= Equivalences and Orderings
+//==============================================================================
+/** Returns true, if \c left and \c right contain the same elements. 
+	Complexity: linear. */
+template<class LeftT, class RightT>
+typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
+                          bool>::type
+is_element_equal(const LeftT& left, const RightT& right)
+{
+    return Interval_Set::is_element_equal(left, right);
+}
+
+/** Returns true, if \c left is lexicographically less than \c right. 
+	Intervals are interpreted as sequence of elements.
+	Complexity: linear. */
+template<class LeftT, class RightT>
+typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
+                          bool>::type
+is_element_less(const LeftT& left, const RightT& right)
+{
+    return Interval_Set::is_element_less(left, right);
+}
+
+/** Returns true, if \c left is lexicographically greater than \c right. 
+	Intervals are interpreted as sequence of elements.
+	Complexity: linear. */
+template<class LeftT, class RightT>
+typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
+                          bool>::type
+is_element_greater(const LeftT& left, const RightT& right)
+{
+    return Interval_Set::is_element_greater(left, right);
+}
+
+//==============================================================================
 //= Addition
 //==============================================================================
+/** \par \b Requires: \c OperandT is an interval container addable to \c ObjectT. 
+	\b Effects: \c operand is added to \c object.
+	\par \b Returns: A reference to \c object.
+	\b Complexity: loglinear */
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator += (ObjectT& object, const OperandT& operand)
+{
+	typename ObjectT::iterator prior_ = object.end();
+    const_FORALL(typename OperandT, elem_, operand) 
+        prior_ = object.add(prior_, *elem_); 
+
+    return object; 
+}
+
 /** \par \b Requires: \c OperandT is an addable derivative type of \c ObjectT. 
 	\b Effects: \c operand is added to \c object.
 	\par \b Returns: A reference to \c object.
@@ -98,7 +149,9 @@ template<class ObjectT, class OperandT>
 typename boost::enable_if<is_right_intra_combinable<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator |= (ObjectT& object, const OperandT& operand)
-{ return object += operand; }
+{ 
+	return object += operand; 
+}
 
 
 template<class ObjectT, class OperandT>
@@ -152,6 +205,18 @@ For interval sets subtraction of segments
 is \b amortized \b logarithmic.
 */
 template<class ObjectT, class OperandT>
+inline 
+typename boost::enable_if<is_concept_equivalent<is_interval_map, ObjectT, OperandT>, 
+                          ObjectT>::type& 
+operator -=(ObjectT& object, const OperandT& operand)
+{
+    const_FORALL(typename OperandT, elem_, operand) 
+        object.subtract(*elem_); 
+
+    return object; 
+}
+
+template<class ObjectT, class OperandT>
 typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
@@ -181,6 +246,51 @@ operator -=
     const interval_base_set<SetT,DomainT,Compare,Interval,Alloc>& operand
 )
 {
+	return erase(object, operand);
+}
+
+
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
+operator - (ObjectT object, const OperandT& operand)
+{
+    return object -= operand; 
+}
+
+//==============================================================================
+//= Insertion
+//==============================================================================
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
+                          ObjectT>::type&
+insert(ObjectT& object, const OperandT& operand)
+{
+	typename ObjectT::iterator prior_ = object.end();
+    const_FORALL(typename OperandT, elem_, operand) 
+        object.insert(*elem_); 
+
+    return object; 
+}
+
+
+//==============================================================================
+//= Erasure
+//==============================================================================
+template 
+<
+    class ObjectT, class SetT, class DomainT, ITL_COMPARE Compare, 
+	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+inline
+typename boost::enable_if<is_interval_set_companion<ObjectT, SetT>,
+                          ObjectT>::type&
+erase
+(
+          ObjectT& object,
+    const interval_base_set<SetT,DomainT,Compare,Interval,Alloc>& operand
+)
+{
     typedef interval_base_set<SetT,DomainT,Compare,Interval,Alloc> operand_type;
 
     if(operand.empty())
@@ -200,13 +310,26 @@ operator -=
 }
 
 
-
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_right_inter_combinable<ObjectT, OperandT>, ObjectT>::type
-operator - (ObjectT object, const OperandT& operand)
+typename boost::enable_if<is_interval_map<ObjectT>, ObjectT>::type& 
+erase(ObjectT& object, const OperandT& operand)
 {
-    return object -= operand; 
+    if(operand.empty())
+        return object;
+
+    typename OperandT::const_iterator common_lwb;
+    typename OperandT::const_iterator common_upb;
+
+    if(!Set::common_range(common_lwb, common_upb, operand, object))
+        return object;
+
+    typename OperandT::const_iterator it_ = common_lwb;
+    while(it_ != common_upb)
+		object.erase(*it_++);
+
+    return object; 
 }
+
 
 //==============================================================================
 //= Intersection
@@ -244,6 +367,67 @@ ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& o
     return object &= operand; 
 }
 
+//------------------------------------------------------------------------------
+//- intersects
+//------------------------------------------------------------------------------
+template<class LeftT, class RightT>
+typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
+                          bool>::type
+intersects(const LeftT& left, const RightT& right)
+{
+	LeftT intersection;
+
+	if(left.empty() || right.empty())
+		false;
+
+	typename RightT::const_iterator  right_common_lower_;
+    typename RightT::const_iterator right_common_upper_;
+
+    if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
+        return false;
+
+    typename RightT::const_iterator it_ = right_common_lower_;
+    while(it_ != right_common_upper_)
+    {
+        left.add_intersection(intersection, RightT::key_value(it_++));
+        if(!intersection.empty())
+            return true;
+    }
+
+    return false; 
+}
+
+template<class Type, class AssociateT>
+typename boost::enable_if<is_inter_derivative<Type, AssociateT>, 
+                          bool>::type
+intersects(const Type& left, const AssociateT& right)
+{
+	return left.intersects(right);
+}
+
+/** \b Returns true, if \c left and \c right have no common elements.
+    Intervals are interpreted as sequence of elements.
+	\b Complexity: loglinear, if \c left and \c right are interval containers. */
+template<class LeftT, class RightT>
+typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
+                          bool>::type
+is_disjoint(const LeftT& left, const RightT& right)
+{
+	return !intersects(left, right);
+}
+
+/** \b Returns true, if \c left and \c right have no common elements.
+    Intervals are interpreted as sequence of elements.
+	\b Complexity: logarithmic, if \c AssociateT is an element type \c Type::element_type. 
+	linear, if \c AssociateT is a segment type \c Type::segment_type. */
+template<class Type, class AssociateT>
+typename boost::enable_if<is_inter_derivative<Type, AssociateT>, 
+                          bool>::type
+is_disjoint(const Type& left, const AssociateT& right)
+{
+	return !left.intersects(right);
+}
+
 
 //==============================================================================
 //= Symmetric difference
@@ -251,6 +435,16 @@ ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& o
 //------------------------------------------------------------------------------
 //- Symmetric difference ^=, ^
 //------------------------------------------------------------------------------
+
+
+template<class ObjectT, class OperandT>
+typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
+                          ObjectT>::type&
+operator ^= (ObjectT& object, const OperandT& operand)
+{ 
+	return object.flip(operand); 
+}
+
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>, 
                           ObjectT>::type&
@@ -278,6 +472,21 @@ template<class ObjectT>
 ObjectT operator ^ (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
     return object ^= operand; 
+}
+
+
+//-----------------------------------------------------------------------------
+// hull
+//-----------------------------------------------------------------------------
+template<class ObjectT>
+typename boost::enable_if<is_interval_container<ObjectT>, 
+                          typename ObjectT::interval_type>::type
+hull(const ObjectT& object)
+{
+    return 
+		object.empty() ? neutron<typename ObjectT::interval_type>::value()
+		: (ObjectT::key_value(object.begin()))
+            .span(ObjectT::key_value(object.rbegin()));
 }
 
 

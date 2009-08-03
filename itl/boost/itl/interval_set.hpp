@@ -11,7 +11,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
 #include <boost/assert.hpp>
 #include <boost/itl/interval_base_set.hpp>
-#include <boost/itl/interval_sets.hpp>
+#include <boost/itl/functions.hpp>
 
 namespace boost{namespace itl
 {

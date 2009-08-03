@@ -13,13 +13,9 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
 
-#ifdef USE_CONCEPTS
-#include <bits/concepts.h>
-#endif
 
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_base_set.hpp>
-#include <boost/itl/interval_sets.hpp>
 
 
 #define const_FOR_IMPLMAP(iter) for(typename ImplMapT::const_iterator iter=_map.begin(); (iter)!=_map.end(); (iter)++)
@@ -56,9 +52,6 @@ template
     template<class,ITL_COMPARE>class Interval = itl::interval,
     ITL_ALLOC   Alloc    = std::allocator
 >
-#ifdef USE_CONCEPTS
-    requires std::LessThanComparable<DomainT>
-#endif
 class interval_base_map
 {
 public:
@@ -507,6 +500,35 @@ public:
         interval_base_map& intersection,
         const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& sectant
     )const;
+
+
+	/** Returns \c true, if element \c key is found in \c *this map.
+	    Complexity: logarithmic. */
+	bool intersects(const domain_type& key)const
+	{ return _map.find(interval_type(key)) != _map.end(); }
+
+	/** Returns \c true, if \c inter_val intersects with \c *this map.
+	    Complexity: logarithmic. */
+	bool intersects(const interval_type& inter_val)const
+	{ return _map.find(inter_val) != _map.end(); }
+
+	/** Returns \c true, if \c key_value_pair is found in \c *this map.
+	    Complexity: logarithmic. */
+	bool intersects(const element_type& key_value_pair)const
+	{ 
+		const_iterator found_ = _map.find(interval_type(key_value_pair.key));
+		return found_ != _map.end() && found_->KEY_VALUE == key_value_pair.data; 
+	}
+
+	/** Returns \c true, if \c interval_value_pair intersects with \c *this map:
+	    Complexity: logarithmic. */
+	bool intersects(const segment_type& interval_value_pair)const
+	{
+		type intersection;
+		add(intersection, interval_value_pair);
+		return !intersection.empty(); 
+	}
+
 
 
     //==========================================================================
@@ -1219,6 +1241,28 @@ inline bool is_protonic_equal(const interval_base_map<SubType,DomainT,CodomainT,
 {
     return Map::lexicographical_protonic_equal(lhs, rhs);
 }
+
+
+template 
+<
+    class DomainT, class CodomainT, class Traits,
+    ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc,
+    template
+    <    
+        class, class, class, 
+        ITL_COMPARE, ITL_COMBINE, ITL_SECTION, template<class,ITL_COMPARE>class, ITL_ALLOC
+    >
+    class IntervalMap
+>
+bool is_protonic_equal
+(
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& left,
+    const IntervalMap<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>& right
+)
+{
+    return Map::lexicographical_protonic_equal(left, right);
+}
+
 
 
 //-----------------------------------------------------------------------------

@@ -195,7 +195,24 @@ BOOST_AUTO_TEST_CASE(casual_test)
 	check_combinable<is_interval_set_companion, sM, zS>(true, "sM_zS");
 	check_combinable<is_interval_set_companion, sM, sS>(true, "sM_sS");
 
+	//--------------------------------------------------------------------------
+	check_combinable<is_intra_combinable, jS, jS>(true, "jS_jS");
+	check_combinable<is_intra_combinable, zS, jS>(true, "zS_jS");
+	check_combinable<is_intra_combinable, sS, jS>(true, "sS_jS");
 
+	check_combinable<is_intra_combinable, jS, zS>(true, "jS_zS");
+	check_combinable<is_intra_combinable, zS, zS>(true, "zS_zS");
+	check_combinable<is_intra_combinable, sS, zS>(true, "sS_zS");
+
+	check_combinable<is_intra_combinable, jS, zS>(true, "jS_sS");
+	check_combinable<is_intra_combinable, zS, zS>(true, "zS_sS");
+	check_combinable<is_intra_combinable, sS, zS>(true, "sS_sS");
+
+	check_combinable<is_intra_combinable, jM, jM>(true, "jM_jM");
+	check_combinable<is_intra_combinable, sM, jM>(true, "sM_jM");
+
+	check_combinable<is_intra_combinable, jM, sM>(true, "jM_sM");
+	check_combinable<is_intra_combinable, sM, sM>(true, "sM_sM");
 
 	//--------------------------------------------------------------------------
     BOOST_CHECK_EQUAL(map_a_b, map_b_a);

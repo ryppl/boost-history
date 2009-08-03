@@ -12,7 +12,6 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/interval_base_map.hpp>
-#include <boost/itl/interval_maps.hpp>
 
 namespace boost{namespace itl
 {

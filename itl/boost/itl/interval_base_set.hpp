@@ -31,9 +31,6 @@ template
     template<class, ITL_COMPARE>class Interval = itl::interval,
     ITL_ALLOC   Alloc    = std::allocator
 > 
-#ifdef USE_CONCEPTS
-    requires {std::LessThanComparable<DomainT>}
-#endif
 class interval_base_set
 {
 public:
@@ -311,6 +308,16 @@ public:
         const IntervalSet<DomainT,Compare,Interval,Alloc>& sectant
     )const;
 
+
+	/** Returns \c true, if element \c key is found in \c *this map.
+	    Complexity: logarithmic. */
+	bool intersects(const element_type& key)const
+	{ return _map.find(interval_type(key)) != _map.end(); }
+
+	/** Returns \c true, if \c inter_val intersects with \c *this map.
+	    Complexity: logarithmic. */
+	bool intersects(const interval_type& inter_val)const
+	{ return _map.find(inter_val) != _map.end(); }
 
     //==========================================================================
     //= Symmetric difference

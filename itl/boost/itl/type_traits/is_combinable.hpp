@@ -42,6 +42,42 @@ struct is_interval_set
         is_interval_container<Type>::value && !is_interval_map<Type>::value; 
 };
 
+template<template<class>class IsConcept, class LeftT, class RightT>
+struct is_concept_equivalent
+{
+	typedef is_concept_equivalent<IsConcept, LeftT, RightT> type;
+    static const bool value =
+        mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value;
+};
+
+template<class LeftT, class RightT>
+struct is_intra_combinable
+{
+	typedef is_intra_combinable<LeftT, RightT> type;
+	static const bool value =
+		mpl::or_<is_concept_equivalent<is_interval_set, LeftT, RightT>, 
+		         is_concept_equivalent<is_interval_map, LeftT, RightT> >::value;
+};
+
+template<class LeftT, class RightT>
+struct is_cross_combinable
+{
+	typedef is_cross_combinable<LeftT, RightT> type;
+	static const bool value =
+		mpl::or_<
+					mpl::and_<is_interval_map<LeftT>, is_interval_set<RightT> >
+				  , mpl::and_<is_interval_set<LeftT>, is_interval_map<RightT> >
+				>::value;
+};
+
+template<class LeftT, class RightT>
+struct is_inter_combinable
+{
+	typedef is_inter_combinable<LeftT, RightT> type;
+	static const bool value =
+		mpl::or_<is_intra_combinable<LeftT,RightT>, is_cross_combinable<LeftT,RightT> >::value;
+};
+
 //------------------------------------------------------------------------------
 // is_interval_set_derivative
 //------------------------------------------------------------------------------
@@ -124,9 +160,24 @@ template<class Type, class AssociateT>
 struct is_cross_derivative
 {
     typedef is_cross_derivative<Type, AssociateT> type;
+    static const bool value =
+		mpl::and_
+		<
+            is_interval_map<Type>
+          , is_interval_set_derivative<Type, AssociateT>
+		>::value;
+};
+
+template<class Type, class AssociateT>
+struct is_inter_derivative
+{
+    typedef is_inter_derivative<Type, AssociateT> type;
     static const bool value = 
-            (   is_interval_map<Type>::value 
-            &&  is_interval_set_derivative<Type, AssociateT>::value);
+		mpl::or_
+		<
+            is_intra_derivative<Type, AssociateT> 
+          , is_cross_derivative<Type, AssociateT>
+		>::value;
 };
 
 
