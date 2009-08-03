@@ -1,11 +1,11 @@
 <?xml  version="1.0"?>
 
-<document date="2009-06-22"
-  rev="1"
-  docno="PL22.16 09/0088 = WG21 N2898"
+<document date="2009-08-03"
+  rev="2"
+  docno="PL22.16 09/0129 = WG21 N2939"
 >
 
-<comment nb="FR" num="1" uknum="" type="ge" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="1" uknum="" type="ge" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 General Comment
 </section>
@@ -447,7 +447,7 @@ extensions: issue a diagnostic and then do the extension.
 </rationale>
 </comment>
 
-<comment nb="US" num="8" uknum="" type="te" owner="editor" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="8" uknum="" type="te" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 1.5
 </section>
@@ -464,6 +464,7 @@ extensions: issue a diagnostic and then do the extension.
         entities.
 </suggestion>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -929,7 +930,7 @@ an identifier.
 </rationale>
 </comment>
 
-<comment nb="UK" num="13" uknum="138" type="Ed" owner="CWG" issue="832" disp="" date="" extdoc="">
+<comment nb="UK" num="13" uknum="138" type="Ed" owner="CWG" issue="832" disp="accepted" date="" extdoc="">
 <section>
 2.9
 </section>
@@ -1397,7 +1398,7 @@ shift/reduce conflicts in the grammar and is thus not editorial.
 </rationale>
 </comment>
 
-<comment nb="UK" num="20" uknum="209" type="Ge" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="20" uknum="209" type="Ge" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 3
 </section>
@@ -1416,9 +1417,10 @@ shift/reduce conflicts in the grammar and is thus not editorial.
 </suggestion>
 <rationale>
 </rationale>
+All concepts-related text has been removed from the draft.
 </comment>
 
-<comment nb="UK" num="21" uknum="359" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="21" uknum="359" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 3
 </section>
@@ -1435,6 +1437,7 @@ shift/reduce conflicts in the grammar and is thus not editorial.
         p2 specifically needs similar rewording
 </suggestion>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -1633,7 +1636,7 @@ These entities do, in fact, have names, as described in 3&#182;4.
 </rationale>
 </comment>
 
-<comment nb="FR" num="17" uknum="" type="te" owner="CWG" issue="791" disp="" date="" extdoc="">
+<comment nb="FR" num="17" uknum="" type="te" owner="CWG" issue="791" disp="modified" date="2009-07-18" extdoc="">
 <section>
 3.5 [Program
 and linkage]
@@ -1650,10 +1653,11 @@ and linkage]
 </description>
 <suggestion></suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="30" uknum="367" type="Te" owner="CWG" issue="791" disp="" date="" extdoc="">
+<comment nb="UK" num="30" uknum="367" type="Te" owner="CWG" issue="791" disp="modified" date="2009-07-18" extdoc="">
 <section>
 3.5
 </section>
@@ -1671,6 +1675,7 @@ and linkage]
         need linkage.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -2398,7 +2403,7 @@ specification.
 </rationale>
 </comment>
 
-<comment nb="US" num="29" uknum="" type="te" owner="CWG" issue="762" disp="" date="" extdoc="">
+<comment nb="US" num="29" uknum="" type="te" owner="CWG" issue="762" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -2414,7 +2419,7 @@ specification.
 </rationale>
 </comment>
 
-<comment nb="US" num="30" uknum="" type="te" owner="CWG" issue="762" disp="" date="" extdoc="">
+<comment nb="US" num="30" uknum="" type="te" owner="CWG" issue="762" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -2433,7 +2438,7 @@ specification.
 </rationale>
 </comment>
 
-<comment nb="US" num="31" uknum="" type="te" owner="CWG" issue="752" disp="" date="" extdoc="">
+<comment nb="US" num="31" uknum="" type="te" owner="CWG" issue="752" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -2451,7 +2456,7 @@ specification.
 </rationale>
 </comment>
 
-<comment nb="UK" num="45" uknum="444" type="Te" owner="CWG" issue="795" disp="" date="" extdoc="">
+<comment nb="UK" num="45" uknum="444" type="Te" owner="CWG" issue="795" disp="rejected" date="2009-07-18" extdoc="">
 <section>
 5.1.1
 </section>
@@ -2477,6 +2482,11 @@ para 2
         this clarity is technically important).
 </suggestion>
 <rationale>
+The reference to 20.7 appears only in a note, not in normative text, and
+is intended only to clarify the meaning of the term &#8220;function
+object,&#8221; as defined there: &#8220;Function objects are objects with
+an <TT>operator()</TT> defined.&#8221;  This creates no dependency on
+&lt;functional&gt; or any other library facitlity.
 </rationale>
 </comment>
 
@@ -2497,7 +2507,7 @@ para 2
 </rationale>
 </comment>
 
-<comment nb="UK" num="39" uknum="408" type="Te" owner="CWG" issue="759" disp="" date="" extdoc="">
+<comment nb="UK" num="39" uknum="408" type="Te" owner="CWG" issue="759" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -2517,7 +2527,7 @@ para 2
 </rationale>
 </comment>
 
-<comment nb="UK" num="40" uknum="409" type="Te" owner="CWG" issue="796" disp="" date="" extdoc="">
+<comment nb="UK" num="40" uknum="409" type="Te" owner="CWG" issue="796" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -2751,7 +2761,7 @@ p10
 </rationale>
 </comment>
 
-<comment nb="US" num="33" uknum="" type="Ge" owner="CWG" issue="680" disp="" date="" extdoc="">
+<comment nb="US" num="33" uknum="" type="Ge" owner="CWG" issue="680" disp="modified" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -2768,10 +2778,12 @@ p10
         either be added here, or a cross reference to one.
 </suggestion>
 <rationale>
+The term &#8220;move constructor&#8221; is no longer used; instead, the
+behavior of the constructor is described.
 </rationale>
 </comment>
 
-<comment nb="DE" num="9" uknum="" type="te" owner="CWG" issue="720" disp="" date="" extdoc="">
+<comment nb="DE" num="9" uknum="" type="te" owner="CWG" issue="720" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 5.1.1
 </section>
@@ -3198,7 +3210,7 @@ same type as the operand.
 </rationale>
 </comment>
 
-<comment nb="UK" num="69" uknum="240" type="Te" owner="CWG" issue="802" disp="" date="" extdoc="">
+<comment nb="UK" num="69" uknum="240" type="Te" owner="CWG" issue="802" disp="modified" date="2009-07-18" extdoc="">
 <section>
 5.3.1
 </section>
@@ -3221,10 +3233,11 @@ same type as the operand.
         ... unknown ...
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="70" uknum="420" type="Te" owner="CWG" issue="803" disp="" date="" extdoc="">
+<comment nb="UK" num="70" uknum="420" type="Te" owner="CWG" issue="803" disp="accepted" date="" extdoc="">
 <section>
 5.3.3
 </section>
@@ -3245,7 +3258,7 @@ same type as the operand.
 </rationale>
 </comment>
 
-<comment nb="UK" num="71" uknum="254" type="Te" owner="CWG" issue="804" disp="" date="" extdoc="">
+<comment nb="UK" num="71" uknum="254" type="Te" owner="CWG" issue="804" disp="accepted" date="" extdoc="">
 <section>
 5.3.4
 </section>
@@ -3268,7 +3281,7 @@ same type as the operand.
 </rationale>
 </comment>
 
-<comment nb="UK" num="72" uknum="257" type="Te" owner="CWG" issue="805" disp="" date="" extdoc="">
+<comment nb="UK" num="72" uknum="257" type="Te" owner="CWG" issue="805" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/N2932.pdf">
 <section>
 5.3.4
 </section>
@@ -3462,7 +3475,7 @@ do indeed have names.
 </rationale>
 </comment>
 
-<comment nb="UK" num="49" uknum="376" type="Te" owner="CWG" issue="699" disp="" date="" extdoc="">
+<comment nb="UK" num="49" uknum="376" type="Te" owner="CWG" issue="699" disp="accepted" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -3512,7 +3525,7 @@ do indeed have names.
 </rationale>
 </comment>
 
-<comment nb="UK" num="51" uknum="251" type="Te" owner="CWG" issue="807" disp="" date="" extdoc="">
+<comment nb="UK" num="51" uknum="251" type="Te" owner="CWG" issue="807" disp="rejected" date="" extdoc="">
 <section>
 5.19
 </section>
@@ -3533,6 +3546,12 @@ do indeed have names.
         expressions.
 </suggestion>
 <rationale>
+The result of <TT>typeid</TT> applied to a non-polymorphic type can
+be treated as an address constant and thus usable for static
+initialization (e.g., to initialize a reference). The result of
+<TT>typeid</TT> applied to an lvalue of polymorphic type cannot be
+known at compile time. The polymorphic nature of the <TT>typeinfo</TT>
+class is irrelevant to this usage and distinction.
 </rationale>
 </comment>
 
@@ -3884,7 +3903,7 @@ in the standardization process.
 </rationale>
 </comment>
 
-<comment nb="UK" num="85" uknum="373" type="Ed" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="85" uknum="373" type="Ed" owner="CWG" issue="940" disp="accepted" date="" extdoc="">
 <section>
 7.1.1
 </section>
@@ -4002,7 +4021,7 @@ proposal.
 </rationale>
 </comment>
 
-<comment nb="JP" num="12" uknum="" type="te" owner="CWG" issue="699" disp="" date="" extdoc="">
+<comment nb="JP" num="12" uknum="" type="te" owner="CWG" issue="699" disp="accepted" date="" extdoc="">
 <section>
 7.1.5
 </section>
@@ -4500,7 +4519,7 @@ an incomplete type.
 </rationale>
 </comment>
 
-<comment nb="JP" num="14" uknum="" type="te" owner="CWG" issue="812" disp="" date="" extdoc="">
+<comment nb="JP" num="14" uknum="" type="te" owner="CWG" issue="812" disp="accepted" date="" extdoc="">
 <section>
 7.3.1
 </section>
@@ -4694,7 +4713,7 @@ Changed the example slightly to make it clearer.
 </rationale>
 </comment>
 
-<comment nb="US" num="41" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="41" uknum="" type="te" owner="CWG" issue="939" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2928.html">
 <section>
 7.6
 </section>
@@ -4711,11 +4730,10 @@ Changed the example slightly to make it clearer.
         override would enable better diagnostics.
 </suggestion>
 <rationale>
-We are awaiting a full proposal to evaluate.
 </rationale>
 </comment>
 
-<comment nb="FR" num="26" uknum="" type="ed" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="26" uknum="" type="ed" owner="CWG" issue="" disp="rejected" date="" extdoc="">
 <section>
 7.6[Attributes]
 </section>
@@ -4728,10 +4746,13 @@ We are awaiting a full proposal to evaluate.
 </description>
 <suggestion></suggestion>
 <rationale>
+None of the standard attributes says that it is part of the type of an
+object, which would be required for it to be so. Nonstandard attributes
+might be, but nothing can be said normatively about such attributes.
 </rationale>
 </comment>
 
-<comment nb="FI" num="1" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="FI" num="1" uknum="" type="te" owner="CWG" issue="939" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2928.html">
 <section>
 7.6
 </section>
@@ -4745,7 +4766,6 @@ We are awaiting a full proposal to evaluate.
         See override&#173;-attribute.doc, override-attribute.ppt
 </suggestion>
 <rationale>
-We are awaiting a full proposal to evaluate.
 </rationale>
 </comment>
 
@@ -4779,7 +4799,7 @@ that are looked up, depending on the attribute.
 </rationale>
 </comment>
 
-<comment nb="UK" num="103" uknum="397" type="Te" owner="CWG" issue="815" disp="" date="" extdoc="">
+<comment nb="UK" num="103" uknum="397" type="Te" owner="CWG" issue="815" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/N2933.htm">
 <section>
 7.6.1
 </section>
@@ -5145,7 +5165,7 @@ was appropriate there.
 </rationale>
 </comment>
 
-<comment nb="DE" num="13" uknum="" type="te" owner="CWG" issue="732" disp="" date="" extdoc="">
+<comment nb="DE" num="13" uknum="" type="te" owner="CWG" issue="732" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/n2927.html">
 <section>
 8.4
 </section>
@@ -5299,7 +5319,7 @@ should read about concepts.
 </rationale>
 </comment>
 
-<comment nb="US" num="50" uknum="" type="te" owner="CWG" issue="819" disp="" date="" extdoc="">
+<comment nb="US" num="50" uknum="" type="te" owner="CWG" issue="819" disp="rejected" date="" extdoc="">
 <section>
 12.1,
 12.4,
@@ -5351,6 +5371,9 @@ should read about concepts.
         from the two places it occurs.</span>
 </suggestion>
 <rationale>
+The current treatment is sufficiently useful to warrant the inconsistency
+with the other handling of access control.  In particular, it enables such
+cases to be detected by SFINAE.
 </rationale>
 </comment>
 
@@ -5492,7 +5515,7 @@ There was no consensus for making this changes.
 </rationale>
 </comment>
 
-<comment nb="UK" num="117" uknum="430" type="Ge" owner="CWG" issue="822" disp="" date="" extdoc="">
+<comment nb="UK" num="117" uknum="430" type="Ge" owner="CWG" issue="822" disp="rejected" date="" extdoc="">
 <section>
 14
 </section>
@@ -5512,6 +5535,8 @@ There was no consensus for making this changes.
         inside a function scope, and consider scoped concept maps.
 </suggestion>
 <rationale>
+There was non consensus for making this change at this point in the
+standardization process.
 </rationale>
 </comment>
 
@@ -5536,7 +5561,7 @@ There was no consensus for making this changes.
 </rationale>
 </comment>
 
-<comment nb="UK" num="119" uknum="433" type="Te" owner="CWG" issue="791" disp="" date="" extdoc="">
+<comment nb="UK" num="119" uknum="433" type="Te" owner="CWG" issue="791" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14
 </section>
@@ -5557,6 +5582,7 @@ There was no consensus for making this changes.
         entities with linkage in 3.5
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -5617,7 +5643,7 @@ arguments]
 </rationale>
 </comment>
 
-<comment nb="US" num="53" uknum="" type="te" owner="CWG" issue="824" disp="" date="" extdoc="">
+<comment nb="US" num="53" uknum="" type="te" owner="CWG" issue="824" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.5.1
 </section>
@@ -5659,10 +5685,11 @@ arguments]
         parameters) will be declared as a deleted function (8.4).
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="122" uknum="426" type="Te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="122" uknum="426" type="Te" owner="CWG" issue="" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.5.3
 </section>
@@ -5683,6 +5710,7 @@ arguments]
         templates.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -5750,7 +5778,7 @@ The current wording is correct.
 </rationale>
 </comment>
 
-<comment nb="DE" num="14" uknum="" type="te" owner="CWG" issue="730" disp="" date="" extdoc="">
+<comment nb="DE" num="14" uknum="" type="te" owner="CWG" issue="730" disp="accepted" date="" extdoc="">
 <section>
 14.7.3
 </section>
@@ -5819,7 +5847,7 @@ The current wording is correct.
 </rationale>
 </comment>
 
-<comment nb="US" num="54" uknum="" type="ge" owner="CWG" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="54" uknum="" type="ge" owner="CWG" issue="" disp="accepted" date="2009-07-18" extdoc="">
 <section>
 14.9
 [concept],
@@ -5840,6 +5868,7 @@ The current wording is correct.
         I propose no specific change here.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -5902,7 +5931,7 @@ These mean the same thing, and the latter is stilted.
 </rationale>
 </comment>
 
-<comment nb="US" num="58" uknum="" type="ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
+<comment nb="US" num="58" uknum="" type="ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -5918,10 +5947,11 @@ These mean the same thing, and the latter is stilted.
         refined concepts, or in an associated requirement.&#8221;
 </suggestion>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="US" num="59" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="US" num="59" uknum="" type="te" owner="CWG" issue="" disp="accepted" date="2009-07-18" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -5976,10 +6006,11 @@ These mean the same thing, and the latter is stilted.
         &#8220;condition.&#8221;
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="FR" num="31" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="FR" num="31" uknum="" type="te" owner="CWG" issue="" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.9.1.4
 [Axioms]
@@ -6006,10 +6037,11 @@ These mean the same thing, and the latter is stilted.
 </description>
 <suggestion></suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="DE" num="15" uknum="" type="te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="DE" num="15" uknum="" type="te" owner="CWG" issue="" disp="accepted" date="2009-07-18" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -6031,10 +6063,11 @@ These mean the same thing, and the latter is stilted.
         reservation in section 2.11.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="123" uknum="248" type="Te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="123" uknum="248" type="Te" owner="CWG" issue="" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -6055,6 +6088,7 @@ These mean the same thing, and the latter is stilted.
         inside an auto concept.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -6075,7 +6109,7 @@ These mean the same thing, and the latter is stilted.
 </rationale>
 </comment>
 
-<comment nb="UK" num="125" uknum="289" type="Te" owner="CWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="125" uknum="289" type="Te" owner="CWG" issue="" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.9.1.4
 </section>
@@ -6098,6 +6132,7 @@ These mean the same thing, and the latter is stilted.
         declaring equivalence between statements.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -6121,7 +6156,7 @@ These mean the same thing, and the latter is stilted.
 </rationale>
 </comment>
 
-<comment nb="UK" num="127" uknum="118" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="127" uknum="118" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 14.9.4
 </section>
@@ -6137,6 +6172,7 @@ These mean the same thing, and the latter is stilted.
         Provide the diagram.
 </suggestion>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -6163,7 +6199,7 @@ These mean the same thing, and the latter is stilted.
 </rationale>
 </comment>
 
-<comment nb="JP" num="20" uknum="" type="te" owner="CWG" issue="825" disp="" date="" extdoc="">
+<comment nb="JP" num="20" uknum="" type="te" owner="CWG" issue="825" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.9.4
 </section>
@@ -6183,10 +6219,11 @@ These mean the same thing, and the latter is stilted.
         concept.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="129" uknum="128" type="Te" owner="CWG" issue="826" disp="" date="" extdoc="">
+<comment nb="UK" num="129" uknum="128" type="Te" owner="CWG" issue="826" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.10.1,
 20.1.2
@@ -6211,10 +6248,11 @@ These mean the same thing, and the latter is stilted.
         would not.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="US" num="60" uknum="" type="te" owner="CWG" issue="827" disp="" date="" extdoc="">
+<comment nb="US" num="60" uknum="" type="te" owner="CWG" issue="827" disp="modified" date="2009-07-18" extdoc="">
 <section>
 14.10.1
 </section>
@@ -6256,6 +6294,7 @@ These mean the same thing, and the latter is stilted.
         the pack expansion parameters.
 </suggestion>
 <rationale>
+All concepts-related features have been removed from the draft.
 </rationale>
 </comment>
 
@@ -7592,7 +7631,7 @@ are clear as written.
 </rationale>
 </comment>
 
-<comment nb="UK" num="157" uknum="86" type="Ed" owner="editor" issue="" disp="accepted" date="" extdoc="">
+<comment nb="UK" num="157" uknum="86" type="Ed" owner="editor" issue="" disp="m,odified" date="" extdoc="">
 <section>
 17.5.2.2
 </section>
@@ -7608,6 +7647,7 @@ are clear as written.
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -7750,7 +7790,7 @@ LWG625</a>
 </rationale>
 </comment>
 
-<comment nb="UK" num="164" uknum="91" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="164" uknum="91" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 17.5.3.2.1
 </section>
@@ -7772,6 +7812,7 @@ LWG625</a>
 </suggestion>
 <notes>[Being reviewed by Editor]</notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -8682,7 +8723,7 @@ Reworded, but not with "installed".
 </rationale>
 </comment>
 
-<comment nb="UK" num="192" uknum="269" type="Te" owner="CWG" issue="805" disp="" date="" extdoc="">
+<comment nb="UK" num="192" uknum="269" type="Te" owner="CWG" issue="805" disp="accepted" date="2009-07-18" extdoc="http://www.open-std.org/JTC1/SC22/WG21/docs/papers/2009/N2932.pdf">
 <section>
 18.5.1.2
 </section>
@@ -10296,7 +10337,8 @@ See <a href="#US65">US 65</a> for detailed notes.
 </suggestion>
 <notes>Agree. Forward to project editor.</notes>
 <rationale>
-The text in question is in 20.7.2.2, not 20.8.2.2.
+All concepts-related text has been removed from the draft.
+(The text in question is in 20.7.2.2, not 20.8.2.2.)
 </rationale>
 </comment>
 
@@ -14350,7 +14392,7 @@ is editorial.
 </rationale>
 </comment>
 
-<comment nb="UK" num="299" uknum="352" type="Ed" owner="editor" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="299" uknum="352" type="Ed" owner="editor" issue="" disp="modified" date="" extdoc="">
 <section>
 25.2.2
 </section>
@@ -14371,6 +14413,7 @@ is editorial.
 <notes>[Being reviewed by Editor]
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -14453,8 +14496,7 @@ The comment has been made moot by the removal of Concepts from the language.
 </notes>
 <rationale>
 There are at least a dozen places in the standard that refer to this
-defintion of stict weak ordering, including the concepts
-StrictWeakOrder and LessthanComparable.
+definition of strict weak ordering.
 </rationale>
 </comment>
 
@@ -17003,7 +17045,7 @@ The comment has been made moot by the removal of Concepts from the language.
 </rationale>
 </comment>
 
-<comment nb="DE" num="23" uknum="" type="te" owner="CWG" issue="699" disp="" date="" extdoc="">
+<comment nb="DE" num="23" uknum="" type="te" owner="CWG" issue="699" disp="accepted" date="" extdoc="">
 <section>
 Annex B
 </section>
