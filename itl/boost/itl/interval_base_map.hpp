@@ -639,16 +639,16 @@ public:
     //==========================================================================
 
     template<typename IteratorT>
-    static const key_type& key_value(IteratorT& value_){ return (*value_).first; }
+    static const key_type& key_value(IteratorT value_){ return (*value_).first; }
 
     template<typename IteratorT>
-    static const data_type& data_value(IteratorT& value_){ return (*value_).second; }
+    static const data_type& data_value(IteratorT value_){ return (*value_).second; }
 
     template<typename IteratorT>
-    static codomain_type codomain_value(IteratorT& value_){ return (*value_).second; }
+    static codomain_type codomain_value(IteratorT value_){ return (*value_).second; }
 
     template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT& lhs_, RightIterT& rhs_) { return key_compare()((*lhs_).first, (*rhs_).first); }
+    static bool key_less(LeftIterT lhs_, RightIterT rhs_) { return key_compare()((*lhs_).first, (*rhs_).first); }
 
     static value_type make_domain_element(const domain_type& dom_val, const codomain_type& codom_val)
     { return value_type(interval_type(dom_val), codom_val); }

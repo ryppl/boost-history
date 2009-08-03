@@ -299,18 +299,18 @@ public:
     /** \c key_value allows for a uniform access to \c key_values which is
         is used for common algorithms on sets and maps. */
     template<typename IteratorT>
-    static const key_type& key_value(IteratorT& value_)
+    static const key_type& key_value(IteratorT value_)
     { return (*value_).first; }
 
     /** \c data_value allows for a uniform access to \c data_values which is
         is used for common algorithms on sets and maps. */
     template<typename IteratorT>
-    static const data_type& data_value(IteratorT& value_){ return (*value_).second; }
+    static const data_type& data_value(IteratorT value_){ return (*value_).second; }
 
     /** \c key_less allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */
     template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT& lhs_, RightIterT& rhs_) 
+    static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
     { return key_compare()((*lhs_).first,(*rhs_).first); }
 
     /** \c iterative_size() yields the number of elements that is visited

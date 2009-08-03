@@ -312,12 +312,12 @@ public:
 	/** Returns \c true, if element \c key is found in \c *this map.
 	    Complexity: logarithmic. */
 	bool intersects(const element_type& key)const
-	{ return _map.find(interval_type(key)) != _map.end(); }
+	{ return _set.find(interval_type(key)) != _set.end(); }
 
 	/** Returns \c true, if \c inter_val intersects with \c *this map.
 	    Complexity: logarithmic. */
 	bool intersects(const interval_type& inter_val)const
-	{ return _map.find(inter_val) != _map.end(); }
+	{ return _set.find(inter_val) != _set.end(); }
 
     //==========================================================================
     //= Symmetric difference
@@ -391,14 +391,14 @@ public:
     //==========================================================================
 
     template<typename IteratorT>
-    static const key_type& key_value(IteratorT& value_){ return (*value_); }
+    static const key_type& key_value(IteratorT value_){ return (*value_); }
 
     template<typename IteratorT>
-    static codomain_type codomain_value(IteratorT& value_)
+    static codomain_type codomain_value(IteratorT value_)
     { return (*value_).empty()? codomain_type() : (*value_).lower(); }
 
     template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT& lhs_, RightIterT& rhs_) 
+    static bool key_less(LeftIterT lhs_, RightIterT rhs_) 
     { return key_compare()(*lhs_, *rhs_); }
 
     static value_type make_domain_element(const domain_type& dom_val, const codomain_type& codom_val)
