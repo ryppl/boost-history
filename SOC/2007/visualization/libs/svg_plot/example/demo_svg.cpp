@@ -74,7 +74,10 @@ void symb(array<const poly_path_point, 6> shape, const poly_path_point position,
 
 int main()
 {
-  svg  my_svg;
+  svg my_svg;
+
+  cout << "my_svg.document_size() " << my_svg.document_size() << endl; // == 0
+
   // Check default and change image size.
   cout << "my_svg.x_size() = " << my_svg.x_size() << ", my_svg.y_size() = " << my_svg.y_size() << endl;
   // my_svg.x_size() = 400, my_svg.y_size() = 400
@@ -103,11 +106,17 @@ int main()
 
   // g_element& a1 = 
   my_svg.g(); // Add first (zeroth) new element,
+
+  cout << "my_svg.document_size() " << my_svg.document_size() << endl;
+
   g_element& g0 = my_svg.g(0); // so index is zero.
+  cout << "my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl; // == 1
   my_svg.g(0).push_back(new rect_element(0, 0, my_svg.x_size(),  my_svg.y_size() ) ); // border to image.
-  cout << "my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl;
-  g0.id("element 0");
+  g0.id("group element 0");
   cout << g0.id() << endl;
+
+  cout << "my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl; // == 1
+
   cout << "fill color = " << g0.style().fill_color() << endl; // fill color = RGB(0,0,0) == black
   cout << "fill on " << boolalpha << g0.style().fill_on() << endl; // false
   cout << "stroke color = " << g0.style().stroke_color() << endl; // stroke color = RGB(0,0,0)
@@ -126,8 +135,6 @@ int main()
   cout << "width on " << boolalpha << g0.style().width_on() << endl;
   g0.style().stroke_on(true); // stroke on true
   //<g stroke="rgb(255,0,0)" fill="rgb(255,255,255)" stroke-width="10"><rect x="0" y="0"  width="500"  height="600"/></g>
-
-  g_element& g2 = my_svg.g(0); // should be g0 == g2 but no operator==, yet.
 
   rect_element r(20, 20, 50, 50);
   cout << r << endl; // rect(20, 20, 50, 50)
@@ -162,6 +169,7 @@ int main()
 
   my_svg.triangle(400, 20, 300, 100, 450, 50, false); 
   my_svg.triangle(200, 20, 350, 100, 250, 100); 
+    cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 4
   my_svg.rhombus(10, 500, 10, 550, 450, 550, 300, 500, true); 
   my_svg.pentagon(100, 10, 120, 10, 130, 30, 110, 50, 110, 30, true); 
   my_svg.hexagon(300, 10, 420, 10, 330, 130, 350, 150, 210, 30, 250, 60, true);
@@ -222,9 +230,6 @@ int main()
   //my_poly.p(100, 100); // just one point
   //my_poly.p(200, 100).p(300, 200).p(400,300); // <polygon points=" 11,22 33,44 55,66"/>
   //my_svg.g(); // Add 2nd new element,
-  g_element& g1 = my_svg.g(1); // so index is now one.
-  g1.id("element 1");
-  cout << g1.id() << endl; // Output: element 1
 
   // This line aborts:
   //polyline_element& pl = g1.polyline(); // 'empty' line.
@@ -278,6 +283,18 @@ int main()
   {
     symb(hexup, poly_path_point(75., 450.), poly_path_point(10., 10.), g0); // OK construct from array of consts
   }
+
+  cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 8
+
+  // Adding a new group element.
+  g_element& g1 = my_svg.g(1); // so index is now one.
+
+  g1.id("element 1");
+  cout << g1.id() << endl; // Output: element 1
+  cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 8 ???
+
+  cout << "my_svg.g().size() " << my_svg.g().size() << endl; // 0
+
 
   my_svg.write("demo_svg.svg");
 
