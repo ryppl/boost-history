@@ -116,6 +116,7 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_reverse_iterator const_reverse_iterator;
 
+	enum { fineness = 4 }; //SubType::fineness };
 
 public:
     //==========================================================================

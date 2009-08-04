@@ -150,12 +150,14 @@ public:
     typedef typename ImplMapT::reverse_iterator reverse_iterator;
     /// const_iterator for iteration over intervals
     typedef typename ImplMapT::const_reverse_iterator const_reverse_iterator;
+
     
 public:
     inline static bool has_symmetric_difference() 
     { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::is_total); }
 
-    enum{ is_itl_container = true };
+    enum { is_itl_container = true };
+	enum { fineness = 0 };
 
 public:
     //==========================================================================

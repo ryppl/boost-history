@@ -27,27 +27,182 @@ using namespace boost;
 using namespace unit_test;
 using namespace boost::itl;
 
-/*CL
-template<template<class, class>class IsCombinable,
-         class LeftT, class RightT>
-void check_combinable(bool truth)
-{
-	bool is_combinable = IsCombinable<LeftT,RightT>::value;
-	BOOST_CHECK_EQUAL(is_combinable, truth);
-}
-*/
 
 template<template<class, class>class IsCombinable,
          class LeftT, class RightT>
-void check_combinable(bool truth, const char* type_combi)
+void check_combinable(bool expected, const char* type_combi, const char* combi_text)
 {
 	std::string type_combination = type_combi;
+	std::string is_combi_text = combi_text;
 	bool is_combinable = IsCombinable<LeftT,RightT>::value;
 	std::string combination_result = is_combinable 
-		? (is_combinable == truth ? type_combination : "NOT combinable: "+type_combination)
-		: (is_combinable == truth ? type_combination : "IS combinable: "+type_combination);
+		? (is_combinable == expected ? type_combination : "expected: NOT "+is_combi_text+"<"+type_combination+">")
+		: (is_combinable == expected ? type_combination : "expected:  IS "+is_combi_text+"<"+type_combination+">");
+
+	//BOOST_CHECK_EQUAL(expected, is_combinable);
 	BOOST_CHECK_EQUAL(type_combination, combination_result);
 }
+
+template<template<class, class>class IsCombinable>
+void check_combine_pattern(const char* text,
+	bool jS_e, bool jS_i, bool jS_b, bool jS_p, bool jS_jS, bool jS_zS, bool jS_sS, bool jS_jM, bool jS_sM, 
+	bool zS_e, bool zS_i, bool zS_b, bool zS_p, bool zS_jS, bool zS_zS, bool zS_sS, bool zS_jM, bool zS_sM, 
+	bool sS_e, bool sS_i, bool sS_b, bool sS_p, bool sS_jS, bool sS_zS, bool sS_sS, bool sS_jM, bool sS_sM, 
+	bool jM_e, bool jM_i, bool jM_b, bool jM_p, bool jM_jS, bool jM_zS, bool jM_sS, bool jM_jM, bool jM_sM, 
+	bool sM_e, bool sM_i, bool sM_b, bool sM_p, bool sM_jS, bool sM_zS, bool sM_sS, bool sM_jM, bool sM_sM,
+	bool check_base_class = true
+	)
+{
+	typedef interval_set<int>                jS;
+	typedef separate_interval_set<int>       zS;
+	typedef split_interval_set<int>          sS;
+	typedef interval_map<int,double>         jM;
+	typedef split_interval_map<int,double>   sM;
+
+	typedef interval_base_set<jS,int>        jT;
+	typedef interval_base_set<zS,int>        zT;
+	typedef interval_base_set<sS,int>        sT;
+	typedef interval_base_map<jM,int,double> jN;
+	typedef interval_base_map<sM,int,double> sN;
+
+	typedef interval_set<int>::element_type  S_e;
+	typedef interval_set<int>::segment_type  S_i;
+
+	typedef interval_map<int,double>::element_type M_b;
+	typedef interval_map<int,double>::segment_type M_p;
+
+	//--------------------------------------------------------------------------
+	check_combinable<IsCombinable, jS, S_e>(jS_e , "jS_e ", text);
+	check_combinable<IsCombinable, jS, S_i>(jS_i , "jS_i ", text);
+	check_combinable<IsCombinable, jS, M_b>(jS_b , "jS_b ", text);
+	check_combinable<IsCombinable, jS, M_p>(jS_p , "jS_p ", text);
+	check_combinable<IsCombinable, jS, jS >(jS_jS, "jS_jS", text);
+	check_combinable<IsCombinable, jS, zS >(jS_zS, "jS_zS", text);
+	check_combinable<IsCombinable, jS, sS >(jS_sS, "jS_sS", text);
+	check_combinable<IsCombinable, jS, jM >(jS_jM, "jS_jM", text);
+	check_combinable<IsCombinable, jS, sM >(jS_sM, "jS_sM", text);
+	//--------------------------------------------------------------------------
+	check_combinable<IsCombinable, zS, S_e>(zS_e , "zS_e ", text);
+	check_combinable<IsCombinable, zS, S_i>(zS_i , "zS_i ", text);
+	check_combinable<IsCombinable, zS, M_b>(zS_b , "zS_b ", text);
+	check_combinable<IsCombinable, zS, M_p>(zS_p , "zS_p ", text);
+	check_combinable<IsCombinable, zS, jS >(zS_jS, "zS_jS", text);
+	check_combinable<IsCombinable, zS, zS >(zS_zS, "zS_zS", text);
+	check_combinable<IsCombinable, zS, sS >(zS_sS, "zS_sS", text);
+	check_combinable<IsCombinable, zS, jM >(zS_jM, "zS_jM", text);
+	check_combinable<IsCombinable, zS, sM >(zS_sM, "zS_sM", text);
+	//--------------------------------------------------------------------------
+	check_combinable<IsCombinable, sS, S_e>(sS_e , "sS_e ", text);
+	check_combinable<IsCombinable, sS, S_i>(sS_i , "sS_i ", text);
+	check_combinable<IsCombinable, sS, M_b>(sS_b , "sS_b ", text);
+	check_combinable<IsCombinable, sS, M_p>(sS_p , "sS_p ", text);
+	check_combinable<IsCombinable, sS, jS >(sS_jS, "sS_jS", text);
+	check_combinable<IsCombinable, sS, zS >(sS_zS, "sS_zS", text);
+	check_combinable<IsCombinable, sS, sS >(sS_sS, "sS_sS", text);
+	check_combinable<IsCombinable, sS, jM >(sS_jM, "sS_jM", text);
+	check_combinable<IsCombinable, sS, sM >(sS_sM, "sS_sM", text);
+	//--------------------------------------------------------------------------
+	check_combinable<IsCombinable, jM, S_e>(jM_e , "jM_e ", text);
+	check_combinable<IsCombinable, jM, S_i>(jM_i , "jM_i ", text);
+	check_combinable<IsCombinable, jM, M_b>(jM_b , "jM_b ", text);
+	check_combinable<IsCombinable, jM, M_p>(jM_p , "jM_p ", text);
+	check_combinable<IsCombinable, jM, jS >(jM_jS, "jM_jS", text);
+	check_combinable<IsCombinable, jM, zS >(jM_zS, "jM_zS", text);
+	check_combinable<IsCombinable, jM, sS >(jM_sS, "jM_sS", text);
+	check_combinable<IsCombinable, jM, jM >(jM_jM, "jM_jM", text);
+	check_combinable<IsCombinable, jM, sM >(jM_sM, "jM_sM", text);
+	//--------------------------------------------------------------------------
+	check_combinable<IsCombinable, sM, S_e>(sM_e , "sM_e ", text);
+	check_combinable<IsCombinable, sM, S_i>(sM_i , "sM_i ", text);
+	check_combinable<IsCombinable, sM, M_b>(sM_b , "sM_b ", text);
+	check_combinable<IsCombinable, sM, M_p>(sM_p , "sM_p ", text);
+	check_combinable<IsCombinable, sM, jS >(sM_jS, "sM_jS", text);
+	check_combinable<IsCombinable, sM, zS >(sM_zS, "sM_zS", text);
+	check_combinable<IsCombinable, sM, sS >(sM_sS, "sM_sS", text);
+	check_combinable<IsCombinable, sM, jM >(sM_jM, "sM_jM", text);
+	check_combinable<IsCombinable, sM, sM >(sM_sM, "sM_sM", text);
+	//--------------------------------------------------------------------------
+
+	if(check_base_class)
+	{
+		//--------------------------------------------------------------------------
+		check_combinable<IsCombinable, jT, S_e>(jS_e , "jT_e ", text);
+		check_combinable<IsCombinable, jT, S_i>(jS_i , "jT_i ", text);
+		check_combinable<IsCombinable, jT, M_b>(jS_b , "jT_b ", text);
+		check_combinable<IsCombinable, jT, M_p>(jS_p , "jT_p ", text);
+		check_combinable<IsCombinable, jT, jS >(jS_jS, "jT_jS", text);
+		check_combinable<IsCombinable, jT, zS >(jS_zS, "jT_zS", text);
+		check_combinable<IsCombinable, jT, sS >(jS_sS, "jT_sS", text);
+		check_combinable<IsCombinable, jT, jM >(jS_jM, "jT_jM", text);
+		check_combinable<IsCombinable, jT, sM >(jS_sM, "jT_sM", text);
+		check_combinable<IsCombinable, jT, jT >(jS_jS, "jT_jT", text);
+		check_combinable<IsCombinable, jT, zT >(jS_zS, "jT_zT", text);
+		check_combinable<IsCombinable, jT, sT >(jS_sS, "jT_sT", text);
+		check_combinable<IsCombinable, jT, jN >(jS_jM, "jT_jN", text);
+		check_combinable<IsCombinable, jT, sN >(jS_sM, "jT_sN", text);
+		//--------------------------------------------------------------------------
+		check_combinable<IsCombinable, zT, S_e>(zS_e , "zT_e ", text);
+		check_combinable<IsCombinable, zT, S_i>(zS_i , "zT_i ", text);
+		check_combinable<IsCombinable, zT, M_b>(zS_b , "zT_b ", text);
+		check_combinable<IsCombinable, zT, M_p>(zS_p , "zT_p ", text);
+		check_combinable<IsCombinable, zT, jS >(zS_jS, "zT_jS", text);
+		check_combinable<IsCombinable, zT, zS >(zS_zS, "zT_zS", text);
+		check_combinable<IsCombinable, zT, sS >(zS_sS, "zT_sS", text);
+		check_combinable<IsCombinable, zT, jM >(zS_jM, "zT_jM", text);
+		check_combinable<IsCombinable, zT, sM >(zS_sM, "zT_sM", text);
+		check_combinable<IsCombinable, zT, jT >(zS_jS, "zT_jT", text);
+		check_combinable<IsCombinable, zT, zT >(zS_zS, "zT_zT", text);
+		check_combinable<IsCombinable, zT, sT >(zS_sS, "zT_sT", text);
+		check_combinable<IsCombinable, zT, jN >(zS_jM, "zT_jN", text);
+		check_combinable<IsCombinable, zT, sN >(zS_sM, "zT_sN", text);
+		//--------------------------------------------------------------------------
+		check_combinable<IsCombinable, sT, S_e>(sS_e , "sT_e ", text);
+		check_combinable<IsCombinable, sT, S_i>(sS_i , "sT_i ", text);
+		check_combinable<IsCombinable, sT, M_b>(sS_b , "sT_b ", text);
+		check_combinable<IsCombinable, sT, M_p>(sS_p , "sT_p ", text);
+		check_combinable<IsCombinable, sT, jS >(sS_jS, "sT_jS", text);
+		check_combinable<IsCombinable, sT, zS >(sS_zS, "sT_zS", text);
+		check_combinable<IsCombinable, sT, sS >(sS_sS, "sT_sS", text);
+		check_combinable<IsCombinable, sT, jM >(sS_jM, "sT_jM", text);
+		check_combinable<IsCombinable, sT, sM >(sS_sM, "sT_sM", text);
+		check_combinable<IsCombinable, sT, jT >(sS_jS, "sT_jT", text);
+		check_combinable<IsCombinable, sT, zT >(sS_zS, "sT_zT", text);
+		check_combinable<IsCombinable, sT, sT >(sS_sS, "sT_sT", text);
+		check_combinable<IsCombinable, sT, jN >(sS_jM, "sT_jN", text);
+		check_combinable<IsCombinable, sT, sN >(sS_sM, "sT_sN", text);
+		//--------------------------------------------------------------------------
+		check_combinable<IsCombinable, jN, S_e>(jM_e , "jN_e ", text);
+		check_combinable<IsCombinable, jN, S_i>(jM_i , "jN_i ", text);
+		check_combinable<IsCombinable, jN, M_b>(jM_b , "jN_b ", text);
+		check_combinable<IsCombinable, jN, M_p>(jM_p , "jN_p ", text);
+		check_combinable<IsCombinable, jN, jS >(jM_jS, "jN_jS", text);
+		check_combinable<IsCombinable, jN, zS >(jM_zS, "jN_zS", text);
+		check_combinable<IsCombinable, jN, sS >(jM_sS, "jN_sS", text);
+		check_combinable<IsCombinable, jN, jM >(jM_jM, "jN_jM", text);//
+		check_combinable<IsCombinable, jN, sM >(jM_sM, "jN_sM", text);//
+		check_combinable<IsCombinable, jN, jT >(jM_jS, "jN_jT", text);
+		check_combinable<IsCombinable, jN, zT >(jM_zS, "jN_zT", text);
+		check_combinable<IsCombinable, jN, sT >(jM_sS, "jN_sT", text);
+		check_combinable<IsCombinable, jN, jN >(jM_jM, "jN_jN", text);//
+		check_combinable<IsCombinable, jN, sN >(jM_sM, "jN_sN", text);//
+		//--------------------------------------------------------------------------
+		check_combinable<IsCombinable, sN, S_e>(sM_e , "sN_e ", text);
+		check_combinable<IsCombinable, sN, S_i>(sM_i , "sN_i ", text);
+		check_combinable<IsCombinable, sN, M_b>(sM_b , "sN_b ", text);
+		check_combinable<IsCombinable, sN, M_p>(sM_p , "sN_p ", text);
+		check_combinable<IsCombinable, sN, jS >(sM_jS, "sN_jS", text);
+		check_combinable<IsCombinable, sN, zS >(sM_zS, "sN_zS", text);
+		check_combinable<IsCombinable, sN, sS >(sM_sS, "sN_sS", text);
+		check_combinable<IsCombinable, sN, jM >(sM_jM, "sN_jM", text);
+		check_combinable<IsCombinable, sN, sM >(sM_sM, "sN_sM", text);
+		check_combinable<IsCombinable, sN, jT >(sM_jS, "sN_jT", text);
+		check_combinable<IsCombinable, sN, zT >(sM_zS, "sN_zT", text);
+		check_combinable<IsCombinable, sN, sT >(sM_sS, "sN_sT", text);
+		check_combinable<IsCombinable, sN, jN >(sM_jM, "sN_jN", text);
+		check_combinable<IsCombinable, sN, sN >(sM_sM, "sN_sN", text);
+	}
+}
+
 
 BOOST_AUTO_TEST_CASE(casual_test)
 {
@@ -58,163 +213,296 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef interval_set<int> IntervalSetT;
     typedef split_interval_set<int> SplitIntervalSetT;
     
-    SplitIntervalMapT map_a, map_b;
-    map_a.add(IDv(8,9,1)).add(IIv(6,11,3));
-	cout << ">>> map_a = " << map_a << endl;
-    map_b.add(IDv(0,9,2)).add(IIv(3,6,1));
-	cout << ">>> map_b = " << map_b << endl;
-
-	SplitIntervalMapT map_a_b = map_a + map_b;
-	SplitIntervalMapT map_b_a = map_b + map_a;
-	cout << ">>> map_a_b = " << map_a_b << endl;
-	cout << ">>> map_b_a = " << map_b_a << endl;
-
-    IntervalSetT set_a;
-	set_a.add(I_D(2,4));
-	map_a -= set_a;
-	SplitIntervalMapT map_c;
-	map_c = map_a - set_a;
-
-	BOOST_CHECK_EQUAL(is_interval_container<interval_set<int> >::value, true);
-	BOOST_CHECK_EQUAL(is_interval_container<split_interval_set<int> >::value, true);
-	BOOST_CHECK_EQUAL(is_interval_container<separate_interval_set<int> >::value, true);
-	BOOST_CHECK_EQUAL(is_interval_container<std::string >::value, false);
-
-	bool interval_set_companion 
-		= is_interval_set_companion< interval_map<int,int>, interval_set<int> >::value;
-	BOOST_CHECK_EQUAL(interval_set_companion, true);
+	//--------------------------------------------------------------------------
+	// derivative
+	//--------------------------------------------------------------------------
+	// 1.1
+    check_combine_pattern<is_intra_derivative>(
+		"is_intra_derivative",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // zS
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 0, 0, // jM
+		0, 0, 1, 1, 0, 0, 0, 0, 0  // sM
+		);
 
 	//--------------------------------------------------------------------------
-	bool is_combinable_jS_e
-		= is_intra_derivative<interval_set<int>, interval_set<int>::element_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_jS_e, true);
-
-	bool is_combinable_zS_e
-		= is_intra_derivative<separate_interval_set<int>, interval_set<int>::element_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_zS_e, true);
-
-	bool is_combinable_sS_e
-		= is_intra_derivative<split_interval_set<int>, interval_set<int>::element_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_sS_e, true);
-	//--------------------------------------------------------------------------
-	bool is_combinable_jS_i
-		= is_intra_derivative<interval_set<int>, interval_set<int>::segment_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_jS_i, true);
-
-	bool is_combinable_zS_i
-		= is_intra_derivative<separate_interval_set<int>, interval_set<int>::segment_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_zS_i, true);
-
-	bool is_combinable_sS_i
-		= is_intra_derivative<split_interval_set<int>, interval_set<int>::segment_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_sS_i, true);
-	//--------------------------------------------------------------------------
-	bool is_combinable_jM_e
-		= is_intra_derivative<interval_map<int,int>, interval_map<int,int>::element_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_jM_e, true);
-
-	bool is_combinable_sM_e
-		= is_intra_derivative<split_interval_map<int,int>, split_interval_map<int,int>::element_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_sM_e, true);
-	//--------------------------------------------------------------------------
-	bool is_combinable_jM_i
-		= is_intra_derivative<interval_map<int,int>, interval_map<int,int>::segment_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_jM_i, true);
-
-	bool is_combinable_sM_i
-		= is_intra_derivative<split_interval_map<int,int>, split_interval_map<int,int>::segment_type>::value;
-	BOOST_CHECK_EQUAL(is_combinable_sM_i, true);
-	//--------------------------------------------------------------------------
-	//--------------------------------------------------------------------------
-
-	typedef interval_set<int>           jS;
-	typedef separate_interval_set<int>  zS;
-	typedef split_interval_set<int>     sS;
-	typedef interval_map<int,int>       jM;
-	typedef split_interval_map<int,int> sM;
-
-	typedef interval_set<int>::element_type            jS_e;
-	typedef separate_interval_set<int>::element_type   zS_e;
-	typedef split_interval_set<int>::element_type      sS_e;
-	typedef interval_map<int,int>::element_type        jM_b;
-	typedef split_interval_map<int,int>::element_type  sM_b;
-
-	typedef interval_set<int>::segment_type            jS_i;
-	typedef separate_interval_set<int>::segment_type   zS_i;
-	typedef split_interval_set<int>::segment_type      sS_i;
-	typedef interval_map<int,int>::segment_type        jM_p;
-	typedef split_interval_map<int,int>::segment_type  sM_p;
-
-	typedef interval_map<int,int>::domain_type         jM_e;
-	typedef split_interval_map<int,int>::domain_type   sM_e;
-	typedef interval_map<int,int>::interval_type       jM_i;
-	typedef split_interval_map<int,int>::interval_type sM_i;
-
-	//     
-	// jS
-	// zS
-
-
-	check_combinable<is_intra_derivative, jS, jS_e>(true, "jS_jS_e");
-	check_combinable<is_intra_derivative, zS, zS_e>(true, "zS_zS_e");
-	check_combinable<is_intra_derivative, sS, sS_e>(true, "sS_sS_e");
-
-	check_combinable<is_intra_derivative, jS, jS_i>(true, "jS_jS_i");
-	check_combinable<is_intra_derivative, zS, zS_i>(true, "zS_zS_i");
-	check_combinable<is_intra_derivative, sS, sS_i>(true, "sS_sS_i");
-
-	check_combinable<is_intra_derivative, jM, jM_b>(true, "jM_jM_b");
-	check_combinable<is_intra_derivative, sM, sM_b>(true, "sM_sM_b");
-
-	check_combinable<is_intra_derivative, jM, jM_p>(true, "jM_jM_p");
-	check_combinable<is_intra_derivative, sM, sM_p>(true, "sM_sM_p");
-
-	check_combinable<is_cross_derivative, jM, jM_e>(true, "jM_jM_e");
-	check_combinable<is_cross_derivative, sM, sM_e>(true, "sM_sM_e");
-
-	check_combinable<is_cross_derivative, jM, jM_i>(true, "jM_jM_i");
-	check_combinable<is_cross_derivative, sM, sM_i>(true, "sM_sM_i");
-
-	check_combinable<is_interval_set_companion, jS, jS>(true, "jS_jS");
-	check_combinable<is_interval_set_companion, jS, zS>(true, "jS_zS");
-	check_combinable<is_interval_set_companion, jS, sS>(true, "jS_sS");
-
-	check_combinable<is_interval_set_companion, zS, jS>(true, "zS_jS");
-	check_combinable<is_interval_set_companion, zS, zS>(true, "zS_zS");
-	check_combinable<is_interval_set_companion, zS, sS>(true, "zS_sS");
-
-	check_combinable<is_interval_set_companion, sS, jS>(true, "sS_jS");
-	check_combinable<is_interval_set_companion, sS, zS>(true, "sS_zS");
-	check_combinable<is_interval_set_companion, sS, sS>(true, "sS_sS");
-
-	check_combinable<is_interval_set_companion, jM, jS>(true, "jM_jS");
-	check_combinable<is_interval_set_companion, jM, zS>(true, "jM_zS");
-	check_combinable<is_interval_set_companion, jM, sS>(true, "jM_sS");
-
-	check_combinable<is_interval_set_companion, sM, jS>(true, "sM_jS");
-	check_combinable<is_interval_set_companion, sM, zS>(true, "sM_zS");
-	check_combinable<is_interval_set_companion, sM, sS>(true, "sM_sS");
+	// 1.2
+    check_combine_pattern<is_cross_derivative>(
+		"is_cross_derivative",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sS
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jM
+		1, 1, 0, 0, 0, 0, 0, 0, 0  // sM
+		);
 
 	//--------------------------------------------------------------------------
-	check_combinable<is_intra_combinable, jS, jS>(true, "jS_jS");
-	check_combinable<is_intra_combinable, zS, jS>(true, "zS_jS");
-	check_combinable<is_intra_combinable, sS, jS>(true, "sS_jS");
-
-	check_combinable<is_intra_combinable, jS, zS>(true, "jS_zS");
-	check_combinable<is_intra_combinable, zS, zS>(true, "zS_zS");
-	check_combinable<is_intra_combinable, sS, zS>(true, "sS_zS");
-
-	check_combinable<is_intra_combinable, jS, zS>(true, "jS_sS");
-	check_combinable<is_intra_combinable, zS, zS>(true, "zS_sS");
-	check_combinable<is_intra_combinable, sS, zS>(true, "sS_sS");
-
-	check_combinable<is_intra_combinable, jM, jM>(true, "jM_jM");
-	check_combinable<is_intra_combinable, sM, jM>(true, "sM_jM");
-
-	check_combinable<is_intra_combinable, jM, sM>(true, "jM_sM");
-	check_combinable<is_intra_combinable, sM, sM>(true, "sM_sM");
+	// 1.3
+    check_combine_pattern<is_inter_derivative>(
+		"is_inter_derivative",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // zS
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // sS
+		1, 1, 1, 1, 0, 0, 0, 0, 0, // jM
+		1, 1, 1, 1, 0, 0, 0, 0, 0  // sM
+		);
 
 	//--------------------------------------------------------------------------
-    BOOST_CHECK_EQUAL(map_a_b, map_b_a);
+	// inter interval_container
+	//--------------------------------------------------------------------------
+	// 2.1
+    check_combine_pattern<is_intra_combinable>(
+		"is_intra_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // jS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // zS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // sS
+		0, 0, 0, 0, 0, 0, 0, 1, 1, // jM
+		0, 0, 0, 0, 0, 0, 0, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 2.2
+    check_combine_pattern<is_cross_combinable>(
+		"is_cross_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 1, 1, // jS
+		0, 0, 0, 0, 0, 0, 0, 1, 1, // zS
+		0, 0, 0, 0, 0, 0, 0, 1, 1, // sS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // jM
+		0, 0, 0, 0, 1, 1, 1, 0, 0  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 2.3
+    check_combine_pattern<is_inter_combinable>(
+		"is_inter_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 1, 1, 1, 1, 1, // jS
+		0, 0, 0, 0, 1, 1, 1, 1, 1, // zS
+		0, 0, 0, 0, 1, 1, 1, 1, 1, // sS
+		0, 0, 0, 0, 1, 1, 1, 1, 1, // jM
+		0, 0, 0, 0, 1, 1, 1, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// right
+	//--------------------------------------------------------------------------
+	// 3.1
+    check_combine_pattern<is_interval_set_right_combinable>(
+		"is_interval_set_right_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // jS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // sS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jM
+		0, 0, 0, 0, 0, 0, 0, 0, 0  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.2
+    check_combine_pattern<is_interval_map_right_intra_combinable>(
+		"is_interval_map_right_intra_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 1, 1, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.3
+    check_combine_pattern<is_interval_map_right_cross_combinable>(
+		"is_interval_map_right_cross_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // jM
+		1, 1, 0, 0, 1, 1, 1, 0, 0  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.4
+    check_combine_pattern<is_interval_map_right_inter_combinable>(
+		"is_interval_map_right_inter_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sS
+		1, 1, 1, 1, 1, 1, 1, 1, 1, // jM
+		1, 1, 1, 1, 1, 1, 1, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.5
+    check_combine_pattern<is_right_intra_combinable>(
+		"is_right_intra_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // jS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 1, 1, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.6
+    check_combine_pattern<is_right_inter_combinable>(
+		"is_right_inter_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // jS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // sS
+		1, 1, 1, 1, 1, 1, 1, 1, 1, // jM
+		1, 1, 1, 1, 1, 1, 1, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.7
+    check_combine_pattern<combines_right_to_interval_set>(
+		"combines_right_to_interval_set",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // jS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // zS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // sS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // jM
+		0, 0, 0, 0, 1, 1, 1, 0, 0  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.8
+    check_combine_pattern<combines_right_to_interval_map>(
+		"combines_right_to_interval_map",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sS
+		0, 0, 0, 0, 0, 0, 0, 1, 1, // jM
+		0, 0, 0, 0, 0, 0, 0, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 3.9
+    check_combine_pattern<combines_right_to_interval_container>(
+		"combines_right_to_interval_container",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // jS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // zS
+		0, 0, 0, 0, 1, 1, 1, 0, 0, // sS
+		0, 0, 0, 0, 1, 1, 1, 1, 1, // jM
+		0, 0, 0, 0, 1, 1, 1, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 4.1
+    check_combine_pattern<is_interval_set_companion>(
+		"is_interval_set_companion",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // jS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // sS
+		1, 1, 0, 0, 1, 1, 1, 0, 0, // jM
+		1, 1, 0, 0, 1, 1, 1, 0, 0  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 4.2 = 3.2 is_interval_map_right_intra_combinable
+    check_combine_pattern<is_interval_map_companion>(
+		"is_interval_map_companion",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 1, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 1, 0, 0, 0, 0, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 1, 1, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 1  // sM
+		);
+
+	//--------------------------------------------------------------------------
+	// 5.1
+    check_combine_pattern<is_coarser_interval_set_companion>(
+		"is_coarser_interval_set_companion",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		1, 1, 0, 0, 1, 0, 0, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 0, 0, 0, // sS
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jM
+		1, 1, 0, 0, 1, 1, 0, 0, 0, // sM
+		false
+		);
+
+	//--------------------------------------------------------------------------
+	// 5.2
+    check_combine_pattern<is_coarser_interval_map_companion>(
+		"is_coarser_interval_map_companion",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 1, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 1, 0, 0, 0, 0, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 0, 0, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 0, // sM
+		false
+		);
+
+	//--------------------------------------------------------------------------
+	// 6.1
+    check_combine_pattern<is_binary_interval_set_combinable>(
+		"is_binary_interval_set_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		1, 1, 0, 0, 1, 0, 0, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 0, 0, 0, // sS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jM
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sM
+		false
+		);
+
+	//--------------------------------------------------------------------------
+	// 6.2
+    check_combine_pattern<is_binary_interval_map_combinable>(
+		"is_binary_interval_map_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // jS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // zS
+		0, 0, 0, 0, 0, 0, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 0, 0, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 0, // sM
+		false
+		);
+
+	//--------------------------------------------------------------------------
+	// 6.3
+    check_combine_pattern<is_binary_intra_combinable>(
+		"is_binary_intra_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		1, 1, 0, 0, 1, 0, 0, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 0, 0, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 0, // sM
+		false
+		);
+
+	//--------------------------------------------------------------------------
+	// 6.4
+    check_combine_pattern<is_binary_intra_combinable>(
+		"is_binary_intra_combinable",
+	//  e  i  b  p jS zS sS jM sM       
+		1, 1, 0, 0, 0, 0, 0, 0, 0, // jS
+		1, 1, 0, 0, 1, 0, 0, 0, 0, // zS
+		1, 1, 0, 0, 1, 1, 0, 0, 0, // sS
+		0, 0, 1, 1, 0, 0, 0, 0, 0, // jM
+		0, 0, 1, 1, 0, 0, 0, 1, 0, // sM
+		false
+		);
+
+	//--------------------------------------------------------------------------
+	//--------------------------------------------------------------------------
+
 
 }

@@ -803,7 +803,10 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
-{ Map::intersect(object, operand); return object; }
+{ 
+	Map::intersect(object, operand); 
+	return object; 
+}
 
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>

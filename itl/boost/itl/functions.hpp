@@ -68,7 +68,7 @@ operator += (ObjectT& object, const OperandT& operand)
     return object; 
 }
 
-/** \par \b Requires: \c OperandT is an addable derivative type of \c ObjectT. 
+/* \par \b Requires: \c OperandT is an addable derivative type of \c ObjectT. 
 	\b Effects: \c operand is added to \c object.
 	\par \b Returns: A reference to \c object.
 	\b Complexity:
@@ -84,8 +84,8 @@ ObjectT:
 n = object.interval_count()
 \endcode
 
-For the addition of \b elements, \b segments and \b interval \b containers
-complexity is \b logarithmic and \b linear respectively.
+For the addition of \b elements or \b segments
+complexity is \b logarithmic or \b linear respectively.
 For \c interval_sets and \c separate_interval_sets addition of segments
 is \b amortized \b logarithmic.
 */
@@ -123,6 +123,7 @@ ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& o
 //------------------------------------------------------------------------------
 //- Addition |=, | 
 //------------------------------------------------------------------------------
+
 /** \par \b Requires: Types \c ObjectT and \c OperandT are addable.
 	\par \b Effects: \c operand is added to \c object.
 	\par \b Returns: A reference to \c object.
@@ -182,6 +183,7 @@ ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& o
 //------------------------------------------------------------------------------
 //- Subtraction -=, -
 //------------------------------------------------------------------------------
+
 /** \par \b Requires: Types \c ObjectT and \c OperandT are subtractable.
 	\par \b Effects: \c operand is subtracted from \c object.
 	\par \b Returns: A reference to \c object.
@@ -232,23 +234,13 @@ operator -= (ObjectT& object, const OperandT& operand)
 	return object.erase(operand); 
 }
 
-template 
-<
-    class ObjectT, class SetT, class DomainT, ITL_COMPARE Compare, 
-	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
->
-inline
-typename boost::enable_if<is_interval_set_companion<ObjectT, SetT>,
+template<class ObjectT, class IntervalSetT>
+typename boost::enable_if<combines_right_to_interval_set<ObjectT, IntervalSetT>,
                           ObjectT>::type&
-operator -=
-(
-          ObjectT& object,
-    const interval_base_set<SetT,DomainT,Compare,Interval,Alloc>& operand
-)
+operator -= (ObjectT& object, const IntervalSetT& operand)
 {
 	return erase(object, operand);
 }
-
 
 
 template<class ObjectT, class OperandT>
@@ -277,41 +269,9 @@ insert(ObjectT& object, const OperandT& operand)
 //==============================================================================
 //= Erasure
 //==============================================================================
-template 
-<
-    class ObjectT, class SetT, class DomainT, ITL_COMPARE Compare, 
-	template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
->
-inline
-typename boost::enable_if<is_interval_set_companion<ObjectT, SetT>,
-                          ObjectT>::type&
-erase
-(
-          ObjectT& object,
-    const interval_base_set<SetT,DomainT,Compare,Interval,Alloc>& operand
-)
-{
-    typedef interval_base_set<SetT,DomainT,Compare,Interval,Alloc> operand_type;
-
-    if(operand.empty())
-        return object;
-
-    typename operand_type::const_iterator common_lwb;
-    typename operand_type::const_iterator common_upb;
-
-    if(!Set::common_range(common_lwb, common_upb, operand, object))
-        return object;
-
-    typename operand_type::const_iterator it_ = common_lwb;
-    while(it_ != common_upb)
-		object.erase(*it_++);
-
-    return object; 
-}
-
-
 template<class ObjectT, class OperandT>
-typename boost::enable_if<is_interval_map<ObjectT>, ObjectT>::type& 
+typename boost::enable_if<combines_right_to_interval_container<ObjectT, OperandT>,
+                          ObjectT>::type&
 erase(ObjectT& object, const OperandT& operand)
 {
     if(operand.empty())
