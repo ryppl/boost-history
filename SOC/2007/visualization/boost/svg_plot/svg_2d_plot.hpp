@@ -1584,6 +1584,7 @@ my_plot.background_color(ghostwhite) // Whole image.
 
       void draw_straight_lines(const svg_2d_plot_series& series)
       { //! Add line between series of data points (straight rather than a Bezier curve).
+        //! Area fill with color if required.
 
         g_element& g_ptr = image_.g(detail::PLOT_DATA_LINES).add_g_element();
         g_ptr.clip_id(plot_window_clip_);
@@ -1596,34 +1597,36 @@ my_plot.background_color(ghostwhite) // Whole image.
         bool is_fill = !series.line_style_.area_fill_.is_blank();
         path.style().fill_on(is_fill); // Ensure includes a fill="none" if no fill.
 
-        double prev_x; // Previous data points.
+        double prev_x; // Previous X and Y of a data point.
         double prev_y;
         if(series.series_.size() > 1)
-        { // Need at least two points for a line.
+        { // Need at least two points for a line  ;-)
           std::multimap<unc, unc>::const_iterator j = series.series_.begin();
-
-          // If we have to fill the area under the plot,
+          // If required to fill the area under the plot,
           // we first have to move from the X-axis (y = 0) to the first point,
-          // and again at the end after the last point.
-          unc prev_ux = (*j).first;
-          prev_x = prev_ux.value();
-          prev_y = 0.; // X-axis.
+          // and again to the X-axis (y = 0) at the end after the last point.
+
+          // std::multimap<double, double> was prev_x = (*j).first;
+          unc prev_ux = (*j).first; 
+          prev_x = prev_ux.value(); // 1st point X-value.
+          prev_y = 0.; // y = 0, so on horizontal X-axis.
           transform_point(prev_x, prev_y);
-          if(is_fill)
+          if(is_fill == true)
           { // Move to 1st point.
             //path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
             path.M(prev_x, prev_y);
           }
+          // std::multimap<double, double> was transform_y(prev_y = (*j).second);
           unc prev_uy = (*j).second;
           prev_y = prev_uy.value();
           transform_y(prev_y);
-          if(is_fill)
+          if(is_fill == true)
           { // Area fill wanted.
-            // path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
+            //path.style().fill_color(series.line_style_.area_fill_); // Duplicates so no longer needed?
             path.L(prev_x, prev_y); // Line from X-axis to 1st point.
           }
           else
-          { // Area fill == blank
+          { // is_fill == false so area_fill == blank.
             path.M(prev_x, prev_y);
           }
           ++j; // so now refers to 2nd point to plot.
@@ -1642,10 +1645,12 @@ my_plot.background_color(ghostwhite) // Whole image.
             prev_y = temp_y;
           } // for j'th point
 
-          if(is_fill)
+          if(is_fill == true)
           { // Area fill wanted.
-            transform_y(temp_y); // X-axis line coordinate.
+            temp_y = 0; // y = 0, so on horizontal X-axis.
+            transform_y(temp_y); // X-axis line SVG coordinate.
             path.L(temp_x, temp_y).z(); // Draw line to X-axis & closepath with Z.
+            // to ensure area below is filled.
           }
         }
       } // draw_straight_lines
@@ -1669,7 +1674,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           path.style().fill_on(false); // default path constructor is false
         }
         else
-        { // !is_blank so do want area fill.
+        { // !is_blank so DO want area fill.
           path.style().fill_color(series.line_style_.area_fill_);
         }
 

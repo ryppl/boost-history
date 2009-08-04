@@ -109,6 +109,7 @@ namespace svg
       if(clip_name_.size() != 0)
       { // Example: clip-path="url(#plot_window)"
         s_out << " clip-path=\"url(#" << clip_name_ << ")\""; // Prefix with space.
+        // Might be nicer to suffix with newline - but after the >
       }
       // should transform be here allow translate and rotate?
       /*! \details
@@ -132,14 +133,15 @@ namespace svg
                 id_name_(id_name),
                 class_name_(class_name),
                 clip_name_(clip_name)
-    {
+    { // Constructor.
     }
 
     svg_element()
-    {
+    { // Default constructor.
     }
 
     virtual void write(std::ostream& rhs) = 0;
+
     virtual ~svg_element()
     {
     }
@@ -166,7 +168,8 @@ namespace svg
     }
 
     void id(const std::string& id)
-    { //! Provide a unique name for an element.
+    { //! Provide a unique name for an element. Example: id="plotBackground"
+
       /*! \details
         See http://www.w3.org/TR/SVG/struct.html#IDAttribute
         5.10.1 Attributes common to all elements: id and xml:base
@@ -181,7 +184,6 @@ namespace svg
         A group of elements, as well as individual objects,
         can be given a name using the id attribute.
         Named groups are needed for several purposes such as animation and re-usable objects.
-        Example: id="plotBackground"
       */
       id_name_ = id;
    }
