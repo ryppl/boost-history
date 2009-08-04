@@ -338,7 +338,7 @@ intersects(const LeftT& left, const RightT& right)
 	LeftT intersection;
 
 	if(left.empty() || right.empty())
-		false;
+		return false;
 
 	typename RightT::const_iterator  right_common_lower_;
     typename RightT::const_iterator right_common_upper_;

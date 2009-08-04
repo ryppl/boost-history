@@ -56,7 +56,18 @@ struct is_codomain_equal
 {
 	typedef is_codomain_equal<LeftT, RightT> type;
 	static const bool value =
-		is_same<LeftT::codomain_type, RightT::codomain_type>::value;
+		is_same<typename LeftT::codomain_type, 
+			    typename RightT::codomain_type>::value;
+};
+
+//NOTE: Equality of compare order implies the equality of the domain_types
+template<class LeftT, class RightT>
+struct is_domain_compare_equal
+{
+	typedef is_domain_compare_equal<LeftT, RightT> type;
+	static const bool value =
+		is_same<typename LeftT::domain_compare, 
+		        typename RightT::domain_compare>::value;
 };
 
 template<class LeftT, class RightT>
@@ -66,15 +77,6 @@ struct is_content_type_equal
 	static const bool value =
 		mpl::and_<is_domain_compare_equal<LeftT, RightT>, 
 		          is_codomain_equal<LeftT, RightT> >::value;//JODO
-};
-
-//NOTE: Equality of compare order implies the equality of the domain_types
-template<class LeftT, class RightT>
-struct is_domain_compare_equal
-{
-	typedef is_domain_compare_equal<LeftT, RightT> type;
-	static const bool value =
-		is_same<LeftT::domain_compare, RightT::domain_compare>::value;
 };
 
 
