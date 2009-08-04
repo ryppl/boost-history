@@ -12631,7 +12631,7 @@ sequence containers.
 </rationale>
 </comment>
 
-<comment nb="UK" num="240" uknum="427" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="240" uknum="427" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 23.1.6.1
 </section>
@@ -12666,6 +12666,7 @@ sequence containers.
     paper is available. We suspect that there are other similar issues in this 
     sub-clause (9, 10).</notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -12754,7 +12755,7 @@ sequence containers.
 </rationale>
 </comment>
 
-<comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="" date="" extdoc="">
+<comment nb="UK" num="244" uknum="153" type="Te" owner="LWG" issue="1042" disp="modified" date="" extdoc="">
 <section>
 23.2.1,
 23.2.6
@@ -12785,6 +12786,7 @@ sequence containers.
 <notes>Agree with the issue but not the details of the proposed solution. Walter to 
     provide wording for the new concept.</notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -13086,7 +13088,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="254" uknum="55" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="254" uknum="55" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 24.1.3
 </section>
@@ -13105,6 +13107,7 @@ All concepts-related text has been removed from the draft.
 <notes>deferred until we know whether we have axioms.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -13127,10 +13130,11 @@ All concepts-related text has been removed from the draft.
 <notes>deferred until we know whether we have axioms.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="256" uknum="57" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="256" uknum="57" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -13149,6 +13153,7 @@ All concepts-related text has been removed from the draft.
 <notes>deferred until we know whether we have axioms.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -13221,7 +13226,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="260" uknum="61" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="260" uknum="61" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 24.1.5
 </section>
@@ -13243,6 +13248,7 @@ All concepts-related text has been removed from the draft.
 <notes>deferred for axiom decision.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -13294,7 +13300,7 @@ type of any operator[] as described by
 </rationale>
 </comment>
 
-<comment nb="UK" num="262" uknum="65" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="262" uknum="65" type="Te" owner="LWG" issue="" disp="modifed" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13316,6 +13322,7 @@ type of any operator[] as described by
 deferred.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -13344,7 +13351,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="264" uknum="67" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="264" uknum="67" type="Te" owner="LWG" issue="" disp="modifed" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13363,6 +13370,7 @@ All concepts-related text has been removed from the draft.
 <notes>deferred/axiom.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
@@ -13388,7 +13396,7 @@ All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="266" uknum="69" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="266" uknum="69" type="Te" owner="LWG" issue="" disp="modifed" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13409,10 +13417,11 @@ All concepts-related text has been removed from the draft.
 deferred.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
-<comment nb="UK" num="267" uknum="70" type="Te" owner="LWG" issue="" disp="" date="" extdoc="">
+<comment nb="UK" num="267" uknum="70" type="Te" owner="LWG" issue="" disp="modified" date="" extdoc="">
 <section>
 24.1.6
 </section>
@@ -13431,6 +13440,7 @@ deferred.
 <notes>deferred/axiom.
 </notes>
 <rationale>
+All concepts-related text has been removed from the draft.
 </rationale>
 </comment>
 
