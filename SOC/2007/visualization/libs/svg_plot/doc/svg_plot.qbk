@@ -69,6 +69,8 @@ SVG files (.svg) can be viewed with an Internet Browser:
 
 * [@http://www.mozilla.com/firefox/ Mozilla Firefox (version 3 and later)]
 
+You may wish to associate Firefox with SVG files (or perhaps Inkview - see below).
+
 * [@http://www.adobe.com/products/illustrator Adobe Illustrator].
 
 * [@www.opera.com Opera] has [@http://www.opera.com/docs/specs/svg/ svg support]
@@ -83,8 +85,42 @@ but the download software can still be obtained elsewhere, for example from
 Information about limitations of IE with Vista and the Adobe add-in are given on the
 [@http://www.adobe.com/svg/viewer/install/main.html Adobe End of Line FAQ]).
 
-* [@http://www.inkscape.org/ Inkscape], a fine Open Source SVG editor and viewer
+* [@http://www.inkscape.org/ Inkscape], a fine Open Source SVG editor Inkscape and a viewer Inkview
 with excellent rendering, full scaling and other editing features.
+
+Inkview also allows window resizing, showing the scalability of SVG files without any loss of quality,
+unlike bit image files that eventually reveal pixels as you expand the view.
+
+You may find it especially convenient to use the viewer, Inkview, on Microsoft Windows,
+and make this the default program for files of type .svg.
+To do this, you will need to download install the Inkscape package.
+Inkview.exe is included in the directory you chose for the install,
+usually C:\program Files\Inkscape.  You will need to use the Explorer, Tools, Folder Options,
+and add extension svg if necessary and then associate svg files with inkview.exe.
+
+You may also find it convenient to add "c:\program Files\inkscape" to your Path using
+Control Panel, System, Advanced system settings, Environment variables, Path, and edit
+to append the folder.  You can then use commands like "inkview my_picture.svg" from a command window.
+
+Inkview allows one to open many svg files as a slideshow
+and move forward and back with the cursor keys.
+
+This works as expected using a command window,
+for example after changing to the directory containing your SVG files,
+and running "inkview *.svg" to display all the images in the directory as a slideshow.
+
+Sadly, by default, if you select many files (but not more than 15!) in Windows Explorer,
+multiple windows are opened instead of a slideshow.
+If you know how to change this 'by design' feature, please tell me.
+
+You may instead find is useful to create a batch file, for example called demo_plots.bat containing
+
+  START "Inkview" /MIN inkview.exe  C:\Users\Paul\Desktop\Demo_Plots\*.svg
+
+that will display all the svg images in folder \Demo_Plots in turn as the cursor keys are pressed.
+Of course, you can also omit the folder specification and just have `*.svg` when the location of the
+batch file will determine which svg files are being viewed.
+
 
 * [@www.google.com/chrome Google Chrome]
 

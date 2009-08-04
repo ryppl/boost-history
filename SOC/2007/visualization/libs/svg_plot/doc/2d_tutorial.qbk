@@ -194,9 +194,9 @@ A little bit of color customization goes a *very* long way!
 
 [h4 Y-Axis ticks and tick value label position]
 
-[demo_2d_x_external_1]
+[demo_1d_x_external_1]
 producing this plot
-[$images/demo_2d_x_external.svg]
+[$images/demo_1d_x_external.svg]
 
 See [@../../example/demo_1d_x_external.cpp demo_1d_x_external.cpp]
 for full source code.
@@ -210,10 +210,8 @@ for full source code.
 
 producing this plot  [$images/demo_1d_tick_values_1.svg]
 
-See [@../../example/demo_1d_x_external.cpp demo_1d_tick_values.cpp]
+See [@../../example/demo_1d_tick_values.cpp demo_1d_tick_values.cpp]
 for full source code.
-
-
 
 
 [h4 Y-Axis Grid Lines]
