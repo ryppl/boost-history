@@ -34,8 +34,13 @@
    * path_unit_test needs to probe error handling, verify exceptions are thrown when
      requested.
    * Provide the name check functions for more character types? Templatize?
+   * Why do native() and generic() return paths rather than const strings/string refs?
+     Either change or document rationale.
      
                          Design Questions
+
+   * Could sentinel_iterator be used to reduce number of overloads?
+   * Should append be changed to convert, and use back_inserter to append?
 
    * Should path_locale use thread local storage?
    * Will locale overloads be needed in practice?
@@ -136,7 +141,7 @@ namespace filesystem
 //                                  path_traits                                         //
 //                                                                                      //
 //    Specializations are provided for char, wchar_t, char16_t, and char32_t value      //
-//    types and their related string and iterator types .                               //
+//    types and their related string and iterator types.                                //
 //                                                                                      //
 //    Users are permitted to add specializations for additional types.                  //
 //                                                                                      //
@@ -350,26 +355,21 @@ namespace path_traits
     path( const path & p ) : m_path(p.m_path) {}      // #2
 
     //  construct from null terminated sequence
-
     template< class InputIterator >
       path( InputIterator begin,
         system::error_code & ec = boost::throws(),
         typename boost::enable_if<path_traits::is_iterator<InputIterator> >::type* dummy=0 )  // #3
           { m_append( begin, m_path, ec ); }
 
-    //  construct from (potentially) multi-byte character string, which may have
-    //  embedded nulls. Embedded null support is required for some Asian languages on
-    //  Windows.
-
+    //  construct from (potentially) multi-byte character string, which may have embedded
+    //  nulls. Embedded null support is required for some Asian languages on Windows.
     template< class ForwardIterator >
       path( ForwardIterator begin, ForwardIterator end,
         system::error_code & ec = boost::throws() )                                 // #4
           { m_append( begin, end, m_path, ec ); }
 
-    //  construct from container of (potentially) multi-byte character string,
-    //  which may have embedded nulls.  Embedded null support is required for
-    //  some Asian languages on Windows.
-
+    //  construct from container of (potentially) multi-byte chars, which may have embedded
+    //  nulls.  Embedded null support is required for some Asian languages on Windows.
     template< class Container >
       path( const Container & ctr,
         system::error_code & ec = boost::throws(),
@@ -513,11 +513,11 @@ namespace path_traits
     //  For POSIX, these are all the same format; slashes and backslashes are not modified.
     //
     //  For Windows,   native:  slashes are converted to backslashes
-    //                 generic: backslashes are converted to backslashes
+    //                 generic: backslashes are converted to slashes
     //                 source:  slashes and backslashes are not modified
 
     template< class T >  
-    T string( system::error_code & ec = boost::throws() ) const  // source format
+    T string( system::error_code & ec = boost::throws() ) const  // source (i.e. original) format
     {
       return path_traits::convert<T>( m_path, ec );
     }
@@ -542,7 +542,6 @@ namespace path_traits
     
 #   ifdef BOOST_WINDOWS_PATH
 
-    
     const path  native() const;   // native format
     const path  generic() const;  // generic format
 
@@ -557,7 +556,7 @@ namespace path_traits
 
     //  c_str() returns a C string suitable for calls to the operating system API.
     //  On POSIX and Windows that's source format, on some OS's it may be native format.
-    const value_type *   c_str() const  { return m_path.c_str(); }  // 
+    const value_type *   c_str() const  { return m_path.c_str(); }   
 
     //  -----  decomposition  -----
 

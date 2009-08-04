@@ -29,10 +29,6 @@
 
 //  BOOST_POSIX_API or BOOST_WINDOWS_API specify which API to use
 
-#ifdef BOOST_WINDOWS_API
-# warning BOOST_WINDOWS_API defined
-#endif
-
 # if defined( BOOST_WINDOWS_API ) && defined( BOOST_POSIX_API )
 #   error both BOOST_WINDOWS_API and BOOST_POSIX_API are defined
 # elif !defined( BOOST_WINDOWS_API ) && !defined( BOOST_POSIX_API )
