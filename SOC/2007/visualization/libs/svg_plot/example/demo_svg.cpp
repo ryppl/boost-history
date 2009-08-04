@@ -105,7 +105,7 @@ int main()
   // background 
 
   // g_element& a1 = 
-  my_svg.g(); // Add first (zeroth) new element,
+  my_svg.add_g_element(); // Add first (zeroth) new element,
 
   cout << "my_svg.document_size() " << my_svg.document_size() << endl;
 
@@ -229,7 +229,7 @@ int main()
   //polygon_element& my_poly = my_svg.polygon(10, 20, true);
   //my_poly.p(100, 100); // just one point
   //my_poly.p(200, 100).p(300, 200).p(400,300); // <polygon points=" 11,22 33,44 55,66"/>
-  //my_svg.g(); // Add 2nd new element,
+  //my_svg.add_g_element(); // Add 2nd new element,
 
   // This line aborts:
   //polyline_element& pl = g1.polyline(); // 'empty' line.
@@ -293,7 +293,7 @@ int main()
   cout << g1.id() << endl; // Output: element 1
   cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 8 ???
 
-  cout << "my_svg.g().size() " << my_svg.g().size() << endl; // 0
+  cout << "my_svg.add_g_element().size() " << my_svg.add_g_element().size() << endl; // 0
 
 
   my_svg.write("demo_svg.svg");
