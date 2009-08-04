@@ -1,4 +1,4 @@
-//  filesystem convert.hpp  ------------------------------------------------------------//
+//  filesystem path_traits.hpp  --------------------------------------------------------//
 
 //  Copyright Beman Dawes 2009
 
@@ -7,8 +7,8 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
-#ifndef BOOST_FILESYSTEM_CONVERT_HPP
-#define BOOST_FILESYSTEM_CONVERT_HPP
+#ifndef BOOST_FILESYSTEM_PATH_TRAITS_HPP
+#define BOOST_FILESYSTEM_PATH_TRAITS_HPP
 
 #include <boost/filesystem/config.hpp>
 #include <string>
@@ -18,11 +18,9 @@
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-namespace boost { namespace filesystem {
+namespace boost { namespace filesystem { namespace path_traits {
   
   typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
-  
-namespace detail {
 
   // value types differ  ---------------------------------------------------------------//
   //
@@ -100,6 +98,6 @@ namespace detail {
     to += from;
   }
 
-}}} // namespace boost::filesystem::detail
+}}} // namespace boost::filesystem::path_traits
 
-#endif  // BOOST_FILESYSTEM_CONVERT_HPP
+#endif  // BOOST_FILESYSTEM_PATH_TRAITS_HPP
