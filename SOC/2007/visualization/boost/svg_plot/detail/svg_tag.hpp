@@ -1980,16 +1980,14 @@ public:
   class g_element: public svg_element
   { /*! \class boost::svg::g_element
       \brief g_element (group element) is the node element of our document tree.
-      \verbatim
-      'g' element is a container element for grouping together  <g /> ... </g>
-     \endverbatim.
+      'g' element is a container element for grouping together  <g> ... </g>
       \details g_element ('g' element is a container element
       for grouping together related graphics elements).\n
       See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
 
       \verbatim
       'g' element is a container element for grouping together <g /> </g>
-      related graphics elements, for example:
+      related graphics elements, for example, an image background rectangle with border and fill:
       <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
       \endverbatim.
    */
@@ -2045,14 +2043,13 @@ public:
     } // void write(std::ostream& rhs)
 
     g_element& g(int i)
-    { // i is index of children nodes.
-      return *(static_cast<g_element*>(&children[i]));
+    { //! i is index of children nodes.
+      return *(static_cast<g_element*>(&children[i])); // \return reference to child node g_element.
     }
 
-    g_element& g()
+    g_element& add_g_element()
     { //! Add a new group element.
       //! \return A reference to the new child node just created.
-      // was add_g_element
       children.push_back(new g_element());
       return *(static_cast<g_element*>(&children[children.size()-1]));
     }
@@ -2145,21 +2142,23 @@ public:
 
     polygon_element& pentagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, bool f = true)
     { //! Add a new pentagon element.
-      //! \return A reference to the new child node just created. // push_back a complete pentagon to the document.
+      //! \return A reference to the new child node just created.
+      // push_back a complete pentagon to the document.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, f));
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     polygon_element& hexagon(double x1, double y1, double x2, double y2, double x3, double y3, double x4, double y4, double x5, double y5, double x6, double y6, bool f = true)
     { //! Add a new hexagon element.
-      //! \return A reference to the new child node just created. // push_back a complete 6-sided star to the document.
+      //! \return A reference to the new child node just created.
+      // push_back a complete 6-sided star to the document.
       children.push_back(new polygon_element(x1, y1, x2, y2, x3, y3, x4, y4, x5, y5, x6, y6, f));
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     polygon_element& polygon()
     { //! Add a new polygon element.
-      //! \return A reference to the new child node just created.
+      //! \return A reference to the new polygon element just created.
       children.push_back(new polygon_element()); // Empty polygon,
       // to which poly_path_points can be added later using member function P.
       return *(static_cast<polygon_element*>(&(children[(unsigned int)(children.size()-1)])));
@@ -2167,25 +2166,25 @@ public:
 
     polyline_element& polyline()
     { //! Add a new polyline element.
-      //! \return A reference to the new child node just created.
+      //! \return A reference to the new polyline element just created.
       children.push_back(new polyline_element()); // Empty polyline.
       return *(static_cast<polyline_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     path_element& path()
     { //! Add a new path element.
-      //! \return A reference to the new child node just created.
+      //! \return A reference to the new path just created.
       children.push_back(new path_element()); // Empty path.
       return *(static_cast<path_element*>(&(children[(unsigned int)(children.size()-1)])));
     }
 
     void push_back(svg_element* g)
-    { //! Add a new g_element.
+    { //! Add a new child node g_element.
       children.push_back(g);
     }
 
     void clear()
-    {
+    { //! Remove all the child nodes.
       children.clear();
     }
   }; // class g_element

@@ -194,7 +194,7 @@ void show_1d_plot_settings(svg_1d_plot& plot)
   cout << "image_x_size " << plot.image_x_size() << endl;
   cout << "image_y_size " << plot.image_y_size() << endl;
   cout << "image_size " << plot.image_size() << endl;
-  cout << "image_filename " << plot.image.image_filename() << endl;
+  cout << "image_filename " << plot.image_.image_filename() << endl;
   cout << "legend_on " << plot.legend_on() << endl;
   std::pair<double, double> lt = plot.legend_top_left();
   std::pair<double, double> rb = plot.legend_bottom_right();

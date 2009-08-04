@@ -42,7 +42,7 @@ namespace svg
 
 // Forward declarations of classes in svg_style.hpp
 class svg_style; // Holds the basic stroke, fill colors and width, and their switches.
-class text_style; // Text font family, size ...
+class text_style; // Text and tspan element's font family, size ...
 class value_style; // Data series point value information, text, color, uncertainty & df, orientation.
 class plot_point_style; // Shape, color, (optional value & uncertainty) of data point markers.
 class plot_line_style; // Style of line joining data series values.
@@ -327,6 +327,8 @@ public:
   text_style& font_weight(const std::string& s);
   text_style& font_stretch(const std::string& s);
   text_style& font_decoration(const std::string& s);
+  // text_style& font_variant(const std::string& s); // Not implemented,
+
 
   int font_size() const;
   const std::string& font_family() const;

@@ -194,7 +194,7 @@ class svg;
 // svg& y_size(unsigned int y)
 // unsigned int y_size()
 // svg& size(unsigned int x, unsigned int y)
-// information about the image file
+// information about the image file.
 // svg& description(std::string d)
 // std::string& description()
 // svg& document_title(std::string d)
@@ -233,11 +233,12 @@ protected:
   unsigned int x_size_; //!< SVG image X-axis size (in SVG units (default pixels).
   unsigned int y_size_; //!< SVG image Y-axis size (in SVG units (default pixels).
 
-  g_element document; //!< group_element to hold all elements of the svg document.
+  g_element document; //!< To hold all group elements of the svg document.
   std::vector<clip_path_element> clip_paths; //!< Points on clip path (used for plot window).
-  std::string title_document_; //!< SVG document title (for header as \verbatim <title> ... <\title> \endverbatim).
-  std::string image_desc_; //!< SVG image description (for header as \verbatim <desc> ... <\desc> \endverbatim).
-  std::string holder_copyright_; //!< SVG info on holder of copyright (probably == author, but could be institution).
+  // Document metadata:
+  std::string title_document_; //!< SVG document title (appears in the SVG file header as \verbatim <title> ... </title> \endverbatim).
+  std::string image_desc_; //!< SVG image description (appears in the SVG file header as \verbatim <desc> ... </desc> \endverbatim).
+  std::string holder_copyright_; //!< SVG info on holder of copyright (probably == author, but could be an institution).
   std::string date_copyright_; //!< SVG info on date of copyright claimed.
   std::string css_; //!< Cascading Style Sheet.
   std::string filename_; //!< file SVG XML written to.
@@ -249,7 +250,9 @@ protected:
   std::string commercialuse_; //!< License requirements for commerical use: "permits", "requires", or "prohibits".
   std::string distribution_; //!< License requirements for distribution: "permits", "requires", or "prohibits".
   std::string derivative_works_; //!< License requirements for derivative: "permits", "requires", or "prohibits".
+
   int coord_precision_; //!< Number of decimal digits precision for output of X and Y coordinates to SVG XML.
+  // Not sure this is the best place for this?
 
 private:
 
@@ -318,12 +321,12 @@ private:
      */
     for(size_t i = 0; i < clip_paths.size(); ++i)
     {
-      clip_paths[ (unsigned int)i ].write(s_out);
+      clip_paths[(unsigned int)i].write(s_out);
     }
-    // Write all visual elements.
+    // Write all visual group elements.
     for(size_t i = 0; i < document.size(); ++i)
     { // plot_background, grids, axes ... title
-      document[ (unsigned int)i ].write(s_out);
+      document[(unsigned int)i].write(s_out);
     }
   } // write_document
 
@@ -332,8 +335,8 @@ public:
     :
     x_size_(400), //!< X-axis of the whole SVG image (default SVG units, default pixels).
     y_size_(400), //!< Y-axis of the whole SVG image (default SVG units, default pixels).
-    title_document_(""),  //!< This is SVG document title, not a plot title.
-    image_desc_(""), //!< Information about the image, for example, the program that created it.
+    title_document_(""),  //!< This is a SVG document title, not a plot title.
+    image_desc_(""), //!< Information about the SVG image, for example, the program that created it.
     author_(""), //!< Author of image (defaults to the copyright holder).
     holder_copyright_(""),  //!< Name of copyright holder.
     date_copyright_(""), //!<  Date of copyright claim.
@@ -376,16 +379,16 @@ public:
     return y_size_;
   }
 
-  std::pair<double, double> size()
-  { //! \return the size (horizontal width and vertical height) of the SVG image.
+  std::pair<double, double> xy_sizes()
+  { //! \return both X and Y sizes (horizontal width and vertical height) of the SVG image.
     std::pair<double, double> r;
-    r.first =x_size_;
+    r.first = x_size_;
     r.second = y_size_;
     return r;
   }
 
   unsigned int document_size()
-  { //! How many elements (groups or layers) have been added to document.
+  { //! How many group elements groups have been added to the document.
     return static_cast<unsigned int>(document.size());
   }
 
@@ -641,7 +644,7 @@ public:
   }
 
   void description(const std::string d)
-  { //! \verbatim Write description to the document (for header as <desc>). \endverbatim
+  { //! \verbatim Write description to the document (for header as <desc> ... </desc>). \endverbatim
     image_desc_ = d;
   }
 
@@ -660,9 +663,9 @@ public:
     return author_;
   }
 
-  void document_title(const std::string d)
-  { //!  \verbatim Set document title for the document (for header as <title>). \endverbatim
-    title_document_ = d;
+  void document_title(const std::string title)
+  { //!  \verbatim Set document title for the document (for header as <title> ... </title>). \endverbatim
+    title_document_ = title;
   }
 
   const std::string document_title()
@@ -670,9 +673,9 @@ public:
     return title_document_;
   }
 
-  void copyright_holder(const std::string d)
+  void copyright_holder(const std::string copyright_holder)
   { //!  \verbatim Set document title for the document (for header as <copyright_holder>). \endverbatim
-    holder_copyright_ = d;
+    holder_copyright_ = copyright_holder;
   }
 
   const std::string copyright_holder()
@@ -680,9 +683,9 @@ public:
     return holder_copyright_;
   }
 
-  void copyright_date(const std::string d)
+  void copyright_date(const std::string copyright_date)
   { //!  \verbatim Set document title for the document (for header as <copyright_date>). \endverbatim
-    date_copyright_ = d;
+    date_copyright_ = copyright_date;
   }
 
   const std::string copyright_date()
@@ -785,26 +788,27 @@ public:
     return document.polyline(v);
   }
 
-  // Add the information about path, clip_path to the document.
+  // Add information about path, clip_path to the document.
 
   path_element& path()
-  { //! Construct an empty path, ready for additions with chainable functions M., L. ...
-    return document.path();
+  { //! Construct an empty path, ready for additions with chainable functions M., L., ...
+    return document.path(); //! \return reference to path element.
   }
 
   clip_path_element& clip_path(const rect_element& rect, const std::string& id)
   { //! Rectangle outside which 'painting' is 'clipped' so doesn't show.
     clip_paths.push_back(clip_path_element(id, rect));
-    return clip_paths[clip_paths.size()-1];
+    return clip_paths[clip_paths.size()-1]; //! \return Reference to clip_path element.
   }
 
-  g_element& g()
+  g_element& add_g_element()
   { //! Add information about a group element to the document.
-    return document.g(); //! return reference to the group element.
+    //! Increments the size of the array of g_elements, returned by g_element.size().
+    return document.add_g_element(); //! return reference to the added group element.
   }
 
   g_element& g(int i)
-  { //! \return  from the array of g_elements, indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN
+  { //! from array of g_elements, indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN,
     return document.g(i); //! return reference to the ith group element.
   }
 

@@ -143,7 +143,7 @@ namespace boost
           double x(value); // Tick position and tick value label,
           transform_x(x); // Convert to svg.
           double y_bottom(0.); // Start on the horizontal X-axis line.
-          double y_top(derived().image.y_size()); // Image top.
+          double y_top(derived().image_.y_size()); // Image top.
 
           // Draw the minor grid, if wanted.
           if(derived().x_ticks_.minor_grid_on_)
@@ -231,7 +231,7 @@ namespace boost
             return;
           }
           double y_up(0.); // upper end of tick.
-          double y_down(derived().image.x_size()); // y_down = lower end of tick.
+          double y_down(derived().image_.x_size()); // y_down = lower end of tick.
           if(derived().x_ticks_.major_grid_on_)
           { // Draw major grid vertical line.
             if(!derived().plot_window_on_)
@@ -469,7 +469,7 @@ namespace boost
               { // External to plot window style bottom or top.
                 // Always want all values including "0", if labeling external to plot window.
                 // x_ticks_.ticks_on_window_or_on_axis_ == true != 0
-                derived().image.g(detail::PLOT_X_TICKS_VALUES).text(
+                derived().image_.g(detail::PLOT_X_TICKS_VALUES).text(
                   x,
                   y,
                   tick_value_label.str(),
@@ -480,7 +480,7 @@ namespace boost
               {
                 if ((value != 0) && derived().x_axis_.axis_line_on_)
                 { // Avoid a "0" below the X-axis if it would be cut through by any internal vertical Y-axis line.
-                  derived().image.g(detail::PLOT_X_TICKS_VALUES).text(
+                  derived().image_.g(detail::PLOT_X_TICKS_VALUES).text(
                     x,
                     y,
                     tick_value_label.str(),
@@ -521,23 +521,23 @@ namespace boost
                 }
               }
               double y = derived().x_axis_.axis_; // y = 0, (provided y range includes zero).
-              derived().image.g(PLOT_X_AXIS).line(xleft, y, xright, y);
+              derived().image_.g(PLOT_X_AXIS).line(xleft, y, xright, y);
               if (derived().x_ticks_.ticks_on_window_or_on_axis_ < 0) // bottom
               { // Draw a vertical line holding the ticks on the top of plot window.
-                derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
+                derived().image_.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
               }
               else if (derived().x_ticks_.ticks_on_window_or_on_axis_ > 0)  // top
               {// Draw a vertical line holding the ticks on the bottom of plot window.
-                derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
+                derived().image_.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
               }
             }
             else if (derived().x_axis_position_ == top)
             {
-               derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
+               derived().image_.g(PLOT_X_AXIS).line(xleft, derived().plot_top_, xright, derived().plot_top_);
             }
             else if (derived().x_axis_position_ == bottom)
             {
-               derived().image.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
+               derived().image_.g(PLOT_X_AXIS).line(xleft, derived().plot_bottom_, xright, derived().plot_bottom_);
             }
             else
             { // warn that things have gone wrong?
@@ -545,10 +545,10 @@ namespace boost
           } // x_axis_.axis_line_on_
 
           // Access the paths for the ticks & grids, ready for additions.
-          path_element& minor_tick_path = derived().image.g(PLOT_X_MINOR_TICKS).path();
-          path_element& major_tick_path = derived().image.g(PLOT_X_MAJOR_TICKS).path();
-          path_element& minor_grid_path = derived().image.g(PLOT_X_MINOR_GRID).path();
-          path_element& major_grid_path = derived().image.g(PLOT_X_MAJOR_GRID).path();
+          path_element& minor_tick_path = derived().image_.g(PLOT_X_MINOR_TICKS).path();
+          path_element& major_tick_path = derived().image_.g(PLOT_X_MAJOR_TICKS).path();
+          path_element& minor_grid_path = derived().image_.g(PLOT_X_MINOR_GRID).path();
+          path_element& major_grid_path = derived().image_.g(PLOT_X_MAJOR_GRID).path();
 
           // x_minor_jump is the interval between minor ticks.
           double x_minor_jump = derived().x_ticks_.major_interval_ /
@@ -608,7 +608,7 @@ namespace boost
         { //! Draw the X-axis label text (for example, length),
           //! and append any optional units (for example, km).
           // X-label color default is set in constructor thus:
-          // image.g(detail::PLOT_X_LABEL).style().stroke_color(black);
+          // image_.g(detail::PLOT_X_LABEL).style().stroke_color(black);
           // and changed using x_label_color(color);
           // Similarly for font family and size etc (must be same for both label and units).
 
@@ -707,12 +707,12 @@ namespace boost
           { // Ticks are ON the X-axis line, so X label is just below the plot bottom.
             // No space needed for ticks.
              // Character starts at bottom of capital letter, so allow for descenders.
-             //y = derived().image.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
+             //y = derived().image_.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
              //y -= derived().image_border_.margin_;
              y += derived().x_label_info_.textstyle().font_size() * 1.7; 
           }
 
-          derived().image.g(PLOT_X_LABEL).push_back(new text_element(
+          derived().image_.g(PLOT_X_LABEL).push_back(new text_element(
             ( // x position relative to the x-axis which is middle of plot window.
             derived().plot_right_ + derived().plot_left_) / 2,  // x coordinate - middle.
             y, // Down from plot window.
@@ -766,11 +766,11 @@ namespace boost
             Greek, math symbols etc, taking about 8 characters per symbol.
             For example, the Unicode symbol for square root is "&#x221A;" but takes only about one character width).
           */
-          derived().title_info_.x(derived().image.x_size() / 2.); // Center of image.
+          derived().title_info_.x(derived().image_.x_size() / 2.); // Center of image.
           double y;
           y = derived().title_info_.textstyle().font_size() * derived().text_margin_; // Leave a linespace above.
           derived().title_info_.y(y);
-          derived().image.g(PLOT_TITLE).push_back(new text_element(derived().title_info_));
+          derived().image_.g(PLOT_TITLE).push_back(new text_element(derived().title_info_));
         } // void draw_title()
 
         void size_legend_box()
@@ -898,7 +898,7 @@ namespace boost
              break;
             case outside_top:
               // Centered.
-               derived().legend_left_ = derived().image.x_size() / 2. - derived().legend_width_ / 2; // Center.
+               derived().legend_left_ = derived().image_.x_size() / 2. - derived().legend_width_ / 2; // Center.
                derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
                derived().plot_top_ += derived().legend_height_ + spacing;
                derived().legend_top_ = derived().title_info_.y() + derived().title_font_size() * derived().text_margin_;
@@ -907,10 +907,10 @@ namespace boost
               break;
             case outside_bottom:
                // Centered.
-               derived().legend_bottom_ = derived().image.y_size();
+               derived().legend_bottom_ = derived().image_.y_size();
                derived().legend_bottom_ -= (derived().image_border_.width_ + derived().image_border_.margin_); // up
                derived().legend_top_ = derived().legend_bottom_ - derived().legend_height_;
-               derived().legend_left_ = derived().image.x_size()/  2. - derived().legend_width_ / 2; // Center.
+               derived().legend_left_ = derived().image_.x_size()/  2. - derived().legend_width_ / 2; // Center.
                derived().legend_right_ = derived().legend_left_ + derived().legend_width_;
                derived().plot_bottom_ = derived().legend_top_;
                derived().plot_bottom_ -= 2 * spacing;
@@ -925,28 +925,28 @@ namespace boost
 
               // Check if the location requested will fit,
               // now that we know the size of box needed.
-              if ( (derived().legend_left_ < 0) || (derived().legend_left_ > derived().image.x_size()))
+              if ( (derived().legend_left_ < 0) || (derived().legend_left_ > derived().image_.x_size()))
               { // left outside image?
                 std::cout << "Legend top left " << derived().legend_left_
-                  << " is outside image size = " << derived().image.x_size() << std::endl;
+                  << " is outside image size = " << derived().image_.x_size() << std::endl;
               }
-              if ((derived().legend_right_ < 0) || (derived().legend_right_ > derived().image.x_size()))
+              if ((derived().legend_right_ < 0) || (derived().legend_right_ > derived().image_.x_size()))
               { // right outside image?
                 std::cout << "Legend top right " << derived().legend_right_
-                  << " is outside image size = " << derived().image.x_size() << std::endl;
+                  << " is outside image size = " << derived().image_.x_size() << std::endl;
               }
-              if ((derived().legend_top_ < 0) || (derived().legend_top_ > derived().image.y_size()))
+              if ((derived().legend_top_ < 0) || (derived().legend_top_ > derived().image_.y_size()))
               { // top outside image?
                 std::cout << "Legend top " << derived().legend_top_
-                  << " outside image!" << derived().image.y_size() << std::endl;
+                  << " outside image!" << derived().image_.y_size() << std::endl;
               }
-              if ((derived().legend_bottom_  < 0 ) || (derived().legend_bottom_ > derived().image.y_size()))
+              if ((derived().legend_bottom_  < 0 ) || (derived().legend_bottom_ > derived().image_.y_size()))
               { // bottom outside image?
                 std::cout << "Legend bottom " << derived().legend_bottom_
-                  << " outside " << derived().image.y_size() << std::endl;
+                  << " outside " << derived().image_.y_size() << std::endl;
               }
 
-               derived().image.g(detail::PLOT_LEGEND_BACKGROUND)
+               derived().image_.g(detail::PLOT_LEGEND_BACKGROUND)
               .style().fill_color(derived().legend_box_.fill()) //
               .stroke_color(derived().legend_box_.stroke())
               .stroke_width(derived().legend_box_.width())
@@ -954,7 +954,7 @@ namespace boost
               ;
 
               // Draw border box round legend.
-              g_element* g_ptr = &(derived().image.g(PLOT_LEGEND_BACKGROUND));
+              g_element* g_ptr = &(derived().image_.g(PLOT_LEGEND_BACKGROUND));
               g_ptr->push_back(new
                 rect_element(derived().legend_left_, derived().legend_top_, derived().legend_width_, derived().legend_height_));
             } // if legend_on_
@@ -979,7 +979,7 @@ namespace boost
             double legend_height = derived().legend_height_;
 
             // Draw border box round legend.
-            g_element* g_ptr = &(derived().image.g(PLOT_LEGEND_BACKGROUND));
+            g_element* g_ptr = &(derived().image_.g(PLOT_LEGEND_BACKGROUND));
 
             g_ptr->push_back(new
               rect_element(legend_x_start, legend_y_start, legend_width, legend_height));
@@ -990,13 +990,13 @@ namespace boost
               derived().legend_header_.x(legend_x_start + legend_width / 2.); // / 2. to center in legend box.
               // Might be better to use center_align here because will fail if legend contains symbols in Unicode.
               derived().legend_header_.y(legend_y_pos);
-              derived().image.g(PLOT_LEGEND_TEXT).push_back(new text_element(derived().legend_header_));
+              derived().image_.g(PLOT_LEGEND_TEXT).push_back(new text_element(derived().legend_header_));
               legend_y_pos += 2 * spacing; // Might be 1.5? - useful if many series makes the box too tall.
             }
 
-            g_ptr = &(derived().image.g(PLOT_LEGEND_POINTS));
+            g_ptr = &(derived().image_.g(PLOT_LEGEND_POINTS));
             g_element* g_inner_ptr = g_ptr;
-            g_inner_ptr = &(derived().image.g(PLOT_LEGEND_TEXT));
+            g_inner_ptr = &(derived().image_.g(PLOT_LEGEND_TEXT));
 
             for(unsigned int i = 0; i < derived().serieses_.size(); ++i)
             { // Show point marker, perhaps line, & text info for all the data series.
@@ -1007,7 +1007,7 @@ namespace boost
 
               double legend_x_pos = legend_x_start;
               legend_x_pos += spacing; // space before point marker and/or line & text.
-              g_inner_ptr = &(g_ptr->g());
+              g_inner_ptr = &(g_ptr->add_g_element());
               // Use both stroke & fill colors from the points' style.
               // Applies to both shape AND line.
               g_inner_ptr->style().stroke_color(derived().serieses_[i].point_style_.stroke_color_);
@@ -1048,7 +1048,7 @@ namespace boost
               } // legend_lines_
 
               // Legend text for each Data Series added to the plot.
-              g_inner_ptr = &(derived().image.g(PLOT_LEGEND_TEXT));
+              g_inner_ptr = &(derived().image_.g(PLOT_LEGEND_TEXT));
               g_inner_ptr->push_back(new text_element(
                 legend_x_pos, // allow space for the marker.
                 legend_y_pos,
@@ -1120,11 +1120,11 @@ namespace boost
                 {
                   y_radius = 1.;
                 }
-                //image.g(PLOT_DATA_UNC).style().stroke_color(magenta).fill_color(pink).stroke_width(1);
+                //image_.g(PLOT_DATA_UNC).style().stroke_color(magenta).fill_color(pink).stroke_width(1);
                 // color set in svg_1d_plot         data at present.
-                g_element* gu3_ptr = &(derived().image.g(PLOT_DATA_UNC3));
-                g_element* gu2_ptr = &(derived().image.g(PLOT_DATA_UNC2));
-                g_element* gu1_ptr = &(derived().image.g(PLOT_DATA_UNC1));
+                g_element* gu3_ptr = &(derived().image_.g(PLOT_DATA_UNC3));
+                g_element* gu2_ptr = &(derived().image_.g(PLOT_DATA_UNC2));
+                g_element* gu1_ptr = &(derived().image_.g(PLOT_DATA_UNC1));
                 gu1_ptr->ellipse(x, y, x_radius, y_radius); //  Radii are one standard deviation.
                 gu2_ptr->ellipse(x, y, x_radius * 2, y_radius * 2); //  Radii are two standard deviation..
                 gu3_ptr->ellipse(x, y, x_radius * 3, y_radius * 3); //  Radii are three standard deviation..
@@ -1604,54 +1604,54 @@ namespace boost
 
           void clear_background()
           { //! Clear the whole image background layer of the SVG plot.
-            derived().image.g(PLOT_BACKGROUND).clear();
+            derived().image_.g(PLOT_BACKGROUND).clear();
           }
 
           void clear_title()
           { //! Clear the plot title layer of the SVG plot.
-            derived().image.g(PLOT_TITLE).clear();
+            derived().image_.g(PLOT_TITLE).clear();
           }
 
           void clear_points()
           {  //! Clear the data points layer of the SVG plot.
-            derived().image.g(PLOT_DATA_POINTS).clear();
+            derived().image_.g(PLOT_DATA_POINTS).clear();
           }
 
           void clear_plot_background()
           { //! Clear the plot area background layer of the SVG plot.
-            derived().image.g(PLOT_WINDOW_BACKGROUND).clear();
+            derived().image_.g(PLOT_WINDOW_BACKGROUND).clear();
           }
 
           void clear_legend()
           { //! Clear the legend layer of the SVG plot.
-            derived().image.g(PLOT_LEGEND_BACKGROUND).clear();
-            derived().image.g(PLOT_LEGEND_POINTS).clear();
-            derived().image.g(PLOT_LEGEND_TEXT).clear();
+            derived().image_.g(PLOT_LEGEND_BACKGROUND).clear();
+            derived().image_.g(PLOT_LEGEND_POINTS).clear();
+            derived().image_.g(PLOT_LEGEND_TEXT).clear();
           }
 
           void clear_x_axis()
           { //! Clear the X axis layer of the SVG plot.
-            derived().image.g(PLOT_X_AXIS).clear();
-            derived().image.g(PLOT_X_MINOR_TICKS).clear();
-            derived().image.g(PLOT_X_MAJOR_TICKS).clear();
-            derived().image.g(PLOT_X_LABEL).clear();
-            derived().image.g(PLOT_X_TICKS_VALUES).clear();
+            derived().image_.g(PLOT_X_AXIS).clear();
+            derived().image_.g(PLOT_X_MINOR_TICKS).clear();
+            derived().image_.g(PLOT_X_MAJOR_TICKS).clear();
+            derived().image_.g(PLOT_X_LABEL).clear();
+            derived().image_.g(PLOT_X_TICKS_VALUES).clear();
           }
 
           void clear_y_axis()
           { //! Clear the Y axis layer of the SVG plot.
-            derived().image.g(PLOT_Y_AXIS).clear();
-            derived().image.g(PLOT_Y_MINOR_TICKS).clear();
-            derived().image.g(PLOT_Y_MAJOR_TICKS).clear();
-            derived().image.g(PLOT_Y_LABEL).clear();
+            derived().image_.g(PLOT_Y_AXIS).clear();
+            derived().image_.g(PLOT_Y_MINOR_TICKS).clear();
+            derived().image_.g(PLOT_Y_MAJOR_TICKS).clear();
+            derived().image_.g(PLOT_Y_LABEL).clear();
           }
 
           void clear_grids()
           { //! Clear the  grids layer of the SVG plot.
-            derived().image.g(PLOT_X_MAJOR_GRID).clear();
-            derived().image.g(PLOT_X_MINOR_GRID).clear();
-            derived().image.g(PLOT_Y_MAJOR_GRID).clear();
-            derived().image.g(PLOT_Y_MINOR_GRID).clear();
+            derived().image_.g(PLOT_X_MAJOR_GRID).clear();
+            derived().image_.g(PLOT_X_MINOR_GRID).clear();
+            derived().image_.g(PLOT_Y_MAJOR_GRID).clear();
+            derived().image_.g(PLOT_Y_MINOR_GRID).clear();
           }
 
         private:
@@ -1968,7 +1968,7 @@ namespace boost
 
           //Derived& load_stylesheet(const std::string& file)
           //{
-          //  derived().image.load_stylesheet(file);
+          //  derived().image_.load_stylesheet(file);
           //  return derived();
           //}
 
@@ -1977,13 +1977,13 @@ namespace boost
           //svg& get_svg()
           //{
           //  derived()._update_image();
-          //  return derived().image;
+          //  return derived().image_;
           //}
 
           //const svg& get_svg() const
           //{
           //  derived()._update_image();
-          //  return derived().image;
+          //  return derived().image_;
           //}
         }; // template <class Derived> class axis_plot_frame
 
@@ -2026,59 +2026,59 @@ namespace boost
           { //! Set SVG image size (SVG units, default pixels).
             // Might put default sizes here?
             // Check on sanity of these values?
-            derived().image.size(x, y);
+            derived().image_.size(x, y);
             return derived();
           }
 
           template <class Derived>
           std::pair<double, double> axis_plot_frame<Derived>::image_size()
-          { //! \return SVG image size horizontal width and vertical height (SVG units, default pixels).
-            return derived().image.size();
+          { //! \return SVG image size, both horizontal width and vertical height (SVG units, default pixels).
+            return derived().image_.xy_sizes();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::image_x_size()
           { //! \return SVG image X-axis size as horizontal width (SVG units, default pixels).
-            return derived().image.x_size();
+            return derived().image_.x_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::image_x_size(unsigned int i)
           { //! Set SVG image X-axis size (SVG units, default pixels).
-            derived().image.x_size(i);
+            derived().image_.x_size(i);
             return derived();
           }
 
           template <class Derived>
           unsigned int axis_plot_frame<Derived>::image_y_size()
           { //! \return  SVG image Y-axis size as vertical height (SVG units, default pixels).
-            return derived().image.y_size();
+            return derived().image_.y_size();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::image_y_size(unsigned int i)
           {//! Set SVG image Y-axis size (SVG units, default pixels).
-            derived().image.y_size(i);
+            derived().image_.y_size(i);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::background_color()
           { //! \return  plot background color.
-            return derived().image.g(PLOT_BACKGROUND).style().fill_color();
+            return derived().image_.g(PLOT_BACKGROUND).style().fill_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::background_color(const svg_color& col)
           { //! Set plot background color.
-            derived().image.g(PLOT_BACKGROUND).style().fill_color(col);
+            derived().image_.g(PLOT_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::background_border_color(const svg_color& col)
           { //! Set plot background border color.
-            derived().image.g(PLOT_BACKGROUND).style().stroke_color(col);
+            derived().image_.g(PLOT_BACKGROUND).style().stroke_color(col);
             /*!
               background_border_color example:
               \code
@@ -2091,74 +2091,74 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           svg_color axis_plot_frame<Derived>::background_border_color()
           { //! \return  plot background border color.
-            return derived().image.g(PLOT_BACKGROUND).style().stroke_color();
+            return derived().image_.g(PLOT_BACKGROUND).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::background_border_width(double w)
           { //! Set plot background border width.
-            derived().image.g(PLOT_BACKGROUND).style().stroke_width(w);
+            derived().image_.g(PLOT_BACKGROUND).style().stroke_width(w);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::background_border_width()
           { //! \return  plot background border width.
-            return derived().image.g(PLOT_BACKGROUND).style().stroke_width();
+            return derived().image_.g(PLOT_BACKGROUND).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::description(const std::string d)
-          { //! Writes description to the document for header as \verbatim <desc> My Data <\desc> \endverbatim
-            derived().image.description(d);
+          { //! Writes description to the document for header as \verbatim <desc> My Data </desc> \endverbatim
+            derived().image_.description(d);
             return derived();
           }
 
           template <class Derived>
           const std::string& axis_plot_frame<Derived>::description()
-          { //! \return  description of the document for header as \verbatim <desc> ... <\desc> \endverbatim
-            return derived().image.description();
+          { //! \return  description of the document for header as \verbatim <desc> ... </desc> \endverbatim
+            return derived().image_.description();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::document_title(const std::string d)
-          { //! Write document title to the SVG document for header as \verbatim <title> My Title <\title> \endverbatim
-            derived().image.document_title(d);
+          { //! Write document title to the SVG document for header as \verbatim <title> My Title </title>  \endverbatim
+            derived().image_.document_title(d);
             return derived();
           }
           template <class Derived>
           std::string axis_plot_frame<Derived>::document_title()
-          { //! \return  document title to the document for header as \verbatim <title> My Title <\title> \endverbatim
-            return derived().image.document_title();
+          { //! \return  document title to the document for header as \verbatim <title> My Title </title> \endverbatim
+            return derived().image_.document_title();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::copyright_holder(const std::string d)
           { //! Writes copyright_holder to the document
             //! (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
-            //! and as \verbatim metadata: meta name="copyright" content="Paul A. Bristow" /> \endverbatim
-            derived().image.copyright_holder(d);
+            //! and as \verbatim metadata: <meta name="copyright" content="Paul A. Bristow" /meta> \endverbatim
+            derived().image_.copyright_holder(d);
             return derived();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::copyright_holder()
           { //! \return copyright holder.
-            return derived().image.copyright_holder();
+            return derived().image_.copyright_holder();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::copyright_date(const std::string d)
           { //! Writes copyright date to the document.
             //! and as \verbatim metadata <meta name="date" content="2007" /> \endverbatim
-            derived().image.copyright_date(d);
+            derived().image_.copyright_date(d);
             return derived();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::copyright_date()
           { //! \return  copyright_date.
-            return derived().image.copyright_date();
+            return derived().image_.copyright_date();
           }
 
           template <class Derived>
@@ -2171,7 +2171,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             //! usually "permits", "requires", or "prohibits",
             //! and set license_on == true.
             // Might check these are "permits", "requires", or "prohibits"?
-            derived().image.license(repro, distrib, attrib, commercial, derivative);
+            derived().image_.license(repro, distrib, attrib, commercial, derivative);
             return derived();
           }
 
@@ -2179,52 +2179,52 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           bool axis_plot_frame<Derived>::license_on()
           { //! \return true if license conditions should be included in the SVG document.
             //! \see axis_plot_frame::license
-            return derived().image.license_on();
+            return derived().image_.license_on();
           }
 
           template <class Derived>
           Derived&  axis_plot_frame<Derived>::license_on(bool l)
           { //! Set if license conditions should be included in the SVG document.
             //! \see axis_plot_frame::license
-            derived().image.license_on(l);
+            derived().image_.license_on(l);
             return derived();
           }
           template <class Derived>
           bool axis_plot_frame<Derived>::boost_license_on()
           { //! \return  if the Boost license conditions should be included in the SVG document.
             //! To set see axis_plot_frame::boost_license_on(bool).
-            return derived().image.boost_license_one();
+            return derived().image_.boost_license_one();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::boost_license_on(bool l)
           { //! Set if the Boost license conditions should be included in the SVG document.
-            derived().image.boost_license_on(l);
+            derived().image_.boost_license_on(l);
             return derived();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_reproduction()
           { //! \return  reproduction license conditions, usually "permits", "requires", or "prohibits".
-            return derived().image.reproduction();
+            return derived().image_.reproduction();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_distribution()
           { //! \return  distribution license conditions, usually "permits", "requires", or "prohibits".
-            return derived().image.distribution();
+            return derived().image_.distribution();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_attribution()
           { //! \return  attribution license conditions, usually "permits", "requires", or "prohibits".
-            return derived().image.attribution();
+            return derived().image_.attribution();
           }
 
           template <class Derived>
           const std::string axis_plot_frame<Derived>::license_commercialuse()
           { //! \return  commercial use license conditions, usually "permits", "requires", or "prohibits".
-            return derived().image.commercialuse();
+            return derived().image_.commercialuse();
           }
 
           template <class Derived>
@@ -2235,14 +2235,14 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
               especially for larger images, at the expense of larger .svg files,
               particularly if there are very many data points.
            */
-            derived().image.coord_precision(digits);
+            derived().image_.coord_precision(digits);
             return derived();
           }
 
           template <class Derived>
           int axis_plot_frame<Derived>::coord_precision()
           { //! \return  precision of SVG coordinates in decimal digits.
-            return derived().image.coord_precision();
+            return derived().image_.coord_precision();
           }
 
           template <class Derived>
@@ -2308,7 +2308,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             // effectively concatenates with any existing title.
             // So clear the existing string first but doesn't work,
             // so need to clear the whole g_element.
-            //derived().image.g(PLOT_TITLE).clear();
+            //derived().image_.g(PLOT_TITLE).clear();
             derived().title_info_.text(title);
             derived().title_on_ = true; // Assume display wanted, if bother to set title.
             return derived();
@@ -2495,7 +2495,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::legend_top_left(double x, double y)
           { //! Set position of top left of legend box (svg coordinates, default pixels).
             //! Bottom right is controlled by contents, so the user cannot set it.
-            if((x < 0) || (x > derived().image.x_size()) || (y < 0) || (y > derived().image.y_size()))
+            if((x < 0) || (x > derived().image_.x_size()) || (y < 0) || (y > derived().image_.y_size()))
             {
               throw std::runtime_error("Legend box position outside image!");
             }
@@ -2588,7 +2588,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             derived().plot_window_on_ = cmd;
             if(cmd)
             { // Set plot window.
-              derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style()
+              derived().image_.g(detail::PLOT_WINDOW_BACKGROUND).style()
                 .fill_color(derived().plot_window_border_.fill_) // background color and
                 .stroke_color(derived().plot_window_border_.stroke_); // border color.
             }
@@ -2606,27 +2606,27 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::plot_border_color(const svg_color& col)
           { //! Set the color for the plot window background.
             derived().plot_window_border_.stroke_ = col;
-            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
+            derived().image_.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::plot_border_color()
           { //! \return  the color for the plot window background.
-            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
+            return derived().image_.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_color();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::plot_border_width()
           { //! \return  the width for the plot window border (svg units, default pixels).
-            return derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
+            return derived().image_.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::plot_border_width(double w)
           { //! Set the width for the plot window border (svg units, default pixels).
             derived().plot_window_border_.width_ = w;
-            derived().image.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
+            derived().image_.g(detail::PLOT_WINDOW_BACKGROUND).style().stroke_width(w);
             return derived();
           }
 
@@ -2834,8 +2834,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_axis_label_color(const svg_color& col)
           { //! Set X axis label color.
-            derived().image.g(detail::PLOT_X_LABEL).style().fill_color(col);
-            //derived().image.g(detail::PLOT_X_LABEL).style().stroke_color(col);
+            derived().image_.g(detail::PLOT_X_LABEL).style().fill_color(col);
+            //derived().image_.g(detail::PLOT_X_LABEL).style().stroke_color(col);
             // Setting the stroke color produces fuzzy characters :-(
             // Set BOTH stroke and fill to the same color?
            return derived();
@@ -2845,7 +2845,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           svg_color axis_plot_frame<Derived>::x_axis_label_color()
           { //! \return  X axis label color.
             // But only return the fill color.
-            return derived().image.g(detail::PLOT_X_LABEL).style().fill_color();
+            return derived().image_.g(detail::PLOT_X_LABEL).style().fill_color();
           }
 
           // X-axis tick label style.
@@ -2853,8 +2853,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_ticks_values_color(const svg_color& col)
           { //! Set X axis tick value label color.
             // Set BOTH stroke and fill to the same color.
-            derived().image.g(detail::PLOT_X_TICKS_VALUES).style().fill_color(col);
-            //derived().image.g(detail::PLOT_X_TICK_VALUE_LABELS).style().stroke_color(col);
+            derived().image_.g(detail::PLOT_X_TICKS_VALUES).style().fill_color(col);
+            //derived().image_.g(detail::PLOT_X_TICK_VALUE_LABELS).style().stroke_color(col);
             // Setting the stroke color produces fuzzy characters :-(
             //derived().x_ticks_.color_ = col; 
             return derived();
@@ -2864,7 +2864,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           svg_color axis_plot_frame<Derived>::x_ticks_values_color()
           { //! \return  X-axis ticks value label color.
             // But only return the fill color.
-            return derived().image.g(detail::PLOT_X_TICKS_VALUES).style().fill_color();
+            return derived().image_.g(detail::PLOT_X_TICKS_VALUES).style().fill_color();
             //return x_ticks_.color_ ;
           }
 
@@ -3084,8 +3084,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             // Function title_color could set both fill (middle) and stroke (outside),
             // but just setting fill if simplest,
             // but does not allow separate inside & outside colors.
-            derived().image.g(PLOT_TITLE).style().fill_color(col);
-            //derived().image.g(PLOT_TITLE).style().stroke_color(col);
+            derived().image_.g(PLOT_TITLE).style().fill_color(col);
+            //derived().image_.g(PLOT_TITLE).style().stroke_color(col);
             return derived();
           }
 
@@ -3093,8 +3093,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           svg_color axis_plot_frame<Derived>::title_color()
           { //! \return the color of any title of the plot.
             // Function title_color could get either fill and stroke,
-            // return derived().image.g(PLOT_TITLE).style().stroke_color();
-            return derived().image.g(PLOT_TITLE).style().fill_color();
+            // return derived().image_.g(PLOT_TITLE).style().stroke_color();
+            return derived().image_.g(PLOT_TITLE).style().fill_color();
           }
 
           //Derived& title_font_width(double width)
@@ -3102,32 +3102,32 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           // width of text is effectively the boldness.
           //  // Not useful with current browsers, setting this may cause lower quality graphic fonts
           //  // perhaps because the font is created using graphics rather than a built-in font.
-          //  derived().image.g(PLOT_TITLE).style().stroke_width(width);
+          //  derived().image_.g(PLOT_TITLE).style().stroke_width(width);
           //  return derived();
           //}
 
          //Derived& legend_font_width(double width)
           //{ //! \return  the width of the font for the title of the plot.
             // width of text is effectively the boldness.
-          //  derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
+          //  derived().image_.g(PLOT_LEGEND_TEXT).style().stroke_width(width);
           //  return derived();
           //}
 
           //double legend_font_width()
           //{ // Set the width of the font for the title of the legend.
           // Probably not useful at present (se above).
-          //  return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_width();
+          //  return derived().image_.g(PLOT_LEGEND_TEXT).style().stroke_width();
           //}
           //double legend_font_width()
           //{ //! \return  the width of the font for the title of the legend.
-          //  return derived().image.g(PLOT_TITLE).style().stroke_width();
+          //  return derived().image_.g(PLOT_TITLE).style().stroke_width();
           //}
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_color(const svg_color& col)
           { //! Set the color of the title of the legend.
-            // derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
-            derived().image.g(PLOT_LEGEND_TEXT).style().fill_color(col);
+            // derived().image_.g(PLOT_LEGEND_TEXT).style().stroke_color(col);
+            derived().image_.g(PLOT_LEGEND_TEXT).style().fill_color(col);
             return derived();
           }
 
@@ -3136,22 +3136,22 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           { //! \return  the color of the title of the legend.
             // Function legend_color sets only stroke, assuming that 'filled' text is not being used.
             // (It produces much lower quality fonts on some browsers).
-            return derived().image.g(PLOT_LEGEND_TEXT).style().fill_color();
-            // return derived().image.g(PLOT_LEGEND_TEXT).style().stroke_color();
+            return derived().image_.g(PLOT_LEGEND_TEXT).style().fill_color();
+            // return derived().image_.g(PLOT_LEGEND_TEXT).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::legend_background_color(const svg_color& col)
           { //! Set the background fill color of the legend box.
             derived().legend_box_.fill(col);
-            derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
+            derived().image_.g(PLOT_LEGEND_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::legend_background_color()
           { //! \return  the background fill color of the legend box.
-            return derived().image.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
+            return derived().image_.g(PLOT_LEGEND_BACKGROUND).style().fill_color();
           }
 
           template <class Derived>
@@ -3164,7 +3164,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::legend_border_color(const svg_color& col)
           { //! Set the border stroke color of the legend box.
             derived().legend_box_.stroke(col);
-            derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
+            derived().image_.g(PLOT_LEGEND_BACKGROUND).style().stroke_color(col);
             return derived();
           }
 
@@ -3172,20 +3172,20 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           svg_color axis_plot_frame<Derived>::legend_border_color()
           { //! \return  the border stroke color of the legend box.
             return  derived().legend_box_.stroke();
-            // return derived().image.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
+            // return derived().image_.g(PLOT_LEGEND_BACKGROUND).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::plot_background_color(const svg_color& col)
           { //! Set the fill color of the plot window background.
-            derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
+            derived().image_.g(PLOT_WINDOW_BACKGROUND).style().fill_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::plot_background_color()
           { //! \return  the fill color of the plot window background.
-            return derived().image.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
+            return derived().image_.g(PLOT_WINDOW_BACKGROUND).style().fill_color();
           }
 
           template <class Derived>
@@ -3208,42 +3208,42 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_axis_color(const svg_color& col)
           { //! Set the color of the X-axis line.
             // Note only stroke color is set.
-            derived().image.g(PLOT_X_AXIS).style().stroke_color(col);
+            derived().image_.g(PLOT_X_AXIS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_axis_color()
           { //! \return  the color of the X-axis line.
-            return derived().image.g(PLOT_X_AXIS).style().stroke_color();
+            return derived().image_.g(PLOT_X_AXIS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::y_axis_color(const svg_color& col)
           { //! Set the color of the Y-axis line.
-            derived().image.g(PLOT_Y_AXIS).style().stroke_color(col);
+            derived().image_.g(PLOT_Y_AXIS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::y_axis_color()
           { //! \return  the color of the Y-axis line.
-            return derived().image.g(PLOT_Y_AXIS).style().stroke_color();
+            return derived().image_.g(PLOT_Y_AXIS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_label_color(const svg_color& col)
           { //! Set the color of X-axis label (including any units).
             // add fill as well PAB Oct 07
-            derived().image.g(PLOT_X_LABEL).style().fill_color(col);
-            derived().image.g(PLOT_X_LABEL).style().stroke_color(col);
+            derived().image_.g(PLOT_X_LABEL).style().fill_color(col);
+            derived().image_.g(PLOT_X_LABEL).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_label_color()
           { //! \return  the color of X-axis label (including any units).
-            return derived().image.g(PLOT_X_LABEL).style().fill_color();
+            return derived().image_.g(PLOT_X_LABEL).style().fill_color();
           }
 
           template <class Derived>
@@ -3251,132 +3251,132 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           { //! Set the width (boldness) of X-axis label (including any units).
             //! (not recommended until browsers implement better).
             // width of text is effectively the boldness.
-            derived().image.g(PLOT_X_LABEL).style().stroke_width(width);
+            derived().image_.g(PLOT_X_LABEL).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_label_width()
           { //! \return  the width (boldness) of X-axis label (including any units).
-            return derived().image.g(PLOT_X_LABEL).style().stroke_width();
+            return derived().image_.g(PLOT_X_LABEL).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::y_label_color(const svg_color& col)
           { //! Set the color of Y-axis label (including any units).
-            derived().image.g(PLOT_Y_LABEL).style().fill_color(col);
-            derived().image.g(PLOT_Y_LABEL).style().stroke_color(col);
+            derived().image_.g(PLOT_Y_LABEL).style().fill_color(col);
+            derived().image_.g(PLOT_Y_LABEL).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::y_label_color()
           { //! \return  the color of Y-axis label (including any units).
-            return derived().image.g(PLOT_Y_LABEL).style().fill_color();
+            return derived().image_.g(PLOT_Y_LABEL).style().fill_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_tick_color(const svg_color& col)
           { //! Set the color of X-axis major ticks.
-            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
+            derived().image_.g(PLOT_X_MAJOR_TICKS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_major_tick_color()
           { //! \return  the color of X-axis major ticks.
-            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
+            return derived().image_.g(PLOT_X_MAJOR_TICKS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_tick_color(const svg_color& col)
           { //! Set the color of X-axis minor ticks.
-            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color(col);
+            derived().image_.g(PLOT_X_MINOR_TICKS).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_minor_tick_color()
           { //! \return  the color of X-axis minor ticks.
-            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_color();
+            return derived().image_.g(PLOT_X_MINOR_TICKS).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_grid_color(const svg_color& col)
           { //! Set the color of X-axis major grid lines.
-            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color(col);
+            derived().image_.g(PLOT_X_MAJOR_GRID).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_major_grid_color()
           { //! \return  the color of X-axis major grid lines.
-            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_color();
+            return derived().image_.g(PLOT_X_MAJOR_GRID).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_major_grid_width(double w)
           { //! Set the width of X-axis major grid lines.
-            derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width(w);
+            derived().image_.g(PLOT_X_MAJOR_GRID).style().stroke_width(w);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_grid_width()
           { //! \return  the color of X-axis major grid lines.
-            return derived().image.g(PLOT_X_MAJOR_GRID).style().stroke_width();
+            return derived().image_.g(PLOT_X_MAJOR_GRID).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_grid_color(const svg_color& col)
           { //! Set the color of X-axis minor grid lines.
-            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color(col);
+            derived().image_.g(PLOT_X_MINOR_GRID).style().stroke_color(col);
             return derived();
           }
 
           template <class Derived>
           svg_color axis_plot_frame<Derived>::x_minor_grid_color()
           { //! \return  the color of X-axis minor grid lines.
-            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_color();
+            return derived().image_.g(PLOT_X_MINOR_GRID).style().stroke_color();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_minor_grid_width(double w)
           { //! Set the width of X-axis minor grid lines.
-            derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width(w);
+            derived().image_.g(PLOT_X_MINOR_GRID).style().stroke_width(w);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_minor_grid_width()
           { //! \return  the width of X-axis minor grid lines.
-            return derived().image.g(PLOT_X_MINOR_GRID).style().stroke_width();
+            return derived().image_.g(PLOT_X_MINOR_GRID).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::x_axis_width(double width)
           { //! Set the width of X-axis lines.
-            derived().image.g(PLOT_X_AXIS).style().stroke_width(width);
+            derived().image_.g(PLOT_X_AXIS).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_axis_width()
           { //! \return  the width of X-axis lines.
-            return derived().image.g(PLOT_X_AXIS).style().stroke_width();
+            return derived().image_.g(PLOT_X_AXIS).style().stroke_width();
           }
 
           template <class Derived>
           Derived& axis_plot_frame<Derived>::data_lines_width(double width)
           { //! Set the width of lines joining data points.
-            derived().image.g(PLOT_DATA_LINES).style().stroke_width(width);
+            derived().image_.g(PLOT_DATA_LINES).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::data_lines_width()
           { //! \return  the width of lines joining data points.
-            return derived().image.g(PLOT_DATA_LINES).style().stroke_width();
+            return derived().image_.g(PLOT_DATA_LINES).style().stroke_width();
           }
 
           template <class Derived>
@@ -3505,8 +3505,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             // but just setting fill is simplest,
             // but does not allow separate inside & outside colors.
             // Might be better to set in x_values_style
-            derived().image.g(PLOT_X_POINT_VALUES).style().fill_color(col);
-            //derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color(col);
+            derived().image_.g(PLOT_X_POINT_VALUES).style().fill_color(col);
+            //derived().image_.g(PLOT_X_POINT_VALUES).style().stroke_color(col);
 
             return derived();
           }
@@ -3515,8 +3515,8 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           svg_color axis_plot_frame<Derived>::x_values_color()
           { //! \return  the color of data point X values near data points markers.
             // Function could get either fill and stroke,
-            // return derived().image.g(PLOT_X_POINT_VALUES).style().stroke_color();
-            return derived().image.g(PLOT_X_POINT_VALUES).style().fill_color();
+            // return derived().image_.g(PLOT_X_POINT_VALUES).style().stroke_color();
+            return derived().image_.g(PLOT_X_POINT_VALUES).style().fill_color();
           }
 
           template <class Derived>
@@ -3665,14 +3665,14 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_major_tick_width(double width)
           { //! Set width of X major ticks.
             derived().x_ticks_.major_tick_width_ = width; // Redundant?
-            derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
+            derived().image_.g(PLOT_X_MAJOR_TICKS).style().stroke_width(width);
             return derived();
           }
 
           template <class Derived>
           double axis_plot_frame<Derived>::x_major_tick_width()
           {//! \return  width of X major ticks.
-            return derived().image.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
+            return derived().image_.g(PLOT_X_MAJOR_TICKS).style().stroke_width();
           }
 
           template <class Derived>
@@ -3692,7 +3692,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_minor_tick_width(double width)
           { //! Set width of X minor ticks.
             derived().x_ticks_.minor_tick_width_ = width;
-            derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width(width);
+            derived().image_.g(PLOT_X_MINOR_TICKS).style().stroke_width(width);
             return derived();
           }
 
@@ -3700,7 +3700,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           double axis_plot_frame<Derived>::x_minor_tick_width()
           { //! \return  width of X minor ticks.
             // return derived().x_minor_tick_width_; // should be the same but store in stroke_width is definitive.
-            return derived().image.g(PLOT_X_MINOR_TICKS).style().stroke_width();
+            return derived().image_.g(PLOT_X_MINOR_TICKS).style().stroke_width();
           }
 
           template <class Derived>
@@ -3978,7 +3978,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         Derived& axis_plot_frame<Derived>::limit_color(const svg_color& col)
         { //! Set the color for 'at limit' point stroke color.
           // Need to set the series 
-          derived().image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color(col);
+          derived().image_.g(detail::PLOT_LIMIT_POINTS).style().stroke_color(col);
           // derived().serieses_[0].limit_point_color(col); // Would require to add some data first!
           return derived();
         }
@@ -3986,14 +3986,14 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         template <class Derived>
         svg_color axis_plot_frame<Derived>::limit_color()
         { //! \return  the color for the 'at limit' point stroke color.
-          return derived().image.g(detail::PLOT_LIMIT_POINTS).style().stroke_color();
+          return derived().image_.g(detail::PLOT_LIMIT_POINTS).style().stroke_color();
         }
 
         template <class Derived>
         Derived& axis_plot_frame<Derived>::limit_fill_color(const svg_color& col)
         { //! Set the color for 'at limit' point fill color.
-          derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_on(true);
-          derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color(col);
+          derived().image_.g(detail::PLOT_LIMIT_POINTS).style().fill_on(true);
+          derived().image_.g(detail::PLOT_LIMIT_POINTS).style().fill_color(col);
           //derived().serieses_[0].limit_point_style_.fill_color(col);
           return derived();
         }
@@ -4001,52 +4001,52 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         template <class Derived>
         svg_color axis_plot_frame<Derived>::limit_fill_color()
         { //! \return  the color for the 'at limit' point fill color.
-          return derived().image.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
+          return derived().image_.g(detail::PLOT_LIMIT_POINTS).style().fill_color();
         }
 
         template <class Derived>
         Derived& axis_plot_frame<Derived>::one_sd_color(const svg_color& col)
         { //! Set the color for the one standard deviation (~67% confidence) ellipse fill.
-          derived().image.g(detail::PLOT_DATA_UNC1).style().fill_on(true);
-          derived().image.g(detail::PLOT_DATA_UNC1).style().fill_color(col);
-          derived().image.g(detail::PLOT_DATA_UNC1).style().stroke_color(blank);
+          derived().image_.g(detail::PLOT_DATA_UNC1).style().fill_on(true);
+          derived().image_.g(detail::PLOT_DATA_UNC1).style().fill_color(col);
+          derived().image_.g(detail::PLOT_DATA_UNC1).style().stroke_color(blank);
           return derived();
         }
 
        template <class Derived>
        svg_color axis_plot_frame<Derived>::one_sd_color()
        { //! \return Color for the one standard deviation (~67% confidence) ellipse fill.
-         return derived().image.g(detail::PLOT_DATA_UNC1).style().fill_color();
+         return derived().image_.g(detail::PLOT_DATA_UNC1).style().fill_color();
        }
 
         template <class Derived>
         Derived& axis_plot_frame<Derived>::two_sd_color(const svg_color& col)
         { //! Set the color for two standard deviation (~95% confidence) ellipse fill.
-          derived().image.g(detail::PLOT_DATA_UNC2).style().fill_on(true);
-          derived().image.g(detail::PLOT_DATA_UNC2).style().fill_color(col);
-          derived().image.g(detail::PLOT_DATA_UNC2).style().stroke_color(blank);
+          derived().image_.g(detail::PLOT_DATA_UNC2).style().fill_on(true);
+          derived().image_.g(detail::PLOT_DATA_UNC2).style().fill_color(col);
+          derived().image_.g(detail::PLOT_DATA_UNC2).style().stroke_color(blank);
           return derived();
         }
 
        template <class Derived>
        svg_color axis_plot_frame<Derived>::two_sd_color()
        { //! \return Color for two standard deviation (~95% confidence) ellipse fill.
-         return derived().image.g(detail::PLOT_DATA_UNC2).style().fill_color();
+         return derived().image_.g(detail::PLOT_DATA_UNC2).style().fill_color();
        }
 
         template <class Derived>
         Derived& axis_plot_frame<Derived>::three_sd_color(const svg_color& col)
         { //! Set the color for three standard deviation (~99% confidence) ellipse fill.
-          derived().image.g(detail::PLOT_DATA_UNC3).style().fill_on(true);
-          derived().image.g(detail::PLOT_DATA_UNC3).style().fill_color(col);
-          derived().image.g(detail::PLOT_DATA_UNC3).style().stroke_color(blank);
+          derived().image_.g(detail::PLOT_DATA_UNC3).style().fill_on(true);
+          derived().image_.g(detail::PLOT_DATA_UNC3).style().fill_color(col);
+          derived().image_.g(detail::PLOT_DATA_UNC3).style().stroke_color(blank);
           return derived();
         }
 
        template <class Derived>
        svg_color axis_plot_frame<Derived>::three_sd_color()
        { //! \return Color for three standard deviation (~99% confidence) ellipse fill.
-         return derived().image.g(detail::PLOT_DATA_UNC3).style().fill_color();
+         return derived().image_.g(detail::PLOT_DATA_UNC3).style().fill_color();
        }
 
         template <class Derived>
@@ -4058,7 +4058,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             for example Greek or math symbols, taking about 6 characters per symbol)
             because the render engine does the centering.
           */
-           g_element* g = &(derived()).image.g(); // New group.
+           g_element* g = &(derived()).image_.add_g_element(); // New group.
            g->style().fill_color(col); // Set its color
            g->push_back(new text_element(x, y, note, tsty, al, rot)); // Add to document image.
           // No checks on X or Y - leave to SVG to not draw outside image.
@@ -4071,7 +4071,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         { /*! \brief Annotate plot with a line from SVG Coordinates X1, Y1 to X2, Y2.
               \details Default color black.
           */
-          g_element* g = &(derived()).image.g(); // New group.
+          g_element* g = &(derived()).image_.add_g_element(); // New group.
           g->style().stroke_color(col);
           //g->style().width(w); // todo
           g->push_back(new line_element(x1, y1, x2, y2));
@@ -4091,7 +4091,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           // This assumes that the notes, lines and curves are the last item before the write.
           transform_point(x1, y1);
           transform_point(x2, y2);
-          g_element* g = &(derived()).image.g(); // New group.
+          g_element* g = &(derived()).image_.add_g_element(); // New group.
           g->style().stroke_color(col);
           g->push_back(new line_element(x1, y1, x2, y2));
           // No checks on X or Y - leave to SVG to not draw outside image.
@@ -4112,7 +4112,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           transform_point(x1, y1);
           transform_point(x2, y2);
           transform_point(x3, y3);
-          g_element* g = &(derived()).image.g(); // New group.
+          g_element* g = &(derived()).image_.add_g_element(); // New group.
           g->style().stroke_color(col);
           g->push_back(new qurve_element(x1, y1, x2, y2, x3, y3));
           // No checks on X or Y - leave to SVG to not draw outside image.
