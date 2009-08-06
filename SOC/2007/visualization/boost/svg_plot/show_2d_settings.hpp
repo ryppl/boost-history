@@ -141,9 +141,9 @@ void show_2d_plot_settings(svg_2d_plot& plot)
   cout << "description " << plot.description() << endl;
   cout << "document_title "  << '"' << plot.document_title()  << '"' << endl;
   //cout << plot.draw_bezier_lines() << endl;
-  cout << "image_x_size " << plot.image_x_size() << endl;
-  cout << "image_y_size " << plot.image_y_size() << endl;
-  cout << "image_size " << plot.image_size() << endl;
+  cout << "x_size " << plot.x_size() << endl;
+  cout << "image y_size " << plot.y_size() << endl;
+  cout << "image x_size " << plot.size() << endl;
   cout << "image_filename " << plot.image_.image_filename() << endl;
   cout << "legend_on " << plot.legend_on() << endl;
   std::pair<double, double> lt = plot.legend_top_left();

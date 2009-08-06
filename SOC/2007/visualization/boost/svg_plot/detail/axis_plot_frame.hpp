@@ -1674,51 +1674,84 @@ namespace boost
           // If both are set, stroke is considered 'more important',
           // and so is returned by get functions.
 
-          Derived& size(unsigned int x, unsigned int y);
-          std::pair<double, double> image_size();
-          unsigned int image_x_size();
-          Derived& image_x_size(unsigned int i);
-          unsigned int image_y_size();
-          Derived& image_y_size(unsigned int i);
-          svg_color background_color();
-          Derived& background_color(const svg_color& col);
-          Derived& background_border_color(const svg_color& col);
-          svg_color background_border_color();
-          Derived& background_border_width(double w);
-          double background_border_width();
-          Derived& description(const std::string d);
-          const std::string& description();
-          Derived& document_title(const std::string d);
-          std::string document_title();
-          Derived& copyright_holder(const std::string d);
-          const std::string copyright_holder();
-          Derived& copyright_date(const std::string d);
-          const std::string copyright_date();
-          Derived& license(std::string repro = "permits",
+          Derived& size(unsigned int x, unsigned int y); //! Set SVG image size (SVG units, default pixels).
+          std::pair<double, double> size(); //! \return SVG image size, both horizontal width and vertical height (SVG units, default pixels).
+
+          Derived& x_size(unsigned int i); //! Set SVG image X-axis size (SVG units, default pixels).
+          unsigned int x_size(); //! \return SVG image X-axis size as horizontal width (SVG units, default pixels).
+          unsigned int image_x_size(); // Obselete - deprecated.
+          Derived& image_x_size(unsigned int i); // Obselete - deprecated.
+
+          unsigned int y_size(); //! \return SVG image Y-axis size as horizontal width (SVG units, default pixels).
+          Derived& y_size(unsigned int i); //! Set SVG image Y-axis size (SVG units, default pixels).
+          unsigned int image_y_size(); //! Obselete - deprecated - use y_size().
+          Derived& image_y_size(unsigned int i); // Obselete - deprecated - y_size(unsigned int i).
+
+          svg_color background_color(); //! \return  plot background color.
+          Derived& background_color(const svg_color& col); //! Set plot background border color.
+          Derived& background_border_color(const svg_color& col); //! Set plot background border color.
+          svg_color background_border_color(); //! \return plot background border color.
+          Derived& background_border_width(double w); //! Set plot background border width.
+          double background_border_width(); //! \return  plot background border color.
+          Derived& description(const std::string d);  //! Writes description to the document for header as <desc> My Description </desc>
+          const std::string& description(); //! \return  description of the document for header as <desc> My description </desc>
+          Derived& document_title(const std::string d); 
+          std::string document_title(); //! \return  document title to the document for header as \verbatim <title> My Title </title> \endverbatim
+          Derived& copyright_holder(const std::string d);//! Writes copyright_holder to the document
+            //! (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
+            //! and as \verbatim metadata: <meta name="copyright" content="Paul A. Bristow" /meta> \endverbatim
+          const std::string copyright_holder(); //! \return copyright holder.
+          Derived& copyright_date(const std::string d); //! Writes copyright date to the document.
+            //! and as \verbatim metadata <meta name="date" content="2007" /> \endverbatim
+          const std::string copyright_date(); //! \return  copyright_date.
+          Derived& license(
+            std::string repro= "permits",
             std::string distrib = "permits",
             std::string attrib = "requires",
             std::string commercial = "permits",
-            std::string derivative = "permits");
-          bool license_on();
-          Derived&  license_on(bool l);
-          bool boost_license_on();
-          Derived& boost_license_on(bool l);
-          const std::string license_reproduction();
-          const std::string license_distribution();
-          const std::string license_attribution();
-          const std::string license_commercialuse();
-          Derived& coord_precision(int digits);
-          int coord_precision();
-          Derived& x_value_precision(int digits);
-          int x_value_precision();
-          Derived& x_value_ioflags(int flags);
-          int x_value_ioflags();
-          Derived& x_labels_strip_e0s(bool cmd);
-          bool y_labels_strip_e0s();
-          Derived& title(const std::string title);
-          const std::string title();
-          Derived& title_font_size(unsigned int i);
-          unsigned int title_font_size();
+            std::string derivative = "permits"); //! Set license conditions for reproduction, atribution, commercial use, and derivative works,
+            //! usually "permits", "requires", or "prohibits",
+            //! and set license_on == true.
+          bool license_on(); //! \return true if license conditions should be included in the SVG document.
+          Derived&  license_on(bool l); //! Set if license conditions should be included in the SVG document.
+          bool boost_license_on();  //! \return  if the Boost license conditions should be included in the SVG document.
+          Derived& boost_license_on(bool l); //! Set true if the Boost license conditions should be included in the SVG document.
+          const std::string license_reproduction(); //! \return  reproduction license conditions, usually "permits", "requires", or "prohibits".
+          const std::string license_distribution(); //! \return  distribution license conditions, usually "permits", "requires", or "prohibits".
+          const std::string license_attribution(); //! \return  attribution license conditions, usually "permits", "requires", or "prohibits".
+          const std::string license_commercialuse();  //! \return  commercial use license conditions, usually "permits", "requires", or "prohibits".
+          Derived& coord_precision(int digits); /*! Precision of SVG coordinates in decimal digits (default 3).
+              3 decimal digits precision is sufficient for small images.
+              4 or 5 decimal digits precision will give higher quality plots,
+              especially for larger images, at the expense of larger .svg files,
+              particularly if there are very many data points.
+           */
+          int coord_precision(); //! \return  precision of SVG coordinates in decimal digits.
+          Derived& x_value_precision(int digits); /*! Precision of X tick label values in decimal digits (default 3).
+              3 decimal digits precision is sufficient for small images.
+              4 or 5 decimal digits precision will give more cluttered plots.
+              If the range of labels is very small, then more digits will be essential.
+            */
+          int x_value_precision(); //! \return  precision of X tick label values in decimal digits
+          Derived& x_value_ioflags(int flags); /*! Set iostream std::ios::fmtflags for X value label (default decimal == 0X201).
+              Mainly useful for changing to scientific, fixed or hexadecimal format.
+              For example: .x_value_ioflags(std::ios::dec | std::ios::scientific)
+            */
+          int x_value_ioflags(); //! \return  stream std::ios::fmtflags for control of format of X value labels.
+          Derived& x_labels_strip_e0s(bool cmd); //! Set if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
+            //! This markedly reduces visual clutter, and is the default.
+          bool y_labels_strip_e0s(); //! \return  if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
+          Derived& title(const std::string title); /*!
+              Set a title for plot.
+              The string may include Unicode for greek letter and symbols.
+              For example a title that includes a greek omega and degree symbols:
+              \verbatim my_plot.title("Plot of &#x3A9; function (&#x00B0;C)"); \endverbatim
+
+              Unicode symbols are at http://unicode.org/charts/symbols.html .
+            */
+          const std::string title(); //! \return  a title for plot, whose string may include Unicode for greek letter and symbols.
+          Derived& title_font_size(unsigned int i); //! Sets the font size for the title (svg units, default pixels).
+          unsigned int title_font_size(); //! \return  the font size for the title (svg units, default pixels).
           Derived& title_font_family(const std::string& family);
           const std::string& title_font_family();
           Derived& title_font_style(const std::string& style);
@@ -2008,7 +2041,7 @@ namespace boost
           } // x_autoscale(const T& begin, const T& end)
 
           template <class Derived>
-          template <class T> // T an STL container: array, vector ...
+          template <class T> // T an STL container: array, vector...
           Derived& axis_plot_frame<Derived>::x_autoscale(const T& container) // Use whole 1D data series.
           { //! Data series (all values) to use to calculate autoscaled X-axis values.
             //scale_axis(container.begin(), container.end(), // All the container.
@@ -2031,32 +2064,60 @@ namespace boost
           }
 
           template <class Derived>
-          std::pair<double, double> axis_plot_frame<Derived>::image_size()
+          std::pair<double, double> axis_plot_frame<Derived>::size()
           { //! \return SVG image size, both horizontal width and vertical height (SVG units, default pixels).
             return derived().image_.xy_sizes();
           }
 
           template <class Derived>
-          unsigned int axis_plot_frame<Derived>::image_x_size()
+          unsigned int axis_plot_frame<Derived>::image_x_size() //!< Obselete - deprecated.
           { //! \return SVG image X-axis size as horizontal width (SVG units, default pixels).
             return derived().image_.x_size();
           }
 
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::image_x_size(unsigned int i)
+          unsigned int axis_plot_frame<Derived>::x_size()
+          { //! \return SVG image X-axis size as horizontal width (SVG units, default pixels).
+            return derived().image_.x_size();
+          }
+
+          template <class Derived>
+          Derived& axis_plot_frame<Derived>::image_x_size(unsigned int i) //!< Obselete - deprecated.
           { //! Set SVG image X-axis size (SVG units, default pixels).
+            // Can't this be x_size(unsigned int i)
             derived().image_.x_size(i);
             return derived();
           }
 
           template <class Derived>
-          unsigned int axis_plot_frame<Derived>::image_y_size()
-          { //! \return  SVG image Y-axis size as vertical height (SVG units, default pixels).
+          Derived& axis_plot_frame<Derived>::x_size(unsigned int i)
+          { //! Set SVG image X-axis size (SVG units, default pixels).
+            // Can't this be x_size(unsigned int i)
+            derived().image_.x_size(i);
+            return derived();
+          }
+
+          template <class Derived>
+          unsigned int axis_plot_frame<Derived>::image_y_size() //!< Obselete - deprecated.
+          { //! \return SVG image Y-axis size as vertical height (SVG units, default pixels).
             return derived().image_.y_size();
           }
 
           template <class Derived>
-          Derived& axis_plot_frame<Derived>::image_y_size(unsigned int i)
+          Derived& axis_plot_frame<Derived>::image_y_size(unsigned int i) //!< Obselete - deprecated.
+          {//! Set SVG image Y-axis size (SVG units, default pixels).
+            derived().image_.y_size(i);
+            return derived();
+          }
+
+          template <class Derived>
+          unsigned int axis_plot_frame<Derived>::y_size() 
+          { //! \return SVG image Y-axis size as vertical height (SVG units, default pixels).
+            return derived().image_.y_size();
+          }
+
+          template <class Derived>
+          Derived& axis_plot_frame<Derived>::y_size(unsigned int i)
           {//! Set SVG image Y-axis size (SVG units, default pixels).
             derived().image_.y_size(i);
             return derived();

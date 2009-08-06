@@ -1228,7 +1228,6 @@ public:
       //  || !axis.axis_line_on_ ignore these tests to avoid the above that doesn't work.
       // Zero isn't likely to be the longest value label.
       // ticks_labels_style& tick_labels = (dim_ = X) ? x_ticks() : y_ticks(); // doesn't work.
-      //
 
       // Check length of label for the ticks on the positive side (right or above zero).
       for(double v = 0.; v <= max_; v += major_interval_)

@@ -241,18 +241,20 @@ namespace svg
   public:
     line_element(double x1, double y1, double x2,  double y2)
       :   x1_(x1), y1_(y1),  x2_(x2), y2_(y2)
-    {
+    { // Constructor assigning all line_element private data.
     }
 
     line_element(double x1, double y1,
                  double x2, double y2,
-                 const svg_style& style_info,
-                 const std::string& id_name="",
-                 const std::string& class_name="",
+                 // Inherited from svg_element:
+                 const svg_style& style_info, // No default?
+                 const std::string& id_name = "",
+                 const std::string& class_name = "",
                  const std::string& clip_name = "")
                 : x1_(x1), y1_(y1), x2_(x2), y2_(y2),
                   svg_element(style_info, id_name, class_name, clip_name)
-    {
+    { // Constructor assigning all line_element private data,
+      // and also inherited svg_element data.
     }
 
     void write(std::ostream& rhs)
@@ -288,6 +290,7 @@ namespace svg
     qurve_element(double x1, double y1,
                  double x2, double y2, // Control point - will not pass thru this point.
                  double x3, double y3,
+                 // Inherited from svg_element:
                  const svg_style& style_info,
                  const std::string& id_name="",
                  const std::string& class_name="",
@@ -329,9 +332,9 @@ namespace svg
     friend bool operator!=(const rect_element&, const rect_element&);
 
   private:
-    double x_; //! x-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
-    double y_; //! y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
-    //! So is top left corner of rectangle.
+    double x_; //! X-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
+    double y_; //! Y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
+    //! So (0, 0) is top left corner of rectangle.
     double width_; //! x + width is top right.
     double height_; //! y + height is bottom left.
     //! x + width and y + height is bottom right.
@@ -343,6 +346,7 @@ namespace svg
     }
 
     rect_element(double x, double y, double w, double h,
+                // Inherited from svg_element:
                  const svg_style& style_info,
                  const std::string& id_name,
                  const std::string& class_name,

@@ -1883,8 +1883,8 @@ public:
   svg_boxplot& x_tick_width(unsigned int width);
   svg_boxplot& y_major_tick_width(unsigned int width);
   svg_boxplot& y_minor_tick_width(unsigned int width);
-  unsigned int image_x_size();
-  unsigned int image_y_size();
+  unsigned int x_size();
+  unsigned int y_size();
   std::string title(); // title assigned to boxplot.
   bool x_label_on();
   int x_major_labels();
@@ -2342,12 +2342,12 @@ public:
     return *this; //! \return reference to svg_boxplot to make chainable.
   }
 
-  unsigned int svg_boxplot::image_x_size()
+  unsigned int svg_boxplot::x_size()
   { //! \return width of the SVG image.
     return image_.x_size();
   }
 
-  unsigned int svg_boxplot::image_y_size()
+  unsigned int svg_boxplot::y_size()
   { //! \return height of the SVG image.
     return image_.x_size();
   }

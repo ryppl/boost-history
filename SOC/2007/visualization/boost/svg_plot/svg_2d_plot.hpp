@@ -727,15 +727,31 @@ my_plot.background_color(ghostwhite) // Whole image.
 
         if(plot_window_on_)
         { 
-       // A margin is needed to allow any plot window border rectangle to show OK. 
-        // A small margin is to prevent it overlapping the image border.
-        // Also allows for axis value labels that mark the min and max
-        // that must extend half a font width beyond the plot window border.
+          // A margin is needed to allow any plot window border rectangle to show OK. 
+          // A small margin is to prevent it overlapping the image border.
+          // Also allows for axis value labels that mark the min and max
+          // that must extend beyond the plot window border,
+          // if writing is vertical need only half a font, but half x_ticks_.label_max_space_ if horizontal.
+          // x_ticks_.label_max_space_ calculated this - but is not calculated yet!
+          // So just allow a few chars.
 
-          double margin = (std::max)(image_border_.margin_, static_cast<double>(x_value_label_style_.font_size()/2) );
+          double value_space;
+            // Really want
+            // value_space = x_ticks_.label_max_space_ /2.; // Assume value label is center aligned.
+          if (x_ticks_.label_rotation_ != horizontal)
+          { // vertical-ish x value labels just need half a font.
+            value_space = x_value_label_style_.font_size() / 2; // half a single font width.
+          }
+          else
+          { // horizontal so need space for half the label, assumed 4 chars.
+            value_space = x_value_label_style_.font_size() * 2; // two font widths.
+          }
+          double margin = 0.;
+          margin = (std::max)(image_border_.margin_, value_space);
           plot_left_ += margin;
           plot_right_ -= margin;
 
+          // Might need to do similar for Y-axis if anyone complains.
           margin = (std::max)(image_border_.margin_, static_cast<double>(y_value_label_style_.font_size()/2) );
           plot_top_ += margin;
           plot_bottom_ -= margin;
