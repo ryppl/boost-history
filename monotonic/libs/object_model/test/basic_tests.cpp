@@ -16,6 +16,7 @@
 
 #include <string>
 #include <boost/object_model/object.hpp>
+
 #include <boost/object_model/dictionary.hpp>
 #include <boost/object_model/registry.hpp>
 #include <boost/object_model/type/builtins.hpp>
