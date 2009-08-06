@@ -10,25 +10,25 @@ namespace detail
     struct block_find
     {
         typedef bool result_type;
-
-        bool operator()(const boost::unicode::ucd::unichar_blocks_internal& a, const boost::unicode::ucd::unichar_blocks_internal& b) const
+        
+        bool operator()(const unichar_blocks_internal& a, const unichar_blocks_internal& b) const
         {
             return a.first < b.first;
         }
         
-        bool operator()(const boost::unicode::ucd::unichar_blocks_internal& a, char32 b) const
+        bool operator()(const unichar_blocks_internal& a, char32 b) const
         {
             return a.first < b;
         }
         
-        bool operator()(char32 a, const boost::unicode::ucd::unichar_blocks_internal& b) const
+        bool operator()(char32 a, const unichar_blocks_internal& b) const
         {
             return a < b.first;
         }
     };
 }
 
-BOOST_UNICODE_DECL boost::unicode::ucd::block::type boost::unicode::ucd::get_block(char32 ch)
+BOOST_UNICODE_DECL block::type get_block(char32 ch)
 {
     const unichar_blocks_internal* end = __uni_block_data + __uni_block_data_size;
     
@@ -44,10 +44,10 @@ BOOST_UNICODE_DECL boost::unicode::ucd::block::type boost::unicode::ucd::get_blo
     if(ch > b->last)
         return block::none;
     
-    return (boost::unicode::ucd::block::type)b->first;
+    return (block::type)b->first;
 }
 
-BOOST_UNICODE_DECL const char* boost::unicode::ucd::as_string(boost::unicode::ucd::block::type type)
+BOOST_UNICODE_DECL const char* as_string(block::type type)
 {
     const unichar_blocks_internal* b = std::lower_bound(
         __uni_block_data, __uni_block_data + __uni_block_data_size,

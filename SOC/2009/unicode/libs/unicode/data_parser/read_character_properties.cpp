@@ -73,6 +73,9 @@ void read_character_properties (std::map <char32, character_properties> & props)
 	read_character_properties_sentence (props, "./USERDATA/auxiliary/SentenceBreakProperty.txt", false);
     read_collation_data(props, "./UNIDATA/UCA/allkeys.txt", true);
     read_collation_data(props, "./USERDATA/UCA/allkeys.txt", false);
+    
+    read_character_properties_compex (props, "./UNIDATA/CompositionExclusions.txt", true);
+    read_character_properties_compex (props, "./USERDATA/CompositionExclusions.txt", false);
 
 	add_unknown_character(props);
 }

@@ -19,7 +19,6 @@
 using namespace boost::unicode;
 
 
-
 namespace boost { namespace unicode { namespace ucd {
 }}}  // namespaces
 

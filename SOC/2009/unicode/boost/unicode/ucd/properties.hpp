@@ -7,8 +7,7 @@
 
 #include <boost/unicode/ucd/detail/unichar_data.hpp>
 
-#include <algorithm>
-#include <iostream>
+#include <boost/range.hpp>
 
 /** BOOST_UNICODE_UCD_VERSION / 1000 is the major version
  * BOOST_UNICODE_UCD_VERSION % 1000 is the minor version */
@@ -77,9 +76,10 @@ BOOST_UNICODE_DECL block::type get_block(char32 ch);
 /** Returns the decomposition associated with \c ch as a zero-terminated
  * sequence of code points.
  * See the \c decomposition_type property to know what kind of decomposition it is. */
-inline const char32* get_decomposition(char32 ch)
+inline iterator_range<const char32*> get_decomposition(char32 ch)
 {
-    return ucd::get_data_internal(ch).decomp;
+    const char32* p = ucd::get_data_internal(ch).decomp;
+    return make_iterator_range(p+1, p+1+p[0]);
 }
 
 } // namespace ucd

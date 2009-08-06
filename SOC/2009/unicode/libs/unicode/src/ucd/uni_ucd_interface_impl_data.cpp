@@ -31,6 +31,7 @@
 #include "uni_ucd_interface_impl_data_8.ipp"
 #include "uni_ucd_interface_impl_data_9.ipp"
 #include "uni_ucd_interface_impl_sort_data.ipp"
+#include "uni_ucd_interface_impl_compose_data.ipp"
 
 
 namespace boost { namespace unicode { namespace ucd {

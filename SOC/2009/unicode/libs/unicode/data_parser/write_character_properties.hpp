@@ -81,7 +81,6 @@ public:
 	decomp_entry();
 	decomp_entry(char32 ch, const std::vector<char32>& decomp);
 
-private:
 	char32				chr;
 	std::vector<char32>	decomposition;
 
@@ -151,6 +150,8 @@ struct write_data
     // vector of tuple where first is cp for comments, and second are following chrs
     std::vector<tuple<char32, bool, char32> > tbl_sort_following_chars;
     std::vector<tuple<char32, sort_data_entry> > tbl_sort_entries;
+    
+    const std::map<char32, character_properties>* props;
 };
 
 // prepare to write the data out

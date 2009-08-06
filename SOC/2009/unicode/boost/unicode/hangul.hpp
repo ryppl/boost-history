@@ -71,9 +71,9 @@ struct hangul_composer
     typedef char32 output_type;
     typedef mpl::int_<1> max_output;
     
-    /*template<typename In, typename Out>
+    template<typename In, typename Out>
     std::pair<In, Out> ltr(In begin, In end, Out out)
-    {
+    {/*
         using namespace detail;
 
         char32 last = *begin; // copy first char
@@ -115,14 +115,17 @@ struct hangul_composer
             last = ch;
             result.append(ch);
         }
-
+        */
+        *out++ = *begin++;
         return std::make_pair(begin, out);
     }
     
     template<typename In, typename Out>
     std::pair<In, Out> rtl(In begin, In end, Out out)
     {
-    }*/
+        *out++ = *--end;
+        return std::make_pair(end, out);
+    }
 };
 
 } // namespace unicode

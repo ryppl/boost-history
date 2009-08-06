@@ -41,6 +41,12 @@ namespace ucd
         const char32 *      following_chars;
         const uint16_t      following_chars_count;
     };
+    
+    struct unichar_compose_data_entry
+    {
+        const char32* decomp;
+        char32 ch;
+    };
 
     struct unichar_complex_case_internal
     {
@@ -133,13 +139,15 @@ namespace ucd
         const char*      name;
     };
 
-    BOOST_UNICODE_DECL extern const boost::unicode::ucd::unichar_data_internal* __uni_char_data[];
-    BOOST_UNICODE_DECL extern const boost::unicode::ucd::unichar_blocks_internal __uni_block_data[];
-#ifdef BOOST_UNICODE_UCD_BIG
-    BOOST_UNICODE_DECL extern const boost::unicode::ucd::unichar_sort_data_entry __uni_sort_entry[];
-#endif
-    
+    BOOST_UNICODE_DECL extern const unichar_data_internal* __uni_char_data[];
+    BOOST_UNICODE_DECL extern const unichar_blocks_internal __uni_block_data[];
     BOOST_UNICODE_DECL extern const size_t __uni_block_data_size;
+#ifdef BOOST_UNICODE_UCD_BIG
+    BOOST_UNICODE_DECL extern const unichar_sort_data_entry __uni_sort_entry[];
+#endif
+    BOOST_UNICODE_DECL extern const unichar_compose_data_entry __uni_compose_entry[];
+    BOOST_UNICODE_DECL extern const size_t __uni_compose_entry_size;
+
     
     inline const unichar_data_internal& get_data_internal(char32 ch)
     {

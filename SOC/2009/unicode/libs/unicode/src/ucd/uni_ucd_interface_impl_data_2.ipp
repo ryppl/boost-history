@@ -21,11 +21,11 @@ using namespace boost::unicode;
 
 
 namespace boost { namespace unicode { namespace ucd {
-static const char32 __uni_decomp_data_0xcc0[] = { 0xcbf, 0xcd5, 0, };
-static const char32 __uni_decomp_data_0xcc7[] = { 0xcc6, 0xcd5, 0, };
-static const char32 __uni_decomp_data_0xcc8[] = { 0xcc6, 0xcd6, 0, };
-static const char32 __uni_decomp_data_0xcca[] = { 0xcc6, 0xcc2, 0, };
-static const char32 __uni_decomp_data_0xccb[] = { 0xcca, 0xcd5, 0, };
+static const char32 __uni_decomp_data_0xcc0[] = { 2, 0xcbf, 0xcd5, };
+static const char32 __uni_decomp_data_0xcc7[] = { 2, 0xcc6, 0xcd5, };
+static const char32 __uni_decomp_data_0xcc8[] = { 2, 0xcc6, 0xcd6, };
+static const char32 __uni_decomp_data_0xcca[] = { 2, 0xcc6, 0xcc2, };
+static const char32 __uni_decomp_data_0xccb[] = { 2, 0xcca, 0xcd5, };
 
 
 
@@ -1699,9 +1699,9 @@ static const unichar_data_internal __uni_char_data_c80[]=
 };
 
 
-static const char32 __uni_decomp_data_0xd4a[] = { 0xd46, 0xd3e, 0, };
-static const char32 __uni_decomp_data_0xd4b[] = { 0xd47, 0xd3e, 0, };
-static const char32 __uni_decomp_data_0xd4c[] = { 0xd46, 0xd57, 0, };
+static const char32 __uni_decomp_data_0xd4a[] = { 2, 0xd46, 0xd3e, };
+static const char32 __uni_decomp_data_0xd4b[] = { 2, 0xd47, 0xd3e, };
+static const char32 __uni_decomp_data_0xd4c[] = { 2, 0xd46, 0xd57, };
 
 
 
@@ -3375,10 +3375,10 @@ static const unichar_data_internal __uni_char_data_d00[]=
 };
 
 
-static const char32 __uni_decomp_data_0xdda[] = { 0xdd9, 0xdca, 0, };
-static const char32 __uni_decomp_data_0xddc[] = { 0xdd9, 0xdcf, 0, };
-static const char32 __uni_decomp_data_0xddd[] = { 0xddc, 0xdca, 0, };
-static const char32 __uni_decomp_data_0xdde[] = { 0xdd9, 0xddf, 0, };
+static const char32 __uni_decomp_data_0xdda[] = { 2, 0xdd9, 0xdca, };
+static const char32 __uni_decomp_data_0xddc[] = { 2, 0xdd9, 0xdcf, };
+static const char32 __uni_decomp_data_0xddd[] = { 2, 0xddc, 0xdca, };
+static const char32 __uni_decomp_data_0xdde[] = { 2, 0xdd9, 0xddf, };
 
 
 
@@ -5052,7 +5052,7 @@ static const unichar_data_internal __uni_char_data_d80[]=
 };
 
 
-static const char32 __uni_decomp_data_0xe33[] = { 0xe4d, 0xe32, 0, };
+static const char32 __uni_decomp_data_0xe33[] = { 2, 0xe4d, 0xe32, };
 
 
 
@@ -6726,9 +6726,9 @@ static const unichar_data_internal __uni_char_data_e00[]=
 };
 
 
-static const char32 __uni_decomp_data_0xeb3[] = { 0xecd, 0xeb2, 0, };
-static const char32 __uni_decomp_data_0xedc[] = { 0xeab, 0xe99, 0, };
-static const char32 __uni_decomp_data_0xedd[] = { 0xeab, 0xea1, 0, };
+static const char32 __uni_decomp_data_0xeb3[] = { 2, 0xecd, 0xeb2, };
+static const char32 __uni_decomp_data_0xedc[] = { 2, 0xeab, 0xe99, };
+static const char32 __uni_decomp_data_0xedd[] = { 2, 0xeab, 0xea1, };
 
 
 
@@ -8402,19 +8402,19 @@ static const unichar_data_internal __uni_char_data_e80[]=
 };
 
 
-static const char32 __uni_decomp_data_0xf0c[] = { 0xf0b, 0, };
-static const char32 __uni_decomp_data_0xf43[] = { 0xf42, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xf4d[] = { 0xf4c, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xf52[] = { 0xf51, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xf57[] = { 0xf56, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xf5c[] = { 0xf5b, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xf69[] = { 0xf40, 0xfb5, 0, };
-static const char32 __uni_decomp_data_0xf73[] = { 0xf71, 0xf72, 0, };
-static const char32 __uni_decomp_data_0xf75[] = { 0xf71, 0xf74, 0, };
-static const char32 __uni_decomp_data_0xf76[] = { 0xfb2, 0xf80, 0, };
-static const char32 __uni_decomp_data_0xf77[] = { 0xfb2, 0xf81, 0, };
-static const char32 __uni_decomp_data_0xf78[] = { 0xfb3, 0xf80, 0, };
-static const char32 __uni_decomp_data_0xf79[] = { 0xfb3, 0xf81, 0, };
+static const char32 __uni_decomp_data_0xf0c[] = { 1, 0xf0b, };
+static const char32 __uni_decomp_data_0xf43[] = { 2, 0xf42, 0xfb7, };
+static const char32 __uni_decomp_data_0xf4d[] = { 2, 0xf4c, 0xfb7, };
+static const char32 __uni_decomp_data_0xf52[] = { 2, 0xf51, 0xfb7, };
+static const char32 __uni_decomp_data_0xf57[] = { 2, 0xf56, 0xfb7, };
+static const char32 __uni_decomp_data_0xf5c[] = { 2, 0xf5b, 0xfb7, };
+static const char32 __uni_decomp_data_0xf69[] = { 2, 0xf40, 0xfb5, };
+static const char32 __uni_decomp_data_0xf73[] = { 2, 0xf71, 0xf72, };
+static const char32 __uni_decomp_data_0xf75[] = { 2, 0xf71, 0xf74, };
+static const char32 __uni_decomp_data_0xf76[] = { 2, 0xfb2, 0xf80, };
+static const char32 __uni_decomp_data_0xf77[] = { 2, 0xfb2, 0xf81, };
+static const char32 __uni_decomp_data_0xf78[] = { 2, 0xfb3, 0xf80, };
+static const char32 __uni_decomp_data_0xf79[] = { 2, 0xfb3, 0xf81, };
 
 
 
@@ -10088,13 +10088,13 @@ static const unichar_data_internal __uni_char_data_f00[]=
 };
 
 
-static const char32 __uni_decomp_data_0xf81[] = { 0xf71, 0xf80, 0, };
-static const char32 __uni_decomp_data_0xf93[] = { 0xf92, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xf9d[] = { 0xf9c, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xfa2[] = { 0xfa1, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xfa7[] = { 0xfa6, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xfac[] = { 0xfab, 0xfb7, 0, };
-static const char32 __uni_decomp_data_0xfb9[] = { 0xf90, 0xfb5, 0, };
+static const char32 __uni_decomp_data_0xf81[] = { 2, 0xf71, 0xf80, };
+static const char32 __uni_decomp_data_0xf93[] = { 2, 0xf92, 0xfb7, };
+static const char32 __uni_decomp_data_0xf9d[] = { 2, 0xf9c, 0xfb7, };
+static const char32 __uni_decomp_data_0xfa2[] = { 2, 0xfa1, 0xfb7, };
+static const char32 __uni_decomp_data_0xfa7[] = { 2, 0xfa6, 0xfb7, };
+static const char32 __uni_decomp_data_0xfac[] = { 2, 0xfab, 0xfb7, };
+static const char32 __uni_decomp_data_0xfb9[] = { 2, 0xf90, 0xfb5, };
 
 
 
@@ -11768,7 +11768,7 @@ static const unichar_data_internal __uni_char_data_f80[]=
 };
 
 
-static const char32 __uni_decomp_data_0x1026[] = { 0x1025, 0x102e, 0, };
+static const char32 __uni_decomp_data_0x1026[] = { 2, 0x1025, 0x102e, };
 
 
 
@@ -13442,7 +13442,7 @@ static const unichar_data_internal __uni_char_data_1000[]=
 };
 
 
-static const char32 __uni_decomp_data_0x10fc[] = { 0x10dc, 0, };
+static const char32 __uni_decomp_data_0x10fc[] = { 1, 0x10dc, };
 
 
 

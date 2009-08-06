@@ -1694,73 +1694,73 @@ static const unichar_data_internal __uni_char_data_0[]=
 };
 
 
-static const char32 __uni_decomp_data_0xa0[] = { 0x20, 0, };
-static const char32 __uni_decomp_data_0xa8[] = { 0x20, 0x308, 0, };
-static const char32 __uni_decomp_data_0xaa[] = { 0x61, 0, };
-static const char32 __uni_decomp_data_0xaf[] = { 0x20, 0x304, 0, };
-static const char32 __uni_decomp_data_0xb2[] = { 0x32, 0, };
-static const char32 __uni_decomp_data_0xb3[] = { 0x33, 0, };
-static const char32 __uni_decomp_data_0xb4[] = { 0x20, 0x301, 0, };
-static const char32 __uni_decomp_data_0xb5[] = { 0x3bc, 0, };
-static const char32 __uni_decomp_data_0xb8[] = { 0x20, 0x327, 0, };
-static const char32 __uni_decomp_data_0xb9[] = { 0x31, 0, };
-static const char32 __uni_decomp_data_0xba[] = { 0x6f, 0, };
-static const char32 __uni_decomp_data_0xbc[] = { 0x31, 0x2044, 0x34, 0, };
-static const char32 __uni_decomp_data_0xbd[] = { 0x31, 0x2044, 0x32, 0, };
-static const char32 __uni_decomp_data_0xbe[] = { 0x33, 0x2044, 0x34, 0, };
-static const char32 __uni_decomp_data_0xc0[] = { 0x41, 0x300, 0, };
-static const char32 __uni_decomp_data_0xc1[] = { 0x41, 0x301, 0, };
-static const char32 __uni_decomp_data_0xc2[] = { 0x41, 0x302, 0, };
-static const char32 __uni_decomp_data_0xc3[] = { 0x41, 0x303, 0, };
-static const char32 __uni_decomp_data_0xc4[] = { 0x41, 0x308, 0, };
-static const char32 __uni_decomp_data_0xc5[] = { 0x41, 0x30a, 0, };
-static const char32 __uni_decomp_data_0xc7[] = { 0x43, 0x327, 0, };
-static const char32 __uni_decomp_data_0xc8[] = { 0x45, 0x300, 0, };
-static const char32 __uni_decomp_data_0xc9[] = { 0x45, 0x301, 0, };
-static const char32 __uni_decomp_data_0xca[] = { 0x45, 0x302, 0, };
-static const char32 __uni_decomp_data_0xcb[] = { 0x45, 0x308, 0, };
-static const char32 __uni_decomp_data_0xcc[] = { 0x49, 0x300, 0, };
-static const char32 __uni_decomp_data_0xcd[] = { 0x49, 0x301, 0, };
-static const char32 __uni_decomp_data_0xce[] = { 0x49, 0x302, 0, };
-static const char32 __uni_decomp_data_0xcf[] = { 0x49, 0x308, 0, };
-static const char32 __uni_decomp_data_0xd1[] = { 0x4e, 0x303, 0, };
-static const char32 __uni_decomp_data_0xd2[] = { 0x4f, 0x300, 0, };
-static const char32 __uni_decomp_data_0xd3[] = { 0x4f, 0x301, 0, };
-static const char32 __uni_decomp_data_0xd4[] = { 0x4f, 0x302, 0, };
-static const char32 __uni_decomp_data_0xd5[] = { 0x4f, 0x303, 0, };
-static const char32 __uni_decomp_data_0xd6[] = { 0x4f, 0x308, 0, };
-static const char32 __uni_decomp_data_0xd9[] = { 0x55, 0x300, 0, };
-static const char32 __uni_decomp_data_0xda[] = { 0x55, 0x301, 0, };
-static const char32 __uni_decomp_data_0xdb[] = { 0x55, 0x302, 0, };
-static const char32 __uni_decomp_data_0xdc[] = { 0x55, 0x308, 0, };
-static const char32 __uni_decomp_data_0xdd[] = { 0x59, 0x301, 0, };
-static const char32 __uni_decomp_data_0xe0[] = { 0x61, 0x300, 0, };
-static const char32 __uni_decomp_data_0xe1[] = { 0x61, 0x301, 0, };
-static const char32 __uni_decomp_data_0xe2[] = { 0x61, 0x302, 0, };
-static const char32 __uni_decomp_data_0xe3[] = { 0x61, 0x303, 0, };
-static const char32 __uni_decomp_data_0xe4[] = { 0x61, 0x308, 0, };
-static const char32 __uni_decomp_data_0xe5[] = { 0x61, 0x30a, 0, };
-static const char32 __uni_decomp_data_0xe7[] = { 0x63, 0x327, 0, };
-static const char32 __uni_decomp_data_0xe8[] = { 0x65, 0x300, 0, };
-static const char32 __uni_decomp_data_0xe9[] = { 0x65, 0x301, 0, };
-static const char32 __uni_decomp_data_0xea[] = { 0x65, 0x302, 0, };
-static const char32 __uni_decomp_data_0xeb[] = { 0x65, 0x308, 0, };
-static const char32 __uni_decomp_data_0xec[] = { 0x69, 0x300, 0, };
-static const char32 __uni_decomp_data_0xed[] = { 0x69, 0x301, 0, };
-static const char32 __uni_decomp_data_0xee[] = { 0x69, 0x302, 0, };
-static const char32 __uni_decomp_data_0xef[] = { 0x69, 0x308, 0, };
-static const char32 __uni_decomp_data_0xf1[] = { 0x6e, 0x303, 0, };
-static const char32 __uni_decomp_data_0xf2[] = { 0x6f, 0x300, 0, };
-static const char32 __uni_decomp_data_0xf3[] = { 0x6f, 0x301, 0, };
-static const char32 __uni_decomp_data_0xf4[] = { 0x6f, 0x302, 0, };
-static const char32 __uni_decomp_data_0xf5[] = { 0x6f, 0x303, 0, };
-static const char32 __uni_decomp_data_0xf6[] = { 0x6f, 0x308, 0, };
-static const char32 __uni_decomp_data_0xf9[] = { 0x75, 0x300, 0, };
-static const char32 __uni_decomp_data_0xfa[] = { 0x75, 0x301, 0, };
-static const char32 __uni_decomp_data_0xfb[] = { 0x75, 0x302, 0, };
-static const char32 __uni_decomp_data_0xfc[] = { 0x75, 0x308, 0, };
-static const char32 __uni_decomp_data_0xfd[] = { 0x79, 0x301, 0, };
-static const char32 __uni_decomp_data_0xff[] = { 0x79, 0x308, 0, };
+static const char32 __uni_decomp_data_0xa0[] = { 1, 0x20, };
+static const char32 __uni_decomp_data_0xa8[] = { 2, 0x20, 0x308, };
+static const char32 __uni_decomp_data_0xaa[] = { 1, 0x61, };
+static const char32 __uni_decomp_data_0xaf[] = { 2, 0x20, 0x304, };
+static const char32 __uni_decomp_data_0xb2[] = { 1, 0x32, };
+static const char32 __uni_decomp_data_0xb3[] = { 1, 0x33, };
+static const char32 __uni_decomp_data_0xb4[] = { 2, 0x20, 0x301, };
+static const char32 __uni_decomp_data_0xb5[] = { 1, 0x3bc, };
+static const char32 __uni_decomp_data_0xb8[] = { 2, 0x20, 0x327, };
+static const char32 __uni_decomp_data_0xb9[] = { 1, 0x31, };
+static const char32 __uni_decomp_data_0xba[] = { 1, 0x6f, };
+static const char32 __uni_decomp_data_0xbc[] = { 3, 0x31, 0x2044, 0x34, };
+static const char32 __uni_decomp_data_0xbd[] = { 3, 0x31, 0x2044, 0x32, };
+static const char32 __uni_decomp_data_0xbe[] = { 3, 0x33, 0x2044, 0x34, };
+static const char32 __uni_decomp_data_0xc0[] = { 2, 0x41, 0x300, };
+static const char32 __uni_decomp_data_0xc1[] = { 2, 0x41, 0x301, };
+static const char32 __uni_decomp_data_0xc2[] = { 2, 0x41, 0x302, };
+static const char32 __uni_decomp_data_0xc3[] = { 2, 0x41, 0x303, };
+static const char32 __uni_decomp_data_0xc4[] = { 2, 0x41, 0x308, };
+static const char32 __uni_decomp_data_0xc5[] = { 2, 0x41, 0x30a, };
+static const char32 __uni_decomp_data_0xc7[] = { 2, 0x43, 0x327, };
+static const char32 __uni_decomp_data_0xc8[] = { 2, 0x45, 0x300, };
+static const char32 __uni_decomp_data_0xc9[] = { 2, 0x45, 0x301, };
+static const char32 __uni_decomp_data_0xca[] = { 2, 0x45, 0x302, };
+static const char32 __uni_decomp_data_0xcb[] = { 2, 0x45, 0x308, };
+static const char32 __uni_decomp_data_0xcc[] = { 2, 0x49, 0x300, };
+static const char32 __uni_decomp_data_0xcd[] = { 2, 0x49, 0x301, };
+static const char32 __uni_decomp_data_0xce[] = { 2, 0x49, 0x302, };
+static const char32 __uni_decomp_data_0xcf[] = { 2, 0x49, 0x308, };
+static const char32 __uni_decomp_data_0xd1[] = { 2, 0x4e, 0x303, };
+static const char32 __uni_decomp_data_0xd2[] = { 2, 0x4f, 0x300, };
+static const char32 __uni_decomp_data_0xd3[] = { 2, 0x4f, 0x301, };
+static const char32 __uni_decomp_data_0xd4[] = { 2, 0x4f, 0x302, };
+static const char32 __uni_decomp_data_0xd5[] = { 2, 0x4f, 0x303, };
+static const char32 __uni_decomp_data_0xd6[] = { 2, 0x4f, 0x308, };
+static const char32 __uni_decomp_data_0xd9[] = { 2, 0x55, 0x300, };
+static const char32 __uni_decomp_data_0xda[] = { 2, 0x55, 0x301, };
+static const char32 __uni_decomp_data_0xdb[] = { 2, 0x55, 0x302, };
+static const char32 __uni_decomp_data_0xdc[] = { 2, 0x55, 0x308, };
+static const char32 __uni_decomp_data_0xdd[] = { 2, 0x59, 0x301, };
+static const char32 __uni_decomp_data_0xe0[] = { 2, 0x61, 0x300, };
+static const char32 __uni_decomp_data_0xe1[] = { 2, 0x61, 0x301, };
+static const char32 __uni_decomp_data_0xe2[] = { 2, 0x61, 0x302, };
+static const char32 __uni_decomp_data_0xe3[] = { 2, 0x61, 0x303, };
+static const char32 __uni_decomp_data_0xe4[] = { 2, 0x61, 0x308, };
+static const char32 __uni_decomp_data_0xe5[] = { 2, 0x61, 0x30a, };
+static const char32 __uni_decomp_data_0xe7[] = { 2, 0x63, 0x327, };
+static const char32 __uni_decomp_data_0xe8[] = { 2, 0x65, 0x300, };
+static const char32 __uni_decomp_data_0xe9[] = { 2, 0x65, 0x301, };
+static const char32 __uni_decomp_data_0xea[] = { 2, 0x65, 0x302, };
+static const char32 __uni_decomp_data_0xeb[] = { 2, 0x65, 0x308, };
+static const char32 __uni_decomp_data_0xec[] = { 2, 0x69, 0x300, };
+static const char32 __uni_decomp_data_0xed[] = { 2, 0x69, 0x301, };
+static const char32 __uni_decomp_data_0xee[] = { 2, 0x69, 0x302, };
+static const char32 __uni_decomp_data_0xef[] = { 2, 0x69, 0x308, };
+static const char32 __uni_decomp_data_0xf1[] = { 2, 0x6e, 0x303, };
+static const char32 __uni_decomp_data_0xf2[] = { 2, 0x6f, 0x300, };
+static const char32 __uni_decomp_data_0xf3[] = { 2, 0x6f, 0x301, };
+static const char32 __uni_decomp_data_0xf4[] = { 2, 0x6f, 0x302, };
+static const char32 __uni_decomp_data_0xf5[] = { 2, 0x6f, 0x303, };
+static const char32 __uni_decomp_data_0xf6[] = { 2, 0x6f, 0x308, };
+static const char32 __uni_decomp_data_0xf9[] = { 2, 0x75, 0x300, };
+static const char32 __uni_decomp_data_0xfa[] = { 2, 0x75, 0x301, };
+static const char32 __uni_decomp_data_0xfb[] = { 2, 0x75, 0x302, };
+static const char32 __uni_decomp_data_0xfc[] = { 2, 0x75, 0x308, };
+static const char32 __uni_decomp_data_0xfd[] = { 2, 0x79, 0x301, };
+static const char32 __uni_decomp_data_0xff[] = { 2, 0x79, 0x308, };
 
 
 
@@ -3434,120 +3434,120 @@ static const unichar_data_internal __uni_char_data_80[]=
 };
 
 
-static const char32 __uni_decomp_data_0x100[] = { 0x41, 0x304, 0, };
-static const char32 __uni_decomp_data_0x101[] = { 0x61, 0x304, 0, };
-static const char32 __uni_decomp_data_0x102[] = { 0x41, 0x306, 0, };
-static const char32 __uni_decomp_data_0x103[] = { 0x61, 0x306, 0, };
-static const char32 __uni_decomp_data_0x104[] = { 0x41, 0x328, 0, };
-static const char32 __uni_decomp_data_0x105[] = { 0x61, 0x328, 0, };
-static const char32 __uni_decomp_data_0x106[] = { 0x43, 0x301, 0, };
-static const char32 __uni_decomp_data_0x107[] = { 0x63, 0x301, 0, };
-static const char32 __uni_decomp_data_0x108[] = { 0x43, 0x302, 0, };
-static const char32 __uni_decomp_data_0x109[] = { 0x63, 0x302, 0, };
-static const char32 __uni_decomp_data_0x10a[] = { 0x43, 0x307, 0, };
-static const char32 __uni_decomp_data_0x10b[] = { 0x63, 0x307, 0, };
-static const char32 __uni_decomp_data_0x10c[] = { 0x43, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x10d[] = { 0x63, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x10e[] = { 0x44, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x10f[] = { 0x64, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x112[] = { 0x45, 0x304, 0, };
-static const char32 __uni_decomp_data_0x113[] = { 0x65, 0x304, 0, };
-static const char32 __uni_decomp_data_0x114[] = { 0x45, 0x306, 0, };
-static const char32 __uni_decomp_data_0x115[] = { 0x65, 0x306, 0, };
-static const char32 __uni_decomp_data_0x116[] = { 0x45, 0x307, 0, };
-static const char32 __uni_decomp_data_0x117[] = { 0x65, 0x307, 0, };
-static const char32 __uni_decomp_data_0x118[] = { 0x45, 0x328, 0, };
-static const char32 __uni_decomp_data_0x119[] = { 0x65, 0x328, 0, };
-static const char32 __uni_decomp_data_0x11a[] = { 0x45, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x11b[] = { 0x65, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x11c[] = { 0x47, 0x302, 0, };
-static const char32 __uni_decomp_data_0x11d[] = { 0x67, 0x302, 0, };
-static const char32 __uni_decomp_data_0x11e[] = { 0x47, 0x306, 0, };
-static const char32 __uni_decomp_data_0x11f[] = { 0x67, 0x306, 0, };
-static const char32 __uni_decomp_data_0x120[] = { 0x47, 0x307, 0, };
-static const char32 __uni_decomp_data_0x121[] = { 0x67, 0x307, 0, };
-static const char32 __uni_decomp_data_0x122[] = { 0x47, 0x327, 0, };
-static const char32 __uni_decomp_data_0x123[] = { 0x67, 0x327, 0, };
-static const char32 __uni_decomp_data_0x124[] = { 0x48, 0x302, 0, };
-static const char32 __uni_decomp_data_0x125[] = { 0x68, 0x302, 0, };
-static const char32 __uni_decomp_data_0x128[] = { 0x49, 0x303, 0, };
-static const char32 __uni_decomp_data_0x129[] = { 0x69, 0x303, 0, };
-static const char32 __uni_decomp_data_0x12a[] = { 0x49, 0x304, 0, };
-static const char32 __uni_decomp_data_0x12b[] = { 0x69, 0x304, 0, };
-static const char32 __uni_decomp_data_0x12c[] = { 0x49, 0x306, 0, };
-static const char32 __uni_decomp_data_0x12d[] = { 0x69, 0x306, 0, };
-static const char32 __uni_decomp_data_0x12e[] = { 0x49, 0x328, 0, };
-static const char32 __uni_decomp_data_0x12f[] = { 0x69, 0x328, 0, };
-static const char32 __uni_decomp_data_0x130[] = { 0x49, 0x307, 0, };
-static const char32 __uni_decomp_data_0x132[] = { 0x49, 0x4a, 0, };
-static const char32 __uni_decomp_data_0x133[] = { 0x69, 0x6a, 0, };
-static const char32 __uni_decomp_data_0x134[] = { 0x4a, 0x302, 0, };
-static const char32 __uni_decomp_data_0x135[] = { 0x6a, 0x302, 0, };
-static const char32 __uni_decomp_data_0x136[] = { 0x4b, 0x327, 0, };
-static const char32 __uni_decomp_data_0x137[] = { 0x6b, 0x327, 0, };
-static const char32 __uni_decomp_data_0x139[] = { 0x4c, 0x301, 0, };
-static const char32 __uni_decomp_data_0x13a[] = { 0x6c, 0x301, 0, };
-static const char32 __uni_decomp_data_0x13b[] = { 0x4c, 0x327, 0, };
-static const char32 __uni_decomp_data_0x13c[] = { 0x6c, 0x327, 0, };
-static const char32 __uni_decomp_data_0x13d[] = { 0x4c, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x13e[] = { 0x6c, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x13f[] = { 0x4c, 0xb7, 0, };
-static const char32 __uni_decomp_data_0x140[] = { 0x6c, 0xb7, 0, };
-static const char32 __uni_decomp_data_0x143[] = { 0x4e, 0x301, 0, };
-static const char32 __uni_decomp_data_0x144[] = { 0x6e, 0x301, 0, };
-static const char32 __uni_decomp_data_0x145[] = { 0x4e, 0x327, 0, };
-static const char32 __uni_decomp_data_0x146[] = { 0x6e, 0x327, 0, };
-static const char32 __uni_decomp_data_0x147[] = { 0x4e, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x148[] = { 0x6e, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x149[] = { 0x2bc, 0x6e, 0, };
-static const char32 __uni_decomp_data_0x14c[] = { 0x4f, 0x304, 0, };
-static const char32 __uni_decomp_data_0x14d[] = { 0x6f, 0x304, 0, };
-static const char32 __uni_decomp_data_0x14e[] = { 0x4f, 0x306, 0, };
-static const char32 __uni_decomp_data_0x14f[] = { 0x6f, 0x306, 0, };
-static const char32 __uni_decomp_data_0x150[] = { 0x4f, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x151[] = { 0x6f, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x154[] = { 0x52, 0x301, 0, };
-static const char32 __uni_decomp_data_0x155[] = { 0x72, 0x301, 0, };
-static const char32 __uni_decomp_data_0x156[] = { 0x52, 0x327, 0, };
-static const char32 __uni_decomp_data_0x157[] = { 0x72, 0x327, 0, };
-static const char32 __uni_decomp_data_0x158[] = { 0x52, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x159[] = { 0x72, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x15a[] = { 0x53, 0x301, 0, };
-static const char32 __uni_decomp_data_0x15b[] = { 0x73, 0x301, 0, };
-static const char32 __uni_decomp_data_0x15c[] = { 0x53, 0x302, 0, };
-static const char32 __uni_decomp_data_0x15d[] = { 0x73, 0x302, 0, };
-static const char32 __uni_decomp_data_0x15e[] = { 0x53, 0x327, 0, };
-static const char32 __uni_decomp_data_0x15f[] = { 0x73, 0x327, 0, };
-static const char32 __uni_decomp_data_0x160[] = { 0x53, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x161[] = { 0x73, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x162[] = { 0x54, 0x327, 0, };
-static const char32 __uni_decomp_data_0x163[] = { 0x74, 0x327, 0, };
-static const char32 __uni_decomp_data_0x164[] = { 0x54, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x165[] = { 0x74, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x168[] = { 0x55, 0x303, 0, };
-static const char32 __uni_decomp_data_0x169[] = { 0x75, 0x303, 0, };
-static const char32 __uni_decomp_data_0x16a[] = { 0x55, 0x304, 0, };
-static const char32 __uni_decomp_data_0x16b[] = { 0x75, 0x304, 0, };
-static const char32 __uni_decomp_data_0x16c[] = { 0x55, 0x306, 0, };
-static const char32 __uni_decomp_data_0x16d[] = { 0x75, 0x306, 0, };
-static const char32 __uni_decomp_data_0x16e[] = { 0x55, 0x30a, 0, };
-static const char32 __uni_decomp_data_0x16f[] = { 0x75, 0x30a, 0, };
-static const char32 __uni_decomp_data_0x170[] = { 0x55, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x171[] = { 0x75, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x172[] = { 0x55, 0x328, 0, };
-static const char32 __uni_decomp_data_0x173[] = { 0x75, 0x328, 0, };
-static const char32 __uni_decomp_data_0x174[] = { 0x57, 0x302, 0, };
-static const char32 __uni_decomp_data_0x175[] = { 0x77, 0x302, 0, };
-static const char32 __uni_decomp_data_0x176[] = { 0x59, 0x302, 0, };
-static const char32 __uni_decomp_data_0x177[] = { 0x79, 0x302, 0, };
-static const char32 __uni_decomp_data_0x178[] = { 0x59, 0x308, 0, };
-static const char32 __uni_decomp_data_0x179[] = { 0x5a, 0x301, 0, };
-static const char32 __uni_decomp_data_0x17a[] = { 0x7a, 0x301, 0, };
-static const char32 __uni_decomp_data_0x17b[] = { 0x5a, 0x307, 0, };
-static const char32 __uni_decomp_data_0x17c[] = { 0x7a, 0x307, 0, };
-static const char32 __uni_decomp_data_0x17d[] = { 0x5a, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x17e[] = { 0x7a, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x17f[] = { 0x73, 0, };
+static const char32 __uni_decomp_data_0x100[] = { 2, 0x41, 0x304, };
+static const char32 __uni_decomp_data_0x101[] = { 2, 0x61, 0x304, };
+static const char32 __uni_decomp_data_0x102[] = { 2, 0x41, 0x306, };
+static const char32 __uni_decomp_data_0x103[] = { 2, 0x61, 0x306, };
+static const char32 __uni_decomp_data_0x104[] = { 2, 0x41, 0x328, };
+static const char32 __uni_decomp_data_0x105[] = { 2, 0x61, 0x328, };
+static const char32 __uni_decomp_data_0x106[] = { 2, 0x43, 0x301, };
+static const char32 __uni_decomp_data_0x107[] = { 2, 0x63, 0x301, };
+static const char32 __uni_decomp_data_0x108[] = { 2, 0x43, 0x302, };
+static const char32 __uni_decomp_data_0x109[] = { 2, 0x63, 0x302, };
+static const char32 __uni_decomp_data_0x10a[] = { 2, 0x43, 0x307, };
+static const char32 __uni_decomp_data_0x10b[] = { 2, 0x63, 0x307, };
+static const char32 __uni_decomp_data_0x10c[] = { 2, 0x43, 0x30c, };
+static const char32 __uni_decomp_data_0x10d[] = { 2, 0x63, 0x30c, };
+static const char32 __uni_decomp_data_0x10e[] = { 2, 0x44, 0x30c, };
+static const char32 __uni_decomp_data_0x10f[] = { 2, 0x64, 0x30c, };
+static const char32 __uni_decomp_data_0x112[] = { 2, 0x45, 0x304, };
+static const char32 __uni_decomp_data_0x113[] = { 2, 0x65, 0x304, };
+static const char32 __uni_decomp_data_0x114[] = { 2, 0x45, 0x306, };
+static const char32 __uni_decomp_data_0x115[] = { 2, 0x65, 0x306, };
+static const char32 __uni_decomp_data_0x116[] = { 2, 0x45, 0x307, };
+static const char32 __uni_decomp_data_0x117[] = { 2, 0x65, 0x307, };
+static const char32 __uni_decomp_data_0x118[] = { 2, 0x45, 0x328, };
+static const char32 __uni_decomp_data_0x119[] = { 2, 0x65, 0x328, };
+static const char32 __uni_decomp_data_0x11a[] = { 2, 0x45, 0x30c, };
+static const char32 __uni_decomp_data_0x11b[] = { 2, 0x65, 0x30c, };
+static const char32 __uni_decomp_data_0x11c[] = { 2, 0x47, 0x302, };
+static const char32 __uni_decomp_data_0x11d[] = { 2, 0x67, 0x302, };
+static const char32 __uni_decomp_data_0x11e[] = { 2, 0x47, 0x306, };
+static const char32 __uni_decomp_data_0x11f[] = { 2, 0x67, 0x306, };
+static const char32 __uni_decomp_data_0x120[] = { 2, 0x47, 0x307, };
+static const char32 __uni_decomp_data_0x121[] = { 2, 0x67, 0x307, };
+static const char32 __uni_decomp_data_0x122[] = { 2, 0x47, 0x327, };
+static const char32 __uni_decomp_data_0x123[] = { 2, 0x67, 0x327, };
+static const char32 __uni_decomp_data_0x124[] = { 2, 0x48, 0x302, };
+static const char32 __uni_decomp_data_0x125[] = { 2, 0x68, 0x302, };
+static const char32 __uni_decomp_data_0x128[] = { 2, 0x49, 0x303, };
+static const char32 __uni_decomp_data_0x129[] = { 2, 0x69, 0x303, };
+static const char32 __uni_decomp_data_0x12a[] = { 2, 0x49, 0x304, };
+static const char32 __uni_decomp_data_0x12b[] = { 2, 0x69, 0x304, };
+static const char32 __uni_decomp_data_0x12c[] = { 2, 0x49, 0x306, };
+static const char32 __uni_decomp_data_0x12d[] = { 2, 0x69, 0x306, };
+static const char32 __uni_decomp_data_0x12e[] = { 2, 0x49, 0x328, };
+static const char32 __uni_decomp_data_0x12f[] = { 2, 0x69, 0x328, };
+static const char32 __uni_decomp_data_0x130[] = { 2, 0x49, 0x307, };
+static const char32 __uni_decomp_data_0x132[] = { 2, 0x49, 0x4a, };
+static const char32 __uni_decomp_data_0x133[] = { 2, 0x69, 0x6a, };
+static const char32 __uni_decomp_data_0x134[] = { 2, 0x4a, 0x302, };
+static const char32 __uni_decomp_data_0x135[] = { 2, 0x6a, 0x302, };
+static const char32 __uni_decomp_data_0x136[] = { 2, 0x4b, 0x327, };
+static const char32 __uni_decomp_data_0x137[] = { 2, 0x6b, 0x327, };
+static const char32 __uni_decomp_data_0x139[] = { 2, 0x4c, 0x301, };
+static const char32 __uni_decomp_data_0x13a[] = { 2, 0x6c, 0x301, };
+static const char32 __uni_decomp_data_0x13b[] = { 2, 0x4c, 0x327, };
+static const char32 __uni_decomp_data_0x13c[] = { 2, 0x6c, 0x327, };
+static const char32 __uni_decomp_data_0x13d[] = { 2, 0x4c, 0x30c, };
+static const char32 __uni_decomp_data_0x13e[] = { 2, 0x6c, 0x30c, };
+static const char32 __uni_decomp_data_0x13f[] = { 2, 0x4c, 0xb7, };
+static const char32 __uni_decomp_data_0x140[] = { 2, 0x6c, 0xb7, };
+static const char32 __uni_decomp_data_0x143[] = { 2, 0x4e, 0x301, };
+static const char32 __uni_decomp_data_0x144[] = { 2, 0x6e, 0x301, };
+static const char32 __uni_decomp_data_0x145[] = { 2, 0x4e, 0x327, };
+static const char32 __uni_decomp_data_0x146[] = { 2, 0x6e, 0x327, };
+static const char32 __uni_decomp_data_0x147[] = { 2, 0x4e, 0x30c, };
+static const char32 __uni_decomp_data_0x148[] = { 2, 0x6e, 0x30c, };
+static const char32 __uni_decomp_data_0x149[] = { 2, 0x2bc, 0x6e, };
+static const char32 __uni_decomp_data_0x14c[] = { 2, 0x4f, 0x304, };
+static const char32 __uni_decomp_data_0x14d[] = { 2, 0x6f, 0x304, };
+static const char32 __uni_decomp_data_0x14e[] = { 2, 0x4f, 0x306, };
+static const char32 __uni_decomp_data_0x14f[] = { 2, 0x6f, 0x306, };
+static const char32 __uni_decomp_data_0x150[] = { 2, 0x4f, 0x30b, };
+static const char32 __uni_decomp_data_0x151[] = { 2, 0x6f, 0x30b, };
+static const char32 __uni_decomp_data_0x154[] = { 2, 0x52, 0x301, };
+static const char32 __uni_decomp_data_0x155[] = { 2, 0x72, 0x301, };
+static const char32 __uni_decomp_data_0x156[] = { 2, 0x52, 0x327, };
+static const char32 __uni_decomp_data_0x157[] = { 2, 0x72, 0x327, };
+static const char32 __uni_decomp_data_0x158[] = { 2, 0x52, 0x30c, };
+static const char32 __uni_decomp_data_0x159[] = { 2, 0x72, 0x30c, };
+static const char32 __uni_decomp_data_0x15a[] = { 2, 0x53, 0x301, };
+static const char32 __uni_decomp_data_0x15b[] = { 2, 0x73, 0x301, };
+static const char32 __uni_decomp_data_0x15c[] = { 2, 0x53, 0x302, };
+static const char32 __uni_decomp_data_0x15d[] = { 2, 0x73, 0x302, };
+static const char32 __uni_decomp_data_0x15e[] = { 2, 0x53, 0x327, };
+static const char32 __uni_decomp_data_0x15f[] = { 2, 0x73, 0x327, };
+static const char32 __uni_decomp_data_0x160[] = { 2, 0x53, 0x30c, };
+static const char32 __uni_decomp_data_0x161[] = { 2, 0x73, 0x30c, };
+static const char32 __uni_decomp_data_0x162[] = { 2, 0x54, 0x327, };
+static const char32 __uni_decomp_data_0x163[] = { 2, 0x74, 0x327, };
+static const char32 __uni_decomp_data_0x164[] = { 2, 0x54, 0x30c, };
+static const char32 __uni_decomp_data_0x165[] = { 2, 0x74, 0x30c, };
+static const char32 __uni_decomp_data_0x168[] = { 2, 0x55, 0x303, };
+static const char32 __uni_decomp_data_0x169[] = { 2, 0x75, 0x303, };
+static const char32 __uni_decomp_data_0x16a[] = { 2, 0x55, 0x304, };
+static const char32 __uni_decomp_data_0x16b[] = { 2, 0x75, 0x304, };
+static const char32 __uni_decomp_data_0x16c[] = { 2, 0x55, 0x306, };
+static const char32 __uni_decomp_data_0x16d[] = { 2, 0x75, 0x306, };
+static const char32 __uni_decomp_data_0x16e[] = { 2, 0x55, 0x30a, };
+static const char32 __uni_decomp_data_0x16f[] = { 2, 0x75, 0x30a, };
+static const char32 __uni_decomp_data_0x170[] = { 2, 0x55, 0x30b, };
+static const char32 __uni_decomp_data_0x171[] = { 2, 0x75, 0x30b, };
+static const char32 __uni_decomp_data_0x172[] = { 2, 0x55, 0x328, };
+static const char32 __uni_decomp_data_0x173[] = { 2, 0x75, 0x328, };
+static const char32 __uni_decomp_data_0x174[] = { 2, 0x57, 0x302, };
+static const char32 __uni_decomp_data_0x175[] = { 2, 0x77, 0x302, };
+static const char32 __uni_decomp_data_0x176[] = { 2, 0x59, 0x302, };
+static const char32 __uni_decomp_data_0x177[] = { 2, 0x79, 0x302, };
+static const char32 __uni_decomp_data_0x178[] = { 2, 0x59, 0x308, };
+static const char32 __uni_decomp_data_0x179[] = { 2, 0x5a, 0x301, };
+static const char32 __uni_decomp_data_0x17a[] = { 2, 0x7a, 0x301, };
+static const char32 __uni_decomp_data_0x17b[] = { 2, 0x5a, 0x307, };
+static const char32 __uni_decomp_data_0x17c[] = { 2, 0x7a, 0x307, };
+static const char32 __uni_decomp_data_0x17d[] = { 2, 0x5a, 0x30c, };
+static const char32 __uni_decomp_data_0x17e[] = { 2, 0x7a, 0x30c, };
+static const char32 __uni_decomp_data_0x17f[] = { 1, 0x73, };
 
 
 
@@ -5221,65 +5221,65 @@ static const unichar_data_internal __uni_char_data_100[]=
 };
 
 
-static const char32 __uni_decomp_data_0x1a0[] = { 0x4f, 0x31b, 0, };
-static const char32 __uni_decomp_data_0x1a1[] = { 0x6f, 0x31b, 0, };
-static const char32 __uni_decomp_data_0x1af[] = { 0x55, 0x31b, 0, };
-static const char32 __uni_decomp_data_0x1b0[] = { 0x75, 0x31b, 0, };
-static const char32 __uni_decomp_data_0x1c4[] = { 0x44, 0x17d, 0, };
-static const char32 __uni_decomp_data_0x1c5[] = { 0x44, 0x17e, 0, };
-static const char32 __uni_decomp_data_0x1c6[] = { 0x64, 0x17e, 0, };
-static const char32 __uni_decomp_data_0x1c7[] = { 0x4c, 0x4a, 0, };
-static const char32 __uni_decomp_data_0x1c8[] = { 0x4c, 0x6a, 0, };
-static const char32 __uni_decomp_data_0x1c9[] = { 0x6c, 0x6a, 0, };
-static const char32 __uni_decomp_data_0x1ca[] = { 0x4e, 0x4a, 0, };
-static const char32 __uni_decomp_data_0x1cb[] = { 0x4e, 0x6a, 0, };
-static const char32 __uni_decomp_data_0x1cc[] = { 0x6e, 0x6a, 0, };
-static const char32 __uni_decomp_data_0x1cd[] = { 0x41, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1ce[] = { 0x61, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1cf[] = { 0x49, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1d0[] = { 0x69, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1d1[] = { 0x4f, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1d2[] = { 0x6f, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1d3[] = { 0x55, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1d4[] = { 0x75, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1d5[] = { 0xdc, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1d6[] = { 0xfc, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1d7[] = { 0xdc, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1d8[] = { 0xfc, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1d9[] = { 0xdc, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1da[] = { 0xfc, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1db[] = { 0xdc, 0x300, 0, };
-static const char32 __uni_decomp_data_0x1dc[] = { 0xfc, 0x300, 0, };
-static const char32 __uni_decomp_data_0x1de[] = { 0xc4, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1df[] = { 0xe4, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1e0[] = { 0x226, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1e1[] = { 0x227, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1e2[] = { 0xc6, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1e3[] = { 0xe6, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1e6[] = { 0x47, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1e7[] = { 0x67, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1e8[] = { 0x4b, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1e9[] = { 0x6b, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1ea[] = { 0x4f, 0x328, 0, };
-static const char32 __uni_decomp_data_0x1eb[] = { 0x6f, 0x328, 0, };
-static const char32 __uni_decomp_data_0x1ec[] = { 0x1ea, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1ed[] = { 0x1eb, 0x304, 0, };
-static const char32 __uni_decomp_data_0x1ee[] = { 0x1b7, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1ef[] = { 0x292, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1f0[] = { 0x6a, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x1f1[] = { 0x44, 0x5a, 0, };
-static const char32 __uni_decomp_data_0x1f2[] = { 0x44, 0x7a, 0, };
-static const char32 __uni_decomp_data_0x1f3[] = { 0x64, 0x7a, 0, };
-static const char32 __uni_decomp_data_0x1f4[] = { 0x47, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1f5[] = { 0x67, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1f8[] = { 0x4e, 0x300, 0, };
-static const char32 __uni_decomp_data_0x1f9[] = { 0x6e, 0x300, 0, };
-static const char32 __uni_decomp_data_0x1fa[] = { 0xc5, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1fb[] = { 0xe5, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1fc[] = { 0xc6, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1fd[] = { 0xe6, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1fe[] = { 0xd8, 0x301, 0, };
-static const char32 __uni_decomp_data_0x1ff[] = { 0xf8, 0x301, 0, };
+static const char32 __uni_decomp_data_0x1a0[] = { 2, 0x4f, 0x31b, };
+static const char32 __uni_decomp_data_0x1a1[] = { 2, 0x6f, 0x31b, };
+static const char32 __uni_decomp_data_0x1af[] = { 2, 0x55, 0x31b, };
+static const char32 __uni_decomp_data_0x1b0[] = { 2, 0x75, 0x31b, };
+static const char32 __uni_decomp_data_0x1c4[] = { 2, 0x44, 0x17d, };
+static const char32 __uni_decomp_data_0x1c5[] = { 2, 0x44, 0x17e, };
+static const char32 __uni_decomp_data_0x1c6[] = { 2, 0x64, 0x17e, };
+static const char32 __uni_decomp_data_0x1c7[] = { 2, 0x4c, 0x4a, };
+static const char32 __uni_decomp_data_0x1c8[] = { 2, 0x4c, 0x6a, };
+static const char32 __uni_decomp_data_0x1c9[] = { 2, 0x6c, 0x6a, };
+static const char32 __uni_decomp_data_0x1ca[] = { 2, 0x4e, 0x4a, };
+static const char32 __uni_decomp_data_0x1cb[] = { 2, 0x4e, 0x6a, };
+static const char32 __uni_decomp_data_0x1cc[] = { 2, 0x6e, 0x6a, };
+static const char32 __uni_decomp_data_0x1cd[] = { 2, 0x41, 0x30c, };
+static const char32 __uni_decomp_data_0x1ce[] = { 2, 0x61, 0x30c, };
+static const char32 __uni_decomp_data_0x1cf[] = { 2, 0x49, 0x30c, };
+static const char32 __uni_decomp_data_0x1d0[] = { 2, 0x69, 0x30c, };
+static const char32 __uni_decomp_data_0x1d1[] = { 2, 0x4f, 0x30c, };
+static const char32 __uni_decomp_data_0x1d2[] = { 2, 0x6f, 0x30c, };
+static const char32 __uni_decomp_data_0x1d3[] = { 2, 0x55, 0x30c, };
+static const char32 __uni_decomp_data_0x1d4[] = { 2, 0x75, 0x30c, };
+static const char32 __uni_decomp_data_0x1d5[] = { 2, 0xdc, 0x304, };
+static const char32 __uni_decomp_data_0x1d6[] = { 2, 0xfc, 0x304, };
+static const char32 __uni_decomp_data_0x1d7[] = { 2, 0xdc, 0x301, };
+static const char32 __uni_decomp_data_0x1d8[] = { 2, 0xfc, 0x301, };
+static const char32 __uni_decomp_data_0x1d9[] = { 2, 0xdc, 0x30c, };
+static const char32 __uni_decomp_data_0x1da[] = { 2, 0xfc, 0x30c, };
+static const char32 __uni_decomp_data_0x1db[] = { 2, 0xdc, 0x300, };
+static const char32 __uni_decomp_data_0x1dc[] = { 2, 0xfc, 0x300, };
+static const char32 __uni_decomp_data_0x1de[] = { 2, 0xc4, 0x304, };
+static const char32 __uni_decomp_data_0x1df[] = { 2, 0xe4, 0x304, };
+static const char32 __uni_decomp_data_0x1e0[] = { 2, 0x226, 0x304, };
+static const char32 __uni_decomp_data_0x1e1[] = { 2, 0x227, 0x304, };
+static const char32 __uni_decomp_data_0x1e2[] = { 2, 0xc6, 0x304, };
+static const char32 __uni_decomp_data_0x1e3[] = { 2, 0xe6, 0x304, };
+static const char32 __uni_decomp_data_0x1e6[] = { 2, 0x47, 0x30c, };
+static const char32 __uni_decomp_data_0x1e7[] = { 2, 0x67, 0x30c, };
+static const char32 __uni_decomp_data_0x1e8[] = { 2, 0x4b, 0x30c, };
+static const char32 __uni_decomp_data_0x1e9[] = { 2, 0x6b, 0x30c, };
+static const char32 __uni_decomp_data_0x1ea[] = { 2, 0x4f, 0x328, };
+static const char32 __uni_decomp_data_0x1eb[] = { 2, 0x6f, 0x328, };
+static const char32 __uni_decomp_data_0x1ec[] = { 2, 0x1ea, 0x304, };
+static const char32 __uni_decomp_data_0x1ed[] = { 2, 0x1eb, 0x304, };
+static const char32 __uni_decomp_data_0x1ee[] = { 2, 0x1b7, 0x30c, };
+static const char32 __uni_decomp_data_0x1ef[] = { 2, 0x292, 0x30c, };
+static const char32 __uni_decomp_data_0x1f0[] = { 2, 0x6a, 0x30c, };
+static const char32 __uni_decomp_data_0x1f1[] = { 2, 0x44, 0x5a, };
+static const char32 __uni_decomp_data_0x1f2[] = { 2, 0x44, 0x7a, };
+static const char32 __uni_decomp_data_0x1f3[] = { 2, 0x64, 0x7a, };
+static const char32 __uni_decomp_data_0x1f4[] = { 2, 0x47, 0x301, };
+static const char32 __uni_decomp_data_0x1f5[] = { 2, 0x67, 0x301, };
+static const char32 __uni_decomp_data_0x1f8[] = { 2, 0x4e, 0x300, };
+static const char32 __uni_decomp_data_0x1f9[] = { 2, 0x6e, 0x300, };
+static const char32 __uni_decomp_data_0x1fa[] = { 2, 0xc5, 0x301, };
+static const char32 __uni_decomp_data_0x1fb[] = { 2, 0xe5, 0x301, };
+static const char32 __uni_decomp_data_0x1fc[] = { 2, 0xc6, 0x301, };
+static const char32 __uni_decomp_data_0x1fd[] = { 2, 0xe6, 0x301, };
+static const char32 __uni_decomp_data_0x1fe[] = { 2, 0xd8, 0x301, };
+static const char32 __uni_decomp_data_0x1ff[] = { 2, 0xf8, 0x301, };
 
 
 
@@ -6953,50 +6953,50 @@ static const unichar_data_internal __uni_char_data_180[]=
 };
 
 
-static const char32 __uni_decomp_data_0x200[] = { 0x41, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x201[] = { 0x61, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x202[] = { 0x41, 0x311, 0, };
-static const char32 __uni_decomp_data_0x203[] = { 0x61, 0x311, 0, };
-static const char32 __uni_decomp_data_0x204[] = { 0x45, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x205[] = { 0x65, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x206[] = { 0x45, 0x311, 0, };
-static const char32 __uni_decomp_data_0x207[] = { 0x65, 0x311, 0, };
-static const char32 __uni_decomp_data_0x208[] = { 0x49, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x209[] = { 0x69, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x20a[] = { 0x49, 0x311, 0, };
-static const char32 __uni_decomp_data_0x20b[] = { 0x69, 0x311, 0, };
-static const char32 __uni_decomp_data_0x20c[] = { 0x4f, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x20d[] = { 0x6f, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x20e[] = { 0x4f, 0x311, 0, };
-static const char32 __uni_decomp_data_0x20f[] = { 0x6f, 0x311, 0, };
-static const char32 __uni_decomp_data_0x210[] = { 0x52, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x211[] = { 0x72, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x212[] = { 0x52, 0x311, 0, };
-static const char32 __uni_decomp_data_0x213[] = { 0x72, 0x311, 0, };
-static const char32 __uni_decomp_data_0x214[] = { 0x55, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x215[] = { 0x75, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x216[] = { 0x55, 0x311, 0, };
-static const char32 __uni_decomp_data_0x217[] = { 0x75, 0x311, 0, };
-static const char32 __uni_decomp_data_0x218[] = { 0x53, 0x326, 0, };
-static const char32 __uni_decomp_data_0x219[] = { 0x73, 0x326, 0, };
-static const char32 __uni_decomp_data_0x21a[] = { 0x54, 0x326, 0, };
-static const char32 __uni_decomp_data_0x21b[] = { 0x74, 0x326, 0, };
-static const char32 __uni_decomp_data_0x21e[] = { 0x48, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x21f[] = { 0x68, 0x30c, 0, };
-static const char32 __uni_decomp_data_0x226[] = { 0x41, 0x307, 0, };
-static const char32 __uni_decomp_data_0x227[] = { 0x61, 0x307, 0, };
-static const char32 __uni_decomp_data_0x228[] = { 0x45, 0x327, 0, };
-static const char32 __uni_decomp_data_0x229[] = { 0x65, 0x327, 0, };
-static const char32 __uni_decomp_data_0x22a[] = { 0xd6, 0x304, 0, };
-static const char32 __uni_decomp_data_0x22b[] = { 0xf6, 0x304, 0, };
-static const char32 __uni_decomp_data_0x22c[] = { 0xd5, 0x304, 0, };
-static const char32 __uni_decomp_data_0x22d[] = { 0xf5, 0x304, 0, };
-static const char32 __uni_decomp_data_0x22e[] = { 0x4f, 0x307, 0, };
-static const char32 __uni_decomp_data_0x22f[] = { 0x6f, 0x307, 0, };
-static const char32 __uni_decomp_data_0x230[] = { 0x22e, 0x304, 0, };
-static const char32 __uni_decomp_data_0x231[] = { 0x22f, 0x304, 0, };
-static const char32 __uni_decomp_data_0x232[] = { 0x59, 0x304, 0, };
-static const char32 __uni_decomp_data_0x233[] = { 0x79, 0x304, 0, };
+static const char32 __uni_decomp_data_0x200[] = { 2, 0x41, 0x30f, };
+static const char32 __uni_decomp_data_0x201[] = { 2, 0x61, 0x30f, };
+static const char32 __uni_decomp_data_0x202[] = { 2, 0x41, 0x311, };
+static const char32 __uni_decomp_data_0x203[] = { 2, 0x61, 0x311, };
+static const char32 __uni_decomp_data_0x204[] = { 2, 0x45, 0x30f, };
+static const char32 __uni_decomp_data_0x205[] = { 2, 0x65, 0x30f, };
+static const char32 __uni_decomp_data_0x206[] = { 2, 0x45, 0x311, };
+static const char32 __uni_decomp_data_0x207[] = { 2, 0x65, 0x311, };
+static const char32 __uni_decomp_data_0x208[] = { 2, 0x49, 0x30f, };
+static const char32 __uni_decomp_data_0x209[] = { 2, 0x69, 0x30f, };
+static const char32 __uni_decomp_data_0x20a[] = { 2, 0x49, 0x311, };
+static const char32 __uni_decomp_data_0x20b[] = { 2, 0x69, 0x311, };
+static const char32 __uni_decomp_data_0x20c[] = { 2, 0x4f, 0x30f, };
+static const char32 __uni_decomp_data_0x20d[] = { 2, 0x6f, 0x30f, };
+static const char32 __uni_decomp_data_0x20e[] = { 2, 0x4f, 0x311, };
+static const char32 __uni_decomp_data_0x20f[] = { 2, 0x6f, 0x311, };
+static const char32 __uni_decomp_data_0x210[] = { 2, 0x52, 0x30f, };
+static const char32 __uni_decomp_data_0x211[] = { 2, 0x72, 0x30f, };
+static const char32 __uni_decomp_data_0x212[] = { 2, 0x52, 0x311, };
+static const char32 __uni_decomp_data_0x213[] = { 2, 0x72, 0x311, };
+static const char32 __uni_decomp_data_0x214[] = { 2, 0x55, 0x30f, };
+static const char32 __uni_decomp_data_0x215[] = { 2, 0x75, 0x30f, };
+static const char32 __uni_decomp_data_0x216[] = { 2, 0x55, 0x311, };
+static const char32 __uni_decomp_data_0x217[] = { 2, 0x75, 0x311, };
+static const char32 __uni_decomp_data_0x218[] = { 2, 0x53, 0x326, };
+static const char32 __uni_decomp_data_0x219[] = { 2, 0x73, 0x326, };
+static const char32 __uni_decomp_data_0x21a[] = { 2, 0x54, 0x326, };
+static const char32 __uni_decomp_data_0x21b[] = { 2, 0x74, 0x326, };
+static const char32 __uni_decomp_data_0x21e[] = { 2, 0x48, 0x30c, };
+static const char32 __uni_decomp_data_0x21f[] = { 2, 0x68, 0x30c, };
+static const char32 __uni_decomp_data_0x226[] = { 2, 0x41, 0x307, };
+static const char32 __uni_decomp_data_0x227[] = { 2, 0x61, 0x307, };
+static const char32 __uni_decomp_data_0x228[] = { 2, 0x45, 0x327, };
+static const char32 __uni_decomp_data_0x229[] = { 2, 0x65, 0x327, };
+static const char32 __uni_decomp_data_0x22a[] = { 2, 0xd6, 0x304, };
+static const char32 __uni_decomp_data_0x22b[] = { 2, 0xf6, 0x304, };
+static const char32 __uni_decomp_data_0x22c[] = { 2, 0xd5, 0x304, };
+static const char32 __uni_decomp_data_0x22d[] = { 2, 0xf5, 0x304, };
+static const char32 __uni_decomp_data_0x22e[] = { 2, 0x4f, 0x307, };
+static const char32 __uni_decomp_data_0x22f[] = { 2, 0x6f, 0x307, };
+static const char32 __uni_decomp_data_0x230[] = { 2, 0x22e, 0x304, };
+static const char32 __uni_decomp_data_0x231[] = { 2, 0x22f, 0x304, };
+static const char32 __uni_decomp_data_0x232[] = { 2, 0x59, 0x304, };
+static const char32 __uni_decomp_data_0x233[] = { 2, 0x79, 0x304, };
 
 
 
@@ -8670,26 +8670,26 @@ static const unichar_data_internal __uni_char_data_200[]=
 };
 
 
-static const char32 __uni_decomp_data_0x2b0[] = { 0x68, 0, };
-static const char32 __uni_decomp_data_0x2b1[] = { 0x266, 0, };
-static const char32 __uni_decomp_data_0x2b2[] = { 0x6a, 0, };
-static const char32 __uni_decomp_data_0x2b3[] = { 0x72, 0, };
-static const char32 __uni_decomp_data_0x2b4[] = { 0x279, 0, };
-static const char32 __uni_decomp_data_0x2b5[] = { 0x27b, 0, };
-static const char32 __uni_decomp_data_0x2b6[] = { 0x281, 0, };
-static const char32 __uni_decomp_data_0x2b7[] = { 0x77, 0, };
-static const char32 __uni_decomp_data_0x2b8[] = { 0x79, 0, };
-static const char32 __uni_decomp_data_0x2d8[] = { 0x20, 0x306, 0, };
-static const char32 __uni_decomp_data_0x2d9[] = { 0x20, 0x307, 0, };
-static const char32 __uni_decomp_data_0x2da[] = { 0x20, 0x30a, 0, };
-static const char32 __uni_decomp_data_0x2db[] = { 0x20, 0x328, 0, };
-static const char32 __uni_decomp_data_0x2dc[] = { 0x20, 0x303, 0, };
-static const char32 __uni_decomp_data_0x2dd[] = { 0x20, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x2e0[] = { 0x263, 0, };
-static const char32 __uni_decomp_data_0x2e1[] = { 0x6c, 0, };
-static const char32 __uni_decomp_data_0x2e2[] = { 0x73, 0, };
-static const char32 __uni_decomp_data_0x2e3[] = { 0x78, 0, };
-static const char32 __uni_decomp_data_0x2e4[] = { 0x295, 0, };
+static const char32 __uni_decomp_data_0x2b0[] = { 1, 0x68, };
+static const char32 __uni_decomp_data_0x2b1[] = { 1, 0x266, };
+static const char32 __uni_decomp_data_0x2b2[] = { 1, 0x6a, };
+static const char32 __uni_decomp_data_0x2b3[] = { 1, 0x72, };
+static const char32 __uni_decomp_data_0x2b4[] = { 1, 0x279, };
+static const char32 __uni_decomp_data_0x2b5[] = { 1, 0x27b, };
+static const char32 __uni_decomp_data_0x2b6[] = { 1, 0x281, };
+static const char32 __uni_decomp_data_0x2b7[] = { 1, 0x77, };
+static const char32 __uni_decomp_data_0x2b8[] = { 1, 0x79, };
+static const char32 __uni_decomp_data_0x2d8[] = { 2, 0x20, 0x306, };
+static const char32 __uni_decomp_data_0x2d9[] = { 2, 0x20, 0x307, };
+static const char32 __uni_decomp_data_0x2da[] = { 2, 0x20, 0x30a, };
+static const char32 __uni_decomp_data_0x2db[] = { 2, 0x20, 0x328, };
+static const char32 __uni_decomp_data_0x2dc[] = { 2, 0x20, 0x303, };
+static const char32 __uni_decomp_data_0x2dd[] = { 2, 0x20, 0x30b, };
+static const char32 __uni_decomp_data_0x2e0[] = { 1, 0x263, };
+static const char32 __uni_decomp_data_0x2e1[] = { 1, 0x6c, };
+static const char32 __uni_decomp_data_0x2e2[] = { 1, 0x73, };
+static const char32 __uni_decomp_data_0x2e3[] = { 1, 0x78, };
+static const char32 __uni_decomp_data_0x2e4[] = { 1, 0x295, };
 
 
 
@@ -10363,13 +10363,13 @@ static const unichar_data_internal __uni_char_data_280[]=
 };
 
 
-static const char32 __uni_decomp_data_0x340[] = { 0x300, 0, };
-static const char32 __uni_decomp_data_0x341[] = { 0x301, 0, };
-static const char32 __uni_decomp_data_0x343[] = { 0x313, 0, };
-static const char32 __uni_decomp_data_0x344[] = { 0x308, 0x301, 0, };
-static const char32 __uni_decomp_data_0x374[] = { 0x2b9, 0, };
-static const char32 __uni_decomp_data_0x37a[] = { 0x20, 0x345, 0, };
-static const char32 __uni_decomp_data_0x37e[] = { 0x3b, 0, };
+static const char32 __uni_decomp_data_0x340[] = { 1, 0x300, };
+static const char32 __uni_decomp_data_0x341[] = { 1, 0x301, };
+static const char32 __uni_decomp_data_0x343[] = { 1, 0x313, };
+static const char32 __uni_decomp_data_0x344[] = { 2, 0x308, 0x301, };
+static const char32 __uni_decomp_data_0x374[] = { 1, 0x2b9, };
+static const char32 __uni_decomp_data_0x37a[] = { 2, 0x20, 0x345, };
+static const char32 __uni_decomp_data_0x37e[] = { 1, 0x3b, };
 
 
 
@@ -12043,42 +12043,42 @@ static const unichar_data_internal __uni_char_data_300[]=
 };
 
 
-static const char32 __uni_decomp_data_0x384[] = { 0x20, 0x301, 0, };
-static const char32 __uni_decomp_data_0x385[] = { 0xa8, 0x301, 0, };
-static const char32 __uni_decomp_data_0x386[] = { 0x391, 0x301, 0, };
-static const char32 __uni_decomp_data_0x387[] = { 0xb7, 0, };
-static const char32 __uni_decomp_data_0x388[] = { 0x395, 0x301, 0, };
-static const char32 __uni_decomp_data_0x389[] = { 0x397, 0x301, 0, };
-static const char32 __uni_decomp_data_0x38a[] = { 0x399, 0x301, 0, };
-static const char32 __uni_decomp_data_0x38c[] = { 0x39f, 0x301, 0, };
-static const char32 __uni_decomp_data_0x38e[] = { 0x3a5, 0x301, 0, };
-static const char32 __uni_decomp_data_0x38f[] = { 0x3a9, 0x301, 0, };
-static const char32 __uni_decomp_data_0x390[] = { 0x3ca, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3aa[] = { 0x399, 0x308, 0, };
-static const char32 __uni_decomp_data_0x3ab[] = { 0x3a5, 0x308, 0, };
-static const char32 __uni_decomp_data_0x3ac[] = { 0x3b1, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3ad[] = { 0x3b5, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3ae[] = { 0x3b7, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3af[] = { 0x3b9, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3b0[] = { 0x3cb, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3ca[] = { 0x3b9, 0x308, 0, };
-static const char32 __uni_decomp_data_0x3cb[] = { 0x3c5, 0x308, 0, };
-static const char32 __uni_decomp_data_0x3cc[] = { 0x3bf, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3cd[] = { 0x3c5, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3ce[] = { 0x3c9, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3d0[] = { 0x3b2, 0, };
-static const char32 __uni_decomp_data_0x3d1[] = { 0x3b8, 0, };
-static const char32 __uni_decomp_data_0x3d2[] = { 0x3a5, 0, };
-static const char32 __uni_decomp_data_0x3d3[] = { 0x3d2, 0x301, 0, };
-static const char32 __uni_decomp_data_0x3d4[] = { 0x3d2, 0x308, 0, };
-static const char32 __uni_decomp_data_0x3d5[] = { 0x3c6, 0, };
-static const char32 __uni_decomp_data_0x3d6[] = { 0x3c0, 0, };
-static const char32 __uni_decomp_data_0x3f0[] = { 0x3ba, 0, };
-static const char32 __uni_decomp_data_0x3f1[] = { 0x3c1, 0, };
-static const char32 __uni_decomp_data_0x3f2[] = { 0x3c2, 0, };
-static const char32 __uni_decomp_data_0x3f4[] = { 0x398, 0, };
-static const char32 __uni_decomp_data_0x3f5[] = { 0x3b5, 0, };
-static const char32 __uni_decomp_data_0x3f9[] = { 0x3a3, 0, };
+static const char32 __uni_decomp_data_0x384[] = { 2, 0x20, 0x301, };
+static const char32 __uni_decomp_data_0x385[] = { 2, 0xa8, 0x301, };
+static const char32 __uni_decomp_data_0x386[] = { 2, 0x391, 0x301, };
+static const char32 __uni_decomp_data_0x387[] = { 1, 0xb7, };
+static const char32 __uni_decomp_data_0x388[] = { 2, 0x395, 0x301, };
+static const char32 __uni_decomp_data_0x389[] = { 2, 0x397, 0x301, };
+static const char32 __uni_decomp_data_0x38a[] = { 2, 0x399, 0x301, };
+static const char32 __uni_decomp_data_0x38c[] = { 2, 0x39f, 0x301, };
+static const char32 __uni_decomp_data_0x38e[] = { 2, 0x3a5, 0x301, };
+static const char32 __uni_decomp_data_0x38f[] = { 2, 0x3a9, 0x301, };
+static const char32 __uni_decomp_data_0x390[] = { 2, 0x3ca, 0x301, };
+static const char32 __uni_decomp_data_0x3aa[] = { 2, 0x399, 0x308, };
+static const char32 __uni_decomp_data_0x3ab[] = { 2, 0x3a5, 0x308, };
+static const char32 __uni_decomp_data_0x3ac[] = { 2, 0x3b1, 0x301, };
+static const char32 __uni_decomp_data_0x3ad[] = { 2, 0x3b5, 0x301, };
+static const char32 __uni_decomp_data_0x3ae[] = { 2, 0x3b7, 0x301, };
+static const char32 __uni_decomp_data_0x3af[] = { 2, 0x3b9, 0x301, };
+static const char32 __uni_decomp_data_0x3b0[] = { 2, 0x3cb, 0x301, };
+static const char32 __uni_decomp_data_0x3ca[] = { 2, 0x3b9, 0x308, };
+static const char32 __uni_decomp_data_0x3cb[] = { 2, 0x3c5, 0x308, };
+static const char32 __uni_decomp_data_0x3cc[] = { 2, 0x3bf, 0x301, };
+static const char32 __uni_decomp_data_0x3cd[] = { 2, 0x3c5, 0x301, };
+static const char32 __uni_decomp_data_0x3ce[] = { 2, 0x3c9, 0x301, };
+static const char32 __uni_decomp_data_0x3d0[] = { 1, 0x3b2, };
+static const char32 __uni_decomp_data_0x3d1[] = { 1, 0x3b8, };
+static const char32 __uni_decomp_data_0x3d2[] = { 1, 0x3a5, };
+static const char32 __uni_decomp_data_0x3d3[] = { 2, 0x3d2, 0x301, };
+static const char32 __uni_decomp_data_0x3d4[] = { 2, 0x3d2, 0x308, };
+static const char32 __uni_decomp_data_0x3d5[] = { 1, 0x3c6, };
+static const char32 __uni_decomp_data_0x3d6[] = { 1, 0x3c0, };
+static const char32 __uni_decomp_data_0x3f0[] = { 1, 0x3ba, };
+static const char32 __uni_decomp_data_0x3f1[] = { 1, 0x3c1, };
+static const char32 __uni_decomp_data_0x3f2[] = { 1, 0x3c2, };
+static const char32 __uni_decomp_data_0x3f4[] = { 1, 0x398, };
+static const char32 __uni_decomp_data_0x3f5[] = { 1, 0x3b5, };
+static const char32 __uni_decomp_data_0x3f9[] = { 1, 0x3a3, };
 
 
 
@@ -13752,24 +13752,24 @@ static const unichar_data_internal __uni_char_data_380[]=
 };
 
 
-static const char32 __uni_decomp_data_0x400[] = { 0x415, 0x300, 0, };
-static const char32 __uni_decomp_data_0x401[] = { 0x415, 0x308, 0, };
-static const char32 __uni_decomp_data_0x403[] = { 0x413, 0x301, 0, };
-static const char32 __uni_decomp_data_0x407[] = { 0x406, 0x308, 0, };
-static const char32 __uni_decomp_data_0x40c[] = { 0x41a, 0x301, 0, };
-static const char32 __uni_decomp_data_0x40d[] = { 0x418, 0x300, 0, };
-static const char32 __uni_decomp_data_0x40e[] = { 0x423, 0x306, 0, };
-static const char32 __uni_decomp_data_0x419[] = { 0x418, 0x306, 0, };
-static const char32 __uni_decomp_data_0x439[] = { 0x438, 0x306, 0, };
-static const char32 __uni_decomp_data_0x450[] = { 0x435, 0x300, 0, };
-static const char32 __uni_decomp_data_0x451[] = { 0x435, 0x308, 0, };
-static const char32 __uni_decomp_data_0x453[] = { 0x433, 0x301, 0, };
-static const char32 __uni_decomp_data_0x457[] = { 0x456, 0x308, 0, };
-static const char32 __uni_decomp_data_0x45c[] = { 0x43a, 0x301, 0, };
-static const char32 __uni_decomp_data_0x45d[] = { 0x438, 0x300, 0, };
-static const char32 __uni_decomp_data_0x45e[] = { 0x443, 0x306, 0, };
-static const char32 __uni_decomp_data_0x476[] = { 0x474, 0x30f, 0, };
-static const char32 __uni_decomp_data_0x477[] = { 0x475, 0x30f, 0, };
+static const char32 __uni_decomp_data_0x400[] = { 2, 0x415, 0x300, };
+static const char32 __uni_decomp_data_0x401[] = { 2, 0x415, 0x308, };
+static const char32 __uni_decomp_data_0x403[] = { 2, 0x413, 0x301, };
+static const char32 __uni_decomp_data_0x407[] = { 2, 0x406, 0x308, };
+static const char32 __uni_decomp_data_0x40c[] = { 2, 0x41a, 0x301, };
+static const char32 __uni_decomp_data_0x40d[] = { 2, 0x418, 0x300, };
+static const char32 __uni_decomp_data_0x40e[] = { 2, 0x423, 0x306, };
+static const char32 __uni_decomp_data_0x419[] = { 2, 0x418, 0x306, };
+static const char32 __uni_decomp_data_0x439[] = { 2, 0x438, 0x306, };
+static const char32 __uni_decomp_data_0x450[] = { 2, 0x435, 0x300, };
+static const char32 __uni_decomp_data_0x451[] = { 2, 0x435, 0x308, };
+static const char32 __uni_decomp_data_0x453[] = { 2, 0x433, 0x301, };
+static const char32 __uni_decomp_data_0x457[] = { 2, 0x456, 0x308, };
+static const char32 __uni_decomp_data_0x45c[] = { 2, 0x43a, 0x301, };
+static const char32 __uni_decomp_data_0x45d[] = { 2, 0x438, 0x300, };
+static const char32 __uni_decomp_data_0x45e[] = { 2, 0x443, 0x306, };
+static const char32 __uni_decomp_data_0x476[] = { 2, 0x474, 0x30f, };
+static const char32 __uni_decomp_data_0x477[] = { 2, 0x475, 0x30f, };
 
 
 
@@ -15443,40 +15443,40 @@ static const unichar_data_internal __uni_char_data_400[]=
 };
 
 
-static const char32 __uni_decomp_data_0x4c1[] = { 0x416, 0x306, 0, };
-static const char32 __uni_decomp_data_0x4c2[] = { 0x436, 0x306, 0, };
-static const char32 __uni_decomp_data_0x4d0[] = { 0x410, 0x306, 0, };
-static const char32 __uni_decomp_data_0x4d1[] = { 0x430, 0x306, 0, };
-static const char32 __uni_decomp_data_0x4d2[] = { 0x410, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4d3[] = { 0x430, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4d6[] = { 0x415, 0x306, 0, };
-static const char32 __uni_decomp_data_0x4d7[] = { 0x435, 0x306, 0, };
-static const char32 __uni_decomp_data_0x4da[] = { 0x4d8, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4db[] = { 0x4d9, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4dc[] = { 0x416, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4dd[] = { 0x436, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4de[] = { 0x417, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4df[] = { 0x437, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4e2[] = { 0x418, 0x304, 0, };
-static const char32 __uni_decomp_data_0x4e3[] = { 0x438, 0x304, 0, };
-static const char32 __uni_decomp_data_0x4e4[] = { 0x418, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4e5[] = { 0x438, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4e6[] = { 0x41e, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4e7[] = { 0x43e, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4ea[] = { 0x4e8, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4eb[] = { 0x4e9, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4ec[] = { 0x42d, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4ed[] = { 0x44d, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4ee[] = { 0x423, 0x304, 0, };
-static const char32 __uni_decomp_data_0x4ef[] = { 0x443, 0x304, 0, };
-static const char32 __uni_decomp_data_0x4f0[] = { 0x423, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4f1[] = { 0x443, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4f2[] = { 0x423, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x4f3[] = { 0x443, 0x30b, 0, };
-static const char32 __uni_decomp_data_0x4f4[] = { 0x427, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4f5[] = { 0x447, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4f8[] = { 0x42b, 0x308, 0, };
-static const char32 __uni_decomp_data_0x4f9[] = { 0x44b, 0x308, 0, };
+static const char32 __uni_decomp_data_0x4c1[] = { 2, 0x416, 0x306, };
+static const char32 __uni_decomp_data_0x4c2[] = { 2, 0x436, 0x306, };
+static const char32 __uni_decomp_data_0x4d0[] = { 2, 0x410, 0x306, };
+static const char32 __uni_decomp_data_0x4d1[] = { 2, 0x430, 0x306, };
+static const char32 __uni_decomp_data_0x4d2[] = { 2, 0x410, 0x308, };
+static const char32 __uni_decomp_data_0x4d3[] = { 2, 0x430, 0x308, };
+static const char32 __uni_decomp_data_0x4d6[] = { 2, 0x415, 0x306, };
+static const char32 __uni_decomp_data_0x4d7[] = { 2, 0x435, 0x306, };
+static const char32 __uni_decomp_data_0x4da[] = { 2, 0x4d8, 0x308, };
+static const char32 __uni_decomp_data_0x4db[] = { 2, 0x4d9, 0x308, };
+static const char32 __uni_decomp_data_0x4dc[] = { 2, 0x416, 0x308, };
+static const char32 __uni_decomp_data_0x4dd[] = { 2, 0x436, 0x308, };
+static const char32 __uni_decomp_data_0x4de[] = { 2, 0x417, 0x308, };
+static const char32 __uni_decomp_data_0x4df[] = { 2, 0x437, 0x308, };
+static const char32 __uni_decomp_data_0x4e2[] = { 2, 0x418, 0x304, };
+static const char32 __uni_decomp_data_0x4e3[] = { 2, 0x438, 0x304, };
+static const char32 __uni_decomp_data_0x4e4[] = { 2, 0x418, 0x308, };
+static const char32 __uni_decomp_data_0x4e5[] = { 2, 0x438, 0x308, };
+static const char32 __uni_decomp_data_0x4e6[] = { 2, 0x41e, 0x308, };
+static const char32 __uni_decomp_data_0x4e7[] = { 2, 0x43e, 0x308, };
+static const char32 __uni_decomp_data_0x4ea[] = { 2, 0x4e8, 0x308, };
+static const char32 __uni_decomp_data_0x4eb[] = { 2, 0x4e9, 0x308, };
+static const char32 __uni_decomp_data_0x4ec[] = { 2, 0x42d, 0x308, };
+static const char32 __uni_decomp_data_0x4ed[] = { 2, 0x44d, 0x308, };
+static const char32 __uni_decomp_data_0x4ee[] = { 2, 0x423, 0x304, };
+static const char32 __uni_decomp_data_0x4ef[] = { 2, 0x443, 0x304, };
+static const char32 __uni_decomp_data_0x4f0[] = { 2, 0x423, 0x308, };
+static const char32 __uni_decomp_data_0x4f1[] = { 2, 0x443, 0x308, };
+static const char32 __uni_decomp_data_0x4f2[] = { 2, 0x423, 0x30b, };
+static const char32 __uni_decomp_data_0x4f3[] = { 2, 0x443, 0x30b, };
+static const char32 __uni_decomp_data_0x4f4[] = { 2, 0x427, 0x308, };
+static const char32 __uni_decomp_data_0x4f5[] = { 2, 0x447, 0x308, };
+static const char32 __uni_decomp_data_0x4f8[] = { 2, 0x42b, 0x308, };
+static const char32 __uni_decomp_data_0x4f9[] = { 2, 0x44b, 0x308, };
 
 
 
@@ -18823,7 +18823,7 @@ static const unichar_data_internal __uni_char_data_500[]=
 };
 
 
-static const char32 __uni_decomp_data_0x587[] = { 0x565, 0x582, 0, };
+static const char32 __uni_decomp_data_0x587[] = { 2, 0x565, 0x582, };
 
 
 
@@ -20497,15 +20497,15 @@ static const unichar_data_internal __uni_char_data_580[]=
 };
 
 
-static const char32 __uni_decomp_data_0x622[] = { 0x627, 0x653, 0, };
-static const char32 __uni_decomp_data_0x623[] = { 0x627, 0x654, 0, };
-static const char32 __uni_decomp_data_0x624[] = { 0x648, 0x654, 0, };
-static const char32 __uni_decomp_data_0x625[] = { 0x627, 0x655, 0, };
-static const char32 __uni_decomp_data_0x626[] = { 0x64a, 0x654, 0, };
-static const char32 __uni_decomp_data_0x675[] = { 0x627, 0x674, 0, };
-static const char32 __uni_decomp_data_0x676[] = { 0x648, 0x674, 0, };
-static const char32 __uni_decomp_data_0x677[] = { 0x6c7, 0x674, 0, };
-static const char32 __uni_decomp_data_0x678[] = { 0x64a, 0x674, 0, };
+static const char32 __uni_decomp_data_0x622[] = { 2, 0x627, 0x653, };
+static const char32 __uni_decomp_data_0x623[] = { 2, 0x627, 0x654, };
+static const char32 __uni_decomp_data_0x624[] = { 2, 0x648, 0x654, };
+static const char32 __uni_decomp_data_0x625[] = { 2, 0x627, 0x655, };
+static const char32 __uni_decomp_data_0x626[] = { 2, 0x64a, 0x654, };
+static const char32 __uni_decomp_data_0x675[] = { 2, 0x627, 0x674, };
+static const char32 __uni_decomp_data_0x676[] = { 2, 0x648, 0x674, };
+static const char32 __uni_decomp_data_0x677[] = { 2, 0x6c7, 0x674, };
+static const char32 __uni_decomp_data_0x678[] = { 2, 0x64a, 0x674, };
 
 
 
@@ -22179,9 +22179,9 @@ static const unichar_data_internal __uni_char_data_600[]=
 };
 
 
-static const char32 __uni_decomp_data_0x6c0[] = { 0x6d5, 0x654, 0, };
-static const char32 __uni_decomp_data_0x6c2[] = { 0x6c1, 0x654, 0, };
-static const char32 __uni_decomp_data_0x6d3[] = { 0x6d2, 0x654, 0, };
+static const char32 __uni_decomp_data_0x6c0[] = { 2, 0x6d5, 0x654, };
+static const char32 __uni_decomp_data_0x6c2[] = { 2, 0x6c1, 0x654, };
+static const char32 __uni_decomp_data_0x6d3[] = { 2, 0x6d2, 0x654, };
 
 
 
@@ -28874,17 +28874,17 @@ static const unichar_data_internal __uni_char_data_800[]=
 };
 
 
-static const char32 __uni_decomp_data_0x929[] = { 0x928, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x931[] = { 0x930, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x934[] = { 0x933, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x958[] = { 0x915, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x959[] = { 0x916, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x95a[] = { 0x917, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x95b[] = { 0x91c, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x95c[] = { 0x921, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x95d[] = { 0x922, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x95e[] = { 0x92b, 0x93c, 0, };
-static const char32 __uni_decomp_data_0x95f[] = { 0x92f, 0x93c, 0, };
+static const char32 __uni_decomp_data_0x929[] = { 2, 0x928, 0x93c, };
+static const char32 __uni_decomp_data_0x931[] = { 2, 0x930, 0x93c, };
+static const char32 __uni_decomp_data_0x934[] = { 2, 0x933, 0x93c, };
+static const char32 __uni_decomp_data_0x958[] = { 2, 0x915, 0x93c, };
+static const char32 __uni_decomp_data_0x959[] = { 2, 0x916, 0x93c, };
+static const char32 __uni_decomp_data_0x95a[] = { 2, 0x917, 0x93c, };
+static const char32 __uni_decomp_data_0x95b[] = { 2, 0x91c, 0x93c, };
+static const char32 __uni_decomp_data_0x95c[] = { 2, 0x921, 0x93c, };
+static const char32 __uni_decomp_data_0x95d[] = { 2, 0x922, 0x93c, };
+static const char32 __uni_decomp_data_0x95e[] = { 2, 0x92b, 0x93c, };
+static const char32 __uni_decomp_data_0x95f[] = { 2, 0x92f, 0x93c, };
 
 
 
@@ -30558,11 +30558,11 @@ static const unichar_data_internal __uni_char_data_900[]=
 };
 
 
-static const char32 __uni_decomp_data_0x9cb[] = { 0x9c7, 0x9be, 0, };
-static const char32 __uni_decomp_data_0x9cc[] = { 0x9c7, 0x9d7, 0, };
-static const char32 __uni_decomp_data_0x9dc[] = { 0x9a1, 0x9bc, 0, };
-static const char32 __uni_decomp_data_0x9dd[] = { 0x9a2, 0x9bc, 0, };
-static const char32 __uni_decomp_data_0x9df[] = { 0x9af, 0x9bc, 0, };
+static const char32 __uni_decomp_data_0x9cb[] = { 2, 0x9c7, 0x9be, };
+static const char32 __uni_decomp_data_0x9cc[] = { 2, 0x9c7, 0x9d7, };
+static const char32 __uni_decomp_data_0x9dc[] = { 2, 0x9a1, 0x9bc, };
+static const char32 __uni_decomp_data_0x9dd[] = { 2, 0x9a2, 0x9bc, };
+static const char32 __uni_decomp_data_0x9df[] = { 2, 0x9af, 0x9bc, };
 
 
 
@@ -32236,12 +32236,12 @@ static const unichar_data_internal __uni_char_data_980[]=
 };
 
 
-static const char32 __uni_decomp_data_0xa33[] = { 0xa32, 0xa3c, 0, };
-static const char32 __uni_decomp_data_0xa36[] = { 0xa38, 0xa3c, 0, };
-static const char32 __uni_decomp_data_0xa59[] = { 0xa16, 0xa3c, 0, };
-static const char32 __uni_decomp_data_0xa5a[] = { 0xa17, 0xa3c, 0, };
-static const char32 __uni_decomp_data_0xa5b[] = { 0xa1c, 0xa3c, 0, };
-static const char32 __uni_decomp_data_0xa5e[] = { 0xa2b, 0xa3c, 0, };
+static const char32 __uni_decomp_data_0xa33[] = { 2, 0xa32, 0xa3c, };
+static const char32 __uni_decomp_data_0xa36[] = { 2, 0xa38, 0xa3c, };
+static const char32 __uni_decomp_data_0xa59[] = { 2, 0xa16, 0xa3c, };
+static const char32 __uni_decomp_data_0xa5a[] = { 2, 0xa17, 0xa3c, };
+static const char32 __uni_decomp_data_0xa5b[] = { 2, 0xa1c, 0xa3c, };
+static const char32 __uni_decomp_data_0xa5e[] = { 2, 0xa2b, 0xa3c, };
 
 
 
@@ -35588,11 +35588,11 @@ static const unichar_data_internal __uni_char_data_a80[]=
 };
 
 
-static const char32 __uni_decomp_data_0xb48[] = { 0xb47, 0xb56, 0, };
-static const char32 __uni_decomp_data_0xb4b[] = { 0xb47, 0xb3e, 0, };
-static const char32 __uni_decomp_data_0xb4c[] = { 0xb47, 0xb57, 0, };
-static const char32 __uni_decomp_data_0xb5c[] = { 0xb21, 0xb3c, 0, };
-static const char32 __uni_decomp_data_0xb5d[] = { 0xb22, 0xb3c, 0, };
+static const char32 __uni_decomp_data_0xb48[] = { 2, 0xb47, 0xb56, };
+static const char32 __uni_decomp_data_0xb4b[] = { 2, 0xb47, 0xb3e, };
+static const char32 __uni_decomp_data_0xb4c[] = { 2, 0xb47, 0xb57, };
+static const char32 __uni_decomp_data_0xb5c[] = { 2, 0xb21, 0xb3c, };
+static const char32 __uni_decomp_data_0xb5d[] = { 2, 0xb22, 0xb3c, };
 
 
 
@@ -37266,10 +37266,10 @@ static const unichar_data_internal __uni_char_data_b00[]=
 };
 
 
-static const char32 __uni_decomp_data_0xb94[] = { 0xb92, 0xbd7, 0, };
-static const char32 __uni_decomp_data_0xbca[] = { 0xbc6, 0xbbe, 0, };
-static const char32 __uni_decomp_data_0xbcb[] = { 0xbc7, 0xbbe, 0, };
-static const char32 __uni_decomp_data_0xbcc[] = { 0xbc6, 0xbd7, 0, };
+static const char32 __uni_decomp_data_0xb94[] = { 2, 0xb92, 0xbd7, };
+static const char32 __uni_decomp_data_0xbca[] = { 2, 0xbc6, 0xbbe, };
+static const char32 __uni_decomp_data_0xbcb[] = { 2, 0xbc7, 0xbbe, };
+static const char32 __uni_decomp_data_0xbcc[] = { 2, 0xbc6, 0xbd7, };
 
 
 
@@ -38943,7 +38943,7 @@ static const unichar_data_internal __uni_char_data_b80[]=
 };
 
 
-static const char32 __uni_decomp_data_0xc48[] = { 0xc46, 0xc56, 0, };
+static const char32 __uni_decomp_data_0xc48[] = { 2, 0xc46, 0xc56, };
 
 
 

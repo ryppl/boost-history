@@ -17,6 +17,7 @@ UNIDATA/SpecialCasing.txt
 UNIDATA/LineBreak.txt
 UNIDATA/ArabicShaping.txt
 UCA/allkeys.txt
+UNIDATA/CompositionExclusions.txt
 */
 
 #ifndef BOOST_UNICODE_READ_CHARACTER_PROPERTIES_FILES_HPP_INCLUDED
@@ -98,10 +99,14 @@ namespace boost
 			void read_character_properties_sentence (
 				std::map <char32, character_properties> & prop, const char* filename, bool required);
 
-            // Read from Allkeys.txt
+            /// Read from Allkeys.txt
             void read_collation_data (
 				std::map <char32, character_properties> & props, 
                                 const char* filename, bool required);
+                                
+            /// Read from CompositionExclusions.txt
+            void read_character_properties_compex (
+                std::map <char32, character_properties> & prop, const char* filename, bool required);
 
 
 		}	// namespace ucd

@@ -24,6 +24,7 @@ exe data_parser : main.cpp
     read_character_properties_unicodedata.cpp
     read_character_properties_word_break.cpp
     read_collation_data.cpp
+    read_character_properties_compex.cpp
     write_character_properties.cpp
 
     ../src/unicode_properties.cpp

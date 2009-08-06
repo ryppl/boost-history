@@ -113,6 +113,8 @@ namespace boost
 
 				line_break::type			line_break;
 				join_type::type				joining;
+                
+                bool                        comp_ex;
 
 				enum	{ CHARACTER_DOES_NOT_EXIST = 0x400000	};
 
@@ -136,7 +138,8 @@ namespace boost
 					lowercase (0),
 					titlecase (0),
                     line_break (line_break::type (-1)),
-                    joining (join_type::none)
+                    joining (join_type::none),
+                    comp_ex (false)
 				{}
 			};
 
