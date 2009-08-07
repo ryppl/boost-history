@@ -223,6 +223,7 @@ namespace boost { namespace polygon{
     return lvalue_;
   }
   
+  namespace operators {
   struct y_ps90_b : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>
@@ -435,6 +436,7 @@ namespace boost { namespace polygon{
     geometry_type_1 retval(lvalue);
     retval -= rvalue;
     return retval;
+  }
   }
 }
 }

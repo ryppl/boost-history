@@ -9,7 +9,7 @@
 #include <iostream>
 #include "polygon.hpp"
 namespace gtl = boost::polygon;
-
+using namespace boost::polygon::operators;
 #include <time.h>
 #include <stdlib.h>
 
@@ -3312,7 +3312,7 @@ int main() {
     std::cout << "test_aa_touch_ur failed\n";
     return 1;
   }
-  if(!test_aa_touch_ur2()) {
+  if(!test_aa_touch_ur()) {
     std::cout << "test_aa_touch_ur failed\n";
     return 1;
   }

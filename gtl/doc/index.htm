@@ -103,17 +103,16 @@ the following code snippet that operates on non-library geometry types possible:
 	<div style="text-align:justify;mso-char-wrap:1;mso-kinsoku-overflow:1">
 		<nobr>
 <span style="font-family: Courier New; mso-ascii-font-family: Courier New; mso-bidi-font-family: Arial; mso-hansi-font-family: Courier New">&nbsp;&nbsp;&nbsp;&nbsp; 
-CBoundingBox domainExtent; </span></nobr></div>
+		CBoundingBox domainExtent; </span></nobr></div>
+	<div style="text-align:justify;mso-char-wrap:1;mso-kinsoku-overflow:1">
+		<nobr>
+		<span style="font-family: Courier New; mso-ascii-font-family: Courier New; mso-bidi-font-family: Arial; mso-hansi-font-family: Courier New">
+		<span style="mso-spacerun:yes">&nbsp; </span>&nbsp;&nbsp; using namespace boost::polygon::operators; </span></nobr></div>
 	<div style="text-align:justify;mso-char-wrap:1;mso-kinsoku-overflow:1">
 		<nobr>
 		<span style="font-family: Courier New; mso-ascii-font-family: Courier New; mso-bidi-font-family: Arial; mso-hansi-font-family: Courier New">
 		<span style="mso-spacerun:yes">&nbsp; </span>&nbsp;&nbsp; 
-		using namespace boost::polygon; </span></nobr></div>
-	<div style="text-align:justify;mso-char-wrap:1;mso-kinsoku-overflow:1">
-		<nobr>
-		<span style="font-family: Courier New; mso-ascii-font-family: Courier New; mso-bidi-font-family: Arial; mso-hansi-font-family: Courier New">
-		<span style="mso-spacerun:yes">&nbsp; </span>&nbsp;&nbsp; 
-		extents(domainExtent, a); </span></nobr></div>
+		boost::polygon::extents(domainExtent, a); </span></nobr></div>
 	<div style="text-align:justify;mso-char-wrap:1;mso-kinsoku-overflow:1">
 		<nobr>
 		<span style="font-family: Courier New; mso-ascii-font-family: Courier New; mso-bidi-font-family: Arial; mso-hansi-font-family: Courier New">

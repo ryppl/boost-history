@@ -10,8 +10,8 @@
 <p><font face="Courier New">#include &lt;boost/polygon/polygon.hpp&gt;<br>
 #include &lt;cassert&gt;<br>
 namespace gtl = boost::polygon;<br>
-<br>
-//just a little meta-programming to get things off on the right foot<br>
+using namespace boost::polygon::operators;<br>
+<br>//just a little meta-programming to get things off on the right foot<br>
 template &lt;typename T&gt;<br>
 struct lookup_polygon_set_type { typedef gtl::polygon_set_data&lt;int&gt; type; };<br>
 template &lt;typename T, typename T2&gt;<br>

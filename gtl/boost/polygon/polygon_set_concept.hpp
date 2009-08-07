@@ -61,7 +61,6 @@ namespace boost { namespace polygon{
 
   //get trapezoids
   template <typename output_container_type, typename polygon_set_type>
-  template <typename polygon_set_type>
   typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
                       void>::type
   get_trapezoids(output_container_type& output, const polygon_set_type& polygon_set) {
@@ -72,7 +71,6 @@ namespace boost { namespace polygon{
 
   //get trapezoids
   template <typename output_container_type, typename polygon_set_type>
-  template <typename polygon_set_type>
   typename enable_if< typename is_mutable_polygon_set_type<polygon_set_type>::type,
                       void>::type
   get_trapezoids(output_container_type& output, const polygon_set_type& polygon_set,
@@ -247,6 +245,8 @@ namespace boost { namespace polygon{
     return polygon_set;
   }
 
+  namespace operators {
+
   struct yes_ps_ob : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>
@@ -385,6 +385,8 @@ namespace boost { namespace polygon{
   operator-=(geometry_type_1& lvalue, const geometry_type_2& rvalue) {
     return self_assignment_boolean_op<geometry_type_1, geometry_type_2, 3>(lvalue, rvalue);
   }
+
+  } //end operators namespace
 
   template <typename T>
   struct view_of<polygon_45_set_concept, T> {

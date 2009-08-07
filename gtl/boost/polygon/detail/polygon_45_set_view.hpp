@@ -166,6 +166,7 @@ namespace boost { namespace polygon{
   template <typename ltype, typename rtype, int op_type>
   struct geometry_concept<polygon_45_set_view<ltype, rtype, op_type> > { typedef polygon_45_set_concept type; };
 
+  namespace operators {
   struct y_ps45_b : gtl_yes {};
 
   template <typename geometry_type_1, typename geometry_type_2>
@@ -349,6 +350,7 @@ namespace boost { namespace polygon{
     geometry_type_1 retval(lvalue);
     retval -= rvalue;
     return retval;
+  }
   }
 }
 }
