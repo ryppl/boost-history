@@ -47,7 +47,7 @@ class sequential
         result.map_runtime = microsec_clock::universal_time() - start_time;
 
         // Reduce Tasks
-        start_time(microsec_clock::universal_time());
+        start_time = microsec_clock::universal_time();
         for (unsigned partition=0; partition<job.number_of_partitions(); ++partition)
             job.run_reduce_task(partition, result);
         result.reduce_runtime = microsec_clock::universal_time() - start_time;
