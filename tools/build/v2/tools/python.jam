@@ -1064,24 +1064,10 @@ rule python-extension ( name : sources * : requirements * : default-build * :
 
 IMPORT python : python-extension : : python-extension ;
 
-rule is-py3
-{
-    #TODO(bhy) this may not the correct way to get Python verison,
-    # since it seems the 'python' feature can have other values. Should be checked with volodya
-    local version = [ feature.values python ] ;
-    if $(version) >= 3.0
-    {
-        return true ;
-    }
-}
-
 rule py2to3
 {
     common.copy $(>) $(<) ;
-    if [ is-py3 ]
-    {
-        2to3 $(<) ;
-    }
+    2to3 $(<) ;
 }
 
 actions 2to3
@@ -1109,6 +1095,7 @@ class python-test-generator : generator
 
     rule run ( project name ? : property-set : sources * : multiple ? )
     {
+        local pyversion = [ $(property-set).get <python> ] ;
         local python ;
         local other-pythons ;
     
@@ -1124,10 +1111,17 @@ class python-test-generator : generator
         # Make new target that converting Python source by 2to3 when running with Python 3.
         local rule make-2to3-source ( source )
         {
-            local a = [ new action $(source) : python.py2to3 : $(property-set) ] ;
-            local t =  [ utility.basename [ $(s).name ] ] ;
-            local p = [ new file-target $(t) : PY : $(project) : $(a) ] ;
-            return $(p) ; 
+            if $(pyversion) >= 3.0
+            {
+                local a = [ new action $(source) : python.py2to3 : $(property-set) ] ;
+                local t =  [ utility.basename [ $(s).name ] ] ;
+                local p = [ new file-target $(t) : PY : $(project) : $(a) ] ;
+                return $(p) ;
+            }
+            else
+            {
+                return $(source) ;
+            }
         }
 
         for local s in $(sources)
