@@ -49,7 +49,14 @@ class job : private boost::noncopyable
     typedef Datasource              datasource_type;
     typedef IntermediateStore       intermediate_store_type;
     typedef Combiner                combiner_type;
-    typedef std::list<std::string>  filenames_t;
+
+    typedef
+    typename intermediate_store_type::const_result_iterator
+    const_result_iterator;
+
+    typedef
+    typename intermediate_store_type::keyvalue_t
+    keyvalue_t;
 
   public:
     class map_task_runner : boost::noncopyable
@@ -93,27 +100,42 @@ class job : private boost::noncopyable
     {
       public:
         reduce_task_runner(
-            std::string   const &output_filespec,
-            unsigned      const  partition,
-            unsigned      const  num_partitions)
-          : store_result_(output_filespec, partition, num_partitions)
+            std::string       const &output_filespec,
+            unsigned          const &partition,
+            unsigned          const  num_partitions,
+            intermediate_store_type &intermediate_store,
+            results                 &result)
+          : partition_(partition),
+            result_(result),
+            intermediate_store_(intermediate_store),
+            store_result_(output_filespec, partition, num_partitions)
         {
+        }
+
+        void reduce(void)
+        {
+            intermediate_store_.reduce(partition_, *this);
         }
 
         void emit(typename reduce_task_type::key_type   const &key,
                   typename reduce_task_type::value_type const &value)
         {
-            store_result_(key, value);
+            intermediate_store_.insert(key, value, store_result_);
         }
 
         template<typename It>
         void operator()(typename reduce_task_type::key_type const &key, It it, It ite)
         {
+            ++result_.counters.reduce_keys_executed;
             reduce_task_type::reduce(*this, key, it, ite);
+            ++result_.counters.reduce_keys_completed;
         }
 
       private:
-        StoreResult store_result_;
+        unsigned const          &partition_;
+        results                 &result_;
+        intermediate_store_type &intermediate_store_;
+        StoreResult              store_result_;
     };
 
     job(datasource_type &datasource, specification const &spec)
@@ -122,6 +144,16 @@ class job : private boost::noncopyable
         intermediate_store_(specification_.reduce_tasks)
      {
      }
+
+    const_result_iterator begin_results(void) const
+    {
+        return intermediate_store_.begin_results();
+    }
+
+    const_result_iterator end_results(void) const
+    {
+        return intermediate_store_.end_results();
+    }
 
     bool const get_next_map_key(void *&key)
     {
@@ -218,9 +250,10 @@ class job : private boost::noncopyable
             reduce_task_runner runner(
                 specification_.output_filespec,
                 partition,
-                number_of_partitions());
-
-            intermediate_store_.reduce(partition, runner, result);
+                number_of_partitions(),
+                intermediate_store_,
+                result);
+            runner.reduce();
         }
         catch (std::exception &e)
         {

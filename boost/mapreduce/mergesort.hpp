@@ -42,6 +42,12 @@ bool const less_2nd(T const &first, T const &second)
     return first.second < second.second;
 }
 
+template<typename T>
+bool const greater_2nd(T const &first, T const &second)
+{
+    return first.second > second.second;
+}
+
 struct key_offset_compare
 {
   public:

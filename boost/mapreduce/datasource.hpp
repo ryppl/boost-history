@@ -126,16 +126,13 @@ file_handler<
     if (it->second->offset == it->second->size)
         data_->current_file.clear();
 
-    ///!!! parameterise finding a word boundary
-    char ch = std::toupper(*value.second);
-    while ((ch == '\'' || (ch >= 'A' && ch <= 'Z'))  &&  it->second->offset != it->second->size)
+    // break on a line boundary
+    while (*value.second != '\n'  &&  *value.second != '\r'  &&  it->second->offset != it->second->size)
     {
         ++value.second;
         ++it->second->offset;
-        ch = std::toupper(*value.second);
     }
 
-//std::cout<<"\nget_data(): next offset will be " << it->second->offset;
     return true;
 }
 

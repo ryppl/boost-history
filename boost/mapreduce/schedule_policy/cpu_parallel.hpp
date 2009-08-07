@@ -24,7 +24,7 @@ namespace schedule_policy {
 namespace detail {
 
 template<typename Job>
-inline void run_next_map_task(Job &job, results &result, boost::mutex &m1, boost::mutex &m2)
+inline void run_next_map_task(Job &job, boost::mutex &m1, boost::mutex &m2, results &result)
 {
     try
     {
@@ -48,11 +48,22 @@ inline void run_next_map_task(Job &job, results &result, boost::mutex &m1, boost
 }
 
 template<typename Job>
-inline void run_next_reduce_task(Job &job, unsigned &partition, results &result)
+inline void run_next_reduce_task(Job &job, unsigned &partition, boost::mutex &mutex, results &result)
 {
     try
     {
-        job.run_reduce_task(partition, result);
+        while (1)
+        {
+            boost::mutex::scoped_lock l(mutex);
+            unsigned  part = partition++;
+            if (part < job.number_of_partitions())
+            {
+                l.unlock();
+                job.run_reduce_task(part, result);
+            }
+            else
+                break;
+        }
     }
     catch (std::exception &e)
     {
@@ -90,9 +101,9 @@ class cpu_parallel
                 new boost::thread(
                     detail::run_next_map_task<Job>,
                     boost::ref(job),
-                    boost::ref(*this_result),
                     boost::ref(m1),
-                    boost::ref(m2));
+                    boost::ref(m2),
+                    boost::ref(*this_result));
             map_threads.add_thread(thread);
         }
         map_threads.join_all();
@@ -116,6 +127,7 @@ class cpu_parallel
                     detail::run_next_reduce_task<Job>,
                     boost::ref(job),
                     boost::ref(partition),
+                    boost::ref(m1),
                     boost::ref(*this_result));
             reduce_threads.add_thread(thread);
         }

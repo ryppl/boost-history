@@ -11,5 +11,5 @@
 //
  
 #include <boost/mapreduce/hash_partitioner.hpp>
-#include <boost/mapreduce/intermediates/local_disk.hpp>
 #include <boost/mapreduce/intermediates/in_memory.hpp>
+#include <boost/mapreduce/intermediates/local_disk.hpp>

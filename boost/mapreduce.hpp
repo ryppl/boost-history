@@ -39,7 +39,7 @@ struct specification : boost::noncopyable
 
     specification()
       : map_tasks(0),                   
-        reduce_tasks(10),
+        reduce_tasks(1),
         max_file_segment_size(1048576L),    // default 1Gb               
         output_filespec("mapreduce_")   
     {

@@ -141,6 +141,98 @@ class local_disk : boost::noncopyable
     typedef MapTask    map_task_type;
     typedef ReduceTask reduce_task_type;
     typedef reduce_file_output<MapTask, ReduceTask> store_result_type;
+    typedef
+    std::pair<
+        typename reduce_task_type::key_type,
+        typename reduce_task_type::value_type>
+    keyvalue_t;
+
+    class const_result_iterator
+      : public boost::iterator_facade<
+            const_result_iterator,
+            keyvalue_t const,
+            boost::forward_traversal_tag>
+    {
+        friend class boost::iterator_core_access;
+
+      protected:
+        explicit const_result_iterator(local_disk const *outer)
+          : outer_(outer)
+        {
+            BOOST_ASSERT(outer_);
+            kvlist_.resize(outer_->num_partitions_);
+        }
+
+        void increment(void)
+        {
+            if (!kvlist_[index_].first->eof())
+                read_record(*kvlist_[index_].first, kvlist_[index_].second.first, kvlist_[index_].second.second);
+            set_current();
+        }
+
+        bool const equal(const_result_iterator const &other) const
+        {
+            return (kvlist_.size() == 0  &&  other.kvlist_.size() == 0)
+               ||  (kvlist_.size() > 0
+               &&  other.kvlist_.size() > 0
+               &&  kvlist_[index_].second == other.kvlist_[index_].second);
+        }
+
+        const_result_iterator &begin(void)
+        {
+            for (unsigned loop=0; loop<outer_->num_partitions_; ++loop)
+            {
+                kvlist_[loop] = std::make_pair(boost::shared_ptr<std::ifstream>(new std::ifstream), keyvalue_t());
+                kvlist_[loop].first->open(outer_->intermediate_files_.find(loop)->second.first.c_str());
+                BOOST_ASSERT(kvlist_[loop].first->is_open());
+                read_record(*kvlist_[loop].first, kvlist_[loop].second.first, kvlist_[loop].second.second);
+            }
+            set_current();
+            return *this;
+        }
+
+        const_result_iterator &end(void)
+        {
+            index_ = 0;
+            kvlist_.clear();
+            return *this;
+        }
+
+        keyvalue_t const &dereference(void) const
+        {
+            return kvlist_[index_].second;
+        }
+
+        void set_current(void)
+        {
+            index_ = 0;
+            while (index_<outer_->num_partitions_  &&  kvlist_[index_].first->eof())
+                 ++index_;
+            
+            for (unsigned loop=index_+1; loop<outer_->num_partitions_; ++loop)
+            {
+                if (!kvlist_[loop].first->eof()  &&  !kvlist_[index_].first->eof()  &&  kvlist_[index_].second > kvlist_[loop].second)
+                    index_ = loop;
+            }
+
+            if (index_ == outer_->num_partitions_)
+                end();
+        }
+
+      private:
+        local_disk                    const *outer_;        // parent container
+        unsigned                             index_;        // index of current element
+        typedef
+        std::vector<
+            std::pair<
+                boost::shared_ptr<std::ifstream>,
+                keyvalue_t> >
+        kvlist_t;
+        kvlist_t kvlist_;
+
+        friend class local_disk;
+    };
+    friend class const_result_iterator;
 
     local_disk(unsigned const num_partitions)
       : num_partitions_(num_partitions)
@@ -161,6 +253,25 @@ class local_disk : boost::noncopyable
         {
             std::cerr << "\nError: " << e.what() << "\n";
         }
+    }
+
+    const_result_iterator begin_results(void) const
+    {
+        return const_result_iterator(this).begin();
+    }
+
+    const_result_iterator end_results(void) const
+    {
+        return const_result_iterator(this).end();
+    }
+
+    template<typename StoreResult>
+    bool const insert(typename reduce_task_type::key_type   const &key,
+                      typename reduce_task_type::value_type const &value,
+                      StoreResult &store_result)
+    {
+        store_result(key, value);
+        return insert(key, value);
     }
 
     bool const insert(typename reduce_task_type::key_type   const &key,
@@ -206,25 +317,22 @@ class local_disk : boost::noncopyable
             std::swap(infilename, outfilename);
 
             std::string key, last_key;
+            typename reduce_task_type::value_type value;
             std::ifstream infile(infilename.c_str());
-            while (!infile.eof())
+            while (read_record(infile, key, value))
             {
-                typename reduce_task_type::value_type value;
-                if (read_record(infile, key, value))
+                if (key != last_key  &&  key.length() > 0)
                 {
-                    if (key != last_key  &&  key.length() > 0)
+                    if (last_key.length() > 0)
+                        fn_obj.finish(last_key, *this);
+                    if (key.length() > 0)
                     {
-                        if (last_key.length() > 0)
-                            fn_obj.finish(last_key, *this);
-                        if (key.length() > 0)
-                        {
-                            fn_obj.start(key);
-                            std::swap(key, last_key);
-                        }
+                        fn_obj.start(key);
+                        std::swap(key, last_key);
                     }
-
-                    fn_obj(value);
                 }
+
+                fn_obj(value);
             }
 
             if (last_key.length() > 0)
@@ -275,18 +383,19 @@ class local_disk : boost::noncopyable
     }
 
     template<typename Callback>
-    void reduce(unsigned const partition, Callback &callback, results &result)
+    void reduce(unsigned const partition, Callback &callback)
     {
+        intermediates_t::iterator it = intermediate_files_.find(partition);
+        BOOST_ASSERT(it != intermediate_files_.end());
+
+        std::string filename;
+        std::swap(filename, it->second.first);
+        intermediate_files_.erase(it);
+
         typename reduce_task_type::key_type   key;
         typename reduce_task_type::key_type   last_key;
         typename reduce_task_type::value_type value;
         std::list<typename reduce_task_type::value_type> values;
-
-        std::list<std::string> filenames;
-        intermediates_t::const_iterator it = intermediate_files_.find(partition);
-        BOOST_ASSERT(it != intermediate_files_.end());
-
-        std::string const &filename = it->second.first;
         std::ifstream infile(filename.c_str());
         while (read_record(infile, key, value))
         {
@@ -294,7 +403,6 @@ class local_disk : boost::noncopyable
             {
                 if (length(last_key) > 0)
                 {
-                    ++result.counters.reduce_keys_executed;
                     callback(last_key, values.begin(), values.end());
                     values.clear();
                 }
@@ -307,12 +415,13 @@ class local_disk : boost::noncopyable
 
         if (length(last_key) > 0)
         {
-            ++result.counters.reduce_keys_executed;
             callback(last_key, values.begin(), values.end());
         }
 
         infile.close();
         boost::filesystem::remove(filename.c_str());
+
+        intermediate_files_.find(partition)->second.second->close();
     }
 
   protected:
@@ -365,11 +474,15 @@ class local_disk : boost::noncopyable
     void close_files(void)
     {
         for (intermediates_t::iterator it=intermediate_files_.begin(); it!=intermediate_files_.end(); ++it)
+        {
             if (it->second.second  &&  it->second.second->is_open())
                 it->second.second->close();
+        }
     }
 
   private:
+    typedef enum { map_phase, reduce_phase } phase_t;
+
     unsigned const  num_partitions_;
     intermediates_t intermediate_files_;
     PartitionFn     partitioner_;

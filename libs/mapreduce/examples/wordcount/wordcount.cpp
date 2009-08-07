@@ -152,6 +152,11 @@ int main(int argc, char **argv)
         if (argc > 2)
             spec.map_tasks = atoi(argv[2]);
 
+        if (argc > 3)
+            spec.reduce_tasks = atoi(argv[3]);
+        else
+            spec.reduce_tasks = std::max(1U,boost::thread::hardware_concurrency());
+
         std::cout << "\nRunning CPU Parallel MapReduce...";
         boost::mapreduce::run<wordcount::job>(spec, result);
         std::cout << "\nCPU Parallel MapReduce Finished.";
@@ -161,30 +166,30 @@ int main(int argc, char **argv)
         std::cout << std::endl << "Error: " << e.what();
     }
 
-    std::cout << std::endl << "\n" << "MapReduce statistics:";
-    std::cout << "\n  " << "MapReduce job runtime                     : " << result.job_runtime << " seconds, of which...";
-    std::cout << "\n  " << "  Map phase runtime                       : " << result.map_runtime << " seconds";
-    std::cout << "\n  " << "  Reduce phase runtime                    : " << result.reduce_runtime << " seconds";
-    std::cout << "\n\n  " << "Map:";
-    std::cout << "\n    " << "Total Map keys                          : " << result.counters.map_keys_executed;
-    std::cout << "\n    " << "Map keys processed                      : " << result.counters.map_keys_completed;
-    std::cout << "\n    " << "Map key processing errors               : " << result.counters.map_key_errors;
-    std::cout << "\n    " << "Number of Map Tasks run (in parallel)   : " << result.counters.actual_map_tasks;
-    std::cout << "\n    " << "Fastest Map key processed in            : " << *std::min_element(result.map_times.begin(), result.map_times.end()) << " seconds";
-    std::cout << "\n    " << "Slowest Map key processed in            : " << *std::max_element(result.map_times.begin(), result.map_times.end()) << " seconds";
-    std::cout << "\n    " << "Average time to process Map keys        : " << std::accumulate(result.map_times.begin(), result.map_times.end(), boost::int64_t()) / result.map_times.size() << " seconds";
+    std::cout << std::endl << "\nMapReduce statistics:";
+    std::cout << "\n  MapReduce job runtime                     : " << result.job_runtime << " seconds, of which...";
+    std::cout << "\n    Map phase runtime                       : " << result.map_runtime << " seconds";
+    std::cout << "\n    Reduce phase runtime                    : " << result.reduce_runtime << " seconds";
+    std::cout << "\n\n  Map:";
+    std::cout << "\n    Total Map keys                          : " << result.counters.map_keys_executed;
+    std::cout << "\n    Map keys processed                      : " << result.counters.map_keys_completed;
+    std::cout << "\n    Map key processing errors               : " << result.counters.map_key_errors;
+    std::cout << "\n    Number of Map Tasks run (in parallel)   : " << result.counters.actual_map_tasks;
+    std::cout << "\n    Fastest Map key processed in            : " << *std::min_element(result.map_times.begin(), result.map_times.end()) << " seconds";
+    std::cout << "\n    Slowest Map key processed in            : " << *std::max_element(result.map_times.begin(), result.map_times.end()) << " seconds";
+    std::cout << "\n    Average time to process Map keys        : " << std::accumulate(result.map_times.begin(), result.map_times.end(), boost::int64_t()) / result.map_times.size() << " seconds";
 
-    std::cout << "\n\n  " << "Reduce:";
-    std::cout << "\n    " << "Total Reduce keys                       : " << result.counters.reduce_keys_executed;
-    std::cout << "\n    " << "Reduce keys processed                   : " << result.counters.reduce_keys_completed;
-    std::cout << "\n    " << "Reduce key processing errors            : " << result.counters.reduce_key_errors;
-    std::cout << "\n    " << "Number of Reduce Tasks run (in parallel): " << result.counters.actual_reduce_tasks;
-    std::cout << "\n    " << "Number of Result Files                  : " << result.counters.num_result_files;
+    std::cout << "\n\n  Reduce:";
+    std::cout << "\n    Total Reduce keys                       : " << result.counters.reduce_keys_executed;
+    std::cout << "\n    Reduce keys processed                   : " << result.counters.reduce_keys_completed;
+    std::cout << "\n    Reduce key processing errors            : " << result.counters.reduce_key_errors;
+    std::cout << "\n    Number of Reduce Tasks run (in parallel): " << result.counters.actual_reduce_tasks;
+    std::cout << "\n    Number of Result Files                  : " << result.counters.num_result_files;
     if (result.reduce_times.size() > 0)
     {
-        std::cout << "\n    " << "Fastest Reduce key processed in         : " << *std::min_element(result.reduce_times.begin(), result.reduce_times.end()) << " seconds";
-        std::cout << "\n    " << "Slowest Reduce key processed in         : " << *std::max_element(result.reduce_times.begin(), result.reduce_times.end()) << " seconds";
-        std::cout << "\n    " << "Average time to process Reduce keys     : " << std::accumulate(result.reduce_times.begin(), result.reduce_times.end(), boost::int64_t()) / result.map_times.size() << " seconds";
+        std::cout << "\n    Fastest Reduce key processed in         : " << *std::min_element(result.reduce_times.begin(), result.reduce_times.end()) << " seconds";
+        std::cout << "\n    Slowest Reduce key processed in         : " << *std::max_element(result.reduce_times.begin(), result.reduce_times.end()) << " seconds";
+        std::cout << "\n    Average time to process Reduce keys     : " << std::accumulate(result.reduce_times.begin(), result.reduce_times.end(), boost::int64_t()) / result.map_times.size() << " seconds";
     }
 
     return 0;
