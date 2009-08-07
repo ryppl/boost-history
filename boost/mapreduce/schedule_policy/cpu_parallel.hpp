@@ -87,11 +87,12 @@ class cpu_parallel
         boost::mutex  m1, m2;
 
         // run the Map Tasks
-        time_t start_time = time(NULL);
-        boost::thread_group map_threads;
+        using namespace boost::posix_time;
+        ptime start_time(microsec_clock::universal_time());
 
         unsigned const map_tasks = std::max(num_cpus,std::min(num_cpus, job.number_of_map_tasks()));
 
+        boost::thread_group map_threads;
         for (unsigned loop=0; loop<map_tasks; ++loop)
         {
             boost::shared_ptr<results> this_result(new results);
@@ -107,10 +108,10 @@ class cpu_parallel
             map_threads.add_thread(thread);
         }
         map_threads.join_all();
-        result.map_runtime = time(NULL) - start_time;
+        result.map_runtime = microsec_clock::universal_time() - start_time;
 
         // run the Reduce Tasks
-        start_time = time(NULL);
+        start_time = microsec_clock::universal_time();
         boost::thread_group reduce_threads;
 
         unsigned const reduce_tasks =
@@ -132,7 +133,7 @@ class cpu_parallel
             reduce_threads.add_thread(thread);
         }
         reduce_threads.join_all();
-        result.reduce_runtime = time(NULL) - start_time;
+        result.reduce_runtime = microsec_clock::universal_time() - start_time;
 
         // we're done with the map/reduce job, collate the statistics before returning
         for (all_results_t::const_iterator it=all_results.begin();

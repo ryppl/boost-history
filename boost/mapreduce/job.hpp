@@ -12,7 +12,7 @@
 
 #ifndef BOOST_MAPREDUCE_JOB_HPP
 #define BOOST_MAPREDUCE_JOB_HPP
- 
+
 namespace boost {
 
 namespace mapreduce {
@@ -174,17 +174,19 @@ class job : private boost::noncopyable
     template<typename SchedulePolicy>
     void run(SchedulePolicy &schedule, results &result)
     {
-        time_t const start_time = time(NULL);
+        using namespace boost::posix_time;
+        ptime start_time(microsec_clock::universal_time());
         schedule(*this, result);
-        result.job_runtime = time(NULL) - start_time;
+        result.job_runtime = microsec_clock::universal_time() - start_time;
     }
 
     template<typename Sync>
     bool const run_map_task(void *key, results &result, Sync &sync)
     {
-        bool success = true;
-        time_t const start_time = time(NULL);
+        using namespace boost::posix_time;
+        ptime start_time(microsec_clock::universal_time());
 
+        bool success = true;
         try
         {
             std::auto_ptr<typename map_task_type::key_type>
@@ -226,7 +228,7 @@ class job : private boost::noncopyable
             ++result.counters.map_key_errors;
             success = false;
         }
-        result.map_times.push_back(time(NULL)-start_time);
+        result.map_times.push_back(microsec_clock::universal_time() - start_time);
 
         return success;
     }
@@ -243,8 +245,8 @@ class job : private boost::noncopyable
 
     bool const run_reduce_task(unsigned const partition, results &result)
     {
-        time_t const start_time = time(NULL);
-
+        using namespace boost::posix_time;
+        ptime start_time(microsec_clock::universal_time());
         try
         {
             reduce_task_runner runner(
@@ -261,7 +263,7 @@ class job : private boost::noncopyable
             ++result.counters.reduce_key_errors;
         }
         
-        result.reduce_times.push_back(time(NULL)-start_time);
+        result.reduce_times.push_back(microsec_clock::universal_time()-start_time);
 
         return true;
     }

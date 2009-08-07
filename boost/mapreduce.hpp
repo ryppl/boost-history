@@ -24,6 +24,7 @@
 #include <boost/config.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/date_time/posix_time/posix_time.hpp>
 
 namespace boost {
 
@@ -79,18 +80,11 @@ struct results
         }
     } counters;
 
-    results()
-      : job_runtime(0),
-        map_runtime(0),
-        reduce_runtime(0)
-    {
-    }
-
-    time_t                job_runtime;
-    time_t                map_runtime;
-    time_t                reduce_runtime;
-    std::vector<time_t>   map_times;
-    std::vector<time_t>   reduce_times;
+    boost::posix_time::time_duration                job_runtime;
+    boost::posix_time::time_duration                map_runtime;
+    boost::posix_time::time_duration                reduce_runtime;
+    std::vector<boost::posix_time::time_duration>   map_times;
+    std::vector<boost::posix_time::time_duration>   reduce_times;
 };
 
 }   // namespace mapreduce
