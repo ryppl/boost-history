@@ -131,7 +131,11 @@ The end result is accumulated into a list of polygons with a union operation.&nb
 It is considerably more typing to describe this usage of the API than to code 
 it, and the description is not much clearer than the code itself.&nbsp; 
 Functions are named for what they do, or are overloads of C++ operators that make it 
-easy to infer from reading the code what to expect from it.&nbsp; Following the 
+easy to infer from reading the code what to expect from it.&nbsp; Operators are 
+contained in the namespace <font face="Courier New">boost::polgyon::operators</font> 
+so that they can be used outside the <font face="Courier New">boost::polygon</font> 
+namespace without bringing in the entire <font face="Courier New">boost::polygon</font> 
+namespace.&nbsp; Following the 
 principle of least astonishment, the inferred behavior should generally match 
 the actual behavior.&nbsp; Conventions such as argument ordering (output 
 arguments come first) and consistently applying the same semantics across 
