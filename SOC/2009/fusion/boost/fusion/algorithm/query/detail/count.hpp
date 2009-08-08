@@ -8,6 +8,7 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 
+#include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace fusion { namespace detail

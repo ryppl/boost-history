@@ -22,7 +22,7 @@ namespace boost { namespace fusion
         {
             typedef
                 detail::replace_if_helper<
-                    typename detail::add_lref<F>::type
+                    typename detail::as_fusion_element<F>::type
                   , typename detail::as_fusion_element<NewValue>::type
                 >
             replacer;

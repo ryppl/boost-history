@@ -16,7 +16,7 @@ if "%1" == "gcc" (
         call :msvc
     ) else (
         if "%1" == "" (
-            call :gcc
+            call :msvc
         ) else (
             echo Unknown toolset '%1'
             goto :eof
@@ -29,8 +29,8 @@ rem compile...
 goto :eof
 
 :gcc
-set PATH=C:\MinGW3\bin;%PATH%
-rem set PATH=C:\MinGW\bin;%PATH%
+rem set PATH=C:\MinGW3\bin;%PATH%
+set PATH=C:\MinGW\bin;%PATH%
 set TOOLSET=gcc
 goto :eof
 

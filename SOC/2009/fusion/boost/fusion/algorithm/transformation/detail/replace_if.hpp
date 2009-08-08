@@ -16,7 +16,6 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    //TODO cschmidt: update doc. according to real behavior!
     template <typename F, typename NewValue>
     struct replace_if_helper
     {
@@ -75,6 +74,7 @@ namespace boost { namespace fusion { namespace detail
         typename result<replace_if_helper(U&)>::type
         operator()(U& x) const
         {
+            //TODO cschmidt: update doc. according to real behavior!
             return call_impl(
                 x,
                 typename is_convertible<
