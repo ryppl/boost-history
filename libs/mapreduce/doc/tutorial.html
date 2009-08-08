@@ -77,16 +77,12 @@ class job;
               <ul>
                 <li>Provide type definitions for Map Key (<code>k1</code>) and Map Value (<code>v1</code>);
                   <code>key_type</code> and <code> value_type</code></li>
-                <li>Provide type definitions for Intermediate Key (<code>k2</code>) and Intermediate Value (<code>v2</code>);
-                  <code>intermediate_key_type</code> and <code> intermediate_value_type</code></li>
                 <li>Implement a static mapper function <code>map()</code></li>
               </ul>
 <pre>
 struct map_task : public boost::mapreduce::map_task&lt;
-                             std::string,                           // MapKey
-                             std::pair&lt;char const *, char const *&gt;, // MapValue
-                             std::string,                           // IntermediateKey
-                             unsigned&gt;                              // IntermediateValue
+                             std::string,                            // MapKey
+                             std::pair&lt;char const *, char const *&gt; &gt; // MapValue
 {
     template&lt;typename Runtime&gt;
     static void map(Runtime &runtime, std::string const &key, value_type const &value);
@@ -104,12 +100,12 @@ qualifiers on these parametersare optional, but recommended where possible.</p>
               <h2>ReduceTask</h2>
               <p>Requirements of a ReduceTask function object are</p>
               <ul>
-                <li>Provide type definitions for Reduce Value (<code>v2</code>);
-                  <code> value_type</code></li>
+                <li>Provide type definitions for Reduce Key (<code>k2</code>) and Reduce Value (<code>v2</code>);
+                  <code>key_type</code> and <code> value_type</code></li>
                 <li>Implement a static reducer function <code>reduce()</code></li>
               </ul>
 <pre>
-struct reduce_task : public boost::mapreduce::reduce_task&lt;unsigned&gt;
+struct reduce_task : public boost::mapreduce::reduce_task&lt;std::string, unsigned&gt;
 {
     template&lt;typename Runtime, typename It&gt;
     static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)

@@ -56,11 +56,6 @@
                 and eliminating the two would improve performance considerably).</p>
               </li>
               <li>
-                <p>The only intermediate handler currently provided by the library is the <code>intermediates::local_disk<></code>
-                policy class. An early implementation of the library used in-memory storage for intermediates, and it
-                may be useful to redevelop this as a fully-fledged intermediate policy class.</p>
-              </li>
-              <li>
                 <p>An extension to the <code>intermediates::local_disk<></code> policy class could be to compress
                 the intermediate files, using the Boost.Iostreams zip/bzip2 compression libraries. This is a
                 long-term item that will be very useful when the library is extended to supported cross-machine
