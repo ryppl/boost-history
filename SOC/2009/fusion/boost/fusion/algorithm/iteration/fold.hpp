@@ -12,8 +12,6 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
 
-#include <boost/type_traits/is_base_of.hpp>
-
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
 namespace boost { namespace fusion {

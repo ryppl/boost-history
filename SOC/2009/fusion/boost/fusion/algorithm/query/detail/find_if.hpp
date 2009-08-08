@@ -190,10 +190,7 @@ namespace boost { namespace fusion {
                     First
                   , Last
                   , Pred
-                  , is_base_of<
-                        random_access_traversal_tag
-                      , typename traits::category_of<First>::type
-                    >::value
+                  , traits::is_random_access<First>::type::value
                 >::type
             type;
 

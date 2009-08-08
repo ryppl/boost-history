@@ -31,6 +31,9 @@
 #include <boost/fusion/view/joint_view/detail/equal_to_impl.hpp>
 #include <boost/fusion/view/joint_view/detail/next_impl.hpp>
 #include <boost/fusion/view/joint_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/deref_data_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/key_of_impl.hpp>
+#include <boost/fusion/view/joint_view/detail/value_of_data_impl.hpp>
 
 namespace boost { namespace fusion
 {

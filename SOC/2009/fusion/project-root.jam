@@ -9,12 +9,12 @@ local BOOST_INCLUDES_PATH = [ os.environ BOOST_INCLUDES_PATH ] ;
 project
     : requirements <include>.
                    <include>$(BOOST_INCLUDES_PATH)
-                   <toolset>gcc:<cxxflags>-std=c++0x
+#                   <toolset>gcc:<cxxflags>-std=c++0x
     : build-dir ../bin
     : default-build debug <link>shared <runtime-link>shared <threading>multi
     ;
 
-build-project libs/fusion/example/test ;
+#build-project libs/fusion/example/test ;
 
 #build-project libs/fusion/doc ;
 #build-project libs/fusion/example/extension ;

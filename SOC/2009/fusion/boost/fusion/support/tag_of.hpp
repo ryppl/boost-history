@@ -15,9 +15,6 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/has_xxx.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/not.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace fusion
 {

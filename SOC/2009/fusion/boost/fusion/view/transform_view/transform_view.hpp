@@ -76,10 +76,10 @@ namespace boost { namespace fusion
             >::type
         strictest_traversal;
 
-
         typedef transform_view2_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
+        //TODO implement IsAssociative
         typedef typename
             mpl::eval_if<
                 IsAssociative

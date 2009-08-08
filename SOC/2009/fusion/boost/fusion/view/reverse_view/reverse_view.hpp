@@ -22,7 +22,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/type_traits/is_base_of.hpp>
 
 #include <boost/fusion/view/reverse_view/detail/reverse_view_fwd.hpp>
 #include <boost/fusion/view/reverse_view/detail/reverse_view_iterator.hpp>
@@ -35,6 +34,9 @@
 #include <boost/fusion/view/reverse_view/detail/distance_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/value_of_impl.hpp>
 #include <boost/fusion/view/reverse_view/detail/equal_to_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/deref_data_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/key_of_impl.hpp>
+#include <boost/fusion/view/reverse_view/detail/value_of_data_impl.hpp>
 
 namespace boost { namespace fusion
 {

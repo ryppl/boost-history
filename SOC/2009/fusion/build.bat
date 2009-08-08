@@ -29,8 +29,8 @@ rem compile...
 goto :eof
 
 :gcc
-rem set PATH=C:\MinGW3\bin;%PATH%
-set PATH=C:\MinGW\bin;%PATH%
+set PATH=C:\MinGW3\bin;%PATH%
+rem set PATH=C:\MinGW\bin;%PATH%
 set TOOLSET=gcc
 goto :eof
 

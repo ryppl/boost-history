@@ -12,8 +12,6 @@
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/assert.hpp>
 
-#include <boost/type_traits/is_base_of.hpp>
-
 namespace boost { namespace fusion
 {
     struct reverse_view_iterator_tag;
