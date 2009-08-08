@@ -10,6 +10,7 @@
 #include <boost/range.hpp>
 
 /** BOOST_UNICODE_UCD_VERSION / 1000 is the major version
+ * 
  * BOOST_UNICODE_UCD_VERSION % 1000 is the minor version */
 #define BOOST_UNICODE_UCD_VERSION 5001
 #define BOOST_UNICODE_UCD_VERSION_MAJOR 5
@@ -73,13 +74,13 @@ inline int get_combining_class(char32 ch)
  * \c block::none if the code point does not lie in any block. */
 BOOST_UNICODE_DECL block::type get_block(char32 ch);
 
-/** Returns the decomposition associated with \c ch as a zero-terminated
- * sequence of code points.
+/** Returns the decomposition associated with \c ch as a range of code
+ * points; an empty range is returned if there is none.
  * See the \c decomposition_type property to know what kind of decomposition it is. */
 inline iterator_range<const char32*> get_decomposition(char32 ch)
 {
     const char32* p = ucd::get_data_internal(ch).decomp;
-    return make_iterator_range(p+1, p+1+p[0]);
+    return p ? make_iterator_range(p+1, p+1+p[0]) : make_iterator_range(p, p);
 }
 
 } // namespace ucd

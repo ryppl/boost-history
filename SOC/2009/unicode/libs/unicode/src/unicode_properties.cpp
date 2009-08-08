@@ -202,7 +202,7 @@ static const char* g_decomposition[] =
 	"vertical",
 	"wide",
 	"narrow",
-	"small",
+	"small_",
 	"square",
 	"fraction",
 	"compat",

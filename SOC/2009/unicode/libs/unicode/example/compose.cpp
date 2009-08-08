@@ -1,4 +1,8 @@
 //[ compose
+/*`
+Example in development.
+*/
+
 #include <boost/unicode/compose.hpp>
 #include <boost/foreach.hpp>
 #include <boost/range/as_array.hpp>
@@ -55,9 +59,6 @@ int main()
     boost::char32 bar[] = { 0x20, 0x308 };
     std::cout << "Canonical composition of { " << boost::as_array(bar) << " }: ";
     unicode::compose(bar, std::ostream_iterator<boost::char32>(std::cout, " "));
-    std::cout << std::endl;
-    std::cout << "Compatibility composition of { " << boost::as_array(bar) << " }: ";
-    unicode::compose(bar, std::ostream_iterator<boost::char32>(std::cout, " "), UINT_MAX);
     std::cout << std::endl;
 }
 //]

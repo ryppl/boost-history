@@ -86,7 +86,9 @@ void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
 {
 	// it would be very nice to checksum the whole of the entry in one 
 	// go but alignment might mean that there is random data interspersed
+#ifdef BOOST_UNICODE_UCD_BIG
 	crc.process_bytes(name.c_str(), name.size() );
+#endif
 	crc.process_bytes(&general_category, sizeof(general_category) );
 	crc.process_bytes(&combining, sizeof(combining) );
 	crc.process_bytes(&bidi, sizeof(bidi) );
@@ -96,6 +98,7 @@ void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
 	crc.process_bytes(&word_break_kind, sizeof(word_break_kind) );
 	crc.process_bytes(&sentence_break_kind, sizeof(sentence_break_kind) );
 	crc.process_bytes(&unknown_char, sizeof(unknown_char) );
+#ifdef BOOST_UNICODE_UCD_BIG    
 	crc.process_bytes(&sort_variable, sizeof(sort_variable) );
 	crc.process_bytes(&sort_type, sizeof(sort_type) );
 	crc.process_bytes(&sort_index_or_data1, sizeof(sort_index_or_data1) );
@@ -104,8 +107,11 @@ void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
 	crc.process_bytes(&lowercase, sizeof(lowercase) );
 	crc.process_bytes(&titlecase, sizeof(titlecase) );
 	crc.process_bytes(&has_complex_case, sizeof(has_complex_case) );
+#endif
 	crc.process_bytes(&line_break, sizeof(line_break) );
+#ifdef BOOST_UNICODE_UCD_BIG
 	crc.process_bytes(&joining, sizeof(joining) );
+#endif
 }
 
 bool write_entry::has_same_properties(const write_entry& other) const
@@ -1301,12 +1307,21 @@ void write_sort(const write_data& data, const char * dest_path)
 
 struct lexico_sort
 {
-    bool operator()(const decomp_entry& lft, const decomp_entry& rgt) const
+    bool operator()(const decomp_entry* lft, const decomp_entry* rgt) const
     {
         return std::lexicographical_compare(
-            lft.decomposition.begin(), lft.decomposition.end(),
-            rgt.decomposition.begin(), rgt.decomposition.end()
+            lft->decomposition.begin(), lft->decomposition.end(),
+            rgt->decomposition.begin(), rgt->decomposition.end()
         );
+    }
+};
+
+struct lexico_comp
+{
+    bool operator()(const decomp_entry* lft, const decomp_entry* rgt) const
+    {
+        return lft->decomposition.size() == rgt->decomposition.size()
+           &&  std::equal(lft->decomposition.begin(), lft->decomposition.end(), rgt->decomposition.begin());
     }
 };
 
@@ -1344,21 +1359,36 @@ void write_compose(const write_data& data, const char * dest_path)
 
 	// ---- compose data table ------------------------------------------------------
     
-    std::vector<decomp_entry> tmp = data.tbl_decomp;
-    std::sort(tmp.begin(), tmp.end(), lexico_sort());
+    std::vector<const decomp_entry*> compose;
+    compose.reserve(data.tbl_decomp.size());
+    
+    for(std::vector<decomp_entry>::const_iterator it = data.tbl_decomp.begin(); it != data.tbl_decomp.end(); ++it)
+    {
+        /* We exclude non-canonical decompositions, singletons,
+         * decompositions that start with non-starters,
+         * and code points from the exclusion table */
+        if(
+            get_properties(*data.props, it->chr).decomposition_kind == ucd::decomposition_type::canonical &&
+            it->decomposition.size() > 1 &&
+            get_properties(*data.props, it->decomposition[0]).combining == 0 &&
+            !get_properties(*data.props, it->chr).comp_ex
+        )
+            compose.push_back(&*it);
+    }
+    
+    std::sort(compose.begin(), compose.end(), lexico_sort());
+    std::vector<const decomp_entry*>::iterator end = std::unique(compose.begin(), compose.end(), lexico_comp());
+    if(end != compose.end())
+    {
+		std::stringstream ss;
+		ss << "Duplicates found for canonical composition";
+		throw std::runtime_error (ss.str());
+    }
 
     file << "\nBOOST_UNICODE_DECL extern const unichar_compose_data_entry __uni_compose_entry[] = {\n";
     
-    for(std::vector<decomp_entry>::const_iterator it = tmp.begin(); it != tmp.end(); ++it)
-    {
-        /* We exclude singletons, decompositions that start with non-starters, and code points from the exclusion table */
-        if(
-            it->decomposition.size() > 1
-        && get_properties(*data.props, it->decomposition[0]).combining == 0
-        && !get_properties(*data.props, it->chr).comp_ex
-        )
-            file << "\t{__uni_decomp_data_0x" << std::hex << it->chr << ", 0x" << it->chr << "},\n";
-    }
+    for(std::vector<const decomp_entry*>::const_iterator it = compose.begin(); it != compose.end(); ++it)
+        file << "\t{__uni_decomp_data_0x" << std::hex << (*it)->chr << ", 0x" << (*it)->chr << "},\n";
     
     file << "};\n\n";
     file << "BOOST_UNICODE_DECL extern const size_t __uni_compose_entry_size = sizeof __uni_compose_entry / sizeof __uni_compose_entry[0];\n\n";

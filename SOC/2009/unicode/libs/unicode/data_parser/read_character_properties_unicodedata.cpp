@@ -257,7 +257,7 @@ tuple<char32, character_properties> read_one_character
 				decomposition_type::narrow)] |
 		str_p ("<small>")
 			[assign_a (prop.decomposition_kind,
-				decomposition_type::small)] |
+				decomposition_type::small_)] |
 		str_p ("<square>")
 			[assign_a (prop.decomposition_kind,
 				decomposition_type::square)] |

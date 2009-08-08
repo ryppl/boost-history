@@ -140,6 +140,8 @@ pipe_output_iterator< \
 #endif
 
 /** Defines helper functions for usage of a \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly.
+ * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
+ * the constructor of the \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly.
  * \arg \c name Name of the type modelling the \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly.
  * \arg \c n Maximum number of optional arguments. */
 #define BOOST_UNICODE_ONE_MANY_PIPE_DEF(name, n) \
@@ -147,6 +149,8 @@ BOOST_UNICODE_PIPE_COMMON_DEF(name, one_many_pipe, n) \
 BOOST_UNICODE_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_OUTPUT_DEF, name)
 
 /** Defines helper functions for usage of a \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly.
+ * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
+ * the constructor of the \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly.
  * \arg \c name Name of the type modelling the \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly.
  * \arg \c n Maximum number of optional arguments. */
 #define BOOST_UNICODE_PIPE_DEF(name, n) \

@@ -7,17 +7,15 @@
 #include <boost/integer/static_pow.hpp>
 #include <climits>
 
-#include <boost/range/algorithm/copy.hpp>
-#include <boost/range/distance.hpp>
-#include <boost/range/adaptor/filtered.hpp>
-
+#include <boost/iterator/pipe_iterator.hpp>
 #include <vector>
 
 namespace boost
 {
 namespace unicode
 {
-    
+
+/** Computes 2 elevated to power \c o so as to use the option within bit masks. */
 #define BOOST_UNICODE_OPTION(o) (boost::static_pow<2, (o)>::value)
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 #undef BOOST_UNICODE_OPTION
@@ -26,7 +24,7 @@ namespace unicode
 /** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
  * that decomposes a code point, i.e. it converts a code point into a
  * sequence of code points.
- * It applies UCD decompositions that match \c mask as well as the Hangul decompositions. */
+ * It applies UCD decompositions that match \c mask recursively as well as the Hangul decompositions. */
 struct decomposer
 {
     typedef char32 input_type;
@@ -36,19 +34,22 @@ struct decomposer
     {
     }
     
+    /** \post [<tt>begin</tt>, <tt>end</tt>[ is in Normalization Form D. */
     template<typename Out>
     Out operator()(char32 ch, Out out)
     {
+        if(ucd::get_combining_class(ch) != 0)
+        {
+            // TODO: actually enforce the postcondition, canonical order is not guaranteed */
+        }
+        
         iterator_range<const char32*> dec = ucd::get_decomposition(ch);
         if(!empty(dec) && ((1 << ucd::get_decomposition_type(ch)) & mask))
         {
-            out = copy(dec, out);
+            return pipe(dec, make_one_many_pipe(*this), out); // we decompose recursively
         }
-        else
-        {
-            out = hangul_decomposer()(ch, out);
-        }
-        return out;
+
+        return hangul_decomposer()(ch, out);
     }
     
 private:
@@ -88,38 +89,21 @@ namespace detail
     private:
         std::size_t offset;
     };
-    
-    struct mask_compose_data_entry
-    {
-        mask_compose_data_entry(unsigned mask_) : mask(mask_)
-        {
-        }
-        
-        bool operator()(const ucd::unichar_compose_data_entry& entry) const
-        {
-            return ((1 << ucd::get_decomposition_type(entry.ch)) & mask) != 0;
-        }
-        
-    private:
-        unsigned mask;
-    };
 }
 
 /** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
  * that composes a sequence of code points, i.e. it converts a sequence
  * of code points into a single code point.
- * It applies UCD compositions that match \c mask as well as the Hangul
+ * It applies UCD canonical compositions as well as the Hangul
  * compositions, excluding the ones from the composition
  * exclusion table. */
 struct composer
 {
     typedef char32 input_type;
     typedef char32 output_type;
+    typedef mpl::int_<1> max_output;
     
-    composer(unsigned mask_ = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical)) : mask(mask_)
-    {
-    }
-    
+    /** \pre [<tt>begin</tt>, <tt>end</tt>[ is in Normalization Form D. */
     template<typename In, typename Out>
     std::pair<In, Out> ltr(In begin, In end, Out out)
     {
@@ -133,39 +117,37 @@ struct composer
         std::size_t offset = 0;
         for(;;)
         {
-            filter_range<
-                detail::mask_compose_data_entry,
-                const iterator_range<const ucd::unichar_compose_data_entry*>
-            > r =
-                make_filtered_range(
-                    make_iterator_range(
-                        std::equal_range(
-                            table_begin, table_end,
-                            pos,
-                            detail::composition_find<In>(offset)
-                        )
-                    ),
-                    detail::mask_compose_data_entry(mask)
+            const iterator_range<const ucd::unichar_compose_data_entry*> r =
+                std::equal_range(
+                    table_begin, table_end,
+                    pos,
+                    detail::composition_find<In>(offset)
                 );
             
-            std::ptrdiff_t sz = distance(r);
-            if(sz == 1 && offset == (r.begin()->decomp[0]-1))
+            ++pos;
+            std::size_t sz = size(r);
+            if(sz == 0) // no possible match
+            {
+                return hangul_composer().ltr(begin, end, out);
+            }
+            else if( (sz == 1 || pos == end) && offset == (r.begin()->decomp[0]-1)) // a complete match was found
             {
                 *out++ = r.begin()->ch;
-                return std::make_pair(++pos, out);
+                return std::make_pair(pos, out);
             }
-            else if(sz == 0 || ++pos == end)
+            else if(pos == end) // some possible matches but none complete
             {
                 return hangul_composer().ltr(begin, end, out);
             }
             
-            table_begin = r.begin().base();
-            table_end = r.end().base();
+            table_begin = r.begin();
+            table_end = r.end();
             ++offset;
         }
     }
     
     /* This could by made faster using a sorted table of reversed strings */
+    /** \pre [<tt>begin</tt>, <tt>end</tt>[ is in Normalization Form D. */
     template<typename In, typename Out>
     std::pair<In, Out> rtl(In begin, In end, Out out)
     {
@@ -180,7 +162,7 @@ struct composer
         /* First pass, we copy the possible results into a vector */
         for(const ucd::unichar_compose_data_entry* p = table_begin; p != table_end; ++p)
         {
-            if(detail::mask_compose_data_entry(mask)(*p) && p->decomp[p->decomp[0]] == *pos)
+            if(p->decomp[p->decomp[0]] == *pos)
                 r.push_back(p);
         }
         
@@ -205,15 +187,16 @@ struct composer
             for(iterator it = r.begin(); it != r.end(); ++it)
             {
                 const ucd::unichar_compose_data_entry* p = *it;
-                if(detail::mask_compose_data_entry(mask)(*p) && p->decomp[0] > offset && p->decomp[p->decomp[0]-offset] == *pos)
+                if(
+                    p->decomp[0] > offset &&
+                    (pos == begin ? p->decomp[0] == offset+1 : true) && // if we are at the beginning, we only consider matches with the right size.
+                    p->decomp[p->decomp[0]-offset] == *pos
+                )
                     r2.push_back(p);
             }
             r.swap(r2);
         }
     }
-    
-private:
-    unsigned mask;
 };
 
 } // namespace unicode

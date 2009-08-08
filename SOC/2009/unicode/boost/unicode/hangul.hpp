@@ -62,7 +62,7 @@ struct hangul_decomposer
 };
 
 /** \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
- * transforms <L, V> and <LV, T> Hangul code points sequences into the
+ * transforms <L, V>, <L, V, T> and <LV, T> Hangul code points sequences into the
  * LV and LVT Hangul syllables, since those compositions are not part
  * of the UCD.
  * Other code points are left unchanged. */

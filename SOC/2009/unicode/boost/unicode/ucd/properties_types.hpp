@@ -201,7 +201,7 @@ namespace unicode
 				vertical,
 				wide,
 				narrow,
-				small,
+				small_,
 				square,
 				fraction,
 				compat,

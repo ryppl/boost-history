@@ -9,7 +9,7 @@ namespace boost
 namespace unicode
 {
 
-BOOST_UNICODE_PIPE_DEF(compose, 1)
+BOOST_UNICODE_PIPE_DEF(compose, 0)
 BOOST_UNICODE_ONE_MANY_PIPE_DEF(decompose, 1)
 
 } // namespace unicode
