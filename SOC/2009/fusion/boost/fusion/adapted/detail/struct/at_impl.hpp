@@ -48,6 +48,11 @@ namespace boost { namespace fusion { namespace extension
             }
         };
     };
+
+    template <>
+    struct at_impl<assoc_struct_tag>
+      : at_impl<struct_tag>
+    {};
 }}}
 
 #endif

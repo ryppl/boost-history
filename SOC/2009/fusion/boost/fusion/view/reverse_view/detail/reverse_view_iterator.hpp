@@ -23,6 +23,7 @@ namespace boost { namespace fusion
       : iterator_base<reverse_view_iterator<First> >
     {
         typedef First first_type;
+
         typedef reverse_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<first_type>::type category;
 

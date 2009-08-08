@@ -42,12 +42,13 @@ namespace boost { namespace fusion
     struct concat_iterator
       : iterator_base<concat_iterator<First> >
     {
+        typedef First first_type;
+
         typedef concat_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
 
-        typedef First first_type;
-
-        explicit concat_iterator(First const& first)
+        explicit
+        concat_iterator(First const& first)
           : first(first)
         {}
 

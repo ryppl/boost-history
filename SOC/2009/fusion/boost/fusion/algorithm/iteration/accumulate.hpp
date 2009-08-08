@@ -13,13 +13,11 @@
 
 namespace boost { namespace fusion
 {
-    struct void_;
-
     namespace result_of
     {
         template <typename Seq, typename State, typename F>
         struct accumulate
-          : result_of::fold<Seq, State, F>
+          : fold<Seq, State, F>
         {};
     }
 
@@ -41,7 +39,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename State, typename F>
-    inline typename result_of::accumulate<Seq&, State const&, F const&>::type
+    inline typename
+        result_of::accumulate<Seq&, State const&, F const&>::type
     accumulate(Seq& seq,State const& state,F const& f)
     {
         return fusion::fold(seq,state,f);

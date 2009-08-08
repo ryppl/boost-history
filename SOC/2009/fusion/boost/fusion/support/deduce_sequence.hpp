@@ -31,7 +31,7 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-        template <class Seq>
+        template <typename Seq>
         struct deduce_sequence
           : result_of::as_vector<fusion::transform_view<Seq, detail::deducer> >
         {};

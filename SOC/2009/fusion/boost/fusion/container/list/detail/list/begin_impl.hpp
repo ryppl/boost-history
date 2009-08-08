@@ -9,9 +9,6 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_BEGIN_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_BEGIN_IMPL_HPP
 
-#include <boost/fusion/support/iterator_adapter.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-
 namespace boost { namespace fusion { namespace extension
 {
     template <typename Tag>
@@ -24,23 +21,18 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef
-                iterator_adapter<
-                    typename result_of::begin<
-                        typename detail::forward_as<
-                            SeqRef
-                          , typename detail::remove_reference<
-                                SeqRef
-                            >::type::storage_type
-                        >::type
-                    >::type
+                basic_iterator<
+                    list_iterator_tag
                   , forward_traversal_tag
+                  , SeqRef
+                  , 0
                 >
             type;
 
             static type
             call(SeqRef seq)
             {
-                return type(fusion::begin(seq.get_data()),0);
+                return type(seq,0);
             }
         };
     };

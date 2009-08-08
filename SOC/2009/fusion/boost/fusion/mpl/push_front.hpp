@@ -8,9 +8,9 @@
 #ifndef BOOST_FUSION_MPL_PUSH_FRONT_HPP
 #define BOOST_FUSION_MPL_PUSH_FRONT_HPP
 
-#include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/algorithm/transformation/push_front.hpp>
 #include <boost/fusion/sequence/convert.hpp>
+#include <boost/fusion/algorithm/transformation/push_front.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace mpl
 {
@@ -24,12 +24,9 @@ namespace boost { namespace mpl
         struct apply
         {
             typedef typename
-                fusion::result_of::push_front<Seq, T>::type
-            result;
-
-            typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Seq>::type, result
+                    typename fusion::traits::tag_of<Seq>::type
+                  , typename fusion::result_of::push_front<Seq, T>::type
                 >::type
             type;
         };

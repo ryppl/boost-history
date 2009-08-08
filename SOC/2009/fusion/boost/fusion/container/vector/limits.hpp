@@ -11,14 +11,14 @@
 #include <boost/config.hpp>
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
-# if !defined(FUSION_MAX_VECTOR_SIZE)
-#  define FUSION_MAX_VECTOR_SIZE 10
-# else
-#  if FUSION_MAX_VECTOR_SIZE < 3
-#    undef FUSION_MAX_VECTOR_SIZE
-#    define FUSION_MAX_VECTOR_SIZE 10
-#  endif
-# endif
+#   ifndef FUSION_MAX_VECTOR_SIZE
+#       define FUSION_MAX_VECTOR_SIZE 10
+#   else
+#       if FUSION_MAX_VECTOR_SIZE < 3
+#           undef FUSION_MAX_VECTOR_SIZE
+#           define FUSION_MAX_VECTOR_SIZE 10
+#       endif
+#   endif
 #endif
 
 #endif

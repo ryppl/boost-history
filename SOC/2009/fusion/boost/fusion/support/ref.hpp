@@ -17,10 +17,8 @@
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/mpl/bool.hpp>
 
-#ifndef BOOST_NO_RVALUE_REFERENCES
-#   include <boost/utility/enable_if.hpp>
-#endif
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
@@ -32,18 +30,16 @@
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <utility>
+#endif
+
 //cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
 //get a lot of problems with older compilers. On top of that, fusion
 //types are not meant to be volatile anyway.
-
 #ifdef BOOST_NO_RVALUE_REFERENCES
-#   include <boost/mpl/bool.hpp>
-
 #   define BOOST_FUSION_R_ELSE_LREF(OBJECT) OBJECT&
 #   define BOOST_FUSION_R_ELSE_CLREF(OBJECT) OBJECT const&
-#   define BOOST_FUSION_RREF_ELSE_OBJ(OBJECT) OBJECT
-#   define BOOST_FUSION_OBJ_ELSE_LREF(OBJECT) OBJECT&
-#   define BOOST_FUSION_OBJ_ELSE_CLREF(OBJECT) OBJECT const&
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) ARGUMENT
 
@@ -53,22 +49,13 @@
         MACRO(const&,ARG)\
         MACRO(&,ARG)
 #else
-#   include <utility>
-
 #   define BOOST_FUSION_R_ELSE_LREF(OBJECT) OBJECT&&
 #   define BOOST_FUSION_R_ELSE_CLREF(OBJECT) OBJECT&&
-#   define BOOST_FUSION_RREF_ELSE_OBJ(OBJECT) OBJECT&&
-#   define BOOST_FUSION_OBJ_ELSE_LREF(OBJECT) OBJECT
-#   define BOOST_FUSION_OBJ_ELSE_CLREF(OBJECT) OBJECT
 
 #   define BOOST_FUSION_FORWARD(TYPE,ARGUMENT) std::forward<TYPE>(ARGUMENT)
 
-    //cschmidt: InstThis macro could be replaced with a single function using
-    //enable if and is_convertible. This is a lot slower than five overloads/
-    //specialisations though.
 #   define BOOST_FUSION_ALL_CTOR_COMBINATIONS(MACRO,ARG)\
         BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)
-
 #   define BOOST_FUSION_ALL_CV_REF_COMBINATIONS(MACRO,ARG)\
         MACRO(&,ARG)\
         MACRO(const&,ARG)\

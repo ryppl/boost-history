@@ -42,8 +42,6 @@
 namespace boost { namespace fusion
 {
     struct void_;
-    struct cons_tag;
-    struct forward_traversal_tag;
     struct fusion_sequence_tag;
 
     struct nil
@@ -51,7 +49,7 @@ namespace boost { namespace fusion
     {
         typedef mpl::int_<0> size;
         typedef cons_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag; 
         typedef mpl::false_ is_view;
         typedef forward_traversal_tag category;
         typedef void_ car_type;
@@ -92,7 +90,7 @@ namespace boost { namespace fusion
     {
         typedef mpl::int_<Cdr::size::value+1> size;
         typedef cons_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag; 
         typedef mpl::false_ is_view;
         typedef forward_traversal_tag category;
         typedef Car car_type;
@@ -126,12 +124,14 @@ namespace boost { namespace fusion
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        explicit cons(typename call_traits<Car>::param_type car)
+        explicit
+        cons(typename call_traits<Car>::param_type car)
           : car(car)
         {}
 #else
         template<typename OtherCar>
-        explicit cons(OtherCar&& car)
+        explicit
+        cons(OtherCar&& car)
           : car(std::forward<OtherCar>(car))
         {}
 #endif

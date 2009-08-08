@@ -20,11 +20,13 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/inherit.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/call_traits.hpp>
 
@@ -51,9 +53,9 @@ namespace boost { namespace fusion
     struct fusion_sequence_tag;
 
     // Binary Version
-    template <typename Seq1, typename Seq2, typename F>
+    template <typename Seq1, typename Seq2, typename F, typename IsAssociative>
     struct transform_view
-      : sequence_base<transform_view<Seq1, Seq2, F> >
+      : sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
     {
         //BOOST_FUSION_MPL_ASSERT_RELATION(
         //       result_of::size<Sequence1>,==,result_of::size<Sequence2>,
@@ -64,10 +66,6 @@ namespace boost { namespace fusion
         typedef detail::view_storage<Seq2> storage2_type;
         typedef typename storage2_type::type seq2_type;
         typedef F transform_type;
-
-        typedef transform_view2_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::true_ is_view;
         typedef typename
             detail::strictest_traversal<
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
@@ -75,6 +73,18 @@ namespace boost { namespace fusion
 #else
                 fusion::vector<seq1_type, seq2_type>
 #endif
+            >::type
+        strictest_traversal;
+
+
+        typedef transform_view2_tag fusion_tag;
+        typedef fusion_sequence_tag tag;
+        typedef mpl::true_ is_view;
+        typedef typename
+            mpl::eval_if<
+                IsAssociative
+              , mpl::inherit2<strictest_traversal,associative_sequence_tag>
+              , mpl::identity<strictest_traversal>
             >::type
         category;
         typedef typename result_of::size<seq1_type>::type size;
@@ -120,49 +130,51 @@ namespace boost { namespace fusion
         transform_type f;
     };
 
-    // Unary Version
-    template <typename Seq, typename F>
-#if defined(BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS)
-    struct transform_view<Seq, F, void_>
-      : sequence_base<transform_view<Seq, F, void_> >
-#else
-    struct transform_view<Seq, F>
-      : sequence_base<transform_view<Seq, F> >
-#endif
+    // Unary Version implementation
+    template<typename Seq, typename F, typename IsAssociative>
+    struct unary_transform_view
+      : sequence_base<unary_transform_view<Seq, F, void_> >
     {
         typedef detail::view_storage<Seq> storage_type;
-        typedef typename storage_type::type sequence_type;
+        typedef typename storage_type::type seq_type;
+        typedef typename traits::category_of<seq_type>::type seq_category;
         typedef F transform_type;
 
-        typedef typename traits::category_of<sequence_type>::type category;
-        typedef typename result_of::size<sequence_type>::type size;
+        typedef typename
+            mpl::eval_if<
+                IsAssociative
+              , mpl::inherit2<seq_category,associative_sequence_tag>
+              , mpl::identity<seq_category>
+            >::type
+        category;
+        typedef typename result_of::size<seq_type>::type size;
         typedef transform_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
 
         template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+        unary_transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
           : seq(BOOST_FUSION_FORWARD(OtherTransformView,view).seq)
           , f(BOOST_FUSION_FORWARD(OtherTransformView,view).f)
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        transform_view(
+        unary_transform_view(
             typename storage_type::call_param seq,
-            typename call_traits<F>::param_type f)
+            typename call_traits<transform_type>::param_type f)
           : seq(seq)
           , f(f)
         {}
 #else
         template<typename OtherSeq, typename OtherF>
-        transform_view(OtherSeq&& seq,OtherF&& f)
+        unary_transform_view(OtherSeq&& seq,OtherF&& f)
           : seq(std::forward<OtherSeq>(seq))
           , f(std::forward<OtherF>(f))
         {}
 #endif
 
         template<typename OtherTransformView>
-        OtherTransformView&
+        unary_transform_view&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
         {
             seq=BOOST_FUSION_FORWARD(OtherTransformView,view).seq;
@@ -172,6 +184,75 @@ namespace boost { namespace fusion
 
         storage_type seq;
         transform_type f;
+    };
+
+    //TODO cschmidt: template typedef
+    template<typename Seq, typename F>
+    struct transform_view<Seq, F, mpl::true_,mpl::false_>
+      : unary_transform_view<Seq, F, mpl::true_>
+    {
+        typedef unary_transform_view<Seq, F, mpl::true_> base;
+
+        template<typename OtherTransformView>
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+          : base(BOOST_FUSION_FORWARD(OtherTransformView,view))
+        {}
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        transform_view(
+            typename base::storage_type::call_param seq,
+            typename call_traits<typename base::transform_type>::param_type f)
+          : base(seq,f)
+        {}
+#else
+        template<typename OtherSeq, typename OtherF>
+        transform_view(OtherSeq&& seq,OtherF&& f)
+          : base(std::forward<OtherSeq>(seq),std::forward<OtherF>(f))
+        {}
+#endif
+
+        template<typename OtherTransformView>
+        transform_view&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+        {
+            *static_cast<base*>(this)=
+                    BOOST_FUSION_FORWARD(OtherTransformView,view);
+            return *this;
+        }
+    };
+
+    template<typename Seq, typename F>
+    struct transform_view<Seq, F, mpl::false_,mpl::false_>
+      : unary_transform_view<Seq, F, mpl::false_>
+    {
+        typedef unary_transform_view<Seq, F, mpl::false_> base;
+
+        template<typename OtherTransformView>
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+          : base(BOOST_FUSION_FORWARD(OtherTransformView,view))
+        {}
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        transform_view(
+            typename base::storage_type::call_param seq,
+            typename call_traits<typename base::transform_type>::param_type f)
+          : base(seq,f)
+        {}
+#else
+        template<typename OtherSeq, typename OtherF>
+        transform_view(OtherSeq&& seq,OtherF&& f)
+          : base(std::forward<OtherSeq>(seq),std::forward<OtherF>(f))
+        {}
+#endif
+
+        template<typename OtherTransformView>
+        transform_view&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+        {
+            *static_cast<base*>(this)=
+                    BOOST_FUSION_FORWARD(OtherTransformView,view);
+            return *this;
+        }
     };
 }}
 

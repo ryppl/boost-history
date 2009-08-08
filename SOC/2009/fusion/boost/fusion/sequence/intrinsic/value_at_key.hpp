@@ -9,6 +9,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 
+#include <boost/fusion/iterator/value_of_data.hpp>
+#include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
 
@@ -21,7 +23,18 @@ namespace boost { namespace fusion
     namespace extension
     {
         template <typename Tag>
-        struct value_at_key_impl;
+        struct value_at_key_impl
+        {
+            template <typename SeqRef, typename Key>
+            struct apply
+            {
+                typedef typename
+                    result_of::value_of_data<
+                        typename result_of::find_key<SeqRef, Key>::type
+                    >::type
+                type;
+            };
+        };
 
         template <>
         struct value_at_key_impl<sequence_facade_tag>

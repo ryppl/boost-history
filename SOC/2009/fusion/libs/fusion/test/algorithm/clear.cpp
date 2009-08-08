@@ -5,7 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 #include <boost/detail/lightweight_test.hpp>
-#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/adapted/mpl.hpp>
+#include <boost/fusion/container/vector.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
 #include <boost/fusion/sequence/comparison/equal_to.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
@@ -20,8 +21,6 @@ main()
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
     std::cout << tuple_delimiter(", ");
-
-/// Testing pop_back
 
     {
         char const* s = "Ruby";

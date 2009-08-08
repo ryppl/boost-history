@@ -69,9 +69,9 @@ namespace boost { namespace fusion { namespace detail
     };
 
     template <typename T, int N>
-    struct as_fusion_element<volatile const T(&)[N]>
+    struct as_fusion_element<const volatile T(&)[N]>
     {
-        typedef volatile const T(&type)[N];
+        typedef const volatile T(&type)[N];
     };
 
     template <typename T>

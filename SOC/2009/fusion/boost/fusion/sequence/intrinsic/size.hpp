@@ -45,8 +45,7 @@ namespace boost { namespace fusion
         struct size
           : extension::size_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type>::type
-        {
-        };
+        {};
     }
 
     template <typename Seq>

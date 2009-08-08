@@ -17,24 +17,20 @@ namespace boost { namespace fusion
 
     struct void_;
 
-    //TODO???
     template <typename SingleView>
     struct single_view_iterator_end
       : iterator_base<single_view_iterator_end<SingleView> >
     {
+        typedef void_ view_type;
+
         typedef single_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
-
-        typedef void_ view_type;
     };
 
     template <typename SingleViewRef>
     struct single_view_iterator
       : iterator_base<single_view_iterator<SingleViewRef> >
     {
-        typedef single_view_iterator_tag fusion_tag;
-        typedef forward_traversal_tag category;
-
         typedef SingleViewRef view_type;
         typedef typename
             detail::forward_as<
@@ -44,6 +40,9 @@ namespace boost { namespace fusion
                 >::type::value_type
             >::type
         value_type;
+
+        typedef single_view_iterator_tag fusion_tag;
+        typedef forward_traversal_tag category;
 
         template<typename OtherIt>
         single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)

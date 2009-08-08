@@ -24,6 +24,11 @@ namespace boost { namespace fusion { namespace extension
           : struct_size<typename detail::identity<SeqRef>::type>
         {};
     };
+
+    template <>
+    struct size_impl<assoc_struct_tag>
+      : size_impl<struct_tag>
+    {};
 }}}
 
 #endif

@@ -8,10 +8,11 @@
 
 namespace boost { namespace fusion { namespace detail
 {
+    struct assign_directly
+    {};
 
-        struct assign_directly {};
-        struct assign_by_deref {};
-
+    struct assign_by_deref
+    {};
 }}}
 
 #endif

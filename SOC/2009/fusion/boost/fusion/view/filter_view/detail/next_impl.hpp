@@ -29,7 +29,10 @@ namespace boost { namespace fusion { namespace extension
                 detail::static_find_if<
                     typename result_of::next<typename it::first_type>::type
                   , typename it::last_type
-                  , typename it::pred_type
+                  , mpl::bind1<
+                        typename mpl::lambda<typename it::pred_type>::type
+                      , mpl::bind1<mpl::quote1<result_of::value_of>,mpl::_1>
+                    >
                 >
             filter;
 

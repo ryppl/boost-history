@@ -8,11 +8,8 @@
 #ifndef BOOST_FUSION_SUPPORT_IS_SEQUENCE_HPP
 #define BOOST_FUSION_SUPPORT_IS_SEQUENCE_HPP
 
-#include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
-
-#include <boost/mpl/not.hpp>
 
 namespace boost { namespace fusion
 {

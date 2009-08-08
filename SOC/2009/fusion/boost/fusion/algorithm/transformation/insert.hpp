@@ -23,8 +23,7 @@ namespace boost { namespace fusion
               , Pos
               , single_view<typename detail::as_fusion_element<T>::type>
             >
-        {
-        };
+        {};
     }
 
     template <typename Seq, typename Pos, typename T>

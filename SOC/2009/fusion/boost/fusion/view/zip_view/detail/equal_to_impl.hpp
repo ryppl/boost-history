@@ -12,7 +12,6 @@
 #include <boost/fusion/mpl.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
 
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/zip_view.hpp>
@@ -42,13 +41,13 @@ namespace boost { namespace fusion
             typedef
                 mpl::transform_view<
                     zipped
-                  , mpl::unpack_args<result_of::equal_to<mpl::_,mpl::_> >
+                  , mpl::unpack_args<result_of::equal_to<mpl::_1,mpl::_1> >
                 >
             transformed;
             typedef typename
                 mpl::find_if<
                     transformed
-                  , mpl::equal_to<mpl::_, mpl::false_>
+                  , mpl::equal_to<mpl::_1, mpl::false_>
                 >::type
             found;
 

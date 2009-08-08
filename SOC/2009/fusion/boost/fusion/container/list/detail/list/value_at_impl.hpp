@@ -10,6 +10,7 @@
 
 namespace boost { namespace fusion { namespace extension
 {
+    //TODO doc
     template <typename Tag>
     struct value_at_impl;
 
@@ -20,14 +21,12 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename
-                detail::forward_as<
-                    SeqRef
-                  , typename detail::remove_reference<SeqRef>::type::storage_type
-               >::type
-            storage_type;
-
-            typedef typename
-                result_of::value_at<storage_type,N>::type
+                result_of::value_at<
+                    typename detail::remove_reference<
+                        SeqRef
+                    >::type::storage_type
+                  , N
+                >::type
             type;
         };
     };

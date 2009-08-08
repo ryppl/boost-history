@@ -28,7 +28,7 @@ namespace boost { namespace fusion {
         {
             template<typename Sequence>
             struct apply
-                : mpl::int_<2>
+              : mpl::int_<2>
             {};
         };
     }

@@ -8,7 +8,6 @@
 #ifndef BOOST_FUSION_ITERATOR_VALUE_OF_HPP
 #define BOOST_FUSION_ITERATOR_VALUE_OF_HPP
 
-#include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion

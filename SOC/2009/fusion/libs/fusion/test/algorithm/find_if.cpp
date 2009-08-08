@@ -50,7 +50,6 @@ main()
         using boost::mpl::_;
 
         typedef vector<int, char, X, double> mpl_vec;
-        //TODO!!!
         BOOST_TEST((*boost::fusion::find_if<is_same<_, X> >(mpl_vec()) == 12345));
     }
 

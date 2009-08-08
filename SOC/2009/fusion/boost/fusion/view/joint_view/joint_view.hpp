@@ -13,12 +13,15 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/is_view.hpp>
+#include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
-#include <boost/mpl/if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/inherit.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/and.hpp>
 
 #include <boost/fusion/view/joint_view/detail/joint_view_fwd.hpp>
 #include <boost/fusion/view/joint_view/detail/joint_view_iterator.hpp>
@@ -38,15 +41,24 @@ namespace boost { namespace fusion
     struct joint_view
       : sequence_base<joint_view<Seq1, Seq2> >
     {
-        typedef joint_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef forward_traversal_tag category;
-        typedef mpl::true_ is_view;
-
         typedef detail::view_storage<Seq1> storage1_type;
         typedef typename storage1_type::type seq1_type;
         typedef detail::view_storage<Seq2> storage2_type;
         typedef typename storage2_type::type seq2_type;
+
+        typedef typename
+            mpl::eval_if<
+                mpl::and_<
+                    traits::is_associative<seq1_type>
+                  , traits::is_associative<seq2_type>
+                >
+              , mpl::inherit2<forward_traversal_tag,associative_sequence_tag>
+              , mpl::identity<forward_traversal_tag>
+            >::type
+        category;
+        typedef joint_view_tag fusion_tag;
+        typedef fusion_sequence_tag tag;
+        typedef mpl::true_ is_view;
 
         typedef typename
             mpl::plus<
@@ -77,7 +89,7 @@ namespace boost { namespace fusion
 #endif
 
         template<typename OtherJointView>
-        OtherJointView&
+        joint_view&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) other_view)
         {
             seq1=BOOST_FUSION_FORWARD(OtherJointView,other_view).seq1;

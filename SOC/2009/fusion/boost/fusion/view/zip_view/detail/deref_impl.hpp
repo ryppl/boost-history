@@ -30,15 +30,12 @@ namespace boost { namespace fusion
 
             template<typename Self, typename ItRef>
             struct result<Self(ItRef)>
-            {
-                //TODO cschmidt: ?!
-                typedef typename
-                    mpl::eval_if<is_same<ItRef, unused_type const&>
-                               , mpl::identity<unused_type const&>
-                               , result_of::deref<ItRef>
-                    >::type
-                type;
-            };
+              : mpl::eval_if<
+                    is_same<ItRef, unused_type const&>
+                  , mpl::identity<unused_type const&>
+                  , result_of::deref<ItRef>
+                >
+            {};
 
             template<typename It>
             typename result<poly_deref(It const&)>::type

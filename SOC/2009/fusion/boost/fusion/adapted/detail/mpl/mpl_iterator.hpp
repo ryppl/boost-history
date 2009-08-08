@@ -11,18 +11,45 @@
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/category_of.hpp>
 
-#include <boost/fusion/iterator/equal_to.hpp>
-#include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/iterator/prior.hpp>
-#include <boost/fusion/iterator/advance.hpp>
-#include <boost/fusion/iterator/distance.hpp>
+//TODO assoc iterator!
 
 namespace boost { namespace fusion
 {
     struct mpl_iterator_tag;
     struct mpl_sequence_tag;
+
+    namespace extension
+    {
+        template <typename Tag>
+        struct value_of_impl;
+
+        template <typename Tag>
+        struct equal_to_impl;
+
+        template <typename Tag>
+        struct deref_impl;
+
+        template <typename Tag>
+        struct next_impl;
+
+        template <typename Tag>
+        struct prior_impl;
+
+        template <typename Tag>
+        struct advance_impl;
+
+        template <typename Tag>
+        struct distance_impl;
+    }
+
+    namespace detail
+    {
+        template<typename>
+        struct get_mpl_iterator_tag
+        {
+            typedef mpl_iterator_tag type;
+        };
+    }
 
     template <typename It>
     struct mpl_iterator
@@ -31,72 +58,58 @@ namespace boost { namespace fusion
           , typename traits::category_of<It>::type
         >
     {
+        //cschmidt: void typedef to enable fast SFINAE in get_mpl_it.hpp!
+        typedef void void_;
+        typedef It it_type;
+
         template <typename ItRef>
         struct value_of
-          : result_of::value_of<It>
+          : extension::value_of_impl<
+                typename detail::get_mpl_iterator_tag<ItRef>::type
+            >::template apply<It&>
         {};
 
         template <typename It1Ref, typename It2Ref>
         struct equal_to
-          : result_of::equal_to<It, It2Ref>
+          : extension::equal_to_impl<
+                typename detail::get_mpl_iterator_tag<It1Ref>::type
+            >:: template apply<It&,It2Ref>
         {};
 
         template <typename ItRef>
         struct deref
-        {
-            typedef typename result_of::deref<It>::type type;
-
-            static type
-            call(ItRef)
-            {
-                return type();
-            }
-        };
+          : extension::deref_impl<
+                typename detail::get_mpl_iterator_tag<ItRef>::type
+            >::template apply<It&>
+        {};
 
         template <typename ItRef>
         struct next
-        {
-            typedef typename result_of::next<It>::type type;
-
-            static type
-            call(ItRef)
-            {
-                return type();
-            }
-        };
+          : extension::next_impl<
+                typename detail::get_mpl_iterator_tag<ItRef>::type
+            >::template apply<It&>
+        {};
 
         template <typename ItRef>
         struct prior
-        {
-            typedef typename result_of::prior<It>::type type;
-
-            static type
-            call(ItRef)
-            {
-                return type();
-            }
-        };
+          : extension::prior_impl<
+                typename detail::get_mpl_iterator_tag<ItRef>::type
+            >::template apply<It&>
+        {};
 
         template <typename ItRef, typename N>
         struct advance
-        {
-            typedef typename fusion::result_of::advance<It,N>::type type;
-
-            static type
-            call(ItRef)
-            {
-                return type();
-            }
-        };
+          : extension::advance_impl<
+                typename detail::get_mpl_iterator_tag<ItRef>::type
+            >::template apply<It&,N>
+        {};
 
         template <typename It1Ref, typename It2Ref>
         struct distance
-          : result_of::distance<It, It2Ref>
+          : extension::distance_impl<
+                typename detail::get_mpl_iterator_tag<It1Ref>::type
+            >::template apply<It&,It2Ref>
         {};
-
-        //cschmidt: void typedef to enable fast SFINAE in equal_to_impl.hpp!
-        typedef void void_;
-        typedef It it_type;
     };
 }}
 

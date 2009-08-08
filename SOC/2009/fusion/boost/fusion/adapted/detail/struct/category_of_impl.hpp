@@ -9,12 +9,10 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_CATEGORY_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_CATEGORY_OF_IMPL_HPP
 
-#include <boost/config/no_tr1/utility.hpp>
+#include <boost/fusion/support/category_of.hpp>
 
 namespace boost { namespace fusion
 {
-    struct random_access_traversal_tag;
-
     namespace extension
     {
         template<typename Tag>
@@ -27,6 +25,18 @@ namespace boost { namespace fusion
             struct apply
             {
                 typedef random_access_traversal_tag type;
+            };
+        };
+
+        template<>
+        struct category_of_impl<assoc_struct_tag>
+        {
+            template<typename SeqRef>
+            struct apply
+            {
+                struct type
+                  : random_access_traversal_tag, associative_sequence_tag
+                {};
             };
         };
     }

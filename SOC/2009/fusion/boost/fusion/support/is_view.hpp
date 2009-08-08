@@ -28,8 +28,8 @@ namespace boost { namespace fusion
     namespace traits
     {
         template <typename T>
-        struct is_view :
-            extension::is_view_impl<typename fusion::traits::tag_of<T>::type>::
+        struct is_view
+          : extension::is_view_impl<typename fusion::traits::tag_of<T>::type>::
                 template apply<typename detail::add_lref<T>::type>::type
         {};
     }

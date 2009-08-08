@@ -13,7 +13,8 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_root {};
+    struct sequence_root
+    {};
 
     template <typename Seq>
     struct sequence_base

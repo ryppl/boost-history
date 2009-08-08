@@ -6,28 +6,28 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_TAG_OF_HPP
-#define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_TAG_OF_HPP
-
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
 #include <cstddef>
 
-namespace boost 
+namespace BOOST_FUSION_ADAPTED_ARRAY_NAMESPACE
 { 
     template<typename T, std::size_t N>
-    class array;
+    BOOST_FUSION_ADAPTED_ARRAY_TYPE array;
 }
 
 namespace boost { namespace fusion 
 {
     struct array_tag;
+    struct array_iterator_tag;
+    struct random_access_traversal_tag;
 
     namespace traits
     {
 #define TAG_OF_SPECIALIZATION(COMBINATION,_)\
         template<typename T, std::size_t N>\
-        struct tag_of<boost::array<T,N> COMBINATION>\
+        struct tag_of<\
+            BOOST_FUSION_ADAPTED_ARRAY_NAMESPACE::array<T,N> COMBINATION>\
         {\
             typedef array_tag type;\
         };
@@ -37,5 +37,3 @@ namespace boost { namespace fusion
 #undef TAG_OF_SPECIALIZATION
     }
 }}
-
-#endif

@@ -56,7 +56,7 @@ namespace boost { namespace fusion {
         struct all_references
           : fusion::result_of::equal_to<
                 typename fusion::result_of::find_if<
-                    Seqs, mpl::not_<is_lrref<mpl::_> >
+                    Seqs, mpl::not_<is_lrref<mpl::_1> >
                 >::type
               , typename fusion::result_of::end<Seqs>::type
             >
@@ -105,10 +105,12 @@ namespace boost { namespace fusion {
             sizes;
 
             typedef typename
-                result_of::fold<
-                    sizes
-                  , typename result_of::front<sizes>::type
-                  , detail::poly_min
+                detail::remove_reference<
+                    typename result_of::fold<
+                        sizes
+                      , typename result_of::front<sizes>::type
+                      , detail::poly_min
+                    >::type
                 >::type
             type;
         };
@@ -121,17 +123,20 @@ namespace boost { namespace fusion {
     struct zip_view
       : sequence_base< zip_view<Seqs> >
     {
-        //TODO cschmidt: replace view& with view
         typedef typename
             result_of::remove<Seqs, unused_type const&>::type
         real_seqs;
         BOOST_MPL_ASSERT((detail::all_references<Seqs>));
 
         typedef typename
+            fusion::result_of::as_vector<Seqs>::type
+        seqs_type;
+
+        typedef typename
             detail::strictest_traversal<real_seqs>::type
         category;
         typedef zip_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag; 
         typedef mpl::true_ is_view;
         typedef typename
             mpl::eval_if<
@@ -140,10 +145,6 @@ namespace boost { namespace fusion {
               , mpl::identity<mpl::int_<0> >
             >::type
         size;
-
-        typedef typename
-            fusion::result_of::as_vector<Seqs>::type
-        seqs_type;
 
 #define ZIP_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeqs>\
@@ -157,7 +158,8 @@ namespace boost { namespace fusion {
 #undef ZIP_VIEW_CTOR
 
         template<typename OtherSeqs>
-        explicit zip_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeqs) seqs)
+        explicit
+        zip_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeqs) seqs)
           : seqs(fusion::sequence_assign(
               BOOST_FUSION_FORWARD(OtherSeqs,seqs)))
         {}

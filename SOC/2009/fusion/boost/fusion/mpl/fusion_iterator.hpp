@@ -14,6 +14,7 @@
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/iterator/distance.hpp>
 #include <boost/fusion/support/category_of.hpp>
+
 #include <boost/mpl/next_prior.hpp>
 #include <boost/mpl/advance_fwd.hpp>
 #include <boost/mpl/distance_fwd.hpp>

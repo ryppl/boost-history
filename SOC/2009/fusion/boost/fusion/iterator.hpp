@@ -9,6 +9,7 @@
 #define BOOST_FUSION_ITERATOR_HPP
 
 #include <boost/fusion/iterator/iterator_facade.hpp>
+#include <boost/fusion/iterator/basic_iterator.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/distance.hpp>

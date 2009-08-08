@@ -19,7 +19,8 @@ namespace boost{namespace fusion
         BOOST_MPL_HAS_XXX_TRAIT_DEF(type)
     }
 
-    template<template<typename...>class Type>struct variadic_quote
+    template<template<typename...> class Type>
+    struct variadic_quote
     {
     private:
         template<typename ConcreteType,typename/* HasType*/>
@@ -29,8 +30,8 @@ namespace boost{namespace fusion
         };
 
         template<typename ConcreteType>
-        struct apply_impl<ConcreteType,mpl::true_>:
-            ConcreteType
+        struct apply_impl<ConcreteType,mpl::true_>
+          : ConcreteType
         {
         };
 

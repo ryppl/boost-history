@@ -20,7 +20,14 @@ namespace boost { namespace fusion { namespace extension
         template <typename SeqRef>
         struct apply
         {
-            typedef array_iterator<SeqRef, 0> type;
+            typedef
+                basic_iterator<
+                    array_iterator_tag
+                  , random_access_traversal_tag
+                  , SeqRef
+                  , 0
+                >
+            type;
 
             static type
             call(SeqRef seq)

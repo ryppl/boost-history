@@ -11,7 +11,8 @@
 
 #include <boost/config.hpp>
 #ifdef BOOST_NO_RVALUE_REFERENCES
-#   include <boost/fusion/algorithm/transformation/zip.hpp>
+#   include <boost/fusion/container/generation/vector_tie.hpp>
+#   include <boost/fusion/view/zip_view.hpp>
 #   include <boost/fusion/algorithm/iteration/for_each.hpp>
 #   include <boost/fusion/sequence/intrinsic/front.hpp>
 #   include <boost/fusion/sequence/intrinsic/back.hpp>
@@ -50,7 +51,9 @@ namespace boost { namespace fusion {
     void
     swap(Seq1& seq1, Seq2& seq2)
     {
-        for_each(zip(seq1, seq2), detail::swap());
+        for_each(zip_view<typename result_of::vector_tie<Seq1&,Seq2&>::type>(
+                    vector_tie(seq1, seq2))
+               , detail::swap());
     }
 #else
     using std::swap;

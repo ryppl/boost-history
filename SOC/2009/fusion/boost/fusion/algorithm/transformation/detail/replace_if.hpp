@@ -11,14 +11,12 @@
 #include <boost/fusion/support/result_of.hpp>
 
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/if.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
     //TODO cschmidt: update doc. according to real behavior!
-    //TODO cschmidt: conv based on ptrs?!
-    //TODO const?!
     template <typename F, typename NewValue>
     struct replace_if_helper
     {
@@ -28,11 +26,7 @@ namespace boost { namespace fusion { namespace detail
         template<typename Self, typename U>
         struct result<Self(U)>
         {
-            typedef typename detail::identity<U>::type u;
-
-            typedef typename
-                mpl::if_<is_convertible<NewValue, u>, u, U>::type
-            type;
+            typedef U type;
         };
 
         template<typename OtherF, typename OtherNewValue>
@@ -59,37 +53,39 @@ namespace boost { namespace fusion { namespace detail
         }
 
         template <typename U>
-        BOOST_FUSION_R_ELSE_LREF(U)
-        call_impl(BOOST_FUSION_R_ELSE_LREF(U) x, mpl::false_) const
+        U&
+        call_impl(U& x, mpl::false_) const
         {
             return x;
         }
 
         template <typename U>
-        typename result<replace_if_helper(BOOST_FUSION_R_ELSE_LREF(U))>::type
-        call_impl(BOOST_FUSION_R_ELSE_LREF(U) x, mpl::true_) const
+        U&
+        call_impl(U& x, mpl::true_) const
         {
-            return f(BOOST_FUSION_FORWARD(U,x)) ? new_value : x;
+            if(f(x))
+            {
+                return new_value;
+            }
+
+            return x;
         }
 
         template <typename U>
-        typename result<replace_if_helper(BOOST_FUSION_R_ELSE_LREF(U))>::type
-        operator()(BOOST_FUSION_R_ELSE_LREF(U) x) const
+        typename result<replace_if_helper(U&)>::type
+        operator()(U& x) const
         {
             return call_impl(
-                BOOST_FUSION_FORWARD(U, x),
+                x,
                 typename is_convertible<
-                    NewValue
-#ifdef BOOST_NO_RVALUE_REFERENCES
-                  , U
-#else
-                  , typename detail::remove_reference<U>::type
-#endif
+                    typename detail::remove_reference<NewValue>::type*
+                  , U*
                 >::type());
         }
 
         F f;
-        NewValue new_value;
+        //TODO test if const
+        mutable NewValue new_value;
     };
 }}}
 

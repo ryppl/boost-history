@@ -24,14 +24,14 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename T>
         static inline wanted
-        do_get_pointer(BOOST_FUSION_R_ELSE_CLREF(T), wanted ptr)
+        do_get_pointer(BOOST_FUSION_R_ELSE_LREF(T), wanted ptr)
         {
             return ptr;
         }
 
         template<typename T>
         static inline wanted
-        do_get_pointer(BOOST_FUSION_R_ELSE_CLREF(T) t, void const*)
+        do_get_pointer(BOOST_FUSION_R_ELSE_LREF(T) t, void const*)
         {
             return get_pointer(BOOST_FUSION_FORWARD(T,t));
         }
@@ -51,7 +51,7 @@ namespace boost { namespace fusion { namespace detail
 
         template <typename T>
         static inline wanted
-        get(BOOST_FUSION_R_ELSE_CLREF(T) t)
+        get(BOOST_FUSION_R_ELSE_LREF(T) t)
         {
             return do_get_pointer(
                     BOOST_FUSION_FORWARD(T,t),
@@ -59,7 +59,8 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    /*template <typename PtrOrSmartPtr>
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+    template <typename PtrOrSmartPtr>
     struct non_const_pointee;
 
     namespace adl_barrier
@@ -87,7 +88,8 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef non_const_pointee type;
         typedef bool value_type;
-    };*/
+    };
+#endif
 }}}
 
 #endif

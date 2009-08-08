@@ -37,7 +37,7 @@ namespace boost { namespace fusion
     {
         template <typename Seq, typename N>
         struct value_at
-            : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
+          : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, N>
         {};
 

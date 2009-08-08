@@ -28,8 +28,6 @@ namespace boost { namespace fusion { namespace extension
                 detail::remove_reference<ItRef>::type
             it;
 
-            //TODO reference on deref
-            //TODO return only const
             typedef typename
                 support::result_of<
                     typename support::get_func_base<

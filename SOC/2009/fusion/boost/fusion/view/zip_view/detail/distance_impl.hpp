@@ -33,7 +33,7 @@ namespace boost { namespace fusion
                 result_of::find_if<
                     typename SearchIt::iterators
                   , is_same<
-                        traits::category_of<mpl::_>
+                        traits::category_of<mpl::_1>
                       , random_access_iterator_tag
                     >
                 >
@@ -60,7 +60,7 @@ namespace boost { namespace fusion
             typedef typename
                 result_of::find_if<
                     typename It1::iterators
-                  , is_same<traits::category_of<mpl::_>
+                  , is_same<traits::category_of<mpl::_1>
                   , random_access_iterator_tag>
                 >
             finder;

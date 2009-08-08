@@ -66,7 +66,8 @@ namespace boost { namespace fusion
           cons_iterator()\
           {}\
           \
-          explicit cons_iterator(nil COMBINATION, int)\
+          explicit\
+          cons_iterator(nil COMBINATION, int)\
           {}\
       };
 

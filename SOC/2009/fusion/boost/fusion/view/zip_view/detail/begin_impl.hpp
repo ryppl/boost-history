@@ -30,9 +30,10 @@ namespace boost { namespace fusion
 
             template<typename Self, typename SeqRef>
             struct result<Self(SeqRef)>
-              : mpl::eval_if<is_same<SeqRef, unused_type const&>
-                           , mpl::identity<unused_type const&>
-                           , result_of::begin<SeqRef>
+              : mpl::eval_if<
+                    is_same<SeqRef, unused_type const&>
+                  , mpl::identity<unused_type const&>
+                  , result_of::begin<SeqRef>
                 >
             {
                 BOOST_MPL_ASSERT((detail::is_lrref<SeqRef>));

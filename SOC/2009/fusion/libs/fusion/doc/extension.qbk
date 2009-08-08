@@ -321,7 +321,7 @@ For our __random_access_sequence__ we will also need to implement `size_impl`,
 
 In order for `example_struct` to serve as an associative container,
 we need to enable 3 lookup features, __at_key__, __value_at_key__ and __has_key__.
-We also need to provide an implementation of the `is_associative` trait
+We also need to provide an implementation of the `category_of_impl` trait
 so that our sequence can be correctly identified as an associative container.
 
 To implement `at_key_impl` we need to associate the `fields::age` and `fields::age`

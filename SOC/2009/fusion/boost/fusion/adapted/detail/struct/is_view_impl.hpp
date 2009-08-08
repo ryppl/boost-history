@@ -24,6 +24,11 @@ namespace boost { namespace fusion { namespace extension
           : mpl::false_
         {};
     };
+
+    template <>
+    struct is_view_impl<assoc_struct_tag>
+      : is_view_impl<struct_tag>
+    {};
 }}}
 
 #endif

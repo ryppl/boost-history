@@ -15,6 +15,8 @@
 namespace boost { namespace fusion
 {
     struct vector_tag;
+    struct vector_iterator_tag;
+    struct random_access_traversal_tag;
 
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_VECTOR_SIZE)
     struct vector;

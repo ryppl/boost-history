@@ -58,10 +58,10 @@ main()
 /// Testing the transform_view
 
     {
-        typedef boost::mpl::range_c<int, 5, 9> sequence_type;
-        sequence_type sequence;
+        typedef boost::mpl::range_c<int, 5, 9> seq_type;
+        seq_type sequence;
         square sq;
-        typedef transform_view<sequence_type, square> xform_type;
+        typedef transform_view<seq_type, square> xform_type;
         xform_type xform(sequence, sq);
 
         std::cout << xform << std::endl;

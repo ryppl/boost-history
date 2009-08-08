@@ -6,8 +6,6 @@
 #ifndef BOOST_FUSION_CONTAINER_SET_DETAIL_BEGIN_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_SET_DETAIL_BEGIN_IMPL_HPP
 
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-
 namespace boost { namespace fusion { namespace extension
 {
     template <typename Tag>
@@ -19,21 +17,19 @@ namespace boost { namespace fusion { namespace extension
         template <typename SeqRef>
         struct apply
         {
-            typedef typename
-                result_of::begin<
-                    typename detail::forward_as<
-                        SeqRef
-                      , typename detail::remove_reference<
-                            SeqRef
-                        >::type::storage_type
-                    >::type
-                >::type
+            typedef
+                basic_iterator<
+                    set_iterator_tag
+                  , set_category
+                  , SeqRef
+                  , 0
+                >
             type;
 
             static type
             call(SeqRef seq)
             {
-                return fusion::begin(seq.get_data());
+                return type(seq,0);
             }
         };
     };

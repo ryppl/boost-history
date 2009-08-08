@@ -6,6 +6,7 @@
 #ifndef BOOST_PP_IS_ITERATING
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
+#   include <boost/fusion/iterator/basic_iterator.hpp>
 #   include <boost/fusion/iterator/deref.hpp>
 #   include <boost/fusion/iterator/next.hpp>
 #   include <boost/fusion/iterator/advance_c.hpp>
@@ -35,7 +36,6 @@
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
-#   include <boost/fusion/container/vector/detail/vector_iterator.hpp>
 #   include <boost/fusion/container/vector/detail/begin_impl.hpp>
 #   include <boost/fusion/container/vector/detail/end_impl.hpp>
 #   include <boost/fusion/container/vector/detail/deref_impl.hpp>
@@ -58,7 +58,7 @@ namespace boost { namespace fusion
 #   if !N
     struct void_;
 
-    template <class T0=void_>
+    template <typename T0=void_>
     struct vector0;
 
     template<>
@@ -72,7 +72,7 @@ namespace boost { namespace fusion
     {
         typedef mpl::BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> types;
         typedef vector_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag; 
         typedef mpl::false_ is_view;
         typedef random_access_traversal_tag category;
         typedef mpl::int_<N> size;

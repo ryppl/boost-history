@@ -10,7 +10,6 @@
 #define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_FIND_IF_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/advance_c.hpp>
@@ -28,12 +27,6 @@ namespace boost { namespace fusion {
 
     namespace detail
     {
-        template <typename It, typename Pred>
-        struct apply_filter
-          : mpl::apply1<Pred, typename result_of::value_of<It>::type>::type
-        {
-        };
-
         template <typename First, typename Last, typename Pred>
         struct main_find_if;
 
@@ -56,7 +49,7 @@ namespace boost { namespace fusion {
                 mpl::eval_if<
                     mpl::or_<
                         result_of::equal_to<First, Last>
-                      , apply_filter<First, Pred>
+                      , mpl::apply1<Pred,First>
                     >
                   , mpl::identity<First>
                   , recursive_find_if<First, Last, Pred>
@@ -72,30 +65,27 @@ namespace boost { namespace fusion {
           : main_find_if<First, Last, Pred>
         {};
 
-        template<typename It, typename Pred, int n, int unrolling>
+        template<typename It, typename Pred, int N>
         struct unroll_again;
 
-        template <typename It, typename Pred, int offset>
+        template <typename It, typename Pred, int Offset>
         struct apply_offset_filter
           : mpl::apply1<
                 Pred
-              , typename result_of::value_of<
-                    typename result_of::advance_c<It, offset>::type
-                >::type
+              , typename result_of::advance_c<It, Offset>::type
             >::type
-        {
-        };
+        {};
 
-        template<typename It, typename Pred, int n>
+        template<typename It, typename Pred, int N>
         struct unrolled_find_if
         {
             typedef typename
                 mpl::eval_if<
-                    apply_filter<It, Pred>
+                    typename mpl::apply1<Pred,It>::type
                   , mpl::identity<It>
                   , mpl::eval_if<
                         apply_offset_filter<It, Pred, 1>
-                      , result_of::advance_c<It, 1>
+                      , result_of::next<It>
                       , mpl::eval_if<
                             apply_offset_filter<It, Pred, 2>
                           , result_of::advance_c<It, 2>
@@ -105,12 +95,23 @@ namespace boost { namespace fusion {
                               , unroll_again<
                                     It
                                   , Pred
-                                  , n
-                                  , 4
+                                  , N
                                 >
                             >
                         >
                     >
+                >::type
+            type;
+        };
+
+        template<typename It, typename Pred, int n>
+        struct unroll_again
+        {
+            typedef typename
+                unrolled_find_if<
+                    typename result_of::advance_c<It, 4>::type
+                  , Pred
+                  , n-4
                 >::type
             type;
         };
@@ -120,11 +121,11 @@ namespace boost { namespace fusion {
         {
             typedef typename
                 mpl::eval_if<
-                    apply_filter<It, Pred>
+                    typename mpl::apply1<Pred,It>::type
                   , mpl::identity<It>
                   , mpl::eval_if<
                         apply_offset_filter<It, Pred, 1>
-                      , result_of::advance_c<It, 1>
+                      , result_of::next<It>
                       , mpl::eval_if<
                             apply_offset_filter<It, Pred, 2>
                           , result_of::advance_c<It, 2>
@@ -140,11 +141,11 @@ namespace boost { namespace fusion {
         {
             typedef typename
                 mpl::eval_if<
-                    apply_filter<It, Pred>
+                    typename mpl::apply1<Pred,It>::type
                   , mpl::identity<It>
                   , mpl::eval_if<
                         apply_offset_filter<It, Pred, 1>
-                      , result_of::advance_c<It, 1>
+                      , result_of::next<It>
                       , result_of::advance_c<It, 2>
                     >
                 >::type
@@ -156,21 +157,9 @@ namespace boost { namespace fusion {
         {
             typedef typename
                 mpl::eval_if<
-                    apply_filter<It, Pred>
+                    typename mpl::apply1<Pred,It>::type
                   , mpl::identity<It>
-                  , result_of::advance_c<It, 1>
-                >::type
-            type;
-        };
-
-        template<typename It, typename Pred, int n, int unrolling>
-        struct unroll_again
-        {
-            typedef typename
-                unrolled_find_if<
-                    typename result_of::advance_c<It, unrolling>::type
-                  , Pred
-                  , n-unrolling
+                  , result_of::next<It>
                 >::type
             type;
         };

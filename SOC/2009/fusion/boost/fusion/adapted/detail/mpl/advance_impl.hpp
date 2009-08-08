@@ -28,10 +28,11 @@ namespace boost { namespace fusion { namespace extension
                       , N
                     >::type
                 >
-           type;
+            type;
 
+            template<typename ItRef2>
             static type
-            call(ItRef)
+            call(ItRef2)
             {
                 return type();
             }

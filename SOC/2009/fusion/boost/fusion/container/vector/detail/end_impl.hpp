@@ -20,8 +20,10 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef
-                vector_iterator<
-                    SeqRef
+                basic_iterator<
+                    vector_iterator_tag
+                  , random_access_traversal_tag
+                  , SeqRef
                   , detail::remove_reference<SeqRef>::type::size::value
                 >
             type;

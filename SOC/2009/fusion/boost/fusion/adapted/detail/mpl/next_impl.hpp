@@ -29,8 +29,9 @@ namespace boost { namespace fusion { namespace extension
                 >
             type;
 
+            template<typename ItRef2>
             static type
-            call(ItRef)
+            call(ItRef2)
             {
                 return type();
             }

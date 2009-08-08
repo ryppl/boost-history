@@ -13,7 +13,10 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
 
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/inherit.hpp>
+#include <boost/mpl/identity.hpp>
 
 #include <boost/fusion/view/iterator_range/detail/iterator_range_fwd.hpp>
 #include <boost/fusion/view/iterator_range/detail/begin_impl.hpp>
@@ -30,14 +33,20 @@ namespace boost { namespace fusion
     struct iterator_range
       : sequence_base<iterator_range<First, Last> >
     {
-        typedef iterator_range_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::true_ is_view;
-        typedef typename result_of::distance<First, Last>::type size;
-
         typedef First begin_type;
         typedef Last end_type;
-        typedef typename traits::category_of<First>::type category;
+
+        typedef typename
+            mpl::eval_if<
+                traits::is_associative<begin_type>
+              , mpl::inherit2<forward_traversal_tag,associative_sequence_tag>
+              , mpl::identity<forward_traversal_tag>
+            >::type
+        category;
+        typedef typename result_of::distance<begin_type, end_type>::type size;
+        typedef iterator_range_tag fusion_tag;
+        typedef fusion_sequence_tag tag;
+        typedef mpl::true_ is_view;
 
         template<typename OtherIteratorRange>
         iterator_range(BOOST_FUSION_R_ELSE_CLREF(OtherIteratorRange) range)

@@ -12,7 +12,9 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
-#include <boost/call_traits.hpp>
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
+#   include <boost/call_traits.hpp>
+#endif
 
 namespace boost { namespace fusion
 {
@@ -80,17 +82,21 @@ namespace boost { namespace fusion
         template<typename First, typename Second>
         struct make_pair
         {
-            typedef fusion::pair<First,
-                        typename detail::as_fusion_element<Second>::type> type;
+            typedef
+                fusion::pair<
+                    First
+                  , typename detail::as_fusion_element<Second>::type
+                >
+            type;
         };
 
-        template<class Pair>
+        template<typename Pair>
         struct first
         {
             typedef typename Pair::first_type type;
         };
 
-        template<class Pair>
+        template<typename Pair>
         struct second
         {
             typedef typename Pair::second_type type;
@@ -116,7 +122,6 @@ namespace boost { namespace fusion
         return os;
     }
 
-    //TODO cschmidt: rref?!
     template <typename IStream, typename First, typename Second>
     inline BOOST_FUSION_R_ELSE_LREF(IStream)
     operator>>(

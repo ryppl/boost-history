@@ -22,23 +22,15 @@ namespace boost { namespace fusion { namespace detail
     {
     private:
         template<typename OtherT>
-        static typename
-            enable_if<
-                traits::is_view<T>
-              , BOOST_FUSION_R_ELSE_CLREF(OtherT)
-            >::type
-        get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t)
+        static BOOST_FUSION_R_ELSE_CLREF(OtherT)
+        get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t, mpl::true_)
         {
             return other_t;
         }
 
         template<typename OtherT>
-        static typename
-            disable_if<
-                traits::is_view<T>
-              , typename detail::remove_reference<OtherT>::type*
-            >::type
-        get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t)
+        static typename detail::remove_reference<OtherT>::type*
+        get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t, mpl::false_)
         {
             return &other_t;
         }
@@ -65,7 +57,7 @@ namespace boost { namespace fusion { namespace detail
 #define VIEW_STORAGE_CTOR(COMBINATION,_)\
         template<typename OtherT>\
         view_storage(view_storage<OtherT> COMBINATION storage)\
-          : t(get_init_type(storage.get()))\
+          : t(get_init_type(storage.get(), typename traits::is_view<T>::type()))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(VIEW_STORAGE_CTOR,_)
@@ -74,12 +66,14 @@ namespace boost { namespace fusion { namespace detail
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         view_storage(call_param t)
-          : t(get_init_type(t))
+          : t(get_init_type(t, typename traits::is_view<T>::type()))
         {}
 #else
         template<typename OtherT>
         view_storage(OtherT&& t)
-          : t(get_init_type(std::forward<OtherT>(t)))
+          : t(get_init_type(
+                  std::forward<OtherT>(t),
+                  typename traits::is_view<T>::type()))
         {}
 #endif
 

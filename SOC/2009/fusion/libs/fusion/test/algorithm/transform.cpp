@@ -93,8 +93,8 @@ main()
 /// Testing the transform
 
     {
-        typedef range_c<int, 5, 9> sequence_type;
-        sequence_type sequence;
+        typedef range_c<int, 5, 9> seq_type;
+        seq_type sequence;
         std::cout << transform(sequence, square()) << std::endl;
         BOOST_TEST((transform(sequence, square()) == make_vector(25, 36, 49, 64)));
     }

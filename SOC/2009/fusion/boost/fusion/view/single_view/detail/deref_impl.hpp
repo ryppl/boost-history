@@ -9,7 +9,6 @@
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_DETAIL_DEREF_IMPL_HPP
 
 #include <boost/mpl/identity.hpp>
-#include <boost/type_traits/is_const.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {

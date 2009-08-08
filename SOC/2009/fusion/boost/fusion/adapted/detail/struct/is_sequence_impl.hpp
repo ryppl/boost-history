@@ -24,6 +24,11 @@ namespace boost { namespace fusion { namespace extension
           : mpl::true_
         {};
     };
+
+    template <>
+    struct is_sequence_impl<assoc_struct_tag>
+      : is_sequence_impl<struct_tag>
+    {};
 }}}
 
 #endif

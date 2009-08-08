@@ -33,9 +33,10 @@ namespace boost { namespace fusion
 
             template<typename Self, typename SeqRef>
             struct result<Self(SeqRef)>
-              : mpl::eval_if<is_same<SeqRef, unused_type const&>
-                           , mpl::identity<unused_type const&>
-                           , result_of::at<SeqRef, N>
+              : mpl::eval_if<
+                    is_same<SeqRef, unused_type const&>
+                  , mpl::identity<unused_type const&>
+                  , result_of::at<SeqRef, N>
                 >
             {
                 //BOOST_MPL_ASSERT((is_reference<SeqRef>));
@@ -81,7 +82,6 @@ namespace boost { namespace fusion
                 static type
                 call(SeqRef seq)
                 {
-                    //TODO inside transform_view transform_type rref->llref
                     return type(sequence_assign(fusion::transform(
                             seq.seqs, detail::poly_at<N>())));
                 }

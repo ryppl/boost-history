@@ -11,10 +11,8 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
-#include <boost/type_traits/is_const.hpp>
-
-namespace boost { namespace fusion {
-
+namespace boost { namespace fusion
+{
     template<typename Key, typename T>
     struct pair;
 
@@ -34,7 +32,7 @@ namespace boost { namespace fusion {
 
     template<typename Key, typename T>
     typename result_of::pair_tie<Key, BOOST_FUSION_R_ELSE_CLREF(T)>::type
-    pair_tie(BOOST_FUSION_R_ELSE_CLREF(T) t)
+    pair_tie(BOOST_FUSION_R_ELSE_LREF(T) t)
     {
         return typename
             result_of::pair_tie<
@@ -42,15 +40,6 @@ namespace boost { namespace fusion {
               , BOOST_FUSION_R_ELSE_CLREF(T)
             >::type(BOOST_FUSION_FORWARD(T,t));
     }
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template<typename Key, typename T>
-    typename result_of::pair_tie<Key, T const&>::type
-    pair_tie(T const& t)
-    {
-        return typename result_of::pair_tie<Key, T const&>::type(t);
-    }
-#endif
 }}
 
 #endif

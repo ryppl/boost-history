@@ -13,6 +13,7 @@
 #include <boost/fusion/container/generation/make_vector.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
+#include <boost/fusion/iterator/deref.hpp>
 
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -63,19 +64,6 @@ main()
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
     std::cout << tuple_delimiter(", ");
-
-    { // Testing the static find_if (internal function)
-
-        typedef vector<int, char, long, X> vector_type;
-
-        vector_type v(1, 'x', 987654, X());
-        typedef result_of::begin<vector_type>::type begin;
-        typedef result_of::end<vector_type>::type end;
-        typedef detail::static_find_if<begin, end, is_same<_, long> > filter;
-
-        std::cout << *filter::call(boost::fusion::begin(v)) << std::endl;
-        BOOST_TEST(*filter::call(boost::fusion::begin(v)) == 987654);
-    }
 
     {
         typedef vector<Y, char, long, X, bool, double> vector_type;

@@ -27,17 +27,14 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename Self, typename It>
-            struct result<Self(It)>
-            {
-                typedef typename
-                    mpl::eval_if<
-                        is_same<It, unused_type const&>
-                      , mpl::identity<unused_type const&>
-                      , result_of::next<It>
-                    >::type
-                type;
-            };
+            template<typename Self, typename ItRef>
+            struct result<Self(ItRef)>
+              : mpl::eval_if<
+                    is_same<ItRef, unused_type const&>
+                  , mpl::identity<unused_type const&>
+                  , result_of::next<ItRef>
+                >
+            {};
 
             template<typename It>
             typename result<poly_next(It const&)>::type

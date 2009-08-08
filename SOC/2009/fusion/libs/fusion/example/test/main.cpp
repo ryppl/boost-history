@@ -128,9 +128,9 @@ int main()
     }
 
     {
-        vec v(0,0,0,0,0,0,0);
-        vec v2=std::move(v);
-        //vec v2=v;
+        fusion::vector<moveable> v(0);
+        fusion::vector<moveable> v2=std::move(v);
+        //fusion::vector<moveable> v2=v;
     }
 
     {
@@ -142,7 +142,7 @@ int main()
         seq_test(make_map<int,float>(0,1.0f));
 
         seq_test(single_view<int>(0));
-        seq_test(filter_view<vector<int>&&,std::is_same<boost::mpl::_,int> >(vector<int>()));
+        seq_test(filter_view<vector<int>&&,std::is_same<boost::mpl::_1,int> >(vector<int>()));
         vector<int> vec;
         seq_test(iterator_range<result_of::begin<vector<int>>::type,result_of::end<vector<int>>::type>(begin(vec),end(vec)));
         seq_test(joint_view<vector<int>&&,vector<int>&&>(vector<int>(),vector<int>()));
@@ -150,10 +150,5 @@ int main()
         seq_test(transform_view<vector<int>&&,identity_int>(vector<int>(),identity_int()));
         seq_test(reverse_view<vector<int>&&>(vector<int>()));
     }
-
-    {
-        using namespace fusion;
-        vector<moveable> m(0);
-        replace(m, moveable(0), moveable(0))=replace(m, moveable(0), moveable(0));
-    }
 }
+

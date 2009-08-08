@@ -8,6 +8,7 @@
 
 #include <boost/fusion/mpl.hpp>
 #include <boost/fusion/support/category_of.hpp>
+
 #include <boost/mpl/fold.hpp>
 #include <boost/mpl/placeholders.hpp>
 #include <boost/mpl/vector.hpp>

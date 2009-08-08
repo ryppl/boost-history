@@ -10,12 +10,15 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/inherit.hpp>
+#include <boost/mpl/identity.hpp>
 
 #include <boost/fusion/view/filter_view/detail/filter_view_fwd.hpp>
 #include <boost/fusion/view/filter_view/detail/size_impl.hpp>
@@ -30,21 +33,26 @@
 
 namespace boost { namespace fusion
 {
-    struct forward_traversal_tag;
     struct fusion_sequence_tag;
 
     template <typename Seq, typename Pred>
     struct filter_view
       : sequence_base<filter_view<Seq, Pred> >
     {
-        typedef filter_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef forward_traversal_tag category;
-        typedef mpl::true_ is_view;
-
         typedef detail::view_storage<Seq> storage_type;
-        typedef typename storage_type::type sequence_type;
+        typedef typename storage_type::type seq_type;
         typedef Pred pred_type;
+
+        typedef typename
+            mpl::eval_if<
+                traits::is_associative<seq_type>
+              , mpl::inherit2<forward_traversal_tag,associative_sequence_tag>
+              , mpl::identity<forward_traversal_tag>
+            >::type
+        category;
+        typedef filter_view_tag fusion_tag;
+        typedef fusion_sequence_tag tag; 
+        typedef mpl::true_ is_view;
 
 #define FILTER_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeq>\
@@ -57,12 +65,14 @@ namespace boost { namespace fusion
 #undef FILTER_VIEW_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        explicit filter_view(typename storage_type::call_param seq)
+        explicit
+        filter_view(typename storage_type::call_param seq)
           : seq(seq)
         {}
 #else
         template<typename OtherSeq>
-        explicit filter_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq) seq)
+        explicit
+        filter_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeq) seq)
           : seq(BOOST_FUSION_FORWARD(OtherSeq,seq))
         {}
 #endif

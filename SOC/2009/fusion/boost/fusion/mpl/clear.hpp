@@ -8,8 +8,8 @@
 #ifndef BOOST_FUSION_MPL_CLEAR_HPP
 #define BOOST_FUSION_MPL_CLEAR_HPP
 
-#include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/algorithm/transformation/clear.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace mpl
 {

@@ -28,8 +28,7 @@ namespace boost { namespace fusion { namespace extension
                     typename detail::identity<It2Ref>::type
                 >::type
             >
-        {
-        };
+        {};
     };
 }}}
 

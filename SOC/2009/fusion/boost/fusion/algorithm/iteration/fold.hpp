@@ -27,8 +27,8 @@ namespace boost { namespace fusion {
         {
             typedef
                 detail::fold_impl<
-                    result_of::size<Seq>::value
-                  , typename result_of::begin<Seq>::type
+                    size<Seq>::value
+                  , typename begin<Seq>::type
                   , typename detail::add_lref<State>::type
                   , typename detail::add_lref<F>::type
                 >

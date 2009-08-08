@@ -25,7 +25,6 @@ namespace boost { namespace fusion
     inline bool
     less_equal(Seq1 const& seq1, Seq2 const& seq2)
     {
-        //TODO TEST!
 #ifdef FUSION_DIRECT_OPERATOR_USAGE
         return
             detail::sequence_less_equal<

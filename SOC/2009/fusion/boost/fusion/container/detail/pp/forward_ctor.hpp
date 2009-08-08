@@ -18,20 +18,12 @@
 #       define BOOST_PP_ITERATION_LIMITS (1, BOOST_FUSION_MAX_SEQ_SIZE)
 #       include BOOST_PP_ITERATE()
 
-#       ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename SeqAssign>
     BOOST_FUSION_SEQ_NAME(SeqAssign const& seq_assign)
-#       ifdef BOOST_FUSION_USE_BASE_TYPE
-      : base_type(seq_assign)
-#       else
-      : data(seq_assign)
-#       endif
+      : BOOST_FUSION_INIT_BASE(seq_assign)
     {}
-#       endif
 #   endif
-
 #else
-
 #   define N BOOST_PP_ITERATION()
 
 #   ifndef BOOST_NO_RVALUE_REFERENCES
@@ -42,21 +34,11 @@
 #   endif
 #   ifdef BOOST_NO_RVALUE_REFERENCES
     BOOST_FUSION_SEQ_NAME(EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(N))
-#       ifdef BOOST_FUSION_USE_BASE_TYPE
-      : base_type(EXPAND_PARAMETERS(N))
-#       else
-      : data(EXPAND_PARAMETERS(N))
-#       endif
-    {}
 #   else
     BOOST_FUSION_SEQ_NAME(EXPAND_TEMPLATE_ARGUMENTS_A(N))
-#       ifdef BOOST_FUSION_USE_BASE_TYPE
-      : base_type(EXPAND_PARAMETERS_A(N))
-#       else
-      : data(EXPAND_PARAMETERS_A(N))
-#       endif
-    {}
 #   endif
+      : BOOST_FUSION_INIT_BASE(EXPAND_PARAMETERS_A(N))
+    {}
 
 #   undef N
-#endif // defined(BOOST_PP_IS_ITERATING)
+#endif

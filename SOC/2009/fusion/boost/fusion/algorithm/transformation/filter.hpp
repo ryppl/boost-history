@@ -22,7 +22,7 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct filter
         {
-            typedef filter_view<Seq, is_same<mpl::_, T> > type;
+            typedef filter_view<Seq, is_same<mpl::_1, T> > type;
         };
     }
 
@@ -35,6 +35,7 @@ namespace boost { namespace fusion
                 BOOST_FUSION_FORWARD(Seq,seq));
     }
 
+    //TODO!!!
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename T, typename Seq>
     inline typename result_of::filter<Seq&, T>::type

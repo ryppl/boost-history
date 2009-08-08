@@ -16,6 +16,7 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/sequence/intrinsic/value_at_key.hpp>
 #include <boost/fusion/sequence/io/out.hpp>
+#include <boost/fusion/algorithm/transformation/erase_key.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/container/list/list.hpp>
 #include <boost/fusion/container/generation/make_vector.hpp>
@@ -127,6 +128,8 @@ main()
         
         BOOST_TEST(at_key<ns::x_member>(p) == 5);
         BOOST_TEST(at_key<ns::y_member>(p) == 3);
+
+        erase_key<ns::x_member>(p);
     }
 
     return boost::report_errors();

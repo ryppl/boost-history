@@ -22,7 +22,7 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<ItRef>::type it;
-            typedef typename it::vector vector;
+            typedef typename it::seq_type vector;
 
             typedef
                 typename detail::forward_as<
@@ -39,7 +39,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return it.vec->at_impl(typename it::index());
+                return it.seq->at_impl(typename it::index());
             }
         };
     };

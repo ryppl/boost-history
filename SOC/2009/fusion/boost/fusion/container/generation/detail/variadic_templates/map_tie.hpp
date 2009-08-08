@@ -18,7 +18,6 @@
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/end.hpp>
 #include <boost/mpl/size.hpp>
-#include <boost/mpl/lambda.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/unpack_args.hpp>
 #include <boost/mpl/vector.hpp>

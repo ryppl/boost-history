@@ -11,7 +11,7 @@
 #include <boost/fusion/container/vector/limits.hpp>
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
-#   if !defined(FUSION_MAX_SET_SIZE)
+#   ifndef FUSION_MAX_SET_SIZE
 #       define FUSION_MAX_SET_SIZE FUSION_MAX_VECTOR_SIZE
 #   else
 #       if FUSION_MAX_SET_SIZE < 3

@@ -12,14 +12,17 @@
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
-#include <boost/type_traits/is_base_of.hpp>
+#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/inherit.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 #include <boost/fusion/view/reverse_view/detail/reverse_view_fwd.hpp>
 #include <boost/fusion/view/reverse_view/detail/reverse_view_iterator.hpp>
@@ -41,14 +44,21 @@ namespace boost { namespace fusion
     struct reverse_view
       : sequence_base<reverse_view<Seq> >
     {
-        typedef reverse_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
-        typedef mpl::true_ is_view;
-
         typedef detail::view_storage<Seq> storage_type;
-        typedef typename storage_type::type sequence_type;
-        typedef typename traits::category_of<sequence_type>::type category;
-        typedef typename result_of::size<sequence_type>::type size;
+        typedef typename storage_type::type seq_type;
+        typedef typename traits::category_of<seq_type>::type seq_category;
+
+        typedef typename
+            mpl::eval_if<
+                traits::is_associative<seq_type>
+              , mpl::inherit2<seq_category,associative_sequence_tag>
+              , mpl::identity<seq_category>
+            >::type
+        category;
+        typedef typename result_of::size<seq_type>::type size;
+        typedef reverse_view_tag fusion_tag;
+        typedef fusion_sequence_tag tag; 
+        typedef mpl::true_ is_view;
 
         //BOOST_FUSION_STATIC_ASSERT(
         //    (is_base_of<bidirectional_traversal_tag,
@@ -67,18 +77,20 @@ namespace boost { namespace fusion
 #undef REVERSE_VIEW_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        explicit reverse_view(typename storage_type::call_param seq)
+        explicit
+        reverse_view(typename storage_type::call_param seq)
           : seq(seq)
         {}
 #else
         template<typename OtherSeq>
-        explicit reverse_view(OtherSeq&& seq)
+        explicit
+        reverse_view(OtherSeq&& seq)
           : seq(std::forward<OtherSeq>(seq))
         {}
 #endif
 
         template<typename OtherReverseView>
-        OtherReverseView&
+        reverse_view&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherReverseView) other_view)
         {
             seq=BOOST_FUSION_FORWARD(OtherReverseView,other_view).seq;

@@ -16,6 +16,9 @@
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/call_traits.hpp>
+#endif
 
 #include <boost/fusion/view/single_view/detail/single_view_fwd.hpp>
 #include <boost/fusion/view/single_view/detail/single_view_iterator.hpp>
@@ -36,12 +39,13 @@ namespace boost { namespace fusion
     struct single_view
       : sequence_base<single_view<T> >
     {
+        typedef T value_type;
+
         typedef single_view_tag fusion_tag;
-        typedef fusion_sequence_tag tag; // this gets picked up by MPL
+        typedef fusion_sequence_tag tag; 
         typedef forward_traversal_tag category;
         typedef mpl::true_ is_view;
         typedef mpl::int_<1> size;
-        typedef T value_type;
 
         single_view()
           : val()
@@ -56,10 +60,18 @@ namespace boost { namespace fusion
 
 #undef SINGLE_VIEW_CTOR
 
-        template<typename OtherT>
-        explicit single_view(BOOST_FUSION_R_ELSE_CLREF(OtherT) val)
-          : val(BOOST_FUSION_FORWARD(OtherT,val))
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        explicit
+        single_view(typename call_traits<T>::param_type val)
+          : val(val)
         {}
+#else
+        template<typename OtherT>
+        explicit
+        single_view(OtherT&& val)
+          : val(std::forward<OtherT>(val))
+        {}
+#endif
 
 #define SINGLE_VIEW_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\

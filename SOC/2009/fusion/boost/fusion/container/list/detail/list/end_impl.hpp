@@ -9,8 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_END_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_END_IMPL_HPP
 
-#include <boost/fusion/support/iterator_adapter.hpp>
-#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/sequence/intrinsic/size.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -24,23 +23,18 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef
-                iterator_adapter<
-                    typename result_of::end<
-                        typename detail::forward_as<
-                            SeqRef
-                          , typename detail::remove_reference<
-                                SeqRef
-                            >::type::storage_type
-                        >::type
-                    >::type
+                basic_iterator<
+                    list_iterator_tag
                   , forward_traversal_tag
+                  , SeqRef
+                  , result_of::size<SeqRef>::type::value
                 >
             type;
 
             static type
             call(SeqRef seq)
             {
-                return type(fusion::end(seq.get_data()),0);
+                return type(seq,0);
             }
         };
     };

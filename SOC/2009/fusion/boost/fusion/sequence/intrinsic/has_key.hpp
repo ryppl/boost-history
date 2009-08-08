@@ -8,15 +8,16 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_HAS_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_HAS_KEY_HPP
 
+#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/algorithm/query/find_key.hpp>
+#include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 #include <boost/mpl/not.hpp>
-#include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
 {
-    struct void_;
     struct sequence_facade_tag;
 
     namespace extension
@@ -26,11 +27,12 @@ namespace boost { namespace fusion
         {
             template <typename SeqRef, typename Key>
             struct apply
-              : mpl::not_<is_same<
-                    typename detail::remove_reference<SeqRef>::type::
-                        template meta_at_impl<Key>::type
-                  , void_>
-                >
+              : mpl::not_<
+                    typename result_of::equal_to<
+                        typename result_of::find_key<SeqRef, Key>::type
+                      , typename result_of::end<SeqRef>::type
+                    >::type
+                >::type
             {};
         };
 
@@ -49,7 +51,7 @@ namespace boost { namespace fusion
     {
         template <typename Seq, typename Key>
         struct has_key
-            : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
+          : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, Key>
         {};
     }
@@ -58,8 +60,7 @@ namespace boost { namespace fusion
     inline typename result_of::has_key<Seq const&, Key>::type
     has_key(Seq const& seq)
     {
-        typedef typename result_of::has_key<Seq const&, Key>::type result;
-        return result();
+        return typename result_of::has_key<Seq const&, Key>::type();
     }
 }}
 

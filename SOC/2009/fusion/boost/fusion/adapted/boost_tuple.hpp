@@ -8,6 +8,8 @@
 #ifndef BOOST_FUSION_ADAPTED_BOOST_TUPLE_HPP
 #define BOOST_FUSION_ADAPTED_BOOST_TUPLE_HPP
 
+//TODO adapt std::(tr1::)tuple
+
 #include <boost/fusion/support/ref.hpp>
 
 #include <boost/tuple/tuple.hpp>

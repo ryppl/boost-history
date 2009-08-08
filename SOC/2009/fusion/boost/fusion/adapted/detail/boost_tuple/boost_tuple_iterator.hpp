@@ -20,6 +20,8 @@ namespace boost { namespace fusion
     struct boost_tuple_iterator
       : iterator_facade<boost_tuple_iterator<ConsRef>, forward_traversal_tag>
     {
+        typedef ConsRef cons_type;
+
         template <typename ItRef>
         struct value_of
         {
@@ -77,8 +79,6 @@ namespace boost { namespace fusion
                 >::type
             >
         {};
-
-        typedef ConsRef cons_type;
 
         template<typename OtherIt>
         boost_tuple_iterator(OtherIt const& it)

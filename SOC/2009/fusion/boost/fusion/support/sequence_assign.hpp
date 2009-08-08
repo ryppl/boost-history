@@ -20,8 +20,7 @@ namespace boost{namespace fusion{
         {
             sequence_assign_type(Seq seq)
               : seq(seq)
-            {
-            }
+            {}
 
             Seq get()const
             {

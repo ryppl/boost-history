@@ -9,6 +9,7 @@
 namespace boost { namespace fusion
 {
     struct cons_tag;
+    struct forward_traversal_tag;
 
     struct nil;
 

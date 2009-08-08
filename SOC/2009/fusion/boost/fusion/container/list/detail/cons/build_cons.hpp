@@ -40,9 +40,11 @@ namespace boost { namespace fusion { namespace detail
             build_cons<typename result_of::next<First>::type, Last>
         next_build_cons;
 
-        typedef cons<
-            typename result_of::value_of<First>::type
-          , typename next_build_cons::type>
+        typedef
+            cons<
+                typename result_of::value_of<First>::type
+              , typename next_build_cons::type
+            >
         type;
 
         static type

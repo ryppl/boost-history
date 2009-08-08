@@ -6,16 +6,14 @@
 #ifndef BOOST_FUSION_SUPPORT_RESULT_OF_HPP
 #define BOOST_FUSION_SUPPORT_RESULT_OF_HPP
 
-#include <boost/utility/result_of.hpp>
-
 //cschmidt: fusion might call result_of on class types without an operator().
 //Therefore we emulate the old behavior if (and only if) the boost
 //implementation falls back to decltype by default.
 
 #include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/ref.hpp>
 
 #include <boost/mpl/if.hpp>
+#include <boost/utility/result_of.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
@@ -94,7 +92,7 @@ namespace boost { namespace fusion { namespace support
         typedef Result type;
     };
 
-    //TODO cschmidt: Once we got a macro to find out whether the compiler
+    //cschmidt: Once we get a macro to find out whether the compiler
     //supports rvalue references for this, use
     //BOOST_FUSION_ALL_CV_REF_COMBINATIONS
     template<typename Result,typename Class,typename... Args>
@@ -131,7 +129,7 @@ namespace boost { namespace fusion { namespace support
     {};
 #endif
 
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
     using boost::result_of;
 
     //cschmidt: The non-decltype result_of does not like ref-qualified
@@ -156,40 +154,41 @@ namespace boost { namespace fusion { namespace support
             >::type
         type;
     };
-
 #else
-    namespace detail
+}
+namespace detail
+{
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
+
+    template<typename IdentityF>
+    struct get_result_type
     {
-        BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
+        typedef typename IdentityF::result_type type;
+    };
 
-        template<typename IdentityF>
-        struct get_result_type
-        {
-            typedef typename IdentityF::result_type type;
-        };
+    template<typename IdentityF, typename Sig>
+    struct get_result
+      : IdentityF::template result<Sig>
+    {};
 
-        template<typename IdentityF, typename Sig>
-        struct get_result
-          : IdentityF::template result<Sig>
-        {};
+    template<typename IdentityF,typename F,typename... Args>
+    struct result_of_class_type
+    {
+        typedef typename
+            mpl::eval_if<
+                detail::has_result_type<IdentityF>
+              , detail::get_result_type<IdentityF>
+                //TODO cschmidt: fallback to boost::result_of (decltype) if
+                //'F::template result' does not exist.
+                //Is this even possible?
+              , detail::get_result<IdentityF,F(Args...)>
+            >::type
+        type;
+    };
+}
 
-        //TODO cschmidt: non-native variadic templates version
-        template<typename IdentityF,typename F,typename... Args>
-        struct result_of_class_type
-        {
-            typedef typename
-                mpl::eval_if<
-                    detail::has_result_type<IdentityF>
-                  , detail::get_result_type<IdentityF>
-                    //TODO cschmidt: fallback to boost::result_of (decltype) if
-                    //'F::template result' does not exist.
-                    //Is this even possible?
-                  , detail::get_result<IdentityF,F(Args...)>
-                >::type
-            type;
-        };
-    }
-
+namespace support
+{
     template<typename Sig>
     struct result_of
       : boost::result_of<Sig>
@@ -199,7 +198,7 @@ namespace boost { namespace fusion { namespace support
     template<typename F, typename... Args>
     struct result_of<F(Args...)>
     {
-        typedef typename fusion::detail::identity<F>::type f;
+        typedef typename detail::identity<F>::type f;
 
         typedef typename
             mpl::eval_if<

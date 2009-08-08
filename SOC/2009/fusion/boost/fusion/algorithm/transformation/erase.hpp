@@ -69,12 +69,12 @@ namespace boost { namespace fusion
         >
         struct erase
         {
-            typedef typename result_of::begin<Seq>::type seq_first_type;
-            typedef typename result_of::end<Seq>::type seq_last_type;
+            typedef typename begin<Seq>::type seq_first_type;
+            typedef typename end<Seq>::type seq_last_type;
 
             //TODO cschmidt: !
             //BOOST_FUSION_STATIC_ASSERT(
-            //     (!result_of::equal_to<seq_first_type, seq_last_type>::value),
+            //     (!equal_to<seq_first_type, seq_last_type>::value),
             //     "sequence empty");
 
             typedef

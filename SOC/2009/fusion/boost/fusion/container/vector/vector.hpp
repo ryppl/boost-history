@@ -12,12 +12,11 @@
 #   include <boost/fusion/container/vector/detail/pp/vector.hpp>
 #else
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
+#   include <boost/fusion/iterator/basic_iterator.hpp>
 #   include <boost/fusion/support/ref.hpp>
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
-
-#   include <boost/fusion/container/vector/detail/vector_iterator.hpp>
 #   include <boost/fusion/container/vector/detail/begin_impl.hpp>
 #   include <boost/fusion/container/vector/detail/end_impl.hpp>
 #   include <boost/fusion/container/vector/detail/deref_impl.hpp>

@@ -9,21 +9,21 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_IF_HPP
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
+#include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
-#include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
 
 namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename F, typename T>
+        template <typename Seq, typename F, typename NewValue>
         struct replace_if
         {
             typedef
                 detail::replace_if_helper<
-                    typename detail::as_fusion_element<F>::type
-                  , typename detail::as_fusion_element<T>::type
+                    typename detail::add_lref<F>::type
+                  , typename detail::as_fusion_element<NewValue>::type
                 >
             replacer;
 

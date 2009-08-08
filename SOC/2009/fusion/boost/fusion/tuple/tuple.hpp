@@ -18,9 +18,12 @@
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/support/ref.hpp>
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
+#   include <boost/type_traits/is_const.hpp>
+#   include <boost/utility/enable_if.hpp>
 #endif
+
+#include <boost/fusion/container/detail/forward_ctor.hpp>
 
 namespace boost { namespace fusion
 {
@@ -50,20 +53,13 @@ namespace boost { namespace fusion
 
 #undef TUPLE_CTOR
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-#   define BOOST_FUSION_USE_BASE_TYPE
-#   define BOOST_FUSION_SEQ_NAME tuple
-#   define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
-#   include <boost/fusion/container/detail/pp/forward_ctor.hpp>
-#   undef BOOST_FUSION_MAX_SEQ_SIZE
-#   undef BOOST_FUSION_SEQ_NAME
-#   undef BOOST_FUSION_USE_BASE_TYPE
-#else
-        template <typename... OtherArguments>
-        tuple(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... other_arguments)
-          : base_type(BOOST_FUSION_FORWARD(OtherArguments,other_arguments)...)
-        {}
-#endif
+#define BOOST_FUSION_USE_BASE_TYPE
+#define BOOST_FUSION_SEQ_NAME tuple
+#define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
+#include <boost/fusion/container/detail/forward_ctor.hpp>
+#undef BOOST_FUSION_MAX_SEQ_SIZE
+#undef BOOST_FUSION_SEQ_NAME
+#undef BOOST_FUSION_USE_BASE_TYPE
 
         template <typename Seq>
         tuple&
@@ -93,7 +89,12 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <int N, typename Tuple>
+#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
+    inline typename
+        lazy_disable_if<is_const<Tuple>,result_of::at_c<Tuple&, N> >::type
+#else
     inline typename result_of::at_c<Tuple&, N>::type
+#endif
     get(Tuple& tuple)
     {
         return at_c<N>(tuple);

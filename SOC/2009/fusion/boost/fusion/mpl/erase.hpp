@@ -8,9 +8,9 @@
 #ifndef BOOST_FUSION_MPL_ERASE_HPP
 #define BOOST_FUSION_MPL_ERASE_HPP
 
-#include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/algorithm/transformation/erase.hpp>
 #include <boost/fusion/sequence/convert.hpp>
+#include <boost/fusion/algorithm/transformation/erase.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace mpl
 {
@@ -24,12 +24,9 @@ namespace boost { namespace mpl
         struct apply
         {
             typedef typename
-                fusion::result_of::erase<Seq, First, Last>::type
-            result;
-
-            typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Seq>::type, result
+                    typename fusion::traits::tag_of<Seq>::type
+                  , typename fusion::result_of::erase<Seq, First, Last>::type
                 >::type
             type;
         };

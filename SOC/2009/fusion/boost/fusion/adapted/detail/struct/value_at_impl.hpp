@@ -9,8 +9,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_VALUE_AT_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_VALUE_AT_IMPL_HPP
 
-#include <boost/fusion/support/assert.hpp>
-
 namespace boost { namespace fusion { namespace extension
 {
     template<typename Tag>
@@ -22,10 +20,13 @@ namespace boost { namespace fusion { namespace extension
         template <typename SeqRef, typename N>
         struct apply
           : struct_member<typename detail::identity<SeqRef>::type, N::value>
-        {
-            //BOOST_FUSION_INDEX_CHECK(N::value, struct_size<Sequence>::value);
-        };
+        {};
     };
+
+    template <>
+    struct value_at_impl<assoc_struct_tag>
+      : value_at_impl<struct_tag>
+    {};
 }}}
 
 #endif

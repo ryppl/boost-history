@@ -9,9 +9,7 @@
 #define BOOST_FUSION_ITERATOR_DISTANCE_HPP
 
 #include <boost/fusion/iterator/detail/distance.hpp>
-#include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/assert.hpp>
-
 #include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion

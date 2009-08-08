@@ -22,7 +22,7 @@ namespace boost { namespace fusion
         {
             typedef
                 BOOST_FUSION_CLASS_TPL_NAME<
-                    typename fusion::detail::as_fusion_element<F>::type
+                    typename detail::as_fusion_element<F>::type
                 >
             type;
         };

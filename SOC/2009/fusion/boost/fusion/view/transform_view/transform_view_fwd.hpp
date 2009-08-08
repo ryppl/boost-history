@@ -8,13 +8,19 @@
 #ifndef BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_FWD_HPP
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_TRANSFORM_VIEW_FWD_HPP
 
+#include <boost/mpl/bool.hpp>
+
 namespace boost { namespace fusion
 {
-    struct void_;
     struct transform_view_tag;
     struct transform_view2_tag;
 
-    template <typename A, typename B, typename C = void_>
+    template<
+        typename A
+      , typename B
+      , typename C = mpl::false_
+      , typename D = mpl::false_
+    >
     struct transform_view;
 }}
 

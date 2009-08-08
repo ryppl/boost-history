@@ -25,7 +25,7 @@ namespace boost { namespace fusion
 #   if !N
     struct void_;
 
-    template <class T0=void_>
+    template <typename T0=void_>
     struct vector0;
 
     template<>

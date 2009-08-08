@@ -8,8 +8,8 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_KEY_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_KEY_HPP
 
+#include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/algorithm/transformation/erase.hpp>
-#include <boost/fusion/algorithm/query/detail/assoc_find.hpp>
 #include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
@@ -19,32 +19,25 @@ namespace boost { namespace fusion
         template <typename Seq, typename Key>
         struct erase_key
         {
-            typedef
-                detail::assoc_find<
-                    typename detail::add_lref<Seq>::type
-                  , Key
-                >
-            gen;
-
             typedef typename
                 erase<
                     Seq
-                  , typename gen::type
+                  , typename find_key<
+                        typename detail::add_lref<Seq>::type
+                      , Key
+                    >::type
                 >::type
             type;
         };
     }
 
+    //TODO test const
     template <typename Key, typename Seq>
     inline typename
         result_of::erase_key<BOOST_FUSION_R_ELSE_CLREF(Seq), Key>::type
     erase_key(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return erase(
-                BOOST_FUSION_FORWARD(Seq,seq),
-                result_of::erase_key<
-                    BOOST_FUSION_R_ELSE_CLREF(Seq), Key
-                >::gen::call(seq));
+        return erase(BOOST_FUSION_FORWARD(Seq,seq),find_key<Key>(seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -52,7 +45,7 @@ namespace boost { namespace fusion
     inline typename result_of::erase_key<Seq&, Key>::type
     erase_key(Seq& seq)
     {
-        return erase(seq,result_of::erase_key<Seq, Key>::gen::call(seq));
+        return erase(seq,find_key<Key>(seq));
     }
 #endif
 }}

@@ -7,14 +7,13 @@
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_HPP
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/container/vector/detail/vector_iterator.hpp>
 #include <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
 
 #include <boost/mpl/at.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/add_const.hpp>
 
-#include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#include <boost/fusion/container/detail/forward_ctor.hpp>
 
 namespace boost { namespace fusion
 {
@@ -53,7 +52,7 @@ namespace boost { namespace fusion
 
 #define BOOST_FUSION_SEQ_NAME vector
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE
-        #include <boost/fusion/container/detail/pp/forward_ctor.hpp>
+#include <boost/fusion/container/detail/forward_ctor.hpp>
 #undef BOOST_FUSION_MAX_SEQ_SIZE
 #undef BOOST_FUSION_SEQ_NAME
 

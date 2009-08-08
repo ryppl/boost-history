@@ -21,16 +21,13 @@ namespace boost { namespace fusion { namespace extension
         template <typename ItRef>
         struct apply
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type
-            it;
-            typedef typename
-                it::vector
-            vector;
+            typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
                 mpl::at<
-                    typename detail::remove_reference<vector>::type::types
+                    typename detail::remove_reference<
+                        typename it::seq_type
+                    >::type::types
                   , typename it::index
                 >::type
             type;

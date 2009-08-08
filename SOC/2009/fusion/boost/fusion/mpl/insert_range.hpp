@@ -8,9 +8,9 @@
 #ifndef BOOST_FUSION_MPL_INSERT_RANGE_HPP
 #define BOOST_FUSION_MPL_INSERT_RANGE_HPP
 
-#include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/algorithm/transformation/insert_range.hpp>
 #include <boost/fusion/sequence/convert.hpp>
+#include <boost/fusion/algorithm/transformation/insert_range.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace mpl
 {
@@ -24,12 +24,9 @@ namespace boost { namespace mpl
         struct apply
         {
             typedef typename
-                fusion::result_of::insert_range<Seq, Pos, Range>::type
-            result;
-
-            typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Seq>::type, result
+                    typename fusion::traits::tag_of<Seq>::type
+                  , typename fusion::result_of::insert_range<Seq, Pos, Range>::type
                 >::type
             type;
         };
