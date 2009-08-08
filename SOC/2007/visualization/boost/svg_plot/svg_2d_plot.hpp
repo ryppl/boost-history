@@ -343,7 +343,8 @@ namespace boost
      friend class detail::axis_plot_frame<svg_2d_plot>;
      // axis_plot_frame.hpp contains functions common to 1 and 2-D.
 
-    private:
+   // private:
+  public: //temporary for experimental gil
       // Member data names conventionally end with _,
       // for example: border_margin_,
       // and set & get accessor functions are named without _ suffix,
@@ -621,7 +622,7 @@ my_plot.background_color(ghostwhite) // Whole image.
 
         x_ticks_on_ = x_ticks_.up_ticks_on_ || x_ticks_.down_ticks_on_;
         y_ticks_on_ = y_ticks_.left_ticks_on_ || y_ticks_.right_ticks_on_;
-            
+
         if (title_info_.text() == "")
         { // Avoid leaving unnecessary space etc for a title.
           title_on_ = false;
@@ -650,7 +651,8 @@ my_plot.background_color(ghostwhite) // Whole image.
         }
       } // svg_2d_plot() default constructor.
 
-    private:
+    //private:
+    public: // Temporary for gil experiments.
       // svg_2d_plot Member Functions.
 
       void set_ids()  // This only used once in constructor and should be inlined.
@@ -726,8 +728,8 @@ my_plot.background_color(ghostwhite) // Whole image.
         }
 
         if(plot_window_on_)
-        { 
-          // A margin is needed to allow any plot window border rectangle to show OK. 
+        {
+          // A margin is needed to allow any plot window border rectangle to show OK.
           // A small margin is to prevent it overlapping the image border.
           // Also allows for axis value labels that mark the min and max
           // that must extend beyond the plot window border,
@@ -1147,7 +1149,7 @@ my_plot.background_color(ghostwhite) // Whole image.
             { // downward tick value label direction 90 vertical up or down, or 60 steep degrees (might handle 60 separately).
               if (y_ticks_.major_value_labels_side_ < 0) // tick value labels are to left of plot window.
               { // Allow space for tick value labels font size to left of Y-axis or plot window.
-                x -= y_value_label_info_.textstyle().font_size() * 1.3; // 
+                x -= y_value_label_info_.textstyle().font_size() * 1.3; //
               }
               if (y_ticks_.left_ticks_on_ == true)
               {  // Allow for any leftward ticks.
@@ -1160,7 +1162,7 @@ my_plot.background_color(ghostwhite) // Whole image.
             { // downward tick value label direction 90 vertical up or down, or 60 steep degrees (might handle 60 separately).
               if (y_ticks_.major_value_labels_side_ < 0) // tick value labels are to left of plot window.
               { // Allow space for tick value labels font size to left of Y-axis or plot window.
-                x -= y_value_label_info_.textstyle().font_size() * 1.3; // 
+                x -= y_value_label_info_.textstyle().font_size() * 1.3; //
               }
               if (y_ticks_.left_ticks_on_ == true)
               {  // Allow for any leftward ticks.
@@ -1222,7 +1224,7 @@ my_plot.background_color(ghostwhite) // Whole image.
         }
         else if (y_ticks_.ticks_on_window_or_on_axis_ > 0)
         { // tick values labels are to right of Y axis.
-          // 
+          //
            x = 0. +  image_border_width(); // Start Y Label just right of the image left side.
            x += image_border_.margin_;
            x += y_label_info_.textstyle().font_size() * 1.; // Shift right to suit Y labels.
@@ -1244,7 +1246,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           y_axis_label_style_, // font and size
           center_align, // One might want it to left or right_align?
           upward) // Y label must be drawn vertically.
-          ); 
+          );
 
       } // draw_y_axis_label
 
@@ -1623,7 +1625,7 @@ my_plot.background_color(ghostwhite) // Whole image.
           // and again to the X-axis (y = 0) at the end after the last point.
 
           // std::multimap<double, double> was prev_x = (*j).first;
-          unc prev_ux = (*j).first; 
+          unc prev_ux = (*j).first;
           prev_x = prev_ux.value(); // 1st point X-value.
           prev_y = 0.; // y = 0, so on horizontal X-axis.
           transform_point(prev_x, prev_y);
@@ -2963,6 +2965,11 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
 
       svg_2d_plot& svg_2d_plot::y_label_font_family(const std::string& family)
       { //! Set Y axis label text font family (for example: "Lucida console sans").
+        //! Available fonts depend on the program rendering the SVG XML, usually a browser.
+        //! The default font (usually "verdana") is used if a render program does not provide the font specified.
+        //! These are probably usable:
+        //! "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+        //! "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
         y_axis_label_style_.font_family(family);
         y_label_info_.textstyle().font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
@@ -3034,6 +3041,12 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
 
       svg_2d_plot& svg_2d_plot::y_ticks_values_font_family(const std::string& family)
       { //! Set font family for Y axis ticks values.
+        //! Available fonts depend on the program rendering the SVG XML, usually a browser.
+        //! The default font (usually "verdana") is used if a render program does not provide the font specified.
+        //! These are probably usable:
+        //! "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+        //! "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+
         y_ticks_.value_label_style_.font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -3057,6 +3070,11 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
 
       svg_2d_plot& svg_2d_plot::y_values_font_family(const std::string& family)
       { //! Set font family for Y axis values.
+        //! Available fonts depend on the program rendering the SVG XML, usually a browser.
+        //! The default font (usually "verdana") is used if a render program does not provide the font specified.
+        //! These are probably usable:
+        //! "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+        //! "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
         y_values_style_.values_text_style_.font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -3154,7 +3172,7 @@ my_plot.plot(data1, "Sqrt(x)");
   template <class T, class U>
   svg_2d_plot_series& svg_2d_plot::plot(const T& container, const std::string& title /* = "" */, U functor /* = pair_double_2d_convert*/)
   { /*! This version permits a custom functor (rather than default conversion to double).\n
-       Note that this version assumes that *ALL* the data value in the container is used.
+       Note that this version assumes that \b ALL the data values in the container is used.
     */
     serieses_.push_back(
       svg_2d_plot_series(

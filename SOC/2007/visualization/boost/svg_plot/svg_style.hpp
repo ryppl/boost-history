@@ -304,7 +304,9 @@ class text_style
   friend bool operator== (const text_style&, const text_style&);
   friend bool operator!= (const text_style&, const text_style&);
 
-private:
+  public: //temporary for experimental gil
+
+//private:
   int font_size_; //!< Font size (SVG units, default pixels).
   std::string font_family_; //!< Font family, examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode".
   std::string weight_; //!< Font style, examples: "bold", "normal".
@@ -1616,10 +1618,10 @@ const std::string strip_e0s(std::string s)
 } // const std::string strip(double d)
 
  static const double wh = 0.7; //!< font text width/height ratio.
-  /*! \details 
+  /*! \details
   http://www.w3.org/TR/SVG/text.html#FontSizeProperty
   Font size is the height of the text's font, so width = wh * font_size.
-  
+
   Even after reading http://www.w3.org/TR/SVG/fonts.html,\n
   unclear how to determine the exact width of digits, so an
   arbitrary average width height ratio wh = 0.7 is used as a good approximation.

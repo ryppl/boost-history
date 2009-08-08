@@ -633,7 +633,8 @@ class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
   friend class detail::axis_plot_frame<svg_boxplot>;
   // axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
 
-private:
+  public: //temporary for experimental gil
+//private:
   svg image_; // Stored so as to avoid rewriting style information constantly.
   // image_.size(500, 500);
 

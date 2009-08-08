@@ -614,7 +614,7 @@ namespace boost
 
           std::string x_label = derived().x_label_info_.text(); // x_axis_ label, and optional units.
           if (derived().x_axis_.label_units_on_ && (derived().x_units_info_.text() != ""))
-          { // Append the units, if any, user providing brackets () if required. 
+          { // Append the units, if any, user providing brackets () if required.
             x_label += derived().x_units_info_.text(); // for example: "time (sec)".
           }
 
@@ -701,7 +701,7 @@ namespace boost
           else if (derived().x_ticks_.ticks_on_window_or_on_axis_ > 0)
           {  // = +1 means ticks are on top of plot window.
              // Shift down from plot window bottom to suit X-axis label.
-             y += derived().x_label_info_.textstyle().font_size() * 1.7; 
+             y += derived().x_label_info_.textstyle().font_size() * 1.7;
           }
           else if (derived().x_ticks_.ticks_on_window_or_on_axis_ == 0)
           { // Ticks are ON the X-axis line, so X label is just below the plot bottom.
@@ -709,7 +709,7 @@ namespace boost
              // Character starts at bottom of capital letter, so allow for descenders.
              //y = derived().image_.y_size() - derived().image_border_width(); // Place X Label just above the image bottom.
              //y -= derived().image_border_.margin_;
-             y += derived().x_label_info_.textstyle().font_size() * 1.7; 
+             y += derived().x_label_info_.textstyle().font_size() * 1.7;
           }
 
           derived().image_.g(PLOT_X_LABEL).push_back(new text_element(
@@ -1653,8 +1653,9 @@ namespace boost
             derived().image_.g(PLOT_Y_MAJOR_GRID).clear();
             derived().image_.g(PLOT_Y_MINOR_GRID).clear();
           }
+  public: //temporary for experimental gil
 
-        private:
+//        private:
           Derived& derived()
           { //! Uses Curiously Recurring Template Pattern to allow 1D and 2D to reuse common code.
             //! See http://en.wikipedia.org/wiki/Curiously_Recurring_Template_Pattern .
@@ -1674,327 +1675,402 @@ namespace boost
           // If both are set, stroke is considered 'more important',
           // and so is returned by get functions.
 
-          Derived& size(unsigned int x, unsigned int y); //! Set SVG image size (SVG units, default pixels).
-          std::pair<double, double> size(); //! \return SVG image size, both horizontal width and vertical height (SVG units, default pixels).
+          Derived& size(unsigned int x, unsigned int y); //!< Set SVG image size (SVG units, default pixels).
+          std::pair<double, double> size(); //!< \return SVG image size, both horizontal width and vertical height (SVG units, default pixels).
 
-          Derived& x_size(unsigned int i); //! Set SVG image X-axis size (SVG units, default pixels).
-          unsigned int x_size(); //! \return SVG image X-axis size as horizontal width (SVG units, default pixels).
+          Derived& x_size(unsigned int i); //!< Set SVG image X-axis size (SVG units, default pixels).
+          unsigned int x_size(); //!< \return SVG image X-axis size as horizontal width (SVG units, default pixels).
           unsigned int image_x_size(); // Obselete - deprecated.
           Derived& image_x_size(unsigned int i); // Obselete - deprecated.
 
-          unsigned int y_size(); //! \return SVG image Y-axis size as horizontal width (SVG units, default pixels).
-          Derived& y_size(unsigned int i); //! Set SVG image Y-axis size (SVG units, default pixels).
-          unsigned int image_y_size(); //! Obselete - deprecated - use y_size().
+          unsigned int y_size(); //!< \return SVG image Y-axis size as horizontal width (SVG units, default pixels).
+          Derived& y_size(unsigned int i); //!< Set SVG image Y-axis size (SVG units, default pixels).
+          unsigned int image_y_size(); //!< Obselete - deprecated - use y_size().
           Derived& image_y_size(unsigned int i); // Obselete - deprecated - y_size(unsigned int i).
 
-          svg_color background_color(); //! \return  plot background color.
-          Derived& background_color(const svg_color& col); //! Set plot background border color.
-          Derived& background_border_color(const svg_color& col); //! Set plot background border color.
-          svg_color background_border_color(); //! \return plot background border color.
-          Derived& background_border_width(double w); //! Set plot background border width.
-          double background_border_width(); //! \return  plot background border color.
-          Derived& description(const std::string d);  //! Writes description to the document for header as <desc> My Description </desc>
-          const std::string& description(); //! \return  description of the document for header as <desc> My description </desc>
-          Derived& document_title(const std::string d); 
-          std::string document_title(); //! \return  document title to the document for header as \verbatim <title> My Title </title> \endverbatim
-          Derived& copyright_holder(const std::string d);//! Writes copyright_holder to the document
+          svg_color background_color(); //!< \return  plot background color.
+          Derived& background_color(const svg_color& col); //!< Set plot background color.
+          Derived& background_border_color(const svg_color& col); //!< Set plot background border color.
+          svg_color background_border_color(); //!< \return plot background border color.
+          Derived& background_border_width(double w); //!< Set plot background border width.
+          double background_border_width(); //!< \return plot background border width.
+          Derived& description(const std::string d);  //!< Writes description to the document for header as <desc> My Description </desc>
+          const std::string& description(); //!< \return  description of the document for header as <desc> My description </desc>
+          Derived& document_title(const std::string d);
+          std::string document_title(); //!< \return  document title to the document for header as \verbatim <title> My Title </title> \endverbatim
+          Derived& copyright_holder(const std::string d);//!< Writes copyright_holder to the SVG document
             //! (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
-            //! and as \verbatim metadata: <meta name="copyright" content="Paul A. Bristow" /meta> \endverbatim
-          const std::string copyright_holder(); //! \return copyright holder.
-          Derived& copyright_date(const std::string d); //! Writes copyright date to the document.
+            //! and as \verbatim metadata: <meta name="copyright" content="Paul A. Bristow" /> \endverbatim
+          const std::string copyright_holder(); //!< \return SVG document copyright holder.
+          Derived& copyright_date(const std::string d); //!< Writes copyright date to the SVG document.
             //! and as \verbatim metadata <meta name="date" content="2007" /> \endverbatim
-          const std::string copyright_date(); //! \return  copyright_date.
+          const std::string copyright_date(); //!< \return SVG document copyright_date.
           Derived& license(
             std::string repro= "permits",
             std::string distrib = "permits",
             std::string attrib = "requires",
             std::string commercial = "permits",
-            std::string derivative = "permits"); //! Set license conditions for reproduction, atribution, commercial use, and derivative works,
-            //! usually "permits", "requires", or "prohibits",
-            //! and set license_on == true.
-          bool license_on(); //! \return true if license conditions should be included in the SVG document.
-          Derived&  license_on(bool l); //! Set if license conditions should be included in the SVG document.
-          bool boost_license_on();  //! \return  if the Boost license conditions should be included in the SVG document.
-          Derived& boost_license_on(bool l); //! Set true if the Boost license conditions should be included in the SVG document.
-          const std::string license_reproduction(); //! \return  reproduction license conditions, usually "permits", "requires", or "prohibits".
-          const std::string license_distribution(); //! \return  distribution license conditions, usually "permits", "requires", or "prohibits".
-          const std::string license_attribution(); //! \return  attribution license conditions, usually "permits", "requires", or "prohibits".
-          const std::string license_commercialuse();  //! \return  commercial use license conditions, usually "permits", "requires", or "prohibits".
-          Derived& coord_precision(int digits); /*! Precision of SVG coordinates in decimal digits (default 3).
+            std::string derivative = "permits"); //!< Set license conditions for reproduction, atribution, commercial use, and derivative works,
+            //!< usually "permits", "requires", or "prohibits",
+            //!< and set license_on == true.
+          Derived&  license_on(bool l); //!< Set if license conditions should be included in the SVG document.
+          bool license_on(); //!< \return true if license conditions should be included in the SVG document.
+          Derived& boost_license_on(bool l); //!< Set true if the Boost license conditions should be included in the SVG document.
+          bool boost_license_on();  //!< \return  true if the Boost license conditions should be included in the SVG document.
+          const std::string license_reproduction(); //!< \return  SVG document  reproduction license conditions, usually "permits", "requires", or "prohibits".
+          const std::string license_distribution(); //!< \return  SVG document  distribution license conditions, usually "permits", "requires", or "prohibits".
+          const std::string license_attribution(); //!< \return  SVG document  attribution license conditions, usually "permits", "requires", or "prohibits".
+          const std::string license_commercialuse();  //!< \return  SVG document  commercial use license conditions, usually "permits", "requires", or "prohibits".
+          Derived& coord_precision(int digits); /*!< Precision of SVG coordinates in decimal digits (default 3).
               3 decimal digits precision is sufficient for small images.
               4 or 5 decimal digits precision will give higher quality plots,
               especially for larger images, at the expense of larger .svg files,
               particularly if there are very many data points.
            */
-          int coord_precision(); //! \return  precision of SVG coordinates in decimal digits.
-          Derived& x_value_precision(int digits); /*! Precision of X tick label values in decimal digits (default 3).
+          int coord_precision(); //!< \return  precision of SVG coordinates in decimal digits.
+          Derived& x_value_precision(int digits); /*!< Precision of X tick label values in decimal digits (default 3).
               3 decimal digits precision is sufficient for small images.
               4 or 5 decimal digits precision will give more cluttered plots.
               If the range of labels is very small, then more digits will be essential.
             */
-          int x_value_precision(); //! \return  precision of X tick label values in decimal digits
-          Derived& x_value_ioflags(int flags); /*! Set iostream std::ios::fmtflags for X value label (default decimal == 0X201).
-              Mainly useful for changing to scientific, fixed or hexadecimal format.
-              For example: .x_value_ioflags(std::ios::dec | std::ios::scientific)
+          int x_value_precision(); //!< \return  precision of X tick label values in decimal digits
+          Derived& x_value_ioflags(int flags); /*! Set `iostream std::ios::fmtflags` for X value label (default decimal == 0X201).
+              Mainly useful for changing to `scientific, fixed or hexadecimal` format.
+              For example: `.x_value_ioflags(std::ios::dec | std::ios::scientific)`
             */
-          int x_value_ioflags(); //! \return  stream std::ios::fmtflags for control of format of X value labels.
-          Derived& x_labels_strip_e0s(bool cmd); //! Set if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
+          int x_value_ioflags(); //!< \return  stream std::ios::fmtflags for control of format of X value labels.
+          Derived& x_labels_strip_e0s(bool cmd); //!< Set if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
             //! This markedly reduces visual clutter, and is the default.
-          bool y_labels_strip_e0s(); //! \return  if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
-          Derived& title(const std::string title); /*!
+          bool y_labels_strip_e0s(); //!< \return  if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
+          Derived& title(const std::string title); /*!<
               Set a title for plot.
               The string may include Unicode for greek letter and symbols.
               For example a title that includes a greek omega and degree symbols:
-              \verbatim my_plot.title("Plot of &#x3A9; function (&#x00B0;C)"); \endverbatim
+              `my_plot.title("Plot of \&\#x3A9; function (\&\#x00B0;C)");`
 
               Unicode symbols are at http://unicode.org/charts/symbols.html .
             */
-          const std::string title(); //! \return  a title for plot, whose string may include Unicode for greek letter and symbols.
-          Derived& title_font_size(unsigned int i); //! Sets the font size for the title (svg units, default pixels).
-          unsigned int title_font_size(); //! \return  the font size for the title (svg units, default pixels).
-          Derived& title_font_family(const std::string& family);
-          const std::string& title_font_family();
-          Derived& title_font_style(const std::string& style);
-          const std::string& title_font_style();
-          Derived& title_font_weight(const std::string& weight);
-          const std::string& title_font_weight();
-          Derived& title_font_stretch(const std::string& stretch);
-          const std::string& title_font_stretch();
-          Derived& title_font_decoration(const std::string& decoration);
-          const std::string& title_font_decoration();
-          Derived& title_font_rotation(rotate_style rotate);
-          int title_font_rotation();
-          Derived& title_font_alignment(align_style alignment);
-          align_style title_font_alignment();
+          const std::string title(); //!< \return  a title for plot, whose string may include Unicode for greek letter and symbols.
+          Derived& title_font_size(unsigned int i); //!< Sets the font size for the title (svg units, default pixels).
+          unsigned int title_font_size(); //!< \return  the font size for the title (svg units, default pixels).
+          Derived& title_font_family(const std::string& family); //!< Set the font family for the title (for example: .title_font_family("Lucida Sans Unicode");
+          const std::string& title_font_family(); //!< \return  the font family for the title.
+          Derived& title_font_style(const std::string& style);  //!< Set the font style for the title (default normal).
+          const std::string& title_font_style(); //!< \return  the font style for the title (default normal).
+          Derived& title_font_weight(const std::string& weight); //!< Set the font weight for the title (default normal).
+          const std::string& title_font_weight(); //!< \return  the font weight for the title.
+          Derived& title_font_stretch(const std::string& stretch); //!< Set the font stretch for the title (default normal), wider or narrow.
+          const std::string& title_font_stretch(); //!< \return  the font stretch for the title.
+          Derived& title_font_decoration(const std::string& decoration); //!< Set the font decoration for the title (default normal, or underline, overline or strike-thru).
+          const std::string& title_font_decoration(); //!< \return  the font decoration for the title (default normal, or underline, overline or strike-thru).
+          Derived& title_font_rotation(rotate_style rotate); //!< Set the rotation for the title font (degrees, 0 to 360 in steps using rotate_style, for example horizontal, uphill...
+          int title_font_rotation(); //!< \return  the rotation for the title font (degrees).
+          Derived& title_font_alignment(align_style alignment);  //!< Set the alignment for the title.
+          align_style title_font_alignment(); //!< \return  the alignment for the title.
           // Legend.
-          Derived& legend_width(double width);
-          double legend_width();
-          Derived& legend_title(const std::string title);
-          const std::string legend_title();
-          Derived& legend_font_weight(const std::string& weight);
-          const std::string& legend_font_weight();
-          Derived& legend_font_family(const std::string& family);
-          const std::string& legend_font_family();
-          Derived& legend_title_font_size(unsigned int size);
-          unsigned int legend_title_font_size();
-          Derived& legend_top_left(double x, double y);
-          const std::pair<double, double> legend_top_left();
-          const std::pair<double, double> legend_bottom_right();
-          Derived& legend_lines(bool is);
-          bool legend_lines();
-          Derived& legend_on(bool cmd);
-          bool legend_on();
-          Derived& legend_place(legend_places l);
-          legend_places legend_place();
-          bool legend_outside();
-          Derived& legend_header_font_size(int size);
-          int legend_header_font_size();
-          Derived& plot_window_on(bool cmd);
-          bool plot_window_on();
-          Derived& plot_border_color(const svg_color& col);
-          svg_color plot_border_color();
-          double plot_border_width();
-          Derived& plot_border_width(double w);
-          Derived& image_border_margin(double w);
-          double image_border_margin();
-          Derived& image_border_width(double w);
-          double image_border_width();
-          Derived& plot_window_x(double min_x, double max_x);
-          Derived& plot_window_y(double min_y, double max_y);
-          std::pair<double, double> plot_window_x();
-          double plot_window_x_left();
-          double plot_window_x_right();
-          double plot_window_y_top();
-          double plot_window_y_bottom();
-          std::pair<double, double> plot_window_y();
-          double x_minor_interval();
-          double y_minor_interval();
-          Derived& x_ticks_up_on(bool cmd);
-          bool x_ticks_up_on();
+          Derived& legend_width(double width); //!< Set the width for the legend box.
+          double legend_width(); //!< \return  the width for the legend box.
+          Derived& legend_title(const std::string title); //!< Set the title for the legend.
+          const std::string legend_title(); //!< \return  the title for the legend.
+          Derived& legend_font_weight(const std::string& weight); //!< Set the font weight for the legend title.
+          const std::string& legend_font_weight(); //!< \return  the font weight for the legend title.
+          Derived& legend_font_family(const std::string& family); //!< Set the font family for the legend title.
+          const std::string& legend_font_family(); //!< \return  the font family for the legend title.
+          Derived& legend_title_font_size(unsigned int size); //!< \return  the font family for the legend title.
+          unsigned int legend_title_font_size(); //!< \return  the font size for the legend title (svg units, default pixels).
+          Derived& legend_top_left(double x, double y);//!< Set position of top left of legend box (svg coordinates, default pixels).
+            //!< Bottom right is controlled by contents, so the user cannot set it.
+          const std::pair<double, double> legend_top_left(); //!< \return  svg coordinate (default pixels) of top left of legend box.
+          const std::pair<double, double> legend_bottom_right(); //!< \return  svg coordinate (default pixels) of bottom right of legend box.
+          Derived& legend_lines(bool is); /*!< Set true if legend should include samples of the lines joining data points.
+            This allows different series of data points to be distinguished by different color and/or width.
+            This is especially useful to show plots of different functions and/or different parameters in different colors.
+            */
+          bool legend_lines();//!< \return  true if legend should include samples of the lines joining data points.
+          Derived& legend_on(bool cmd); //!< Set true if a legend is wanted.
+          bool legend_on(); //!< \return  true if a legend is wanted.
+          Derived& legend_place(legend_places l); //!< Set the position of the legend, \see  boost::svg::legend_places
+          legend_places legend_place(); //!< \return  the position of the legend, \see  boost::svg::legend_places
+          bool legend_outside(); //!< \return  if the legend should be outside the plot area.
+          Derived& legend_header_font_size(int size); //!< Set legend header font size (svg units, default pixels).
+          int legend_header_font_size(); //!< \return  legend header font size (svg units, default pixels).
+          Derived& plot_window_on(bool cmd); //!< Set true if a plot window is wanted (or false if the whole image is to be used).
+          bool plot_window_on();//!< \return  true if a plot window is wanted (or false if the whole image is to be used).
+          Derived& plot_border_color(const svg_color& col); //!< Set the color for the plot window background.
+          svg_color plot_border_color(); //!< \return  the color for the plot window background.
+          Derived& plot_border_width(double w); //!< Set the margin around the plot window border (svg units, default pixels).
+            //! \details This prevents the plot window getting too close to other elements of the plot.
+          double plot_border_width(); //!< \return  the width for the plot window border (svg units, default pixels).
+          Derived& image_border_margin(double w); //!< Set the margin around the plot window border (svg units, default pixels).
+            //! \details This prevents the plot window getting too close to other elements of the plot.
+          double image_border_margin(); //!< \return  the margin around the plot window border (svg units, default pixels).
+          Derived& image_border_width(double w); //!< Set the svg image border width (svg units, default pixels).
+          double image_border_width(); //!< \return  the svg image border width (svg units, default pixels).
+          Derived& plot_window_x(double min_x, double max_x);//!< Set the minimum and maximum (cartesian data units) for the plot window X axis.
+            //! This is normally calculated from other plot values.
+          Derived& plot_window_y(double min_y, double max_y);//!< Set the minimum and maximum (cartesian data units) for the plot window Y axis.
+            //! This is normally calculated from other plot values.
+          std::pair<double, double> plot_window_x(); //!< \return  both the left and right (X axis) of the plot window.
+          double plot_window_x_left(); //!< \return  left of the plot window.
+          double plot_window_x_right(); //!< \return  right of the plot window.
+          double plot_window_y_top(); //!< \return  top of the plot window.
+          double plot_window_y_bottom(); //!< \return  top of the plot window.
+          std::pair<double, double> plot_window_y(); //!< \return  both the top and bottom (Y axis) of the plot window.
+          double x_minor_interval(); //!< \return  interval between X minor ticks.
+          double y_minor_interval(); //!< \return  interval between Y minor ticks.
+          Derived& x_ticks_up_on(bool cmd); //!< Set true if X major ticks should mark upwards.
+          bool x_ticks_up_on(); //!< \return  true if X major ticks should mark upwards.
           Derived& x_ticks_down_on(bool cmd);
-          bool x_ticks_down_on();
-          Derived& x_label_on(bool cmd);
-          bool x_label_on();
-          Derived& x_label_font_size(unsigned int i);
-          unsigned int x_label_font_size();
-          Derived& x_value_font_size(unsigned int i);
-          unsigned int x_value_font_size();
-          Derived& x_label_font_family(const std::string& family);
-          const std::string& x_label_font_family();
-          Derived& x_axis_label_color(const svg_color& col);
-          svg_color x_axis_label_color();
+          bool x_ticks_down_on(); //!< \return  true if Y major ticks should mark upwards.
+          Derived& x_label_on(bool cmd); //!< \return  true if X major ticks should mark downwards.
+          bool x_label_on(); /*!< Set true if want to show X-axis label text.
+            Also switched on by setting label text.
+            (on the assumption that if label text is set, display is also wanted,
+            but can be switched off if *not* required).
+           */
+          Derived& x_label_font_size(unsigned int i); //!< Set X axis label font size (svg units, default pixels).
+          unsigned int x_label_font_size(); //!< \return  X axis label font size (svg units, default pixels).
+          Derived& x_value_font_size(unsigned int i); //!< Set X tick value label font size (svg units, default pixels).
+          unsigned int x_value_font_size(); //!< \return  X tick value label font size (svg units, default pixels).
+          Derived& x_label_font_family(const std::string& family); /*!< Set X tick value label font family.
+           Available fonts depend on the program rendering the SVG XML, usually a browser.
+          The default font (usually "verdana") is used if a render program does not provide the font specified.
+          These are probably usable:
+          `"arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+          "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"`
+          */
+          const std::string& x_label_font_family(); //!< \return  X tick value label font family.
+          Derived& x_axis_label_color(const svg_color& col); //!< Set X axis label color, for example, red.
+          svg_color x_axis_label_color(); //!< \return  X axis label color.
           // X-axis ticks values label style.
-          Derived& x_ticks_values_color(const svg_color& col);
-          svg_color x_ticks_values_color();
-          Derived& x_ticks_values_precision(int p);
-          int x_ticks_values_precision();
-          Derived& x_ticks_values_ioflags(std::ios_base::fmtflags f);
-          std::ios_base::fmtflags x_ticks_values_ioflags();
+          Derived& x_ticks_values_color(const svg_color& col);  //!< Set X axis tick value label color.
+          svg_color x_ticks_values_color(); //!< \return  X-axis ticks value label color.
+          Derived& x_ticks_values_precision(int p); //!< Set iostream decimal digits precision of data point X values near data points markers.
+          int x_ticks_values_precision(); //!< \return  iostream decimal digits precision of data point X values near data points markers.
+          Derived& x_ticks_values_ioflags(std::ios_base::fmtflags f); //!< Set iostream format flags of data point X values near data points markers.
+          std::ios_base::fmtflags x_ticks_values_ioflags(); //!< \return  iostream format flags of data point X values near data points markers.
 
-          Derived& x_ticks_values_font_family(const std::string& family);
-          const std::string& x_ticks_values_font_family();
-          Derived& x_ticks_values_font_size(unsigned int i);
-          unsigned int x_ticks_values_font_size();
+          Derived& x_ticks_values_font_family(const std::string& family); //!< Set X ticks value label font family.
+          //!< Available fonts depend on the program rendering the SVG XML, usually a browser.
+          //!< The default font (usually "verdana") is used if a render program does not provide the font specified.
+          //!< These are probably usable:
+          //!< "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+          //!< "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
 
-          Derived& x_ticks_on_window_or_axis(int cmd);
-          int x_ticks_on_window_or_axis();
-          Derived& x_label_units_on(bool cmd);
-          bool x_label_units_on();
-          Derived& x_major_labels_side(int cmd);
-          int x_major_labels_side();
-          Derived& x_major_label_rotation(rotate_style rot);
-          rotate_style x_major_label_rotation();
-          Derived& title_on(bool cmd);
-          bool title_on();
-          Derived& x_major_grid_on(bool is);
-          bool x_major_grid_on();
-          Derived& x_minor_grid_on(bool is);
-          bool x_minor_grid_on();
-          Derived& axes_on(bool is);
-          bool axes_on();
-          Derived& x_axis_on(bool is);
-          bool x_axis_on();
-          Derived& y_axis_on(bool is);
-          bool y_axis_on();
-          Derived& title_color(const svg_color& col);
-          svg_color title_color();
-          Derived& legend_color(const svg_color& col);
-          svg_color legend_color();
-          Derived& legend_background_color(const svg_color& col);
-          svg_color legend_background_color();
-          bool legend_box_fill_on();
-          Derived& legend_border_color(const svg_color& col);
-          svg_color legend_border_color();
-          Derived& plot_background_color(const svg_color& col);
-          svg_color plot_background_color();
-          const std::string x_axis_position();
-          Derived& x_axis_color(const svg_color& col);
-          svg_color x_axis_color();
-          Derived& y_axis_color(const svg_color& col);
-          svg_color y_axis_color();
-          Derived& x_label_color(const svg_color& col);
-          Derived& x_label_width(double width);
-          double x_label_width();
-          svg_color x_label_color();
-          Derived& y_label_color(const svg_color& col);
-          svg_color y_label_color();
-          Derived& x_major_tick_color(const svg_color& col);
-          svg_color x_major_tick_color();
-          Derived& x_minor_tick_color(const svg_color& col);
-          svg_color x_minor_tick_color();
-          Derived& x_major_grid_color(const svg_color& col);
-          svg_color x_major_grid_color();
-          Derived& x_major_grid_width(double w);
-          double x_major_grid_width();
-          Derived& x_minor_grid_color(const svg_color& col);
-          svg_color x_minor_grid_color();
-          Derived& x_minor_grid_width(double w);
-          double x_minor_grid_width();
-          Derived& x_axis_width(double width);
-          double x_axis_width();
-          Derived& data_lines_width(double width);
-          double data_lines_width();
-          Derived& x_label(const std::string& str);
-          std::string x_label();
-          Derived& x_label_units(const std::string& str);
-          std::string x_label_units();
-          Derived& y_label(const std::string& str);
-          std::string y_label();
-          Derived& y_label_units(const std::string& str);
-          std::string y_label_units();
-          Derived& x_values_on(bool b);
-          bool x_values_on();
-          Derived& x_values_font_size(unsigned int i);
-          unsigned int x_values_font_size();
-          Derived& x_values_font_family(const std::string& family);
-          const std::string& x_values_font_family();
-          Derived& x_major_interval(double inter);
+          const std::string& x_ticks_values_font_family(); //!< \return  X ticks value label font family.
+          Derived& x_ticks_values_font_size(unsigned int i); //!< Set X ticks value label font size (svg units, default pixels).
+          unsigned int x_ticks_values_font_size(); //!< Set X ticks value label font size (svg units, default pixels).
 
-          Derived& x_values_color(const svg_color& col);
-          svg_color x_values_color();
-          Derived& x_values_rotation(rotate_style rotate);
-          int x_values_rotation();
-          Derived& x_values_precision(int p);
-          int x_values_precision();
-          Derived& x_values_ioflags(std::ios_base::fmtflags f);
-          std::ios_base::fmtflags x_values_ioflags();
-          Derived& x_plusminus_on(bool b);
-          bool x_plusminus_on();
-          Derived& x_plusminus_color(const svg_color& col);
-          svg_color x_plusminus_color();
-          Derived& x_df_on(bool b);
-          bool x_df_on();
-          Derived& x_df_color(const svg_color& col);
-          svg_color x_df_color();
+          Derived& x_ticks_on_window_or_axis(int cmd); /*!  Set  X ticks on window or axis
+              \arg cmd -1 bottom of plot window,
+              \arg cmd 0 on X axis.
+              \arg cmd +1 top of plot window.
+            */
+          int x_ticks_on_window_or_axis();//!< \return true if X axis ticks wanted on the window (rather than on axis).\n
+            //!< -1 bottom of plot window, 0 on X axis, +1 top of plot window.
+          Derived& x_label_units_on(bool cmd); //!< Set true if want X axis label to include units (as well as label like "length").
+            //!< \see x_label_units which also sets true.
+          bool x_label_units_on(); //!< Set true if want X axis label to include units (as well as label like "length").
+          Derived& x_major_labels_side(int cmd); /*! Position of labels for major ticks on horizontal X axis line.
+               \arg \c place > 0 labels to left of Y axis line (default),
+               \arg \c place = 0 (false) no major tick labels on Y axis.
+               \arg \c place > 0 labels to right of Y axis line.
+            */
+          int x_major_labels_side(); //!< \return the side for X ticks major value labels.
+          Derived& x_major_label_rotation(rotate_style rot); /*! Set rotation for X ticks major value labels. (Default horizontal).
+               \see rotate_style
+            */
+          rotate_style x_major_label_rotation(); /*! \return rotation for X ticks major value labels.
+                \see rotate_style
+             */
+          Derived& title_on(bool cmd); //!< If set true, show a title for the plot.
+            //!< Set true by setting a title.
+          bool title_on(); //!< \return true if will show a title for the plot.
+          Derived& x_major_grid_on(bool is); //!< If set true, will include a major X-axis grid.
+          bool x_major_grid_on();  //!< \return true if will include a major X-axis grid.
+          Derived& x_minor_grid_on(bool is); //!< If set true, will include a minor X-axis grid.
+          bool x_minor_grid_on();   //!< \return true if will include a major X-axis grid.
+          Derived& axes_on(bool is); //!< If set true, draw \b both x and y axes (note plural axes).
+          bool axes_on(); //!< \return true if \b both x and y axis on.
+          Derived& x_axis_on(bool is); //!< If set true, draw a horizontal X-axis line.
+          bool x_axis_on(); //!< \return true if will draw a horizontal X-axis line.
+          Derived& y_axis_on(bool is); //!< If set true, draw a vertical Y-axis line.
+          bool y_axis_on(); //!< \return true if will draw a horizontal X-axis line.
+          Derived& title_color(const svg_color& col); //!< Set the color of any title of the plot.
+          svg_color title_color(); //!< \return the color of any title of the plot.
+          Derived& legend_color(const svg_color& col); //!< Set the color of the title of the legend.
+          svg_color legend_color(); //!< \return  the color of the title of the legend.
+          Derived& legend_background_color(const svg_color& col); //!< Set the background fill color of the legend box.
+          svg_color legend_background_color(); //!< \return  the background fill color of the legend box.
+          bool legend_box_fill_on(); //!< \return true if legend box has a background fill color.
+          Derived& legend_border_color(const svg_color& col); //!< Set the border stroke color of the legend box.
+          svg_color legend_border_color(); //!< \return  the border stroke color of the legend box.
+          Derived& plot_background_color(const svg_color& col); //!< Set the fill color of the plot window background.
+          svg_color plot_background_color(); //!< \return  the fill color of the plot window background.
+          const std::string x_axis_position(); //!< \return  the position (or intersection with Y-axis) of the X-axis.
+          Derived& x_axis_color(const svg_color& col); //!< Set the color of the X-axis line.
+          svg_color x_axis_color(); //!< \return  the color of the X-axis line.
+          Derived& y_axis_color(const svg_color& col); //!< Set the color of the Y-axis line.
+          svg_color y_axis_color(); //!< \return  the color of the Y-axis line.
+          Derived& x_label_color(const svg_color& col); //!< \return  the color of the Y-axis line.
+          svg_color x_label_color(); //!< \return  the color of X-axis label (including any units).
+          Derived& x_label_width(double width); //!< Set the width (boldness) of X-axis label (including any units).
+            //!< (not recommended until browsers implement better).
+          double x_label_width(); //!< \return  the width (boldness) of X-axis label (including any units).
+          Derived& y_label_color(const svg_color& col); //!< Set the color of Y-axis label (including any units).
+          svg_color y_label_color(); //!< \return  the color of Y-axis label (including any units).
+          Derived& x_major_tick_color(const svg_color& col); //!< Set the color of X-axis major ticks.
+          svg_color x_major_tick_color(); //!< \return  the color of X-axis major ticks.
+          Derived& x_minor_tick_color(const svg_color& col); //!< Set the color of X-axis minor ticks.
+          svg_color x_minor_tick_color(); //!< \return  the color of X-axis minor ticks.
+          Derived& x_major_grid_color(const svg_color& col); //!< Set the color of X-axis major grid lines.
+          svg_color x_major_grid_color(); //!< Set the color of X-axis major grid lines.
+          Derived& x_major_grid_width(double w); //!< Set the width of X-axis major grid lines.
+          double x_major_grid_width(); //!< \return  the color of X-axis major grid lines.
+          Derived& x_minor_grid_color(const svg_color& col); //!< Set the color of X-axis minor grid lines.
+          svg_color x_minor_grid_color(); //!< \return  the color of X-axis minor grid lines.
+          Derived& x_minor_grid_width(double w); //!< Set the width of X-axis minor grid lines.
+          double x_minor_grid_width(); //!< \return  the width of X-axis minor grid lines.
+          Derived& x_axis_width(double width); //!< Set the width of X-axis lines.
+          double x_axis_width(); //!< \return  the width of X-axis lines.
+          Derived& data_lines_width(double width); //!< Set the width of lines joining data points.
+          double data_lines_width(); //!< \return  the width of lines joining data points.
+          Derived& x_label(const std::string& str); //!< Set the text to label the X-axis (and set x_label_on(true)).
+          std::string x_label(); //!< \return  the text to label the X-axis.
+          Derived& x_label_units(const std::string& str); //!< Set the text to add units to the X-axis label.
+          std::string x_label_units(); //!< \return  the text to add units to the X-axis label.
+            //!< The label will only be shown if  x_label_on() == true.
+          Derived& y_label(const std::string& str); //!< Set the text for the Y-axis label (and set y_label_on(true)).
+          std::string y_label(); //!< \return  the text for the Y-axis label.
+            //!< The label will only be shown if  y_label_on() == true.
+          Derived& y_label_units(const std::string& str); //!< Set the text to add units to the Y-axis label.
+          std::string y_label_units(); //!< \return  the text to add units to the X-axis label.
+          Derived& x_values_on(bool b); //!< Set true to show data point values near data points markers.
+          bool x_values_on(); //!< \return true if to show data point values near data points markers.
+          Derived& x_values_font_size(unsigned int i); //!< Set font size of data point X values near data points markers.
+          unsigned int x_values_font_size(); //!< \return  font size of data point X values near data points markers.
+          Derived& x_values_font_family(const std::string& family); //!< Set font family of data point X values near data points markers.
+          const std::string& x_values_font_family(); //!< \return font family of data point X values near data points markers.
+          Derived& x_major_interval(double inter); //!< Set the interval between X-axis major ticks.
+          double x_major_interval();  //!< \return  the interval between X-axis major ticks.
+
+          Derived& x_values_color(const svg_color& col); //!< Set the color of data point X values near data points markers.
+          svg_color x_values_color(); //!< \return  the color of data point X values near data points markers.
+          Derived& x_values_rotation(rotate_style rotate); //!< \return  the rotation (rotate_style) of data point X values near data points markers.
+          int x_values_rotation(); //!< Set the rotation (rotate_style) of data point X values near data points markers.
+          Derived& x_values_precision(int p); //!< Set iostream decimal digits precision of data point X values near data points markers.
+          int x_values_precision(); //!< \return  iostream decimal digits precision of data point X values near data points markers.
+          Derived& x_values_ioflags(std::ios_base::fmtflags f); //!< Set iostream format flags of data point X values near data points markers.
+          std::ios_base::fmtflags x_values_ioflags(); //!< \return  iostream format flags of data point X values near data points markers.
+          Derived& x_plusminus_on(bool b); //!< Set if to append uncertainty estimate to data point X values near data points markers.
+          bool x_plusminus_on(); //!< \return true if to append uncertainty estimate to data point X values near data points markers.
+          Derived& x_plusminus_color(const svg_color& col); //!< Set the color of X uncertainty of value, for example, the color of 0.02 in "1.23 +-0.02 (9)".
+          svg_color x_plusminus_color(); //!< \return the color of X uncertainty of value, for example, the color of 0.02 in "1.23 +-0.02 (9)".
+          Derived& x_df_on(bool b); //!< Set true if to append a degrees of freedom estimate to data point X values near data points markers.
+          bool x_df_on(); //!< \return true if to append a degrees of freedom estimate to data point X values near data points markers.
+          Derived& x_df_color(const svg_color& col); //!< Set the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
+          svg_color x_df_color(); //!< \return the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
           Derived& x_decor(const std::string& pre, const std::string& sep = "", const std::string& suf = "");
-          const std::string x_suffix();
-          const std::string x_separator();
-          const std::string x_prefix();
+          /*!< Set prefix, separator and suffix together for x_ values.
+            Note if you want a space, you must use a Unicode space "\&\#x00A0;",
+            for example, ",\&\#x00A0;" rather than ASCII space", ".
+            */
+          const std::string x_suffix(); //!< \return the suffix (only used if separator != "")
+          const std::string x_separator(); //!< \return the separator, perhaps including Unicode.
+          const std::string x_prefix(); //!< \return the prefix.
 
-          double x_major_interval();
-          Derived& x_major_tick_length(double length);
-          double x_major_tick_length();
-          Derived& x_major_tick_width(double width);
-          double x_major_tick_width();
-          Derived& x_minor_tick_length(double length);
-          double x_minor_tick_length();
-          Derived& x_minor_tick_width(double width);
-          double x_minor_tick_width();
-          Derived& x_major_tick(double d);
-          double x_major_tick();
-          Derived& x_minor_interval(double interval);
-          Derived& x_num_minor_ticks(unsigned int num);
-          unsigned int x_num_minor_ticks();
-          Derived& x_range(double min_x, double max_x);
-          std::pair<double, double> x_range();
-          Derived& x_min(double min_x);
-          double x_min();
-          Derived& x_max(double x);
-          double x_max();
-          // Set & get autoscale parameters,
+          Derived& x_major_tick_length(double length); //!< Set length of X major ticks (SVG units, default pixels).
+          double x_major_tick_length(); //!< Set length of X major ticks (SVG units, default pixels).
+          Derived& x_major_tick_width(double width); //!< Set width of X major ticks (SVG units, default pixels).
+          double x_major_tick_width(); //!< Set width of X major ticks (SVG units, default pixels).
+          Derived& x_minor_tick_length(double length); //!< Set length of X minor ticks (SVG units, default pixels).
+          double x_minor_tick_length(); //!< \return  length of X minor ticks (SVG units, default pixels).
+          Derived& x_minor_tick_width(double width); //!< Set width of X minor ticks (SVG units, default pixels).
+          double x_minor_tick_width(); //!< \return  width of X minor ticks (SVG units, default pixels).
+          Derived& x_major_tick(double d); //!< Set interval (Cartesian units) between major ticks.
+          double x_major_tick(); //!< \return  interval (Cartesian units) between major ticks.
+          Derived& x_minor_interval(double interval); //!< Set interval between X-axis minor ticks.
+          Derived& x_num_minor_ticks(unsigned int num); //!< Set number of X-axis minor ticks between major ticks.
+          unsigned int x_num_minor_ticks(); //!< \return  number of X-axis minor ticks between major ticks.
+          Derived& x_range(double min_x, double max_x); /*!< Set the range of values on the X-axis.
+            The minimum and maximum values must be finite and not too near
+            to the minima or maxima that can be represented by floating point double,
+            std::numeric_limits<double>::min() or std::numeric_limits<double>::max(),
+            and the range must not be too small.
+            */
+          std::pair<double, double> x_range(); //!< \return  the range of values on the X-axis.
+          Derived& x_min(double min_x); //!< Set the minimum value on the X-axis.
+          double x_min(); //! \return  the minimum value on the X-axis.
+          Derived& x_max(double x); //!< Set the maximum value on the X-axis.
+          double x_max(); //!< \return  the maximum value on the X-axis.
+
+          // autoscale set & get parameters,
           // Note: all these *MUST* preceed x_autoscale(data) call.
-          double autoscale_plusminus();
-          Derived& autoscale_plusminus(double);
-
-          bool autoscale_check_limits();
-          Derived& autoscale_check_limits(bool b);
-          bool x_autoscale();
-          Derived& x_autoscale(bool b);
-          bool autoscale();
-          Derived& autoscale(bool b);
-          Derived& x_autoscale(std::pair<double, double> p); //! autoscale X axis using a pair of doubles.
+          Derived& autoscale_plusminus(double); //!< Set how many uncertainty or standard deviation to allow for ellipse when autoscaling.
+          double autoscale_plusminus(); //!< \return  how many uncertainty or standard deviations to allow for ellipse when autoscaling.
+          Derived& autoscale_check_limits(bool b); //!< Set to check that values used for autoscale are within limits.
+            //! Default is true, but can switch off checks for speed if can be sure all are 'inside limits'.
+          bool autoscale_check_limits();//!< \return True if to check that values used for autoscale are within limits.
+          bool x_autoscale();  //!< \return true if to use autoscale value for X-axis.
+          Derived& x_autoscale(bool b); //!< Set true if to use autoscale values for X-axis.
+          bool autoscale(); //!< \return true if to use autoscale values for X-axis.
+          Derived& autoscale(bool b);  //!< Set true if to use autoscale values for X-axis.
+          Derived& x_autoscale(std::pair<double, double> p); //!< autoscale X axis using a pair of doubles.
           template <class T> // T an STL container: array, vector ...
-          Derived& x_autoscale(const T& container); //! autoscale X axis using the whole data series.
+          Derived& x_autoscale(const T& container); //!< autoscale X axis using the whole data series.
           template <class T> // T an STL container: array, vector ...
           Derived& x_autoscale(const T& begin, const T& end); // Data series using iterators.
-          Derived& x_with_zero(bool b);
-          bool x_with_zero();
-          Derived& x_min_ticks(int min_ticks);
-          int x_min_ticks();
-          Derived& x_steps(int steps);
-          int x_steps();
-          Derived& x_tight(double tight);
-          double x_tight();
+          Derived& x_with_zero(bool b); //!< Set X-axis autoscale to include zero (default = false).
+          bool x_with_zero(); //!< \return  true if X-axis autoscale to include zero (default = false).
+          Derived& x_min_ticks(int min_ticks); //!< Set X-axis autoscale to include at least minimum number of ticks (default = 6).
+          int x_min_ticks(); //!< \return  X-axis autoscale minimum number of ticks.
+          Derived& x_steps(int steps); /*!< Set autoscale to set ticks in steps multiples of:\n
+             2,4,6,8,10, if 2\n
+             or 1,5,10 if 5\n
+             or 2,5,10 if 10.\n
+             default = 0 (none).
+             \note: Must \b preceed x_autoscale(data) call).
+             */
+          int x_steps(); //!< \return  autoscale to set ticks in steps.
+          Derived& x_tight(double tight); //!< Set tolerance to autoscale to permit data points slightly outside both end ticks.
+          double x_tight(); //!< \return  tolerance given to autoscale to permit data points slightly outside both end ticks.
           // Get results of autoscaling.
-          double x_auto_min_value();
-          double x_auto_max_value();
-          double x_auto_tick_interval();
-          int x_auto_ticks();
-          Derived& limit_color(const svg_color&);
-          svg_color limit_color();
-          Derived& limit_fill_color(const svg_color&);
-          svg_color limit_fill_color();
-          Derived& draw_note(double x, double y, std::string note, rotate_style rot = horizontal, align_style al = center_align, const svg_color& = black, text_style& tsty = no_style);
+          double x_auto_min_value(); //!< \return  the X-axis minimum value computed by autoscale.
+          double x_auto_max_value(); //!< \return  the X-axis maximum value computed by autoscale.
+          double x_auto_tick_interval(); //!< \return  the X-axis major tick interval computed by autoscale.
+          int x_auto_ticks(); //!< \return  the X-axis number of major ticks computed by autoscale.
+          Derived& limit_color(const svg_color&); //!< Set the color for 'at limit' point stroke color.
+          svg_color limit_color(); //!< \return  the color for the 'at limit' point stroke color.
+          Derived& limit_fill_color(const svg_color&); //!< Set the color for 'at limit' point fill color.
+          svg_color limit_fill_color(); //!< \return  the color for the 'at limit' point fill color.
+          Derived& draw_note
+            (double x, double y, std::string note, rotate_style rot = horizontal, align_style al = center_align, const svg_color& = black, text_style& tsty = no_style);
+           /*!< \brief Annotate plot with a  text string (perhaps including Unicode), putting note at SVG Coordinates X, Y.
+            \details Defaults color black, rotation horizontal and align = center_align
+            Using center_align is recommended as it will ensure that will center correctly
+            (even if original string is made much longer because it contains Unicode,
+            for example Greek or math symbols, taking about 6 characters per symbol)
+            because the render engine does the centering.
+          */
           Derived& draw_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
-          Derived& draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
+          /*!< \brief Annotate plot with a line from SVG Coordinates X1, Y1 to X2, Y2.
+              \details Default color black.
+              Note \b NOT the data values. See draw_plot_line if want to use user coordinates.
+            */
+          Derived& draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col = black); /*!< \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 to X2, Y2.
+              \details For example, -10, -10, +10, +10, Default color black.
+            */
           Derived& draw_plot_curve(double x1, double y1, double x2, double y2, double x3, double y3,const svg_color& col = black);
+          /*! \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 via X2, Y2 to X3, Y3.
+              \details For example, -10, -10, +10, +10, Default color black.
+          */
 
-          Derived& one_sd_color(const svg_color&);
-          svg_color one_sd_color();
-          Derived& two_sd_color(const svg_color&);
-          svg_color two_sd_color();
-          Derived& three_sd_color(const svg_color&);
-          svg_color three_sd_color();
+          Derived& one_sd_color(const svg_color&); //!< Set the color for the one standard deviation (~67% confidence) ellipse fill.
+          svg_color one_sd_color(); //!< \return Color for the one standard deviation (~67% confidence) ellipse fill.
+          Derived& two_sd_color(const svg_color&); //!< Set the color for two standard deviation (~95% confidence) ellipse fill.
+          svg_color two_sd_color(); //!< \return Color for two standard deviation (~95% confidence) ellipse fill.
+          Derived& three_sd_color(const svg_color&); //!< Set the color for three standard deviation (~99% confidence) ellipse fill.
+          svg_color three_sd_color(); //!< \return Color for three standard deviation (~99% confidence) ellipse fill.
 
           //// Stylesheet.
           // Removed for now to avoid compile warning in spirit.
@@ -2023,7 +2099,7 @@ namespace boost
         // class axis_plot_frame Member function Definitions (for .ipp file):
 
           template <class Derived>
-          /*! \tparam Derived svg_1d_plot or svg_2d_plot
+          /*! \tparam Derived plot class, svg_1d_plot or svg_2d_plot or svg_boxplot.
           */
           template <class T>
           /*! \tparam T an STL container: array, vector, list, map ...
@@ -2111,7 +2187,7 @@ namespace boost
           }
 
           template <class Derived>
-          unsigned int axis_plot_frame<Derived>::y_size() 
+          unsigned int axis_plot_frame<Derived>::y_size()
           { //! \return SVG image Y-axis size as vertical height (SVG units, default pixels).
             return derived().image_.y_size();
           }
@@ -2855,7 +2931,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           Derived& axis_plot_frame<Derived>::x_label_font_size(unsigned int i)
           { //! Set X axis label font size (svg units, default pixels).
             derived().x_label_info_.textstyle().font_size(i);
-            // Also duplicated at 
+            // Also duplicated at
             // derived().x_axis_label_style_.font_size(i);
             return derived();
           }
@@ -2917,7 +2993,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             derived().image_.g(detail::PLOT_X_TICKS_VALUES).style().fill_color(col);
             //derived().image_.g(detail::PLOT_X_TICK_VALUE_LABELS).style().stroke_color(col);
             // Setting the stroke color produces fuzzy characters :-(
-            //derived().x_ticks_.color_ = col; 
+            //derived().x_ticks_.color_ = col;
             return derived();
           }
 
@@ -3905,7 +3981,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           bool axis_plot_frame<Derived>::autoscale()
-          { //! Set true if to use autoscale values for X-axis.
+          { //! \return true if to use autoscale values for X-axis.
             //! autoscale() is same as x_autoscale.
            return derived().x_autoscale_;
           }
@@ -4038,7 +4114,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
         template <class Derived>
         Derived& axis_plot_frame<Derived>::limit_color(const svg_color& col)
         { //! Set the color for 'at limit' point stroke color.
-          // Need to set the series 
+          // Need to set the series
           derived().image_.g(detail::PLOT_LIMIT_POINTS).style().stroke_color(col);
           // derived().serieses_[0].limit_point_color(col); // Would require to add some data first!
           return derived();

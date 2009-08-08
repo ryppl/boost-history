@@ -232,7 +232,8 @@ namespace svg
         /details Straight line from SVG location (x1, y1) to (x2, y2).
 
     */
-  private:
+  public: //temporary for experimental gil
+//  private:
     double x1_; //!< Line from (x1_, x2_) to (y1_, y2_)
     double x2_; //!< Line from (x1_, x2_) to (y1_, y2_)
     double y1_; //!< Line from (x1_, x2_) to (y1_, y2_)
@@ -272,7 +273,8 @@ namespace svg
         \brief Quadratic Bezier curved line from (x1, y1) control point (x2, y2) to (x3, y3).
         \details Note x2 is the Bezier control point - the curve will \b not pass thru this point.
     */
-  private:
+  public: //temporary for experimental gil
+//  private:
     double x1_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
     double x2_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
     double y1_; //!< Quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (y3_, y3_)
@@ -301,16 +303,16 @@ namespace svg
     }
 
     void write(std::ostream& o_str)
-    { /*! output quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (x3_, y3_) 
+    { /*! output quadratic curved line from (x1_, y1_) control point (x2_, y2_) to (x3_, y3_)
        \details
-          \verbatim Example:  
+          \verbatim Example:
           \endverbatim
       */
-      o_str << "<path d=\"M" << x1_ << "," << y1_ 
+      o_str << "<path d=\"M" << x1_ << "," << y1_
           << " Q" << x2_ << "," << y2_ << " " // Control point - will not pass thru this point.
           //<< x1_ << "," << y1_ << " "
           //<< x2_ << "," << y2_ << " "
-          << x3_ << "," << y3_ 
+          << x3_ << "," << y3_
           <<"\"";
       if(style_info_.fill_on() == false)
       {
@@ -331,7 +333,9 @@ namespace svg
     friend bool operator==(const rect_element&, const rect_element&);
     friend bool operator!=(const rect_element&, const rect_element&);
 
-  private:
+  public: //temporary for experimental gil
+
+//  private:
     double x_; //! X-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
     double y_; //! Y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
     //! So (0, 0) is top left corner of rectangle.
@@ -1155,7 +1159,8 @@ public:
       \brief The clipping path restricts the region to which paint can be applied.
       \details 14.3 Clipping paths http://www.w3.org/TR/SVG/masking.html#ClipPathProperty.
     */
-  private:
+  public: //temporary for experimental gil
+//  private:
     std::string element_id; // SVG element id.
     rect_element rect; //! Clipping rectangle.
 
@@ -1483,7 +1488,8 @@ public:
      where the d attribute contains the moveto, line, curve
      (both cubic and quadratic Beziers), arc and closepath instructions.
      */
-  private:
+  public: //temporary for experimental gil
+//  private:
     ptr_vector<path_point> path; // All the (x, y) coordinate pairs,
     // filled by calls of m, M, l , L... that push_back.
   public:
@@ -1716,7 +1722,8 @@ public:
     friend std::ostream& operator<< (std::ostream&, const polygon_element&);
     friend std::ostream& operator<< (std::ostream&, polygon_element&);
 
-  private:
+  public: //temporary for experimental gil
+//  private:
     //using boost::ptr_vector;
     ptr_vector<poly_path_point> poly_points; //!< All the x, y coordinate pairs,
     //!< push_backed by calls of p_path(x, y).
@@ -1902,7 +1909,8 @@ public:
      */
   friend std::ostream& operator<< (std::ostream&, polyline_element&);
 
-  private:
+   public: //temporary for experimental gil
+// private:
     ptr_vector<poly_path_point> poly_points; //!< All the (x, y) coordinate pairs,
     // push_back by calls of p_path(x, y).
   public:
@@ -1997,8 +2005,9 @@ public:
       <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
       \endverbatim.
    */
+  public: //temporary for experimental gil
 
-  private:
+//  private:
     ptr_vector<svg_element> children; /*! Children of this group element node,
       containg graphics elements like text, circle line, polyline...
     */

@@ -264,7 +264,9 @@ class svg_1d_plot : public detail::axis_plot_frame<svg_1d_plot>
   //friend void show_2d_plot_settings(svg_1d_plot&); // Surely not needed?
   friend class detail::axis_plot_frame<svg_1d_plot>;
 
- protected:
+public: // Temporary for gil experiment.
+
+ //protected:
   // Member data names conventionally end with _.
   // for example: border_margin_,
   // and set & get accessor functions are named *without* _ suffix,
@@ -388,7 +390,7 @@ public:
     //x_units_info_(0, 0, " (units)", x_value_label_style_, center_align, horizontal),
     x_label_info_(0, 0, "", x_axis_label_style_, center_align, horizontal), // Null strings for now.
     x_value_label_info_(0, 0, "", x_value_label_style_, center_align, horizontal), // X-axis tick value label, for example: "1.2" or "1.2e1".
-    x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal), 
+    x_units_info_(0, 0, "", x_value_label_style_, center_align, horizontal),
     x_axis_(X, -10., +10., black, 1, 0, true, false, true),
     y_axis_(Y, 0., +1., black, 1, 0, false, false, false), // Not used for 1D.
 
@@ -485,14 +487,14 @@ public:
     // This will place the labels just under the horizontal X-axis line,
     // rather than below the plot window border.
     // This over-rides the default in class ticks_labels_style.
-    // 
+    //
 
     if (title_info_.text() == "")
     { // Avoid leaving unnecessary space etc for a title.
       title_on_ = false;
     }
     else
-    { 
+    {
       title_on_ = true; // Can be switched off later with `my_1d_plot.title_on(true);`
     }
 
@@ -864,7 +866,7 @@ public:
   template <class T>
   svg_1d_plot_series& svg_1d_plot::plot(const T& container, const std::string& title /*= "" */)
   { /*! Add a data series to the plot (by default, converting to unc doubles), with optional title.
-     Note that this version assumes that *ALL* the data values in the container are used.
+     Note that this version assumes that \b ALL the data values in the container are used.
     */
     serieses_.push_back(
       svg_1d_plot_series(

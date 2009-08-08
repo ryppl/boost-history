@@ -88,7 +88,8 @@ namespace svg
     friend svg_color constant_to_rgb(svg_color_constant c);
     friend bool is_blank(const svg_color& col);
 
-  private:
+  public: //temporary for experimental gil
+//  private:
     unsigned char r_; //!< red unsigned char provides range [0 to 255].
     unsigned char g_; //!< green unsigned char provides range [0 to 255].
     unsigned char b_; //!< blue unsigned char provides range [0 to 255].
@@ -156,7 +157,7 @@ namespace svg
     } // void write(std::ostream& os)
 
     bool operator== (const svg_color& rhs)
-    { //! Compare colors (for equal).  
+    { //! Compare colors (for equal).
       if ((is_blank_) && (rhs.is_blank_ == true))
       { // Both blank
         return true;
@@ -237,17 +238,17 @@ namespace svg
     else
     {
       os << "blank";
-    } 
+    }
     /*! \details Usage: svg_color my_color(127, 255, 212); cout << "my_color " << my_color << endl;
          Outputs: my_color RGB(127,255,212)       cout << "magenta " << svg_color(magenta) << endl;
-         but caution! cout << magenta << endl; outputs 85 because magenta is an enum #svg_color_constant ! 
+         but caution! cout << magenta << endl; outputs 85 because magenta is an enum #svg_color_constant !
      */
     return os;
   } // std::ostream& operator<<
 
   //! SVG standard colors, \see svg_color_constant
   svg_color color_array[] =
-  { 
+  {
     svg_color(240, 248, 255), // aliceblue
     svg_color(250, 235, 215), // antiquewhite
     svg_color(0  , 255, 255), // aqua
