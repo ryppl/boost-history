@@ -21,10 +21,11 @@ namespace unicode
 #undef BOOST_UNICODE_OPTION
 #endif
 
-/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
- * that decomposes a code point, i.e. it converts a code point into a
- * sequence of code points.
- * It applies UCD decompositions that match \c mask recursively as well as the Hangul decompositions. */
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+ * that decomposes a combining character sequence, i.e. it transforms a combining
+ * character sequence into its canonically ordered decomposed equivalent.
+ * It applies UCD decompositions that match \c mask recursively as well as the Hangul decompositions
+ * if \c mask matches canonical decompositions. */
 struct decomposer
 {
     typedef char32 input_type;
@@ -34,22 +35,46 @@ struct decomposer
     {
     }
     
-    /** \post [<tt>begin</tt>, <tt>end</tt>[ is in Normalization Form D. */
-    template<typename Out>
-    Out operator()(char32 ch, Out out)
+    /** \post \c out is in Normalization Form D. */
+    template<typename In, typename Out>
+    std::pair<In, Out> ltr(In begin, In end, Out out)
     {
-        if(ucd::get_combining_class(ch) != 0)
+        do
         {
-            // TODO: actually enforce the postcondition, canonical order is not guaranteed */
-        }
+            char32 ch = *begin;
+            if(ucd::get_combining_class(ch) != 0)
+            {
+                // canonical reorder, not handled yet
+            }
         
-        iterator_range<const char32*> dec = ucd::get_decomposition(ch);
-        if(!empty(dec) && ((1 << ucd::get_decomposition_type(ch)) & mask))
-        {
-            return pipe(dec, make_one_many_pipe(*this), out); // we decompose recursively
+            iterator_range<const char32*> dec = ucd::get_decomposition(ch);
+            if(!empty(dec) && ((1 << ucd::get_decomposition_type(ch)) & mask))
+            {
+                out = pipe(dec, *this, out); // we decompose recursively
+            }
+            else if(BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical) & mask)
+            {
+                out = hangul_decomposer()(ch, out);
+            }
+            else
+            {
+                *out++ = ch;
+            }
+            
+            ++begin;
         }
-
-        return hangul_decomposer()(ch, out);
+        while(begin != end && ucd::get_combining_class(*begin) != 0);
+        
+        return std::make_pair(begin, out);
+    }
+    
+    /** \post \c out is in Normalization Form D. */
+    template<typename In, typename Out>
+    std::pair<In, Out> rtl(In begin, In end, Out out)
+    {
+        // NOT IMPLEMENTED
+        *out++ = *--end;
+        return std::make_pair(end, out);
     }
     
 private:

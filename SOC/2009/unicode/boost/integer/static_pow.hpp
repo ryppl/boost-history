@@ -5,7 +5,7 @@
 
 namespace boost
 {
-    template<int X, int Y>
+    template<int X, unsigned Y>
     struct static_pow : boost::mpl::int_< X * static_pow<X, Y-1>::value >
     {
     };

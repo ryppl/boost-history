@@ -36,107 +36,107 @@ const int PROGRESS_INDICATION_EVERY_WRITE  = 100;
 
 write_entry::write_entry()
 {
-	general_category = (category::type)-1;
-	combining = -1;
-	bidi = (bidi_class::type)-1;
-	decomposition_kind = (decomposition_type::type)-1;
-	has_decomposition = false;
+    general_category = (category::type)-1;
+    combining = -1;
+    bidi = (bidi_class::type)-1;
+    decomposition_kind = (decomposition_type::type)-1;
+    has_decomposition = false;
     grapheme_break = grapheme_cluster_break::any;
     word_break_kind = word_break::any;
     sentence_break_kind = sentence_break::any;
-	unknown_char = false;
-	sort_variable = false;
+    unknown_char = false;
+    sort_variable = false;
     sort_type = sort_type::default_;
     sort_index_or_data1 = 0;
     sort_data2 = 0;
-	uppercase = (char32)0;
-	lowercase = (char32)0;
-	titlecase = (char32)0;
-	has_complex_case = false;
-	line_break = (line_break::type)-1;
-	joining = (join_type::type)-1;
+    uppercase = (char32)0;
+    lowercase = (char32)0;
+    titlecase = (char32)0;
+    has_complex_case = false;
+    line_break = (line_break::type)-1;
+    joining = (join_type::type)-1;
 }
 
 write_entry::write_entry(char32 ch, const character_properties& data)
 {
-	chr = ch;
-	name = data.name;
-	general_category = data.general_category;
-	combining = data.combining;
-	bidi = data.bidi;
-	decomposition_kind = data.decomposition_kind;
-	has_decomposition = (!data.decomposition.empty());
+    chr = ch;
+    name = data.name;
+    general_category = data.general_category;
+    combining = data.combining;
+    bidi = data.bidi;
+    decomposition_kind = data.decomposition_kind;
+    has_decomposition = (!data.decomposition.empty());
     grapheme_break = data.grapheme_break;
     word_break_kind = data.word_break_kind;
     sentence_break_kind = data.sentence_break_kind;
-	unknown_char = data.unknown_char;
-	sort_variable = data.sort_variable;
+    unknown_char = data.unknown_char;
+    sort_variable = data.sort_variable;
     sort_type = data.sort_type;
     sort_index_or_data1 = data.sort_index_or_data1;
     sort_data2 = data.sort_data2;
-	uppercase = data.uppercase;
-	lowercase = data.lowercase;
-	titlecase = data.titlecase;
-	has_complex_case = (!data.complex_case.empty());
-	line_break = data.line_break;
-	joining = data.joining;
+    uppercase = data.uppercase;
+    lowercase = data.lowercase;
+    titlecase = data.titlecase;
+    has_complex_case = (!data.complex_case.empty());
+    line_break = data.line_break;
+    joining = data.joining;
 }
 
 void write_entry::calc_properties_checksum(boost::crc_basic<16>& crc)
 {
-	// it would be very nice to checksum the whole of the entry in one 
-	// go but alignment might mean that there is random data interspersed
+    // it would be very nice to checksum the whole of the entry in one 
+    // go but alignment might mean that there is random data interspersed
 #ifdef BOOST_UNICODE_UCD_BIG
-	crc.process_bytes(name.c_str(), name.size() );
+    crc.process_bytes(name.c_str(), name.size() );
 #endif
-	crc.process_bytes(&general_category, sizeof(general_category) );
-	crc.process_bytes(&combining, sizeof(combining) );
-	crc.process_bytes(&bidi, sizeof(bidi) );
-	crc.process_bytes(&decomposition_kind, sizeof(decomposition_kind) );
-	crc.process_bytes(&has_decomposition, sizeof(has_decomposition) );
-	crc.process_bytes(&grapheme_break, sizeof(grapheme_break) );
-	crc.process_bytes(&word_break_kind, sizeof(word_break_kind) );
-	crc.process_bytes(&sentence_break_kind, sizeof(sentence_break_kind) );
-	crc.process_bytes(&unknown_char, sizeof(unknown_char) );
+    crc.process_bytes(&general_category, sizeof(general_category) );
+    crc.process_bytes(&combining, sizeof(combining) );
+    crc.process_bytes(&bidi, sizeof(bidi) );
+    crc.process_bytes(&decomposition_kind, sizeof(decomposition_kind) );
+    crc.process_bytes(&has_decomposition, sizeof(has_decomposition) );
+    crc.process_bytes(&grapheme_break, sizeof(grapheme_break) );
+    crc.process_bytes(&word_break_kind, sizeof(word_break_kind) );
+    crc.process_bytes(&sentence_break_kind, sizeof(sentence_break_kind) );
+    crc.process_bytes(&unknown_char, sizeof(unknown_char) );
 #ifdef BOOST_UNICODE_UCD_BIG    
-	crc.process_bytes(&sort_variable, sizeof(sort_variable) );
-	crc.process_bytes(&sort_type, sizeof(sort_type) );
-	crc.process_bytes(&sort_index_or_data1, sizeof(sort_index_or_data1) );
-	crc.process_bytes(&sort_data2, sizeof(sort_data2) );
-	crc.process_bytes(&uppercase, sizeof(uppercase) );
-	crc.process_bytes(&lowercase, sizeof(lowercase) );
-	crc.process_bytes(&titlecase, sizeof(titlecase) );
-	crc.process_bytes(&has_complex_case, sizeof(has_complex_case) );
+    crc.process_bytes(&sort_variable, sizeof(sort_variable) );
+    crc.process_bytes(&sort_type, sizeof(sort_type) );
+    crc.process_bytes(&sort_index_or_data1, sizeof(sort_index_or_data1) );
+    crc.process_bytes(&sort_data2, sizeof(sort_data2) );
+    crc.process_bytes(&uppercase, sizeof(uppercase) );
+    crc.process_bytes(&lowercase, sizeof(lowercase) );
+    crc.process_bytes(&titlecase, sizeof(titlecase) );
+    crc.process_bytes(&has_complex_case, sizeof(has_complex_case) );
 #endif
-	crc.process_bytes(&line_break, sizeof(line_break) );
+    crc.process_bytes(&line_break, sizeof(line_break) );
 #ifdef BOOST_UNICODE_UCD_BIG
-	crc.process_bytes(&joining, sizeof(joining) );
+    crc.process_bytes(&joining, sizeof(joining) );
 #endif
 }
 
 bool write_entry::has_same_properties(const write_entry& other) const
 {
-	// note: chr should NOT be included as this is used to compare 
+    // note: chr should NOT be included as this is used to compare 
     // character properties, not chr
-	// note: as the name comparison is the slowest, 
+    // note: as the name comparison is the slowest, 
     // it is also the last item in the statement
-	return general_category == other.general_category && 
-		combining == other.combining && bidi == other.bidi && 
-		decomposition_kind == other.decomposition_kind && 
+    return general_category == other.general_category && 
+        combining == other.combining && bidi == other.bidi && 
+        decomposition_kind == other.decomposition_kind && 
         has_decomposition == other.has_decomposition &&
-		grapheme_break == other.grapheme_break &&
-		word_break_kind == other.word_break_kind &&
+        grapheme_break == other.grapheme_break &&
+        word_break_kind == other.word_break_kind &&
         sentence_break_kind == other.sentence_break_kind && 
         unknown_char == other.unknown_char && 
         sort_type == other.sort_type &&
         sort_variable == other.sort_variable &&
         sort_index_or_data1 == other.sort_index_or_data1 && 
         uppercase == other.uppercase &&
-		lowercase == other.lowercase && 
+        lowercase == other.lowercase && 
         titlecase == other.titlecase &&
-		has_complex_case == other.has_complex_case && 
+        has_complex_case == other.has_complex_case && 
         line_break == other.line_break &&
-		joining == other.joining && name == other.name;
+        joining == other.joining && name == other.name;
 }
 
 /*******************************************************************************************
@@ -146,335 +146,337 @@ bool write_entry::has_same_properties(const write_entry& other) const
 *******************************************************************************************/
 std::fstream& operator << (std::fstream& file, const write_entry& data)
 {
-	// create the data in a stringstream
-	std::stringstream ss;
-	// start and comment
-	// --- start of character -------------------------------------------------
-	ss << "\t{\t// char 0x" << std::hex << data.chr << ",\n";
+    // create the data in a stringstream
+    std::stringstream ss;
+    // start and comment
+    // --- start of character -------------------------------------------------
+    ss << "\t{\t// char 0x" << std::hex << data.chr << ",\n";
 #ifdef BOOST_UNICODE_UCD_BIG
-	ss << "\t\t\"" << data.name << "\",\n";
+    ss << "\t\t\"" << data.name << "\",\n";
 #endif
-	if (data.has_decomposition)
-	{
-		ss << "\t\t__uni_decomp_data_0x" << std::hex << data.chr << ",\n";
-	}
-	else
-	{
-		ss << "\t\tNULL,\n";
-	}
+    if (data.has_decomposition)
+    {
+        ss << "\t\t__uni_decomp_data_0x" << std::hex << data.chr << ",\n";
+    }
+    else
+    {
+        ss << "\t\tNULL,\n";
+    }
 #ifdef BOOST_UNICODE_UCD_BIG
-	if (data.has_complex_case)
-	{
-		ss << "\t\t__uni_complex_case_0x" << std::hex << data.chr << ",\n";
-	}
-	else
-	{
-		ss << "\t\tNULL,\n";
-	}
+    if (data.has_complex_case)
+    {
+        ss << "\t\t__uni_complex_case_0x" << std::hex << data.chr << ",\n";
+    }
+    else
+    {
+        ss << "\t\tNULL,\n";
+    }
 #endif
     ss << "\t\t{\n";
-	ss << "\t\t\tcategory::" << as_string(data.general_category) << ",\n";
+    ss << "\t\t\tcategory::" << as_string(data.general_category) << ",\n";
 #ifdef BOOST_UNICODE_UCD_BIG
-	ss << "\t\t\tjoin_type::" << as_string(data.joining) << ",\n";
+    ss << "\t\t\tjoin_type::" << as_string(data.joining) << ",\n";
 #endif
-	ss << "\t\t\tword_break::" << as_string(data.word_break_kind) << ",\n";
+    ss << "\t\t\tword_break::" << as_string(data.word_break_kind) << ",\n";
 //    ss << "\t\t\t" << std::boolalpha << data.unknown_char << ",\n";
 #ifdef BOOST_UNICODE_UCD_BIG
     ss << "\t\t\t" << std::boolalpha << data.sort_variable << ",\n";
     ss << "\t\t\tucd::sort_type::" << as_string(data.sort_type) << ",\n";
     ss << "\t\t\t" << std::dec << data.sort_data2 << ",\n";
 #endif
-	ss << "\t\t\tbidi_class::" << as_string(data.bidi) << ",\n";
-	ss << "\t\t\tdecomposition_type::" << as_string(data.decomposition_kind) << ",\n";
-	ss << "\t\t\tline_break::" << as_string(data.line_break) << ",\n";
-	ss << "\t\t\t" << std::dec << data.combining << ",\n";
-	ss << "\t\t\tsentence_break::" << as_string(data.sentence_break_kind) << ",\n";
+    ss << "\t\t\tbidi_class::" << as_string(data.bidi) << ",\n";
+    ss << "\t\t\tdecomposition_type::" << as_string(data.decomposition_kind) << ",\n";
+    ss << "\t\t\tline_break::" << as_string(data.line_break) << ",\n";
+    ss << "\t\t\t" << std::dec << data.combining << ",\n";
+    ss << "\t\t\tsentence_break::" << as_string(data.sentence_break_kind) << ",\n";
     ss << "\t\t\tgrapheme_cluster_break::" << as_string(data.grapheme_break) << ",\n";
     ss << "\t\t},\n";
 
 #ifdef BOOST_UNICODE_UCD_BIG    
     ss << "\t\t" << std::dec << data.sort_index_or_data1 << ",\n";
-	ss << "\t\t0x" << std::hex << data.uppercase << ",\n";
-	ss << "\t\t0x" << std::hex << data.lowercase << ",\n";
-	ss << "\t\t0x" << std::hex << data.titlecase << ",\n";
+    ss << "\t\t0x" << std::hex << data.uppercase << ",\n";
+    ss << "\t\t0x" << std::hex << data.lowercase << ",\n";
+    ss << "\t\t0x" << std::hex << data.titlecase << ",\n";
 #endif
-	// --- end of character ---------------------------------------------------
-	ss << "\t},\n";		
+    // --- end of character ---------------------------------------------------
+    ss << "\t},\n";     
 
-	// write the data to the file
-	file << ss.str();
+    // write the data to the file
+    file << ss.str();
 
-	return file;
+    return file;
 }
 
 decomp_entry::decomp_entry()
 {
-	chr = (char32)-1;
+    chr = (char32)-1;
+    full = false;
 }
 
-decomp_entry::decomp_entry(char32 ch, const std::vector<char32>& decomp)
+decomp_entry::decomp_entry(char32 ch, const std::vector<char32>& decomp, bool full_ = false)
 {
-	chr = ch;
-	decomposition = decomp;
+    chr = ch;
+    decomposition = decomp;
+    full = full_;
 }
 
 decomp_entry decomp_entry::create_dummy_entry()
 {
-	decomp_entry temp;
-	temp.decomposition.push_back(0);
+    decomp_entry temp;
+    temp.decomposition.push_back(0);
 
-	return temp;
+    return temp;
 }
 
 std::fstream& operator << (std::fstream& file, const decomp_entry& data)
 {
-	// create the data in a stringstream
-	std::stringstream ss;
-	ss << "static const char32 __uni_decomp_data_0x" << std::hex << data.chr << "[] = { ";
-	size_t size = data.decomposition.size();
+    // create the data in a stringstream
+    std::stringstream ss;
+    ss << "static const char32 __uni_" << (data.full ? "full_" : "") << "decomp_data_0x" << std::hex << data.chr << "[] = { ";
+    size_t size = data.decomposition.size();
     ss << size << ", ";
-	for (size_t n = 0; n < size; n++)
-	{
-		ss << "0x" << std::hex << data.decomposition[n] << ", ";
-	}
-	ss << "};\n";
+    for (size_t n = 0; n < size; n++)
+    {
+        ss << "0x" << std::hex << data.decomposition[n] << ", ";
+    }
+    ss << "};\n";
 
-	// write the data to the file
-	file << ss.str();
+    // write the data to the file
+    file << ss.str();
 
-	return file;
+    return file;
 }
 
 write_block::write_block()
 {
-	decomposition_index_min = 0;
-	decomposition_index_max = -1;
-	complex_case_index_min = 0;
-	complex_case_index_max = -1;
-	ch_first = 0;
+    decomposition_index_min = 0;
+    decomposition_index_max = -1;
+    complex_case_index_min = 0;
+    complex_case_index_max = -1;
+    ch_first = 0;
 };
 
 std::fstream& write_block::write_decomp_for_block(std::fstream& file,
-	const std::vector<decomp_entry>& tbl_decomp) const
+    const std::vector<decomp_entry>& tbl_decomp) const
 {
-	for (int n = decomposition_index_min; n <= decomposition_index_max; n++)
-	{
-		file << tbl_decomp[n];
-	}
+    for (int n = decomposition_index_min; n <= decomposition_index_max; n++)
+    {
+        file << tbl_decomp[n];
+    }
 
-	file << "\n\n";
+    file << "\n\n";
 
-	return file;
+    return file;
 }
 
 void write_complex_casing(
-	std::fstream& file, const complex_casing& data, bool bFinal)
+    std::fstream& file, const complex_casing& data, bool bFinal)
 {
-	if (data.complex_uppercase.size() > (size_t)complex_case_size_const)
-	{
-		std::stringstream ss;
-		ss << "Increase in size of complex_case_size_const due to complex_uppercase is required";
-		throw std::runtime_error (ss.str());
-	}
-	if (data.complex_lowercase.size() > (size_t)complex_case_size_const)
-	{
-		std::stringstream ss;
-		ss << "Increase in size of complex_case_size_const due to complex_lowercase is required";
-		throw std::runtime_error (ss.str());
-	}
-	if (data.complex_titlecase.size() > (size_t)complex_case_size_const)
-	{
-		std::stringstream ss;
-		ss << "Increase in size of complex_case_size_const due to complex_titlecase is required";
-		throw std::runtime_error (ss.str());
-	}
+    if (data.complex_uppercase.size() > (size_t)complex_case_size_const)
+    {
+        std::stringstream ss;
+        ss << "Increase in size of complex_case_size_const due to complex_uppercase is required";
+        throw std::runtime_error (ss.str());
+    }
+    if (data.complex_lowercase.size() > (size_t)complex_case_size_const)
+    {
+        std::stringstream ss;
+        ss << "Increase in size of complex_case_size_const due to complex_lowercase is required";
+        throw std::runtime_error (ss.str());
+    }
+    if (data.complex_titlecase.size() > (size_t)complex_case_size_const)
+    {
+        std::stringstream ss;
+        ss << "Increase in size of complex_case_size_const due to complex_titlecase is required";
+        throw std::runtime_error (ss.str());
+    }
 
-	file << "\t\t" << std::dec << (int)data.complex_uppercase.size() << ", ";
-	file << "\t\t{ ";
-	int n;
-	for (n = 0; n < (int)data.complex_uppercase.size(); n++)
-	{
-		file << std::hex << "0x" << data.complex_uppercase[n] << ", ";
-	}
-	file << "},\n";
+    file << "\t\t" << std::dec << (int)data.complex_uppercase.size() << ", ";
+    file << "\t\t{ ";
+    int n;
+    for (n = 0; n < (int)data.complex_uppercase.size(); n++)
+    {
+        file << std::hex << "0x" << data.complex_uppercase[n] << ", ";
+    }
+    file << "},\n";
 
-	file << "\t\t" << std::dec << (int)data.complex_lowercase.size() << ", ";
-	file << "\t\t{ ";
-	for (n = 0; n < (int)data.complex_lowercase.size(); n++)
-	{
-		file << std::hex << "0x" << data.complex_lowercase[n] << ", ";
-	}
-	file << "},\n";
+    file << "\t\t" << std::dec << (int)data.complex_lowercase.size() << ", ";
+    file << "\t\t{ ";
+    for (n = 0; n < (int)data.complex_lowercase.size(); n++)
+    {
+        file << std::hex << "0x" << data.complex_lowercase[n] << ", ";
+    }
+    file << "},\n";
 
-	file << "\t\t" << std::dec << (int)data.complex_titlecase.size() << ", ";
-	file << "\t\t{ ";
-	for (n = 0; n < (int)data.complex_titlecase.size(); n++)
-	{
-		file << std::hex << "0x" << data.complex_titlecase[n] << ", ";
-	}
-	file << "},\n";
+    file << "\t\t" << std::dec << (int)data.complex_titlecase.size() << ", ";
+    file << "\t\t{ ";
+    for (n = 0; n < (int)data.complex_titlecase.size(); n++)
+    {
+        file << std::hex << "0x" << data.complex_titlecase[n] << ", ";
+    }
+    file << "},\n";
 
-	if (bFinal)
-	{
-		file << "\t\ttrue,\n";
-	}
-	else
-	{
-		file << "\t\tfalse,\n";
-	}
+    if (bFinal)
+    {
+        file << "\t\ttrue,\n";
+    }
+    else
+    {
+        file << "\t\tfalse,\n";
+    }
 }
 
 std::fstream& operator << (std::fstream& file, const read_block& data)
 {
-	file << "\t{ ";
-	file << "0x" << std::hex << data.first << ", ";
-	file << "0x" << std::hex << data.last << ", ";
-	file << "\"" << data.name << "\" ";
-	file << "},\n";
+    file << "\t{ ";
+    file << "0x" << std::hex << data.first << ", ";
+    file << "0x" << std::hex << data.last << ", ";
+    file << "\"" << data.name << "\" ";
+    file << "},\n";
 
-	return file;
+    return file;
 }
 
 std::fstream& operator << (std::fstream& file,
-	const tuple<char32, std::vector<complex_casing> >& data)
+    const tuple<char32, std::vector<complex_casing> >& data)
 {
 #ifdef BOOST_UNICODE_UCD_BIG
-	// write the block
-	file << "static const unichar_complex_case_internal __uni_complex_case_0x";
-	file << std::hex << get<0>(data) << "[]= \n{\n";
+    // write the block
+    file << "static const unichar_complex_case_internal __uni_complex_case_0x";
+    file << std::hex << get<0>(data) << "[]= \n{\n";
     
-	int n;
-	int count = (int)get<1>(data).size();
-	for (n = 0; n < count - 1; n++)
-	{
+    int n;
+    int count = (int)get<1>(data).size();
+    for (n = 0; n < count - 1; n++)
+    {
         file << "\t{\n";
-		write_complex_casing(file, get<1>(data)[n], false);
+        write_complex_casing(file, get<1>(data)[n], false);
         file << "\t},\n";
-	}
-	for (; n < count; n++)
-	{
+    }
+    for (; n < count; n++)
+    {
         file << "\t{\n";
-		write_complex_casing(file, get<1>(data)[n], true);
+        write_complex_casing(file, get<1>(data)[n], true);
         file << "\t},\n";
-	}
+    }
 
-	// write the data to the file
-	file << "};\n\n\n";
+    // write the data to the file
+    file << "};\n\n\n";
 
 #endif
-	return file;
+    return file;
 }
 
 std::fstream& write_block::write_complex_case_block(std::fstream& file,
-	const std::vector<tuple<char32, std::vector<complex_casing> > >&
-		tbl_complex_case) const
+    const std::vector<tuple<char32, std::vector<complex_casing> > >&
+        tbl_complex_case) const
 {
-	for (int n = complex_case_index_min; n <= complex_case_index_max; n++)
-	{
-		file << tbl_complex_case[n];
-	}
+    for (int n = complex_case_index_min; n <= complex_case_index_max; n++)
+    {
+        file << tbl_complex_case[n];
+    }
 
-	file << "\n\n";
+    file << "\n\n";
 
-	return file;
+    return file;
 }
 
 std::fstream& operator << (std::fstream& file, const write_block& data)
 {
-	// write the block
-	file << "static const unichar_data_internal __uni_char_data_";
+    // write the block
+    file << "static const unichar_data_internal __uni_char_data_";
     file << std::hex << data.ch_first << "[]= \n{\n";
- 	
-	for (int n = 0; n < block_size_const; n++)
-	{
-		file << (*data.tbl_entry[n]);
-	}
+    
+    for (int n = 0; n < block_size_const; n++)
+    {
+        file << (*data.tbl_entry[n]);
+    }
 
-	file << "};\n\n\n";
+    file << "};\n\n\n";
 
-	return file;
+    return file;
 }
 
 void write_block::calc_checksum()
 {
-	if (decomposition_index_max != -1 || complex_case_index_max != -1)
-	{
-		checksum_of_entry_properties = (uint32_t)-1;
-		return;
-	}
+    if (decomposition_index_max != -1 || complex_case_index_max != -1)
+    {
+        checksum_of_entry_properties = (uint32_t)-1;
+        return;
+    }
 
-	boost::crc_basic<16> crc( 0x1021, 0xFFFF, 0, false, false );
+    boost::crc_basic<16> crc( 0x1021, 0xFFFF, 0, false, false );
 
-	int x;
-	for (x = block_size_const - 1; x >= 0; x--)
-	{
-		// optimisation - if an entry has decomposition data or complex case there
-		// is no point trying to compare with it as these are almost certainly unique
-		tbl_entry[x]->calc_properties_checksum(crc);
-	}
+    int x;
+    for (x = block_size_const - 1; x >= 0; x--)
+    {
+        // optimisation - if an entry has decomposition data or complex case there
+        // is no point trying to compare with it as these are almost certainly unique
+        tbl_entry[x]->calc_properties_checksum(crc);
+    }
 
-	checksum_of_entry_properties = (uint32_t)crc.checksum();
+    checksum_of_entry_properties = (uint32_t)crc.checksum();
 }
 
 void write_license(std::fstream& file)
 {
-	file << "// Though this file is under the Boost license, it is NOT (or not yet) part of\n";
-	file << "// Boost!\n";
-	file << "\n";
-	file << "// Copyright Graham Barnett, Rogier van Dalen 2005.\n";
-	file << "// Use, modification, and distribution are subject to the Boost Software\n";
-	file << "// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at\n";
-	file << "// http://www.boost.org/LICENSE_1_0.txt)\n";
-	file << "\n";
-	file << "// This file was created using information from the\n";
-	file << "// www.unicode.org web site\n";
-	file << "// License http://www.unicode.org/copyright.html \n";
-	file << "\n";
+    file << "// Though this file is under the Boost license, it is NOT (or not yet) part of\n";
+    file << "// Boost!\n";
+    file << "\n";
+    file << "// Copyright Graham Barnett, Rogier van Dalen 2005.\n";
+    file << "// Use, modification, and distribution are subject to the Boost Software\n";
+    file << "// License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at\n";
+    file << "// http://www.boost.org/LICENSE_1_0.txt)\n";
+    file << "\n";
+    file << "// This file was created using information from the\n";
+    file << "// www.unicode.org web site\n";
+    file << "// License http://www.unicode.org/copyright.html \n";
+    file << "\n";
 }
 
 void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
-	const std::vector<char32>& tbl_block_ident, 
-	const char * dest_path, size_t nFiles)
+    const std::vector<char32>& tbl_block_ident, 
+    const char * dest_path, size_t nFiles)
 {
-	std::cout << " writing " << dest_path << "uni_ucd_interface_impl_data.cpp\n";
+    std::cout << " writing " << dest_path << "uni_ucd_interface_impl_data.cpp\n";
 
-	// open file
-	std::stringstream fss;
-	fss << dest_path;
-	fss << "uni_ucd_interface_impl_data.cpp";
+    // open file
+    std::stringstream fss;
+    fss << dest_path;
+    fss << "uni_ucd_interface_impl_data.cpp";
 
-	std::fstream file;
-	file.exceptions (std::ios_base::failbit | std::ios_base::badbit);
-	file.open(fss.str().c_str(), std::ios_base::out);
+    std::fstream file;
+    file.exceptions (std::ios_base::failbit | std::ios_base::badbit);
+    file.open(fss.str().c_str(), std::ios_base::out);
 
-	write_license(file);
-	file << "/**** This file should be added to a project that                     ****/\n";
-	file << "/**** implements the unichar interface                                ****/\n";
-	file << "/**** This file is automatically generated and should not be modified.****/\n";
-	file << "/**** Data in this file should not be accessed directly except        ****/\n";
-	file << "/**** through the single published interface as documented in Boost   ****/\n";
+    write_license(file);
+    file << "/**** This file should be added to a project that                     ****/\n";
+    file << "/**** implements the unichar interface                                ****/\n";
+    file << "/**** This file is automatically generated and should not be modified.****/\n";
+    file << "/**** Data in this file should not be accessed directly except        ****/\n";
+    file << "/**** through the single published interface as documented in Boost   ****/\n";
     
-	file << "\n\n#define BOOST_UNICODE_SOURCE\n";
+    file << "\n\n#define BOOST_UNICODE_SOURCE\n";
     file << "#include <boost/assert.hpp>\n";
-	file << "#include <boost/static_assert.hpp>\n";
-	file << "#include <boost/unicode/ucd/properties.hpp>\n";
-	size_t n;
-	for (n = 0; n < nFiles; n++)
-	{
-		file << "#include \"uni_ucd_interface_impl_data_" << std::dec << (int)(n + 1) << ".ipp\"\n";
-	}
-	file << "#include \"uni_ucd_interface_impl_sort_data.ipp\"\n";
+    file << "#include <boost/static_assert.hpp>\n";
+    file << "#include <boost/unicode/ucd/properties.hpp>\n";
+    size_t n;
+    for (n = 0; n < nFiles; n++)
+    {
+        file << "#include \"uni_ucd_interface_impl_data_" << std::dec << (int)(n + 1) << ".ipp\"\n";
+    }
+    file << "#include \"uni_ucd_interface_impl_sort_data.ipp\"\n";
     file << "#include \"uni_ucd_interface_impl_compose_data.ipp\"\n";
-	file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n\n";
+    file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n\n";
 
-	// ---- block table -------------------------------------------------------
+    // ---- block table -------------------------------------------------------
 
-	file << "BOOST_UNICODE_DECL const unichar_blocks_internal __uni_block_data[]=\n{\n";
+    file << "BOOST_UNICODE_DECL const unichar_blocks_internal __uni_block_data[]=\n{\n";
 
-	for (n = 0; n < tbl_block.size(); n++)
-	{
-		file << tbl_block[n];
-	}
+    for (n = 0; n < tbl_block.size(); n++)
+    {
+        file << tbl_block[n];
+    }
 
     /*// write a terminating block
     read_block terminating_data;
@@ -483,91 +485,91 @@ void write_block_tables_and_blocks(const std::vector<read_block>& tbl_block,
     terminating_data.name = "";
     file << terminating_data;*/
 
-	file << "};\n\nBOOST_UNICODE_DECL const size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
+    file << "};\n\nBOOST_UNICODE_DECL const size_t __uni_block_data_size = sizeof __uni_block_data / sizeof __uni_block_data[0];\n\n";
 
-	// ---- block table -------------------------------------------------------
-	
-	// ---- block refs --------------------------------------------------------
-	file << "BOOST_UNICODE_DECL const unichar_data_internal* __uni_char_data[]=\n{\n";
+    // ---- block table -------------------------------------------------------
+    
+    // ---- block refs --------------------------------------------------------
+    file << "BOOST_UNICODE_DECL const unichar_data_internal* __uni_char_data[]=\n{\n";
 
-	for (n = 0; n < tbl_block_ident.size(); n++)
-	{
-		file << "\t__uni_char_data_" << std::hex << tbl_block_ident[n] << ",\n";
-	}
+    for (n = 0; n < tbl_block_ident.size(); n++)
+    {
+        file << "\t__uni_char_data_" << std::hex << tbl_block_ident[n] << ",\n";
+    }
 
-	file << "};\n";
+    file << "};\n";
 
-	// ---- block ref --------------------------------------------------------
+    // ---- block ref --------------------------------------------------------
 
-	file << "}}}	// namespaces\n";
-	
-	file.flush();
-	file.close();
+    file << "}}}    // namespaces\n";
+    
+    file.flush();
+    file.close();
 }
 
 void write_block_enum(
-	const std::vector<read_block>& tbl_block, const char * dest_path_ucd_props)
+    const std::vector<read_block>& tbl_block, const char * dest_path_ucd_props)
 {
-	std::cout << " writing " << dest_path_ucd_props
-		<< "block_types.hpp" << std::endl;
+    std::cout << " writing " << dest_path_ucd_props
+        << "block_types.hpp" << std::endl;
 
-	// open file
-	std::stringstream fss;
-	fss << dest_path_ucd_props;
-	fss << "block_types.hpp";
+    // open file
+    std::stringstream fss;
+    fss << dest_path_ucd_props;
+    fss << "block_types.hpp";
 
-	std::fstream file;
-	file.open(fss.str().c_str(), std::ios_base::out);
+    std::fstream file;
+    file.open(fss.str().c_str(), std::ios_base::out);
 
-	write_license(file);
-	file << "/**** This file should be included in any project that uses           ****/\n";
-	file << "/**** the boost Unicode character interface                           ****/\n";
-	file << "/**** This file is automatically generated and should not be modified.****/\n";
-	file << "\n";
-	file << "/**** WARNING !! The block enum is a sparse enum to allow for         ****/\n";
-	file << "/**** new values to be added to the unicode spec without affecting    ****/\n";
-	file << "/**** existing code                                                   ****/\n";
-	
+    write_license(file);
+    file << "/**** This file should be included in any project that uses           ****/\n";
+    file << "/**** the boost Unicode character interface                           ****/\n";
+    file << "/**** This file is automatically generated and should not be modified.****/\n";
+    file << "\n";
+    file << "/**** WARNING !! The block enum is a sparse enum to allow for         ****/\n";
+    file << "/**** new values to be added to the unicode spec without affecting    ****/\n";
+    file << "/**** existing code                                                   ****/\n";
+    
     file << "\n\n#ifndef BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
     file << "#define BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
-	file << "\n\nnamespace boost { namespace unicode { namespace ucd { \n\n";
+    file << "\n\nnamespace boost { namespace unicode { namespace ucd { \n\n";
 
-	// ---- block table -------------------------------------------------------
+    // ---- block table -------------------------------------------------------
 
-	file << "\t\tstruct block\n";
-	file << "\t\t{\n";
-	file << "\t\t\tenum type\n";
-	file << "\t\t\t{\n";
+    file << "\t\tstruct block\n";
+    file << "\t\t{\n";
+    file << "\t\t\tenum type\n";
+    file << "\t\t\t{\n";
     file << "\t\t\t\tnone = -1,\n\n";
 
-	for (size_t n = 0; n < tbl_block.size(); n++)
-	{
-		std::string name = tbl_block[n].name;
-		// legalise the name into a form that is acceptible for use in a C enum
-		for (size_t x = 0; x < name.length();x++)
-		{
-			switch (name[x])
-			{
-				case '-':	name[x] = '_';	break;
-				case ' ':	name[x] = '_';	break;
-				default:	name[x] = tolower(name[x]);	break;
-			}
-		}
-		file << "\t\t\t\t" << name;
-		file << " = 0x" << std::hex << tbl_block[n].first;
-		file << ",\n";
-	}
+    for (size_t n = 0; n < tbl_block.size(); n++)
+    {
+        std::string name = tbl_block[n].name;
+        // legalise the name into a form that is acceptible for use in a C enum
+        for (size_t x = 0; x < name.length();x++)
+        {
+            switch (name[x])
+            {
+                case '-':   name[x] = '_';  break;
+                case ' ':   name[x] = '_';  break;
+                default:    name[x] = tolower(name[x]); break;
+            }
+        }
+        file << "\t\t\t\t" << name;
+        file << " = 0x" << std::hex << tbl_block[n].first;
+        file << ",\n";
+    }
 
-	file << "\t\t\t};\n";
-	file << "\t\t};\n";
+    file << "\t\t\t};\n";
+    file << "\t\t};\n";
     
     file << "\n\t\tBOOST_UNICODE_DECL const char* as_string(block::type);\n\n";
 
-	file << "}}} // namespaces\n\n";
+    file << "}}} // namespaces\n\n";
     file << "#endif // BOOST_UNICODE_UNI_UCD_CHARACTER_PROPERTIES_HPP_INCLUDED\n";
-	
-	file.flush();
-	file.close();
+    
+    file.flush();
+    file.close();
 }
 
 /*******************************************************************
@@ -582,8 +584,8 @@ void get_default_sort_characteristics(char32 cp, collation_entry & sort_entry)
     // the character has no sort entry, nor could it be decomposed
 
     // check for illegal values
-	if (cp == 0xFFFF || cp == 0xFFFE || cp > 0x10FFFF)
-	{
+    if (cp == 0xFFFF || cp == 0xFFFE || cp > 0x10FFFF)
+    {
         collation_data coll1;
         coll1.variable = false;
         coll1.weight1 = 0;
@@ -603,17 +605,17 @@ void get_default_sort_characteristics(char32 cp, collation_entry & sort_entry)
     // The value for BASE depends on the type of character:
     if (cp >= 0x3400 && cp < 0x4DB5)
     {
-        // FB40 	CJK Ideograph
+        // FB40     CJK Ideograph
         base = 0xFB40;
     }
     else if (cp >= 0x4DB5 && cp < 0x4DC0)
     {
-        // FB80 	CJK Ideograph Extension A/B
+        // FB80     CJK Ideograph Extension A/B
         base = 0xFB80;
     }
     else
     {
-        // FBC0 	Any other code point
+        // FBC0     Any other code point
         base = 0xFBC0;
     }
 
@@ -852,13 +854,13 @@ void pack_char_sort_data(char32 cp, character_properties & props_char_var)
 ** Takes the character properties and organises them into blocks 
 *******************************************************************/
 void prepare(std::map <char32, character_properties> & props, 
-						const std::vector <read_block>& blocks, write_data& data)
+                        const std::vector <read_block>& blocks, write_data& data)
 {
-	std::cout << "+Preparing to write data\n";
+    std::cout << "+Preparing to write data\n";
 
-	data.tbl_blocks.clear();
-	data.tbl_decomp.clear();
-	data.tbl_complex_case.clear();
+    data.tbl_blocks.clear();
+    data.tbl_decomp.clear();
+    data.tbl_complex_case.clear();
     data.tbl_sort_data.clear();
     data.tbl_sort_following_chars.clear();
     data.tbl_sort_entries.clear();
@@ -871,95 +873,95 @@ void prepare(std::map <char32, character_properties> & props,
     // write empty following chars at index 0
     data.tbl_sort_following_chars.push_back(make_tuple(0, true, 0));
 
-	data.tbl_blocks.reserve(1 + (int)(0x10FFFD / block_size_const));
+    data.tbl_blocks.reserve(1 + (int)(0x10FFFD / block_size_const));
 
-	int progress = PROGRESS_INDICATION_EVERY_PREPARE;
-	std::cout << " ";
+    int progress = PROGRESS_INDICATION_EVERY_PREPARE;
+    std::cout << " ";
 
-	int index_in_block = 0;
-	write_block block;
-	for (char32 cp = 0; cp <= 0x10FFFD; cp++)
-	{	
-		std::map <char32, character_properties>::iterator iter_char = 
+    int index_in_block = 0;
+    write_block block;
+    for (char32 cp = 0; cp <= 0x10FFFD; cp++)
+    {   
+        std::map <char32, character_properties>::iterator iter_char = 
                                                                     props.find(cp);
 
-		if (iter_char == props.end())
-		{
-			// Although it may seem strange, it is valid for codepooints
+        if (iter_char == props.end())
+        {
+            // Although it may seem strange, it is valid for codepooints
             // to be missing
-			// In those cases they are filled in with the first default 
+            // In those cases they are filled in with the first default 
             // character in that block
             int x;
             for (x = (int)blocks.size() - 1; 
                 x >= 0 && (cp < blocks[x].first || cp > blocks[x].last); x--);                                                                    
-			
-			if (x < 0)
-			{
-				// This is a gap in the unicode range which no existing block
+            
+            if (x < 0)
+            {
+                // This is a gap in the unicode range which no existing block
                 // occupies at this time.
-				// We therefore supply the unknown character
-				iter_char = props.find(character_properties::CHARACTER_DOES_NOT_EXIST);
+                // We therefore supply the unknown character
+                iter_char = props.find(character_properties::CHARACTER_DOES_NOT_EXIST);
 
-				if (iter_char == props.end())
-				{
-					std::stringstream ss;
-					ss << "Unknown character not found - search for CHARACTER_DOES_NOT_EXIST and ";
-					ss << "check why it was not added explicitly";
-					throw std::runtime_error (ss.str());
-				}
-			}
-			else
-			{
-				// We now must look up the default character for the block
-				// Although this really makes sense unicode does not make 
+                if (iter_char == props.end())
+                {
+                    std::stringstream ss;
+                    ss << "Unknown character not found - search for CHARACTER_DOES_NOT_EXIST and ";
+                    ss << "check why it was not added explicitly";
+                    throw std::runtime_error (ss.str());
+                }
+            }
+            else
+            {
+                // We now must look up the default character for the block
+                // Although this really makes sense unicode does not make 
                 // things easy for us as in some blocks the first character
                 // is a few characters in
-				// We therefore try up to five characters from the start of the block
-				for (x = 0; x < 5; x++)
-				{
-					iter_char = props.find(blocks[x].first + x);
-					if (iter_char != props.end())
-					break;
-				}
+                // We therefore try up to five characters from the start of the block
+                for (x = 0; x < 5; x++)
+                {
+                    iter_char = props.find(blocks[x].first + x);
+                    if (iter_char != props.end())
+                    break;
+                }
 
-				if (iter_char == props.end())
-				{
-					std::stringstream ss;
-					ss << "codepoint " << std::hex << blocks[x].first;
-					ss << " is a block start and no characters were found near the start of the block";
-					throw std::runtime_error (ss.str());
-				}
-			}
-		}
+                if (iter_char == props.end())
+                {
+                    std::stringstream ss;
+                    ss << "codepoint " << std::hex << blocks[x].first;
+                    ss << " is a block start and no characters were found near the start of the block";
+                    throw std::runtime_error (ss.str());
+                }
+            }
+        }
 
-		if (progress-- <= 0)
-		{
-			progress = PROGRESS_INDICATION_EVERY_PREPARE;
-			std::cout << '.' << std::flush;
-		}
-		
-		int decomposition_index = 0;
-		int complex_case_index = 0;
+        if (progress-- <= 0)
+        {
+            progress = PROGRESS_INDICATION_EVERY_PREPARE;
+            std::cout << '.' << std::flush;
+        }
+        
+        int decomposition_index = 0;
+        int complex_case_index = 0;
 
-		const character_properties& props_char = iter_char->second;
+        const character_properties& props_char = iter_char->second;
 
-		// check for decompostion data
-		if (!props_char.decomposition.empty())
-		{
-			decomposition_index = (int)data.tbl_decomp.size();
-			block.decomposition_index_max = decomposition_index;
-			
-			data.tbl_decomp.push_back(decomp_entry(cp, props_char.decomposition));
-		}
+        // check for decompostion data
+        if (!props_char.decomposition.empty())
+        {
+            decomposition_index = (int)data.tbl_decomp.size();
+            block.decomposition_index_max = decomposition_index;
+            
+            data.tbl_decomp.push_back(decomp_entry(cp, props_char.decomposition));
+        }
 
-		// check for complex case data
-		if (!props_char.complex_case.empty())
-		{
-			complex_case_index = (int)data.tbl_complex_case.size();
-			block.complex_case_index_max = complex_case_index;
-			
-			data.tbl_complex_case.push_back(make_tuple(cp, props_char.complex_case));
-		}
+        // check for complex case data
+        if (!props_char.complex_case.empty())
+        {
+            complex_case_index = (int)data.tbl_complex_case.size();
+            block.complex_case_index_max = complex_case_index;
+            
+            data.tbl_complex_case.push_back(make_tuple(cp, props_char.complex_case));
+        }
 
         character_properties& props_char_var = iter_char->second;
         if (props_char.sort_type == (sort_type::type)-1)
@@ -1099,58 +1101,58 @@ void prepare(std::map <char32, character_properties> & props,
             }
         }
 
-		block.tbl_entry[index_in_block].reset(new write_entry(cp, props_char)); 
-		if (++index_in_block == block_size_const)
-		{
-			block.calc_checksum();
+        block.tbl_entry[index_in_block].reset(new write_entry(cp, props_char)); 
+        if (++index_in_block == block_size_const)
+        {
+            block.calc_checksum();
 
-			bool skip_duplicate = false;
-			
-			// now check to see if the block is a duplicate
-			for (int y = (int)data.tbl_blocks.size() - 1; y >= 0; y--)
-			{
-				const write_block& block2 = data.tbl_blocks[y];
+            bool skip_duplicate = false;
+            
+            // now check to see if the block is a duplicate
+            for (int y = (int)data.tbl_blocks.size() - 1; y >= 0; y--)
+            {
+                const write_block& block2 = data.tbl_blocks[y];
 
-				if (block.checksum_of_entry_properties != (uint32_t)-1 &&
-								block.checksum_of_entry_properties == block2.checksum_of_entry_properties)
-				{
-					// yes it has - now check to see if the block 
+                if (block.checksum_of_entry_properties != (uint32_t)-1 &&
+                                block.checksum_of_entry_properties == block2.checksum_of_entry_properties)
+                {
+                    // yes it has - now check to see if the block 
                     // entries are actually the same
-					// or if the checksum was a statistical anomoly
-					int z;
-					for (z = block_size_const - 1; 
-						z >= 0 && block.tbl_entry[z]->has_same_properties(*block2.tbl_entry[z]); z--);
+                    // or if the checksum was a statistical anomoly
+                    int z;
+                    for (z = block_size_const - 1; 
+                        z >= 0 && block.tbl_entry[z]->has_same_properties(*block2.tbl_entry[z]); z--);
 
-					if (z < 0)
-					{
-						// identical block
-						skip_duplicate = true;
-						data.tbl_block_ident.push_back(block2.ch_first);
-						break;
-					}
-				}
-			}
+                    if (z < 0)
+                    {
+                        // identical block
+                        skip_duplicate = true;
+                        data.tbl_block_ident.push_back(block2.ch_first);
+                        break;
+                    }
+                }
+            }
 
-			if (!skip_duplicate)
-			{
-				data.tbl_block_ident.push_back(block.ch_first);
-				data.tbl_blocks.push_back(block);
-			}
+            if (!skip_duplicate)
+            {
+                data.tbl_block_ident.push_back(block.ch_first);
+                data.tbl_blocks.push_back(block);
+            }
 
-			index_in_block = 0;
+            index_in_block = 0;
 
-			// reset the block ready for reuse
-			block.ch_first = cp + 1;
-			block.decomposition_index_min = (int)data.tbl_decomp.size();
-			block.decomposition_index_max = -1;
-			block.complex_case_index_min = (int)data.tbl_complex_case.size();
-			block.complex_case_index_max = -1;
-		}
-	}
-	std::cout << "\n";
+            // reset the block ready for reuse
+            block.ch_first = cp + 1;
+            block.decomposition_index_min = (int)data.tbl_decomp.size();
+            block.decomposition_index_max = -1;
+            block.complex_case_index_min = (int)data.tbl_complex_case.size();
+            block.complex_case_index_max = -1;
+        }
+    }
+    std::cout << "\n";
 
     data.props = &props;
-	std::cout << "-Preparing to write data\n";
+    std::cout << "-Preparing to write data\n";
 }
 
 #ifdef BOOST_UNICODE_UCD_BIG
@@ -1161,7 +1163,7 @@ std::fstream& operator << (std::fstream& file,
                            const tuple<char32, sort_data_entry>& data)
 {
 #ifdef BOOST_UNICODE_UCD_BIG
-	// write the entry
+    // write the entry
     if (get<0>(data) != cp_last_sort_data_entry)
     {
         file << "\t{  // char 0x" << std::hex << get<0>(data);
@@ -1171,54 +1173,54 @@ std::fstream& operator << (std::fstream& file,
     {
         file << "\t{";
     }
- 	
+    
     // there is always sort data
-	file << "\n\t\t&__uni_sort_data[" << 
+    file << "\n\t\t&__uni_sort_data[" << 
             std::dec << get<1>(data).sort_data_index << "],";
-	file << "\n\t\t&__uni_sort_data[" <<
+    file << "\n\t\t&__uni_sort_data[" <<
             std::dec << ((int)(get<1>(data).sort_data_index +
             get<1>(data).sort_data_length)) << "],";
     
     if (get<1>(data).following_chars_length == 0)
     {
-	    file << "\n\t\t&__uni_sort_follow[0],";
+        file << "\n\t\t&__uni_sort_follow[0],";
     }
     else
     {
-	    file << "\n\t\t&__uni_sort_follow[" <<
+        file << "\n\t\t&__uni_sort_follow[" <<
             std::dec << get<1>(data).following_chars_index << "],";
     }
     file << "\n\t\t" << get<1>(data).following_chars_length << ",";
-    	
+        
     file << "\n\t},\n";
     
 #endif
-	return file;
+    return file;
 }
 
 // write the sort table and update the props sort indexes as appropriate
 void write_sort(const write_data& data, const char * dest_path)
 {
     std::cout << " writing "<< dest_path
-		<< "uni_ucd_interface_impl_sort_data.ipp\n";
+        << "uni_ucd_interface_impl_sort_data.ipp\n";
 
     // open file
-	std::stringstream fss;
-	fss << dest_path;
-	fss << "uni_ucd_interface_impl_sort_data.ipp";
-	std::fstream file;
-	file.open(fss.str().c_str(), std::ios_base::out);
+    std::stringstream fss;
+    fss << dest_path;
+    fss << "uni_ucd_interface_impl_sort_data.ipp";
+    std::fstream file;
+    file.open(fss.str().c_str(), std::ios_base::out);
 
-	write_license(file);
-	file << "/**** This file should not be included in any file manually           ****/\n";
-	file << "/**** This file is automatically generated and should not be modified.****/\n";
-	file << "/**** Data in this file should not be accessed directly except        ****/\n";
-	file << "/**** through the single published interface as documented in Boost   ****/\n";
-	file << "\n\nusing namespace boost::unicode;\n";
-	file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
+    write_license(file);
+    file << "/**** This file should not be included in any file manually           ****/\n";
+    file << "/**** This file is automatically generated and should not be modified.****/\n";
+    file << "/**** Data in this file should not be accessed directly except        ****/\n";
+    file << "/**** through the single published interface as documented in Boost   ****/\n";
+    file << "\n\nusing namespace boost::unicode;\n";
+    file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
 
 #ifdef BOOST_UNICODE_UCD_BIG
-	// ---- sort data table ------------------------------------------------------
+    // ---- sort data table ------------------------------------------------------
 
     std::vector<tuple<bool, uint16_t> >::const_iterator iter_sd = 
                                                     data.tbl_sort_data.begin();
@@ -1244,7 +1246,7 @@ void write_sort(const write_data& data, const char * dest_path)
     }
     file << "\t};\n\n";
     
-	// ---- following chars table ------------------------------------------------
+    // ---- following chars table ------------------------------------------------
     
     std::vector<tuple<char32, bool, char32> >::const_iterator iter_sf = 
                                             data.tbl_sort_following_chars.begin();
@@ -1269,14 +1271,14 @@ void write_sort(const write_data& data, const char * dest_path)
     }
     file << "\t};\n\n";
     
-	// ---- sort data entry table ------------------------------------------------
+    // ---- sort data entry table ------------------------------------------------
 
-	file << "\n\nBOOST_UNICODE_DECL extern const unichar_sort_data_entry __uni_sort_entry[]= {\n";
+    file << "\n\nBOOST_UNICODE_DECL extern const unichar_sort_data_entry __uni_sort_entry[]= {\n";
 
     // write the dummy entry
     file << "\t{  // entry means use canonical decomp";
-	file << "\n\t\tNULL,";
-	file << "\n\t\tNULL,";
+    file << "\n\t\tNULL,";
+    file << "\n\t\tNULL,";
     file << "\n\t\tNULL,";
     file << "\n\t\t0,";
     file << "\n\t},\n";
@@ -1294,34 +1296,34 @@ void write_sort(const write_data& data, const char * dest_path)
         iter_se++;
     }
 
-	file << "\t};\n\n";
+    file << "\t};\n\n";
 
     // ----------------------------------------------------------------------------
 #endif
 
     file << "}}}  // namespaces\n\n";
-	
-	file.flush();
-	file.close();
+    
+    file.flush();
+    file.close();
 }
 
 struct lexico_sort
 {
-    bool operator()(const decomp_entry* lft, const decomp_entry* rgt) const
+    bool operator()(const decomp_entry& lft, const decomp_entry& rgt) const
     {
         return std::lexicographical_compare(
-            lft->decomposition.begin(), lft->decomposition.end(),
-            rgt->decomposition.begin(), rgt->decomposition.end()
+            lft.decomposition.begin(), lft.decomposition.end(),
+            rgt.decomposition.begin(), rgt.decomposition.end()
         );
     }
 };
 
 struct lexico_comp
 {
-    bool operator()(const decomp_entry* lft, const decomp_entry* rgt) const
+    bool operator()(const decomp_entry& lft, const decomp_entry& rgt) const
     {
-        return lft->decomposition.size() == rgt->decomposition.size()
-           &&  std::equal(lft->decomposition.begin(), lft->decomposition.end(), rgt->decomposition.begin());
+        return lft.decomposition.size() == rgt.decomposition.size()
+           &&  std::equal(lft.decomposition.begin(), lft.decomposition.end(), rgt.decomposition.begin());
     }
 };
 
@@ -1330,36 +1332,58 @@ const character_properties& get_properties(const std::map<char32, character_prop
     std::map<char32, character_properties>::const_iterator it = props.find(ch);
     if(it == props.end())
     {
-		std::stringstream ss;
-		ss << "Code points associated with decomposition not found";
-		throw std::runtime_error (ss.str());
+        std::stringstream ss;
+        ss << "Code points associated with decomposition not found";
+        throw std::runtime_error (ss.str());
     }
     return it->second;
+}
+
+template<typename OutputIterator>
+OutputIterator canonical_decompose_impl(const std::map<char32, character_properties>& props, char32 ch, OutputIterator out)
+{
+    const character_properties& p = get_properties(props, ch);
+    if(p.decomposition_kind == ucd::decomposition_type::canonical)
+    {
+        for(std::vector<char32>::const_iterator it = p.decomposition.begin(); it != p.decomposition.end(); ++it)
+            out = canonical_decompose_impl(props, *it, out);
+        return out;
+    }
+    *out++ = ch;
+    return out;
+}
+
+decomp_entry canonical_decompose(const std::map<char32, character_properties>& props, const decomp_entry& e)
+{
+    std::vector<char32> decomp;
+    for(std::vector<char32>::const_iterator it = e.decomposition.begin(); it != e.decomposition.end(); ++it)
+        canonical_decompose_impl(props, *it, std::back_inserter(decomp));
+    return decomp_entry(e.chr, decomp, true);
 }
 
 void write_compose(const write_data& data, const char * dest_path)
 {
     std::cout << " writing "<< dest_path
-		<< "uni_ucd_interface_impl_compose_data.ipp\n";
+        << "uni_ucd_interface_impl_compose_data.ipp\n";
 
     // open file
-	std::stringstream fss;
-	fss << dest_path;
-	fss << "uni_ucd_interface_impl_compose_data.ipp";
-	std::fstream file;
-	file.open(fss.str().c_str(), std::ios_base::out);
+    std::stringstream fss;
+    fss << dest_path;
+    fss << "uni_ucd_interface_impl_compose_data.ipp";
+    std::fstream file;
+    file.open(fss.str().c_str(), std::ios_base::out);
 
-	write_license(file);
-	file << "/**** This file should not be included in any file manually           ****/\n";
-	file << "/**** This file is automatically generated and should not be modified.****/\n";
-	file << "/**** Data in this file should not be accessed directly except        ****/\n";
-	file << "/**** through the single published interface as documented in Boost   ****/\n";
-	file << "\n\nusing namespace boost::unicode;\n";
-	file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
+    write_license(file);
+    file << "/**** This file should not be included in any file manually           ****/\n";
+    file << "/**** This file is automatically generated and should not be modified.****/\n";
+    file << "/**** Data in this file should not be accessed directly except        ****/\n";
+    file << "/**** through the single published interface as documented in Boost   ****/\n";
+    file << "\n\nusing namespace boost::unicode;\n";
+    file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
 
-	// ---- compose data table ------------------------------------------------------
+    // ---- compose data table ------------------------------------------------------
     
-    std::vector<const decomp_entry*> compose;
+    std::vector<decomp_entry> compose;
     compose.reserve(data.tbl_decomp.size());
     
     for(std::vector<decomp_entry>::const_iterator it = data.tbl_decomp.begin(); it != data.tbl_decomp.end(); ++it)
@@ -1373,22 +1397,26 @@ void write_compose(const write_data& data, const char * dest_path)
             get_properties(*data.props, it->decomposition[0]).combining == 0 &&
             !get_properties(*data.props, it->chr).comp_ex
         )
-            compose.push_back(&*it);
+        {
+            decomp_entry e = canonical_decompose(*data.props, *it);
+            file << e;
+            compose.push_back(e);
+        }
     }
     
     std::sort(compose.begin(), compose.end(), lexico_sort());
-    std::vector<const decomp_entry*>::iterator end = std::unique(compose.begin(), compose.end(), lexico_comp());
+    std::vector<decomp_entry>::iterator end = std::unique(compose.begin(), compose.end(), lexico_comp());
     if(end != compose.end())
     {
-		std::stringstream ss;
-		ss << "Duplicates found for canonical composition";
-		throw std::runtime_error (ss.str());
+        std::stringstream ss;
+        ss << "Duplicates found for canonical composition";
+        throw std::runtime_error (ss.str());
     }
 
     file << "\nBOOST_UNICODE_DECL extern const unichar_compose_data_entry __uni_compose_entry[] = {\n";
     
-    for(std::vector<const decomp_entry*>::const_iterator it = compose.begin(); it != compose.end(); ++it)
-        file << "\t{__uni_decomp_data_0x" << std::hex << (*it)->chr << ", 0x" << (*it)->chr << "},\n";
+    for(std::vector<decomp_entry>::const_iterator it = compose.begin(); it != compose.end(); ++it)
+        file << "\t{__uni_full_decomp_data_0x" << std::hex << it->chr << ", 0x" << it->chr << "},\n";
     
     file << "};\n\n";
     file << "BOOST_UNICODE_DECL extern const size_t __uni_compose_entry_size = sizeof __uni_compose_entry / sizeof __uni_compose_entry[0];\n\n";
@@ -1396,9 +1424,9 @@ void write_compose(const write_data& data, const char * dest_path)
     // ----------------------------------------------------------------------------
     
     file << "}}}  // namespaces\n\n";
-	
-	file.flush();
-	file.close();
+    
+    file.flush();
+    file.close();
 }
 
 /*******************************************************************
@@ -1408,74 +1436,74 @@ void write_compose(const write_data& data, const char * dest_path)
 void write(const std::vector <read_block>& blocks, const write_data& data, 
                               const char * dest_path, const char* dest_path_ucd_props)
 {
-	std::cout << "+Writing data\n";
+    std::cout << "+Writing data\n";
 
-	int blocks_in_file = 0;
-	int file_index = 0;
+    int blocks_in_file = 0;
+    int file_index = 0;
 
-	// work out how many blocks will be in each file
-	size_t block_size = data.tbl_blocks.size();
+    // work out how many blocks will be in each file
+    size_t block_size = data.tbl_blocks.size();
 
-	int blocks_per_file = ((int)block_size + (write_block::NUMBER_FILES / 2)) / 
-													write_block::NUMBER_FILES;
+    int blocks_per_file = ((int)block_size + (write_block::NUMBER_FILES / 2)) / 
+                                                    write_block::NUMBER_FILES;
 
     std::fstream file;
-	file.exceptions (std::ios_base::failbit | std::ios_base::badbit);
-	for (size_t block_index = 0; block_index < block_size; block_index++)
-	{
-		if (blocks_in_file <= 0)
-		{
-			if (file.is_open())
-			{
-				file << "}}}	// namespaces\n";
+    file.exceptions (std::ios_base::failbit | std::ios_base::badbit);
+    for (size_t block_index = 0; block_index < block_size; block_index++)
+    {
+        if (blocks_in_file <= 0)
+        {
+            if (file.is_open())
+            {
+                file << "}}}    // namespaces\n";
 
-				file.flush();
-				file.close();
-			}
+                file.flush();
+                file.close();
+            }
 
-			std::cout << " writing "<< dest_path
-				<< "uni_ucd_interface_impl_data_"
-				<< std::dec << (file_index+1) << ".ipp\n";
-			// open file
-			std::stringstream fss;
-			fss << dest_path;
-			fss << "uni_ucd_interface_impl_data_" << std::dec << ++file_index
-				<< ".ipp";
-			file.open(fss.str().c_str(), std::ios_base::out);
-			// reset count
-			blocks_in_file = blocks_per_file - 1;
-			
-			write_license(file);
-			file << "/**** This file should not be included in any file manually           ****/\n";
-			file << "/**** This file is automatically generated and should not be modified.****/\n";
-			file << "/**** Data in this file should not be accessed directly except        ****/\n";
-			file << "/**** through the single published interface as documented in Boost   ****/\n";
-			file << "\n\nusing namespace boost::unicode;\n\n";
-			file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
-		}
+            std::cout << " writing "<< dest_path
+                << "uni_ucd_interface_impl_data_"
+                << std::dec << (file_index+1) << ".ipp\n";
+            // open file
+            std::stringstream fss;
+            fss << dest_path;
+            fss << "uni_ucd_interface_impl_data_" << std::dec << ++file_index
+                << ".ipp";
+            file.open(fss.str().c_str(), std::ios_base::out);
+            // reset count
+            blocks_in_file = blocks_per_file - 1;
+            
+            write_license(file);
+            file << "/**** This file should not be included in any file manually           ****/\n";
+            file << "/**** This file is automatically generated and should not be modified.****/\n";
+            file << "/**** Data in this file should not be accessed directly except        ****/\n";
+            file << "/**** through the single published interface as documented in Boost   ****/\n";
+            file << "\n\nusing namespace boost::unicode;\n\n";
+            file << "\n\nnamespace boost { namespace unicode { namespace ucd {\n";
+        }
 
-		blocks_in_file--;
+        blocks_in_file--;
 
-		// do the write
-		data.tbl_blocks[block_index].write_decomp_for_block(file, data.tbl_decomp);
-		data.tbl_blocks[block_index].write_complex_case_block(file, data.tbl_complex_case);
-		file << data.tbl_blocks[block_index];
-	}
+        // do the write
+        data.tbl_blocks[block_index].write_decomp_for_block(file, data.tbl_decomp);
+        data.tbl_blocks[block_index].write_complex_case_block(file, data.tbl_complex_case);
+        file << data.tbl_blocks[block_index];
+    }
 
-	file << "}}}	// namespaces\n";
+    file << "}}}    // namespaces\n";
 
-	// close the file
-	file.flush();
-	file.close();
+    // close the file
+    file.flush();
+    file.close();
 
-	write_block_tables_and_blocks(blocks, data.tbl_block_ident, dest_path, file_index);
-	write_block_enum(blocks, dest_path_ucd_props);
+    write_block_tables_and_blocks(blocks, data.tbl_block_ident, dest_path, file_index);
+    write_block_enum(blocks, dest_path_ucd_props);
     write_sort(data, dest_path);
     write_compose(data, dest_path);
 
-	std::cout << "-Writing data\n";
+    std::cout << "-Writing data\n";
 }
 
 
-}}}	// namespaces
+}}} // namespaces
 

@@ -79,10 +79,11 @@ class decomp_entry
 {
 public:
 	decomp_entry();
-	decomp_entry(char32 ch, const std::vector<char32>& decomp);
+	decomp_entry(char32 ch, const std::vector<char32>& decomp, bool full);
 
 	char32				chr;
 	std::vector<char32>	decomposition;
+    bool full;
 
 public:
 	static decomp_entry		create_dummy_entry();

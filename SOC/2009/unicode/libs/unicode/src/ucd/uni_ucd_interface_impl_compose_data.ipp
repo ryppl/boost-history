@@ -20,936 +20,1864 @@ using namespace boost::unicode;
 
 
 namespace boost { namespace unicode { namespace ucd {
+static const char32 __uni_full_decomp_data_0xc0[] = { 2, 0x41, 0x300, };
+static const char32 __uni_full_decomp_data_0xc1[] = { 2, 0x41, 0x301, };
+static const char32 __uni_full_decomp_data_0xc2[] = { 2, 0x41, 0x302, };
+static const char32 __uni_full_decomp_data_0xc3[] = { 2, 0x41, 0x303, };
+static const char32 __uni_full_decomp_data_0xc4[] = { 2, 0x41, 0x308, };
+static const char32 __uni_full_decomp_data_0xc5[] = { 2, 0x41, 0x30a, };
+static const char32 __uni_full_decomp_data_0xc7[] = { 2, 0x43, 0x327, };
+static const char32 __uni_full_decomp_data_0xc8[] = { 2, 0x45, 0x300, };
+static const char32 __uni_full_decomp_data_0xc9[] = { 2, 0x45, 0x301, };
+static const char32 __uni_full_decomp_data_0xca[] = { 2, 0x45, 0x302, };
+static const char32 __uni_full_decomp_data_0xcb[] = { 2, 0x45, 0x308, };
+static const char32 __uni_full_decomp_data_0xcc[] = { 2, 0x49, 0x300, };
+static const char32 __uni_full_decomp_data_0xcd[] = { 2, 0x49, 0x301, };
+static const char32 __uni_full_decomp_data_0xce[] = { 2, 0x49, 0x302, };
+static const char32 __uni_full_decomp_data_0xcf[] = { 2, 0x49, 0x308, };
+static const char32 __uni_full_decomp_data_0xd1[] = { 2, 0x4e, 0x303, };
+static const char32 __uni_full_decomp_data_0xd2[] = { 2, 0x4f, 0x300, };
+static const char32 __uni_full_decomp_data_0xd3[] = { 2, 0x4f, 0x301, };
+static const char32 __uni_full_decomp_data_0xd4[] = { 2, 0x4f, 0x302, };
+static const char32 __uni_full_decomp_data_0xd5[] = { 2, 0x4f, 0x303, };
+static const char32 __uni_full_decomp_data_0xd6[] = { 2, 0x4f, 0x308, };
+static const char32 __uni_full_decomp_data_0xd9[] = { 2, 0x55, 0x300, };
+static const char32 __uni_full_decomp_data_0xda[] = { 2, 0x55, 0x301, };
+static const char32 __uni_full_decomp_data_0xdb[] = { 2, 0x55, 0x302, };
+static const char32 __uni_full_decomp_data_0xdc[] = { 2, 0x55, 0x308, };
+static const char32 __uni_full_decomp_data_0xdd[] = { 2, 0x59, 0x301, };
+static const char32 __uni_full_decomp_data_0xe0[] = { 2, 0x61, 0x300, };
+static const char32 __uni_full_decomp_data_0xe1[] = { 2, 0x61, 0x301, };
+static const char32 __uni_full_decomp_data_0xe2[] = { 2, 0x61, 0x302, };
+static const char32 __uni_full_decomp_data_0xe3[] = { 2, 0x61, 0x303, };
+static const char32 __uni_full_decomp_data_0xe4[] = { 2, 0x61, 0x308, };
+static const char32 __uni_full_decomp_data_0xe5[] = { 2, 0x61, 0x30a, };
+static const char32 __uni_full_decomp_data_0xe7[] = { 2, 0x63, 0x327, };
+static const char32 __uni_full_decomp_data_0xe8[] = { 2, 0x65, 0x300, };
+static const char32 __uni_full_decomp_data_0xe9[] = { 2, 0x65, 0x301, };
+static const char32 __uni_full_decomp_data_0xea[] = { 2, 0x65, 0x302, };
+static const char32 __uni_full_decomp_data_0xeb[] = { 2, 0x65, 0x308, };
+static const char32 __uni_full_decomp_data_0xec[] = { 2, 0x69, 0x300, };
+static const char32 __uni_full_decomp_data_0xed[] = { 2, 0x69, 0x301, };
+static const char32 __uni_full_decomp_data_0xee[] = { 2, 0x69, 0x302, };
+static const char32 __uni_full_decomp_data_0xef[] = { 2, 0x69, 0x308, };
+static const char32 __uni_full_decomp_data_0xf1[] = { 2, 0x6e, 0x303, };
+static const char32 __uni_full_decomp_data_0xf2[] = { 2, 0x6f, 0x300, };
+static const char32 __uni_full_decomp_data_0xf3[] = { 2, 0x6f, 0x301, };
+static const char32 __uni_full_decomp_data_0xf4[] = { 2, 0x6f, 0x302, };
+static const char32 __uni_full_decomp_data_0xf5[] = { 2, 0x6f, 0x303, };
+static const char32 __uni_full_decomp_data_0xf6[] = { 2, 0x6f, 0x308, };
+static const char32 __uni_full_decomp_data_0xf9[] = { 2, 0x75, 0x300, };
+static const char32 __uni_full_decomp_data_0xfa[] = { 2, 0x75, 0x301, };
+static const char32 __uni_full_decomp_data_0xfb[] = { 2, 0x75, 0x302, };
+static const char32 __uni_full_decomp_data_0xfc[] = { 2, 0x75, 0x308, };
+static const char32 __uni_full_decomp_data_0xfd[] = { 2, 0x79, 0x301, };
+static const char32 __uni_full_decomp_data_0xff[] = { 2, 0x79, 0x308, };
+static const char32 __uni_full_decomp_data_0x100[] = { 2, 0x41, 0x304, };
+static const char32 __uni_full_decomp_data_0x101[] = { 2, 0x61, 0x304, };
+static const char32 __uni_full_decomp_data_0x102[] = { 2, 0x41, 0x306, };
+static const char32 __uni_full_decomp_data_0x103[] = { 2, 0x61, 0x306, };
+static const char32 __uni_full_decomp_data_0x104[] = { 2, 0x41, 0x328, };
+static const char32 __uni_full_decomp_data_0x105[] = { 2, 0x61, 0x328, };
+static const char32 __uni_full_decomp_data_0x106[] = { 2, 0x43, 0x301, };
+static const char32 __uni_full_decomp_data_0x107[] = { 2, 0x63, 0x301, };
+static const char32 __uni_full_decomp_data_0x108[] = { 2, 0x43, 0x302, };
+static const char32 __uni_full_decomp_data_0x109[] = { 2, 0x63, 0x302, };
+static const char32 __uni_full_decomp_data_0x10a[] = { 2, 0x43, 0x307, };
+static const char32 __uni_full_decomp_data_0x10b[] = { 2, 0x63, 0x307, };
+static const char32 __uni_full_decomp_data_0x10c[] = { 2, 0x43, 0x30c, };
+static const char32 __uni_full_decomp_data_0x10d[] = { 2, 0x63, 0x30c, };
+static const char32 __uni_full_decomp_data_0x10e[] = { 2, 0x44, 0x30c, };
+static const char32 __uni_full_decomp_data_0x10f[] = { 2, 0x64, 0x30c, };
+static const char32 __uni_full_decomp_data_0x112[] = { 2, 0x45, 0x304, };
+static const char32 __uni_full_decomp_data_0x113[] = { 2, 0x65, 0x304, };
+static const char32 __uni_full_decomp_data_0x114[] = { 2, 0x45, 0x306, };
+static const char32 __uni_full_decomp_data_0x115[] = { 2, 0x65, 0x306, };
+static const char32 __uni_full_decomp_data_0x116[] = { 2, 0x45, 0x307, };
+static const char32 __uni_full_decomp_data_0x117[] = { 2, 0x65, 0x307, };
+static const char32 __uni_full_decomp_data_0x118[] = { 2, 0x45, 0x328, };
+static const char32 __uni_full_decomp_data_0x119[] = { 2, 0x65, 0x328, };
+static const char32 __uni_full_decomp_data_0x11a[] = { 2, 0x45, 0x30c, };
+static const char32 __uni_full_decomp_data_0x11b[] = { 2, 0x65, 0x30c, };
+static const char32 __uni_full_decomp_data_0x11c[] = { 2, 0x47, 0x302, };
+static const char32 __uni_full_decomp_data_0x11d[] = { 2, 0x67, 0x302, };
+static const char32 __uni_full_decomp_data_0x11e[] = { 2, 0x47, 0x306, };
+static const char32 __uni_full_decomp_data_0x11f[] = { 2, 0x67, 0x306, };
+static const char32 __uni_full_decomp_data_0x120[] = { 2, 0x47, 0x307, };
+static const char32 __uni_full_decomp_data_0x121[] = { 2, 0x67, 0x307, };
+static const char32 __uni_full_decomp_data_0x122[] = { 2, 0x47, 0x327, };
+static const char32 __uni_full_decomp_data_0x123[] = { 2, 0x67, 0x327, };
+static const char32 __uni_full_decomp_data_0x124[] = { 2, 0x48, 0x302, };
+static const char32 __uni_full_decomp_data_0x125[] = { 2, 0x68, 0x302, };
+static const char32 __uni_full_decomp_data_0x128[] = { 2, 0x49, 0x303, };
+static const char32 __uni_full_decomp_data_0x129[] = { 2, 0x69, 0x303, };
+static const char32 __uni_full_decomp_data_0x12a[] = { 2, 0x49, 0x304, };
+static const char32 __uni_full_decomp_data_0x12b[] = { 2, 0x69, 0x304, };
+static const char32 __uni_full_decomp_data_0x12c[] = { 2, 0x49, 0x306, };
+static const char32 __uni_full_decomp_data_0x12d[] = { 2, 0x69, 0x306, };
+static const char32 __uni_full_decomp_data_0x12e[] = { 2, 0x49, 0x328, };
+static const char32 __uni_full_decomp_data_0x12f[] = { 2, 0x69, 0x328, };
+static const char32 __uni_full_decomp_data_0x130[] = { 2, 0x49, 0x307, };
+static const char32 __uni_full_decomp_data_0x134[] = { 2, 0x4a, 0x302, };
+static const char32 __uni_full_decomp_data_0x135[] = { 2, 0x6a, 0x302, };
+static const char32 __uni_full_decomp_data_0x136[] = { 2, 0x4b, 0x327, };
+static const char32 __uni_full_decomp_data_0x137[] = { 2, 0x6b, 0x327, };
+static const char32 __uni_full_decomp_data_0x139[] = { 2, 0x4c, 0x301, };
+static const char32 __uni_full_decomp_data_0x13a[] = { 2, 0x6c, 0x301, };
+static const char32 __uni_full_decomp_data_0x13b[] = { 2, 0x4c, 0x327, };
+static const char32 __uni_full_decomp_data_0x13c[] = { 2, 0x6c, 0x327, };
+static const char32 __uni_full_decomp_data_0x13d[] = { 2, 0x4c, 0x30c, };
+static const char32 __uni_full_decomp_data_0x13e[] = { 2, 0x6c, 0x30c, };
+static const char32 __uni_full_decomp_data_0x143[] = { 2, 0x4e, 0x301, };
+static const char32 __uni_full_decomp_data_0x144[] = { 2, 0x6e, 0x301, };
+static const char32 __uni_full_decomp_data_0x145[] = { 2, 0x4e, 0x327, };
+static const char32 __uni_full_decomp_data_0x146[] = { 2, 0x6e, 0x327, };
+static const char32 __uni_full_decomp_data_0x147[] = { 2, 0x4e, 0x30c, };
+static const char32 __uni_full_decomp_data_0x148[] = { 2, 0x6e, 0x30c, };
+static const char32 __uni_full_decomp_data_0x14c[] = { 2, 0x4f, 0x304, };
+static const char32 __uni_full_decomp_data_0x14d[] = { 2, 0x6f, 0x304, };
+static const char32 __uni_full_decomp_data_0x14e[] = { 2, 0x4f, 0x306, };
+static const char32 __uni_full_decomp_data_0x14f[] = { 2, 0x6f, 0x306, };
+static const char32 __uni_full_decomp_data_0x150[] = { 2, 0x4f, 0x30b, };
+static const char32 __uni_full_decomp_data_0x151[] = { 2, 0x6f, 0x30b, };
+static const char32 __uni_full_decomp_data_0x154[] = { 2, 0x52, 0x301, };
+static const char32 __uni_full_decomp_data_0x155[] = { 2, 0x72, 0x301, };
+static const char32 __uni_full_decomp_data_0x156[] = { 2, 0x52, 0x327, };
+static const char32 __uni_full_decomp_data_0x157[] = { 2, 0x72, 0x327, };
+static const char32 __uni_full_decomp_data_0x158[] = { 2, 0x52, 0x30c, };
+static const char32 __uni_full_decomp_data_0x159[] = { 2, 0x72, 0x30c, };
+static const char32 __uni_full_decomp_data_0x15a[] = { 2, 0x53, 0x301, };
+static const char32 __uni_full_decomp_data_0x15b[] = { 2, 0x73, 0x301, };
+static const char32 __uni_full_decomp_data_0x15c[] = { 2, 0x53, 0x302, };
+static const char32 __uni_full_decomp_data_0x15d[] = { 2, 0x73, 0x302, };
+static const char32 __uni_full_decomp_data_0x15e[] = { 2, 0x53, 0x327, };
+static const char32 __uni_full_decomp_data_0x15f[] = { 2, 0x73, 0x327, };
+static const char32 __uni_full_decomp_data_0x160[] = { 2, 0x53, 0x30c, };
+static const char32 __uni_full_decomp_data_0x161[] = { 2, 0x73, 0x30c, };
+static const char32 __uni_full_decomp_data_0x162[] = { 2, 0x54, 0x327, };
+static const char32 __uni_full_decomp_data_0x163[] = { 2, 0x74, 0x327, };
+static const char32 __uni_full_decomp_data_0x164[] = { 2, 0x54, 0x30c, };
+static const char32 __uni_full_decomp_data_0x165[] = { 2, 0x74, 0x30c, };
+static const char32 __uni_full_decomp_data_0x168[] = { 2, 0x55, 0x303, };
+static const char32 __uni_full_decomp_data_0x169[] = { 2, 0x75, 0x303, };
+static const char32 __uni_full_decomp_data_0x16a[] = { 2, 0x55, 0x304, };
+static const char32 __uni_full_decomp_data_0x16b[] = { 2, 0x75, 0x304, };
+static const char32 __uni_full_decomp_data_0x16c[] = { 2, 0x55, 0x306, };
+static const char32 __uni_full_decomp_data_0x16d[] = { 2, 0x75, 0x306, };
+static const char32 __uni_full_decomp_data_0x16e[] = { 2, 0x55, 0x30a, };
+static const char32 __uni_full_decomp_data_0x16f[] = { 2, 0x75, 0x30a, };
+static const char32 __uni_full_decomp_data_0x170[] = { 2, 0x55, 0x30b, };
+static const char32 __uni_full_decomp_data_0x171[] = { 2, 0x75, 0x30b, };
+static const char32 __uni_full_decomp_data_0x172[] = { 2, 0x55, 0x328, };
+static const char32 __uni_full_decomp_data_0x173[] = { 2, 0x75, 0x328, };
+static const char32 __uni_full_decomp_data_0x174[] = { 2, 0x57, 0x302, };
+static const char32 __uni_full_decomp_data_0x175[] = { 2, 0x77, 0x302, };
+static const char32 __uni_full_decomp_data_0x176[] = { 2, 0x59, 0x302, };
+static const char32 __uni_full_decomp_data_0x177[] = { 2, 0x79, 0x302, };
+static const char32 __uni_full_decomp_data_0x178[] = { 2, 0x59, 0x308, };
+static const char32 __uni_full_decomp_data_0x179[] = { 2, 0x5a, 0x301, };
+static const char32 __uni_full_decomp_data_0x17a[] = { 2, 0x7a, 0x301, };
+static const char32 __uni_full_decomp_data_0x17b[] = { 2, 0x5a, 0x307, };
+static const char32 __uni_full_decomp_data_0x17c[] = { 2, 0x7a, 0x307, };
+static const char32 __uni_full_decomp_data_0x17d[] = { 2, 0x5a, 0x30c, };
+static const char32 __uni_full_decomp_data_0x17e[] = { 2, 0x7a, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1a0[] = { 2, 0x4f, 0x31b, };
+static const char32 __uni_full_decomp_data_0x1a1[] = { 2, 0x6f, 0x31b, };
+static const char32 __uni_full_decomp_data_0x1af[] = { 2, 0x55, 0x31b, };
+static const char32 __uni_full_decomp_data_0x1b0[] = { 2, 0x75, 0x31b, };
+static const char32 __uni_full_decomp_data_0x1cd[] = { 2, 0x41, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1ce[] = { 2, 0x61, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1cf[] = { 2, 0x49, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1d0[] = { 2, 0x69, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1d1[] = { 2, 0x4f, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1d2[] = { 2, 0x6f, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1d3[] = { 2, 0x55, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1d4[] = { 2, 0x75, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1d5[] = { 3, 0x55, 0x308, 0x304, };
+static const char32 __uni_full_decomp_data_0x1d6[] = { 3, 0x75, 0x308, 0x304, };
+static const char32 __uni_full_decomp_data_0x1d7[] = { 3, 0x55, 0x308, 0x301, };
+static const char32 __uni_full_decomp_data_0x1d8[] = { 3, 0x75, 0x308, 0x301, };
+static const char32 __uni_full_decomp_data_0x1d9[] = { 3, 0x55, 0x308, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1da[] = { 3, 0x75, 0x308, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1db[] = { 3, 0x55, 0x308, 0x300, };
+static const char32 __uni_full_decomp_data_0x1dc[] = { 3, 0x75, 0x308, 0x300, };
+static const char32 __uni_full_decomp_data_0x1de[] = { 3, 0x41, 0x308, 0x304, };
+static const char32 __uni_full_decomp_data_0x1df[] = { 3, 0x61, 0x308, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e0[] = { 3, 0x41, 0x307, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e1[] = { 3, 0x61, 0x307, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e2[] = { 2, 0xc6, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e3[] = { 2, 0xe6, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e6[] = { 2, 0x47, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1e7[] = { 2, 0x67, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1e8[] = { 2, 0x4b, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1e9[] = { 2, 0x6b, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1ea[] = { 2, 0x4f, 0x328, };
+static const char32 __uni_full_decomp_data_0x1eb[] = { 2, 0x6f, 0x328, };
+static const char32 __uni_full_decomp_data_0x1ec[] = { 3, 0x4f, 0x328, 0x304, };
+static const char32 __uni_full_decomp_data_0x1ed[] = { 3, 0x6f, 0x328, 0x304, };
+static const char32 __uni_full_decomp_data_0x1ee[] = { 2, 0x1b7, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1ef[] = { 2, 0x292, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1f0[] = { 2, 0x6a, 0x30c, };
+static const char32 __uni_full_decomp_data_0x1f4[] = { 2, 0x47, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f5[] = { 2, 0x67, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f8[] = { 2, 0x4e, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f9[] = { 2, 0x6e, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fa[] = { 3, 0x41, 0x30a, 0x301, };
+static const char32 __uni_full_decomp_data_0x1fb[] = { 3, 0x61, 0x30a, 0x301, };
+static const char32 __uni_full_decomp_data_0x1fc[] = { 2, 0xc6, 0x301, };
+static const char32 __uni_full_decomp_data_0x1fd[] = { 2, 0xe6, 0x301, };
+static const char32 __uni_full_decomp_data_0x1fe[] = { 2, 0xd8, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ff[] = { 2, 0xf8, 0x301, };
+static const char32 __uni_full_decomp_data_0x200[] = { 2, 0x41, 0x30f, };
+static const char32 __uni_full_decomp_data_0x201[] = { 2, 0x61, 0x30f, };
+static const char32 __uni_full_decomp_data_0x202[] = { 2, 0x41, 0x311, };
+static const char32 __uni_full_decomp_data_0x203[] = { 2, 0x61, 0x311, };
+static const char32 __uni_full_decomp_data_0x204[] = { 2, 0x45, 0x30f, };
+static const char32 __uni_full_decomp_data_0x205[] = { 2, 0x65, 0x30f, };
+static const char32 __uni_full_decomp_data_0x206[] = { 2, 0x45, 0x311, };
+static const char32 __uni_full_decomp_data_0x207[] = { 2, 0x65, 0x311, };
+static const char32 __uni_full_decomp_data_0x208[] = { 2, 0x49, 0x30f, };
+static const char32 __uni_full_decomp_data_0x209[] = { 2, 0x69, 0x30f, };
+static const char32 __uni_full_decomp_data_0x20a[] = { 2, 0x49, 0x311, };
+static const char32 __uni_full_decomp_data_0x20b[] = { 2, 0x69, 0x311, };
+static const char32 __uni_full_decomp_data_0x20c[] = { 2, 0x4f, 0x30f, };
+static const char32 __uni_full_decomp_data_0x20d[] = { 2, 0x6f, 0x30f, };
+static const char32 __uni_full_decomp_data_0x20e[] = { 2, 0x4f, 0x311, };
+static const char32 __uni_full_decomp_data_0x20f[] = { 2, 0x6f, 0x311, };
+static const char32 __uni_full_decomp_data_0x210[] = { 2, 0x52, 0x30f, };
+static const char32 __uni_full_decomp_data_0x211[] = { 2, 0x72, 0x30f, };
+static const char32 __uni_full_decomp_data_0x212[] = { 2, 0x52, 0x311, };
+static const char32 __uni_full_decomp_data_0x213[] = { 2, 0x72, 0x311, };
+static const char32 __uni_full_decomp_data_0x214[] = { 2, 0x55, 0x30f, };
+static const char32 __uni_full_decomp_data_0x215[] = { 2, 0x75, 0x30f, };
+static const char32 __uni_full_decomp_data_0x216[] = { 2, 0x55, 0x311, };
+static const char32 __uni_full_decomp_data_0x217[] = { 2, 0x75, 0x311, };
+static const char32 __uni_full_decomp_data_0x218[] = { 2, 0x53, 0x326, };
+static const char32 __uni_full_decomp_data_0x219[] = { 2, 0x73, 0x326, };
+static const char32 __uni_full_decomp_data_0x21a[] = { 2, 0x54, 0x326, };
+static const char32 __uni_full_decomp_data_0x21b[] = { 2, 0x74, 0x326, };
+static const char32 __uni_full_decomp_data_0x21e[] = { 2, 0x48, 0x30c, };
+static const char32 __uni_full_decomp_data_0x21f[] = { 2, 0x68, 0x30c, };
+static const char32 __uni_full_decomp_data_0x226[] = { 2, 0x41, 0x307, };
+static const char32 __uni_full_decomp_data_0x227[] = { 2, 0x61, 0x307, };
+static const char32 __uni_full_decomp_data_0x228[] = { 2, 0x45, 0x327, };
+static const char32 __uni_full_decomp_data_0x229[] = { 2, 0x65, 0x327, };
+static const char32 __uni_full_decomp_data_0x22a[] = { 3, 0x4f, 0x308, 0x304, };
+static const char32 __uni_full_decomp_data_0x22b[] = { 3, 0x6f, 0x308, 0x304, };
+static const char32 __uni_full_decomp_data_0x22c[] = { 3, 0x4f, 0x303, 0x304, };
+static const char32 __uni_full_decomp_data_0x22d[] = { 3, 0x6f, 0x303, 0x304, };
+static const char32 __uni_full_decomp_data_0x22e[] = { 2, 0x4f, 0x307, };
+static const char32 __uni_full_decomp_data_0x22f[] = { 2, 0x6f, 0x307, };
+static const char32 __uni_full_decomp_data_0x230[] = { 3, 0x4f, 0x307, 0x304, };
+static const char32 __uni_full_decomp_data_0x231[] = { 3, 0x6f, 0x307, 0x304, };
+static const char32 __uni_full_decomp_data_0x232[] = { 2, 0x59, 0x304, };
+static const char32 __uni_full_decomp_data_0x233[] = { 2, 0x79, 0x304, };
+static const char32 __uni_full_decomp_data_0x385[] = { 2, 0xa8, 0x301, };
+static const char32 __uni_full_decomp_data_0x386[] = { 2, 0x391, 0x301, };
+static const char32 __uni_full_decomp_data_0x388[] = { 2, 0x395, 0x301, };
+static const char32 __uni_full_decomp_data_0x389[] = { 2, 0x397, 0x301, };
+static const char32 __uni_full_decomp_data_0x38a[] = { 2, 0x399, 0x301, };
+static const char32 __uni_full_decomp_data_0x38c[] = { 2, 0x39f, 0x301, };
+static const char32 __uni_full_decomp_data_0x38e[] = { 2, 0x3a5, 0x301, };
+static const char32 __uni_full_decomp_data_0x38f[] = { 2, 0x3a9, 0x301, };
+static const char32 __uni_full_decomp_data_0x390[] = { 3, 0x3b9, 0x308, 0x301, };
+static const char32 __uni_full_decomp_data_0x3aa[] = { 2, 0x399, 0x308, };
+static const char32 __uni_full_decomp_data_0x3ab[] = { 2, 0x3a5, 0x308, };
+static const char32 __uni_full_decomp_data_0x3ac[] = { 2, 0x3b1, 0x301, };
+static const char32 __uni_full_decomp_data_0x3ad[] = { 2, 0x3b5, 0x301, };
+static const char32 __uni_full_decomp_data_0x3ae[] = { 2, 0x3b7, 0x301, };
+static const char32 __uni_full_decomp_data_0x3af[] = { 2, 0x3b9, 0x301, };
+static const char32 __uni_full_decomp_data_0x3b0[] = { 3, 0x3c5, 0x308, 0x301, };
+static const char32 __uni_full_decomp_data_0x3ca[] = { 2, 0x3b9, 0x308, };
+static const char32 __uni_full_decomp_data_0x3cb[] = { 2, 0x3c5, 0x308, };
+static const char32 __uni_full_decomp_data_0x3cc[] = { 2, 0x3bf, 0x301, };
+static const char32 __uni_full_decomp_data_0x3cd[] = { 2, 0x3c5, 0x301, };
+static const char32 __uni_full_decomp_data_0x3ce[] = { 2, 0x3c9, 0x301, };
+static const char32 __uni_full_decomp_data_0x3d3[] = { 2, 0x3d2, 0x301, };
+static const char32 __uni_full_decomp_data_0x3d4[] = { 2, 0x3d2, 0x308, };
+static const char32 __uni_full_decomp_data_0x400[] = { 2, 0x415, 0x300, };
+static const char32 __uni_full_decomp_data_0x401[] = { 2, 0x415, 0x308, };
+static const char32 __uni_full_decomp_data_0x403[] = { 2, 0x413, 0x301, };
+static const char32 __uni_full_decomp_data_0x407[] = { 2, 0x406, 0x308, };
+static const char32 __uni_full_decomp_data_0x40c[] = { 2, 0x41a, 0x301, };
+static const char32 __uni_full_decomp_data_0x40d[] = { 2, 0x418, 0x300, };
+static const char32 __uni_full_decomp_data_0x40e[] = { 2, 0x423, 0x306, };
+static const char32 __uni_full_decomp_data_0x419[] = { 2, 0x418, 0x306, };
+static const char32 __uni_full_decomp_data_0x439[] = { 2, 0x438, 0x306, };
+static const char32 __uni_full_decomp_data_0x450[] = { 2, 0x435, 0x300, };
+static const char32 __uni_full_decomp_data_0x451[] = { 2, 0x435, 0x308, };
+static const char32 __uni_full_decomp_data_0x453[] = { 2, 0x433, 0x301, };
+static const char32 __uni_full_decomp_data_0x457[] = { 2, 0x456, 0x308, };
+static const char32 __uni_full_decomp_data_0x45c[] = { 2, 0x43a, 0x301, };
+static const char32 __uni_full_decomp_data_0x45d[] = { 2, 0x438, 0x300, };
+static const char32 __uni_full_decomp_data_0x45e[] = { 2, 0x443, 0x306, };
+static const char32 __uni_full_decomp_data_0x476[] = { 2, 0x474, 0x30f, };
+static const char32 __uni_full_decomp_data_0x477[] = { 2, 0x475, 0x30f, };
+static const char32 __uni_full_decomp_data_0x4c1[] = { 2, 0x416, 0x306, };
+static const char32 __uni_full_decomp_data_0x4c2[] = { 2, 0x436, 0x306, };
+static const char32 __uni_full_decomp_data_0x4d0[] = { 2, 0x410, 0x306, };
+static const char32 __uni_full_decomp_data_0x4d1[] = { 2, 0x430, 0x306, };
+static const char32 __uni_full_decomp_data_0x4d2[] = { 2, 0x410, 0x308, };
+static const char32 __uni_full_decomp_data_0x4d3[] = { 2, 0x430, 0x308, };
+static const char32 __uni_full_decomp_data_0x4d6[] = { 2, 0x415, 0x306, };
+static const char32 __uni_full_decomp_data_0x4d7[] = { 2, 0x435, 0x306, };
+static const char32 __uni_full_decomp_data_0x4da[] = { 2, 0x4d8, 0x308, };
+static const char32 __uni_full_decomp_data_0x4db[] = { 2, 0x4d9, 0x308, };
+static const char32 __uni_full_decomp_data_0x4dc[] = { 2, 0x416, 0x308, };
+static const char32 __uni_full_decomp_data_0x4dd[] = { 2, 0x436, 0x308, };
+static const char32 __uni_full_decomp_data_0x4de[] = { 2, 0x417, 0x308, };
+static const char32 __uni_full_decomp_data_0x4df[] = { 2, 0x437, 0x308, };
+static const char32 __uni_full_decomp_data_0x4e2[] = { 2, 0x418, 0x304, };
+static const char32 __uni_full_decomp_data_0x4e3[] = { 2, 0x438, 0x304, };
+static const char32 __uni_full_decomp_data_0x4e4[] = { 2, 0x418, 0x308, };
+static const char32 __uni_full_decomp_data_0x4e5[] = { 2, 0x438, 0x308, };
+static const char32 __uni_full_decomp_data_0x4e6[] = { 2, 0x41e, 0x308, };
+static const char32 __uni_full_decomp_data_0x4e7[] = { 2, 0x43e, 0x308, };
+static const char32 __uni_full_decomp_data_0x4ea[] = { 2, 0x4e8, 0x308, };
+static const char32 __uni_full_decomp_data_0x4eb[] = { 2, 0x4e9, 0x308, };
+static const char32 __uni_full_decomp_data_0x4ec[] = { 2, 0x42d, 0x308, };
+static const char32 __uni_full_decomp_data_0x4ed[] = { 2, 0x44d, 0x308, };
+static const char32 __uni_full_decomp_data_0x4ee[] = { 2, 0x423, 0x304, };
+static const char32 __uni_full_decomp_data_0x4ef[] = { 2, 0x443, 0x304, };
+static const char32 __uni_full_decomp_data_0x4f0[] = { 2, 0x423, 0x308, };
+static const char32 __uni_full_decomp_data_0x4f1[] = { 2, 0x443, 0x308, };
+static const char32 __uni_full_decomp_data_0x4f2[] = { 2, 0x423, 0x30b, };
+static const char32 __uni_full_decomp_data_0x4f3[] = { 2, 0x443, 0x30b, };
+static const char32 __uni_full_decomp_data_0x4f4[] = { 2, 0x427, 0x308, };
+static const char32 __uni_full_decomp_data_0x4f5[] = { 2, 0x447, 0x308, };
+static const char32 __uni_full_decomp_data_0x4f8[] = { 2, 0x42b, 0x308, };
+static const char32 __uni_full_decomp_data_0x4f9[] = { 2, 0x44b, 0x308, };
+static const char32 __uni_full_decomp_data_0x622[] = { 2, 0x627, 0x653, };
+static const char32 __uni_full_decomp_data_0x623[] = { 2, 0x627, 0x654, };
+static const char32 __uni_full_decomp_data_0x624[] = { 2, 0x648, 0x654, };
+static const char32 __uni_full_decomp_data_0x625[] = { 2, 0x627, 0x655, };
+static const char32 __uni_full_decomp_data_0x626[] = { 2, 0x64a, 0x654, };
+static const char32 __uni_full_decomp_data_0x6c0[] = { 2, 0x6d5, 0x654, };
+static const char32 __uni_full_decomp_data_0x6c2[] = { 2, 0x6c1, 0x654, };
+static const char32 __uni_full_decomp_data_0x6d3[] = { 2, 0x6d2, 0x654, };
+static const char32 __uni_full_decomp_data_0x929[] = { 2, 0x928, 0x93c, };
+static const char32 __uni_full_decomp_data_0x931[] = { 2, 0x930, 0x93c, };
+static const char32 __uni_full_decomp_data_0x934[] = { 2, 0x933, 0x93c, };
+static const char32 __uni_full_decomp_data_0x9cb[] = { 2, 0x9c7, 0x9be, };
+static const char32 __uni_full_decomp_data_0x9cc[] = { 2, 0x9c7, 0x9d7, };
+static const char32 __uni_full_decomp_data_0xb48[] = { 2, 0xb47, 0xb56, };
+static const char32 __uni_full_decomp_data_0xb4b[] = { 2, 0xb47, 0xb3e, };
+static const char32 __uni_full_decomp_data_0xb4c[] = { 2, 0xb47, 0xb57, };
+static const char32 __uni_full_decomp_data_0xb94[] = { 2, 0xb92, 0xbd7, };
+static const char32 __uni_full_decomp_data_0xbca[] = { 2, 0xbc6, 0xbbe, };
+static const char32 __uni_full_decomp_data_0xbcb[] = { 2, 0xbc7, 0xbbe, };
+static const char32 __uni_full_decomp_data_0xbcc[] = { 2, 0xbc6, 0xbd7, };
+static const char32 __uni_full_decomp_data_0xc48[] = { 2, 0xc46, 0xc56, };
+static const char32 __uni_full_decomp_data_0xcc0[] = { 2, 0xcbf, 0xcd5, };
+static const char32 __uni_full_decomp_data_0xcc7[] = { 2, 0xcc6, 0xcd5, };
+static const char32 __uni_full_decomp_data_0xcc8[] = { 2, 0xcc6, 0xcd6, };
+static const char32 __uni_full_decomp_data_0xcca[] = { 2, 0xcc6, 0xcc2, };
+static const char32 __uni_full_decomp_data_0xccb[] = { 3, 0xcc6, 0xcc2, 0xcd5, };
+static const char32 __uni_full_decomp_data_0xd4a[] = { 2, 0xd46, 0xd3e, };
+static const char32 __uni_full_decomp_data_0xd4b[] = { 2, 0xd47, 0xd3e, };
+static const char32 __uni_full_decomp_data_0xd4c[] = { 2, 0xd46, 0xd57, };
+static const char32 __uni_full_decomp_data_0xdda[] = { 2, 0xdd9, 0xdca, };
+static const char32 __uni_full_decomp_data_0xddc[] = { 2, 0xdd9, 0xdcf, };
+static const char32 __uni_full_decomp_data_0xddd[] = { 3, 0xdd9, 0xdcf, 0xdca, };
+static const char32 __uni_full_decomp_data_0xdde[] = { 2, 0xdd9, 0xddf, };
+static const char32 __uni_full_decomp_data_0x1026[] = { 2, 0x1025, 0x102e, };
+static const char32 __uni_full_decomp_data_0x1b06[] = { 2, 0x1b05, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b08[] = { 2, 0x1b07, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b0a[] = { 2, 0x1b09, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b0c[] = { 2, 0x1b0b, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b0e[] = { 2, 0x1b0d, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b12[] = { 2, 0x1b11, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b3b[] = { 2, 0x1b3a, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b3d[] = { 2, 0x1b3c, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b40[] = { 2, 0x1b3e, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b41[] = { 2, 0x1b3f, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1b43[] = { 2, 0x1b42, 0x1b35, };
+static const char32 __uni_full_decomp_data_0x1e00[] = { 2, 0x41, 0x325, };
+static const char32 __uni_full_decomp_data_0x1e01[] = { 2, 0x61, 0x325, };
+static const char32 __uni_full_decomp_data_0x1e02[] = { 2, 0x42, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e03[] = { 2, 0x62, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e04[] = { 2, 0x42, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e05[] = { 2, 0x62, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e06[] = { 2, 0x42, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e07[] = { 2, 0x62, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e08[] = { 3, 0x43, 0x327, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e09[] = { 3, 0x63, 0x327, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e0a[] = { 2, 0x44, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e0b[] = { 2, 0x64, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e0c[] = { 2, 0x44, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e0d[] = { 2, 0x64, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e0e[] = { 2, 0x44, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e0f[] = { 2, 0x64, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e10[] = { 2, 0x44, 0x327, };
+static const char32 __uni_full_decomp_data_0x1e11[] = { 2, 0x64, 0x327, };
+static const char32 __uni_full_decomp_data_0x1e12[] = { 2, 0x44, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e13[] = { 2, 0x64, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e14[] = { 3, 0x45, 0x304, 0x300, };
+static const char32 __uni_full_decomp_data_0x1e15[] = { 3, 0x65, 0x304, 0x300, };
+static const char32 __uni_full_decomp_data_0x1e16[] = { 3, 0x45, 0x304, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e17[] = { 3, 0x65, 0x304, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e18[] = { 2, 0x45, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e19[] = { 2, 0x65, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e1a[] = { 2, 0x45, 0x330, };
+static const char32 __uni_full_decomp_data_0x1e1b[] = { 2, 0x65, 0x330, };
+static const char32 __uni_full_decomp_data_0x1e1c[] = { 3, 0x45, 0x327, 0x306, };
+static const char32 __uni_full_decomp_data_0x1e1d[] = { 3, 0x65, 0x327, 0x306, };
+static const char32 __uni_full_decomp_data_0x1e1e[] = { 2, 0x46, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e1f[] = { 2, 0x66, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e20[] = { 2, 0x47, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e21[] = { 2, 0x67, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e22[] = { 2, 0x48, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e23[] = { 2, 0x68, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e24[] = { 2, 0x48, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e25[] = { 2, 0x68, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e26[] = { 2, 0x48, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e27[] = { 2, 0x68, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e28[] = { 2, 0x48, 0x327, };
+static const char32 __uni_full_decomp_data_0x1e29[] = { 2, 0x68, 0x327, };
+static const char32 __uni_full_decomp_data_0x1e2a[] = { 2, 0x48, 0x32e, };
+static const char32 __uni_full_decomp_data_0x1e2b[] = { 2, 0x68, 0x32e, };
+static const char32 __uni_full_decomp_data_0x1e2c[] = { 2, 0x49, 0x330, };
+static const char32 __uni_full_decomp_data_0x1e2d[] = { 2, 0x69, 0x330, };
+static const char32 __uni_full_decomp_data_0x1e2e[] = { 3, 0x49, 0x308, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e2f[] = { 3, 0x69, 0x308, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e30[] = { 2, 0x4b, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e31[] = { 2, 0x6b, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e32[] = { 2, 0x4b, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e33[] = { 2, 0x6b, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e34[] = { 2, 0x4b, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e35[] = { 2, 0x6b, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e36[] = { 2, 0x4c, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e37[] = { 2, 0x6c, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e38[] = { 3, 0x4c, 0x323, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e39[] = { 3, 0x6c, 0x323, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e3a[] = { 2, 0x4c, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e3b[] = { 2, 0x6c, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e3c[] = { 2, 0x4c, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e3d[] = { 2, 0x6c, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e3e[] = { 2, 0x4d, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e3f[] = { 2, 0x6d, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e40[] = { 2, 0x4d, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e41[] = { 2, 0x6d, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e42[] = { 2, 0x4d, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e43[] = { 2, 0x6d, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e44[] = { 2, 0x4e, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e45[] = { 2, 0x6e, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e46[] = { 2, 0x4e, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e47[] = { 2, 0x6e, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e48[] = { 2, 0x4e, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e49[] = { 2, 0x6e, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e4a[] = { 2, 0x4e, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e4b[] = { 2, 0x6e, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e4c[] = { 3, 0x4f, 0x303, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e4d[] = { 3, 0x6f, 0x303, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e4e[] = { 3, 0x4f, 0x303, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e4f[] = { 3, 0x6f, 0x303, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e50[] = { 3, 0x4f, 0x304, 0x300, };
+static const char32 __uni_full_decomp_data_0x1e51[] = { 3, 0x6f, 0x304, 0x300, };
+static const char32 __uni_full_decomp_data_0x1e52[] = { 3, 0x4f, 0x304, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e53[] = { 3, 0x6f, 0x304, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e54[] = { 2, 0x50, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e55[] = { 2, 0x70, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e56[] = { 2, 0x50, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e57[] = { 2, 0x70, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e58[] = { 2, 0x52, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e59[] = { 2, 0x72, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e5a[] = { 2, 0x52, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e5b[] = { 2, 0x72, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e5c[] = { 3, 0x52, 0x323, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e5d[] = { 3, 0x72, 0x323, 0x304, };
+static const char32 __uni_full_decomp_data_0x1e5e[] = { 2, 0x52, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e5f[] = { 2, 0x72, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e60[] = { 2, 0x53, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e61[] = { 2, 0x73, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e62[] = { 2, 0x53, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e63[] = { 2, 0x73, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e64[] = { 3, 0x53, 0x301, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e65[] = { 3, 0x73, 0x301, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e66[] = { 3, 0x53, 0x30c, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e67[] = { 3, 0x73, 0x30c, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e68[] = { 3, 0x53, 0x323, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e69[] = { 3, 0x73, 0x323, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e6a[] = { 2, 0x54, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e6b[] = { 2, 0x74, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e6c[] = { 2, 0x54, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e6d[] = { 2, 0x74, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e6e[] = { 2, 0x54, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e6f[] = { 2, 0x74, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e70[] = { 2, 0x54, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e71[] = { 2, 0x74, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e72[] = { 2, 0x55, 0x324, };
+static const char32 __uni_full_decomp_data_0x1e73[] = { 2, 0x75, 0x324, };
+static const char32 __uni_full_decomp_data_0x1e74[] = { 2, 0x55, 0x330, };
+static const char32 __uni_full_decomp_data_0x1e75[] = { 2, 0x75, 0x330, };
+static const char32 __uni_full_decomp_data_0x1e76[] = { 2, 0x55, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e77[] = { 2, 0x75, 0x32d, };
+static const char32 __uni_full_decomp_data_0x1e78[] = { 3, 0x55, 0x303, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e79[] = { 3, 0x75, 0x303, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e7a[] = { 3, 0x55, 0x304, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e7b[] = { 3, 0x75, 0x304, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e7c[] = { 2, 0x56, 0x303, };
+static const char32 __uni_full_decomp_data_0x1e7d[] = { 2, 0x76, 0x303, };
+static const char32 __uni_full_decomp_data_0x1e7e[] = { 2, 0x56, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e7f[] = { 2, 0x76, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e80[] = { 2, 0x57, 0x300, };
+static const char32 __uni_full_decomp_data_0x1e81[] = { 2, 0x77, 0x300, };
+static const char32 __uni_full_decomp_data_0x1e82[] = { 2, 0x57, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e83[] = { 2, 0x77, 0x301, };
+static const char32 __uni_full_decomp_data_0x1e84[] = { 2, 0x57, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e85[] = { 2, 0x77, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e86[] = { 2, 0x57, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e87[] = { 2, 0x77, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e88[] = { 2, 0x57, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e89[] = { 2, 0x77, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e8a[] = { 2, 0x58, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e8b[] = { 2, 0x78, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e8c[] = { 2, 0x58, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e8d[] = { 2, 0x78, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e8e[] = { 2, 0x59, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e8f[] = { 2, 0x79, 0x307, };
+static const char32 __uni_full_decomp_data_0x1e90[] = { 2, 0x5a, 0x302, };
+static const char32 __uni_full_decomp_data_0x1e91[] = { 2, 0x7a, 0x302, };
+static const char32 __uni_full_decomp_data_0x1e92[] = { 2, 0x5a, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e93[] = { 2, 0x7a, 0x323, };
+static const char32 __uni_full_decomp_data_0x1e94[] = { 2, 0x5a, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e95[] = { 2, 0x7a, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e96[] = { 2, 0x68, 0x331, };
+static const char32 __uni_full_decomp_data_0x1e97[] = { 2, 0x74, 0x308, };
+static const char32 __uni_full_decomp_data_0x1e98[] = { 2, 0x77, 0x30a, };
+static const char32 __uni_full_decomp_data_0x1e99[] = { 2, 0x79, 0x30a, };
+static const char32 __uni_full_decomp_data_0x1e9b[] = { 2, 0x17f, 0x307, };
+static const char32 __uni_full_decomp_data_0x1ea0[] = { 2, 0x41, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ea1[] = { 2, 0x61, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ea2[] = { 2, 0x41, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ea3[] = { 2, 0x61, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ea4[] = { 3, 0x41, 0x302, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ea5[] = { 3, 0x61, 0x302, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ea6[] = { 3, 0x41, 0x302, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ea7[] = { 3, 0x61, 0x302, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ea8[] = { 3, 0x41, 0x302, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ea9[] = { 3, 0x61, 0x302, 0x309, };
+static const char32 __uni_full_decomp_data_0x1eaa[] = { 3, 0x41, 0x302, 0x303, };
+static const char32 __uni_full_decomp_data_0x1eab[] = { 3, 0x61, 0x302, 0x303, };
+static const char32 __uni_full_decomp_data_0x1eac[] = { 3, 0x41, 0x323, 0x302, };
+static const char32 __uni_full_decomp_data_0x1ead[] = { 3, 0x61, 0x323, 0x302, };
+static const char32 __uni_full_decomp_data_0x1eae[] = { 3, 0x41, 0x306, 0x301, };
+static const char32 __uni_full_decomp_data_0x1eaf[] = { 3, 0x61, 0x306, 0x301, };
+static const char32 __uni_full_decomp_data_0x1eb0[] = { 3, 0x41, 0x306, 0x300, };
+static const char32 __uni_full_decomp_data_0x1eb1[] = { 3, 0x61, 0x306, 0x300, };
+static const char32 __uni_full_decomp_data_0x1eb2[] = { 3, 0x41, 0x306, 0x309, };
+static const char32 __uni_full_decomp_data_0x1eb3[] = { 3, 0x61, 0x306, 0x309, };
+static const char32 __uni_full_decomp_data_0x1eb4[] = { 3, 0x41, 0x306, 0x303, };
+static const char32 __uni_full_decomp_data_0x1eb5[] = { 3, 0x61, 0x306, 0x303, };
+static const char32 __uni_full_decomp_data_0x1eb6[] = { 3, 0x41, 0x323, 0x306, };
+static const char32 __uni_full_decomp_data_0x1eb7[] = { 3, 0x61, 0x323, 0x306, };
+static const char32 __uni_full_decomp_data_0x1eb8[] = { 2, 0x45, 0x323, };
+static const char32 __uni_full_decomp_data_0x1eb9[] = { 2, 0x65, 0x323, };
+static const char32 __uni_full_decomp_data_0x1eba[] = { 2, 0x45, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ebb[] = { 2, 0x65, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ebc[] = { 2, 0x45, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ebd[] = { 2, 0x65, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ebe[] = { 3, 0x45, 0x302, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ebf[] = { 3, 0x65, 0x302, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ec0[] = { 3, 0x45, 0x302, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ec1[] = { 3, 0x65, 0x302, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ec2[] = { 3, 0x45, 0x302, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ec3[] = { 3, 0x65, 0x302, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ec4[] = { 3, 0x45, 0x302, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ec5[] = { 3, 0x65, 0x302, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ec6[] = { 3, 0x45, 0x323, 0x302, };
+static const char32 __uni_full_decomp_data_0x1ec7[] = { 3, 0x65, 0x323, 0x302, };
+static const char32 __uni_full_decomp_data_0x1ec8[] = { 2, 0x49, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ec9[] = { 2, 0x69, 0x309, };
+static const char32 __uni_full_decomp_data_0x1eca[] = { 2, 0x49, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ecb[] = { 2, 0x69, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ecc[] = { 2, 0x4f, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ecd[] = { 2, 0x6f, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ece[] = { 2, 0x4f, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ecf[] = { 2, 0x6f, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ed0[] = { 3, 0x4f, 0x302, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ed1[] = { 3, 0x6f, 0x302, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ed2[] = { 3, 0x4f, 0x302, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ed3[] = { 3, 0x6f, 0x302, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ed4[] = { 3, 0x4f, 0x302, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ed5[] = { 3, 0x6f, 0x302, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ed6[] = { 3, 0x4f, 0x302, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ed7[] = { 3, 0x6f, 0x302, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ed8[] = { 3, 0x4f, 0x323, 0x302, };
+static const char32 __uni_full_decomp_data_0x1ed9[] = { 3, 0x6f, 0x323, 0x302, };
+static const char32 __uni_full_decomp_data_0x1eda[] = { 3, 0x4f, 0x31b, 0x301, };
+static const char32 __uni_full_decomp_data_0x1edb[] = { 3, 0x6f, 0x31b, 0x301, };
+static const char32 __uni_full_decomp_data_0x1edc[] = { 3, 0x4f, 0x31b, 0x300, };
+static const char32 __uni_full_decomp_data_0x1edd[] = { 3, 0x6f, 0x31b, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ede[] = { 3, 0x4f, 0x31b, 0x309, };
+static const char32 __uni_full_decomp_data_0x1edf[] = { 3, 0x6f, 0x31b, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ee0[] = { 3, 0x4f, 0x31b, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ee1[] = { 3, 0x6f, 0x31b, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ee2[] = { 3, 0x4f, 0x31b, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ee3[] = { 3, 0x6f, 0x31b, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ee4[] = { 2, 0x55, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ee5[] = { 2, 0x75, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ee6[] = { 2, 0x55, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ee7[] = { 2, 0x75, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ee8[] = { 3, 0x55, 0x31b, 0x301, };
+static const char32 __uni_full_decomp_data_0x1ee9[] = { 3, 0x75, 0x31b, 0x301, };
+static const char32 __uni_full_decomp_data_0x1eea[] = { 3, 0x55, 0x31b, 0x300, };
+static const char32 __uni_full_decomp_data_0x1eeb[] = { 3, 0x75, 0x31b, 0x300, };
+static const char32 __uni_full_decomp_data_0x1eec[] = { 3, 0x55, 0x31b, 0x309, };
+static const char32 __uni_full_decomp_data_0x1eed[] = { 3, 0x75, 0x31b, 0x309, };
+static const char32 __uni_full_decomp_data_0x1eee[] = { 3, 0x55, 0x31b, 0x303, };
+static const char32 __uni_full_decomp_data_0x1eef[] = { 3, 0x75, 0x31b, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ef0[] = { 3, 0x55, 0x31b, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ef1[] = { 3, 0x75, 0x31b, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ef2[] = { 2, 0x59, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ef3[] = { 2, 0x79, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ef4[] = { 2, 0x59, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ef5[] = { 2, 0x79, 0x323, };
+static const char32 __uni_full_decomp_data_0x1ef6[] = { 2, 0x59, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ef7[] = { 2, 0x79, 0x309, };
+static const char32 __uni_full_decomp_data_0x1ef8[] = { 2, 0x59, 0x303, };
+static const char32 __uni_full_decomp_data_0x1ef9[] = { 2, 0x79, 0x303, };
+static const char32 __uni_full_decomp_data_0x1f00[] = { 2, 0x3b1, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f01[] = { 2, 0x3b1, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f02[] = { 3, 0x3b1, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f03[] = { 3, 0x3b1, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f04[] = { 3, 0x3b1, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f05[] = { 3, 0x3b1, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f06[] = { 3, 0x3b1, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f07[] = { 3, 0x3b1, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f08[] = { 2, 0x391, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f09[] = { 2, 0x391, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f0a[] = { 3, 0x391, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f0b[] = { 3, 0x391, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f0c[] = { 3, 0x391, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f0d[] = { 3, 0x391, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f0e[] = { 3, 0x391, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f0f[] = { 3, 0x391, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f10[] = { 2, 0x3b5, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f11[] = { 2, 0x3b5, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f12[] = { 3, 0x3b5, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f13[] = { 3, 0x3b5, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f14[] = { 3, 0x3b5, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f15[] = { 3, 0x3b5, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f18[] = { 2, 0x395, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f19[] = { 2, 0x395, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f1a[] = { 3, 0x395, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f1b[] = { 3, 0x395, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f1c[] = { 3, 0x395, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f1d[] = { 3, 0x395, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f20[] = { 2, 0x3b7, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f21[] = { 2, 0x3b7, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f22[] = { 3, 0x3b7, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f23[] = { 3, 0x3b7, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f24[] = { 3, 0x3b7, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f25[] = { 3, 0x3b7, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f26[] = { 3, 0x3b7, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f27[] = { 3, 0x3b7, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f28[] = { 2, 0x397, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f29[] = { 2, 0x397, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f2a[] = { 3, 0x397, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f2b[] = { 3, 0x397, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f2c[] = { 3, 0x397, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f2d[] = { 3, 0x397, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f2e[] = { 3, 0x397, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f2f[] = { 3, 0x397, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f30[] = { 2, 0x3b9, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f31[] = { 2, 0x3b9, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f32[] = { 3, 0x3b9, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f33[] = { 3, 0x3b9, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f34[] = { 3, 0x3b9, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f35[] = { 3, 0x3b9, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f36[] = { 3, 0x3b9, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f37[] = { 3, 0x3b9, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f38[] = { 2, 0x399, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f39[] = { 2, 0x399, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f3a[] = { 3, 0x399, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f3b[] = { 3, 0x399, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f3c[] = { 3, 0x399, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f3d[] = { 3, 0x399, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f3e[] = { 3, 0x399, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f3f[] = { 3, 0x399, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f40[] = { 2, 0x3bf, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f41[] = { 2, 0x3bf, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f42[] = { 3, 0x3bf, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f43[] = { 3, 0x3bf, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f44[] = { 3, 0x3bf, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f45[] = { 3, 0x3bf, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f48[] = { 2, 0x39f, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f49[] = { 2, 0x39f, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f4a[] = { 3, 0x39f, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f4b[] = { 3, 0x39f, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f4c[] = { 3, 0x39f, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f4d[] = { 3, 0x39f, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f50[] = { 2, 0x3c5, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f51[] = { 2, 0x3c5, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f52[] = { 3, 0x3c5, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f53[] = { 3, 0x3c5, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f54[] = { 3, 0x3c5, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f55[] = { 3, 0x3c5, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f56[] = { 3, 0x3c5, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f57[] = { 3, 0x3c5, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f59[] = { 2, 0x3a5, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f5b[] = { 3, 0x3a5, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f5d[] = { 3, 0x3a5, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f5f[] = { 3, 0x3a5, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f60[] = { 2, 0x3c9, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f61[] = { 2, 0x3c9, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f62[] = { 3, 0x3c9, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f63[] = { 3, 0x3c9, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f64[] = { 3, 0x3c9, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f65[] = { 3, 0x3c9, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f66[] = { 3, 0x3c9, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f67[] = { 3, 0x3c9, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f68[] = { 2, 0x3a9, 0x313, };
+static const char32 __uni_full_decomp_data_0x1f69[] = { 2, 0x3a9, 0x314, };
+static const char32 __uni_full_decomp_data_0x1f6a[] = { 3, 0x3a9, 0x313, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f6b[] = { 3, 0x3a9, 0x314, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f6c[] = { 3, 0x3a9, 0x313, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f6d[] = { 3, 0x3a9, 0x314, 0x301, };
+static const char32 __uni_full_decomp_data_0x1f6e[] = { 3, 0x3a9, 0x313, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f6f[] = { 3, 0x3a9, 0x314, 0x342, };
+static const char32 __uni_full_decomp_data_0x1f70[] = { 2, 0x3b1, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f72[] = { 2, 0x3b5, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f74[] = { 2, 0x3b7, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f76[] = { 2, 0x3b9, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f78[] = { 2, 0x3bf, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f7a[] = { 2, 0x3c5, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f7c[] = { 2, 0x3c9, 0x300, };
+static const char32 __uni_full_decomp_data_0x1f80[] = { 3, 0x3b1, 0x313, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f81[] = { 3, 0x3b1, 0x314, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f82[] = { 4, 0x3b1, 0x313, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f83[] = { 4, 0x3b1, 0x314, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f84[] = { 4, 0x3b1, 0x313, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f85[] = { 4, 0x3b1, 0x314, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f86[] = { 4, 0x3b1, 0x313, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f87[] = { 4, 0x3b1, 0x314, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f88[] = { 3, 0x391, 0x313, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f89[] = { 3, 0x391, 0x314, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f8a[] = { 4, 0x391, 0x313, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f8b[] = { 4, 0x391, 0x314, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f8c[] = { 4, 0x391, 0x313, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f8d[] = { 4, 0x391, 0x314, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f8e[] = { 4, 0x391, 0x313, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f8f[] = { 4, 0x391, 0x314, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f90[] = { 3, 0x3b7, 0x313, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f91[] = { 3, 0x3b7, 0x314, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f92[] = { 4, 0x3b7, 0x313, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f93[] = { 4, 0x3b7, 0x314, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f94[] = { 4, 0x3b7, 0x313, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f95[] = { 4, 0x3b7, 0x314, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f96[] = { 4, 0x3b7, 0x313, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f97[] = { 4, 0x3b7, 0x314, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f98[] = { 3, 0x397, 0x313, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f99[] = { 3, 0x397, 0x314, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f9a[] = { 4, 0x397, 0x313, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f9b[] = { 4, 0x397, 0x314, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f9c[] = { 4, 0x397, 0x313, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f9d[] = { 4, 0x397, 0x314, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f9e[] = { 4, 0x397, 0x313, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1f9f[] = { 4, 0x397, 0x314, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa0[] = { 3, 0x3c9, 0x313, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa1[] = { 3, 0x3c9, 0x314, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa2[] = { 4, 0x3c9, 0x313, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa3[] = { 4, 0x3c9, 0x314, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa4[] = { 4, 0x3c9, 0x313, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa5[] = { 4, 0x3c9, 0x314, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa6[] = { 4, 0x3c9, 0x313, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa7[] = { 4, 0x3c9, 0x314, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa8[] = { 3, 0x3a9, 0x313, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fa9[] = { 3, 0x3a9, 0x314, 0x345, };
+static const char32 __uni_full_decomp_data_0x1faa[] = { 4, 0x3a9, 0x313, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fab[] = { 4, 0x3a9, 0x314, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fac[] = { 4, 0x3a9, 0x313, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fad[] = { 4, 0x3a9, 0x314, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fae[] = { 4, 0x3a9, 0x313, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1faf[] = { 4, 0x3a9, 0x314, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fb0[] = { 2, 0x3b1, 0x306, };
+static const char32 __uni_full_decomp_data_0x1fb1[] = { 2, 0x3b1, 0x304, };
+static const char32 __uni_full_decomp_data_0x1fb2[] = { 3, 0x3b1, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fb3[] = { 2, 0x3b1, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fb4[] = { 3, 0x3b1, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fb6[] = { 2, 0x3b1, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fb7[] = { 3, 0x3b1, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fb8[] = { 2, 0x391, 0x306, };
+static const char32 __uni_full_decomp_data_0x1fb9[] = { 2, 0x391, 0x304, };
+static const char32 __uni_full_decomp_data_0x1fba[] = { 2, 0x391, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fbc[] = { 2, 0x391, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fc1[] = { 2, 0xa8, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fc2[] = { 3, 0x3b7, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fc3[] = { 2, 0x3b7, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fc4[] = { 3, 0x3b7, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fc6[] = { 2, 0x3b7, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fc7[] = { 3, 0x3b7, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fc8[] = { 2, 0x395, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fca[] = { 2, 0x397, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fcc[] = { 2, 0x397, 0x345, };
+static const char32 __uni_full_decomp_data_0x1fcd[] = { 2, 0x1fbf, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fce[] = { 2, 0x1fbf, 0x301, };
+static const char32 __uni_full_decomp_data_0x1fcf[] = { 2, 0x1fbf, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fd0[] = { 2, 0x3b9, 0x306, };
+static const char32 __uni_full_decomp_data_0x1fd1[] = { 2, 0x3b9, 0x304, };
+static const char32 __uni_full_decomp_data_0x1fd2[] = { 3, 0x3b9, 0x308, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fd6[] = { 2, 0x3b9, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fd7[] = { 3, 0x3b9, 0x308, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fd8[] = { 2, 0x399, 0x306, };
+static const char32 __uni_full_decomp_data_0x1fd9[] = { 2, 0x399, 0x304, };
+static const char32 __uni_full_decomp_data_0x1fda[] = { 2, 0x399, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fdd[] = { 2, 0x1ffe, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fde[] = { 2, 0x1ffe, 0x301, };
+static const char32 __uni_full_decomp_data_0x1fdf[] = { 2, 0x1ffe, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fe0[] = { 2, 0x3c5, 0x306, };
+static const char32 __uni_full_decomp_data_0x1fe1[] = { 2, 0x3c5, 0x304, };
+static const char32 __uni_full_decomp_data_0x1fe2[] = { 3, 0x3c5, 0x308, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fe4[] = { 2, 0x3c1, 0x313, };
+static const char32 __uni_full_decomp_data_0x1fe5[] = { 2, 0x3c1, 0x314, };
+static const char32 __uni_full_decomp_data_0x1fe6[] = { 2, 0x3c5, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fe7[] = { 3, 0x3c5, 0x308, 0x342, };
+static const char32 __uni_full_decomp_data_0x1fe8[] = { 2, 0x3a5, 0x306, };
+static const char32 __uni_full_decomp_data_0x1fe9[] = { 2, 0x3a5, 0x304, };
+static const char32 __uni_full_decomp_data_0x1fea[] = { 2, 0x3a5, 0x300, };
+static const char32 __uni_full_decomp_data_0x1fec[] = { 2, 0x3a1, 0x314, };
+static const char32 __uni_full_decomp_data_0x1fed[] = { 2, 0xa8, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ff2[] = { 3, 0x3c9, 0x300, 0x345, };
+static const char32 __uni_full_decomp_data_0x1ff3[] = { 2, 0x3c9, 0x345, };
+static const char32 __uni_full_decomp_data_0x1ff4[] = { 3, 0x3c9, 0x301, 0x345, };
+static const char32 __uni_full_decomp_data_0x1ff6[] = { 2, 0x3c9, 0x342, };
+static const char32 __uni_full_decomp_data_0x1ff7[] = { 3, 0x3c9, 0x342, 0x345, };
+static const char32 __uni_full_decomp_data_0x1ff8[] = { 2, 0x39f, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ffa[] = { 2, 0x3a9, 0x300, };
+static const char32 __uni_full_decomp_data_0x1ffc[] = { 2, 0x3a9, 0x345, };
+static const char32 __uni_full_decomp_data_0x219a[] = { 2, 0x2190, 0x338, };
+static const char32 __uni_full_decomp_data_0x219b[] = { 2, 0x2192, 0x338, };
+static const char32 __uni_full_decomp_data_0x21ae[] = { 2, 0x2194, 0x338, };
+static const char32 __uni_full_decomp_data_0x21cd[] = { 2, 0x21d0, 0x338, };
+static const char32 __uni_full_decomp_data_0x21ce[] = { 2, 0x21d4, 0x338, };
+static const char32 __uni_full_decomp_data_0x21cf[] = { 2, 0x21d2, 0x338, };
+static const char32 __uni_full_decomp_data_0x2204[] = { 2, 0x2203, 0x338, };
+static const char32 __uni_full_decomp_data_0x2209[] = { 2, 0x2208, 0x338, };
+static const char32 __uni_full_decomp_data_0x220c[] = { 2, 0x220b, 0x338, };
+static const char32 __uni_full_decomp_data_0x2224[] = { 2, 0x2223, 0x338, };
+static const char32 __uni_full_decomp_data_0x2226[] = { 2, 0x2225, 0x338, };
+static const char32 __uni_full_decomp_data_0x2241[] = { 2, 0x223c, 0x338, };
+static const char32 __uni_full_decomp_data_0x2244[] = { 2, 0x2243, 0x338, };
+static const char32 __uni_full_decomp_data_0x2247[] = { 2, 0x2245, 0x338, };
+static const char32 __uni_full_decomp_data_0x2249[] = { 2, 0x2248, 0x338, };
+static const char32 __uni_full_decomp_data_0x2260[] = { 2, 0x3d, 0x338, };
+static const char32 __uni_full_decomp_data_0x2262[] = { 2, 0x2261, 0x338, };
+static const char32 __uni_full_decomp_data_0x226d[] = { 2, 0x224d, 0x338, };
+static const char32 __uni_full_decomp_data_0x226e[] = { 2, 0x3c, 0x338, };
+static const char32 __uni_full_decomp_data_0x226f[] = { 2, 0x3e, 0x338, };
+static const char32 __uni_full_decomp_data_0x2270[] = { 2, 0x2264, 0x338, };
+static const char32 __uni_full_decomp_data_0x2271[] = { 2, 0x2265, 0x338, };
+static const char32 __uni_full_decomp_data_0x2274[] = { 2, 0x2272, 0x338, };
+static const char32 __uni_full_decomp_data_0x2275[] = { 2, 0x2273, 0x338, };
+static const char32 __uni_full_decomp_data_0x2278[] = { 2, 0x2276, 0x338, };
+static const char32 __uni_full_decomp_data_0x2279[] = { 2, 0x2277, 0x338, };
+static const char32 __uni_full_decomp_data_0x2280[] = { 2, 0x227a, 0x338, };
+static const char32 __uni_full_decomp_data_0x2281[] = { 2, 0x227b, 0x338, };
+static const char32 __uni_full_decomp_data_0x2284[] = { 2, 0x2282, 0x338, };
+static const char32 __uni_full_decomp_data_0x2285[] = { 2, 0x2283, 0x338, };
+static const char32 __uni_full_decomp_data_0x2288[] = { 2, 0x2286, 0x338, };
+static const char32 __uni_full_decomp_data_0x2289[] = { 2, 0x2287, 0x338, };
+static const char32 __uni_full_decomp_data_0x22ac[] = { 2, 0x22a2, 0x338, };
+static const char32 __uni_full_decomp_data_0x22ad[] = { 2, 0x22a8, 0x338, };
+static const char32 __uni_full_decomp_data_0x22ae[] = { 2, 0x22a9, 0x338, };
+static const char32 __uni_full_decomp_data_0x22af[] = { 2, 0x22ab, 0x338, };
+static const char32 __uni_full_decomp_data_0x22e0[] = { 2, 0x227c, 0x338, };
+static const char32 __uni_full_decomp_data_0x22e1[] = { 2, 0x227d, 0x338, };
+static const char32 __uni_full_decomp_data_0x22e2[] = { 2, 0x2291, 0x338, };
+static const char32 __uni_full_decomp_data_0x22e3[] = { 2, 0x2292, 0x338, };
+static const char32 __uni_full_decomp_data_0x22ea[] = { 2, 0x22b2, 0x338, };
+static const char32 __uni_full_decomp_data_0x22eb[] = { 2, 0x22b3, 0x338, };
+static const char32 __uni_full_decomp_data_0x22ec[] = { 2, 0x22b4, 0x338, };
+static const char32 __uni_full_decomp_data_0x22ed[] = { 2, 0x22b5, 0x338, };
+static const char32 __uni_full_decomp_data_0x304c[] = { 2, 0x304b, 0x3099, };
+static const char32 __uni_full_decomp_data_0x304e[] = { 2, 0x304d, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3050[] = { 2, 0x304f, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3052[] = { 2, 0x3051, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3054[] = { 2, 0x3053, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3056[] = { 2, 0x3055, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3058[] = { 2, 0x3057, 0x3099, };
+static const char32 __uni_full_decomp_data_0x305a[] = { 2, 0x3059, 0x3099, };
+static const char32 __uni_full_decomp_data_0x305c[] = { 2, 0x305b, 0x3099, };
+static const char32 __uni_full_decomp_data_0x305e[] = { 2, 0x305d, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3060[] = { 2, 0x305f, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3062[] = { 2, 0x3061, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3065[] = { 2, 0x3064, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3067[] = { 2, 0x3066, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3069[] = { 2, 0x3068, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3070[] = { 2, 0x306f, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3071[] = { 2, 0x306f, 0x309a, };
+static const char32 __uni_full_decomp_data_0x3073[] = { 2, 0x3072, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3074[] = { 2, 0x3072, 0x309a, };
+static const char32 __uni_full_decomp_data_0x3076[] = { 2, 0x3075, 0x3099, };
+static const char32 __uni_full_decomp_data_0x3077[] = { 2, 0x3075, 0x309a, };
+static const char32 __uni_full_decomp_data_0x3079[] = { 2, 0x3078, 0x3099, };
+static const char32 __uni_full_decomp_data_0x307a[] = { 2, 0x3078, 0x309a, };
+static const char32 __uni_full_decomp_data_0x307c[] = { 2, 0x307b, 0x3099, };
+static const char32 __uni_full_decomp_data_0x307d[] = { 2, 0x307b, 0x309a, };
+static const char32 __uni_full_decomp_data_0x3094[] = { 2, 0x3046, 0x3099, };
+static const char32 __uni_full_decomp_data_0x309e[] = { 2, 0x309d, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30ac[] = { 2, 0x30ab, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30ae[] = { 2, 0x30ad, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30b0[] = { 2, 0x30af, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30b2[] = { 2, 0x30b1, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30b4[] = { 2, 0x30b3, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30b6[] = { 2, 0x30b5, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30b8[] = { 2, 0x30b7, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30ba[] = { 2, 0x30b9, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30bc[] = { 2, 0x30bb, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30be[] = { 2, 0x30bd, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30c0[] = { 2, 0x30bf, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30c2[] = { 2, 0x30c1, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30c5[] = { 2, 0x30c4, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30c7[] = { 2, 0x30c6, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30c9[] = { 2, 0x30c8, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30d0[] = { 2, 0x30cf, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30d1[] = { 2, 0x30cf, 0x309a, };
+static const char32 __uni_full_decomp_data_0x30d3[] = { 2, 0x30d2, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30d4[] = { 2, 0x30d2, 0x309a, };
+static const char32 __uni_full_decomp_data_0x30d6[] = { 2, 0x30d5, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30d7[] = { 2, 0x30d5, 0x309a, };
+static const char32 __uni_full_decomp_data_0x30d9[] = { 2, 0x30d8, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30da[] = { 2, 0x30d8, 0x309a, };
+static const char32 __uni_full_decomp_data_0x30dc[] = { 2, 0x30db, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30dd[] = { 2, 0x30db, 0x309a, };
+static const char32 __uni_full_decomp_data_0x30f4[] = { 2, 0x30a6, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30f7[] = { 2, 0x30ef, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30f8[] = { 2, 0x30f0, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30f9[] = { 2, 0x30f1, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30fa[] = { 2, 0x30f2, 0x3099, };
+static const char32 __uni_full_decomp_data_0x30fe[] = { 2, 0x30fd, 0x3099, };
 
 BOOST_UNICODE_DECL extern const unichar_compose_data_entry __uni_compose_entry[] = {
-	{__uni_decomp_data_0x226e, 0x226e},
-	{__uni_decomp_data_0x2260, 0x2260},
-	{__uni_decomp_data_0x226f, 0x226f},
-	{__uni_decomp_data_0xc0, 0xc0},
-	{__uni_decomp_data_0xc1, 0xc1},
-	{__uni_decomp_data_0xc2, 0xc2},
-	{__uni_decomp_data_0xc3, 0xc3},
-	{__uni_decomp_data_0x100, 0x100},
-	{__uni_decomp_data_0x102, 0x102},
-	{__uni_decomp_data_0x226, 0x226},
-	{__uni_decomp_data_0xc4, 0xc4},
-	{__uni_decomp_data_0x1ea2, 0x1ea2},
-	{__uni_decomp_data_0xc5, 0xc5},
-	{__uni_decomp_data_0x1cd, 0x1cd},
-	{__uni_decomp_data_0x200, 0x200},
-	{__uni_decomp_data_0x202, 0x202},
-	{__uni_decomp_data_0x1ea0, 0x1ea0},
-	{__uni_decomp_data_0x1e00, 0x1e00},
-	{__uni_decomp_data_0x104, 0x104},
-	{__uni_decomp_data_0x1e02, 0x1e02},
-	{__uni_decomp_data_0x1e04, 0x1e04},
-	{__uni_decomp_data_0x1e06, 0x1e06},
-	{__uni_decomp_data_0x106, 0x106},
-	{__uni_decomp_data_0x108, 0x108},
-	{__uni_decomp_data_0x10a, 0x10a},
-	{__uni_decomp_data_0x10c, 0x10c},
-	{__uni_decomp_data_0xc7, 0xc7},
-	{__uni_decomp_data_0x1e0a, 0x1e0a},
-	{__uni_decomp_data_0x10e, 0x10e},
-	{__uni_decomp_data_0x1e0c, 0x1e0c},
-	{__uni_decomp_data_0x1e10, 0x1e10},
-	{__uni_decomp_data_0x1e12, 0x1e12},
-	{__uni_decomp_data_0x1e0e, 0x1e0e},
-	{__uni_decomp_data_0xc8, 0xc8},
-	{__uni_decomp_data_0xc9, 0xc9},
-	{__uni_decomp_data_0xca, 0xca},
-	{__uni_decomp_data_0x1ebc, 0x1ebc},
-	{__uni_decomp_data_0x112, 0x112},
-	{__uni_decomp_data_0x114, 0x114},
-	{__uni_decomp_data_0x116, 0x116},
-	{__uni_decomp_data_0xcb, 0xcb},
-	{__uni_decomp_data_0x1eba, 0x1eba},
-	{__uni_decomp_data_0x11a, 0x11a},
-	{__uni_decomp_data_0x204, 0x204},
-	{__uni_decomp_data_0x206, 0x206},
-	{__uni_decomp_data_0x1eb8, 0x1eb8},
-	{__uni_decomp_data_0x228, 0x228},
-	{__uni_decomp_data_0x118, 0x118},
-	{__uni_decomp_data_0x1e18, 0x1e18},
-	{__uni_decomp_data_0x1e1a, 0x1e1a},
-	{__uni_decomp_data_0x1e1e, 0x1e1e},
-	{__uni_decomp_data_0x1f4, 0x1f4},
-	{__uni_decomp_data_0x11c, 0x11c},
-	{__uni_decomp_data_0x1e20, 0x1e20},
-	{__uni_decomp_data_0x11e, 0x11e},
-	{__uni_decomp_data_0x120, 0x120},
-	{__uni_decomp_data_0x1e6, 0x1e6},
-	{__uni_decomp_data_0x122, 0x122},
-	{__uni_decomp_data_0x124, 0x124},
-	{__uni_decomp_data_0x1e22, 0x1e22},
-	{__uni_decomp_data_0x1e26, 0x1e26},
-	{__uni_decomp_data_0x21e, 0x21e},
-	{__uni_decomp_data_0x1e24, 0x1e24},
-	{__uni_decomp_data_0x1e28, 0x1e28},
-	{__uni_decomp_data_0x1e2a, 0x1e2a},
-	{__uni_decomp_data_0xcc, 0xcc},
-	{__uni_decomp_data_0xcd, 0xcd},
-	{__uni_decomp_data_0xce, 0xce},
-	{__uni_decomp_data_0x128, 0x128},
-	{__uni_decomp_data_0x12a, 0x12a},
-	{__uni_decomp_data_0x12c, 0x12c},
-	{__uni_decomp_data_0x130, 0x130},
-	{__uni_decomp_data_0xcf, 0xcf},
-	{__uni_decomp_data_0x1ec8, 0x1ec8},
-	{__uni_decomp_data_0x1cf, 0x1cf},
-	{__uni_decomp_data_0x208, 0x208},
-	{__uni_decomp_data_0x20a, 0x20a},
-	{__uni_decomp_data_0x1eca, 0x1eca},
-	{__uni_decomp_data_0x12e, 0x12e},
-	{__uni_decomp_data_0x1e2c, 0x1e2c},
-	{__uni_decomp_data_0x134, 0x134},
-	{__uni_decomp_data_0x1e30, 0x1e30},
-	{__uni_decomp_data_0x1e8, 0x1e8},
-	{__uni_decomp_data_0x1e32, 0x1e32},
-	{__uni_decomp_data_0x136, 0x136},
-	{__uni_decomp_data_0x1e34, 0x1e34},
-	{__uni_decomp_data_0x139, 0x139},
-	{__uni_decomp_data_0x13d, 0x13d},
-	{__uni_decomp_data_0x1e36, 0x1e36},
-	{__uni_decomp_data_0x13b, 0x13b},
-	{__uni_decomp_data_0x1e3c, 0x1e3c},
-	{__uni_decomp_data_0x1e3a, 0x1e3a},
-	{__uni_decomp_data_0x1e3e, 0x1e3e},
-	{__uni_decomp_data_0x1e40, 0x1e40},
-	{__uni_decomp_data_0x1e42, 0x1e42},
-	{__uni_decomp_data_0x1f8, 0x1f8},
-	{__uni_decomp_data_0x143, 0x143},
-	{__uni_decomp_data_0xd1, 0xd1},
-	{__uni_decomp_data_0x1e44, 0x1e44},
-	{__uni_decomp_data_0x147, 0x147},
-	{__uni_decomp_data_0x1e46, 0x1e46},
-	{__uni_decomp_data_0x145, 0x145},
-	{__uni_decomp_data_0x1e4a, 0x1e4a},
-	{__uni_decomp_data_0x1e48, 0x1e48},
-	{__uni_decomp_data_0xd2, 0xd2},
-	{__uni_decomp_data_0xd3, 0xd3},
-	{__uni_decomp_data_0xd4, 0xd4},
-	{__uni_decomp_data_0xd5, 0xd5},
-	{__uni_decomp_data_0x14c, 0x14c},
-	{__uni_decomp_data_0x14e, 0x14e},
-	{__uni_decomp_data_0x22e, 0x22e},
-	{__uni_decomp_data_0xd6, 0xd6},
-	{__uni_decomp_data_0x1ece, 0x1ece},
-	{__uni_decomp_data_0x150, 0x150},
-	{__uni_decomp_data_0x1d1, 0x1d1},
-	{__uni_decomp_data_0x20c, 0x20c},
-	{__uni_decomp_data_0x20e, 0x20e},
-	{__uni_decomp_data_0x1a0, 0x1a0},
-	{__uni_decomp_data_0x1ecc, 0x1ecc},
-	{__uni_decomp_data_0x1ea, 0x1ea},
-	{__uni_decomp_data_0x1e54, 0x1e54},
-	{__uni_decomp_data_0x1e56, 0x1e56},
-	{__uni_decomp_data_0x154, 0x154},
-	{__uni_decomp_data_0x1e58, 0x1e58},
-	{__uni_decomp_data_0x158, 0x158},
-	{__uni_decomp_data_0x210, 0x210},
-	{__uni_decomp_data_0x212, 0x212},
-	{__uni_decomp_data_0x1e5a, 0x1e5a},
-	{__uni_decomp_data_0x156, 0x156},
-	{__uni_decomp_data_0x1e5e, 0x1e5e},
-	{__uni_decomp_data_0x15a, 0x15a},
-	{__uni_decomp_data_0x15c, 0x15c},
-	{__uni_decomp_data_0x1e60, 0x1e60},
-	{__uni_decomp_data_0x160, 0x160},
-	{__uni_decomp_data_0x1e62, 0x1e62},
-	{__uni_decomp_data_0x218, 0x218},
-	{__uni_decomp_data_0x15e, 0x15e},
-	{__uni_decomp_data_0x1e6a, 0x1e6a},
-	{__uni_decomp_data_0x164, 0x164},
-	{__uni_decomp_data_0x1e6c, 0x1e6c},
-	{__uni_decomp_data_0x21a, 0x21a},
-	{__uni_decomp_data_0x162, 0x162},
-	{__uni_decomp_data_0x1e70, 0x1e70},
-	{__uni_decomp_data_0x1e6e, 0x1e6e},
-	{__uni_decomp_data_0xd9, 0xd9},
-	{__uni_decomp_data_0xda, 0xda},
-	{__uni_decomp_data_0xdb, 0xdb},
-	{__uni_decomp_data_0x168, 0x168},
-	{__uni_decomp_data_0x16a, 0x16a},
-	{__uni_decomp_data_0x16c, 0x16c},
-	{__uni_decomp_data_0xdc, 0xdc},
-	{__uni_decomp_data_0x1ee6, 0x1ee6},
-	{__uni_decomp_data_0x16e, 0x16e},
-	{__uni_decomp_data_0x170, 0x170},
-	{__uni_decomp_data_0x1d3, 0x1d3},
-	{__uni_decomp_data_0x214, 0x214},
-	{__uni_decomp_data_0x216, 0x216},
-	{__uni_decomp_data_0x1af, 0x1af},
-	{__uni_decomp_data_0x1ee4, 0x1ee4},
-	{__uni_decomp_data_0x1e72, 0x1e72},
-	{__uni_decomp_data_0x172, 0x172},
-	{__uni_decomp_data_0x1e76, 0x1e76},
-	{__uni_decomp_data_0x1e74, 0x1e74},
-	{__uni_decomp_data_0x1e7c, 0x1e7c},
-	{__uni_decomp_data_0x1e7e, 0x1e7e},
-	{__uni_decomp_data_0x1e80, 0x1e80},
-	{__uni_decomp_data_0x1e82, 0x1e82},
-	{__uni_decomp_data_0x174, 0x174},
-	{__uni_decomp_data_0x1e86, 0x1e86},
-	{__uni_decomp_data_0x1e84, 0x1e84},
-	{__uni_decomp_data_0x1e88, 0x1e88},
-	{__uni_decomp_data_0x1e8a, 0x1e8a},
-	{__uni_decomp_data_0x1e8c, 0x1e8c},
-	{__uni_decomp_data_0x1ef2, 0x1ef2},
-	{__uni_decomp_data_0xdd, 0xdd},
-	{__uni_decomp_data_0x176, 0x176},
-	{__uni_decomp_data_0x1ef8, 0x1ef8},
-	{__uni_decomp_data_0x232, 0x232},
-	{__uni_decomp_data_0x1e8e, 0x1e8e},
-	{__uni_decomp_data_0x178, 0x178},
-	{__uni_decomp_data_0x1ef6, 0x1ef6},
-	{__uni_decomp_data_0x1ef4, 0x1ef4},
-	{__uni_decomp_data_0x179, 0x179},
-	{__uni_decomp_data_0x1e90, 0x1e90},
-	{__uni_decomp_data_0x17b, 0x17b},
-	{__uni_decomp_data_0x17d, 0x17d},
-	{__uni_decomp_data_0x1e92, 0x1e92},
-	{__uni_decomp_data_0x1e94, 0x1e94},
-	{__uni_decomp_data_0xe0, 0xe0},
-	{__uni_decomp_data_0xe1, 0xe1},
-	{__uni_decomp_data_0xe2, 0xe2},
-	{__uni_decomp_data_0xe3, 0xe3},
-	{__uni_decomp_data_0x101, 0x101},
-	{__uni_decomp_data_0x103, 0x103},
-	{__uni_decomp_data_0x227, 0x227},
-	{__uni_decomp_data_0xe4, 0xe4},
-	{__uni_decomp_data_0x1ea3, 0x1ea3},
-	{__uni_decomp_data_0xe5, 0xe5},
-	{__uni_decomp_data_0x1ce, 0x1ce},
-	{__uni_decomp_data_0x201, 0x201},
-	{__uni_decomp_data_0x203, 0x203},
-	{__uni_decomp_data_0x1ea1, 0x1ea1},
-	{__uni_decomp_data_0x1e01, 0x1e01},
-	{__uni_decomp_data_0x105, 0x105},
-	{__uni_decomp_data_0x1e03, 0x1e03},
-	{__uni_decomp_data_0x1e05, 0x1e05},
-	{__uni_decomp_data_0x1e07, 0x1e07},
-	{__uni_decomp_data_0x107, 0x107},
-	{__uni_decomp_data_0x109, 0x109},
-	{__uni_decomp_data_0x10b, 0x10b},
-	{__uni_decomp_data_0x10d, 0x10d},
-	{__uni_decomp_data_0xe7, 0xe7},
-	{__uni_decomp_data_0x1e0b, 0x1e0b},
-	{__uni_decomp_data_0x10f, 0x10f},
-	{__uni_decomp_data_0x1e0d, 0x1e0d},
-	{__uni_decomp_data_0x1e11, 0x1e11},
-	{__uni_decomp_data_0x1e13, 0x1e13},
-	{__uni_decomp_data_0x1e0f, 0x1e0f},
-	{__uni_decomp_data_0xe8, 0xe8},
-	{__uni_decomp_data_0xe9, 0xe9},
-	{__uni_decomp_data_0xea, 0xea},
-	{__uni_decomp_data_0x1ebd, 0x1ebd},
-	{__uni_decomp_data_0x113, 0x113},
-	{__uni_decomp_data_0x115, 0x115},
-	{__uni_decomp_data_0x117, 0x117},
-	{__uni_decomp_data_0xeb, 0xeb},
-	{__uni_decomp_data_0x1ebb, 0x1ebb},
-	{__uni_decomp_data_0x11b, 0x11b},
-	{__uni_decomp_data_0x205, 0x205},
-	{__uni_decomp_data_0x207, 0x207},
-	{__uni_decomp_data_0x1eb9, 0x1eb9},
-	{__uni_decomp_data_0x229, 0x229},
-	{__uni_decomp_data_0x119, 0x119},
-	{__uni_decomp_data_0x1e19, 0x1e19},
-	{__uni_decomp_data_0x1e1b, 0x1e1b},
-	{__uni_decomp_data_0x1e1f, 0x1e1f},
-	{__uni_decomp_data_0x1f5, 0x1f5},
-	{__uni_decomp_data_0x11d, 0x11d},
-	{__uni_decomp_data_0x1e21, 0x1e21},
-	{__uni_decomp_data_0x11f, 0x11f},
-	{__uni_decomp_data_0x121, 0x121},
-	{__uni_decomp_data_0x1e7, 0x1e7},
-	{__uni_decomp_data_0x123, 0x123},
-	{__uni_decomp_data_0x125, 0x125},
-	{__uni_decomp_data_0x1e23, 0x1e23},
-	{__uni_decomp_data_0x1e27, 0x1e27},
-	{__uni_decomp_data_0x21f, 0x21f},
-	{__uni_decomp_data_0x1e25, 0x1e25},
-	{__uni_decomp_data_0x1e29, 0x1e29},
-	{__uni_decomp_data_0x1e2b, 0x1e2b},
-	{__uni_decomp_data_0x1e96, 0x1e96},
-	{__uni_decomp_data_0xec, 0xec},
-	{__uni_decomp_data_0xed, 0xed},
-	{__uni_decomp_data_0xee, 0xee},
-	{__uni_decomp_data_0x129, 0x129},
-	{__uni_decomp_data_0x12b, 0x12b},
-	{__uni_decomp_data_0x12d, 0x12d},
-	{__uni_decomp_data_0xef, 0xef},
-	{__uni_decomp_data_0x1ec9, 0x1ec9},
-	{__uni_decomp_data_0x1d0, 0x1d0},
-	{__uni_decomp_data_0x209, 0x209},
-	{__uni_decomp_data_0x20b, 0x20b},
-	{__uni_decomp_data_0x1ecb, 0x1ecb},
-	{__uni_decomp_data_0x12f, 0x12f},
-	{__uni_decomp_data_0x1e2d, 0x1e2d},
-	{__uni_decomp_data_0x135, 0x135},
-	{__uni_decomp_data_0x1f0, 0x1f0},
-	{__uni_decomp_data_0x1e31, 0x1e31},
-	{__uni_decomp_data_0x1e9, 0x1e9},
-	{__uni_decomp_data_0x1e33, 0x1e33},
-	{__uni_decomp_data_0x137, 0x137},
-	{__uni_decomp_data_0x1e35, 0x1e35},
-	{__uni_decomp_data_0x13a, 0x13a},
-	{__uni_decomp_data_0x13e, 0x13e},
-	{__uni_decomp_data_0x1e37, 0x1e37},
-	{__uni_decomp_data_0x13c, 0x13c},
-	{__uni_decomp_data_0x1e3d, 0x1e3d},
-	{__uni_decomp_data_0x1e3b, 0x1e3b},
-	{__uni_decomp_data_0x1e3f, 0x1e3f},
-	{__uni_decomp_data_0x1e41, 0x1e41},
-	{__uni_decomp_data_0x1e43, 0x1e43},
-	{__uni_decomp_data_0x1f9, 0x1f9},
-	{__uni_decomp_data_0x144, 0x144},
-	{__uni_decomp_data_0xf1, 0xf1},
-	{__uni_decomp_data_0x1e45, 0x1e45},
-	{__uni_decomp_data_0x148, 0x148},
-	{__uni_decomp_data_0x1e47, 0x1e47},
-	{__uni_decomp_data_0x146, 0x146},
-	{__uni_decomp_data_0x1e4b, 0x1e4b},
-	{__uni_decomp_data_0x1e49, 0x1e49},
-	{__uni_decomp_data_0xf2, 0xf2},
-	{__uni_decomp_data_0xf3, 0xf3},
-	{__uni_decomp_data_0xf4, 0xf4},
-	{__uni_decomp_data_0xf5, 0xf5},
-	{__uni_decomp_data_0x14d, 0x14d},
-	{__uni_decomp_data_0x14f, 0x14f},
-	{__uni_decomp_data_0x22f, 0x22f},
-	{__uni_decomp_data_0xf6, 0xf6},
-	{__uni_decomp_data_0x1ecf, 0x1ecf},
-	{__uni_decomp_data_0x151, 0x151},
-	{__uni_decomp_data_0x1d2, 0x1d2},
-	{__uni_decomp_data_0x20d, 0x20d},
-	{__uni_decomp_data_0x20f, 0x20f},
-	{__uni_decomp_data_0x1a1, 0x1a1},
-	{__uni_decomp_data_0x1ecd, 0x1ecd},
-	{__uni_decomp_data_0x1eb, 0x1eb},
-	{__uni_decomp_data_0x1e55, 0x1e55},
-	{__uni_decomp_data_0x1e57, 0x1e57},
-	{__uni_decomp_data_0x155, 0x155},
-	{__uni_decomp_data_0x1e59, 0x1e59},
-	{__uni_decomp_data_0x159, 0x159},
-	{__uni_decomp_data_0x211, 0x211},
-	{__uni_decomp_data_0x213, 0x213},
-	{__uni_decomp_data_0x1e5b, 0x1e5b},
-	{__uni_decomp_data_0x157, 0x157},
-	{__uni_decomp_data_0x1e5f, 0x1e5f},
-	{__uni_decomp_data_0x15b, 0x15b},
-	{__uni_decomp_data_0x15d, 0x15d},
-	{__uni_decomp_data_0x1e61, 0x1e61},
-	{__uni_decomp_data_0x161, 0x161},
-	{__uni_decomp_data_0x1e63, 0x1e63},
-	{__uni_decomp_data_0x219, 0x219},
-	{__uni_decomp_data_0x15f, 0x15f},
-	{__uni_decomp_data_0x1e6b, 0x1e6b},
-	{__uni_decomp_data_0x1e97, 0x1e97},
-	{__uni_decomp_data_0x165, 0x165},
-	{__uni_decomp_data_0x1e6d, 0x1e6d},
-	{__uni_decomp_data_0x21b, 0x21b},
-	{__uni_decomp_data_0x163, 0x163},
-	{__uni_decomp_data_0x1e71, 0x1e71},
-	{__uni_decomp_data_0x1e6f, 0x1e6f},
-	{__uni_decomp_data_0xf9, 0xf9},
-	{__uni_decomp_data_0xfa, 0xfa},
-	{__uni_decomp_data_0xfb, 0xfb},
-	{__uni_decomp_data_0x169, 0x169},
-	{__uni_decomp_data_0x16b, 0x16b},
-	{__uni_decomp_data_0x16d, 0x16d},
-	{__uni_decomp_data_0xfc, 0xfc},
-	{__uni_decomp_data_0x1ee7, 0x1ee7},
-	{__uni_decomp_data_0x16f, 0x16f},
-	{__uni_decomp_data_0x171, 0x171},
-	{__uni_decomp_data_0x1d4, 0x1d4},
-	{__uni_decomp_data_0x215, 0x215},
-	{__uni_decomp_data_0x217, 0x217},
-	{__uni_decomp_data_0x1b0, 0x1b0},
-	{__uni_decomp_data_0x1ee5, 0x1ee5},
-	{__uni_decomp_data_0x1e73, 0x1e73},
-	{__uni_decomp_data_0x173, 0x173},
-	{__uni_decomp_data_0x1e77, 0x1e77},
-	{__uni_decomp_data_0x1e75, 0x1e75},
-	{__uni_decomp_data_0x1e7d, 0x1e7d},
-	{__uni_decomp_data_0x1e7f, 0x1e7f},
-	{__uni_decomp_data_0x1e81, 0x1e81},
-	{__uni_decomp_data_0x1e83, 0x1e83},
-	{__uni_decomp_data_0x175, 0x175},
-	{__uni_decomp_data_0x1e87, 0x1e87},
-	{__uni_decomp_data_0x1e85, 0x1e85},
-	{__uni_decomp_data_0x1e98, 0x1e98},
-	{__uni_decomp_data_0x1e89, 0x1e89},
-	{__uni_decomp_data_0x1e8b, 0x1e8b},
-	{__uni_decomp_data_0x1e8d, 0x1e8d},
-	{__uni_decomp_data_0x1ef3, 0x1ef3},
-	{__uni_decomp_data_0xfd, 0xfd},
-	{__uni_decomp_data_0x177, 0x177},
-	{__uni_decomp_data_0x1ef9, 0x1ef9},
-	{__uni_decomp_data_0x233, 0x233},
-	{__uni_decomp_data_0x1e8f, 0x1e8f},
-	{__uni_decomp_data_0xff, 0xff},
-	{__uni_decomp_data_0x1ef7, 0x1ef7},
-	{__uni_decomp_data_0x1e99, 0x1e99},
-	{__uni_decomp_data_0x1ef5, 0x1ef5},
-	{__uni_decomp_data_0x17a, 0x17a},
-	{__uni_decomp_data_0x1e91, 0x1e91},
-	{__uni_decomp_data_0x17c, 0x17c},
-	{__uni_decomp_data_0x17e, 0x17e},
-	{__uni_decomp_data_0x1e93, 0x1e93},
-	{__uni_decomp_data_0x1e95, 0x1e95},
-	{__uni_decomp_data_0x1fed, 0x1fed},
-	{__uni_decomp_data_0x385, 0x385},
-	{__uni_decomp_data_0x1fc1, 0x1fc1},
-	{__uni_decomp_data_0x1ea6, 0x1ea6},
-	{__uni_decomp_data_0x1ea4, 0x1ea4},
-	{__uni_decomp_data_0x1eaa, 0x1eaa},
-	{__uni_decomp_data_0x1ea8, 0x1ea8},
-	{__uni_decomp_data_0x1de, 0x1de},
-	{__uni_decomp_data_0x1fa, 0x1fa},
-	{__uni_decomp_data_0x1fc, 0x1fc},
-	{__uni_decomp_data_0x1e2, 0x1e2},
-	{__uni_decomp_data_0x1e08, 0x1e08},
-	{__uni_decomp_data_0x1ec0, 0x1ec0},
-	{__uni_decomp_data_0x1ebe, 0x1ebe},
-	{__uni_decomp_data_0x1ec4, 0x1ec4},
-	{__uni_decomp_data_0x1ec2, 0x1ec2},
-	{__uni_decomp_data_0x1e2e, 0x1e2e},
-	{__uni_decomp_data_0x1ed2, 0x1ed2},
-	{__uni_decomp_data_0x1ed0, 0x1ed0},
-	{__uni_decomp_data_0x1ed6, 0x1ed6},
-	{__uni_decomp_data_0x1ed4, 0x1ed4},
-	{__uni_decomp_data_0x1e4c, 0x1e4c},
-	{__uni_decomp_data_0x22c, 0x22c},
-	{__uni_decomp_data_0x1e4e, 0x1e4e},
-	{__uni_decomp_data_0x22a, 0x22a},
-	{__uni_decomp_data_0x1fe, 0x1fe},
-	{__uni_decomp_data_0x1db, 0x1db},
-	{__uni_decomp_data_0x1d7, 0x1d7},
-	{__uni_decomp_data_0x1d5, 0x1d5},
-	{__uni_decomp_data_0x1d9, 0x1d9},
-	{__uni_decomp_data_0x1ea7, 0x1ea7},
-	{__uni_decomp_data_0x1ea5, 0x1ea5},
-	{__uni_decomp_data_0x1eab, 0x1eab},
-	{__uni_decomp_data_0x1ea9, 0x1ea9},
-	{__uni_decomp_data_0x1df, 0x1df},
-	{__uni_decomp_data_0x1fb, 0x1fb},
-	{__uni_decomp_data_0x1fd, 0x1fd},
-	{__uni_decomp_data_0x1e3, 0x1e3},
-	{__uni_decomp_data_0x1e09, 0x1e09},
-	{__uni_decomp_data_0x1ec1, 0x1ec1},
-	{__uni_decomp_data_0x1ebf, 0x1ebf},
-	{__uni_decomp_data_0x1ec5, 0x1ec5},
-	{__uni_decomp_data_0x1ec3, 0x1ec3},
-	{__uni_decomp_data_0x1e2f, 0x1e2f},
-	{__uni_decomp_data_0x1ed3, 0x1ed3},
-	{__uni_decomp_data_0x1ed1, 0x1ed1},
-	{__uni_decomp_data_0x1ed7, 0x1ed7},
-	{__uni_decomp_data_0x1ed5, 0x1ed5},
-	{__uni_decomp_data_0x1e4d, 0x1e4d},
-	{__uni_decomp_data_0x22d, 0x22d},
-	{__uni_decomp_data_0x1e4f, 0x1e4f},
-	{__uni_decomp_data_0x22b, 0x22b},
-	{__uni_decomp_data_0x1ff, 0x1ff},
-	{__uni_decomp_data_0x1dc, 0x1dc},
-	{__uni_decomp_data_0x1d8, 0x1d8},
-	{__uni_decomp_data_0x1d6, 0x1d6},
-	{__uni_decomp_data_0x1da, 0x1da},
-	{__uni_decomp_data_0x1eb0, 0x1eb0},
-	{__uni_decomp_data_0x1eae, 0x1eae},
-	{__uni_decomp_data_0x1eb4, 0x1eb4},
-	{__uni_decomp_data_0x1eb2, 0x1eb2},
-	{__uni_decomp_data_0x1eb1, 0x1eb1},
-	{__uni_decomp_data_0x1eaf, 0x1eaf},
-	{__uni_decomp_data_0x1eb5, 0x1eb5},
-	{__uni_decomp_data_0x1eb3, 0x1eb3},
-	{__uni_decomp_data_0x1e14, 0x1e14},
-	{__uni_decomp_data_0x1e16, 0x1e16},
-	{__uni_decomp_data_0x1e15, 0x1e15},
-	{__uni_decomp_data_0x1e17, 0x1e17},
-	{__uni_decomp_data_0x1e50, 0x1e50},
-	{__uni_decomp_data_0x1e52, 0x1e52},
-	{__uni_decomp_data_0x1e51, 0x1e51},
-	{__uni_decomp_data_0x1e53, 0x1e53},
-	{__uni_decomp_data_0x1e64, 0x1e64},
-	{__uni_decomp_data_0x1e65, 0x1e65},
-	{__uni_decomp_data_0x1e66, 0x1e66},
-	{__uni_decomp_data_0x1e67, 0x1e67},
-	{__uni_decomp_data_0x1e78, 0x1e78},
-	{__uni_decomp_data_0x1e79, 0x1e79},
-	{__uni_decomp_data_0x1e7a, 0x1e7a},
-	{__uni_decomp_data_0x1e7b, 0x1e7b},
-	{__uni_decomp_data_0x1e9b, 0x1e9b},
-	{__uni_decomp_data_0x1edc, 0x1edc},
-	{__uni_decomp_data_0x1eda, 0x1eda},
-	{__uni_decomp_data_0x1ee0, 0x1ee0},
-	{__uni_decomp_data_0x1ede, 0x1ede},
-	{__uni_decomp_data_0x1ee2, 0x1ee2},
-	{__uni_decomp_data_0x1edd, 0x1edd},
-	{__uni_decomp_data_0x1edb, 0x1edb},
-	{__uni_decomp_data_0x1ee1, 0x1ee1},
-	{__uni_decomp_data_0x1edf, 0x1edf},
-	{__uni_decomp_data_0x1ee3, 0x1ee3},
-	{__uni_decomp_data_0x1eea, 0x1eea},
-	{__uni_decomp_data_0x1ee8, 0x1ee8},
-	{__uni_decomp_data_0x1eee, 0x1eee},
-	{__uni_decomp_data_0x1eec, 0x1eec},
-	{__uni_decomp_data_0x1ef0, 0x1ef0},
-	{__uni_decomp_data_0x1eeb, 0x1eeb},
-	{__uni_decomp_data_0x1ee9, 0x1ee9},
-	{__uni_decomp_data_0x1eef, 0x1eef},
-	{__uni_decomp_data_0x1eed, 0x1eed},
-	{__uni_decomp_data_0x1ef1, 0x1ef1},
-	{__uni_decomp_data_0x1ee, 0x1ee},
-	{__uni_decomp_data_0x1ec, 0x1ec},
-	{__uni_decomp_data_0x1ed, 0x1ed},
-	{__uni_decomp_data_0x1e0, 0x1e0},
-	{__uni_decomp_data_0x1e1, 0x1e1},
-	{__uni_decomp_data_0x1e1c, 0x1e1c},
-	{__uni_decomp_data_0x1e1d, 0x1e1d},
-	{__uni_decomp_data_0x230, 0x230},
-	{__uni_decomp_data_0x231, 0x231},
-	{__uni_decomp_data_0x1ef, 0x1ef},
-	{__uni_decomp_data_0x1fba, 0x1fba},
-	{__uni_decomp_data_0x386, 0x386},
-	{__uni_decomp_data_0x1fb9, 0x1fb9},
-	{__uni_decomp_data_0x1fb8, 0x1fb8},
-	{__uni_decomp_data_0x1f08, 0x1f08},
-	{__uni_decomp_data_0x1f09, 0x1f09},
-	{__uni_decomp_data_0x1fbc, 0x1fbc},
-	{__uni_decomp_data_0x1fc8, 0x1fc8},
-	{__uni_decomp_data_0x388, 0x388},
-	{__uni_decomp_data_0x1f18, 0x1f18},
-	{__uni_decomp_data_0x1f19, 0x1f19},
-	{__uni_decomp_data_0x1fca, 0x1fca},
-	{__uni_decomp_data_0x389, 0x389},
-	{__uni_decomp_data_0x1f28, 0x1f28},
-	{__uni_decomp_data_0x1f29, 0x1f29},
-	{__uni_decomp_data_0x1fcc, 0x1fcc},
-	{__uni_decomp_data_0x1fda, 0x1fda},
-	{__uni_decomp_data_0x38a, 0x38a},
-	{__uni_decomp_data_0x1fd9, 0x1fd9},
-	{__uni_decomp_data_0x1fd8, 0x1fd8},
-	{__uni_decomp_data_0x3aa, 0x3aa},
-	{__uni_decomp_data_0x1f38, 0x1f38},
-	{__uni_decomp_data_0x1f39, 0x1f39},
-	{__uni_decomp_data_0x1ff8, 0x1ff8},
-	{__uni_decomp_data_0x38c, 0x38c},
-	{__uni_decomp_data_0x1f48, 0x1f48},
-	{__uni_decomp_data_0x1f49, 0x1f49},
-	{__uni_decomp_data_0x1fec, 0x1fec},
-	{__uni_decomp_data_0x1fea, 0x1fea},
-	{__uni_decomp_data_0x38e, 0x38e},
-	{__uni_decomp_data_0x1fe9, 0x1fe9},
-	{__uni_decomp_data_0x1fe8, 0x1fe8},
-	{__uni_decomp_data_0x3ab, 0x3ab},
-	{__uni_decomp_data_0x1f59, 0x1f59},
-	{__uni_decomp_data_0x1ffa, 0x1ffa},
-	{__uni_decomp_data_0x38f, 0x38f},
-	{__uni_decomp_data_0x1f68, 0x1f68},
-	{__uni_decomp_data_0x1f69, 0x1f69},
-	{__uni_decomp_data_0x1ffc, 0x1ffc},
-	{__uni_decomp_data_0x1fb4, 0x1fb4},
-	{__uni_decomp_data_0x1fc4, 0x1fc4},
-	{__uni_decomp_data_0x1f70, 0x1f70},
-	{__uni_decomp_data_0x3ac, 0x3ac},
-	{__uni_decomp_data_0x1fb1, 0x1fb1},
-	{__uni_decomp_data_0x1fb0, 0x1fb0},
-	{__uni_decomp_data_0x1f00, 0x1f00},
-	{__uni_decomp_data_0x1f01, 0x1f01},
-	{__uni_decomp_data_0x1fb6, 0x1fb6},
-	{__uni_decomp_data_0x1fb3, 0x1fb3},
-	{__uni_decomp_data_0x1f72, 0x1f72},
-	{__uni_decomp_data_0x3ad, 0x3ad},
-	{__uni_decomp_data_0x1f10, 0x1f10},
-	{__uni_decomp_data_0x1f11, 0x1f11},
-	{__uni_decomp_data_0x1f74, 0x1f74},
-	{__uni_decomp_data_0x3ae, 0x3ae},
-	{__uni_decomp_data_0x1f20, 0x1f20},
-	{__uni_decomp_data_0x1f21, 0x1f21},
-	{__uni_decomp_data_0x1fc6, 0x1fc6},
-	{__uni_decomp_data_0x1fc3, 0x1fc3},
-	{__uni_decomp_data_0x1f76, 0x1f76},
-	{__uni_decomp_data_0x3af, 0x3af},
-	{__uni_decomp_data_0x1fd1, 0x1fd1},
-	{__uni_decomp_data_0x1fd0, 0x1fd0},
-	{__uni_decomp_data_0x3ca, 0x3ca},
-	{__uni_decomp_data_0x1f30, 0x1f30},
-	{__uni_decomp_data_0x1f31, 0x1f31},
-	{__uni_decomp_data_0x1fd6, 0x1fd6},
-	{__uni_decomp_data_0x1f78, 0x1f78},
-	{__uni_decomp_data_0x3cc, 0x3cc},
-	{__uni_decomp_data_0x1f40, 0x1f40},
-	{__uni_decomp_data_0x1f41, 0x1f41},
-	{__uni_decomp_data_0x1fe4, 0x1fe4},
-	{__uni_decomp_data_0x1fe5, 0x1fe5},
-	{__uni_decomp_data_0x1f7a, 0x1f7a},
-	{__uni_decomp_data_0x3cd, 0x3cd},
-	{__uni_decomp_data_0x1fe1, 0x1fe1},
-	{__uni_decomp_data_0x1fe0, 0x1fe0},
-	{__uni_decomp_data_0x3cb, 0x3cb},
-	{__uni_decomp_data_0x1f50, 0x1f50},
-	{__uni_decomp_data_0x1f51, 0x1f51},
-	{__uni_decomp_data_0x1fe6, 0x1fe6},
-	{__uni_decomp_data_0x1f7c, 0x1f7c},
-	{__uni_decomp_data_0x3ce, 0x3ce},
-	{__uni_decomp_data_0x1f60, 0x1f60},
-	{__uni_decomp_data_0x1f61, 0x1f61},
-	{__uni_decomp_data_0x1ff6, 0x1ff6},
-	{__uni_decomp_data_0x1ff3, 0x1ff3},
-	{__uni_decomp_data_0x1fd2, 0x1fd2},
-	{__uni_decomp_data_0x390, 0x390},
-	{__uni_decomp_data_0x1fd7, 0x1fd7},
-	{__uni_decomp_data_0x1fe2, 0x1fe2},
-	{__uni_decomp_data_0x3b0, 0x3b0},
-	{__uni_decomp_data_0x1fe7, 0x1fe7},
-	{__uni_decomp_data_0x1ff4, 0x1ff4},
-	{__uni_decomp_data_0x3d3, 0x3d3},
-	{__uni_decomp_data_0x3d4, 0x3d4},
-	{__uni_decomp_data_0x407, 0x407},
-	{__uni_decomp_data_0x4d0, 0x4d0},
-	{__uni_decomp_data_0x4d2, 0x4d2},
-	{__uni_decomp_data_0x403, 0x403},
-	{__uni_decomp_data_0x400, 0x400},
-	{__uni_decomp_data_0x4d6, 0x4d6},
-	{__uni_decomp_data_0x401, 0x401},
-	{__uni_decomp_data_0x4c1, 0x4c1},
-	{__uni_decomp_data_0x4dc, 0x4dc},
-	{__uni_decomp_data_0x4de, 0x4de},
-	{__uni_decomp_data_0x40d, 0x40d},
-	{__uni_decomp_data_0x4e2, 0x4e2},
-	{__uni_decomp_data_0x419, 0x419},
-	{__uni_decomp_data_0x4e4, 0x4e4},
-	{__uni_decomp_data_0x40c, 0x40c},
-	{__uni_decomp_data_0x4e6, 0x4e6},
-	{__uni_decomp_data_0x4ee, 0x4ee},
-	{__uni_decomp_data_0x40e, 0x40e},
-	{__uni_decomp_data_0x4f0, 0x4f0},
-	{__uni_decomp_data_0x4f2, 0x4f2},
-	{__uni_decomp_data_0x4f4, 0x4f4},
-	{__uni_decomp_data_0x4f8, 0x4f8},
-	{__uni_decomp_data_0x4ec, 0x4ec},
-	{__uni_decomp_data_0x4d1, 0x4d1},
-	{__uni_decomp_data_0x4d3, 0x4d3},
-	{__uni_decomp_data_0x453, 0x453},
-	{__uni_decomp_data_0x450, 0x450},
-	{__uni_decomp_data_0x4d7, 0x4d7},
-	{__uni_decomp_data_0x451, 0x451},
-	{__uni_decomp_data_0x4c2, 0x4c2},
-	{__uni_decomp_data_0x4dd, 0x4dd},
-	{__uni_decomp_data_0x4df, 0x4df},
-	{__uni_decomp_data_0x45d, 0x45d},
-	{__uni_decomp_data_0x4e3, 0x4e3},
-	{__uni_decomp_data_0x439, 0x439},
-	{__uni_decomp_data_0x4e5, 0x4e5},
-	{__uni_decomp_data_0x45c, 0x45c},
-	{__uni_decomp_data_0x4e7, 0x4e7},
-	{__uni_decomp_data_0x4ef, 0x4ef},
-	{__uni_decomp_data_0x45e, 0x45e},
-	{__uni_decomp_data_0x4f1, 0x4f1},
-	{__uni_decomp_data_0x4f3, 0x4f3},
-	{__uni_decomp_data_0x4f5, 0x4f5},
-	{__uni_decomp_data_0x4f9, 0x4f9},
-	{__uni_decomp_data_0x4ed, 0x4ed},
-	{__uni_decomp_data_0x457, 0x457},
-	{__uni_decomp_data_0x476, 0x476},
-	{__uni_decomp_data_0x477, 0x477},
-	{__uni_decomp_data_0x4da, 0x4da},
-	{__uni_decomp_data_0x4db, 0x4db},
-	{__uni_decomp_data_0x4ea, 0x4ea},
-	{__uni_decomp_data_0x4eb, 0x4eb},
-	{__uni_decomp_data_0x622, 0x622},
-	{__uni_decomp_data_0x623, 0x623},
-	{__uni_decomp_data_0x625, 0x625},
-	{__uni_decomp_data_0x624, 0x624},
-	{__uni_decomp_data_0x626, 0x626},
-	{__uni_decomp_data_0x6c2, 0x6c2},
-	{__uni_decomp_data_0x6d3, 0x6d3},
-	{__uni_decomp_data_0x6c0, 0x6c0},
-	{__uni_decomp_data_0x929, 0x929},
-	{__uni_decomp_data_0x931, 0x931},
-	{__uni_decomp_data_0x934, 0x934},
-	{__uni_decomp_data_0x9cb, 0x9cb},
-	{__uni_decomp_data_0x9cc, 0x9cc},
-	{__uni_decomp_data_0xb4b, 0xb4b},
-	{__uni_decomp_data_0xb48, 0xb48},
-	{__uni_decomp_data_0xb4c, 0xb4c},
-	{__uni_decomp_data_0xb94, 0xb94},
-	{__uni_decomp_data_0xbca, 0xbca},
-	{__uni_decomp_data_0xbcc, 0xbcc},
-	{__uni_decomp_data_0xbcb, 0xbcb},
-	{__uni_decomp_data_0xc48, 0xc48},
-	{__uni_decomp_data_0xcc0, 0xcc0},
-	{__uni_decomp_data_0xcca, 0xcca},
-	{__uni_decomp_data_0xcc7, 0xcc7},
-	{__uni_decomp_data_0xcc8, 0xcc8},
-	{__uni_decomp_data_0xccb, 0xccb},
-	{__uni_decomp_data_0xd4a, 0xd4a},
-	{__uni_decomp_data_0xd4c, 0xd4c},
-	{__uni_decomp_data_0xd4b, 0xd4b},
-	{__uni_decomp_data_0xdda, 0xdda},
-	{__uni_decomp_data_0xddc, 0xddc},
-	{__uni_decomp_data_0xdde, 0xdde},
-	{__uni_decomp_data_0xddd, 0xddd},
-	{__uni_decomp_data_0x1026, 0x1026},
-	{__uni_decomp_data_0x1b06, 0x1b06},
-	{__uni_decomp_data_0x1b08, 0x1b08},
-	{__uni_decomp_data_0x1b0a, 0x1b0a},
-	{__uni_decomp_data_0x1b0c, 0x1b0c},
-	{__uni_decomp_data_0x1b0e, 0x1b0e},
-	{__uni_decomp_data_0x1b12, 0x1b12},
-	{__uni_decomp_data_0x1b3b, 0x1b3b},
-	{__uni_decomp_data_0x1b3d, 0x1b3d},
-	{__uni_decomp_data_0x1b40, 0x1b40},
-	{__uni_decomp_data_0x1b41, 0x1b41},
-	{__uni_decomp_data_0x1b43, 0x1b43},
-	{__uni_decomp_data_0x1e38, 0x1e38},
-	{__uni_decomp_data_0x1e39, 0x1e39},
-	{__uni_decomp_data_0x1e5c, 0x1e5c},
-	{__uni_decomp_data_0x1e5d, 0x1e5d},
-	{__uni_decomp_data_0x1e68, 0x1e68},
-	{__uni_decomp_data_0x1e69, 0x1e69},
-	{__uni_decomp_data_0x1eac, 0x1eac},
-	{__uni_decomp_data_0x1eb6, 0x1eb6},
-	{__uni_decomp_data_0x1ead, 0x1ead},
-	{__uni_decomp_data_0x1eb7, 0x1eb7},
-	{__uni_decomp_data_0x1ec6, 0x1ec6},
-	{__uni_decomp_data_0x1ec7, 0x1ec7},
-	{__uni_decomp_data_0x1ed8, 0x1ed8},
-	{__uni_decomp_data_0x1ed9, 0x1ed9},
-	{__uni_decomp_data_0x1f02, 0x1f02},
-	{__uni_decomp_data_0x1f04, 0x1f04},
-	{__uni_decomp_data_0x1f06, 0x1f06},
-	{__uni_decomp_data_0x1f80, 0x1f80},
-	{__uni_decomp_data_0x1f03, 0x1f03},
-	{__uni_decomp_data_0x1f05, 0x1f05},
-	{__uni_decomp_data_0x1f07, 0x1f07},
-	{__uni_decomp_data_0x1f81, 0x1f81},
-	{__uni_decomp_data_0x1f82, 0x1f82},
-	{__uni_decomp_data_0x1f83, 0x1f83},
-	{__uni_decomp_data_0x1f84, 0x1f84},
-	{__uni_decomp_data_0x1f85, 0x1f85},
-	{__uni_decomp_data_0x1f86, 0x1f86},
-	{__uni_decomp_data_0x1f87, 0x1f87},
-	{__uni_decomp_data_0x1f0a, 0x1f0a},
-	{__uni_decomp_data_0x1f0c, 0x1f0c},
-	{__uni_decomp_data_0x1f0e, 0x1f0e},
-	{__uni_decomp_data_0x1f88, 0x1f88},
-	{__uni_decomp_data_0x1f0b, 0x1f0b},
-	{__uni_decomp_data_0x1f0d, 0x1f0d},
-	{__uni_decomp_data_0x1f0f, 0x1f0f},
-	{__uni_decomp_data_0x1f89, 0x1f89},
-	{__uni_decomp_data_0x1f8a, 0x1f8a},
-	{__uni_decomp_data_0x1f8b, 0x1f8b},
-	{__uni_decomp_data_0x1f8c, 0x1f8c},
-	{__uni_decomp_data_0x1f8d, 0x1f8d},
-	{__uni_decomp_data_0x1f8e, 0x1f8e},
-	{__uni_decomp_data_0x1f8f, 0x1f8f},
-	{__uni_decomp_data_0x1f12, 0x1f12},
-	{__uni_decomp_data_0x1f14, 0x1f14},
-	{__uni_decomp_data_0x1f13, 0x1f13},
-	{__uni_decomp_data_0x1f15, 0x1f15},
-	{__uni_decomp_data_0x1f1a, 0x1f1a},
-	{__uni_decomp_data_0x1f1c, 0x1f1c},
-	{__uni_decomp_data_0x1f1b, 0x1f1b},
-	{__uni_decomp_data_0x1f1d, 0x1f1d},
-	{__uni_decomp_data_0x1f22, 0x1f22},
-	{__uni_decomp_data_0x1f24, 0x1f24},
-	{__uni_decomp_data_0x1f26, 0x1f26},
-	{__uni_decomp_data_0x1f90, 0x1f90},
-	{__uni_decomp_data_0x1f23, 0x1f23},
-	{__uni_decomp_data_0x1f25, 0x1f25},
-	{__uni_decomp_data_0x1f27, 0x1f27},
-	{__uni_decomp_data_0x1f91, 0x1f91},
-	{__uni_decomp_data_0x1f92, 0x1f92},
-	{__uni_decomp_data_0x1f93, 0x1f93},
-	{__uni_decomp_data_0x1f94, 0x1f94},
-	{__uni_decomp_data_0x1f95, 0x1f95},
-	{__uni_decomp_data_0x1f96, 0x1f96},
-	{__uni_decomp_data_0x1f97, 0x1f97},
-	{__uni_decomp_data_0x1f2a, 0x1f2a},
-	{__uni_decomp_data_0x1f2c, 0x1f2c},
-	{__uni_decomp_data_0x1f2e, 0x1f2e},
-	{__uni_decomp_data_0x1f98, 0x1f98},
-	{__uni_decomp_data_0x1f2b, 0x1f2b},
-	{__uni_decomp_data_0x1f2d, 0x1f2d},
-	{__uni_decomp_data_0x1f2f, 0x1f2f},
-	{__uni_decomp_data_0x1f99, 0x1f99},
-	{__uni_decomp_data_0x1f9a, 0x1f9a},
-	{__uni_decomp_data_0x1f9b, 0x1f9b},
-	{__uni_decomp_data_0x1f9c, 0x1f9c},
-	{__uni_decomp_data_0x1f9d, 0x1f9d},
-	{__uni_decomp_data_0x1f9e, 0x1f9e},
-	{__uni_decomp_data_0x1f9f, 0x1f9f},
-	{__uni_decomp_data_0x1f32, 0x1f32},
-	{__uni_decomp_data_0x1f34, 0x1f34},
-	{__uni_decomp_data_0x1f36, 0x1f36},
-	{__uni_decomp_data_0x1f33, 0x1f33},
-	{__uni_decomp_data_0x1f35, 0x1f35},
-	{__uni_decomp_data_0x1f37, 0x1f37},
-	{__uni_decomp_data_0x1f3a, 0x1f3a},
-	{__uni_decomp_data_0x1f3c, 0x1f3c},
-	{__uni_decomp_data_0x1f3e, 0x1f3e},
-	{__uni_decomp_data_0x1f3b, 0x1f3b},
-	{__uni_decomp_data_0x1f3d, 0x1f3d},
-	{__uni_decomp_data_0x1f3f, 0x1f3f},
-	{__uni_decomp_data_0x1f42, 0x1f42},
-	{__uni_decomp_data_0x1f44, 0x1f44},
-	{__uni_decomp_data_0x1f43, 0x1f43},
-	{__uni_decomp_data_0x1f45, 0x1f45},
-	{__uni_decomp_data_0x1f4a, 0x1f4a},
-	{__uni_decomp_data_0x1f4c, 0x1f4c},
-	{__uni_decomp_data_0x1f4b, 0x1f4b},
-	{__uni_decomp_data_0x1f4d, 0x1f4d},
-	{__uni_decomp_data_0x1f52, 0x1f52},
-	{__uni_decomp_data_0x1f54, 0x1f54},
-	{__uni_decomp_data_0x1f56, 0x1f56},
-	{__uni_decomp_data_0x1f53, 0x1f53},
-	{__uni_decomp_data_0x1f55, 0x1f55},
-	{__uni_decomp_data_0x1f57, 0x1f57},
-	{__uni_decomp_data_0x1f5b, 0x1f5b},
-	{__uni_decomp_data_0x1f5d, 0x1f5d},
-	{__uni_decomp_data_0x1f5f, 0x1f5f},
-	{__uni_decomp_data_0x1f62, 0x1f62},
-	{__uni_decomp_data_0x1f64, 0x1f64},
-	{__uni_decomp_data_0x1f66, 0x1f66},
-	{__uni_decomp_data_0x1fa0, 0x1fa0},
-	{__uni_decomp_data_0x1f63, 0x1f63},
-	{__uni_decomp_data_0x1f65, 0x1f65},
-	{__uni_decomp_data_0x1f67, 0x1f67},
-	{__uni_decomp_data_0x1fa1, 0x1fa1},
-	{__uni_decomp_data_0x1fa2, 0x1fa2},
-	{__uni_decomp_data_0x1fa3, 0x1fa3},
-	{__uni_decomp_data_0x1fa4, 0x1fa4},
-	{__uni_decomp_data_0x1fa5, 0x1fa5},
-	{__uni_decomp_data_0x1fa6, 0x1fa6},
-	{__uni_decomp_data_0x1fa7, 0x1fa7},
-	{__uni_decomp_data_0x1f6a, 0x1f6a},
-	{__uni_decomp_data_0x1f6c, 0x1f6c},
-	{__uni_decomp_data_0x1f6e, 0x1f6e},
-	{__uni_decomp_data_0x1fa8, 0x1fa8},
-	{__uni_decomp_data_0x1f6b, 0x1f6b},
-	{__uni_decomp_data_0x1f6d, 0x1f6d},
-	{__uni_decomp_data_0x1f6f, 0x1f6f},
-	{__uni_decomp_data_0x1fa9, 0x1fa9},
-	{__uni_decomp_data_0x1faa, 0x1faa},
-	{__uni_decomp_data_0x1fab, 0x1fab},
-	{__uni_decomp_data_0x1fac, 0x1fac},
-	{__uni_decomp_data_0x1fad, 0x1fad},
-	{__uni_decomp_data_0x1fae, 0x1fae},
-	{__uni_decomp_data_0x1faf, 0x1faf},
-	{__uni_decomp_data_0x1fb2, 0x1fb2},
-	{__uni_decomp_data_0x1fc2, 0x1fc2},
-	{__uni_decomp_data_0x1ff2, 0x1ff2},
-	{__uni_decomp_data_0x1fb7, 0x1fb7},
-	{__uni_decomp_data_0x1fcd, 0x1fcd},
-	{__uni_decomp_data_0x1fce, 0x1fce},
-	{__uni_decomp_data_0x1fcf, 0x1fcf},
-	{__uni_decomp_data_0x1fc7, 0x1fc7},
-	{__uni_decomp_data_0x1ff7, 0x1ff7},
-	{__uni_decomp_data_0x1fdd, 0x1fdd},
-	{__uni_decomp_data_0x1fde, 0x1fde},
-	{__uni_decomp_data_0x1fdf, 0x1fdf},
-	{__uni_decomp_data_0x219a, 0x219a},
-	{__uni_decomp_data_0x219b, 0x219b},
-	{__uni_decomp_data_0x21ae, 0x21ae},
-	{__uni_decomp_data_0x21cd, 0x21cd},
-	{__uni_decomp_data_0x21cf, 0x21cf},
-	{__uni_decomp_data_0x21ce, 0x21ce},
-	{__uni_decomp_data_0x2204, 0x2204},
-	{__uni_decomp_data_0x2209, 0x2209},
-	{__uni_decomp_data_0x220c, 0x220c},
-	{__uni_decomp_data_0x2224, 0x2224},
-	{__uni_decomp_data_0x2226, 0x2226},
-	{__uni_decomp_data_0x2241, 0x2241},
-	{__uni_decomp_data_0x2244, 0x2244},
-	{__uni_decomp_data_0x2247, 0x2247},
-	{__uni_decomp_data_0x2249, 0x2249},
-	{__uni_decomp_data_0x226d, 0x226d},
-	{__uni_decomp_data_0x2262, 0x2262},
-	{__uni_decomp_data_0x2270, 0x2270},
-	{__uni_decomp_data_0x2271, 0x2271},
-	{__uni_decomp_data_0x2274, 0x2274},
-	{__uni_decomp_data_0x2275, 0x2275},
-	{__uni_decomp_data_0x2278, 0x2278},
-	{__uni_decomp_data_0x2279, 0x2279},
-	{__uni_decomp_data_0x2280, 0x2280},
-	{__uni_decomp_data_0x2281, 0x2281},
-	{__uni_decomp_data_0x22e0, 0x22e0},
-	{__uni_decomp_data_0x22e1, 0x22e1},
-	{__uni_decomp_data_0x2284, 0x2284},
-	{__uni_decomp_data_0x2285, 0x2285},
-	{__uni_decomp_data_0x2288, 0x2288},
-	{__uni_decomp_data_0x2289, 0x2289},
-	{__uni_decomp_data_0x22e2, 0x22e2},
-	{__uni_decomp_data_0x22e3, 0x22e3},
-	{__uni_decomp_data_0x22ac, 0x22ac},
-	{__uni_decomp_data_0x22ad, 0x22ad},
-	{__uni_decomp_data_0x22ae, 0x22ae},
-	{__uni_decomp_data_0x22af, 0x22af},
-	{__uni_decomp_data_0x22ea, 0x22ea},
-	{__uni_decomp_data_0x22eb, 0x22eb},
-	{__uni_decomp_data_0x22ec, 0x22ec},
-	{__uni_decomp_data_0x22ed, 0x22ed},
-	{__uni_decomp_data_0x3094, 0x3094},
-	{__uni_decomp_data_0x304c, 0x304c},
-	{__uni_decomp_data_0x304e, 0x304e},
-	{__uni_decomp_data_0x3050, 0x3050},
-	{__uni_decomp_data_0x3052, 0x3052},
-	{__uni_decomp_data_0x3054, 0x3054},
-	{__uni_decomp_data_0x3056, 0x3056},
-	{__uni_decomp_data_0x3058, 0x3058},
-	{__uni_decomp_data_0x305a, 0x305a},
-	{__uni_decomp_data_0x305c, 0x305c},
-	{__uni_decomp_data_0x305e, 0x305e},
-	{__uni_decomp_data_0x3060, 0x3060},
-	{__uni_decomp_data_0x3062, 0x3062},
-	{__uni_decomp_data_0x3065, 0x3065},
-	{__uni_decomp_data_0x3067, 0x3067},
-	{__uni_decomp_data_0x3069, 0x3069},
-	{__uni_decomp_data_0x3070, 0x3070},
-	{__uni_decomp_data_0x3071, 0x3071},
-	{__uni_decomp_data_0x3073, 0x3073},
-	{__uni_decomp_data_0x3074, 0x3074},
-	{__uni_decomp_data_0x3076, 0x3076},
-	{__uni_decomp_data_0x3077, 0x3077},
-	{__uni_decomp_data_0x3079, 0x3079},
-	{__uni_decomp_data_0x307a, 0x307a},
-	{__uni_decomp_data_0x307c, 0x307c},
-	{__uni_decomp_data_0x307d, 0x307d},
-	{__uni_decomp_data_0x309e, 0x309e},
-	{__uni_decomp_data_0x30f4, 0x30f4},
-	{__uni_decomp_data_0x30ac, 0x30ac},
-	{__uni_decomp_data_0x30ae, 0x30ae},
-	{__uni_decomp_data_0x30b0, 0x30b0},
-	{__uni_decomp_data_0x30b2, 0x30b2},
-	{__uni_decomp_data_0x30b4, 0x30b4},
-	{__uni_decomp_data_0x30b6, 0x30b6},
-	{__uni_decomp_data_0x30b8, 0x30b8},
-	{__uni_decomp_data_0x30ba, 0x30ba},
-	{__uni_decomp_data_0x30bc, 0x30bc},
-	{__uni_decomp_data_0x30be, 0x30be},
-	{__uni_decomp_data_0x30c0, 0x30c0},
-	{__uni_decomp_data_0x30c2, 0x30c2},
-	{__uni_decomp_data_0x30c5, 0x30c5},
-	{__uni_decomp_data_0x30c7, 0x30c7},
-	{__uni_decomp_data_0x30c9, 0x30c9},
-	{__uni_decomp_data_0x30d0, 0x30d0},
-	{__uni_decomp_data_0x30d1, 0x30d1},
-	{__uni_decomp_data_0x30d3, 0x30d3},
-	{__uni_decomp_data_0x30d4, 0x30d4},
-	{__uni_decomp_data_0x30d6, 0x30d6},
-	{__uni_decomp_data_0x30d7, 0x30d7},
-	{__uni_decomp_data_0x30d9, 0x30d9},
-	{__uni_decomp_data_0x30da, 0x30da},
-	{__uni_decomp_data_0x30dc, 0x30dc},
-	{__uni_decomp_data_0x30dd, 0x30dd},
-	{__uni_decomp_data_0x30f7, 0x30f7},
-	{__uni_decomp_data_0x30f8, 0x30f8},
-	{__uni_decomp_data_0x30f9, 0x30f9},
-	{__uni_decomp_data_0x30fa, 0x30fa},
-	{__uni_decomp_data_0x30fe, 0x30fe},
+	{__uni_full_decomp_data_0x226e, 0x226e},
+	{__uni_full_decomp_data_0x2260, 0x2260},
+	{__uni_full_decomp_data_0x226f, 0x226f},
+	{__uni_full_decomp_data_0xc0, 0xc0},
+	{__uni_full_decomp_data_0xc1, 0xc1},
+	{__uni_full_decomp_data_0xc2, 0xc2},
+	{__uni_full_decomp_data_0x1ea6, 0x1ea6},
+	{__uni_full_decomp_data_0x1ea4, 0x1ea4},
+	{__uni_full_decomp_data_0x1eaa, 0x1eaa},
+	{__uni_full_decomp_data_0x1ea8, 0x1ea8},
+	{__uni_full_decomp_data_0xc3, 0xc3},
+	{__uni_full_decomp_data_0x100, 0x100},
+	{__uni_full_decomp_data_0x102, 0x102},
+	{__uni_full_decomp_data_0x1eb0, 0x1eb0},
+	{__uni_full_decomp_data_0x1eae, 0x1eae},
+	{__uni_full_decomp_data_0x1eb4, 0x1eb4},
+	{__uni_full_decomp_data_0x1eb2, 0x1eb2},
+	{__uni_full_decomp_data_0x226, 0x226},
+	{__uni_full_decomp_data_0x1e0, 0x1e0},
+	{__uni_full_decomp_data_0xc4, 0xc4},
+	{__uni_full_decomp_data_0x1de, 0x1de},
+	{__uni_full_decomp_data_0x1ea2, 0x1ea2},
+	{__uni_full_decomp_data_0xc5, 0xc5},
+	{__uni_full_decomp_data_0x1fa, 0x1fa},
+	{__uni_full_decomp_data_0x1cd, 0x1cd},
+	{__uni_full_decomp_data_0x200, 0x200},
+	{__uni_full_decomp_data_0x202, 0x202},
+	{__uni_full_decomp_data_0x1ea0, 0x1ea0},
+	{__uni_full_decomp_data_0x1eac, 0x1eac},
+	{__uni_full_decomp_data_0x1eb6, 0x1eb6},
+	{__uni_full_decomp_data_0x1e00, 0x1e00},
+	{__uni_full_decomp_data_0x104, 0x104},
+	{__uni_full_decomp_data_0x1e02, 0x1e02},
+	{__uni_full_decomp_data_0x1e04, 0x1e04},
+	{__uni_full_decomp_data_0x1e06, 0x1e06},
+	{__uni_full_decomp_data_0x106, 0x106},
+	{__uni_full_decomp_data_0x108, 0x108},
+	{__uni_full_decomp_data_0x10a, 0x10a},
+	{__uni_full_decomp_data_0x10c, 0x10c},
+	{__uni_full_decomp_data_0xc7, 0xc7},
+	{__uni_full_decomp_data_0x1e08, 0x1e08},
+	{__uni_full_decomp_data_0x1e0a, 0x1e0a},
+	{__uni_full_decomp_data_0x10e, 0x10e},
+	{__uni_full_decomp_data_0x1e0c, 0x1e0c},
+	{__uni_full_decomp_data_0x1e10, 0x1e10},
+	{__uni_full_decomp_data_0x1e12, 0x1e12},
+	{__uni_full_decomp_data_0x1e0e, 0x1e0e},
+	{__uni_full_decomp_data_0xc8, 0xc8},
+	{__uni_full_decomp_data_0xc9, 0xc9},
+	{__uni_full_decomp_data_0xca, 0xca},
+	{__uni_full_decomp_data_0x1ec0, 0x1ec0},
+	{__uni_full_decomp_data_0x1ebe, 0x1ebe},
+	{__uni_full_decomp_data_0x1ec4, 0x1ec4},
+	{__uni_full_decomp_data_0x1ec2, 0x1ec2},
+	{__uni_full_decomp_data_0x1ebc, 0x1ebc},
+	{__uni_full_decomp_data_0x112, 0x112},
+	{__uni_full_decomp_data_0x1e14, 0x1e14},
+	{__uni_full_decomp_data_0x1e16, 0x1e16},
+	{__uni_full_decomp_data_0x114, 0x114},
+	{__uni_full_decomp_data_0x116, 0x116},
+	{__uni_full_decomp_data_0xcb, 0xcb},
+	{__uni_full_decomp_data_0x1eba, 0x1eba},
+	{__uni_full_decomp_data_0x11a, 0x11a},
+	{__uni_full_decomp_data_0x204, 0x204},
+	{__uni_full_decomp_data_0x206, 0x206},
+	{__uni_full_decomp_data_0x1eb8, 0x1eb8},
+	{__uni_full_decomp_data_0x1ec6, 0x1ec6},
+	{__uni_full_decomp_data_0x228, 0x228},
+	{__uni_full_decomp_data_0x1e1c, 0x1e1c},
+	{__uni_full_decomp_data_0x118, 0x118},
+	{__uni_full_decomp_data_0x1e18, 0x1e18},
+	{__uni_full_decomp_data_0x1e1a, 0x1e1a},
+	{__uni_full_decomp_data_0x1e1e, 0x1e1e},
+	{__uni_full_decomp_data_0x1f4, 0x1f4},
+	{__uni_full_decomp_data_0x11c, 0x11c},
+	{__uni_full_decomp_data_0x1e20, 0x1e20},
+	{__uni_full_decomp_data_0x11e, 0x11e},
+	{__uni_full_decomp_data_0x120, 0x120},
+	{__uni_full_decomp_data_0x1e6, 0x1e6},
+	{__uni_full_decomp_data_0x122, 0x122},
+	{__uni_full_decomp_data_0x124, 0x124},
+	{__uni_full_decomp_data_0x1e22, 0x1e22},
+	{__uni_full_decomp_data_0x1e26, 0x1e26},
+	{__uni_full_decomp_data_0x21e, 0x21e},
+	{__uni_full_decomp_data_0x1e24, 0x1e24},
+	{__uni_full_decomp_data_0x1e28, 0x1e28},
+	{__uni_full_decomp_data_0x1e2a, 0x1e2a},
+	{__uni_full_decomp_data_0xcc, 0xcc},
+	{__uni_full_decomp_data_0xcd, 0xcd},
+	{__uni_full_decomp_data_0xce, 0xce},
+	{__uni_full_decomp_data_0x128, 0x128},
+	{__uni_full_decomp_data_0x12a, 0x12a},
+	{__uni_full_decomp_data_0x12c, 0x12c},
+	{__uni_full_decomp_data_0x130, 0x130},
+	{__uni_full_decomp_data_0xcf, 0xcf},
+	{__uni_full_decomp_data_0x1e2e, 0x1e2e},
+	{__uni_full_decomp_data_0x1ec8, 0x1ec8},
+	{__uni_full_decomp_data_0x1cf, 0x1cf},
+	{__uni_full_decomp_data_0x208, 0x208},
+	{__uni_full_decomp_data_0x20a, 0x20a},
+	{__uni_full_decomp_data_0x1eca, 0x1eca},
+	{__uni_full_decomp_data_0x12e, 0x12e},
+	{__uni_full_decomp_data_0x1e2c, 0x1e2c},
+	{__uni_full_decomp_data_0x134, 0x134},
+	{__uni_full_decomp_data_0x1e30, 0x1e30},
+	{__uni_full_decomp_data_0x1e8, 0x1e8},
+	{__uni_full_decomp_data_0x1e32, 0x1e32},
+	{__uni_full_decomp_data_0x136, 0x136},
+	{__uni_full_decomp_data_0x1e34, 0x1e34},
+	{__uni_full_decomp_data_0x139, 0x139},
+	{__uni_full_decomp_data_0x13d, 0x13d},
+	{__uni_full_decomp_data_0x1e36, 0x1e36},
+	{__uni_full_decomp_data_0x1e38, 0x1e38},
+	{__uni_full_decomp_data_0x13b, 0x13b},
+	{__uni_full_decomp_data_0x1e3c, 0x1e3c},
+	{__uni_full_decomp_data_0x1e3a, 0x1e3a},
+	{__uni_full_decomp_data_0x1e3e, 0x1e3e},
+	{__uni_full_decomp_data_0x1e40, 0x1e40},
+	{__uni_full_decomp_data_0x1e42, 0x1e42},
+	{__uni_full_decomp_data_0x1f8, 0x1f8},
+	{__uni_full_decomp_data_0x143, 0x143},
+	{__uni_full_decomp_data_0xd1, 0xd1},
+	{__uni_full_decomp_data_0x1e44, 0x1e44},
+	{__uni_full_decomp_data_0x147, 0x147},
+	{__uni_full_decomp_data_0x1e46, 0x1e46},
+	{__uni_full_decomp_data_0x145, 0x145},
+	{__uni_full_decomp_data_0x1e4a, 0x1e4a},
+	{__uni_full_decomp_data_0x1e48, 0x1e48},
+	{__uni_full_decomp_data_0xd2, 0xd2},
+	{__uni_full_decomp_data_0xd3, 0xd3},
+	{__uni_full_decomp_data_0xd4, 0xd4},
+	{__uni_full_decomp_data_0x1ed2, 0x1ed2},
+	{__uni_full_decomp_data_0x1ed0, 0x1ed0},
+	{__uni_full_decomp_data_0x1ed6, 0x1ed6},
+	{__uni_full_decomp_data_0x1ed4, 0x1ed4},
+	{__uni_full_decomp_data_0xd5, 0xd5},
+	{__uni_full_decomp_data_0x1e4c, 0x1e4c},
+	{__uni_full_decomp_data_0x22c, 0x22c},
+	{__uni_full_decomp_data_0x1e4e, 0x1e4e},
+	{__uni_full_decomp_data_0x14c, 0x14c},
+	{__uni_full_decomp_data_0x1e50, 0x1e50},
+	{__uni_full_decomp_data_0x1e52, 0x1e52},
+	{__uni_full_decomp_data_0x14e, 0x14e},
+	{__uni_full_decomp_data_0x22e, 0x22e},
+	{__uni_full_decomp_data_0x230, 0x230},
+	{__uni_full_decomp_data_0xd6, 0xd6},
+	{__uni_full_decomp_data_0x22a, 0x22a},
+	{__uni_full_decomp_data_0x1ece, 0x1ece},
+	{__uni_full_decomp_data_0x150, 0x150},
+	{__uni_full_decomp_data_0x1d1, 0x1d1},
+	{__uni_full_decomp_data_0x20c, 0x20c},
+	{__uni_full_decomp_data_0x20e, 0x20e},
+	{__uni_full_decomp_data_0x1a0, 0x1a0},
+	{__uni_full_decomp_data_0x1edc, 0x1edc},
+	{__uni_full_decomp_data_0x1eda, 0x1eda},
+	{__uni_full_decomp_data_0x1ee0, 0x1ee0},
+	{__uni_full_decomp_data_0x1ede, 0x1ede},
+	{__uni_full_decomp_data_0x1ee2, 0x1ee2},
+	{__uni_full_decomp_data_0x1ecc, 0x1ecc},
+	{__uni_full_decomp_data_0x1ed8, 0x1ed8},
+	{__uni_full_decomp_data_0x1ea, 0x1ea},
+	{__uni_full_decomp_data_0x1ec, 0x1ec},
+	{__uni_full_decomp_data_0x1e54, 0x1e54},
+	{__uni_full_decomp_data_0x1e56, 0x1e56},
+	{__uni_full_decomp_data_0x154, 0x154},
+	{__uni_full_decomp_data_0x1e58, 0x1e58},
+	{__uni_full_decomp_data_0x158, 0x158},
+	{__uni_full_decomp_data_0x210, 0x210},
+	{__uni_full_decomp_data_0x212, 0x212},
+	{__uni_full_decomp_data_0x1e5a, 0x1e5a},
+	{__uni_full_decomp_data_0x1e5c, 0x1e5c},
+	{__uni_full_decomp_data_0x156, 0x156},
+	{__uni_full_decomp_data_0x1e5e, 0x1e5e},
+	{__uni_full_decomp_data_0x15a, 0x15a},
+	{__uni_full_decomp_data_0x1e64, 0x1e64},
+	{__uni_full_decomp_data_0x15c, 0x15c},
+	{__uni_full_decomp_data_0x1e60, 0x1e60},
+	{__uni_full_decomp_data_0x160, 0x160},
+	{__uni_full_decomp_data_0x1e66, 0x1e66},
+	{__uni_full_decomp_data_0x1e62, 0x1e62},
+	{__uni_full_decomp_data_0x1e68, 0x1e68},
+	{__uni_full_decomp_data_0x218, 0x218},
+	{__uni_full_decomp_data_0x15e, 0x15e},
+	{__uni_full_decomp_data_0x1e6a, 0x1e6a},
+	{__uni_full_decomp_data_0x164, 0x164},
+	{__uni_full_decomp_data_0x1e6c, 0x1e6c},
+	{__uni_full_decomp_data_0x21a, 0x21a},
+	{__uni_full_decomp_data_0x162, 0x162},
+	{__uni_full_decomp_data_0x1e70, 0x1e70},
+	{__uni_full_decomp_data_0x1e6e, 0x1e6e},
+	{__uni_full_decomp_data_0xd9, 0xd9},
+	{__uni_full_decomp_data_0xda, 0xda},
+	{__uni_full_decomp_data_0xdb, 0xdb},
+	{__uni_full_decomp_data_0x168, 0x168},
+	{__uni_full_decomp_data_0x1e78, 0x1e78},
+	{__uni_full_decomp_data_0x16a, 0x16a},
+	{__uni_full_decomp_data_0x1e7a, 0x1e7a},
+	{__uni_full_decomp_data_0x16c, 0x16c},
+	{__uni_full_decomp_data_0xdc, 0xdc},
+	{__uni_full_decomp_data_0x1db, 0x1db},
+	{__uni_full_decomp_data_0x1d7, 0x1d7},
+	{__uni_full_decomp_data_0x1d5, 0x1d5},
+	{__uni_full_decomp_data_0x1d9, 0x1d9},
+	{__uni_full_decomp_data_0x1ee6, 0x1ee6},
+	{__uni_full_decomp_data_0x16e, 0x16e},
+	{__uni_full_decomp_data_0x170, 0x170},
+	{__uni_full_decomp_data_0x1d3, 0x1d3},
+	{__uni_full_decomp_data_0x214, 0x214},
+	{__uni_full_decomp_data_0x216, 0x216},
+	{__uni_full_decomp_data_0x1af, 0x1af},
+	{__uni_full_decomp_data_0x1eea, 0x1eea},
+	{__uni_full_decomp_data_0x1ee8, 0x1ee8},
+	{__uni_full_decomp_data_0x1eee, 0x1eee},
+	{__uni_full_decomp_data_0x1eec, 0x1eec},
+	{__uni_full_decomp_data_0x1ef0, 0x1ef0},
+	{__uni_full_decomp_data_0x1ee4, 0x1ee4},
+	{__uni_full_decomp_data_0x1e72, 0x1e72},
+	{__uni_full_decomp_data_0x172, 0x172},
+	{__uni_full_decomp_data_0x1e76, 0x1e76},
+	{__uni_full_decomp_data_0x1e74, 0x1e74},
+	{__uni_full_decomp_data_0x1e7c, 0x1e7c},
+	{__uni_full_decomp_data_0x1e7e, 0x1e7e},
+	{__uni_full_decomp_data_0x1e80, 0x1e80},
+	{__uni_full_decomp_data_0x1e82, 0x1e82},
+	{__uni_full_decomp_data_0x174, 0x174},
+	{__uni_full_decomp_data_0x1e86, 0x1e86},
+	{__uni_full_decomp_data_0x1e84, 0x1e84},
+	{__uni_full_decomp_data_0x1e88, 0x1e88},
+	{__uni_full_decomp_data_0x1e8a, 0x1e8a},
+	{__uni_full_decomp_data_0x1e8c, 0x1e8c},
+	{__uni_full_decomp_data_0x1ef2, 0x1ef2},
+	{__uni_full_decomp_data_0xdd, 0xdd},
+	{__uni_full_decomp_data_0x176, 0x176},
+	{__uni_full_decomp_data_0x1ef8, 0x1ef8},
+	{__uni_full_decomp_data_0x232, 0x232},
+	{__uni_full_decomp_data_0x1e8e, 0x1e8e},
+	{__uni_full_decomp_data_0x178, 0x178},
+	{__uni_full_decomp_data_0x1ef6, 0x1ef6},
+	{__uni_full_decomp_data_0x1ef4, 0x1ef4},
+	{__uni_full_decomp_data_0x179, 0x179},
+	{__uni_full_decomp_data_0x1e90, 0x1e90},
+	{__uni_full_decomp_data_0x17b, 0x17b},
+	{__uni_full_decomp_data_0x17d, 0x17d},
+	{__uni_full_decomp_data_0x1e92, 0x1e92},
+	{__uni_full_decomp_data_0x1e94, 0x1e94},
+	{__uni_full_decomp_data_0xe0, 0xe0},
+	{__uni_full_decomp_data_0xe1, 0xe1},
+	{__uni_full_decomp_data_0xe2, 0xe2},
+	{__uni_full_decomp_data_0x1ea7, 0x1ea7},
+	{__uni_full_decomp_data_0x1ea5, 0x1ea5},
+	{__uni_full_decomp_data_0x1eab, 0x1eab},
+	{__uni_full_decomp_data_0x1ea9, 0x1ea9},
+	{__uni_full_decomp_data_0xe3, 0xe3},
+	{__uni_full_decomp_data_0x101, 0x101},
+	{__uni_full_decomp_data_0x103, 0x103},
+	{__uni_full_decomp_data_0x1eb1, 0x1eb1},
+	{__uni_full_decomp_data_0x1eaf, 0x1eaf},
+	{__uni_full_decomp_data_0x1eb5, 0x1eb5},
+	{__uni_full_decomp_data_0x1eb3, 0x1eb3},
+	{__uni_full_decomp_data_0x227, 0x227},
+	{__uni_full_decomp_data_0x1e1, 0x1e1},
+	{__uni_full_decomp_data_0xe4, 0xe4},
+	{__uni_full_decomp_data_0x1df, 0x1df},
+	{__uni_full_decomp_data_0x1ea3, 0x1ea3},
+	{__uni_full_decomp_data_0xe5, 0xe5},
+	{__uni_full_decomp_data_0x1fb, 0x1fb},
+	{__uni_full_decomp_data_0x1ce, 0x1ce},
+	{__uni_full_decomp_data_0x201, 0x201},
+	{__uni_full_decomp_data_0x203, 0x203},
+	{__uni_full_decomp_data_0x1ea1, 0x1ea1},
+	{__uni_full_decomp_data_0x1ead, 0x1ead},
+	{__uni_full_decomp_data_0x1eb7, 0x1eb7},
+	{__uni_full_decomp_data_0x1e01, 0x1e01},
+	{__uni_full_decomp_data_0x105, 0x105},
+	{__uni_full_decomp_data_0x1e03, 0x1e03},
+	{__uni_full_decomp_data_0x1e05, 0x1e05},
+	{__uni_full_decomp_data_0x1e07, 0x1e07},
+	{__uni_full_decomp_data_0x107, 0x107},
+	{__uni_full_decomp_data_0x109, 0x109},
+	{__uni_full_decomp_data_0x10b, 0x10b},
+	{__uni_full_decomp_data_0x10d, 0x10d},
+	{__uni_full_decomp_data_0xe7, 0xe7},
+	{__uni_full_decomp_data_0x1e09, 0x1e09},
+	{__uni_full_decomp_data_0x1e0b, 0x1e0b},
+	{__uni_full_decomp_data_0x10f, 0x10f},
+	{__uni_full_decomp_data_0x1e0d, 0x1e0d},
+	{__uni_full_decomp_data_0x1e11, 0x1e11},
+	{__uni_full_decomp_data_0x1e13, 0x1e13},
+	{__uni_full_decomp_data_0x1e0f, 0x1e0f},
+	{__uni_full_decomp_data_0xe8, 0xe8},
+	{__uni_full_decomp_data_0xe9, 0xe9},
+	{__uni_full_decomp_data_0xea, 0xea},
+	{__uni_full_decomp_data_0x1ec1, 0x1ec1},
+	{__uni_full_decomp_data_0x1ebf, 0x1ebf},
+	{__uni_full_decomp_data_0x1ec5, 0x1ec5},
+	{__uni_full_decomp_data_0x1ec3, 0x1ec3},
+	{__uni_full_decomp_data_0x1ebd, 0x1ebd},
+	{__uni_full_decomp_data_0x113, 0x113},
+	{__uni_full_decomp_data_0x1e15, 0x1e15},
+	{__uni_full_decomp_data_0x1e17, 0x1e17},
+	{__uni_full_decomp_data_0x115, 0x115},
+	{__uni_full_decomp_data_0x117, 0x117},
+	{__uni_full_decomp_data_0xeb, 0xeb},
+	{__uni_full_decomp_data_0x1ebb, 0x1ebb},
+	{__uni_full_decomp_data_0x11b, 0x11b},
+	{__uni_full_decomp_data_0x205, 0x205},
+	{__uni_full_decomp_data_0x207, 0x207},
+	{__uni_full_decomp_data_0x1eb9, 0x1eb9},
+	{__uni_full_decomp_data_0x1ec7, 0x1ec7},
+	{__uni_full_decomp_data_0x229, 0x229},
+	{__uni_full_decomp_data_0x1e1d, 0x1e1d},
+	{__uni_full_decomp_data_0x119, 0x119},
+	{__uni_full_decomp_data_0x1e19, 0x1e19},
+	{__uni_full_decomp_data_0x1e1b, 0x1e1b},
+	{__uni_full_decomp_data_0x1e1f, 0x1e1f},
+	{__uni_full_decomp_data_0x1f5, 0x1f5},
+	{__uni_full_decomp_data_0x11d, 0x11d},
+	{__uni_full_decomp_data_0x1e21, 0x1e21},
+	{__uni_full_decomp_data_0x11f, 0x11f},
+	{__uni_full_decomp_data_0x121, 0x121},
+	{__uni_full_decomp_data_0x1e7, 0x1e7},
+	{__uni_full_decomp_data_0x123, 0x123},
+	{__uni_full_decomp_data_0x125, 0x125},
+	{__uni_full_decomp_data_0x1e23, 0x1e23},
+	{__uni_full_decomp_data_0x1e27, 0x1e27},
+	{__uni_full_decomp_data_0x21f, 0x21f},
+	{__uni_full_decomp_data_0x1e25, 0x1e25},
+	{__uni_full_decomp_data_0x1e29, 0x1e29},
+	{__uni_full_decomp_data_0x1e2b, 0x1e2b},
+	{__uni_full_decomp_data_0x1e96, 0x1e96},
+	{__uni_full_decomp_data_0xec, 0xec},
+	{__uni_full_decomp_data_0xed, 0xed},
+	{__uni_full_decomp_data_0xee, 0xee},
+	{__uni_full_decomp_data_0x129, 0x129},
+	{__uni_full_decomp_data_0x12b, 0x12b},
+	{__uni_full_decomp_data_0x12d, 0x12d},
+	{__uni_full_decomp_data_0xef, 0xef},
+	{__uni_full_decomp_data_0x1e2f, 0x1e2f},
+	{__uni_full_decomp_data_0x1ec9, 0x1ec9},
+	{__uni_full_decomp_data_0x1d0, 0x1d0},
+	{__uni_full_decomp_data_0x209, 0x209},
+	{__uni_full_decomp_data_0x20b, 0x20b},
+	{__uni_full_decomp_data_0x1ecb, 0x1ecb},
+	{__uni_full_decomp_data_0x12f, 0x12f},
+	{__uni_full_decomp_data_0x1e2d, 0x1e2d},
+	{__uni_full_decomp_data_0x135, 0x135},
+	{__uni_full_decomp_data_0x1f0, 0x1f0},
+	{__uni_full_decomp_data_0x1e31, 0x1e31},
+	{__uni_full_decomp_data_0x1e9, 0x1e9},
+	{__uni_full_decomp_data_0x1e33, 0x1e33},
+	{__uni_full_decomp_data_0x137, 0x137},
+	{__uni_full_decomp_data_0x1e35, 0x1e35},
+	{__uni_full_decomp_data_0x13a, 0x13a},
+	{__uni_full_decomp_data_0x13e, 0x13e},
+	{__uni_full_decomp_data_0x1e37, 0x1e37},
+	{__uni_full_decomp_data_0x1e39, 0x1e39},
+	{__uni_full_decomp_data_0x13c, 0x13c},
+	{__uni_full_decomp_data_0x1e3d, 0x1e3d},
+	{__uni_full_decomp_data_0x1e3b, 0x1e3b},
+	{__uni_full_decomp_data_0x1e3f, 0x1e3f},
+	{__uni_full_decomp_data_0x1e41, 0x1e41},
+	{__uni_full_decomp_data_0x1e43, 0x1e43},
+	{__uni_full_decomp_data_0x1f9, 0x1f9},
+	{__uni_full_decomp_data_0x144, 0x144},
+	{__uni_full_decomp_data_0xf1, 0xf1},
+	{__uni_full_decomp_data_0x1e45, 0x1e45},
+	{__uni_full_decomp_data_0x148, 0x148},
+	{__uni_full_decomp_data_0x1e47, 0x1e47},
+	{__uni_full_decomp_data_0x146, 0x146},
+	{__uni_full_decomp_data_0x1e4b, 0x1e4b},
+	{__uni_full_decomp_data_0x1e49, 0x1e49},
+	{__uni_full_decomp_data_0xf2, 0xf2},
+	{__uni_full_decomp_data_0xf3, 0xf3},
+	{__uni_full_decomp_data_0xf4, 0xf4},
+	{__uni_full_decomp_data_0x1ed3, 0x1ed3},
+	{__uni_full_decomp_data_0x1ed1, 0x1ed1},
+	{__uni_full_decomp_data_0x1ed7, 0x1ed7},
+	{__uni_full_decomp_data_0x1ed5, 0x1ed5},
+	{__uni_full_decomp_data_0xf5, 0xf5},
+	{__uni_full_decomp_data_0x1e4d, 0x1e4d},
+	{__uni_full_decomp_data_0x22d, 0x22d},
+	{__uni_full_decomp_data_0x1e4f, 0x1e4f},
+	{__uni_full_decomp_data_0x14d, 0x14d},
+	{__uni_full_decomp_data_0x1e51, 0x1e51},
+	{__uni_full_decomp_data_0x1e53, 0x1e53},
+	{__uni_full_decomp_data_0x14f, 0x14f},
+	{__uni_full_decomp_data_0x22f, 0x22f},
+	{__uni_full_decomp_data_0x231, 0x231},
+	{__uni_full_decomp_data_0xf6, 0xf6},
+	{__uni_full_decomp_data_0x22b, 0x22b},
+	{__uni_full_decomp_data_0x1ecf, 0x1ecf},
+	{__uni_full_decomp_data_0x151, 0x151},
+	{__uni_full_decomp_data_0x1d2, 0x1d2},
+	{__uni_full_decomp_data_0x20d, 0x20d},
+	{__uni_full_decomp_data_0x20f, 0x20f},
+	{__uni_full_decomp_data_0x1a1, 0x1a1},
+	{__uni_full_decomp_data_0x1edd, 0x1edd},
+	{__uni_full_decomp_data_0x1edb, 0x1edb},
+	{__uni_full_decomp_data_0x1ee1, 0x1ee1},
+	{__uni_full_decomp_data_0x1edf, 0x1edf},
+	{__uni_full_decomp_data_0x1ee3, 0x1ee3},
+	{__uni_full_decomp_data_0x1ecd, 0x1ecd},
+	{__uni_full_decomp_data_0x1ed9, 0x1ed9},
+	{__uni_full_decomp_data_0x1eb, 0x1eb},
+	{__uni_full_decomp_data_0x1ed, 0x1ed},
+	{__uni_full_decomp_data_0x1e55, 0x1e55},
+	{__uni_full_decomp_data_0x1e57, 0x1e57},
+	{__uni_full_decomp_data_0x155, 0x155},
+	{__uni_full_decomp_data_0x1e59, 0x1e59},
+	{__uni_full_decomp_data_0x159, 0x159},
+	{__uni_full_decomp_data_0x211, 0x211},
+	{__uni_full_decomp_data_0x213, 0x213},
+	{__uni_full_decomp_data_0x1e5b, 0x1e5b},
+	{__uni_full_decomp_data_0x1e5d, 0x1e5d},
+	{__uni_full_decomp_data_0x157, 0x157},
+	{__uni_full_decomp_data_0x1e5f, 0x1e5f},
+	{__uni_full_decomp_data_0x15b, 0x15b},
+	{__uni_full_decomp_data_0x1e65, 0x1e65},
+	{__uni_full_decomp_data_0x15d, 0x15d},
+	{__uni_full_decomp_data_0x1e61, 0x1e61},
+	{__uni_full_decomp_data_0x161, 0x161},
+	{__uni_full_decomp_data_0x1e67, 0x1e67},
+	{__uni_full_decomp_data_0x1e63, 0x1e63},
+	{__uni_full_decomp_data_0x1e69, 0x1e69},
+	{__uni_full_decomp_data_0x219, 0x219},
+	{__uni_full_decomp_data_0x15f, 0x15f},
+	{__uni_full_decomp_data_0x1e6b, 0x1e6b},
+	{__uni_full_decomp_data_0x1e97, 0x1e97},
+	{__uni_full_decomp_data_0x165, 0x165},
+	{__uni_full_decomp_data_0x1e6d, 0x1e6d},
+	{__uni_full_decomp_data_0x21b, 0x21b},
+	{__uni_full_decomp_data_0x163, 0x163},
+	{__uni_full_decomp_data_0x1e71, 0x1e71},
+	{__uni_full_decomp_data_0x1e6f, 0x1e6f},
+	{__uni_full_decomp_data_0xf9, 0xf9},
+	{__uni_full_decomp_data_0xfa, 0xfa},
+	{__uni_full_decomp_data_0xfb, 0xfb},
+	{__uni_full_decomp_data_0x169, 0x169},
+	{__uni_full_decomp_data_0x1e79, 0x1e79},
+	{__uni_full_decomp_data_0x16b, 0x16b},
+	{__uni_full_decomp_data_0x1e7b, 0x1e7b},
+	{__uni_full_decomp_data_0x16d, 0x16d},
+	{__uni_full_decomp_data_0xfc, 0xfc},
+	{__uni_full_decomp_data_0x1dc, 0x1dc},
+	{__uni_full_decomp_data_0x1d8, 0x1d8},
+	{__uni_full_decomp_data_0x1d6, 0x1d6},
+	{__uni_full_decomp_data_0x1da, 0x1da},
+	{__uni_full_decomp_data_0x1ee7, 0x1ee7},
+	{__uni_full_decomp_data_0x16f, 0x16f},
+	{__uni_full_decomp_data_0x171, 0x171},
+	{__uni_full_decomp_data_0x1d4, 0x1d4},
+	{__uni_full_decomp_data_0x215, 0x215},
+	{__uni_full_decomp_data_0x217, 0x217},
+	{__uni_full_decomp_data_0x1b0, 0x1b0},
+	{__uni_full_decomp_data_0x1eeb, 0x1eeb},
+	{__uni_full_decomp_data_0x1ee9, 0x1ee9},
+	{__uni_full_decomp_data_0x1eef, 0x1eef},
+	{__uni_full_decomp_data_0x1eed, 0x1eed},
+	{__uni_full_decomp_data_0x1ef1, 0x1ef1},
+	{__uni_full_decomp_data_0x1ee5, 0x1ee5},
+	{__uni_full_decomp_data_0x1e73, 0x1e73},
+	{__uni_full_decomp_data_0x173, 0x173},
+	{__uni_full_decomp_data_0x1e77, 0x1e77},
+	{__uni_full_decomp_data_0x1e75, 0x1e75},
+	{__uni_full_decomp_data_0x1e7d, 0x1e7d},
+	{__uni_full_decomp_data_0x1e7f, 0x1e7f},
+	{__uni_full_decomp_data_0x1e81, 0x1e81},
+	{__uni_full_decomp_data_0x1e83, 0x1e83},
+	{__uni_full_decomp_data_0x175, 0x175},
+	{__uni_full_decomp_data_0x1e87, 0x1e87},
+	{__uni_full_decomp_data_0x1e85, 0x1e85},
+	{__uni_full_decomp_data_0x1e98, 0x1e98},
+	{__uni_full_decomp_data_0x1e89, 0x1e89},
+	{__uni_full_decomp_data_0x1e8b, 0x1e8b},
+	{__uni_full_decomp_data_0x1e8d, 0x1e8d},
+	{__uni_full_decomp_data_0x1ef3, 0x1ef3},
+	{__uni_full_decomp_data_0xfd, 0xfd},
+	{__uni_full_decomp_data_0x177, 0x177},
+	{__uni_full_decomp_data_0x1ef9, 0x1ef9},
+	{__uni_full_decomp_data_0x233, 0x233},
+	{__uni_full_decomp_data_0x1e8f, 0x1e8f},
+	{__uni_full_decomp_data_0xff, 0xff},
+	{__uni_full_decomp_data_0x1ef7, 0x1ef7},
+	{__uni_full_decomp_data_0x1e99, 0x1e99},
+	{__uni_full_decomp_data_0x1ef5, 0x1ef5},
+	{__uni_full_decomp_data_0x17a, 0x17a},
+	{__uni_full_decomp_data_0x1e91, 0x1e91},
+	{__uni_full_decomp_data_0x17c, 0x17c},
+	{__uni_full_decomp_data_0x17e, 0x17e},
+	{__uni_full_decomp_data_0x1e93, 0x1e93},
+	{__uni_full_decomp_data_0x1e95, 0x1e95},
+	{__uni_full_decomp_data_0x1fed, 0x1fed},
+	{__uni_full_decomp_data_0x385, 0x385},
+	{__uni_full_decomp_data_0x1fc1, 0x1fc1},
+	{__uni_full_decomp_data_0x1fc, 0x1fc},
+	{__uni_full_decomp_data_0x1e2, 0x1e2},
+	{__uni_full_decomp_data_0x1fe, 0x1fe},
+	{__uni_full_decomp_data_0x1fd, 0x1fd},
+	{__uni_full_decomp_data_0x1e3, 0x1e3},
+	{__uni_full_decomp_data_0x1ff, 0x1ff},
+	{__uni_full_decomp_data_0x1e9b, 0x1e9b},
+	{__uni_full_decomp_data_0x1ee, 0x1ee},
+	{__uni_full_decomp_data_0x1ef, 0x1ef},
+	{__uni_full_decomp_data_0x1fba, 0x1fba},
+	{__uni_full_decomp_data_0x386, 0x386},
+	{__uni_full_decomp_data_0x1fb9, 0x1fb9},
+	{__uni_full_decomp_data_0x1fb8, 0x1fb8},
+	{__uni_full_decomp_data_0x1f08, 0x1f08},
+	{__uni_full_decomp_data_0x1f0a, 0x1f0a},
+	{__uni_full_decomp_data_0x1f8a, 0x1f8a},
+	{__uni_full_decomp_data_0x1f0c, 0x1f0c},
+	{__uni_full_decomp_data_0x1f8c, 0x1f8c},
+	{__uni_full_decomp_data_0x1f0e, 0x1f0e},
+	{__uni_full_decomp_data_0x1f8e, 0x1f8e},
+	{__uni_full_decomp_data_0x1f88, 0x1f88},
+	{__uni_full_decomp_data_0x1f09, 0x1f09},
+	{__uni_full_decomp_data_0x1f0b, 0x1f0b},
+	{__uni_full_decomp_data_0x1f8b, 0x1f8b},
+	{__uni_full_decomp_data_0x1f0d, 0x1f0d},
+	{__uni_full_decomp_data_0x1f8d, 0x1f8d},
+	{__uni_full_decomp_data_0x1f0f, 0x1f0f},
+	{__uni_full_decomp_data_0x1f8f, 0x1f8f},
+	{__uni_full_decomp_data_0x1f89, 0x1f89},
+	{__uni_full_decomp_data_0x1fbc, 0x1fbc},
+	{__uni_full_decomp_data_0x1fc8, 0x1fc8},
+	{__uni_full_decomp_data_0x388, 0x388},
+	{__uni_full_decomp_data_0x1f18, 0x1f18},
+	{__uni_full_decomp_data_0x1f1a, 0x1f1a},
+	{__uni_full_decomp_data_0x1f1c, 0x1f1c},
+	{__uni_full_decomp_data_0x1f19, 0x1f19},
+	{__uni_full_decomp_data_0x1f1b, 0x1f1b},
+	{__uni_full_decomp_data_0x1f1d, 0x1f1d},
+	{__uni_full_decomp_data_0x1fca, 0x1fca},
+	{__uni_full_decomp_data_0x389, 0x389},
+	{__uni_full_decomp_data_0x1f28, 0x1f28},
+	{__uni_full_decomp_data_0x1f2a, 0x1f2a},
+	{__uni_full_decomp_data_0x1f9a, 0x1f9a},
+	{__uni_full_decomp_data_0x1f2c, 0x1f2c},
+	{__uni_full_decomp_data_0x1f9c, 0x1f9c},
+	{__uni_full_decomp_data_0x1f2e, 0x1f2e},
+	{__uni_full_decomp_data_0x1f9e, 0x1f9e},
+	{__uni_full_decomp_data_0x1f98, 0x1f98},
+	{__uni_full_decomp_data_0x1f29, 0x1f29},
+	{__uni_full_decomp_data_0x1f2b, 0x1f2b},
+	{__uni_full_decomp_data_0x1f9b, 0x1f9b},
+	{__uni_full_decomp_data_0x1f2d, 0x1f2d},
+	{__uni_full_decomp_data_0x1f9d, 0x1f9d},
+	{__uni_full_decomp_data_0x1f2f, 0x1f2f},
+	{__uni_full_decomp_data_0x1f9f, 0x1f9f},
+	{__uni_full_decomp_data_0x1f99, 0x1f99},
+	{__uni_full_decomp_data_0x1fcc, 0x1fcc},
+	{__uni_full_decomp_data_0x1fda, 0x1fda},
+	{__uni_full_decomp_data_0x38a, 0x38a},
+	{__uni_full_decomp_data_0x1fd9, 0x1fd9},
+	{__uni_full_decomp_data_0x1fd8, 0x1fd8},
+	{__uni_full_decomp_data_0x3aa, 0x3aa},
+	{__uni_full_decomp_data_0x1f38, 0x1f38},
+	{__uni_full_decomp_data_0x1f3a, 0x1f3a},
+	{__uni_full_decomp_data_0x1f3c, 0x1f3c},
+	{__uni_full_decomp_data_0x1f3e, 0x1f3e},
+	{__uni_full_decomp_data_0x1f39, 0x1f39},
+	{__uni_full_decomp_data_0x1f3b, 0x1f3b},
+	{__uni_full_decomp_data_0x1f3d, 0x1f3d},
+	{__uni_full_decomp_data_0x1f3f, 0x1f3f},
+	{__uni_full_decomp_data_0x1ff8, 0x1ff8},
+	{__uni_full_decomp_data_0x38c, 0x38c},
+	{__uni_full_decomp_data_0x1f48, 0x1f48},
+	{__uni_full_decomp_data_0x1f4a, 0x1f4a},
+	{__uni_full_decomp_data_0x1f4c, 0x1f4c},
+	{__uni_full_decomp_data_0x1f49, 0x1f49},
+	{__uni_full_decomp_data_0x1f4b, 0x1f4b},
+	{__uni_full_decomp_data_0x1f4d, 0x1f4d},
+	{__uni_full_decomp_data_0x1fec, 0x1fec},
+	{__uni_full_decomp_data_0x1fea, 0x1fea},
+	{__uni_full_decomp_data_0x38e, 0x38e},
+	{__uni_full_decomp_data_0x1fe9, 0x1fe9},
+	{__uni_full_decomp_data_0x1fe8, 0x1fe8},
+	{__uni_full_decomp_data_0x3ab, 0x3ab},
+	{__uni_full_decomp_data_0x1f59, 0x1f59},
+	{__uni_full_decomp_data_0x1f5b, 0x1f5b},
+	{__uni_full_decomp_data_0x1f5d, 0x1f5d},
+	{__uni_full_decomp_data_0x1f5f, 0x1f5f},
+	{__uni_full_decomp_data_0x1ffa, 0x1ffa},
+	{__uni_full_decomp_data_0x38f, 0x38f},
+	{__uni_full_decomp_data_0x1f68, 0x1f68},
+	{__uni_full_decomp_data_0x1f6a, 0x1f6a},
+	{__uni_full_decomp_data_0x1faa, 0x1faa},
+	{__uni_full_decomp_data_0x1f6c, 0x1f6c},
+	{__uni_full_decomp_data_0x1fac, 0x1fac},
+	{__uni_full_decomp_data_0x1f6e, 0x1f6e},
+	{__uni_full_decomp_data_0x1fae, 0x1fae},
+	{__uni_full_decomp_data_0x1fa8, 0x1fa8},
+	{__uni_full_decomp_data_0x1f69, 0x1f69},
+	{__uni_full_decomp_data_0x1f6b, 0x1f6b},
+	{__uni_full_decomp_data_0x1fab, 0x1fab},
+	{__uni_full_decomp_data_0x1f6d, 0x1f6d},
+	{__uni_full_decomp_data_0x1fad, 0x1fad},
+	{__uni_full_decomp_data_0x1f6f, 0x1f6f},
+	{__uni_full_decomp_data_0x1faf, 0x1faf},
+	{__uni_full_decomp_data_0x1fa9, 0x1fa9},
+	{__uni_full_decomp_data_0x1ffc, 0x1ffc},
+	{__uni_full_decomp_data_0x1f70, 0x1f70},
+	{__uni_full_decomp_data_0x1fb2, 0x1fb2},
+	{__uni_full_decomp_data_0x3ac, 0x3ac},
+	{__uni_full_decomp_data_0x1fb4, 0x1fb4},
+	{__uni_full_decomp_data_0x1fb1, 0x1fb1},
+	{__uni_full_decomp_data_0x1fb0, 0x1fb0},
+	{__uni_full_decomp_data_0x1f00, 0x1f00},
+	{__uni_full_decomp_data_0x1f02, 0x1f02},
+	{__uni_full_decomp_data_0x1f82, 0x1f82},
+	{__uni_full_decomp_data_0x1f04, 0x1f04},
+	{__uni_full_decomp_data_0x1f84, 0x1f84},
+	{__uni_full_decomp_data_0x1f06, 0x1f06},
+	{__uni_full_decomp_data_0x1f86, 0x1f86},
+	{__uni_full_decomp_data_0x1f80, 0x1f80},
+	{__uni_full_decomp_data_0x1f01, 0x1f01},
+	{__uni_full_decomp_data_0x1f03, 0x1f03},
+	{__uni_full_decomp_data_0x1f83, 0x1f83},
+	{__uni_full_decomp_data_0x1f05, 0x1f05},
+	{__uni_full_decomp_data_0x1f85, 0x1f85},
+	{__uni_full_decomp_data_0x1f07, 0x1f07},
+	{__uni_full_decomp_data_0x1f87, 0x1f87},
+	{__uni_full_decomp_data_0x1f81, 0x1f81},
+	{__uni_full_decomp_data_0x1fb6, 0x1fb6},
+	{__uni_full_decomp_data_0x1fb7, 0x1fb7},
+	{__uni_full_decomp_data_0x1fb3, 0x1fb3},
+	{__uni_full_decomp_data_0x1f72, 0x1f72},
+	{__uni_full_decomp_data_0x3ad, 0x3ad},
+	{__uni_full_decomp_data_0x1f10, 0x1f10},
+	{__uni_full_decomp_data_0x1f12, 0x1f12},
+	{__uni_full_decomp_data_0x1f14, 0x1f14},
+	{__uni_full_decomp_data_0x1f11, 0x1f11},
+	{__uni_full_decomp_data_0x1f13, 0x1f13},
+	{__uni_full_decomp_data_0x1f15, 0x1f15},
+	{__uni_full_decomp_data_0x1f74, 0x1f74},
+	{__uni_full_decomp_data_0x1fc2, 0x1fc2},
+	{__uni_full_decomp_data_0x3ae, 0x3ae},
+	{__uni_full_decomp_data_0x1fc4, 0x1fc4},
+	{__uni_full_decomp_data_0x1f20, 0x1f20},
+	{__uni_full_decomp_data_0x1f22, 0x1f22},
+	{__uni_full_decomp_data_0x1f92, 0x1f92},
+	{__uni_full_decomp_data_0x1f24, 0x1f24},
+	{__uni_full_decomp_data_0x1f94, 0x1f94},
+	{__uni_full_decomp_data_0x1f26, 0x1f26},
+	{__uni_full_decomp_data_0x1f96, 0x1f96},
+	{__uni_full_decomp_data_0x1f90, 0x1f90},
+	{__uni_full_decomp_data_0x1f21, 0x1f21},
+	{__uni_full_decomp_data_0x1f23, 0x1f23},
+	{__uni_full_decomp_data_0x1f93, 0x1f93},
+	{__uni_full_decomp_data_0x1f25, 0x1f25},
+	{__uni_full_decomp_data_0x1f95, 0x1f95},
+	{__uni_full_decomp_data_0x1f27, 0x1f27},
+	{__uni_full_decomp_data_0x1f97, 0x1f97},
+	{__uni_full_decomp_data_0x1f91, 0x1f91},
+	{__uni_full_decomp_data_0x1fc6, 0x1fc6},
+	{__uni_full_decomp_data_0x1fc7, 0x1fc7},
+	{__uni_full_decomp_data_0x1fc3, 0x1fc3},
+	{__uni_full_decomp_data_0x1f76, 0x1f76},
+	{__uni_full_decomp_data_0x3af, 0x3af},
+	{__uni_full_decomp_data_0x1fd1, 0x1fd1},
+	{__uni_full_decomp_data_0x1fd0, 0x1fd0},
+	{__uni_full_decomp_data_0x3ca, 0x3ca},
+	{__uni_full_decomp_data_0x1fd2, 0x1fd2},
+	{__uni_full_decomp_data_0x390, 0x390},
+	{__uni_full_decomp_data_0x1fd7, 0x1fd7},
+	{__uni_full_decomp_data_0x1f30, 0x1f30},
+	{__uni_full_decomp_data_0x1f32, 0x1f32},
+	{__uni_full_decomp_data_0x1f34, 0x1f34},
+	{__uni_full_decomp_data_0x1f36, 0x1f36},
+	{__uni_full_decomp_data_0x1f31, 0x1f31},
+	{__uni_full_decomp_data_0x1f33, 0x1f33},
+	{__uni_full_decomp_data_0x1f35, 0x1f35},
+	{__uni_full_decomp_data_0x1f37, 0x1f37},
+	{__uni_full_decomp_data_0x1fd6, 0x1fd6},
+	{__uni_full_decomp_data_0x1f78, 0x1f78},
+	{__uni_full_decomp_data_0x3cc, 0x3cc},
+	{__uni_full_decomp_data_0x1f40, 0x1f40},
+	{__uni_full_decomp_data_0x1f42, 0x1f42},
+	{__uni_full_decomp_data_0x1f44, 0x1f44},
+	{__uni_full_decomp_data_0x1f41, 0x1f41},
+	{__uni_full_decomp_data_0x1f43, 0x1f43},
+	{__uni_full_decomp_data_0x1f45, 0x1f45},
+	{__uni_full_decomp_data_0x1fe4, 0x1fe4},
+	{__uni_full_decomp_data_0x1fe5, 0x1fe5},
+	{__uni_full_decomp_data_0x1f7a, 0x1f7a},
+	{__uni_full_decomp_data_0x3cd, 0x3cd},
+	{__uni_full_decomp_data_0x1fe1, 0x1fe1},
+	{__uni_full_decomp_data_0x1fe0, 0x1fe0},
+	{__uni_full_decomp_data_0x3cb, 0x3cb},
+	{__uni_full_decomp_data_0x1fe2, 0x1fe2},
+	{__uni_full_decomp_data_0x3b0, 0x3b0},
+	{__uni_full_decomp_data_0x1fe7, 0x1fe7},
+	{__uni_full_decomp_data_0x1f50, 0x1f50},
+	{__uni_full_decomp_data_0x1f52, 0x1f52},
+	{__uni_full_decomp_data_0x1f54, 0x1f54},
+	{__uni_full_decomp_data_0x1f56, 0x1f56},
+	{__uni_full_decomp_data_0x1f51, 0x1f51},
+	{__uni_full_decomp_data_0x1f53, 0x1f53},
+	{__uni_full_decomp_data_0x1f55, 0x1f55},
+	{__uni_full_decomp_data_0x1f57, 0x1f57},
+	{__uni_full_decomp_data_0x1fe6, 0x1fe6},
+	{__uni_full_decomp_data_0x1f7c, 0x1f7c},
+	{__uni_full_decomp_data_0x1ff2, 0x1ff2},
+	{__uni_full_decomp_data_0x3ce, 0x3ce},
+	{__uni_full_decomp_data_0x1ff4, 0x1ff4},
+	{__uni_full_decomp_data_0x1f60, 0x1f60},
+	{__uni_full_decomp_data_0x1f62, 0x1f62},
+	{__uni_full_decomp_data_0x1fa2, 0x1fa2},
+	{__uni_full_decomp_data_0x1f64, 0x1f64},
+	{__uni_full_decomp_data_0x1fa4, 0x1fa4},
+	{__uni_full_decomp_data_0x1f66, 0x1f66},
+	{__uni_full_decomp_data_0x1fa6, 0x1fa6},
+	{__uni_full_decomp_data_0x1fa0, 0x1fa0},
+	{__uni_full_decomp_data_0x1f61, 0x1f61},
+	{__uni_full_decomp_data_0x1f63, 0x1f63},
+	{__uni_full_decomp_data_0x1fa3, 0x1fa3},
+	{__uni_full_decomp_data_0x1f65, 0x1f65},
+	{__uni_full_decomp_data_0x1fa5, 0x1fa5},
+	{__uni_full_decomp_data_0x1f67, 0x1f67},
+	{__uni_full_decomp_data_0x1fa7, 0x1fa7},
+	{__uni_full_decomp_data_0x1fa1, 0x1fa1},
+	{__uni_full_decomp_data_0x1ff6, 0x1ff6},
+	{__uni_full_decomp_data_0x1ff7, 0x1ff7},
+	{__uni_full_decomp_data_0x1ff3, 0x1ff3},
+	{__uni_full_decomp_data_0x3d3, 0x3d3},
+	{__uni_full_decomp_data_0x3d4, 0x3d4},
+	{__uni_full_decomp_data_0x407, 0x407},
+	{__uni_full_decomp_data_0x4d0, 0x4d0},
+	{__uni_full_decomp_data_0x4d2, 0x4d2},
+	{__uni_full_decomp_data_0x403, 0x403},
+	{__uni_full_decomp_data_0x400, 0x400},
+	{__uni_full_decomp_data_0x4d6, 0x4d6},
+	{__uni_full_decomp_data_0x401, 0x401},
+	{__uni_full_decomp_data_0x4c1, 0x4c1},
+	{__uni_full_decomp_data_0x4dc, 0x4dc},
+	{__uni_full_decomp_data_0x4de, 0x4de},
+	{__uni_full_decomp_data_0x40d, 0x40d},
+	{__uni_full_decomp_data_0x4e2, 0x4e2},
+	{__uni_full_decomp_data_0x419, 0x419},
+	{__uni_full_decomp_data_0x4e4, 0x4e4},
+	{__uni_full_decomp_data_0x40c, 0x40c},
+	{__uni_full_decomp_data_0x4e6, 0x4e6},
+	{__uni_full_decomp_data_0x4ee, 0x4ee},
+	{__uni_full_decomp_data_0x40e, 0x40e},
+	{__uni_full_decomp_data_0x4f0, 0x4f0},
+	{__uni_full_decomp_data_0x4f2, 0x4f2},
+	{__uni_full_decomp_data_0x4f4, 0x4f4},
+	{__uni_full_decomp_data_0x4f8, 0x4f8},
+	{__uni_full_decomp_data_0x4ec, 0x4ec},
+	{__uni_full_decomp_data_0x4d1, 0x4d1},
+	{__uni_full_decomp_data_0x4d3, 0x4d3},
+	{__uni_full_decomp_data_0x453, 0x453},
+	{__uni_full_decomp_data_0x450, 0x450},
+	{__uni_full_decomp_data_0x4d7, 0x4d7},
+	{__uni_full_decomp_data_0x451, 0x451},
+	{__uni_full_decomp_data_0x4c2, 0x4c2},
+	{__uni_full_decomp_data_0x4dd, 0x4dd},
+	{__uni_full_decomp_data_0x4df, 0x4df},
+	{__uni_full_decomp_data_0x45d, 0x45d},
+	{__uni_full_decomp_data_0x4e3, 0x4e3},
+	{__uni_full_decomp_data_0x439, 0x439},
+	{__uni_full_decomp_data_0x4e5, 0x4e5},
+	{__uni_full_decomp_data_0x45c, 0x45c},
+	{__uni_full_decomp_data_0x4e7, 0x4e7},
+	{__uni_full_decomp_data_0x4ef, 0x4ef},
+	{__uni_full_decomp_data_0x45e, 0x45e},
+	{__uni_full_decomp_data_0x4f1, 0x4f1},
+	{__uni_full_decomp_data_0x4f3, 0x4f3},
+	{__uni_full_decomp_data_0x4f5, 0x4f5},
+	{__uni_full_decomp_data_0x4f9, 0x4f9},
+	{__uni_full_decomp_data_0x4ed, 0x4ed},
+	{__uni_full_decomp_data_0x457, 0x457},
+	{__uni_full_decomp_data_0x476, 0x476},
+	{__uni_full_decomp_data_0x477, 0x477},
+	{__uni_full_decomp_data_0x4da, 0x4da},
+	{__uni_full_decomp_data_0x4db, 0x4db},
+	{__uni_full_decomp_data_0x4ea, 0x4ea},
+	{__uni_full_decomp_data_0x4eb, 0x4eb},
+	{__uni_full_decomp_data_0x622, 0x622},
+	{__uni_full_decomp_data_0x623, 0x623},
+	{__uni_full_decomp_data_0x625, 0x625},
+	{__uni_full_decomp_data_0x624, 0x624},
+	{__uni_full_decomp_data_0x626, 0x626},
+	{__uni_full_decomp_data_0x6c2, 0x6c2},
+	{__uni_full_decomp_data_0x6d3, 0x6d3},
+	{__uni_full_decomp_data_0x6c0, 0x6c0},
+	{__uni_full_decomp_data_0x929, 0x929},
+	{__uni_full_decomp_data_0x931, 0x931},
+	{__uni_full_decomp_data_0x934, 0x934},
+	{__uni_full_decomp_data_0x9cb, 0x9cb},
+	{__uni_full_decomp_data_0x9cc, 0x9cc},
+	{__uni_full_decomp_data_0xb4b, 0xb4b},
+	{__uni_full_decomp_data_0xb48, 0xb48},
+	{__uni_full_decomp_data_0xb4c, 0xb4c},
+	{__uni_full_decomp_data_0xb94, 0xb94},
+	{__uni_full_decomp_data_0xbca, 0xbca},
+	{__uni_full_decomp_data_0xbcc, 0xbcc},
+	{__uni_full_decomp_data_0xbcb, 0xbcb},
+	{__uni_full_decomp_data_0xc48, 0xc48},
+	{__uni_full_decomp_data_0xcc0, 0xcc0},
+	{__uni_full_decomp_data_0xcca, 0xcca},
+	{__uni_full_decomp_data_0xccb, 0xccb},
+	{__uni_full_decomp_data_0xcc7, 0xcc7},
+	{__uni_full_decomp_data_0xcc8, 0xcc8},
+	{__uni_full_decomp_data_0xd4a, 0xd4a},
+	{__uni_full_decomp_data_0xd4c, 0xd4c},
+	{__uni_full_decomp_data_0xd4b, 0xd4b},
+	{__uni_full_decomp_data_0xdda, 0xdda},
+	{__uni_full_decomp_data_0xddc, 0xddc},
+	{__uni_full_decomp_data_0xddd, 0xddd},
+	{__uni_full_decomp_data_0xdde, 0xdde},
+	{__uni_full_decomp_data_0x1026, 0x1026},
+	{__uni_full_decomp_data_0x1b06, 0x1b06},
+	{__uni_full_decomp_data_0x1b08, 0x1b08},
+	{__uni_full_decomp_data_0x1b0a, 0x1b0a},
+	{__uni_full_decomp_data_0x1b0c, 0x1b0c},
+	{__uni_full_decomp_data_0x1b0e, 0x1b0e},
+	{__uni_full_decomp_data_0x1b12, 0x1b12},
+	{__uni_full_decomp_data_0x1b3b, 0x1b3b},
+	{__uni_full_decomp_data_0x1b3d, 0x1b3d},
+	{__uni_full_decomp_data_0x1b40, 0x1b40},
+	{__uni_full_decomp_data_0x1b41, 0x1b41},
+	{__uni_full_decomp_data_0x1b43, 0x1b43},
+	{__uni_full_decomp_data_0x1fcd, 0x1fcd},
+	{__uni_full_decomp_data_0x1fce, 0x1fce},
+	{__uni_full_decomp_data_0x1fcf, 0x1fcf},
+	{__uni_full_decomp_data_0x1fdd, 0x1fdd},
+	{__uni_full_decomp_data_0x1fde, 0x1fde},
+	{__uni_full_decomp_data_0x1fdf, 0x1fdf},
+	{__uni_full_decomp_data_0x219a, 0x219a},
+	{__uni_full_decomp_data_0x219b, 0x219b},
+	{__uni_full_decomp_data_0x21ae, 0x21ae},
+	{__uni_full_decomp_data_0x21cd, 0x21cd},
+	{__uni_full_decomp_data_0x21cf, 0x21cf},
+	{__uni_full_decomp_data_0x21ce, 0x21ce},
+	{__uni_full_decomp_data_0x2204, 0x2204},
+	{__uni_full_decomp_data_0x2209, 0x2209},
+	{__uni_full_decomp_data_0x220c, 0x220c},
+	{__uni_full_decomp_data_0x2224, 0x2224},
+	{__uni_full_decomp_data_0x2226, 0x2226},
+	{__uni_full_decomp_data_0x2241, 0x2241},
+	{__uni_full_decomp_data_0x2244, 0x2244},
+	{__uni_full_decomp_data_0x2247, 0x2247},
+	{__uni_full_decomp_data_0x2249, 0x2249},
+	{__uni_full_decomp_data_0x226d, 0x226d},
+	{__uni_full_decomp_data_0x2262, 0x2262},
+	{__uni_full_decomp_data_0x2270, 0x2270},
+	{__uni_full_decomp_data_0x2271, 0x2271},
+	{__uni_full_decomp_data_0x2274, 0x2274},
+	{__uni_full_decomp_data_0x2275, 0x2275},
+	{__uni_full_decomp_data_0x2278, 0x2278},
+	{__uni_full_decomp_data_0x2279, 0x2279},
+	{__uni_full_decomp_data_0x2280, 0x2280},
+	{__uni_full_decomp_data_0x2281, 0x2281},
+	{__uni_full_decomp_data_0x22e0, 0x22e0},
+	{__uni_full_decomp_data_0x22e1, 0x22e1},
+	{__uni_full_decomp_data_0x2284, 0x2284},
+	{__uni_full_decomp_data_0x2285, 0x2285},
+	{__uni_full_decomp_data_0x2288, 0x2288},
+	{__uni_full_decomp_data_0x2289, 0x2289},
+	{__uni_full_decomp_data_0x22e2, 0x22e2},
+	{__uni_full_decomp_data_0x22e3, 0x22e3},
+	{__uni_full_decomp_data_0x22ac, 0x22ac},
+	{__uni_full_decomp_data_0x22ad, 0x22ad},
+	{__uni_full_decomp_data_0x22ae, 0x22ae},
+	{__uni_full_decomp_data_0x22af, 0x22af},
+	{__uni_full_decomp_data_0x22ea, 0x22ea},
+	{__uni_full_decomp_data_0x22eb, 0x22eb},
+	{__uni_full_decomp_data_0x22ec, 0x22ec},
+	{__uni_full_decomp_data_0x22ed, 0x22ed},
+	{__uni_full_decomp_data_0x3094, 0x3094},
+	{__uni_full_decomp_data_0x304c, 0x304c},
+	{__uni_full_decomp_data_0x304e, 0x304e},
+	{__uni_full_decomp_data_0x3050, 0x3050},
+	{__uni_full_decomp_data_0x3052, 0x3052},
+	{__uni_full_decomp_data_0x3054, 0x3054},
+	{__uni_full_decomp_data_0x3056, 0x3056},
+	{__uni_full_decomp_data_0x3058, 0x3058},
+	{__uni_full_decomp_data_0x305a, 0x305a},
+	{__uni_full_decomp_data_0x305c, 0x305c},
+	{__uni_full_decomp_data_0x305e, 0x305e},
+	{__uni_full_decomp_data_0x3060, 0x3060},
+	{__uni_full_decomp_data_0x3062, 0x3062},
+	{__uni_full_decomp_data_0x3065, 0x3065},
+	{__uni_full_decomp_data_0x3067, 0x3067},
+	{__uni_full_decomp_data_0x3069, 0x3069},
+	{__uni_full_decomp_data_0x3070, 0x3070},
+	{__uni_full_decomp_data_0x3071, 0x3071},
+	{__uni_full_decomp_data_0x3073, 0x3073},
+	{__uni_full_decomp_data_0x3074, 0x3074},
+	{__uni_full_decomp_data_0x3076, 0x3076},
+	{__uni_full_decomp_data_0x3077, 0x3077},
+	{__uni_full_decomp_data_0x3079, 0x3079},
+	{__uni_full_decomp_data_0x307a, 0x307a},
+	{__uni_full_decomp_data_0x307c, 0x307c},
+	{__uni_full_decomp_data_0x307d, 0x307d},
+	{__uni_full_decomp_data_0x309e, 0x309e},
+	{__uni_full_decomp_data_0x30f4, 0x30f4},
+	{__uni_full_decomp_data_0x30ac, 0x30ac},
+	{__uni_full_decomp_data_0x30ae, 0x30ae},
+	{__uni_full_decomp_data_0x30b0, 0x30b0},
+	{__uni_full_decomp_data_0x30b2, 0x30b2},
+	{__uni_full_decomp_data_0x30b4, 0x30b4},
+	{__uni_full_decomp_data_0x30b6, 0x30b6},
+	{__uni_full_decomp_data_0x30b8, 0x30b8},
+	{__uni_full_decomp_data_0x30ba, 0x30ba},
+	{__uni_full_decomp_data_0x30bc, 0x30bc},
+	{__uni_full_decomp_data_0x30be, 0x30be},
+	{__uni_full_decomp_data_0x30c0, 0x30c0},
+	{__uni_full_decomp_data_0x30c2, 0x30c2},
+	{__uni_full_decomp_data_0x30c5, 0x30c5},
+	{__uni_full_decomp_data_0x30c7, 0x30c7},
+	{__uni_full_decomp_data_0x30c9, 0x30c9},
+	{__uni_full_decomp_data_0x30d0, 0x30d0},
+	{__uni_full_decomp_data_0x30d1, 0x30d1},
+	{__uni_full_decomp_data_0x30d3, 0x30d3},
+	{__uni_full_decomp_data_0x30d4, 0x30d4},
+	{__uni_full_decomp_data_0x30d6, 0x30d6},
+	{__uni_full_decomp_data_0x30d7, 0x30d7},
+	{__uni_full_decomp_data_0x30d9, 0x30d9},
+	{__uni_full_decomp_data_0x30da, 0x30da},
+	{__uni_full_decomp_data_0x30dc, 0x30dc},
+	{__uni_full_decomp_data_0x30dd, 0x30dd},
+	{__uni_full_decomp_data_0x30f7, 0x30f7},
+	{__uni_full_decomp_data_0x30f8, 0x30f8},
+	{__uni_full_decomp_data_0x30f9, 0x30f9},
+	{__uni_full_decomp_data_0x30fa, 0x30fa},
+	{__uni_full_decomp_data_0x30fe, 0x30fe},
 };
 
 BOOST_UNICODE_DECL extern const size_t __uni_compose_entry_size = sizeof __uni_compose_entry / sizeof __uni_compose_entry[0];

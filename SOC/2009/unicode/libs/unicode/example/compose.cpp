@@ -56,6 +56,11 @@ int main()
     unicode::compose(foo, std::ostream_iterator<boost::char32>(std::cout, " "));
     std::cout << std::endl;
     
+    boost::char32 foo2[] = { 0x65, 0x304, 0x301 };
+    std::cout << "Canonical composition of { " << boost::as_array(foo2) << " }: ";
+    unicode::compose(foo2, std::ostream_iterator<boost::char32>(std::cout, " "));
+    std::cout << std::endl;
+    
     boost::char32 bar[] = { 0x20, 0x308 };
     std::cout << "Canonical composition of { " << boost::as_array(bar) << " }: ";
     unicode::compose(bar, std::ostream_iterator<boost::char32>(std::cout, " "));
