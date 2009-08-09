@@ -381,13 +381,8 @@ public:
      */
     void splice(cursor position, binary_tree& x, cursor root)
     {
-        static_cast<node_base_pointer>(root.base_node()->m_children[position.m_pos])->m_parent
-        = position.base_node();
-
-        position.base_node()->m_children[position.m_pos]
-        = root.base_node()->m_children[position.m_pos];
-        
-        root.base_node()->m_children[position.m_pos] = 0;       
+        // x isn't actually used currently...
+        position.base_node()->splice(root.base_node(), position.m_pos);
     }
 
     /**
