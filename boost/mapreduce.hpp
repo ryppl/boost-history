@@ -30,7 +30,7 @@ namespace boost {
 
 namespace mapreduce {
 
-struct specification : boost::noncopyable
+struct specification
 {
     unsigned         map_tasks;             // ideal number of map tasks to use
     unsigned         reduce_tasks;          // ideal number of reduce tasks to use
