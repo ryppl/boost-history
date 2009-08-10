@@ -1,0 +1,121 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 1: Simple GUI Events Handling</h2>
+<big><small>
+This sample introduces Channel by showing how to implement event
+handling thru Channel.<br>
+<br>
+</small></big>
+<p><big><small>We first include the channel header file</small></big></p>
+<big><small></small></big>
+<pre style="background-color: rgb(204, 204, 204);"><big><small><span
+ style="font-weight: bold; font-style: italic;">#include &lt;boost/channel/channel.hpp&gt;</span></small></big></pre>
+<big><small><span style="font-weight: bold; font-style: italic;"><span
+ style="color: rgb(102, 0, 0);">
+</span></span></small></big>
+<p><big><small>As a first step, instantiate a concrete channel type
+according to
+application's requirement. We could consider what data type to use as
+ids, and what kind of namespace and dispatcher will be best fit the
+application. Here we use strings as ids and use default
+linear_namespace and broadcast dispatcher:</small></big></p>
+<big><small></small></big>
+<pre style="background-color: rgb(204, 204, 204);"><big><em><span
+ style="color: rgb(153, 0, 0); font-weight: bold;"><small>typedef channel&lt;string&gt; evt_chan;</small></span></em></big></pre>
+<big><em><span style="color: rgb(153, 0, 0); font-weight: bold;"></span></em></big><big><span
+ style="color: rgb(0, 0, 0);">Next</span></big> we
+define a few event ids to simulate some possible events inside a GUI
+window:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-style: italic; font-weight: bold; color: rgb(153, 0, 0);">string down_id = "_window_button_down_";<br>string up_id = "_window_button_up_";<br>string close_id = "_window_close_";</span></pre>
+<br>
+In this sample, we use the following message/event data structure to
+pass some data:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">struct evt_data {<br>  string data_;&nbsp;<br>  evt_data(const char *d) : data_(d) {}<br>};</span></pre>
+<br>
+<p>Then we define&nbsp; the event source of this sample: a simplest GUI
+window
+without any features except those for sending events: bound channel and
+named_outs (also typedefed inside channel: evt_chan::out). Inside
+gui_window constructor, we bind named_outs to the above mentioned event
+ids in channel to send events:</p>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">class gui_window {<br>  evt_chan &amp; chan_;<br> &nbsp;//a few event src<br></span></pre>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">  evt_chan::out down_out_;<br>&nbsp; evt_chan::out close_out_;<br>public:<br>  gui_window(evt_chan &amp; c): chan_(c),<br>  down_out_(chan_, down_id),<br>  up_out_(chan_, up_id),<br>  close_out_(chan_, close_id) {}<br>  ...and define some utility methods to send out events thru named_outs ...<br>};</span></pre>
+<br>
+After defining event source, we define a handler class to demo using
+object methods as event callbacks. In constructor, we create named_in
+(also nested typedefed inside channel: evt_chan::in) objects to bind
+callbacks to event ids in channel namespace. Named_out and named_in
+objects can be created in stack as we have done in class gui_window.
+Here we create them by invoking channel's factory method to create them
+from heap.<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">class window_handler {<br>&nbsp; evt_chan &amp; ch_;<br>&nbsp; //a few event sinks<br>&nbsp; evt_chan::in *down_in_;<br>&nbsp; evt_chan::in *up_in_;<br>&nbsp; evt_chan::in *close_in_;&nbsp; <br>public:<br>&nbsp; window_handler(evt_chan &amp; c): ch_(c) {<br>&nbsp;&nbsp;&nbsp; down_in_ = ch_.bind_name_in(down_id, boost::bind(&amp;window_handler::down, this, _1, _2));<br>&nbsp;&nbsp;&nbsp; up_in_ = ch_.bind_name_in(up_id, boost::bind(&amp;window_handler::up, this, _1, _2));<br>&nbsp;&nbsp;&nbsp; close_in_ = ch_.bind_name_in(close_id, boost::bind(&amp;window_handler::close, this, _1, _2));<br>&nbsp; }<br>.... here define methods as event callbacks ...<br>};</span></pre>
+<br>
+We define another global function to be used&nbsp; as event handler.<br>
+<span style="color: rgb(153, 0, 0);">void evt_handler(string id,
+boost::shared_ptr&lt;void&gt; p)</span><br
+ style="color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);">{</span><br
+ style="color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);">&nbsp; cout &lt;&lt; "free handler
+... recv event [id=" &lt;&lt; id &lt;&lt; "], [data=" &lt;&lt;
+((evt_data*)p.get())-&gt;data_ &lt;&lt; "]" &lt;&lt; endl;</span><br
+ style="color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);">}</span><br>
+<br>
+Now here is a simple main function:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">int main(int, char **) {</span></pre>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span>The
+first thing is to create the event channel<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">evt_chan chan;</span></pre>
+create the event source (gui_window) and bind it to channel<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">gui_window window(chan);</span></pre>
+create a handler object and bind it to channel<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">&nbsp;window_handler hdlr(chan);</span></pre>
+Next we create more event sinks to bind the global function to event
+ids.<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">evt_chan::in window_down_in(chan, down_id, evt_handler)<br>evt_chan::in window_up_in(chan, up_id, evt_handler);&nbsp;<br>evt_chan::in shut_down_in(chan, close_id, evt_handler);</span></pre>
+Last, we fire some events<span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">window.up("..Hi there [mouse-left-up] ..");<br>window.down(".. a simple window test [mouse-right-down] ..");<br>window.close(".. simple window wiered [window-closed] ..");</span></pre>
+Then exit<br
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="font-weight: bold; font-style: italic; color: rgb(153, 0, 0);">cout &lt;&lt; "... exit ...\n";&nbsp;<br>return 0;</span></pre>
+<p><br>
+In this simple sample, we bind event handlers/callbacks to event
+sources indirectly by binding to names in channel namespace. After
+namespace binding, event dispatching happens directly between named_out
+(senders) and named_in (receivers).</p>
+<br>
+Finally, here is <a href="gui_evt_chan1.cpp">the
+complete
+source code.</a><br>
+<br>
+<br>
+<em><span style="color: rgb(153, 0, 0); font-weight: bold;"></span></em>
+</body>
+</html>

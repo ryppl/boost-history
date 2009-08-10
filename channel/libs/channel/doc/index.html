@@ -1,0 +1,213 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.1//EN" "http://www.w3.org/TR/xhtml11/DTD/xhtml11.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta name="keywords"
+ content="channel, namespace, distributed, communication, C++, template, Windows, Unix, Linux, NFS">
+  <meta name="description"
+ content="Channel - a C++ template framework for distributed computing.">
+  <title>Channel -- a C++ template framework for distributed message
+passing and event dispatching</title>
+  <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+<body>
+<div id="title">
+<h1> Channel </h1>
+<h2>A Name Space Based C++ Template Framework For Asynchronous
+Distributed Message
+Passing and Event Dispatching</h2>
+</div>
+<hr>
+<div class="link-bar"><small><a href="#intro">Overview</a> | <a
+ href="#boost"><span style="text-decoration: underline;">Boost Channel</span></a>
+| <span style="text-decoration: underline;"></span></small><small><a
+ href="#ace">ACE Channel</a></small><small>
+| <a href="#source"><span style="text-decoration: underline;">Download
+at Sourceforge</span></a> | <a href="#platform">Supported Platforms</a>
+| <a href="#build">Build</a> | <a href="#contact">Contact /
+Support</a> </small>
+</div>
+<hr>
+<div>
+<h3><a id="intro">Overview</a></h3>
+<a id="intro">
+Channel is a C++ template library to provide name spaces for
+asynchronous, distributed message passing and event dispatching.
+Message senders and receivers bind to names in name space; binding and
+matching rules decide which senders will bind to which receivers; then
+message passing and event dispatching could happen among bound senders
+and receivers.<br>
+<br>
+Channel's signature:<br>
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; template &lt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename idtype,</span><br style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename platform_type = boost_platform,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename synchpolicy = mt_synch&lt;platform_type&gt;,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename executor_type = abstract_executor, </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;"></span><span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename name_space =
+linear_name_space&lt;idtype,executor_type,synchpolicy&gt;,</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typename dispatcher =
+broadcast_dispatcher&lt;name_space,platform_type&gt; </span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; &gt;</span><br
+ style="font-weight: bold;">
+<span style="font-weight: bold;">&nbsp;&nbsp;&nbsp; class
+channel;&nbsp;&nbsp; </span><br>
+<br>
+Various name spaces (linear/hierarchical/associative) can be used for
+different applications. For example, we can use integer ids as names to
+send messages in linear name space, we can use path name ids (such as
+"/sports/basketball") to send
+messages in hierarchical name space and we can use regex patterns or
+Linda tuple-space style tuples to send messages in associative name
+space; User can configure name space
+easily
+by setting a channel template parameter.<br>
+<br>
+Channel's other major components are dispatchers; which dispatch
+messages/events from senders to bounded receivers. Dispatcher is also a
+channel template parameter. </a>Sample dispatchers includes :
+synchronous broadcast dispatcher,
+buffered asynchronous dispatchers,...<br>
+<br>
+Name space and dispatchers are orthogonal; they can mix and match
+together freely; just as STL algorithms can be used with any STL
+containers. <br>
+<br>
+By combining different name space and dispatching policies, we can
+achieve various models:<br>
+<ul>
+  <li>synchronous event dispatching&nbsp;&nbsp;&nbsp; </li>
+  <li>associative name space based on matching/look-up rules similar to
+Linda tuple space</li>
+  <li>asynchronous messaging model similar to Microsoft CCR
+(Concurrency Coordination Runtime)<br>
+  </li>
+</ul>
+Similar to distributed files systems, distributed channels can be
+connected or "mounted" to allow transparent distributed message
+passing. Filters and translators are used to control name space changes.<br>
+<br>
+For tightly coupled single-address-space applications/modules,
+Channel's "unnamed" in/out
+objects : ports and signal/slots support fine grained and local message
+passing model without
+the hassle of setting up a name space and assigning names.<br>
+<hr style="width: 100%; height: 2px;">
+<h3><a name="boost"></a>Boost Channel</h3>
+Boost Channel is the latest implementation of Channel framework for
+<a href="http://www.boost.org">Boost</a>. Boost provides free
+peer-reviewed portable C++ source libraries. It is emphasized that
+libraries work well with the C++ Standard Library. Boost libraries are
+intended to be widely useful, and usable across a broad spectrum of
+applications. Boost Channel is solely based on standard boost
+facilities:<br>
+<ul>
+  <li>Boost::shared_ptr for message/event data life-time management</li>
+  <li>Boost.Bind, Boost.Function for callback</li>
+  <li>Boost.Thread for synchronization</li>
+  <li>Boost.Serialization for message marshaling/demarshaling</li>
+  <li>Boost.Regex and Boost.Tuple for associative name-matching<br>
+  </li>
+  <li><big><small>Boost.Asio and Boost.Shmem are used to build
+transports among remote channels.</small></big></li>
+</ul>
+Detailed Info:<br>
+<ul>
+  <li><a
+ href="http://channel.sourceforge.net/boost_channel/libs/channel/doc/design.html">Design
+Document</a></li>
+  <li><a
+ href="http://channel.cvs.sourceforge.net/channel/boost_channel/boost_channel/">Browse
+CVS Source Code</a><br>
+  </li>
+</ul>
+<ul>
+</ul>
+</div>
+<hr>
+<div>
+<h3><a name="ace"></a>ACE Channel</h3>
+ACE Channel is the first implementation of Channel framework on top of <a
+ href="http://www.cs.wustl.edu/%7Eschmidt/ACE.html">ACE (Adaptive
+Communication Environment) </a>. ACE is a
+powerful and portable OO/C++ framework for system programming. It
+provides not only wrapper facade classes to abstract the complete OS
+facilities, but also frameworks and design patterns for developing
+multithreaded and distributed applications. ACE Channel uses several
+key ACE facilities including Reactor,
+Service Configurator, Task and Acceptor-Connector.
+<ul>
+  <li><a href="http://channel.sourceforge.net/ace_index.html">Design
+Docs and more info...</a></li>
+  <li><a href="http://channel.cvs.sourceforge.net/channel/channel/">Browse
+CVS Source Code</a><br>
+  </li>
+</ul>
+<ul>
+</ul>
+</div>
+<hr>
+<div>
+<h3><a name="source"></a><a id="source">Source Code Download<br>
+</a></h3>
+<ul>
+  <li><a href="http://sourceforge.net/projects/channel/">Download</a></li>
+</ul>
+All released files are hosted at sf.net: <a
+ href="http://sourceforge.net/projects/channel">http://sourceforge.net/projects/channel</a>
+</div>
+<hr>
+<div>
+<div>
+<h3><a name="platform"></a><a id="source">Supported Platforms<br>
+</a></h3>
+Theoretically Boost Channel can work on any platforms where Boost is
+supported, since it is solely dependent on&nbsp; Boost
+facilities.&nbsp; Currently Boost Channel is being actively developed
+and tested in the
+following platforms:<br>
+<ul>
+  <li>Linux (Fedora, Ubuntu) with gcc</li>
+  <li>Windows XP with Visual C++ 2005 Express</li>
+</ul>
+It will be tested on other platforms (Solaris, NetBSD...) when time and
+resources are available.<br>
+</div>
+<hr>
+<h3><a name="build"></a><a id="source">Build<br>
+</a></h3>
+<a href="http://www.boost.org/more/getting_started.html">checkout boost
+cvs source code</a><br>
+download latest boost_channel_x_x.tar.gz<br>
+tar xvzf boost_channel_x_x.tar.gz<br>
+cd &lt;top directory of channel&gt;<br>
+copy subdirectory boost/channel/ to &lt;boost
+root directory&gt;/boost/<br>
+copy subdirectory
+libs/channel/ to &lt;boost root directory&gt;/libs/<br>
+cd to &lt;boost root
+directory&gt;/libs/channel/exmaple/&lt;specific samples such as
+ping_pong&gt;<br>
+bjam
+<hr>
+<h3><a id="contact">Contact / Support</a></h3>
+<a href="yigongliu@gmail.com">yigongliu@gmail.com</a>
+</div>
+<hr>
+<div class="footer"><small>This page is maintained by: <a
+ href="yigongliu@gmail.com">yigongliu@gmail.com</a></small>
+</div>
+</body>
+</html>

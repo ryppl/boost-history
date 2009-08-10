@@ -1,0 +1,20 @@
+#//
+#// Copyright (c) 2005-2009 Yigong Liu (yigongliu at gmail dot com)
+#//
+#// Distributed under the Boost Software License, Version 1.0. (See accompanying
+#// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#//
+
+project
+  : requirements
+    <library>/boost/serialization//boost_serialization
+    <library>/boost/thread//boost_thread
+    <library>/boost/system//boost_system
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+  ;
+
+obj chat1.obj : chat1.cpp ;
+exe chat1 : chat1.obj ;
+obj chat2.obj : chat2.cpp ;
+exe chat2 : chat2.obj ;

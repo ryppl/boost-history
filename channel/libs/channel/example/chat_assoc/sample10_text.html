@@ -1,0 +1,240 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 10.&nbsp; channel using Linda-style associative lookup<br>
+</h2>
+This sample modifies chat_direct sample to show how we can pass
+messages and events among distributed processes based on Linda-style
+associative name lookup.<br>
+<br>
+Lets walk thru the code.<br>
+<br>
+All name space related types are defined in <a href="chat_defs.hpp">chat_defs.hpp</a>.<br>
+<br>
+In Linda tuple space, each tuple consist of a set of fields. When
+tuples are read from tuple space, some fields can be set as wildcard
+and they can match any values. In Channel we can use tuples as
+names/ids in name space and similarly associative lookup will be used
+for
+name-matching. Please refer to <a href="../../doc/assoc_id_text.html">simple
+design doc</a> for more details. Boost.Tuple is used for tuple
+implementation, so &lt;boost/tuple.hpp&gt; is included.<br>
+<br>
+For this sample, we use the following tuple type with 4 fields:<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">typedef
+boost::tuple&lt;string, string, int, int&gt; tuple_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">typedef
+tuple_id&lt;tuple_type&gt; id_type;<br>
+</span></div>
+These 4 fields are used to identify a person:<br>
+&nbsp;*&nbsp; string - first name<br>
+&nbsp;*&nbsp; string - last name<br>
+&nbsp;*&nbsp; int&nbsp;&nbsp;&nbsp; - male(0), female(1)<br>
+&nbsp;*&nbsp; int&nbsp;&nbsp;&nbsp; - department: math(0), physics(1),
+art(2)...<br>
+Next we instantiate the channel type. A associative name space is
+implemented as a linear namespace with associative&nbsp; lookup. The
+lookup method is defined as the last template argument of
+linear_name_space class template. The default value "true" means "exact
+matching"; for "associative lookup" we set it to false.<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">typedef channel&lt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; id_type,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+boost_platform,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+mt_synch&lt;boost_platform&gt;,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+abstract_executor, //force in place execution</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+linear_name_space&lt;id_type, abstract_executor,
+mt_synch&lt;boost_platform&gt;, false&gt; ///false - assoc matching</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; &gt;
+chat_chan;</span><br>
+</div>
+<br>
+Next we define ids/names we are going to use in this application. They
+are names and attributes of persons we are interested. Two sets of ids
+are defined: ids for specific persons and ids for categories:<br>
+Ids for specific persons:<br>
+<div style="margin-left: 40px;">A person with name "robin smith", male
+and in department of "art"<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">id_type
+robin_s_id(tuple_type(</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "robin",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "smith",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 0,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 2));</span><br>
+</div>
+A person with name "adam smith", male and in department of "math"<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">id_type
+adam_s_id(tuple_type(</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "adam",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "smith",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 0,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 0));</span><br>
+</div>
+A person with name "tina su", female and in department of "physics"<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">id_type
+tina_s_id(tuple_type(</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "tina",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "su",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 1,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 1));</span><br>
+</div>
+</div>
+<span style="font-style: italic;"></span>Ids for categories:<br>
+<div style="margin-left: 40px;">Id for all people with last name "smith"<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">id_type
+smith_r_id(tuple_type(</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;string&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; "smith",</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;int&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;int&gt;::wildcard));</span><br>
+</div>
+Id for all people in "math" department<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">id_type
+math_r_id(tuple_type(</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;string&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;string&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;int&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 0));</span><br>
+</div>
+Id for all female<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">id_type
+female_r_id(tuple_type(</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;string&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;string&gt;::wildcard,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; 1,</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+field_trait&lt;int&gt;::wildcard));</span><br>
+</div>
+</div>
+<br>
+Next we define a simple structure for message data:<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">struct chat_msg {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; string
+source_;</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; string
+data_;</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+chat_msg(char *s, char *d) : source_(s), data_(d) {}</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+chat_msg() {} //have to define this for marshaling to work</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+//serialization function for chat_msg</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+template &lt;typename Archive&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; void
+serialize(Archive &amp; ar, const unsigned int version)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+ar &amp;source_ &amp; data_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">};</span><br>
+</div>
+<br>
+As a last step, we need to add the following macro to define the system
+internal messages (ugly):<br>
+<span style="font-style: italic; color: rgb(153, 0, 0);">DEFINE_ASSOC_SYS_IDS(tuple_type)
+</span><br>
+<br>
+The code in the peer process (<a href="chat1.cpp">chat1.cpp</a>,
+<a href="chat2.cpp">chat2.cpp</a>) are similar to
+other samples. We bind to names to send messages to distributed
+processes, except that we are using associative lookup for
+name-matching. So if application subscribe to <span
+ style="font-style: italic; color: rgb(153, 0, 0);">"smith_r_id", </span><span
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);">it
+will receive messages for both "robin smith" and "adam smith".</span></span><br>
+<br>
+Complete source code listing:<br>
+<a href="chat_defs.hpp">chat_defs.hpp</a><br>
+<a href="chat1.cpp">chat1.cpp</a><br>
+<a href="chat2.cpp">chat2.cpp</a><br>
+<br>
+</body>
+</html>

@@ -1,0 +1,84 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 8.&nbsp; channel
+connection thru shared memory</h2>
+<br>
+This sample shows that remote channels at 2 processes (chat1, chat2)
+can be connected thru shared memory message queues based on
+Boost.Interprocess.<br>
+<br>
+Boost.Interprocess provides rich facilities for intra-node
+inter-process communication, including message queues residing inside
+shared memory. Channel uses this shmem message queue as one of its
+transport among processes in the same node.<br>
+<br>
+Here is the code walk thru at one of peer process (<a href="chat1.cpp">chat1.cpp</a>):<br>
+First we define a message handler function which just print out the
+received messages.<span style="color: rgb(153, 0, 0);"></span><br
+ style="color: rgb(153, 0, 0);">
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);">void msg_handler(id_type id, boost::shared_ptr&lt;void&gt; p, int sz, timeout_type * t)</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">{</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  chat_msg *msg = (chat_msg *) p.get();</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  cout &lt;&lt; msg-&gt;source_ &lt;&lt; " speak on [" &lt;&lt; chat_chan::id_trait::id_to_string(id) &lt;&lt; "]:\n";</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  cout &lt;&lt; msg-&gt;data_  &lt;&lt; "\n";</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">}</span><br
+ style="color: rgb(153, 0, 0);"></pre>
+In the main function, we create channel; bind named_out to ids for
+sending messages; bind named_in to ids and message handler for handling
+incoming messages.<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);">int main(int, char **) {</span><br
+ style="color: rgb(153, 0, 0);"><span style="color: rgb(153, 0, 0);">  char *my_name   //create local channel and bind local event source/sink<br>  chat_chan chan;<br><br>  //create/bind-to subjects i am going to speak about<br>  chat_chan::out basketball_o(chan, basketball);<br>  chat_chan::out tennis_o(chan, tennis);<br>  chat_chan::out stock_o(chan, stock);<br><br>  //subscribe to subjects i am interested in listening<br>  chat_chan::in basketball_i(chan, basketball, msg_handler);<br>  //i want hear all about financials<br>  chat_chan::in all_financial_i(chan, all_financial, msg_handler);<br></span></pre>
+register message type for marshaling/demarshaling:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">  //register chat msg type for marshaling/demarshaling<br>  chat_chan::text_marshaler_registry mar_reg;<br>  mar_reg.register_default_msg_marshaler&lt;chat_msg&gt;();<br></span></pre>
+Next we create a "stream" based on shared memory message queue for
+connecting chat channel to remote channel in other processes. The 1st
+argument "false" means this process just open the share memory message
+queue and don't create it.<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">  shmem_stream&lt;<br>  id_type,<br>    chat_chan::text_marshaler_registry,<br>    timeout_type<br>    &gt; <br>    shmstream(false, que_name, que_max_num, que_max_size, mar_reg); //let the other side create shmem<br></span></pre>
+Then we connect channel to this shmem "stream" and this is the active
+side to start channel connection hand shaking.<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">  connect(chan, &amp;shmstream, true); //active connection side<br></span></pre>
+Here comes the main loop for sending chat messages:<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">  char msg[1024];<br>  bool cont = true;<br>  while (cont) {<br>    //speak<br>    cout &lt;&lt; "which subject : 1-basket_ball, 2-tennis, 3-stock, 4-exit:\n";<br>    int subject;<br>    cin.getline(msg, 1024);<br>    subject = atoi(msg);<br>    switch(subject) {<br>    case 1:<br>    case 2:<br>    case 3:<br>      cout &lt;&lt; "enter your message: ";<br>      cin.getline(msg, 1024);<br>      switch (subject) {<br>      case 1:<br>	basketball_o.send(new chat_msg(my_name, msg));<br>	break;<br>      case 2:<br>	tennis_o.send(new chat_msg(my_name, msg));<br>	break;<br>      case 3:<br>	stock_o.send(new chat_msg(my_name, msg));<br>	break;<br>      default:<br>	break;<br>      }<br></span></pre>
+<br>
+Next we walk thru the code for 2nd peer process (<a href="chat2.cpp">chat2.cpp</a>).
+Most code is
+similar to chat1.cpp, besides we have 2 local channels here.<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"><br>int main(int, char **) {<br>  char* my_name = "chatter 2";<br>  //create local channels and connect them<br>  chat_chan chan;<br>  chat_chan chan2;<br>  connect(chan, chan2);<br><br>  //create/bind-to subjects i am going to speak about<br>  chat_chan::publisher pub(chan);<br>  pub.publish(basketball);<br>  pub.publish(baseball);<br>  pub.publish(tax);<br>  pub.publish(investment);<br>    <br>  //subscribe to subjects i am interested in listening<br>  chat_chan::subscriber sub(chan, msg_handler);<br>  //i am a sports fan<br>  sub.subscribe(all_sports);<br>  sub.subscribe(stock);<br>  sub.subscribe(tax);<br><br>  //subscribe at chan2, using named_in/out api<br>  chat_chan::in basketball_i(chan2, basketball, msg_handler2);<br>  chat_chan::in all_financial_i(chan2, all_financial, msg_handler2);<br><br>  //register chat msg type for marshaling/demarshaling<br>  chat_chan::text_marshaler_registry mar_reg;<br>  mar_reg.register_default_msg_marshaler&lt;chat_msg&gt;();<br></span></pre>
+Here we create shared memory "stream" to connect to remote channel;
+notice that the 1st argument is "true", so the shared memory message
+queue will be created if it doesn't exist.<br>
+<pre style="background-color: rgb(204, 204, 204);"><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);"></span><span
+ style="color: rgb(153, 0, 0);">  //create shmem stream and connect to channel<br>  shmem_stream&lt;<br>  id_type,<br>    chat_chan::text_marshaler_registry,<br>    timeout_type<br>    &gt; <br>    shmstream(true, que_name, que_max_num, que_max_size, mar_reg); //i'll create shmem<br>  connect(chan, &amp;shmstream, false); //i am passive side</span><span
+ style="color: rgb(153, 0, 0);"><br></span></pre>
+<br>
+Complete source code listing:<br>
+<a href="chat_defs.hpp">chat_defs.hpp</a><br>
+<a href="chat1.cpp">chat1.cpp</a><br>
+<a href="chat2.cpp">chat2.cpp</a><br>
+<br>
+</body>
+</html>

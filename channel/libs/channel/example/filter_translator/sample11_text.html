@@ -1,0 +1,248 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 11.&nbsp; channel name space management and security with
+filter and translator<br>
+</h2>
+Based on applications name space management requirements, we may need
+to "relocate"/"mount" the names imported (from a connection to a remote
+name space) to a specific sub-region in name space. For example, if we
+have a name space in desktop computer and connect to a PDA and a
+laptop, we can set translators at connections so that names imported
+from PDA will appear under "/pda/" and names from laptop will appear
+under "/laptop/". Or if our application use integer as ids/names, we
+may want to relocate ids from the 1st connection to [1000-1999] and ids
+from next connection to [2000-2999] and so on. That is similar to the
+way how we mount remote file-systems to local file-system.<br>
+Based on security requirements, we may need to use filters to restrict
+the valid range of names allowed to pass in/out specific channel
+connections. For example, a server's name space connect to 2 clients
+and we want that these clients' name spaces and messaging are totally
+separate, so that one client is unware of anything happening inside the
+other client's name space such as new name-publications and message
+passing. That is also similar to the way we protect network by
+firewalls and NATs.<br>
+<br>
+This sample uses a linear name space with strings as ids and implements
+a server which can connect to multiple clients. For each connection,
+the server will relocate the imported names to sub-region. For demo
+purpose, we simply put the names from clients under "/client0/...",
+"/client1/..."... and so on. So a name "basketball" in the first client
+will appear in server's name space as "/client0/basketball".<br>
+<br>
+First we define sample filter and translator in <a
+ href="./chat_defs.hpp">chat_defs.hpp</a>.<br>
+<br>
+When filter is created and bound for a connection,&nbsp; a prefix
+string ( such as "/client0/", "/client1/" ) is passed in . Then this
+filter will check name space change messages (init_subscription,
+publication/unpublication, subscription/unsubscription) to block
+names/ids which are not allowed; in our sample, valid names should
+begin with correct prefix. both input and output directions will be
+checked:<br>
+<div style="margin-left: 40px;"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">class filter_t :
+public filter_type&lt;string&gt; {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">public:</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; string
+prefix;</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+filter_t(string pre) : prefix(pre) {}</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; bool
+block_inward (string &amp;id) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+if (id.find(prefix) != 0) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; "id [" &lt;&lt; id &lt;&lt; "] blocked at inward&lt;"
+&lt;&lt; prefix &lt;&lt; "&gt;" &lt;&lt; endl;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return true;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+return false;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; }</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; bool
+block_outward (string &amp;id) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+if (id.find(prefix) != 0) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; "id [" &lt;&lt; id &lt;&lt; "] blocked at outward&lt;"
+&lt;&lt; prefix &lt;&lt; "&gt;" &lt;&lt; endl;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+return true;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+}</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+return false;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; }</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">};</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<br>
+</div>
+When translator is created and bound for a connection,&nbsp; a prefix
+string (
+such as "/client0/", "/client1/" ) is passed in which designates where
+imported names will appear. Then both incoming and outgoing messages
+will be translated by the translator. In our simple demo, the
+translation is adding and removing of the prefix:<br>
+<div style="margin-left: 40px;"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">class translator_t
+: public translator_type&lt;string&gt; {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">public:</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; string
+prefix;</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+translator_t(string pre) : prefix(pre) {}</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; void
+translate_inward (string &amp; id) { </span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; "translate_inward : id[" &lt;&lt; id &lt;&lt; "] into [" ;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+id = prefix + id;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; id &lt;&lt;&nbsp; "]\n";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; }</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; void
+translate_outward (string &amp; id) { </span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; "translate_outward : id[" &lt;&lt; id &lt;&lt; "] into ["
+;</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+id.erase(0,prefix.size());</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+cout &lt;&lt; id &lt;&lt; "]\n";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; }</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">};</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<br>
+</div>
+A binder is just the combination of filter and translator.<br>
+<div style="margin-left: 40px;"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">class binder :
+public binder_type&lt;string&gt; {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">public:</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+binder(string prefix) {</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+filter = new filter_t(prefix);</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;&nbsp;&nbsp;
+translator = new translator_t(prefix);</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; }</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">};</span><br>
+</div>
+<br>
+Next lets see how filter and translator is set up in <a href="srv.cpp">srv.cpp</a>.<br>
+<br>
+In srv.cpp, we define the following callback function, so that a proper
+binder object will be created based on information about the connection
+(here we use information about socket). In real applications, we may
+need security provisions such as which range of ids/names are allowed
+for which remote connections. Here we simply relocate names for remote
+clients to "/client0/", "/client1/", etc.<br>
+<div style="margin-left: 40px;"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">binder *
+binder_generator(boost::shared_ptr&lt;tcp::socket&gt; sock)</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">{</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;"></span><span
+ style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; static int
+num = 0;</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; string
+prefix = "/client";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+std::ostringstream os;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; os
+&lt;&lt; num;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; num++;</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; return
+new binder(prefix+os.str()+"/");</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">}<br>
+</span></div>
+<br>
+Next in srv.cpp when we accept connection from clients,
+binder_generator is passed in so that proper binder will be created and
+used for each new connection:<br>
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+connector.async_accept(atoi(srv_port), // channel address</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+boost::bind(asio_bind_sock_chan&lt;chat_chan,
+chat_chan::text_marshaler_registry&gt;(&amp;binder_generator), </span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; boost::ref(chan),
+boost::ref(mar_reg), _1, _2,_3));</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<br>
+A sample session could be as following:<br>
+1. start server<br>
+&nbsp;&nbsp;&nbsp; srv 8888<br>
+2. start first client (test1)<br>
+&nbsp;&nbsp;&nbsp; cli test1 localhost 8888<br>
+3. start 2nd client (test2)<br>
+&nbsp;&nbsp;&nbsp; cli test2 localhost 8888<br>
+4. in test1, add a new id/name such as "fishing"; from server's log,
+we'll see it appears in server's namespace as "/client0/fishing";<br>
+&nbsp;&nbsp;&nbsp; in test1, we can use "fishing" to send message to
+server, while at server we need to use "/client0/fishing" to send
+message to &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+test1.<br>
+5. in test2, add a new id/name such as "reading"; from server's log,
+we'll see it appears in server's namespace as "/client1/reading";<br>
+&nbsp;&nbsp;&nbsp; in test2, we can use "reading" to send message to
+server, while at
+server we need to use "/client1/reading" to send message to
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; test2.<br>
+6. notice that test1 is not aware of what is happening with test2 and
+vice versa.<br>
+<br>
+Complete source code listing:<br>
+<a href="chat_defs.hpp">chat_defs.hpp</a><br>
+<a href="cli.cpp">cli.cpp</a><br>
+<a href="srv.cpp">srv.cpp</a><br>
+<br>
+</body>
+</html>

@@ -1,0 +1,129 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Sample 9.&nbsp; channel using regex name matching<br>
+</h2>
+<br>
+This sample modifies chat_direct sample to show how we can pass
+messages and events among distributed processes based on regex name
+matching.<br>
+<br>
+Lets walk thru the code.<br>
+<br>
+All name space related types are defined in <a href="chat_defs.hpp">chat_defs.hpp</a>.<br>
+<br>
+First we set regex_id to be the id_type. With regex_id, applications
+can use strings and regex patterns (Boost.Regex) as message ids and
+names (also we need to include &lt;boost/regex.hpp&gt;). <br>
+Next we instantiate the channel type. A associative name space is
+implemented as a linear namespace with associative&nbsp; lookup. The
+lookup method is defined as the last template argument of
+linear_name_space class template. The default value "true" means "exact
+matching"; for "associative lookup" we set it to false.<br>
+<div style="margin-left: 40px;"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">typedef regex_id
+id_type;</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">typedef
+channel&lt;</span><br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; id_type,</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+boost_platform,</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+mt_synch&lt;boost_platform&gt;,</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+abstract_executor, //force in place execution</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp;
+linear_name_space&lt;id_type, abstract_executor,
+mt_synch&lt;boost_platform&gt;, false&gt; ///false - assoc matching</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">&nbsp; &gt;
+chat_chan;</span><br>
+</div>
+Next we define ids/names we are going to use in this channel
+application. We define 2 sets of ids: plain text strings and&nbsp;
+regex patterns: <br>
+<div style="margin-left: 40px; background-color: rgb(255, 255, 255);"><span
+ style="color: rgb(153, 0, 0); font-style: italic;">id_type basketball
+= "[sports]: basketball";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">id_type tennis
+= "[sports]: tennis";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">id_type
+baseball = "[sports]: baseball";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="font-style: italic; color: rgb(0, 0, 102);">id_type
+all_balls(new boost::regex(".*ball.*"));</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<br style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">id_type tax =
+"[financial]: tax";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">id_type stock
+= "[financial]: stock";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="color: rgb(153, 0, 0); font-style: italic;">id_type
+investment = "[financial]: investment";</span><br
+ style="color: rgb(153, 0, 0); font-style: italic;">
+<span style="font-style: italic; color: rgb(0, 0, 102);">id_type
+all_financial(new boost::regex(".*financial.*"));</span><br
+ style="color: rgb(0, 0, 102);">
+</div>
+<br>
+Next we define a simple structure for message data:<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">struct chat_msg {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; string
+source_;</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; string
+data_;</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+chat_msg(char *s, char *d) : source_(s), data_(d) {}</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+chat_msg() {} //have to define this for marshaling to work</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+//serialization function for chat_msg</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;
+template &lt;typename Archive&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; void
+serialize(Archive &amp; ar, const unsigned int version)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+ar &amp;source_ &amp; data_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">};</span><br>
+</div>
+<br>
+The code in the peer process (<a href="chat1.cpp">chat1.cpp</a>,
+<a href="chat2.cpp">chat2.cpp</a>) are similar to
+other samples. We bind to names to send messages to distributed
+processes, except that
+we are using regex matching for name-matching. So if application
+subscribe to <span style="font-style: italic; color: rgb(153, 0, 0);">"all_balls",
+</span><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);">it will receive messages for both
+"basketball", "baseball" and any other balls.</span></span><br>
+<br>
+Complete source code listing:<br>
+<a href="chat_defs.hpp">chat_defs.hpp</a><br>
+<a href="chat1.cpp">chat1.cpp</a><br>
+<a href="chat2.cpp">chat2.cpp</a><br>
+<br>
+</body>
+</html>

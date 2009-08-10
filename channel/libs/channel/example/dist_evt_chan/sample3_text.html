@@ -1,0 +1,309 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+</head>
+<body>
+<h2>Sample 3: Distributed Event Channel<br>
+</h2>
+<br>
+This sample is based on Sample1 with changes to show how remote
+channels can be connected to facilitate distributed events dispatching.<br>
+<br>
+Now we put the event source (gui_window) in one process with some local
+event sinks and connect it to another process which contains other
+event
+sinks. We are going to use Boost.Asio to set up tcp socket for remote
+connection transport.<br>
+<br>
+All major data types are defined in a common header file <a
+ href="evt_chan_defs.hpp">evt_chan_defs.hpp.</a><br>
+<br>
+First we need to instantiate the concrete channel class. Different from
+Sample1 and Sample2, we are going to make Channel <span
+ style="font-weight: bold;">asynchronous</span> which means that
+callbacks are not executed by the event sending thread directly (or in
+place). In stead callbacks will be scheduled and executed lated in an
+executor. For best integration with asio, Channel provides a special
+executor (asio_executor) to dispatch asynchronous operations to asio's
+main thread. So here is our channel type:<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">typedef
+channel&lt;string, </span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; boost_platform,</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; mt_synch&lt;boost_platform&gt;,</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; asio_executor&gt; evt_chan;</span><br>
+Channel's implementation depends on some system facilities, such as
+mutex, condition, timers. To facilitate platform independence, these
+facilties are defined as nested types inside "platform" wrapper class,
+such as boost_platform used here. mt_synch is synchronization policy
+class for thread safe operations, while another class
+null_synch&lt;&gt; contains empty "null" definitions of synchronization
+primitives and can be used for single threaded application.<br>
+<br>
+Next we define event ids and data structure the same as Sample1.<br>
+<br>
+Since we are doing distributed event dispatching now, the
+messages/event_data need be marshaled/demarshaled across process
+boundary. Channel uses Boost.Serialization for message marshaling. So
+the message class contains the following serialize() method:<br>
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">struct
+evt_data {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+string data_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+evt_data(const char *d) : data_(d) {}</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+evt_data() {} //have to define this for marshaling to work</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+//serialization function for evt_data</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+template &lt;typename Archive&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+void serialize(Archive &amp; ar, const unsigned int version)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+{</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;&nbsp;&nbsp;
+ar &amp; data_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">&nbsp;
+}</span><br
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">
+<span
+ style="font-style: italic; color: rgb(153, 0, 0); font-weight: bold;">};</span><br>
+<br>
+In file <a href="evt_chan1.cpp">evt_chan1.cpp</a>,
+we first define event source (gui_window) and handler class
+(window_handler) the same as Sample1 and Sample2. <br>
+Next we introduce a major addition in this sameple - name binding
+callback. Since we are going to connect channels in 2 processes and
+send events to remote process, we must start sending events after the
+remote process connect in and bind to event ids. Otherwise events will
+be lost. Channel allows registering callbacks to
+names (named_in and named_out) so that application will be notified
+when
+remote peers connect in and bind. The following is the binding callback
+in this sample in which we start sending events after remote peers
+connect and bind:<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">void
+name_binding_callback(evt_chan::name *n, </span><span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">evt_chan::name::binding_event
+e) {</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;
+if (n-&gt;type_ == evt_chan::name::member_remote &amp;&amp; e ==
+evt_chan::name::bind_ev) {</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+if (n-&gt;id_ == down_id) rmt_down_bound = true;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+if (n-&gt;id_ == up_id) rmt_up_bound = true;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+if (n-&gt;id_ == close_id) rmt_close_bound = true;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+///fire sample events after remote peer connected and ids bound</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+if (rmt_down_bound &amp;&amp; rmt_up_bound &amp;&amp; rmt_close_bound) {</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+window-&gt;up("..Hi there [mouse-left-up] ..");</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+window-&gt;down(".. a simple window test [mouse-right-down] ..");</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+window-&gt;close(".. simple window wiered [window-closed] ..");</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;
+}</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">}</span><br>
+<br>
+Now the main function in evt_chan1.cpp:<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">int
+main(int, char **) {</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;
+try {</span><br>
+First we create asio io_service and asio_executor for asynchronous
+operations.<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+boost::asio::io_service io_service;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+asio_executor asio_exec(io_service);</span><br>
+Next create local channel and configure it to run all its async
+operations in asio_exec<br>
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+evt_chan chan(&amp;asio_exec);</span><br>
+Same as Sample1 and Sample2, create event source (gui_window) and
+handler and bind them to channel. Also name binding callback is
+registered when creating gui_window.<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+gui_window window(chan</span><span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+window_handler hdlr(chan);</span><br>
+Since event messages will be sent to remote process, they will be
+marshaled into on-wire format at sender side and demarshaled at
+receiver side. Channel's marshaling mechanism is based on
+Boost.Serialization. Here we register event/message data class
+(evt_data) with corresponding event ids in a marshaler registry inside
+which a marshaler object is created automatically for this data class.
+Later when socket connection is set up, we should specify the
+marshaler_registry to use:<br>
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+evt_chan::text_marshaler_registry mar_reg;</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+std::vector&lt;evt_chan::id_type&gt; ids;</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+ids.push_back(down_id);</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+ids.push_back(up_id);</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+ids.push_back(close_id);</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+mar_reg.register_msg_marshaler&lt;evt_data&gt;(ids);</span><br>
+Now we create asio connector and connect local channel to remote
+channel. Since we are using asynchronous API at asio, we pass in a
+callback (asio_bind_sock_chan) asking asio_connector to connect socket
+streams to local channel, including which marshaler_registry to use.
+Here in evt_chan1.cpp, asio connector plays the active connecting role.<br>
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+asio_connector connector(io_service);</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+connector.async_connect("localhost", "6666", //remote channel address</span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+boost::bind(asio_bind_sock_chan&lt;evt_chan,
+evt_chan::text_marshaler_registry&gt;(), </span><br
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">
+<span
+ style="color: rgb(204, 0, 0); font-weight: bold; font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; boost::ref(chan), boost::ref(mar_reg), _1, _2));<br>
+</span>Finally start asio main event loop.<br>
+<span style="color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+<span style="font-weight: bold; font-style: italic;">io_service.run();</span></span><br>
+<span style="color: rgb(204, 0, 0);">...</span><br
+ style="color: rgb(204, 0, 0);">
+<span style="color: rgb(204, 0, 0);">}</span><br>
+<br>
+In file <a href="evt_chan2.cpp">evt_chan2.cpp</a>,
+most code is similar to code in evt_chan1.cpp
+with one major difference: asio_connector plays the passive side of
+connection (accept):<br>
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;
+try {</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+boost::asio::io_service io_service;</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+asio_connector connector(io_service);</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+connector.async_accept(6666, //channel published at port 6666</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+boost::bind(asio_bind_sock_chan&lt;evt_chan,
+evt_chan::text_marshaler_registry&gt;(), </span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; boost::ref(chan),
+boost::ref(mar_reg), _1, _2));</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;&nbsp;&nbsp;
+io_service.run();</span><br
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">
+<span
+ style="font-weight: bold; font-style: italic; color: rgb(204, 0, 0);">&nbsp;
+}</span><br>
+<br>
+During testing, first start evt_chan2 and then start evt_chan1. From
+trace, we should see the events generated at evt_chan1 received and
+processed at both evt_chan1 and evt_chan2 processes.<br>
+<br>
+Here are complete source listing:<br>
+<a href="evt_chan_defs.hpp">evt_chan_defs.hpp</a><br>
+<a href="evt_chan1.cpp">evt_chan1.cpp</a><br>
+<a href="evt_chan2.cpp">evt_chan2.cpp</a><br>
+<br>
+<br>
+</body>
+</html>

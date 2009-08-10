@@ -1,0 +1,20 @@
+#//
+#// Copyright (c) 2005-2009 Yigong Liu (yigongliu at gmail dot com)
+#//
+#// Distributed under the Boost Software License, Version 1.0. (See accompanying
+#// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#//
+
+project
+  : requirements
+    <library>/boost/thread//boost_thread
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+  ;
+
+obj gui_evt_chan1.obj : gui_evt_chan1.cpp ;
+exe gui_evt_chan1 : gui_evt_chan1.obj ;
+obj gui_evt_chan2.obj : gui_evt_chan2.cpp ;
+exe gui_evt_chan2 : gui_evt_chan2.obj ;
+obj gui_evt3.obj : gui_evt3.cpp ;
+exe gui_evt3 : gui_evt3.obj ;

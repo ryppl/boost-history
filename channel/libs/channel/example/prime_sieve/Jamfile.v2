@@ -1,0 +1,16 @@
+#//
+#// Copyright (c) 2005-2009 Yigong Liu (yigongliu at gmail dot com)
+#//
+#// Distributed under the Boost Software License, Version 1.0. (See accompanying
+#// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+#//
+
+project
+  : requirements
+    <library>/boost/thread//boost_thread
+    <define>BOOST_ALL_NO_LIB=1
+    <threading>multi
+  ;
+
+obj prime_sieve.obj : prime_sieve.cpp ;
+exe prime_sieve : prime_sieve.obj ;

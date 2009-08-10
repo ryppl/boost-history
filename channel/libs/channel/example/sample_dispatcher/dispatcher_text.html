@@ -1,0 +1,528 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
+<html>
+<head>
+  <meta content="text/html; charset=ISO-8859-1"
+ http-equiv="content-type">
+  <title>dispatcher_text.html</title>
+</head>
+<body style="color: rgb(0, 0, 0);" alink="#ee0000" link="#0000ee"
+ vlink="#551a8b">
+<h2>Implementation of Sample Pull Dispatcher<br>
+</h2>
+The following is the description of implementation of a simple pull
+dispatcher.&nbsp; Its full source is <a
+ href="pull_dispatcher_sample.hpp">here...</a><br>
+<br>
+Each dispatcher has 2 parts: sending algorithm and receiving algorithm.
+They are defined as 2 separate nested template classes. With this
+dispatcher, sending thread buffers messages in queues at sending side,
+notifies the receivers and returns right away, receiving threads are
+blocked waiting at receiving side and unblocked when messages are
+available.<br>
+<br>
+Let's look at the sending class at first. Because it is a pull
+dispatcher, the messages will be buffered inside channel at sending
+side. A queue will be part of sending class. Queue type is one of
+template parameter of sender class to allow customization. We set the
+sender class inherit from queue class so that queue's methods are
+exposed to allow clients code to provision the queue's settings such as
+size or blocking timeout.<br>
+<br>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+template &lt;typename name_space, typename platform, template
+&lt;class,class,class&gt; class msg_queue_type&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+struct pull_sender_sample : </span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; public
+msg_queue_type&lt;boost::shared_ptr&lt;message&lt;typename
+name_space::id_type&gt; &gt;,</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; typename
+name_space::synch_policy,</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp; platform&gt; {<br>
+<br>
+</span></span></div>
+Next, we define a few data types associated with sending class:<br>
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);"></span></span></div>
+<div style="text-align: left;">
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);"><span
+ style="font-style: italic;">&nbsp;&nbsp;&nbsp; typedef typename
+name_space::id_type id_type;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef typename name_space::synch_policy synch_policy;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef typename name_space::executor executor;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef name&lt;id_type,executor,synch_policy&gt; name_type;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef message&lt;id_type&gt; msg_type;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef typename name_type::binding_set_type binding_set_type;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef msg_queue_type&lt;boost::shared_ptr&lt;msg_type&gt;,
+synch_policy,</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; platform&gt; que_type;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef pull_recver_sample&lt;name_space, platform,msg_queue_type&gt;
+recver_type;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typedef named_in&lt;name_space, recver_type&gt; named_in_type;</span></span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Then constructor is defined.<br>
+</span></span>
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);"><span
+ style="font-style: italic;">&nbsp;&nbsp;&nbsp; name_type * name_;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+pull_sender_sample(name_type *n, executor *) : que_type(), name_(n) { }</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+~pull_sender_sample() {}</span></span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Next, the most important method in sending class is defined. Since this
+is a pull dispatcher, the message is not pushed directly to receivers.
+Instead, the message is stored in queue first, then bound receivers are
+notified that a message is available and receiving threads are
+unblocked. Notice the binding_set (set of bound receivers) are
+retrieved from associated name object.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+void notify(boost::shared_ptr&lt;msg_type&gt; msg) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; //first store msg in que</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; put(msg);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; //notify recevers</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; typename synch_policy::scoped_lock
+lock(this-&gt;name_-&gt;bind_lock_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; binding_set_type &amp;bindings = this-&gt;name_-&gt;bindings_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; if (!bindings.empty()) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; bool cont = true;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; for(typename binding_set_type::iterator iter =
+bindings.begin();</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; iter != bindings.end() &amp;&amp; cont; iter++) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; named_in_type *named_in = (named_in_type
+*)(*iter);</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; recver_type *recver = (recver_type
+*)named_in;</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //for pull dispatchers, only send msgs
+to local receviers</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; if (named_in-&gt;type_ ==
+named_in_type::member_local)</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; cont = recver-&gt;notify(msg-&gt;id_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; }</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+After receiving notification, the 1st notified receiver will
+pull/retrieve message from sender's queue.<br>
+</span></span>
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);"><span
+ style="font-style: italic;">&nbsp;&nbsp;&nbsp; int
+pull(boost::shared_ptr&lt;msg_type&gt; &amp; msg) {</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp; if (!this-&gt;empty()) {</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; get(msg);</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return 1;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp; }</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp; return 0;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+}</span></span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+The following methods are various "send()" which are the API of this
+class. One basic rule is that message data are passed in as pointers,
+and this data will be owned by channel and released by channel after
+nobody refers to it anymore. To change this default behaviour (such as
+passing data on stack as message), invoker of "send()" can pass in
+proper deleter together with data pointer or pass in proper share_ptr
+initialized with proprt deleter.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+//after sending, channel becomes owner</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+template &lt;typename user_msg_type&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+void send(user_msg_type *msg) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;void&gt; m0(msg);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;msg_type&gt; m(new msg_type(name_-&gt;id_,
+m0));</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; notify (m);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+//after sending: 1&gt; channel becomes owner, if deleter does real
+deletion</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+// 2&gt; sender still owns msg, if deleter does nothing</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+template &lt;typename user_msg_type, typename deleter&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+void send(user_msg_type *msg, deleter deler) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;void&gt; m0(msg, deler);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;msg_type&gt; m(new msg_type(name_-&gt;id_,
+m0));</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; notify (m);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+//user_msg is already smarter pointer, channel becomes owner</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+template &lt;typename user_msg_type&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+void send(boost::shared_ptr&lt;user_msg_type&gt; msg) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;void&gt; m0(msg);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;msg_type&gt; m(new msg_type(name_-&gt;id_,
+m0));</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; notify (m);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);"></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+//for channel internal use on wildcard named_out</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+template &lt;typename user_msg_type&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+void send(id_type id, boost::shared_ptr&lt;user_msg_type&gt; msg) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;void&gt; m0(msg);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;msg_type&gt; m(new msg_type(id, m0));</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; notify (m);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+The following is about the implementation of receiving class.<br>
+<br>
+It has the same template parameters as sending class.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+template &lt;typename name_space, typename platform, template
+&lt;class,class,class&gt; class msg_que_type&gt;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+struct pull_recver_sample {<br>
+</span><span style="color: rgb(153, 0, 0);"><span
+ style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);">Similarly,
+associated types are defined.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef typename name_space::id_type id_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef typename name_space::synch_policy synch_policy;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef typename name_space::executor executor;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef name&lt;id_type,executor,synch_policy&gt; name_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef message&lt;id_type&gt; msg_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef pull_sender_sample&lt;name_space, platform, msg_que_type&gt;
+sender_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef named_out&lt;name_space, sender_type&gt; named_out_type;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+typedef typename name_type::binding_set_type binding_set_type;</span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Some synchronization variables and constructor.<br>
+</span></span>
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);"><span
+ style="font-style: italic;">&nbsp;&nbsp;&nbsp; name_type * name_;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typename synch_policy::mutex mutex_;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+typename synch_policy::condition cond_;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+int num_waiting_;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+pull_recver_sample(name_type *n) : </span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+&nbsp; name_(n), num_waiting_(0) {}</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+~pull_recver_sample() {}</span></span><br style="font-style: italic;">
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Here comes the "main" function of receiving threads. Recving thread
+will block here and wait for notifications from senders. And then
+messages will be pulled/retrieved from sending queue and processed.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+void recv(id_type &amp; id, boost::shared_ptr&lt;void&gt; &amp; msg) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; int st;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; boost::shared_ptr&lt;msg_type&gt; mesg;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; typename synch_policy::scoped_lock lock(mutex_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; while(1) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; st = pull(mesg);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; if (st != 0) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; id = mesg-&gt;id_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; msg = mesg-&gt;data_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; num_waiting_++;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; cond_.wait(lock);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; num_waiting_--;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; }&nbsp;&nbsp;&nbsp; &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; </span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Sending thread will call this method to wake up blocked receiving
+threads.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+bool notify(id_type id) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; typename synch_policy::scoped_lock lock(mutex_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; if (num_waiting_ &gt; 0) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; cond_.notify_one();</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return false;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; } </span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; else</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; return true;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Since a receiver can be bound to multiple senders, the following pull
+method try to retrieve data from any bound senders.<br>
+</span></span>
+<div style="margin-left: 40px;"><span
+ style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+int pull(boost::shared_ptr&lt;msg_type&gt; &amp; msg) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; int st = 0;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; //go-thru binding_set to pull from senders</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; typename synch_policy::scoped_lock lock(name_-&gt;bind_lock_);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; binding_set_type &amp;bindings = name_-&gt;bindings_;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; if (!bindings.empty()) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; for(typename binding_set_type::iterator iter =
+bindings.begin();</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; iter != bindings.end() &amp;&amp; st == 0; iter++) {</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; named_out_type *named_out =
+(named_out_type *)(*iter);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; sender_type *sender = (sender_type
+*)(named_out);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; st = sender-&gt;pull(msg);</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp;&nbsp;&nbsp; }</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; }</span><br style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+&nbsp; return st;</span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="font-style: italic; color: rgb(153, 0, 0);">&nbsp;&nbsp;&nbsp;
+}</span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Finally, a dispatcher template class wraps these sending class and
+receiving class together.<br>
+</span></span>
+<div style="margin-left: 40px;"><span style="color: rgb(153, 0, 0);"><span
+ style="font-style: italic;">&nbsp;&nbsp;&nbsp; template &lt;typename
+name_space, typename platform, template &lt;class,class,class&gt; class
+queue_type = unbounded_que&gt;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+struct pull_dispatcher_sample {</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef
+detail::pull_sender_sample&lt;name_space,platform,queue_type&gt; sender;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+typedef
+detail::pull_recver_sample&lt;name_space,platform,queue_type&gt; recver;</span></span><br
+ style="font-style: italic; color: rgb(153, 0, 0);">
+<span style="color: rgb(153, 0, 0);"><span style="font-style: italic;">&nbsp;&nbsp;&nbsp;
+};</span></span><br>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"></span></span></div>
+<span style="color: rgb(153, 0, 0);"><span style="color: rgb(0, 0, 0);"><br>
+Here is <a href="sync_send_recv.cpp">a
+simple program demos usage of this dispatcher</a>.<br>
+<br>
+</span></span><span style="color: rgb(153, 0, 0); font-style: italic;"></span></div>
+</body>
+</html>
