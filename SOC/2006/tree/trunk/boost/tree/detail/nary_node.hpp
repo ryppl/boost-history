@@ -77,16 +77,15 @@ public:
         m_children[m_pos] = p_node;
     }
 
-    void splice(node_with_children_base* p_node, children_type::size_type m_pos)
-    {
-        m_children[m_pos] = p_node->m_children[m_pos];
-
-        p_node->m_children[m_pos] = 0; 
-    }
-
 //protected:
     children_type m_children;
 };
+
+static void splice(node_with_children_base*& to, node_with_children_base*& from)
+{
+    to = from;
+    from = 0; 
+}
 
 class node_base
 : public node_with_parent_base, public node_with_children_base {
@@ -135,13 +134,6 @@ public:
 
         node_with_children_base::attach(p_node, m_pos);
     }
-
-    void splice(base_pointer p_node, children_type::size_type m_pos)
-    {
-        static_cast<node_base*>(p_node->m_children[m_pos])->m_parent = this;
-
-        node_with_children_base::splice(p_node, m_pos);
-    }
     
     base_pointer detach(children_type::size_type m_pos)
     {
@@ -163,6 +155,13 @@ public:
     }
     
 };
+
+void splice(node_base* to, node_with_children_base*& from, node_with_children_base::children_type::size_type m_pos)
+{
+    static_cast<node_base*>(from)->m_parent = to;
+
+    splice(to->m_children[m_pos], from);
+}
 
 class descending_node_base
 : public node_with_children_base {

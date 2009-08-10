@@ -382,7 +382,7 @@ public:
     void splice(cursor position, binary_tree& x, cursor root)
     {
         // x isn't actually used currently...
-        position.base_node()->splice(root.base_node(), position.m_pos);
+        detail::splice(position.base_node(), root.base_node()->m_children[position.m_pos], position.m_pos);
     }
 
     /**
