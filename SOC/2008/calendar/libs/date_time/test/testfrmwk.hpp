@@ -6,12 +6,13 @@
  * Use, modification and distribution is subject to the 
  * Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
- * $Date: 2008-03-23 13:03:24 +0000 (Sun, 23 Mar 2008) $
+ * $Date$
  */
 
 
 #include <iostream>
 #include <string>
+#include <boost/config.hpp>
 
 //! Really simple test framework for counting and printing
 class TestStats
@@ -55,6 +56,28 @@ bool check(const std::string& testname, bool testcond)
   }
 }
 
+template< typename T, typename U >
+inline bool check_equal(const std::string& testname, T const& left, U const& right)
+{
+  bool res = check(testname, left == right);
+  if (!res)
+  {
+    std::cout << "        left = " << left << ", right = " << right << std::endl;
+  }
+  return res;
+}
+
+#ifndef BOOST_NO_STD_WSTRING
+inline bool check_equal(const std::string& testname, std::wstring const& left, std::wstring const& right)
+{
+  bool res = check(testname, left == right);
+  if (!res)
+  {
+    std::wcout << L"        left = " << left << L", right = " << right << std::endl;
+  }
+  return res;
+}
+#endif
 
 int printTestStats() 
 {

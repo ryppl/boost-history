@@ -3,7 +3,7 @@
  * Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
  * Author: Jeff Garland, Bart Garst
- * $Date: 2008-02-27 18:51:14 +0000 (Wed, 27 Feb 2008) $
+ * $Date: 2008-11-25 20:36:52 +0000 (Tue, 25 Nov 2008) $
  */
 
 #include "boost/date_time/posix_time/posix_time_duration.hpp"
@@ -13,7 +13,7 @@
 #else
 #include "boost/date_time/posix_time/time_formatters.hpp"
 #endif
-#include "boost/date_time/testfrmwk.hpp"
+#include "../testfrmwk.hpp"
 
 
 int

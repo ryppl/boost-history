@@ -6,7 +6,7 @@
  * Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
  * Author: Jeff Garland
- * $Date: 2008-02-27 18:51:14 +0000 (Wed, 27 Feb 2008) $
+ * $Date: 2009-01-29 18:54:17 +0000 (Thu, 29 Jan 2009) $
  */
 
 #include <sstream>
@@ -49,6 +49,7 @@ gather_month_strings(const std::locale& locale, bool short_strings=true)
   {
     //grab the needed strings by using the locale to
     //output each month
+    const charT* p_outfmt = outfmt.c_str(), *p_outfmt_end = p_outfmt + outfmt.size();
     for (int m=0; m < 12; m++) {
       tm tm_value;
       tm_value.tm_mon = m;
@@ -56,8 +57,8 @@ gather_month_strings(const std::locale& locale, bool short_strings=true)
       ostream_iter_type oitr(ss);
       std::use_facet<time_put_facet_type>(locale).put(oitr, ss, ss.fill(),
                                                       &tm_value,
-                                                      &*outfmt.begin(),
-                                                      &*outfmt.begin()+outfmt.size());
+                                                      p_outfmt,
+                                                      p_outfmt_end);
       months.push_back(ss.str());
     }
   }
@@ -101,6 +102,7 @@ gather_weekday_strings(const std::locale& locale, bool short_strings=true)
   {
     //grab the needed strings by using the locale to
     //output each month / weekday
+    const charT* p_outfmt = outfmt.c_str(), *p_outfmt_end = p_outfmt + outfmt.size();
     for (int i=0; i < 7; i++) {
       tm tm_value;
       tm_value.tm_wday = i;
@@ -108,8 +110,8 @@ gather_weekday_strings(const std::locale& locale, bool short_strings=true)
       ostream_iter_type oitr(ss);
       std::use_facet<time_put_facet_type>(locale).put(oitr, ss, ss.fill(),
                                                       &tm_value,
-                                                      &*outfmt.begin(),
-                                                      &*outfmt.begin()+outfmt.size());
+                                                      p_outfmt,
+                                                      p_outfmt_end);
 
       weekdays.push_back(ss.str());
     }

@@ -5,7 +5,7 @@
  * Subject to the Boost Software License, Version 1.0.
  * (See accompanying file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
  * Author: Jeff Garland, Bart Garst
- * $Date: 2008-02-27 18:51:14 +0000 (Wed, 27 Feb 2008) $
+ * $Date: 2009-05-31 15:24:25 +0100 (Sun, 31 May 2009) $
  */
 
 
@@ -18,9 +18,8 @@ namespace local_time {
 
 //! Function that creates a tm struct from a local_date_time
 inline
-tm to_tm(const local_date_time& lt) {
-  tm lt_tm;
-  lt_tm = posix_time::to_tm(lt.local_time());
+std::tm to_tm(const local_date_time& lt) {
+  std::tm lt_tm = posix_time::to_tm(lt.local_time());
   if(lt.is_dst()){
     lt_tm.tm_isdst = 1;
   }
