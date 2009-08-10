@@ -195,7 +195,7 @@ public:
         //m_node_alloc.construct(p_node, val);
         *p_node = node_type(val);
         
-        pos.base_node()->attach(p_node, pos.m_pos);
+        detail::attach(pos.base_node(), pos.base_node()->m_children[pos.m_pos], p_node, p_node->m_children[pos.m_pos]);
 
         // Readjust begin
 //        if ((pos == this->inorder_first()))
@@ -382,7 +382,7 @@ public:
     void splice(cursor position, binary_tree& x, cursor root)
     {
         // x isn't actually used currently...
-        detail::splice(position.base_node(), root.base_node()->m_children[position.m_pos], position.m_pos);
+        detail::splice(position.base_node(), position.base_node()->m_children[position.m_pos], root.base_node()->m_children[position.m_pos]);
     }
 
     /**

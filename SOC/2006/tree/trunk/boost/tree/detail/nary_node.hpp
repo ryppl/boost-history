@@ -45,12 +45,12 @@ public:
     {
         return m_parent;
     }
-    
-    void attach(node_with_parent_base* p_node)
-    {
-        p_node->m_parent = this;
-    }
 };
+
+void attach(node_with_parent_base* child, node_with_parent_base* parent)
+{
+    child->m_parent = parent;
+}
 
 class node_with_children_base;
 
@@ -69,17 +69,17 @@ public:
             m_children[i] = 0;
     }
 
-    void attach(node_with_children_base* p_node, children_type::size_type m_pos)
-    {
-        // Only relevant for non-leaf insertion:
-        p_node->m_children[m_pos] = m_children[m_pos];
-
-        m_children[m_pos] = p_node;
-    }
-
 //protected:
     children_type m_children;
 };
+
+void attach(node_with_children_base*& to, node_with_children_base* p_node, node_with_children_base*& parent)
+{
+    // Only relevant for non-leaf insertion:
+    parent = to;
+
+    to = p_node;
+}
 
 static void splice(node_with_children_base*& to, node_with_children_base*& from)
 {
@@ -123,17 +123,6 @@ public:
         return qp;
         //return (c ? 0 : 1);
     }
-
-    void attach(base_pointer p_node, children_type::size_type m_pos)
-    {
-        node_with_parent_base::attach(p_node);
-        
-        // Only relevant for non-leaf insertion:
-        if (m_children[m_pos] != 0)
-            static_cast<node_base*>(m_children[m_pos])->m_parent = p_node;
-
-        node_with_children_base::attach(p_node, m_pos);
-    }
     
     base_pointer detach(children_type::size_type m_pos)
     {
@@ -156,11 +145,22 @@ public:
     
 };
 
-void splice(node_base* to, node_with_children_base*& from, node_with_children_base::children_type::size_type m_pos)
+void attach(node_base* parent, node_with_children_base*& parent_child, node_base* child, node_with_children_base*& child_child)
 {
-    static_cast<node_base*>(from)->m_parent = to;
+    attach(static_cast<node_with_parent_base*>(child), static_cast<node_with_parent_base*>(parent));
+    
+    // Only relevant for non-leaf insertion:
+    if (parent_child != 0)
+        static_cast<node_base*>(parent_child)->m_parent = child;
 
-    splice(to->m_children[m_pos], from);
+    attach(parent_child, static_cast<node_with_children_base*>(child), child_child);
+}
+
+void splice(node_base* to_parent, node_with_children_base*& to, node_with_children_base*& from)
+{
+    static_cast<node_base*>(from)->m_parent = to_parent;
+
+    splice(to, from);
 }
 
 class descending_node_base
