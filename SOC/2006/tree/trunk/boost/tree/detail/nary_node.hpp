@@ -94,19 +94,6 @@ public:
 
     node_base(ascending_node_base* p)
     : ascending_node_base(p), descending_node_base() {}
-    
-    node_base* detach(children_type::size_type m_pos)
-    {
-        descending_node_base::children_type::size_type parent_idx = get_index();
-
-        if (m_children[m_pos] != 0) // Set child's parent only if there _is_ a child
-            static_cast<node_base*>(m_children[m_pos])->m_parent = m_parent;
-
-        static_cast<node_base*>(m_parent)->m_children[parent_idx]
-            = m_children[m_pos];
-        
-        return &*this;
-    }
 
     // O(1)
     children_type::size_type const get_index() const
@@ -114,6 +101,17 @@ public:
         return (static_cast<node_base*>(this->m_parent)->m_children[0] == this ? 0 : 1);
     }
 };
+
+void detach(node_base* n, descending_node_base* child)
+{
+    descending_node_base::children_type::size_type parent_idx = n->get_index();
+
+    if (child != 0) // Set child's parent only if there _is_ a child
+        static_cast<node_base*>(child)->m_parent = n->m_parent;
+
+    static_cast<node_base*>(n->m_parent)->m_children[parent_idx]
+        = child;
+}
 
 //descending_node_base::children_type::size_type
 void

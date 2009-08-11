@@ -352,12 +352,11 @@ public:
      */
     cursor erase(cursor position)
     {
-        size_type idx = index(position);
         node_pointer p_node = static_cast<node_pointer>(position.parent_node());
 
-        p_node = static_cast<node_pointer>(p_node->detach(idx));
+        detach(position.parent_node(), position.child_node());
 
-        position.parent_node() = static_cast<node_base_pointer>(p_node->m_children[idx]);
+        position.parent_node() = static_cast<node_base_pointer>(position.child_node());
 
         m_node_alloc.destroy(p_node);
         m_node_alloc.deallocate(p_node, 1);
