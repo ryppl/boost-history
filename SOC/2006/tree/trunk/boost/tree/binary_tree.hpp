@@ -195,7 +195,7 @@ public:
         //m_node_alloc.construct(p_node, val);
         *p_node = node_type(val);
         
-        detail::attach(pos.base_node(), pos.base_node()->m_children[pos.m_pos], p_node, p_node->m_children[pos.m_pos]);
+        detail::attach(pos.base_node(), pos.the_node(), p_node, p_node->m_children[pos.m_pos]);
 
         // Readjust begin
 //        if ((pos == this->inorder_first()))
@@ -248,7 +248,7 @@ public:
         if (!position.is_leaf()) {
             node_pointer pos_node = 
                 static_cast<node_pointer>(
-                    position.base_node()->m_children[position.m_pos]
+                    position.the_node()
                 );
 
             size_type parent_idx = index(position.parent());
@@ -274,7 +274,7 @@ private:
         if (!position.is_leaf()) {
             node_pointer pos_node = 
                 static_cast<node_pointer>(
-                     position.base_node()->m_children[position.m_pos]
+                     position.the_node()
                 );
 
             // recurse
@@ -289,9 +289,7 @@ private:
 public:
     void rotate(cursor& pos)
     {
-        //TODO: Take care of inorder_first pointer!
-        pos.m_pos = pos.base_node()->rotate(pos.m_pos);
-        pos.base_node() = static_cast<node_base_pointer>(pos.base_node()->m_parent->m_parent);
+        pos.m_pos = detail::rotate(pos.the_node(), pos.base_node(), pos.m_pos);
     }
     
     /**
@@ -382,7 +380,7 @@ public:
     void splice(cursor position, binary_tree& x, cursor root)
     {
         // x isn't actually used currently...
-        detail::splice(position.base_node(), position.base_node()->m_children[position.m_pos], root.base_node()->m_children[position.m_pos]);
+        detail::splice(position.base_node(), position.the_node(), root.the_node());
     }
 
     /**

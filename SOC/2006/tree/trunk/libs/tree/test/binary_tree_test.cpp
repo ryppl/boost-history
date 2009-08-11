@@ -405,6 +405,7 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
     BOOST_CHECK_EQUAL(*c.begin(), 6);
         
     bt.rotate(c); // Left rotate
+    c.to_parent().to_parent();
 
     BOOST_CHECK_EQUAL(*c.begin(), 6);
     BOOST_CHECK_EQUAL(*c.parent().begin(), 8);
@@ -419,7 +420,8 @@ BOOST_AUTO_TEST_CASE( rotate_binary_tree_test )
     BOOST_CHECK_EQUAL(*c.begin(), 3);
     
     bt.rotate(c); // Right rotate
-    
+    c.to_parent().to_parent();
+
     BOOST_CHECK_EQUAL(*c.begin(), 3);
     c = c.end();
 

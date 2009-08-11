@@ -217,6 +217,16 @@ public:
         return this->base_reference();
     }
 
+    typename node_type::node_with_children_base* const& the_node() const
+    {
+        return this->base_reference()->m_children[m_pos];
+    }
+
+    typename node_type::node_with_children_base*& the_node()
+    {
+        return this->base_reference()->m_children[m_pos];
+    }
+
 //    /** 
 //     * Detaches the node this cursor points to and returns a pointer to it;
 //     * this cursor will be set to its inorder successor afterwards (?)

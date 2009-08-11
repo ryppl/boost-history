@@ -100,30 +100,6 @@ public:
     node_base(node_with_parent_base* p)
     : node_with_parent_base(p), node_with_children_base() {}
     
-    // Binary specific
-    
-    children_type::size_type rotate(children_type::size_type const& c)
-    {
-        //TODO: Optimise.
-        base_pointer q = static_cast<node_base*>(m_children[c]);
-        
-        base_pointer B = static_cast<node_base*>(m_children[c]->m_children[(c ? 0 : 1)]);
-        //pre_rotate();
-        
-        //B swaps places with its m_parent:
-
-        m_children[c] = B;
-        B->m_parent = this;
-        q->m_parent = this->m_parent;
-
-        children_type::size_type qp = get_index();
-        static_cast<base_pointer>(q->m_parent)->m_children[qp] = q;
-        this->m_parent = q;
-        q->m_children[(c ? 0 : 1)] = this;
-        return qp;
-        //return (c ? 0 : 1);
-    }
-    
     base_pointer detach(children_type::size_type m_pos)
     {
         node_with_children_base::children_type::size_type parent_idx = get_index();
@@ -142,8 +118,30 @@ public:
     {
         return (static_cast<base_pointer>(this->m_parent)->m_children[0] == this ? 0 : 1);
     }
-    
 };
+
+node_with_children_base::children_type::size_type rotate(node_with_children_base*& child, node_base* me, node_with_children_base::children_type::size_type const& c)
+{
+    //TODO: Optimise.
+    typedef node_base* base_pointer;
+    base_pointer q = static_cast<node_base*>(child);
+    
+    base_pointer B = static_cast<node_base*>(child->m_children[(c ? 0 : 1)]);
+    //pre_rotate();
+    
+    //B swaps places with its m_parent:
+
+    child = B;
+    B->m_parent = parent;
+    q->m_parent = parent->m_parent;
+
+    node_with_children_base::children_type::size_type qp = parent->get_index();
+    static_cast<base_pointer>(q->m_parent)->m_children[qp] = q;
+    parent->m_parent = q;
+    q->m_children[(c ? 0 : 1)] = parent;
+    return qp;
+    //return (c ? 0 : 1);
+}
 
 void attach(node_base* parent, node_with_children_base*& parent_child, node_base* child, node_with_children_base*& child_child)
 {
