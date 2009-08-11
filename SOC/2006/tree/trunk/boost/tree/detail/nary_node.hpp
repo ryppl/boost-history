@@ -120,7 +120,7 @@ public:
     }
 };
 
-node_with_children_base::children_type::size_type rotate(node_with_children_base*& child, node_base* me, node_with_children_base::children_type::size_type const& c)
+node_with_children_base::children_type::size_type rotate(node_with_children_base*& child, node_base* parent, node_with_children_base::children_type::size_type const& c)
 {
     //TODO: Optimise.
     typedef node_base* base_pointer;
