@@ -25,40 +25,40 @@ namespace detail {
 
 using boost::array;
  
-class node_with_parent_base {
+class ascending_node_base {
 public:
-    node_with_parent_base* m_parent; // TODO: protect?
+    ascending_node_base* m_parent; // TODO: protect?
     
-    node_with_parent_base()
+    ascending_node_base()
     {
         m_parent = this;
     }
     
-    node_with_parent_base(node_with_parent_base* p) : m_parent(p) {}
+    ascending_node_base(ascending_node_base* p) : m_parent(p) {}
     
-    node_with_parent_base* parent()
+    ascending_node_base* parent()
     {
         return m_parent;
     }
     
-    node_with_parent_base* const parent() const
+    ascending_node_base* const parent() const
     {
         return m_parent;
     }
 };
 
-void attach(node_with_parent_base* child, node_with_parent_base* parent)
+void attach(ascending_node_base* child, ascending_node_base* parent)
 {
     child->m_parent = parent;
 }
 
-class node_with_children_base;
+class descending_node_base;
 
-class node_with_children_base {
+class descending_node_base {
 public:
-    typedef array<node_with_children_base*, 2> children_type;
+    typedef array<descending_node_base*, 2> children_type;
     
-    node_with_children_base()
+    descending_node_base()
     {
         init();
     }
@@ -73,7 +73,7 @@ public:
     children_type m_children;
 };
 
-void attach(node_with_children_base*& to, node_with_children_base* p_node, node_with_children_base*& parent)
+void attach(descending_node_base*& to, descending_node_base* p_node, descending_node_base*& parent)
 {
     // Only relevant for non-leaf insertion:
     parent = to;
@@ -81,23 +81,23 @@ void attach(node_with_children_base*& to, node_with_children_base* p_node, node_
     to = p_node;
 }
 
-static void splice(node_with_children_base*& to, node_with_children_base*& from)
+static void splice(descending_node_base*& to, descending_node_base*& from)
 {
     to = from;
     from = 0; 
 }
 
 class node_base
-: public node_with_parent_base, public node_with_children_base {
+: public ascending_node_base, public descending_node_base {
 public:
-    node_base() : node_with_parent_base(), node_with_children_base() {}
+    node_base() : ascending_node_base(), descending_node_base() {}
 
-    node_base(node_with_parent_base* p)
-    : node_with_parent_base(p), node_with_children_base() {}
+    node_base(ascending_node_base* p)
+    : ascending_node_base(p), descending_node_base() {}
     
     node_base* detach(children_type::size_type m_pos)
     {
-        node_with_children_base::children_type::size_type parent_idx = get_index();
+        descending_node_base::children_type::size_type parent_idx = get_index();
 
         if (m_children[m_pos] != 0) // Set child's parent only if there _is_ a child
             static_cast<node_base*>(m_children[m_pos])->m_parent = m_parent;
@@ -115,10 +115,10 @@ public:
     }
 };
 
-//node_with_children_base::children_type::size_type
+//descending_node_base::children_type::size_type
 void
-rotate(node_with_children_base*& child, node_base* parent
-     , node_with_children_base::children_type::size_type const& c)
+rotate(descending_node_base*& child, node_base* parent
+     , descending_node_base::children_type::size_type const& c)
 {
     //TODO: Optimise.
     node_base* q = static_cast<node_base*>(child);
@@ -132,7 +132,7 @@ rotate(node_with_children_base*& child, node_base* parent
     B->m_parent = parent;
     q->m_parent = parent->m_parent;
 
-    node_with_children_base::children_type::size_type qp = parent->get_index();
+    descending_node_base::children_type::size_type qp = parent->get_index();
     static_cast<node_base*>(q->m_parent)->m_children[qp] = q;
     parent->m_parent = q;
     q->m_children[(c ? 0 : 1)] = parent;
@@ -140,18 +140,18 @@ rotate(node_with_children_base*& child, node_base* parent
     //return (c ? 0 : 1);
 }
 
-void attach(node_base* parent, node_with_children_base*& parent_child, node_base* child, node_with_children_base*& child_child)
+void attach(node_base* parent, descending_node_base*& parent_child, node_base* child, descending_node_base*& child_child)
 {
-    attach(static_cast<node_with_parent_base*>(child), static_cast<node_with_parent_base*>(parent));
+    attach(static_cast<ascending_node_base*>(child), static_cast<ascending_node_base*>(parent));
     
     // Only relevant for non-leaf insertion:
     if (parent_child != 0)
         static_cast<node_base*>(parent_child)->m_parent = child;
 
-    attach(parent_child, static_cast<node_with_children_base*>(child), child_child);
+    attach(parent_child, static_cast<descending_node_base*>(child), child_child);
 }
 
-void splice(node_base* to_parent, node_with_children_base*& to, node_with_children_base*& from)
+void splice(node_base* to_parent, descending_node_base*& to, descending_node_base*& from)
 {
     static_cast<node_base*>(from)->m_parent = to_parent;
 
@@ -175,10 +175,6 @@ void swap_trees(node_base& x, node_base& y)
             y.m_children[0]
         )->m_parent = &y;
 }
-
-class descending_node_base
-: public node_with_children_base {
-};
 
 template <typename T>
 class ascending_node : public node_base {

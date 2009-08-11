@@ -211,12 +211,12 @@ public:
         return this->base_reference();
     }
 
-    typename node_base_type::node_with_children_base* const& child_node() const
+    typename node_base_type::descending_node_base* const& child_node() const
     {
         return this->base_reference()->m_children[m_pos];
     }
 
-    typename node_base_type::node_with_children_base*& child_node()
+    typename node_base_type::descending_node_base*& child_node()
     {
         return this->base_reference()->m_children[m_pos];
     }
