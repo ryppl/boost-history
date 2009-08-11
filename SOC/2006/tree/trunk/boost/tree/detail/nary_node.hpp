@@ -158,6 +158,24 @@ void splice(node_base* to_parent, node_with_children_base*& to, node_with_childr
     splice(to, from);
 }
 
+// Currently only suitable for trees, not subtrees!
+// Otherwise we'd need also to take care of m_children[1] and m_parent
+void swap_trees(node_base& x, node_base& y)
+{
+    using std::swap;
+    
+    swap(x, y);
+    
+    if (x.m_children[0])
+        static_cast<node_base*>(x.m_children[0])->m_parent
+        = &x;
+    
+    if (y.m_children[0])
+        static_cast<node_base*>(
+            y.m_children[0]
+        )->m_parent = &y;
+}
+
 class descending_node_base
 : public node_with_children_base {
 };

@@ -297,48 +297,10 @@ public:
      * @param  x  A %binary_tree of the same element and allocator types.
      * 
      * This exchanges the elements between two binary trees in constant time.
-     * (Four pointers, so it should be quite fast.)
      */
     void swap(self_type& other)
     {
-        using std::swap;
-        if (empty()) {
-            if (other.empty())
-                return;
-                
-            m_header.m_children[0] = other.m_header.m_children[0];
-            static_cast<node_base_pointer>(m_header.m_children[0])->m_parent = &m_header;
-
-            m_header.m_children[1] = other.m_header.m_children[1];
-            //m_header.m_parent = other.m_header.m_parent;
-            
-            other.m_header.m_children[0] = 0;
-            other.m_header.m_children[1] = &other.m_header;
-            //other.m_header.m_parent = &other.m_header;
-            
-            return;
-        }
-        
-        if (other.empty()) {
-            other.m_header.m_children[0] = m_header.m_children[0];
-            static_cast<node_base_pointer>(other.m_header.m_children[0])->m_parent = &other.m_header;
-            
-            other.m_header.m_children[1] = m_header.m_children[1];
-            //other.m_header.m_parent = m_header.m_parent;
-            
-            m_header.m_children[0] = 0;
-            m_header.m_children[1] = &m_header;
-            //m_header.m_parent = &m_header;
-            
-            return;            
-        }
-        
-        swap(m_header, other.m_header);
-        //swap(m_header.m_children[0]->m_parent, other.m_header.m_children[0]->m_parent);
-        static_cast<node_base_pointer>(m_header.m_children[0])->m_parent = &m_header;
-        static_cast<node_base_pointer>(other.m_header.m_children[0])->m_parent = &other.m_header;
-        
-        return;
+        detail::swap_trees(m_header, other.m_header);
     }
 
     /**
