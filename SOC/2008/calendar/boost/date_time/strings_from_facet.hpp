@@ -6,7 +6,7 @@
  * Boost Software License, Version 1.0. (See accompanying
  * file LICENSE_1_0.txt or http://www.boost.org/LICENSE_1_0.txt)
  * Author: Jeff Garland
- * $Date: 2009-01-29 18:54:17 +0000 (Thu, 29 Jan 2009) $
+ * $Date$
  */
 
 #include <sstream>
