@@ -34,8 +34,8 @@ class ascending_nary_cursor
  : public cursor_adaptor<ascending_nary_cursor<Node>
       , typename mpl::eval_if<
                         is_const<Node>
-                      , add_const<typename Node::base_type>
-                      , mpl::identity<typename Node::base_type>
+                      , add_const<typename Node::node_base>
+                      , mpl::identity<typename Node::node_base>
                     >::type*                  
       , typename mpl::eval_if<
                     is_const<Node>
@@ -47,21 +47,17 @@ class ascending_nary_cursor
     > {
 
 private:
-    typedef typename Node::base_type node_base;
-      
-    typedef typename mpl::eval_if<
-                        is_const<Node>
-                      , add_const<node_base>
-                      , mpl::identity<node_base>
-                    >::type base_type;
-
-    typedef base_type* base_pointer;
-      
     struct enabler {};
-     
+
     typedef Node node_type;
     typedef node_type* node_pointer;
-    
+
+    typedef typename mpl::eval_if<
+                        is_const<Node>
+                      , add_const<typename Node::node_base>
+                      , mpl::identity<typename Node::node_base>
+                    >::type node_base_type;
+
 public:
     typedef typename mpl::eval_if<
                         is_const<Node>
@@ -89,7 +85,7 @@ public:
     ascending_nary_cursor()
       : ascending_nary_cursor::cursor_adaptor_(0), m_pos(0) {}
 
-    explicit ascending_nary_cursor(base_pointer p, size_type pos) 
+    explicit ascending_nary_cursor(node_base_type* p, size_type pos) 
     : ascending_nary_cursor::cursor_adaptor_(p), m_pos(pos) {}
 
     template <class OtherNode>
@@ -102,9 +98,8 @@ public:
     )
     : ascending_nary_cursor::cursor_adaptor_(other.base()), m_pos(other.m_pos) {}
 
-     size_type m_pos;
-
-private: 
+private:
+    size_type m_pos;
 
     friend class iterator_core_access;
     friend class cursor_core_access;
@@ -173,7 +168,7 @@ private:
     void left()
     {
         this->base_reference() = 
-            static_cast<node_base*>(this->base_reference()->m_children[m_pos]);
+            static_cast<node_base_type*>(this->base_reference()->m_children[m_pos]);
         m_pos  = 0;
         //this->base_reference() = this->base_reference()->operator[0];
     }
@@ -182,7 +177,7 @@ private:
     {
         size_type new_pos = this->base_reference()->m_children.size()-1; 
         this->base_reference() = 
-            static_cast<node_base*>(this->base_reference()->m_children[m_pos]);
+            static_cast<node_base_type*>(this->base_reference()->m_children[m_pos]);
         m_pos  = new_pos;
         //this->base_reference() = this->base_reference()->operator[0];
     }
@@ -191,38 +186,37 @@ private:
     void up()
     {
         m_pos  = this->base_reference()->get_index();
-        this->base_reference() = static_cast<base_pointer>(this->base_reference()->parent());
+        this->base_reference() = static_cast<node_base_type*>(this->base_reference()->parent());
         //this->base_reference() = this->base_reference()->parent();
     }
     
 protected:
     bool is_on_top() const
     {
-        base_pointer parent_begin_node = 
-            static_cast<base_pointer>(this->base_reference()->parent())
+        node_base_type* parent_begin_node = 
+            static_cast<node_base_type*>(this->base_reference()->parent())
             ->m_children[this->base_reference()->get_index()];
         return (!m_pos && (this->base_reference() != parent_begin_node));
         // (*this != this->parent().begin())
     }
 
 public:
-    
-    base_pointer const& base_node() const
+    node_base_type* const& parent_node() const
     {
         return this->base_reference();
     }
 
-    base_pointer& base_node()
+    node_base_type*& parent_node()
     {
         return this->base_reference();
     }
 
-    typename node_type::node_with_children_base* const& the_node() const
+    typename node_base_type::node_with_children_base* const& child_node() const
     {
         return this->base_reference()->m_children[m_pos];
     }
 
-    typename node_type::node_with_children_base*& the_node()
+    typename node_base_type::node_with_children_base*& child_node()
     {
         return this->base_reference()->m_children[m_pos];
     }

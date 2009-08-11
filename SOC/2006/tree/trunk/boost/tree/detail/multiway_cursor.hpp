@@ -131,7 +131,7 @@ class multiway_tree_cursor
         multiway_tree_cursor<OtherCursor> const& other
       , typename boost::enable_if<
             boost::is_convertible<OtherCursor*, 
-               typename Cursor::base_pointer>  // is that correct?
+               typename Cursor::node_base_type*>  // is that correct?
           , enabler
         >::type = enabler()
     )

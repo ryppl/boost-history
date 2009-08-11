@@ -195,7 +195,7 @@ public:
         //m_node_alloc.construct(p_node, val);
         *p_node = node_type(val);
         
-        detail::attach(pos.base_node(), pos.the_node(), p_node, p_node->m_children[pos.m_pos]);
+        detail::attach(pos.parent_node(), pos.child_node(), p_node, p_node->m_children[pos.index()]);
 
         // Readjust begin
 //        if ((pos == this->inorder_first()))
@@ -248,7 +248,7 @@ public:
         if (!position.is_leaf()) {
             node_pointer pos_node = 
                 static_cast<node_pointer>(
-                    position.the_node()
+                    position.child_node()
                 );
 
             size_type parent_idx = index(position.parent());
@@ -274,7 +274,7 @@ private:
         if (!position.is_leaf()) {
             node_pointer pos_node = 
                 static_cast<node_pointer>(
-                     position.the_node()
+                     position.child_node()
                 );
 
             // recurse
@@ -289,7 +289,7 @@ private:
 public:
     void rotate(cursor& pos)
     {
-        pos.m_pos = detail::rotate(pos.the_node(), pos.base_node(), pos.m_pos);
+        detail::rotate(pos.child_node(), pos.parent_node(), pos.index());
     }
     
     /**
@@ -380,7 +380,7 @@ public:
     void splice(cursor position, binary_tree& x, cursor root)
     {
         // x isn't actually used currently...
-        detail::splice(position.base_node(), position.the_node(), root.the_node());
+        detail::splice(position.parent_node(), position.child_node(), root.child_node());
     }
 
     /**
@@ -391,11 +391,11 @@ public:
     cursor erase(cursor position)
     {
         size_type idx = index(position);
-        node_pointer p_node = static_cast<node_pointer>(position.base_node());
+        node_pointer p_node = static_cast<node_pointer>(position.parent_node());
 
         p_node = static_cast<node_pointer>(p_node->detach(idx));
 
-        position.base_node() = static_cast<node_base_pointer>(p_node->m_children[idx]);
+        position.parent_node() = static_cast<node_base_pointer>(p_node->m_children[idx]);
 
         m_node_alloc.destroy(p_node);
         m_node_alloc.deallocate(p_node, 1);

@@ -89,18 +89,13 @@ static void splice(node_with_children_base*& to, node_with_children_base*& from)
 
 class node_base
 : public node_with_parent_base, public node_with_children_base {
-    typedef node_base self_type;
-    
 public:
-    typedef self_type* base_pointer;
-    typedef self_type const* const_base_pointer;
-        
     node_base() : node_with_parent_base(), node_with_children_base() {}
 
     node_base(node_with_parent_base* p)
     : node_with_parent_base(p), node_with_children_base() {}
     
-    base_pointer detach(children_type::size_type m_pos)
+    node_base* detach(children_type::size_type m_pos)
     {
         node_with_children_base::children_type::size_type parent_idx = get_index();
 
@@ -116,17 +111,19 @@ public:
     // O(1)
     children_type::size_type const get_index() const
     {
-        return (static_cast<base_pointer>(this->m_parent)->m_children[0] == this ? 0 : 1);
+        return (static_cast<node_base*>(this->m_parent)->m_children[0] == this ? 0 : 1);
     }
 };
 
-node_with_children_base::children_type::size_type rotate(node_with_children_base*& child, node_base* parent, node_with_children_base::children_type::size_type const& c)
+//node_with_children_base::children_type::size_type
+void
+rotate(node_with_children_base*& child, node_base* parent
+     , node_with_children_base::children_type::size_type const& c)
 {
     //TODO: Optimise.
-    typedef node_base* base_pointer;
-    base_pointer q = static_cast<node_base*>(child);
+    node_base* q = static_cast<node_base*>(child);
     
-    base_pointer B = static_cast<node_base*>(child->m_children[(c ? 0 : 1)]);
+    node_base* B = static_cast<node_base*>(child->m_children[(c ? 0 : 1)]);
     //pre_rotate();
     
     //B swaps places with its m_parent:
@@ -136,10 +133,10 @@ node_with_children_base::children_type::size_type rotate(node_with_children_base
     q->m_parent = parent->m_parent;
 
     node_with_children_base::children_type::size_type qp = parent->get_index();
-    static_cast<base_pointer>(q->m_parent)->m_children[qp] = q;
+    static_cast<node_base*>(q->m_parent)->m_children[qp] = q;
     parent->m_parent = q;
     q->m_children[(c ? 0 : 1)] = parent;
-    return qp;
+    //return qp;
     //return (c ? 0 : 1);
 }
 
@@ -173,10 +170,6 @@ public:
     typedef ascending_node<value_type> node_type;
     typedef node_type* node_pointer;
     typedef node_type& node_reference;
-
-    typedef node_base base_type;
-    typedef base_type* base_pointer;
-    typedef base_type const* const_base_pointer;
     
     typedef value_type& reference;
     typedef value_type const& const_reference;
@@ -189,9 +182,9 @@ public:
 
     const_reference operator*() const { return m_data; } 
     
-    ascending_node(value_type data) : base_type(), m_data(data) {}
+    ascending_node(value_type data) : node_base(), m_data(data) {}
  
-    ascending_node(value_type data, base_pointer p) : base_type(p), m_data(data) {}
+    ascending_node(value_type data, node_base* p) : node_base(p), m_data(data) {}
     
 private:
     value_type m_data;
