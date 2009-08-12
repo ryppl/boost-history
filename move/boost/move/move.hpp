@@ -141,9 +141,9 @@ typename enable_if<is_movable<T>, rv<T>&>::type move(T& x)
 }
 
 template <class T>
-typename enable_if<is_movable<T>, rv<T>&>::type move(const rv<T>& x)
+typename enable_if<is_movable<T>, rv<T>&>::type move(rv<T>& x)
 {
-   return const_cast<rv<T>& >(x);
+   return x;
 }
 
 //////////////////////////////////////////////////////////////////////////////
@@ -159,38 +159,12 @@ typename enable_if<boost::move_detail::is_rv<T>, T &>::type
    return const_cast<T&>(x);
 }
 
-/*
-template <class T>
-typename enable_if<boost::move_detail::is_rv<T>, T &>::type
-forward(typename move_detail::identity<T>::type &x)
-{
-   return x;
-}
-
-template <class T>
-typename disable_if<boost::move_detail::is_rv<T>, T &>::type
-   forward(typename move_detail::identity<T>::type &x)
-{
-   return x;
-}
-*/
 template <class T>
 typename disable_if<boost::move_detail::is_rv<T>, const T &>::type
    forward(const typename move_detail::identity<T>::type &x)
 {
    return x;
 }
-
-//////////////////////////////////////////////////////////////////////////////
-//
-//                         BOOST_ENABLE_MOVE_EMULATION
-//
-//////////////////////////////////////////////////////////////////////////////
-#define BOOST_ENABLE_MOVE_EMULATION(TYPE)\
-   operator boost::rv<TYPE>&() \
-   {  return *static_cast<boost::rv<TYPE>* >(this);  }\
-//
-
 
 #define BOOST_RV_REF(TYPE)\
    boost::rv< TYPE >& \
@@ -204,9 +178,68 @@ typename disable_if<boost::move_detail::is_rv<T>, const T &>::type
    boost::rv< TYPE<ARG1, ARG2, ARG3> >& \
 //
 
+#define BOOST_COPY_ASSIGN_REF(TYPE)\
+   const boost::rv< TYPE >& \
+//
+
+#define BOOST_COPY_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
+   const boost::rv< TYPE<ARG1, ARG2> >& \
+//
+
+#define BOOST_COPY_REF_3_TEMPL_ARGS(TYPE, ARG1, ARG2, ARG3)\
+   const boost::rv< TYPE<ARG1, ARG2, ARG3> >& \
+//
+
 #define BOOST_FWD_REF(TYPE)\
    const TYPE & \
 //
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//                         BOOST_ENABLE_MOVE_EMULATION
+//
+//////////////////////////////////////////////////////////////////////////////
+#define BOOST_ENABLE_MOVE_EMULATION(TYPE)\
+   operator boost::rv<TYPE>&() \
+   {  return *reinterpret_cast<boost::rv<TYPE>* >(this);  }\
+   operator const boost::rv<TYPE>&() const \
+   {  return *reinterpret_cast<const boost::rv<TYPE>* >(this);  }\
+//
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//                         BOOST_MOVABLE_BUT_NOT_COPYABLE
+//
+//////////////////////////////////////////////////////////////////////////////
+#define BOOST_MOVABLE_BUT_NOT_COPYABLE(TYPE)\
+   private:\
+   TYPE(TYPE &);\
+   TYPE& operator=(TYPE &);\
+   public:\
+   operator boost::rv<TYPE>&() \
+   {  return *reinterpret_cast<boost::rv<TYPE>* >(this);  }\
+   operator const boost::rv<TYPE>&() const \
+   {  return *reinterpret_cast<const boost::rv<TYPE>* >(this);  }\
+   private:\
+//
+
+//////////////////////////////////////////////////////////////////////////////
+//
+//                         BOOST_COPYABLE_AND_MOVABLE
+//
+//////////////////////////////////////////////////////////////////////////////
+#define BOOST_COPYABLE_AND_MOVABLE(TYPE)\
+   public:\
+   TYPE& operator=(TYPE &t)\
+   {  this->operator=(static_cast<const ::boost::rv<TYPE> &>(const_cast<const TYPE &>(t))); return *this;}\
+   public:\
+   operator ::boost::rv<TYPE>&() \
+   {  return *reinterpret_cast< ::boost::rv<TYPE>* >(this);  }\
+   operator const ::boost::rv<TYPE>&() const \
+   {  return *reinterpret_cast<const ::boost::rv<TYPE>* >(this);  }\
+   private:\
+//
+
 }  //namespace boost
 
 #else    //BOOST_HAS_RVALUE_REFS
@@ -311,16 +344,34 @@ T&& forward (typename move_detail::identity<T>::type&& t)
 //
 //////////////////////////////////////////////////////////////////////////////
 
-//! This macro expands to a typedef named boost_move_emulation_t for compilers with rvalue references.
-//! Otherwise expands to:
-//! \code
-//! operator boost::rv<TYPE>&()
-//! {  return static_cast<boost::rv<TYPE>& >(*this);   }
-//! \endcode
+///@cond
+
 #define BOOST_ENABLE_MOVE_EMULATION(TYPE)\
    typedef int boost_move_emulation_t;
 \
 //
+
+/// @endcond
+
+//! This macro marks a type as movable but not copyable, disabling copy construction
+//! and assignment. The user will need to write a move constructor/assignment as explained
+//! in the documentation to fully write a movable but not copyable class.
+#define BOOST_MOVABLE_BUT_NOT_COPYABLE(TYPE)\
+   public:\
+   typedef int boost_move_emulation_t;\
+   private:\
+   TYPE(const TYPE &);\
+   TYPE& operator=(const TYPE &);\
+//
+
+//! This macro marks a type as copyable and movable.
+//! The user will need to write a move constructor/assignment and a copy assignment
+//! as explained in the documentation to fully write a copyable and movable class.
+#define BOOST_COPYABLE_AND_MOVABLE(TYPE)\
+   typedef int boost_move_emulation_t;
+//
+
+/// @cond
 
 #define BOOST_RV_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
    TYPE<ARG1, ARG2> && \
@@ -330,14 +381,35 @@ T&& forward (typename move_detail::identity<T>::type&& t)
    TYPE<ARG1, ARG2, ARG3> && \
 //
 
-//! This macro expands to <i>T&&</i> for compilers with rvalue references.
-//! Otherwise expands to <i>boost::rv<T> &</i>.
+/// @endcond
+
+//!This macro is used to achieve portable syntax in move
+//!constructors and assignments for classes marked as
+//!BOOST_COPYABLE_AND_MOVABLE or BOOST_MOVABLE_BUT_NOT_COPYABLE
 #define BOOST_RV_REF(TYPE)\
    TYPE && \
 //
 
-//! This macro expands to <i>T&&</i> for compilers with rvalue references.
-//! Otherwise expands to <i>const T &</i>.
+//!This macro is used to achieve portable syntax in copy
+//!assignment for classes marked as BOOST_COPYABLE_AND_MOVABLE.
+#define BOOST_COPY_ASSIGN_REF(TYPE)\
+   const TYPE & \
+//
+
+/// @cond
+
+#define BOOST_COPY_REF_2_TEMPL_ARGS(TYPE, ARG1, ARG2)\
+   const TYPE<ARG1, ARG2> & \
+//
+
+#define BOOST_COPY_REF_3_TEMPL_ARGS(TYPE, ARG1, ARG2, ARG3)\
+   TYPE<ARG1, ARG2, ARG3>& \
+//
+
+/// @endcond
+
+//! This macro is used to implement portable perfect forwarding
+//! as explained in the documentation.
 #define BOOST_FWD_REF(TYPE)\
    TYPE && \
 //
@@ -764,8 +836,14 @@ F uninitialized_copy_or_move(I f, I l, F r
    return std::uninitialized_copy(f, l, r);
 }
 
-///has_trivial_destructor_after_move<> == true_type
-///specialization for optimizations
+//! If this traits yields to true
+//! (<i>has_trivial_destructor_after_move &lt;T&gt;::value == true</i>)
+//! menas that after moved, there is no need to call T's destructor.
+//! This optimization is used to improve containers' performance.
+//!
+//! By default this trais is true if the type has trivial destructor,
+//! every class should specialize this trait if it wants to improve performance
+//! when inserted in containers.
 template <class T>
 struct has_trivial_destructor_after_move
    : public boost::has_trivial_destructor<T>

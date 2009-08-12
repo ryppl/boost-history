@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -50,7 +50,7 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <utility>
 #include <functional>
 #include <memory>
@@ -99,6 +99,7 @@ class map
 {
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(map)
    typedef containers_detail::rbtree<Key, 
                            std::pair<const Key, T>, 
                            containers_detail::select1st< std::pair<const Key, T> >, 
@@ -108,7 +109,6 @@ class map
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(map)
 
    // typedefs:
    typedef typename tree_t::key_type               key_type;
@@ -167,6 +167,20 @@ class map
       : m_tree(first, last, comp, a, true) 
    {}
 
+   //! <b>Effects</b>: Constructs an empty map using the specified comparison object and 
+   //! allocator, and inserts elements from the ordered unique range [first ,last). This function
+   //! is more efficient than the normal range creation for ordered ranges.
+   //!
+   //! <b>Requires</b>: [first ,last) must be ordered according to the predicate and must be
+   //! unique values.
+   //! 
+   //! <b>Complexity</b>: Linear in N.
+   template <class InputIterator>
+   map( ordered_unique_range_t, InputIterator first, InputIterator last
+      , const Pred& comp = Pred(), const allocator_type& a = allocator_type())
+      : m_tree(ordered_range, first, last, comp, a) 
+   {}
+
    //! <b>Effects</b>: Copy constructs a map.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
@@ -186,7 +200,7 @@ class map
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   map& operator=(const map<Key, T, Pred, Alloc>& x)
+   map& operator=(BOOST_COPY_ASSIGN_REF(map) x)
    {  m_tree = x.m_tree;   return *this;  }
 
    //! <b>Effects</b>: this->swap(x.get()).
@@ -738,6 +752,7 @@ class multimap
 {
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(multimap)
    typedef containers_detail::rbtree<Key, 
                            std::pair<const Key, T>, 
                            containers_detail::select1st< std::pair<const Key, T> >, 
@@ -747,7 +762,6 @@ class multimap
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(multimap)
 
    // typedefs:
    typedef typename tree_t::key_type               key_type;
@@ -807,6 +821,20 @@ class multimap
       : m_tree(first, last, comp, a, false) 
    {}
 
+   //! <b>Effects</b>: Constructs an empty multimap using the specified comparison object and 
+   //! allocator, and inserts elements from the ordered range [first ,last). This function
+   //! is more efficient than the normal range creation for ordered ranges.
+   //!
+   //! <b>Requires</b>: [first ,last) must be ordered according to the predicate.
+   //! 
+   //! <b>Complexity</b>: Linear in N.
+   template <class InputIterator>
+   multimap(ordered_range_t ordered_range, InputIterator first, InputIterator last, const Pred& comp = Pred(),
+         const allocator_type& a = allocator_type())
+      : m_tree(ordered_range, first, last, comp, a) 
+   {}
+
+
    //! <b>Effects</b>: Copy constructs a multimap.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
@@ -826,7 +854,7 @@ class multimap
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   multimap& operator=(const multimap<Key,T,Pred,Alloc>& x) 
+   multimap& operator=(BOOST_COPY_ASSIGN_REF(multimap) x) 
    {  m_tree = x.m_tree;   return *this;  }
 
    //! <b>Effects</b>: this->swap(x.get()).
@@ -1234,9 +1262,9 @@ template <class Key, class T, class Pred, class Alloc>
 inline void swap(multimap<Key,T,Pred,Alloc>& x, multimap<Key,T,Pred,Alloc>& y) 
 {  x.swap(y);  }
 
-}  //namespace container {
-
 /// @cond
+
+}  //namespace container {
 
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
@@ -1246,9 +1274,11 @@ struct has_trivial_destructor_after_move<boost::container::multimap<K, T, C, A> 
    static const bool value = has_trivial_destructor<A>::value && has_trivial_destructor<C>::value;
 };
 
+namespace container {
+
 /// @endcond
 
-}
+}}
 
 #include <boost/container/detail/config_end.hpp>
 

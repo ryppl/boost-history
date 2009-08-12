@@ -55,7 +55,7 @@
 #include <boost/container/detail/iterators.hpp>
 #include <boost/container/detail/algorithms.hpp>
 #include <boost/container/detail/mpl.hpp>
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <cstddef>
 #include <iterator>
 #include <cassert>
@@ -530,6 +530,7 @@ class deque : protected deque_base<T, Alloc>
 
    /// @cond
    private:                      // Internal typedefs
+   BOOST_COPYABLE_AND_MOVABLE(deque)
    typedef ptr_alloc_ptr index_pointer;
    static std::size_t s_buffer_size() 
       { return Base::s_buffer_size(); }
@@ -542,7 +543,6 @@ class deque : protected deque_base<T, Alloc>
    allocator_type get_allocator() const { return Base::alloc(); }
 
    public:                         // Basic accessors
-   BOOST_ENABLE_MOVE_EMULATION(deque)
 
    iterator begin() 
       { return this->members_.m_start; }
@@ -653,7 +653,7 @@ class deque : protected deque_base<T, Alloc>
       priv_destroy_range(this->members_.m_start, this->members_.m_finish);
    }
 
-   deque& operator= (const deque& x) 
+   deque& operator= (BOOST_COPY_ASSIGN_REF(deque) x) 
    {
       const size_type len = size();
       if (&x != this) {

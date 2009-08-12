@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -45,6 +45,7 @@
 
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
+#include <boost/container/container_fwd.hpp>
 
 #include <cstddef>
 #include <memory>
@@ -64,19 +65,14 @@
 #include <boost/container/detail/iterators.hpp>
 #include <boost/container/detail/algorithms.hpp>
 #include <boost/container/detail/destroyers.hpp>
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <boost/move/move.hpp>
 #include <boost/pointer_to_other.hpp>
 #include <boost/container/detail/mpl.hpp>
 #include <boost/container/detail/advanced_insert_int.hpp>
 
-#ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
 namespace boost {
 namespace container {
-#else
-namespace boost {
-namespace container {
-#endif
 
 /// @cond
 
@@ -446,6 +442,7 @@ class vector : private containers_detail::vector_alloc_holder<A>
 
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(vector)
    typedef containers_detail::advanced_insert_aux_int<T, T*>    advanced_insert_aux_int_t;
    typedef containers_detail::vector_value_traits<value_type, A> value_traits;
 
@@ -459,7 +456,6 @@ class vector : private containers_detail::vector_alloc_holder<A>
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(vector)
 
    //! <b>Effects</b>: Constructs a vector taking the allocator as parameter.
    //! 
@@ -853,7 +849,7 @@ class vector : private containers_detail::vector_alloc_holder<A>
    //! <b>Throws</b>: If memory allocation throws or T's copy constructor throws.
    //!
    //! <b>Complexity</b>: Linear to the number of elements in x.
-   vector& operator=(const vector& x)
+   vector& operator=(BOOST_COPY_ASSIGN_REF(vector) x)
    {
       if (&x != this){
          this->assign(x.members_.m_start, x.members_.m_start + x.members_.m_size);
@@ -1336,6 +1332,8 @@ class vector : private containers_detail::vector_alloc_holder<A>
 
    void priv_range_insert_expand_forward(T* pos, size_type n, advanced_insert_aux_int_t &interf)
    {
+      //n can't be 0, because there is nothing to do in that case
+      if(!n) return;
       //There is enough memory
       T* old_finish = containers_detail::get_pointer(this->members_.m_start) + this->members_.m_size;
       const size_type elems_after = old_finish - pos;
@@ -1367,7 +1365,8 @@ class vector : private containers_detail::vector_alloc_holder<A>
    void priv_range_insert_new_allocation
       (T* new_start, size_type new_cap, T* pos, size_type n, advanced_insert_aux_int_t &interf)
    {
-      T* new_finish = new_start;
+      //n can be zero, if we want to reallocate!
+      T *new_finish = new_start;
       T *old_finish;
       //Anti-exception rollbacks
       typename value_traits::UCopiedArrayDeallocator scoped_alloc(new_start, this->alloc(), new_cap);
@@ -1375,36 +1374,40 @@ class vector : private containers_detail::vector_alloc_holder<A>
 
       //Initialize with [begin(), pos) old buffer 
       //the start of the new buffer
-      new_finish = boost::uninitialized_move
-         (containers_detail::get_pointer(this->members_.m_start), pos, old_finish = new_finish);
-      constructed_values_destroyer.increment_size(new_finish - old_finish);
+      T *old_buffer = containers_detail::get_pointer(this->members_.m_start);
+      if(old_buffer){
+         new_finish = boost::uninitialized_move
+            (containers_detail::get_pointer(this->members_.m_start), pos, old_finish = new_finish);
+         constructed_values_destroyer.increment_size(new_finish - old_finish);
+      }
       //Initialize new objects, starting from previous point
       interf.uninitialized_copy_all_to(old_finish = new_finish);
       new_finish += n;
       constructed_values_destroyer.increment_size(new_finish - old_finish);
       //Initialize from the rest of the old buffer, 
       //starting from previous point
-      new_finish = boost::uninitialized_move
-         ( pos, containers_detail::get_pointer(this->members_.m_start) + this->members_.m_size, new_finish);
-      //All construction successful, disable rollbacks
-      constructed_values_destroyer.release();
-      scoped_alloc.release();
-      //Destroy and deallocate old elements
-      //If there is allocated memory, destroy and deallocate
-      if(this->members_.m_start != 0){
+      if(old_buffer){
+         new_finish = boost::uninitialized_move
+            (pos, old_buffer + this->members_.m_size, new_finish);
+         //Destroy and deallocate old elements
+         //If there is allocated memory, destroy and deallocate
          if(!value_traits::trivial_dctr_after_move)
-            this->destroy_n(containers_detail::get_pointer(this->members_.m_start), this->members_.m_size); 
+            this->destroy_n(old_buffer, this->members_.m_size); 
          this->alloc().deallocate(this->members_.m_start, this->members_.m_capacity);
       }
       this->members_.m_start     = new_start;
       this->members_.m_size      = new_finish - new_start;
       this->members_.m_capacity  = new_cap;
+      //All construction successful, disable rollbacks
+      constructed_values_destroyer.release();
+      scoped_alloc.release();
    }
 
    void priv_range_insert_expand_backwards
          (T* new_start, size_type new_capacity,
           T* pos, const size_type n, advanced_insert_aux_int_t &interf)
    {
+      //n can be zero to just expand capacity
       //Backup old data
       T* old_start  = containers_detail::get_pointer(this->members_.m_start);
       T* old_finish = old_start + this->members_.m_size;
@@ -1723,6 +1726,10 @@ class vector : private containers_detail::vector_alloc_holder<A>
    void priv_assign_aux(FwdIt first, FwdIt last, std::forward_iterator_tag)
    {
       size_type n = std::distance(first, last);
+      if(!n){
+         this->prot_destroy_all();
+         return;
+      }
       //Check if we have enough memory or try to expand current memory
       size_type remaining = this->members_.m_capacity - this->members_.m_size;
       bool same_buffer_start;
@@ -1749,7 +1756,6 @@ class vector : private containers_detail::vector_alloc_holder<A>
          if (this->size() >= n){
             //There is memory, but there are more old elements than new ones
             //Overwrite old elements with new ones
-            // iG std::copy(first, last, start);
             std::copy(first, last, start);
             //Destroy remaining old elements
             this->destroy_n(start + n, this->members_.m_size - n);

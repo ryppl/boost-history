@@ -1,6 +1,6 @@
 ////////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -34,6 +34,8 @@
 
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
+
+#include <boost/container/container_fwd.hpp>
 
 #include <algorithm>
 #include <functional>
@@ -91,7 +93,12 @@ class flat_tree
       //Inherit from value_compare to do EBO
       : public value_compare
    {
-     public:
+      private:
+      BOOST_COPYABLE_AND_MOVABLE(Data)
+      public:
+      Data(const Data &d)
+         : value_compare(d), m_vect(d.m_vect)
+      {}
       Data(const Compare &comp,
            const vector_t &vect) 
          : value_compare(comp), m_vect(vect){}
@@ -103,14 +110,28 @@ class flat_tree
       Data(const Compare &comp,
            const allocator_t &alloc) 
          : value_compare(comp), m_vect(alloc){}
-     public:
+
+      Data& operator=(BOOST_COPY_ASSIGN_REF(Data) d)
+      {
+         value_compare::operator=(d);
+         m_vect = d.m_vect;
+         return *this;
+      }
+
+      Data& operator=(BOOST_RV_REF(Data) d)
+      {
+         value_compare::operator=(boost::move(static_cast<value_compare &>(d)));
+         m_vect = boost::move(d.m_vect);
+         return *this;
+      }
+
       vector_t m_vect;
    };
 
    Data m_data;
+   BOOST_COPYABLE_AND_MOVABLE(flat_tree)
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(flat_tree)
 
    typedef typename vector_t::value_type              value_type;
    typedef typename vector_t::pointer                 pointer;
@@ -143,10 +164,17 @@ class flat_tree
       :  m_data(boost::move(x.m_data))
    { }
 
+   template <class InputIterator>
+   flat_tree( ordered_range_t, InputIterator first, InputIterator last
+            , const Compare& comp     = Compare()
+            , const allocator_type& a = allocator_type())
+      : m_data(comp, a)
+   { this->m_data.m_vect.insert(this->m_data.m_vect.end(), first, last); }
+
    ~flat_tree()
    { }
 
-   flat_tree&  operator=(const flat_tree& x)
+   flat_tree&  operator=(BOOST_COPY_ASSIGN_REF(flat_tree) x)
    {  m_data = x.m_data;   return *this;  }
 
    flat_tree&  operator=(BOOST_RV_REF(flat_tree) mx)

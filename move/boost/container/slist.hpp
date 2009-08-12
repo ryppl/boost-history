@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2004-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2004-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -8,7 +8,7 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 //
-// This file comes from SGI's stl_slist.h file. Modified by Ion Gaztanaga 2004-2008
+// This file comes from SGI's stl_slist.h file. Modified by Ion Gaztanaga 2004-2009
 // Renaming, isolating and porting to generic algorithms. Pointer typedef 
 // set to allocator::pointer to allow placing it in shared memory.
 //
@@ -50,7 +50,7 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <boost/move/move.hpp>
 #include <boost/pointer_to_other.hpp>
 #include <boost/container/detail/utilities.hpp>
@@ -61,11 +61,13 @@
 #include <boost/intrusive/slist.hpp>
 
 
-#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
+#if defined(BOOST_CONTAINERS_PERFECT_FORWARDING) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
 //Preprocessor library to emulate perfect forwarding
+#else
 #include <boost/container/detail/preprocessor.hpp> 
 #endif
 
+#include <stdexcept>
 #include <iterator>
 #include <utility>
 #include <memory>
@@ -95,7 +97,18 @@ template <class T, class VoidPointer>
 struct slist_node
    :  public slist_hook<VoidPointer>::type
 {
-   #ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
+   #if defined(BOOST_CONTAINERS_PERFECT_FORWARDING) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
+
+   slist_node()
+      : m_data()
+   {}
+
+   template<class ...Args>
+   slist_node(Args &&...args)
+      : m_data(boost::forward<Args>(args)...)
+   {}
+
+   #else //#ifdef BOOST_CONTAINERS_PERFECT_FORWARDING
 
    slist_node()
       : m_data()
@@ -110,17 +123,7 @@ struct slist_node
    #define BOOST_PP_LOCAL_LIMITS (1, BOOST_CONTAINERS_MAX_CONSTRUCTOR_PARAMETERS)
    #include BOOST_PP_LOCAL_ITERATE()
 
-   #else //#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
-
-   slist_node()
-      : m_data()
-   {}
-
-   template<class ...Args>
-   slist_node(Args &&...args)
-      : m_data(boost::forward<Args>(args)...)
-   {}
-   #endif//#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
+   #endif//#ifdef BOOST_CONTAINERS_PERFECT_FORWARDING
 
    T m_data;
 };
@@ -249,6 +252,7 @@ class slist
 
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(slist)
    typedef difference_type                         list_difference_type;
    typedef pointer                                 list_pointer;
    typedef const_pointer                           list_const_pointer;
@@ -257,7 +261,6 @@ class slist
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(slist)
 
    //! Const iterator used to iterate through a list. 
    class const_iterator
@@ -411,7 +414,7 @@ class slist
    //! <b>Throws</b>: If memory allocation throws or T's copy constructor throws.
    //!
    //! <b>Complexity</b>: Linear to the number of elements in x.
-   slist& operator= (const slist& x)
+   slist& operator= (BOOST_COPY_ASSIGN_REF(slist) x)
    {
       if (&x != this){
          this->assign(x.begin(), x.end());
@@ -1470,9 +1473,11 @@ struct has_trivial_destructor_after_move<boost::container::slist<T, A> >
    static const bool value = has_trivial_destructor<A>::value;
 };
 
-}  //namespace boost{  
+namespace container {
 
 /// @endcond
+
+}} //namespace boost{  namespace container {
 
 // Specialization of insert_iterator so that insertions will be constant
 // time rather than linear time.

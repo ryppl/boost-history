@@ -31,8 +31,9 @@ class non_movable_test
 
 class movable_test
 {
+   // move semantics
+   BOOST_COPYABLE_AND_MOVABLE(movable_test)
    public:
-   BOOST_ENABLE_MOVE_EMULATION(movable_test)
 
    movable_test()
    {  std::cout << "movable_test()" << std::endl;   }
@@ -48,6 +49,14 @@ class movable_test
 
    movable_test(BOOST_RV_REF(movable_test), BOOST_RV_REF(movable_test))
    {  std::cout << "movable_test(BOOST_RV_REF(movable_test), BOOST_RV_REF(movable_test))" << std::endl;   }
+
+   movable_test &operator=(BOOST_RV_REF(movable_test))
+   {  std::cout << "movable_test & operator=(BOOST_RV_REF(movable_test))" << std::endl; 
+      return *this;  }
+
+   movable_test &operator=(BOOST_COPY_ASSIGN_REF(movable_test))
+   {  std::cout << "movable_test & operator=(BOOST_COPY_ASSIGN_REF(movable_test))" << std::endl;
+      return *this;  }
 };
 
 //1 argument

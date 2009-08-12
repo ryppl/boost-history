@@ -75,9 +75,11 @@ conforming to C++03.
 
 [endsect]
 
-[section:implementing_movable_classes Implementing movable classes]
+[section:implementing_movable_classes Implementing copyable and movable classes]
 
 [import ../example/doc_clone_ptr.cpp]
+
+[section:copyable_and_movable_cpp0x Copyable and movable classes in C++0x]
 
 Consider a simple handle class that owns a resource and also provides copy semantics
 (copy constructor and assignment). For example a `clone_ptr` might own a pointer, and call
@@ -150,38 +152,38 @@ consider the source of the copy an rvalue (using `boost::move`), the operation w
 
 [move_clone_ptr]
 
+[endsect]
+
+[section:copyable_and_movable_cpp03 Copyable and movable classes in portable syntax for both C++03 and C++0x compilers]
+
 Many aspects of move semantics can be emulated for compilers not supporting `rvalue references`
-and [*Boost.Move] offers tools for that purpose. With [*Boost.Move] we can write code that
-will work both in compilers with rvalue references and those who conform to C++03:
+and [*Boost.Move] offers tools for that purpose. With [*Boost.Move] we can write `clone_ptr`
+so that it will work both in compilers with rvalue references and those who conform to C++03.
+You just need to follow these simple steps:
+
+* Put the following macro in the [*private] section:
+  [macroref BOOST_COPYABLE_AND_MOVABLE BOOST_COPYABLE_AND_MOVABLE(classname)]
+* Left copy constructor as is.
+* Write a copy assignment taking the parameter as
+  [macroref BOOST_COPY_ASSIGN_REF BOOST_COPY_ASSIGN_REF(classname)]
+* Write a move constructor and a move assignment taking the parameter as
+  [macroref BOOST_RV_REF BOOST_RV_REF(classname)]
+
+Let's see how are applied to `clone_ptr`:
 
 [clone_ptr_def]
 
-For compilers with rvalue references `BOOST_ENABLE_MOVE_EMULATION(TYPE)` macro is expanded to nothing
-and `BOOST_RV_REF` to `TYPE &&` so we obtain exactly the same code we've presented in the beginning
-of this chapter.
+[endsect]
 
-For compilers without rvalue references, `BOOST_ENABLE_MOVE_EMULATION(TYPE)` is expaded to a
-conversion operator that will allow `boost::move` to work:
+[*Question]: What about types that don't own resources? (E.g. `std::complex`?) 
 
-[c++]
+No work needs to be done in that case. The copy constructor is already optimal.
 
-   operator boost::rv<TYPE>&()
-   {  return static_cast<boost::rv<TYPE>& >(*this);   }
+[endsect]
 
-and `BOOST_RV_REF` is expanded to `boost::rv<TYPE> &`, a non-instantiable type derived from T, and
-thus, it's similar to a reference to that class:
+[section:composition_inheritance Composition or inheritance]
 
-[c++]
-
-   template <class T>
-   class rv : public T
-   {
-      //Non-instantiable...
-      public:
-      T &get() { return *this; }
-   };
-
-For classes made up of other classes (via either containment or inheritance), the move constructor
+For classes made up of other classes (via either composition or inheritance), the move constructor
 and move assignment can be easily coded using the `boost::move` function:
 
 [clone_ptr_base_derived]
@@ -197,10 +199,6 @@ Note above that the argument x is treated as a lvalue reference. That's why it i
 say `move(x)` instead of just x when passing down to the base class. This is a key safety feature of move
 semantics designed to prevent accidently moving twice from some named variable. All moves occur
 explicitly.
-
-[*Question]: What about types that don't own resources? (E.g. `std::complex`?) 
-
-No work needs to be done in that case. The copy constructor is already optimal.
 
 [endsect]
 
@@ -219,21 +217,25 @@ increased. Movable but non-copyable types can be returned by value from factory 
 
    file_descriptor create_file(/* ... */);
    //...
-   file_descriptor data_file = create_file(/* ... */);  // No copies!
+   file_descriptor data_file;
+   //...
+   data_file = create_file(/* ... */);  // No copies!
 
 In the above example, the underlying file handle is passed from object to object, as long
 as the source `file_descriptor` is an rvalue. At all times, there is still only one underlying file
-handle, and only one `file_descriptor` owns it at a time. Here's the definition of `file descriptor`:
+handle, and only one `file_descriptor` owns it at a time.
+
+To write a movable but not copyable type in portable syntax, you need to follow these simple steps:
+
+* Put the following macro in the [*private] section:
+  [macroref BOOST_MOVABLE_BUT_NOT_COPYABLE BOOST_MOVABLE_BUT_NOT_COPYABLE(classname)]
+* Write a move constructor and a move assignment taking the parameter as
+  [macroref BOOST_RV_REF BOOST_RV_REF(classname)]
+
+Here's the definition of `file descriptor` using portable syntax:
 
 [import ../example/doc_file_descriptor.cpp]
 [file_descriptor_def]
-
-Movable but non-copyable types can also safely be put into containers if those containers
-are aware of move semantics. If the container needs to "copy" an element internally
-(e.g. vector reallocation) it will move the element instead of copying it.
-[*Boost.Container] containers are move-aware:
-
-[file_descriptor_example]
 
 [/
  /Many standard algorithms benefit from moving elements of the sequence as opposed to
@@ -264,6 +266,19 @@ are aware of move semantics. If the container needs to "copy" an element interna
 
 [endsect]
 
+[section:move_and_containers Containers and move semantics]
+
+Movable but non-copyable types can be safely inserted into containers and
+movable and copyable types are more efficiently handled if those containers
+internally use move semantics instead of copy semantics.
+If the container needs to "change the location" of an element
+internally (e.g. vector reallocation) it will move the element instead of copying it.
+[*Boost.Container] containers are move-aware so you can write the following:
+
+[file_descriptor_example]
+
+[endsect]
+
 [section:construct_forwarding Constructor Forwarding]
 
 Consider writing a generic factory function that returns an object for a newly
@@ -291,14 +306,6 @@ This library makes this emulation easy with the help of `BOOST_FWD_REF` and
 
 [import ../example/doc_construct_forward.cpp]
 [construct_forward_example]
-
-In compilers wit rvalue references `BOOST_FWD_REF(TYPE)` expands to `TYPE &&` and
-`boost::forward` implements perfect forwarding. Otherwise
-`BOOST_FWD_REF(TYPE)` expands to `const TYPE &` and `boost::forward`
-behaviour depends on the argument type:
-
-* If TYPE is boost::rv<T>, then return a non-const reference `boost::rv<T> &`.
-* Otherwise, just returns the input const reference.
 
 Constructor forwarding comes handful to implement placement insertion in containers with
 just N overloads if the implementor accepts the limitations of this type of forwarding for

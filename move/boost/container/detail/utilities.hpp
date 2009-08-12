@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -77,6 +77,12 @@ inline void do_swap(T& x, T& y)
 {
    using std::swap;
    swap(x, y);
+}
+
+//Rounds "orig_size" by excess to round_to bytes
+inline std::size_t get_rounded_size(std::size_t orig_size, std::size_t round_to)
+{
+   return ((orig_size-1)/round_to+1)*round_to;
 }
 
 template <std::size_t OrigSize, std::size_t RoundTo>

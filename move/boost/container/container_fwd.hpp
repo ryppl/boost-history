@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -54,13 +54,8 @@ struct char_traits;
 //                             Containers
 //////////////////////////////////////////////////////////////////////////////
 
-#ifdef BOOST_CONTAINER_DOXYGEN_INVOKED
 namespace boost {
 namespace container {
-#else
-namespace boost {
-namespace container {
-#endif
 
 //vector class
 template <class T
@@ -69,7 +64,12 @@ class vector;
 
 //vector class
 template <class T
-,class A = std::allocator<T> >
+         ,class A = std::allocator<T> >
+class stable_vector;
+
+//vector class
+template <class T
+         ,class A = std::allocator<T> >
 class deque;
 
 //list class
@@ -140,14 +140,48 @@ template <class CharT
          ,class Alloc  = std::allocator<CharT> > 
 class basic_string;
 
-//string class
-typedef basic_string
-   <char
-   ,std::char_traits<char>
-   ,std::allocator<char> >
-string;
+//! Type used to tag that the input range is
+//! guaranteed to be ordered
+struct ordered_range_impl_t {};
+
+//! Type used to tag that the input range is
+//! guaranteed to be ordered and unique
+struct ordered_unique_range_impl_t{};
+
+/// @cond
+
+typedef ordered_range_impl_t * ordered_range_t;
+typedef ordered_unique_range_impl_t *ordered_unique_range_t;
+
+/// @endcond
+
+//! Value used to tag that the input range is
+//! guaranteed to be ordered
+static const ordered_range_t ordered_range = 0;
+
+//! Value used to tag that the input range is
+//! guaranteed to be ordered and unique
+static const ordered_unique_range_t ordered_unique_range = 0;
+
+/// @cond
+
+namespace detail_really_deep_namespace {
+
+//Otherwise, gcc issues a warning of previously defined
+//anonymous_instance and unique_instance
+struct dummy
+{
+   dummy()
+   {
+      (void)ordered_range;
+      (void)ordered_unique_range;
+   }
+};
+
+}  //detail_really_deep_namespace {
+
+/// @endcond
 
 }}  //namespace boost { namespace container {
 
 #endif //#ifndef BOOST_CONTAINERS_CONTAINERS_FWD_HPP
-

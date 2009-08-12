@@ -18,15 +18,10 @@
 //A movable class
 class movable
 {
-   //Non-copyable
-   movable(movable &);
-   movable & operator=(movable &);
-
+   BOOST_MOVABLE_BUT_NOT_COPYABLE(movable)
    int value_;
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(movable)
-
    movable() : value_(1){}
 
    //Move constructor and assignment

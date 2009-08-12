@@ -38,8 +38,10 @@ namespace containers_detail {
 template <class T1, class T2>
 struct pair
 {
-   BOOST_ENABLE_MOVE_EMULATION(pair)
+   private:
+   BOOST_COPYABLE_AND_MOVABLE(pair)
 
+   public:
    typedef T1 first_type;
    typedef T2 second_type;
 
@@ -117,6 +119,13 @@ struct pair
    #define BOOST_PP_LOCAL_LIMITS (1, BOOST_CONTAINERS_MAX_CONSTRUCTOR_PARAMETERS)
    #include BOOST_PP_LOCAL_ITERATE()
    #endif
+
+   pair& operator=(BOOST_COPY_ASSIGN_REF(pair) p)
+   {
+      first  = p.first;
+      second = p.second;
+      return *this;
+   }
 
    pair& operator=(BOOST_RV_REF(pair) p)
    {

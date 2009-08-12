@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -18,7 +18,7 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <utility>
 #include <functional>
 #include <memory>
@@ -65,12 +65,12 @@ class flat_set
 {
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(flat_set)
    typedef containers_detail::flat_tree<T, T, containers_detail::identity<T>, Pred, Alloc> tree_t;
    tree_t m_flat_tree;  // flat tree representing flat_set
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(flat_set)
 
    // typedefs:
    typedef typename tree_t::key_type               key_type;
@@ -111,6 +111,21 @@ class flat_set
       : m_flat_tree(comp, a) 
       { m_flat_tree.insert_unique(first, last); }
 
+   //! <b>Effects</b>: Constructs an empty flat_set using the specified comparison object and 
+   //! allocator, and inserts elements from the ordered unique range [first ,last). This function
+   //! is more efficient than the normal range creation for ordered ranges.
+   //!
+   //! <b>Requires</b>: [first ,last) must be ordered according to the predicate and must be
+   //! unique values.
+   //! 
+   //! <b>Complexity</b>: Linear in N.
+   template <class InputIterator>
+   flat_set(ordered_unique_range_t, InputIterator first, InputIterator last, 
+            const Pred& comp = Pred(),
+            const allocator_type& a = allocator_type())
+      : m_flat_tree(ordered_range, first, last, comp, a) 
+   {}
+
    //! <b>Effects</b>: Copy constructs a map.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
@@ -129,7 +144,7 @@ class flat_set
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   flat_set<T,Pred,Alloc>& operator=(const flat_set<T, Pred, Alloc>& x)
+   flat_set<T,Pred,Alloc>& operator=(BOOST_COPY_ASSIGN_REF(flat_set) x)
       {  m_flat_tree = x.m_flat_tree;   return *this;  }
 
    //! <b>Effects</b>: Makes *this a copy of x.
@@ -643,13 +658,12 @@ class flat_multiset
 {
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(flat_multiset)
    typedef containers_detail::flat_tree<T, T, containers_detail::identity<T>, Pred, Alloc> tree_t;
    tree_t m_flat_tree;  // flat tree representing flat_multiset
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(flat_multiset)
-
    // typedefs:
    typedef typename tree_t::key_type               key_type;
    typedef typename tree_t::value_type             value_type;
@@ -680,6 +694,20 @@ class flat_multiset
       : m_flat_tree(comp, a) 
       { m_flat_tree.insert_equal(first, last); }
 
+   //! <b>Effects</b>: Constructs an empty flat_multiset using the specified comparison object and 
+   //! allocator, and inserts elements from the ordered range [first ,last ). This function
+   //! is more efficient than the normal range creation for ordered ranges.
+   //!
+   //! <b>Requires</b>: [first ,last) must be ordered according to the predicate.
+   //! 
+   //! <b>Complexity</b>: Linear in N.
+   template <class InputIterator>
+   flat_multiset(ordered_range_t, InputIterator first, InputIterator last,
+                 const Pred& comp        = Pred(),
+                 const allocator_type& a = allocator_type())
+      : m_flat_tree(ordered_range, first, last, comp, a) 
+   {}
+
    flat_multiset(const flat_multiset<T,Pred,Alloc>& x) 
       : m_flat_tree(x.m_flat_tree) {}
 
@@ -687,7 +715,7 @@ class flat_multiset
       : m_flat_tree(boost::move(x.m_flat_tree))
    {}
 
-   flat_multiset<T,Pred,Alloc>& operator=(const flat_multiset<T,Pred,Alloc>& x) 
+   flat_multiset<T,Pred,Alloc>& operator=(BOOST_COPY_ASSIGN_REF(flat_multiset) x) 
       {  m_flat_tree = x.m_flat_tree;   return *this;  }
 
    flat_multiset<T,Pred,Alloc>& operator=(BOOST_RV_REF(flat_multiset) mx) 
@@ -1141,9 +1169,9 @@ template <class T, class Pred, class Alloc>
 inline void swap(flat_multiset<T,Pred,Alloc>& x, flat_multiset<T,Pred,Alloc>& y) 
    {  x.swap(y);  }
 
-}  //namespace container {
-
 /// @cond
+
+}  //namespace container {
 
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
@@ -1153,9 +1181,11 @@ struct has_trivial_destructor_after_move<boost::container::flat_multiset<T, C, A
    static const bool value = has_trivial_destructor<A>::value && has_trivial_destructor<C>::value;
 };
 
+namespace container {
+
 /// @endcond
 
-}
+}}
 
 #include <boost/container/detail/config_end.hpp>
 

@@ -9,23 +9,24 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 #include <boost/move/move.hpp>
-#include <utility>
 
 //[clone_ptr_base_derived
 class Base
 {
-   public:
-   // Compiler-generated copy constructor and assignment 
+   BOOST_COPYABLE_AND_MOVABLE(Base)
 
+   public:
    Base(){}
 
-   // move semantics
-   BOOST_ENABLE_MOVE_EMULATION(Base)
+   // Compiler-generated copy constructor...
 
    Base(BOOST_RV_REF(Base) x) {/**/}      // Move ctor
 
    Base& operator=(BOOST_RV_REF(Base) x)
    {/**/ return *this;}                   // Move assign
+
+   Base& operator=(BOOST_COPY_ASSIGN_REF(Base) x)
+   {/**/ return *this;}                   // Copy assign
    
    virtual Base *clone() const
    {  return new Base(*this);  }
@@ -33,31 +34,31 @@ class Base
 
 class Member
 {
+   BOOST_COPYABLE_AND_MOVABLE(Member)
+
    public:
    Member(){}
 
-   // Compiler-generated copy constructor and assignment 
-
-   // move semantics
-   BOOST_ENABLE_MOVE_EMULATION(Member)
+   // Compiler-generated copy constructor...
 
    Member(BOOST_RV_REF(Member))  {/**/}      // Move ctor
 
    Member &operator=(BOOST_RV_REF(Member))   // Move assign
    {/**/ return *this;  }
+
+   Member &operator=(BOOST_COPY_ASSIGN_REF(Member))   // Copy assign
+   {/**/ return *this;  }
 };
 
 class Derived : public Base
 {
+   BOOST_COPYABLE_AND_MOVABLE(Derived)
    Member mem_;
 
    public:
-   // Compiler-generated copy constructor and assignment 
-
    Derived(){}
 
-   // move semantics
-   BOOST_ENABLE_MOVE_EMULATION(Derived)
+   // Compiler-generated copy constructor...
 
    Derived(BOOST_RV_REF(Derived) x)             // Move ctor
       : Base(boost::move(static_cast<Base&>(x))), 
@@ -69,6 +70,13 @@ class Derived : public Base
       mem_  = boost::move(x.mem_);
       return *this;
    }
+
+   Derived& operator=(BOOST_COPY_ASSIGN_REF(Derived) x)  // Move assign
+   {
+      Base::operator=(static_cast<const Base&>(x));
+      mem_  = x.mem_;
+      return *this;
+   }
    // ...
 };
 //]
@@ -77,25 +85,24 @@ class Derived : public Base
 template <class T>
 class clone_ptr
 {
-   //<-
    private:
+   // Mark this class copyable and movable
+   BOOST_COPYABLE_AND_MOVABLE(clone_ptr)
    T* ptr;
 
    public:
-   // construction
+   // Construction
    explicit clone_ptr(T* p = 0) : ptr(p) {}
 
-   // destruction
+   // Destruction
    ~clone_ptr() { delete ptr; }
-
-   // copy semantics
-   clone_ptr(const clone_ptr& p)
+   
+   clone_ptr(const clone_ptr& p) // Copy constructor (as usual)
       : ptr(p.ptr ? p.ptr->clone() : 0) {}
 
-   clone_ptr& operator=(const clone_ptr& p)
+   clone_ptr& operator=(BOOST_COPY_ASSIGN_REF(clone_ptr) p) // Copy assignment
    {
-      if (this != &p)
-      {
+      if (this != &p){
          T *p = p.ptr ? p.ptr->clone() : 0;
          delete ptr;
          ptr = p;
@@ -103,19 +110,14 @@ class clone_ptr
       return *this;
    }
 
-   //->
-   // Same as before ...
-
-   // move semantics
-   BOOST_ENABLE_MOVE_EMULATION(clone_ptr)
-   
-   clone_ptr(BOOST_RV_REF(clone_ptr) p)
+   //Move semantics...
+   clone_ptr(BOOST_RV_REF(clone_ptr) p)            //Move constructor
       : ptr(p.ptr) { p.ptr = 0; }
 
-   clone_ptr& operator=(BOOST_RV_REF(clone_ptr) p)
+   clone_ptr& operator=(BOOST_RV_REF(clone_ptr) p) //Move assignment
    {
-      std::swap(ptr, p.ptr);
-      delete p.ptr;
+      delete ptr;
+      ptr = p.ptr;
       p.ptr = 0;
       return *this;
    }
@@ -136,6 +138,7 @@ int main()
    clone_ptr<Base> p1(new Derived());
    // ...
    clone_ptr<Base> p2 = boost::move(p1);  // p2 now owns the pointer instead of p1
+   p2 = clone_ptr<Base>(new Derived());   // temporary is moved to p2
    }
    //]
    //[clone_ptr_move_derived

@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -18,7 +18,7 @@
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
 
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <utility>
 #include <functional>
 #include <memory>
@@ -77,6 +77,7 @@ class flat_map
 {
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(flat_map)
    //This is the tree that we should store if pair was movable
    typedef containers_detail::flat_tree<Key, 
                            std::pair<Key, T>, 
@@ -119,7 +120,6 @@ class flat_map
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(flat_map)
 
    // typedefs:
    typedef typename tree_t::key_type               key_type;
@@ -158,6 +158,20 @@ class flat_map
       : m_flat_tree(comp, force<impl_allocator_type>(a)) 
       { m_flat_tree.insert_unique(first, last); }
 
+   //! <b>Effects</b>: Constructs an empty flat_map using the specified comparison object and 
+   //! allocator, and inserts elements from the ordered unique range [first ,last). This function
+   //! is more efficient than the normal range creation for ordered ranges.
+   //!
+   //! <b>Requires</b>: [first ,last) must be ordered according to the predicate and must be
+   //! unique values.
+   //! 
+   //! <b>Complexity</b>: Linear in N.
+   template <class InputIterator>
+   flat_map( ordered_unique_range_t, InputIterator first, InputIterator last
+           , const Pred& comp = Pred(), const allocator_type& a = allocator_type())
+      : m_flat_tree(ordered_range, first, last, comp, a) 
+   {}
+
    //! <b>Effects</b>: Copy constructs a flat_map.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
@@ -177,8 +191,8 @@ class flat_map
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   flat_map<Key,T,Pred,Alloc>& operator=(const flat_map<Key, T, Pred, Alloc>& x)
-      {  m_flat_tree = x.m_flat_tree;   return *this;  }
+   flat_map<Key,T,Pred,Alloc>& operator=(BOOST_COPY_ASSIGN_REF(flat_map) x)
+   {  m_flat_tree = x.m_flat_tree;   return *this;  }
 
    //! <b>Effects</b>: Move constructs a flat_map.
    //!   Constructs *this using x's resources.
@@ -796,6 +810,7 @@ class flat_multimap
 {
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(flat_multimap)
    typedef containers_detail::flat_tree<Key, 
                            std::pair<Key, T>, 
                            containers_detail::select1st< std::pair<Key, T> >, 
@@ -835,7 +850,6 @@ class flat_multimap
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(flat_multimap)
 
    // typedefs:
    typedef typename tree_t::key_type               key_type;
@@ -876,6 +890,20 @@ class flat_multimap
       : m_flat_tree(comp, force<impl_allocator_type>(a)) 
       { m_flat_tree.insert_equal(first, last); }
 
+   //! <b>Effects</b>: Constructs an empty flat_multimap using the specified comparison object and 
+   //! allocator, and inserts elements from the ordered range [first ,last). This function
+   //! is more efficient than the normal range creation for ordered ranges.
+   //!
+   //! <b>Requires</b>: [first ,last) must be ordered according to the predicate.
+   //! 
+   //! <b>Complexity</b>: Linear in N.
+   template <class InputIterator>
+   flat_multimap(ordered_range_t, InputIterator first, InputIterator last,
+            const Pred& comp        = Pred(),
+            const allocator_type& a = allocator_type())
+      : m_flat_tree(ordered_range, first, last, comp, a) 
+   {}
+
    //! <b>Effects</b>: Copy constructs a flat_multimap.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
@@ -894,7 +922,7 @@ class flat_multimap
    //! <b>Effects</b>: Makes *this a copy of x.
    //! 
    //! <b>Complexity</b>: Linear in x.size().
-   flat_multimap<Key,T,Pred,Alloc>& operator=(const flat_multimap<Key,T,Pred,Alloc>& x) 
+   flat_multimap<Key,T,Pred,Alloc>& operator=(BOOST_COPY_ASSIGN_REF(flat_multimap) x) 
       {  m_flat_tree = x.m_flat_tree;   return *this;  }
 
    //! <b>Effects</b>: this->swap(x.get()).
@@ -1361,9 +1389,11 @@ template <class Key, class T, class Pred, class Alloc>
 inline void swap(flat_multimap<Key,T,Pred,Alloc>& x, flat_multimap<Key,T,Pred,Alloc>& y) 
    {  x.swap(y);  }
 
-}
+}}
 
 /// @cond
+
+namespace boost {
 
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
@@ -1373,9 +1403,9 @@ struct has_trivial_destructor_after_move< boost::container::flat_multimap<K, T, 
    static const bool value = has_trivial_destructor<A>::value && has_trivial_destructor<C>::value;
 };
 
-/// @endcond
+}  //namespace boost { 
 
-}
+/// @endcond
 
 #include <boost/container/detail/config_end.hpp>
 

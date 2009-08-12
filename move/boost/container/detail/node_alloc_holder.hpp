@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -60,12 +60,9 @@ struct scoped_deallocator
    void priv_deallocate(allocator_v2)
    {  m_alloc.deallocate_one(m_ptr); }
 
-   scoped_deallocator(scoped_deallocator &);
-   scoped_deallocator& operator=(scoped_deallocator &);
+   BOOST_MOVABLE_BUT_NOT_COPYABLE(scoped_deallocator)
 
    public:
-
-   BOOST_ENABLE_MOVE_EMULATION(scoped_deallocator)
 
    pointer     m_ptr;
    Allocator&  m_alloc;
@@ -180,11 +177,9 @@ struct node_alloc_holder
    typedef allocator_destroyer<NodeAlloc>             Destroyer;
 
    private:
-   node_alloc_holder(node_alloc_holder&);
-   node_alloc_holder & operator=(node_alloc_holder&);
+   BOOST_COPYABLE_AND_MOVABLE(node_alloc_holder)
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(node_alloc_holder)
 
    node_alloc_holder(const ValAlloc &a) 
       : members_(a)
@@ -197,6 +192,12 @@ struct node_alloc_holder
    node_alloc_holder(BOOST_RV_REF(node_alloc_holder) other)
       : members_(boost::move(other.node_alloc()))
    {  this->swap(other);  }
+
+   node_alloc_holder & operator=(BOOST_COPY_ASSIGN_REF(node_alloc_holder) other)
+   {  members_.assign(other.node_alloc());   }
+
+   node_alloc_holder & operator=(BOOST_RV_REF(node_alloc_holder) other)
+   {  members_.assign(other.node_alloc());   }
 
    template<class Pred>
    node_alloc_holder(const ValAlloc &a, const Pred &c) 
@@ -239,12 +240,7 @@ struct node_alloc_holder
 
    template<class Convertible1, class Convertible2>
    static void construct(const NodePtr &ptr,
-      #ifdef BOOST_HAS_RVALUE_REFS
-      std::pair<Convertible1, Convertible2> &&
-      #else
-      boost::rv<std::pair<Convertible1, Convertible2> > &
-      #endif
-      value)
+      BOOST_RV_REF_2_TEMPL_ARGS(std::pair, Convertible1, Convertible2) value)
    {  
       typedef typename Node::hook_type                hook_type;
       typedef typename Node::value_type::first_type   first_type;
@@ -372,7 +368,7 @@ struct node_alloc_holder
          int constructed = 0;
          Node *p = 0;
          BOOST_TRY{
-            for(difference_type i = 0; i < n; ++i, ++beg, --constructed){
+               for(difference_type i = 0; i < n; ++i, ++beg, --constructed){
                p = containers_detail::get_pointer(mem.front());
                mem.pop_front();
                //This can throw
@@ -393,7 +389,6 @@ struct node_alloc_holder
          BOOST_CATCH_END
       }
       return beg;
-
    }
 
    void clear(allocator_v1)
@@ -470,6 +465,13 @@ struct node_alloc_holder
       members_holder(const ConvertibleToAlloc &c2alloc, const Pred &c)
          :  NodeAlloc(c2alloc), m_icont(c)
       {}
+
+      template<class ConvertibleToAlloc>
+      void assign (const ConvertibleToAlloc &c2alloc)
+      {
+         NodeAlloc::operator=(c2alloc);
+      }
+
       //The intrusive container
       ICont m_icont;
    } members_;

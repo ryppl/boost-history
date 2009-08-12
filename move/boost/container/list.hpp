@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2005-2008. Distributed under the Boost
+// (C) Copyright Ion Gaztanaga 2005-2009. Distributed under the Boost
 // Software License, Version 1.0. (See accompanying file
 // LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
@@ -49,7 +49,7 @@
 
 #include <boost/container/detail/config_begin.hpp>
 #include <boost/container/detail/workaround.hpp>
-#include <boost/container/containers_fwd.hpp>
+#include <boost/container/container_fwd.hpp>
 #include <boost/container/detail/version_type.hpp>
 #include <boost/move/move.hpp>
 #include <boost/pointer_to_other.hpp>
@@ -60,11 +60,13 @@
 #include <boost/intrusive/list.hpp>
 #include <boost/container/detail/node_alloc_holder.hpp>
 
-#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
+#if defined(BOOST_CONTAINERS_PERFECT_FORWARDING) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
+#else
 //Preprocessor library to emulate perfect forwarding
 #include <boost/container/detail/preprocessor.hpp> 
 #endif
 
+#include <stdexcept>
 #include <iterator>
 #include <utility>
 #include <memory>
@@ -95,7 +97,18 @@ struct list_node
    :  public list_hook<VoidPointer>::type
 {
 
-   #ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
+   #if defined(BOOST_CONTAINERS_PERFECT_FORWARDING) || defined(BOOST_CONTAINER_DOXYGEN_INVOKED)
+
+   list_node()
+      : m_data()
+   {}
+
+   template<class ...Args>
+   list_node(Args &&...args)
+      : m_data(boost::forward<Args>(args)...)
+   {}
+
+   #else //#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
 
    list_node()
       : m_data()
@@ -110,12 +123,6 @@ struct list_node
    #define BOOST_PP_LOCAL_LIMITS (1, BOOST_CONTAINERS_MAX_CONSTRUCTOR_PARAMETERS)
    #include BOOST_PP_LOCAL_ITERATE()
 
-   #else //#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
-
-   template<class ...Args>
-   list_node(Args &&...args)
-      : m_data(boost::forward<Args>(args)...)
-   {}
    #endif//#ifndef BOOST_CONTAINERS_PERFECT_FORWARDING
 
    T m_data;
@@ -222,6 +229,7 @@ class list
 
    /// @cond
    private:
+   BOOST_COPYABLE_AND_MOVABLE(list)
    typedef difference_type                         list_difference_type;
    typedef pointer                                 list_pointer;
    typedef const_pointer                           list_const_pointer;
@@ -230,8 +238,6 @@ class list
    /// @endcond
 
    public:
-   BOOST_ENABLE_MOVE_EMULATION(list)
-
    //! Const iterator used to iterate through a list. 
    class const_iterator
       /// @cond
@@ -724,7 +730,7 @@ class list
    //! <b>Throws</b>: If memory allocation throws or T's copy constructor throws.
    //!
    //! <b>Complexity</b>: Linear to the number of elements in x.
-   ThisType& operator=(const ThisType& x)
+   ThisType& operator=(BOOST_COPY_ASSIGN_REF(ThisType) x)
    {
       if (this != &x) {
          this->assign(x.begin(), x.end());
@@ -1345,9 +1351,9 @@ inline void swap(list<T, A>& x, list<T, A>& y)
   x.swap(y);
 }
 
-}  //namespace container {
-
 /// @cond
+
+}  //namespace container {
 
 //!has_trivial_destructor_after_move<> == true_type
 //!specialization for optimizations
@@ -1357,9 +1363,11 @@ struct has_trivial_destructor_after_move<boost::container::list<T, A> >
    static const bool value = has_trivial_destructor<A>::value;
 };
 
+namespace container {
+
 /// @endcond
 
-}
+}}
 
 #include <boost/container/detail/config_end.hpp>
 

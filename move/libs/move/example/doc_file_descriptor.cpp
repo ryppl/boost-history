@@ -1,6 +1,6 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Ion Gaztanaga 2009.
+// (C) Copyright Ion Gaztanaga 2008-2009.
 // Distributed under the Boost Software License, Version 1.0.
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
@@ -27,19 +27,16 @@ class file_descriptor
    //->
    int os_descr_;
 
-   file_descriptor(file_descriptor &);
-   file_descriptor & operator=(file_descriptor &);
+   private:
+   BOOST_MOVABLE_BUT_NOT_COPYABLE(file_descriptor)
 
    public:
-   explicit file_descriptor(const char *filename = 0)
+   explicit file_descriptor(const char *filename = 0)          //Constructor
       : os_descr_(filename ? operating_system_open_file(filename) : 0)
    {  if(!os_descr_) throw std::runtime_error("file not found");  }
 
-   ~file_descriptor()
+   ~file_descriptor()                                          //Destructor
    {  if(!os_descr_)  operating_system_close_file(os_descr_);  }
-
-   // move semantics
-   BOOST_ENABLE_MOVE_EMULATION(file_descriptor)
 
    file_descriptor(BOOST_RV_REF(file_descriptor) x)            // Move ctor
       :  os_descr_(x.os_descr_)
@@ -62,17 +59,19 @@ class file_descriptor
 #include <boost/container/vector.hpp>
 #include <cassert>
 
+//Remember: 'file_descriptor' is NOT copyable, but it
+//can be returned from functions thanks to move semantics
 file_descriptor create_file_descriptor(const char *filename)
 {  return file_descriptor(filename);  }
 
 int main()
 {
-   //Open a file obtaining its descriptor. The file_descriptor
-   //can be returned from factory functions without any copy
+   //Open a file obtaining its descriptor, the temporary
+   //returned from 'create_file_descriptor' is moved to 'fd'.
    file_descriptor fd = create_file_descriptor("filename");
    assert(!fd.empty());
 
-   //Move into a vector
+   //Now move fd into a vector
    boost::container::vector<file_descriptor> v;
    v.push_back(boost::move(fd));
 
@@ -80,7 +79,8 @@ int main()
    assert(fd.empty());
    assert(!v[0].empty());
 
-   //Compilation error if uncommented, file_descriptor is not copyable:
+   //Compilation error if uncommented since file_descriptor is not copyable
+   //and vector copy construction requires value_type's copy constructor:
    //boost::container::vector<file_descriptor> v2(v);
    return 0;
 }
