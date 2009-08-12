@@ -181,6 +181,10 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\path_traits.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\path_unit_test.cpp"
 				>
 			</File>
@@ -190,6 +194,10 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\utf8_codecvt_facet.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\windows_file_codecvt.cpp"
 				>
 			</File>
 		</Filter>

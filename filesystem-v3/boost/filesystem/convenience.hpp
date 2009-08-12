@@ -27,45 +27,23 @@ namespace boost
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
 
-    BOOST_FS_FUNC_STRING extension(const Path& ph)
+    std::string extension(const path & p)
     {
-      typedef BOOST_FS_TYPENAME Path::string_type string_type;
-      string_type filename = ph.filename();
-
-      BOOST_FS_TYPENAME string_type::size_type n = filename.rfind('.');
-      if (n != string_type::npos)
-        return filename.substr(n);
-      else
-        return string_type();
+      return p.extension().string();
     }
 
-    BOOST_FS_FUNC_STRING basename(const Path& ph)
+    std::string basename(const path & p)
     {
-      typedef BOOST_FS_TYPENAME Path::string_type string_type;
-      string_type filename = ph.filename();
-      BOOST_FS_TYPENAME string_type::size_type n = filename.rfind('.');
-      return filename.substr(0, n);
+      return p.stem().string();
     }
 
+    path change_extension( const path & p, const path & new_extension )
+    { 
+      path new_p( p );
+      new_p.replace_extension( new_extension );
+      return new_p;
+    }
 
-    BOOST_FS_FUNC(Path) change_extension( const Path & ph,
-      const BOOST_FS_TYPENAME Path::string_type & new_extension )
-      { return ph.parent_path() / (basename(ph) + new_extension); }
-
-    inline std::string extension(const path& ph)
-      { return extension<path>(ph); }
-    inline std::wstring extension(const wpath& ph)
-      { return extension<wpath>(ph); }
-
-    inline std::string basename(const path& ph)
-      { return basename<path>( ph ); }
-    inline std::wstring basename(const wpath& ph)
-      { return basename<wpath>( ph ); }
-
-    inline path change_extension( const path & ph, const std::string& new_ex )
-      { return change_extension<path>( ph, new_ex ); }
-    inline wpath change_extension( const wpath & ph, const std::wstring& new_ex )
-      { return change_extension<wpath>( ph, new_ex ); }
 # endif
 
 
@@ -184,8 +162,8 @@ namespace boost
         system::error_code ec;
         m_imp->m_stack.push(
           m_imp->m_no_throw
-            ? directory_iterator( *m_imp->m_stack.top(), ec )
-            : directory_iterator( *m_imp->m_stack.top() ) );
+            ? directory_iterator( m_imp->m_stack.top()->path(), ec )
+            : directory_iterator( m_imp->m_stack.top()->path() ) );
         if ( m_imp->m_stack.top() != end_itr )
         {
           ++m_imp->m_level;

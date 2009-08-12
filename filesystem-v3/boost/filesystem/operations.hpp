@@ -8,7 +8,7 @@
 //  Distributed under the Boost Software License, Version 1.0.
 //  See http://www.boost.org/LICENSE_1_0.txt
 
-//  See library home page at http://www.boost.org/libs/filesystem
+//  Library home page: http://www.boost.org/libs/filesystem
 
 //--------------------------------------------------------------------------------------//
 /*
@@ -179,9 +179,15 @@ namespace boost
 //                  in alphabetical order, unless otherwise noted                       //
 //                                                                                      //
 //--------------------------------------------------------------------------------------//
-
   BOOST_FILESYSTEM_DECL // declaration must precede complete()
   path initial_path( system::error_code & ec = throws() );
+
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+  //  support legacy initial_path<...>()
+  template <class Path>
+  path initial_path( system::error_code & ec = throws() )
+    { return initial_path( ec ); }
+# endif
 
   BOOST_FILESYSTEM_DECL
   path complete( const path & p, const path & base = initial_path() );
@@ -312,8 +318,9 @@ public:
   file_status   status( system::error_code & ec = throws() ) const;
   file_status   symlink_status( system::error_code & ec = throws() ) const;
 
-  // conversion simplifies the most common use of directory_entry
-  operator const boost::filesystem::path &() const { return m_path; }
+  //// conversion simplifies the most common use of directory_entry
+  // Removed; poor design + too likely to conflict with path v3 constructor templates
+  //operator const boost::filesystem::path &() const { return m_path; }
 
 //#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
 //      // deprecated functions preserve common use cases in legacy code
@@ -337,6 +344,19 @@ private:
   mutable file_status       m_symlink_status;   // lstat()-like
 
 }; // directory_entry
+
+////  dispatch directory_entry supplied here rather than in 
+////  <boost/filesystem/path_traits.hpp>, thus avoiding header circularity.
+////  test cases are in operations_unit_test.cpp
+//
+//namespace path_traits
+//{
+//  template <class U> inline
+//  void dispatch( const directory_entry & de, U & to, const codecvt_type & )
+//  {
+//    to = de.path().source();
+//  }
+//}  // namespace path_traits
 
 //--------------------------------------------------------------------------------------//
 //                                                                                      //

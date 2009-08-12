@@ -7,6 +7,43 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
+/*
+   FAQ
+
+   Why are there no error_code & arguments?
+   ----------------------------------------
+
+   error_code & arguments add considerably to the surface area of the interface, yet
+   appear to be of limited usefulness. They have not been requested by users; the need
+   for filesystem error reporting via error_code seems limited to operational failures
+   rather than path failures.
+
+   error_code & arguments double the number of signatures, since for efficiency the
+   use of a default throws() argument is not desirable.
+
+   Errors in path conversions only occur if the source and target value types differ AND
+   the target encoding can't represent a character present in the source. The only
+   commonplace case is when directory iteration on Windows encounters a file name that
+   can't be represented in a char encoding.
+
+   Workarounds (such as pre-scanning for characters that can't be encoded) appear
+   resonable.
+
+   Why are there no const codecvt_type & arguments?
+   ------------------------------------------------
+
+   To hold down the size of the class path interface. Per function codecvt facets
+   just aren't needed very often in practice.
+
+   An RAII idiom can be used to ensure push/pop behavior as an alternative.
+
+   Note that codecvt() is passed to the path_traits::convert functions, since that
+   decouples the convert functions from class path.
+
+   const codecvt_type & can be added later, but once added, they can never be removed
+   since that would break user code.
+*/
+
 #ifndef BOOST_FILESYSTEM_PATH_TRAITS_HPP
 #define BOOST_FILESYSTEM_PATH_TRAITS_HPP
 
@@ -15,12 +52,44 @@
 #include <iterator>
 #include <boost/assert.hpp>
 #include <boost/system/error_code.hpp>
+// #include <iostream>   //**** comment me out ****
 
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
-namespace boost { namespace filesystem { namespace path_traits {
+namespace boost { namespace filesystem {
+
+  class directory_entry;
   
+namespace path_traits {
+ 
   typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
+
+  //  Pathable dispatchers
+
+  template <class Container, class U> inline
+  void dispatch( const Container & c, U & to, const codecvt_type & cvt )
+  {
+//    std::cout << "dispatch() container\n";
+    if ( c.size() )
+      convert( &*c.begin(), &*c.begin() + c.size(), to, cvt );
+  }
+
+  template <class T, class U> inline
+  void dispatch( T * const & c_str, U & to, const codecvt_type & cvt )
+  {
+//    std::cout << "dispatch() const T *\n"; 
+    convert( c_str, to, cvt );
+  }
+  
+  template <typename T, size_t N, class U> inline
+  void dispatch( T (&array)[N], U & to, const codecvt_type & cvt ) // T, N, U deduced
+  {
+//    std::cout << "dispatch() array, N=" << N << "\n"; 
+    convert( array, array + N - 1, to, cvt );
+  }
+
+  BOOST_FILESYSTEM_DECL
+  void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & );
 
   // value types differ  ---------------------------------------------------------------//
   //
@@ -99,5 +168,7 @@ namespace boost { namespace filesystem { namespace path_traits {
   }
 
 }}} // namespace boost::filesystem::path_traits
+
+#include <boost/config/abi_suffix.hpp> // pops abi_prefix.hpp pragmas
 
 #endif  // BOOST_FILESYSTEM_PATH_TRAITS_HPP

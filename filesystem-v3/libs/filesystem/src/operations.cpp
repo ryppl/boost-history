@@ -206,7 +206,7 @@ namespace
     else  
     { //  error
       if ( &ec == &throws() )
-        throw_exception( filesystem_error( message,
+        throw/*_exception*/( filesystem_error( message,
           p, BOOST_ERRNO, system_category ) );
       else
         ec.assign( BOOST_ERRNO, system_category );
@@ -1326,7 +1326,11 @@ namespace boost
   path system_complete( const path & p, system::error_code & ec ) 
    {
 #   ifdef BOOST_WINDOWS_API
-    if ( p.empty() ) return p;
+    if ( p.empty() )
+    {
+      if ( &ec != &throws() ) ec.clear();
+      return p;
+    }
     wchar_t buf[buf_size];
     wchar_t * pfn;
     std::size_t len = get_full_path_name( p, buf_size, buf, &pfn );
@@ -1335,7 +1339,7 @@ namespace boost
       return path();
 
     if ( len < buf_size ) // len does not include null termination character
-      return path( buf );
+      return path( &buf[0] );
 
     boost::scoped_array<wchar_t> big_buf( new wchar_t[len] );
 
@@ -1424,6 +1428,17 @@ namespace boost
     return m_symlink_status;
   }
 
+//  dispatch directory_entry supplied here rather than in 
+//  <boost/filesystem/path_traits.hpp>, thus avoiding header circularity.
+//  test cases are in operations_unit_test.cpp
+
+  namespace path_traits
+  {
+    void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & )
+    {
+      to = de.path().source();
+    }
+}  // namespace path_traits
 } // namespace filesystem
 } // namespace boost
 

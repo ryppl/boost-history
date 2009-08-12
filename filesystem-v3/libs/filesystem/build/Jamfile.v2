@@ -1,4 +1,3 @@
-
 # Boost Filesystem Library Build Jamfile
 
 # (C) Copyright Beman Dawes 2002-2006
@@ -16,15 +15,15 @@ project boost/filesystem
     ;
 
 SOURCES =
-    operations path portability utf8_codecvt_facet ;
+    operations path path_traits portability utf8_codecvt_facet windows_file_codecvt ;
 
 lib boost_filesystem
     :
     $(SOURCES).cpp
     ../../system/build//boost_system
     :
-    <link>shared:<define>BOOST_ALL_DYN_LINK=1 # tell source we're building dll's
-    <link>static:<define>BOOST_All_STATIC_LINK=1 # tell source we're building static lib's
+      <link>shared:<define>BOOST_FILESYSTEM_DYN_LINK=1
+      <link>static:<define>BOOST_FILESYSTEM_STATIC_LINK=1
     :
     :
     ;

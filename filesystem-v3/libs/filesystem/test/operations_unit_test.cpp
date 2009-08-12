@@ -2,14 +2,15 @@
 
 //  Copyright Beman Dawes 2008
 
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
 
-//  See library home page at http://www.boost.org/libs/filesystem
+//  Library home page: http://www.boost.org/libs/filesystem
 
 #include <iostream>
 #include <boost/filesystem/operations.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 using namespace boost::filesystem;
 using namespace boost::system;
@@ -20,7 +21,6 @@ using std::string;
 
 namespace
 {
-  int errors;
 
   std::string this_file;
   
@@ -28,7 +28,7 @@ namespace
   {
     if ( ok ) return;
 
-    ++errors;
+    ++::boost::detail::test_errors();
 
     std::cout << file << '(' << line << "): test failed\n";
   }
@@ -53,7 +53,7 @@ namespace
     CHECK( !is_directory( this_file ) );
 
     CHECK( is_regular_file( this_file ) );
-    CHECK( !is_empty( this_file ) );
+    CHECK( !boost::filesystem::is_empty( this_file ) );
     CHECK( !is_other( this_file ) );
   }
 
@@ -87,15 +87,13 @@ namespace
       CHECK( !is_symlink( it->symlink_status() ) );
     }
 
-
     for ( ; it != end; ++it )
     {
 //      cout << "  " << it->path().string() << "\n";
     }
 
     std::cout << "directory_iterator_test complete" << std::endl;
-}
-
+  }
 
   //  operations_test  -------------------------------------------------------//
 
@@ -122,16 +120,25 @@ namespace
     std::time_t ft = last_write_time( "." );
 
     last_write_time( ".", std::time_t(-1), ec );
+  }
 
+  //  directory_entry_overload_test  ---------------------------------------------------//
+
+  void directory_entry_overload_test()
+  {
+    std::cout << "directory_entry overload test..." << std::endl;
+
+    directory_iterator it( "." );
+    path p( *it );
   }
 
 }  // unnamed namespace
 
-  //------------------------------------------------------------------------------------//
-  //                                                                                    //
-  //                                  test_main                                         //
-  //                                                                                    //
-  //------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                    main                                              //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 int main( int argc, char * argv[] )
 {
@@ -142,12 +149,19 @@ int main( int argc, char * argv[] )
   //  error handling tests
 
   bool threw( false );
-  try { file_size( "no-such-file" ); }
-  catch ( const filesystem_error & ex )
+  try
+  { 
+    file_size( "no-such-file" );
+  }
+  catch ( const boost::filesystem::filesystem_error & ex )
   {
     threw = true;
     cout << "\nas expected, attempt to get size of non-existent file threw a filesystem_error\n"
       "what() returns " << ex.what() << "\n";
+  }
+  catch ( ... )
+  {
+    cout << "\nunexpected exception type caught" << std::endl;
   }
 
   CHECK( threw );
@@ -158,7 +172,7 @@ int main( int argc, char * argv[] )
   query_test();
   directory_iterator_test();
   operations_test();
+  directory_entry_overload_test();
   
-  cout << errors << " errors detected\n";
-  return errors;
+  return ::boost::report_errors();
 }

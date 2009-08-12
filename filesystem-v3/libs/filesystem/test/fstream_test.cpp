@@ -1,11 +1,11 @@
-//  fstream_test.cpp  --------------------------------------------------------//
+//  fstream_test.cpp  ------------------------------------------------------------------//
 
-//  Copyright Beman Dawes 2002.
-//  Use, modification, and distribution is subject to the Boost Software
-//  License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-//  http://www.boost.org/LICENSE_1_0.txt)
+//  Copyright Beman Dawes 2002
 
-//  See library home page at http://www.boost.org/libs/filesystem
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
+
+//  Library home page: http://www.boost.org/libs/filesystem
 
 #include <boost/config/warning_disable.hpp>
 
@@ -20,10 +20,6 @@
 
 #include "../src/utf8_codecvt_facet.hpp"
 
-#ifndef BOOST_FILESYSTEM_NARROW_ONLY
-#  include "lpath.hpp"
-#endif
-
 namespace fs = boost::filesystem;
 
 #include <boost/config.hpp>
@@ -31,150 +27,129 @@ namespace fs = boost::filesystem;
   namespace std { using ::remove; }
 #endif
 
-#include <boost/test/minimal.hpp>
+#include <boost/detail/lightweight_test.hpp>
 
 namespace
 {
   bool cleanup = true;
   
-  template< class Path >
-  void test( const Path & p )
+  void test( const fs::path & p )
   {
-#  if !BOOST_WORKAROUND( BOOST_MSVC, <= 1200 ) // VC++ 6.0 can't handle open
     { 
       std::cout << " in test 1\n";
       fs::filebuf fb;
       fb.open( p, std::ios_base::in );
-      BOOST_CHECK( fb.is_open() == fs::exists( p ) );
+      BOOST_TEST( fb.is_open() == fs::exists( p ) );
     }
     {
       std::cout << " in test 2\n";
       fs::filebuf fb1;
       fb1.open( p, std::ios_base::out );
-      BOOST_CHECK( fb1.is_open() );
+      BOOST_TEST( fb1.is_open() );
     }
     {
       std::cout << " in test 3\n";
       fs::filebuf fb2;
       fb2.open( p, std::ios_base::in );
-      BOOST_CHECK( fb2.is_open() );
+      BOOST_TEST( fb2.is_open() );
     }
-#  else
-    std::cout << "<note>\n";
-    std::cout <<
-      "VC++6.0 does not support boost::filesystem open()\n";
-#  endif
     {
       std::cout << " in test 4\n";
       fs::ifstream tfs( p );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
     {
       std::cout << " in test 4.1\n";
       fs::ifstream tfs( p / p.filename() ); // should fail
-      BOOST_CHECK( !tfs.is_open() );
+      BOOST_TEST( !tfs.is_open() );
     }
     {
       std::cout << " in test 5\n";
       fs::ifstream tfs( p, std::ios_base::in );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
-#  if !BOOST_WORKAROUND( BOOST_MSVC, <= 1200 ) // VC++ 6.0 can't handle open
     {
       std::cout << " in test 6\n";
       fs::ifstream tfs;
       tfs.open( p );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
     {
       std::cout << " in test 7\n";
       fs::ifstream tfs;
       tfs.open( p, std::ios_base::in );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
-#  endif
     {
       std::cout << " in test 8\n";
       fs::ofstream tfs( p );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
     {
       std::cout << " in test 9\n";
       fs::ofstream tfs( p, std::ios_base::out );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
-#  if !BOOST_WORKAROUND( BOOST_MSVC, <= 1200 ) // VC++ 6.0 can't handle open
     {
       std::cout << " in test 10\n";
       fs::ofstream tfs;
       tfs.open( p );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
     {
       std::cout << " in test 11\n";
       fs::ofstream tfs;
       tfs.open( p, std::ios_base::out );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
-# endif
     {
       std::cout << " in test 12\n";
       fs::fstream tfs( p );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
     {
       std::cout << " in test 13\n";
       fs::fstream tfs( p, std::ios_base::in|std::ios_base::out );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
-#  if !BOOST_WORKAROUND( BOOST_MSVC, <= 1200 ) // VC++ 6.0 can't handle open
     {
       std::cout << " in test 14\n";
       fs::fstream tfs;
       tfs.open( p );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
     {
       std::cout << " in test 15\n";
       fs::fstream tfs;
       tfs.open( p, std::ios_base::in|std::ios_base::out );
-      BOOST_CHECK( tfs.is_open() );
+      BOOST_TEST( tfs.is_open() );
     }
-#  endif
 
     if ( cleanup ) fs::remove( p );
 
   } // test
 } // unnamed namespace
 
-int test_main( int argc, char*[] )
+int main( int argc, char*[] )
 {
   if ( argc > 1 ) cleanup = false;
 
-  // test fs::path
-  std::cout << "path tests:\n";
-  test( fs::path( "fstream_test_foo" ) );
+  // test narrow characters
+  std::cout << "narrow character tests:\n";
+  test( "fstream_test_foo" );
 
-#ifndef BOOST_FILESYSTEM_NARROW_ONLY
 
   // So that tests are run with known encoding, use Boost UTF-8 codecvt
   std::locale global_loc = std::locale();
   std::locale loc( global_loc, new fs::detail::utf8_codecvt_facet );
-  fs::wpath_traits::imbue( loc );
+  fs::path::imbue( loc );
 
-  // test fs::wpath
-  //  x2780 is circled 1 against white background == e2 9e 80 in UTF-8
-  //  x2781 is circled 2 against white background == e2 9e 81 in UTF-8
-  std::cout << "\nwpath tests:\n";
-  test( fs::wpath( L"fstream_test_\x2780" ) );
+  // test with some wide characters
+  //  \u2780 is circled 1 against white background == e2 9e 80 in UTF-8
+  //  \u2781 is circled 2 against white background == e2 9e 81 in UTF-8
+  //  \u263A is a white smiling face
+  std::cout << "\nwide character tests:\n";
+  test( L"fstream_test_\u2780\u263A" );
 
-  // test user supplied basic_path
-  const long lname[] = { 'f', 's', 'r', 'e', 'a', 'm', '_', 't', 'e', 's',
-    't', '_', 'l', 'p', 'a', 't', 'h', 0 };
-  std::cout << "\nlpath tests:\n";
-  test( user::lpath( lname ) );
-
-#endif
-
-  return 0;
+  return ::boost::report_errors();
 }

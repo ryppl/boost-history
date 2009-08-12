@@ -90,8 +90,6 @@
 		</Configuration>
 		<Configuration
 			Name="Release|Win32"
-			OutputDirectory="$(SolutionDir)$(ConfigurationName)"
-			IntermediateDirectory="$(ConfigurationName)"
 			ConfigurationType="1"
 			InheritedPropertySheets="..\common.vsprops"
 			CharacterSet="1"
@@ -188,6 +186,14 @@
 			</File>
 			<File
 				RelativePath="..\..\..\src\path.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\path_traits.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\windows_file_codecvt.cpp"
 				>
 			</File>
 		</Filter>

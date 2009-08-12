@@ -2,8 +2,10 @@
 
 //  Copyright Beman Dawes 2008
 
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
+
+//  Library home page: http://www.boost.org/libs/filesystem
 
 // define BOOST_FILESYSTEM_SOURCE so that <boost/system/config.hpp> knows
 // the library is being built (possibly exporting rather than importing code)
@@ -17,6 +19,7 @@
 #include <cstddef>
 #include <cstring>
 #include <cassert>
+#include "windows_file_codecvt.hpp"
 
 #ifdef BOOST_FILESYSTEM_DEBUG
 # include <iostream>
@@ -293,6 +296,76 @@ namespace filesystem
 
     return *this;
   }
+
+//
+//  // m_normalize  ------------------------------------------------------------//
+//  // 
+//
+//  path & path::m_normalize()
+//  {
+//    if ( m_path.empty() ) return *this;
+//      
+//    path_type temp;
+//    iterator start( begin() );
+//    iterator last( end() );
+//    iterator stop( last-- );
+//    for ( iterator itr( start ); itr != stop; ++itr )
+//    {
+//      // ignore "." except at start and last
+//      if ( itr->size() == 1
+//        && (*itr)[0] == dot
+//        && itr != start
+//        && itr != last ) continue;
+//
+//      // ignore a name and following ".."
+//      if ( !temp.empty()
+//        && itr->size() == 2
+//        && (*itr)[0] == dot
+//        && (*itr)[1] == dot ) // dot dot
+//      {
+//        string_type lf( temp.filename() );  
+//        if ( lf.size() > 0  
+//          && (lf.size() != 1
+//            || (lf[0] != dot
+//              && lf[0] != separator))
+//          && (lf.size() != 2 
+//            || (lf[0] != dot
+//              && lf[1] != dot
+//#             ifdef BOOST_WINDOWS_PATH
+//              && lf[1] != colon
+//#             endif
+//               )
+//             )
+//          )
+//        {
+//          temp.remove_filename();
+//          // if not root directory, must also remove "/" if any
+//          if ( temp.m_path.size() > 0
+//            && temp.m_path[temp.m_path.size()-1]
+//              == separator )
+//          {
+//            typename string_type::size_type rds(
+//              detail::root_directory_start<String,Traits>( temp.m_path,
+//                temp.m_path.size() ) );
+//            if ( rds == string_type::npos
+//              || rds != temp.m_path.size()-1 ) 
+//              { temp.m_path.erase( temp.m_path.size()-1 ); }
+//          }
+//
+//          iterator next( itr );
+//          if ( temp.empty() && ++next != stop
+//            && next == last && *last == dot_str ) temp /= dot_str;
+//          continue;
+//        }
+//      }
+//
+//      temp /= *itr;
+//    };
+//
+//    if ( temp.empty() ) temp /= dot_str;
+//    m_path = temp.m_path;
+//    return *this;
+//  }
 
 }  // namespace filesystem
 }  // namespace boost
@@ -602,87 +675,6 @@ namespace filesystem
 
 namespace
 {
-# ifdef BOOST_WINDOWS_API
-
-  //------------------------------------------------------------------------------------//
-  //                                                                                    //
-  //                     class windows_file_api_codecvt_facet                           //
-  //                                                                                    //
-  //  Warning: partial implementation; even do_in and do_out only partially meet the    //
-  //  standard library specifications; the "to" buffer must hold the entire result.     //
-  //------------------------------------------------------------------------------------//
-
-  class windows_file_api_codecvt_facet
-    : public std::codecvt< wchar_t, char, std::mbstate_t >  
-  {
-  public:
-    explicit windows_file_api_codecvt_facet()
-        : std::codecvt<wchar_t, char, std::mbstate_t>(0) {}
-  protected:
-
-    virtual bool do_always_noconv() const throw() { return false; }
-
-    //  seems safest to assume variable number of characters since we don't
-    //  actually know what codepage is active
-    virtual int do_encoding() const throw() { return 0; }
-
-    virtual std::codecvt_base::result do_in( std::mbstate_t& state, 
-      const char * from, const char * from_end, const char *& from_next,
-      wchar_t * to, wchar_t * to_end, wchar_t *& to_next ) const;
-
-    virtual std::codecvt_base::result do_out( std::mbstate_t & state,
-      const wchar_t * from, const wchar_t * from_end, const wchar_t *& from_next,
-      char * to, char * to_end, char *& to_next ) const;
-
-    virtual std::codecvt_base::result do_unshift( std::mbstate_t&,
-        char * from, char * /*to*/, char * & next) const  { return ok; } 
-
-    virtual int do_length( std::mbstate_t &,
-      const char * from, const char * from_end, std::size_t max ) const  { return 0; }
-
-    virtual int do_max_length() const throw () { return 0; }
-  };
-
-  std::codecvt_base::result windows_file_api_codecvt_facet::do_in(
-    std::mbstate_t & state, 
-    const char * from, const char * from_end, const char *& from_next,
-    wchar_t * to, wchar_t * to_end, wchar_t *& to_next ) const
-  {
-    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
-
-    int count;
-    if ( (count = ::MultiByteToWideChar( codepage, MB_PRECOMPOSED, from,
-      from_end - from, to, to_end - to )) == 0 ) 
-    {
-      return error;  // conversion failed
-    }
-
-    from_next = from_end;
-    to_next = to + count;
-    *to_next = L'\0';
-    return ok;
- }
-
-  std::codecvt_base::result windows_file_api_codecvt_facet::do_out(
-    std::mbstate_t & state,
-    const wchar_t * from, const wchar_t * from_end, const wchar_t*  & from_next,
-    char * to, char * to_end, char * & to_next ) const
-  {
-    UINT codepage = AreFileApisANSI() ? CP_THREAD_ACP : CP_OEMCP;
-
-    int count;
-    if ( (count = ::WideCharToMultiByte( codepage, WC_NO_BEST_FIT_CHARS, from,
-      from_end - from, to, to_end - to, 0, 0 )) == 0 )
-    {
-      return error;  // conversion failed
-    }
-
-    from_next = from_end;
-    to_next = to + count;
-    *to_next = '\0';
-    return ok;
-  }
-# endif  // BOOST_WINDOWS_API
 
   //------------------------------------------------------------------------------------//
   //                              locale helpers                                        //
@@ -697,11 +689,15 @@ namespace
   {
 # ifdef BOOST_WINDOWS_API
     std::locale global_loc = std::locale();
-    std::locale loc( global_loc, new windows_file_api_codecvt_facet );
+    std::locale loc( global_loc, new windows_file_codecvt );
     return loc;
 # else
     // ISO C calls this "the locale-specific native environment":
-    return std::locale("");
+#   if !defined(macintosh) && !defined(__APPLE__) && !defined(__APPLE_CC__) 
+      return std::locale("");
+#   else
+      return std::locale();  // std::locale("") throws on Mac OS
+#   endif
 # endif
   }
 
@@ -710,16 +706,6 @@ namespace
     // ISO C calls this "the locale-specific native environment":
     static std::locale loc( default_locale() );
     return loc;
-  }
-
-  const std::codecvt<wchar_t, char, std::mbstate_t> *&
-  wchar_t_codecvt_facet()
-  {
-   static const std::codecvt<wchar_t, char, std::mbstate_t> *
-     facet(
-       &std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >
-        ( path_locale() ) );
-   return facet;
   }
 
 }  // unnamed namespace
@@ -733,6 +719,16 @@ namespace boost
 namespace filesystem
 {
 
+  const path::codecvt_type *&
+    path::wchar_t_codecvt_facet()
+  {
+   static const std::codecvt<wchar_t, char, std::mbstate_t> *
+     facet(
+       &std::use_facet<std::codecvt<wchar_t, char, std::mbstate_t> >
+        ( path_locale() ) );
+   return facet;
+  }
+
   std::locale path::imbue( const std::locale & loc )
   {
     std::locale temp( path_locale() );
@@ -742,160 +738,5 @@ namespace filesystem
     return temp;
   }
 
-  std::locale path::imbue( const std::locale & loc, system::error_code & ec )
-  {
-    try
-    {
-      std::locale temp( path_locale() );
-      path_locale() = loc;
-      wchar_t_codecvt_facet() = &std::use_facet
-          <std::codecvt<wchar_t, char, std::mbstate_t> >( path_locale() );
-      if ( &ec != &boost::throws() ) ec.clear();
-      return temp;
-    }
-    catch (...)
-    {
-      assert( 0 && "not implemented yet" );  // TODO
-      return path_locale();
-    }
-  }
-
-//--------------------------------------------------------------------------------------//
-//                              detail implementation                                   //
-//--------------------------------------------------------------------------------------//
-
-namespace detail
-{
-# ifdef BOOST_WINDOWS_API
-#  define APPEND_DIRECTION in
-#  define CONVERT_DIRECTION out
-# else
-#  define APPEND_DIRECTION out
-#  define CONVERT_DIRECTION in
-# endif
-
-  //------------------------------------------------------------------------------------//
-  //                                   append                                           //
-  //------------------------------------------------------------------------------------//
-
-  //  actual append done here to factor it out from messy buffer management code;
-  //  this function just assumes the buffer is large enough.
-  inline void do_append(
-                   const interface_value_type * from, const interface_value_type * from_end,
-                   value_type * to, value_type * to_end,
-                   string_type & target, error_code & ec )
-  {
-    //std::cout << std::hex
-    //          << " from=" << std::size_t(from)
-    //          << " from_end=" << std::size_t(from_end)
-    //          << " to=" << std::size_t(to)
-    //          << " to_end=" << std::size_t(to_end)
-    //          << std::endl;
-
-    std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const interface_value_type * from_next;
-    value_type * to_next;
-
-    std::codecvt_base::result res;
-
-    if ( (res=wchar_t_codecvt_facet()->APPEND_DIRECTION( state, from, from_end, from_next,
-           to, to_end, to_next )) != std::codecvt_base::ok )
-    {
-      //std::cout << " result is " << static_cast<int>(res) << std::endl;
-      assert( 0 && "append error handling not implemented yet" );
-      throw "append error handling not implemented yet";
-    }
-    if ( &ec != &boost::throws() ) ec.clear();
-    target.append( to, to_next ); 
-  }
-
-  BOOST_FILESYSTEM_DECL
-  void append( const interface_value_type * begin, const interface_value_type * end,
-  string_type & target, error_code & ec )
-  {
-    if ( !end )
-    {
-      // compute strlen by hand since interface_value_type may not be char
-      end = begin;
-      while (*end) ++end;
-    }
-
-    if ( begin == end )
-    {
-      if ( &ec != &boost::throws() ) ec.clear();
-      return;
-    }
-
-    std::size_t buf_size = (end - begin) * 3;  // perhaps too large, but that's OK
-
-    //  dynamically allocate a buffer only if source is unusually large
-    if ( buf_size > default_codecvt_buf_size )
-    {
-      boost::scoped_array< value_type > buf( new value_type [buf_size] );
-      do_append( begin, end, buf.get(), buf.get()+buf_size, target, ec );
-    }
-    else
-    {
-      value_type buf[default_codecvt_buf_size];
-      do_append( begin, end, buf, buf+default_codecvt_buf_size, target, ec );
-    }
-  }
-
-  //------------------------------------------------------------------------------------//
-  //                                  convert                                           //
-  //------------------------------------------------------------------------------------//
-
-  //  actual convert done here to factor it out from messy buffer management code;
-  //  this function just assumes the buffer is large enough.
-  inline interface_string_type  do_convert(
-    const value_type * from, const value_type * from_end,
-    interface_value_type * to, interface_value_type * to_end,
-    error_code & ec )
-  {
-    std::mbstate_t state  = std::mbstate_t();  // perhaps unneeded, but cuts bug reports
-    const value_type * from_next;
-    interface_value_type * to_next;
-
-    if ( wchar_t_codecvt_facet()->CONVERT_DIRECTION( state, from, from_end,
-          from_next, to, to_end, to_next ) != std::codecvt_base::ok )
-    {
-      assert( 0 && "convert error handling not implemented yet" );
-      throw "convert error handling not implemented yet";
-    }
-    if ( &ec != &boost::throws() ) ec.clear();
-    return interface_string_type( to, to_next ); 
-  }
-
-  BOOST_FILESYSTEM_DECL
-  interface_string_type convert_to_string( const string_type & src, error_code & ec )
-  {
-    if ( src.empty() )
-    {
-      if ( &ec != &boost::throws() ) ec.clear();
-      return interface_string_type();
-    }
-
-    //  The codecvt length functions may not be implemented, and I don't really
-    //  understand them either. Thus this code is just a guess; if it turns
-    //  out the buffer is too small then an error will be reported and the code
-    //  will have to be fixed.
-    std::size_t buf_size = src.size() * 4;
-    buf_size += 4;  // encodings like shift-JIS need some prefix space
-
-    //  dynamically allocate a buffer only if source is unusually large
-    if ( buf_size > default_codecvt_buf_size )
-    {
-      boost::scoped_array< interface_value_type > buf( new interface_value_type [buf_size] );
-      return do_convert( src.c_str(), src.c_str()+src.size(),
-        buf.get(), buf.get()+buf_size, ec );
-    }
-    else
-    {
-      interface_value_type buf[default_codecvt_buf_size];
-      return do_convert( src.c_str(), src.c_str()+src.size(), buf, buf+buf_size, ec );
-    }
-  }
-
-}  // namespace detail
 }  // namespace filesystem
 }  // namespace boost

@@ -3,12 +3,12 @@
 //  Copyright Beman Dawes 2002-2005, 2008
 //  Copyright Vladimir Prus 2002
 
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
 
-//  See library home page at http://www.boost.org/libs/filesystem
+//  Library home page: http://www.boost.org/libs/filesystem
 
-//  basic_path's stem(), extension(), and replace_extension() are based on
+//  path::stem(), extension(), and replace_extension() are based on
 //  basename(), extension(), and change_extension() from the original
 //  filesystem/convenience.hpp header by Vladimir Prus.
 
@@ -18,7 +18,7 @@
 
    * Document breaking changes, provide workarounds where possible.
    * Windows, POSIX, conversions for char16_t, char32_t for supporting compilers.
-   * Need an error category for codecvt errors. Seed path.cpp detail::append, etc.
+   * Move semantics and other C++0x features.
    * Add Alternate Data Stream test cases. See http://en.wikipedia.org/wiki/NTFS Features.
    * test case: relational on paths differing only in trailing separator. rationale?
    * Behavior of root_path() has been changed. Change needs to be propagated to trunk.
@@ -31,16 +31,17 @@
    * reference.html: operator /= is underspecified as to when a "/" is appended, and
      whether a '/' or '\' is appended.
    * path.cpp: locale and detail append/convert need error handling.
-   * path_unit_test needs to probe error handling, verify exceptions are thrown when
-     requested.
    * Provide the name check functions for more character types? Templatize?
    * Why do native() and generic() return paths rather than const strings/string refs?
      Either change or document rationale.
+   * Use BOOST_DELETED, BOOST_DEFAULTED, where appropriate.
+   * imbue/codecvt too complex. Move to path_traits? Refactor?
+   * path_unit_test, x /= x test failing, commented out. Fix. See test_appends.
+   * The name source() is obscure. Come up with a more explicit name.
+   * Add test for scoped_path_locale.
      
                          Design Questions
 
-   * Could sentinel_iterator be used to reduce number of overloads?
-   * Should append be changed to convert, and use back_inserter to append?
 
    * Should path_locale use thread local storage?
    * Will locale overloads be needed in practice?
@@ -56,7 +57,7 @@
      No. KISS. basic_string<char> is special because it is the predominent
      use case. w (and other) flavors can be added later.
    * Should UDT's be supported? Yes. Easy to do and pretty harmless.
-   * What to do about Cygwin and other environments that don't support wchar_t?
+   * Remove all support for environments that don't support wstring.
    * Should path iteration to a separator result in:
        -- the actual separator used
        -- the preferred separator
@@ -69,13 +70,14 @@
 #define BOOST_FILESYSTEM_PATH_HPP
 
 #include <boost/filesystem/config.hpp>
+#include <boost/filesystem/path_traits.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/iterator/iterator_facade.hpp>
-#include <boost/utility/enable_if.hpp>
+//#include <boost/utility/enable_if.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/shared_ptr.hpp>
-#include <boost/type_traits/is_same.hpp>
+//#include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <string>
 #include <cstring>
@@ -136,141 +138,6 @@ namespace filesystem
     String m_source;
   };
 
-//--------------------------------------------------------------------------------------//
-//                                                                                      //
-//                                  path_traits                                         //
-//                                                                                      //
-//    Specializations are provided for char, wchar_t, char16_t, and char32_t value      //
-//    types and their related string and iterator types.                                //
-//                                                                                      //
-//    Users are permitted to add specializations for additional types.                  //
-//                                                                                      //
-//--------------------------------------------------------------------------------------//
-
-namespace path_traits
-{
-  
-#ifdef BOOST_WINDOWS_API
-  typedef std::wstring  string_type;  // path internal representation type
-#else 
-  typedef std::string   string_type;
-#endif
-
-  typedef string_type::value_type           value_type;
-
-  template< class I > struct is_iterator { static const bool value = false; };
-  template< class C > struct is_container { static const bool value = false; };
-
-  template< class charT >   // specialization optional
-  inline void append( const charT * begin,   // requires: null termination
-    string_type & target, system::error_code & ec )
-  {
-    path_traits::append<charT>( begin, static_cast<const charT *>(0), target, ec );
-  }
-
-  template< class charT >   // specialization required
-  void append( const charT * begin, const charT * end,
-               string_type & target, system::error_code & ec );
-
-  template< class String >   // specialization required
-  String convert( const string_type & source, system::error_code & ec );
-
-}  // namespace path_traits
-  
-  //------------------------------------------------------------------------------------//
-  //                           implementation details                                   //
-  //------------------------------------------------------------------------------------//
-
-namespace detail
-{
-#ifdef BOOST_WINDOWS_API
-  typedef std::string   interface_string_type; 
-#else 
-  typedef std::wstring  interface_string_type; 
-#endif
-
-  typedef interface_string_type::value_type  interface_value_type;
-
-  BOOST_FILESYSTEM_DECL
-  void append( const interface_value_type * begin,
-               const interface_value_type * end,      // 0 for null terminated MBCS
-               path_traits::string_type & target, system::error_code & ec );
-
-  BOOST_FILESYSTEM_DECL
-  interface_string_type convert_to_string( const path_traits::string_type & src,
-                                 system::error_code & ec ); 
-
-}  // namespace detail
-
-  //------------------------------------------------------------------------------------//
-  //                             path_traits specializations                            //
-  //------------------------------------------------------------------------------------//
-
-namespace path_traits
-{
-  template<> struct is_iterator<const char *> { static const bool value = true; };
-  template<> struct is_iterator<char *> { static const bool value = true; };
-  template<> struct is_iterator<std::string::iterator> { static const bool value = true; };
-  template<> struct is_iterator<std::string::const_iterator> { static const bool value = true; };
-  template<> struct is_container<std::string> { static const bool value = true; };
-
-  template<> struct is_iterator<const wchar_t *> { static const bool value = true; };
-  template<> struct is_iterator<wchar_t *> { static const bool value = true; };
-  template<> struct is_iterator<std::wstring::iterator> { static const bool value = true; };
-  template<> struct is_iterator<std::wstring::const_iterator> { static const bool value = true; };
-  template<> struct is_container<std::wstring> { static const bool value = true; };
-
-  template<>
-  inline void append<string_type::value_type>( const string_type::value_type * begin,
-    const string_type::value_type * end, string_type & target, system::error_code & ec )
-  {
-    target.assign( begin, end ); // TODO: what if throws() bad_alloc?
-    if ( &ec != &throws() ) ec.clear(); 
-  }
-
-  template<>
-  inline void append<string_type::value_type>( const string_type::value_type * begin,
-    string_type & target, system::error_code & ec )
-  {
-    target += begin; // TODO:  what if throws() bad_alloc?
-    if ( &ec != &throws() ) ec.clear(); 
-  }
-
-  template<>
-  inline string_type convert<string_type>( const string_type & s, system::error_code & ec )
-  { 
-    if ( &ec != &throws() ) ec.clear();
-    return s;
-  }
-
-  template<>
-  inline void append<detail::interface_value_type>( const detail::interface_value_type * begin,
-    const detail::interface_value_type * end,
-    string_type & target, system::error_code & ec )
-  {
-    detail::append( begin, end, target, ec );
-  }
-
-  template<>
-  inline void append<detail::interface_value_type>( const detail::interface_value_type * begin,
-    string_type & target, system::error_code & ec )
-  { 
-    detail::append( begin, 0, target, ec );
-  }
-
-  template<>
-  inline detail::interface_string_type convert<detail::interface_string_type>( const string_type & s,
-    system::error_code & ec )
-  {
-    return detail::convert_to_string( s, ec );
-  }
-
-#   ifdef BOOST_FILESYSTEM_CPP0X_CHAR_TYPES
-      ...
-#   endif
-
-}  // namespace path_traits
-
   //------------------------------------------------------------------------------------//
   //                                                                                    //
   //                                    class path                                      //
@@ -283,13 +150,15 @@ namespace path_traits
 
     //  string_type is the std::basic_string type corresponding to the character
     //  type for paths used by the native operating system API.
-    //
-    //  Thus string_type is std::string for POSIX and std::wstring for Windows.
-    //  value_type is char for POSIX and wchar_t for Windows.
 
-    typedef path_traits::string_type  string_type;
-    typedef string_type::value_type   value_type;
-    typedef string_type::size_type    size_type;
+#ifdef BOOST_WINDOWS_API
+    typedef std::wstring  string_type;  // internal representation type
+#else 
+    typedef std::string   string_type;
+#endif
+    typedef string_type::value_type    value_type;
+    typedef string_type::size_type     size_type;
+    typedef path_traits::codecvt_type  codecvt_type;
 
     //  ----- character encoding conversions -----
 
@@ -348,87 +217,56 @@ namespace path_traits
     //
     //  ************************************************************************
 
+    //  Supported source arguments: half-open iterator range, container, c-array,
+    //  and single pointer to null terminated string.
+
+    //  All source arguments except pointers to null terminated byte strings support
+    //  multi-byte character string, which may have embedded nulls. Embedded null
+    //  support is required for some Asian languages on Windows.
+
     //  -----  constructors  -----
 
-    path(){}                                          // #1
+    path(){}                                          
 
-    path( const path & p ) : m_path(p.m_path) {}      // #2
+    path( const path & p ) : m_path(p.m_path) {}
 
-    //  construct from null terminated sequence
-    template< class InputIterator >
-      path( InputIterator begin,
-        system::error_code & ec = boost::throws(),
-        typename boost::enable_if<path_traits::is_iterator<InputIterator> >::type* dummy=0 )  // #3
-          { m_append( begin, m_path, ec ); }
+    template <class ContiguousIterator>
+    path( ContiguousIterator begin, ContiguousIterator end )
+    { 
+      if ( begin != end )
+        path_traits::convert( &*begin, &*begin+std::distance(begin, end),
+          m_path, codecvt() );
+    }
 
-    //  construct from (potentially) multi-byte character string, which may have embedded
-    //  nulls. Embedded null support is required for some Asian languages on Windows.
-    template< class ForwardIterator >
-      path( ForwardIterator begin, ForwardIterator end,
-        system::error_code & ec = boost::throws() )                                 // #4
-          { m_append( begin, end, m_path, ec ); }
-
-    //  construct from container of (potentially) multi-byte chars, which may have embedded
-    //  nulls.  Embedded null support is required for some Asian languages on Windows.
-    template< class Container >
-      path( const Container & ctr,
-        system::error_code & ec = boost::throws(),
-        typename boost::enable_if<path_traits::is_container<Container> >::type* dummy=0 )  // #5
-          { m_append( ctr.begin(), ctr.end(), m_path, ec ); }
-
+    template <class Pathable>
+    path( Pathable const & pathable )
+    {
+      path_traits::dispatch( pathable, m_path, codecvt() );
+    }
 
     //  -----  assignments  -----
 
-    path & operator=( const path & p )                                     // #1
+    path & operator=( const path & p )
     {
       m_path = p.m_path;
       return *this;
     }
 
-    template< class InputIterator >
-      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
-        operator=( InputIterator begin )                                   // #2
-    {
+    template <class ContiguousIterator>
+    path & assign( ContiguousIterator begin, ContiguousIterator end )
+    { 
       m_path.clear();
-      m_append( begin, m_path, boost::throws() );
+      if ( begin != end )
+        path_traits::convert( &*begin, &*begin+std::distance(begin, end),
+          m_path, codecvt() );
       return *this;
     }
 
-    template< class InputIterator >
-      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
-        assign( InputIterator begin,
-          system::error_code & ec = boost::throws() )                       // #3
+    template <class Pathable>
+    path & operator=( Pathable const & range )
     {
       m_path.clear();
-      m_append( begin, m_path, ec );
-      return *this;
-    }
-
-    template< class FowardIterator >
-      path & assign( FowardIterator begin, FowardIterator end,
-        system::error_code & ec = boost::throws() )                         // #4
-    { 
-      m_path.clear();
-      m_append( begin, end, m_path, ec );
-      return *this;
-    }
- 
-    template< class Container >
-      typename boost::enable_if<path_traits::is_container<Container>, path &>::type 
-        operator=( const Container & ctr )                                 // #5
-    { 
-      m_path.clear();
-      m_append( ctr.begin(), ctr.end(), m_path, boost::throws() );
-      return *this;
-    }
- 
-    template< class Container >
-      typename boost::enable_if<path_traits::is_container<Container>, path &>::type
-        assign( const Container & ctr,
-        system::error_code & ec = boost::throws() )                         // #6
-    { 
-      m_path.clear();
-      m_append( ctr.begin(), ctr.end(), m_path, ec );
+      path_traits::dispatch( range, m_path, codecvt() );
       return *this;
     }
 
@@ -437,57 +275,28 @@ namespace path_traits
     //  if a separator is added, it is the preferred separator for the platform;
     //  slash for POSIX, backslash for Windows
 
-    path & operator/=( const path & p )                                    // #1
+    path & operator/=( const path & p )
     {
       append_separator_if_needed_();
       m_path += p.m_path;
       return *this;
     }
 
-    template< class InputIterator >
-      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
-        operator/=( InputIterator begin )                                  // #2
-    {
+    template <class ContiguousIterator>
+    path & append( ContiguousIterator begin, ContiguousIterator end )
+    { 
       append_separator_if_needed_();
-      m_append( begin, m_path, boost::throws() );
+      if ( begin != end )
+        path_traits::convert( &*begin, &*begin+std::distance(begin, end),
+          m_path, codecvt() );
       return *this;
     }
 
-    template< class InputIterator >
-      typename boost::enable_if<path_traits::is_iterator<InputIterator>, path &>::type
-        append( InputIterator begin,
-          system::error_code & ec = boost::throws() )                       // #3
+    template <class Pathable>
+    path & operator/=( Pathable const & range )
     {
       append_separator_if_needed_();
-      m_append( begin, m_path, ec );
-      return *this;
-    }
-
-    template< class FowardIterator >
-      path & append( FowardIterator begin, FowardIterator end,
-        system::error_code & ec = boost::throws() )                         // #4
-    { 
-      append_separator_if_needed_();
-      m_append( begin, end, m_path, ec );
-      return *this;
-    }
- 
-    template< class Container >
-      typename boost::enable_if<path_traits::is_container<Container>, path &>::type
-        operator/=( const Container & ctr )                                // #5
-    { 
-      append_separator_if_needed_();
-      m_append( ctr.begin(), ctr.end(), m_path, boost::throws() );
-      return *this;
-    }
- 
-    template< class Container >
-      typename boost::enable_if<path_traits::is_container<Container>, path &>::type
-        append( const Container & ctr,
-        system::error_code & ec = boost::throws() )                         // #6
-    { 
-      append_separator_if_needed_();
-      m_append( ctr.begin(), ctr.end(), m_path, ec );
+      path_traits::dispatch( range, m_path, codecvt() );
       return *this;
     }
 
@@ -496,9 +305,15 @@ namespace path_traits
     void    clear()             { m_path.clear(); }
     void    swap( path & rhs )  { m_path.swap( rhs.m_path ); }
     path &  remove_filename();
-    path &  replace_extension( const path & source = path() );
+    path &  replace_extension( const path & new_extension = path() );
+//# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+//    path &  normalize()         { return m_normalize(); }
+//# endif
 
     //  -----  observers  -----
+
+    std::size_t size() const    { return m_path.size(); }
+
   
     //  For operating systems that format file paths differently than directory
     //  paths, return values from observers are formatted as file names unless there
@@ -516,18 +331,24 @@ namespace path_traits
     //                 generic: backslashes are converted to slashes
     //                 source:  slashes and backslashes are not modified
 
-    template< class T >  
-    T string( system::error_code & ec = boost::throws() ) const  // source (i.e. original) format
-    {
-      return path_traits::convert<T>( m_path, ec );
-    }
+//    template< class T >  
+//    T string( system::error_code & ec = boost::throws() ) const  // source (i.e. original) format
+//    {
+//      return path_traits::convert<T>( m_path, ec );
+//    }
 
 #   ifdef BOOST_WINDOWS_API
 
     // source format
-    const std::string     string( system::error_code & ec = boost::throws() ) const { return detail::convert_to_string( m_path, ec ); }
-    const std::wstring &  wstring() const                                          { return m_path; }
-    const std::wstring &  wstring( system::error_code & ec ) const                 { ec.clear(); return m_path; }
+    const std::string  string() const
+    { 
+      std::string tmp;
+      if ( !m_path.empty() )
+        path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
+          tmp, codecvt() );
+      return tmp;
+    }
+    const std::wstring &  wstring() const { return m_path; }
 
 #   else   // BOOST_POSIX_API
 
@@ -556,7 +377,7 @@ namespace path_traits
 
     //  c_str() returns a C string suitable for calls to the operating system API.
     //  On POSIX and Windows that's source format, on some OS's it may be native format.
-    const value_type *   c_str() const  { return m_path.c_str(); }   
+    const value_type *   c_str() const  { return m_path.c_str(); }
 
     //  -----  decomposition  -----
 
@@ -588,10 +409,16 @@ namespace path_traits
 #   endif
     }
 
-    //  -----  locale  -----
+    //  -----  imbue  -----
 
     static std::locale imbue( const std::locale & loc );
-    static std::locale imbue( const std::locale & loc, system::error_code & ec );
+
+    //  -----  codecvt  -----
+
+    static const codecvt_type & codecvt()
+    {
+      return *wchar_t_codecvt_facet();
+    }
 
     //  -----  iterators  -----
 
@@ -601,43 +428,24 @@ namespace path_traits
     iterator begin() const;
     iterator end() const;
 
-  //------------------------------------------------------------------------------------//
-  //                          class path private members                                //
-  //------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                            class path private members                                //
+//--------------------------------------------------------------------------------------//
 
   private:
-
-    //  m_path has the type, encoding, and format required by the native
-    //  operating system. Thus for POSIX and Windows there is no conversion for
-    //  passing m_path.c_str() to the O/S API or when obtaining a path from the
-    //  O/S API. POSIX encoding is unspecified other than for dot and slash
-    //  characters; POSIX just treats paths as a sequence of bytes. Windows
-    //  encoding is UCS-2 or UTF-16 depending on the version.
-
+/*
+      m_path has the type, encoding, and format required by the native
+      operating system. Thus for POSIX and Windows there is no conversion for
+      passing m_path.c_str() to the O/S API or when obtaining a path from the
+      O/S API. POSIX encoding is unspecified other than for dot and slash
+      characters; POSIX just treats paths as a sequence of bytes. Windows
+      encoding is UCS-2 or UTF-16 depending on the version.
+*/
     string_type  m_path;  // Windows: as input; backslashes NOT converted to slashes,
                           // slashes NOT converted to backslashes
 
-    //  These helpers factor out common code and convert iterators to pointers.
-    template< class InputIterator >
-    inline void m_append( InputIterator begin,
-      string_type & target, system::error_code & ec )
-    {
-      BOOST_ASSERT( &*begin );
-      path_traits::append( &*begin, target, ec );
-    }
-
-    template< class FowardIterator >
-    inline void m_append( FowardIterator begin, FowardIterator end,
-      string_type & target, system::error_code & ec )
-    { 
-      if ( begin == end ) return;
-      BOOST_ASSERT( &*begin );
-      path_traits::append( &*begin,
-        &*begin + std::distance( begin, end ), // avoid dereference of end iterator
-        target, ec );
-    }
-
     void append_separator_if_needed_();
+    //path &  m_normalize();
 
     // Was qualified; como433beta8 reports:
     //    warning #427-D: qualified name is not allowed in member declaration 
@@ -650,10 +458,13 @@ namespace path_traits
     // see path::iterator::increment/decrement comment below
     static void m_path_iterator_increment( path::iterator & it );
     static void m_path_iterator_decrement( path::iterator & it );
+
+    static const codecvt_type *&  wchar_t_codecvt_facet();
+
   };  // class path
 
   //------------------------------------------------------------------------------------//
-  //                            class path::iterator                                    //
+  //                             class path::iterator                                   //
   //------------------------------------------------------------------------------------//
  
   class path::iterator
@@ -697,17 +508,16 @@ namespace path_traits
   class scoped_path_locale
   {
   public:
-    scoped_path_locale( const std::locale & loc,
-                        system::error_code & ec = boost::throws() )
+    scoped_path_locale( const std::locale & loc )
                       : m_saved_locale(loc)
     {
-      path::imbue( loc, ec );
+      path::imbue( loc );
     }
 
     ~scoped_path_locale()   // never throws()
     {
-      system::error_code ec;
-      path::imbue( m_saved_locale, ec );
+      try { path::imbue( m_saved_locale ); }
+      catch ( ... ) {}
     };
 
   private:

@@ -189,7 +189,15 @@
 				>
 			</File>
 			<File
+				RelativePath="..\..\..\src\path_traits.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\..\src\portability.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\windows_file_codecvt.cpp"
 				>
 			</File>
 		</Filter>

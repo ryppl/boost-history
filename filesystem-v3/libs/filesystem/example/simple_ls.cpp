@@ -20,12 +20,10 @@ namespace fs = boost::filesystem;
 
 int main( int argc, char* argv[] )
 {
-  boost::progress_timer t( std::clog );
-
-  fs::path full_path( fs::initial_path<fs::path>() );
+  fs::path p( fs::initial_path() );
 
   if ( argc > 1 )
-    full_path = fs::system_complete( fs::path( argv[1] ) );
+    p = fs::system_complete( argv[1] );
   else
     std::cout << "\nusage:   simple_ls [path]" << std::endl;
 
@@ -34,18 +32,18 @@ int main( int argc, char* argv[] )
   unsigned long other_count = 0;
   unsigned long err_count = 0;
 
-  if ( !fs::exists( full_path ) )
+  if ( !fs::exists( p ) )
   {
-    std::cout << "\nNot found: " << full_path.file_string() << std::endl;
+    std::cout << "\nNot found: " << p.string() << std::endl;
     return 1;
   }
 
-  if ( fs::is_directory( full_path ) )
+  if ( fs::is_directory( p ) )
   {
     std::cout << "\nIn directory: "
-              << full_path.directory_string() << "\n\n";
+              << p.string() << "\n\n";
     fs::directory_iterator end_iter;
-    for ( fs::directory_iterator dir_itr( full_path );
+    for ( fs::directory_iterator dir_itr( p );
           dir_itr != end_iter;
           ++dir_itr )
     {
@@ -81,7 +79,7 @@ int main( int argc, char* argv[] )
   }
   else // must be a file
   {
-    std::cout << "\nFound: " << full_path.file_string() << "\n";    
+    std::cout << "\nFound: " << p.string() << "\n";    
   }
   return 0;
 }

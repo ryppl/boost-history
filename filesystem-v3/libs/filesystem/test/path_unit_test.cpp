@@ -1,11 +1,11 @@
-//  filesystem3 path_unit_test.cpp  --------------------------------------------------  //
+//  filesystem path_unit_test.cpp  ---------------------------------------------------  //
 
-//  Copyright Beman Dawes 2008
+//  Copyright Beman Dawes 2008, 2009
 
-//  Distributed under the Boost Software License, Version 1.0. (See accompanying
-//  file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//  Distributed under the Boost Software License, Version 1.0.
+//  See http://www.boost.org/LICENSE_1_0.txt
 
-//  See library home page at http://www.boost.org/libs/filesystem
+//  Library home page: http://www.boost.org/libs/filesystem
 
 //  ----------------------------------------------------------------------------------  //
 //
@@ -21,6 +21,7 @@
 
 #include <boost/filesystem/path.hpp>
 #include "../src/utf8_codecvt_facet.hpp"  // for imbue tests
+#include <boost/detail/lightweight_test.hpp>
 
 #include <iostream>
 #include <sstream>
@@ -38,7 +39,6 @@ using std::wstring;
 
 namespace
 {
-  int errors;
 
   boost::system::error_code ec;
   const boost::system::error_code ok;
@@ -51,7 +51,7 @@ namespace
   {
     if ( source == expected ) return;
 
-    ++errors;
+    ++::boost::detail::test_errors();
 
     std::cout << file;
     std::wcout << L'(' << line << L"): source.wstring(): \"" << source.wstring()
@@ -65,7 +65,7 @@ namespace
   {
     if ( value == expected ) return;
 
-    ++errors;
+    ++::boost::detail::test_errors();
 
     std::cout << file;
 
@@ -78,15 +78,13 @@ namespace
   {
     if ( ok ) return;
 
-    ++errors;
+    ++::boost::detail::test_errors();
 
     std::cout << file << '(' << line << "): test failed\n";
   }
 
-  path x;
-  path y;
-  string s("string iterators");
-  wstring ws(L"wstring iterators");
+  string s("string");
+  wstring ws(L"wstring");
 
   //  test_constructors  ---------------------------------------------------------------//
 
@@ -94,101 +92,141 @@ namespace
   {
     std::cout << "testing constructors..." << std::endl;
 
-    path x0;                                           // #1
+    path x0;                                           // default constructor
     PATH_IS(x0, L"");
+    BOOST_TEST_EQ( x0.size(), 0 );
 
-    path x1("path x1");                                // #3
-    PATH_IS(x1, L"path x1");
+    path x1(s.begin(), s.end());                       // iterator range char
+    PATH_IS(x1, L"string");
+    BOOST_TEST_EQ( x1.size(), 6 );
 
-    path x2(x1);                                       // #2
-    PATH_IS(x2, L"path x1");
+    path x2(x1);                                       // copy constructor
+    PATH_IS(x2, L"string");
+    BOOST_TEST_EQ( x2.size(), 6 );
 
-    path x3(L"const wchar_t *");                       // #3
-    PATH_IS(x3, L"const wchar_t *");
+    path x3(ws.begin(), ws.end());                     // iterator range wchar_t
+    PATH_IS(x3, L"wstring");
+    BOOST_TEST_EQ( x3.size(), 7 );
 
-    string s3a( "s3a.c_str()" );
-    path x3a( s3a.c_str() );                           // #3
-    PATH_IS(x3a, L"s3a.c_str()");
+    path x4(string("std::string"));                    // container char
+    PATH_IS(x4, L"std::string");
+    BOOST_TEST_EQ( x4.size(), 11 );
 
-    path x4(string("std::string::iterator").begin());  // #3
-    PATH_IS(x4, L"std::string::iterator");
+    path x5(wstring(L"std::wstring"));                 // container wchar_t
+    PATH_IS(x5, L"std::wstring");
+    BOOST_TEST_EQ( x5.size(), 12 );
 
-    path x5(wstring(L"std::wstring::iterator").begin()); // #3
-    PATH_IS(x5, L"std::wstring::iterator");
+    path x6("array char");                             // array char
+    PATH_IS(x6, L"array char");
+    BOOST_TEST_EQ( x6.size(), 10 );
 
-    path x7(s.begin(), s.end());                       // #4
-    PATH_IS(x7, L"string iterators");
+    path x7(L"array wchar_t");                         // array wchar_t
+    PATH_IS(x7, L"array wchar_t");
+    BOOST_TEST_EQ( x7.size(), 13 );
 
-    path x8(ws.begin(), ws.end());                     // #4
-    PATH_IS(x8, L"wstring iterators");
+    path x8( s.c_str() );                              // const char * null terminated
+    PATH_IS(x8, L"string");
+    BOOST_TEST_EQ( x8.size(), 6 );
 
-    path x10(string("std::string"));                   // #5
-    PATH_IS(x10, L"std::string");
-
-    path x11(wstring(L"std::wstring"));                // #5
-    PATH_IS(x11, L"std::wstring");
+    path x9( ws.c_str() );                             // const wchar_t * null terminated
+    PATH_IS(x9, L"wstring");
+    BOOST_TEST_EQ( x9.size(), 7 );
   }
 
-  //  test_assignments  ----------------------------------------------------------------//
+  path x;
+  path y;
 
+  //  test_assignments  ----------------------------------------------------------------//
+                                                       
   void test_assignments()
   {
     std::cout << "testing assignments..." << std::endl;
 
-    y = "path y";                                      // #2
-    PATH_IS(y, L"path y");
+    x = path("yet another path");                      // another path
+    PATH_IS(x, L"yet another path");
+    BOOST_TEST_EQ( x.size(), 16 );
 
-    x = y;                                             // #1
-    PATH_IS(x, L"path y");
+    x = x;                                             // self-assignment
+    PATH_IS(x, L"yet another path");
+    BOOST_TEST_EQ( x.size(), 16 );
 
-    x = "const char *";                                // #2
-    PATH_IS(x, L"const char *");
+    x.assign(s.begin(), s.end());                      // iterator range char
+    PATH_IS(x, L"string");
 
-    x = L"const wchar_t *";                            // #2
-    PATH_IS(x, L"const wchar_t *");
+    x.assign(ws.begin(), ws.end());                    // iterator range wchar_t
+    PATH_IS(x, L"wstring");
 
-    x = string("std::string::iterator").begin();       // #2 w/iterator 
-    PATH_IS(x, L"std::string::iterator");
-
-    x = wstring(L"std::wstring::iterator").begin();    // #2 w/iterator
-    PATH_IS(x, L"std::wstring::iterator");
-
-    y.assign("path y w/o ec");                         // #3 w/o ec
-    PATH_IS(y, L"path y w/o ec");
-
-    ec = ng;
-    y.assign("path y w/ec", ec);                       // #3 w/ec
-    PATH_IS(y, L"path y w/ec");
-    IS(ec, ok);
-
-    x.assign(s.begin(), s.end());                      // #4
-    PATH_IS(x, L"string iterators");
-
-    ec = ng;
-    x.assign(s.begin(), s.end(), ec);                  // #4 w/ec
-    PATH_IS(x, L"string iterators");
-    IS(ec, ok);
-
-    x.assign(ws.begin(), ws.end());                    // #4
-    PATH_IS(x, L"wstring iterators");
-
-    x = string("std::string");                         // #5
+    x = string("std::string");                         // container char
     PATH_IS(x, L"std::string");
 
-    x = wstring(L"std::wstring");                      // #5
+    x = wstring(L"std::wstring");                      // container wchar_t
     PATH_IS(x, L"std::wstring");
 
-    x.assign(string("std::string"));                   // #6
-    PATH_IS(x, L"std::string");
+    x = "array char";                                  // array char
+    PATH_IS(x, L"array char");
 
-    x.assign(wstring(L"std::wstring"));                // #6
-    PATH_IS(x, L"std::wstring");
+    x = L"array wchar";                                // array wchar_t
+    PATH_IS(x, L"array wchar");
 
-    ec = ng;
-    x.assign(string("std::string"), ec);               // #6 w/ec
-    PATH_IS(x, L"std::string");
-    IS(ec, ok);
+    x = s.c_str();                                     // const char * null terminated
+    PATH_IS(x, L"string");
 
+    x = ws.c_str();                                    // const wchar_t * null terminated
+    PATH_IS(x, L"wstring");
+   }
+
+  //  test_appends  --------------------------------------------------------------------//
+
+  void test_appends()
+  {
+    std::cout << "testing appends..." << std::endl;
+
+#   ifdef BOOST_WINDOWS_PATH
+#   define BOOST_FS_FOO L"/foo\\"
+#   else   // POSIX paths
+#   define BOOST_FS_FOO L"/foo/"
+#   endif
+
+
+    x = "/foo";
+    x /= path("yet another path");                      // another path
+    PATH_IS(x, BOOST_FS_FOO L"yet another path");
+
+    //x = "/foo";
+    //x /= x;                                             // self-assignment
+    //PATH_IS(x, BOOST_FS_FOO L"yet another path" BOOST_FS_FOO L"yet another path");
+
+    x = "/foo";
+    x.append(s.begin(), s.end());                      // iterator range char
+    PATH_IS(x, BOOST_FS_FOO L"string");
+
+    x = "/foo";
+    x.append(ws.begin(), ws.end());                    // iterator range wchar_t
+    PATH_IS(x, BOOST_FS_FOO L"wstring");
+
+    x = "/foo";
+    x /= string("std::string");                         // container char
+    PATH_IS(x, BOOST_FS_FOO L"std::string");
+
+    x = "/foo";
+    x /= wstring(L"std::wstring");                      // container wchar_t
+    PATH_IS(x, BOOST_FS_FOO L"std::wstring");
+
+    x = "/foo";
+    x /= "array char";                                  // array char
+    PATH_IS(x, BOOST_FS_FOO L"array char");
+
+    x = "/foo";
+    x /= L"array wchar";                                // array wchar_t
+    PATH_IS(x, BOOST_FS_FOO L"array wchar");
+
+    x = "/foo";
+    x /= s.c_str();                                     // const char * null terminated
+    PATH_IS(x, BOOST_FS_FOO L"string");
+
+    x = "/foo";
+    x /= ws.c_str();                                    // const wchar_t * null terminated
+    PATH_IS(x, BOOST_FS_FOO L"wstring");
    }
 
   //  test_observers  ------------------------------------------------------------------//
@@ -196,6 +234,14 @@ namespace
   void test_observers()
   {
     std::cout << "testing observers..." << std::endl;
+
+    path p0( "abc" );
+
+    CHECK( p0.source().size() == 3 );
+    CHECK( p0.string() == "abc" );
+    CHECK( p0.string().size() == 3 );
+    CHECK( p0.wstring() == L"abc" );
+    CHECK( p0.wstring().size() == 3 );
 
 # ifdef BOOST_WINDOWS_PATH
 
@@ -214,17 +260,10 @@ namespace
 
 # else  // BOOST_POSIX_PATH
 
+    ...
 
 # endif 
   }
-
-//  //  test_appends  --------------------------------------------------------------------//
-//
-//  void test_appends()
-//  {
-//    std::cout << "testing appends..." << std::endl;
-//
-//  }
 
   //  test_relationals  ----------------------------------------------------------------//
 
@@ -456,7 +495,7 @@ namespace
     //  \u2722 and \xE2\x9C\xA2 are UTF-16 and UTF-8 FOUR TEARDROP-SPOKED ASTERISK
 
     std::cout << "  testing p0 ..." << std::endl;
-    path p0( L"\u2722" );  // for tests that depend on detail::convert_to_string
+    path p0( L"\u2722" );  // for tests that depend on path_traits::convert
 #   ifdef BOOST_WINDOWS_PATH
     CHECK( p0.string() != "\xE2\x9C\xA2" );
 #   endif
@@ -494,6 +533,8 @@ namespace
 
     std::cout << "  locale testing complete" << std::endl;
   }
+
+# if 0
 
 //  //  test_locales  --------------------------------------------------------------------//
 //
@@ -572,20 +613,43 @@ namespace
     CHECK( s1 == usr );
   }
 
+# endif
+
+  //  test_overloads  ------------------------------------------------------------------//
+
+  void test_overloads()
+  {
+    std::cout << "testing overloads..." << std::endl;
+    std::string s("hello");
+    const char a[] = "goodbye";
+    path p1( s );
+    path p2( s.c_str() );
+    path p3( a );
+    path p4( "foo" );
+
+    std::wstring ws(L"hello");
+    const wchar_t wa[] = L"goodbye";
+    path wp1( ws );
+    path wp2( ws.c_str() );
+    path wp3( wa );
+    path wp4( L"foo" );
+  }
+
 }  // unnamed namespace
 
-  //------------------------------------------------------------------------------------//
-  //                                                                                    //
-  //                                  test_main                                         //
-  //                                                                                    //
-  //------------------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
+//                                                                                      //
+//                                     main                                             //
+//                                                                                      //
+//--------------------------------------------------------------------------------------//
 
 int main( int, char*[] )
 {
+  test_overloads();
   test_constructors();
   test_assignments();
+  test_appends();
   test_observers();
-  ////test_appends();
   test_relationals();
   test_inserter_and_extractor();
   test_other_non_members();
@@ -594,16 +658,18 @@ int main( int, char*[] )
   test_decompositions();
   test_queries();
   test_imbue_locale();
-  //test_convert_with_locale();
+
+# if 0
+
   test_user_supplied_type();
+
+#endif
 
   std::string foo("\\abc");
   const char * bar = "/abc";
 
   if ( foo == bar )
     cout << "unintended consequence\n";
- 
-  cout << errors << " errors detected\n";
-  
-  return errors;
+
+  return ::boost::report_errors();
 }

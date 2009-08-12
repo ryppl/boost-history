@@ -190,6 +190,14 @@
 				RelativePath="..\..\..\src\path.cpp"
 				>
 			</File>
+			<File
+				RelativePath="..\..\..\src\path_traits.cpp"
+				>
+			</File>
+			<File
+				RelativePath="..\..\..\src\windows_file_codecvt.cpp"
+				>
+			</File>
 		</Filter>
 		<Filter
 			Name="Header Files"
