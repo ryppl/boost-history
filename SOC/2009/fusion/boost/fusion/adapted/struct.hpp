@@ -11,4 +11,5 @@
 
 #include <boost/fusion/adapted/struct/adapt_assoc_struct.hpp>
 #include <boost/fusion/adapted/struct/adapt_struct.hpp>
+
 #endif

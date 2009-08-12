@@ -18,6 +18,7 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/unused.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -28,8 +29,7 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 
-#include <boost/integer_traits.hpp>
-#include <boost/type_traits/is_reference.hpp>
+//#include <boost/integer_traits.hpp>
 
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
 #include <boost/fusion/view/zip_view/detail/zip_view_fwd.hpp>
@@ -52,15 +52,31 @@ namespace boost { namespace fusion {
 
     namespace detail
     {
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
         template<typename Seqs>
-        struct all_references
-          : fusion::result_of::equal_to<
-                typename fusion::result_of::find_if<
-                    Seqs, mpl::not_<is_lrref<mpl::_1> >
-                >::type
-              , typename fusion::result_of::end<Seqs>::type
-            >
-        {};
+        struct all_forward_seqs
+          : mpl::true_
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                result_of::equal_to<
+                    typename fusion::result_of::find_if<
+                        Seqs
+                      , mpl::not_<
+                            traits::is_forward/*traits::is_sequence*/<mpl::_1>
+                        >
+                    >::type
+                  , typename fusion::result_of::end<Seqs>::type
+                >));
+            BOOST_FUSION_MPL_ASSERT((
+                result_of::equal_to<
+                    typename fusion::result_of::find_if<
+                        Seqs
+                      , mpl::not_<detail::is_lrref<mpl::_1> >
+                    >::type
+                  , typename fusion::result_of::end<Seqs>::type
+                >));
+        };
+#endif
 
         struct seq_size
         {
@@ -71,13 +87,13 @@ namespace boost { namespace fusion {
             struct result<Self(Seq)>
             {
                 typedef typename
-                    mpl::eval_if<
-                        traits::is_forward<Seq>
-                      , result_of::size<Seq>
-                      , mpl::identity<
-                            mpl::int_<integer_traits<int>::const_max>
-                        >
-                    >::type
+                    //mpl::eval_if<
+                    //    traits::is_forward<Seq>
+                    /*  ,*/ result_of::size<Seq>
+                    //  , mpl::identity<
+                    //        mpl::int_<integer_traits<int>::const_max>
+                    //    >
+                    /*>*/::type
                 type;
             };
         };
@@ -93,8 +109,7 @@ namespace boost { namespace fusion {
                     typename detail::remove_reference<MinSize>::type,
                     typename detail::remove_reference<SeqSize>::type
                 >
-            {
-            };
+            {};
         };
 
         template<typename Seqs>
@@ -123,10 +138,14 @@ namespace boost { namespace fusion {
     struct zip_view
       : sequence_base< zip_view<Seqs> >
     {
+        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seqs>));
+
         typedef typename
             result_of::remove<Seqs, unused_type const&>::type
         real_seqs;
-        BOOST_MPL_ASSERT((detail::all_references<Seqs>));
+
+        BOOST_FUSION_MPL_ASSERT((detail::all_forward_seqs<real_seqs>));
 
         typedef typename
             fusion::result_of::as_vector<Seqs>::type

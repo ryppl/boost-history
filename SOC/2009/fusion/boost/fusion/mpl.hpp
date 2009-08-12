@@ -8,18 +8,21 @@
 #ifndef BOOST_FUSION_MPL_HPP
 #define BOOST_FUSION_MPL_HPP
 
+#include <boost/fusion/support/category_of.hpp>
+
 #include <boost/fusion/mpl/at.hpp>
 #include <boost/fusion/mpl/back.hpp>
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/clear.hpp>
 #include <boost/fusion/mpl/empty.hpp>
 #include <boost/fusion/mpl/end.hpp>
-#include <boost/fusion/mpl/erase.hpp>
 #include <boost/fusion/mpl/erase_key.hpp>
+#include <boost/fusion/mpl/erase.hpp>
 #include <boost/fusion/mpl/front.hpp>
+#include <boost/fusion/mpl/fusion_iterator.hpp>
 #include <boost/fusion/mpl/has_key.hpp>
-#include <boost/fusion/mpl/insert.hpp>
 #include <boost/fusion/mpl/insert_range.hpp>
+#include <boost/fusion/mpl/insert.hpp>
 #include <boost/fusion/mpl/pop_back.hpp>
 #include <boost/fusion/mpl/pop_front.hpp>
 #include <boost/fusion/mpl/push_back.hpp>

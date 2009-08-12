@@ -9,7 +9,9 @@
 #define BOOST_FUSION_SEQUENCE_CONVERT_HPP
 
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
+//TODO doc!!!
 namespace boost { namespace fusion
 {
     namespace extension
@@ -23,6 +25,9 @@ namespace boost { namespace fusion
         template <typename Tag, typename Seq>
         struct convert
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef typename extension::convert_impl<Tag> gen;
 
             typedef typename gen::

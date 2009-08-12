@@ -9,8 +9,10 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_HPP
 
-#include <boost/fusion/view/filter_view/filter_view.hpp>
+#include <boost/fusion/algorithm/transformation/filter_if.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/detail/workaround.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -21,8 +23,10 @@ namespace boost { namespace fusion
     {
         template <typename Seq, typename T>
         struct filter
+          : filter_if<Seq, is_same<mpl::_1, T> >
         {
-            typedef filter_view<Seq, is_same<mpl::_1, T> > type;
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
         };
     }
 
@@ -30,18 +34,16 @@ namespace boost { namespace fusion
     inline typename result_of::filter<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type
     filter(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return typename
-            result_of::filter<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type(
-                BOOST_FUSION_FORWARD(Seq,seq));
+        return filter_if<is_same<mpl::_1, T> >(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
-    //TODO!!!
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename T, typename Seq>
-    inline typename result_of::filter<Seq&, T>::type
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::filter<,Seq,&, T>)
     filter(Seq& seq)
     {
-        return typename result_of::filter<Seq&, T>::type(seq);
+        return filter_if<is_same<mpl::_1, T> >(seq);
     }
 #endif
 }}

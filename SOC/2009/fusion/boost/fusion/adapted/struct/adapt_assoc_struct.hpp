@@ -7,7 +7,6 @@
 #define BOOST_FUSION_ADAPTED_STRUCT_ADAPT_ASSOC_STRUCT_HPP
 
 #include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/iterator/basic_iterator.hpp>
 
 #include <boost/fusion/adapted/detail/struct/extension.hpp>
 #include <boost/fusion/adapted/detail/struct/adapt_base.hpp>

@@ -11,8 +11,9 @@
 #include <boost/fusion/view/filter_view.hpp>
 #include <boost/fusion/view/iterator_range.hpp>
 #include <boost/fusion/view/joint_view.hpp>
-#include <boost/fusion/view/transform_view.hpp>
 #include <boost/fusion/view/reverse_view.hpp>
+#include <boost/fusion/view/single_view.hpp>
+#include <boost/fusion/view/transform_view.hpp>
 #include <boost/fusion/view/zip_view.hpp>
 
 #endif

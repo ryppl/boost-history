@@ -9,6 +9,8 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_BEGIN_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_BEGIN_IMPL_HPP
 
+#include <boost/fusion/iterator/basic_iterator.hpp>
+
 namespace boost { namespace fusion { namespace extension
 {
     template<typename Tag>

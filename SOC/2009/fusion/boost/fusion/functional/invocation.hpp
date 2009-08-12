@@ -9,8 +9,9 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_INVOCATION_HPP
 #define BOOST_FUSION_FUNCTIONAL_INVOCATION_HPP
 
-#include <boost/fusion/functional/invocation/invoke.hpp>
-#include <boost/fusion/functional/invocation/invoke_procedure.hpp>
 #include <boost/fusion/functional/invocation/invoke_function_object.hpp>
+#include <boost/fusion/functional/invocation/invoke_procedure.hpp>
+#include <boost/fusion/functional/invocation/invoke.hpp>
+#include <boost/fusion/functional/invocation/limits.hpp>
 
 #endif

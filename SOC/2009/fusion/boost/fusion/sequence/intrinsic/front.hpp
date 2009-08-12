@@ -8,9 +8,13 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_FRONT_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_FRONT_HPP
 
-#include <boost/fusion/support/ref.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/empty.hpp>
+#endif
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -22,8 +26,12 @@ namespace boost { namespace fusion
     {
         template <typename Seq>
         struct front
-          : result_of::deref<typename result_of::begin<Seq>::type>
-        {};
+          : deref<typename begin<Seq>::type>
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT_NOT((empty<Seq>));
+        };
     }
 
     template <typename Seq>

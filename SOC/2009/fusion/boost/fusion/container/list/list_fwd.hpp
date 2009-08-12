@@ -16,6 +16,7 @@ namespace boost { namespace fusion
     struct list_tag;
     struct list_iterator_tag;
     struct forward_traversal_tag;
+    struct bidirectional_traversal_tag;
 
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_LIST_SIZE)
     struct list;

@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_END_IMPL_HPP
 #define BOOST_FUSION_CONTAINER_LIST_DETAIL_LIST_END_IMPL_HPP
 
+#include <boost/fusion/iterator/basic_iterator.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 
 namespace boost { namespace fusion { namespace extension
@@ -25,7 +26,7 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 basic_iterator<
                     list_iterator_tag
-                  , forward_traversal_tag
+                  , bidirectional_traversal_tag
                   , SeqRef
                   , result_of::size<SeqRef>::type::value
                 >

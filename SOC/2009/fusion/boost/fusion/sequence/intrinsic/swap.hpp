@@ -17,6 +17,10 @@
 #   include <boost/fusion/sequence/intrinsic/front.hpp>
 #   include <boost/fusion/sequence/intrinsic/back.hpp>
 #endif
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#endif
+#include <boost/fusion/support/assert.hpp>
 
 #include <algorithm>
 
@@ -42,13 +46,19 @@ namespace boost { namespace fusion {
         template<typename Seq1, typename Seq2>
         struct swap
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+            BOOST_FUSION_STATIC_ASSERT((size<Seq1>::value==size<Seq2>::value));
+
             typedef void type;
         };
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template<typename Seq1, typename Seq2>
-    void
+    typename result_of::swap<Seq1&,Seq2&>::type
     swap(Seq1& seq1, Seq2& seq2)
     {
         for_each(zip_view<typename result_of::vector_tie<Seq1&,Seq2&>::type>(

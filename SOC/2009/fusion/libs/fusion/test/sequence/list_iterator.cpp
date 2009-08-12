@@ -8,7 +8,7 @@
 
 #define FUSION_SEQUENCE list
 #define FUSION_NO_RANDOM_ACCESS_SEQUENCE
-#define FUSION_TRAVERSAL_TAG forward_traversal_tag
+#define FUSION_TRAVERSAL_TAG bidirectional_traversal_tag
 #include "./iterator.hpp"
 
 int

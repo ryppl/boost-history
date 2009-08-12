@@ -29,6 +29,8 @@ namespace boost { namespace mpl
         typedef It iterator;
     };
 
+    //TODO deref
+
     template <typename It>
     struct next<fusion_iterator<It> >
     {
@@ -59,7 +61,6 @@ namespace boost { namespace mpl
     struct distance<fusion_iterator<First>, fusion_iterator<Last> >
       : fusion::result_of::distance<First, Last>
     {};
-
 }}
 
 #endif

@@ -22,7 +22,6 @@ namespace boost { namespace fusion
         template <typename Tag>
         struct advance_impl
         {
-            // default implementation
             template <typename ItRef, typename N>
             struct apply
               : mpl::if_c<
@@ -30,11 +29,7 @@ namespace boost { namespace fusion
                   , advance_detail::forward<ItRef, N::value>
                   , advance_detail::backward<ItRef, N::value>
                 >::type
-            {
-//                BOOST_FUSION_MPL_ASSERT_NOT(
-//                        traits::is_random_access<ItRef>,
-//            "default implementation not available for random access iterators");
-            };
+            {};
         };
 
         template <>
@@ -57,13 +52,26 @@ namespace boost { namespace fusion
                     typename detail::add_lref<It>::type
                   , mpl::int_<N>
                 >
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It>));
+            BOOST_FUSION_STATIC_ASSERT((
+                    N>=0 ||
+                    traits::is_bidirectional<It>::value));
+
+        };
 
         template <typename It, typename N>
         struct advance
           : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<typename detail::add_lref<It>::type, N>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It>));
+            BOOST_FUSION_STATIC_ASSERT((
+                    N::value>=0 ||
+                    traits::is_bidirectional<It>::value));
+        };
     }
 
     template <int N, typename It>
@@ -79,7 +87,6 @@ namespace boost { namespace fusion
     {
         return result_of::advance<It const&, N>::call(it);
     }
-
 }}
 
 #endif

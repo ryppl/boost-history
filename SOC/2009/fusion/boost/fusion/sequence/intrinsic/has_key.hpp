@@ -13,6 +13,7 @@
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/not.hpp>
 
@@ -53,7 +54,10 @@ namespace boost { namespace fusion
         struct has_key
           : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, Key>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
+        };
     }
 
     template <typename Key, typename Seq>

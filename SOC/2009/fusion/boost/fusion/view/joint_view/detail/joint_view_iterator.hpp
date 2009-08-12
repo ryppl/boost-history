@@ -10,7 +10,6 @@
 
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
-#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {

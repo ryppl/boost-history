@@ -11,6 +11,7 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/fusion/sequence/comparison/detail/less.hpp>
 #include <boost/fusion/sequence/comparison/detail/enable_comparison.hpp>
@@ -21,6 +22,11 @@ namespace boost { namespace fusion
     inline bool
     less(Seq1 const& seq1, Seq2 const& seq2)
     {
+        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+
         return
             detail::sequence_less<
                 Seq1 const&
@@ -38,6 +44,11 @@ namespace boost { namespace fusion
             >::type
         operator<(Seq1 const& seq1, Seq2 const& seq2)
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+
             return fusion::less(seq1, seq2);
         }
     }

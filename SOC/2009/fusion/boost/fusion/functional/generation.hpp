@@ -9,9 +9,9 @@
 #ifndef BOOST_FUSION_FUNCTIONAL_GENERATION_HPP
 #define BOOST_FUSION_FUNCTIONAL_GENERATION_HPP
 
-#include <boost/fusion/functional/generation/make_fused.hpp>
-#include <boost/fusion/functional/generation/make_fused_procedure.hpp>
 #include <boost/fusion/functional/generation/make_fused_function_object.hpp>
+#include <boost/fusion/functional/generation/make_fused_procedure.hpp>
+#include <boost/fusion/functional/generation/make_fused.hpp>
 #include <boost/fusion/functional/generation/make_unfused.hpp>
 
 #endif

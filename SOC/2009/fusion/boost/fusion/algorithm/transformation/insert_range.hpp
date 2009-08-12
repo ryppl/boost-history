@@ -14,6 +14,8 @@
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/algorithm/transformation/detail/is_in_seq.hpp>
 
 #include <boost/preprocessor/empty.hpp>
 
@@ -24,6 +26,12 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pos, typename Range>
         struct insert_range
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<Pos, Seq>));
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Range>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Range>));
+
             typedef
                 iterator_range<
                     typename begin<Seq>::type

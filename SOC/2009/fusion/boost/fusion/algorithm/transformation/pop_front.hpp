@@ -8,10 +8,15 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_POP_FRONT_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_POP_FRONT_HPP
 
-#include <boost/fusion/view/iterator_range/iterator_range.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#endif
 #include <boost/fusion/iterator/next.hpp>
+#include <boost/fusion/view/iterator_range/iterator_range.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -20,6 +25,10 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct pop_front
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((size<Seq>));
+
             typedef 
                 iterator_range<
                     typename next<typename begin<Seq>::type>::type

@@ -11,6 +11,7 @@
 #include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
@@ -20,6 +21,9 @@ namespace boost { namespace fusion
         template <typename Seq, typename F, typename NewValue>
         struct replace_if
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef
                 detail::replace_if_helper<
                     typename detail::as_fusion_element<F>::type

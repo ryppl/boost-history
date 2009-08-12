@@ -10,7 +10,6 @@
 
 #include <boost/fusion/container/list/list_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/iterator/basic_iterator.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>
 
@@ -31,7 +30,7 @@ namespace boost { namespace fusion
     struct list
       : sequence_base<list<EXPAND_TEMPLATE_ARGUMENTS(FUSION_MAX_LIST_SIZE)> >
     {
-        typedef forward_traversal_tag category;
+        typedef bidirectional_traversal_tag category;
         typedef list_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::false_ is_view;

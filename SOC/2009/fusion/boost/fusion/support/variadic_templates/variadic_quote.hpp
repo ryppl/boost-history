@@ -10,9 +10,8 @@
 //BOOST_MPL_CFG_NO_HAS_XXX ?!
 
 #include <boost/mpl/has_xxx.hpp>
-#include <boost/mpl/bool.hpp>
 
-namespace boost{namespace fusion
+namespace boost { namespace fusion
 {
     namespace detail
     {
@@ -23,24 +22,25 @@ namespace boost{namespace fusion
     struct variadic_quote
     {
     private:
-        template<typename ConcreteType,typename/* HasType*/>
+        template<typename ConcreteType,bool/* HasType*/>
         struct apply_impl
         {
             typedef ConcreteType type;
         };
 
         template<typename ConcreteType>
-        struct apply_impl<ConcreteType,mpl::true_>
+        struct apply_impl<ConcreteType,true>
           : ConcreteType
-        {
-        };
+        {};
 
     public:
         template<typename... Argument>
         struct apply
-          : apply_impl<Type<Argument...>,detail::has_type<Type<Argument...> > >
-        {
-        };
+          : apply_impl<
+                Type<Argument...>
+              , detail::has_type<Type<Argument...> >::type::value
+            >
+        {};
     };
 
 }}

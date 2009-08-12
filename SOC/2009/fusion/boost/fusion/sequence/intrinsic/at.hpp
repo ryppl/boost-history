@@ -8,14 +8,19 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_AT_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_AT_HPP
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/container/list/list_fwd.hpp>
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#endif
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/detail/workaround.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/int.hpp>
-
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-#   include <boost/type_traits/is_const.hpp>
-#   include <boost/utility/enable_if.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/or.hpp>
+#   include <boost/type_traits/is_same.hpp>
 #endif
 
 namespace boost { namespace fusion
@@ -43,12 +48,34 @@ namespace boost { namespace fusion
         struct at
           : extension::at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, N>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<
+                    traits::is_random_access<Seq>
+                  , is_same<
+                        typename traits::tag_of<Seq>::type
+                      , list_tag
+                    >
+                >));
+            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
+        };
 
         template <typename Seq, int N>
         struct at_c
           : at<Seq, mpl::int_<N> >
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<
+                    traits::is_random_access<Seq>
+                  , is_same<
+                        typename traits::tag_of<Seq>::type
+                      , list_tag
+                    >
+                >));
+            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value);
+        };
     }
 
     template <typename N, typename Seq>
@@ -58,14 +85,10 @@ namespace boost { namespace fusion
         return result_of::at<BOOST_FUSION_R_ELSE_CLREF(Seq), N>::call(seq);
     }
 
-    //cschmidt: see https://svn.boost.org/trac/boost/ticket/3305
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename N, typename Seq>
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-    inline typename lazy_disable_if<is_const<Seq>,result_of::at<Seq&, N> >::type
-#else
-    inline typename result_of::at<Seq&, N>::type
-#endif
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::at<,Seq,&,N>)
     at(Seq& seq)
     {
         return result_of::at<Seq&, N>::call(seq);
@@ -82,12 +105,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <int N, typename Seq>
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-    inline typename
-        lazy_disable_if<is_const<Seq>,result_of::at_c<Seq&, N> >::type
-#else
-    inline typename result_of::at_c<Seq&, N>::type
-#endif
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::at_c<,Seq,&, N>)
     at_c(Seq& seq)
     {
         return fusion::at<mpl::int_<N> >(seq);

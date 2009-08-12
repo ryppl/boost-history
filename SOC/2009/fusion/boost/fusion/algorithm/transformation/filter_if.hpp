@@ -9,6 +9,9 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_IF_HPP
 
 #include <boost/fusion/view/filter_view/filter_view.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/detail/workaround.hpp>
 
 namespace boost { namespace fusion
 {
@@ -17,6 +20,9 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pred>
         struct filter_if
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef filter_view<Seq, Pred> type;
         };
     }
@@ -33,7 +39,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Pred, typename Seq>
-    inline typename result_of::filter_if<Seq&, Pred>::type
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::filter_if<,Seq,&, Pred>)
     filter_if(Seq& seq)
     {
         return typename result_of::filter_if<Seq&, Pred>::type(seq);

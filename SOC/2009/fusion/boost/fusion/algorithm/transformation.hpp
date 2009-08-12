@@ -9,10 +9,10 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_HPP
 
 #include <boost/fusion/algorithm/transformation/clear.hpp>
-#include <boost/fusion/algorithm/transformation/erase.hpp>
 #include <boost/fusion/algorithm/transformation/erase_key.hpp>
-#include <boost/fusion/algorithm/transformation/filter.hpp>
+#include <boost/fusion/algorithm/transformation/erase.hpp>
 #include <boost/fusion/algorithm/transformation/filter_if.hpp>
+#include <boost/fusion/algorithm/transformation/filter.hpp>
 #include <boost/fusion/algorithm/transformation/insert_range.hpp>
 #include <boost/fusion/algorithm/transformation/insert.hpp>
 #include <boost/fusion/algorithm/transformation/join.hpp>

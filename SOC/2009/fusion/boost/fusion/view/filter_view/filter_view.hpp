@@ -13,6 +13,7 @@
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -42,6 +43,9 @@ namespace boost { namespace fusion
     struct filter_view
       : sequence_base<filter_view<Seq, Pred> >
     {
+        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
         typedef Pred pred_type;

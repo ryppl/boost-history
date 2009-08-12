@@ -11,6 +11,8 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
+#include <boost/config.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace fusion
@@ -22,17 +24,58 @@ namespace boost { namespace fusion
       : incrementable_traversal_tag
     {};
 
+    //cschmidt: to ensure full compatibility between fusion and mpl iterators,
+    //the tags should inheritate the corresponding mpl tags.
+    //Fusion tags may be used as template arguments for iterator base classes
+    //(e.g. fusion::iterator_facade), therefore emulate the mpl tags (see
+    //(3.4.2/2) for more details.
     struct forward_traversal_tag
       : single_pass_traversal_tag
-    {};
+    {
+        typedef mpl::forward_iterator_tag::tag tag;
+        typedef mpl::forward_iterator_tag::value_type value_type;
+        typedef forward_traversal_tag type;
+        BOOST_STATIC_CONSTANT(
+                value_type,
+                value=mpl::forward_iterator_tag::value);
+
+        operator value_type() const
+        {
+            return value;
+        }
+    };
 
     struct bidirectional_traversal_tag
       : forward_traversal_tag
-    {};
+    {
+        typedef mpl::bidirectional_iterator_tag::tag tag;
+        typedef mpl::bidirectional_iterator_tag::value_type value_type;
+        typedef bidirectional_traversal_tag type;
+        BOOST_STATIC_CONSTANT(
+                value_type,
+                value=mpl::bidirectional_iterator_tag::value);
+
+        operator value_type() const
+        {
+            return value;
+        }
+    };
 
     struct random_access_traversal_tag
       : bidirectional_traversal_tag
-    {};
+    {
+        typedef mpl::random_access_iterator_tag::tag tag;
+        typedef mpl::random_access_iterator_tag::value_type value_type;
+        typedef bidirectional_traversal_tag type;
+        BOOST_STATIC_CONSTANT(
+                  value_type,
+                  value=mpl::random_access_iterator_tag::value);
+
+        operator value_type() const
+        {
+            return value;
+        }
+    };
 
     struct associative_sequence_tag
     {};

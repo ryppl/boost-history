@@ -17,6 +17,7 @@
 #include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>
@@ -30,6 +31,9 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct clear
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
             typedef vector0<> vec;
 #else
@@ -40,10 +44,7 @@ namespace boost { namespace fusion
                 mpl::eval_if<
                     traits::is_view<Seq>
                   , mpl::identity<vec>
-                  , result_of::convert<
-                        typename traits::tag_of<Seq>::type
-                      , vec
-                    >
+                  , convert<typename traits::tag_of<Seq>::type, vec>
                 >::type
             type;
         };

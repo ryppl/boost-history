@@ -8,12 +8,15 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_ERASE_HPP
 
+#include <boost/fusion/sequence/intrinsic/begin.hpp>
+#include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/view/joint_view/joint_view.hpp>
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
-#include <boost/fusion/sequence/intrinsic/begin.hpp>
-#include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/algorithm/transformation/detail/is_in_seq.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
@@ -69,13 +72,16 @@ namespace boost { namespace fusion
         >
         struct erase
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef typename begin<Seq>::type seq_first_type;
             typedef typename end<Seq>::type seq_last_type;
 
-            //TODO cschmidt: !
-            //BOOST_FUSION_STATIC_ASSERT(
-            //     (!equal_to<seq_first_type, seq_last_type>::value),
-            //     "sequence empty");
+            BOOST_FUSION_MPL_ASSERT(
+                    (detail::is_in_range<First,seq_first_type,seq_last_type>));
+            BOOST_FUSION_MPL_ASSERT(
+                    (detail::is_in_range<Last,First,seq_last_type>));
 
             typedef
                 iterator_range<

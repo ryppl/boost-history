@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_SUPPORT_HPP
 #define BOOST_FUSION_SUPPORT_HPP
 
-//TODO cschmidt: is this file needed?
+//TODO cschmidt: decouple internal helper and public support classes
 
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/is_iterator.hpp>

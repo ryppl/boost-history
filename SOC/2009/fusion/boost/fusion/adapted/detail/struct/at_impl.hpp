@@ -9,8 +9,6 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_AT_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_AT_IMPL_HPP
 
-#include <boost/fusion/support/assert.hpp>
-
 #include <boost/mpl/int.hpp>
 
 namespace boost { namespace fusion { namespace extension
@@ -24,9 +22,6 @@ namespace boost { namespace fusion { namespace extension
         template <typename SeqRef, typename N>
         struct apply
         {
-            //BOOST_FUSION_INDEX_CHECK(n_value,
-            //    struct_size<Sequence>::value);
-
             typedef typename
                 detail::forward_as<
                     SeqRef

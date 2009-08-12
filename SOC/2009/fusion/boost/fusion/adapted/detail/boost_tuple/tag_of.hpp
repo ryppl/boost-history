@@ -13,6 +13,7 @@
 namespace boost { namespace fusion 
 {
     struct boost_tuple_tag;
+    struct boost_tuple_iterator_tag;
 
     namespace traits
     {

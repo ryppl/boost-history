@@ -9,17 +9,35 @@
 #define BOOST_FUSION_SUPPORT_IS_ITERATOR_HPP
 
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/iterator_base.hpp>
 
 #include <boost/type_traits/is_base_of.hpp>
 
+//TODO doc!!!
+
 namespace boost { namespace fusion
 {
-    struct iterator_root;
+    namespace extension
+    {
+        template<typename Tag>
+        struct is_iterator_impl
+        {
+            template <typename T>
+            struct apply
+              : is_base_of<iterator_root, typename detail::identity<T>::type>
+            {};
+        };
+    }
 
-    template <typename T>
-    struct is_fusion_iterator
-      : is_base_of<iterator_root, typename detail::identity<T>::type>
-    {};
+    namespace traits
+    {
+        template <typename T>
+        struct is_iterator
+          : extension::is_iterator_impl<
+                typename fusion::traits::tag_of<T>::type
+            >::template apply<typename detail::add_lref<T>::type>::type
+        {};
+    }
 }}
 
 #endif

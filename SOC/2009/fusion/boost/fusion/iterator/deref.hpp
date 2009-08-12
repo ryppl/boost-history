@@ -11,6 +11,7 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -37,7 +38,10 @@ namespace boost { namespace fusion
         struct deref
           : extension::deref_impl<typename traits::tag_of<It>::type>::
                 template apply<typename detail::add_lref<It>::type>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It>));
+        };
     }
 
     template <typename It>

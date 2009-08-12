@@ -10,6 +10,8 @@
 #define BOOST_FUSION_ALGORITHM_QUERY_NONE_HPP
 
 #include <boost/fusion/algorithm/query/any.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 namespace boost { namespace fusion
 {
@@ -18,12 +20,19 @@ namespace boost { namespace fusion
         template <typename Seq, typename F>
         struct none
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef bool type;
         };
     }
 
     template <typename Seq, typename F>
-    inline bool
+    inline typename
+        result_of::none<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
+        >::type
     none(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return !fusion::any(
@@ -33,7 +42,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline bool
+    inline typename result_of::none<Seq&, F const&>::type
     none(Seq& seq, F const& f)
     {
         return !fusion::any(seq,f);

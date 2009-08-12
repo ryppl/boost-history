@@ -8,6 +8,7 @@
 
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/equal_to.hpp>

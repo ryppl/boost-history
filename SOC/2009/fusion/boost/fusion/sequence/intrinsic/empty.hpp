@@ -8,9 +8,10 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_EMPTY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_EMPTY_HPP
 
-#include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -25,7 +26,7 @@ namespace boost { namespace fusion
         {
             template <typename SeqRef>
             struct apply
-              : mpl::bool_<(result_of::size<SeqRef>::value == 0)>
+              : mpl::bool_<!result_of::size<SeqRef>::value>
             {};
         };
 
@@ -44,8 +45,11 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct empty
           : extension::empty_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type>
-        {};
+                template apply<typename detail::add_lref<Seq>::type>::type
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        };
     }
 
     template <typename Seq>

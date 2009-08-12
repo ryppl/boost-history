@@ -12,6 +12,7 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -33,16 +34,15 @@ namespace boost { namespace fusion
     struct iterator_range
       : sequence_base<iterator_range<First, Last> >
     {
+        //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<First>));
+        //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Last>));
+
         typedef First begin_type;
         typedef Last end_type;
 
-        typedef typename
-            mpl::eval_if<
-                traits::is_associative<begin_type>
-              , mpl::inherit2<forward_traversal_tag,associative_sequence_tag>
-              , mpl::identity<forward_traversal_tag>
-            >::type
-        category;
+        typedef typename traits::category_of<First>::type category;
         typedef typename result_of::distance<begin_type, end_type>::type size;
         typedef iterator_range_tag fusion_tag;
         typedef fusion_sequence_tag tag;

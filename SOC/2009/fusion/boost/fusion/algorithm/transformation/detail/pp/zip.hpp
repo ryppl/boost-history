@@ -11,6 +11,12 @@
 #include <boost/fusion/view/zip_view.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/template.hpp>
+#include <boost/fusion/support/assert.hpp>
+
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/preprocessor/cat.hpp>
+#   include <boost/preprocessor/repetition/repeat.hpp>
+#endif
 
 namespace boost { namespace fusion
 {
@@ -37,6 +43,15 @@ namespace boost { namespace fusion
         struct zip
             EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(FUSION_MAX_ZIP_SEQUENCES,N)
         {
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERS
+#define BOOST_FUSION_IS_FORWARD_ASSERT(Z,N,_)\
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<BOOST_PP_CAT(T,N)>));
+
+            BOOST_PP_REPEAT(N,BOOST_FUSION_IS_FORWARD_ASSERT,_)
+
+#undef BOOST_FUSION_IS_FORWARD_ASSERT
+#endif
+
             typedef
                 zip_view<
                     typename result_of::vector_tie<

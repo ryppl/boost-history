@@ -10,6 +10,7 @@
 
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -18,7 +19,10 @@ namespace boost { namespace fusion
         template <typename Seq, typename State, typename F>
         struct accumulate
           : fold<Seq, State, F>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        };
     }
 
     template <typename Seq, typename State, typename F>

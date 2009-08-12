@@ -10,7 +10,6 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -24,10 +23,6 @@ namespace boost { namespace fusion
 
         typedef reverse_view_iterator_tag fusion_tag;
         typedef typename traits::category_of<first_type>::type category;
-
-        //BOOST_FUSION_STATIC_ASSERT(
-        //    (is_base_of<bidirectional_traversal_tag, category>::value),
-        //    "underlying iterator must be bidirectional");
 
         reverse_view_iterator(First const& first)
           : first(first)

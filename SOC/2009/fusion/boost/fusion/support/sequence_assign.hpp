@@ -18,6 +18,8 @@ namespace boost{namespace fusion{
         template<typename Seq>
         struct sequence_assign_type
         {
+            typedef Seq seq_type;
+
             sequence_assign_type(Seq seq)
               : seq(seq)
             {}

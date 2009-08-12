@@ -18,7 +18,6 @@
 
 namespace boost { namespace fusion
 {
-    struct sequence_root;
     struct mpl_sequence_tag;
     struct mpl_iterator_tag;
 

@@ -11,6 +11,8 @@
 #include <boost/fusion/view/single_view/single_view.hpp>
 #include <boost/fusion/algorithm/transformation/insert_range.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/algorithm/transformation/detail/is_in_seq.hpp>
 
 namespace boost { namespace fusion
 {
@@ -21,9 +23,14 @@ namespace boost { namespace fusion
           : insert_range<
                 Seq
               , Pos
-              , single_view<typename detail::as_fusion_element<T>::type>
+              , BOOST_FUSION_R_ELSE_CLREF(
+                  single_view<typename detail::as_fusion_element<T>::type>)
             >
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<Pos, Seq>));
+        };
     }
 
     template <typename Seq, typename Pos, typename T>

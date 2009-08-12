@@ -13,6 +13,8 @@
 #include <boost/fusion/container.hpp>
 #include <boost/fusion/view.hpp>
 #include <boost/fusion/adapted.hpp>
+#include <boost/fusion/tuple.hpp>
+#include <boost/fusion/support.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 
@@ -113,6 +115,9 @@ struct identity_int
     }
 };
 
+template<class>
+class C;
+
 int main()
 {
     {
@@ -152,3 +157,45 @@ int main()
     }
 }
 
+/*#include <boost/mpl/transform.hpp>
+#include <boost/mpl/vector.hpp>
+#include <boost/mpl/equal.hpp>
+
+#include <utility>
+
+namespace mpl=boost::mpl;
+
+struct my_make_pair {
+  template<typename T1, typename T2>
+  struct apply {
+    typedef std::pair<T1,T2> type;
+  };
+};
+
+
+
+int main(int argc, char *argv[])
+{
+    {
+  typedef mpl::vector<int,long> seq1;
+  typedef mpl::vector<float,double> seq2;
+  typedef mpl::vector<std::pair<int,float>,std::pair<long,double> > pairs;
+
+  typedef mpl::transform<seq1,seq2,my_make_pair>::type result;
+
+  static_assert( mpl::equal<result,pairs>::type::value, "");
+    }
+
+  typedef fusion::vector<int,long> seq1;
+
+  typedef fusion::vector<float,double> seq2;
+  typedef fusion::vector<std::pair<int,float>,std::pair<long,double> >
+pairs;
+
+  typedef mpl::transform<seq1,seq2,my_make_pair>::type result;
+
+  static_assert( mpl::equal<result,pairs>::type::value, "");
+  mpl::push_back<fusion::vector<>,int>::type z;
+
+  return 0;
+}*/

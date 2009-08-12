@@ -8,6 +8,8 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_BEGIN_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_BEGIN_IMPL_HPP
 
+#include <boost/fusion/iterator/basic_iterator.hpp>
+
 namespace boost { namespace fusion { namespace extension
 {
     template<typename Tag>
@@ -19,7 +21,14 @@ namespace boost { namespace fusion { namespace extension
         template <typename SeqRef>
         struct apply
         {
-            typedef boost_tuple_iterator<SeqRef> type;
+            typedef
+                basic_iterator<
+                    boost_tuple_iterator_tag
+                  , random_access_traversal_tag
+                  , SeqRef
+                  , 0
+                >
+            type;
 
             static type
             call(SeqRef seq)

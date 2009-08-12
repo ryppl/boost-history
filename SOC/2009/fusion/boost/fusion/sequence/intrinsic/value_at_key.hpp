@@ -9,10 +9,14 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_KEY_HPP
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/has_key.hpp>
+#endif
 #include <boost/fusion/iterator/value_of_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 
@@ -49,11 +53,15 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq, typename N>
+        template <typename Seq, typename Key>
         struct value_at_key
           : extension::value_at_key_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type, N>
-        {};
+                template apply<typename detail::add_lref<Seq>::type, Key>
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
+            BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>));
+        };
     }
 }}
 

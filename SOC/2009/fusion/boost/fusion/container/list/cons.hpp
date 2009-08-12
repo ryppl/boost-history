@@ -11,12 +11,16 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/front.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/empty.hpp>
+#endif
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/assign_tags.hpp>
 #include <boost/fusion/support/sequence_assign.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
@@ -64,7 +68,15 @@ namespace boost { namespace fusion
         template<typename SeqAssign>
         nil(BOOST_FUSION_R_ELSE_CLREF(SeqAssign))
         {
-            //TODO cschmidt: assert!
+#ifdef BOOST_NO_RVALUE_REFERENCES
+            BOOST_FUSION_MPL_ASSERT((
+                result_of::empty<typename SeqAssign::seq_type>));
+#else
+            BOOST_FUSION_MPL_ASSERT((
+                result_of::empty<
+                    typename detail::remove_reference<SeqAssign>::type::seq_type
+                >));
+#endif
         }
 
         template<typename It>
@@ -75,7 +87,7 @@ namespace boost { namespace fusion
         nil&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq))
         {
-            //TODO cschmidt: assert!
+            BOOST_FUSION_MPL_ASSERT((result_of::empty<Seq>));
             return *this;
         }
 

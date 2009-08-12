@@ -8,10 +8,10 @@
 #ifndef BOOST_FUSION_ITERATOR_EQUAL_TO_HPP
 #define BOOST_FUSION_ITERATOR_EQUAL_TO_HPP
 
-#include <boost/type_traits/is_same.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/type_traits/add_const.hpp>
 #include <boost/fusion/support/is_iterator.hpp>
+#include <boost/fusion/support/assert.hpp>
+
 #include <boost/mpl/and.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -44,7 +44,12 @@ namespace boost { namespace fusion
                     typename detail::add_lref<It1>::type
                   , typename detail::add_lref<It2>::type
                 >::type
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It1>));
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It2>));
+        };
     }
 
     namespace iterator_operators
@@ -52,7 +57,7 @@ namespace boost { namespace fusion
         template <typename It1, typename It2>
         inline typename
             enable_if<
-                mpl::and_<is_fusion_iterator<It1>, is_fusion_iterator<It2> >
+                mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
               , bool
             >::type
         operator==(It1 const&, It2 const&)
@@ -63,7 +68,7 @@ namespace boost { namespace fusion
         template <typename It1, typename It2>
         inline typename
             enable_if<
-                mpl::and_<is_fusion_iterator<It1>, is_fusion_iterator<It2> >
+                mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
               , bool
             >::type
         operator!=(It1 const&, It1 const&)

@@ -11,13 +11,12 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/detail/workaround.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-#   include <boost/type_traits/is_const.hpp>
-#   include <boost/utility/enable_if.hpp>
-#endif
 
 #include <boost/fusion/algorithm/query/detail/find_if.hpp>
 
@@ -28,6 +27,9 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct find
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef
                 detail::static_seq_find_if<
                     typename begin<Seq>::type
@@ -54,15 +56,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename T, typename Seq>
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-    inline typename
-        lazy_disable_if<
-            is_const<Seq>
-          , result_of::find<Seq&, T>
-        >::type const
-#else
-    inline typename result_of::find<Seq&, T>::type const
-#endif
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::find<,Seq,&, T>) const
     find(Seq& seq)
     {
         return result_of::find<Seq&, T>::filter::call(seq);

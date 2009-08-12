@@ -12,6 +12,7 @@
 
 #include <boost/fusion/algorithm/query/all.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -39,15 +40,22 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq, typename F>
+        template <typename Seq, typename>
         struct any
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef bool type;
         };
     }
 
     template <typename Seq, typename F>
-    inline bool
+    inline typename
+        result_of::any<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
+        >::type
     any(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return !fusion::all(
@@ -57,7 +65,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline bool
+    inline typename result_of::any<Seq&,F const&>::type
     any(Seq& seq, F const& f)
     {
         return !fusion::all(seq,detail::any_helper<F const&>(f));

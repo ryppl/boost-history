@@ -15,9 +15,7 @@
 namespace boost { namespace fusion
 {
     struct random_access_traversal_tag;
-
-    // Special tags:
-    struct iterator_facade_tag; // iterator facade tag
+    struct iterator_facade_tag;
 
     namespace extension
     {
@@ -28,14 +26,7 @@ namespace boost { namespace fusion
             template <typename FirstRef, typename LastRef>
             struct apply
               : distance_detail::linear_distance<FirstRef, LastRef>
-            {
-                /*BOOST_FUSION_MPL_ASSERT_NOT(
-                        traits::is_random_access<FirstRef>,
-      "default implementation not available for random access iterators");
-                BOOST_FUSION_MPL_ASSERT_NOT(
-                        traits::is_random_access<FirstRef>,
-      "default implementation not available for random access iterators");*/
-            };
+            {};
         };
 
         template <>
@@ -59,6 +50,10 @@ namespace boost { namespace fusion
                   , typename detail::add_lref<Last>::type
                 >::type
         {
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<First>));
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Last>));
         };
     }
 

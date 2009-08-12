@@ -21,8 +21,9 @@
 #include <boost/fusion/adapted/detail/boost_tuple/size_impl.hpp>
 #include <boost/fusion/adapted/detail/boost_tuple/at_impl.hpp>
 #include <boost/fusion/adapted/detail/boost_tuple/value_at_impl.hpp>
-#include <boost/fusion/adapted/detail/boost_tuple/boost_tuple_iterator.hpp>
 #include <boost/fusion/adapted/detail/boost_tuple/begin_impl.hpp>
 #include <boost/fusion/adapted/detail/boost_tuple/end_impl.hpp>
+#include <boost/fusion/adapted/detail/boost_tuple/deref_impl.hpp>
+#include <boost/fusion/adapted/detail/boost_tuple/value_of_impl.hpp>
 
 #endif

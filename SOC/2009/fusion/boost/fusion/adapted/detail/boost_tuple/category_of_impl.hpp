@@ -10,7 +10,7 @@
 
 namespace boost { namespace fusion 
 { 
-    struct forward_traversal_tag;
+    struct random_access_traversal_tag;
 
     namespace extension
     {
@@ -23,7 +23,7 @@ namespace boost { namespace fusion
             template<typename SeqRef>
             struct apply
             {
-                typedef forward_traversal_tag type;
+                typedef random_access_traversal_tag type;
             };
         };
     }

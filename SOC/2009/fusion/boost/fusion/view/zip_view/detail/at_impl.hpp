@@ -13,7 +13,6 @@
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/sequence/intrinsic/at.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
-#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/support/unused.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -38,9 +37,7 @@ namespace boost { namespace fusion
                   , mpl::identity<unused_type const&>
                   , result_of::at<SeqRef, N>
                 >
-            {
-                //BOOST_MPL_ASSERT((is_reference<SeqRef>));
-            };
+            {};
 
             template<typename Seq>
             typename result<poly_at(BOOST_FUSION_R_ELSE_LREF(Seq))>::type

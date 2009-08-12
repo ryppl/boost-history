@@ -9,47 +9,36 @@
 #ifndef BOOST_FUSION_VIEW_DETAIL_STRICTEST_TRAVERSAL_HPP
 #define BOOST_FUSION_VIEW_DETAIL_STRICTEST_TRAVERSAL_HPP
 
-#include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/algorithm/iteration/fold.hpp>
-#include <boost/fusion/mpl.hpp>
+#include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/ref.hpp>
 
-#include <boost/mpl/or.hpp>
 #include <boost/mpl/if.hpp>
-
-#include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/is_base_of.hpp>
 
 namespace boost { namespace fusion
 {
-    struct forward_traversal_tag;
-    struct bidirectional_traversal_tag;
-    struct random_access_traversal_tag;
-
     namespace detail
     {
-        template<typename Tag1, typename Tag2>
-        struct stricter_traversal
-        {
-            typedef typename
-                mpl::if_<
-                    is_convertible<Tag2,Tag1>
-                  , Tag1
-                  , Tag2
-                >::type
-            type;
-        };
-
         struct strictest_traversal_impl
         {
             template<typename Sig>
             struct result;
 
-            template<typename Self, typename Next, typename StrictestSoFar>
-            struct result<Self(Next, StrictestSoFar)>
+            template<typename Self, typename NextSeq, typename StrictestSoFar>
+            struct result<Self(NextSeq, StrictestSoFar)>
             {
-                typedef typename traits::category_of<Next>::type next_tag;
+                typedef typename traits::category_of<NextSeq>::type next_tag;
+                typedef typename
+                    detail::identity<StrictestSoFar>::type
+                strictest_so_far_identity;
 
                 typedef typename
-                    stricter_traversal<StrictestSoFar,next_tag>::type
+                    mpl::if_<
+                        is_base_of<strictest_so_far_identity,next_tag>
+                      , strictest_so_far_identity
+                      , next_tag
+                    >::type
                 type;
             };
         };

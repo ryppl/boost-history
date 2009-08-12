@@ -9,6 +9,7 @@
 #define BOOST_FUSION_ITERATOR_PRIOR_HPP
 
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -35,7 +36,10 @@ namespace boost { namespace fusion
         struct prior
           : extension::prior_impl<typename traits::tag_of<It>::type>::
                 template apply<typename detail::add_lref<It>::type>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<It>));
+        };
     }
 
     template <typename It>

@@ -11,6 +11,7 @@
 
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -38,15 +39,22 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq, typename F>
+        template <typename Seq, typename>
         struct count_if
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef int type;
         };
     }
 
     template <typename Seq, typename F>
-    inline int
+    inline typename
+        result_of::count_if<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
+        >::type
     count_if(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return fold(BOOST_FUSION_FORWARD(Seq,seq),
@@ -56,7 +64,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline int
+    inline typename result_of::count_if<Seq&,F const&>::type
     count_if(Seq& seq, F const& f)
     {
         return fold(seq,

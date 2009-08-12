@@ -8,8 +8,7 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_END_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_END_IMPL_HPP
 
-#include <boost/mpl/bool.hpp>
-#include <boost/type_traits/is_convertible.hpp>
+#include <boost/fusion/iterator/basic_iterator.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -19,36 +18,24 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct end_impl<boost_tuple_tag>
     {
-        template <typename>
+        template <typename SeqRef>
         struct apply
         {
             typedef
-                boost_tuple_iterator<tuples::null_type const volatile&>
+                basic_iterator<
+                    boost_tuple_iterator_tag
+                  , random_access_traversal_tag
+                  , SeqRef
+                  , tuples::length<
+                        typename detail::identity<SeqRef>::type
+                    >::value
+                >
             type;
 
-            template<typename Seq>
             static type
-            call(Seq const& seq, mpl::true_)
+            call(SeqRef seq)
             {
                 return type(seq,0);
-            }
-
-            template<typename Seq>
-            static type
-            call(Seq const& seq, mpl::false_)
-            {
-                return call(seq.get_tail());
-            }
-
-            template<typename Seq>
-            static type
-            call(Seq const& seq)
-            {
-                return call(seq,
-                        typename is_convertible<
-                            Seq*
-                          , tuples::null_type const volatile*
-                        >::type());
             }
         };
     };

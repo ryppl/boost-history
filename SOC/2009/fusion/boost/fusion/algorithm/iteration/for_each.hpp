@@ -11,6 +11,7 @@
 
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/fusion/algorithm/iteration/detail/for_each.hpp>
 
@@ -20,15 +21,22 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename, typename>
+        template <typename Seq, typename>
         struct for_each
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef void type;
         };
     }
 
     template <typename Seq, typename F>
-    inline void
+    inline typename
+        result_of::for_each<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
+        >::type
     for_each(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
              BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
@@ -40,7 +48,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline void
+    inline typename result_of::for_each<Seq&,F const&>::type
     for_each(Seq& seq,F const& f)
     {
         detail::for_each_unrolled<result_of::size<Seq&>::value>::call(

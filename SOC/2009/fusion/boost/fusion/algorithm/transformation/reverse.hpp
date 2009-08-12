@@ -9,6 +9,8 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REVERSE_HPP
 
 #include <boost/fusion/view/reverse_view/reverse_view.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -17,6 +19,9 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct reverse
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef reverse_view<Seq> type;
         };
     }
@@ -25,7 +30,8 @@ namespace boost { namespace fusion
     inline typename result_of::reverse<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type
     reverse(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return typename result_of::reverse<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type(
+        return typename
+            result_of::reverse<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type(
                 BOOST_FUSION_FORWARD(Seq,seq));
     }
 

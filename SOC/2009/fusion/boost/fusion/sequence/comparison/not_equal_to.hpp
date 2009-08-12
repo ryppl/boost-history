@@ -11,12 +11,13 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/fusion/sequence/comparison/detail/enable_comparison.hpp>
 #ifdef FUSION_DIRECT_OPERATOR_USAGE
-#include <boost/fusion/sequence/comparison/detail/not_equal_to.hpp>
+#   include <boost/fusion/sequence/comparison/detail/not_equal_to.hpp>
 #else
-#include <boost/fusion/sequence/comparison/equal_to.hpp>
+#   include <boost/fusion/sequence/comparison/equal_to.hpp>
 #endif
 
 namespace boost { namespace fusion
@@ -25,6 +26,11 @@ namespace boost { namespace fusion
     inline bool
     not_equal_to(Seq1 const& seq1, Seq2 const& seq2)
     {
+        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+
 #ifdef FUSION_DIRECT_OPERATOR_USAGE
         return
             detail::sequence_not_equal_to<
@@ -48,6 +54,11 @@ namespace boost { namespace fusion
             >::type
         operator!=(Seq1 const& seq1, Seq2 const& seq2)
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+
             return fusion::not_equal_to(seq1, seq2);
         }
     }

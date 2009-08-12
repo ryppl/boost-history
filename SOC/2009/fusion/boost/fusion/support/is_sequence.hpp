@@ -10,6 +10,7 @@
 
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/sequence_base.hpp>
 
 #include <boost/type_traits/is_base_of.hpp>
 

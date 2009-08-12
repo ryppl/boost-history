@@ -10,6 +10,8 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_JOIN_HPP
 
 #include <boost/fusion/view/joint_view.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/preprocessor/empty.hpp>
 
@@ -17,29 +19,34 @@ namespace boost { namespace fusion {
 
     namespace result_of
     {
-        template<typename Lhs, typename Rhs>
+        template<typename Seq1, typename Seq2>
         struct join
         {
-            typedef joint_view<Lhs,Rhs> type;
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+
+            typedef joint_view<Seq1,Seq2> type;
         };
     }
 
-#define BOOST_FUSION_JOIN(LHS_CV_REF_MODIFIER,RHS_CV_REF_MODIFIER)\
-    template<typename Lhs, typename Rhs>\
+#define BOOST_FUSION_JOIN(SEQ1_CV_REF_MODIFIER,SEQ2_CV_REF_MODIFIER)\
+    template<typename Seq1, typename Seq2>\
     inline typename\
         result_of::join<\
-            Lhs LHS_CV_REF_MODIFIER\
-          , Rhs RHS_CV_REF_MODIFIER\
+            Seq1 SEQ1_CV_REF_MODIFIER\
+          , Seq2 SEQ2_CV_REF_MODIFIER\
         >::type\
-    join(Lhs LHS_CV_REF_MODIFIER lhs,\
-            Rhs RHS_CV_REF_MODIFIER rhs)\
+    join(Seq1 SEQ1_CV_REF_MODIFIER seq1,\
+         Seq2 SEQ2_CV_REF_MODIFIER seq2)\
     {\
         return typename\
             result_of::join<\
-                Lhs LHS_CV_REF_MODIFIER\
-              , Rhs RHS_CV_REF_MODIFIER\
-            >::type(BOOST_FUSION_FORWARD(Lhs LHS_CV_REF_MODIFIER,lhs)\
-                  , BOOST_FUSION_FORWARD(Rhs RHS_CV_REF_MODIFIER,rhs));\
+                Seq1 SEQ1_CV_REF_MODIFIER\
+              , Seq2 SEQ2_CV_REF_MODIFIER\
+            >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
+                  , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2));\
     }
 
     BOOST_FUSION_JOIN(

@@ -11,7 +11,7 @@
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/category_of.hpp>
 
-//TODO assoc iterator!
+//TODO doc no assoc iterator!
 
 namespace boost { namespace fusion
 {

@@ -8,10 +8,14 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_BACK_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_BACK_HPP
 
-#include <boost/fusion/support/ref.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/empty.hpp>
+#endif
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/iterator/deref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/ref.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -23,10 +27,12 @@ namespace boost { namespace fusion
     {
         template <typename Seq>
         struct back
-          : result_of::deref<typename result_of::prior<
-                typename result_of::end<Seq>::type>::type
-            >
-        {};
+          : deref<typename prior<typename end<Seq>::type>::type>
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT_NOT((empty<Seq>));
+        };
     }
 
     template <typename Seq>

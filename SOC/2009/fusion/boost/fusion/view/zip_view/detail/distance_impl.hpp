@@ -14,7 +14,6 @@
 #include <boost/fusion/iterator/distance.hpp>
 #include <boost/fusion/algorithm/query/find_if.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -30,19 +29,16 @@ namespace boost { namespace fusion
         struct best_distance
         {
             typedef typename
-                result_of::find_if<
-                    typename SearchIt::iterators
-                  , is_same<
-                        traits::category_of<mpl::_1>
-                      , random_access_iterator_tag
-                    >
-                >
-            finder;
-
-            //BOOST_MPL_ASSERT_NOT((is_same<typename finder::type, result_of::end<typename SearchIt::iterators> >));
-
-            typedef typename
-                result_of::distance<FoundIt, typename finder::type>::type
+                result_of::distance<
+                    FoundIt
+                  , typename result_of::find_if<
+                        typename SearchIt::iterators
+                      , is_same<
+                            traits::category_of<mpl::_1>
+                          , random_access_iterator_tag
+                        >
+                    >::type
+                >::type
             type;
         };
 
@@ -62,17 +58,17 @@ namespace boost { namespace fusion
                     typename It1::iterators
                   , is_same<traits::category_of<mpl::_1>
                   , random_access_iterator_tag>
-                >
-            finder;
+                >::type
+            found_it;
 
             typedef typename
                 mpl::eval_if<
                     is_same<
-                        typename finder::type
+                        found_it
                       , typename result_of::end<typename It1::iterators>::type
                     >
                   , detail::default_distance<It1, It2>
-                  , detail::best_distance<typename finder::type, It2>
+                  , detail::best_distance<found_it, It2>
                 >::type
             type;
         };

@@ -15,12 +15,10 @@
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/algorithm/transformation/transform.hpp>
-#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/min.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion
@@ -48,9 +46,7 @@ namespace boost { namespace fusion
                   , mpl::identity<unused_type const&>
                   , get_endpoint<SeqRef, M>
                 >
-            {
-                BOOST_MPL_ASSERT((detail::is_lrref<SeqRef>));
-            };
+            {};
 
             template<typename Seq>
             typename result<endpoints(BOOST_FUSION_R_ELSE_LREF(Seq))>::type

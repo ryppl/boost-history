@@ -11,6 +11,7 @@
 
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
@@ -23,6 +24,9 @@ namespace boost { namespace fusion {
         template <typename Seq, typename State, typename F>
         struct fold
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef
                 detail::fold_impl<
                     size<Seq>::value

@@ -9,6 +9,10 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REMOVE_IF_HPP
 
 #include <boost/fusion/view/filter_view/filter_view.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/detail/workaround.hpp>
+
 #include <boost/mpl/not.hpp>
 
 namespace boost { namespace fusion
@@ -18,9 +22,10 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pred>
         struct remove_if
         {
-            typedef
-                filter_view<Seq, mpl::not_<Pred> >
-            type;
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
+            typedef filter_view<Seq, mpl::not_<Pred> > type;
         };
     }
 
@@ -36,7 +41,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Pred, typename Seq>
-    inline typename result_of::remove_if<Seq&, Pred>::type
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::remove_if<,Seq,&, Pred>)
     remove_if(Seq& seq)
     {
         return typename result_of::remove_if<Seq&, Pred>::type(seq);

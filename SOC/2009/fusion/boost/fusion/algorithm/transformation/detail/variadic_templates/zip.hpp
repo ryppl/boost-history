@@ -10,6 +10,11 @@
 #include <boost/fusion/container/generation/vector_tie.hpp>
 #include <boost/fusion/view/zip_view.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/and.hpp>
+#endif
 
 namespace boost { namespace fusion {
 
@@ -18,6 +23,9 @@ namespace boost { namespace fusion {
         template<typename... Seqs>
         struct zip
         {
+            //TODO variadic template to fixed length macro!!!
+            //BOOST_FUSION_MPL_ASSERT((mpl::and_<traits::is_forward<Seqs>...>));
+
             typedef
                 zip_view<typename result_of::vector_tie<Seqs...>::type>
             type;

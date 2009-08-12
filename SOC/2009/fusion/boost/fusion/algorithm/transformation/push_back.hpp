@@ -11,6 +11,8 @@
 #include <boost/fusion/view/joint_view/joint_view.hpp>
 #include <boost/fusion/view/single_view/single_view.hpp>
 #include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -19,6 +21,9 @@ namespace boost { namespace fusion
         template <typename Seq, typename T>
         struct push_back
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef
                 joint_view<
                     Seq

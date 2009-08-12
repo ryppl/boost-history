@@ -8,7 +8,6 @@
 
 #include <boost/fusion/container/map/map_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
-#include <boost/fusion/iterator/basic_iterator.hpp>
 #include <boost/fusion/support/pair.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>

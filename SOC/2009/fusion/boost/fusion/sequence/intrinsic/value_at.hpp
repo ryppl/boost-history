@@ -8,10 +8,19 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_VALUE_AT_HPP
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/container/list/list_fwd.hpp>
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#endif
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/int.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/or.hpp>
+#   include <boost/type_traits/is_same.hpp>
+#endif
 
 namespace boost { namespace fusion
 {
@@ -39,12 +48,36 @@ namespace boost { namespace fusion
         struct value_at
           : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, N>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<
+                    traits::is_random_access<Seq>
+                  , is_same<
+                        typename traits::tag_of<Seq>::type
+                      , list_tag
+                    >
+                >));
+            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
+            BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
+        };
 
         template <typename Seq, int N>
         struct value_at_c
-          : fusion::result_of::value_at<Seq,mpl::int_<N> >
-        {};
+          : result_of::value_at<Seq,mpl::int_<N> >
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<
+                    traits::is_random_access<Seq>
+                  , is_same<
+                        typename traits::tag_of<Seq>::type
+                      , list_tag
+                    >
+                >));
+            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value);
+            BOOST_FUSION_INDEX_CHECK(N,size<Seq>::value);
+        };
     }
 }}
 

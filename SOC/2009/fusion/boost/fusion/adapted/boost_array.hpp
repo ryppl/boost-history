@@ -6,7 +6,6 @@
 #ifndef BOOST_FUSION_ADAPTED_BOOST_ARRAY_HPP
 #define BOOST_FUSION_ADAPTED_BOOST_ARRAY_HPP
  
-#include <boost/fusion/iterator/basic_iterator.hpp>
 #include <boost/fusion/support/ref.hpp>
 
 #define BOOST_FUSION_ADAPTED_ARRAY_TYPE class

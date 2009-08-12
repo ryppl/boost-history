@@ -6,7 +6,6 @@
 #ifndef BOOST_PP_IS_ITERATING
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
-#   include <boost/fusion/iterator/basic_iterator.hpp>
 #   include <boost/fusion/iterator/deref.hpp>
 #   include <boost/fusion/iterator/next.hpp>
 #   include <boost/fusion/iterator/advance_c.hpp>

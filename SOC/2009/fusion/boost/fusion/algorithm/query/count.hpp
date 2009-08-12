@@ -11,6 +11,7 @@
 
 #include <boost/fusion/algorithm/query/count_if.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/fusion/algorithm/query/detail/count.hpp>
 
@@ -18,15 +19,22 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename Seq, typename F>
+        template <typename Seq, typename>
         struct count
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef int type;
         };
     }
 
     template <typename Seq, typename T>
-    inline int
+    inline typename
+        result_of::count<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(T)
+        >::type
     count(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(T) x)
     {
         return fusion::count_if(
@@ -36,7 +44,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename T>
-    inline int
+    inline typename result_of::count<Seq&, T const&>::type
     count(Seq& seq, T const& x)
     {
         return fusion::count_if(seq,detail::count_helper<T const&>(x));

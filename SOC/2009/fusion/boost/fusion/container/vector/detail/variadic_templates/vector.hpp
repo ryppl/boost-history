@@ -14,6 +14,7 @@
 #include <boost/fusion/support/sequence_assign.hpp>
 #include <boost/fusion/support/assign_tags.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 
@@ -151,13 +152,19 @@ namespace boost { namespace fusion
         vector(BOOST_FUSION_R_ELSE_CLREF(OtherArguments)... arguments)
           : base(detail::assign_directly(),
                  BOOST_FUSION_FORWARD(OtherArguments,arguments)...)
-        {}
+        {
+            BOOST_FUSION_STATIC_ASSERT((
+                    sizeof...(Elements)==sizeof...(OtherArguments)));
+        }
 
 #define VECTOR_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
         vector(support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
           : base(detail::assign_by_deref(),fusion::begin(seq_assign.get()))\
-        {}
+        {\
+            BOOST_FUSION_STATIC_ASSERT((\
+                sizeof...(Elements)==result_of::size<SeqRef>::value));\
+        }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
 
@@ -176,6 +183,9 @@ namespace boost { namespace fusion
         vector&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
+            BOOST_FUSION_STATIC_ASSERT((
+                sizeof...(Elements)==result_of::size<Seq>::value));
+
             static_cast<base*>(this)->assign(
                 fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             return *this;

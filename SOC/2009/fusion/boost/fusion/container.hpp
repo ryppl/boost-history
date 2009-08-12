@@ -8,10 +8,10 @@
 #ifndef BOOST_FUSION_CONTAINER_HPP
 #define BOOST_FUSION_CONTAINER_HPP
 
-#include <boost/fusion/container/vector.hpp>
+#include <boost/fusion/container/generation.hpp>
 #include <boost/fusion/container/list.hpp>
 #include <boost/fusion/container/map.hpp>
 #include <boost/fusion/container/set.hpp>
-#include <boost/fusion/container/generation.hpp>
+#include <boost/fusion/container/vector.hpp>
 
 #endif

@@ -17,11 +17,7 @@
 #include <boost/fusion/sequence/io.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
 #include <boost/fusion/support/ref.hpp>
-
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-#   include <boost/type_traits/is_const.hpp>
-#   include <boost/utility/enable_if.hpp>
-#endif
+#include <boost/fusion/support/detail/workaround.hpp>
 
 #include <boost/fusion/container/detail/forward_ctor.hpp>
 
@@ -89,12 +85,8 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <int N, typename Tuple>
-#if defined(BOOST_NO_EXPLICIT_FUNCTION_TEMPLATE_ARGUMENTS) || BOOST_WORKAROUND(__GNUC__,<4)
-    inline typename
-        lazy_disable_if<is_const<Tuple>,result_of::at_c<Tuple&, N> >::type
-#else
-    inline typename result_of::at_c<Tuple&, N>::type
-#endif
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::at_c<,Tuple,&, N>)
     get(Tuple& tuple)
     {
         return at_c<N>(tuple);

@@ -10,6 +10,7 @@
 
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -36,7 +37,10 @@ namespace boost { namespace fusion
         struct begin
             : extension::begin_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type>
-        {};
+        {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+        };
     }
 
     template <typename Seq>

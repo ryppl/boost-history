@@ -23,7 +23,6 @@
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/is_volatile.hpp>
-#include <boost/type_traits/is_reference.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/add_volatile.hpp>

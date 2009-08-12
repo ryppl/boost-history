@@ -12,6 +12,7 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
 
 #include <boost/fusion/algorithm/query/detail/all.hpp>
 
@@ -19,15 +20,22 @@ namespace boost { namespace fusion
 {
     namespace result_of
     {
-        template <typename, typename>
+        template <typename Seq, typename>
         struct all
         {
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
             typedef bool type;
         };
     }
 
     template <typename Seq, typename F>
-    inline bool
+    inline typename
+        result_of::all<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
+        >::type
     all(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return
@@ -40,7 +48,7 @@ namespace boost { namespace fusion
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename Seq, typename F>
-    inline bool
+    inline typename result_of::all<Seq&, F const&>::type
     all(Seq& seq, F const& f)
     {
         return

@@ -8,7 +8,10 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_REMOVE_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REMOVE_HPP
 
-#include <boost/fusion/view/filter_view/filter_view.hpp>
+#include <boost/fusion/algorithm/transformation/remove_if.hpp>
+#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/detail/workaround.hpp>
 
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -20,10 +23,10 @@ namespace boost { namespace fusion
     {
         template <typename Seq, typename T>
         struct remove
+          : remove_if<Seq, is_same<mpl::_1, T> >
         {
-            typedef
-                filter_view<Seq, mpl::not_<is_same<mpl::_1, T> > >
-            type;
+            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
         };
     }
 
@@ -31,17 +34,16 @@ namespace boost { namespace fusion
     inline typename result_of::remove<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type
     remove(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
     {
-        return typename
-            result_of::remove<BOOST_FUSION_R_ELSE_CLREF(Seq), T>::type(
-                BOOST_FUSION_FORWARD(Seq,seq));
+        return remove_if<is_same<mpl::_1, T> >(BOOST_FUSION_FORWARD(Seq,seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
     template <typename T, typename Seq>
-    inline typename result_of::remove<Seq&, T>::type
+    inline BOOST_FUSION_EXPLICIT_TEMPLATE_NON_CONST_ARG_OVERLOAD(
+            result_of::remove<,Seq,&, T>)
     remove_if(Seq& seq)
     {
-        return typename result_of::remove<Seq&, T>::type(seq);
+        return remove_if<is_same<mpl::_1, T> >(seq);
     }
 #endif
 }}

@@ -14,8 +14,8 @@
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -46,6 +46,9 @@ namespace boost { namespace fusion
     struct reverse_view
       : sequence_base<reverse_view<Seq> >
     {
+        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_bidirectional<Seq>));
+
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
         typedef typename traits::category_of<seq_type>::type seq_category;

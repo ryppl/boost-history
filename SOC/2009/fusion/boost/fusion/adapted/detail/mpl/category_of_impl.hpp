@@ -11,13 +11,8 @@
 
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/is_sequence.hpp>
-
-namespace boost { namespace mpl
-{
-    struct forward_iterator_tag;
-    struct bidirectional_iterator_tag;
-    struct random_access_iterator_tag;
-}}
+#include <boost/mpl/iterator_category.hpp>
+#include <boost/mpl/iterator_tags.hpp>
 
 namespace boost { namespace fusion
 {
@@ -62,9 +57,27 @@ namespace boost { namespace fusion
             {
                 typedef typename
                     detail::mpl_iterator_category<
-                        typename mpl::begin<
-                            typename detail::identity<SeqRef>::type
-                        >::type::category
+                        typename mpl::iterator_category<
+                            typename mpl::begin<
+                                typename detail::identity<SeqRef>::type
+                            >::type
+                        >::type
+                    >::type
+                type;
+            };
+        };
+
+        template<>
+        struct category_of_impl<mpl_iterator_tag>
+        {
+            template<typename ItRef>
+            struct apply
+            {
+                typedef typename
+                    detail::mpl_iterator_category<
+                        typename mpl::iterator_category<
+                            typename detail::identity<ItRef>::type
+                        >::type
                     >::type
                 type;
             };

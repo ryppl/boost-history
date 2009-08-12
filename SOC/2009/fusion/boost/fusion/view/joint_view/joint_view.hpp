@@ -14,6 +14,7 @@
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -44,6 +45,11 @@ namespace boost { namespace fusion
     struct joint_view
       : sequence_base<joint_view<Seq1, Seq2> >
     {
+        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
+        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
+
         typedef detail::view_storage<Seq1> storage1_type;
         typedef typename storage1_type::type seq1_type;
         typedef detail::view_storage<Seq2> storage2_type;
