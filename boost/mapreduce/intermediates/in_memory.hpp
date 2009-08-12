@@ -44,7 +44,8 @@ class reduce_null_output
 template<
     typename MapTask,
     typename ReduceTask,
-    typename PartitionFn=mapreduce::hash_partitioner>
+    typename PartitionFn=mapreduce::hash_partitioner,
+    typename KeyCompare=std::less<typename ReduceTask::key_type> >
 class in_memory
 {
   private:
@@ -52,7 +53,8 @@ class in_memory
     std::vector<
         std::map<
             typename ReduceTask::key_type,
-            std::list<typename ReduceTask::value_type> > >
+            std::list<typename ReduceTask::value_type>,
+            KeyCompare > >
     intermediates_t;
 
   public:

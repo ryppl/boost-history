@@ -121,7 +121,7 @@
 				Name="VCCLCompilerTool"
 				InlineFunctionExpansion="2"
 				AdditionalIncludeDirectories=""
-				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN;BOOST_LIB_DIAGNOSTIC"
+				PreprocessorDefinitions="WIN32_LEAN_AND_MEAN"
 				RuntimeLibrary="2"
 				UsePrecompiledHeader="0"
 				WarningLevel="4"

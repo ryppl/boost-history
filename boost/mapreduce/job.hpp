@@ -23,8 +23,8 @@ template<typename MapKey, typename MapValue>
 class map_task
 {
   public:
-    typedef MapKey              key_type;
-    typedef MapValue            value_type;             
+    typedef MapKey   key_type;
+    typedef MapValue value_type;             
 };
 
 template<typename ReduceKey, typename ReduceValue>
@@ -69,7 +69,8 @@ class job : private boost::noncopyable
         }
 
         // 'value' parameter is not a reference to const to enable streams to be passed
-        map_task_runner &operator()(typename map_task_type::key_type const &key, typename map_task_type::value_type &value)
+        map_task_runner &operator()(typename map_task_type::key_type const &key,
+                                    typename map_task_type::value_type     &value)
         {
             map_task_type::map(*this, key, value);
 

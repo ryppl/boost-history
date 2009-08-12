@@ -9,18 +9,20 @@
 //
 // For more information, see http://www.boost.org/libs/mapreduce/
 //
- 
+
+#define BOOST_DISABLE_ASSERTS 
 #if !defined(_DEBUG) &&  !defined(BOOST_DISABLE_ASSERTS)
 #   pragma message("Warning: BOOST_DISABLE_ASSERTS not defined")
 #endif
 
 #include <boost/config.hpp>
 #if defined(BOOST_MSVC)
-#   pragma warning(disable: 4244 4512 4267)
+#   pragma warning(disable: 4244 4512 4267 4996)
 #endif
 
 #include <boost/mapreduce.hpp>
 #include <numeric>              // accumulate
+#include <boost/algorithm/string.hpp>
 
 #if defined(BOOST_MSVC)  && defined(_DEBUG)
 #include <crtdbg.h>
@@ -29,11 +31,11 @@
 namespace wordcount {
 
 struct map_task : public boost::mapreduce::map_task<
-                             std::string,                            // MapKey
-                             std::pair<char const *, char const *> > // MapValue
+                             std::string,                               // MapKey (filename)
+                             std::pair<char const *, char const *> >    // MapValue (memory mapped file contents)
 {
     template<typename Runtime>
-    static void map(Runtime &runtime, std::string const &/*key*/, value_type &value)
+    static void map(Runtime &runtime, key_type const &/*key*/, value_type &value)
     {
         bool in_word = false;
         char const *ptr = value.first;
@@ -46,41 +48,29 @@ struct map_task : public boost::mapreduce::map_task<
             {
                 if ((ch < 'A' || ch > 'Z') && ch != '\'')
                 {
-                    std::string w(word,ptr-word);
-                    std::transform(w.begin(), w.end(), w.begin(),
-                                   std::bind1st(
-                                       std::mem_fun(&std::ctype<char>::tolower),
-                                       &std::use_facet<std::ctype<char> >(std::locale::classic())));
-                    runtime.emit_intermediate(w, 1);
+                    runtime.emit_intermediate(std::make_pair(word,ptr-word), 1);
                     in_word = false;
                 }
             }
-            else
+            else if (ch >= 'A'  &&  ch <= 'Z')
             {
-                if (ch >= 'A'  &&  ch <= 'Z')
-                {
-                    word = ptr;
-                    in_word = true;
-                }
+                word = ptr;
+                in_word = true;
             }
         }
         if (in_word)
-        {
-            BOOST_ASSERT(ptr-word > 0);
-            std::string w(word,ptr-word);
-            std::transform(w.begin(), w.end(), w.begin(),
-                           std::bind1st(
-                               std::mem_fun(&std::ctype<char>::tolower),
-                               &std::use_facet<std::ctype<char> >(std::locale::classic())));
-            runtime.emit_intermediate(w, 1);
-        }
+            runtime.emit_intermediate(std::make_pair(word,ptr-word), 1);
     }
 };
 
-struct reduce_task : public boost::mapreduce::reduce_task<std::string, unsigned>
+typedef std::pair<char const *, std::ptrdiff_t> reduce_key_t;
+
+struct reduce_task : public boost::mapreduce::reduce_task<
+                                reduce_key_t,
+                                unsigned>
 {
     template<typename Runtime, typename It>
-    static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
+    static void reduce(Runtime &runtime, key_type const &key, It it, It const ite)
     {
         runtime.emit(key, std::accumulate(it, ite, 0));
     }
@@ -128,6 +118,37 @@ boost::mapreduce::job<
 > job;
 
 }   // namespace wordcount
+
+
+template<>
+bool std::less<wordcount::reduce_key_t>::operator()(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second) const
+{
+    std::ptrdiff_t const len = std::min(first.second, second.second);
+    int const cmp = strnicmp(first.first, second.first, len);
+    if (cmp < 0)
+        return true;
+    else if (cmp > 0)
+        return false;
+
+    return (first.second < second.second);
+}
+
+template<>
+bool std::operator==(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second)
+{
+    if (first.second != second.second)
+        return false;
+    else if (first.second == 0  &&  first.first == 0  &&  second.first == 0)
+        return true;
+
+    return (strnicmp(first.first, second.first, first.second) == 0);
+}
+
+template<>
+unsigned boost::mapreduce::hash_partitioner::operator()(wordcount::reduce_key_t const &key, unsigned partitions) const
+{
+    return boost::hash_range(key.first, key.first+key.second) % partitions;
+}
 
 
 
@@ -215,7 +236,7 @@ int main(int argc, char **argv)
             frequencies.sort(boost::mapreduce::detail::greater_2nd<wordcount::job::keyvalue_t>);
             std::cout << "\n\nMapReduce results:";
             for (frequencies_t::const_iterator freq=frequencies.begin(); freq!=frequencies.end(); ++freq)
-                std::cout << "\n" << freq->first << "\t" << freq->second;
+                printf("\n%.*s\t%d", freq->first.second, freq->first.first, freq->second);
         }
     }
     catch (std::exception &e)
