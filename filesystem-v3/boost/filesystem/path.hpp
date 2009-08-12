@@ -353,11 +353,16 @@ namespace filesystem
 #   else   // BOOST_POSIX_API
 
     // source format
-    const std::string &  string() const                                            { return m_path; }
-    const std::string &  string( system::error_code & ec ) const                   { ec.clear(); return m_path; }
-#     ifndef BOOST_FILESYSTEM_NARROW_ONLY
-    const std::wstring   wstring( system::error_code & ec = boost::throws() ) const { return detail::convert_to_string( m_path, ec ); }
-#     endif    
+    const std::string &  string() const   { return m_path; }
+    const std::wstring   wstring() const
+    { 
+      std::wstring tmp;
+      if ( !m_path.empty() )
+        path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
+          tmp, codecvt() );
+      return tmp;
+    }
+
 #   endif
 
     

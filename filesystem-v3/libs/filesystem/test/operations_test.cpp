@@ -183,6 +183,7 @@ namespace
 
     //  catch runtime_error
 
+    std::cout << "  catch runtime_error by value" << std::endl;
     bool exception_thrown;
     exception_thrown = false;
     try
@@ -204,6 +205,7 @@ namespace
 
     //  catch system_error
 
+    std::cout << "  catch system_error by value" << std::endl;
     exception_thrown = false;
     try
     {
@@ -221,6 +223,7 @@ namespace
 
     //  catch filesystem_error by value
 
+    std::cout << "  catch filesystem_error by value" << std::endl;
     exception_thrown = false;
     try
     {
@@ -245,6 +248,7 @@ namespace
 
     //  catch filesystem_error by const reference
 
+    std::cout << "  catch filesystem_error by const reference" << std::endl;
     exception_thrown = false;
     try
     {
@@ -266,6 +270,8 @@ namespace
       }
     }
     BOOST_TEST( exception_thrown );
+
+    std::cout << "  exception_test cleanup" << std::endl;
   }
   
   //  directory_iterator_tests  ----------------------------------------------//
@@ -766,9 +772,6 @@ int main( int argc, char * argv[] )
 
   exception_tests();
 
-  std::cout << "\ninitial_path<path>().string() is\n  \""
-    << fs::initial_path().string()
-            << "\"\n";
   std::cout << "\ninitial_path().string() is\n  \""
             << fs::initial_path().string()
             << "\"\n\n";

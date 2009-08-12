@@ -260,7 +260,18 @@ namespace
 
 # else  // BOOST_POSIX_PATH
 
-    ...
+    path p( "abc\\def/ghi" );
+
+    CHECK( string( p.c_str() ) == "abc\\def/ghi" );
+
+    CHECK( p.string() == "abc\\def/ghi" );
+    CHECK( p.wstring() == L"abc\\def/ghi" );
+
+    CHECK( p.generic().string() == "abc\\def/ghi" );
+    CHECK( p.generic().wstring() == L"abc\\def/ghi" );
+
+    CHECK( p.native().string() == "abc\\def/ghi" );
+    CHECK( p.native().wstring() == L"abc\\def/ghi" );
 
 # endif 
   }
@@ -362,9 +373,6 @@ namespace
 
     CHECK( p1 == "bar" );
     CHECK( p2 == "foo" );
-
-    // swap( p1, "baz" );   // should fail to compile
-    // swap( p1, L"baz" );  // should fail to compile
 
     CHECK( path( "" ).remove_filename() == "" );
     CHECK( path( "foo" ).remove_filename() == "" );

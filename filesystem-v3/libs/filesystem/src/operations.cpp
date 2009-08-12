@@ -765,7 +765,8 @@ namespace boost
       }
       else
       {
-        cur.assign( buf.get(), ec );
+        cur = buf.get();
+        if ( &ec != &throws() ) ec.clear();
         break;
       }
     }
@@ -1434,10 +1435,22 @@ namespace boost
 
   namespace path_traits
   {
+# ifdef BOOST_WINDOWS_API
+
     void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & )
     {
       to = de.path().source();
     }
+
+# else
+
+    void dispatch( const directory_entry & de, std::string & to, const codecvt_type & )
+    {
+      to = de.path().source();
+    }
+
+# endif
+
 }  // namespace path_traits
 } // namespace filesystem
 } // namespace boost

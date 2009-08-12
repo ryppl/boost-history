@@ -88,8 +88,17 @@ namespace path_traits {
     convert( array, array + N - 1, to, cvt );
   }
 
+# ifdef BOOST_WINDOWS_API
+
   BOOST_FILESYSTEM_DECL
   void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & );
+
+# else
+
+  BOOST_FILESYSTEM_DECL
+  void dispatch( const directory_entry & de, std::string & to, const codecvt_type & );
+
+# endif
 
   // value types differ  ---------------------------------------------------------------//
   //
