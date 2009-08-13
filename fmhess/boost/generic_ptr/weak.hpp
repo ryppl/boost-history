@@ -17,6 +17,8 @@
 #include <memory> // boost.TR1 include order fix
 #include <boost/smart_ptr/detail/shared_count.hpp>
 #include <boost/generic_ptr/shared.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
 #ifdef BOOST_MSVC  // moved here to work around VC++ compiler crash
@@ -67,9 +69,9 @@ public:
 //
 
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+#if !defined( BOOST_NO_SFINAE )
 
-    weak( weak<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    weak( weak<Y> const & r, typename enable_if<is_convertible<Y,T> >::type * = 0 )
 
 #else
 
@@ -83,9 +85,9 @@ public:
 #ifndef BOOST_NO_RVALUE_REFERENCES
 
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+#if !defined( BOOST_NO_SFINAE )
 
-    weak( weak<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    weak( weak<Y> && r, typename enable_if<is_convertible<Y,T> >::type * = 0 )
 
 #else
 
@@ -114,9 +116,9 @@ public:
 #endif
 
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+#if !defined( BOOST_NO_SFINAE )
 
-    weak( shared<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    weak( shared<Y> const & r, typename enable_if<is_convertible<Y,T> >::type * = 0 )
 
 #else
 

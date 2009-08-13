@@ -17,6 +17,8 @@
 #include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 #include <stdexcept>
 
@@ -42,16 +44,43 @@ namespace boost
       throwing(): px()
       {}
       template<typename U>
-      throwing( U p ): px( p )
+      throwing
+      (
+        U p
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px( p )
       {}
+#ifndef BOOST_NO_SFINAE
       template<typename U>
-      throwing(const throwing<U> & other): px(other.px)
+      explicit throwing
+      (
+        U p
+        , typename disable_if<is_convertible<U, T> >::type * = 0
+      ): px( p )
+      {}
+#endif // BOOST_NO_SFINAE
+      template<typename U>
+      throwing
+      (
+        const throwing<U> & other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(other.px)
       {}
 #ifndef BOOST_NO_RVALUE_REFERENCES
       throwing(throwing && other): px(std::move(other.px))
       {}
       template<typename U>
-      throwing(throwing<U> && other): px(std::move(other.px))
+      throwing
+      (
+        throwing<U> && other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(std::move(other.px))
       {}
 #endif
 

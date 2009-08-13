@@ -32,4 +32,4 @@ namespace boost
   } // namespace generic_ptr
 } // namespace boost
 
-#endif  // #ifndef BOOST_GENERIC_PTR_DETAIL_UTIL_HPP_INCLUDED
+#endif  // BOOST_GENERIC_PTR_DETAIL_UTIL_HPP_INCLUDED

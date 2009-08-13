@@ -68,8 +68,8 @@ namespace boost
 		shared_ptr(U *u, V v, W w): base_type(u, v, w)
 		{}
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
-		shared_ptr( shared_ptr<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+#if !defined( BOOST_NO_SFINAE )
+		shared_ptr( shared_ptr<Y> const & r, typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
 		shared_ptr( shared_ptr<Y> const & r )
 #endif
@@ -94,8 +94,8 @@ namespace boost
     shared_ptr( shared_ptr && r ): base_type(std::move<base_type>(r))
     {}
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
-    shared_ptr( shared_ptr<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+#if !defined( BOOST_NO_SFINAE )
+    shared_ptr( shared_ptr<Y> && r, typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
     shared_ptr( shared_ptr<Y> && r )
 #endif

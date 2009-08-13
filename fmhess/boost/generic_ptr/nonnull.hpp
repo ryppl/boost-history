@@ -18,6 +18,8 @@
 #include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
 namespace boost
@@ -40,18 +42,44 @@ namespace boost
       };
 
       template<typename U>
-      nonnull( U p ): px( p )
+      nonnull
+      (
+        U p
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px( p )
       {
         if(get_plain_old_pointer(px) == 0)
         {
           throw std::invalid_argument("Attempted to create a generic_ptr::nonnull with a null pointer.");
         }
       }
+#ifndef BOOST_NO_SFINAE
       template<typename U>
-      nonnull(const nonnull<U> & other): px(other.px)
+      explicit nonnull
+      (
+        U p
+        , typename disable_if<is_convertible<U, T> >::type * = 0
+      ): px( p )
+      {
+        if(get_plain_old_pointer(px) == 0)
+        {
+          throw std::invalid_argument("Attempted to create a generic_ptr::nonnull with a null pointer.");
+        }
+      }
+#endif // BOOST_NO_SFINAE
+      template<typename U>
+      nonnull
+      (
+        const nonnull<U> & other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(other.px)
       {}
 
-      // no move constructors because they could violate the nonnull invariant of the moved-from object
+      // no move from nonnull constructor because they could violate the nonnull invariant of the moved-from object
 
       // default copy constructor and assignment operator are fine
 
@@ -147,6 +175,7 @@ namespace boost
       mpl::identity<ToValueType> to_type_iden = mpl::identity<ToValueType>()
     )
     {
+        //FIXME: should check and throw proper exception on cast failure (cannot return zero for nonnull)
         return dynamic_pointer_cast(p.get(), to_type_iden);
     }
 

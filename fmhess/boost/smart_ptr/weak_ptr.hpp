@@ -24,16 +24,16 @@ namespace boost
 		weak_ptr() {}
 		weak_ptr(base_type const & b): base_type(b) {}
 		template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
-		weak_ptr( weak_ptr<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+#if !defined( BOOST_NO_SFINAE )
+		weak_ptr( weak_ptr<Y> const & r, typename typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
 		weak_ptr( weak_ptr<Y> const & r )
 #endif
 		:base_type(static_cast<generic_ptr::weak<Y*> const &>(r))
 		{}
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
-		weak_ptr( shared_ptr<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = detail::sp_empty() )
+#if !defined( BOOST_NO_SFINAE )
+		weak_ptr( shared_ptr<Y> const & r, typename typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
 		weak_ptr( shared_ptr<Y> const & r )
 #endif
@@ -41,8 +41,8 @@ namespace boost
 		{}
 #ifndef BOOST_NO_RVALUE_REFERENCES
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
-    weak_ptr( weak_ptr<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+#if !defined( BOOST_NO_SFINAE )
+    weak_ptr( weak_ptr<Y> && r, typename typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
     weak_ptr( weak_ptr<Y> && r )
 #endif

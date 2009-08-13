@@ -18,6 +18,8 @@
 #include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
 namespace boost
@@ -42,16 +44,43 @@ namespace boost
       asserting(): px()
       {}
       template<typename U>
-      asserting( U p ): px( p )
+      asserting
+      (
+        U p
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px( p )
       {}
+#ifndef BOOST_NO_SFINAE
       template<typename U>
-      asserting(const asserting<U> & other): px(other.px)
+      explicit asserting
+      (
+        U p
+        , typename disable_if<is_convertible<U, T> >::type * = 0
+      ): px( p )
+      {}
+#endif // BOOST_NO_SFINAE
+      template<typename U>
+      asserting
+      (
+        const asserting<U> & other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(other.px)
       {}
 #ifndef BOOST_NO_RVALUE_REFERENCES
       asserting(asserting && other): px(std::move(other.px))
       {}
       template<typename U>
-      asserting(asserting<U> && other): px(std::move(other.px))
+      asserting
+      (
+        asserting<U> && other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(std::move(other.px))
       {}
 #endif
 

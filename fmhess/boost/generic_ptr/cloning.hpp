@@ -23,7 +23,9 @@
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/clone_allocator.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
 namespace boost
@@ -168,7 +170,13 @@ namespace boost
       cloning(): _clone_factory(), px()
       {}
       template<typename U>
-      cloning( U p ):
+      cloning
+      (
+        U p
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ):
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
@@ -183,8 +191,34 @@ namespace boost
           >(_clone_factory.get_pointer())
         )
       {}
+#ifndef BOOST_NO_SFINAE
+      template<typename U>
+      explicit cloning
+      (
+        U p
+        , typename disable_if<is_convertible<U, T> >::type * = 0
+      ):
+        _clone_factory
+        (
+          typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
+          default_cloning_deleter(),
+          default_cloner()
+        ),
+        px
+        (
+          static_pointer_cast
+          <
+            typename pointer_traits<U>::value_type
+          >(_clone_factory.get_pointer())
+        )
+      {}
+#endif // BOOST_NO_SFINAE
       template<typename U, typename Deleter>
-      cloning(U p, Deleter d):
+      cloning
+      (
+        U p,
+        Deleter d
+      ):
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
@@ -223,7 +257,13 @@ namespace boost
         )
       {}
       template<typename U>
-      cloning(const cloning<U> & other):
+      cloning
+      (
+        const cloning<U> & other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ):
         _clone_factory(other._clone_factory),
         px
         (
@@ -299,7 +339,13 @@ namespace boost
         detail::set_plain_old_pointer_to_null(other.px);
       }
       template<typename U>
-      cloning(cloning<U> && other): _clone_factory(std::move(other._clone_factory)), px(std::move(other.px))
+      cloning
+      (
+        cloning<U> && other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): _clone_factory(std::move(other._clone_factory)), px(std::move(other.px))
       {
         detail::set_plain_old_pointer_to_null(other.px);
       }

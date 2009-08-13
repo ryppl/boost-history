@@ -45,7 +45,7 @@
 #include <boost/throw_exception.hpp>
 #include <boost/smart_ptr/detail/shared_count.hpp>
 #include <boost/detail/workaround.hpp>
-#include <boost/smart_ptr/detail/sp_convertible.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
@@ -131,11 +131,6 @@ template< class T, class R > struct sp_enable_if_auto_ptr< std::auto_ptr< T >, R
 
 #endif
 
-template<typename Y, typename T>
-class sp_enable_if_convertible: public
-    boost::detail::sp_enable_if_convertible<typename pointer_traits<Y>::value_type, typename pointer_traits<T>::value_type>
-{};
-
 } // namespace detail
 
 
@@ -213,9 +208,9 @@ public:
     }
 
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+#if !defined( BOOST_NO_SFINAE )
 
-    shared( shared<Y> const & r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    shared( shared<Y> const & r, typename enable_if<is_convertible<Y,T> >::type * = 0 )
 
 #else
 
@@ -335,9 +330,9 @@ public:
     }
 
     template<class Y>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+#if !defined( BOOST_NO_SFINAE )
 
-    shared( shared<Y> && r, typename detail::sp_enable_if_convertible<Y,T>::type = boost::detail::sp_empty() )
+    shared( shared<Y> && r, typename enable_if<is_convertible<Y,T> >::type * = 0 )
 
 #else
 

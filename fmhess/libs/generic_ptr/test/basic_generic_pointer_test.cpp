@@ -20,6 +20,8 @@
 #include <boost/generic_ptr/shared.hpp>
 #include <boost/generic_ptr/throwing.hpp>
 
+namespace bgp = boost::generic_ptr;
+
 class Y
 {
 public:
@@ -51,47 +53,47 @@ void dereference_test(GenericPointer &p)
 template<typename GenericPointer>
 void rebind_test(GenericPointer &p)
 {
-  typedef typename boost::generic_ptr::rebind
+  typedef typename bgp::rebind
   <
     GenericPointer,
-    const typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type
+    const typename bgp::pointer_traits<GenericPointer>::value_type
   >::other other_type;
-  BOOST_TEST(typeid(const typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type) ==
-    typeid(typename boost::generic_ptr::pointer_traits<other_type>::value_type));
+  BOOST_TEST(typeid(const typename bgp::pointer_traits<GenericPointer>::value_type) ==
+    typeid(typename bgp::pointer_traits<other_type>::value_type));
 }
 
 template<typename GenericPointer>
 void cast_test(GenericPointer &p)
 {
-  typedef typename boost::generic_ptr::rebind<GenericPointer, Y>::other pointer_to_y_type;
+  typedef typename bgp::rebind<GenericPointer, Y>::other pointer_to_y_type;
 
-  pointer_to_y_type yp = boost::generic_ptr::static_pointer_cast<Y>(p);
-  GenericPointer xp = boost::generic_ptr::static_pointer_cast
-    <typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type>(yp);
+  pointer_to_y_type yp = bgp::static_pointer_cast<Y>(p);
+  GenericPointer xp = bgp::static_pointer_cast
+    <typename bgp::pointer_traits<GenericPointer>::value_type>(yp);
 
-  yp = boost::generic_ptr::dynamic_pointer_cast<Y>(p);
-  BOOST_TEST(boost::generic_ptr::get_plain_old_pointer(yp) != 0);
-  xp = boost::generic_ptr::dynamic_pointer_cast
-    <typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type>(yp);
-  BOOST_TEST(boost::generic_ptr::get_plain_old_pointer(xp) != 0);
+  yp = bgp::dynamic_pointer_cast<Y>(p);
+  BOOST_TEST(bgp::get_plain_old_pointer(yp) != 0);
+  xp = bgp::dynamic_pointer_cast
+    <typename bgp::pointer_traits<GenericPointer>::value_type>(yp);
+  BOOST_TEST(bgp::get_plain_old_pointer(xp) != 0);
 
-  typedef typename boost::generic_ptr::rebind
+  typedef typename bgp::rebind
   <
     GenericPointer,
-    const typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type
+    const typename bgp::pointer_traits<GenericPointer>::value_type
   >::other pointer_to_const_x_type;
-  pointer_to_const_x_type xp_const = boost::generic_ptr::const_pointer_cast
-    <const typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type>(p);
-  xp = boost::generic_ptr::const_pointer_cast
+  pointer_to_const_x_type xp_const = bgp::const_pointer_cast
+    <const typename bgp::pointer_traits<GenericPointer>::value_type>(p);
+  xp = bgp::const_pointer_cast
     <
-      typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type
+      typename bgp::pointer_traits<GenericPointer>::value_type
     >(xp_const);
 }
 
 template<typename GenericPointer>
 void conversion_to_base_test(GenericPointer &p, bool is_cloning_pointer = false)
 {
-  typedef typename boost::generic_ptr::rebind<GenericPointer, Y>::other pointer_to_base_type;
+  typedef typename bgp::rebind<GenericPointer, Y>::other pointer_to_base_type;
   pointer_to_base_type base_p(p);
   BOOST_TEST(p == base_p ||
     is_cloning_pointer);
@@ -103,7 +105,7 @@ void conversion_to_base_test(GenericPointer &p, bool is_cloning_pointer = false)
 template<typename GenericPointer>
 void conversion_to_void_test(GenericPointer &p, bool is_cloning_pointer = false)
 {
-  typedef typename boost::generic_ptr::rebind<GenericPointer, void>::other pointer_to_void_type;
+  typedef typename bgp::rebind<GenericPointer, void>::other pointer_to_void_type;
   pointer_to_void_type void_p(p);
   BOOST_TEST(p == void_p ||
     is_cloning_pointer);
@@ -111,14 +113,14 @@ void conversion_to_void_test(GenericPointer &p, bool is_cloning_pointer = false)
   BOOST_TEST(p == void_p ||
     is_cloning_pointer);
 
-  typedef typename boost::generic_ptr::rebind
+  typedef typename bgp::rebind
   <
     GenericPointer,
-    const typename boost::generic_ptr::pointer_traits<GenericPointer>::value_type
+    const typename bgp::pointer_traits<GenericPointer>::value_type
   >::other pointer_to_const_type;
   pointer_to_const_type cp(p);
 
-  typedef typename boost::generic_ptr::rebind
+  typedef typename bgp::rebind
   <
     GenericPointer,
     const void
@@ -131,6 +133,32 @@ void conversion_to_void_test(GenericPointer &p, bool is_cloning_pointer = false)
     is_cloning_pointer);
 }
 
+#ifndef BOOST_NO_SFINAE
+template<typename GenericPointer>
+class overloaded
+{
+public:
+	typedef typename bgp::rebind<GenericPointer, Y>::other base_ptr;
+	typedef typename bgp::rebind<GenericPointer, int>::other other_ptr;
+	void f(const base_ptr &)
+	{
+	}
+	void f(const other_ptr &)
+	{
+		BOOST_TEST(false);
+	}
+};
+#endif // BOOST_NO_SFINAE
+
+template<typename GenericPointer>
+void overload_resolution_test(GenericPointer &p)
+{
+#ifndef BOOST_NO_SFINAE
+	overloaded<GenericPointer> o;
+	o.f(p);
+#endif // BOOST_NO_SFINAE
+}
+
 int main()
 {
   {
@@ -140,74 +168,83 @@ int main()
     cast_test(p);
     conversion_to_base_test(p);
     conversion_to_void_test(p);
+    overload_resolution_test(p);
   }
   {
     X x;
-    boost::generic_ptr::asserting<X*> p(&x);
+    bgp::asserting<X*> p(&x);
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p);
     conversion_to_void_test(p);
+    overload_resolution_test(p);
   }
   {
     X x;
-    boost::generic_ptr::throwing<X*> p(&x);
+    bgp::throwing<X*> p(&x);
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p);
     conversion_to_void_test(p);
+    overload_resolution_test(p);
   }
   {
     X x;
-    boost::generic_ptr::nonnull<X*> p(&x);
+    bgp::nonnull<X*> p(&x);
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p);
     conversion_to_void_test(p);
+    overload_resolution_test(p);
   }
   {
     X x;
-    boost::generic_ptr::monitor<X*> p(&x);
+    bgp::monitor<X*> p(&x);
     member_access_test(p);
     // dereference_test(p); // monitors don't support dereference
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p);
     conversion_to_void_test(p);
+    overload_resolution_test(p);
   }
   {
-    boost::generic_ptr::shared<X*> p(new X());
+    bgp::shared<X*> p(new X());
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p);
     conversion_to_void_test(p);
+    overload_resolution_test(p);
   }
   {
     X x;
-    boost::generic_ptr::intrusive<X*> p(&x);
+    bgp::intrusive<X*> p(&x);
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p);
     // conversion_to_void_test(p); // intrusive doesn't support void pointers
+    overload_resolution_test(p);
   }
   {
-    boost::generic_ptr::cloning<X*> p(new X());
+    bgp::cloning<X*> p(new X());
     member_access_test(p);
     dereference_test(p);
     rebind_test(p);
     cast_test(p);
     conversion_to_base_test(p, true);
     conversion_to_void_test(p, true);
+    overload_resolution_test(p);
   }
+  //TODO: add tests for external pointer types
   return boost::report_errors();
 }

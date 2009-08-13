@@ -26,7 +26,7 @@
 #include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/smart_ptr/detail/sp_convertible.hpp>
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/is_pointer.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
@@ -106,13 +106,9 @@ public:
 #if !defined(BOOST_NO_MEMBER_TEMPLATES) || defined(BOOST_MSVC6_MEMBER_TEMPLATES)
 
     template<class U>
-#if !defined( BOOST_SP_NO_SP_CONVERTIBLE )
+#if !defined( BOOST_NO_SFINAE )
 
-    intrusive( intrusive<U> const & rhs, typename boost::detail::sp_enable_if_convertible
-        <
-            typename pointer_traits<U>::value_type,
-            typename pointer_traits<T>::value_type
-        >::type = boost::detail::sp_empty() )
+    intrusive( intrusive<U> const & rhs, typename enable_if<is_convertible<U,T> >::type * = 0 )
 
 #else
 

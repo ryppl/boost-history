@@ -20,6 +20,8 @@
 #include <boost/generic_ptr/detail/unique_lock.hpp>
 #include <boost/generic_ptr/shared.hpp>
 #include <boost/mpl/identity.hpp>
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
 namespace boost
@@ -66,16 +68,32 @@ namespace boost
       monitor(): px(), _mutex_p()
       {}
       template<typename U>
-      explicit monitor( U p, const shared<Mutex*> & mutex_p = shared<Mutex*>(new Mutex()) ): px( p ), _mutex_p(mutex_p)
+      explicit monitor
+      (
+        U p,
+        const shared<Mutex*> & mutex_p = shared<Mutex*>(new Mutex())
+      ): px( p ), _mutex_p(mutex_p)
       {}
       template<typename U>
-      monitor(const monitor<U, Mutex> & other): px(other.px), _mutex_p(other._mutex_p)
+      monitor
+      (
+        const monitor<U, Mutex> & other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(other.px), _mutex_p(other._mutex_p)
       {}
 #ifndef BOOST_NO_RVALUE_REFERENCES
       monitor(monitor && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p))
       {}
       template<typename U>
-      monitor(monitor<U> && other): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p))
+      monitor
+      (
+        monitor<U> && other
+#ifndef BOOST_NO_SFINAE
+        , typename enable_if<is_convertible<U, T> >::type * = 0
+#endif // BOOST_NO_SFINAE
+      ): px(std::move(other.px)), _mutex_p(std::move(other._mutex_p))
       {}
 #endif
 
