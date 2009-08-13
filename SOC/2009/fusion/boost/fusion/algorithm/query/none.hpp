@@ -10,8 +10,8 @@
 #define BOOST_FUSION_ALGORITHM_QUERY_NONE_HPP
 
 #include <boost/fusion/algorithm/query/any.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 namespace boost { namespace fusion
 {

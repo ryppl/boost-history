@@ -9,7 +9,7 @@
 #define BOOST_FUSION_TUPLE_TUPLE_FWD_HPP
 
 #include <boost/fusion/container/vector/limits.hpp>
-#include <boost/fusion/support/template.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 
 namespace boost { namespace fusion
 {

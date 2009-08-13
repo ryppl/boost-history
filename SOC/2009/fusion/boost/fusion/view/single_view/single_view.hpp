@@ -9,10 +9,10 @@
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
 #include <boost/fusion/sequence/intrinsic/front.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/sequence_assign.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/sequence_assign.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
@@ -51,14 +51,14 @@ namespace boost { namespace fusion
           : val()
         {}
 
-#define SINGLE_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_SINGLE_VIEW_CTOR(COMBINATION,_)\
         single_view(single_view COMBINATION view)\
           : val(BOOST_FUSION_FORWARD(single_view COMBINATION,view).val)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SINGLE_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_CTOR,_)
 
-#undef SINGLE_VIEW_CTOR
+#undef BOOST_FUSION_SINGLE_VIEW_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         explicit
@@ -73,16 +73,16 @@ namespace boost { namespace fusion
         {}
 #endif
 
-#define SINGLE_VIEW_ASSIGN_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
         single_view(\
-            support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+            detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
           : val(fusion::front(seq_assign.get()))\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SINGLE_VIEW_ASSIGN_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR,_)
 
-#undef SINGLE_VIEW_ASSIGN_CTOR
+#undef BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR
 
         template<typename OtherT>
         single_view&
@@ -92,18 +92,18 @@ namespace boost { namespace fusion
             return *this;
         }
 
-#define SINGLE_VIEW_SEQ_ASSIGN(COMBINATION,_)\
+#define BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN(COMBINATION,_)\
         template<typename SeqRef>\
         single_view&\
-        operator=(support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        operator=(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
         {\
             val=fusion::front(seq_assign.get());\
             return *this;\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SINGLE_VIEW_SEQ_ASSIGN,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN,_)
 
-#undef SINGLE_VIEW_SEQ_ASSIGN
+#undef BOOST_FUSION_SINGLE_VIEW_SEQ_ASSIGN
 
         value_type val;
     };

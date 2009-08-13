@@ -5,8 +5,8 @@
 
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/end.hpp>
-#include <boost/fusion/support/variadic_templates/variadic_quote.hpp>
-#include <boost/fusion/support/to_random_access_mpl_seq.hpp>
+#include <boost/fusion/support/internal/variadic_templates/variadic_quote.hpp>
+#include <boost/fusion/support/internal/to_random_access_mpl_seq.hpp>
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/unpack_args.hpp>
@@ -21,8 +21,8 @@ namespace boost { namespace fusion { namespace detail
             typedef typename
                 mpl::apply<
                     mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
-                  , typename detail::to_random_access_mpl_seq<
-                        typename detail::remove_reference<SeqRef>::type
+                  , typename to_random_access_mpl_seq<
+                        typename remove_reference<SeqRef>::type
                     >::type
                 >::type
             type;

@@ -8,8 +8,8 @@
 #ifndef BOOST_FUSION_SEQUENCE_CONVERT_HPP
 #define BOOST_FUSION_SEQUENCE_CONVERT_HPP
 
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 //TODO doc!!!
 namespace boost { namespace fusion

@@ -9,7 +9,7 @@
 #define BOOST_FUSION_CONTAINER_LIST_LIST_FWD_HPP
 
 #include <boost/fusion/container/list/limits.hpp>
-#include <boost/fusion/support/template.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 
 namespace boost { namespace fusion
 {

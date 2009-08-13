@@ -9,9 +9,9 @@
 
 #include <boost/fusion/container/generation/vector_tie.hpp>
 #include <boost/fusion/view/zip_view.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/template.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/template.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/preprocessor/cat.hpp>
@@ -35,19 +35,20 @@ namespace boost { namespace fusion
 #endif
 #else
 
-#define N BOOST_PP_ITERATION()
+#define BOOST_FUSION_N BOOST_PP_ITERATION()
 
     namespace result_of
     {
-        VARIADIC_TEMPLATE(N)
+        VARIADIC_TEMPLATE(BOOST_FUSION_N)
         struct zip
-            EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(FUSION_MAX_ZIP_SEQUENCES,N)
+            EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(
+                    FUSION_MAX_ZIP_SEQUENCES,BOOST_FUSION_N)
         {
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERS
 #define BOOST_FUSION_IS_FORWARD_ASSERT(Z,N,_)\
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<BOOST_PP_CAT(T,N)>));
 
-            BOOST_PP_REPEAT(N,BOOST_FUSION_IS_FORWARD_ASSERT,_)
+            BOOST_PP_REPEAT(BOOST_FUSION_N,BOOST_FUSION_IS_FORWARD_ASSERT,_)
 
 #undef BOOST_FUSION_IS_FORWARD_ASSERT
 #endif
@@ -55,7 +56,7 @@ namespace boost { namespace fusion
             typedef
                 zip_view<
                     typename result_of::vector_tie<
-                        EXPAND_TEMPLATE_ARGUMENTS(N)
+                        EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
                     >::type
                 >
             type;
@@ -67,16 +68,19 @@ namespace boost { namespace fusion
 #if N
         typename
 #endif
-        result_of::zip<EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(N)>::type
-    zip(EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(N))
+        result_of::zip<
+            EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(BOOST_FUSION_N)
+        >::type
+    zip(EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N))
     {
         return
 #if N
             typename
 #endif
-            result_of::zip<EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(N)>::type(
-                    fusion::vector_tie(EXPAND_PARAMETERS_A(N)));
+            result_of::zip<
+                EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(BOOST_FUSION_N)
+            >::type(fusion::vector_tie(EXPAND_PARAMETERS_A(BOOST_FUSION_N)));
     }
 
-#undef N
+#undef BOOST_FUSION_N
 #endif

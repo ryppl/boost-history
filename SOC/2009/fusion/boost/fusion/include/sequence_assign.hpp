@@ -6,6 +6,6 @@
 #ifndef BOOST_FUSION_INCLUDE_SEQUENCE_ASSIGN_HPP
 #define BOOST_FUSION_INCLUDE_SEQUENCE_ASSIGN_HPP
 
-#include <boost/fusion/support/sequence_assign.hpp>
+#include <boost/fusion/support/internal/sequence_assign.hpp>
 
 #endif

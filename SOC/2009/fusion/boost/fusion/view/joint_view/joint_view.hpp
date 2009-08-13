@@ -12,9 +12,9 @@
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/eval_if.hpp>

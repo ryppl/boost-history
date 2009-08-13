@@ -11,8 +11,8 @@
 
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/fusion/algorithm/query/detail/all.hpp>
 

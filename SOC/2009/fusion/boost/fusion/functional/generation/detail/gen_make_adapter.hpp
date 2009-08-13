@@ -6,8 +6,8 @@
     http://www.boost.org/LICENSE_1_0.txt).
 ==============================================================================*/
 
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 

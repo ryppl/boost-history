@@ -17,7 +17,7 @@
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/support/result_of.hpp>
+#include <boost/fusion/support/internal/result_of.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -131,22 +131,19 @@ namespace boost { namespace fusion { namespace detail
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         typedef typename
-            support::result_of<
-                typename support::get_func_base<FRef>::type
-                (deref_type, StateRef)
+            internal::result_of<
+                typename get_func_base<FRef>::type(deref_type, StateRef)
             >::type
         type;
 #else
         typedef typename
             mpl::eval_if<
-                typename detail::is_lrref<deref_type>::type
-              , support::result_of<
-                    typename support::get_func_base<FRef>::type
-                    (deref_type, StateRef)
+                typename is_lrref<deref_type>::type
+              , internal::result_of<
+                    typename get_func_base<FRef>::type(deref_type, StateRef)
                 >
-              , support::result_of<
-                    typename support::get_func_base<FRef>::type
-                    (deref_type&&, StateRef)
+              , internal::result_of<
+                    typename get_func_base<FRef>::type(deref_type&&, StateRef)
                 >
             >::type
         type;
@@ -158,7 +155,7 @@ namespace boost { namespace fusion { namespace detail
 #ifdef BOOST_NO_RVALUE_REFERENCES
       : fold_apply<
             It
-          , typename detail::add_lref<typename add_const<State>::type>::type
+          , typename add_lref<typename add_const<State>::type>::type
           , FRef
         >
 #else
@@ -225,8 +222,8 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef typename
             mpl::eval_if<
-                typename support::is_preevaluable<FRef>::type
-              , support::preevaluate<FRef>
+                typename is_preevaluable<FRef>::type
+              , preevaluate<FRef>
               , result_of_unrolled_fold<It0, StateRef, FRef, SeqSize>
             >::type
         type;

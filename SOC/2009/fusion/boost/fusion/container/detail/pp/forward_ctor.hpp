@@ -6,7 +6,7 @@
 #ifndef BOOST_PP_IS_ITERATING
 #   ifndef BOOST_FUSION_SEQ_NAME
 #       ifndef BOOST_FUSION_CONTAINER_DETAIL_PP_FORWARD_CTOR_HPP
-#           include <boost/fusion/support/template.hpp>
+#           include <boost/fusion/support/internal/template.hpp>
 
 #           include <boost/config.hpp>
 #           include <boost/preprocessor/iterate.hpp>
@@ -24,21 +24,21 @@
     {}
 #   endif
 #else
-#   define N BOOST_PP_ITERATION()
+#   define BOOST_FUSION_N BOOST_PP_ITERATION()
 
 #   ifndef BOOST_NO_RVALUE_REFERENCES
-    VARIADIC_TEMPLATE_A(N)
+    VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
 #   endif
 #   if N == 1
     explicit
 #   endif
 #   ifdef BOOST_NO_RVALUE_REFERENCES
-    BOOST_FUSION_SEQ_NAME(EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(N))
+    BOOST_FUSION_SEQ_NAME(EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(BOOST_FUSION_N))
 #   else
-    BOOST_FUSION_SEQ_NAME(EXPAND_TEMPLATE_ARGUMENTS_A(N))
+    BOOST_FUSION_SEQ_NAME(EXPAND_TEMPLATE_ARGUMENTS_A(BOOST_FUSION_N))
 #   endif
-      : BOOST_FUSION_INIT_BASE(EXPAND_PARAMETERS_A(N))
+      : BOOST_FUSION_INIT_BASE(EXPAND_PARAMETERS_A(BOOST_FUSION_N))
     {}
 
-#   undef N
+#   undef BOOST_FUSION_N
 #endif

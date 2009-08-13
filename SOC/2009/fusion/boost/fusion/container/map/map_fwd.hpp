@@ -10,7 +10,7 @@
 
 #include <boost/fusion/container/map/limits.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/template.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 
 namespace boost { namespace fusion
 {

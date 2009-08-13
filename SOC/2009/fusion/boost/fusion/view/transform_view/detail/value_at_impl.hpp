@@ -10,7 +10,7 @@
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_VALUE_AT_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
-#include <boost/fusion/support/result_of.hpp>
+#include <boost/fusion/support/internal/result_of.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -26,8 +26,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                support::result_of<
-                    typename support::get_func_base<
+                detail::internal::result_of<
+                    typename detail::get_func_base<
                         typename seq::transform_type
                     >::type(
                     typename boost::fusion::result_of::value_at<
@@ -48,8 +48,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                support::result_of<
-                    typename support::get_func_base<
+                detail::internal::result_of<
+                    typename detail::get_func_base<
                         typename seq::transform_type
                     >::type(
                     typename boost::fusion::result_of::value_at<

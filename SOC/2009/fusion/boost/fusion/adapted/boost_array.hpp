@@ -6,7 +6,7 @@
 #ifndef BOOST_FUSION_ADAPTED_BOOST_ARRAY_HPP
 #define BOOST_FUSION_ADAPTED_BOOST_ARRAY_HPP
  
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #define BOOST_FUSION_ADAPTED_ARRAY_TYPE class
 #define BOOST_FUSION_ADAPTED_ARRAY_NAMESPACE boost

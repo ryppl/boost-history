@@ -28,10 +28,10 @@ namespace boost { namespace fusion { namespace detail
 
 #else
 
-#define N BOOST_PP_ITERATION()
+#define BOOST_FUSION_N BOOST_PP_ITERATION()
 
     template <>
-    struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<N>
+    struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<BOOST_FUSION_N>
     {
         template <typename It0>
         struct apply
@@ -48,13 +48,16 @@ namespace boost { namespace fusion { namespace detail
                 result_of::value_of<BOOST_PP_CAT(It, N)>::type\
             BOOST_PP_CAT(T, N);
 
-            BOOST_PP_REPEAT_FROM_TO(1, N, BOOST_FUSION_IT_VALUE_ENUM, _)
+            BOOST_PP_REPEAT_FROM_TO(
+                    1, BOOST_FUSION_N, BOOST_FUSION_IT_VALUE_ENUM, _)
 
 #undef BOOST_FUSION_IT_VALUE_ENUM
 
-            typedef BOOST_FUSION_SEQ_NAME<BOOST_PP_ENUM_PARAMS(N, T)> type;
+            typedef
+                BOOST_FUSION_SEQ_NAME<BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)>
+            type;
         };
     };
 
-#undef N
+#undef BOOST_FUSION_N
 #endif

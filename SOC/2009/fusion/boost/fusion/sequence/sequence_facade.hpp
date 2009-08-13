@@ -7,7 +7,7 @@
 #define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/dummy_tag.hpp>
+#include <boost/fusion/support/internal/dummy_tag.hpp>
 
 #include <boost/mpl/bool.hpp>
 

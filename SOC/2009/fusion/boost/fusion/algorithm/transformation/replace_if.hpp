@@ -10,9 +10,9 @@
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {

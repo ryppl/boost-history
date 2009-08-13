@@ -10,11 +10,11 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/support/variadic_templates/variadic_arguments_to_vector.hpp>
-#include <boost/fusion/support/sequence_assign.hpp>
-#include <boost/fusion/support/assign_tags.hpp>
+#include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
+#include <boost/fusion/support/internal/sequence_assign.hpp>
+#include <boost/fusion/support/internal/assign_tags.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 
@@ -127,7 +127,9 @@ namespace boost { namespace fusion
 
     public:
         typedef vector<Elements...> this_type;
-        typedef typename variadic_arguments_to_vector<Elements...>::type types;
+        typedef typename
+            detail::variadic_arguments_to_vector<Elements...>::type
+        types;
         typedef vector_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::false_ is_view;
@@ -157,18 +159,18 @@ namespace boost { namespace fusion
                     sizeof...(Elements)==sizeof...(OtherArguments)));
         }
 
-#define VECTOR_ASSIGN_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_VECTOR_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
-        vector(support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        vector(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
           : base(detail::assign_by_deref(),fusion::begin(seq_assign.get()))\
         {\
             BOOST_FUSION_STATIC_ASSERT((\
                 sizeof...(Elements)==result_of::size<SeqRef>::value));\
         }
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_ASSIGN_CTOR,_);
 
-#undef VECTOR_ASSIGN_CTOR
+#undef BOOST_FUSION_VECTOR_ASSIGN_CTOR
 
         /*
         template<typename Seq>

@@ -8,9 +8,9 @@
 #ifndef BOOST_FUSION_SEQUENCE_INTRINSIC_BEGIN_HPP
 #define BOOST_FUSION_SEQUENCE_INTRINSIC_BEGIN_HPP
 
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

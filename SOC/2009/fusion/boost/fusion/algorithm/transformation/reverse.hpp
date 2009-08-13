@@ -9,8 +9,8 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REVERSE_HPP
 
 #include <boost/fusion/view/reverse_view/reverse_view.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

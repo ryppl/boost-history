@@ -13,9 +13,9 @@
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/view/joint_view/joint_view.hpp>
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/algorithm/transformation/detail/is_in_seq.hpp>
 
 #include <boost/mpl/eval_if.hpp>

@@ -7,7 +7,7 @@
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 

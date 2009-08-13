@@ -7,7 +7,7 @@
 #define BOOST_FUSION_ADAPTED_STD_ARRAY_HPP
  
 #include <boost/config.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #define BOOST_FUSION_ADAPTED_ARRAY_TYPE struct
 //TODO!!!

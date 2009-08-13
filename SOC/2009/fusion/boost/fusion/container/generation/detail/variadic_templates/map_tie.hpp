@@ -7,9 +7,9 @@
 #define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAP_TIE_HPP
 
 #include <boost/fusion/container/map/map.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
-#include <boost/fusion/support/variadic_templates/variadic_arguments_to_vector.hpp>
-#include <boost/fusion/support/variadic_templates/variadic_quote.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
+#include <boost/fusion/support/internal/variadic_templates/variadic_quote.hpp>
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/divides.hpp>
@@ -32,7 +32,7 @@ namespace boost { namespace fusion
         struct map_tie
         {
             typedef typename
-                variadic_arguments_to_vector<KeysTypes...>::type
+                detail::variadic_arguments_to_vector<KeysTypes...>::type
             args;
             typedef typename
                 mpl::iterator_range<
@@ -62,7 +62,7 @@ namespace boost { namespace fusion
 
             typedef typename
                 mpl::apply<
-                    mpl::unpack_args<variadic_quote<map> >
+                    mpl::unpack_args<detail::variadic_quote<map> >
                   , map_args
                 >::type
             type;

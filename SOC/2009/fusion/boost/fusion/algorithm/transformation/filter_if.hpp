@@ -9,9 +9,9 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_IF_HPP
 
 #include <boost/fusion/view/filter_view/filter_view.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/detail/workaround.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 
 namespace boost { namespace fusion
 {

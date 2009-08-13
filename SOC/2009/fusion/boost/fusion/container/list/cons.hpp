@@ -17,10 +17,10 @@
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assign_tags.hpp>
-#include <boost/fusion/support/sequence_assign.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assign_tags.hpp>
+#include <boost/fusion/support/internal/sequence_assign.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
@@ -115,7 +115,7 @@ namespace boost { namespace fusion
 
         //cschmidt: iterators so we do not have to deal with the cv-ness
         //of cons_.car/cons_.cdr explicitly
-#define CONS_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_CONS_CTOR(COMBINATION,_)\
         cons(cons COMBINATION cons_)\
           : car(fusion::front(BOOST_FUSION_FORWARD(cons COMBINATION,cons_)))\
           , cdr(detail::assign_by_deref(),\
@@ -123,9 +123,9 @@ namespace boost { namespace fusion
                         BOOST_FUSION_FORWARD(cons COMBINATION,cons_))))\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(CONS_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_CTOR,_);
 
-#undef CONS_CTOR
+#undef BOOST_FUSION_CONS_CTOR
 
         //cschmidt: rvalue ref if possible, so this does not collide with
         //cons(OtherCar&&,OtherCdr&&)
@@ -148,17 +148,17 @@ namespace boost { namespace fusion
         {}
 #endif
 
-#define CONS_ASSIGN_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_CONS_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
-        cons(support::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
+        cons(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
           : car(fusion::front(seq_assign.get()))\
           , cdr(detail::assign_by_deref(),\
                   fusion::next(fusion::begin(seq_assign.get())))\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(CONS_ASSIGN_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_);
 
-#undef CONS_ASSIGN_CTOR
+#undef BOOST_FUSION_CONS_ASSIGN_CTOR
 
         /*
         template<typename Seq>

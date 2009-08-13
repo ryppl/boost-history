@@ -9,8 +9,8 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_TRANSFORM_HPP
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/preprocessor/empty.hpp>
 

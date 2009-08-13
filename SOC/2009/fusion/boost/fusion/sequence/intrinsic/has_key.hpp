@@ -11,9 +11,9 @@
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/not.hpp>
 

@@ -10,7 +10,7 @@
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_CONS_HPP
 
 #include <boost/fusion/container/list/cons.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {

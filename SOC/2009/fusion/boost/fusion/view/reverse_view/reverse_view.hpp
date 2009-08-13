@@ -11,11 +11,11 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/eval_if.hpp>
@@ -65,21 +65,16 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag; 
         typedef mpl::true_ is_view;
 
-        //BOOST_FUSION_STATIC_ASSERT(
-        //    (is_base_of<bidirectional_traversal_tag,
-        //            typename traits::category_of<first_type>::type>::value),
-        //    "underlying iterator must be bidirectional");
-
-#define REVERSE_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_REVERSE_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeq>\
         reverse_view(reverse_view<OtherSeq> COMBINATION view)\
           : seq(BOOST_FUSION_FORWARD(\
                 reverse_view<OtherSeq> COMBINATION,view).seq)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(REVERSE_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_REVERSE_VIEW_CTOR,_)
 
-#undef REVERSE_VIEW_CTOR
+#undef BOOST_FUSION_REVERSE_VIEW_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         explicit

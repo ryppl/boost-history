@@ -17,7 +17,7 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-#define TAG_OF_SPECIALIZATION(COMBINATION,_)\
+#define BOOST_FUSION_TAG_OF_SPECIALIZATION(COMBINATION,_)\
         template <\
             class T0, class T1, class T2, class T3, class T4, \
             class T5, class T6, class T7, class T8, class T9\
@@ -41,9 +41,10 @@ namespace boost { namespace fusion
             typedef boost_tuple_tag type;\
         };
 
-        BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(TAG_OF_SPECIALIZATION,_)
+        BOOST_FUSION_ALL_CV_REF_NON_REF_COMBINATIONS(
+                BOOST_FUSION_TAG_OF_SPECIALIZATION,_)
 
-#undef TAG_OF_SPECIALIZATION
+#undef BOOST_FUSION_TAG_OF_SPECIALIZATION
     }
 }}
 

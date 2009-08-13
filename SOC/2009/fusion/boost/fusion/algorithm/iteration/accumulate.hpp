@@ -9,8 +9,8 @@
 #define BOOST_FUSION_ALGORITHM_ITERATION_ACCUMULATE_HPP
 
 #include <boost/fusion/algorithm/iteration/fold.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

@@ -5,8 +5,8 @@
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
-#include <boost/fusion/support/template.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 
 #include <boost/preprocessor/iterate.hpp>
 #include <boost/preprocessor/cat.hpp>
@@ -27,19 +27,19 @@ namespace boost { namespace fusion
 
 #else
 
-#define N BOOST_PP_ITERATION()
+#define BOOST_FUSION_N BOOST_PP_ITERATION()
 
     namespace result_of
     {
         VARIADIC_TEMPLATE(N)
         struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)
             EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(
-                BOOST_FUSION_MAX_SEQ_SIZE,N)
+                BOOST_FUSION_MAX_SEQ_SIZE,BOOST_FUSION_N)
         {
             typedef
                 BOOST_FUSION_SEQ_NAME<
                     EXPAND_TEMPLATE_ARGUMENTS_BINARY(
-                            N,
+                            BOOST_FUSION_N,
                             typename detail::as_fusion_element<,
                             >::type
                     )
@@ -48,25 +48,25 @@ namespace boost { namespace fusion
         };
     }
 
-    VARIADIC_TEMPLATE_A(N)
+    VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
     inline
 #if N
         typename
 #endif
         result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
-            EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(N)
+            EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(BOOST_FUSION_N)
         >::type
     BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)(
-        EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(N))
+        EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N))
     {
         return
 #if N
             typename
 #endif
             result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
-                EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(N)
-            >::type(EXPAND_PARAMETERS_A(N));
+                EXPAND_TEMPLATE_ARGUMENTS_A_R_ELSE_CLREF(BOOST_FUSION_N)
+            >::type(EXPAND_PARAMETERS_A(BOOST_FUSION_N));
     }
 
-#undef N
+#undef BOOST_FUSION_N
 #endif

@@ -11,8 +11,8 @@
 #define BOOST_FUSION_ALGORITHM_QUERY_ANY_HPP
 
 #include <boost/fusion/algorithm/query/all.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

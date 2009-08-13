@@ -86,5 +86,5 @@ namespace boost { namespace fusion { namespace detail
         };
     };
 
-#undef N
+#undef BOOST_FUSION_N
 #endif // defined(BOOST_PP_IS_ITERATING)

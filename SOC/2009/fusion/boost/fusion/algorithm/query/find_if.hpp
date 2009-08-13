@@ -11,9 +11,9 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/detail/workaround.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/lambda.hpp>

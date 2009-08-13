@@ -9,7 +9,7 @@
 #define BOOST_FUSION_CONTAINER_GENERATION_CONS_TIE_HPP
 
 #include <boost/fusion/container/list/cons.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {

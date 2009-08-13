@@ -8,7 +8,7 @@
 #ifndef BOOST_FUSION_SUPPORT_CATEGORY_OF_HPP
 #define BOOST_FUSION_SUPPORT_CATEGORY_OF_HPP
 
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 #include <boost/config.hpp>

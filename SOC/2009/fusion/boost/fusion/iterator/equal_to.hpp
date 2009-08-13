@@ -10,7 +10,7 @@
 
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/is_iterator.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/and.hpp>
 #include <boost/utility/enable_if.hpp>

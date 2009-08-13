@@ -7,7 +7,7 @@
 #define BOOST_FUSION_VIEW_DETAIL_VIEW_STORAGE_HPP
 
 #include <boost/fusion/support/is_view.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
@@ -54,15 +54,15 @@ namespace boost { namespace fusion { namespace detail
         call_param;
 #endif
 
-#define VIEW_STORAGE_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_VIEW_STORAGE_CTOR(COMBINATION,_)\
         template<typename OtherT>\
         view_storage(view_storage<OtherT> COMBINATION storage)\
           : t(get_init_type(storage.get(), typename traits::is_view<T>::type()))\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VIEW_STORAGE_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VIEW_STORAGE_CTOR,_)
 
-#undef VIEW_STORAGE_CTOR
+#undef BOOST_FUSION_VIEW_STORAGE_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         view_storage(call_param t)

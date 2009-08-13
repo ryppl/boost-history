@@ -58,7 +58,7 @@ namespace boost { namespace fusion
         {}
     };
 
-#define NIL_ITERATOR(COMBINATION,_)\
+#define BOOST_FUSION_NIL_ITERATOR(COMBINATION,_)\
       template <>\
       struct cons_iterator<nil COMBINATION>\
         : nil_iterator\
@@ -71,9 +71,9 @@ namespace boost { namespace fusion
           {}\
       };
 
-    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(NIL_ITERATOR,_)
+    BOOST_FUSION_ALL_CV_REF_COMBINATIONS(BOOST_FUSION_NIL_ITERATOR,_)
 
-#undef NIL_ITERATOR
+#undef BOOST_FUSION_NIL_ITERATOR
 }}
 
 #endif

@@ -10,8 +10,8 @@
 
 #include <boost/fusion/view/single_view/single_view.hpp>
 #include <boost/fusion/algorithm/transformation/insert_range.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/algorithm/transformation/detail/is_in_seq.hpp>
 
 namespace boost { namespace fusion

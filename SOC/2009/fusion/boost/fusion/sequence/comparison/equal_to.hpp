@@ -12,7 +12,7 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/fusion/sequence/comparison/detail/equal_to.hpp>
 #include <boost/fusion/sequence/comparison/detail/enable_comparison.hpp>

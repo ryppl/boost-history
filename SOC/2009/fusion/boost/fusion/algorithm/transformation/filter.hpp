@@ -10,9 +10,9 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_FILTER_HPP
 
 #include <boost/fusion/algorithm/transformation/filter_if.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/detail/workaround.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 #include <boost/type_traits/is_same.hpp>

@@ -16,8 +16,8 @@
 #include <boost/fusion/sequence/comparison.hpp>
 #include <boost/fusion/sequence/io.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/detail/workaround.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 
 #include <boost/fusion/container/detail/forward_ctor.hpp>
 

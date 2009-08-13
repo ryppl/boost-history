@@ -8,8 +8,8 @@
 #if !defined (BOOST_FUSION_PAIR_TIE_20060812_2058)
 #define BOOST_FUSION_PAIR_TIE_20060812_2058
 
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {

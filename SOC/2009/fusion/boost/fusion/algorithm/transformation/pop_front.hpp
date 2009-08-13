@@ -15,8 +15,8 @@
 #endif
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

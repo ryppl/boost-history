@@ -41,14 +41,14 @@ namespace boost { namespace fusion
         vector()
         {}
 
-#define VECTOR_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_VECTOR_CTOR(COMBINATION,_)\
         vector(self_type COMBINATION vec)\
           : data(BOOST_FUSION_FORWARD(self_type COMBINATION,vec).data)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(VECTOR_CTOR,_);
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_CTOR,_);
 
-#undef VECTOR_CTOR
+#undef BOOST_FUSION_VECTOR_CTOR
 
 #define BOOST_FUSION_SEQ_NAME vector
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_VECTOR_SIZE

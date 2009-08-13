@@ -10,7 +10,7 @@
 #define BOOST_FUSION_CONTAINER_VECTOR_VECTOR_FWD_HPP
 
 #include <boost/fusion/container/vector/limits.hpp>
-#include <boost/fusion/support/template.hpp>
+#include <boost/fusion/support/internal/template.hpp>
 
 namespace boost { namespace fusion
 {

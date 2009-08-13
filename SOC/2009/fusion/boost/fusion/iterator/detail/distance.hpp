@@ -8,13 +8,14 @@
 #ifndef BOOST_FUSION_ITERATOR_DETAIL_DISTANCE_HPP
 #define BOOST_FUSION_ITERATOR_DETAIL_DISTANCE_HPP
 
+#include <boost/fusion/iterator/next.hpp>
+#include <boost/fusion/iterator/equal_to.hpp>
+
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/fusion/iterator/next.hpp>
-#include <boost/fusion/iterator/equal_to.hpp>
 
 namespace boost { namespace fusion { namespace distance_detail
 {
@@ -44,8 +45,7 @@ namespace boost { namespace fusion { namespace distance_detail
           , mpl::identity<mpl::int_<0> >
           , next_distance<First, Last>
         >::type
-    {
-    };
+    {};
 
 }}}
 

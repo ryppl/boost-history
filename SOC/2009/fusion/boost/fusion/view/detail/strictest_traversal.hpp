@@ -11,7 +11,7 @@
 
 #include <boost/fusion/algorithm/iteration/fold.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/if.hpp>
 #include <boost/type_traits/is_base_of.hpp>
@@ -30,7 +30,7 @@ namespace boost { namespace fusion
             {
                 typedef typename traits::category_of<NextSeq>::type next_tag;
                 typedef typename
-                    detail::identity<StrictestSoFar>::type
+                    identity<StrictestSoFar>::type
                 strictest_so_far_identity;
 
                 typedef typename

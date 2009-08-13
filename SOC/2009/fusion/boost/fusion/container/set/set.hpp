@@ -9,7 +9,7 @@
 #include <boost/fusion/container/set/set_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -44,14 +44,14 @@ namespace boost { namespace fusion
         set()
         {}
 
-#define SET_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_SET_CTOR(COMBINATION,_)\
         set(set COMBINATION set_)\
           : data(BOOST_FUSION_FORWARD(set COMBINATION,set_).data)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(SET_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SET_CTOR,_)
 
-#undef SET_CTOR
+#undef BOOST_FUSION_SET_CTOR
 
 #define BOOST_FUSION_SEQ_NAME set
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_SET_SIZE

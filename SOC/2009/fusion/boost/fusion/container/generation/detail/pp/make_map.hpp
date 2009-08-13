@@ -9,7 +9,7 @@
 #define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAKE_MAP_HPP
 
 #include <boost/fusion/container/map/map.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 #include <boost/fusion/support/pair.hpp>
 
 #include <boost/preprocessor/iterate.hpp>
@@ -36,21 +36,21 @@ namespace boost { namespace fusion
 #endif
 #else
 
-#define N BOOST_PP_ITERATION()
+#define BOOST_FUSION_N BOOST_PP_ITERATION()
 
     namespace result_of
     {
-        VARIADIC_TEMPLATE(BOOST_PP_MUL(N,2))
+        VARIADIC_TEMPLATE(BOOST_PP_MUL(BOOST_FUSION_N,2))
         struct make_map
         EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(
             BOOST_PP_MUL(FUSION_MAX_MAP_SIZE,2),
-            BOOST_PP_MUL(N,2))
+            BOOST_PP_MUL(BOOST_FUSION_N,2))
         {
 #define BOOST_FUSION_MAP_ELEMENT(Z,INNER_N,_)\
             pair<\
                 BOOST_PP_CAT(T,INNER_N),\
                 typename detail::as_fusion_element<\
-                    BOOST_PP_CAT(T,BOOST_PP_ADD(N,INNER_N))\
+                    BOOST_PP_CAT(T,BOOST_PP_ADD(BOOST_FUSION_N,INNER_N))\
                 >::type\
             >
 
@@ -64,22 +64,22 @@ namespace boost { namespace fusion
     BOOST_PP_CAT(A,BOOST_PP_ADD(N,INNER_N))\
         BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY())
 
-    VARIADIC_TEMPLATE_A(BOOST_PP_MUL(N,2))
+    VARIADIC_TEMPLATE_A(BOOST_PP_MUL(BOOST_FUSION_N,2))
     inline
 #if N
         typename
 #endif
         result_of::make_map<
-            BOOST_PP_ENUM_PARAMS(N, A)
-          , BOOST_PP_ENUM(N, BOOST_FUSION_MAKE_MAP_ARGS2, _)
+            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, A)
+          , BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MAKE_MAP_ARGS2, _)
         >::type
 
 #define BOOST_FUSION_MAKE_MAP_ARGUMENTS(Z,INNER_N,__)\
-    BOOST_PP_CAT(A,BOOST_PP_ADD(N,INNER_N))\
+    BOOST_PP_CAT(A,BOOST_PP_ADD(BOOST_FUSION_N,INNER_N))\
         BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY())\
     BOOST_PP_CAT(_,INNER_N)
 
-    make_map(BOOST_PP_ENUM(N, BOOST_FUSION_MAKE_MAP_ARGUMENTS, _))
+    make_map(BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MAKE_MAP_ARGUMENTS, _))
 
 #undef BOOST_FUSION_MAKE_MAP_ARGUMENTS
     {
@@ -88,12 +88,12 @@ namespace boost { namespace fusion
             typename
 #endif
             result_of::make_map<
-                BOOST_PP_ENUM_PARAMS(N, A)
-              , BOOST_PP_ENUM(N, BOOST_FUSION_MAKE_MAP_ARGS2, _)
+                BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, A)
+              , BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MAKE_MAP_ARGS2, _)
             >::type(EXPAND_PARAMETERS_A(N));
     }
 
 #undef BOOST_FUSION_MAKE_MAP_ARGS2
 
-#undef N
+#undef BOOST_FUSION_N
 #endif

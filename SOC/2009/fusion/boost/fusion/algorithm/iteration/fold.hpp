@@ -10,8 +10,8 @@
 #define BOOST_FUSION_ALGORITHM_ITERATION_FOLD_HPP
 
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 

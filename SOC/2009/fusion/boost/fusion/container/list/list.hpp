@@ -11,7 +11,7 @@
 #include <boost/fusion/container/list/list_fwd.hpp>
 #include <boost/fusion/container/vector/vector.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/fusion/container/list/detail/list/begin_impl.hpp>
 #include <boost/fusion/container/list/detail/list/end_impl.hpp>
@@ -43,14 +43,14 @@ namespace boost { namespace fusion
         list()
         {}
 
-#define LIST_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_LIST_CTOR(COMBINATION,_)\
         list(list COMBINATION list_)\
           : data(BOOST_FUSION_FORWARD(list COMBINATION,list_).data)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(LIST_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_LIST_CTOR,_)
 
-#undef LIST_CTOR
+#undef BOOST_FUSION_LIST_CTOR
 
 #define BOOST_FUSION_SEQ_NAME list
 #define BOOST_FUSION_MAX_SEQ_SIZE FUSION_MAX_LIST_SIZE

@@ -14,8 +14,8 @@
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/prior.hpp>
 #include <boost/fusion/iterator/deref.hpp>
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/bool.hpp>
 

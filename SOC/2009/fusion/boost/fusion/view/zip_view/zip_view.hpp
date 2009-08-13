@@ -17,8 +17,8 @@
 #include <boost/fusion/algorithm/transformation/remove.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/unused.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/not.hpp>
 #include <boost/mpl/placeholders.hpp>
@@ -165,16 +165,16 @@ namespace boost { namespace fusion {
             >::type
         size;
 
-#define ZIP_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_ZIP_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeqs>\
         zip_view(zip_view<OtherSeqs> COMBINATION view)\
           : seqs(sequence_assign(BOOST_FUSION_FORWARD(\
                 zip_view<OtherSeqs> COMBINATION,view).seqs))\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(ZIP_VIEW_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_ZIP_VIEW_CTOR,_)
 
-#undef ZIP_VIEW_CTOR
+#undef BOOST_FUSION_ZIP_VIEW_CTOR
 
         template<typename OtherSeqs>
         explicit

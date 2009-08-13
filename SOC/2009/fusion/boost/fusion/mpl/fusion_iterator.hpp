@@ -29,8 +29,6 @@ namespace boost { namespace mpl
         typedef It iterator;
     };
 
-    //TODO deref
-
     template <typename It>
     struct next<fusion_iterator<It> >
     {

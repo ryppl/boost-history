@@ -9,7 +9,7 @@
 #ifndef BOOST_FUSION_ADAPTED_MPL_HPP
 #define BOOST_FUSION_ADAPTED_MPL_HPP
 
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/fusion/adapted/detail/mpl/mpl_iterator.hpp>
 #include <boost/fusion/adapted/detail/mpl/advance_impl.hpp>

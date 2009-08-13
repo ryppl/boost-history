@@ -10,8 +10,8 @@
 #define BOOST_FUSION_ALGORITHM_QUERY_COUNT_HPP
 
 #include <boost/fusion/algorithm/query/count_if.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/fusion/algorithm/query/detail/count.hpp>
 

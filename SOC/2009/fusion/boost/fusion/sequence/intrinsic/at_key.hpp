@@ -14,9 +14,9 @@
 #endif
 #include <boost/fusion/iterator/deref_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

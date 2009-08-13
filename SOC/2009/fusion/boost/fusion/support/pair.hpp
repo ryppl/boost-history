@@ -9,8 +9,8 @@
 #ifndef BOOST_FUSION_SUPPORT_PAIR_HPP
 #define BOOST_FUSION_SUPPORT_PAIR_HPP
 
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
 #   include <boost/call_traits.hpp>
@@ -26,16 +26,16 @@ namespace boost { namespace fusion
           : second()
         {}
 
-#define PAIR_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_PAIR_CTOR(COMBINATION,_)\
         template<typename OtherFirst,typename OtherSecond>\
         pair(pair<OtherFirst,OtherSecond> COMBINATION pair_)\
           : second(static_cast<pair<OtherFirst,OtherSecond> COMBINATION>(pair_)\
                   .second)\
         {}
 
-        BOOST_FUSION_ALL_CTOR_COMBINATIONS(PAIR_CTOR,_)
+        BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_PAIR_CTOR,_)
 
-#undef PAIR_CTOR
+#undef BOOST_FUSION_PAIR_CTOR
 
 
 #ifdef BOOST_NO_VARIADIC_TEMPLATES

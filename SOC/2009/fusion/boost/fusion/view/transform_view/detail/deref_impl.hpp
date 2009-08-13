@@ -10,7 +10,7 @@
 
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/support/result_of.hpp>
+#include <boost/fusion/support/internal/result_of.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -29,8 +29,8 @@ namespace boost { namespace fusion { namespace extension
             it;
 
             typedef typename
-                support::result_of<
-                    typename support::get_func_base<
+                detail::internal::result_of<
+                    typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
                     typename result_of::deref<typename it::first_type>::type
@@ -56,8 +56,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                support::result_of<
-                    typename support::get_func_base<
+                detail::internal::result_of<
+                    typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
                     typename result_of::deref<typename it::first1_type>::type

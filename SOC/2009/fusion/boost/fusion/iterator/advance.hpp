@@ -9,7 +9,7 @@
 #define BOOST_FUSION_ITERATOR_ADVANCE_HPP
 
 #include <boost/fusion/iterator/detail/advance.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 
 namespace boost { namespace fusion

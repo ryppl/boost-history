@@ -9,7 +9,7 @@
 #define BOOST_FUSION_SUPPORT_TAG_OF_HPP
 
 #include <boost/fusion/support/tag_of_fwd.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/is_sequence.hpp>
 #include <boost/mpl/eval_if.hpp>

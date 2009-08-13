@@ -6,11 +6,12 @@
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
-#if !defined(BOOST_IN_05042005_0120)
-#define BOOST_IN_05042005_0120
+
+#ifndef BOOST_FUSION_SEQUENCE_IO_IN_HPP
+#define BOOST_FUSION_SEQUENCE_IO_IN_HPP
 
 #include <boost/fusion/support/is_sequence.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <istream>
 

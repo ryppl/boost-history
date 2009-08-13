@@ -10,7 +10,7 @@
 
 //TODO adapt std::(tr1::)tuple
 
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/tuple/tuple.hpp>
 

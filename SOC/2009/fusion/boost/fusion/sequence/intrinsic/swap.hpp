@@ -20,7 +20,7 @@
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <algorithm>
 

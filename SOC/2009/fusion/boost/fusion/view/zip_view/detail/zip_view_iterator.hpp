@@ -11,7 +11,7 @@
 
 #include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 namespace boost { namespace fusion {
 

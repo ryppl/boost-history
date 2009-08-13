@@ -8,10 +8,10 @@
 #ifndef BOOST_FUSION_ITERATOR_DEREF_HPP
 #define BOOST_FUSION_ITERATOR_DEREF_HPP
 
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {

@@ -9,10 +9,10 @@
 #define BOOST_FUSION_VIEW_ITERATOR_RANGE_ITERATOR_RANGE_HPP
 
 #include <boost/fusion/iterator/distance.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/bool.hpp>

@@ -12,7 +12,7 @@
 #   include <boost/fusion/container/vector/detail/pp/vector.hpp>
 #else
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
-#   include <boost/fusion/support/ref.hpp>
+#   include <boost/fusion/support/internal/ref.hpp>
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>

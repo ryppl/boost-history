@@ -6,7 +6,7 @@
 #ifndef BOOST_FUSION_SUPPORT_DEDUCE_HPP
 #define BOOST_FUSION_SUPPORT_DEDUCE_HPP
 
-#include <boost/fusion/support/detail/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #include <boost/config.hpp>
 #ifdef BOOST_NO_RVALUE_REFERENCES

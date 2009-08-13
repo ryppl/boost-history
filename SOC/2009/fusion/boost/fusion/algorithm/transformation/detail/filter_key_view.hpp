@@ -9,7 +9,7 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/support/ref.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -39,16 +39,17 @@ namespace boost { namespace fusion
             typedef fusion_sequence_tag tag;
             typedef mpl::true_ is_view;
 
-#define FILTER_KEY_VIEW_CTOR(COMBINATION,_)\
+#define BOOST_FUSION_FILTER_KEY_VIEW_CTOR(COMBINATION,_)\
             template<typename OtherSeq>\
             filter_key_view(filter_key_view<OtherSeq,Pred> COMBINATION view)\
               : seq(static_cast<filter_key_view<OtherSeq,Pred>COMBINATION>(\
                     view).seq)\
             {}
 
-            BOOST_FUSION_ALL_CTOR_COMBINATIONS(FILTER_KEY_VIEW_CTOR,_)
+            BOOST_FUSION_ALL_CTOR_COMBINATIONS(
+                    BOOST_FUSION_FILTER_KEY_VIEW_CTOR,_)
 
-#undef FILTER_KEY_VIEW_CTOR
+#undef BOOST_FUSION_FILTER_KEY_VIEW_CTOR
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
             explicit

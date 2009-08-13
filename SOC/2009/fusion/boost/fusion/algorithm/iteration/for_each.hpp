@@ -10,8 +10,8 @@
 #define BOOST_FUSION_ALGORITHM_ITERATION_FOR_EACH_HPP
 
 #include <boost/fusion/sequence/intrinsic/size.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/fusion/algorithm/iteration/detail/for_each.hpp>
 
@@ -51,7 +51,7 @@ namespace boost { namespace fusion
     inline typename result_of::for_each<Seq&,F const&>::type
     for_each(Seq& seq,F const& f)
     {
-        detail::for_each_unrolled<result_of::size<Seq&>::value>::call(
+        for_each_unrolled<result_of::size<Seq&>::value>::call(
                 fusion::begin(seq),f);
     }
 #endif

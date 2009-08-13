@@ -13,9 +13,9 @@
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/fusion/sequence/intrinsic/has_key.hpp>
 #endif
-#include <boost/fusion/support/assert.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/detail/workaround.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/workaround.hpp>
 
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>

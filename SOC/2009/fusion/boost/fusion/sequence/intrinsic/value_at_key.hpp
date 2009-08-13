@@ -15,8 +15,8 @@
 #include <boost/fusion/iterator/value_of_data.hpp>
 #include <boost/fusion/algorithm/query/find_key.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/int.hpp>
 

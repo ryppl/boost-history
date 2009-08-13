@@ -7,8 +7,6 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-//TODO !!!
-
 #ifndef BOOST_FUSION_SEQUENCE_IO_DETAIL_IN_HPP
 #define BOOST_FUSION_SEQUENCE_IO_DETAIL_IN_HPP
 

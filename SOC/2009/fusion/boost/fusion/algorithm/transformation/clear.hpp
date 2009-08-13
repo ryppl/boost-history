@@ -16,8 +16,8 @@
 #endif
 #include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
-#include <boost/fusion/support/ref.hpp>
-#include <boost/fusion/support/assert.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/eval_if.hpp>

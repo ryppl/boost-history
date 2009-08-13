@@ -9,7 +9,7 @@
 #define BOOST_FUSION_VIEW_TRANSFORM_VIEW_DETAIL_VALUE_OF_IMPL_HPP
 
 #include <boost/fusion/iterator/value_of.hpp>
-#include <boost/fusion/support/result_of.hpp>
+#include <boost/fusion/support/internal/result_of.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -26,8 +26,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                support::result_of<
-                    typename support::get_func_base<
+                detail::internal::result_of<
+                    typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
                     typename result_of::value_of<typename it::first_type>::type)
@@ -46,8 +46,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                support::result_of<
-                    typename support::get_func_base<
+                detail::internal::result_of<
+                    typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
                    typename result_of::value_of<typename it::first1_type>::type

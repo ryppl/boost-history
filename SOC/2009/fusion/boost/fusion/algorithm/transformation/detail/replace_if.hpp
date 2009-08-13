@@ -8,11 +8,12 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 
-#include <boost/fusion/support/result_of.hpp>
+#include <boost/fusion/support/internal/result_of.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/is_convertible.hpp>
+#include <boost/type_traits/remove_const.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -84,8 +85,7 @@ namespace boost { namespace fusion { namespace detail
         }
 
         F f;
-        //TODO test if const
-        mutable NewValue new_value;
+        mutable typename remove_const<NewValue>::type new_value;
     };
 }}}
 
