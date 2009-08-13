@@ -25,7 +25,7 @@ namespace boost
 		weak_ptr(base_type const & b): base_type(b) {}
 		template<class Y>
 #if !defined( BOOST_NO_SFINAE )
-		weak_ptr( weak_ptr<Y> const & r, typename typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
+		weak_ptr( weak_ptr<Y> const & r, typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
 		weak_ptr( weak_ptr<Y> const & r )
 #endif
@@ -33,7 +33,7 @@ namespace boost
 		{}
     template<class Y>
 #if !defined( BOOST_NO_SFINAE )
-		weak_ptr( shared_ptr<Y> const & r, typename typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
+		weak_ptr( shared_ptr<Y> const & r, typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
 		weak_ptr( shared_ptr<Y> const & r )
 #endif
@@ -42,7 +42,7 @@ namespace boost
 #ifndef BOOST_NO_RVALUE_REFERENCES
     template<class Y>
 #if !defined( BOOST_NO_SFINAE )
-    weak_ptr( weak_ptr<Y> && r, typename typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
+    weak_ptr( weak_ptr<Y> && r, typename enable_if<is_convertible<Y*, T*> >::type * = 0 )
 #else
     weak_ptr( weak_ptr<Y> && r )
 #endif
