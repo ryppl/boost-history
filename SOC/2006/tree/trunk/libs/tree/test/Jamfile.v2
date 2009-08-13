@@ -44,10 +44,10 @@ test-suite tree :
 	[ run cursor_algorithm_test.cpp ]
 	[ run iterator_algorithm_test.cpp ]
 #	[ run red_black_tree_test.cpp ]
-#	[ run treap_test.cpp ]
+	[ run treap_test.cpp ]
 	[ run forest_test.cpp ]
 #	[ run nary_tree_test.cpp ]
 	[ run multiway_tree_test.cpp ]
-#	[ run unbalanced_binary_tree_test.cpp ]
+	[ run unbalanced_binary_tree_test.cpp ]
 	[ run graph_test.cpp ]
 	;

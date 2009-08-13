@@ -40,7 +40,6 @@ private:
     int m_priority;
 };
 
-
 class treap {
  public:
     typedef treap_metadata metadata_type;
@@ -50,12 +49,12 @@ class treap {
     {
         int priority = x->metadata().get_priority();
         
-        x = x.parent();
+        x.to_parent();
         while ((x != t.root()) && (priority > x->metadata().get_priority())) {
             t.rotate(x);
             priority = x->metadata().get_priority();
         }
-        x = x.begin();
+        x.to_begin();
     }
       
     template <class Tree>

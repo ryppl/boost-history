@@ -8,21 +8,40 @@
 #include <boost/tree/detail/balancers/unbalanced.hpp>
 #include <boost/tree/binary_tree.hpp>
 
-
-
 #define BOOST_TEST_MODULE unbalanced_binary_tree test
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
+
+// TODO: Use a mock_binary_tree.
+BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_constructors_test )
+{
+    using namespace boost::tree;
+    typedef binary_tree<int> tree_t;
+    typedef balance<tree_t, balancers::unbalanced> balance_t;
+    balance_t t1;
+    
+    balance_t t2(t1);
+}
+
+BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_iterator_test )
+{
+    using namespace boost::tree;
+    typedef binary_tree<int> tree_t;
+    typedef balance<tree_t, balancers::unbalanced> balance_t;
+    
+    balance_t::iterator it1;
+    balance_t::iterator it2(it1);
+}
 
 BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_test )
 {
     using namespace boost::tree;
     
     typedef binary_tree<int> tree_t;
-    typedef balance<tree_t, balancers::unbalanced> balancer_t;
-    balancer_t my_tree; 
+    typedef balance<tree_t, balancers::unbalanced> balance_t;
+    balance_t my_tree; 
     
-    balancer_t::iterator c, c1, c2, c3, c4, c5;
+    balance_t::iterator c, c1, c2, c3, c4, c5;
 
     c = my_tree.end();
     BOOST_CHECK(c == my_tree.end());
@@ -66,14 +85,3 @@ BOOST_AUTO_TEST_CASE( unbalanced_binary_tree_test )
     BOOST_CHECK_EQUAL(*c, 7);
     
 }
-
-//boost::unit_test::test_suite*
-//init_unit_test_suite( int argc, char* argv[] )
-//{
-//    boost::unit_test::test_suite* key_search_test = 
-//            BOOST_TEST_SUITE( "Key search binary vector test" );
-//
-//    key_search_test->add( BOOST_TEST_CASE( &key_search_binary_balancer_test ) );
-//
-//    return key_search_test;
-//}

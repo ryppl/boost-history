@@ -139,10 +139,9 @@ public:
     typedef typename cursor_facade_::difference_type difference_type;
     typedef typename cursor_facade_::size_type size_type;
  
-//    cursor_adaptor() {}
+    cursor_adaptor() {}
     
-    explicit cursor_adaptor(Base const& cur) : m_cursor(cur)
-    { }
+    explicit cursor_adaptor(Base const& cur) : m_cursor(cur) {}
     
     Base const& base() const
     { return m_cursor; }

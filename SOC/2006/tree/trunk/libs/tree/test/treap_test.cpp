@@ -16,8 +16,7 @@
 //#define BOOST_TEST_DYN_LINK
 #include <boost/test/included/unit_test.hpp>
 
-//TODO: Make this a test suite.
-
+//TODO: Use a mock_binary_tree
 BOOST_AUTO_TEST_CASE( treap_test )
 {
     using namespace boost::tree;
@@ -28,19 +27,19 @@ BOOST_AUTO_TEST_CASE( treap_test )
     typedef balance<binary_tree<int>, balancers::treap> treap_t;
     
     //searcher_t my_searcher;
-    treap_t my_balancer;
+    treap_t my_balance;
     //tree_t my_tree;
     
     //create_test_data_searcher(my_searcher);
-    create_test_data_sequence(my_balancer);
+    //create_test_data_sequence(my_balancer);
     //create_test_data_sequence(my_vector);
 
 //    Segfaults:    
 //    BOOST_CHECK(std::equal(my_balancer.begin(), my_balancer.end(), my_vector.begin()));
 
     //TODO: More tests?
-    for (treap_t::iterator ci = my_balancer.begin(); ci != my_balancer.end(); ++ci) {
-        treap_t::hierarchy_type::cursor c = ci.base().base();
+    for (treap_t::iterator ci = my_balance.begin(); ci != my_balance.end(); ++ci) {
+        treap_t::hierarchy_type::cursor c = ci.base().base().base();
 //        int priority = c->metadata().get_priority(); // FIXME: Segfaults!
 //        if (!c.is_leaf()) {
 //            BOOST_CHECK(priority

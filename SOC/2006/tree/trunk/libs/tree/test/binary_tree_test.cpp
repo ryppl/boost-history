@@ -22,12 +22,28 @@ BOOST_AUTO_TEST_CASE( constructors_test )
 {
     binary_tree<int> bt0;
     BOOST_CHECK(bt0.root().is_leaf());
-    
+
 //    binary_tree<int>::node_base_type::descending_node_base** x = bt0.m_header.m_children.data();
 //    BOOST_CHECK_EQUAL(++x, &bt0.m_header.m_children.data()[1]);
 
     //BOOST_CHECK(bt0.root().begin() == bt0.root().end()); //FIXME
     // test with allocator? 
+}
+
+BOOST_AUTO_TEST_CASE( cursor_test )
+{
+    binary_tree<int>::cursor c1;
+    binary_tree<int>::cursor c2(c1);
+
+    BOOST_CHECK(c1 == c2);
+
+    binary_tree<int>::const_cursor cc1;
+    binary_tree<int>::const_cursor cc2(cc1);
+
+    BOOST_CHECK(cc1 == cc2);
+
+    //binary_tree<int>::const_cursor cc3(c1);
+    //BOOST_CHECK(cc3 == c1);
 }
 
 BOOST_AUTO_TEST_CASE( insert_value_test )

@@ -47,13 +47,13 @@ class augmented_iterator<InorderIter, Extract, bidirectional_traversal_tag>
     struct enabler {};
  public:
     augmented_iterator()
-      : augmented_iterator::iterator_adaptor_() {}
+    : augmented_iterator::iterator_adaptor_() {}
 
     explicit augmented_iterator(InorderIter p)
-      : augmented_iterator::iterator_adaptor_(p) {}
+    : augmented_iterator::iterator_adaptor_(p) {}
 
     explicit augmented_iterator(typename InorderIter::base_type c)
-      : augmented_iterator::iterator_adaptor_(InorderIter(c)) {}
+    : augmented_iterator::iterator_adaptor_(InorderIter(c)) {}
 
     template <class OtherInorderIter>
     augmented_iterator(

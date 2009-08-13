@@ -92,7 +92,7 @@ public:
     ascending_nary_cursor(
         ascending_nary_cursor<OtherNode> const& other
       , typename boost::enable_if<
-            boost::is_convertible<OtherNode*, node_type*>
+            boost::is_convertible<typename OtherNode::value_type*, value_type*>
           , enabler
         >::type = enabler()
     )
@@ -190,17 +190,18 @@ private:
         //this->base_reference() = this->base_reference()->parent();
     }
     
-protected:
+//protected:
+public:
     bool is_on_top() const
     {
         node_base_type* parent_begin_node = 
+            static_cast<node_base_type*>(
             static_cast<node_base_type*>(this->base_reference()->parent())
-            ->m_children[this->base_reference()->get_index()];
+            ->m_children[this->base_reference()->get_index()]);
         return (!m_pos && (this->base_reference() != parent_begin_node));
         // (*this != this->parent().begin())
     }
 
-public:
     node_base_type* const& parent_node() const
     {
         return this->base_reference();
