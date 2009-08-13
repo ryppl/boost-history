@@ -119,7 +119,9 @@ namespace boost
           {
             throw boost::lock_error();
           }
-          return _mon.get();
+          typename pointer_traits<MonitorPtr>::pointer p = _mon.get();
+          detail::assert_plain_old_pointer_not_null(p);
+          return p;
         }
         reference operator*() const
         {
@@ -127,7 +129,9 @@ namespace boost
           {
             throw boost::lock_error();
           }
-          return *_mon;
+          typename pointer_traits<MonitorPtr>::pointer p = _mon.get();
+          detail::assert_plain_old_pointer_not_null(p);
+          return *p;
         }
   #ifndef BOOST_NO_MEMBER_TEMPLATE_FRIENDS
       protected:
@@ -279,7 +283,9 @@ namespace boost
         {
           throw boost::lock_error();
         }
-        return this->_mon.get();
+        typename pointer_traits<MonitorPtr>::pointer p = this->_mon.get();
+        detail::assert_plain_old_pointer_not_null(p);
+        return p;
       }
       typename pointer_traits<typename base_class::const_wrapped_pointer_type>::reference operator*() const
       {
@@ -287,7 +293,9 @@ namespace boost
         {
           throw boost::lock_error();
         }
-        return *this->_mon.get();
+        typename pointer_traits<MonitorPtr>::pointer p = this->_mon.get();
+        detail::assert_plain_old_pointer_not_null(p);
+        return *p;
       }
 
       // move emulation
@@ -368,7 +376,9 @@ namespace boost
         {
           throw boost::lock_error();
         }
-        return this->_mon.get();
+        typename pointer_traits<MonitorPtr>::pointer p = this->_mon.get();
+        detail::assert_plain_old_pointer_not_null(p);
+        return p;
       }
       const typename pointer_traits<typename base_class::const_wrapped_pointer_type>::reference operator*() const
       {
@@ -376,7 +386,9 @@ namespace boost
         {
           throw boost::lock_error();
         }
-        return *this->_mon.get();
+        typename pointer_traits<MonitorPtr>::pointer p = this->_mon.get();
+        detail::assert_plain_old_pointer_not_null(p);
+        return *p;
       }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -464,7 +476,9 @@ namespace boost
         {
           throw boost::lock_error();
         }
-        return _mon.get();
+        typename pointer_traits<MonitorPtr>::pointer p = _mon.get();
+        detail::assert_plain_old_pointer_not_null(p);
+        return p;
       }
       typename MonitorPtr::reference operator*() const
       {
@@ -472,7 +486,9 @@ namespace boost
         {
           throw boost::lock_error();
         }
-        return *_mon.get();
+        typename pointer_traits<MonitorPtr>::pointer p = _mon.get();
+        detail::assert_plain_old_pointer_not_null(p);
+        return *p;
       }
 
       // move emulation

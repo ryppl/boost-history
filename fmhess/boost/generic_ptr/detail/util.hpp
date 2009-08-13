@@ -10,6 +10,8 @@
 #ifndef BOOST_GENERIC_PTR_DETAIL_UTIL_HPP_INCLUDED
 #define BOOST_GENERIC_PTR_DETAIL_UTIL_HPP_INCLUDED
 
+#include <boost/assert.hpp>
+
 namespace boost
 {
   namespace generic_ptr
@@ -27,6 +29,15 @@ namespace boost
       }
       template<typename T>
       void set_plain_old_pointer_to_null(const T&)
+      {}
+
+      template<typename T>
+      void assert_plain_old_pointer_not_null(T * &p)
+      {
+        BOOST_ASSERT(p != 0);
+      }
+      template<typename T>
+      void assert_plain_old_pointer_not_null(const T&)
       {}
     } // namespace detail
   } // namespace generic_ptr

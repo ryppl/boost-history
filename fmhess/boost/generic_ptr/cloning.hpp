@@ -406,11 +406,13 @@ namespace boost
 
       pointer operator->() const
       {
+        detail::assert_plain_old_pointer_not_null(px);
         return px;
       }
 
       reference operator*() const
       {
+        detail::assert_plain_old_pointer_not_null(px);
         return *px;
       }
 

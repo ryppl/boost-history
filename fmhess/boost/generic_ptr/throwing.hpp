@@ -126,7 +126,7 @@ namespace boost
 
       pointer operator->() const
       {
-        if(get_plain_old_pointer(px) == 0)
+        if(!px)
         {
           throw std::invalid_argument("Attempted to access object through null pointer.");
         }
@@ -135,7 +135,7 @@ namespace boost
 
       reference operator*() const
       {
-        if(get_plain_old_pointer(px) == 0)
+        if(!px)
         {
           throw std::invalid_argument("Attempted to dereference null pointer.");
         }

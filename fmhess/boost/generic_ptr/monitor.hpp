@@ -43,6 +43,7 @@ namespace boost
         {}
         T operator->() const
         {
+          detail::assert_plain_old_pointer_not_null(_object_p);
           return _object_p;
         }
       private:
@@ -159,6 +160,9 @@ namespace boost
     template<typename T, typename Mutex>
     T get_pointer(const monitor<T, Mutex> &mp)
     {
+      //FIXME: should get_pointer return a monitor lock?
+      // if it does not, it will not be safe to use monitor as "this" pointer with bind.
+      // if it does, the monitor lock types will need to support generic pointer concepts better
       return mp.get();
     }
 

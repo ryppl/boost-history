@@ -126,13 +126,13 @@ namespace boost
 
       pointer operator->() const
       {
-        BOOST_ASSERT(get_plain_old_pointer(px));
+        BOOST_ASSERT(px);
         return px;
       }
 
       reference operator*() const
       {
-        BOOST_ASSERT(get_plain_old_pointer(px));
+        BOOST_ASSERT(px);
         return *px;
       }
 
