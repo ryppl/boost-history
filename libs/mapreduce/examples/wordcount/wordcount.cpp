@@ -126,7 +126,11 @@ template<>
 bool less<wordcount::reduce_key_t>::operator()(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second) const
 {
     std::ptrdiff_t const len = std::min(first.second, second.second);
+#if defined(BOOST_MSVC)
     int const cmp = strnicmp(first.first, second.first, len);
+#else
+    int const cmp = strncasecmp(first.first, second.first, len);
+#endif
     if (cmp < 0)
         return true;
     else if (cmp > 0)
@@ -143,7 +147,11 @@ bool operator==(wordcount::reduce_key_t const &first, wordcount::reduce_key_t co
     else if (first.second == 0  &&  first.first == 0  &&  second.first == 0)
         return true;
 
+#if defined(BOOST_MSVC)
     return (strnicmp(first.first, second.first, first.second) == 0);
+#else
+    return (strncasecmp(first.first, second.first, first.second) == 0);
+#endif
 }
 
 }   // namespace std
