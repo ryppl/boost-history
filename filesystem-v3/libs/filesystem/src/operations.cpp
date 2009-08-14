@@ -1439,14 +1439,14 @@ namespace boost
 
     void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & )
     {
-      to = de.path().source();
+      to = de.path().rep();
     }
 
 # else
 
     void dispatch( const directory_entry & de, std::string & to, const codecvt_type & )
     {
-      to = de.path().source();
+      to = de.path().rep();
     }
 
 # endif

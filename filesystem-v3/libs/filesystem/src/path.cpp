@@ -147,7 +147,7 @@ namespace filesystem
   
   //  native  ---------------------------------------------------------------//
 
-  const path path::native() const
+  const path path::preferred() const
   {
     path tmp;
 

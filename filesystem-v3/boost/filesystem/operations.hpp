@@ -345,19 +345,6 @@ private:
 
 }; // directory_entry
 
-////  dispatch directory_entry supplied here rather than in 
-////  <boost/filesystem/path_traits.hpp>, thus avoiding header circularity.
-////  test cases are in operations_unit_test.cpp
-//
-//namespace path_traits
-//{
-//  template <class U> inline
-//  void dispatch( const directory_entry & de, U & to, const codecvt_type & )
-//  {
-//    to = de.path().source();
-//  }
-//}  // namespace path_traits
-
 //--------------------------------------------------------------------------------------//
 //                                                                                      //
 //                            directory_iterator helpers                                //

@@ -32,13 +32,13 @@
      whether a '/' or '\' is appended.
    * path.cpp: locale and detail append/convert need error handling.
    * Provide the name check functions for more character types? Templatize?
-   * Why do native() and generic() return paths rather than const strings/string refs?
+   * Why do preferred() and generic() return paths rather than const strings/string refs?
      Either change or document rationale.
    * Use BOOST_DELETED, BOOST_DEFAULTED, where appropriate.
    * imbue/codecvt too complex. Move to path_traits? Refactor?
    * path_unit_test, x /= x test failing, commented out. Fix. See test_appends.
-   * The name source() is obscure. Come up with a more explicit name.
    * Add test for scoped_path_locale.
+   * Should there be a public "preferered_separator" const?
      
                          Design Questions
 
@@ -132,7 +132,7 @@ namespace filesystem
       const String & source_ )
         : path_error( what_, ec_ ), m_source( source_ ) {}
 
-    const String & source() const { return m_source; }
+    const String & rep() const { return m_source; }
 
   private:
     String m_source;
@@ -323,24 +323,23 @@ namespace filesystem
     //  Implementations are permitted to return const values or const references.
 
     //  The string or path returned by an observer will be described as being formatted
-    //  as "native", "generic", or "source".
+    //  as "native", "generic", or "internal".
     //
     //  For POSIX, these are all the same format; slashes and backslashes are not modified.
     //
-    //  For Windows,   native:  slashes are converted to backslashes
-    //                 generic: backslashes are converted to slashes
-    //                 source:  slashes and backslashes are not modified
+    //  For Windows,   native:   slashes are converted to backslashes
+    //                 generic:  backslashes are converted to slashes
+    //                 internal: slashes and backslashes are not modified 
 
 //    template< class T >  
-//    T string( system::error_code & ec = boost::throws() ) const  // source (i.e. original) format
+//    T string( system::error_code & ec = boost::throws() ) const  // internal (i.e. original) format
 //    {
 //      return path_traits::convert<T>( m_path, ec );
 //    }
 
 #   ifdef BOOST_WINDOWS_API
 
-    // source format
-    const std::string  string() const
+    const std::string  string() const   // internal format
     { 
       std::string tmp;
       if ( !m_path.empty() )
@@ -352,7 +351,6 @@ namespace filesystem
 
 #   else   // BOOST_POSIX_API
 
-    // source format
     const std::string &  string() const   { return m_path; }
     const std::wstring   wstring() const
     { 
@@ -364,24 +362,28 @@ namespace filesystem
     }
 
 #   endif
-
     
 #   ifdef BOOST_WINDOWS_PATH
 
-    const path  native() const;   // native format
-    const path  generic() const;  // generic format
+    const path  preferred() const;   // preferred format
+    const path  generic() const;     // generic format
 
 #   else // BOOST_POSIX_PATH
 
-    const path  native() const   { return m_path; }
-    const path  generic() const  { return m_path; }
+    const path  preferred() const   { return m_path; }
+    const path  generic() const     { return m_path; }
 
 #   endif
 
-    const string_type &  source() const { return m_path; }  // source format
+    //  -----  internals observers  -----
+    //
+    //  access to the internal string is efficient and often convenient, but may result in
+    //  less than fully portable code.
+
+    const string_type &  rep() const { return m_path; }  // internal format
 
     //  c_str() returns a C string suitable for calls to the operating system API.
-    //  On POSIX and Windows that's source format, on some OS's it may be native format.
+    //  On POSIX and Windows that's internal format, on some OS's it may be native format.
     const value_type *   c_str() const  { return m_path.c_str(); }
 
     //  -----  decomposition  -----
@@ -566,11 +568,11 @@ namespace filesystem
   inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs; }
   inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
 # else   // BOOST_POSIX_API
-  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.source() == rhs.source(); }
-  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.source() == rhs; }
-  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.source() == rhs; }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.source(); }
-  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.source(); }
+  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.rep() == rhs.rep(); }
+  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.rep() == rhs; }
+  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.rep() == rhs; }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.rep(); }
+  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.rep(); }
 # endif
 
 
