@@ -103,7 +103,7 @@ inline std::string const get_temporary_filename(void)
 
 #if defined(_WIN32)
 namespace platform=win32;
-#elif defined(LINUX)
+#elif defined(__GNUC__)
 namespace platform=linux_os;
 #else
 #error Undefined Platform
