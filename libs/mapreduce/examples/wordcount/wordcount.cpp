@@ -120,8 +120,10 @@ boost::mapreduce::job<
 }   // namespace wordcount
 
 
+namespace std {
+
 template<>
-bool std::less<wordcount::reduce_key_t>::operator()(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second) const
+bool less<wordcount::reduce_key_t>::operator()(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second) const
 {
     std::ptrdiff_t const len = std::min(first.second, second.second);
     int const cmp = strnicmp(first.first, second.first, len);
@@ -134,7 +136,7 @@ bool std::less<wordcount::reduce_key_t>::operator()(wordcount::reduce_key_t cons
 }
 
 template<>
-bool std::operator==(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second)
+bool operator==(wordcount::reduce_key_t const &first, wordcount::reduce_key_t const &second)
 {
     if (first.second != second.second)
         return false;
@@ -144,11 +146,17 @@ bool std::operator==(wordcount::reduce_key_t const &first, wordcount::reduce_key
     return (strnicmp(first.first, second.first, first.second) == 0);
 }
 
+}   // namespace std
+
+namespace boost {
+namespace mapreduce {
 template<>
-unsigned boost::mapreduce::hash_partitioner::operator()(wordcount::reduce_key_t const &key, unsigned partitions) const
+unsigned hash_partitioner::operator()(wordcount::reduce_key_t const &key, unsigned partitions) const
 {
     return boost::hash_range(key.first, key.first+key.second) % partitions;
 }
+}   // namespace mapreduce {
+}   // namespace boost {
 
 
 
