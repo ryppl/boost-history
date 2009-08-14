@@ -1,0 +1,6 @@
+#ifndef BOOST_UNICODE_CAT_HPP
+#define BOOST_UNICODE_CAT_HPP
+
+
+
+#endif

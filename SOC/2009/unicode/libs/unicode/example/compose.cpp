@@ -9,6 +9,8 @@ Example in development.
 #include <iostream>
 #include <iterator>
 
+#include <boost/range/adaptor/reversed.hpp>
+
 namespace unicode = boost::unicode;
 namespace ucd = unicode::ucd;
 
@@ -39,8 +41,12 @@ int main()
     std::cout << std::endl;
     std::cout << "Decomposition type: " << as_string(ucd::get_decomposition_type(cp)) << std::endl;
     
+    boost::char32 baz[] = { cp, 0x330 };
     std::cout << "Canonical decomposition: ";
-    unicode::decompose(boost::list_of(cp), std::ostream_iterator<boost::char32>(std::cout, " "));
+    std::cout << unicode::composed(unicode::decomposed(baz)) << std::endl;
+    std::cout << "reversed: " << boost::make_reversed_range(unicode::composed(unicode::decomposed(baz))) << std::endl;
+    std::cout << unicode::normalized(baz) << std::endl;
+    std::cout << "reversed: " << boost::make_reversed_range(unicode::normalized(baz));
     std::cout << std::endl << std::endl;
     
     std::cout << "Canonical decomposition of U+00A8: ";

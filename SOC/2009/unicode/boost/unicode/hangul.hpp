@@ -32,6 +32,7 @@ namespace detail
  * Other code points are left unchanged. */
 struct hangul_decomposer
 {
+    typedef char32 input_type;
     typedef char32 output_type;
     typedef mpl::int_<3> max_output;
     
@@ -59,8 +60,23 @@ struct hangul_decomposer
         return out;
     }
     
+    static int len(char32 ch)
+    {
+        using namespace detail;
+        
+        char32 SIndex = ch - SBase;
+        char32 TIndex = SIndex % TCount;
+        
+        if(SIndex < 0 || SIndex >= SCount)
+            return 1;
+        if(TIndex)
+            return 3;
+        return 2;
+    }
+    
 };
 
+/* TODO: implement it */
 /** \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
  * transforms <L, V>, <L, V, T> and <LV, T> Hangul code points sequences into the
  * LV and LVT Hangul syllables, since those compositions are not part
@@ -68,6 +84,7 @@ struct hangul_decomposer
  * Other code points are left unchanged. */
 struct hangul_composer
 {
+    typedef char32 input_type;
     typedef char32 output_type;
     typedef mpl::int_<1> max_output;
     
