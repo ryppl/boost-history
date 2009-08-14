@@ -81,7 +81,7 @@ inline boost::shared_array<char> collection_to_win32_cmdline(const Arguments &ar
     boost::shared_array<char> cmdline(new char[size]); 
     cmdline.get()[0] = '\0'; 
     for (arguments_t::size_type i = 0; i < args.size(); ++i) 
-#if defined(__CYGWIN__) 
+#if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE) 
         ::strncat(cmdline.get(), args2[i].c_str(), args2[i].size()); 
 #else 
         ::strcat_s(cmdline.get(), size, args2[i].c_str()); 
@@ -121,7 +121,7 @@ inline boost::shared_array<char> environment_to_win32_strings(const environment 
         } 
 
         envp.reset(new char[s.size() + 1]); 
-#if defined(__CYGWIN__) 
+#if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE) 
         ::memcpy(envp.get(), s.c_str(), s.size() + 1); 
 #else 
         ::memcpy_s(envp.get(), s.size() + 1, s.c_str(), s.size() + 1); 
@@ -327,14 +327,14 @@ inline PROCESS_INFORMATION win32_start(const Executable &exe, const Arguments &a
     boost::shared_array<char> cmdline = collection_to_win32_cmdline(args); 
 
     boost::scoped_array<char> executable(new char[exe.size() + 1]); 
-#if defined(__CYGWIN__) 
+#if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE) 
     ::strcpy(executable.get(), exe.c_str()); 
 #else 
     ::strcpy_s(executable.get(), exe.size() + 1, exe.c_str()); 
 #endif 
 
     boost::scoped_array<char> workdir(new char[setup.work_directory.size() + 1]); 
-#if defined(__CYGWIN__) 
+#if defined(__CYGWIN__) || defined(_SCL_SECURE_NO_DEPRECATE) 
     ::strcpy(workdir.get(), setup.work_directory.c_str()); 
 #else 
     ::strcpy_s(workdir.get(), setup.work_directory.size() + 1, setup.work_directory.c_str()); 
