@@ -663,7 +663,7 @@ itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 operator + (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand,
                            itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>                object  )
 {
-    return result += operand; 
+    return object += operand; 
 }
 
 /** Add a map \c operand to map \c object. If an element of \c operand already exists
@@ -708,9 +708,7 @@ itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 operator | (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& operand,
                            itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>                object  )
 {
-    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    ObjectT result(object);
-    return result |= operand; 
+    return object |= operand; 
 }
 
 /** Add a map \c operand to map \c object. If an element of \c operand already exists
