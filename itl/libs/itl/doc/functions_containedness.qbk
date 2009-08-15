@@ -1,0 +1,23 @@
+[/
+    Copyright (c) 2008-2009 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+
+[/ //= Containedness ===================================================================]
+[section Containedness]
+
+[table
+[[['*Containedness*]]       [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
+[[`void T::clear()`]                           [1]       [1]      [1]     [1]      [1]      ]
+[[`bool T::empty()const`]                      [1]       [1]      [1]     [1]      [1]      ]
+[[`bool T::contains(const P&)const`]         [__ei]  [__eiS][__eiS __bpM][__es]   [__bm]    ]
+[[`bool T::contained_in(const P&)const`]      [__i]     [__S]    [__M]    [1]      [1]      ]
+]
+
+[endsect][/ Containedness]
+
+

@@ -283,6 +283,13 @@ public:
     SubType& erase(const segment_type& inter_val) 
     { return subtract(inter_val); }
 
+	/** Erase the interval that iterator \c position points to. */
+	void erase(iterator position){ _set.erase(position); }
+
+	/** Erase all intervals in the range <tt>[first,past)</tt> of iterators. */
+	void erase(iterator first, iterator past){ _set.erase(first, past); }
+
+
     //==========================================================================
     //= Intersection
     //==========================================================================
@@ -361,6 +368,11 @@ public:
     const_iterator upper_bound(const value_type& interval)const
     { return _set.upper_bound(interval); }
 
+	std::pair<iterator,iterator> equal_range(const key_type& interval)
+    { return _set.equal_range(interval); }
+
+	std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
+    { return _set.equal_range(interval); }
 
     //==========================================================================
     //= Morphisms

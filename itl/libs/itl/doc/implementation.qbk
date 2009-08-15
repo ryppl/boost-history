@@ -164,7 +164,7 @@ The /complexity patterns/ for ['*intersection*] are identical to those for ['*su
 [table Time Complexity of Intersection:
 [[]                                              [`P`]               [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
 [/ 1operation                                    2granul.            3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
-[[`T& operator -=(T& object, const P& operand)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
+[[`T& operator &=(T& object, const P& operand)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
 [[]                                              [`T::segment_type`] [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
 [[]                                              []                  [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
 [[]                                              [`interval_sets`]   []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]

@@ -1,0 +1,288 @@
+[/
+    Copyright (c) 2008-2009 Joachim Faulhaber
+
+    Distributed under the Boost Software License, Version 1.0.
+    (See accompanying file LICENSE_1_0.txt or copy at
+    http://www.boost.org/LICENSE_1_0.txt)
+]
+
+
+[/ //= Addition ===============================================================]
+[section Addition]
+
+[section Synopsis]
+
+[table
+[[Addition]                                [__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map] ]
+[[`T& T::add(const P&)`]                                     [__ei]    [__bp]   [__e]   [__b]     ]
+[[`T& operator +=(T&, const P&)`]                            [__eiS]   [__bpM]  [__es]  [__bm]    ]
+[[`T operator + (T, const P&)`\n`T operator + (const P&, T)`][__eiS]   [__bpM]  [__es]  [__bm]    ]
+[[`T& operator |=(      T&, const P&)`]                      [__eiS]   [__bpM]  [__es]  [__bm]    ]
+[[`T operator | (T, const P&)`\n`T operator | (const P&, T)`][__eiS]   [__bpM]  [__es]  [__bm]    ]
+]
+
+Functions and operators that implement ['*Addition*] on *itl* objects
+are given in the table above.
+
+[note `operator |=` and `operator |` are implemented just as `operator +=` and `operator +`.
+This is a redundancy that has been introduced deliberately, because 
+a /set union/ semantics is often attached `operators |=` and `|`. 
+]
+
+[endsect][/ Synopsis]
+
+[section Member functions][/ Addition]
+
+The admissable combinations of types for memberfunction 
+`T& T::add(const P&)` can be summarized in the 
+['*overload table*] below:
+
+``
+// overload table for
+T& T::add(const P&)
+
+add | e i b p    
+----+--------
+s   | s
+m   |     m
+S   | S S         
+M   |     M M    
+``
+
+The next table contains complexity characteristics for `add`.
+
+[table Time Complexity for member function add on itl containers
+[[`T& T::add(const P&)`]      [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
+[[__itl_set__]                 [__Olgn__] []          []        []          ]
+[[__itl_map__]                 []         []          [__Olgn__][]          ]
+[[__itv_set__\n__sep_itv_set__][__Olgn__] [__a_Olgn__][]        []          ]
+[[__spl_itv_set__]             [__Olgn__] [__On__]    []        []          ]
+[[__itv_map__\n__spl_itv_map__][]         []          [__Olgn__][__On__]    ]
+]
+
+[endsect][/ Member function Addition]
+
+[section Inplace operators]
+
+The possible overloads of inplace `T& operator += (T&, const P&)`
+are given by two tables, that show admissable combinations of types.
+Row types show instantiations of argument type `T`. Columns types
+show show instantiations of argument type `P`. If a combination
+of argument types is possible, the related table cell contains
+the result type of the operation. 
+__eiS_Phs__ __eibpsSmM__ will be used to denote 
+/elements, intervals, 
+element value pairs, interval value pairs, 
+element sets, interval sets, 
+element maps/ and /interval maps/. 
+The first table shows the 
+overloads of `+=` for /element containers/ the second table
+refers to /interval containers/. 
+
+``
+// overload tables for
+T& operator += (T&, const P&)
+
+element containers:     interval containers:  
++= | e b s m            += | e i b p S M    
+---+--------            ---+------------    
+s  | s   s              S  | S S     S       
+m  |   m   m            M  |     M M   M    
+``
+
+For the definition of admissable overloads
+we separate /element containers/ from /interval containers/.
+Within each group all combinations of types are supported 
+for an operation, that are inline with the *itl's* 
+design and the sets of laws, that establish the *itl's*
+[link boost_itl.semantics semantics].
+
+
+Overloads between /element containers/ and /interval containers/
+could also be defined. But this has not been done for
+pragmatical reasons: Each additional combination of types
+for an operation enlarges the space of possible overloads.
+This makes the overload resolution by compilers more complex,
+error prone and slows down compilation speed. Error messages
+for unresolvable or ambiguous overloads are difficult
+to read and understand. Therefore overloading of namespace
+global functions in the *itl* are limited to a reasonable
+field of combinations, that are described here.
+
+[endsect][/ Inplace operators]
+
+
+[h4 Complexity]
+
+For different combinations of argument types `T` and `P`
+different implementations of the `operator +=` are 
+selected. These implementations show different complexity
+characteristics. 
+If `T` is a container type, 
+the combination of 
+domain elements (__e) or element value pairs (__b)
+is faster than a combination of intervals (__i) or
+interval value pairs (__p) which in turn is faster than
+the combinatin of element or interval containers.
+The next table shows /time complexities/ of addition for
+*itl's* element containers.
+
+Sizes `n` and `m` are in the complexity statements are sizes
+of objects `T y` and `P x`:
+``
+n = y.iterative_size();
+m = x.iterative_size(); //if P is a container type
+``
+Note, that for an interval container the number of elements `T::size` is
+different from the number of intervals that you can iterate over.
+Therefore a function `T::iterative_size()` is used that provides the
+desired kind of size.
+
+[table Time Complexity for inplace Addition on element containers
+[[`T& operator += (T& y, const P& x)`][__ch_dom_t__][__ch_dom_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
+[[__itl_set__]                        [__Olgn__]    []               [__Om__]         []               ]
+[[__itl_map__]                        []            [__Olgn__]       []               [__Om__]         ]
+]
+
+Time complexity characteristics of inplace addition for interval containers
+is given by this table.
+
+[table Time Complexity for inplace Addition on interval containers
+[[`T& operator += (T& y, const P& x)`][][__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__][__ch_itv_sets__][__ch_itv_maps__]]
+[[interval_sets][__itv_set__\n__sep_itv_set__][__Olgn__] [__a_Olgn__][]        []        [__Omlgnpm__]    []               ]
+[[]             [__spl_itv_set__]             [__Olgn__] [__On__]    []        []        [__Omlgnpm__]    []               ]
+[[interval_maps][]                            []         []          [__Olgn__][__On__]  []               [__Omlgnpm__]    ]
+]
+
+Since the implementation of
+element and interval containers is based on the 
+[link boost_itl.implementation link red-black tree implementation]
+of std::AssociativeContainers, we have a logarithmic complexity for
+addition of elements.
+Addition of intervals or interval value pairs is amortized logarithmic
+for __itv_sets__ and __sep_itv_sets__ and linear for __spl_itv_sets__
+and __itv_maps__.
+Addition is linear for element containers and
+loglinear for interval containers.
+
+
+[section Infix operators]
+
+For every inplace operator
+``
+T& operator o= (T& object, const P& operand)
+``
+the *itl* provides corresponding infix operators.
+``
+T operator o (T object, const P& operand){ return object o= operand; }
+T operator o (const P& operand, T object){ return object o= operand; }
+``
+
+From this implementation of infix `operator o` 
+the compiler will hopefully use return value optimization 
+[@http://en.wikipedia.org/wiki/Return_value_optimization (RVO)]
+creatiing no temporary object and performing one copy of 
+the first argument `object`.
+
+[caution
+Compared to the /inplace/ `operator o=` every use of an 
+/infix/ `operator o` requires ['*one extra copy*] 
+of the first argument `object` that passes a container.]
+
+Use infix operators only, if
+
+* efficiency is not crucial, e.g. the containers copied are small.
+* a concise and short notation is more important than efficiency in your context.
+* you need the result of operator `o=` as a copy anyway.
+
+
+The admissable type combinations for infix `operator +`
+is defined by the overload tables below. For interval containers
+__itv_sets__ __S and __itv_maps__ __M are split up into
+
+``
+S1:          interval_set   M1:       interval_map 
+S2: separate_interval_set
+S3:    split_interval_set   M3: split_interval_map 
+``
+
+``
+// overload tables for
+T operator + (T, const P&)
+T operator + (const P&, T)
+
+element containers:     interval containers:
++  | e b s m            +  | e  i  b  p  S1 S2 S3 M1 M3     
+---+--------            ---+---------------------------
+e  |     s              e  |             S1 S2 S3 
+b  |       m            i  |             S1 S2 S3 
+s  | s   s              b  |                      M1 M3  
+m  |   m   m            p  |                      M1 M3
+                        S1 | S1 S1       S1 S2 S3 
+                        S2 | S2 S2       S2 S2 S3 
+                        S3 | S3 S3       S3 S3 S3 
+                        M1 |       M1 M1          M1 M3
+                        M3 |       M3 M3          M3 M3
+``
+
+[h5 Segmentational Fineness]
+
+The indices `i` of `Si` and `Mi` represent a property
+called ['*segmentational fineness*] or short ['*fineness*]. 
+Segmentational fineness represents the fact, 
+that for interval containers holding the same elements, a
+splitting interval container may contain more segments as
+a separating container which in turn may contain more
+segments than a joining one. So for an 
+``
+operator >
+``
+where
+``
+x > y   // means that
+x is_finer_than y
+
+// we have
+
+finer                                             coarser
+split_interval_set                           interval_set
+                   > separate_interval_set >  
+split_interval_map                           interval_map
+``
+
+This relation is needed to resolve the instantiation of an
+infix `T operator + (P, Q)` for two interval container types
+`P` and `Q`. If both `P` and `Q` are candidates for the result
+type `T`, one of them must be chosen by the compiler.
+We choose the type that is segmentational finer as
+result type `T`. This way we do not loose the ['*segment informations*]
+that are stored in the ['*finer] one of the container types `P` and `Q`.
+
+So looking up a type combination for e.g. 
+`T operator + (interval_map, split_interval_map)`
+which is equivalent to
+`T operator + (M1, M3)`
+we find for row type `M1` and column type `M3`,
+`M3` will be assigned as result type.
+So this type combination will result in
+choosing an 
+``
+split_interval_map operator + (const interval_map&, split_interval_map)
+``
+
+[h5 Time Complexity of infix `operators o`]
+
+The time complexity of all infix operators of the *itl*
+is biased by the extra copy of the `object` argument.
+So all infix `operators o` are at least 
+/linear/ in `n = object.iterative_size()`.
+Taking this into account, the complexities of all 
+infix operators can be determined
+from the corresponding inplace `operators o=` they depend
+on.
+
+[endsect][/ Infix operators]
+
+[endsect][/ Addition]
+
+

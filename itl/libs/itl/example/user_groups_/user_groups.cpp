@@ -50,7 +50,7 @@ using namespace boost::itl;
 // intervals.
 typedef boost::itl::set<string> MemberSetT;
 
-// boost::gregorian::date is the domain type the the interval map. 
+// boost::gregorian::date is the domain type the interval map. 
 // It's key values are therefore time intervals: interval<date>. The content
 // is the set of names: MemberSetT.
 typedef interval_map<date, MemberSetT> MembershipT;

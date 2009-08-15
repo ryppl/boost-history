@@ -131,6 +131,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_split_interval_
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_fastest_total_interval_quantifier", "..\..\test\fastest_total_interval_quantifier_\vc9_fastest_total_interval_quantifier.vcproj", "{EE61B7EF-EC45-4165-8B4B-FD5B7D2A917F}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "vc9_test_combinable", "..\..\test\test_combinable_\vc9_test_combinable.vcproj", "{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -397,6 +399,10 @@ Global
 		{EE61B7EF-EC45-4165-8B4B-FD5B7D2A917F}.Debug|Win32.Build.0 = Debug|Win32
 		{EE61B7EF-EC45-4165-8B4B-FD5B7D2A917F}.Release|Win32.ActiveCfg = Release|Win32
 		{EE61B7EF-EC45-4165-8B4B-FD5B7D2A917F}.Release|Win32.Build.0 = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA1}.Debug|Win32.ActiveCfg = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA1}.Debug|Win32.Build.0 = Debug|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA1}.Release|Win32.ActiveCfg = Release|Win32
+		{EE61B7EF-EC45-4165-8B49-FD5B8D3A9FA1}.Release|Win32.Build.0 = Release|Win32
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

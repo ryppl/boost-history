@@ -433,12 +433,17 @@ public:
     /** Erase all value pairs from \c *this map that are elements of map \eraser */
     SubType& erase(const interval_base_map& eraser);
 
+	/** Erase all value pairs within the range of the interval that iterator 
+	    \c position points to. */
+	void erase(iterator position){ _map.erase(position); }
+
+	/** Erase all value pairs for a range of iterators <tt>[first,past)</tt>. */
+	void erase(iterator first, iterator past){ _map.erase(first, past); }
 
     /** Remove all elements where property <tt>p</tt> holds, keep all others */
     template<class Predicate>
     interval_base_map& erase_if(const Predicate& pred)
     { _map.erase_if(pred); return *this; }
-
 
     //==========================================================================
     //= Intersection
@@ -565,6 +570,12 @@ public:
 
     const_iterator upper_bound(const key_type& interval)const
     { return _map.upper_bound(interval); }
+
+	std::pair<iterator,iterator> equal_range(const key_type& interval)
+    { return _map.equal_range(interval); }
+
+	std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
+    { return _map.equal_range(interval); }
 
     iterator begin() { return _map.begin(); }
     iterator end()   { return _map.end(); }

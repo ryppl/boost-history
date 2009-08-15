@@ -97,7 +97,10 @@ operator += (ObjectT& object, const OperandT& operand)
 	return object.add(operand); 
 }
 
-
+/** \par \b Requires: \c object and \c operand are addable.
+	\b Effects: \c operand is added to \c object.
+	\par \b Efficieny: There is one additional copy of 
+	\c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (ObjectT object, const OperandT& operand)
@@ -105,6 +108,10 @@ operator + (ObjectT object, const OperandT& operand)
     return object += operand; 
 }
 
+/** \par \b Requires: \c object and \c operand are addable.
+	\b Effects: \c operand is added to \c object.
+	\par \b Efficieny: There is one additional copy of 
+	\c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const OperandT& operand, ObjectT object)
@@ -113,6 +120,10 @@ operator + (const OperandT& operand, ObjectT object)
 }
 
 
+/** \par \b Requires: \c object and \c operand are addable.
+	\b Effects: \c operand is added to \c object.
+	\par \b Efficieny: There is one additional copy of 
+	\c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT>
 ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
@@ -154,7 +165,10 @@ operator |= (ObjectT& object, const OperandT& operand)
 	return object += operand; 
 }
 
-
+/** \par \b Requires: \c object and \c operand are addable.
+	\b Effects: \c operand is added to \c object.
+	\par \b Efficieny: There is one additional copy of 
+	\c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (ObjectT object, const OperandT& operand)
@@ -162,6 +176,10 @@ operator | (ObjectT object, const OperandT& operand)
     return object += operand; 
 }
 
+/** \par \b Requires: \c object and \c operand are addable.
+	\b Effects: \c operand is added to \c object.
+	\par \b Efficieny: There is one additional copy of 
+	\c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (const OperandT& operand, ObjectT object)
@@ -169,7 +187,10 @@ operator | (const OperandT& operand, ObjectT object)
     return object += operand; 
 }
 
-
+/** \par \b Requires: \c object and \c operand are addable.
+	\b Effects: \c operand is added to \c object.
+	\par \b Efficieny: There is one additional copy of 
+	\c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT>
 ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
@@ -207,7 +228,6 @@ For interval sets subtraction of segments
 is \b amortized \b logarithmic.
 */
 template<class ObjectT, class OperandT>
-inline 
 typename boost::enable_if<is_concept_equivalent<is_interval_map, ObjectT, OperandT>, 
                           ObjectT>::type& 
 operator -=(ObjectT& object, const OperandT& operand)

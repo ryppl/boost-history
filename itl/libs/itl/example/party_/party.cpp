@@ -59,7 +59,7 @@ using namespace boost::itl;
 // implement operator += that performs a set union on overlap of intervals.
 typedef boost::itl::set<string> GuestSetT;
 
-// Time is the domain type the the split_interval_map. It's key values are therefore
+// Time is the domain type the split_interval_map. It's key values are therefore
 // time intervals: interval<Time>. The content is the set of names: GuestSetT.
 
 
