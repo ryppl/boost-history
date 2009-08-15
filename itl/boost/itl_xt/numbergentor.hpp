@@ -202,7 +202,7 @@ void WeightedNumberGentor<WeightsT>::init()
 {
     _kumWeights[0] = WeightsT();
     for(int idx=1; idx < _size; idx++)
-        _kumWeights[idx] = static_cast<WeightsT>(std::min(_kumWeights[idx-1]+_weights[idx-1], _maxWeights));
+        _kumWeights[idx] = static_cast<WeightsT>((std::min)(_kumWeights[idx-1]+_weights[idx-1], _maxWeights));
 
     _kumWeights[_size] = _maxWeights;
 }
