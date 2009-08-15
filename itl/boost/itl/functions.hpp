@@ -18,7 +18,7 @@ namespace boost{namespace itl
 //= Equivalences and Orderings
 //==============================================================================
 /** Returns true, if \c left and \c right contain the same elements. 
-	Complexity: linear. */
+    Complexity: linear. */
 template<class LeftT, class RightT>
 typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
                           bool>::type
@@ -28,8 +28,8 @@ is_element_equal(const LeftT& left, const RightT& right)
 }
 
 /** Returns true, if \c left is lexicographically less than \c right. 
-	Intervals are interpreted as sequence of elements.
-	Complexity: linear. */
+    Intervals are interpreted as sequence of elements.
+    Complexity: linear. */
 template<class LeftT, class RightT>
 typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
                           bool>::type
@@ -39,8 +39,8 @@ is_element_less(const LeftT& left, const RightT& right)
 }
 
 /** Returns true, if \c left is lexicographically greater than \c right. 
-	Intervals are interpreted as sequence of elements.
-	Complexity: linear. */
+    Intervals are interpreted as sequence of elements.
+    Complexity: linear. */
 template<class LeftT, class RightT>
 typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
                           bool>::type
@@ -53,15 +53,15 @@ is_element_greater(const LeftT& left, const RightT& right)
 //= Addition
 //==============================================================================
 /** \par \b Requires: \c OperandT is an interval container addable to \c ObjectT. 
-	\b Effects: \c operand is added to \c object.
-	\par \b Returns: A reference to \c object.
-	\b Complexity: loglinear */
+    \b Effects: \c operand is added to \c object.
+    \par \b Returns: A reference to \c object.
+    \b Complexity: loglinear */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>, 
                           ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
 {
-	typename ObjectT::iterator prior_ = object.end();
+    typename ObjectT::iterator prior_ = object.end();
     const_FORALL(typename OperandT, elem_, operand) 
         prior_ = object.add(prior_, *elem_); 
 
@@ -69,9 +69,9 @@ operator += (ObjectT& object, const OperandT& operand)
 }
 
 /* \par \b Requires: \c OperandT is an addable derivative type of \c ObjectT. 
-	\b Effects: \c operand is added to \c object.
-	\par \b Returns: A reference to \c object.
-	\b Complexity:
+    \b Effects: \c operand is added to \c object.
+    \par \b Returns: A reference to \c object.
+    \b Complexity:
 \code
                   \ OperandT:                    
                    \         element     segment 
@@ -94,13 +94,13 @@ typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>,
                           ObjectT>::type&
 operator += (ObjectT& object, const OperandT& operand)
 { 
-	return object.add(operand); 
+    return object.add(operand); 
 }
 
 /** \par \b Requires: \c object and \c operand are addable.
-	\b Effects: \c operand is added to \c object.
-	\par \b Efficieny: There is one additional copy of 
-	\c ObjectT \c object compared to inplace \c operator \c += */
+    \b Effects: \c operand is added to \c object.
+    \par \b Efficieny: There is one additional copy of 
+    \c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (ObjectT object, const OperandT& operand)
@@ -109,9 +109,9 @@ operator + (ObjectT object, const OperandT& operand)
 }
 
 /** \par \b Requires: \c object and \c operand are addable.
-	\b Effects: \c operand is added to \c object.
-	\par \b Efficieny: There is one additional copy of 
-	\c ObjectT \c object compared to inplace \c operator \c += */
+    \b Effects: \c operand is added to \c object.
+    \par \b Efficieny: There is one additional copy of 
+    \c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator + (const OperandT& operand, ObjectT object)
@@ -121,9 +121,9 @@ operator + (const OperandT& operand, ObjectT object)
 
 
 /** \par \b Requires: \c object and \c operand are addable.
-	\b Effects: \c operand is added to \c object.
-	\par \b Efficieny: There is one additional copy of 
-	\c ObjectT \c object compared to inplace \c operator \c += */
+    \b Effects: \c operand is added to \c object.
+    \par \b Efficieny: There is one additional copy of 
+    \c ObjectT \c object compared to inplace \c operator \c += */
 template<class ObjectT>
 ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
@@ -136,9 +136,9 @@ ObjectT operator + (typename ObjectT::overloadable_type object, const ObjectT& o
 //------------------------------------------------------------------------------
 
 /** \par \b Requires: Types \c ObjectT and \c OperandT are addable.
-	\par \b Effects: \c operand is added to \c object.
-	\par \b Returns: A reference to \c object.
-	\b Complexity:
+    \par \b Effects: \c operand is added to \c object.
+    \par \b Returns: A reference to \c object.
+    \b Complexity:
 \code
                   \ OperandT:                      interval
                    \         element     segment   container
@@ -162,13 +162,13 @@ typename boost::enable_if<is_right_intra_combinable<ObjectT, OperandT>,
                           ObjectT>::type&
 operator |= (ObjectT& object, const OperandT& operand)
 { 
-	return object += operand; 
+    return object += operand; 
 }
 
 /** \par \b Requires: \c object and \c operand are addable.
-	\b Effects: \c operand is added to \c object.
-	\par \b Efficieny: There is one additional copy of 
-	\c ObjectT \c object compared to inplace \c operator \c |= */
+    \b Effects: \c operand is added to \c object.
+    \par \b Efficieny: There is one additional copy of 
+    \c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (ObjectT object, const OperandT& operand)
@@ -177,9 +177,9 @@ operator | (ObjectT object, const OperandT& operand)
 }
 
 /** \par \b Requires: \c object and \c operand are addable.
-	\b Effects: \c operand is added to \c object.
-	\par \b Efficieny: There is one additional copy of 
-	\c ObjectT \c object compared to inplace \c operator \c |= */
+    \b Effects: \c operand is added to \c object.
+    \par \b Efficieny: There is one additional copy of 
+    \c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT, class OperandT>
 typename boost::enable_if<is_binary_intra_combinable<ObjectT, OperandT>, ObjectT>::type
 operator | (const OperandT& operand, ObjectT object)
@@ -188,9 +188,9 @@ operator | (const OperandT& operand, ObjectT object)
 }
 
 /** \par \b Requires: \c object and \c operand are addable.
-	\b Effects: \c operand is added to \c object.
-	\par \b Efficieny: There is one additional copy of 
-	\c ObjectT \c object compared to inplace \c operator \c |= */
+    \b Effects: \c operand is added to \c object.
+    \par \b Efficieny: There is one additional copy of 
+    \c ObjectT \c object compared to inplace \c operator \c |= */
 template<class ObjectT>
 ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& operand)
 {
@@ -206,9 +206,9 @@ ObjectT operator | (typename ObjectT::overloadable_type object, const ObjectT& o
 //------------------------------------------------------------------------------
 
 /** \par \b Requires: Types \c ObjectT and \c OperandT are subtractable.
-	\par \b Effects: \c operand is subtracted from \c object.
-	\par \b Returns: A reference to \c object.
-	\b Complexity:
+    \par \b Effects: \c operand is subtracted from \c object.
+    \par \b Returns: A reference to \c object.
+    \b Complexity:
 \code
                   \ OperandT:                      interval
                    \         element    segment    container
@@ -243,7 +243,7 @@ typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>,
                           ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
 { 
-	return object.subtract(operand); 
+    return object.subtract(operand); 
 }
 
 template<class ObjectT, class OperandT>
@@ -251,7 +251,7 @@ typename boost::enable_if<is_cross_derivative<ObjectT, OperandT>,
                           ObjectT>::type&
 operator -= (ObjectT& object, const OperandT& operand)
 { 
-	return object.erase(operand); 
+    return object.erase(operand); 
 }
 
 template<class ObjectT, class IntervalSetT>
@@ -259,7 +259,7 @@ typename boost::enable_if<combines_right_to_interval_set<ObjectT, IntervalSetT>,
                           ObjectT>::type&
 operator -= (ObjectT& object, const IntervalSetT& operand)
 {
-	return erase(object, operand);
+    return erase(object, operand);
 }
 
 
@@ -278,7 +278,7 @@ typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>,
                           ObjectT>::type&
 insert(ObjectT& object, const OperandT& operand)
 {
-	typename ObjectT::iterator prior_ = object.end();
+    typename ObjectT::iterator prior_ = object.end();
     const_FORALL(typename OperandT, elem_, operand) 
         object.insert(*elem_); 
 
@@ -305,7 +305,7 @@ erase(ObjectT& object, const OperandT& operand)
 
     typename OperandT::const_iterator it_ = common_lwb;
     while(it_ != common_upb)
-		object.erase(*it_++);
+        object.erase(*it_++);
 
     return object; 
 }
@@ -355,12 +355,12 @@ typename boost::enable_if<is_inter_combinable<LeftT, RightT>,
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
-	LeftT intersection;
+    LeftT intersection;
 
-	if(left.empty() || right.empty())
-		return false;
+    if(left.empty() || right.empty())
+        return false;
 
-	typename RightT::const_iterator  right_common_lower_;
+    typename RightT::const_iterator  right_common_lower_;
     typename RightT::const_iterator right_common_upper_;
 
     if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
@@ -382,30 +382,30 @@ typename boost::enable_if<is_inter_derivative<Type, AssociateT>,
                           bool>::type
 intersects(const Type& left, const AssociateT& right)
 {
-	return left.intersects(right);
+    return left.intersects(right);
 }
 
 /** \b Returns true, if \c left and \c right have no common elements.
     Intervals are interpreted as sequence of elements.
-	\b Complexity: loglinear, if \c left and \c right are interval containers. */
+    \b Complexity: loglinear, if \c left and \c right are interval containers. */
 template<class LeftT, class RightT>
 typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
                           bool>::type
 is_disjoint(const LeftT& left, const RightT& right)
 {
-	return !intersects(left, right);
+    return !intersects(left, right);
 }
 
 /** \b Returns true, if \c left and \c right have no common elements.
     Intervals are interpreted as sequence of elements.
-	\b Complexity: logarithmic, if \c AssociateT is an element type \c Type::element_type. 
-	linear, if \c AssociateT is a segment type \c Type::segment_type. */
+    \b Complexity: logarithmic, if \c AssociateT is an element type \c Type::element_type. 
+    linear, if \c AssociateT is a segment type \c Type::segment_type. */
 template<class Type, class AssociateT>
 typename boost::enable_if<is_inter_derivative<Type, AssociateT>, 
                           bool>::type
 is_disjoint(const Type& left, const AssociateT& right)
 {
-	return !left.intersects(right);
+    return !left.intersects(right);
 }
 
 
@@ -422,7 +422,7 @@ typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>,
                           ObjectT>::type&
 operator ^= (ObjectT& object, const OperandT& operand)
 { 
-	return object.flip(operand); 
+    return object.flip(operand); 
 }
 
 template<class ObjectT, class OperandT>
@@ -430,7 +430,7 @@ typename boost::enable_if<is_intra_derivative<ObjectT, OperandT>,
                           ObjectT>::type&
 operator ^= (ObjectT& object, const OperandT& operand)
 { 
-	return object.flip(operand); 
+    return object.flip(operand); 
 }
 
 template<class ObjectT, class OperandT>
@@ -464,8 +464,8 @@ typename boost::enable_if<is_interval_container<ObjectT>,
 hull(const ObjectT& object)
 {
     return 
-		object.empty() ? neutron<typename ObjectT::interval_type>::value()
-		: (ObjectT::key_value(object.begin()))
+        object.empty() ? neutron<typename ObjectT::interval_type>::value()
+        : (ObjectT::key_value(object.begin()))
             .span(ObjectT::key_value(object.rbegin()));
 }
 

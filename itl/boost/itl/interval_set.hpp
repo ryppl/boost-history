@@ -121,7 +121,7 @@ public:
         typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> base_set_type;
         this->clear();
         // Has to be implemented via add. there might be touching borders to be joined
-		iterator prior_ = this->_set.end();
+        iterator prior_ = this->_set.end();
         const_FORALL(typename base_set_type, it_, src) 
             prior_ = this->add(prior_, *it_);
     }
@@ -199,11 +199,11 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
                 // it's a non border element that might have two touching neighbours
                 if((*it_extended).touches(*succ_)) 
                     return join_on_left(it_extended, succ_);
-				else
-					return it_extended;
+                else
+                    return it_extended;
             }
-			else
-				return it_extended;
+            else
+                return it_extended;
         }
         else
         {
@@ -217,7 +217,7 @@ inline typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
         }
     }
 
-	return it_;
+    return it_;
 }
 
 
@@ -274,7 +274,7 @@ typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
     interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
     if(addend.empty()) 
-		return prior_;
+        return prior_;
 
     iterator insertion = this->_set.insert(prior_, addend);
 
@@ -282,7 +282,7 @@ typename interval_set<DomainT,Compare,Interval,Alloc>::iterator
         return handle_neighbours(insertion);
     else
     {
-		std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
+        std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
         iterator first_ = overlap.first,
                  end_   = overlap.second,
                  last_  = end_; --last_;

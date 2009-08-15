@@ -29,8 +29,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/size.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 
-#undef min
-#undef max
+//#undef min
+//#undef max
 
 #define BOUND_VALUE first
 #define BOUND_TYPES second
@@ -339,8 +339,8 @@ interval.as(open_bounded).is(open_bounded)
 
     /** An interval that covers the complete range of it's domain_type */
     static interval whole()
-    { return interval<DomainT>::closed(std::numeric_limits<DomainT>::min(), 
-                                       std::numeric_limits<DomainT>::max()); }
+    { return interval<DomainT>::closed((std::numeric_limits<DomainT>::min)(), 
+                                       (std::numeric_limits<DomainT>::max)()); }
 
 
     /** First element of \c *this is less than first element of \c x2 */

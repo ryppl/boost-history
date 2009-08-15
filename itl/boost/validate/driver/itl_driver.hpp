@@ -46,10 +46,10 @@ namespace boost{namespace itl
     class itl_driver
     {
     public:
-		itl_driver()
-		{
-			_laws_per_cycle = GentorProfileSgl::it()->laws_per_cycle();
-		}
+        itl_driver()
+        {
+            _laws_per_cycle = GentorProfileSgl::it()->laws_per_cycle();
+        }
 
         bool hasValidProfile()const { return _isValid; }
 
@@ -86,26 +86,26 @@ namespace boost{namespace itl
         {
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             int valid_count = 1;
-			double avg_evaluation_time = 0.0;
-			long   instance_count      = 0;
+            double avg_evaluation_time = 0.0;
+            long   instance_count      = 0;
             FORALL(ValidationCounterT, it, _frequencies)
             {
-				long law_validation_count = it->CONT_VALUE.count();
-				double avg_law_evaluation_time = 
-					it->CONT_VALUE.time()/(law_validation_count);
+                long law_validation_count = it->CONT_VALUE.count();
+                double avg_law_evaluation_time = 
+                    it->CONT_VALUE.time()/(law_validation_count);
                 printf("%3d %-58s%9d%7.0lf\n", 
-					valid_count, it->KEY_VALUE.c_str(), law_validation_count, avg_law_evaluation_time);
+                    valid_count, it->KEY_VALUE.c_str(), law_validation_count, avg_law_evaluation_time);
 
-				avg_evaluation_time += avg_law_evaluation_time;
-				instance_count      += law_validation_count;
+                avg_evaluation_time += avg_law_evaluation_time;
+                instance_count      += law_validation_count;
                 valid_count++;
             }
 
             std::cout << "------------------------------------------------------------------------------" << std::endl;
-			// Summary for the current cycle
-			double avg_evaluation_time_per_law = avg_evaluation_time/_frequencies.size();
+            // Summary for the current cycle
+            double avg_evaluation_time_per_law = avg_evaluation_time/_frequencies.size();
             printf( "    %10.3lf%-50s%7d%7.0lf\n", 
-				    avg_evaluation_time_per_law, " ", instance_count, avg_evaluation_time_per_law);
+                    avg_evaluation_time_per_law, " ", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
             FORALL(ViolationMapT, it, _violations)
@@ -145,9 +145,9 @@ namespace boost{namespace itl
 
     protected:
         void setValid(bool truth) 
-		{ 
-			_isValid = truth;
-		}
+        { 
+            _isValid = truth;
+        }
 
         void setRootTypeNames()
         {
@@ -207,9 +207,9 @@ namespace boost{namespace itl
         ViolationMapT      _violations;
         bool               _isValid;
 
-		int _laws_per_cycle; // After _laws_per_cycle times a cycle is
-		                     // done and times and frequencies of law 
-		                     // validations are reported for all instances.
+        int _laws_per_cycle; // After _laws_per_cycle times a cycle is
+                             // done and times and frequencies of law 
+                             // validations are reported for all instances.
     };
 
 

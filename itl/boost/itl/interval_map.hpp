@@ -102,7 +102,7 @@ public:
                                   Traits,Compare,Combine,Section,Interval,Alloc> base_map_type;
         this->clear();
         // Can be implemented via _map.insert: Interval joining not necessary.
-		iterator prior_ = this->_map.end();
+        iterator prior_ = this->_map.end();
         const_FORALL(typename base_map_type, it_, src) 
             prior_ = this->add(prior_, *it_); 
     }
@@ -328,17 +328,17 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
     else
     {
         // Detect the first and the end iterator of the collision sequence
-		std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
+        std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
         iterator it_   = overlap.first,
-				 last_ = overlap.second;
-				 --last_;
+                 last_ = overlap.second;
+                 --last_;
         interval_type rest_interval = inter_val;
 
         add_front         (rest_interval, co_val, it_);
         add_main<Combiner>(rest_interval, co_val, it_, last_);
         add_rear<Combiner>(rest_interval, co_val, it_);
 
-		return it_;
+        return it_;
     }
 }
 
@@ -464,10 +464,10 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
             Combiner()(it_->CONT_VALUE, co_val);
 
             if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
-			{
+            {
                 this->_map.erase(it_);
-				it_ = prior_;
-			}
+                it_ = prior_;
+            }
             else
                 join_neighbours(it_);
         }
@@ -486,10 +486,10 @@ inline void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interv
             Combiner()(it_->CONT_VALUE, co_val);
 
             if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
-			{
+            {
                 this->_map.erase(it_);
-				it_ = insertion_;
-			}
+                it_ = insertion_;
+            }
             else
                 join_neighbours(it_);
         }

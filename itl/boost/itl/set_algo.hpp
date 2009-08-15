@@ -66,9 +66,9 @@ namespace boost{namespace itl
                 return result;
 
             typedef typename ObjectT::const_iterator Object_const_iterator;
-			typename ObjectT::iterator prior_ = result.end();
+            typename ObjectT::iterator prior_ = result.end();
             for(Object_const_iterator x2_ = x2.begin(); x2_ != x2.end(); x2_++)
-				prior_ = result.add(prior_, *x2_);
+                prior_ = result.add(prior_, *x2_);
 
             return result;
         }
@@ -135,7 +135,7 @@ namespace boost{namespace itl
             return true;
         }
 
-		template<class SetType>
+        template<class SetType>
         bool intersects(const SetType& left, const SetType& right)
         {
             typename SetType::const_iterator common_lwb_right_;
@@ -150,16 +150,16 @@ namespace boost{namespace itl
             {
                 found_ = left.find(*right_++);
                 if(found_ != left.end()) 
-					return true; // found a common element
+                    return true; // found a common element
             }
             // found no common element
             return false;    
         }
 
-		template<class SetType>
+        template<class SetType>
         inline bool is_disjoint(const SetType& left, const SetType& right)
         {
-			return !intersects(left, right);
+            return !intersects(left, right);
         }
 
 

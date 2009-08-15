@@ -222,9 +222,9 @@ public:
     map& add(const value_type& value_pair) { return add<codomain_combine>(value_pair); }
 
     /** \c add add \c value_pair into the map using \c prior as a hint to
-	    insert \c value_pair after the position \c prior is pointing to. */
+        insert \c value_pair after the position \c prior is pointing to. */
     iterator add(iterator prior, const value_type& value_pair) 
-	{ return add<codomain_combine>(prior, value_pair); }
+    { return add<codomain_combine>(prior, value_pair); }
 
     /** If the \c value_pair's key value is in the map, it's data value is
         subtraced from the data value stored in the map. */
@@ -378,20 +378,20 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
     template <class Combiner>
 typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-	::add(iterator prior_, const value_type& val)
+    ::add(iterator prior_, const value_type& val)
 {
     if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
         return prior_;
 
-	iterator inserted_ = insert(prior_, value_type(val.KEY_VALUE, Combiner::neutron()));
-	Combiner()(inserted_->CONT_VALUE, val.CONT_VALUE);
+    iterator inserted_ = insert(prior_, value_type(val.KEY_VALUE, Combiner::neutron()));
+    Combiner()(inserted_->CONT_VALUE, val.CONT_VALUE);
     if(Traits::absorbs_neutrons && inserted_->CONT_VALUE == Combiner::neutron())
-	{
+    {
         erase(inserted_);
-		return prior_;
-	}
-	else
-		return inserted_;
+        return prior_;
+    }
+    else
+        return inserted_;
 }
 
 
@@ -673,7 +673,7 @@ inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
-	return Set::add(object, operand); 
+    return Set::add(object, operand); 
 }
 
 
@@ -718,7 +718,7 @@ inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator |= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
-	return Set::add(object, operand); 
+    return Set::add(object, operand); 
 }
 
 
@@ -762,7 +762,7 @@ inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator -= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
-	return Set::erase(object, operand); 
+    return Set::erase(object, operand); 
 }
 
 
@@ -808,8 +808,8 @@ inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
-	Map::intersect(object, operand); 
-	return object; 
+    Map::intersect(object, operand); 
+    return object; 
 }
 
 

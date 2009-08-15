@@ -112,8 +112,8 @@ public:
     template<class SubType>
     void assign(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     {
-		this->clear();
-		this->_set.insert(src.begin(), src.end());
+        this->clear();
+        this->_set.insert(src.begin(), src.end());
     }
     
 private:
@@ -126,7 +126,7 @@ private:
 
     /// Insertion of an interval <tt>x</tt>
     void add_(const value_type& x);
-	iterator add_(iterator prior_, const value_type& x);
+    iterator add_(iterator prior_, const value_type& x);
 
     /// Removal of an interval <tt>x</tt>
     void subtract_(const value_type& x);
@@ -183,7 +183,7 @@ inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
     split_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
     if(addend.empty()) 
-		return prior_;
+        return prior_;
 
     iterator insertion = this->_set.insert(prior_, addend);
 
@@ -191,7 +191,7 @@ inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
         return insertion;
     else
     {
-		std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
+        std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
         iterator first_ = overlap.first,
                  end_   = overlap.second,
                  last_  = end_; --last_;
@@ -203,7 +203,7 @@ inline typename split_interval_set<DomainT,Compare,Interval,Alloc>::iterator
         add_main (rest_interval, it_, last_);
         add_rear (rest_interval, it_);
 
-		return it_;
+        return it_;
     }
 }
 
@@ -274,7 +274,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
     if(!lead_gap.empty())
-	    //          [lead_gap--- . . .
+        //          [lead_gap--- . . .
         // [prior_)          [-- it_ ...
         this->_set.insert(prior_, lead_gap);
     

@@ -19,13 +19,13 @@ namespace boost{namespace itl
     class GentorProfile
     {
     public:
-		GentorProfile();
+        GentorProfile();
 
-		void set_defaults();
-		void set_debug_defaults();
-		void set_release_defaults();
+        void set_defaults();
+        void set_debug_defaults();
+        void set_release_defaults();
 
-		void set_std_profile(int unit, int factor);
+        void set_std_profile(int unit, int factor);
 
         void set_range_int(int lwb, int upb) 
         { _range_int = interval<int>::rightopen(lwb, upb); }
@@ -58,19 +58,19 @@ namespace boost{namespace itl
         int                 maxIntervalLength()     { return _maxIntervalLength; }
         interval<int>       range_codomain_ContainerSize()
                                                     { return _range_codomain_ContainerSize; }
-		int                 repeat_count()          { return _repeat_count; }
-		int                 trials_count()          { return _trials_count; }
-		int                 trials_count_release()  { return _trials_count_release; }
-		int                 laws_per_cycle()        { return _laws_per_cycle; }
+        int                 repeat_count()          { return _repeat_count; }
+        int                 trials_count()          { return _trials_count; }
+        int                 trials_count_release()  { return _trials_count_release; }
+        int                 laws_per_cycle()        { return _laws_per_cycle; }
 
-		int                 unit()                  { return _unit; }
-		int                 scaling()               { return _scaling; }
+        int                 unit()                  { return _unit; }
+        int                 scaling()               { return _scaling; }
 
-		double              debug_slowdown()const   { return _debug_slowdown; }
+        double              debug_slowdown()const   { return _debug_slowdown; }
 
-		int adjusted_trials_count()const;
+        int adjusted_trials_count()const;
 
-		void report_profile();
+        void report_profile();
 
     private:
         interval<int>       _range_int;
@@ -83,15 +83,15 @@ namespace boost{namespace itl
         int                 _maxIntervalLength;
 
         interval<int>       _range_codomain_ContainerSize;
-		int                 _repeat_count;
-		int                 _trials_count;
-		int                 _trials_count_release;
-		int                 _laws_per_cycle;
+        int                 _repeat_count;
+        int                 _trials_count;
+        int                 _trials_count_release;
+        int                 _laws_per_cycle;
 
-		double              _debug_slowdown;
+        double              _debug_slowdown;
 
-		int                 _unit;
-		int                 _scaling;
+        int                 _unit;
+        int                 _scaling;
     };
 
 
@@ -128,13 +128,13 @@ namespace boost{namespace itl
         interval<double>    range_interval_double()    { return m_profile.range_interval_double();}
         int                 maxIntervalLength()        { return m_profile.maxIntervalLength();   }
         interval<int>       range_codomain_ContainerSize(){ return m_profile.range_codomain_ContainerSize(); }
-		int                 repeat_count()             { return m_profile.repeat_count(); }
-		int                 trials_count()             { return m_profile.trials_count(); }
-		int                 laws_per_cycle()           { return m_profile.laws_per_cycle(); }
+        int                 repeat_count()             { return m_profile.repeat_count(); }
+        int                 trials_count()             { return m_profile.trials_count(); }
+        int                 laws_per_cycle()           { return m_profile.laws_per_cycle(); }
 
-		void                report_profile()           { return m_profile.report_profile(); }
+        void                report_profile()           { return m_profile.report_profile(); }
 
-		void set_std_profile(int unit, int factor){ return m_profile.set_std_profile(unit, factor); }
+        void set_std_profile(int unit, int factor){ return m_profile.set_std_profile(unit, factor); }
 
 
     private:

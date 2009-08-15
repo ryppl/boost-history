@@ -60,10 +60,10 @@ namespace boost{namespace itl
         static const int default_repeat_count = 10;
 #endif
         LawValidater()
-		{ 
-			_repeat_count   = GentorProfileSgl::it()->repeat_count(); 
-			_trials_count   = GentorProfileSgl::it()->trials_count(); 
-		}
+        { 
+            _repeat_count   = GentorProfileSgl::it()->repeat_count(); 
+            _trials_count   = GentorProfileSgl::it()->trials_count(); 
+        }
 
         void set_trials_count(int trials) 
         {
@@ -105,7 +105,7 @@ namespace boost{namespace itl
 
         int _trials_count;
         int _silent_trials_count;
-		int _repeat_count;
+        int _repeat_count;
 
         LawViolationsT     _lawViolations;
         ValidationCounterT _frequencies;
@@ -122,8 +122,8 @@ namespace boost{namespace itl
         _violations.clear();
     }
 
-	// Runs law_instance_count * repeat_count validations on the law LawT
-	// law_instance_count: Number of instances that are validated for LawT
+    // Runs law_instance_count * repeat_count validations on the law LawT
+    // law_instance_count: Number of instances that are validated for LawT
     template <class LawT, template<typename>class GentorT>
     void LawValidater<LawT, GentorT>::run()
     {
@@ -134,8 +134,8 @@ namespace boost{namespace itl
 
         // Input values that are to be generated on every iteration
         input_tuple values;
-		posix_time::ptime start, stop;
-		double validation_time = 0.0; //microseconds
+        posix_time::ptime start, stop;
+        double validation_time = 0.0; //microseconds
 
         for(int idx=0; idx<_trials_count; idx++)
         {
@@ -143,22 +143,22 @@ namespace boost{namespace itl
             _gentor.template map_template<GentorT, SomeValue>(values);
             _law.setInstance(values);
 
-			bool law_is_violated = false;
-			start = posix_time::ptime(posix_time::microsec_clock::local_time());
-			// In order to measure small time intervals, evaluation must be repeated.
-			for(int repeat=0; repeat<_repeat_count; repeat++)
-				law_is_violated = !_law.holds();
+            bool law_is_violated = false;
+            start = posix_time::ptime(posix_time::microsec_clock::local_time());
+            // In order to measure small time intervals, evaluation must be repeated.
+            for(int repeat=0; repeat<_repeat_count; repeat++)
+                law_is_violated = !_law.holds();
 
-			stop = posix_time::ptime(posix_time::microsec_clock::local_time());
-			validation_time += static_cast<double>((stop - start).total_microseconds());
+            stop = posix_time::ptime(posix_time::microsec_clock::local_time());
+            validation_time += static_cast<double>((stop - start).total_microseconds());
 
             if(law_is_violated)
                 _lawViolations.insert(_law);
 
         }
 
-		// Average time for one law evaluation in micro seconds
-		double avg_validation_time = validation_time/(_trials_count * _repeat_count);
+        // Average time for one law evaluation in micro seconds
+        double avg_validation_time = validation_time/(_trials_count * _repeat_count);
 
         if(!_lawViolations.empty())
         {
@@ -179,8 +179,8 @@ namespace boost{namespace itl
         {
             //reportSuccess();
             _frequencies +=
-				ValidationCounterT::value_type(lawType(), 
-				                               validation_counts(avg_validation_time));
+                ValidationCounterT::value_type(lawType(), 
+                                               validation_counts(avg_validation_time));
         }
 
     }

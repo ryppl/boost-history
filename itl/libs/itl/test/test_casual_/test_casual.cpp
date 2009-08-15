@@ -39,6 +39,6 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef interval_set<int> IntervalSetT;
     typedef split_interval_set<int> SplitIntervalSetT;
 
-	const bool test = is_same<SplitIntervalSetT::key_type, SplitIntervalSetT::interval_type>::value;
-	BOOST_CHECK_EQUAL(test, true);
+    const bool test = is_same<SplitIntervalSetT::key_type, SplitIntervalSetT::interval_type>::value;
+    BOOST_CHECK_EQUAL(test, true);
 }

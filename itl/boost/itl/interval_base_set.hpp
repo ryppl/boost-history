@@ -116,7 +116,7 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_reverse_iterator const_reverse_iterator;
 
-	enum { fineness = 4 }; //SubType::fineness };
+    enum { fineness = 4 }; //SubType::fineness };
 
 public:
     //==========================================================================
@@ -126,12 +126,12 @@ public:
     interval_base_set(){}
 
     /** Copy constructor */
-	interval_base_set(const interval_base_set& src): _set(src._set){}
+    interval_base_set(const interval_base_set& src): _set(src._set){}
 
     /** Assignment operator */
     interval_base_set& operator = (const interval_base_set& src) 
     { 
-		this->_set = src._set;
+        this->_set = src._set;
         return *this; 
     }
 
@@ -245,9 +245,9 @@ public:
     SubType& add(const segment_type& inter_val) 
     { that()->add_(inter_val); return *that(); }
 
-	/** Add an interval of elements \c inter_val to the set. Iterator 
-	    \c prior_ is a hint to the position \c inter_val can be 
-		inserted after. */
+    /** Add an interval of elements \c inter_val to the set. Iterator 
+        \c prior_ is a hint to the position \c inter_val can be 
+        inserted after. */
     iterator add(iterator prior_, const segment_type& inter_val) 
     { return that()->add_(prior_, inter_val); }
 
@@ -283,11 +283,11 @@ public:
     SubType& erase(const segment_type& inter_val) 
     { return subtract(inter_val); }
 
-	/** Erase the interval that iterator \c position points to. */
-	void erase(iterator position){ _set.erase(position); }
+    /** Erase the interval that iterator \c position points to. */
+    void erase(iterator position){ _set.erase(position); }
 
-	/** Erase all intervals in the range <tt>[first,past)</tt> of iterators. */
-	void erase(iterator first, iterator past){ _set.erase(first, past); }
+    /** Erase all intervals in the range <tt>[first,past)</tt> of iterators. */
+    void erase(iterator first, iterator past){ _set.erase(first, past); }
 
 
     //==========================================================================
@@ -317,15 +317,15 @@ public:
     )const;
 
 
-	/** Returns \c true, if element \c key is found in \c *this map.
-	    Complexity: logarithmic. */
-	bool intersects(const element_type& key)const
-	{ return _set.find(interval_type(key)) != _set.end(); }
+    /** Returns \c true, if element \c key is found in \c *this map.
+        Complexity: logarithmic. */
+    bool intersects(const element_type& key)const
+    { return _set.find(interval_type(key)) != _set.end(); }
 
-	/** Returns \c true, if \c inter_val intersects with \c *this map.
-	    Complexity: logarithmic. */
-	bool intersects(const interval_type& inter_val)const
-	{ return _set.find(inter_val) != _set.end(); }
+    /** Returns \c true, if \c inter_val intersects with \c *this map.
+        Complexity: logarithmic. */
+    bool intersects(const interval_type& inter_val)const
+    { return _set.find(inter_val) != _set.end(); }
 
     //==========================================================================
     //= Symmetric difference
@@ -368,10 +368,10 @@ public:
     const_iterator upper_bound(const value_type& interval)const
     { return _set.upper_bound(interval); }
 
-	std::pair<iterator,iterator> equal_range(const key_type& interval)
+    std::pair<iterator,iterator> equal_range(const key_type& interval)
     { return _set.equal_range(interval); }
 
-	std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
+    std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
     { return _set.equal_range(interval); }
 
     //==========================================================================
@@ -430,8 +430,8 @@ protected:
 
     iterator gap_insert(iterator prior_, const interval_type& inter_val)
     {
-		// inter_val is not conained in this map. Insertion will be successful
-		BOOST_ASSERT(this->_set.find(inter_val) == this->_set.end());
+        // inter_val is not conained in this map. Insertion will be successful
+        BOOST_ASSERT(this->_set.find(inter_val) == this->_set.end());
         return this->_set.insert(prior_, inter_val);
     }
 
@@ -485,13 +485,13 @@ void interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::add_intersection
     const_iterator first_ = _set.lower_bound(inter_val);
     const_iterator end_   = _set.upper_bound(inter_val);
 
-	iterator prior_ = section.end();
+    iterator prior_ = section.end();
     for(const_iterator it_=first_; it_ != end_; it_++) 
-	{
-		interval_type common_interval = (*it_) & inter_val;
-		if(!common_interval.empty())
-			prior_ = section.gap_insert(prior_, common_interval);
-	}
+    {
+        interval_type common_interval = (*it_) & inter_val;
+        if(!common_interval.empty())
+            prior_ = section.gap_insert(prior_, common_interval);
+    }
 }
 
 
@@ -629,12 +629,12 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence
-			const_cast<interval_type&>(*it_).extend(*fst_mem);
+            const_cast<interval_type&>(*it_).extend(*fst_mem);
             _set.erase(fst_mem, it_);
 
             it_++; next_=it_; 
-			if(next_!=_set.end())
-				next_++;
+            if(next_!=_set.end())
+                next_++;
         }
         else { it_++; next_++; }
     }

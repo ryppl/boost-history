@@ -115,8 +115,8 @@ public:
     template<class SubType>
     void assign(const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     {
-		this->clear();
-		this->_set.insert(src.begin(), src.end());
+        this->clear();
+        this->_set.insert(src.begin(), src.end());
     }
 
 private:
@@ -186,7 +186,7 @@ typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator
     separate_interval_set<DomainT,Compare,Interval,Alloc>::add_(iterator prior_, const value_type& addend)
 {
     if(addend.empty()) 
-		return prior_;
+        return prior_;
 
     iterator insertion = this->_set.insert(prior_, addend);
 
@@ -194,7 +194,7 @@ typename separate_interval_set<DomainT,Compare,Interval,Alloc>::iterator
         return insertion;
     else
     {
-		std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
+        std::pair<iterator,iterator> overlap = this->_set.equal_range(addend);
         iterator first_ = overlap.first,
                  end_   = overlap.second,
                  last_  = end_; --last_;

@@ -87,8 +87,8 @@ public:
     void assign(const interval_base_map<SubType,DomainT,CodomainT,
                                         Traits,Compare,Combine,Section,Interval,Alloc>& src)
     {
-		this->clear();
-		this->_map.insert(src.begin(), src.end());
+        this->clear();
+        this->_map.insert(src.begin(), src.end());
     }
 
     //==========================================================================
@@ -201,7 +201,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         add_front         (rest_interval, co_val, it_);
         add_main<Combiner>(rest_interval, co_val, it_, last_);
         add_rear<Combiner>(rest_interval, co_val, it_);
-    }	
+    }    
 }
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
@@ -222,21 +222,21 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
         = this->template map_insert<Combiner>(prior_, inter_val, co_val);
 
     if(insertion.WAS_SUCCESSFUL)
-		return insertion.ITERATOR;
-	else
+        return insertion.ITERATOR;
+    else
     {
         // Detect the first and the end iterator of the collision sequence
-		std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
+        std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
         iterator it_   = overlap.first,
-				 last_ = overlap.second;
-				 --last_;
+                 last_ = overlap.second;
+                 --last_;
         interval_type rest_interval = inter_val;
 
         add_front         (rest_interval, co_val, it_);
         add_main<Combiner>(rest_interval, co_val, it_, last_);
         add_rear<Combiner>(rest_interval, co_val, it_);
 
-		return it_;
+        return it_;
     }
 }
 
@@ -315,7 +315,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
     interval_type lead_gap = right_subtract(inter_val, cur_itv);
     if(!lead_gap.empty())
-	    //          [lead_gap--- . . .
+        //          [lead_gap--- . . .
         // [prior_)          [-- it_ ...
         this->template gap_insert<Combiner>(prior_, lead_gap, co_val);
     
@@ -347,10 +347,10 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
             Combiner()(it_->CONT_VALUE, co_val);
 
             if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
-			{
+            {
                 this->_map.erase(it_);
-				it_ = prior_;
-			}
+                it_ = prior_;
+            }
         }
         else
         {
@@ -368,7 +368,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
             if(Traits::absorbs_neutrons && it_->CONT_VALUE == Combiner::neutron())
                 this->_map.erase(it_);
 
-			it_ = insertion_;
+            it_ = insertion_;
         }
     }
 }

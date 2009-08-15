@@ -152,9 +152,9 @@ public:
     /** Add an \c element to the set. */
     set& add(const element_type& element) { insert(element); return *this; } 
 
-	/** Add an element \c element after \c prior to the set. */
+    /** Add an element \c element after \c prior to the set. */
     iterator add(iterator prior, const element_type& element) 
-	{ return insert(prior, element); } 
+    { return insert(prior, element); } 
 
     /** Subtract an \c element from the set. */
     set& subtract(const element_type& element);
@@ -171,7 +171,7 @@ public:
     //= Intersection, symmetric difference
     //==========================================================================
 
-	/** Add \c element to \c section, if \c element is in \c *this set */
+    /** Add \c element to \c section, if \c element is in \c *this set */
     void add_intersection(set& section, const element_type& element)const;
 
     /** The intersection of set \c sectant with \c *this set is added 

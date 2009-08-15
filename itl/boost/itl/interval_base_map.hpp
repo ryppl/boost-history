@@ -157,7 +157,7 @@ public:
     { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::is_total); }
 
     enum { is_itl_container = true };
-	enum { fineness = 0 };
+    enum { fineness = 0 };
 
 public:
     //==========================================================================
@@ -172,7 +172,7 @@ public:
     /** Assignment operator */
     interval_base_map& operator = (const interval_base_map& src) 
     { 
-		this->_map = src._map;
+        this->_map = src._map;
         return *this; 
     }
 
@@ -309,9 +309,9 @@ public:
     SubType& add(const segment_type& interval_value_pair) 
     { that()->template add_<codomain_combine>(interval_value_pair); return *that(); }
 
-	/** Addition of an interval value pair \c interval_value_pair to the map. 
-	    Iterator \c prior_ is a hint to the position \c interval_value_pair can be 
-		inserted after. */
+    /** Addition of an interval value pair \c interval_value_pair to the map. 
+        Iterator \c prior_ is a hint to the position \c interval_value_pair can be 
+        inserted after. */
     iterator add(iterator prior_, const segment_type& interval_value_pair) 
     { return that()->template add_<codomain_combine>(prior_, interval_value_pair); }
 
@@ -411,34 +411,34 @@ public:
     template<class SetSubType>
     SubType& erase(const interval_base_set<SetSubType,DomainT,Compare,Interval,Alloc>& operand)
     {
-		typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
+        typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> operand_type;
 
-		if(operand.empty())
-			return *that();
+        if(operand.empty())
+            return *that();
 
-		typename operand_type::const_iterator common_lwb;
-		typename operand_type::const_iterator common_upb;
+        typename operand_type::const_iterator common_lwb;
+        typename operand_type::const_iterator common_upb;
 
-		if(!Set::common_range(common_lwb, common_upb, operand, *this))
-			return *that();
+        if(!Set::common_range(common_lwb, common_upb, operand, *this))
+            return *that();
 
-		typename operand_type::const_iterator it_ = common_lwb;
-		while(it_ != common_upb)
-			erase(*it_++);
+        typename operand_type::const_iterator it_ = common_lwb;
+        while(it_ != common_upb)
+            erase(*it_++);
 
-		return *that(); 
+        return *that(); 
     }
 
 
     /** Erase all value pairs from \c *this map that are elements of map \eraser */
     SubType& erase(const interval_base_map& eraser);
 
-	/** Erase all value pairs within the range of the interval that iterator 
-	    \c position points to. */
-	void erase(iterator position){ _map.erase(position); }
+    /** Erase all value pairs within the range of the interval that iterator 
+        \c position points to. */
+    void erase(iterator position){ _map.erase(position); }
 
-	/** Erase all value pairs for a range of iterators <tt>[first,past)</tt>. */
-	void erase(iterator first, iterator past){ _map.erase(first, past); }
+    /** Erase all value pairs for a range of iterators <tt>[first,past)</tt>. */
+    void erase(iterator first, iterator past){ _map.erase(first, past); }
 
     /** Remove all elements where property <tt>p</tt> holds, keep all others */
     template<class Predicate>
@@ -509,32 +509,32 @@ public:
     )const;
 
 
-	/** Returns \c true, if element \c key is found in \c *this map.
-	    Complexity: logarithmic. */
-	bool intersects(const domain_type& key)const
-	{ return _map.find(interval_type(key)) != _map.end(); }
+    /** Returns \c true, if element \c key is found in \c *this map.
+        Complexity: logarithmic. */
+    bool intersects(const domain_type& key)const
+    { return _map.find(interval_type(key)) != _map.end(); }
 
-	/** Returns \c true, if \c inter_val intersects with \c *this map.
-	    Complexity: logarithmic. */
-	bool intersects(const interval_type& inter_val)const
-	{ return _map.find(inter_val) != _map.end(); }
+    /** Returns \c true, if \c inter_val intersects with \c *this map.
+        Complexity: logarithmic. */
+    bool intersects(const interval_type& inter_val)const
+    { return _map.find(inter_val) != _map.end(); }
 
-	/** Returns \c true, if \c key_value_pair is found in \c *this map.
-	    Complexity: logarithmic. */
-	bool intersects(const element_type& key_value_pair)const
-	{ 
-		const_iterator found_ = _map.find(interval_type(key_value_pair.key));
-		return found_ != _map.end() && found_->KEY_VALUE == key_value_pair.data; 
-	}
+    /** Returns \c true, if \c key_value_pair is found in \c *this map.
+        Complexity: logarithmic. */
+    bool intersects(const element_type& key_value_pair)const
+    { 
+        const_iterator found_ = _map.find(interval_type(key_value_pair.key));
+        return found_ != _map.end() && found_->KEY_VALUE == key_value_pair.data; 
+    }
 
-	/** Returns \c true, if \c interval_value_pair intersects with \c *this map:
-	    Complexity: logarithmic. */
-	bool intersects(const segment_type& interval_value_pair)const
-	{
-		type intersection;
-		add(intersection, interval_value_pair);
-		return !intersection.empty(); 
-	}
+    /** Returns \c true, if \c interval_value_pair intersects with \c *this map:
+        Complexity: logarithmic. */
+    bool intersects(const segment_type& interval_value_pair)const
+    {
+        type intersection;
+        add(intersection, interval_value_pair);
+        return !intersection.empty(); 
+    }
 
 
 
@@ -571,10 +571,10 @@ public:
     const_iterator upper_bound(const key_type& interval)const
     { return _map.upper_bound(interval); }
 
-	std::pair<iterator,iterator> equal_range(const key_type& interval)
+    std::pair<iterator,iterator> equal_range(const key_type& interval)
     { return _map.equal_range(interval); }
 
-	std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
+    std::pair<const_iterator,const_iterator> equal_range(const key_type& interval)const
     { return _map.equal_range(interval); }
 
     iterator begin() { return _map.begin(); }
@@ -676,7 +676,7 @@ public:
 protected:
 
     iterator prior(iterator it_)
-	{ return it_ == this->_map.begin() ? this->_map.end() : --it_; }
+    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
 
     template <class Combiner>
     bool combine(iterator& it_, const codomain_type& co_val)
@@ -700,35 +700,35 @@ protected:
             return this->_map.insert(value_type(inter_val, co_val));
     }
 
-	// Insertion with hint, that does report insertion failure
+    // Insertion with hint, that does report insertion failure
     template <class Combiner>
-	std::pair<iterator, bool> 
-		map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
+    std::pair<iterator, bool> 
+        map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
-		iterator inserted_ 
-			= this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
+        iterator inserted_ 
+            = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
 
-		if(inserted_->KEY_VALUE == inter_val && inserted_->CONT_VALUE == Combiner::neutron())
-		{
-			Combiner()(inserted_->CONT_VALUE, co_val);
-			return std::pair<iterator,bool>(inserted_, true);
-		}
-		else
-			return std::pair<iterator,bool>(inserted_, false);
+        if(inserted_->KEY_VALUE == inter_val && inserted_->CONT_VALUE == Combiner::neutron())
+        {
+            Combiner()(inserted_->CONT_VALUE, co_val);
+            return std::pair<iterator,bool>(inserted_, true);
+        }
+        else
+            return std::pair<iterator,bool>(inserted_, false);
     }
 
     template <class Combiner>
     iterator gap_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
-		// inter_val is not conained in this map. Insertion will be successful
-		BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
-		BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
+        // inter_val is not conained in this map. Insertion will be successful
+        BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
+        BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
         if(Traits::is_total)
         {
             iterator inserted_ = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
             Combiner()(inserted_->CONT_VALUE, co_val);
-			return inserted_;
+            return inserted_;
         }
         else
             return this->_map.insert(prior_, value_type(inter_val, co_val));
@@ -846,34 +846,34 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     {
         interval_type sectant_interval = sectant.KEY_VALUE;
         if(sectant_interval.empty()) 
-			return;
+            return;
 
         const_iterator first_ = _map.lower_bound(sectant_interval);
         const_iterator end_   = _map.upper_bound(sectant_interval);
 
-		const_iterator it_;
-		iterator prior_ = section.end();
+        const_iterator it_;
+        iterator prior_ = section.end();
 
-		if(is_set<CodomainT>::value)
-			for(it_=first_; it_ != end_; it_++) 
-			{
-				interval_type common_interval = it_->KEY_VALUE & sectant_interval; 
-				if(!common_interval.empty())
-				{
-					section.that()->add(value_type(common_interval, it_->CONT_VALUE));
-					section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.CONT_VALUE)); 
-				}
-			}
-		else
-			for(it_=first_; it_ != end_; it_++) 
-			{
-				interval_type common_interval = it_->KEY_VALUE & sectant_interval; 
-				if(!common_interval.empty())
-				{
-					section.that()->add(value_type(common_interval, it_->CONT_VALUE) );
-					section.that()->template add<codomain_combine>(value_type(common_interval, sectant.CONT_VALUE));
-				}
-			}
+        if(is_set<CodomainT>::value)
+            for(it_=first_; it_ != end_; it_++) 
+            {
+                interval_type common_interval = it_->KEY_VALUE & sectant_interval; 
+                if(!common_interval.empty())
+                {
+                    section.that()->add(value_type(common_interval, it_->CONT_VALUE));
+                    section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.CONT_VALUE)); 
+                }
+            }
+        else
+            for(it_=first_; it_ != end_; it_++) 
+            {
+                interval_type common_interval = it_->KEY_VALUE & sectant_interval; 
+                if(!common_interval.empty())
+                {
+                    section.that()->add(value_type(common_interval, it_->CONT_VALUE) );
+                    section.that()->template add<codomain_combine>(value_type(common_interval, sectant.CONT_VALUE));
+                }
+            }
 
     }
 }
@@ -894,7 +894,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     typename ImplMapT::const_iterator first_ = _map.lower_bound(sectant_interval);
     typename ImplMapT::const_iterator end_   = _map.upper_bound(sectant_interval);
 
-	iterator prior_ = section.end();
+    iterator prior_ = section.end();
     for(typename ImplMapT::const_iterator it_=first_; it_ != end_; it_++) 
     {
         interval_type common_interval = it_->KEY_VALUE & sectant_interval; 
@@ -1082,12 +1082,12 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
 
             // finally we arrive at the end of a sequence of joinable intervals
             // and it points to the last member of that sequence            
-			const_cast<interval_type&>(it_->KEY_VALUE).extend(fst_mem->KEY_VALUE);
+            const_cast<interval_type&>(it_->KEY_VALUE).extend(fst_mem->KEY_VALUE);
             _map.erase(fst_mem, it_);
 
             it_++; next_=it_; 
-			if(next_!=_map.end())
-				next_++;
+            if(next_!=_map.end())
+                next_++;
         }
         else { it_++; next_++; }
     }

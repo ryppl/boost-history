@@ -26,10 +26,10 @@ public:
 
     validation_counts& operator += (const validation_counts& right)
     { 
-		_time += right.time(); 
-		_count += right.count(); 
-		return *this; 
-	}
+        _time += right.time(); 
+        _count += right.count(); 
+        return *this; 
+    }
 
 private:
     double _time;
