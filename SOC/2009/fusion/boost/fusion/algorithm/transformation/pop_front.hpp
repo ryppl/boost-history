@@ -11,7 +11,7 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#   include <boost/fusion/sequence/intrinsic/empty.hpp>
 #endif
 #include <boost/fusion/iterator/next.hpp>
 #include <boost/fusion/view/iterator_range/iterator_range.hpp>
@@ -27,7 +27,7 @@ namespace boost { namespace fusion
         {
             //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-            BOOST_FUSION_MPL_ASSERT((size<Seq>));
+            BOOST_FUSION_MPL_ASSERT_NOT((empty<Seq>));
 
             typedef 
                 iterator_range<

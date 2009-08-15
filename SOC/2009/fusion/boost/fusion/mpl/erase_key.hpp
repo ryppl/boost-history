@@ -29,7 +29,8 @@ namespace boost { namespace mpl
 
             typedef typename
                 fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Seq>::type, result
+                    typename fusion::traits::tag_of<Seq>::type
+                  , result
                 >::type
             type;
         };

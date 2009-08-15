@@ -14,39 +14,25 @@
 #else
 #   include <boost/fusion/container/vector/vector10.hpp>
 #endif
-#include <boost/fusion/support/is_view.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
-#include <boost/mpl/identity.hpp>
-#include <boost/mpl/eval_if.hpp>
 
 namespace boost { namespace fusion
 {
     namespace result_of
     {
         //TODO doc!!!
-
         template <typename Seq>
         struct clear
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+          : convert<typename traits::tag_of<Seq>::type, vector0<> >
+#else
+          : convert<typename traits::tag_of<Seq>::type, vector<> >
+#endif
         {
             //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
-
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-            typedef vector0<> vec;
-#else
-            typedef vector<> vec;
-#endif
-
-            typedef typename
-                mpl::eval_if<
-                    traits::is_view<Seq>
-                  , mpl::identity<vec>
-                  , convert<typename traits::tag_of<Seq>::type, vec>
-                >::type
-            type;
         };
     }
 

@@ -10,7 +10,8 @@
 
 #include <boost/fusion/sequence/intrinsic/value_at.hpp>
 
-namespace boost {
+namespace boost
+{
     namespace fusion
     {
         struct fusion_sequence_tag;

@@ -11,7 +11,7 @@
 
 #include <boost/mpl/end.hpp>
 
-namespace boost { namespace fusion{ namespace extension
+namespace boost { namespace fusion { namespace extension
 {
     template <typename Tag>
     struct end_impl;

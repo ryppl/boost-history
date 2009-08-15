@@ -10,7 +10,9 @@
 #include <boost/fusion/iterator/detail/advance.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/dummy_tag.hpp>
+
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/apply.hpp>
 
 namespace boost { namespace fusion
 {
@@ -33,11 +35,10 @@ namespace boost { namespace fusion
 
         //TODO doc
 
-        // default implementation
         template <typename ItRef, typename N>
         struct advance
           :  extension::advance_impl<
-                 typename detail::get_dummy_tag<ItRef>::type
+                 typename mpl::apply<mpl::always<void_>,ItRef>::type
              >::template apply<ItRef,N>
         {};
     };

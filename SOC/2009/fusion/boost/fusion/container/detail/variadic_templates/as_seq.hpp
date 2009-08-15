@@ -6,7 +6,7 @@
 #include <boost/fusion/mpl/begin.hpp>
 #include <boost/fusion/mpl/end.hpp>
 #include <boost/fusion/support/internal/variadic_templates/variadic_quote.hpp>
-#include <boost/fusion/support/internal/to_random_access_mpl_seq.hpp>
+#include <boost/fusion/support/internal/variadic_templates/to_random_access_mpl_seq.hpp>
 
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/unpack_args.hpp>

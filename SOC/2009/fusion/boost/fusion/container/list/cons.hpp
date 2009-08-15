@@ -26,6 +26,9 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
 //#include <boost/utility/enable_if.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/equal_to.hpp>
+#endif
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
@@ -154,7 +157,10 @@ namespace boost { namespace fusion
           : car(fusion::front(seq_assign.get()))\
           , cdr(detail::assign_by_deref(),\
                   fusion::next(fusion::begin(seq_assign.get())))\
-        {}
+        {\
+            BOOST_FUSION_MPL_ASSERT_NOT((\
+                mpl::equal_to<size,result_of::size<SeqRef> >));\
+        }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_);
 
@@ -187,8 +193,21 @@ namespace boost { namespace fusion
         cons&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
+            BOOST_FUSION_MPL_ASSERT_NOT((result_of::empty<Seq>));
+
             assign(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             return *this;
+        }
+
+        template<typename Seq>
+        cons&
+        operator=(cons const& seq)
+        {
+#ifdef BOOST_NO_RVALUE_REFERENCES
+            return this->operator=<cons<Car,Cdr> >(seq);
+#else
+            return this->operator=<cons<Car,Cdr> const&>(seq);
+#endif
         }
 
         template<typename It>

@@ -20,11 +20,6 @@
 #   include <boost/fusion/container/vector/detail/end_impl.hpp>
 #   include <boost/fusion/container/vector/detail/deref_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_of_impl.hpp>
-#   include <boost/fusion/container/vector/detail/next_impl.hpp>
-#   include <boost/fusion/container/vector/detail/prior_impl.hpp>
-#   include <boost/fusion/container/vector/detail/equal_to_impl.hpp>
-#   include <boost/fusion/container/vector/detail/distance_impl.hpp>
-#   include <boost/fusion/container/vector/detail/advance_impl.hpp>
 
 #   include <boost/fusion/container/vector/detail/variadic_templates/vector.hpp>
 #endif

@@ -8,6 +8,9 @@
 #ifndef BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 #define BOOST_FUSION_VIEW_SINGLE_VIEW_SINGLE_VIEW_HPP
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/fusion/sequence/intrinsic/size.hpp>
+#endif
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
@@ -78,7 +81,9 @@ namespace boost { namespace fusion
         single_view(\
             detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
           : val(fusion::front(seq_assign.get()))\
-        {}
+        {\
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
+        }
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR,_)
 
@@ -97,6 +102,8 @@ namespace boost { namespace fusion
         single_view&\
         operator=(detail::sequence_assign_type<SeqRef> COMBINATION seq_assign)\
         {\
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<SeqRef>::value==1));\
+            \
             val=fusion::front(seq_assign.get());\
             return *this;\
         }

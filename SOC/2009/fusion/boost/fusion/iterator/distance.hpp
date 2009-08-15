@@ -22,7 +22,6 @@ namespace boost { namespace fusion
         template <typename Tag>
         struct distance_impl
         {
-            // default implementation
             template <typename FirstRef, typename LastRef>
             struct apply
               : distance_detail::linear_distance<FirstRef, LastRef>

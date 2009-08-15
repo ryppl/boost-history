@@ -36,7 +36,7 @@ namespace boost { namespace fusion { namespace detail
         template <typename It0>
         struct apply
         {
-#if N
+#if BOOST_FUSION_N
             typedef typename result_of::value_of<It0>::type T0;
 #endif
 

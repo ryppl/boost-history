@@ -20,7 +20,6 @@
 #undef BOOST_FUSION_ADAPTED_ARRAY_NAMESPACE
 #undef BOOST_FUSION_ADAPTED_ARRAY_TYPE
 
-#include <boost/fusion/adapted/detail/array/array_iterator.hpp>
 #include <boost/fusion/adapted/detail/array/is_view_impl.hpp>
 #include <boost/fusion/adapted/detail/array/is_sequence_impl.hpp>
 #include <boost/fusion/adapted/detail/array/category_of_impl.hpp>

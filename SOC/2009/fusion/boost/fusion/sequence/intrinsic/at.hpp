@@ -58,6 +58,7 @@ namespace boost { namespace fusion
                       , list_tag
                     >
                 >));
+
             BOOST_FUSION_INDEX_CHECK(N::value,size<Seq>::value);
         };
 

@@ -29,7 +29,7 @@
 #   ifndef BOOST_NO_RVALUE_REFERENCES
     VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
 #   endif
-#   if N == 1
+#   if BOOST_FUSION_N == 1
     explicit
 #   endif
 #   ifdef BOOST_NO_RVALUE_REFERENCES

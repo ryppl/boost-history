@@ -63,9 +63,9 @@ namespace boost { namespace fusion
         };
     }
 
-    VARIADIC_TEMPLATE_A(N)
+    VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
     inline
-#if N
+#if BOOST_FUSION_N
         typename
 #endif
         result_of::zip<
@@ -74,7 +74,7 @@ namespace boost { namespace fusion
     zip(EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N))
     {
         return
-#if N
+#if BOOST_FUSION_N
             typename
 #endif
             result_of::zip<

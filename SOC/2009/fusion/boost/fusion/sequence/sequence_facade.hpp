@@ -7,8 +7,9 @@
 #define BOOST_FUSION_SEQUENCE_SEQUENCE_FACADE_HPP
 
 #include <boost/fusion/support/sequence_base.hpp>
-#include <boost/fusion/support/internal/dummy_tag.hpp>
 
+#include <boost/mpl/apply.hpp>
+#include <boost/mpl/always.hpp>
 #include <boost/mpl/bool.hpp>
 
 namespace boost { namespace fusion
@@ -50,35 +51,35 @@ namespace boost { namespace fusion
         template<typename SeqRef,typename Key>
         struct at_key
           : extension::at_key_impl<
-                typename detail::get_dummy_tag<SeqRef>::type
+                typename mpl::apply<mpl::always<void_>,SeqRef>::type
             >::template apply<SeqRef,Key>
         {};
 
         template<typename SeqRef>
         struct empty
           : extension::empty_impl<
-                typename detail::get_dummy_tag<SeqRef>::type
+                typename mpl::apply<mpl::always<void_>,SeqRef>::type
             >::template apply<SeqRef>
         {};
 
         template<typename SeqRef>
         struct size
           : extension::size_impl<
-                typename detail::get_dummy_tag<SeqRef>::type
+                typename mpl::apply<mpl::always<void_>,SeqRef>::type
             >::template apply<SeqRef>
         {};
 
         template<typename SeqRef,typename Key>
         struct has_key
           : extension::has_key_impl<
-                typename detail::get_dummy_tag<SeqRef>::type
+                typename mpl::apply<mpl::always<void_>,SeqRef>::type
             >::template apply<SeqRef,Key>
         {};
 
         template<typename SeqRef,typename Key>
         struct value_at_key
           : extension::value_at_key_impl<
-                typename detail::get_dummy_tag<SeqRef>::type
+                typename mpl::apply<mpl::always<void_>,SeqRef>::type
             >::template apply<SeqRef,Key>
         {};
 

@@ -31,7 +31,7 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        VARIADIC_TEMPLATE(N)
+        VARIADIC_TEMPLATE(BOOST_FUSION_N)
         struct BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)
             EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(
                 BOOST_FUSION_MAX_SEQ_SIZE,BOOST_FUSION_N)
@@ -50,7 +50,7 @@ namespace boost { namespace fusion
 
     VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
     inline
-#if N
+#if BOOST_FUSION_N
         typename
 #endif
         result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
@@ -60,7 +60,7 @@ namespace boost { namespace fusion
         EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N))
     {
         return
-#if N
+#if BOOST_FUSION_N
             typename
 #endif
             result_of::BOOST_PP_CAT(make_,BOOST_FUSION_SEQ_NAME)<
