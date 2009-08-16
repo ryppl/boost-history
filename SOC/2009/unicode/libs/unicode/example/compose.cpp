@@ -10,26 +10,11 @@ Example in development.
 #include <iterator>
 
 #include <boost/range/adaptor/reversed.hpp>
+#include <boost/assign/list_of.hpp> 
 
 namespace unicode = boost::unicode;
 namespace ucd = unicode::ucd;
-
-namespace boost
-{
-    
-template<typename T>
-iterator_range<T*> list_of(T& t)
-{
-    return make_iterator_range(&t, &t+1);
-}
-
-template<typename T>
-iterator_range<const T*> list_of(const T& t)
-{
-    return make_iterator_range(&t, &t+1);
-}
-
-}
+using boost::assign::list_of; 
 
 int main()
 {
@@ -50,10 +35,10 @@ int main()
     std::cout << std::endl << std::endl;
     
     std::cout << "Canonical decomposition of U+00A8: ";
-    unicode::decompose(boost::list_of(0xA8), std::ostream_iterator<boost::char32>(std::cout, " "));
+    unicode::decompose(list_of(0xA8), std::ostream_iterator<boost::char32>(std::cout, " "));
     std::cout << std::endl;
     std::cout << "Compatibility decomposition of U+00A8: ";
-    unicode::decompose(boost::list_of(0xA8), std::ostream_iterator<boost::char32>(std::cout, " "), UINT_MAX);
+    unicode::decompose(list_of(0xA8), std::ostream_iterator<boost::char32>(std::cout, " "), UINT_MAX);
     std::cout << std::endl;
     std::cout << std::endl;
     

@@ -76,7 +76,6 @@ struct hangul_decomposer
     
 };
 
-/* TODO: implement it */
 /** \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly that
  * transforms <L, V>, <L, V, T> and <LV, T> Hangul code points sequences into the
  * LV and LVT Hangul syllables, since those compositions are not part
@@ -90,58 +89,124 @@ struct hangul_composer
     
     template<typename In, typename Out>
     std::pair<In, Out> ltr(In begin, In end, Out out)
-    {/*
-        using namespace detail;
-
-        char32 last = *begin; // copy first char
-        result.append(last);
-
-        for(int i=1; i<len; i++)
+    {
+        char32 ch = *begin++;
+        
+        if(is_l(ch) && begin != end)
         {
-            char32 ch = source.charAt(i);
-
-            // 1. check to see if two current characters are L and V
-            char32 LIndex = last - LBase;
-            if(0 <= LIndex && LIndex < LCount)
+            char32 v = *begin;
+            if(is_v(v))
             {
-                char32 VIndex = ch - VBase;
-                if(0 <= VIndex && VIndex < VCount)
+                ++begin;
+                if(begin == end)
                 {
-                    // make syllable of form LV
-                    last = SBase + (LIndex * VCount + VIndex) * TCount;
-                    result.setCharAt(result.length()-1, last); // reset last
-                    continue; // discard ch
+                    *out++ = combine_l_v(ch, v);
+                    return std::make_pair(begin, out);
                 }
-            }
 
-
-            // 2. check to see if two current characters are LV and T
-            char32 SIndex = last - SBase;
-            if(0 <= SIndex && SIndex < SCount && (SIndex % TCount) == 0)
-            {
-                char32 TIndex = ch - TBase;
-                if(0 < TIndex && TIndex < TCount)
+                char32 t = *begin;
+                if(is_t(t))
                 {
-                    // make syllable of form LVT
-                    last += TIndex;
-                    result.setCharAt(result.length()-1, last); // reset last
-                    continue; // discard ch
+                    ++begin;
+                    *out++ = combine_lv_t(combine_l_v(ch, v), t);
+                    return std::make_pair(begin, out);
                 }
+                
+                *out++ = combine_l_v(ch, v);
+                return std::make_pair(begin, out);
             }
-            // if neither case was true, just add the character
-            last = ch;
-            result.append(ch);
         }
-        */
-        *out++ = *begin++;
+        else if(is_lv(ch) && begin != end)
+        {
+            char32 t = *begin;
+            if(is_t(t))
+            {
+                ++begin;
+                *out++ = combine_lv_t(ch, t);
+                return std::make_pair(begin, out);
+            }
+        }
+
+        *out++ = ch;
         return std::make_pair(begin, out);
     }
     
     template<typename In, typename Out>
     std::pair<In, Out> rtl(In begin, In end, Out out)
     {
-        *out++ = *--end;
+        char32 ch = *--end;
+        
+        if(is_t(ch) && end != begin)
+        {
+            char32 v = *--end;
+            if(is_v(v) && end != begin)
+            {
+                char32 l = *--end;
+                if(is_l(l))
+                {
+                    *out++ = combine_lv_t(combine_l_v(l, v), ch);
+                    return std::make_pair(end, out);
+                }
+                ++end;
+            }
+            else if(is_lv(v))
+            {
+                *out++ = combine_lv_t(v, ch);
+                return std::make_pair(end, out);
+            }
+            ++end;
+        }
+        else if(is_v(ch) && end != begin)
+        {
+            char32 l = *--end;
+            if(is_l(l))
+            {
+                *out++ = combine_l_v(l, ch);
+                return std::make_pair(end, out);
+            }
+            ++end;
+        }
+
+        *out++ = ch;
         return std::make_pair(end, out);
+    }
+    
+private:
+    static bool is_l(char32 ch)
+    {
+        char32 LIndex = ch - detail::LBase;
+        return 0 <= LIndex && LIndex < detail::LCount;
+    }
+
+    static bool is_v(char32 ch)
+    {
+        char32 VIndex = ch - detail::VBase;
+        return 0 <= VIndex && VIndex < detail::VCount;
+    }
+
+    static char32 combine_l_v(char32 l, char32 v)
+    {
+        char32 LIndex = l - detail::LBase;
+        char32 VIndex = v - detail::VBase;
+        return detail::SBase + (LIndex * detail::VCount + VIndex) * detail::TCount;
+    }
+
+    static bool is_lv(char32 ch)
+    {
+        char32 SIndex = ch - detail::SBase;
+        return 0 <= SIndex && SIndex < detail::SCount && (SIndex % detail::TCount) == 0;
+    }
+
+    static bool is_t(char32 ch)
+    {
+        char32 TIndex = ch - detail::TBase;
+        return 0 < TIndex && TIndex < detail::TCount;
+    }
+
+    static char32 combine_lv_t(char32 lv, char32 t)
+    {
+        char32 TIndex = lv - detail::TBase;
+        return lv + TIndex;
     }
 };
 

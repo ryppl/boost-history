@@ -27,10 +27,10 @@ int main()
     
     // Boost.StringAlgo
     BOOST_AUTO(finder,
-        /*boost::algorithm::make_boundary_finder(*/
-            boost::algorithm::first_finder(s)/*,
+        boost::algorithm::make_boundary_finder(
+            boost::algorithm::first_finder(s),
             unicode::utf_grapheme_boundary()
-        )*/
+        )
     );
     
     BOOST_AUTO(f, unicode::make_boundary_finder(
@@ -38,8 +38,8 @@ int main()
         unicode::utf_grapheme_boundary()
     )); 
     
-    BOOST_AUTO(range, f.ltr(boost::begin(foo), boost::end(foo)));
-    //BOOST_AUTO(range, boost::algorithm::find(foo, finder));
+    //BOOST_AUTO(range, f.ltr(boost::begin(foo), boost::end(foo)));
+    BOOST_AUTO(range, boost::algorithm::find(foo, finder));
     
     std::cout << "[" << std::distance(boost::begin(foo), range.begin()) << ", " << std::distance(boost::begin(foo), range.end()) << "] ";
         
