@@ -70,6 +70,8 @@ private:
 		{ throw task_already_executed(); }
 		catch ( thread_interrupted const&)
 		{ this->prom_.set_exception( copy_exception( task_interrupted() ) ); }
+		catch ( task_interrupted const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
 		catch ( boost::exception const& e)
 		{ this->prom_.set_exception( copy_exception( e) ); }
 		catch ( std::ios_base::failure const& e)
@@ -127,6 +129,8 @@ private:
 		{ throw task_already_executed(); }
 		catch ( thread_interrupted const&)
 		{ this->prom_.set_exception( copy_exception( task_interrupted() ) ); }
+		catch ( task_interrupted const& e)
+		{ this->prom_.set_exception( copy_exception( e) ); }
 		catch ( boost::exception const& e)
 		{ this->prom_.set_exception( copy_exception( e) ); }
 		catch ( std::ios_base::failure const& e)

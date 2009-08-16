@@ -17,9 +17,10 @@ extern "C"
 
 #include <boost/assert.hpp>
 #include <boost/function.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/system/system_error.hpp>
 
-namespace boost { namespace task {
+namespace boost { namespace fibers {
 namespace detail
 {
 template< typename Fiber >
@@ -47,11 +48,22 @@ private:
 	friend
 	VOID CALLBACK trampoline( LPVOID);
 
-    function< void() >	fn_;
-	std::size_t			stack_size_;
-	LPVOID				caller_;
-	LPVOID				callee_;
-	st_state			state_;
+    function< void( context< fiber > &) >	fn_;
+	std::size_t								stack_size_;
+	LPVOID									caller_;
+	LPVOID									callee_;
+	st_state								state_;
+
+	fiber(
+		function< void() > fn,
+		std::size_t stack_size)
+	:
+	fn_( fn),
+	stack_size_( stack_size),
+	caller_( 0),
+	callee_( 0),
+	state_( st_uninitialized)
+	{ BOOST_ASSERT( stack_size_ > 0); }
 
 	bool uninitialized_() const
 	{ return state_ == st_uninitialized; }
@@ -65,14 +77,13 @@ private:
 	bool exited_() const
 	{ return state_ == st_exited; }
 
-	void yield_()
+	void exit_()
 	{ ::SwitchToFiber( caller_); }
 
-	void yield_to_( fiber & to)
+	void switch_to_( fiber & to)
 	{
 		std::swap( caller_, to.caller_);
 		std::swap( state_, to.state_);
-
 		::SwitchToFiber( to.callee_);
 	}
 
@@ -103,29 +114,21 @@ private:
 	}
 
 public:
+	typedef shared_ptr< fiber >		sptr_t;
+
 	static void convert_thread_to_fiber()
 	{
-		if ( ! ::ConvertThreadToFiber( 0) )
-			throw system::system_error(
-				system::error_code(
-					::GetLastError(),
-					system::system_category) );
-	
+			if ( ! ::ConvertThreadToFiber( 0)_)
+				throw system::system_error(
+					system::error_code(
+						::GetLastError(),
+						system::system_category) );
 	}
 
-	fiber(
+	static sptr-t create(
 		function< void() > fn,
 		std::size_t stack_size)
-	:
-	fn_( fn),
-	stack_size_( stack_size),
-	caller_( 0),
-	callee_( 0),
-	state_( st_uninitialized)
-	{
-		BOOST_ASSERT( ! fn_.empty() );
-		BOOST_ASSERT( stack_size_ > 0);
-	}
+	{ return sptr_t( new fiber( fn, stack_size) ); }
 
 	~fiber()
 	{
@@ -142,19 +145,11 @@ public:
     bool exited() const
 	{ return exited_(); }
 
-	void yield()
+	void switch_to( sptr_t & to)
 	{
 		BOOST_ASSERT( running_() );
-		state_ = st_ready;
-		yield_();
-		BOOST_ASSERT( running_() );
-	}
-
-	void yield_to( fiber & to)
-	{
-		BOOST_ASSERT( running_() );
-		if ( to.uninitialized_() ) to.init_();
-		yield_to_( to);
+		if ( to->uninitialized_() ) to->init_();
+		switch_to_( * to);
 		BOOST_ASSERT( running_() );
 	}
 
@@ -172,11 +167,11 @@ public:
 	{
 		BOOST_ASSERT( running_() || ready_() ) ;
 		state_ = st_exited;
-		yield_();
+		exit_();
 		BOOST_ASSERT(!"should never be reached");
 	}
 };
-}}}
+} } }
 
 #endif // BOOST_TASK_DETAIL_FIBER_WINDOWS_H
 

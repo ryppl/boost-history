@@ -27,6 +27,7 @@
 #include <boost/task/static_pool.hpp>
 #include <boost/task/smart.hpp>
 #include <boost/task/task.hpp>
+#include <boost/task/unbounded_buffer.hpp>
 #include <boost/task/unbounded_channel.hpp>
 #include <boost/task/utility.hpp>
 #include <boost/task/watermark.hpp>

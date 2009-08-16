@@ -9,6 +9,7 @@
 
 #include <cstddef>
 #include <list>
+#include <set>
 #include <utility>
 
 #include <boost/assert.hpp>
@@ -62,7 +63,7 @@ struct worker_base
 
 	virtual void reschedule_until( function< bool() > const&) = 0;
 
-	virtual bool block() = 0;
+	virtual void block() = 0;
 };
 
 template<
@@ -92,15 +93,14 @@ private:
 		{ return die_(); }
 	};
 
-	typedef shared_ptr< fiber >		fiber_t;
 	typedef shared_ptr< thread >	thread_t;
 
 	Pool					&	pool_;
 	thread_t					thrd_;
-	fiber_t						fib_;
+	fiber::sptr_t				fib_;
 	wsq							wsq_;
-	std::list< fiber_t >		blocked_fibers_;
-	std::list< fiber_t >		runnable_fiber_lst;
+	std::list< fiber::sptr_t >	blocked_fibers_;
+	std::list< fiber::sptr_t >	runnable_fibers_;
 	semaphore					shtdwn_sem_;
 	semaphore					shtdwn_now_sem_;
 	bool						shtdwn_;
@@ -124,7 +124,16 @@ private:
 
 	void try_blocked_fibers_()
 	{
-		td::list< fiber_t > 	
+		if ( ! blocked_fibers_.empty() )
+		{
+			fiber::sptr_t this_fib = fib_;
+			runnable_fibers_.push_back( this_fib);
+			fiber::sptr_t blocked_fib = blocked_fibers_.front();
+			blocked_fibers_.pop_front();
+			fib_ = blocked_fib;
+			this_fib->switch_to( blocked_fib);
+			fib_ = this_fib;
+		}
 	}
 
 	bool take_global_callable_(
@@ -152,49 +161,52 @@ private:
 		return false;
 	}
 
-	void run_()
+	void process_( bool all)
 	{
 		callable ca;
-		while ( ! shutdown_() )
+		if ( all ? try_take_local_callable_( ca) || 
+					try_steal_other_callable_( ca) ||
+					try_take_global_callable_( ca)
+				 : try_take_local_callable_( ca) )
 		{
-			try_runnable_fibers_();
-			if ( try_take_local_callable_( ca) || 
-				 try_take_global_callable_( ca) ||
-				 try_steal_other_callable_( ca) )
+			execute_( ca);
+			scns_ = 0;
+		}
+		else
+		{
+			guard grd( pool_.idle_worker_);
+			++scns_;
+			if ( scns_ >= max_scns_)
 			{
-				execute_( ca);
+				if ( pool_.size_() > pool_.idle_worker_)
+				{
+					if ( take_global_callable_( ca, asleep_) )
+						execute_( ca);
+				}
+				else if ( blocked_fibers_.empty() )
+				{
+					try
+					{ this_thread::sleep( asleep_); }
+					catch ( thread_interrupted const&)
+					{ return; }
+				}
 				scns_ = 0;
 			}
 			else
-			{
-				guard grd( pool_.idle_worker_);
-				if ( shutdown_() ) return;
-				++scns_;
-				if ( scns_ >= max_scns_)
-				{
-					// should the comparation be atomic or
-					// at least the read of idle_worker_ be atomic ?
-					if ( pool_.size_() == pool_.idle_worker_)
-					{
-						if ( take_global_callable_( ca, asleep_) )
-							execute_( ca);
-					}
-					else
-						try
-						{ this_thread::sleep( asleep_); }
-						catch ( thread_interrupted const&)
-						{ return; }
-					scns_ = 0;
-				}
-				else
-					this_thread::yield();
-			}
+				this_thread::yield();
 		}
+		try_blocked_fibers_();
+	}
+
+	void run_()
+	{
+		while ( ! shutdown_() )
+			process_( true);
 	}
 
 	bool shutdown_()
 	{
-		if ( shutdown__() && get_pool().channel_.empty() )
+		if ( shutdown__() && pool_.channel_.empty() && blocked_fibers_.empty() )
 			return true;
 		else if ( shutdown_now__() )
 			return true;
@@ -225,7 +237,7 @@ public:
 	fib_(),
 	wsq_(),
 	blocked_fibers_(),
-	runnable_fiber_lst(),
+	runnable_fibers_(),
 	shtdwn_sem_( 0),
 	shtdwn_now_sem_( 0),
 	shtdwn_( false),
@@ -261,76 +273,47 @@ public:
 	bool try_steal( callable & ca)
 	{ return wsq_.try_steal( ca); }
 
-	Pool & get_pool() const
-	{ return pool_; }
-
 	void run()
 	{
 		BOOST_ASSERT( get_id() == this_thread::get_id() );
 
 		fiber::convert_thread_to_fiber();
 
-		fiber_t fib(
-			new fiber(
-				bind(
-					& worker_object::run_,
-					this),
+		fiber::sptr_t fib(
+			fiber::create(
+				bind( & worker_object::run_, this),
 				stack_size_) );
 		fib_.swap( fib);
 		fib_->run();
-		BOOST_ASSERT( fib_->exited() );
 		fib_.reset();
 	}
 
 	void reschedule_until( function< bool() > const& pred)
 	{
-		callable ca;
-		while ( ! pred() /* && ! shutdown_() */)
-		{
-			if ( try_take_local_callable_( ca) )
-			{
-				execute_( ca);
-				scns_ = 0;
-			}
-			else
-			{
-				guard grd( get_pool().idle_worker_);
-				if ( shutdown_() ) return;
-				++scns_;
-				if ( scns_ >= max_scns_)
-				{
-					this_thread::sleep( asleep_);
-					scns_ = 0;
-				}
-				else
-					this_thread::yield();
-			}
-		}
+		while ( ! pred() )
+			process_( false);
 	}
 
-	bool block()
+	void block()
 	{
-		blocked_fibers_.push_back( fib_);
-		fiber_t fib;
+		fiber::sptr_t this_fib = fib_;
+		blocked_fibers_.push_back( this_fib);
+		fiber::sptr_t runnable_fib;
 		if ( runnable_fibers_.empty() )
 		{
-			fib.reset(
-				new fiber(
-					bind(
-						& worker_object::run_,
-						this),
-					stack_size_) );
+			runnable_fib = fiber::create(
+					bind( & worker_object::run_, this),
+					stack_size_);
 		}
 		else
 		{
-			fib = runnable_fibers_.front();
+			runnable_fib = runnable_fibers_.front();
 			runnable_fibers_.pop_front();
 		}
-		fib_.swap( fib);
-		fib_->run();
-		runnable_fibers_.push_back( fib);
-		
-		return ! shutdown_();
+		BOOST_ASSERT( runnable_fib);
+		fib_ = runnable_fib;
+		this_fib->switch_to( runnable_fib);
+		fib_ = this_fib;
 	}
 };
 
@@ -371,17 +354,9 @@ public:
 	void put( callable const&);
 	bool try_steal( callable &);
 
-	template< typename Pool >
-	Pool & get_pool() const
-	{
-		worker_object< Pool, worker > * p( dynamic_cast< worker_object< Pool, worker > * >( impl_.get() ) );
-		BOOST_ASSERT( p);
-		return p->get_pool();
-	}
-
 	void run();
 	void reschedule_until( function< bool() > const&);
-	bool block();
+	void block();
 
 	static worker * tss_get();
 };

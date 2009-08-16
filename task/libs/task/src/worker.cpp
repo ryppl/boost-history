@@ -52,9 +52,9 @@ void
 worker::reschedule_until( function< bool() > const& pred)
 { impl_->reschedule_until( pred); }
 
-bool
+void
 worker::block()
-{ return impl_->block(); }
+{ impl_->block(); }
 
 worker *
 worker::tss_get()

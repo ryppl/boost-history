@@ -41,10 +41,7 @@ semaphore::wait()
 	if ( this_task::runs_in_pool() )
 	{
 		while ( ! try_wait() )
-		{
-			if ( ! this_task::block() )
-				throw task_interrupted();
-		}
+			this_task::block();
 	}
 	else
 	{

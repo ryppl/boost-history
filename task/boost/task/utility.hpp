@@ -9,7 +9,6 @@
 
 #include <boost/assert.hpp>
 #include <boost/thread.hpp>
-#include <boost/thread/thread_time.hpp>
 
 #include <boost/task/detail/worker.hpp>
 
@@ -17,25 +16,17 @@
 
 namespace boost { namespace this_task
 {
-template< typename Pool >
-Pool & get_pool()
+inline
+void block()
 {
 	task::detail::worker * w( task::detail::worker::tss_get() );
 	BOOST_ASSERT( w);
-	return w->get_pool< Pool >();
+	w->block();
 }
 
 inline
 bool runs_in_pool()
 { return task::detail::worker::tss_get() != 0; }
-
-inline
-bool block()
-{
-	task::detail::worker * w( task::detail::worker::tss_get() );
-	BOOST_ASSERT( w);
-	return w->block();
-}
 
 inline
 thread::id worker_id()

@@ -18,6 +18,7 @@ extern "C"
 #include <boost/assert.hpp>
 #include <boost/function.hpp>
 #include <boost/shared_array.hpp>
+#include <boost/shared_ptr.hpp>
 #include <boost/system/system_error.hpp>
 
 namespace boost { namespace task {
@@ -54,6 +55,18 @@ private:
 	shared_array< char >	stack_;
 	st_state				state_;
 
+	fiber(
+		function< void() > fn,
+		std::size_t stack_size)
+	:
+	fn_( fn),
+	stack_size_( stack_size),
+	caller_(),
+	callee_(),
+	stack_( new char[stack_size]),
+	state_( st_uninitialized)
+	{ BOOST_ASSERT( stack_size_ > 0); }
+
 	bool uninitialized_() const
 	{ return state_ == st_uninitialized; }
 
@@ -66,7 +79,7 @@ private:
 	bool exited_() const
 	{ return state_ == st_exited; }
 
-	void yield_()
+	void exit_()
 	{
 		if ( ::swapcontext( & callee_, & caller_) == -1)
 			throw system::system_error(
@@ -75,11 +88,10 @@ private:
 					system::system_category) );
 	}
 
-	void yield_to_( fiber & to)
+	void switch_to_( fiber & to)
 	{
 		std::swap( caller_, to.caller_);
 		std::swap( state_, to.state_);
-
 		if ( ::swapcontext( & callee_, & to.callee_) == -1)
 			throw system::system_error(
 				system::error_code(
@@ -128,22 +140,15 @@ private:
 	}
 
 public:
-	static void convert_thread_to_fiber() {}
+	typedef shared_ptr< fiber >	sptr_t;
 
-	fiber(
+	static void convert_thread_to_fiber()
+	{}
+
+	static sptr_t create(
 		function< void() > fn,
 		std::size_t stack_size)
-	:
-	fn_( fn),
-	stack_size_( stack_size),
-	caller_(),
-	callee_(),
-	stack_( new char[stack_size]),
-	state_( st_uninitialized)
-	{
-		BOOST_ASSERT( ! fn_.empty() );
-		BOOST_ASSERT( stack_size_ > 0);
-	}
+	{ return sptr_t( new fiber( fn, stack_size) ); }
 
 	~fiber()
 	{ BOOST_ASSERT( ! running_() ); }
@@ -151,25 +156,18 @@ public:
 	bool ready() const
 	{ return uninitialized_() || ready_(); }
 
-    bool running() const
+    	bool running() const
 	{ return running_(); }
 
-    bool exited() const
+   	 bool exited() const
 	{ return exited_(); }
 
-	void yield()
+	void switch_to( sptr_t & to)
 	{
+		BOOST_ASSERT( to);
 		BOOST_ASSERT( running_() );
-		state_ = st_ready;
-		yield_();
-		BOOST_ASSERT( running_() );
-	}
-
-	void yield_to( fiber & to)
-	{
-		BOOST_ASSERT( running_() );
-		if ( to.uninitialized_() ) to.init_();
-		yield_to_( to);
+		if ( to->uninitialized_() ) to->init_();
+		switch_to_( * to);
 		BOOST_ASSERT( running_() );
 	}
 
@@ -187,11 +185,11 @@ public:
 	{
 		BOOST_ASSERT( running_() ) ;
 		state_ = st_exited;
-		yield_();
+		exit_();
 		BOOST_ASSERT(!"should never be reached");
 	}
 };
-}}}
+} } }
 
 #endif // BOOST_TASK_DETAIL_FIBER_POSIX_H
 
