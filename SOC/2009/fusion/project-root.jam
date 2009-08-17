@@ -1,0 +1,23 @@
+# Copyright Christopher Schmidt 2009.
+# Distributed under the Boost Software License, Version 1.0.
+# (See accompanying file LICENSE_1_0.txt or copy at
+# http://www.boost.org/LICENSE_1_0.txt)
+
+import os ;
+local BOOST_INCLUDES_PATH = [ os.environ BOOST_INCLUDES_PATH ] ;
+
+project
+    : requirements <include>.
+                   <include>$(BOOST_INCLUDES_PATH)
+                   <define>BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#                   <toolset>gcc:<cxxflags>-std=c++0x
+    : build-dir ../bin
+    : default-build debug <link>shared <runtime-link>shared <threading>multi
+    ;
+
+build-project libs/fusion/example/test ;
+
+#build-project libs/fusion/doc ;
+#build-project libs/fusion/example/extension ;
+#build-project libs/fusion/example/performance ;
+build-project libs/fusion/test ;
