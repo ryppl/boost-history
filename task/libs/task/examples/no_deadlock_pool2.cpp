@@ -9,6 +9,7 @@
 #include <stdexcept>
 #include <vector>
 
+#include <boost/thread.hpp>
 #include "boost/task.hpp"
 
 namespace tsk = boost::task;
@@ -36,11 +37,10 @@ int main( int argc, char *argv[])
 {
 	try
 	{
+		tsk::poolsize psize( boost::thread::hardware_concurrency() );
 		tsk::static_pool<
 			tsk::unbounded_channel< tsk::fifo >
-		> pool(
-				tsk::poolsize(
-					boost::thread::hardware_concurrency() ) );
+		> pool( psize);
 
 		fprintf( stderr, "pool-size == %d\n", pool.size() );
 

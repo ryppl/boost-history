@@ -20,7 +20,7 @@ extern "C"
 #include <boost/shared_ptr.hpp>
 #include <boost/system/system_error.hpp>
 
-namespace boost { namespace fibers {
+namespace boost { namespace task {
 namespace detail
 {
 template< typename Fiber >
@@ -48,11 +48,11 @@ private:
 	friend
 	VOID CALLBACK trampoline( LPVOID);
 
-    function< void( context< fiber > &) >	fn_;
-	std::size_t								stack_size_;
-	LPVOID									caller_;
-	LPVOID									callee_;
-	st_state								state_;
+    function< void() >	fn_;
+	std::size_t			stack_size_;
+	LPVOID				caller_;
+	LPVOID				callee_;
+	st_state			state_;
 
 	fiber(
 		function< void() > fn,
@@ -118,14 +118,14 @@ public:
 
 	static void convert_thread_to_fiber()
 	{
-			if ( ! ::ConvertThreadToFiber( 0)_)
+			if ( ! ::ConvertThreadToFiber( 0) )
 				throw system::system_error(
 					system::error_code(
 						::GetLastError(),
 						system::system_category) );
 	}
 
-	static sptr-t create(
+	static sptr_t create(
 		function< void() > fn,
 		std::size_t stack_size)
 	{ return sptr_t( new fiber( fn, stack_size) ); }

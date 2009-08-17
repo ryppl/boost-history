@@ -112,9 +112,8 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		pool_type pool(
-				tsk::poolsize(
-					boost::thread::hardware_concurrency() ) );
+		tsk::poolsize psize( boost::thread::hardware_concurrency() );
+		pool_type pool( psize);
 
 		int n = 32;	
 		event outer_ev;
