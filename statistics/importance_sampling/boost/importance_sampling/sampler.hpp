@@ -16,7 +16,7 @@
 #include <boost/range.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_real.hpp>
-#include <boost/random/multinomial_distribution.hpp>
+#include <boost/random/categorical_distribution.hpp>
 
 namespace boost{
 namespace is{
@@ -41,7 +41,7 @@ class sampler{
     typedef typename range_value<const_values_>::type result_type;
     private:
     typedef Ur<result_type>                             unif_;
-    typedef random::multinomial_distribution<unif_>     mult_dist_t;
+    typedef random::categorical_distribution<unif_>     mult_dist_t;
     public:
     typedef typename mult_dist_t::input_type            input_type;
 
@@ -55,7 +55,7 @@ class sampler{
     sampler& operator=(const sampler& that);
 
     template<typename U> result_type operator()(U& urng)const;
-    const mult_dist_t& multinomial_distribution()const;
+    const mult_dist_t& categorical_distribution()const;
 
     // TODO os/is
 
@@ -117,7 +117,7 @@ sampler<R1,Ur>::operator()(U& urng)const{
 // Access
 template<typename R1, template<typename> class Ur>
 const typename sampler<R1,Ur>::mult_dist_t&
-sampler<R1,Ur>::multinomial_distribution()const{ return mult_dist_; }
+sampler<R1,Ur>::categorical_distribution()const{ return mult_dist_; }
 
 }//random
 }//boost

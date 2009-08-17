@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// is::multinomial_distribution.hpp                                          //
+// random::categorical_distribution.hpp                                      //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_RANDOM_MULTINOMIAL_DISTRIBUTION_HPP_ER_2009
-#define BOOST_RANDOM_MULTINOMIAL_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_RANDOM_CATEGORICAL_DISTRIBUTION_HPP_ER_2009
+#define BOOST_RANDOM_CATEGORICAL_DISTRIBUTION_HPP_ER_2009
 #include <algorithm>
 #include <numeric>
 #include <cmath>
@@ -21,7 +21,7 @@ namespace boost{
 namespace random{
 
 // Usage:
-// typedef multinomial_distribution<> rmult_;
+// typedef categorical_distribution<> rmult_;
 // typedef rmult_::value_type         value_type;
 // typedef rmult_::result_type        idx_;
 //
@@ -31,7 +31,7 @@ namespace random{
 // rmult_ rmult(weights);
 // idx_ idx = rmult(urng);
 template<typename Ur = uniform_real<double> >
-class multinomial_distribution{
+class categorical_distribution{
     typedef Ur                                          unif_t;
     public:
     typedef typename unif_t::input_type                 input_type;
@@ -44,14 +44,14 @@ class multinomial_distribution{
     typedef typename range_difference<cont_t>::type     result_type;
 
     // Construction
-    multinomial_distribution();
+    categorical_distribution();
     
     // Passing sorted from large to small weights will speed up execution. 
     template<typename R>
-    multinomial_distribution( const R& unnormalized_weights );
-    multinomial_distribution( const multinomial_distribution& that );
-    multinomial_distribution&
-    operator=(const multinomial_distribution& that);
+    categorical_distribution( const R& unnormalized_weights );
+    categorical_distribution( const categorical_distribution& that );
+    categorical_distribution&
+    operator=(const categorical_distribution& that);
 
     // Draw
     template<typename U> result_type operator()(U& urng)const;
@@ -72,11 +72,11 @@ class multinomial_distribution{
 
     // Construction
     template<typename Ur>
-    multinomial_distribution<Ur>::multinomial_distribution() : cum_sums_(){}
+    categorical_distribution<Ur>::categorical_distribution() : cum_sums_(){}
 
     template<typename Ur>
     template<typename R>
-    multinomial_distribution<Ur>::multinomial_distribution( 
+    categorical_distribution<Ur>::categorical_distribution( 
         const R& unnormalized_weights 
     )
     {
@@ -84,15 +84,15 @@ class multinomial_distribution{
     }
     
     template<typename Ur>
-    multinomial_distribution<Ur>::multinomial_distribution( 
-        const multinomial_distribution& that 
+    categorical_distribution<Ur>::categorical_distribution( 
+        const categorical_distribution& that 
     )
     :cum_sums_(that.cum_sums_){}
     
     template<typename Ur>
-    multinomial_distribution<Ur>&
-    multinomial_distribution<Ur>::operator=(
-        const multinomial_distribution& that
+    categorical_distribution<Ur>&
+    categorical_distribution<Ur>::operator=(
+        const categorical_distribution& that
     ){
         if(&that!=this){
             this->cum_sums_ = that.cum_sums_;
@@ -102,8 +102,8 @@ class multinomial_distribution{
     
     template<typename Ur>
     template<typename U>
-    typename multinomial_distribution<Ur>::result_type 
-    multinomial_distribution<Ur>::operator()(U& urng)const{
+    typename categorical_distribution<Ur>::result_type 
+    categorical_distribution<Ur>::operator()(U& urng)const{
         unif_t unif(static_cast<value_type>(0),normalizing_constant());
         typedef typename range_iterator<const cont_t>::type iter_;
         value_type u = unif(urng);
@@ -118,20 +118,20 @@ class multinomial_distribution{
     
     // Access
     template<typename Ur>
-    const typename multinomial_distribution<Ur>::cont_t&
-    multinomial_distribution<Ur>::cumulative_weights()const{ 
+    const typename categorical_distribution<Ur>::cont_t&
+    categorical_distribution<Ur>::cumulative_weights()const{ 
         return (this->cum_sums_); 
     }
     
     template<typename Ur>
-    typename multinomial_distribution<Ur>::value_type
-    multinomial_distribution<Ur>::normalizing_constant()const{
+    typename categorical_distribution<Ur>::value_type
+    categorical_distribution<Ur>::normalizing_constant()const{
         return (this->cum_sums_).back();
     }
     
     template<typename Ur>
     template<typename R>
-    void multinomial_distribution<Ur>::set(const R& unnormalized_weights){
+    void categorical_distribution<Ur>::set(const R& unnormalized_weights){
         const char* method = "multinormal_distribution::set, error : ";
         static value_type eps = math::tools::epsilon<value_type>();
 
