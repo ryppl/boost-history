@@ -31,7 +31,7 @@ namespace boost { namespace fusion
         template <typename Seq, typename Key>
         struct erase_key
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
             BOOST_FUSION_MPL_ASSERT((has_key<Seq,Key>));
 

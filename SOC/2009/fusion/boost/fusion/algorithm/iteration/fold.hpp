@@ -24,7 +24,7 @@ namespace boost { namespace fusion {
         template <typename Seq, typename State, typename F>
         struct fold
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef

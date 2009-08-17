@@ -39,7 +39,7 @@ namespace boost { namespace fusion
           : extension::deref_data_impl<typename traits::tag_of<It>::type>::
                 template apply<typename detail::add_lref<It>::type>
         {
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
             BOOST_FUSION_MPL_ASSERT((traits::is_associative<It>));
         };
     }

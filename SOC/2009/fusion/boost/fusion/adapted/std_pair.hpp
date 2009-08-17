@@ -7,6 +7,7 @@
 #define BOOST_FUSION_ADAPTED_STD_PAIR_HPP
 
 #include <boost/fusion/adapted/struct.hpp>
+#include <boost/fusion/support/tag_of_fwd.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/int.hpp>

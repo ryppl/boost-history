@@ -34,7 +34,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template <typename T1, typename T2>
         static bool
-        call(BOOST_FUSION_R_ELSE_CLREF(T1), BOOST_FUSION_R_ELSE_CLREF(T2))
+        call(BOOST_FUSION_R_ELSE_CLREF(T1) x, BOOST_FUSION_R_ELSE_CLREF(T2) y)
         {
             return false;
         }

@@ -14,6 +14,7 @@
 #else
 #   include <boost/fusion/container/vector/vector10.hpp>
 #endif
+#include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
@@ -31,7 +32,7 @@ namespace boost { namespace fusion
           : convert<typename traits::tag_of<Seq>::type, vector<> >
 #endif
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         };
     }

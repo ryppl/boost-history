@@ -20,7 +20,7 @@ namespace boost { namespace fusion
         struct accumulate
           : fold<Seq, State, F>
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
         };
     }

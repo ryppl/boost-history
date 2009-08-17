@@ -23,9 +23,9 @@ namespace boost { namespace fusion
         template <typename Seq1, typename Seq2, typename F = void_>
         struct transform
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
             typedef transform_view<Seq1,Seq2,F> type;
@@ -38,7 +38,7 @@ namespace boost { namespace fusion
         struct transform<Seq, F>
 #endif
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef transform_view<Seq, F> type;

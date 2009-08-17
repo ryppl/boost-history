@@ -28,6 +28,9 @@
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/equal_to.hpp>
+#endif
 #include <boost/call_traits.hpp>
 
 #include <boost/fusion/view/transform_view/transform_view_fwd.hpp>
@@ -57,14 +60,12 @@ namespace boost { namespace fusion
     struct transform_view
       : sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
     {
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
-
-        //BOOST_FUSION_MPL_ASSERT_RELATION(
-        //       result_of::size<Sequence1>,==,result_of::size<Sequence2>,
-        //       "both sequences must have the same length");
+        BOOST_FUSION_MPL_ASSERT((
+            mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq1> >));
 
         typedef detail::view_storage<Seq1> storage1_type;
         typedef typename storage1_type::type seq1_type;
@@ -140,7 +141,7 @@ namespace boost { namespace fusion
     struct unary_transform_view
       : sequence_base<unary_transform_view<Seq, F, void_> >
     {
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
         typedef detail::view_storage<Seq> storage_type;

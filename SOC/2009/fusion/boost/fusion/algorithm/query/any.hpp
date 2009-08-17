@@ -43,7 +43,7 @@ namespace boost { namespace fusion
         template <typename Seq, typename>
         struct any
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef bool type;

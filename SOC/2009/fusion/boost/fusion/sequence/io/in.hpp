@@ -23,7 +23,7 @@ namespace boost { namespace fusion
     inline std::istream&
     in(std::istream& is, Seq& seq)
     {
-        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
         detail::read_sequence(is, seq);
@@ -40,7 +40,7 @@ namespace boost { namespace fusion
             >::type
         operator>>(std::istream& is, Seq& seq)
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             return fusion::in(is, seq);

@@ -26,10 +26,11 @@ namespace boost { namespace fusion
         template <typename Seq, typename Pos, typename Range>
         struct insert_range
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Pos>));
             BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<Pos, Seq>));
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Range>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Range>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Range>));
 
             typedef

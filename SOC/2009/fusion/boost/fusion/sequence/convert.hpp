@@ -13,15 +13,9 @@
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 
-#include <boost/mpl/always.hpp>
-#include <boost/mpl/apply.hpp>
-
-//TODO in /sequence/intrisic/ or /container/?
 //TODO doc!!!
 namespace boost { namespace fusion
 {
-    struct void_;
-
     namespace extension
     {
         template <typename Tag>
@@ -46,7 +40,7 @@ namespace boost { namespace fusion
         template <typename Tag, typename Seq>
         struct convert
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef typename extension::convert_impl<Tag> gen;

@@ -34,19 +34,18 @@ namespace boost { namespace fusion
             typedef typename
                 detail::variadic_arguments_to_vector<KeysTypes...>::type
             args;
+            typedef typename mpl::begin<args>::type args_begin;
             typedef typename
+                mpl::advance<
+                    args_begin
+                  , mpl::divides<mpl::size<args>, mpl::int_<2> >
+                >::type
+            args_middle;
+
+            typedef mpl::iterator_range<args_begin, args_middle> keys;
+            typedef
                 mpl::iterator_range<
-                    typename mpl::begin<args>::type
-                  , typename mpl::advance<typename mpl::begin<args>::type
-                  , mpl::divides<mpl::size<args>, mpl::int_<2> > >::type
-                >
-            keys;
-            typedef typename
-                mpl::iterator_range<
-                    typename mpl::advance<
-                        typename mpl::begin<args>::type
-                      , mpl::divides<mpl::size<args>, mpl::int_<2> >
-                    >::type
+                    args_middle
                   , typename mpl::end<args>::type
                 >
             types;

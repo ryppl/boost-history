@@ -22,9 +22,9 @@ namespace boost { namespace fusion
     inline bool
     less(Seq1 const& seq1, Seq2 const& seq2)
     {
-        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
         return
@@ -44,9 +44,9 @@ namespace boost { namespace fusion
             >::type
         operator<(Seq1 const& seq1, Seq2 const& seq2)
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
             return fusion::less(seq1, seq2);

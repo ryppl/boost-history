@@ -24,7 +24,7 @@ namespace boost { namespace fusion
         template <typename Seq, typename>
         struct for_each
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef void type;

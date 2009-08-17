@@ -43,7 +43,7 @@ namespace boost { namespace fusion
     struct filter_view
       : sequence_base<filter_view<Seq, Pred> >
     {
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
         typedef detail::view_storage<Seq> storage_type;

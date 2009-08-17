@@ -11,38 +11,42 @@
 
 #include <boost/mpl/begin_end_fwd.hpp>
 
-namespace boost { namespace fusion
+namespace boost
 {
-    struct sequence_root
-    {};
-
-    template <typename Seq>
-    struct sequence_base
-      : sequence_root
+    namespace fusion
     {
-        Seq const&
-        derived() const
+        struct sequence_root
+        {};
+
+        template <typename Seq>
+        struct sequence_base
+          : sequence_root
         {
-            return static_cast<Seq const&>(*this);
-        }
+            Seq const&
+            derived() const
+            {
+                return static_cast<Seq const&>(*this);
+            }
 
-        Seq&
-        derived()
-        {
-            return static_cast<Seq&>(*this);
-        }
-    };
+            Seq&
+            derived()
+            {
+                return static_cast<Seq&>(*this);
+            }
+        };
 
-    struct fusion_sequence_tag;
-}}
+        struct fusion_sequence_tag;
+    }
 
-namespace boost { namespace mpl
-{
-    // Deliberately break mpl::begin, so it doesn't lie that a Fusion sequence
-    // is not an MPL sequence by returning mpl::void_.
-    // In other words: Fusion Sequences are always MPL Sequences, but they can
-    // be incompletely defined.
-    template<> struct begin_impl< boost::fusion::fusion_sequence_tag >;
-}}
+    namespace mpl
+    {
+        // Deliberately break mpl::begin, so it doesn't lie that a Fusion
+        // sequence is not an MPL sequence by returning mpl::void_.
+        // In other words: Fusion Sequences are always MPL Sequences, but they
+        // can be incompletely defined.
+        template<>
+        struct begin_impl<fusion::fusion_sequence_tag>;
+    }
+}
 
 #endif

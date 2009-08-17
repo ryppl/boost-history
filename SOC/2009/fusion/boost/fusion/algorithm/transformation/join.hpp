@@ -22,9 +22,9 @@ namespace boost { namespace fusion {
         template<typename Seq1, typename Seq2>
         struct join
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
             typedef joint_view<Seq1,Seq2> type;

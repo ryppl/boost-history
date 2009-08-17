@@ -37,8 +37,10 @@ namespace boost { namespace fusion
             typedef typename
                 mpl::iterator_range<
                     typename mpl::begin<args>::type
-                  , typename mpl::advance<typename mpl::begin<args>::type
-                  , mpl::divides<mpl::size<args>, mpl::int_<2> > >::type
+                  , typename mpl::advance<
+                        typename mpl::begin<args>::type
+                      , mpl::divides<mpl::size<args>, mpl::int_<2> >
+                    >::type
                 >
             keys;
             typedef typename

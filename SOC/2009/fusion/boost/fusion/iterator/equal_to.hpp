@@ -15,6 +15,8 @@
 #include <boost/mpl/and.hpp>
 #include <boost/utility/enable_if.hpp>
 
+//TODO constexpr
+
 namespace boost { namespace fusion
 {
     struct iterator_facade_tag;
@@ -45,10 +47,8 @@ namespace boost { namespace fusion
                   , typename detail::add_lref<It2>::type
                 >::type
         {
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It1>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It1>));
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It2>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It2>));
         };
     }
 
@@ -68,7 +68,10 @@ namespace boost { namespace fusion
         template <typename It1, typename It2>
         inline typename
             enable_if<
-                mpl::and_<traits::is_iterator<It1>, traits::is_iterator<It2> >
+                mpl::and_<
+                    traits::is_iterator<It1>
+                  , traits::is_iterator<It2>
+                >
               , bool
             >::type
         operator!=(It1 const&, It1 const&)

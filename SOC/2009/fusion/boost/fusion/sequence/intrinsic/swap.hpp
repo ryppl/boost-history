@@ -46,9 +46,9 @@ namespace boost { namespace fusion {
         template<typename Seq1, typename Seq2>
         struct swap
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
             BOOST_FUSION_STATIC_ASSERT((size<Seq1>::value==size<Seq2>::value));
 

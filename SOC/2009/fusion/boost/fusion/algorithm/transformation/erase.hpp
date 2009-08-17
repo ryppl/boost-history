@@ -72,17 +72,19 @@ namespace boost { namespace fusion
         >
         struct erase
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
+            BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<First, Seq>));
+            BOOST_FUSION_MPL_ASSERT((
+                detail::is_in_range<
+                    Last
+                  , First
+                  , typename result_of::end<Seq>::type
+                >));
 
             typedef typename begin<Seq>::type seq_first_type;
             typedef typename end<Seq>::type seq_last_type;
-
-            BOOST_FUSION_MPL_ASSERT(
-                    (detail::is_in_range<First,seq_first_type,seq_last_type>));
-            BOOST_FUSION_MPL_ASSERT(
-                    (detail::is_in_range<Last,First,seq_last_type>));
-
             typedef
                 iterator_range<
                     seq_first_type

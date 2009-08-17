@@ -29,7 +29,7 @@ namespace boost { namespace fusion
         struct back
           : deref<typename prior<typename end<Seq>::type>::type>
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
             BOOST_FUSION_MPL_ASSERT_NOT((empty<Seq>));
         };

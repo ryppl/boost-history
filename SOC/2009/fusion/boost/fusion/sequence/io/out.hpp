@@ -26,7 +26,7 @@ namespace boost { namespace fusion
     inline std::ostream&
     out(std::ostream& os, Seq& seq)
     {
-        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
         detail::print_sequence(os, seq);
@@ -43,7 +43,7 @@ namespace boost { namespace fusion
             >::type
         operator<<(std::ostream& os, Seq const& seq)
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             return fusion::out(os, seq);

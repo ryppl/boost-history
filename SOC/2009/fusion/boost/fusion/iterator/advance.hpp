@@ -53,8 +53,7 @@ namespace boost { namespace fusion
                   , mpl::int_<N>
                 >
         {
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
             BOOST_FUSION_STATIC_ASSERT((
                     N>=0 ||
                     traits::is_bidirectional<It>::value));
@@ -66,8 +65,7 @@ namespace boost { namespace fusion
           : extension::advance_impl<typename traits::tag_of<It>::type>::
                 template apply<typename detail::add_lref<It>::type, N>
         {
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<It>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
             BOOST_FUSION_STATIC_ASSERT((
                     N::value>=0 ||
                     traits::is_bidirectional<It>::value));

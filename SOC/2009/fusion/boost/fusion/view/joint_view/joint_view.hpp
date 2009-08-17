@@ -45,9 +45,9 @@ namespace boost { namespace fusion
     struct joint_view
       : sequence_base<joint_view<Seq1, Seq2> >
     {
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
         typedef detail::view_storage<Seq1> storage1_type;

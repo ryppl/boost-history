@@ -138,7 +138,7 @@ namespace boost { namespace fusion {
     struct zip_view
       : sequence_base< zip_view<Seqs> >
     {
-        //BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seqs>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seqs>));
 
         typedef typename

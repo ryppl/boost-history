@@ -15,6 +15,7 @@
 #include <boost/fusion/adapted.hpp>
 #include <boost/fusion/tuple.hpp>
 #include <boost/fusion/support.hpp>
+#include <boost/fusion/functional.hpp>
 
 #include <boost/mpl/placeholders.hpp>
 
@@ -120,6 +121,14 @@ class C;
 
 int main()
 {
+    {
+        using namespace fusion;
+
+        static_assert(std::is_same<traits::tag_of<int>::type,non_fusion_tag>::value,"");
+        static_assert(std::is_same<traits::tag_of<boost::mpl::vector<> >::type,mpl_sequence_tag>::value,"");
+        static_assert(std::is_same<traits::tag_of<boost::mpl::begin<boost::mpl::vector<> >::type>::type,mpl_iterator_tag>::value,"");
+    }
+
     {
         using namespace fusion::result_of;
 

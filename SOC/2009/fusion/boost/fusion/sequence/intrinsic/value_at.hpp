@@ -49,7 +49,7 @@ namespace boost { namespace fusion
           : extension::value_at_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, N>
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((
                 mpl::or_<
                     traits::is_random_access<Seq>
@@ -66,7 +66,7 @@ namespace boost { namespace fusion
         struct value_at_c
           : result_of::value_at<Seq,mpl::int_<N> >
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((
                 mpl::or_<
                     traits::is_random_access<Seq>

@@ -26,9 +26,9 @@ namespace boost { namespace fusion
     inline bool
     greater(Seq1 const& seq1, Seq2 const& seq2)
     {
-        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-        //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
 #ifdef FUSION_DIRECT_OPERATOR_USAGE
@@ -52,9 +52,9 @@ namespace boost { namespace fusion
             >::type
         operator>(Seq1 const& seq1, Seq2 const& seq2)
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq1>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq1>));
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq2>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
             return fusion::greater(seq1, seq2);

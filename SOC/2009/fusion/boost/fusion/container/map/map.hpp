@@ -27,9 +27,6 @@
 namespace boost { namespace fusion
 {
     struct fusion_sequence_tag;
-#ifndef BOOST_NO_VARIADIC_TEMPLATES
-    struct void_;
-#endif
 
     VARIADIC_TEMPLATE(FUSION_MAX_MAP_SIZE)
     struct map

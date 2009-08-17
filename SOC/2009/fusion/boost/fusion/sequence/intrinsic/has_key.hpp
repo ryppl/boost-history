@@ -55,7 +55,7 @@ namespace boost { namespace fusion
           : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
                 template apply<typename detail::add_lref<Seq>::type, Key>
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
         };
     }

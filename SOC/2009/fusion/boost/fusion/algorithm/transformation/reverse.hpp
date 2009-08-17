@@ -19,7 +19,7 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct reverse
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef reverse_view<Seq> type;

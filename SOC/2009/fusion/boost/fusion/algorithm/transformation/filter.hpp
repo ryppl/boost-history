@@ -25,7 +25,7 @@ namespace boost { namespace fusion
         struct filter
           : filter_if<Seq, is_same<mpl::_1, T> >
         {
-            //BOOST_FUSION_MPL_ASSERT((traits_is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
         };
     }

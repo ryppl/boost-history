@@ -49,10 +49,8 @@ namespace boost { namespace fusion
                   , typename detail::add_lref<Last>::type
                 >::type
         {
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<First>));
-            //BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Last>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
         };
     }
 
