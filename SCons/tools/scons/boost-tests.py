@@ -8,11 +8,11 @@ def generate(env):
     AddOption('--test', dest='test', action="store_true")
 
     def BoostCompileTest(env, test, source = None, **kw):
-        env.Alias("test", env.Object(test, (source is None) and (test + ".cpp") or source), **kw)
+        env.Alias("$BOOST_LIB", env.Object(test, (source is None) and (test + ".cpp") or source), **kw)
     def BoostRunTest(env, test, source = None, **kw):
         test_prog = env.Program(test, (source is None) and (test + ".cpp") or source, **kw)
         test = env.Command("$BOOST_LIB-"+test, test_prog, "./$SOURCE")
-        env.Alias("test", test)
+        env.Alias("$BOOST_LIB", test)
     def BoostRunTests(env, tests, **kw):
         for test in Flatten(tests):
             env.BoostRunTest(test, **kw)

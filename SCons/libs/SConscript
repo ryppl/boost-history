@@ -7,7 +7,7 @@ env.Append(
 
 sconscripts = Glob("*/build/SConscript")
 test_sconscripts = Glob("*/test/SConscript")
-env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB + '_DYN_LINK=1' or []}"])
+env.AppendUnique(CPPDEFINES = ["${LINK_DYNAMIC and 'BOOST_' + BOOST_LIB.upper() + '_DYN_LINK=1' or []}"])
 for variant in env["variant"]:
     env["current_variant"] = variant
     env.SetProperty(profile = False)
@@ -31,10 +31,10 @@ for variant in env["variant"]:
             for sconscript in sconscripts:
                 lib = str(sconscript.get_dir().up())
                 VariantDir(src_dir = lib + "/build", variant_dir = lib + "/src", duplicate = False)
-                env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib.upper()) })
+                env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/src/SConscript", exports = { "env" : env.Clone(BOOST_LIB = lib) })
             if GetOption("test"):
                 for sconscript in test_sconscripts:
                     lib = str(sconscript.get_dir().up())
-                    test_env = env.Clone(BOOST_LIB = lib.upper(), BOOST_TEST = True)
+                    test_env = env.Clone(BOOST_LIB = lib, BOOST_TEST = True)
                     test_env.BoostUseLib(lib)
                     env.SConscript("$BOOST_CURRENT_VARIANT_DIR/" + lib + "/test/SConscript", exports = { "env" : test_env })
