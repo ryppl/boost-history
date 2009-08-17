@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DETAIL_EXCEPTIONS
-#define BOOST_DETAIL_EXCEPTIONS
+#ifndef BOOST_PINHOLE_EXCEPTIONS
+#define BOOST_PINHOLE_EXCEPTIONS
 
 #include <exception>
 #include <stdexcept>
@@ -35,13 +35,14 @@ namespace boost { namespace pinhole
         public: no_metadata_defined() : runtime_error( "No metadata defined for property" ) {;}
     };
 
-    typedef boost::error_info< struct tag_requested_type, const std::string > exception_requested_type;
-    typedef boost::error_info< struct tag_property_name,  const std::string > exception_property_name;
-    typedef boost::error_info< struct tag_property_type,  const std::string > exception_property_type;
-    typedef boost::error_info< struct tag_actual_type,    const std::string > exception_actual_type;
-    typedef boost::error_info< struct tag_action_name,    const std::string > exception_action_name;
-    typedef boost::error_info< struct tag_path,           const std::string > exception_path;
-    typedef boost::error_info< struct tag_path_section,   const std::string > exception_path_section;
+    typedef ::boost::error_info< struct tag_additional_info, const std::string > exception_additional_info;
+    typedef ::boost::error_info< struct tag_requested_type,  const std::string > exception_requested_type;
+    typedef ::boost::error_info< struct tag_property_name,   const std::string > exception_property_name;
+    typedef ::boost::error_info< struct tag_property_type,   const std::string > exception_property_type;
+    typedef ::boost::error_info< struct tag_actual_type,     const std::string > exception_actual_type;
+    typedef ::boost::error_info< struct tag_action_name,     const std::string > exception_action_name;
+    typedef ::boost::error_info< struct tag_path,            const std::string > exception_path;
+    typedef ::boost::error_info< struct tag_path_section,    const std::string > exception_path_section;
 }}
 
 #endif // include guard

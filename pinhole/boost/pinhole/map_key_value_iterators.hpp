@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_MAP_KEY_VALUE_ITERATORS
-#define BOOST_MAP_KEY_VALUE_ITERATORS
+#ifndef BOOST_PINHOLE_MAP_KEY_VALUE_ITERATORS
+#define BOOST_PINHOLE_MAP_KEY_VALUE_ITERATORS
 
 #include <boost/iterator.hpp>
 #include <boost/iterator/iterator_adaptor.hpp>

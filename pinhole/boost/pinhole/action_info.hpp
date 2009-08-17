@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DETAILS_ACTION_INFO
-#define BOOST_DETAILS_ACTION_INFO
+#ifndef BOOST_PINHOLE_ACTION_INFO
+#define BOOST_PINHOLE_ACTION_INFO
 
 #if defined(BOOST_MSVC)
     #pragma warning(push)

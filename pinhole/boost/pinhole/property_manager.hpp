@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PROPERTY_MANAGER
-#define BOOST_PROPERTY_MANAGER
+#ifndef BOOST_PINHOLE_PROPERTY_MANAGER
+#define BOOST_PINHOLE_PROPERTY_MANAGER
 
 #include "types.hpp"
 #include "exceptions.hpp"

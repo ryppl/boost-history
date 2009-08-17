@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PROPERTY_GROUP
-#define BOOST_PROPERTY_GROUP
+#ifndef BOOST_PINHOLE_PROPERTY_GROUP
+#define BOOST_PINHOLE_PROPERTY_GROUP
 
 #include "types.hpp"
 #include "map_key_value_iterators.hpp"
@@ -336,7 +336,8 @@ namespace boost { namespace pinhole
                         return static_cast<detail::property_info<Return_Type>*>(propInfo)->getter();
                     }
                     
-                    throw ::boost::enable_error_info(std::bad_cast("Attempted to get a property using a type different from the properties type."))
+                    throw ::boost::enable_error_info(std::bad_cast())
+                                << ::boost::pinhole::exception_additional_info("Attempted to get a property using a type different from the properties type.")
                                 << ::boost::pinhole::exception_property_name(property)
                                 << ::boost::pinhole::exception_requested_type(typeid(Return_Type).name())
                                 << ::boost::pinhole::exception_property_type(propInfo->m_type.name());
@@ -373,7 +374,8 @@ namespace boost { namespace pinhole
                         return static_cast<detail::property_info<Set_Type>*>(propInfo)->setter(value);
                     }
                     
-                    throw ::boost::enable_error_info(std::bad_cast("Attempted to set a property using a type different from the properties type."))
+                    throw ::boost::enable_error_info(std::bad_cast())
+                            << ::boost::pinhole::exception_additional_info("Attempted to set a property using a type different from the properties type.")
                             << ::boost::pinhole::exception_property_name(property)
                             << ::boost::pinhole::exception_requested_type(typeid(Set_Type).name())
                             << ::boost::pinhole::exception_property_type(propInfo->m_type.name());

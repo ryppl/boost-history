@@ -5,13 +5,14 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PROPERTY_INFO
-#define BOOST_PROPERTY_INFO
+#ifndef BOOST_PINHOLE_PROPERTY_INFO
+#define BOOST_PINHOLE_PROPERTY_INFO
 
 #if defined(BOOST_MSVC)
     #pragma warning(push)
     #pragma warning( disable: 4561 4793 )
 #endif
+#include "exceptions.hpp"
 #include <boost/type_traits.hpp>
 #include <boost/function.hpp>
 #include <boost/lexical_cast.hpp>
@@ -43,16 +44,18 @@ namespace boost { namespace pinhole { namespace detail
     template<typename String_Type, typename Value_Type>
     struct internal_string_set
     {
+        template<typename T> struct tag_requested_value;
+        
         template<typename Set_Type>
         inline void operator()( Set_Type setter, String_Type value )
         {
-            typedef boost::error_info< struct tag_requested_value, const String_Type > exception_requested_value;
+            typedef ::boost::error_info< struct tag_requested_value<String_Type>, const String_Type > exception_requested_value;
 
             try
             {
-                setter( boost::lexical_cast<Value_Type>(value) );
+                setter( ::boost::lexical_cast<Value_Type>(value) );
             }
-            catch(boost::bad_lexical_cast &)
+            catch(::boost::bad_lexical_cast &)
             {
                 throw ::boost::enable_error_info(std::invalid_argument("Could not convert string to the property's type."))
                             << exception_requested_value(value)

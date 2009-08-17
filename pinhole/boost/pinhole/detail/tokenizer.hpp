@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PINHOLE_TOKENIZER
-#define BOOST_PINHOLE_TOKENIZER
+#ifndef BOOST_PINHOLE_DETAIL_TOKENIZER
+#define BOOST_PINHOLE_DETAIL_TOKENIZER
 
 #include <vector>
 #include "../exceptions.hpp"

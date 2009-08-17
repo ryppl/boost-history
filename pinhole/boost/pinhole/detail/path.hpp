@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PINHOLE_PATH
-#define BOOST_PINHOLE_PATH
+#ifndef BOOST_PINHOLE_DETAIL_PATH
+#define BOOST_PINHOLE_DETAIL_PATH
 
 #include <vector>
 

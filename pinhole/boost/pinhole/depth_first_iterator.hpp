@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DEPTH_FIRST_ITERATOR
-#define BOOST_DEPTH_FIRST_ITERATOR
+#ifndef BOOST_PINHOLE_DEPTH_FIRST_ITERATOR
+#define BOOST_PINHOLE_DEPTH_FIRST_ITERATOR
 
 #include <string>
 #include "detail/depth_first_iterator_base.hpp"

@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_PROPERTY_PINHOLE
-#define BOOST_PROPERTY_PINHOLE
+#ifndef BOOST_PINHOLE
+#define BOOST_PINHOLE
 
 #include "pinhole/property_group.hpp"
 #include "pinhole/value.hpp"

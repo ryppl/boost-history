@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_CATEGORY_ITERATOR
-#define BOOST_CATEGORY_ITERATOR
+#ifndef BOOST_PINHOLE_CATEGORY_ITERATOR
+#define BOOST_PINHOLE_CATEGORY_ITERATOR
 
 #include <exception>
 #include <stdexcept>

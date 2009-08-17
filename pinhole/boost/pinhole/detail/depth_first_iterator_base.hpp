@@ -5,8 +5,8 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_DETAIL_DEPTH_FIRST_ITERATOR_BASE
-#define BOOST_DETAIL_DEPTH_FIRST_ITERATOR_BASE
+#ifndef BOOST_PINHOLE_DETAIL_DEPTH_FIRST_ITERATOR_BASE
+#define BOOST_PINHOLE_DETAIL_DEPTH_FIRST_ITERATOR_BASE
 
 #include <exception>
 #include <stdexcept>
