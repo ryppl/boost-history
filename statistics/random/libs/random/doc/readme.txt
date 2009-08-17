@@ -27,9 +27,9 @@ http://www.boost.org/doc/libs/1_39_0/libs/random/index.html
 
     Class                           Description
 	chi_squared<T>				
-    students_t_distribution<T>         
+    	students_t_distribution<T>         
 	location_scale<Z>               X = sigma Z + mu
-	multinomial_distribution<U>     Samples indices by their probability
+	categorical_distribution<U>     Samples indices by their probability
 	ref_distribution<X&>            A reference wrapper
 	gen_to_random<X>                A generator that acts like a RandomDist
 
