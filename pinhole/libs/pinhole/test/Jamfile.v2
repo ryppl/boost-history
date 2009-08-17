@@ -35,6 +35,6 @@ project
   [ run test_path_filtered_iterator.cpp ]
   [ run test_category_iterator.cpp ]
   [ run test_find.cpp  ]
-  #[ run test_value.cpp  ]
+  [ run test_value.cpp  ]
  ;
 }

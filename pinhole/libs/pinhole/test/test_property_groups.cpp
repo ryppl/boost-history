@@ -8,6 +8,8 @@
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PinholeLib
+
+#include <boost/config.hpp>
 #include <boost/bind.hpp>
 #include <boost/function.hpp>
 #include <boost/test/unit_test.hpp>
