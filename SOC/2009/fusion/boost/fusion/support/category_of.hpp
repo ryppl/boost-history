@@ -27,8 +27,8 @@ namespace boost { namespace fusion
     //cschmidt: to ensure full compatibility between fusion and mpl iterators,
     //the tags should inheritate the corresponding mpl tags.
     //Fusion tags may be used as template arguments for iterator base classes
-    //(e.g. fusion::iterator_facade), therefore emulate the mpl tags (see
-    //(3.4.2/2) for more details.
+    //(e.g. fusion::iterator_facade), therefore emulate the mpl tags
+    //(3.4.2/2 !).
     struct forward_traversal_tag
       : single_pass_traversal_tag
     {

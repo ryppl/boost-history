@@ -29,8 +29,8 @@ rem compile...
 goto :eof
 
 :gcc
-set PATH=C:\Program Files (x86)\MinGWOld\bin;%PATH%
-rem set PATH=C:\Program Files (x86)\MinGW\bin;%PATH%
+rem set PATH=C:\Program Files (x86)\MinGWOld\bin;%PATH%
+set PATH=C:\Program Files (x86)\MinGW\bin;%PATH%
 set TOOLSET=gcc
 goto :eof
 

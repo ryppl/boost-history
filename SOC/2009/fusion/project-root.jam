@@ -10,7 +10,7 @@ project
     : requirements <include>.
                    <include>$(BOOST_INCLUDES_PATH)
                    <define>BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#                   <toolset>gcc:<cxxflags>-std=c++0x
+                   <toolset>gcc:<cxxflags>-std=c++0x
     : build-dir ../bin
     : default-build debug <link>shared <runtime-link>shared <threading>multi
     ;

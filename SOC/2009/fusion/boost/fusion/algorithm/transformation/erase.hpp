@@ -76,6 +76,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
             BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<First, Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
             BOOST_FUSION_MPL_ASSERT((
                 detail::is_in_range<
                     Last
