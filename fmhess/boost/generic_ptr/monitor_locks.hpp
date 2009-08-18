@@ -107,9 +107,10 @@ namespace boost
         }
         MonitorPtr release()
         {
+          MonitorPtr result = _mon;
           _mon.reset();
           _lock.release();
-          return _mon;
+          return result;
         }
 
         // monitor extensions to lock interface
