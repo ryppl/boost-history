@@ -34,25 +34,37 @@ namespace boost
     class monitor
     {
       typedef monitor this_type; // for detail/operator_bool.hpp
-#ifdef BOOST_NO_RVALUE_REFERENCES
-      class moveable_monitor_lock
+
+      // we could use monitor_unique_lock, but this should be slightly faster
+      class moving_monitor_lock
       {
       public:
-        moveable_monitor_lock(const monitor& mon): _object_p(mon.px),
-          _lock(new detail::unique_lock<Mutex>(mon.get_mutex_ref()))
+        moving_monitor_lock(const monitor& mon):
+          _object_p(mon.px),
+          _lock(mon.get_mutex_ref())
         {}
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        moving_monitor_lock(const moving_monitor_lock & other):
+          _object_p(other._object_p),
+          _lock(const_cast<moving_monitor_lock &>(other)._lock.move())
+        {}
+#else // BOOST_NO_RVALUE_REFERENCES
+        moving_monitor_lock(moving_monitor_lock && other):
+          _object_p(std::move(other._object_p)),
+          _lock(std::move(other._lock))
+        {}
+#endif // BOOST_NO_RVALUE_REFERENCES
         T operator->() const
         {
           detail::assert_plain_old_pointer_not_null(_object_p);
           return _object_p;
         }
       private:
+        moving_monitor_lock(moving_monitor_lock & other);
+
         T _object_p;
-        shared<detail::unique_lock<Mutex> *> _lock;
+        detail::unique_lock<Mutex> _lock;
       };
-#else
-      typedef monitor_unique_lock<monitor> moveable_monitor_lock;
-#endif // BOOST_NO_RVALUE_REFERENCES
 
     public:
       typedef typename pointer_traits<T>::value_type value_type;
@@ -141,9 +153,9 @@ namespace boost
 // implicit conversion to "bool"
 #include <boost/generic_ptr/detail/operator_bool.hpp>
 
-      moveable_monitor_lock operator->() const
+      moving_monitor_lock operator->() const
       {
-        return moveable_monitor_lock(*this);
+        return moving_monitor_lock(*this);
       }
 
 // Tasteless as this may seem, making all members public allows member templates

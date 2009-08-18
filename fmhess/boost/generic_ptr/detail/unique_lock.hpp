@@ -9,14 +9,14 @@
 
 // See http://www.boost.org/libs/signals2 for library home page.
 
-#ifndef BOOST_SIGNALS2_UNIQUE_LOCK_HPP
-#define BOOST_SIGNALS2_UNIQUE_LOCK_HPP
+#ifndef BOOST_GENERIC_PTR_UNIQUE_LOCK_HPP
+#define BOOST_GENERIC_PTR_UNIQUE_LOCK_HPP
 
 #include <boost/noncopyable.hpp>
 
 namespace boost
 {
-  namespace signals2
+  namespace generic_ptr
   {
     namespace detail
     {
@@ -24,19 +24,44 @@ namespace boost
       class unique_lock: public noncopyable
       {
       public:
-        unique_lock(Mutex &m): _mutex(m)
+        unique_lock(Mutex &m): _mutex(m), _owns_lock(false)
         {
           _mutex.lock();
+          _owns_lock = true;
         }
-        ~unique_lock()
+ #ifdef BOOST_NO_RVALUE_REFERENCES
+        unique_lock(boost::detail::thread_move_t<unique_lock> other):
+          _mutex(other->_mutex), _owns_lock(true)
         {
-          _mutex.unlock();
+          other->_owns_lock = false;
+        }
+        boost::detail::thread_move_t<unique_lock> move()
+        {
+          return boost::detail::thread_move_t<unique_lock>(*this);
+        }
+#else // BOOST_NO_RVALUE_REFERENCES
+        unique_lock(unique_lock && other):
+          _mutex(other._mutex), _owns_lock(true)
+        {
+          other._owns_lock = false;
+        }
+        unique_lock && move()
+        {
+          return std::move(*this);
+        }
+#endif // BOOST_NO_RVALUE_REFERENCES
+       ~unique_lock()
+        {
+          if(_owns_lock)
+            _mutex.unlock();
         }
       private:
         Mutex &_mutex;
+        bool _owns_lock;
       };
     } // namespace detail
-  } // namespace signals2
+  } // namespace generic_ptr
 } // namespace boost
 
-#endif  // BOOST_SIGNALS2_UNIQUE_LOCK_HPP
+#endif  // BOOST_GENERIC_PTR_UNIQUE_LOCK_HPP
+
