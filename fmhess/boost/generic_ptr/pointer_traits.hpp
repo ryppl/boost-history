@@ -24,7 +24,7 @@
 namespace std
 {
   template<typename T> class shared_ptr;
-  template<typename T> class unique_ptr;
+  template<typename T, typename D> class unique_ptr;
 }
 
 namespace boost
@@ -108,8 +108,8 @@ namespace boost
     {
       return p.get();
     }
-    template<typename T>
-    T* get_pointer(const std::unique_ptr<T> &p)
+    template<typename T, typename D>
+    T* get_pointer(const std::unique_ptr<T, D> &p)
     {
       return p.get();
     }
@@ -186,13 +186,13 @@ namespace boost
     {
       typedef std::shared_ptr<ValueType> other;
     };
-    template<typename T> struct pointer_traits<std::unique_ptr<T> > :
+    template<typename T, typename D> struct pointer_traits<std::unique_ptr<T, D> > :
       public detail::value_templated_ptr_pointer_traits<T>
     {};
-    template<typename T, typename ValueType>
-    struct rebind<std::unique_ptr<T>, ValueType>
+    template<typename T, typename D, typename ValueType>
+    struct rebind<std::unique_ptr<T, D>, ValueType>
     {
-      typedef std::unique_ptr<ValueType> other;
+      typedef std::unique_ptr<ValueType, D> other;
     };
   } // namespace generic_ptr
 } // namespace boost
