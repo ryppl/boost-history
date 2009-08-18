@@ -19,6 +19,8 @@
 #include <boost/generic_ptr/pointer_traits.hpp>
 #include <boost/generic_ptr/shared.hpp>
 #include <boost/generic_ptr/throwing.hpp>
+#include <boost/shared_ptr.hpp>
+#include <boost/intrusive_ptr.hpp>
 
 namespace bgp = boost::generic_ptr;
 
@@ -245,6 +247,27 @@ int main()
     conversion_to_void_test(p, true);
     overload_resolution_test(p);
   }
-  //TODO: add tests for external pointer types
+  // some tests for external pointer types
+  {
+    boost::shared_ptr<X> p(new X());
+    member_access_test(p);
+    dereference_test(p);
+    rebind_test(p);
+    cast_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
+    overload_resolution_test(p);
+  }
+  {
+    X x;
+    boost::intrusive_ptr<X> p(&x);
+    member_access_test(p);
+    dereference_test(p);
+    rebind_test(p);
+    cast_test(p);
+    conversion_to_base_test(p);
+    // conversion_to_void_test(p); // intrusive doesn't support void pointers
+    overload_resolution_test(p);
+  }
   return boost::report_errors();
 }

@@ -15,8 +15,35 @@
 
 #include <boost/generic_ptr/pointer_traits.hpp>
 
+namespace std
+{
+  template<typename T> class shared_ptr;
+  template<typename T, typename U>
+  shared_ptr<T> static_pointer_cast(const shared_ptr<U> &r);
+  template<typename T, typename U>
+  shared_ptr<T> const_pointer_cast(const shared_ptr<U> &r);
+  template<typename T, typename U>
+  shared_ptr<T> dynamic_pointer_cast(const shared_ptr<U> &r);
+} // namespace std
+
 namespace boost
 {
+  template<typename T> class shared_ptr;
+  template<typename T, typename U>
+  shared_ptr<T> static_pointer_cast(const shared_ptr<U> &r);
+  template<typename T, typename U>
+  shared_ptr<T> const_pointer_cast(const shared_ptr<U> &r);
+  template<typename T, typename U>
+  shared_ptr<T> dynamic_pointer_cast(const shared_ptr<U> &r);
+
+  template<typename T> class intrusive_ptr;
+  template<typename T, typename U>
+  intrusive_ptr<T> static_pointer_cast(const intrusive_ptr<U> &r);
+  template<typename T, typename U>
+  intrusive_ptr<T> const_pointer_cast(const intrusive_ptr<U> &r);
+  template<typename T, typename U>
+  intrusive_ptr<T> dynamic_pointer_cast(const intrusive_ptr<U> &r);
+
   namespace generic_ptr
   {
     // two-argument cast overloads for raw pointers
@@ -34,6 +61,53 @@ namespace boost
     T* dynamic_pointer_cast(U *r, boost::mpl::identity<T>)
     {
       return dynamic_cast<T*>(r);
+    }
+
+    // two-argument cast overloads for some external smart pointer types
+    template<typename T, typename U>
+    shared_ptr<T> static_pointer_cast(const shared_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return boost::static_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    shared_ptr<T> const_pointer_cast(const shared_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return boost::const_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    shared_ptr<T> dynamic_pointer_cast(const shared_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return boost::dynamic_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    std::shared_ptr<T> static_pointer_cast(const std::shared_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return std::static_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    std::shared_ptr<T> const_pointer_cast(const std::shared_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return std::const_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    std::shared_ptr<T> dynamic_pointer_cast(const std::shared_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return std::dynamic_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    intrusive_ptr<T> static_pointer_cast(const intrusive_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return boost::static_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    intrusive_ptr<T> const_pointer_cast(const intrusive_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return boost::const_pointer_cast<T>(r);
+    }
+    template<typename T, typename U>
+    intrusive_ptr<T> dynamic_pointer_cast(const intrusive_ptr<U> &r, boost::mpl::identity<T>)
+    {
+      return boost::dynamic_pointer_cast<T>(r);
     }
 
     template<typename ToValueType, typename U>

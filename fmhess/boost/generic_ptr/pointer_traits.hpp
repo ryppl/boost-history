@@ -104,6 +104,23 @@ namespace boost
 #endif
 
     template<typename T>
+    T* get_pointer(const std::shared_ptr<T> &p)
+    {
+      return p.get();
+    }
+    template<typename T>
+    T* get_pointer(const std::unique_ptr<T> &p)
+    {
+      return p.get();
+    }
+    template<typename GenericPointer>
+    typename pointer_traits<GenericPointer>::pointer get_pointer(const GenericPointer &p)
+    {
+      using boost::get_pointer;
+      return get_pointer(p);
+    }
+
+    template<typename T>
     T * get_plain_old_pointer(T * p)
     {
       return p;
@@ -113,7 +130,6 @@ namespace boost
     typename pointer_traits<GenericPtr>::value_type *
         get_plain_old_pointer(const GenericPtr &gp)
     {
-      using boost::get_pointer;
       return get_plain_old_pointer(get_pointer(gp));
     }
 
