@@ -24,6 +24,7 @@ rule thread-run ( sources )
         : [ thread-run basic_generic_pointer_test.cpp ]
           [ run cloning_test.cpp ]
           [ thread-run cloning_monitor_test.cpp ]
+          [ run intrusive_test.cpp ]
           [ run throwing_test.cpp ]
         ;
 }
