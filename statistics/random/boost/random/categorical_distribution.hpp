@@ -20,6 +20,8 @@
 namespace boost{
 namespace random{
 
+// See alternate implementation : discrete_distribution
+//
 // Usage:
 // typedef categorical_distribution<> rmult_;
 // typedef rmult_::value_type         value_type;

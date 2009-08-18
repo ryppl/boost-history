@@ -1,10 +1,12 @@
-
-#include <boost/random/include.hpp>
+#include <iostream>
+#include <libs/random/example/categorical.h>
 
 int main(){
 
-    // Examples can be found in 
+    // Other examples are in 
     // sandbox/statistics/dist_random/libs/dist_random/example
+
+    example_categorical(std::cout);
     
     return 0;
 }

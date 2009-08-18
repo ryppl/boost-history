@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// random::students_t_distribution.hpp                                                   //
+// random::students_t_distribution.hpp                                      //
 //                                                                          //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
@@ -16,10 +16,11 @@
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/chi_squared.hpp>
+
 namespace boost{
 namespace random{
 
-    // Samples from a location-scale distribution
+    // Samples from a students_t distribution
     template<typename T>
     class students_t_distribution{
             typedef boost::normal_distribution<T>           nd_;
