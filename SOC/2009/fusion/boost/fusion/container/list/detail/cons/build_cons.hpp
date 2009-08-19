@@ -16,39 +16,39 @@
 namespace boost { namespace fusion { namespace detail
 {
     template <
-        typename First
-      , typename Last
-      , bool is_empty = result_of::equal_to<First, Last>::value>
+        typename Begin
+      , typename End
+      , bool is_empty = result_of::equal_to<Begin, End>::value>
     struct build_cons;
 
-    template <typename First, typename Last>
-    struct build_cons<First, Last, true>
+    template <typename Begin, typename End>
+    struct build_cons<Begin, End, true>
     {
         typedef nil type;
 
         static nil
-        call(First const&, Last const&)
+        call(Begin const&, End const&)
         {
             return nil();
         }
     };
 
-    template <typename First, typename Last>
-    struct build_cons<First, Last, false>
+    template <typename Begin, typename End>
+    struct build_cons<Begin, End, false>
     {
         typedef
-            build_cons<typename result_of::next<First>::type, Last>
+            build_cons<typename result_of::next<Begin>::type, End>
         next_build_cons;
 
         typedef
             cons<
-                typename result_of::value_of<First>::type
+                typename result_of::value_of<Begin>::type
               , typename next_build_cons::type
             >
         type;
 
         static type
-        call(First const& f, Last const& l)
+        call(Begin const& f, End const& l)
         {
             return type(
                     fusion::deref(f),

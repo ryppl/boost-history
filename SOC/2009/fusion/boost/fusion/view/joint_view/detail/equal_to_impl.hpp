@@ -21,8 +21,8 @@ namespace boost { namespace fusion
         template<typename It1, typename It2>
         struct same_joint_view_iterator
           : result_of::equal_to<
-                typename It1::first_type
-              , typename It2::first_type
+                typename It1::begin_type
+              , typename It2::begin_type
             >
         {
         };

@@ -20,30 +20,30 @@
 namespace boost { namespace fusion { namespace distance_detail
 {
     // Default distance implementation, linear
-    // search for the Last iterator.
+    // search for the End iterator.
 
-    template <typename First, typename Last>
+    template <typename Begin, typename End>
     struct linear_distance;
 
-    template <typename First, typename Last>
+    template <typename Begin, typename End>
     struct next_distance
     {
         typedef typename
             mpl::next<
                 typename linear_distance<
-                    typename result_of::next<First>::type
-                  , Last
+                    typename result_of::next<Begin>::type
+                  , End
                 >::type
             >::type
         type;
     };
 
-    template <typename First, typename Last>
+    template <typename Begin, typename End>
     struct linear_distance
       : mpl::eval_if<
-            result_of::equal_to<First, Last>
+            result_of::equal_to<Begin, End>
           , mpl::identity<mpl::int_<0> >
-          , next_distance<First, Last>
+          , next_distance<Begin, End>
         >::type
     {};
 

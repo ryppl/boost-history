@@ -11,8 +11,11 @@
 
 //TODO cschmidt: rref
 
+#include <boost/fusion/support/internal/result_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/type_traits/is_same.hpp>
@@ -32,11 +35,19 @@ namespace boost { namespace fusion { namespace detail
         typedef T& type;
     };
 
+    //TODO preserve rvalues?
 #define BOOST_FUSION_CV_REF_SPECIALIZATION(COMBINATION,_)\
     template <typename T>\
     struct as_fusion_element<T COMBINATION>\
-      : as_fusion_element<T>\
-    {};\
+    {\
+        typedef typename\
+            mpl::eval_if<\
+                detail::is_po_callable<T COMBINATION>\
+              , mpl::identity<T COMBINATION>\
+              , as_fusion_element<T>\
+            >::type\
+        type;\
+    };\
     \
     template <typename T>\
     struct as_fusion_element<reference_wrapper<T> COMBINATION>\

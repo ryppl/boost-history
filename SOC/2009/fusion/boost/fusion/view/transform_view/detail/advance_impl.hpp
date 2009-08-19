@@ -20,7 +20,7 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct advance_impl<transform_view_iterator_tag>
     {
-        template<typename ItRef, typename Dist>
+        template<typename ItRef, typename N>
         struct apply
         {
             typedef typename
@@ -29,10 +29,7 @@ namespace boost { namespace fusion { namespace extension
 
             typedef
                 transform_view_iterator<
-                    typename result_of::advance<
-                        typename it::first_type
-                      , Dist
-                    >::type
+                    typename result_of::advance<typename it::it_type, N>::type
                   , typename it::transform_type
                 >
             type;
@@ -40,7 +37,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(boost::fusion::advance<Dist>(it.first), *it.f);
+                return type(boost::fusion::advance<N>(it.it), *it.f);
             }
         };
     };
@@ -49,7 +46,7 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct advance_impl<transform_view_iterator2_tag>
     {
-        template<typename ItRef, typename Dist>
+        template<typename ItRef, typename N>
         struct apply
         {
             typedef typename
@@ -58,14 +55,8 @@ namespace boost { namespace fusion { namespace extension
 
             typedef
                 transform_view_iterator2<
-                    typename result_of::advance<
-                        typename it::first1_type
-                      , Dist
-                    >::type
-                  , typename result_of::advance<
-                        typename it::first2_type
-                      , Dist
-                    >::type
+                    typename result_of::advance<typename it::it1_type, N>::type
+                  , typename result_of::advance<typename it::it2_type, N>::type
                   , typename it::transform_type
                 >
             type;
@@ -73,9 +64,9 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(boost::fusion::advance<Dist>(it.first1)
-                          , boost::fusion::advance<Dist>(it.first2)
-                          , it.f);
+                return type(boost::fusion::advance<N>(it.it1),
+                            boost::fusion::advance<N>(it.it2),
+                            it.f);
             }
         };
     };

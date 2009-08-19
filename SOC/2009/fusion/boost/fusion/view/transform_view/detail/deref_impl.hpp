@@ -33,7 +33,7 @@ namespace boost { namespace fusion { namespace extension
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
-                    typename result_of::deref<typename it::first_type>::type
+                    typename result_of::deref<typename it::it_type>::type
                     )
                 >::type
             type;
@@ -41,7 +41,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return (*it.f)(fusion::deref(it.first));
+                return (*it.f)(fusion::deref(it.it));
             }
         };
     };
@@ -60,17 +60,15 @@ namespace boost { namespace fusion { namespace extension
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
-                    typename result_of::deref<typename it::first1_type>::type
-                  , typename result_of::deref<typename it::first2_type>::type)
+                    typename result_of::deref<typename it::it1_type>::type
+                  , typename result_of::deref<typename it::it2_type>::type)
                 >::type
             type;
 
             static type
             call(ItRef it)
             {
-                return (*it.f)(
-                        fusion::deref(it.first1)
-                      , fusion::deref(it.first2));
+                return (*it.f)(fusion::deref(it.it1), fusion::deref(it.it2));
             }
         };
     };

@@ -21,7 +21,6 @@ int
 main()
 {
     using namespace boost::fusion;
-    using namespace boost;
 
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');

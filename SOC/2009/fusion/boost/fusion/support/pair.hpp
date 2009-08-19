@@ -93,7 +93,7 @@ namespace boost { namespace fusion
         template<typename Pair>
         struct first
         {
-            typedef typename Pair::first_type type;
+            typedef typename Pair::begin_type type;
         };
 
         template<typename Pair>

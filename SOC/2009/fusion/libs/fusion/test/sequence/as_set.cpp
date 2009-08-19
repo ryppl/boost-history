@@ -22,7 +22,6 @@ int
 main()
 {
     using namespace boost::fusion;
-    using namespace boost;
 
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
@@ -46,9 +45,9 @@ main()
     }
 
     {
-        std::cout << as_set(mpl::vector_c<int, 1, 2, 3, 4, 5>()) << std::endl;
-        BOOST_TEST((as_list(as_set(mpl::vector_c<int, 1, 2, 3, 4, 5>()))
-            == mpl::vector_c<int, 1, 2, 3, 4, 5>()));
+        std::cout << as_set(boost::mpl::vector_c<int, 1, 2, 3, 4, 5>()) << std::endl;
+        BOOST_TEST((as_list(as_set(boost::mpl::vector_c<int, 1, 2, 3, 4, 5>()))
+            == boost::mpl::vector_c<int, 1, 2, 3, 4, 5>()));
     }
 
     {

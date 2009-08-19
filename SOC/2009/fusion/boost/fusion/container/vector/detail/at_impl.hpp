@@ -9,7 +9,6 @@
 #define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_AT_IMPL_HPP
 
 #include <boost/mpl/at.hpp>
-#include <boost/mpl/eval_if.hpp>
 
 namespace boost { namespace fusion { namespace extension
 {

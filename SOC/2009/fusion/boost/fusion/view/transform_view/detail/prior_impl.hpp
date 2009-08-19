@@ -28,7 +28,7 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 transform_view_iterator<
                     typename result_of::prior<
-                        typename it::first_type
+                        typename it::it_type
                     >::type
                   , typename it::transform_type
                 >
@@ -37,7 +37,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(fusion::prior(it.first), *it.f);
+                return type(fusion::prior(it.it), *it.f);
             }
         };
     };
@@ -56,10 +56,10 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 transform_view_iterator2<
                     typename result_of::prior<
-                        typename it::first1_type
+                        typename it::it1_type
                     >::type
                   , typename result_of::prior<
-                        typename it::first2_type
+                        typename it::it2_type
                     >::type
                   , typename it::transform_type
                 >
@@ -68,9 +68,9 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(fusion::prior(it.first1),
-                        fusion::prior(it.first2),
-                        it.f);
+                return type(fusion::prior(it.it1),
+                            fusion::prior(it.it2),
+                            it.f);
             }
         };
     };

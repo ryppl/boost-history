@@ -28,22 +28,22 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
             typedef typename
                 result_of::begin<typename seq::seq1_type>::type
-            first_type;
+            begin_type;
             typedef typename
                 result_of::end<typename seq::seq1_type>::type
-            last_type;
+            end_type;
             typedef typename
                 result_of::begin<typename seq::seq2_type>::type
             concat_type;
             typedef typename
-                result_of::equal_to<first_type, last_type>::type
+                result_of::equal_to<begin_type, end_type>::type
             equal_to;
 
             typedef typename
                 mpl::if_<
                     equal_to
                   , concat_iterator<concat_type>
-                  , joint_view_iterator<first_type, last_type, concat_type>
+                  , joint_view_iterator<begin_type, end_type, concat_type>
                 >::type
             type;
 

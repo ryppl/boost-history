@@ -22,8 +22,8 @@ namespace boost { namespace fusion { namespace extension
         template<typename It1Ref, typename It2Ref>
         struct apply
           : is_same<
-                typename detail::remove_reference<It1Ref>::type::first_type
-              , typename detail::remove_reference<It2Ref>::type::first_type
+                typename detail::remove_reference<It1Ref>::type::it_type
+              , typename detail::remove_reference<It2Ref>::type::it_type
             >
         {};
     };

@@ -44,20 +44,20 @@ namespace boost { namespace fusion { namespace detail
 
     struct read_sequence_loop
     {
-        template <typename IS, typename First, typename Last>
+        template <typename IS, typename Begin, typename End>
         static void
-        call(IS& is, First const&, Last const&, mpl::true_)
+        call(IS& is, Begin const&, End const&, mpl::true_)
         {
         }
 
-        template <typename IS, typename First, typename Last>
+        template <typename IS, typename Begin, typename End>
         static void
-        call(IS& is, First const& first, Last const& last, mpl::false_)
+        call(IS& is, Begin const& first, End const& last, mpl::false_)
         {
             typedef typename
                 result_of::equal_to<
-                    typename result_of::next<First>::type
-                  , Last
+                    typename result_of::next<Begin>::type
+                  , End
                 >::type
             is_last;
 
@@ -66,16 +66,16 @@ namespace boost { namespace fusion { namespace detail
             call(is, fusion::next(first), last, is_last());
         }
 
-        template <typename IS, typename First, typename Last>
+        template <typename IS, typename Begin, typename End>
         static void
-        call(IS& is, First const& first, Last const& last)
+        call(IS& is, Begin const& first, End const& last)
         {
             call(is,
                     first,
                     last,
                     typename result_of::equal_to<
-                        First const&
-                      , Last const&
+                        Begin const&
+                      , End const&
                     >::type());
         }
     };

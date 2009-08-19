@@ -10,9 +10,6 @@
 
 #include <boost/fusion/algorithm/query/detail/find_if.hpp>
 
-#include <boost/mpl/eval_if.hpp>
-#include <boost/mpl/identity.hpp>
-
 namespace boost { namespace fusion { namespace extension
 {
     template <typename Tag>
@@ -27,8 +24,8 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
             typedef typename
                 detail::static_find_if<
-                    typename result_of::next<typename it::first_type>::type
-                  , typename it::last_type
+                    typename result_of::next<typename it::begin_type>::type
+                  , typename it::end_type
                   , mpl::bind1<
                         typename mpl::lambda<typename it::pred_type>::type
                       , mpl::bind1<mpl::quote1<result_of::value_of>,mpl::_1>
@@ -39,7 +36,7 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 filter_iterator<
                     typename filter::type
-                  , typename it::last_type
+                  , typename it::end_type
                   , typename it::pred_type
                 >
             type;

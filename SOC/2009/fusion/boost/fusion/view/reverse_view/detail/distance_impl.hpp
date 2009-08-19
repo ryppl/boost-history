@@ -19,17 +19,17 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct distance_impl<reverse_view_iterator_tag>
     {
-        template<typename FirstRef, typename LastRef>
+        template<typename BeginRef, typename EndRef>
         struct apply
         {
             typedef typename
                 result_of::distance<
                     typename detail::remove_reference<
-                        FirstRef
-                    >::type::first_type
+                        BeginRef
+                    >::type::it_type
                   , typename detail::remove_reference<
-                        LastRef
-                    >::type::first_type
+                        EndRef
+                    >::type::it_type
                 >::type
             type;
         };

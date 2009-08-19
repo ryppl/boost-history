@@ -15,20 +15,20 @@ namespace boost { namespace fusion
 {
     struct reverse_view_iterator_tag;
 
-    template <typename First>
+    template <typename It>
     struct reverse_view_iterator
-      : iterator_base<reverse_view_iterator<First> >
+      : iterator_base<reverse_view_iterator<It> >
     {
-        typedef First first_type;
+        typedef It it_type;
 
         typedef reverse_view_iterator_tag fusion_tag;
-        typedef typename traits::category_of<first_type>::type category;
+        typedef typename traits::category_of<it_type>::type category;
 
-        reverse_view_iterator(First const& first)
-          : first(first)
+        reverse_view_iterator(It const& it)
+          : it(it)
         {}
 
-        first_type first;
+        it_type it;
     };
 }}
 

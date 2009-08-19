@@ -33,19 +33,19 @@ namespace boost { namespace fusion
     struct iterator_range_tag;
     struct fusion_sequence_tag;
 
-    template <typename First, typename Last>
+    template <typename Begin, typename End>
     struct iterator_range
-      : sequence_base<iterator_range<First, Last> >
+      : sequence_base<iterator_range<Begin, End> >
     {
-        BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<First>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
-        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Last>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<Begin>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_iterator<End>));
+        BOOST_FUSION_MPL_ASSERT((traits::is_forward<End>));
 
-        typedef First begin_type;
-        typedef Last end_type;
+        typedef Begin begin_type;
+        typedef End end_type;
 
-        typedef typename traits::category_of<First>::type category;
+        typedef typename traits::category_of<Begin>::type category;
         typedef typename result_of::distance<begin_type, end_type>::type size;
         typedef iterator_range_tag fusion_tag;
         typedef fusion_sequence_tag tag;
@@ -57,7 +57,7 @@ namespace boost { namespace fusion
           , last(range.last)
         {}
 
-        iterator_range(First const& first, Last const& last)
+        iterator_range(Begin const& first, End const& last)
           : first(first)
           , last(last)
         {}

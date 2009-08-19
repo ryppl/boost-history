@@ -3,10 +3,6 @@
 // (See accompanying file LICENSE_1_0.txt or copy at
 // http://www.boost.org/LICENSE_1_0.txt)
 
-#include <type_traits>
-#include <utility>
-#include <iostream>
-
 #include <boost/fusion/sequence.hpp>
 #include <boost/fusion/iterator.hpp>
 #include <boost/fusion/algorithm.hpp>
@@ -20,6 +16,14 @@
 #include <boost/mpl/placeholders.hpp>
 
 namespace fusion=boost::fusion;
+
+#if defined(BOOST_NO_RVALUE_REFERENCES) || defined(BOOST_NO_VARIADIC_TEMPLATES)
+int main()
+{}
+#else
+#include <type_traits>
+#include <utility>
+#include <iostream>
 
 struct moveable
 {
@@ -116,9 +120,6 @@ struct identity_int
     }
 };
 
-template<class>
-class C;
-
 int main()
 {
     {
@@ -163,48 +164,7 @@ int main()
         seq_test(zip_view<vector<vector<int>&&, vector<int>&&> >(vector_tie(vector<int>(),vector<int>())));
         seq_test(transform_view<vector<int>&&,identity_int>(vector<int>(),identity_int()));
         seq_test(reverse_view<vector<int>&&>(vector<int>()));
+        seq_test(repetitive_view<vector<int>&&>(vector<int>()));
     }
 }
-
-/*#include <boost/mpl/transform.hpp>
-#include <boost/mpl/vector.hpp>
-#include <boost/mpl/equal.hpp>
-
-#include <utility>
-
-namespace mpl=boost::mpl;
-
-struct my_make_pair {
-  template<typename T1, typename T2>
-  struct apply {
-    typedef std::pair<T1,T2> type;
-  };
-};
-
-
-
-int main(int argc, char *argv[])
-{
-    {
-  typedef mpl::vector<int,long> seq1;
-  typedef mpl::vector<float,double> seq2;
-  typedef mpl::vector<std::pair<int,float>,std::pair<long,double> > pairs;
-
-  typedef mpl::transform<seq1,seq2,my_make_pair>::type result;
-
-  static_assert( mpl::equal<result,pairs>::type::value, "");
-    }
-
-  typedef fusion::vector<int,long> seq1;
-
-  typedef fusion::vector<float,double> seq2;
-  typedef fusion::vector<std::pair<int,float>,std::pair<long,double> >
-pairs;
-
-  typedef mpl::transform<seq1,seq2,my_make_pair>::type result;
-
-  static_assert( mpl::equal<result,pairs>::type::value, "");
-  mpl::push_back<fusion::vector<>,int>::type z;
-
-  return 0;
-}*/
+#endif

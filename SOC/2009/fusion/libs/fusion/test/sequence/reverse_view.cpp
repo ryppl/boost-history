@@ -49,9 +49,9 @@ main()
         std::cout << rev << std::endl;
         BOOST_TEST((rev == make_vector(s, 123456789, 'x', 123)));
 
-        typedef result_of::begin<view_type>::type first_type;
-        first_type first_it(begin(rev));
-        typedef result_of::next<first_type>::type second_type;
+        typedef result_of::begin<view_type>::type begin_type;
+        begin_type first_it(begin(rev));
+        typedef result_of::next<begin_type>::type second_type;
         second_type second_it(next(first_it));
         BOOST_TEST((*second_it == 123456789));
         BOOST_TEST((*prior(second_it) == s));

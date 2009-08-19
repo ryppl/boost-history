@@ -22,43 +22,43 @@ namespace boost { namespace fusion
         template <typename Tag>
         struct distance_impl
         {
-            template <typename FirstRef, typename LastRef>
+            template <typename BeginRef, typename EndRef>
             struct apply
-              : distance_detail::linear_distance<FirstRef, LastRef>
+              : distance_detail::linear_distance<BeginRef, EndRef>
             {};
         };
 
         template <>
         struct distance_impl<iterator_facade_tag>
         {
-            template <typename FirstRef, typename LastRef>
+            template <typename BeginRef, typename EndRef>
             struct apply
-              : detail::remove_reference<FirstRef>::type::
-                  template distance<FirstRef, LastRef>
+              : detail::remove_reference<BeginRef>::type::
+                  template distance<BeginRef, EndRef>
             {};
         };
     }
 
     namespace result_of
     {
-        template <typename First, typename Last>
+        template <typename Begin, typename End>
         struct distance
-          : extension::distance_impl<typename traits::tag_of<First>::type>::
+          : extension::distance_impl<typename traits::tag_of<Begin>::type>::
                 template apply<
-                    typename detail::add_lref<First>::type
-                  , typename detail::add_lref<Last>::type
+                    typename detail::add_lref<Begin>::type
+                  , typename detail::add_lref<End>::type
                 >::type
         {
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<End>));
         };
     }
 
-    template <typename First, typename Last>
-    inline typename result_of::distance<First const&, Last const&>::type
-    distance(First const& a, Last const& b)
+    template <typename Begin, typename End>
+    inline typename result_of::distance<Begin const&, End const&>::type
+    distance(Begin const& a, End const& b)
     {
-        return typename result_of::distance<First const&, Last const&>::type();
+        return typename result_of::distance<Begin const&, End const&>::type();
     }
 }}
 

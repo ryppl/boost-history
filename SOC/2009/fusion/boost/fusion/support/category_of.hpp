@@ -17,6 +17,7 @@
 
 namespace boost { namespace fusion
 {
+    //TODO necessary?
     struct incrementable_traversal_tag
     {};
 

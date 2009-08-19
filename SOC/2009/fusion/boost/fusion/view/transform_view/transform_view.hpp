@@ -55,6 +55,8 @@ namespace boost { namespace fusion
     struct transform_view2_tag;
     struct fusion_sequence_tag;
 
+    //TODO IsAssociative
+
     // Binary Version
     template <typename Seq1, typename Seq2, typename F, typename IsAssociative>
     struct transform_view
@@ -65,7 +67,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
         BOOST_FUSION_MPL_ASSERT((
-            mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq1> >));
+            mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq2> >));
 
         typedef detail::view_storage<Seq1> storage1_type;
         typedef typename storage1_type::type seq1_type;
@@ -85,7 +87,6 @@ namespace boost { namespace fusion
         typedef transform_view2_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
-        //TODO implement IsAssociative
         typedef typename
             mpl::eval_if<
                 IsAssociative

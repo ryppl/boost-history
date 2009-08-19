@@ -21,7 +21,7 @@ namespace boost { namespace fusion { namespace extension
         template <typename ItRef>
         struct apply
           : result_of::value_of<
-                typename detail::remove_reference<ItRef>::type::first_type
+                typename detail::remove_reference<ItRef>::type::begin_type
             >
         {};
     };

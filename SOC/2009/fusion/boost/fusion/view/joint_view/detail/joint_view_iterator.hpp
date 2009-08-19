@@ -17,41 +17,41 @@ namespace boost { namespace fusion
     struct concat_iterator_tag;
     struct forward_traversal_tag;
 
-    template <typename First, typename Last, typename Concat>
+    template <typename Begin, typename End, typename Concat>
     struct joint_view_iterator
-      : iterator_base<joint_view_iterator<First, Last, Concat> >
+      : iterator_base<joint_view_iterator<Begin, End, Concat> >
     {
         typedef joint_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
 
-        typedef First first_type;
-        typedef Last last_type;
+        typedef Begin begin_type;
+        typedef End end_type;
         typedef Concat concat_type;
 
-        joint_view_iterator(First const& first, Concat const& concat)
+        joint_view_iterator(Begin const& first, Concat const& concat)
           : first(first)
           , concat(concat)
         {}
 
-        first_type first;
+        begin_type first;
         concat_type concat;
     };
 
-    template <typename First>
+    template <typename Begin>
     struct concat_iterator
-      : iterator_base<concat_iterator<First> >
+      : iterator_base<concat_iterator<Begin> >
     {
-        typedef First first_type;
+        typedef Begin begin_type;
 
         typedef concat_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
 
         explicit
-        concat_iterator(First const& first)
+        concat_iterator(Begin const& first)
           : first(first)
         {}
 
-        first_type first;
+        begin_type first;
     };
 }}
 

@@ -25,19 +25,19 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename detail::remove_reference<ItRef>::type it;
 
-            typedef typename it::first_type first_type;
-            typedef typename it::last_type last_type;
+            typedef typename it::begin_type begin_type;
+            typedef typename it::end_type end_type;
             typedef typename it::concat_type concat_type;
-            typedef typename result_of::next<first_type>::type next_type;
+            typedef typename result_of::next<begin_type>::type next_type;
             typedef typename
-                result_of::equal_to<next_type, last_type>::type
+                result_of::equal_to<next_type, end_type>::type
             equal_to;
 
             typedef typename
                 mpl::if_<
                     equal_to
                   , concat_iterator<concat_type>
-                  , joint_view_iterator<next_type, last_type, concat_type>
+                  , joint_view_iterator<next_type, end_type, concat_type>
                 >::type
             type;
 
@@ -72,7 +72,7 @@ namespace boost { namespace fusion { namespace extension
                     typename result_of::next<
                         typename detail::remove_reference<
                             ItRef
-                        >::type::first_type
+                        >::type::begin_type
                     >::type
                 >
             type;

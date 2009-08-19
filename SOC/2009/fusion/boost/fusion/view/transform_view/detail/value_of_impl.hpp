@@ -30,7 +30,7 @@ namespace boost { namespace fusion { namespace extension
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
-                    typename result_of::value_of<typename it::first_type>::type)
+                    typename result_of::value_of<typename it::it_type>::type)
                 >::type
             type;
         };
@@ -50,8 +50,8 @@ namespace boost { namespace fusion { namespace extension
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
-                   typename result_of::value_of<typename it::first1_type>::type
-                 , typename result_of::value_of<typename it::first2_type>::type)
+                   typename result_of::value_of<typename it::it1_type>::type
+                 , typename result_of::value_of<typename it::it2_type>::type)
                 >::type
             type;
         };

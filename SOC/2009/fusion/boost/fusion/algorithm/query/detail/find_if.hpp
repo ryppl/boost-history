@@ -27,42 +27,42 @@ namespace boost { namespace fusion {
 
     namespace detail
     {
-        template <typename First, typename Last, typename Pred>
+        template <typename Begin, typename End, typename Pred>
         struct main_find_if;
 
-        template <typename First, typename Last, typename Pred>
+        template <typename Begin, typename End, typename Pred>
         struct recursive_find_if
         {
             typedef typename
                 main_find_if<
-                    typename result_of::next<First>::type
-                  , Last
+                    typename result_of::next<Begin>::type
+                  , End
                   , Pred
                 >::type
             type;
         };
 
-        template <typename First, typename Last, typename Pred>
+        template <typename Begin, typename End, typename Pred>
         struct main_find_if
         {
             typedef typename
                 mpl::eval_if<
                     mpl::or_<
-                        result_of::equal_to<First, Last>
-                      , mpl::apply1<Pred,First>
+                        result_of::equal_to<Begin, End>
+                      , mpl::apply1<Pred,Begin>
                     >
-                  , mpl::identity<First>
-                  , recursive_find_if<First, Last, Pred>
+                  , mpl::identity<Begin>
+                  , recursive_find_if<Begin, End, Pred>
                 >::type
             type;
         };
 
-        template<typename First, typename Last, typename Pred, bool>
+        template<typename Begin, typename End, typename Pred, bool>
         struct choose_find_if;
 
-        template<typename First, typename Last, typename Pred>
-        struct choose_find_if<First, Last, Pred, false>
-          : main_find_if<First, Last, Pred>
+        template<typename Begin, typename End, typename Pred>
+        struct choose_find_if<Begin, End, Pred, false>
+          : main_find_if<Begin, End, Pred>
         {};
 
         template<typename It, typename Pred, int N>
@@ -170,27 +170,27 @@ namespace boost { namespace fusion {
             typedef It type;
         };
 
-        template<typename First, typename Last, typename Pred>
-        struct choose_find_if<First, Last, Pred, true>
+        template<typename Begin, typename End, typename Pred>
+        struct choose_find_if<Begin, End, Pred, true>
         {
             typedef typename
                 unrolled_find_if<
-                    First
+                    Begin
                   , Pred
-                  , result_of::distance<First, Last>::value
+                  , result_of::distance<Begin, End>::value
                 >::type
             type;
         };
 
-        template <typename First, typename Last, typename Pred>
+        template <typename Begin, typename End, typename Pred>
         struct static_find_if
         {
             typedef typename
                 choose_find_if<
-                    First
-                  , Last
+                    Begin
+                  , End
                   , Pred
-                  , traits::is_random_access<First>::type::value
+                  , traits::is_random_access<Begin>::type::value
                 >::type
             type;
 
@@ -205,15 +205,15 @@ namespace boost { namespace fusion {
             }
         };
 
-        template <typename First, typename Last, typename Pred>
+        template <typename Begin, typename End, typename Pred>
         struct static_seq_find_if
-          : static_find_if<First, Last, Pred>
+          : static_find_if<Begin, End, Pred>
         {
             template <typename Seq>
-            static typename static_find_if<First, Last, Pred>::type
+            static typename static_find_if<Begin, End, Pred>::type
             call(BOOST_FUSION_R_ELSE_LREF(Seq) seq)
             {
-                return static_find_if<First, Last, Pred>::call(
+                return static_find_if<Begin, End, Pred>::call(
                         fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
             }
         };

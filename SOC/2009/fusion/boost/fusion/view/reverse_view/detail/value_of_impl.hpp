@@ -27,7 +27,7 @@ namespace boost { namespace fusion { namespace extension
                     typename result_of::prior<
                         typename detail::remove_reference<
                             ItRef
-                        >::type::first_type
+                        >::type::it_type
                     >::type
                 >::type
             type;

@@ -26,8 +26,8 @@ namespace boost { namespace fusion
             struct apply
               : mpl::if_c<
                     (N::value > 0)
-                  , advance_detail::forward<ItRef, N::value>
-                  , advance_detail::backward<ItRef, N::value>
+                  , detail::forward<ItRef, N::value>
+                  , detail::backward<ItRef, N::value>
                 >::type
             {};
         };

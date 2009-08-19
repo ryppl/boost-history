@@ -22,23 +22,23 @@ namespace boost { namespace fusion
     struct filter_view_iterator_tag;
     struct forward_traversal_tag;
 
-    template <typename First, typename Last, typename Pred>
+    template <typename Begin, typename End, typename Pred>
     struct filter_iterator
-      : iterator_base<filter_iterator<First, Last, Pred> >
+      : iterator_base<filter_iterator<Begin, End, Pred> >
     {
         typedef Pred pred_type;
         typedef
             detail::static_find_if<
-                First
-              , Last
+                Begin
+              , End
               , mpl::bind1<
                     typename mpl::lambda<Pred>::type
                   , mpl::bind1<mpl::quote1<result_of::value_of>,mpl::_1>
                 >
             >
         filter;
-        typedef typename filter::type first_type;
-        typedef Last last_type;
+        typedef typename filter::type begin_type;
+        typedef End end_type;
 
         typedef filter_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
@@ -48,7 +48,7 @@ namespace boost { namespace fusion
           : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
         {}
 
-        filter_iterator(First const& first,int)
+        filter_iterator(Begin const& first,int)
           : first(filter::call(first))
         {}
 
@@ -60,7 +60,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        first_type first;
+        begin_type first;
     };
 }}
 

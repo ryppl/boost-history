@@ -52,8 +52,6 @@ int
 main()
 {
     using namespace boost::fusion;
-    using namespace boost;
-    using namespace std;
 
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
@@ -80,9 +78,9 @@ main()
     }
 
     {
-        fusion::vector<int, float> v1(4, 2);
+        vector<int, float> v1(4, 2);
         ns::point v2 = {5, 3};
-        fusion::vector<long, double> v3(5, 4);
+        vector<long, double> v3(5, 4);
         BOOST_TEST(v1 < v2);
         BOOST_TEST(v1 <= v2);
         BOOST_TEST(v2 > v1);
@@ -96,14 +94,14 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p = {5, 3};
-        fusion::vector<int, short> v(sequence_assign(p));
+        vector<int, short> v(sequence_assign(p));
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p = {5, 3};
-        fusion::list<int, short> l(sequence_assign(p));
+        list<int, short> l(sequence_assign(p));
         l = p;
     }
 

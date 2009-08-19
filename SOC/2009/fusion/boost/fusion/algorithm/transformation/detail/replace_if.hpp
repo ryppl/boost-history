@@ -10,8 +10,6 @@
 
 #include <boost/fusion/support/internal/result_of.hpp>
 
-#include <boost/mpl/bool.hpp>
-#include <boost/mpl/eval_if.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
@@ -20,7 +18,7 @@ namespace boost { namespace fusion { namespace detail
     template <typename F, typename NewValue>
     struct replace_if_helper
     {
-        template<typename Params>
+        template<typename Sig>
         struct result;
 
         template<typename Self, typename U>
@@ -54,14 +52,14 @@ namespace boost { namespace fusion { namespace detail
 
         template <typename U>
         U&
-        call_impl(U& x, mpl::false_) const
+        call_impl(U& x, mpl::false_ /*is_convertible*/) const
         {
             return x;
         }
 
         template <typename U>
         U&
-        call_impl(U& x, mpl::true_) const
+        call_impl(U& x, mpl::true_ /*is_convertible*/) const
         {
             if(f(x))
             {

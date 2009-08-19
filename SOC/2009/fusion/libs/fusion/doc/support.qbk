@@ -407,7 +407,7 @@ It is used as elements in __map__s, for example.
 
 [table
     [[Expression]       [Semantics]]
-    [[`P::first_type`]  [The type of the first template parameter, `F`, equivalent to
+    [[`P::begin_type`]  [The type of the first template parameter, `F`, equivalent to
                         `result_of::first<P>::type`. ]]
     [[`P::second_type`] [The type of the second template parameter, `S`, equivalent to
                         `result_of::second<P>::type`. ]]

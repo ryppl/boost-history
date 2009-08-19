@@ -16,67 +16,65 @@ namespace boost { namespace fusion
     // Unary Version
     struct transform_view_iterator_tag;
 
-    template <typename First, typename FRef>
+    template <typename It, typename FRef>
     struct transform_view_iterator
-      : iterator_base<transform_view_iterator<First, FRef> >
+      : iterator_base<transform_view_iterator<It, FRef> >
     {
         typedef FRef transform_type;
-        typedef First first_type;
+        typedef It it_type;
 
         typedef transform_view_iterator_tag fusion_tag;
-        typedef typename traits::category_of<first_type>::type category;
+        typedef typename traits::category_of<it_type>::type category;
 
         template<typename OtherIt>
         transform_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
-          : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
+          : it(BOOST_FUSION_FORWARD(OtherIt,it).it)
           , f(BOOST_FUSION_FORWARD(OtherIt,it).f)
         {}
 
-        transform_view_iterator(First const& first, transform_type f)
-          : first(first)
+        transform_view_iterator(It const& it, transform_type f)
+          : it(it)
           , f(&f)
         {}
 
         template<typename OtherIt>
         transform_view_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it_)
         {
-            first=BOOST_FUSION_FORWARD(OtherIt,it).first;
-            f=BOOST_FUSION_FORWARD(OtherIt,it).f;
+            it=BOOST_FUSION_FORWARD(OtherIt,it_).it;
+            f=BOOST_FUSION_FORWARD(OtherIt,it_).f;
             return *this;
         }
 
-        first_type first;
+        it_type it;
         typename detail::remove_reference<transform_type>::type* f;
     };
 
     // Binary Version
     struct transform_view_iterator2_tag;
 
-    template <typename First1, typename First2, typename FRef>
+    template <typename It1, typename It2, typename FRef>
     struct transform_view_iterator2
-      : iterator_base<transform_view_iterator2<First1, First2, FRef> >
+      : iterator_base<transform_view_iterator2<It1, It2, FRef> >
     {
-        typedef First1 first1_type;
-        typedef First2 first2_type;
+        typedef It1 it1_type;
+        typedef It2 it2_type;
         typedef FRef transform_type;
 
         typedef transform_view_iterator2_tag fusion_tag;
-        typedef typename traits::category_of<first1_type>::type category;
+        typedef typename traits::category_of<it1_type>::type category;
 
         template<typename OtherIt>
         transform_view_iterator2(
                 BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
-          : first1(BOOST_FUSION_FORWARD(OtherIt,it).first1)
-          , first2(BOOST_FUSION_FORWARD(OtherIt,it).first2)
+          : it1(BOOST_FUSION_FORWARD(OtherIt,it).it1)
+          , it2(BOOST_FUSION_FORWARD(OtherIt,it).it2)
           , f(BOOST_FUSION_FORWARD(OtherIt,it).f)
         {}
 
-        transform_view_iterator2(First1 const& first1,
-                First2 const& first2,
-                FRef f)
-          : first1(first1)
-          , first2(first2)
+        transform_view_iterator2(It1 const& it1,It2 const& it2,transform_type f)
+          : it1(it1)
+          , it2(it2)
           , f(&f)
         {}
 
@@ -84,14 +82,14 @@ namespace boost { namespace fusion
         transform_view_iterator2&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
-            first1=BOOST_FUSION_FORWARD(OtherIt,it).first1;
-            first2=BOOST_FUSION_FORWARD(OtherIt,it).first2;
+            it1=BOOST_FUSION_FORWARD(OtherIt,it).it1;
+            it2=BOOST_FUSION_FORWARD(OtherIt,it).it2;
             f=BOOST_FUSION_FORWARD(OtherIt,it).f;
             return *this;
         }
 
-        first1_type first1;
-        first2_type first2;
+        it1_type it1;
+        it2_type it2;
         typename detail::remove_reference<transform_type>::type* f;
     };
 }}

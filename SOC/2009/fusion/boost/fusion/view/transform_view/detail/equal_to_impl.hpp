@@ -21,8 +21,8 @@ namespace boost { namespace fusion { namespace extension
         template<typename ItRef1, typename ItRef2>
         struct apply
           : result_of::equal_to<
-                typename detail::remove_reference<ItRef1>::type::first_type
-              , typename detail::remove_reference<ItRef2>::type::first_type
+                typename detail::remove_reference<ItRef1>::type::it_type
+              , typename detail::remove_reference<ItRef2>::type::it_type
             >
         {};
     };
@@ -33,8 +33,8 @@ namespace boost { namespace fusion { namespace extension
         template<typename ItRef1, typename ItRef2>
         struct apply
           : result_of::equal_to<
-                typename detail::remove_reference<ItRef1>::type::first1_type
-              , typename detail::remove_reference<ItRef2>::type::first1_type
+                typename detail::remove_reference<ItRef1>::type::it1_type
+              , typename detail::remove_reference<ItRef2>::type::it1_type
             >
         {};
     };

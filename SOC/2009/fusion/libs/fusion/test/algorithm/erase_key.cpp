@@ -58,8 +58,6 @@ int
 main()
 {
     using namespace boost::fusion;
-    using namespace boost;
-    using namespace std;
     using boost::fusion::pair;
     using boost::fusion::make_pair;
 

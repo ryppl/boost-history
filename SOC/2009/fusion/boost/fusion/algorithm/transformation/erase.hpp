@@ -25,36 +25,36 @@ namespace boost { namespace fusion
 {
     namespace detail
     {
-        template <typename Seq, typename FirstRef>
+        template <typename Seq, typename BeginRef>
         struct compute_erase_last
         {
-            typedef typename result_of::end<Seq>::type last_type;
+            typedef typename result_of::end<Seq>::type end_type;
 
             typedef typename
                 mpl::eval_if<
-                    result_of::equal_to<FirstRef, last_type>
-                  , mpl::identity<FirstRef>
-                  , result_of::next<FirstRef>
+                    result_of::equal_to<BeginRef, end_type>
+                  , mpl::identity<BeginRef>
+                  , result_of::next<BeginRef>
                 >::type
             type;
 
             static type
-            call(FirstRef first, mpl::false_)
+            call(BeginRef begin, mpl::false_)
             {
-                return fusion::next(first);
+                return fusion::next(begin);
             }
 
             static type
-            call(FirstRef first, mpl::true_)
+            call(BeginRef begin, mpl::true_)
             {
-                return first;
+                return begin;
             }
 
             static type
-            call(FirstRef first)
+            call(BeginRef begin)
             {
-                return call(first,
-                        result_of::equal_to<FirstRef, last_type>());
+                return call(begin,
+                        result_of::equal_to<BeginRef, end_type>());
             }
         };
     }
@@ -63,39 +63,39 @@ namespace boost { namespace fusion
     {
         template <
             typename Seq
-          , typename First
-          , typename Last =
+          , typename Begin
+          , typename End =
                 typename detail::compute_erase_last<
                     Seq
-                  , typename detail::add_lref<First>::type
+                  , typename detail::add_lref<Begin>::type
                 >::type
         >
         struct erase
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<First>));
-            BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<First, Seq>));
-            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Last>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>));
+            BOOST_FUSION_MPL_ASSERT((detail::is_in_seq<Begin, Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_iterator<End>));
             BOOST_FUSION_MPL_ASSERT((
                 detail::is_in_range<
-                    Last
-                  , First
+                    End
+                  , Begin
                   , typename result_of::end<Seq>::type
                 >));
 
-            typedef typename begin<Seq>::type seq_first_type;
-            typedef typename end<Seq>::type seq_last_type;
+            typedef typename begin<Seq>::type seq_begin_type;
+            typedef typename end<Seq>::type seq_end_type;
             typedef
                 iterator_range<
-                    seq_first_type
-                  , typename detail::identity<First>::type
+                    seq_begin_type
+                  , typename detail::identity<Begin>::type
                 >
             left_type;
             typedef
                 iterator_range<
-                    typename detail::identity<Last>::type
-                  , seq_last_type
+                    typename detail::identity<End>::type
+                  , seq_end_type
                 >
             right_type;
 
@@ -105,21 +105,21 @@ namespace boost { namespace fusion
         };
     }
 
-    template <typename Seq, typename First, typename Last>
+    template <typename Seq, typename Begin, typename End>
     typename result_of::erase<
         BOOST_FUSION_R_ELSE_CLREF(Seq)
-      , First const&
-      , Last const&
+      , Begin const&
+      , End const&
     >::type
     erase(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
-            First const& first,
-            Last const& last)
+            Begin const& first,
+            End const& last)
     {
         typedef
             result_of::erase<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
-              , First const&
-              , Last const&
+              , Begin const&
+              , End const&
             >
         result;
         typedef typename result::left_type left_type;
@@ -137,25 +137,25 @@ namespace boost { namespace fusion
                 ));
     }
 
-    template <typename Seq, typename First>
-    typename result_of::erase<BOOST_FUSION_R_ELSE_CLREF(Seq), First const&>::type
-    erase(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, First const& first)
+    template <typename Seq, typename Begin>
+    typename result_of::erase<BOOST_FUSION_R_ELSE_CLREF(Seq), Begin const&>::type
+    erase(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, Begin const& first)
     {
         return erase(
                 BOOST_FUSION_FORWARD(Seq,seq)
               , first
               , detail::compute_erase_last<
                     BOOST_FUSION_R_ELSE_CLREF(Seq)
-                  , First const&
+                  , Begin const&
                 >::call(first));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename Seq, typename First, typename Last>
-    typename result_of::erase<Seq&, First const&, Last const&>::type
-    erase(Seq& seq,First const& first,Last const& last)
+    template <typename Seq, typename Begin, typename End>
+    typename result_of::erase<Seq&, Begin const&, End const&>::type
+    erase(Seq& seq,Begin const& first,End const& last)
     {
-        typedef result_of::erase<Seq&, First const&, Last const&> result;
+        typedef result_of::erase<Seq&, Begin const&, End const&> result;
         typedef typename result::left_type left_type;
         typedef typename result::right_type right_type;
         typedef typename result::type result_type;
@@ -171,14 +171,14 @@ namespace boost { namespace fusion
                 ));
     }
 
-    template <typename Seq, typename First>
-    typename result_of::erase<Seq&, First const&>::type
-    erase(Seq& seq, First const& first)
+    template <typename Seq, typename Begin>
+    typename result_of::erase<Seq&, Begin const&>::type
+    erase(Seq& seq, Begin const& first)
     {
         return erase(
                 seq
               , first
-              , detail::compute_erase_last<Seq&, First const&>::call(first));
+              , detail::compute_erase_last<Seq&, Begin const&>::call(first));
     }
 #endif
 }}

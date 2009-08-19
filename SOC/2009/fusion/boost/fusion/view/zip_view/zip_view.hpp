@@ -17,6 +17,7 @@
 #include <boost/fusion/algorithm/transformation/remove.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
 #include <boost/fusion/support/unused.hpp>
+#include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 
@@ -28,8 +29,6 @@
 #include <boost/mpl/equal_to.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/eval_if.hpp>
-
-//#include <boost/integer_traits.hpp>
 
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
 #include <boost/fusion/view/zip_view/detail/zip_view_fwd.hpp>
@@ -48,8 +47,8 @@
 #include <boost/fusion/view/zip_view/detail/value_of_impl.hpp>
 #include <boost/fusion/view/zip_view/detail/equal_to_impl.hpp>
 
-namespace boost { namespace fusion {
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
@@ -80,22 +79,13 @@ namespace boost { namespace fusion {
 
         struct seq_size
         {
-            template<typename Params>
+            template<typename Sig>
             struct result;
 
             template<typename Self,typename Seq>
             struct result<Self(Seq)>
-            {
-                typedef typename
-                    //mpl::eval_if<
-                    //    traits::is_forward<Seq>
-                    /*  ,*/ result_of::size<Seq>
-                    //  , mpl::identity<
-                    //        mpl::int_<integer_traits<int>::const_max>
-                    //    >
-                    /*>*/::type
-                type;
-            };
+              : result_of::size<Seq>
+            {};
         };
 
         struct poly_min

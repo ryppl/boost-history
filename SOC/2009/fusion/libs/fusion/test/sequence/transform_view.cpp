@@ -67,10 +67,10 @@ main()
         std::cout << xform << std::endl;
         BOOST_TEST((xform == make_vector(25, 36, 49, 64)));
 
-        typedef boost::fusion::result_of::begin<xform_type>::type first_type;
-        first_type first_it(boost::fusion::begin(xform));
+        typedef boost::fusion::result_of::begin<xform_type>::type begin_type;
+        begin_type first_it(boost::fusion::begin(xform));
 
-        typedef boost::fusion::result_of::next<first_type>::type next_type;
+        typedef boost::fusion::result_of::next<begin_type>::type next_type;
         next_type next_it(boost::fusion::next(first_it));
         BOOST_TEST((*next_it == 36));
         BOOST_TEST((*boost::fusion::prior(next_it) == 25));

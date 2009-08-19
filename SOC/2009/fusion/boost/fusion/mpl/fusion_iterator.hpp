@@ -55,9 +55,9 @@ namespace boost { namespace mpl
         type;
     };
 
-    template <typename First, typename Last>
-    struct distance<fusion_iterator<First>, fusion_iterator<Last> >
-      : fusion::result_of::distance<First, Last>
+    template <typename Begin, typename End>
+    struct distance<fusion_iterator<Begin>, fusion_iterator<End> >
+      : fusion::result_of::distance<Begin, End>
     {};
 }}
 

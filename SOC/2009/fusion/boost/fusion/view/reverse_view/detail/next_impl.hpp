@@ -23,7 +23,7 @@ namespace boost { namespace fusion { namespace extension
                     typename result_of::prior<
                         typename detail::remove_reference<
                             ItRef
-                        >::type::first_type
+                        >::type::it_type
                     >::type
                 >
             type;
@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(fusion::prior(it.first));
+                return type(fusion::prior(it.it));
             }
         };
     };

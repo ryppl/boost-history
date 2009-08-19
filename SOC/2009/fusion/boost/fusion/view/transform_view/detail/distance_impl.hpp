@@ -20,28 +20,26 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct distance_impl<transform_view_iterator_tag>
     {
-        template<typename First, typename Last>
+        template<typename Begin, typename End>
         struct apply
           : result_of::distance<
-                typename detail::remove_reference<First>::type::first_type
-              , typename detail::remove_reference<Last>::type::first_type
+                typename detail::remove_reference<Begin>::type::it_type
+              , typename detail::remove_reference<End>::type::it_type
             >
-        {
-        };
+        {};
     };
 
     // Binary Version
     template<>
     struct distance_impl<transform_view_iterator2_tag>
     {
-        template<typename First, typename Last>
+        template<typename Begin, typename End>
         struct apply
           : result_of::distance<
-                typename detail::remove_reference<First>::type::first1_type
-              , typename detail::remove_reference<Last>::type::first1_type
+                typename detail::remove_reference<Begin>::type::it1_type
+              , typename detail::remove_reference<End>::type::it1_type
             >
-        {
-        };
+        {};
     };
 }}}
 

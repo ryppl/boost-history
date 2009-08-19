@@ -35,8 +35,6 @@ int
 main()
 {
     using namespace boost::fusion;
-    using namespace boost;
-    using namespace std;
 
     std::cout << tuple_open('[');
     std::cout << tuple_close(']');
@@ -64,9 +62,9 @@ main()
     }
     
     {
-        fusion::vector<int, float> v1(4, 3.3f);
+        vector<int, float> v1(4, 3.3f);
         std::pair<short, float> v2(5, 3.3f);
-        fusion::vector<long, double> v3(5, 4.4);
+        vector<long, double> v3(5, 4.4);
         BOOST_TEST(v1 < v2);
         BOOST_TEST(v1 <= v2);
         BOOST_TEST(v2 > v1);
@@ -79,13 +77,13 @@ main()
 
     {
         // conversion from pair to vector
-        fusion::vector<int, std::string> v(sequence_assign(std::make_pair(123, "Hola!!!")));
+        vector<int, std::string> v(sequence_assign(std::make_pair(123, "Hola!!!")));
         v = std::make_pair(123, "Hola!!!");
     }
 
     {
         // conversion from pair to list
-        fusion::list<int, std::string> l(sequence_assign(std::make_pair(123, "Hola!!!")));
+        list<int, std::string> l(sequence_assign(std::make_pair(123, "Hola!!!")));
         l = std::make_pair(123, "Hola!!!");
     }
 

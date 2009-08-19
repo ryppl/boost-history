@@ -27,16 +27,6 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-//cschmidt: a pp implementation won't be worth the effort
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-    template<typename FRef>
-    struct is_preevaluable
-      : mpl::false_
-    {};
-
-    template<typename FRef>
-    struct preevaluate;
-#else
     //cschmidt: These metafunction needs to handle
     //T()
     //T(&)()
@@ -59,7 +49,7 @@ namespace boost { namespace fusion { namespace detail
     //& -> &&
 
     template<typename FRef>
-    struct is_preevaluable
+    struct is_po_callable_impl
     {
          typedef typename
              remove_pointer<
@@ -74,6 +64,26 @@ namespace boost { namespace fusion { namespace detail
              >
          type;
     };
+
+    template<typename FRef>
+    struct is_po_callable
+      : is_po_callable_impl<FRef>::type
+    {};
+
+//cschmidt: a pp implementation won't be worth the effort
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+    template<typename FRef>
+    struct is_preevaluable
+      : mpl::false_
+    {};
+
+    template<typename FRef>
+    struct preevaluate;
+#else
+    template<typename FRef>
+    struct is_preevaluable
+      : is_po_callable<FRef>
+    {};
 
     template<typename FRef>
     struct preevaluate_impl;

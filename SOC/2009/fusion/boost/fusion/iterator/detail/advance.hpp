@@ -15,7 +15,7 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
 
-namespace boost { namespace fusion { namespace advance_detail
+namespace boost { namespace fusion { namespace detail
 {
     // Default advance implementation, perform next(it)
     // or prior(it) N times.
@@ -97,7 +97,6 @@ namespace boost { namespace fusion { namespace advance_detail
             return call(fusion::prior(it));
         }
     };
-
 }}}
 
 #endif

@@ -11,6 +11,7 @@
 #include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #include <boost/preprocessor/empty.hpp>
 
@@ -28,7 +29,13 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq2>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
-            typedef transform_view<Seq1,Seq2,F> type;
+            typedef
+                transform_view<
+                    Seq1
+                  , Seq2
+                  , typename detail::as_fusion_element<F>::type
+                >
+            type;
         };
 
         template <typename Seq, typename F>
@@ -41,7 +48,9 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
-            typedef transform_view<Seq, F> type;
+            typedef
+                transform_view<Seq, typename detail::as_fusion_element<F>::type>
+            type;
         };
     }
 
@@ -51,7 +60,8 @@ namespace boost { namespace fusion
             BOOST_FUSION_R_ELSE_CLREF(Seq)
           , BOOST_FUSION_R_ELSE_CLREF(F)
         >::type
-    transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq, BOOST_FUSION_R_ELSE_CLREF(F) f)
+    transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+            BOOST_FUSION_R_ELSE_CLREF(F) f)
     {
         return typename
             result_of::transform<
@@ -84,8 +94,7 @@ namespace boost { namespace fusion
           , Seq2 SEQ2_CV_REF_MODIFIER\
           , BOOST_FUSION_R_ELSE_CLREF(F)\
         >::type\
-    transform(\
-            Seq1 SEQ1_CV_REF_MODIFIER seq1\
+    transform(Seq1 SEQ1_CV_REF_MODIFIER seq1\
           , Seq2 SEQ2_CV_REF_MODIFIER seq2\
           , BOOST_FUSION_R_ELSE_CLREF(F) f)\
     {\
@@ -94,8 +103,7 @@ namespace boost { namespace fusion
                 Seq1 SEQ1_CV_REF_MODIFIER\
               , Seq2 SEQ2_CV_REF_MODIFIER\
               , BOOST_FUSION_R_ELSE_CLREF(F)\
-            >::type(\
-                    BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
+            >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
                   , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2)\
                   , BOOST_FUSION_FORWARD(F,f));\
     }

@@ -21,7 +21,7 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename
                 result_of::deref_data<
-                    typename detail::remove_reference<ItRef>::type::first_type
+                    typename detail::remove_reference<ItRef>::type::begin_type
                 >::type
             type;
 
