@@ -39,18 +39,19 @@ namespace boost { namespace task {
 namespace detail
 {
 
-template< typename Channel >
+template< typename Channel, typename UMS >
 class pool_base
 {
 private:
 	friend class worker;
 
-	template< typename T, typename X >
+	template< typename T, typename X, typename Z >
 	friend class worker_object;
 
 	typedef Channel					channel;
 	typedef typename channel::item	channel_item;
-	
+
+	UMS						ums_;	
 	worker_group			wg_;
 	shared_mutex			mtx_wg_;
 	volatile uint32_t		state_;
@@ -78,6 +79,7 @@ private:
 		wg_.insert(
 			worker(
 				* this,
+				ums_,
 				psize,
 				asleep,
 				max_scns,
@@ -104,6 +106,7 @@ private:
 		wg_.insert(
 			worker(
 				* this,
+				ums_,
 				psize,
 				asleep,
 				max_scns,
@@ -137,6 +140,7 @@ public:
 		scanns const& max_scns,
 		stacksize const& stack_size)
 	:
+	ums_(),
 	wg_(),
 	mtx_wg_(),
 	state_( 0),

@@ -19,6 +19,7 @@
 #include <boost/task/detail/worker_group.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/handle.hpp>
+#include <boost/task/local_rr_ums.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/stacksize.hpp>
@@ -29,21 +30,21 @@
 
 namespace boost { namespace task
 {
-template< typename Channel >
+template< typename Channel, typename UMS = local_rr_ums >
 class static_pool
 {
 public:
 	typedef Channel		channel;
 
 private:
-	template< typename T, typename X >
+	template< typename T, typename X, typename Z >
 	friend class detail::worker_object;
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
 	struct tag_bind_to_processors {};
 # endif
 	
-	shared_ptr< detail::pool_base< Channel > >		pool_;
+	shared_ptr< detail::pool_base< Channel, UMS > >		pool_;
 
 	static_pool( static_pool &);
 	static_pool & operator=( static_pool &);
@@ -58,7 +59,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel >( psize, asleep, max_scns, stack_size) )
+	: pool_( new detail::pool_base< Channel, UMS >( psize, asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
@@ -68,7 +69,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel >( psize, hwm, lwm, asleep, max_scns, stack_size) )
+	: pool_( new detail::pool_base< Channel, UMS >( psize, hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
@@ -77,7 +78,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel >( asleep, max_scns, stack_size) )
+	: pool_( new detail::pool_base< Channel, UMS >( asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
@@ -87,7 +88,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel >( hwm, lwm, asleep, max_scns, stack_size) )
+	: pool_( new detail::pool_base< Channel, UMS >( hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 	static tag_bind_to_processors bind_to_processors()
@@ -244,7 +245,7 @@ public:
 		return pool_->submit( boost::move( t), attr);
 	}
 
-	typedef typename shared_ptr< detail::pool_base< Channel > >::unspecified_bool_type	unspecified_bool_type;
+	typedef typename shared_ptr< detail::pool_base< Channel, UMS > >::unspecified_bool_type	unspecified_bool_type;
 
 	operator unspecified_bool_type() const // throw()
 	{ return pool_; }
@@ -257,18 +258,18 @@ public:
 };
 }
 
-template< typename Channel >
-void swap( task::static_pool< Channel > & l, task::static_pool< Channel > & r)
+template< typename Channel, typename UMS >
+void swap( task::static_pool< Channel, UMS > & l, task::static_pool< Channel, UMS > & r)
 { return l.swap( r); }
 
 # if defined(BOOST_HAS_RVALUE_REFS)
-template< typename Channel >
-task::static_pool< Channel > && move( task::static_pool< Channel > && t)
+template< typename Channel, typename UMS >
+task::static_pool< Channel, UMS > && move( task::static_pool< Channel, UMS > && t)
 { return t; }
 # else
-template< typename Channel >
-task::static_pool< Channel >  move( boost::detail::thread_move_t< task::static_pool< Channel > > t)
-{ return task::static_pool< Channel >( t); }
+template< typename Channel, typename UMS >
+task::static_pool< Channel, UMS >  move( boost::detail::thread_move_t< task::static_pool< Channel, UMS > > t)
+{ return task::static_pool< Channel, UMS >( t); }
 # endif
 
 }
