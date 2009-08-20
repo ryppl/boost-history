@@ -23,13 +23,13 @@
 #include <boost/mpl/identity.hpp>
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/clone_allocator.hpp>
-#include <boost/scoped_ptr.hpp>
 #include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
 #include <boost/utility/addressof.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
+#include <memory>
 
 namespace boost
 {
@@ -86,9 +86,10 @@ namespace boost
         virtual ~clone_factory_impl_base() {}
         virtual GenericVoidPointer get_pointer() = 0;
         virtual clone_factory_impl_base* make_clone() = 0;
+        virtual void delete_self() = 0;
       };
 
-      template<typename GenericPointer, typename Cloner>
+      template<typename GenericPointer, typename Cloner, typename Allocator>
       class clone_factory_impl: public
         clone_factory_impl_base
         <
@@ -96,9 +97,17 @@ namespace boost
         >
       {
       public:
-        clone_factory_impl(GenericPointer p, Cloner c):
+        typedef typename Allocator::template rebind<clone_factory_impl>::other allocator_type;
+
+        clone_factory_impl(GenericPointer p, Cloner c, allocator_type a):
           cloner(c),
-          px(cloner.allocate_clone(p))
+          px(cloner.allocate_clone(p)),
+          allocator(a)
+        {}
+        clone_factory_impl(const clone_factory_impl &other):
+          cloner(other.cloner),
+          px(cloner.allocate_clone(other.px)),
+          allocator(other.allocator)
         {}
         ~clone_factory_impl()
         {
@@ -116,11 +125,31 @@ namespace boost
         }
         virtual clone_factory_impl* make_clone()
         {
-          return new clone_factory_impl(px, cloner);
+          clone_factory_impl *result = allocator.allocate(1);
+          try
+          {
+            allocator.construct(result, clone_factory_impl(px, cloner, allocator));
+          }
+          catch(...)
+          {
+            allocator.deallocate(result, 1);
+            throw;
+          }
+          return result;
+        }
+        virtual void delete_self()
+        {
+          // need to local copy of allocator, since original will be destroyed by destructor
+          allocator_type local_allocator(allocator);
+          local_allocator.destroy(this);
+          local_allocator.deallocate(this, 1);
         }
       private:
+        clone_factory_impl & operator=(const clone_factory_impl &other); // could be implemented if we needed it
+
         Cloner cloner;
         GenericPointer px;
+        allocator_type allocator;
       };
 
       template<typename GenericVoidPointer>
@@ -129,20 +158,39 @@ namespace boost
       public:
         clone_factory(): _impl()
         {}
-        template<typename T, typename Cloner>
-        clone_factory(T p, Cloner c): _impl(new clone_factory_impl<T, Cloner>(p, c))
-        {}
+        template<typename T, typename Cloner, typename Allocator>
+        clone_factory(T p, Cloner c, Allocator a): _impl(0)
+        {
+          typedef clone_factory_impl<T, Cloner, Allocator> impl_type;
+          typename impl_type::allocator_type allocator(a);
+          impl_type *storage = allocator.allocate(1);
+          try
+          {
+            allocator.construct(storage, impl_type(p, c, allocator));
+          }
+          catch(...)
+          {
+            allocator.deallocate(storage, 1);
+            throw;
+          }
+          _impl = storage;
+        }
         clone_factory(const clone_factory &other): _impl(other._impl->make_clone())
         {}
 #ifndef BOOST_NO_RVALUE_REFERENCES
         clone_factory(clone_factory && other)
         {
-          swap(other);
+          _impl = other._impl;
+          other._impl = 0;
         }
 #endif
+        ~clone_factory()
+        {
+          if(_impl) _impl->delete_self();
+        }
         GenericVoidPointer get_pointer()
         {
-          if(_impl.get() == 0) return GenericVoidPointer();
+          if(_impl == 0) return GenericVoidPointer();
           return _impl->get_pointer();
         }
         void swap(clone_factory &other)
@@ -152,7 +200,7 @@ namespace boost
       private:
         clone_factory& operator=(const clone_factory &);  // could be implemented and made public if we needed it
 
-        scoped_ptr<clone_factory_impl_base<GenericVoidPointer> > _impl;
+        clone_factory_impl_base<GenericVoidPointer> *_impl;
       };
       template<typename T>
       void swap(clone_factory<T> &a, clone_factory<T> &b)
@@ -193,6 +241,7 @@ namespace boost
       }
     private:
       void * storage() {return boost::addressof(_storage);}
+
       boost::aligned_storage<sizeof(T), boost::alignment_of<T>::value> _storage;
       bool _allocated;
     };
@@ -228,7 +277,8 @@ namespace boost
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          default_cloner<typename pointer_traits<U>::value_type>()
+          default_cloner<typename pointer_traits<U>::value_type>(),
+          std::allocator<void>()
         ),
         px
         (
@@ -248,7 +298,8 @@ namespace boost
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          default_cloner<typename pointer_traits<U>::value_type>()
+          default_cloner<typename pointer_traits<U>::value_type>(),
+          std::allocator<void>()
         ),
         px
         (
@@ -259,17 +310,13 @@ namespace boost
         )
       {}
 #endif // BOOST_NO_SFINAE
-      template<typename U, typename Deleter>
-      cloning
-      (
-        U p,
-        Deleter d
-      ):
+      template<typename U, typename Cloner>
+      cloning(U p, Cloner c):
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          d,
-          default_cloner<typename pointer_traits<U>::value_type>()
+          c,
+          std::allocator<void>()
         ),
         px
         (
@@ -279,12 +326,13 @@ namespace boost
           >(_clone_factory.get_pointer())
         )
       {}
-      template<typename U, typename Deleter, typename Cloner>
-      cloning(U p, Deleter d, Cloner c):
+      template<typename U, typename Cloner, typename Allocator>
+      cloning(U p, Cloner c, Allocator a):
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          c
+          c,
+          a
         ),
         px
         (

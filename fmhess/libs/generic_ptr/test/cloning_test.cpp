@@ -12,6 +12,7 @@
 #include <boost/detail/lightweight_test.hpp>
 #include <boost/generic_ptr/cloning.hpp>
 #include <boost/generic_ptr/null_deleter.hpp>
+#include <memory>
 
 class X_base
 {
@@ -137,7 +138,14 @@ void custom_cloner_test()
   X *x0 = new X();
   BOOST_TEST(X::instances == 1);
   {
-    boost::generic_ptr::cloning<X*> cp0(x0, boost::generic_ptr::null_deleter(), null_cloner());
+    boost::generic_ptr::cloning<X*> cp0(x0, null_cloner());
+    BOOST_TEST(X::instances == 1);
+    boost::generic_ptr::cloning<X*> cp1 = cp0;
+    BOOST_TEST(X::instances == 1);
+  }
+  BOOST_TEST(X::instances == 1);
+  {
+    boost::generic_ptr::cloning<X*> cp0(x0, null_cloner(), std::allocator<int>());
     BOOST_TEST(X::instances == 1);
     boost::generic_ptr::cloning<X*> cp1 = cp0;
     BOOST_TEST(X::instances == 1);
