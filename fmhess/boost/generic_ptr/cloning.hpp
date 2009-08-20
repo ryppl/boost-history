@@ -15,6 +15,7 @@
 #define BOOST_GENERIC_PTR_CLONING_HPP_INCLUDED
 
 #include <boost/config.hpp>
+#include <boost/aligned_storage.hpp>
 #include <boost/generic_ptr/detail/util.hpp>
 #include <boost/generic_ptr/pointer_cast.hpp>
 #include <boost/generic_ptr/pointer_traits.hpp>
@@ -23,8 +24,10 @@
 #include <boost/noncopyable.hpp>
 #include <boost/ptr_container/clone_allocator.hpp>
 #include <boost/scoped_ptr.hpp>
+#include <boost/type_traits/alignment_of.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
+#include <boost/utility/addressof.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/utility/swap.hpp>
 
@@ -33,16 +36,45 @@ namespace boost
   namespace generic_ptr
   {
     template<typename T>
-    T* new_clone(T *p)
+    T* construct_clone(void *location, T *p)
     {
       if(p == 0) return 0;
-      using boost::new_clone;
-      return new_clone(*p);
+      // based on boost::new_clone
+      T* result = new(location) T(*p);
+      BOOST_ASSERT
+      (
+        typeid(*p) == typeid(*result) &&
+        "Default construct_clone() sliced object!"
+      );
+      return result;
     }
     template<typename GenericPointer>
-    GenericPointer new_clone(const GenericPointer &p, typename pointer_traits<GenericPointer>::value_type * = 0)
+    GenericPointer construct_clone
+    (
+      void *location,
+      const GenericPointer &p,
+      typename pointer_traits<GenericPointer>::value_type * = 0
+    )
     {
-      return GenericPointer(new_clone(get_pointer(p)));
+      return GenericPointer(construct_clone(location, get_pointer(p)));
+    }
+    template<typename T>
+    void destroy_clone(T *p)
+    {
+      if(p == 0) return;
+      // make sure type is complete: based on boost::checked_delete
+      typedef char type_must_be_complete[ sizeof(T)? 1: -1 ];
+      (void) sizeof(type_must_be_complete);
+      p->~T();
+    }
+    template<typename GenericPointer>
+    void destroy_clone
+    (
+      const GenericPointer &p,
+      typename pointer_traits<GenericPointer>::value_type * = 0
+    )
+    {
+      return destroy_clone(get_pointer(p));
     }
 
     namespace detail
@@ -56,19 +88,21 @@ namespace boost
         virtual clone_factory_impl_base* make_clone() = 0;
       };
 
-      template<typename GenericPointer, typename Deleter, typename Cloner>
-      class clone_factory_pdc_impl: public
+      template<typename GenericPointer, typename Cloner>
+      class clone_factory_impl: public
         clone_factory_impl_base
         <
           typename rebind<GenericPointer, void>::other
         >
       {
       public:
-        clone_factory_pdc_impl(GenericPointer p, Deleter d, Cloner c): px(p), deleter(d), cloner(c)
+        clone_factory_impl(GenericPointer p, Cloner c):
+          cloner(c),
+          px(cloner.allocate_clone(p))
         {}
-        ~clone_factory_pdc_impl()
+        ~clone_factory_impl()
         {
-          deleter(px);
+          cloner.deallocate_clone(px);
         }
         virtual typename rebind<GenericPointer, void>::other get_pointer()
         {
@@ -80,14 +114,13 @@ namespace boost
               >::type
             >(px);
         }
-        virtual clone_factory_pdc_impl* make_clone()
+        virtual clone_factory_impl* make_clone()
         {
-          return new clone_factory_pdc_impl(cloner(px), deleter, cloner);
+          return new clone_factory_impl(px, cloner);
         }
       private:
-        GenericPointer px;
-        Deleter deleter;
         Cloner cloner;
+        GenericPointer px;
       };
 
       template<typename GenericVoidPointer>
@@ -96,8 +129,8 @@ namespace boost
       public:
         clone_factory(): _impl()
         {}
-        template<typename T, typename Deleter, typename Cloner>
-        clone_factory(T p, Deleter d, Cloner c): _impl(new clone_factory_pdc_impl<T, Deleter, Cloner>(p, d, c))
+        template<typename T, typename Cloner>
+        clone_factory(T p, Cloner c): _impl(new clone_factory_impl<T, Cloner>(p, c))
         {}
         clone_factory(const clone_factory &other): _impl(other._impl->make_clone())
         {}
@@ -128,25 +161,40 @@ namespace boost
       }
     }
 
-    class default_cloning_deleter
-    {
-    public:
-      template<typename GenericPointer>
-      void operator()(const GenericPointer &p) const
-      {
-        delete_clone(get_plain_old_pointer(p));
-      }
-    };
-
+    template<typename T>
     class default_cloner
     {
     public:
+      default_cloner(): _allocated(false)
+      {}
+      default_cloner(const default_cloner &): _allocated(false)
+      {}
+      default_cloner & operator=(const default_cloner &)
+      {}
       template<typename GenericPointer>
-      GenericPointer operator()(const GenericPointer & p) const
+      GenericPointer allocate_clone(const GenericPointer & p)
       {
-        if(get_plain_old_pointer(p) == 0) return p;
-        return new_clone(p);
+        BOOST_ASSERT(_allocated == false);
+        using boost::generic_ptr::construct_clone;
+        GenericPointer result(construct_clone(storage(), p));
+        _allocated = true;
+        return result;
       }
+      template<typename GenericPointer>
+      void deallocate_clone(const GenericPointer & p)
+      {
+        typename pointer_traits<GenericPointer>::value_type *pop = get_plain_old_pointer(p);
+        if(pop == 0) return;
+        BOOST_ASSERT(pop == storage());
+        BOOST_ASSERT(_allocated);
+        _allocated = false;
+        using boost::generic_ptr::destroy_clone;
+        destroy_clone(p);
+      }
+    private:
+      void * storage() {return boost::addressof(_storage);}
+      boost::aligned_storage<sizeof(T), boost::alignment_of<T>::value> _storage;
+      bool _allocated;
     };
 
     template<typename T>
@@ -180,8 +228,7 @@ namespace boost
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          default_cloning_deleter(),
-          default_cloner()
+          default_cloner<typename pointer_traits<U>::value_type>()
         ),
         px
         (
@@ -201,8 +248,7 @@ namespace boost
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          default_cloning_deleter(),
-          default_cloner()
+          default_cloner<typename pointer_traits<U>::value_type>()
         ),
         px
         (
@@ -223,7 +269,7 @@ namespace boost
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
           d,
-          default_cloner()
+          default_cloner<typename pointer_traits<U>::value_type>()
         ),
         px
         (
@@ -238,7 +284,6 @@ namespace boost
         _clone_factory
         (
           typename generic_ptr::rebind<T, typename pointer_traits<U>::value_type>::other(p),
-          d,
           c
         ),
         px

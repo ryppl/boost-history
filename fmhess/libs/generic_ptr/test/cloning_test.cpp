@@ -43,54 +43,61 @@ unsigned X::instances = 0;
 void clone_test()
 {
   BOOST_TEST(X::instances == 0);
-  boost::generic_ptr::cloning<X*> cp(new X());
+  X obj;
   BOOST_TEST(X::instances == 1);
-  boost::generic_ptr::cloning<X*> cp2(cp);
+  boost::generic_ptr::cloning<X*> cp(&obj);
   BOOST_TEST(X::instances == 2);
+  boost::generic_ptr::cloning<X*> cp2(cp);
+  BOOST_TEST(X::instances == 3);
   BOOST_TEST(cp != cp2);
   boost::generic_ptr::cloning<const X*> cp3;
-  BOOST_TEST(X::instances == 2);
-  cp3 = cp2;
   BOOST_TEST(X::instances == 3);
+  cp3 = cp2;
+  BOOST_TEST(X::instances == 4);
   BOOST_TEST(cp3->num_instances() == X::instances);
   BOOST_TEST(cp2 != cp3);
 
-  const X* p_to_const = new X();
-  cp3.reset(p_to_const);
-  BOOST_TEST(X::instances == 3);
+  {
+    const X const_obj;
+    cp3.reset(&const_obj);
+  }
+  BOOST_TEST(X::instances == 4);
 }
 
 void move_test()
 {
 #ifndef BOOST_NO_RVALUE_REFERENCES
   BOOST_TEST(X::instances == 0);
-  X * plain_x = new X();
-  boost::generic_ptr::cloning<X*> cp(plain_x);
+  X plain_x;
   BOOST_TEST(X::instances == 1);
-  BOOST_TEST(cp == plain_x);
+  boost::generic_ptr::cloning<X*> cp(&plain_x);
+  X* original_p = cp.get();
+  BOOST_TEST(X::instances == 2);
   boost::generic_ptr::cloning<X*> cp2(std::move(cp));
-  BOOST_TEST(X::instances == 1);
+  BOOST_TEST(X::instances == 2);
   BOOST_TEST(cp.get() == 0);
-  BOOST_TEST(cp2 == plain_x);
+  BOOST_TEST(cp2 == original_p);
   boost::generic_ptr::cloning<X*> cp3;
   cp3 = std::move(cp2);
-  BOOST_TEST(X::instances == 1);
-  BOOST_TEST(cp3 == plain_x);
+  BOOST_TEST(X::instances == 2);
+  BOOST_TEST(cp3 == original_p);
 #endif // BOOST_NO_RVALUE_REFERENCES
 }
 
 void no_slice_test()
 {
   BOOST_TEST(X::instances == 0);
-  boost::generic_ptr::cloning<X*> cp(new X());
+  X obj;
   BOOST_TEST(X::instances == 1);
-  boost::generic_ptr::cloning<X_base*> cp2(cp);
+  boost::generic_ptr::cloning<X*> cp(&obj);
   BOOST_TEST(X::instances == 2);
+  boost::generic_ptr::cloning<X_base*> cp2(cp);
+  BOOST_TEST(X::instances == 3);
   BOOST_TEST(cp != cp2);
   boost::generic_ptr::cloning<X_base*> cp3;
-  BOOST_TEST(X::instances == 2);
-  cp3 = cp;
   BOOST_TEST(X::instances == 3);
+  cp3 = cp;
+  BOOST_TEST(X::instances == 4);
   BOOST_TEST(cp3->f() == 0);
   BOOST_TEST(cp != cp3);
 }
@@ -98,45 +105,30 @@ void no_slice_test()
 void cast_test()
 {
   BOOST_TEST(X::instances == 0);
-  boost::generic_ptr::cloning<X_base*> cp(new X());
+  X obj;
   BOOST_TEST(X::instances == 1);
-  boost::generic_ptr::cloning<X*> cp2 = boost::generic_ptr::static_pointer_cast<X>(cp);
+  boost::generic_ptr::cloning<X_base*> cp(&obj);
   BOOST_TEST(X::instances == 2);
+  boost::generic_ptr::cloning<X*> cp2 = boost::generic_ptr::static_pointer_cast<X>(cp);
+  BOOST_TEST(X::instances == 3);
   BOOST_TEST(cp != cp2);
   boost::generic_ptr::cloning<X_base*> cp3(boost::generic_ptr::static_pointer_cast<X_base>(cp2));
-  BOOST_TEST(X::instances == 3);
+  BOOST_TEST(X::instances == 4);
   BOOST_TEST(cp2 != cp3);
-}
-
-void deleter_test()
-{
-  BOOST_TEST(X::instances == 0);
-  X *x0 = new X();
-  X *x1 = 0;
-  {
-    boost::generic_ptr::cloning<X*> cp0(x0, boost::generic_ptr::null_deleter());
-    BOOST_TEST(X::instances == 1);
-    {
-      boost::generic_ptr::cloning<X*> cp1(cp0);
-      BOOST_TEST(X::instances == 2);
-      x1 = get_plain_old_pointer(cp1);
-    }
-    BOOST_TEST(X::instances == 2);
-  }
-  BOOST_TEST(X::instances == 2);
-  using boost::delete_clone;
-  delete_clone(x0);
-  delete_clone(x1);
-  BOOST_TEST(X::instances == 0);
 }
 
 class null_cloner
 {
 public:
   template<typename GenericPointer>
-  GenericPointer operator()(const GenericPointer &p)
+  GenericPointer allocate_clone(const GenericPointer &p)
   {
     return p;
+  }
+  template<typename GenericPointer>
+  void deallocate_clone(const GenericPointer &p)
+  {
+    return;
   }
 };
 
@@ -162,7 +154,6 @@ int main()
   move_test();
   no_slice_test();
   cast_test();
-  deleter_test();
   custom_cloner_test();
   return boost::report_errors();
 }
