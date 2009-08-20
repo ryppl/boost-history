@@ -15,6 +15,11 @@
 #   pragma message("Warning: BOOST_DISABLE_ASSERTS not defined")
 #endif
 
+// turn off checked iterators to avoid performance hit
+#if defined(BOOST_MSVC)  &&  !defined(__SGI_STL_PORT)  &&  !defined(_DEBUG)
+#define _SECURE_SCL 0
+#endif
+
 #include <boost/config.hpp>
 #if defined(BOOST_MSVC)
 #   pragma warning(disable: 4244 4512 4267 4996)
@@ -24,7 +29,7 @@
 #include <numeric>              // accumulate
 #include <boost/algorithm/string.hpp>
 
-#if defined(BOOST_MSVC)  && defined(_DEBUG)
+#if defined(BOOST_MSVC)  &&  defined(_DEBUG)
 #include <crtdbg.h>
 #endif
 
