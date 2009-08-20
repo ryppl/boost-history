@@ -190,6 +190,8 @@ class job : private boost::noncopyable
         bool success = true;
         try
         {
+            ++result.counters.map_keys_executed;
+
             std::auto_ptr<typename map_task_type::key_type>
                 map_key_ptr(
                     reinterpret_cast<
@@ -200,9 +202,10 @@ class job : private boost::noncopyable
             // get the data
             typename map_task_type::value_type value;
             if (!datasource_.get_data(map_key, value))
+            {
+                ++result.counters.map_key_errors;
                 return false;
-
-            ++result.counters.map_keys_executed;
+            }
 
             // Map Task
             if (map_key == typename map_task_type::key_type()
@@ -246,6 +249,8 @@ class job : private boost::noncopyable
 
     bool const run_reduce_task(unsigned const partition, results &result)
     {
+        bool success = true;
+
         using namespace boost::posix_time;
         ptime start_time(microsec_clock::universal_time());
         try
@@ -262,11 +267,12 @@ class job : private boost::noncopyable
         {
             std::cerr << "\nError: " << e.what() << "\n";
             ++result.counters.reduce_key_errors;
+            success = false;
         }
         
         result.reduce_times.push_back(microsec_clock::universal_time()-start_time);
 
-        return true;
+        return success;
     }
 
   private:

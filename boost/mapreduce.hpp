@@ -15,7 +15,10 @@
 
 #ifdef BOOST_MSVC
 #   if !defined(__SGI_STL_PORT)
-#   pragma message("warning: using STLPort is recommended to avoid STL container locking in MSVC supplied libraries.")
+#       pragma message("warning: using STLPort is recommended to avoid STL container performance problems in MSVC supplied libraries.")
+#   endif
+#   if _SECURE_SCL
+#       pragma message("warning: using MSVC with _SECURE_SCL=1 defined can cause serious runtime performance degradation.")
 #   endif
 #endif
 
@@ -41,7 +44,7 @@ struct specification
     specification()
       : map_tasks(0),                   
         reduce_tasks(1),
-        max_file_segment_size(1048576L),    // default 1Gb               
+        max_file_segment_size(1048576L),    // default 1Mb
         output_filespec("mapreduce_")   
     {
     }
