@@ -198,7 +198,6 @@ using boost::svg::quantile;
 #include <iostream>
 using std::cout;
 using std::endl;
-
 //] [demo_Hoaglin_1]
 
 int main()
@@ -250,8 +249,7 @@ and show that the value is stored.
     svg_boxplot& b = H_boxplot.median_values_on(true)
     .outlier_values_on(true)
     .extreme_outlier_values_on(true)
-    .quartile_definition(8)
-    ;
+    .quartile_definition(8);
 /*`Show the quartile definition just assigned:
 */
     cout << "boxplot.quartile_definition() = " << b.quartile_definition() << endl; // 8
@@ -292,10 +290,6 @@ and show that the value is stored.
 /*`Write the entire SVG plot to a file.
 */
   H_boxplot.write("demo_Hoaglin.svg");
-
-/*`You can view the plot at [@demo_Hoaglin.svg].
-*/
-
 //] [demo_Hoaglin_2]
   }
   catch(const std::exception& e)

@@ -67,7 +67,6 @@ using boost::svg::unc;
 
 #include <iterator>
    using std::ostream_iterator;
-
 //] [/demo_2d_uncertainty_1]
 
   enum side

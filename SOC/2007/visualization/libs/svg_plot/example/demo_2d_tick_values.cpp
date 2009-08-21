@@ -20,10 +20,8 @@
 // and comments: don't change any of the special comment markups!
 
 //[demo_2d_tick_values_1
-
 /*`
 An example to demonstrate some options for controlling the layout and color of tick values.
-
 */
 //] [/demo_2d_tick_values_1]
 
@@ -43,7 +41,7 @@ using namespace boost::svg;
 #include <map>
   using std::map; // 2D data container.
 #include <fstream> // for file streaming, ifstream & ofstream.
-	using std::ifstream;
+  using std::ifstream;
 #include <string>
   using std::string;
   using std::getline;
@@ -59,14 +57,13 @@ using namespace boost::svg;
 #include <ios>
   using std::noskipws;
 
-  double f(double x)
-  { // A sample function to generate some X, Y pairs.
-    return sqrt(x);
-  }
+double f(double x)
+{ // A sample function to generate some X, Y pairs.
+  return sqrt(x);
+}
 
 int main()
 { // Construct one STL containers for the data series to plot.
-
 
   map<double, double> data1; // record number and value.
 
@@ -77,18 +74,14 @@ int main()
 
   try
   { // try'n'catch blocks are needed to ensure error messages from any exceptions are shown.
+//[demo_2d_tick_values_2
 
-
-  //[demo_2d_tick_values_2
-
-/*` The code below shows plotting the sqrt function
+/*`
+The code below shows plotting the sqrt function
 selecting the range of the axis by a user choice.
 
 [note Unicode symbols can be found at http://en.wikipedia.org/wiki/Unicode_symbols.
 The 4 hex digit value needs to be wrapped with prefix &#x and suffix ; like &#xDDDD;]
-*/
- 
- /*`
 */
     svg_2d_plot my_plot; // Construct a 2D plot.
 
@@ -102,7 +95,7 @@ The 4 hex digit value needs to be wrapped with prefix &#x and suffix ; like &#xD
            .x_label_font_size(30)
 
            .x_num_minor_ticks(4) // MAJOR, minor, minor, minor, minor, MAJOR
-           .x_ticks_values_color(red) // 
+           .x_ticks_values_color(red) //
            .x_ticks_values_font_family("Times New Roman")
            .x_ticks_values_font_size(20)
            .x_ticks_values_precision(0)
@@ -129,13 +122,10 @@ The 4 hex digit value needs to be wrapped with prefix &#x and suffix ; like &#xD
           ;
 
     my_plot.x_label("x abcd1234(&#x221A;)").y_label("sqrt(x) "); // Note chaining.
-         
+
     // Add a container of data to the plot, choosing a color.
     my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(3).bezier_on(true).line_color(pink);
 
-/*`
-
-*/
     my_plot.write("./demo_2d_tick_values.svg"); // Write the plot to another file.
 
     // Show the ticks styling:
@@ -152,8 +142,8 @@ The 4 hex digit value needs to be wrapped with prefix &#x and suffix ; like &#xD
     cout << "my_plot.y_ticks_values_color() " << my_plot.y_ticks_values_color() << endl;
     cout << "my_plot.y_ticks_values_precision() " << my_plot.y_ticks_values_precision() << endl;
     cout << "my_plot.y_ticks_values_ioflags() 0x" << hex << my_plot.y_ticks_values_ioflags() << dec << endl;
-
   }
+//] [/demo_2d_tick_values_2]
   catch(const std::exception& e)
   {
     std::cout <<
@@ -163,8 +153,5 @@ The 4 hex digit value needs to be wrapped with prefix &#x and suffix ; like &#xD
   return 0;
 } // int main()
 
-//    cout << "my_plot.x_ticks_values_color() " << my_plot.x_ticks_values_color() << endl;
-
-//] [/demo_2d_tick_values_2]
 
 

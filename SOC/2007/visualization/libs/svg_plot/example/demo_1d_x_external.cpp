@@ -23,10 +23,9 @@ using namespace boost::svg;
 //  top = +1 //!< X-axis free above top of X-axis (case of all Y definitely > 0).
 //  };
 
-//[demo_1d_x_external_1
-
 int main()
 {
+//[demo_1d_x_external_1
 
 /*`Following previous examples, we set up two containers for two data series.
 */
@@ -48,7 +47,7 @@ int main()
          .x_range(-1, 10);
 
 /*`We add tastelessly color the grids for both major and minor ticks, and switch both grids on.
-*/   
+*/
   my_plot.x_major_grid_color(pink)
          .x_minor_grid_color(lightgray);
 
@@ -56,7 +55,7 @@ int main()
          .x_minor_grid_on(true);
 
 /*`Also we specify the position of the labelling of the X-axis.
-It can be controlled using values in the enum x_axis_intersect.
+It can be controlled using values in the `enum x_axis_intersect`.
 ``
   enum x_axis_intersect
   { //! \enum x_axis_intersect
@@ -77,7 +76,6 @@ For this example, we choose to show the X axis and tick value labels at the top 
   my_plot.write("./demo_1d_x_external.svg");
   return 0;
 } // int main()
-
 //] [/demo_1d_x_external_1]
 
 /*

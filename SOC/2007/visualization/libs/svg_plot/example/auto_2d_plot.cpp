@@ -38,7 +38,7 @@
 #include <boost\math\special_functions\fpclassify.hpp>
   using boost::math::isfinite;
 
-  // demo of getting the max and min of x and y
+  // Getting the max and min of x and y data points.
 template <class T> // T an STL container: array, vector ...
 void s(const T& container, // Container Data series to plot - entire container.
                // (not necessarily ordered, so will find min and max).
@@ -62,8 +62,6 @@ void s(const T& container, // Container Data series to plot - entire container.
   cout << "s x_min " << *x_min << ", x_max " << *x_max << endl; // x_min 1, x_max 7.3
   cout << "s y_min " << *y_min << ", y_max " << *y_max << endl; // y_min 3.2, y_max 9.1
 } // template <class T> int scale_axis  T an STL container: array, vector ...
-
-
 //] [/auto_2d_plot_1]
 
 int main()
@@ -112,19 +110,17 @@ int main()
   my_plot.autoscale_check_limits(false);  // Skip checks for speed.
 
   /*`The possible cost is that it will fail at run-time if there are any infinite or NaNs.
-  
-  We could also chose to autoscale either of the axes separately, for example:*/
+We could also chose to autoscale either of the axes separately, for example:*/
 
   my_plot.y_autoscale(0.4, 9.3); // autoscale using two doubles.
 
-  /*`which will chose a neater scale from 0 to 10 for the Y axis. */
-  
+/*`which will chose a neater scale from 0 to 10 for the Y axis. */
+
   my_plot.write("./auto_2d_plot2.svg"); // And write another SVG image to a file.
 
-  /*`We can show the ranges chosen by autoscaling; */
+/*`We can show the ranges chosen by autoscaling; */
   cout << "X min " << my_plot.x_range().first << ", X max " << my_plot.x_range().second << endl;
   cout << "Y min " << my_plot.y_range().first << ", Y max "  << my_plot.y_range().second << endl;
-
 //] [/auto_2d_plot_2]
   }
   catch(const std::exception& e)
@@ -138,54 +134,12 @@ int main()
 
 /*
 //[auto_2d_plot_output
-
 Output:
 
-auto_2d_plot.cpp
-Linking...
-Embedding manifest...
-Autorun "j:\Cpp\SVG\debug\auto_2d_plot.exe"
-2 goods, 2.1 5.4
-3 goods, 7.3 9.1
-limit value: 99.99 1.#QNAN
-limit value: 999 1.#INF
-limit value: 999.9 1.#INF
-x_min 1.1, x_max 7.3
-y_min 3.2, y_max 9.1
-limits 3
-1 8
-3 10
-Build Time 0:21
-
-
-Linking...
-Embedding manifest...
-Autorun "j:\Cpp\SVG\debug\auto_2d_plot.exe"
+Autorun "j:\Cpp\SVG\Debug\auto_2d_plot.exe"
+Checked: x_min 1.1, x_max 7.3, y_min 3.2, y_max 9.1, 3 'good' values, 3 values at limits.
 X min 1, X max 8
 Y min 3, Y max 10
-Build Time 0:03
-
-
+X min 1, X max 8
+Y min 0, Y max 10
 //] [/auto_2d_plot_output]
-
-
-Parked pro tem.
-
-
-// double tol100eps = 1000 * numeric_limits<double>::epsilon(); // suitable tight value.
-
- // double axis_min_value; // Values to be updated by autoscale.
- // double axis_max_value;
- // double axis_tick_increment;
- // int axis_ticks;
-
- // multiset<double> my_set;
-  //// Initialize my_set with some entirely fictional data.
- // my_set.insert(1.2);
- // my_set.insert(2.3);
- // my_set.insert(3.4);
-
- // // Feed STL 1D container to scale_axis.
- // scale_axis(my_set, &axis_min_value, &axis_max_value, &axis_tick_increment, &axis_ticks, false, tol100eps, 6, 0);
-
-*/

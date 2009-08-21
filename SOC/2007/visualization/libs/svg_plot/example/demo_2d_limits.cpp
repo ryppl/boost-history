@@ -47,12 +47,9 @@ As ever, we need the usuall includes to use Boost.Plot.
 #include <utility>
   using std::make_pair;
 
-
 int main()
 {
-
 //[demo_2d_limits_2
-
   /*`Some fictional data is pushed into an STL container, here map:*/
 
   map<double, double> my_data;
@@ -117,7 +114,7 @@ We can also keep note of the plot series and use this to interrogate how many no
 
 /*`To change the default colors (lightgray and whitesmoke) for the 'at limit' point marker
 to something more conspicuous for this demonstration:
-*/ 
+*/
     my_2d_plot.limit_color(blue);
     my_2d_plot.limit_fill_color(pink);
 
@@ -132,7 +129,7 @@ To echo the new marker colors chosen:
     cout << "limit points stroke color " << my_2d_plot.limit_color() << endl;
     cout << "limit points fill color " << my_2d_plot.limit_fill_color() << endl;
 
-//] [demo_2d_limits_2]
+//] [/demo_2d_limits_2]
   }
   catch(const std::exception& e)
   {
@@ -148,7 +145,12 @@ To echo the new marker colors chosen:
 
 Output:
 
-
+Autorun "j:\Cpp\SVG\Debug\demo_2d_limits.exe"
+3 normal data values in series.
+9 'at limits' data values in series.
+limit points stroke color RGB(0,0,255)
+limit points fill color RGB(255,192,203)
 
 */
+//} //[/demo_2d_limits_output]
 

@@ -110,17 +110,16 @@ int main()
 
     /*`It may be useful to display that range chosen by autoscaling. */
     cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range()
+//] [/auto_1d_plot_2]
   }
   catch(const std::exception& e)
   { // Error, warning and information messages are displayed by the catch block.
     std::cout <<
       "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-//] [/auto_1d_plot_2]
 
 //[auto_1d_plot_3
 /*`Other STL containers can also be used, for example set, or multiset (allowing duplicates):*/
-
   try
   { // Ensure error, warning and information messages are displayed by the catch block.
 
@@ -166,27 +165,26 @@ If the container is sorted, then these are the minimum and maximum values.*/
   double max_value = *(--my_data.end());
   cout << "my_set min " << min_value << ", max = " << max_value << endl;
 
-/*`Function scale_axis is used by autoscale, but is also available for use direct by the user.
+/*`Function `scale_axis` is used by autoscale, but is also available for use direct by the user.
 It accepts parameters controlling the scaling and updates 4 items. Its signature is:
 
-  ``void scale_axis(double min_value, double max_value, // Input range
-               double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
-               bool check_limits, // Whether to check all values for infinity, NaN etc.
-               bool origin, // If true, ensures that zero is a tick value.
-               double tight, // Allows user to avoid a small fraction over a tick using another tick.
-               int min_ticks, // Minimum number of ticks.
-               int steps); // Round up and down to 2, 4, 6, 8, 10, or 5, 10 or 2, 5, 10 systems.
-  ``
-
-  */
+  void scale_axis(
+    double min_value, // Input range min
+    double max_value, // Input range max
+    double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
+    bool check_limits, // Whether to check all values for infinity, NaN etc.
+    bool origin, // If true, ensures that zero is a tick value.
+    double tight, // Allows user to avoid a small fraction over a tick using another tick.
+    nt min_ticks, // Minimum number of ticks.
+ */
   double axis_min_value; // Values to be updated by autoscale.
   double axis_max_value;
   double axis_tick_increment;
   int axis_ticks;
 
-  /*`min_value` and `max_value` could be provided by the user program:
-  usually these values are derived in some way from the user data.
-  Several examples follow.*/
+/*` `min_value` and `max_value` could be provided by the user program:
+usually these values are derived in some way from the user data.
+Several examples follow:*/
 
   // Scaling using first and last values in container,
   // assuming the data are ordered in ascending value,
@@ -227,11 +225,10 @@ It accepts parameters controlling the scaling and updates 4 items. Its signature
     true, 3., false, tol100eps, 6); // Display range.
   cout << "scaled min " << axis_min_value << ", max = " << axis_max_value
     << ", increment " << axis_tick_increment << ", axis ticks " << axis_ticks << endl;
-
-  /*`
+/*`
 However autoscaling may go wrong if the data could contain values that are outside normal limits.
 Infinity (+ and -), and maximum value, and NaN (Not A Number),
-are separated by the plot program to allow them to be shown,
+are separated by the plot program to allow them to be shown
 but separate from 'normal' values.  These values similarly can distort automatic scaling:
 a single infinity would result in useless scaling!
 When the plot range is set, the maximum and minimum values are checked,
@@ -239,9 +236,9 @@ and if not normal then an exception will be thrown, and no plot will be produced
 However, when autoscaling, it is more useful to ignore 'limit' values.
 But this means checking all values individually.  If it known that all values are normal,
 for example because they come from some measuring equipment that is known only to produce normal values,
-it will be much quicker to use 'std::min_max_element' which can take advantange of knowledge of the container.
+it will be much quicker to use `std::min_max_element` which can take advantange of knowledge of the container.
 
-The function 'autoscale_check_limits(bool)' is provided to control this.
+The function `autoscale_check_limits(bool)` is provided to control this.
 If set true, all values will be checked, and those at 'limits' will be ignored in autoscaling.
 The default is true, to check all values.
 
@@ -260,12 +257,13 @@ we might instead opt to ignore these checks, and write:
 
   my_1d_plot.x_autoscale(false);  // Ensure autoscale values are *not* recalculated for the plot.
 
-/*`There are also some parameters which can fine-tune the autoscaling to produce more
-aesthetically pleasing ranges. One can:
-* enforce the inclusion of zero on the plot.
-* Specify a minimum number of major ticks.
-* Specify the steps between major ticks, default 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
-* Avoid values that are a tiny amount over the minimum or maximum from causing
+/*`There are also some parameters which can fine-tune the autoscaling
+to produce more aesthetically pleasing ranges. One can:
+
+# enforce the inclusion of zero on the plot.
+# Specify a minimum number of major ticks.
+# Specify the steps between major ticks, default 0,  or 2 for 2, 4, 6, 8, 10, 5 for 1, 5, 10, or 10 (2, 5, 10).
+# Avoid values that are a tiny amount over the minimum or maximum from causing
   an apparently unnecessary tick at the minimum or maximum.
 */
 
@@ -355,8 +353,8 @@ limit value: 1.#INF
 6 good values, 1 limit values.
 limit value: 1.#INF
 x_range() 0, 7
-7 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF 
-8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
+7 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF
+8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 0.2 1.1 4.2 3.3 5.4 6.5 : 6 values used.
 1.1 4.2 3.3 5.4 : 4 values used.
 0.2 1.1 4.2 3.3 5.4 6.5 1.#INF : 7 values used.
@@ -389,10 +387,10 @@ background_color RGB(255,255,255)
 image_border_margin() 10
 image_border_width() 1
 coord_precision 3
-copyright_date  
-copyright_holder 
-description 
-document_title 
+copyright_date
+copyright_holder
+description
+document_title
 image_x_size 500
 image_y_size 200
 legend_on false
@@ -401,7 +399,7 @@ legend_top_left -1, -1, legend_bottom_right -1, -1
 legend_background_color blank
 legend_border_color RGB(255,255,0)
 legend_color blank
-legend_title 
+legend_title
 legend_title_font_size 14
 legend_width 0
 legend_lines true
@@ -426,12 +424,12 @@ title_on true
 title ""
 title_color blank
 title_font_alignment 2
-title_font_decoration 
+title_font_decoration
 title_font_family Verdana
 title_font_rotation 0
 title_font_size 18
-title_font_stretch 
-title_font_style 
+title_font_stretch
+title_font_style
 x_value_precision 3
 x_value_ioflags 200 IOS format flags (0x200) dec.
 x_max 5.5
@@ -442,11 +440,11 @@ x_axis_label_color RGB(0,0,0)
 x_axis_value_color RGB(0,0,0)
 x_axis_width 1
 x_label_on true
-x_label 
+x_label
 x_label_color blank
 x_label_font_family Verdana
 x_label_font_size 14
-x_label_units 
+x_label_units
 x_label_units_on false
 x_major_labels_side left
 x_values_font_size 10

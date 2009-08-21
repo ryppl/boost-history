@@ -39,7 +39,6 @@
   using std::ostream_iterator;
 #include <algorithm>
   using std::copy;
-
 //] [/demo_1d_uncertainty_1]
 
 int main()
@@ -63,15 +62,16 @@ the order of data values is not important.
   B_times.push_back(unc(6.9)); // Only value known - no information available about uncertainty.
 
   vector<unc> C_times;
-  C_times.push_back(unc(0.6, 0.1F, 5));
-  C_times.push_back(unc(1.4, 0.2F, 11));
+  C_times.push_back(unc(2.6, 0.1F, 5));
+  C_times.push_back(unc(5.4, 0.2F, 11));
 
   /*`Echo the values input: */
   copy(A_times.begin(), A_times.end(), ostream_iterator<unc>(std::cout, " "));
   cout << endl;
   copy(B_times.begin(), B_times.end(), ostream_iterator<unc>(std::cout, " "));
   cout << endl;
- /*`The constructor initializes a new 1D plot, called `my_plot`, and also sets all the very many defaults for axes, width, colors, etc. 
+ /*`The constructor initializes a new 1D plot, called `my_plot`,
+ and also sets all the very many defaults for axes, width, colors, etc.
 */
   svg_1d_plot my_plot;
 /*`A few (member) functions that set are fairly self-explanatory:
@@ -81,9 +81,8 @@ the order of data values is not important.
 * `x_range(-1, 11)` sets the axis limits from -1 to +11 (instead of the default -10 to +10).
 * `background_border_color(blue)` sets just one of the very many options.
 */
-    my_plot.autoscale_check_limits(false); // default is true.
-    my_plot.autoscale_plusminus(3); // default is 3.
-
+  my_plot.autoscale_check_limits(false); // default is true.
+  my_plot.autoscale_plusminus(3); // default is 3.
 
   my_plot
     .plot_window_on(true)
@@ -102,7 +101,7 @@ the order of data values is not important.
     .x_plusminus_on(true)
     .x_df_on(true)
     .x_df_color(green)
-    .x_autoscale(A_times)
+    .x_autoscale(B_times) // Note that this might not be right for A and C_times.
     ;
 /*`
 Then we add our data series,
@@ -114,13 +113,12 @@ The B_times use a blue vertical line,
 while C_times use an ellipse whose width (x radius) is from the uncertainty.
 All the data points are also labelled with their value,
 and uncertainty and degrees of freedom if known.
-
 */
 
   my_plot.plot(A_times, "A").shape(round).size(10).stroke_color(red).fill_color(green);
   my_plot.plot(B_times, "B").shape(vertical_line).stroke_color(blue);
   my_plot.plot(C_times, "C").shape(unc_ellipse).fill_color(lightyellow).stroke_color(magenta);
-     
+
 /*`Finally, we can write the SVG to a file of our choice.
 */
   my_plot.write("./demo_1d_uncertainty.svg");
@@ -137,8 +135,8 @@ demo_1d_uncertainty.cpp
 Linking...
 Embedding manifest...
 Autorun j:\Cpp\SVG\debug\demo_1d_uncertainty.exe
-3.1±0.02 (8)  4.2±0.01 (14)  
-2.1±0.001 (30)  7.8±0.0025 (21)  3.4±0.03 6.9 
+3.1±0.02 (8)  4.2±0.01 (14)
+2.1±0.001 (30)  7.8±0.0025 (21)  3.4±0.03 6.9
 Build Time 0:03
 //] [/demo_1d_uncertainty_output]
 */

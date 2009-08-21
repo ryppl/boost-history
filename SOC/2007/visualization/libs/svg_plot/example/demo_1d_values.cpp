@@ -1,11 +1,11 @@
 /*! \file demo_1d_values.cpp
     \brief Demonstration of showing the 1D values.
     \details  Showing the 1D values of items from the data set.
-    
+
     Some of the many possible formatting options are demonstrated,
     including controlling the precision and iosflags,
     and prefix and suffix also useful for giving units.
-    
+
     Quickbook markup to include in documentation.
     \date 19 Jul 2009
     \author Paul A. Bristow
@@ -50,14 +50,12 @@
 
 #include <vector>
   using std::vector;
-
 //] [demo_1d_values_1]
 
 int main()
 {
-
 //[demo_1d_values_2
-/*`Some fictional data is pushed into an STL container, here vector<double>:*/
+/*`Some fictional data is pushed into an STL container, here `vector<double>`:*/
   vector<double> my_data;
   my_data.push_back(-1.6);
   my_data.push_back(2.0);
@@ -132,8 +130,7 @@ but for 2-D plots all writing orientations can be useful).
 */
     my_1d_plot.write("demo_1d_values.svg");
 
-/*`If chosen settings do not have the effect that you expect, it may be helpful to display them!
-
+/*`If chosen settings do not have the effect that you expect, it may be helpful to display some of them!
 (All the myriad settings can be displayed with `show_1d_plot_settings(my_1d_plot)`.)
 */
     //show_1d_plot_settings(my_1d_plot);
@@ -172,14 +169,6 @@ my_1d_plot.x_values_color() RGB(255,0,0)
 my_1d_plot.x_values_precision() 2
  my_1d_plot.x_values_ioflags() 1020
 Build Time 0:03
-
-
 //] [demo_1d_values_output]
-
-    //my_1d_plot.x_values_rotation(uphill); // Orientation for the X-axis value labels.
-    //my_1d_plot.x_values_rotation(horizontal); // Orientation for the X-axis value labels.
-    //my_1d_plot.x_values_rotation(backup); // Orientation for the X-axis value labels.
-    my_1d_plot.x_values_rotation(downhill); // Orientation for the X-axis value labels.
-
 */
 

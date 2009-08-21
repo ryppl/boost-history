@@ -76,7 +76,7 @@ int main()
   /*`This example uses two containers to demonstrate autoscaling.
   It is common to plot more than one set of data series together.
   Autoscaling must probably inspect all the containers of these series
-  in order to find axis ranges that will be suitable for all of them.
+  in order to find axis ranges that will be *suitable for all of them*.
   */
   vector<double> my_data_1;
   // Initialize STL container my_data_1 with some entirely fictional data.
@@ -108,7 +108,7 @@ int main()
   //cout << endl << my_data.size() << " values in my_data_2. " << endl;
 
   /*`Next we need a new STL container, vector say, to hold our multiple containers of data series.
-    They must all be the same STL container type, in this example, vector<double>.
+    They must all be the same STL container type, in this example, `vector<double>`.
     And we use pushback to add the containers.
   */
   vector<vector<double> > my_containers;
@@ -142,7 +142,7 @@ int main()
   /*`If we want, we can check the autoscale range used.*/
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 0, 15
   /*`And even all the (hundreds of) plot settings (useful for diagnosis why your plot doesn't meet your expectations).*/
-  //show_1d_plot_settings(my_1d_plot); 
+  //show_1d_plot_settings(my_1d_plot);
 
 //] [/auto_1d_containers_2]
 

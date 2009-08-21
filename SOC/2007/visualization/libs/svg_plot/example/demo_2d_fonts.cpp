@@ -29,7 +29,7 @@ The result is a graphic designers nightmare!
 
 A font family may or may not be available for a particular internet browser,
 so it is inevitable that the exact appearance of a SVG plot may vary when
-viewed with different browsers.  If a font family is not recognised, then 
+viewed with different browsers.  If a font family is not recognised, then
 a default (for that browser) will be used instead.
 
 The font families available for browsers do not seem to be listed,
@@ -43,21 +43,22 @@ For most purposes the default Font family Verdana looks fine.
 
 The following font families work with Firefox 3.5:
 
-arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century", "lucida calligraphy", "tahoma", "vivaldi"
-"informal roman", "lucida handwriting", "lucida bright", "helvetica"
-"arial narrow" is narrow, so may be useful to fit a long title or label.
-"arial black" is black!
+  "arial", "impact", "courier", "lucida console",  "Lucida sans unicode",
+  "verdana", "calibri", "century", "lucida calligraphy", "tahoma", "vivaldi"
+  "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+  "arial narrow" is narrow, so may be useful to fit a long title or label.
+  "arial black" is black!
 
 These do NOT work and are substituted:
 
-"comic sans", "sans" "bauhaus" "brush script" "segeo condensed" = Serif
+  "comic sans", "sans" "bauhaus" "brush script" "segeo condensed" = Serif
 
 The narrow, wide, bold and italic features produce rather variable and unpredictable results
 - the rendering may be 'fuzzy' or ill-formed: so these are not recommended.  For example,
 
-"Times New Roman Bold" "Times New Roman Italic" are substituted by "Times New Roman"
+  "Times New Roman Bold" "Times New Roman Italic" are substituted by "Times New Roman"
 
-But to get narrow characters "arial narrow" works well, allowing a longer title or label.
+But to get narrow characters "arial narrow" works well, squeezing in a longer title or label.
 
 The font sizes are also changes from the defaults.  This should change the positioning,
 but the calculations are complex and necessarily approximate.
@@ -69,12 +70,10 @@ By default, the std::precision is reduced from the default 6 to 3, and unnecessa
 But it will still often be necessary to change the std::iosflags and std::precision,
 and/or the number of major ticks and/or font size and type to avoid tick value label collisions.
 
-Unicode symbols can be found at http://en.wikipedia.org/wiki/Unicode_symbols.
+Unicode symbols can be found at [@http://en.wikipedia.org/wiki/Unicode_symbols Unicode symbols].
 The 4 hex digit value needs to be wrapped with prefix &#x and suffix ; like &#xDDDD;
 Rendering of Unicode symbols is not entirely predictable, but usually works well
 to provide a wide range of greek and math symbols.
-
-
 */
 //] [/demo_2d_fonts_1]
 
@@ -109,10 +108,9 @@ int main()
 
   try
   { // try'n'catch blocks are needed to ensure error messages from any exceptions are shown.
-  //[demo_2d_fonts_2
+//[demo_2d_fonts_2
 
-/*` The code below shows plotting the sqrt function
-selecting the range of the axis by a user choice.
+/*`The code below shows plotting the sqrt function selecting the range of the axis by a user choice.
 */
     {
       svg_2d_plot my_plot; // Construct a 2D plot.
@@ -134,7 +132,7 @@ selecting the range of the axis by a user choice.
            .x_axis_label_color(green)
            .x_label_font_family("helvetica")
            .x_label_font_size(40)
-           .x_ticks_values_color(red) // 
+           .x_ticks_values_color(red) //
            .x_ticks_values_font_family("Times New Roman")
            .x_ticks_values_font_size(14)
            .x_ticks_values_precision(0)
@@ -152,7 +150,7 @@ selecting the range of the axis by a user choice.
            .y_label_font_size(40)
            .y_axis_label_color(blue)
          ;
-         
+
       // Add a container of data to the plot, choosing a color.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(3).bezier_on(true).line_color(pink);
 
@@ -164,21 +162,19 @@ selecting the range of the axis by a user choice.
       cout << "my_plot.x_ticks_values_precision() " << my_plot.x_ticks_values_precision() << endl;
       cout << "my_plot.x_ticks_values_ioflags() 0x" << hex << my_plot.x_ticks_values_ioflags() << dec << endl;
     }
-
     // Axis label rotation default is horizontal.
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
              .y_range(0., 5.)
              .x_label("X axis label font default size 14")
-             .y_label("Y axis label font default size 14") 
+             .y_label("Y axis label font default size 14")
              //.x_label_font_size(10)
              //.y_label_font_size(10)
              ;
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_1.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -190,7 +186,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_2.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -202,7 +197,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_3.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -218,7 +212,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_4.svg"); // Write another plot to file.
     }
-
 // Now alter the rotation of the axis labels.
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
@@ -234,7 +227,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_5.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -282,7 +274,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_8.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -295,7 +286,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_9.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -311,7 +301,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_10.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -326,7 +315,6 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_11.svg"); // Write another plot to file.
     }
-
     {
       svg_2d_plot my_plot; // Construct another 2D plot to try other variations of font sizes.
       my_plot.x_range(0, +20.)
@@ -343,38 +331,25 @@ selecting the range of the axis by a user choice.
       my_plot.plot(data1, "Function (&#x221A;)").stroke_color(red).shape(round).size(10).line_on(false).line_color(green);
       my_plot.write("./demo_2d_fonts_12.svg"); // Write another plot to file.
     }
-
-
-
-
-
   }
   catch(const std::exception& e)
   {
     std::cout <<
       "\n""Message from thrown exception was:\n   " << e.what() << std::endl;
   }
-
   return 0;
 } // int main()
-
-
 //] [/demo_2d_fonts_2]
 
-
-//] [demo_2d_fonts_output]
-
+//[demo_2d_fonts_output
 /*`
-
 Output:
 
-Autorun "j:\Cpp\SVG\Debug\demo_2d_fonts.exe"
-my_plot.x_ticks_values_color() RGB(255,0,0)
-my_plot.x_ticks_values_font_family() Verdana
-my_plot.x_ticks_values_font_size() 12
-my_plot.x_ticks_values_precision() 0
-my_plot.x_ticks_values_ioflags() 0x2000
-
+  Autorun "j:\Cpp\SVG\Debug\demo_2d_fonts.exe"
+  my_plot.x_ticks_values_color() RGB(255,0,0)
+  my_plot.x_ticks_values_font_family() Verdana
+  my_plot.x_ticks_values_font_size() 12
+  my_plot.x_ticks_values_precision() 0
+  my_plot.x_ticks_values_ioflags() 0x2000
 */
-
 //] [/demo_2d_fonts_output]

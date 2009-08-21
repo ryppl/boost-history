@@ -36,13 +36,12 @@
 
 #include <limits>
   using std::numeric_limits;
-
 //] [demo_1d_limits_1]
 
 int main()
 {
 //[demo_1d_limits_2
-/*`Some fictional data is pushed into an STL container, here vector<double>, including a NaN and + and - infinity:*/
+/*`Some fictional data is pushed into an STL container, here `vector<double>`, including a NaN and + and - infinity:*/
   vector<double> my_data;
   my_data.push_back(-1.6);
   my_data.push_back(2.0);
@@ -68,11 +67,11 @@ here a circle with a diameter of 5 pixels.
 
 /*`To put a value label against each data point, switch on the option:
 */
-    my_1d_plot.x_values_on(true); // Add a label for the X-axis.
+    my_1d_plot.x_values_on(true); // Add data point value labels for the X-axis.
 
 /*`To change the default colors (lightgray and whitesmoke) for the 'at limit' point marker
 to something more conspicuous for this demonstration:
-*/ 
+*/
     my_1d_plot.limit_color(blue);
     my_1d_plot.limit_fill_color(pink);
 
@@ -87,7 +86,6 @@ To echo the new marker colors chosen:
 */
     cout << "limit points stroke color " << my_1d_plot.limit_color() << endl;
     cout << "limit points fill color " << my_1d_plot.limit_fill_color() << endl;
-
 //] [demo_1d_limits_2]
   }
   catch(const std::exception& e)

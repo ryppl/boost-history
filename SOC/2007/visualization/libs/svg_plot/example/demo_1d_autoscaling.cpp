@@ -61,7 +61,6 @@
   using boost::svg::show_all; // Multiple STL containers.
   using boost::svg::range; // Find min and max of a STL container.
   using boost::svg::range_all;// Find min and max of multipler STL containers.
-
 //] [/demo_1d_autoscaling_1]
 
 double tol100eps = 1000 * numeric_limits<double>::epsilon(); // suitable tight value.
@@ -83,7 +82,7 @@ int main()
   my_data.push_back(5.4); // [4]
   my_data.push_back(6.5); // [5]
   show(my_data); // Show entire container contents,
-  // 6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
+  // 6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
 
   /*`Construct a plot , and add some data to the plot. */
 
@@ -91,12 +90,11 @@ int main()
   my_1d_plot.title("Demo 1D autoscaling").x_label("X values"); // Add a title and X axis label.
   my_1d_plot.plot(my_data, "Auto 1D my_data"); // Add whole data series from my_data.
 
-  /*`Use x_autoscale to scale the axis, in this most common and simplest case, using all the values.*/
-  my_1d_plot.x_autoscale(my_data); 
+  /*`Use `x_autoscale` to scale the axis, in this most common and simplest case, using all the values.*/
+  my_1d_plot.x_autoscale(my_data);
 
   /*` and finally write the SVG to a file.*/
   my_1d_plot.write("demo_1d_autoscaling_1.svg"); // Write the plot to file.
-
 //] [/demo_1d_autoscaling_2]
 
 
@@ -119,11 +117,11 @@ int main()
   // Show the set.
   multiset<double>::const_iterator si;
   show(my_set); // for two different types of container.
-  // 8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
+  // 8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 
   svg_1d_plot my_1d_plot; // Construct a plot with all the default constructor values.
 
-  /*`and also override the default controls of scale_axis function used by autoscaling.*/
+  /*`and also override the default controls of `scale_axis` function used by autoscaling.*/
   // Set some autoscaling parameters:
   my_1d_plot.x_with_zero(true); // Always include zero in the axis range, even if the data values don't.
   my_1d_plot.x_min_ticks(10); // Ensure more than the default minimum number of ticks.
@@ -141,7 +139,7 @@ int main()
   (Remember values in set are sorted).
   */
   my_1d_plot.x_autoscale(++my_set.begin(),--my_set.end());
-  /*`This also sets autoscale(true), but note that x_range() is still not updated.
+  /*`This also sets `autoscale(true)`, but note that `x_range()` is still not updated.
   If we want, we can display the ranges chosen by autoscale:
   */
   cout << " x_auto_min_value " << my_1d_plot.x_auto_min_value()
@@ -157,25 +155,22 @@ int main()
    my_1d_plot.plot(++my_set.begin(),--my_set.end(), "Auto 1D my_set"); // Add 'top and tailed' data series from my_set.
  //my_1d_plot.plot(my_set, "Auto 1D my_set"); // Add whole data series from my_set.
   my_1d_plot.write("demo_1d_autoscaling_2.svg"); // Write the plot to file.
-  
+
   /*`If we want, we can check the autoscale range used, noting that zero *is* included because we demanded it.*/
   cout << "x_range() " << my_1d_plot.x_range() << endl; // x_range() 0, 8
   //show_1d_plot_settings(my_1d_plot); // If required.
   }
+  /*`try'n'catch blocks are very useful to display any plot error messages.
+  Otherwise any exceptions thrown will just terminate - silently and most unhelpfully.
+  */
   catch(const std::exception& e)
   {
-  /*` Try & catch blocks are very useful to display any plot error messages.
-  Otherwise any exceptions thrown will just terminate - silently and unhelpfully.
-  */
     cout <<"\n""Message from thrown exception was:\n   " << e.what() << endl;
   }
-  } // // Autoscaling with my_set
-
  //] [/demo_1d_autoscaling_3]
-
+  } // Autoscaling with my_set
   return 0;
 } // int main()
-
 /*
 
 //[demo_1d_autoscaling_output
@@ -184,8 +179,8 @@ demo_1d_autoscaling.cpp
 Linking...
 Embedding manifest...
 Autorun "j:\Cpp\SVG\debug\demo_1d_autoscaling.exe"
-6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5 
-8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9 
+6 values in container: 0.2 1.1 4.2 3.3 5.4 6.5
+8 values in container: 1.2 2.3 3.4 4.5 5.6 6.7 7.8 8.9
 x_with_zero, 10 x_min_ticks, 0 x_steps, 0.01 tightness.
  x_auto_min_value 0, x_auto_max _value 8, x_auto_tick_interval 0.5
 x_range() 0, 8

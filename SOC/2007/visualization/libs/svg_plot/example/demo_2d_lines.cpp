@@ -43,6 +43,7 @@ using namespace boost::svg;
    using std::cout;
    using std::endl;
    using std::boolalpha;
+//] [/demo_2d_lines_1]
 
 int main()
 {
@@ -69,14 +70,14 @@ The data is roughly a straight line through the origin.
   my_data[4.1] = 4.3;
   my_data[5.0] = 5.3;
   my_data[6.1] = 5.9;
-  
+
   /*`
   First construct, size and draw a simple plot ready to add some sample lines.
   */
   svg_2d_plot my_plot;
   my_plot.size(400, 400);
   my_plot.plot(my_data, "my_data").fill_color(red);
-  
+
   /*`
   First draw a line using SVG coordinates (rather than the Cartesian coordinates used for user's data - see below).
   Note that for SVG coordinates, Y increases *down* the page, so Y = 0 is the top and Y = 300 is the bottom.
@@ -93,20 +94,17 @@ from the bottom left through the origin of the plot to the top right of the plot
   my_plot.draw_plot_line(-10, -10, +10, +10, blue);
 
 /*`If you have calculated a confidence interval, you might want to add curved line(s) showing it (still using the Cartesian coordinates).
-For example, you can draw a curve (quadratic) through two X, Y pairs using a Bezier curve with the middle point as control point.  
+For example, you can draw a curve (quadratic) through two X, Y pairs using a Bezier curve with the middle point as control point.
 */
   my_plot.draw_plot_curve(-6, -8, 0, +1, +8, +6, red);
 
 /*`Finally write the SVG image file.
 [note At present, notes and lines must come after all plot commands to be put in the correct place.]
 */
-
   my_plot.write("./demo_2d_lines");
-
   //show_2d_plot_settings(my_plot);
-
 //] [/demo_2d_lines_2]
-  
+
   }
   catch (const std::exception& e)
   {
@@ -117,7 +115,11 @@ For example, you can draw a curve (quadratic) through two X, Y pairs using a Bez
 } // int main()
 
 /*
-
 Output :
+
+demo_2d_lines.cpp
+Linking...
+Embedding manifest...
+Autorun "j:\Cpp\SVG\Debug\demo_2d_lines.exe"
 
 */
