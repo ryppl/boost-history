@@ -262,7 +262,7 @@ void run_test(boost::mapreduce::specification spec)
             typedef std::list<typename Job::keyvalue_t> frequencies_t;
             frequencies_t frequencies;
             frequencies.push_back(*it);
-            frequencies_t::reverse_iterator it_smallest = frequencies.rbegin();
+            typename frequencies_t::reverse_iterator it_smallest = frequencies.rbegin();
             for (++it; it!=ite; ++it)
             {
                 if (frequencies.size() < 10)    // show top 10
@@ -280,7 +280,7 @@ void run_test(boost::mapreduce::specification spec)
 
             frequencies.sort(boost::mapreduce::detail::greater_2nd<typename Job::keyvalue_t>);
             std::cout << "\n\nMapReduce results:";
-            for (frequencies_t::const_iterator freq=frequencies.begin(); freq!=frequencies.end(); ++freq)
+            for (typename frequencies_t::const_iterator freq=frequencies.begin(); freq!=frequencies.end(); ++freq)
                 std::cout << "\n" << freq->first << "\t" << freq->second;
         }
     }
