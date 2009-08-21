@@ -27,41 +27,33 @@
           data2.push_back(g(i));
       }
 
-      // Initialize a new box plot.
-      svg_boxplot my_plot;
+      svg_boxplot my_plot; // Initialize a new box plot.
 
-      // Color information.
-      my_plot.background_border_color(black);
+      my_plot.background_border_color(black); // Color information.
 
-      // String information.
-      my_plot.title("Boxplots of Common Functions")
-     .x_label("Functions")
+      my_plot.title("Boxplots of Common Functions") // Title and
+     .x_label("Functions") // labels.
      .y_label("Population Size");
 
-      // Axis information.
-      my_plot.y_range(0, 100)
-             .y_minor_tick_length(20)
+      my_plot.y_range(0, 100)      // Axis information.
+       .y_minor_tick_length(20)
        .y_major_interval(20);
 
-      // Write data.
+      // Write two data series.
       my_plot.plot(data1, "[50 / x]");
       my_plot.plot(data2, "[40 + 25 * sin(x * 50)]");
 
-      my_plot.write("boxplot_simple.svg");
+      my_plot.write("boxplot_simple.svg"); // Write final file.
       return 0;
   }
 
-[h4 Image boxplot_simple.svg]
+[h5 Image boxplot_simple.svg]
 
 [$images/boxplot_simple.svg]
 
-[h4 Basic Example Breakdown]
-Let's examine what this does.
-
 [h4 Initializing a new boxplot]
 
-This initializes a new boxplot. This also sets the many default values. 4
-  svg_boxplot my_plot;
+`svg_boxplot my_plot;` initializes a new boxplot. This also sets the very many default values.
 
 [h4 Setting a color]
 This sets the border color of the entire image to black (not just the plot area).
@@ -78,26 +70,28 @@ to the left to name the Y-axis.
             .y_label("Population Size");
 
 [h3 Setting axis information]
-Axis information for the X-axis is very limited, as the coordinate system
+Axis label information for the X-axis is very limited, as the coordinate system
 for the X-axis is discrete, based only on the number of box-and-whisker plots
 that appear in the same boxplot.
 
-Axis information for the Y-axis, however, is customizable much in the same way that that axis information is customizable for the 1 and 2 dimensional graphs.
-      // Axis information.
-      my_plot.y_range(0, 100)
-             .y_minor_tick_length(20)
-             .y_major_interval(20);
+Axis information for the Y-axis, however, is customizable much in the same way
+that that axis information is customizable for the 1 and 2 dimensional graphs.
+
+// Axis information.
+  my_plot.y_range(0, 100)
+         .y_minor_tick_length(20)
+         .y_major_interval(20);
 
 [h4 Writing to a file]
 
 This finally writes our plot to the file "boxplot_simple.svg".
-``
-my_plot.write("boxplot_simple.svg");
-``
+
+  my_plot.write("boxplot_simple.svg");
+
 [endsect] [/section:svg_boxplot_tutorial_simple]
 
 [/ boxplot_simple_tutorial.qbk
-  Copyright 2008 Jake Voytko and Paul A. Bristow.
+  Copyright 2008 Jake Voytko and 2009 Paul A. Bristow.
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
   http://www.boost.org/LICENSE_1_0.txt).

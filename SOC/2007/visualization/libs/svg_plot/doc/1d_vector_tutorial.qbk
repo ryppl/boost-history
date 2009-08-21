@@ -6,7 +6,8 @@
 
 The IDE output is not very exciting in this case
 [demo_1d_vector_output]
-but the plot is
+but the plot is more informative:
+
 [$images/demo_1d_vector.svg]
 
 (You can also view the SVG XML source using browsers (View, Source)

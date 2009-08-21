@@ -84,7 +84,7 @@ for full source code and sample output.
 [/include 1d_full_tutorial.qbk]
 [section:full_1d_layout Tutorial: 1D More Layout Examples]
 
-This section showsa few more of the near infinite layout options.
+This section shows a few more of the near-infinite layout options.
 See also the reference section and function index.
 
   #include <boost/svg_plot/svg_1d_plot.hpp>
@@ -212,6 +212,7 @@ To color style it, you might add the following calls:
          .x_minor_grid_color(whitesmoke); // Lighter color for minor grid.
 
 This will produce the following image:
+
 [$images/1d_x_grid.svg]
 
 [h4 X-Axis Tick value labels precision, iosflags, font family and size]

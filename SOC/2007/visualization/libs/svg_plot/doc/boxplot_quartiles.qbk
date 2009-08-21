@@ -10,6 +10,10 @@ This example demonstrates the dramatic effect of the choice of definition of the
 Typical output is:
 [demo_Hoaglin_output]
 
+Plot showing the appearance for Hoaglin's eight definitions is at:
+
+[$images/demo_Hoaglin.svg]
+
 See [@../../example/demo_Hoaglin.cpp demo_Hoaglin.cpp]
 for full source code and sample output.
 

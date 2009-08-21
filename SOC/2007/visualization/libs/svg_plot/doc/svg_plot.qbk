@@ -73,6 +73,10 @@ You may wish to associate Firefox with SVG files (or perhaps Inkview - see below
 
 * [@http://www.adobe.com/products/illustrator Adobe Illustrator].
 
+
+* [@http:/www.google.com/chrome Google Chrome browser]
+
+
 * [@www.opera.com Opera] has [@http://www.opera.com/docs/specs/svg/ svg support]
 but the quality of rendering is sometimes not as good as other browsers.
 
@@ -128,8 +132,6 @@ that will display all the svg images in folder \My_Plots in turn as the cursor k
 Of course, you can also omit the folder specification, and just have `*.svg` when the location of the
 batch file will determine which svg files are being viewed.
 
-* [@http:/www.google.com/chrome Google Chrome]
-
 * Many other graphics programs, for example see
 [@http://svg.software.informer.com/software/ Most popular SVG software].
 
@@ -139,7 +141,7 @@ The goals of the project are:
 * To allow users to easily customize plots but allow very fine-grained control of appearance.
 * To provide very high quality plots suitable for publication, including printing, but with tiny file sizes.
 * To allow the user to talk to the plot classes using coordinate units
-rather than pixels or other arbitrary units
+rather than pixels or other arbitrary units.
 * To create the backbone of a `svg` class that can be extended to fully support
 the standard.
 * Compliance with the

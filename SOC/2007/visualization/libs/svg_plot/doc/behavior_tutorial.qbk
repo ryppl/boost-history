@@ -7,7 +7,7 @@ Currently, the line interpolation algorithms do not take limits into account,
 so behavior may  be incorrect for such plots as `1 / x`.
 
 Data at the limits are drawn, by default, as a cone with
-stroke_color is `lightgray` and fill_color is `whitesmoke`.
+`stroke_color` is `lightgray` and `fill_color` is `whitesmoke`.
 
 This is customizable using, for example:
 

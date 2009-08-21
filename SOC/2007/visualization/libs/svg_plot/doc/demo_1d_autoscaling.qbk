@@ -8,6 +8,8 @@
 The output is:
 [auto_1d_plot_output]
 
+and the plot:
+
 [$images/auto_1d_plot.svg]
 
 See [@../../example/auto_1d_plot.cpp auto_1d_plot..cpp]
@@ -26,6 +28,7 @@ The output is:
 [demo_1d_autoscaling_output]
 
 and the plot:
+
 [$images/demo_1d_autoscaling.svg]
 
 See [@../../example/demo_1d_autoscaling.cpp demo_1d_autoscaling.cpp]

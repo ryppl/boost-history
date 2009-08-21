@@ -50,8 +50,7 @@ output the expected "RGB(255,0,0)" but instead outputs "119", the value of the e
 You can define a `svg_color` using two different constructors:
 
   svg_color(int, int, int); // The parameters are red, green, and blue respectively.
-
-  svg_color(svg_color_constant); // Use a pre-existing color constant.
+  svg_color(svg_color_constant); // Use a pre-existing color constant, like red.
 
 [h4 Example of using `svg_color`]
 

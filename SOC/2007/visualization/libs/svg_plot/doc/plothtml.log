@@ -3,6 +3,10 @@
 ...updating 10 targets...
 quickbook.quickbook-to-boostbook ..\bin.v2\doc\msvc-9.0\debug\threading-multi\svg_plot.xml
 Generating Output File: ..\bin.v2\doc\msvc-9.0\debug\threading-multi\svg_plot.xml
+I:/boost-sandbox/SOC/2007/visualization/libs/svg_plot/doc/../example/auto_1d_plot.cpp:192: warning: in column:1, unexpected character: `
+I:/boost-sandbox/SOC/2007/visualization/libs/svg_plot/doc/../example/auto_1d_plot.cpp:192: warning: in column:11, unexpected character: `
+I:/boost-sandbox/SOC/2007/visualization/libs/svg_plot/doc/../example/auto_1d_plot.cpp:192: warning: in column:17, unexpected character: `
+I:/boost-sandbox/SOC/2007/visualization/libs/svg_plot/doc/../example/auto_1d_plot.cpp:192: warning: in column:27, unexpected character: `
 doxygen-action ..\bin.v2\doc\msvc-9.0\debug\threading-multi\autodoc-xml.xml-dir
 Searching for include files...
 Searching for example files...
