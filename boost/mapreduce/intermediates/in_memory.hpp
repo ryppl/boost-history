@@ -92,6 +92,8 @@ class in_memory
 
         bool const equal(const_result_iterator const &other) const
         {
+            if (index_ == std::numeric_limits<unsigned>::max()  ||  other.index_ == std::numeric_limits<unsigned>::max())
+                return other.index_ == index_;
             return value_ == other.value_;
         }
 
@@ -105,7 +107,7 @@ class in_memory
 
         const_result_iterator &end(void)
         {
-            index_ = 0;
+            index_ = std::numeric_limits<unsigned>::max();
             value_ = keyvalue_t();
             iterators_.clear();
             return *this;
