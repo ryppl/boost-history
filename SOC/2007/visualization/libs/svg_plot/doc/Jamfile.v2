@@ -59,7 +59,9 @@ doxygen autodoc
     <doxygen:param>MULTILINE_CPP_IS_BRIEF=YES # Treat a multi-line C++ special comment block (i.e. a block of //! or /// comments) as a brief description.
     # May be best to always use \brief and \details to avoid ambiguity?
     <doxygen:param>INCLUDE_PATH=$(BOOST_ROOT)
-    <doxygen:param>WARN_LOGFILE=../../../libs/svg_plot/doc/doxywarnings.log
+    <doxygen:param>WARN_LOGFILE=../../../libs/svg_plot/doc/doxywarnings.log # Specific log file - ideally this should be empty!
+    #<doxygen:param>EXCLUDE=../../../boost/svg_plot/stylesheet.hpp
+    <doxygen:param>EXCLUDE=../../../boost/svg_plot/svg_fwd.hpp  # Try to avoid warnings - file(s) undocumented.
 ;
     #<doxygen:param>"PREDEFINED=\"BOOST_DEDUCED_TYPENAME=typename\" "
 # See Doxygen configuration for detailed explanation of these options

@@ -1365,16 +1365,18 @@ namespace boost
 
           void draw_plot_point_values(double x, double y, g_element& x_g_ptr, g_element& y_g_ptr, const value_style& x_sty, const value_style& y_sty, unc uncx, unc uncy)
           { /*! \brief Write the \b pair of data point's X and Y values as a string.
-               \details If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
+               \details
+               \verbatim  If a separator, then both on the same line, for example "1.23, 3.45", or "[5.6, 7.8]
                  X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
-                 For example, x_style prefix("[ X=", and separator ",\<ampersand\>\#x00A0;Y= ", " and Y value_style = "]"
+                 For example, x_style prefix("[ X=", and separator ",&#x00A0;Y= ", " and Y value_style = "]"
                  will produce a value label like "[X=-1.23, Y=4.56]"
-                 Note the need to use a Unicode space \<ampersand\>\#x00A0; for get space for all browsers.
+                 Note the need to use a Unicode space for get space for all browsers.
                  For as long a string as this you may need to make the total image size bigger,
                  and to orient the value labels with care.
                  draw_plot_point_values is only when both x and Y pairs are wanted.
+                 \endverbatim
            */
-            // verbatim needed to avoid a warning about using \&#x00A0; within Doxygen comment.
+            // verbatim needed to avoid a warning about using &#x00A0; within Doxygen comment.
             using std::string;
             using std::stringstream;
             double vx = uncx.value();
@@ -1680,13 +1682,13 @@ namespace boost
 
           Derived& x_size(unsigned int i); //!< Set SVG image X-axis size (SVG units, default pixels).
           unsigned int x_size(); //!< \return SVG image X-axis size as horizontal width (SVG units, default pixels).
-          unsigned int image_x_size(); // Obselete - deprecated.
-          Derived& image_x_size(unsigned int i); // Obselete - deprecated.
+          unsigned int image_x_size(); //!< Obselete - deprecated use x_size()
+          Derived& image_x_size(unsigned int i); //!< Obselete - deprecated - use x_size().
 
           unsigned int y_size(); //!< \return SVG image Y-axis size as horizontal width (SVG units, default pixels).
           Derived& y_size(unsigned int i); //!< Set SVG image Y-axis size (SVG units, default pixels).
-          unsigned int image_y_size(); //!< Obselete - deprecated - use y_size().
-          Derived& image_y_size(unsigned int i); // Obselete - deprecated - y_size(unsigned int i).
+          unsigned int image_y_size(); //!< Obselete - deprecated - use y_size()
+          Derived& image_y_size(unsigned int i); //!< Obselete - deprecated - use y_size()
 
           svg_color background_color(); //!< \return  plot background color.
           Derived& background_color(const svg_color& col); //!< Set plot background color.
@@ -1694,25 +1696,27 @@ namespace boost
           svg_color background_border_color(); //!< \return plot background border color.
           Derived& background_border_width(double w); //!< Set plot background border width.
           double background_border_width(); //!< \return plot background border width.
-          Derived& description(const std::string d);  //!< Writes description to the document for header as <desc> My Description </desc>
-          const std::string& description(); //!< \return  description of the document for header as <desc> My description </desc>
-          Derived& document_title(const std::string d);
-          std::string document_title(); //!< \return  document title to the document for header as \verbatim <title> My Title </title> \endverbatim
-          Derived& copyright_holder(const std::string d);//!< Writes copyright_holder to the SVG document
-            //! (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
-            //! and as \verbatim metadata: <meta name="copyright" content="Paul A. Bristow" /> \endverbatim
+          Derived& description(const std::string d);
+          //!< Writes description to the document for header as \verbatim <desc> My Description </desc>. \endverbatim
+          const std::string& description(); //!< \return  description of the document for header as \verbatim <desc> My description </desc>. \endverbatim
+          Derived& document_title(const std::string d); //!< Set document title to the document for header as \verbatim <title> My Title </title>. \endverbatim
+          std::string document_title(); //!< \return  document title to the document for header as \verbatim <title> My Title </title>. \endverbatim
+          Derived& copyright_holder(const std::string d);/*!< Writes copyright_holder metadata to the SVG document
+            (for header as <!-- SVG Plot Copyright Paul A. Bristow 2007 --> )
+            /and as metadata: \verbatim <meta name="copyright" content="Paul A. Bristow" /> \endverbatim
+            */
           const std::string copyright_holder(); //!< \return SVG document copyright holder.
           Derived& copyright_date(const std::string d); //!< Writes copyright date to the SVG document.
-            //! and as \verbatim metadata <meta name="date" content="2007" /> \endverbatim
+            //! and as metadata: \verbatim <meta name="date" content="2007" /> \endverbatim
           const std::string copyright_date(); //!< \return SVG document copyright_date.
           Derived& license(
             std::string repro= "permits",
             std::string distrib = "permits",
             std::string attrib = "requires",
             std::string commercial = "permits",
-            std::string derivative = "permits"); //!< Set license conditions for reproduction, atribution, commercial use, and derivative works,
-            //!< usually "permits", "requires", or "prohibits",
-            //!< and set license_on == true.
+            std::string derivative = "permits"); /*!< Set license conditions for reproduction, attribution, commercial use, and derivative works,
+            usually "permits", "requires", or "prohibits", and set license_on == true.
+          */
           Derived&  license_on(bool l); //!< Set if license conditions should be included in the SVG document.
           bool license_on(); //!< \return true if license conditions should be included in the SVG document.
           Derived& boost_license_on(bool l); //!< Set true if the Boost license conditions should be included in the SVG document.
@@ -1734,9 +1738,12 @@ namespace boost
               If the range of labels is very small, then more digits will be essential.
             */
           int x_value_precision(); //!< \return  precision of X tick label values in decimal digits
-          Derived& x_value_ioflags(int flags); /*! Set `iostream std::ios::fmtflags` for X value label (default decimal == 0X201).
-              Mainly useful for changing to `scientific, fixed or hexadecimal` format.
-              For example: `.x_value_ioflags(std::ios::dec | std::ios::scientific)`
+          Derived& x_value_ioflags(int flags); /*!< Set iostream std::ios::fmtflags for X value label (default decimal == 0X201).
+              Mainly useful for changing to scientific, fixed or hexadecimal format.
+              For example:
+              \code
+                 myplot.x_value_ioflags(std::ios::dec | std::ios::scientific)
+              \endcode
             */
           int x_value_ioflags(); //!< \return  stream std::ios::fmtflags for control of format of X value labels.
           Derived& x_labels_strip_e0s(bool cmd); //!< Set if to strip redundant zeros, signs and exponents, for example, reducing "1.2e+000" to "1.2"
@@ -1746,9 +1753,11 @@ namespace boost
               Set a title for plot.
               The string may include Unicode for greek letter and symbols.
               For example a title that includes a greek omega and degree symbols:
-              `my_plot.title("Plot of \&\#x3A9; function (\&\#x00B0;C)");`
+              \code
+                my_plot.title("Plot of &#x3A9; function (&#x00B0;C)");
+              \endcode
 
-              Unicode symbols are at http://unicode.org/charts/symbols.html .
+              Unicode symbols are at http://unicode.org/charts/symbols.html.
             */
           const std::string title(); //!< \return  a title for plot, whose string may include Unicode for greek letter and symbols.
           Derived& title_font_size(unsigned int i); //!< Sets the font size for the title (svg units, default pixels).
@@ -1778,8 +1787,8 @@ namespace boost
           const std::string& legend_font_family(); //!< \return  the font family for the legend title.
           Derived& legend_title_font_size(unsigned int size); //!< \return  the font family for the legend title.
           unsigned int legend_title_font_size(); //!< \return  the font size for the legend title (svg units, default pixels).
-          Derived& legend_top_left(double x, double y);//!< Set position of top left of legend box (svg coordinates, default pixels).
-            //!< Bottom right is controlled by contents, so the user cannot set it.
+          Derived& legend_top_left(double x, double y); //!< Set position of top left of legend box (svg coordinates, default pixels).
+            //! (Bottom right is controlled by contents, so the user cannot set it).
           const std::pair<double, double> legend_top_left(); //!< \return  svg coordinate (default pixels) of top left of legend box.
           const std::pair<double, double> legend_bottom_right(); //!< \return  svg coordinate (default pixels) of bottom right of legend box.
           Derived& legend_lines(bool is); /*!< Set true if legend should include samples of the lines joining data points.
@@ -1820,13 +1829,13 @@ namespace boost
           double y_minor_interval(); //!< \return  interval between Y minor ticks.
           Derived& x_ticks_up_on(bool cmd); //!< Set true if X major ticks should mark upwards.
           bool x_ticks_up_on(); //!< \return  true if X major ticks should mark upwards.
-          Derived& x_ticks_down_on(bool cmd);
+          Derived& x_ticks_down_on(bool cmd); //!< Set true if Y major ticks should mark upwards.
           bool x_ticks_down_on(); //!< \return  true if Y major ticks should mark upwards.
           Derived& x_label_on(bool cmd); //!< \return  true if X major ticks should mark downwards.
           bool x_label_on(); /*!< Set true if want to show X-axis label text.
             Also switched on by setting label text.
             (on the assumption that if label text is set, display is also wanted,
-            but can be switched off if *not* required).
+            but can be switched off if  \b not required).
            */
           Derived& x_label_font_size(unsigned int i); //!< Set X axis label font size (svg units, default pixels).
           unsigned int x_label_font_size(); //!< \return  X axis label font size (svg units, default pixels).
@@ -1836,8 +1845,10 @@ namespace boost
            Available fonts depend on the program rendering the SVG XML, usually a browser.
           The default font (usually "verdana") is used if a render program does not provide the font specified.
           These are probably usable:
-          `"arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
-          "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"`
+          \code
+            "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+            "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+          \endcode
           */
           const std::string& x_label_font_family(); //!< \return  X tick value label font family.
           Derived& x_axis_label_color(const svg_color& col); //!< Set X axis label color, for example, red.
@@ -1850,41 +1861,42 @@ namespace boost
           Derived& x_ticks_values_ioflags(std::ios_base::fmtflags f); //!< Set iostream format flags of data point X values near data points markers.
           std::ios_base::fmtflags x_ticks_values_ioflags(); //!< \return  iostream format flags of data point X values near data points markers.
 
-          Derived& x_ticks_values_font_family(const std::string& family); //!< Set X ticks value label font family.
-          //!< Available fonts depend on the program rendering the SVG XML, usually a browser.
-          //!< The default font (usually "verdana") is used if a render program does not provide the font specified.
-          //!< These are probably usable:
-          //!< "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
-          //!< "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
-
+          Derived& x_ticks_values_font_family(const std::string& family); /*!< Set X ticks value label font family.
+            Available fonts depend on the program rendering the SVG XML, usually a browser.
+            The default font (usually "verdana") is used if a render program does not provide the font specified.
+             These are probably usable:
+             \code
+ "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+ "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+             \endcode
+           */
           const std::string& x_ticks_values_font_family(); //!< \return  X ticks value label font family.
           Derived& x_ticks_values_font_size(unsigned int i); //!< Set X ticks value label font size (svg units, default pixels).
           unsigned int x_ticks_values_font_size(); //!< Set X ticks value label font size (svg units, default pixels).
 
-          Derived& x_ticks_on_window_or_axis(int cmd); /*!  Set  X ticks on window or axis
-              \arg cmd -1 bottom of plot window,
-              \arg cmd 0 on X axis.
-              \arg cmd +1 top of plot window.
+          Derived& x_ticks_on_window_or_axis(int cmd); /*!<  Set position of X ticks on window or axis.
+              \arg \c cmd -1 X ticks on bottom of plot window,
+              \arg \c cmd 0 X ticks on X axis horizontal line.
+              \arg \c cmd +1 X ticks top of plot window.
             */
-          int x_ticks_on_window_or_axis();//!< \return true if X axis ticks wanted on the window (rather than on axis).\n
-            //!< -1 bottom of plot window, 0 on X axis, +1 top of plot window.
+          int x_ticks_on_window_or_axis(); //!< \return true if X axis ticks wanted on the window (rather than on axis).\n
+            //!< -1 bottom of plot window, 0 on horiztonal X axis , +1 top of plot window.
           Derived& x_label_units_on(bool cmd); //!< Set true if want X axis label to include units (as well as label like "length").
             //!< \see x_label_units which also sets true.
           bool x_label_units_on(); //!< Set true if want X axis label to include units (as well as label like "length").
-          Derived& x_major_labels_side(int cmd); /*! Position of labels for major ticks on horizontal X axis line.
-               \arg \c place > 0 labels to left of Y axis line (default),
-               \arg \c place = 0 (false) no major tick labels on Y axis.
-               \arg \c place > 0 labels to right of Y axis line.
+          Derived& x_major_labels_side(int cmd); /*!< Position of labels for X major ticks on horizontal X axis line.
+               \arg \c cmd  place > 0 X tick value labels to left of Y axis line (default),
+               \arg \c cmd place = 0 (false) no major X tick value labels on Y axis.
+               \arg \c cmd place > 0 X tick labels to right of Y axis line.
             */
           int x_major_labels_side(); //!< \return the side for X ticks major value labels.
-          Derived& x_major_label_rotation(rotate_style rot); /*! Set rotation for X ticks major value labels. (Default horizontal).
+          Derived& x_major_label_rotation(rotate_style rot); /*!< Set rotation for X ticks major value labels. (Default horizontal).
                \see rotate_style
             */
-          rotate_style x_major_label_rotation(); /*! \return rotation for X ticks major value labels.
+          rotate_style x_major_label_rotation(); /*!< \return rotation for X ticks major value labels.
                 \see rotate_style
              */
-          Derived& title_on(bool cmd); //!< If set true, show a title for the plot.
-            //!< Set true by setting a title.
+          Derived& title_on(bool cmd); //!< If set true, show a title for the plot. Note: is set true by setting a title.
           bool title_on(); //!< \return true if will show a title for the plot.
           Derived& x_major_grid_on(bool is); //!< If set true, will include a major X-axis grid.
           bool x_major_grid_on();  //!< \return true if will include a major X-axis grid.
@@ -1915,7 +1927,7 @@ namespace boost
           Derived& x_label_color(const svg_color& col); //!< \return  the color of the Y-axis line.
           svg_color x_label_color(); //!< \return  the color of X-axis label (including any units).
           Derived& x_label_width(double width); //!< Set the width (boldness) of X-axis label (including any units).
-            //!< (not recommended until browsers implement better).
+            //! (not recommended until browsers implement better).
           double x_label_width(); //!< \return  the width (boldness) of X-axis label (including any units).
           Derived& y_label_color(const svg_color& col); //!< Set the color of Y-axis label (including any units).
           svg_color y_label_color(); //!< \return  the color of Y-axis label (including any units).
@@ -1972,8 +1984,8 @@ namespace boost
           svg_color x_df_color(); //!< \return the color of X degrees of freedom, for example, the color of 9 in "1.23 +-0.02 (9)".
           Derived& x_decor(const std::string& pre, const std::string& sep = "", const std::string& suf = "");
           /*!< Set prefix, separator and suffix together for x_ values.
-            Note if you want a space, you must use a Unicode space "\&\#x00A0;",
-            for example, ",\&\#x00A0;" rather than ASCII space", ".
+            Note if you want a space, you must use a Unicode space "&#x00A0;",
+            for example, ",&#x00A0;" rather than ASCII space", ".
             */
           const std::string x_suffix(); //!< \return the suffix (only used if separator != "")
           const std::string x_separator(); //!< \return the separator, perhaps including Unicode.
@@ -2000,7 +2012,7 @@ namespace boost
             */
           std::pair<double, double> x_range(); //!< \return  the range of values on the X-axis.
           Derived& x_min(double min_x); //!< Set the minimum value on the X-axis.
-          double x_min(); //! \return  the minimum value on the X-axis.
+          double x_min(); //!< \return  the minimum value on the X-axis.
           Derived& x_max(double x); //!< Set the maximum value on the X-axis.
           double x_max(); //!< \return  the maximum value on the X-axis.
 
@@ -2016,10 +2028,10 @@ namespace boost
           bool autoscale(); //!< \return true if to use autoscale values for X-axis.
           Derived& autoscale(bool b);  //!< Set true if to use autoscale values for X-axis.
           Derived& x_autoscale(std::pair<double, double> p); //!< autoscale X axis using a pair of doubles.
-          template <class T> // T an STL container: array, vector ...
+          template <class T> //!< \tparam T an STL container: array, vector ...
           Derived& x_autoscale(const T& container); //!< autoscale X axis using the whole data series.
-          template <class T> // T an STL container: array, vector ...
-          Derived& x_autoscale(const T& begin, const T& end); // Data series using iterators.
+          template <class T> //!< \tparam T an STL container: array, vector ...
+          Derived& x_autoscale(const T& begin, const T& end); //!< Data series using iterators.
           Derived& x_with_zero(bool b); //!< Set X-axis autoscale to include zero (default = false).
           bool x_with_zero(); //!< \return  true if X-axis autoscale to include zero (default = false).
           Derived& x_min_ticks(int min_ticks); //!< Set X-axis autoscale to include at least minimum number of ticks (default = 6).
@@ -2053,15 +2065,15 @@ namespace boost
             because the render engine does the centering.
           */
           Derived& draw_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
-          /*!< \brief Annotate plot with a line from SVG Coordinates X1, Y1 to X2, Y2.
-              \details Default color black.
+          /*!< Annotate plot with a line from SVG Coordinates X1, Y1 to X2, Y2. (Default color black).
               Note \b NOT the data values. See draw_plot_line if want to use user coordinates.
             */
-          Derived& draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col = black); /*!< \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 to X2, Y2.
+          Derived& draw_plot_line(double x1, double y1, double x2, double y2, const svg_color& col = black);
+          /*!< \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 to X2, Y2.
               \details For example, -10, -10, +10, +10, Default color black.
             */
           Derived& draw_plot_curve(double x1, double y1, double x2, double y2, double x3, double y3,const svg_color& col = black);
-          /*! \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 via X2, Y2 to X3, Y3.
+          /*!< \brief Annotate plot with a line from user's Cartesian Coordinates X1, Y1 via X2, Y2 to X3, Y3.
               \details For example, -10, -10, +10, +10, Default color black.
           */
 
@@ -2304,7 +2316,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
             std::string attrib,
             std::string commercial,
             std::string derivative)
-          { //! Set license conditions for reproduction, atribution, commercial use, and derivative works,
+          { //! Set license conditions for reproduction, attribution, commercial use, and derivative works,
             //! usually "permits", "requires", or "prohibits",
             //! and set license_on == true.
             // Might check these are "permits", "requires", or "prohibits"?
@@ -2916,7 +2928,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
           { //! Set true if want to show X-axis label text.
             //! \details Also switched on by setting label text.
             //! (on the assumption that if label text is set, display is also wanted,
-            //! but can be switched off if *not* required).
+            //! but can be switched off if \b not required).
             derived().x_axis_.label_on_ = cmd;
             return derived();
           }
@@ -3078,7 +3090,7 @@ svg_2d_plot my_plot(my_data, "My Data").background_border_color(red).background_
 
           template <class Derived>
           int axis_plot_frame<Derived>::x_ticks_on_window_or_axis()
-          { //! \return true if X axis ticks wanted on the window (rather than on axis).\n
+          { //! \return if X axis ticks wanted on the window (rather than on axis).\n
             //! -1 bottom of plot window, 0 on X axis, +1 top of plot window.
             return derived().x_ticks_.ticks_on_window_or_on_axis_;
           }

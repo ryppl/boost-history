@@ -92,8 +92,12 @@ double rounddown2(double value);
 
 //! Scale axis and update min and max axis values, and tick increment and number of ticks. 
 void scale_axis( 
-   double min_value, double max_value, //! Scale axis from Input range min & max.
-   double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, // All 4 updated.
+   double min_value, //!< Scale axis from input range min & max.
+   double max_value, //!< Scale axis from input range min & max.
+   double* axis_min_value, //!< Computed minimum value for the axis, updated by scale_axis.
+   double* axis_max_value, //!<  Computed maximum value for the axis, updated by scale_axis.
+   double* axis_tick_increment, //!<  Computed tick increment for the axis, updated by scale_axis.
+   int* auto_ticks, //!< Computed number of ticks, updated by scale_axis.
    //! NO check_limits parameter.
    bool origin, //! Do not include the origin unless the range min_value <= 0 <= max_value.
    double tight, //! Tightness - fraction of 'overrun' allowed before another tick used.
@@ -175,7 +179,10 @@ int mnmx(iter begin, iter end, double* min, double* max)
 void scale_axis(
    double min_value, //!< Minimum value.
    double max_value, //!< Maximum value.
-   double* axis_min_value,  double* axis_max_value, double* axis_tick_increment, int* auto_ticks, //! All 4 updated.
+   double* axis_min_value, //!< Minimum value for the axis, updated by scale_axis.
+   double* axis_max_value, //!<  Maximum value for the axis, updated by scale_axis.
+   double* axis_tick_increment, //!<  Tick increment for the axis, updated by scale_axis.
+   int* auto_ticks,  //!< Updated with number of ticks.
    bool check_limits, //!< Whether to check all values for infinity, NaN etc.
    double autoscale_plusminus, //!< Multiplier of uncertainty or standard deviations to allow for confidence ellipses.
    bool origin, //!< If true, ensures that zero is a tick value.
@@ -196,11 +203,11 @@ template <typename iter> // \tparam iter interator into an STL container: array,
 void scale_axis( 
    iter begin, //!< iterators into begin in STL container.
    iter end, //!< iterators into end in STL container.
-   // (not necessarily ordered, so will find min and max).
-   double* axis_min_value, //!< Updated with axis_min_value
-   double* axis_max_value, //!< Updated with axis_max_value
-   double* axis_tick_increment, //!< Updated with axis_tick_increment
-   int* auto_ticks, //!< Updated with number of ticks
+   // (not necessarily ordered by size, so will find min and max).
+   double* axis_min_value, //!< Computed minimum value for the axis, updated by scale_axis.
+   double* axis_max_value, //!<  Computed maximum value for the axis, updated by scale_axis.
+   double* axis_tick_increment, //!<  Computed tick increment for the axis, updated by scale_axis.
+   int* auto_ticks, //!< Computed number of ticks, updated by scale_axis.
    bool check_limits, //!< Whether to check all values for infinity, NaN etc.
    double autoscale_plusminus, //!< Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
    bool origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
@@ -246,11 +253,11 @@ void scale_axis(
 //! \tparam T type of STL container, vector, map ...
 template <class T>
 void scale_axis( 
-  const T& container, //!< STL container
-  double* axis_min_value, //!< Updated with minimum value for the axis.
-  double* axis_max_value, //!< Updated with maximum value for the axis.
-  double* axis_tick_increment,//!< Updated with
-  int* auto_ticks, //!< Updated with
+  const T& container, //!< STL container, usually of a data series.
+  double* axis_min_value, //!< Computed minimum value for the axis, updated by scale_axis.
+  double* axis_max_value,  //!< Computed maximum value for the axis, updated by scale_axis.
+  double* axis_tick_increment, //!<  Computed tick increment for the axis, updated by scale_axis.
+  int* auto_ticks, //!< Computed number of ticks, updated by scale_axis.
   bool check_limits, //!< Whether to check all values for infinity, NaN etc.
   double autoscale_plusminus = 3., //!< Multiplier of uncertainty or standard deviations to allow for confidence ellipses.
   bool origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.
@@ -295,14 +302,14 @@ void scale_axis(
 template <class T>  //!< \tparam T STL container of 2D pairs of X and Y.
 void scale_axis( 
   const T& container, //!< Data series to plot - entire 2D container (not necessarily ordered, so will find min and max).
-  double* x_axis_min_value, //!< Updated with x_axis_min_value.
-  double* x_axis_max_value, //!< Updated with x_axis_max_value.
+  double* x_axis_min_value, //!< Computed minimum value for the X-axis, updated by scale_axis.
+  double* x_axis_max_value,  //!< Computed minimum value for the X-axis, updated by scale_axis.
   double* x_axis_tick_increment, //!< Updated with X axis tick increment.
-  int* x_auto_ticks, //!< Updated with x_auto_ticks.
-  double* y_axis_min_value, //!< Updated with y_axis_min_value.
-  double* y_axis_max_value, //!< Updated with y_axis_max_value.
+  int* x_auto_ticks,   //!< Computed number of X axis ticks, updated by scale_axis.
+  double* y_axis_min_value, //!< Computed minimum value for the Y-axis, updated by scale_axis.
+  double* y_axis_max_value,  //!< Computed maximum value for the Y-axis, updated by scale_axis.
   double* y_axis_tick_increment, //!< Updated with Y axis tick increment.
-  int* y_auto_ticks, //!< Updated with number of Y axis ticks.
+  int* y_auto_ticks,  //!< Computed number of Y-axis ticks, updated by scale_axis.
   bool check_limits = true, //!< Whether to check all values for infinity, NaN etc.
   double autoscale_plusminus = 3., //!< Mutiplier of uncertainty or standard deviations to allow fo confidence ellipses.
   bool x_origin = false, //!< do not include the origin unless the range min_value <= 0 <= max_value.

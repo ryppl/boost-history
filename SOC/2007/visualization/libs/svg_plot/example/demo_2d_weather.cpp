@@ -108,10 +108,11 @@ int main()
 
   const char comma_or_tab = ','; // separator - assumed comma for .csv file.
 
-  bool diag = false;
+  //bool diag = false;
 
   map<double, double> in_temps; // record number and value.
   map<double, double> out_temps;
+  map<double, double> rain_hours;
 
   const char* weather("I:\\boost-sandbox\\SOC\\2007\\visualization\\libs\\svg_plot\\example\\EasyWeather7mar09.csv"); // The weather data, comma separated, with one column title line.
   ifstream fin(weather, ios_base::in);
@@ -337,6 +338,7 @@ int main()
       plotted++;
       in_temps[j] = in_temp;
       out_temps[j] = out_temp;
+      rain_hours[j] = rain_hour;
     }
   }
   while (line.size() > 0);
@@ -353,18 +355,18 @@ int main()
 /*` The code below shows plotting just the inside and outside temperatures,
 selecting the range of the axis by a user choice or automatically.
 */
-
  
- /*` SVG_plot range_all is another mechanism for handling multiple containers
+/*` SVG_plot range_all is another mechanism for handling multiple containers
  providing a more convenient way to find the minimum of minimums and maximum of maximums.
 It is especially convenient when there are many containers (of the same type),
 and there may be 'missing' data items.
-
 */
     { 
       svg_2d_plot my_plot; // Construct a 2D plot.
 
-      my_plot.legend_on(true) // Set title and legend, and X axis range.
+      my_plot.x_size(1000)
+             .image_y_size(400)
+             .legend_on(true) // Set title and legend, and X axis range.
              .title("Temperatures at Long: 2:45:16.2W, Lat:54:17:47.1N")
              .x_range(0., 2000.)
              .x_major_interval(500.)
@@ -393,7 +395,7 @@ and there may be 'missing' data items.
       //my_plot.plot(out_temps, "Outside (&#x00B0;C)"); // default is black circle, 5 pixel size, with no fill.
       my_plot.plot(out_temps, "Outside (&#x00B0;C)").stroke_color(blue).shape(point);
 
-/*`Note how the point markers are switch off for the inside temperatures,
+/*`Note how the point markers are switched off for the inside temperatures,
 and a bezier line chosen
 but the point markers are set to `round` for the outside temperatures,
 giving an  less attractive spotty appearance, but showing the actual data points.
@@ -404,28 +406,62 @@ There may be also, by default, too many axis ticks and labels on the X-axis,
 so one can either use autoscale or explicitly set the number of X ticks.
 
 */
-      my_plot.write("./demo_2d_weather.svg"); // Write the plot to another file.
+      my_plot.write("./demo_2d_weather_1.svg"); // Write the plot to file.
 
-      // Show the ticks styling
-cout << "my_plot.x_ticks_values_color() " << my_plot.x_ticks_values_color() << endl;
-cout << "my_plot.x_ticks_values_font_family() " << my_plot.x_ticks_values_font_family() << endl;
-cout << "my_plot.x_ticks_values_color() " << my_plot.x_ticks_values_color() << endl;
-cout << "my_plot.x_ticks_values_precision() " << my_plot.x_ticks_values_precision() << endl;
-cout << "my_plot.x_ticks_values_ioflags() " << hex << my_plot.x_ticks_values_ioflags() << dec << endl;
+            // Show the ticks styling
+      cout << "my_plot.x_ticks_values_color() " << my_plot.x_ticks_values_color() << endl;
+      cout << "my_plot.x_ticks_values_font_family() " << my_plot.x_ticks_values_font_family() << endl;
+      cout << "my_plot.x_ticks_values_color() " << my_plot.x_ticks_values_color() << endl;
+      cout << "my_plot.x_ticks_values_precision() " << my_plot.x_ticks_values_precision() << endl;
+      cout << "my_plot.x_ticks_values_ioflags() " << hex << my_plot.x_ticks_values_ioflags() << dec << endl;
 
-cout << "my_plot.y_ticks_values_color() " << my_plot.y_ticks_values_color() << endl;
-//cout << "my_plot.y_ticks_values_font_family() " << my_plot.y_ticks_values_font_family() << endl;
-cout << "my_plot.y_ticks_values_color() " << my_plot.y_ticks_values_color() << endl;
-cout << "my_plot.y_ticks_values_precision() " << my_plot.y_ticks_values_precision() << endl;
-cout << "my_plot.y_ticks_values_ioflags() " << hex << my_plot.y_ticks_values_ioflags() << dec << endl;
+      cout << "my_plot.y_ticks_values_color() " << my_plot.y_ticks_values_color() << endl;
+      //cout << "my_plot.y_ticks_values_font_family() " << my_plot.y_ticks_values_font_family() << endl;
+      cout << "my_plot.y_ticks_values_color() " << my_plot.y_ticks_values_color() << endl;
+      cout << "my_plot.y_ticks_values_precision() " << my_plot.y_ticks_values_precision() << endl;
+      cout << "my_plot.y_ticks_values_ioflags() " << hex << my_plot.y_ticks_values_ioflags() << dec << endl;
 
-// Show the X, Y styling.
-cout << "my_plot.x_values_color() " << my_plot.x_values_color() << endl;
-cout << "my_plot.x_values_font_family() " << my_plot.x_values_font_family() << endl;
-cout << "my_plot.x_values_color() " << my_plot.x_values_color() << endl;
-cout << "my_plot.x_values_precision() " << my_plot.x_values_precision() << endl;
-cout << "my_plot.x_values_ioflags() " << hex << my_plot.x_values_ioflags() << dec << endl;
-   }
+      // Show the X, Y styling.
+      cout << "my_plot.x_values_color() " << my_plot.x_values_color() << endl;
+      cout << "my_plot.x_values_font_family() " << my_plot.x_values_font_family() << endl;
+      cout << "my_plot.x_values_color() " << my_plot.x_values_color() << endl;
+      cout << "my_plot.x_values_precision() " << my_plot.x_values_precision() << endl;
+      cout << "my_plot.x_values_ioflags() " << hex << my_plot.x_values_ioflags() << dec << endl;
+    }
+    { // Plot another graph.
+      svg_2d_plot my_plot; // Construct a 2D plot.
+
+      my_plot.x_size(1000)
+             .image_y_size(400)
+             .legend_on(true) // Set title and legend, and X axis range.
+             .title("Rainfall at Long: 2:45:16.2W, Lat:54:17:47.1N")
+             .x_range(0., 2000.)
+             .x_major_interval(500.)
+             .x_ticks_values_color(red)
+             .x_num_minor_ticks(4)
+             .x_axis_label_color(green)
+             .x_ticks_values_precision(0)
+             .x_ticks_values_ioflags(ios_base::fixed)
+             .x_ticks_values_font_family("arial")
+             .x_ticks_values_font_size(20)
+             //.autoscale_check_limits(true) // Is default, but check for NaN, infinity etc.
+             //.xy_autoscale(in_temps) // Autoscale BOTH axes.
+             // Implementation does not (yet) permit use of the container for .x_autoscale(in_temps),
+             // but can ignore the autoscale range thus:
+             .y_range(0., 10.) // User chosen range, over-riding the autoscale.
+             .y_ticks_values_color(magenta)
+             .y_ticks_values_precision(1)
+             //.y_ticks_values_ioflags(ios_base::scientific)
+             .y_axis_label_color(blue)
+             ;
+
+      my_plot.x_label("time (hr)").y_label("rain (mm/hr)"); // Note chaining.
+      my_plot.plot(rain_hours, "rain (mm/hr)").stroke_color(red).line_on(true).line_color(red);
+
+      my_plot.write("./demo_2d_weather_2.svg"); // Write the plot to file.
+
+
+    }
   }
   catch(const std::exception& e)
   {

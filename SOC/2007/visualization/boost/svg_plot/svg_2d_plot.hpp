@@ -57,8 +57,8 @@ namespace boost
   {
     // Forward declarations.
     const std::string strip_e0s(std::string s); // Strip unncessary zeros and e and sign.
-    class svg_2d_plot; // Plot framework.
-    class svg_2d_plot_series; // One series of data to plot.
+    class svg_2d_plot; //! Plot framework.
+    class svg_2d_plot_series; //! One series of data to plot.
 
     class svg_2d_plot_series
     { /*! \class boost::svg::svg_2d_plot_series
@@ -88,10 +88,10 @@ namespace boost
       //! Constructor for a data series to plot.
       template <class T>  //! \tparam T an STL container: for example: multimap.
       svg_2d_plot_series(
-        T begin, //! starting iterator into container of data series begin() to start at the beginning.
-        T end, //! ending iterator into container of data series, end() to finish with the last item.
-        std::string title = ""); // !Title of data series.
-
+        T begin, //!< starting iterator into container of data series begin() to start at the beginning.
+        T end, //!< ending iterator into container of data series, end() to finish with the last item.
+        std::string title = "" //!< Title of data series.
+      );
       // Function declarations only - definitions may be in .ipp file).
       // Set functions for the plot series.
       svg_2d_plot_series& fill_color(const svg_color& col_);
@@ -132,9 +132,11 @@ namespace boost
    // svg_2d_plot_series constructor.
 
   template <class T>  // \tparam T an STL container: for example: multimap.
-  svg_2d_plot_series::svg_2d_plot_series(T begin, //! \param begin of data series.
-    T end, //! \param end of data series.
-    std::string title) //! \param std::string title Title of data series.
+  svg_2d_plot_series::svg_2d_plot_series(
+      T begin, //!< \param begin of data series.
+      T end, //!< \param end of data series.
+      std::string title //!< Title of data series \param std::string title Title of data series.
+    )
     :
     title_(title), //!< Title of a series of data values.
     // plot_point_style(const svg_color& fill = blank, const svg_color& stroke = black,
@@ -361,7 +363,7 @@ namespace boost
 
       text_style a_style_; //!< Defaults for text_style (contains font size & type etc).
       text_style title_style_; //!< Style for plot title.
-      text_style legend_style_; //! Style for legend title and text.
+      text_style legend_style_; //!< Style for legend title and text.
       text_style x_axis_label_style_; //!< Style for tick labels on X axis.
       text_style x_value_label_style_; //!< Style for data point value labels on X axis.
       text_style y_axis_label_style_; //!< Style for tick labels on Y axis.
@@ -418,14 +420,14 @@ namespace boost
 
       bool title_on_; //!< true if to display a title for the whole plot.
       bool legend_on_; //!< true if to provide a legend box.
-      bool outside_legend_on_; //! true if legend box should be outside the plot window.
-      bool legend_lines_; //! true if to add a colored line for each data series in legend box.
+      bool outside_legend_on_; //!< true if legend box should be outside the plot window.
+      bool legend_lines_; //!< true if to add a colored line for each data series in legend box.
       bool plot_window_on_; //!< true if to use a separate plot window (not the whole image).
       bool x_ticks_on_; //!< true if X axis to have ticks.
       bool y_ticks_on_; //!< true if Y axis to have ticks.
-      bool x_values_on_; // If values of X data are shown (as 1.23).
-      bool y_values_on_; // If values of Y data are shown (as 3.45).
-      bool xy_values_on_; // If values of X & Y pairs are shown (as 1.23, 3.43).
+      bool x_values_on_; //!< true if values of X data are shown (as 1.23).
+      bool y_values_on_; //!< true if values of Y data are shown (as 3.45).
+      bool xy_values_on_; //!< true if values of X & Y pairs are shown (as 1.23, 3.43).
 
       int x_axis_position_; //!< Intersection with Y axis, or not.
       int y_axis_position_; //!< Intersection with X axis, or not.
@@ -449,7 +451,7 @@ namespace boost
 
       bool y_autoscale_; //!< true if to use any y_axis autoscale values.
       bool y_include_zero_; //!< true if autoscale to include zero.
-      int  y_min_ticks_;  // If autoscaled, set a minimum number of Y ticks.
+      int  y_min_ticks_;  //!< If autoscaled, set a minimum number of Y ticks.
       double y_tight_; //!< Tolerance used by autoscale to avoid extra ticks.
       int  y_steps_;  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
@@ -817,8 +819,7 @@ my_plot.background_color(ghostwhite) // Whole image.
 
         // Ensure both axis and ticks have the *same* range.
         // (To use the separation, made to give the potential for different ranges,
-        // one would have to *not* do this,
-        // but to make sure they are both assigned correctly).
+        // one would have to *not* do this, but to make sure they are both assigned correctly).
         x_ticks_.max_ = x_axis_.max_;
         x_ticks_.min_ = x_axis_.min_;
         y_ticks_.max_ = y_axis_.max_;
@@ -1811,7 +1812,6 @@ my_plot.background_color(ghostwhite) // Whole image.
               { // show the value of the Y data point too.
                 draw_plot_point_value(x, y, g_ptr_vy, y_values_style_,serieses_[i].point_style_, uy);
               }
-
               if (xy_values_on_)
               { // Show the values of the X & Y data as a pair.
                 draw_plot_point_values(x, y, g_ptr_vx, g_ptr_vy, x_values_style_, y_values_style_, ux, uy);
@@ -2109,8 +2109,8 @@ my_plot.background_color(ghostwhite) // Whole image.
 
     public: // Declarations of member functions (definitions in separate file).
 
-      // All return *this to permit chaining, doucmented with
-      //! \return reference to svg_2d_plot_series to make chainable.
+      // All return *this to permit chaining, documented with
+      // \return reference to svg_2d_plot_series to make chainable.
 
       // write() has two flavors, a file and a ostream.
       // The file version opens an ostream, and calls the stream version.
@@ -2259,7 +2259,7 @@ my_plot.background_color(ghostwhite) // Whole image.
       svg_2d_plot& y_values_ioflags(std::ios_base::fmtflags f);
       std::ios_base::fmtflags y_values_ioflags();
 
-      // Versions of plot functions to add data series, all or part.
+      // Versions of plot functions to add data series from a container, all or part.
       template <class T>
       svg_2d_plot_series& plot(const T& container, const std::string& title = "");
       template <class T, class U>
@@ -2294,18 +2294,18 @@ my_plot.background_color(ghostwhite) // Whole image.
       }
 
       svg_2d_plot& svg_2d_plot::y_label_on(bool cmd)
-      { // If Y axis name or label.
+      { //!< If to label Y axis with name (and units).
         y_axis_.label_on_ = cmd;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       bool svg_2d_plot::y_label_on()
-      { //! \return true if Y label is on.
+      { //! \return true if Y-axis is to labelled.
         return y_axis_.label_on_;
       }
 
       svg_2d_plot& svg_2d_plot::x_label_on(bool cmd)
-      {//! Set to include an X axis text label.
+      { //! Set to include an X axis text label.
         //! \see x_label_units
         x_axis_.label_on_ = cmd;
         return *this; //! \return reference to svg_2d_plot to make chainable.
@@ -2821,21 +2821,21 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::x_ticks_on_window_or_axis(int side)
-      { //! Set if ticks on the plot window or on the X axis.
-        //! \param side -1 ticks downward.
-        //! \param side 0 no ticks.
-        //! \param side +1 ticks upward.
+      { // Set if ticks on the plot window or on the X axis.
+        // \param side -1 ticks downward.
+        // \param side 0 no ticks.
+        // \param side +1 ticks upward.
         x_ticks_.ticks_on_window_or_on_axis_ = side;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
 
       int svg_2d_plot::x_ticks_on_window_or_axis()
-      { //! \return if ticks on the plot window or on the X axis.
+      { // \return if ticks on the plot window or on the X axis.
         return x_ticks_.ticks_on_window_or_on_axis_;
       }
 
       svg_2d_plot& svg_2d_plot::x_major_labels_side(int side)
-      { /*! Side for major ticks label values:
+      { /* Side for major ticks label values:
          \param side -1 labels downward.
          \param side 0 no labels.
          \param side +1 labels upward.
@@ -2845,7 +2845,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       int svg_2d_plot::x_major_labels_side()
-      { //! \return Label values side for major ticks.
+      { // \return side for label values for major ticks.
         return x_ticks_.major_value_labels_side_;
       }
 
@@ -2877,7 +2877,7 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_ticks_right_on(bool cmd)
-      {//! Set true if ticks on the Y axis are to be on right of axis line.
+      { //! Set true if ticks on the Y axis are to be on right of axis line.
         y_ticks_.right_ticks_on_ = cmd;
         return *this; //! \return reference to svg_2d_plot to make chainable.
       }
@@ -2964,12 +2964,15 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_label_font_family(const std::string& family)
-      { //! Set Y axis label text font family (for example: "Lucida console sans").
-        //! Available fonts depend on the program rendering the SVG XML, usually a browser.
-        //! The default font (usually "verdana") is used if a render program does not provide the font specified.
-        //! These are probably usable:
-        //! "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
-        //! "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+      { /*! Set Y axis label text font family (for example: "Lucida console sans").
+          Available fonts depend on the program rendering the SVG XML, usually a browser.
+          The default font (usually "verdana") is used if a render program does not provide the font specified.
+          These are probably usable:
+          \code
+            "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+            "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+          \endcode
+        */
         y_axis_label_style_.font_family(family);
         y_label_info_.textstyle().font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.
@@ -3040,12 +3043,15 @@ my_plot.x_value_ioflags(ios::dec | ios::scientific).x_value_precision(2);
       }
 
       svg_2d_plot& svg_2d_plot::y_ticks_values_font_family(const std::string& family)
-      { //! Set font family for Y axis ticks values.
-        //! Available fonts depend on the program rendering the SVG XML, usually a browser.
-        //! The default font (usually "verdana") is used if a render program does not provide the font specified.
-        //! These are probably usable:
-        //! "arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
-        //! "lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+      { /*! Set font family for Y axis ticks values.
+          Available fonts depend on the program rendering the SVG XML, usually a browser.
+         The default font (usually "verdana") is used if a render program does not provide the font specified.
+          These are probably usable:
+          \code
+"arial", "impact", "courier", "lucida console",  "Lucida sans unicode", "verdana", "calibri", "century",
+"lucida calligraphy", "tahoma", "vivaldi", "informal roman", "lucida handwriting", "lucida bright", "helvetica"
+          \endcode
+        */
 
         y_ticks_.value_label_style_.font_family(family);
         return *this; //! \return reference to svg_2d_plot to make chainable.

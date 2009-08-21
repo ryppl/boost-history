@@ -41,6 +41,7 @@ class double_1d_convert
 public:
     typedef double result_type; //!< result type is double.
 
+    //! \tparam T type convertable to double.
     template <class T>
     double operator()(T val) const //! Convert a single data value to double.
     {
@@ -55,12 +56,14 @@ class pair_double_2d_convert
 public:
     typedef std::pair<double, double> result_type; //!< result type is a pair (X and Y) of doubles.
     double i; //!< Start value.
-    void start(double i) //!< Set a start value.
-    {
+    void start(double i)
+    { //! Set a start value.
       i = i;
     }
 
-     //!< Convert a pair of X and Y double type values to a pair of doubles.
+     //! Convert a pair of X and Y (whose types can be converted to double values) to a pair of doubles.
+     //! \tparam T type whose value can be converted to double.
+     //! \tparam U type whose value can be converted to double.
     template <class T, class U>
     std::pair<double, double> operator()(const std::pair<T, U>& a) const
     { //! Assumes that a conversion from double yields just the value component of the uncertain value.
@@ -68,8 +71,9 @@ public:
     }
 
     template <class T>
-    std::pair<double, double> operator()(T a) //!< Convert a pair of X and Y values to a pair of doubles.
-    {
+    std::pair<double, double> operator()(T a)
+    {  //! Convert a pair of X and Y values to a pair of doubles.
+       //! \return pair of doubles.
         return std::pair<double, double>(i++, (double)a);
     }
 }; // class pair_double_2d_convert
@@ -81,22 +85,23 @@ class pair_unc_2d_convert
 public:
     typedef std::pair<unc, unc> result_type; //!< result type is pair of uncertain values.
     unc i; //!< Start uncertain value.
-    void start(unc i) //!< Set a start value.
-    {
-        i = i;
+    void start(unc i)
+    { //!< Set a start value.
+       i = i;
     }
 
-    //!< Convert a pair of X and Y uncertain type values to a pair of doubles.
+    //!< \tparam T type convertible to double.
     template <class T, class U>
     std::pair<unc, unc> operator()(const std::pair<T, U>& a) const
-    {
-        return std::pair<unc, unc>((unc)(a.first), (unc)(a.second));
+    {  //!< Convert a pair of X and Y uncertain type values to a pair of doubles.
+       //! \return pair of uncs.
+       return std::pair<unc, unc>((unc)(a.first), (unc)(a.second));
     }
 
-    template <class T>
+    template <class T>    //!< \tparam T type convertible to double.
     std::pair<unc, unc> operator()(T a)
-    {
-        return std::pair<unc, unc>(i++, (unc)a);
+    {  //!< Convert a pair of X and Y uncertain type values to a pair of unc.
+        return std::pair<unc, unc>(i++, (unc)a); //! \return pair of unc.
     }
 }; // class pair_unc_2d_convert
 
@@ -114,7 +119,7 @@ public:
     degrees of freedom information, and type meaning undefined.
     \return uncertain.*/
     {
-      return (unc)val;
+      return (unc)val; //! \return uncertain type (uncertainty, degrees of freedom information, and type meaning undefined).
       // warning C4244: 'argument' : conversion from 'long double' to 'double', possible loss of data.
       // because unc only holds double precision.  Suppressed by pragma for MSVC above. Need similar for other compilers.
     }

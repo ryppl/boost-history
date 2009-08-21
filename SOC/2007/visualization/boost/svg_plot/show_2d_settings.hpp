@@ -5,7 +5,7 @@
   \details Outputs a full list of all settings and options for 2D Plot to std::cout.
   This is useful for diagnosing why your plot doesn't look as you hoped!
   (See also show_1d_settings.cpp for 1D plot).
-  \warning This creates about 100 lines of output, so should be used sparingly!
+  \warning This creates over 100 lines of output, so should be used sparingly!
 */
 
 // Copyright Jacob Voytko 2007

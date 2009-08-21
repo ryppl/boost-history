@@ -13,7 +13,7 @@
 ]
 
 [/ Images]
-[/ $images is ref to folder where images are held.]
+[/ $images is reference to a folder where images are held.]
 [def __detail__     [$images/note.png]]
 [def __note__       [$images/note.png]]
 [def __alert__      [$images/alert.png]]
@@ -24,7 +24,7 @@
 [def __Boost_Assign [@$(BOOST_ROOT)/libs/assign/doc/index.html Boost.Assign]]
 
 [/ Links   ]
-[/ By Eric's convention prefix *and* suffix _ means a defined value.  But Use JM and SW double underscore prefix convention.]
+[/ By Eric's convention prefix *and* suffix _ means a defined value.  But here use JM and SW double underscore prefix convention.]
 [def __boost [@http://www.boost.org Boost]]
 
 [/ Generating docs for compound boost::svg::svg]
@@ -103,7 +103,7 @@ Control Panel, System, Advanced system settings, Environment variables, Path, an
 to append the folder.  You can then use commands like "inkview my_picture.svg" from a command window.
 
 Inkview allows one to open many svg files as a slideshow
-and move forward and back with the cursor keys.
+and move forward and backward (and back to start) with the cursor keys.
 
 This works as expected using a command window,
 for example after changing to the directory containing your SVG files,
@@ -113,16 +113,22 @@ Sadly, by default, if you select many files (but not more than 15!) in Windows E
 multiple windows are opened instead of a slideshow.
 If you know how to change this 'by design' feature, please tell me.
 
-You may instead find is useful to create a batch file, for example called demo_plots.bat containing
+You can use this conveniently from your desktop (for example), by creating a shortcut to inkview.exe
+(right click in the inkscape install directory and choose Create Shortcut).  Drag the shortcut to the desktop.
+Append "*.svg" to the Target, usually \c "C:\Program Files\Inkscape\inkview.exe", or perhaps the name of
+a single file.  If necessary, change Start in to the folder containing the svg files, for example,
+\c C:\Users\Paul\Desktop\My_Plots\.  You can add comment describing what it will do, and change the
+name of the shortcut file to something more helpful, for example, "View My Plots".
 
-  START "Inkview" /MIN inkview.exe  C:\Users\Paul\Desktop\Demo_Plots\*.svg
+You may instead find it useful to create a batch file, for example called view_demo_plots.bat containing, for example:
 
-that will display all the svg images in folder \Demo_Plots in turn as the cursor keys are pressed.
-Of course, you can also omit the folder specification and just have `*.svg` when the location of the
+  START "Inkview" /MIN inkview.exe  C:\Users\Paul\Desktop\My_Plots\*.svg
+
+that will display all the svg images in folder \My_Plots in turn as the cursor keys are pressed.
+Of course, you can also omit the folder specification, and just have `*.svg` when the location of the
 batch file will determine which svg files are being viewed.
 
-
-* [@www.google.com/chrome Google Chrome]
+* [@http:/www.google.com/chrome Google Chrome]
 
 * Many other graphics programs, for example see
 [@http://svg.software.informer.com/software/ Most popular SVG software].
@@ -133,7 +139,7 @@ The goals of the project are:
 * To allow users to easily customize plots but allow very fine-grained control of appearance.
 * To provide very high quality plots suitable for publication, including printing, but with tiny file sizes.
 * To allow the user to talk to the plot classes using coordinate units
-rather than pixels or other arbitrary units.
+rather than pixels or other arbitrary units
 * To create the backbone of a `svg` class that can be extended to fully support
 the standard.
 * Compliance with the
@@ -175,7 +181,11 @@ the standard.
 [@http://code.google.com/soc/2007/boost/about.html Google Summer of Code project (2007)]
 whose mentor organization was Boost. It remains a library under construction,
 the code is quite functional, but interfaces, library structure, and names
-may still be changed without notice.]
+may still be changed without notice.  The current version is available at
+
+[*https://svn.boost.org/svn/boost/sandbox/SOC/2007/visualization/libs/svg_plot/doc/pdf/svg_plot.pdf PDF documentation]
+
+[*https://svn.boost.org/svn/boost/sandbox/SOC/2007/visualization Boost Sandbox source code]
 
 [note Comments and suggestions (even bugs) to Paul.A.Bristow (at) hetp (dot) u-net (dot) com
 or Jake Voytko at jakevoytko (at) gmail (dot) com]

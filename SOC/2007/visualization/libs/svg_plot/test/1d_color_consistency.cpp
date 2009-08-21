@@ -127,21 +127,21 @@ BOOST_AUTO_TEST_CASE( test1 )
 
   svg_1d_plot my_plot;
   // Check the default image sizes:
-  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U);
-  BOOST_CHECK_EQUAL(my_plot.image_y_size(), 200U);
+  BOOST_CHECK_EQUAL(my_plot.x_size(), 500U);
+  BOOST_CHECK_EQUAL(my_plot.y_size(), 200U);
 
   my_plot.size(200U, 100U);
-  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 200U);
+  BOOST_CHECK_EQUAL(my_plot.x_size(), 200U);
   my_plot.size(500U, 100U); // update x
-  BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U); // & check
+  BOOST_CHECK_EQUAL(my_plot.x_size(), 500U); // & check
   my_plot.size(500U, 300U); // update y
-  BOOST_CHECK_EQUAL(my_plot.image_y_size(), 300U); // & check
+  BOOST_CHECK_EQUAL(my_plot.y_size(), 300U); // & check
 
- // // cout <<  my_plot.image_x_size() << endl; // 500
-  //BOOST_CHECK_EQUAL(my_plot.image_x_size(), 500U);
+ // // cout <<  my_plot.x_size() << endl; // 500
+  //BOOST_CHECK_EQUAL(my_plot.x_size(), 500U);
  // // Check that test really works by checking the wrong answer!
-  ////BOOST_CHECK_EQUAL(my_plot.image_x_size(), 400U);
- // // check my_plot.image_x_size() == 400U failed [500 != 400]
+  ////BOOST_CHECK_EQUAL(my_plot.x_size(), 400U);
+ // // check my_plot.x_size() == 400U failed [500 != 400]
 
  // BOOST_CHECK_EQUAL(my_plot.legend_top_left(), std::pair(-1., -1.); // default position unassigned = -1..
  // my_plot.legend_top_left(10., 20.);

@@ -94,13 +94,13 @@ int main()
   my_data5.push_back(numeric_limits<double>::infinity());
 
   svg_1d_plot my_1d_plot; // Construct with all the default constructor values.
-  cout << "Image x & y " << my_1d_plot.image_x_size() << " by " << my_1d_plot.image_y_size() << endl;
+  cout << "Image x & y " << my_1d_plot.x_size() << " by " << my_1d_plot.y_size() << endl;
   //my_1d_plot.size(100,100); // Alter both together.
-  //cout << "Image x & y " << my_1d_plot.image_x_size() << " by " << my_1d_plot.image_y_size() << endl;
+  //cout << "Image x & y " << my_1d_plot.x_size() << " by " << my_1d_plot.y_size() << endl;
   //// And alter both separately.
-  //my_1d_plot.image_x_size(200);
-  //my_1d_plot.image_y_size(600);
-  //cout << "Image x & y " << my_1d_plot.image_x_size() << " by " << my_1d_plot.image_y_size() << endl;
+  //my_1d_plot.x_size(200);
+  //my_1d_plot.y_size(600);
+  //cout << "Image x & y " << my_1d_plot.x_size() << " by " << my_1d_plot.y_size() << endl;
 
   my_1d_plot.document_title("Document title demo_1d_plot"); // This text shows on the browser tab.
   my_1d_plot.description("My demo_1d_plot description");
@@ -113,7 +113,7 @@ int main()
   cout << "font-family was " << my_1d_plot.title_font_family() << endl;
 
   my_1d_plot
-  .image_y_size(250)
+  .y_size(250)
   .background_color(ghostwhite) // whole image.
   .background_border_color(aqua) //
   .background_border_width(10.) //

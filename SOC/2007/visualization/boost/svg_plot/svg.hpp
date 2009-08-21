@@ -23,12 +23,12 @@
   \htmlonly
     <a href="http://en.wikipedia.org/wiki/C%2B%2B#Standard_library"> Standard Template Library (STL) </a>
   \endhtmlonly
-  does not currently offer a way to bridge the gap.
+  do not currently offer a way to bridge the gap.
 
   This library helps the user to easily plot data stored in STL containers.
 
-  This project is focused on using STL containers in order to graph data on a
-  one-dimensional (1D) and two-dimensional (2D) (and in future, perhaps, 3D) plot.
+  This project is focused on using STL containers in order to graph data on
+  one-dimensional (1D) and two-dimensional (2D) plots.
   The plot will currently be written to a
 
   \htmlonly
@@ -52,27 +52,74 @@
     \endhtmlonly
 
   - \htmlonly
+      <a href="http://www.adobe.com/products/illustrator"> Adobe Illustrator </a>
+    \endhtmlonly
+
+  - \htmlonly
       <a href="www.opera.com"> Opera</a>
     \endhtmlonly
     has
     \htmlonly
       <a href="http://www.opera.com/docs/specs/svg/"> SVG support</a>
     \endhtmlonly
-    but the quality of rendering is often not as good as other browsers.
+    but the quality of rendering is sometimes not as good as other browsers.
 
-  - Microsoft Internet Explorer, provided a suitable
+  - Microsoft Internet Explorer, \b provided a suitable
     \htmlonly
-      <a href="http://www.adobe.com/svg/"> Adobe SVG Viewer plug-in for SVG files]</a>
+      <a href="http://www.adobe.com/svg/"> Adobe SVG Viewer plug-in for SVG files</a>
     \endhtmlonly
     is installed.
 
   - \htmlonly
       <a href="http://www.inkscape.org"> Inkscape</a>
     \endhtmlonly
-    , a fine Open Source SVG viewer with excellent rendering, full scaling and other editing features,
+    , a fine Open Source SVG editor with excellent rendering, full scaling and other editing features,
     including conversion to wide variety of other graphics formats like Portable Network Graphics .png.
 
-  - and by many other graphics programs.
+    The Inkscape download also includes Inkview, a convenient <b>SVG viewer and slide show </b>.
+
+    Inkview also allows window resizing, showing the scalability of SVG files without any loss of quality,
+    unlike bit image files that eventually reveal pixels as you zoom in.
+
+    You may find it especially convenient to use the viewer, Inkview, on Microsoft Windows,
+    and make this the default program for files of type .svg.
+    To do this, you will need to download install the Inkscape package from http://www.inkscape.org.
+    Inkview.exe is included in the directory you chose for the install,
+    usually \verbatim C:\Program Files\Inkscape\  \endverbatim
+    You will need to use the Explorer, Tools, Folder Options,
+    and add extension .svg if necessary, and then associate svg files with \c inkview.exe.
+
+    You may also find it convenient to add \verbatim "c:\Program Files\inkscape" \endverbatim to your Path using
+    Control Panel, System, Advanced system settings, Environment variables, Path, and edit
+    to append the folder (needs restart of comand window).
+    You can then use commands like "inkview my_picture.svg" from any command window.
+
+    Inkview allows one to open many svg files as a slideshow
+    and move forward and back with the cursor keys.
+
+    This works as expected using a command window,
+    for example after changing to the directory containing your SVG files,
+    and running "inkview *.svg" to display all the images in the directory as a slideshow.
+
+    Sadly, by default, if you select many files (but not more than 15!) in Windows Explorer,
+    multiple windows (instances of inkview.exe) are opened instead of a slideshow.
+    If you know how to change this 'by design' feature, please tell me.
+
+    You may instead find it useful to create a batch file, for example called view_my_plots.bat containing
+    \verbatim START "Inkview" /MIN inkview.exe  C:\Users\Paul\Desktop\My_Plots\*.svg \endverbatim
+    that will display all the svg images in folder My_Plots in turn as the cursor keys are pressed.
+    Of course, you can also omit the folder specification, and just have `*.svg` when the location of the
+    batch file will determine which svg files are being viewed.
+
+  - Google www.google.com/chrome Chrome,
+
+
+  - And by Many other graphics programs, for example
+      \htmlonly
+        <a href="http://svg.software.informer.com/software/"> Most popular SVG software</a>
+      \endhtmlonly
+
+
 
   The goals of the project are:
 
@@ -93,17 +140,25 @@
   SVG files are microscopic when compressed using a zip program
   to convert to types like .zip, or the specific compressed SVG file type (.svgz).
 
+  SVG files can be added to other documents like Adobe PDF, and display well, without bloat.
+
   \section plot_types_sec 1D, 2D and Boxplot
 
-  Three types of plots can be produced:
+  Many types of plots can be produced:
 
-  1D plots are to show the spread of repeated observations of a single variable,
+  - 1D plots are to show the spread of repeated observations of a single variable,
   for example, the measured length of an object
   (where the object's length is assumed to stay exactly the same but the measurements have some uncertainty)
-
   or observations of a single attribute, for example,
   the heights of boys in a school
   (where the measurement is assumed exact but the heights really do vary).
+
+  - 2D plots allow X versus Y variables to be displayed.  You can show values,
+  and optionally their uncertainty (the deprecated term is 'error bars').
+
+  - Boxplots can be produced, optionally with values and outliers.
+
+  - Bar charts can also be produced.
 
   This page generated from file svg.hpp.
 
@@ -171,14 +226,14 @@ namespace svg
       "<!-- or copy at http://www.boost.org/LICENSE_1_0.txt) --> \n";
 
   /*
-  \verbatim
      Copyright notice to be inserted into plot image produced by this program.
      Note: can have more than one copyright date, or a range.
      Produces a copyright notice as an SVG comment like this:
      "<!-- Copyright Paul A. Bristow, 2007  --> \n"
      and as a meta item:
-     <meta name="copyright" content="Paul A. Bristow" />
-   \endverbatim
+     \verbatim
+       <meta name="copyright" content="Paul A. Bristow" />
+     \endverbatim
    */
 
 //!  Class to output Scalable Vector Graph XML graph elements: point, path, line, circle, rect, polygon and text.
@@ -356,6 +411,7 @@ public:
   svg(const svg& rhs) : x_size_(rhs.x_size_), y_size_(rhs.y_size_)
   { //! Define image size copy constructor.
     // TODO Other member data items are NOT copied.  OK?
+    // I think this means that in practicecan't copy an existing customised SVG?!
   }
 
   // Set & get functions for x_size_ and y_size_
@@ -498,9 +554,9 @@ public:
     { // Output copyright & date as both comment and meta data.
       s_out << "<!-- SVG Plot Copyright " << holder_copyright_ << " " << date_copyright_ << " --> "<< std::endl;
       s_out << "<meta name=\"copyright\" content=\"" << holder_copyright_ << "\" />" << std::endl;
-      //  Example:  <meta name="copyright" content="Paul A. Bristow" />
+      //  Example:  \verbatim <meta name="copyright" content="Paul A. Bristow" /> \endverbatim
       s_out << "<meta name=\"date\" content=\"" << date_copyright_ << "\" />" << std::endl;
-      // Example: <meta name="Date" content="20071101">
+      // Example: \verbatim <meta name="Date" content="20071101"> \endverbatim
     }
     if (image_desc_ != "")
     {
@@ -580,9 +636,7 @@ public:
     const std::string attribution = "requires",
     const std::string commercialuse = "permits",
     const std::string derivative = "permits")
-  {  //! Set several license requirements for the svg document.
-
-     /*!
+  {  /*! Set several license requirements for the svg document.
        If any are set, then a license is wanted, so svg#is_license is set true.
        This can be changed using function license_on().
      */
@@ -595,8 +649,8 @@ public:
   } // void license
 
   void license_on(bool l)
-  { //! Set (or not) license using all requirement (default permits).
-    //! Implicitly set by setting a license requirement using license above.
+  { //! Set (or not) license using all requirements (default permits).
+    //! Implicitly set by setting a license requirement using #license function.
     is_license_ = l;
   }
 
@@ -644,62 +698,62 @@ public:
   }
 
   void description(const std::string d)
-  { //! \verbatim Write description to the document (for header as <desc> ... </desc>). \endverbatim
+  { //! Write description to the SVG document \verbatim (for header as <desc> ... </desc>). \endverbatim
     image_desc_ = d;
   }
 
   const std::string& description()
-  { //! \return \verbatim  description of the document (for header as <desc>).\endverbatim
+  { //! \return  description of the SVG document \verbatim (for header as <desc>).\endverbatim
     return image_desc_;
   }
 
   void author(const std::string a)
-  { //!  \verbatim Set author for the document (default is copyright_holder).\endverbatim
+  { //!  Set author for the SVG document \verbatim (default is copyright_holder).\endverbatim
     author_ = a;
   }
 
   const std::string& author()
-  { //!  \return  \verbatim author of the document (for header as <author>).\endverbatim
+  { //!  \return  author of the SVG document \verbatim (for header as <author>).\endverbatim
     return author_;
   }
 
   void document_title(const std::string title)
-  { //!  \verbatim Set document title for the document (for header as <title> ... </title>). \endverbatim
+  { //!  Set document title for the SVG document \verbatim (for header as <title> ... </title>). \endverbatim
     title_document_ = title;
   }
 
   const std::string document_title()
-  { //!   \return \verbatim document title for the document (for header as <title>). \endverbatim
+  { //!   \return document title for the SVG document (\verbatim for header as <title>). \endverbatim
     return title_document_;
   }
 
   void copyright_holder(const std::string copyright_holder)
-  { //!  \verbatim Set document title for the document (for header as <copyright_holder>). \endverbatim
+  { //!  Set document title for the SVG document (for header as \verbatim <copyright_holder>). \endverbatim
     holder_copyright_ = copyright_holder;
   }
 
   const std::string copyright_holder()
-  { //!  \verbatim \return  document title for the document (for header as <copyright_holder>). \endverbatim
+  { //!  \return  document title for the SVG document (for header as\verbatim  <copyright_holder> \endverbatim ).
     return holder_copyright_;
   }
 
   void copyright_date(const std::string copyright_date)
-  { //!  \verbatim Set document title for the document (for header as <copyright_date>). \endverbatim
+  { //!  Set copyright date for the SVG document \verbatim (for header as <copyright_date>). \endverbatim
     date_copyright_ = copyright_date;
   }
 
   const std::string copyright_date()
-  { //!  \return \verbatim  document title for the document (for header as <copyright_date>). \endverbatim
+  { //!  \return copyright date for the SVG document \verbatim  (for header as <copyright_date>). \endverbatim
     return date_copyright_;
   }
 
   void image_filename(const std::string filename)
-  { //!  \verbatim Set image filename for the document (for header as <filename>). \endverbatim
+  { //!  Set image filename for the SVG document \verbatim (for header as <filename>). \endverbatim
     filename_ = filename;
   }
 
   const std::string image_filename()
-  { //! \return  \verbatim image filename for the document (for header as <filename>). \endverbatim
+  { //! \return  image filename for the SVG document \verbatim (for header as <filename>). \endverbatim
     return filename_;
   }
 
@@ -715,7 +769,7 @@ public:
 
   rect_element& rect(double x1, double y1, double x2, double y2)
   { //! push_back information about a rectangle to the document.
-    //! 'lRect' element defines a rect segment with one point (x1, y1) and opposite vertex is (x2, y2).
+    //! 'Rect' element defines a rect segment with one point (x1, y1) and opposite vertex is (x2, y2).
     return document.rect(x1, y1, x2, y2);
   }
 
@@ -804,12 +858,12 @@ public:
   g_element& add_g_element()
   { //! Add information about a group element to the document.
     //! Increments the size of the array of g_elements, returned by g_element.size().
-    return document.add_g_element(); //! return reference to the added group element.
+    return document.add_g_element(); //! \return reference to the added group element.
   }
 
   g_element& g(int i)
   { //! from array of g_elements, indexed by group type, PLOT_BACKGROUND, PLOT_WINDOW_BACKGROUND, ... SVG_PLOT_DOC_CHILDREN,
-    return document.g(i); //! return reference to the ith group element.
+    return document.g(i); //! \return reference to the ith group element.
   }
 
   //// -------------------------------------------------------------

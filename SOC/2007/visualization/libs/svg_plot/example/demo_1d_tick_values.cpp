@@ -124,9 +124,9 @@ If, perversely, the full 1.123456e+012 format is required, the stripping can be 
 */
     //show_1d_plot_settings(my_1d_plot);
 
-    cout << "my_1d_plot.image_size() " << my_1d_plot.image_size() << endl;
-    cout << "my_1d_plot.image_x_size() " << my_1d_plot.image_x_size() << endl;
-    cout << "my_1d_plot.image_y_size() " << my_1d_plot.image_y_size() << endl;
+    cout << "my_1d_plot.size() " << my_1d_plot.size() << endl;
+    cout << "my_1d_plot.x_size() " << my_1d_plot.x_size() << endl;
+    cout << "my_1d_plot.y_size() " << my_1d_plot.y_size() << endl;
 
     cout << "my_1d_plot.x_axis_label_color() " << my_1d_plot.x_axis_label_color() << endl;
     cout << "my_1d_plot.x_label_font_family() " << my_1d_plot.x_label_font_family() << endl;

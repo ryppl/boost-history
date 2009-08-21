@@ -339,7 +339,7 @@ public: // Temporary for gil experiment.
   bool outside_legend_on_; //!< If true, place legend box outside the plot window.
   bool legend_lines_; //!< If true, include data colored line type in legend box.
   bool plot_window_on_; //!< Use a separate plot window (not whole image).
-  bool x_ticks_on_; // TODO check these are really useful.
+  bool x_ticks_on_; //!< Ticks on X axis will be shown.
   bool x_values_on_; //!< values of data are shown by markers.
   int  x_axis_position_; //!< \see #x_axis_intersect
   bool autoscale_check_limits_; //!< If true, then check autoscale values for infinity, NaN, max, min.
@@ -902,7 +902,7 @@ my_1d_plot.plot(my_data, "All my container"); // Plot all data.
     );
     //! For example:  my_1d_plot.plot(my_data.begin(), my_data.end(), "My container");
     //! my_1d_plot.plot(&my_data[1], &my_data[4], "my_data 1 to 4"); // Add part of data series.
-    //! Care: last == end  which is one past the last, so this only does 1, 2 & 3 - *not* 4!
+    //! Care: last == end  which is one past the last, so this only does 1, 2 & 3 -  \b not 4!
     return serieses_[serieses_.size() - 1]; // Reference to data series just added.
   } // plot
 

@@ -4,7 +4,7 @@
     This demonstrates plotting some simple math functions with most of the 2-D defaults,
     just changing a few typical details.
     The detailed output shows the plot settings for each plot.
-    See default_2d_plot.cpp for using *all* defaults.
+    See default_2d_plot.cpp for using \b all defaults.
     See also demo_2d_plot.cpp for use of some of the very many options.
     \date Feb 2009
     \author Jacob Voytko and Paul A. Bristow 

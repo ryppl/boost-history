@@ -1,5 +1,5 @@
-/* \file demo_FP_compare.cpp
-   \brief demonstrate features of floating-point comparisons to find if values are close to each other,
+/*! \file demo_FP_compare.cpp
+   \brief Demonstrate features of floating-point comparisons to find if values are close to each other,
     or are too small to be significantly different from zero.
 
   \author Paul A. Bristow
@@ -173,17 +173,17 @@ true
 false
 false
 close_to() t1.size() 1e-015 weak
-close_to<float> tdf.size() = 2.38419e-007 strong 
-close_to<double> tds.size() = 1e-014 strong 
+close_to<float> tdf.size() = 2.38419e-007 strong
+close_to<double> tds.size() = 1e-014 strong
 close_to<double> tdw.size() = 1e-014 weak
-close_to<double> tdd.size() = 4.44089e-016 strong 
-close_to<double> tdds.size() = 1e-014 strong 
-close_to<double> t.size() = 4.44089e-016 strong 
-close_to<double> tdd.size() = 4.44089e-016 strong 
+close_to<double> tdd.size() = 4.44089e-016 strong
+close_to<double> tdds.size() = 1e-014 strong
+close_to<double> t.size() = 4.44089e-016 strong
+close_to<double> tdd.size() = 4.44089e-016 strong
 neq(0) true
 neq(0.) true
 neq(1 * numeric_limits<double>::min()) false
-2.22507e-3082.22507e-308 strong 
+2.22507e-3082.22507e-308 strong
 2.22507e-3082.22507e-308 weak
 false
 true

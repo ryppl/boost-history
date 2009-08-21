@@ -14,13 +14,13 @@ xmlns ="http://www.w3.org/2000/svg"
 
 <!-- File ./1d_full_layout.svg --> 
 <g id="imageBackground" stroke="rgb(255,255,0)" fill="rgb(67,111,69)" stroke-width="1"><rect x="0" y="0" width="500" height="350"/></g>
-<g id="plotBackground" stroke="rgb(255,255,0)" fill="rgb(136,188,126)" stroke-width="1"><rect x="11" y="83.5" width="362" height="214"/></g>
+<g id="plotBackground" stroke="rgb(250,250,210)" fill="rgb(136,188,126)" stroke-width="1"><rect x="11" y="83.5" width="362" height="214"/></g>
 <g id="xMinorGrid" stroke="rgb(200,220,255)" stroke-width="0.5"></g>
 <g id="xMajorGrid" stroke="rgb(200,220,255)" stroke-width="1"></g>
 <g id="xAxis" stroke="rgb(0,0,0)" stroke-width="1"><line x1="94.6" y1="83.5" x2="94.6" y2="297"/><line x1="11" y1="197" x2="373" y2="197"/></g>
 <g id="xMinorTicks" stroke="rgb(0,0,0)" stroke-width="1"><path d="M108,197 L108,204 M122,197 L122,204 M136,197 L136,204 M164,197 L164,204 M178,197 L178,204 M192,197 L192,204 M220,197 L220,204 M234,197 L234,204 M248,197 L248,204 M276,197 L276,204 M290,197 L290,204 M303,197 L303,204 M331,197 L331,204 M345,197 L345,204 M359,197 L359,204 M80.6,197 L80.6,204 M66.7,197 L66.7,204 M52.8,197 L52.8,204 M24.9,197 L24.9,204 M11,197 L11,204 " fill="none"/></g>
 <g id="xMajorTicks" stroke="rgb(0,0,0)" stroke-width="1"><path d="M94.6,197 L94.6,211 M150,197 L150,211 M206,197 L206,211 M262,197 L262,211 M317,197 L317,211 M373,197 L373,211 M94.6,197 L94.6,211 M38.9,197 L38.9,211 " fill="none"/></g>
-<g id="plotLabels">
+<g id="xTicksValues">
 <text x="150" y="189" text-anchor="middle" font-size="12" font-family="Verdana">2</text>
 <text x="206" y="189" text-anchor="middle" font-size="12" font-family="Verdana">4</text>
 <text x="262" y="189" text-anchor="middle" font-size="12" font-family="Verdana">6</text>

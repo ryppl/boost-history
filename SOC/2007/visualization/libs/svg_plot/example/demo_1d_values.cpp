@@ -138,9 +138,9 @@ but for 2-D plots all writing orientations can be useful).
 */
     //show_1d_plot_settings(my_1d_plot);
 
-    cout << "my_1d_plot.image_size() " << my_1d_plot.image_size() << endl;
-    cout << "my_1d_plot.image_x_size() " << my_1d_plot.image_x_size() << endl;
-    cout << "my_1d_plot.image_y_size() " << my_1d_plot.image_y_size() << endl;
+    cout << "my_1d_plot.image_size() " << my_1d_plot.size() << endl;
+    cout << "my_1d_plot.image x_size() " << my_1d_plot.x_size() << endl;
+    cout << "my_1d_plot.image y_size() " << my_1d_plot.y_size() << endl;
     cout << "my_1d_plot.x_values_font_size() " << my_1d_plot.x_values_font_size() << endl;
     cout << "my_1d_plot.x_values_font_family() " << my_1d_plot.x_values_font_family() << endl;
     cout << "my_1d_plot.x_values_color() " << my_1d_plot.x_values_color() << endl;

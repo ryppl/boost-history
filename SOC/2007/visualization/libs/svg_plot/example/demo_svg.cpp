@@ -33,10 +33,11 @@
 #include <boost/svg_plot/svg_fwd.hpp>
 
   using namespace boost::svg;
-  // Is most convenient because otherwise all the colors used must be specified thus
+  // Is most convenient because otherwise all the colors used must be specified thus:
   using boost::svg::black;
   using boost::svg::white;
   using boost::svg::red;
+  using boost::svg::blue;
   // ... which may get tedious!
 
 #include <iostream>
@@ -69,14 +70,14 @@ void symb(array<const poly_path_point, 6> shape, const poly_path_point position,
   cout << endl;
   // Can't return ref to shape because goes out of scope :-(
   g.push_back(new polygon_element(shaped, true) );
-  return; 
+  return; // reference to g_element just added.
 } // vector<poly_path_point>& symb
 
 int main()
 {
   svg my_svg;
 
-  cout << "my_svg.document_size() " << my_svg.document_size() << endl; // == 0
+  cout << "Initial my_svg.document_size() " << my_svg.document_size() << endl; // == 0
 
   // Check default and change image size.
   cout << "my_svg.x_size() = " << my_svg.x_size() << ", my_svg.y_size() = " << my_svg.y_size() << endl;
@@ -87,7 +88,10 @@ int main()
 
   boost::svg::text_element t;
   t.textstyle().font_family("arial");
-  cout << t.textstyle().font_family() << endl; // arial
+  cout << t.textstyle().font_family() << endl; // echos "arial".
+
+  // Exercise a few document metadata items.
+  my_svg.document_title("Demo SVG document title");
 
   my_svg.license("permits", "permits", "permits", "permits");
   my_svg.license_on(true);
@@ -96,7 +100,7 @@ int main()
   my_svg.boost_license_on(true);
   cout << "my_svg.boost_license_on() " << my_svg.boost_license_on() << endl;
 
-  my_svg.image_filename("demo_svg");
+  my_svg.image_filename("demo_svg"); // File into which SVG XML will be written.
   cout << "my_svg.image_filename() " << my_svg.image_filename() << endl;
 
   // Default background color is black, rgb(0,0,0)
@@ -104,24 +108,23 @@ int main()
   // my_svg.g(0).push_back(new rect_element(0, 0, my_svg.x_size(),  my_svg.y_size() ) );
   // background 
 
-  // g_element& a1 = 
-  my_svg.add_g_element(); // Add first (zeroth) new element,
+  my_svg.add_g_element(); // Add first (zeroth) new element to the document,
 
-  cout << "my_svg.document_size() " << my_svg.document_size() << endl;
+  cout << "After one add_g_element my_svg.document_size() = " << my_svg.document_size() << endl;
 
   g_element& g0 = my_svg.g(0); // so index is zero.
   cout << "my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl; // == 1
   my_svg.g(0).push_back(new rect_element(0, 0, my_svg.x_size(),  my_svg.y_size() ) ); // border to image.
-  g0.id("group element 0");
-  cout << g0.id() << endl;
+  g0.id("group element 0"); // Add an ID to this group.
+  cout << "g0.id() " << g0.id() << endl; // echo it.
 
-  cout << "my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl; // == 1
-
+  // Show the default colors of the group element g0 added above.
   cout << "fill color = " << g0.style().fill_color() << endl; // fill color = RGB(0,0,0) == black
   cout << "fill on " << boolalpha << g0.style().fill_on() << endl; // false
   cout << "stroke color = " << g0.style().stroke_color() << endl; // stroke color = RGB(0,0,0)
   cout << "stroke on " << boolalpha << g0.style().stroke_on() << endl; // stroke on false
-  cout << "stroke width " << boolalpha << g0.style().stroke_width() << endl; // 
+  cout << "stroke width " << boolalpha << g0.style().stroke_width() << endl; 
+  // Change a svg style - color and width, and fill.
   g0.style().stroke_on(true); // stroke on true
   g0.style().stroke_color(red); // 
   g0.style().stroke_width(5);
@@ -131,20 +134,27 @@ int main()
   cout << "fill color = " << g0.style().fill_color() << endl; // fill color = RGB(0,0,0) == black
   cout << "fill on " << boolalpha << g0.style().fill_on() << endl; // false
   cout << "stroke color = " << g0.style().stroke_color() << endl; // stroke color = RGB(0,0,0)
-  cout << "stroke on " << boolalpha << g0.style().stroke_on() << endl; // stroke on false
-  cout << "width on " << boolalpha << g0.style().width_on() << endl;
+  cout << "stroke on " << boolalpha << g0.style().stroke_on() << endl; // stroke on true
+  cout << "width on " << boolalpha << g0.style().width_on() << endl; // width on true
   g0.style().stroke_on(true); // stroke on true
+  // This might generate svg xml like this:
   //<g stroke="rgb(255,0,0)" fill="rgb(255,255,255)" stroke-width="10"><rect x="0" y="0"  width="500"  height="600"/></g>
 
-  rect_element r(20, 20, 50, 50);
-  cout << r << endl; // rect(20, 20, 50, 50)
+  rect_element r(30, 30, 40, 40);
+  cout << "rect_element r(30, 30, 40, 40);  " << r << endl; // rect(30, 30, 40, 40)
 
   g0.push_back(new line_element(100, 50,  50, 100) ); // red border width 10 white fill.
   // <g stroke="rgb(255,0,0)" fill="rgb(0,0,255)" stroke-width="10"><line x1="100" y1="50" x2="50" y2="100"/></g>
+
+  cout << "After adding a line my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl; // == 1
+
   g0.push_back(new rect_element(20, 20, 50, 50) ); // 
   g0.push_back(new polygon_element(30, 40, true) );
   g0.push_back(new circle_element(100, 200,  10) ); // 
   g0.push_back(new ellipse_element(300, 300, 5, 3) ); // 
+  cout << "After adding several shape elements my_svg.document_size() = number of g_elements = " << my_svg.document_size() << endl; // == 1
+  cout << "After adding several shape elements g0.size() = number of child elements = " << g0.size() << endl; // == 6
+
   my_svg.ellipse(300, 300, 50, 30); // has similar effect, but since not in group, is black stroke & fill.
 
   //Note: my_svg.line(100, 50,  50, 100); // only generates <line x1="100" y1="50" x2="50" y2="100"/>
@@ -153,23 +163,27 @@ int main()
   // <line stroke-width="5" stroke="red" x1="100" y1="300" x2="300" y2="100"/>
 
   poly_path_point p0(100, 200);
-  cout << p0 << endl; // Ouptuts: (100, 200)
+  cout << " poly_path_point p0(100, 200); " << p0 << endl; // Outputs: (100, 200)
 
   path_element my_path;
   my_path.M(1, 2).L(3, 4).L(5, 6).z();
-  path_element& my_path2 = my_svg.g(0).path();
-  path_element& my_path0 = g0.path();
-  my_path2.M(1, 2).L(3, 6).L(5, 4).z(); // <path d="M1,2 L3,4 L5,6 Z " />
-  path_element& path = g0.path(); // OK
+  //path_element& my_path2 = my_svg.g(0).path();
+  //path_element& my_path0 = g0.path();
+  // my_path.M(1, 2).L(3, 6).L(5, 4).z(); // <path d="M1,2 L3,4 L5,6 Z " />
+  //path_element& path = g0.path(); // OK
+
+  cout << "After adding path_element my_svg.document_size() " << my_svg.document_size() << endl; // == 2
 
   polygon_element& pp = g0.polygon(); // 'empty' polygon.
   polygon_element& ppp(pp); // copy constructor.
   pp.P(400, 500); // Add a single vertex.
-  pp.P(200, 300).P(100, 400).P(100, 100); // add several vertices.
+  pp.P(200, 300).P(100, 400).P(100, 100); // add several more vertices.
+  cout << "After adding  polygon my_svg.document_size() " << my_svg.document_size() << endl; // 2
 
   my_svg.triangle(400, 20, 300, 100, 450, 50, false); 
+  cout << "After adding  triangle my_svg.document_size() " << my_svg.document_size() << endl; // 3
   my_svg.triangle(200, 20, 350, 100, 250, 100); 
-    cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 4
+  cout << "After adding  triangle my_svg.document_size() " << my_svg.document_size() << endl; // 4
   my_svg.rhombus(10, 500, 10, 550, 450, 550, 300, 500, true); 
   my_svg.pentagon(100, 10, 120, 10, 130, 30, 110, 50, 110, 30, true); 
   my_svg.hexagon(300, 10, 420, 10, 330, 130, 350, 150, 210, 30, 250, 60, true);
@@ -259,8 +273,7 @@ int main()
  
   //cout.precision(17);
   //double pi = 3.14159265359;
-  //cout <<  cos(pi/6) << endl; // == cos(30)
-  // == 0.86602540378442139;
+  //cout <<  cos(pi/6) << endl; // == cos(30) == 0.86602540378442139;
 
   array<const poly_path_point, 6> hexup =
   { // Regular point up hexagon!
@@ -286,15 +299,15 @@ int main()
 
   cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 8
 
-  // Adding a new group element.
-  g_element& g1 = my_svg.g(1); // so index is now one.
+  // Adding a 2nd new group element.
+  g_element& g1 = my_svg.g(1); // so its index is now one.
 
-  g1.id("element 1");
-  cout << g1.id() << endl; // Output: element 1
+  g1.id("element 1"); // Add an ID
+  cout << "g1.id()  "<< g1.id() << endl; // Outputs: element 1
   cout << "my_svg.document_size() " << my_svg.document_size() << endl; // 8 ???
 
   cout << "my_svg.add_g_element().size() " << my_svg.add_g_element().size() << endl; // 0
-
+  // Nothing added to gorup yet.
 
   my_svg.write("demo_svg.svg");
 
@@ -302,25 +315,6 @@ int main()
 } // int main()
 
 /*
-
-  svg  my_svg;
-  my_svg .write("demo_svg.svg");
-
-?xml version="1.0" standalone="no"?><!DOCTYPE svg PUBLIC "-//W3C//DTD SVG 1.1//EN" "http://www.w3.org/graphics/svg/1.1/dtd/svg11.dtd">
-<svg width="400" height ="400" version="1.1" xmlns="http://www.w3.org/2000/svg">
-<!-- SVG plot written using Boost.Plot program (Creator Jacob Voytko) --> 
-<!-- Use, modification and distribution of Boost.Plot subject to the --> 
-<!-- Boost Software License, Version 1.0.--> 
-<!-- (See accompanying file LICENSE_1_0.txt --> 
-<!-- or copy at http://www.boost.org/LICENSE_1_0.txt) --> 
-
-<!-- File test_svg.svg --> 
-</svg>
-
-
-
-
-
 
 
 

@@ -298,7 +298,7 @@ public:
 
 class text_style
 { /*! \class boost::svg::text_style
-     \brief font family, font size, weight, style, stretch & decoration.
+     \brief Font family, font size, weight, style, stretch & decoration.
   */
   friend std::ostream& operator<< (std::ostream&, const text_style&);
   friend bool operator== (const text_style&, const text_style&);
@@ -315,13 +315,13 @@ class text_style
   std::string decoration_; //!< Font decoration, examples: "underline" | "overline" | "line-through".
 
 public:
-  text_style(
-    int size = 12, // Default font size.
-    const std::string& font = "", // Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
-    const std::string& style = "", // font-style: normal | bold | italic | oblique
-    const std::string& weight = "", // Examples: "bold", "normal"
-    const std::string& stretch = "", // font-stretch: normal | wider | narrower ...
-    const std::string& decoration = ""); // Examples: "underline" | "overline" | "line-through"
+  text_style( //!
+    int size = 12, //!< Default font size (12 pixels).
+    const std::string& font = "", //!< Examples: "Arial", "Times New Roman", "Verdana", "Lucida Sans Unicode"
+    const std::string& style = "", //!< font-style: normal | bold | italic | oblique
+    const std::string& weight = "", //!< Examples: "bold", "normal"
+    const std::string& stretch = "", //!< font-stretch: normal | wider | narrower ...
+    const std::string& decoration = ""); //!< Examples: "underline" | "overline" | "line-through"
 
   text_style& font_size(unsigned int i);
   text_style& font_family(const std::string& s);
@@ -347,9 +347,10 @@ public:
 }; //   class text_style
 
 // class text_style function *Definitions*.
+//!< Default constructor only sets font size = 20, and leaves other font details as SVG defaults.
 
-  text_style::text_style( //!< Default constructor only sets font size = 20, and leaves other font details as SVG defaults.
-    int size,
+  text_style::text_style( //!< Constructor to allow all text style (font etc) to be set.
+    int size, //!< Font size.
     const std::string& font, //!< Default for browser is sans with Firefox & IE but serif with Opera.
     const std::string& style, //!< font-style: normal
     const std::string& weight, //!< font weight "normal"
@@ -409,7 +410,7 @@ public:
 
   text_style& text_style::font_style(const std::string& s)
   { /*! Set font style.
-        Examples: my_text_style.font_style("italic");\n
+        Example: my_text_style.font_style("italic");\n
        See also browser conformance tests:\n
        http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     */
@@ -418,7 +419,11 @@ public:
   }
 
   const std::string& text_style::font_weight() const
-  {
+  {  /*! Set font weight.
+        Example: my_text_style.font_style("bold");\n
+       See also browser conformance tests:\n
+       http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
+    */
     return weight_;
   }
 
@@ -539,13 +544,13 @@ class value_style
      Uncertainty and degrees of freedom estimate.
      Prefix, separator and suffix allow X and Y values to be together on one line, for example\n
      [1.23+- 0.01 (3), 4.56 +-0.2 (10)]\n
-     Used in draw_plot_point_values (note plural - not used in draw_plot_point_value)
+     Used in draw_plot_point_values (note plural - not used in singular draw_plot_point_value)
      where X value_style is used to provide the prefix and separator, and Y value_style to provide the suffix.
      Prefix, separator and suffix are ignored when X or Y are shown separately using draw_plot_point_value.
   */
+// private: // would require lots of set/get functions or lots of friend statements?
 public:
-// private: // would require lots of set/get functions or lots of friend statements.
-  rotate_style value_label_rotation_; //< Direction point value labels written.
+  rotate_style value_label_rotation_; //!< Direction point value labels written.
   int value_precision_; //!< Decimal digits of precision of value.
   std::ios_base::fmtflags value_ioflags_; //!< Control of scientific, fixed, hex etc.
   bool strip_e0s_; //!< If true, then unnecessary zeros and + sign will be stripped to reduce length.
@@ -553,9 +558,8 @@ public:
   // svg_style
   svg_color fill_color_; //!< Fill color for value.
   svg_color stroke_color_; //!< Stroke color for value.
-  bool plusminus_on_; //!< If an uncertainty estimate is to be appended (as + or - value).
-    /* \details See \n
-      http://en.wikipedia.org/wiki/Plus-minus_sign
+  bool plusminus_on_; /*!< If an uncertainty estimate is to be appended (as + or - value).
+     \details See http://en.wikipedia.org/wiki/Plus-minus_sign
     */
   svg_color plusminus_color_; //!< Color for uncertainty, for example: 0.02 in "1.23 +-0.02".
   bool df_on_; //!< If a degrees of freedom estimate is to be appended.
@@ -567,9 +571,21 @@ public:
   public:
     value_style(); //!< Default style for a data point value label.
     value_style( //!< Set style for a data point value label.
-      rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
-      text_style ts, const svg_color& scol /* = black */, svg_color fcol, bool pm /*= false*/, bool df /*= false*/,
-      std::string pre /* = "" */, std::string sep /* = ", " */, std::string suf /* = "" */);
+      rotate_style r, //!< Label orientation, default horizontal.
+      int p, //!< Precision, reduced from default of 6 which is usually too long.
+      std::ios_base::fmtflags f, //!< Any std::ios::ioflags, for example, hex, fixed, scientific.
+      bool s, //!< If true, then unnecessary zeros will be stripped to reduce length.
+      text_style ts,  //!< Value text style, all defaults, black etc.
+      const svg_color& scol,  //!< stroke color == black.
+      const svg_color& fcol, //!< fill color== black.
+      bool pm, //!< If uncertainty estimate to be appended. == false,
+      const svg_color& plusminus_color,  //!< Default color for uncertainty of value.
+      bool df,  //!< If a degrees of freedom estimate to be appended. == false,
+      const svg_color& df_color,  //!< Default color for degrees of freedom.
+      std::string pre, //!< Prefix, for example: "[",
+      std::string sep, //!< separator, for example: ",&#x00A0;",
+      //!< (If just put ", " the trailing space seems to be ignored, so add Unicode explicit space).
+      std::string suf ); //!< suffix, for example: "]"
 
 }; // class value_style
 
@@ -579,34 +595,40 @@ public:
  value_style::value_style()
     :
     value_label_rotation_(horizontal), //!< Label orientation, default horizontal.
-    value_precision_(4), //!< Reduced from default of 6 which is usually too long.
+    value_precision_(4), //!< Precision, reduced from default of 6 which is usually too long.
     value_ioflags_(std::ios::dec), //!< Any std::ios::ioflags, for example, hex, fixed, scientific.
     strip_e0s_(true), //!< If true, then unnecessary zeros will be stripped to reduce length.
     values_text_style_(no_style),  //!< All defaults, black etc.
     stroke_color_(black), //!< == black.
     fill_color_(svg_color(0, 0, 0)), //!< no fill.
-    // TODO should be
-    //     fill_color_(false), //!< no fill.
     plusminus_on_(false), //!< If uncertainty estimate to be appended.
-    plusminus_color_(black), //! Default color for uncertainty of value.
+    plusminus_color_(black), //!< Default color for uncertainty of value.
     df_on_(false), //!< If a degrees of freedom estimate to be appended.
     df_color_(black) //!< Default color for degrees of freedom.
-    { // Default constructor initialises all private data.
+    { //! Default constructor initialises all private data.
     }
 
-    value_style::value_style(rotate_style r, int p,  std::ios_base::fmtflags f, bool s,
-      text_style ts, const svg_color& scol = black, svg_color fcol = black, bool pm = false, bool df = false,
+    value_style::value_style(rotate_style r, //!< Label orientation, default horizontal.
+      int p, //!< Reduced from default of 6 which is usually too long.
+      std::ios_base::fmtflags f, //!< Any std::ios::ioflags, for example, hex, fixed, scientific.
+      bool s, //!< If true, then unnecessary zeros will be stripped to reduce length.
+      text_style ts, //!< All defaults, black etc.
+      const svg_color& scol = black, //!< == black.
+      const svg_color& fcol = black,  //!< no fill.
+      bool pm = false, //!< If uncertainty estimate to be appended.
+      const svg_color& plusminus_color = black, //!< Default color for uncertainty of value.
+      bool df = false,  //!< If a degrees of freedom estimate to be appended.
+      const svg_color& df_color = black,//!< Default color for uncertainty of value.
       // Separators [,] provide, for example: [1.23+-0.01 (3), 4.56 +-0.2 (10)]
-      // default color black.
-      std::string pre = "", // "[",
-      std::string sep  = "", // ,\&#x00A0;", // If put ", " the trailing space seems to be ignored, so add Unicode explicit space.
-      std::string suf  = "") // "]")
+      std::string pre = "", //!< Prefix, for example: "[",
+      std::string sep  = "", //!< separator, for example: ,\&\#x00A0;", // If put ", " the trailing space seems to be ignored, so add Unicode explicit space.
+      std::string suf  = "") //!< suffix, for example: "]")
     :
     value_label_rotation_(r), value_precision_(p), value_ioflags_(f), strip_e0s_(s),
     values_text_style_(ts), stroke_color_(scol), fill_color_(fcol),
-    plusminus_on_(pm),plusminus_color_(blue), df_on_(df), df_color_(blue),
+    plusminus_on_(pm), plusminus_color_(plusminus_color), df_on_(df), df_color_(df_color),
     prefix_(pre), separator_(sep), suffix_(suf)
-    { // Constructor.
+    { //! Constructor setting parameters with some defaults.
     }
 
 // End class value_style Member Functions definitions.
@@ -680,8 +702,11 @@ public:
   //text_style value_style_; // Size, font, color etc of the value.
 
   plot_point_style( //!< Constructor with all defaults.
-    const svg_color& stroke = black, const svg_color& fill = blank,
-    int size = 5, point_shape shape = round, const std::string& symbols = "X");
+    const svg_color& stroke = black,  //!< Color of circumference of shape.
+    const svg_color& fill = blank, //!< Fill color of the centre of the shape.
+    int size = 5, //!< Diameter of circle, height of square, font_size  ...
+    point_shape shape = round, //!< shape: round, square, point...
+    const std::string& symbols = "X"); //!< Unicode symbol(s) (letters, digits, squiggles etc).
 
   plot_point_style& size(int i);
   int size();
@@ -701,8 +726,11 @@ public:
 // Constructor.
 
   plot_point_style::plot_point_style( //!< Constructor set defaults for data members. (see declaration).
-    const svg_color& stroke, const svg_color& fill,
-    int size, point_shape shape, const std::string& symbols)
+    const svg_color& stroke,  //!< Color of circumference of shape.
+    const svg_color& fill, //!< Fill color of the centre of the shape.
+    int size, //!< Diameter of circle, height of square, font_size  ...
+    point_shape shape, //!< shape: round, square, point...
+    const std::string& symbols) //!< Unicode symbol(s) (letters, digits, squiggles etc).
   :
     fill_color_(fill), stroke_color_(stroke), size_(size),
     shape_(shape), symbols_(symbols),
@@ -713,12 +741,12 @@ public:
     symbols_style_.font_size(size);
   }
 
-// Member function Definitions.
+// Member Function Definitions.
 
  plot_point_style& plot_point_style::size(int i)
   { //! Set size of shape or symbol used to mark data value plot point(s).
-    size_ = i; // Shapes.
-    symbols_style_.font_size(i); // In case using a symbol.
+    size_ = i;  //!< Diameter of circle, height of square, font_size  ...
+    symbols_style_.font_size(i); // Font size, in case using a symbol as marker.
     return *this;
     //! \return plot_point_style& to make chainable.
   }
@@ -819,6 +847,7 @@ public:
   bool line_on_; //!< If true, data points will be joined by straight line(s).
   bool bezier_on_; //!< If true, data points will be joined by bezier curved line(s).
 
+  //! Constructor to set plot line style, but providing defaults for all member data.
   plot_line_style(const svg_color& col = black, const svg_color& fill_col = blank, double width = 2, bool line_on = true, bool bezier_on = false);
 
   plot_line_style& width(double w);
@@ -836,7 +865,7 @@ public:
 
 // class plot_line_style function Definitions.
 
-// Constructor.
+  //! Constructor to set plot line style, but providing defaults for all member data.
   plot_line_style::plot_line_style(const svg_color& col, const svg_color& fill_col, double width, bool line_on, bool bezier_on)
     :
     stroke_color_(col), area_fill_(fill_col), width_(width), line_on_(line_on), bezier_on_(bezier_on)
@@ -946,20 +975,30 @@ public:
   bool label_units_on_; //!< Label axis units, example: "cm".
   bool axis_line_on_; //!< Draw an X horizontal or Y vertical axis line.
   double axis_; //!< Depending on value of dim, either X-axis (y = 0) transformed into SVG Y coordinates or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet).
-  // Used in axis_plot_frame.hpp
-  axis_line_style( //!< class axis_line_style default constructor, sets default values for all member data items.
-    dim d = X,
-    double min = -10.,
-    double max = +10., // Defaults.
-    // See also default in ticks_labels_style.
-    const svg_color col = black,
-    double width = 1,
-    int axis_position = 0,
-    bool label_on = true,
-    bool label_units_on = false,
-    bool axis_lines_on = true,
-    double axis = -1); // -1 means not calculated yet.
 
+  // Used in axis_plot_frame.hpp
+  // class axis_line_style default constructor, sets default values for all member data items.
+   //! Constructor that provides defaults all axis style items.
+  axis_line_style(
+    dim d = X, //!< X or Y axis.
+    double min = -10., //!< Minimum of axis line.
+    double max = +10., //!< Maximum of axis line.
+    // See also default in ticks_labels_style.
+    const svg_color col = black, //!< Axis line color.
+    double width = 1, //!< Axis line width.
+    int axis_position = 0, /*!< How the axes intersect with values as below:\n
+    enum x_axis_intersect {bottom = -1, x_intersects_y = 0, top = +1};
+    enum y_axis_intersect {left = -1, y_intersects_x = 0, right = +1};
+    If axes look like an L, then is bottom left.
+    If a T then y intersects and X is at bottom.
+  */
+    bool label_on = true, //!< Label axis with text - example: "length".
+    bool label_units_on = false, //!< Label axis units, example: "cm".
+    bool axis_lines_on = true,  //!< Draw an X horizontal or a Y vertical axis line.
+    double axis = -1  /*!< Depending on value of dim,
+                        either X-axis (y = 0) transformed into SVG Y coordinates,
+                        or Y-axis (x = 0) transformed into SVG X coordinates (-1 if not calculated yet). */
+    );
   // class axis_line_style member functions Declarations:
   // Set and get member functions.
   axis_line_style& color(const svg_color& color);
@@ -1133,12 +1172,14 @@ public:
 
     text_style value_label_style_; //!< text style (font, size...) for value labels.
 
-    ticks_labels_style( //! Constructor, providing defaults values for all member data.
-      dim d = X,
-      const text_style& style = no_style, // Default style.
-      double max = 10., double min = -10.,
-      double major_interval = 2.,
-      unsigned int num_minor_ticks = 4)
+     //! Constructor setting several parameters, but providing default values for all member data.
+     ticks_labels_style(
+      dim d = X, //!< X or Y axis (-1 if not assigned yet).
+      const text_style& style = no_style, //!< Default text font style.
+      double max = 10.,  //!< Maximum x value (Cartesian units).
+      double min = -10., //!< Minimum x value (Cartesian units).
+      double major_interval = 2., //!< Interval between major ticks.
+      unsigned int num_minor_ticks = 4) //!< Number of minor ticks between major ticks.
       : // Constructor.
       dim_(d),
       value_label_style_(style),
@@ -1187,7 +1228,6 @@ public:
     ticks_on_window_or_on_axis_(-1) // Value labels & ticks on the plot window,
     // rather than on X or Y-axis.
     // Default -1 means left or bottom of plot window.
-
   {
       if(max_ <= min_)
       { // max_ <= min_.
@@ -1314,14 +1354,15 @@ public:
     bool border_on_; //!< Display the border of the box.
     bool fill_on_; //!< Color fill the box.
 
-     box_style( //! Constructor provides defaults for all member variables.
+    //! Constructor to set parameters but provides defaults for all variables.
+    box_style(
       const svg_color& scolor = black, //!< stroke color
       const svg_color& fcolor = white, //!< fill color (white = no fill).
       double width = 1, //!< of border.
       double margin = 4., //!< Margin around box (SVG units, default pixels).
       bool border_on = true, //!< Draw a border of specified width.
-      bool fill_on = false); //!< Apply fill color.
-
+      bool fill_on = false //!< Apply fill color.
+     );
   box_style& stroke(const svg_color& color);
   svg_color stroke();
   box_style& fill(const svg_color& color);
@@ -1339,8 +1380,7 @@ public:
 
 // class box_style Definitions.
 
-// Constructor.
-
+//! Constructor to set parameters but provides defaults for all variables.
 box_style::box_style(
   const svg_color& scolor, // = black,
   const svg_color& fcolor, // = white, // No fill.
@@ -1421,7 +1461,7 @@ box_style::box_style(
   box_style& box_style::fill_on(bool is)
   {//! Set true if the box should be filled.
     fill_on_ = is;
-    return *this; // Make chainable.
+    return *this; //! \return box_style& to make chainable.
   }
 
 // End class box_style Definitions.
@@ -1456,7 +1496,8 @@ public:
   histogram_style(histogram_option opt = no_histogram); //!< Set any histogram option.
 
   histogram_style& histogram(histogram_option opt); //!< Set any histogram option.
-  double histogram(); //!
+
+  double histogram(); //!< \return Histogram option.
 }; // class histogram_style
 
 
@@ -1479,8 +1520,8 @@ histogram_style& histogram_style::histogram(histogram_option opt)
 }
 
 double histogram_style::histogram()
-{ // \return Histogram option.
-  return histogram_option_;
+{
+  return histogram_option_; //!< \return Histogram option.
 }
 // End class histogram_style Definitions.
 

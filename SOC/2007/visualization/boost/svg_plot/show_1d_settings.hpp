@@ -1,8 +1,8 @@
 /*! \file show_1d_settings.hpp
   \author Jacob Voytko & Paul A. Bristow
 
-  \brief Shows settings and options for 1-D Plot.
-  \details Outputs a full list of all settings and options for 1-D Plot to std::cout.
+  \brief Shows settings and options for 1D Plot.
+  \details Outputs a full list of all settings and options for 1D Plot to std::cout.
   This is useful for diagnosing why your plot doesn't look as you hoped!
   \warning This creates about 100 lines of output, so should be used sparingly!
 

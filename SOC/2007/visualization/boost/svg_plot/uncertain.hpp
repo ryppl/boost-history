@@ -1,5 +1,5 @@
 /*! \file uncertain.hpp
-  \brief Class for storing Uncertainties and handling simple Propagation of according to a pure Gaussian model.
+  \brief Class for storing Uncertainties and simple propagation according to a pure Gaussian model.
   \details
     This simplifed version assuming uncorrelated uncertainties (the common case)
     is based on code by Evan Manning (manning@alumni.caltech.edu)
@@ -55,7 +55,16 @@ class unc
 public:
   unc(); // Default constructor.
   unc(double v, float u, short unsigned df, short unsigned ty);
+   /*! \brief Output an value with (if defined) uncertainty and degrees of freedom (and type).
+       For example: "1.23 +/- 0.01 (13)".\n
+       \details Note that the uncertainty is input and stored as one standard deviation,
+       but output multiplied for a user configurable 'confidence factor' plusminus,
+       default two for about 95% confidence (but could also be one for 67% or 3 for 99% confidence).
+  */
   friend std::ostream& operator<< (std::ostream& os, const unc& u);
+   /*! Output a pair (X and Y) value with (if defined) uncertainty and degrees of freedom.
+       \details For example: "1.23 +/- 0.01 (13), 3.45 +/- 0.06 (78)".
+   */
   friend std::ostream& operator<< (std::ostream& os, const std::pair<unc, unc>& u);
   bool operator<(const unc& rhs)const;
   bool operator<(unc& rhs)const;
@@ -94,15 +103,15 @@ private:
 unc::unc(double v, float u = -1.f, short unsigned df = (std::numeric_limits<unsigned short int>::max)(), short unsigned ty = 0U)
 :
   value_(v), uncertainty_(u), deg_free_(df), types_(ty)
-{ // Constructor.
-  // Note the defaults so that unspecified variables have 'undefined' status.
+{ //! Constructor allowing an unc to be constructed from just value providing defaults for all other parameters.
+  //! Note the defaults so that unspecified variables have 'undefined' status.
 }
 
 unc::unc()
 :
   value_(0.), uncertainty_(-1.F), deg_free_((std::numeric_limits<unsigned short int>::max)()), types_(0U)
-{ // Default constructor.
-  // Note the defaults so that value is zero, but others have 'undefined' status.
+{ //! Default constructor.
+  //! Note the defaults so that value is zero, but others have 'undefined' status.
 }
 
 bool unc::operator<(const unc& u) const
@@ -179,15 +188,17 @@ std::ostream& operator<< (std::ostream& os, const unc& u)
   if (u.uncertainty_ > 0.F)
   { // Uncertainty is defined, so output it.
     //! Note that the plus or minus can be output using several methods.
-    os << '\361'  //! 256 character 8-bit codepage plusminus symbol octal 361, or
-    // os << char(241)
-    //! decimal 241 or
-    // os << char(0xF1)
-    //! hexadecimal F1, or
-    // os <<  "&#x00A0;&#x00B1;"
-    //! Unicode space plusminus glyph, or\n
-    //! os << " +or-" << u.uncertainty_;
-    //! Plain ANSI 7 bit code chars.
+    os << '\361'
+    /*! \details 256 character 8-bit codepage plusminus symbol octal 361, or
+      os << char(241)
+      decimal 241 or
+      os << char(0xF1)
+      hexadecimal F1, or
+      os <<  "&#x00A0;&#x00B1;"
+      Unicode space plusminus glyph, or\n
+      os << " +or-" << u.uncertainty_;
+      Plain ANSI 7 bit code chars.
+    */
       << u.uncertainty_ * plusminus; // Typically two standard deviation.
   };
   if (u.deg_free_ != (std::numeric_limits<unsigned short int>::max)())
@@ -203,8 +214,9 @@ std::ostream& operator<< (std::ostream& os, const unc& u)
 } // ostream& operator<< (ostream& os, const unc& u)
 
 std::ostream& operator<< (std::ostream& os, const std::pair<unc, unc>& u)
-{ //! Output a pair (X and Y) value with (if defined) uncertainty and degrees of freedom.
-  //! \details For example: "1.23 +/- 0.01 (13), 3.45 +/- 0.06 (78)".
+{ /*! Output a pair (X and Y) value with (if defined) uncertainty and degrees of freedom.
+     \details For example: "1.23 +/- 0.01 (13), 3.45 +/- 0.06 (78)".
+   */
   os << u.first << ", " << u.second;
   return os;
 } // std::ostream& operator<< (ostream& os, const pair<unc, unc>& u)
@@ -215,7 +227,7 @@ std::ostream& operator<< (std::ostream& os, const std::pair<unc, unc>& u)
 template <class T>
 double value_of(T v);
 
-template <class T>
+template <class T> //!< \tparam value type convertible to double.
 double value_of(T v)
 { //! \return value as a double.
   return double(v);

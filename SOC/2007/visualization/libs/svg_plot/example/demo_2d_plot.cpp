@@ -290,7 +290,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -454,7 +454,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -618,7 +618,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -782,7 +782,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -946,7 +946,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -1110,7 +1110,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -1274,7 +1274,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 
@@ -1438,7 +1438,7 @@ copyright_date
 copyright_holder 
 description 
 document_title 
-image_x_size 700
+x_size 700
 image_y_size 500
 image_size 700, 500
 image_filename 

@@ -8,7 +8,7 @@
   Show 1st quartile, median and 3rd quartile as a box.
   http://en.wikipedia.org/wiki/Boxplot
 
-  Some Implementations of the Boxplot
+  Some Implementations of the Boxplot:
   Michael Frigge, David C. Hoaglin and Boris Iglewicz
   The American Statistician, Vol. 43, No. 1 (Feb., 1989), pp. 50-54
 
@@ -17,7 +17,7 @@
   The American Statistician, Vol. 53, No. 4 (Nov., 1999), pp. 382-387
 
   \author Jacob Voytko & Paul A. Bristow
-  \date Mar 2009
+  \date Aug 2009
  */
 
 // Copyright Jacob Voytko 2007
@@ -99,7 +99,7 @@ namespace svg
         Median, whiskers and outliers are computed for each series.
         \see http://en.wikipedia.org/wiki/Boxplot
      */
-  public: // TODO private?
+  public: // private?
     std::vector<double> series_; //!< Data series for the boxplot.
     double whisker_min_; //!< Minimum of whisker.
     double whisker_max_; //!< Maximum of whisker.
@@ -136,7 +136,7 @@ namespace svg
     svg_boxplot_series( //! Constructor, providing default values for all data members.
       T begin,  //!< Data container interator begin.
       T end, //!< Data container interator end.
-      const std::string& title, // Data series title.
+      const std::string& title, //!< Data series title.
       double bw, //!< box width
       svg_style bs, //!< box style
       svg_style ms, //!< median marker style
@@ -596,8 +596,7 @@ namespace svg
     return quartile_definition_;
   }
 
-
-  // Not implemented yet - so these are only available for ALL boxplots.
+  // Not implemented yet - so these are only available for ALL *series* boxplot.
   //svg_boxplot_series& svg_boxplot_series::outlier_values_on(bool cmd)
   //{
   //  outlier_values_on_ = cmd;
@@ -633,113 +632,110 @@ class svg_boxplot  : public detail::axis_plot_frame<svg_boxplot>
   friend class detail::axis_plot_frame<svg_boxplot>;
   // axis_plot_frame.hpp contains functions common to 1 and 2-D, and boxplot.
 
-  public: //temporary for experimental gil
-//private:
-  svg image_; // Stored so as to avoid rewriting style information constantly.
-  // image_.size(500, 500);
+  public: //temporary for experimental gil was private:
 
-  double x_scale_; //! Used by function transform()
-  double x_shift_; //! to go from Cartesian to SVG coordinates.
-  double y_scale_; //! SVG coordinates origin is at top left,
-  double y_shift_;  //! and y coordinates increase DOWN the page!
+  svg image_; //!< svg image data, stored so as to avoid rewriting style information constantly.
 
-  double x_axis_position_; //! < Intersection of X axis, or not.
-  double y_axis_position_; //! < Intersection of Y axis, or not.
+  double x_scale_; //!< Used by function transform()
+  double x_shift_; //!< to go from Cartesian to SVG coordinates.
+  double y_scale_; //!< SVG coordinates origin is at top left,
+  double y_shift_;  //!< and y coordinates increase DOWN the page!
+
+  double x_axis_position_; //!< Intersection of X axis, or not.
+  double y_axis_position_; //!< Intersection of Y axis, or not.
 
   // Plot window (calculate_plot_window() sets these values).
-  double plot_left_;
-  double plot_top_;
-  double plot_right_;
-  double plot_bottom_;
+  double plot_left_; //!< SVG coordinate of left of plot window.
+  double plot_top_; //!< SVG coordinate of top of plot window.
+  double plot_right_;  //!< SVG coordinate of right of plot window.
+  double plot_bottom_; //!< SVG coordinate of bottom of plot window.
 
   // Order of these declarations (not definitions) seems to matter - styles 1st.
-  text_style a_style_; // Defaults.
-  text_style title_style_;
-  text_style x_axis_label_style_;
-  text_style x_value_label_style_;
-  text_style y_axis_label_style_;
-  text_style y_value_label_style_;
-  text_style point_symbols_style_; // Used for data point marking.
-  text_style value_style_; // Used for data point value label.
+ // text_style contains font size & type etc.
+  text_style a_style_; //!< Default text style (font etc).
+  text_style title_style_; //!< text style (font) used for plot title.
+  text_style x_axis_label_style_; //!< text style (font) used for Y axis label.
+  text_style x_value_label_style_; //!< text style (font) used for X data point value label.
+  text_style y_axis_label_style_; //!< text style (font) used for Y axis label.
+  text_style y_value_label_style_; //!< text style (font) used for Y data point value label.
+  text_style point_symbols_style_; //!< text style (font) used for symbol used for data point marking.
+  text_style value_style_; //!< style used for data point value label.
 
-  axis_line_style x_axis_;
-  axis_line_style y_axis_;
+  axis_line_style x_axis_; //!< style of X axis line.
+  axis_line_style y_axis_; //!< style of Y axis line.
 
  // text_style contains font size & type etc.
-  value_style values_style_; // Data point value marking.
+  value_style values_style_; //!< Data point value marking style.
 
-  text_element title_info_;
-  text_element x_label_info_;
-  text_element y_label_info_;
-  text_element x_units_info_; // For example: "mm"
-  text_element y_units_info_; // 2-D only.
+  text_element title_info_; //!< plot title info.
+  text_element x_label_info_; //!< X axis label info.
+  text_element y_label_info_; //!< Y axis label info (used for 2-D only).
+  text_element x_units_info_; //!< X axis unit label, For example: "mm"
+  text_element y_units_info_; //!< Y axis unit label (used for 2-D only).
 
   // Should use axis_style?
-  //    x_axis_(X, -10., +10., black, 1, 0, true, false, true),
-  box_style image_border_; // rectangular border of all image width, color...
-  box_style plot_window_border_; // rectangular border of plot window width, color...
+  //  x_axis_(X, -10., +10., black, 1, 0, true, false, true),
+  box_style image_border_; //!< rectangular border of all image width, color...
+  box_style plot_window_border_; //!< rectangular border of plot window width, color...
 
-  ticks_labels_style x_ticks_;
-  ticks_labels_style y_ticks_; // Added to permit shared code!
+  ticks_labels_style x_ticks_; //!< style of X axis ticks.
+  ticks_labels_style y_ticks_; //!< style of X axis ticks. (Added to permit shared code!)
 
-  bool autoscale_check_limits_; // Whether to check autoscale values for infinity, NaN, max, min.
-  bool x_autoscale_; // Whether to use any X-axis autoscale values.
-  bool x_include_zero_; // If autoscaled, include zero.
-  int  x_min_ticks_;  // If autoscaled, set a minimum number of X ticks.
-  double x_tight_;
-  int  x_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+  bool autoscale_check_limits_; //!< If true then to check autoscale values for infinity, NaN, max, min.
+  bool x_autoscale_; //!< If thrue then to use any X-axis autoscale values.
+  bool x_include_zero_; //!< If true and autoscaled, include zero.
+  int  x_min_ticks_;  //!< If autoscaled, set a minimum number of X ticks.
+  double x_tight_; //!< How much a point is allowed beyond the X  minimum or maximum before another tick is used.
+  int x_steps_;  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
   // Values calculated by scale_axis, and is used only if x_autoscale == true.
-  double x_auto_min_value_;
-  double x_auto_max_value_;
-  double x_auto_tick_interval_; // tick major interval.
-  int x_auto_ticks_; // Number of ticks.
+  double x_auto_min_value_; //!< Value calculated by scale_axis, and is used only if x_autoscale == true.
+  double x_auto_max_value_; //!< Value calculated by scale_axis, and is used only if x_autoscale == true.
+  double x_auto_tick_interval_; //!< tick major interval calculated by scale_axis.
+  int x_auto_ticks_; //!< Number of ticks calculated by scale_axis.
 
-  bool y_autoscale_; // Whether to use any y_axis autoscale values.
+  bool y_autoscale_; //!< If true then to use any y_axis autoscale values.
   double autoscale_plusminus_; //!< For uncertain values, allow for plusminus ellipses showing 67%, 95% and 99% confidence limits.\n
   //!< For example, if a max value is 1.2 +or- 0.02, then 1.4 will be used for autoscaling the maximum.\n
   //!< Similarly, if a min value is 1.2 +or- 0.02, then 1.0 will be used for autoscaling the minimum.
 
-  bool y_include_zero_; // If autoscaled, include zero.
-  int  y_min_ticks_;  // If autoscaled, set a minimum number of Y ticks.
-  double y_tight_;
-  int y_steps_;  // If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
+  bool y_include_zero_; //!< If autoscaled, include zero.
+  int  y_min_ticks_;  //!< If autoscaled, set a minimum number of Y ticks.
+  double y_tight_; //!< How much a point is allowed beyond the Y minimum or maximum before another tick is used.
+  int y_steps_;  //!< If autoscaled, set any prescaling to decimal 1, 2, 5, 10 etc.
 
-    // Values calculated by scale_axis, and is used only if y_autoscale == true.
-  double y_auto_min_value_;
-  double y_auto_max_value_;
-  double y_auto_tick_interval_; // tick major interval.
-  int y_auto_ticks_; // Number of ticks.
+  double y_auto_min_value_; //!< Value calculated by scale_axis, and is used only if y_autoscale == true.
+  double y_auto_max_value_; //!< Value calculated by scale_axis, and is used only if y_autoscale == true.
+  double y_auto_tick_interval_; //!< tick major interval calculated by scale_axis.
+  int y_auto_ticks_; //!< Number of ticks calculated by scale_axis.
 
-  double text_margin_; // Marginal space around text items like title,
-  // text_margin_ * font_size to get distance in svg units.
-  bool title_on_;
+  double text_margin_; //!< Marginal character space around text items like title,
+                       //!< (Use text_margin_ * font_size to get distance in svg units).
+  bool title_on_; //!< If true then should the plot title (set true if a title requested).
 
-  std::string plot_window_clip_;
-  bool plot_window_on_;
-  bool median_values_on_; // If values of data are shown as well as a marker like square.
-  bool outlier_values_on_; // If values of data are shown.
-  bool extreme_outlier_values_on_; // If values of data are shown.
+  std::string plot_window_clip_; //!< name of plot window clip (all lines and text is clipped outside).
+  bool plot_window_on_; //!< true if a central plot window (rather than the whole image rectangle) to be used.
+  bool median_values_on_; //!< true if median of data is shown as well as a line marker.
+  bool outlier_values_on_; //!< true if outlier values of data are shown.
+  bool extreme_outlier_values_on_; //!< true if values of extreme outlier data are shown.
 
-  // For storing the data points for sorting.
-  std::vector<svg_boxplot_series> series;
+  std::vector<svg_boxplot_series> series; //!< Storing the data points for sorting by value.
 
   // Defaults (see below) for the box'n'whiskers
   // can be changed by functions like boxplot.box_width(50)
   // for all following plot(data,"title") calls
   // But can also change each plot data series separately.
-  double box_width_;
-  svg_style box_style_;
-
-  svg_style median_style_;
-  text_style series_style_;
-  svg_style axis_style_;
-  double whisker_length_;
-  svg_style min_whisker_style_;
-  svg_style max_whisker_style_;
-  int quartile_definition_;
-  plot_point_style mild_outlier_;
-  plot_point_style ext_outlier_;
+  double box_width_; //!< Width of box used to show limit of most data items.
+  svg_style box_style_; //!< style (color ...) of box used to show limit of most data items.
+  svg_style median_style_; //!< style (color ...) used to show median.
+  text_style series_style_; //!< font style for name of series.
+  svg_style axis_style_; //!< line style for axis.
+  double whisker_length_; //!< length of whisker showing outliers.
+  svg_style min_whisker_style_; //!< line style for minimum whisker.
+  svg_style max_whisker_style_; //!< line style for maximum whisker.
+  int quartile_definition_; //!< Quartile definition type.
+  plot_point_style mild_outlier_; //!< Style of points that are mild outliers.
+  plot_point_style ext_outlier_; //!< Style of points that are extreme outliers.
 
 public:
  // text_element(double x = 0., double y = 0., const std::string text = "", text_style ts = no_style, align_style align = left_align, rotate_style rotate = horizontal)
@@ -1904,29 +1900,29 @@ public:
 
   // svg_boxplot Member Functions to control all box and whisker settings.
 
-  svg_boxplot& whisker_length(double width);
-  double whisker_length(); //!
+  svg_boxplot& whisker_length(double width); //! Set length of whiskers.
+  double whisker_length(); //! \return length of whiskers.
   svg_boxplot& box_width(double width); //! Width of the actual box (not the border).
   double box_width(); //! \return Width of the box (not the border).
-  svg_boxplot& x_axis_position(int pos); // Position of the horizontal X-axis line (on the border).
-  double x_axis_position(); // Position of the horizontal X-axis line (on the border).
-  svg_boxplot& y_axis_position(int pos); // Position of the vertical Y-axis line (on the border).
-  double y_axis_position(); // Position of the vertical Y-axis line (on the border).
+  svg_boxplot& x_axis_position(int pos); //! Position of the horizontal X-axis line (on the border).
+  double x_axis_position(); //! Position of the horizontal X-axis line (on the border).
+  svg_boxplot& y_axis_position(int pos); //! Position of the vertical Y-axis line (on the border).
+  double y_axis_position(); //! Position of the vertical Y-axis line (on the border).
   svg_boxplot& box_fill(const svg_color& color); // Color of box fill, not border.
-  svg_color box_fill(); // Color of box fill, not border.
+  svg_color box_fill(); //! Color of box fill, not border.
   svg_boxplot& box_border(const svg_color& color); // Color of border (not fill) to box.
-  svg_color box_border(); // Color of border (not fill) to box.
+  svg_color box_border(); //! Color of border (not fill) to box.
   svg_boxplot& median_color(const svg_color& color); // Color of median line in box.
-  svg_color median_color(); // Color of median line in box.
-  svg_boxplot& median_width(double l); // Width of median line in box.
-  double median_width(); //  Width of median line in box.
-  svg_boxplot& axis_color(const svg_color& color);
-  svg_color axis_color(); // Color of median line in box.
-  svg_boxplot& axis_width(double l); // Width of vertical whisker axis line in box.
-  double axis_width(); //  Width of vertical whisker axis line in box.
+  svg_color median_color(); //! Color of median line in box.
+  svg_boxplot& median_width(double l); //! Width of median line in box.
+  double median_width(); //!  Width of median line in box.
+  svg_boxplot& axis_color(const svg_color& color);//! Color of median line in box.
+  svg_color axis_color(); //! \return Color of median line in box.
+  svg_boxplot& axis_width(double l); // !Width of vertical whisker axis line in box.
+  double axis_width(); //!  Width of vertical whisker axis line in box.
 
-  plot_point_style& outlier_style(); //
-  svg_boxplot& outlier_style(plot_point_style& os);
+  plot_point_style& outlier_style(); //! \return style of points used to mark outliers.
+  svg_boxplot& outlier_style(plot_point_style& os); //! Set style of points used to mark outliers.
 
   svg_boxplot& outlier_color(const svg_color& color); //! Set Color of outlier marker.
   svg_color outlier_color(); //! \return Color of outlier marker.
@@ -1964,7 +1960,7 @@ public:
   // explicit svg_boxplot::y_autoscale causes C2442 here, but omitting svg_boxplot:: is OK????
 
   template <class T> // T an STL container: array, vector ...
-  svg_boxplot& y_autoscale(const T& container); //// Autoscale using whole container.
+  svg_boxplot& y_autoscale(const T& container); // Autoscale using whole container.
 
   // Plot member function to add a Data Series Boxplot.
 
@@ -1979,7 +1975,7 @@ public:
     svg_style as, //!< axis style.
     double wl, //!< whisker length.
     svg_style minws, //!< min whisker style.
-    svg_style maxws, //<! max whisker style.
+    svg_style maxws, //!< max whisker style.
     plot_point_style os, //!< mild outlier style.
     plot_point_style extos, //!< extreme outlier style.
     int q_def, //!< Quartile definition H&F \#.
@@ -2000,9 +1996,9 @@ public:
       return series[series.size() - 1]; // Number of data series added so far.
   } // svg_boxplot_series& plot(const T& container, const std::string& title )
 
-  template <class T> //! \tparam T data series value type (must be convertible to double).
-  svg_boxplot_series& plot(const T& container, //! Add a data series to boxplot.
-    const std::string& title = "") //! Warning given if this default is used.
+  template <class T> //!< \tparam T data series value type (must be convertible to double).
+  svg_boxplot_series& plot(const T& container, //!< Add a container of data series to boxplot.
+    const std::string& title = "") //!< Warning given if this default is used.
   { //! plot version copying box'n'whiskers parameters from parent boxplot.
     if (title.size() == 0)
     {

@@ -91,10 +91,10 @@ namespace svg
     */
 
   protected:
-    svg_style style_info_; //! Colors fill, stroke, width, get by function style.
-    std::string id_name_; //! SVG id name, set & get by function id.
-    std::string class_name_; //! SVG class name, set & get by function class id.
-    std::string clip_name_; //! SVG clip path name, set & get by function clip_id.
+    svg_style style_info_; //!< Colors fill, stroke, width, get by function style.
+    std::string id_name_; //!< SVG id name, set & get by function id.
+    std::string class_name_; //!< SVG class name, set & get by function class id.
+    std::string clip_name_; //!< SVG clip path name, set & get by function clip_id.
 
     void write_attributes(std::ostream& s_out)
     { //! Output group_element id and clip-path.
@@ -114,10 +114,10 @@ namespace svg
       // should transform be here allow translate and rotate?
       /*! \details
         Classes inherited from svg_element add other references, 5.3.1, like color, fill, stroke, gradients...
-      \verbatim
-        Example id: <g id="yMinorGrid" ></g>
-        Example class: <g class="grid_style"></g>
-        Example URI: fill="url(#Gradient01) // local URL
+        \verbatim
+          Example id: <g id="yMinorGrid" ></g>
+          Example class: <g class="grid_style"></g>
+          Example URI: fill="url(#Gradient01) // local URL
         \endverbatim
       */
     } // void write_attributes(std::ostream& s_out)
@@ -133,17 +133,17 @@ namespace svg
                 id_name_(id_name),
                 class_name_(class_name),
                 clip_name_(clip_name)
-    { // Constructor.
+    { //! Constructor with some defaults.
     }
 
     svg_element()
-    { // Default constructor.
+    { //! Default constructor.
     }
 
-    virtual void write(std::ostream& rhs) = 0;
+    virtual void write(std::ostream& rhs) = 0; //!< write functions output SVG commands.
 
     virtual ~svg_element()
-    {
+    { //! destructor.
     }
 
     bool operator==(const svg_element& lhs)
@@ -242,7 +242,7 @@ namespace svg
   public:
     line_element(double x1, double y1, double x2,  double y2)
       :   x1_(x1), y1_(y1),  x2_(x2), y2_(y2)
-    { // Constructor assigning all line_element private data.
+    { //! Constructor assigning all line_element private data.
     }
 
     line_element(double x1, double y1,
@@ -254,8 +254,8 @@ namespace svg
                  const std::string& clip_name = "")
                 : x1_(x1), y1_(y1), x2_(x2), y2_(y2),
                   svg_element(style_info, id_name, class_name, clip_name)
-    { // Constructor assigning all line_element private data,
-      // and also inherited svg_element data.
+    { //! Constructor assigning all line_element private data,
+      //! and also inherited svg_element data.
     }
 
     void write(std::ostream& rhs)
@@ -286,7 +286,7 @@ namespace svg
     // bool fill; now inherited from parent svg class.
     qurve_element(double x1, double y1, double x2,  double y2, double x3,  double y3)
       :   x1_(x1), y1_(y1), x2_(x2), y2_(y2),  x3_(x3), y3_(y3)
-    {
+    { //!< Quadratic curved line constructor (info inherited from parent svg_element class).
     }
 
     qurve_element(double x1, double y1,
@@ -299,7 +299,7 @@ namespace svg
                  const std::string& clip_name = "")
                 : x1_(x1), y1_(y1), x2_(x2), y2_(y2), x3_(x3), y3_(y3),
                   svg_element(style_info, id_name, class_name, clip_name)
-    {
+    { //!< Quadratic curved line constructor, including svg_element info.
     }
 
     void write(std::ostream& o_str)
@@ -319,7 +319,6 @@ namespace svg
         o_str << " fill = \"none\"";
       }
       o_str<<"/>";
-      // Perhaps
     }
   }; // class qurve_element
 
@@ -336,12 +335,12 @@ namespace svg
   public: //temporary for experimental gil
 
 //  private:
-    double x_; //! X-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
-    double y_; //! Y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
-    //! So (0, 0) is top left corner of rectangle.
-    double width_; //! x + width is top right.
-    double height_; //! y + height is bottom left.
-    //! x + width and y + height is bottom right.
+    double x_; //!< X-axis coordinate of the side of the rectangle which has the smaller x-axis coordinate value.
+    double y_; //!< Y-axis coordinate of the side of the rectangle which has the smaller y-axis coordinate value.
+    //!< So (0, 0) is top left corner of rectangle.
+    double width_; //!< x + width is top right.
+    double height_; //!< y + height is bottom left.
+    //!< x + width and y + height is bottom right.
   public:
 
     rect_element(double x, double y, double w, double h)
@@ -357,7 +356,7 @@ namespace svg
                  const std::string& clip_name)
       : x_(x), y_(y), width_(w), height_(h),
         svg_element(style_info, id_name, class_name, clip_name)
-    { // Constructor defines all private data (no defaults).
+    { //! Constructor defines all private data (inherites info from svg_element).
     }
 
     double x() const
@@ -395,11 +394,11 @@ namespace svg
     }
 
     bool operator==(const rect_element& lhs)
-    { // Comparison useful for Boost.Test.
+    { //! Comparison (useful for Boost.Test).
       return (lhs.x() == x_) && (lhs.y() == y_) &&  (lhs.width() == width_) && (lhs.height() == height_);
     }
     bool operator!=(const rect_element& lhs)
-    {
+    { //!< Comparison rect_elements (useful for Boost.Test).
       return (lhs.x() != x_) || (lhs.y() != y_) ||  (lhs.width() != width_) || (lhs.height() != height_);
     }
   }; // class rect_element
@@ -437,7 +436,9 @@ namespace svg
     double y;
     double radius;
   public:
-    circle_element(double x, double y, double radius = 5)
+    circle_element(double x,  //!< coordinate X of center of ellipse.
+      double y, //!< coordinate Y of center of ellipse.
+      double radius = 5) //!< radius of ellipse.
       : x(x), y(y), radius(radius)
     { //! Constructor defines all private data (default radius only).
     }
@@ -477,35 +478,42 @@ namespace svg
   private:
     double cx_; //!< coordinate x of center of ellipse, default 0.
     double cy_; //!< coordinate y, default 0.
-    double rx_; //!< radius x.
-    double ry_; //!< radius y.
+    double rx_; //!< radius x, default 4 pixels.
+    double ry_; //!< radius y, default 8 pixels.
     double rotate_; //! rotation in degrees from horizontal (default 0.).
     // Only hacked in - should be in attributes?
   public:
-    ellipse_element(double cx, double cy, double rx = 4,  double ry = 8)
+    ellipse_element(double cx, //!< coordinate X of center of ellipse.
+      double cy, //!< coordinate Y  of center of ellipse.
+      double rx = 4, //!< X radius default.
+      double ry = 8) //!< Y radius default.
       : cx_(cx), cy_(cy), rx_(rx), ry_(ry), rotate_(0.)
     { //!< Constructor defines all private data (with default radii).
     }
 
-    ellipse_element(double cx, double cy, double rx,  double ry,
-                 const svg_style& style_info,
-                 const std::string& id_name="",
-                 const std::string& class_name="",
-                 const std::string& clip_name="")
+    ellipse_element(double cx, //!< coordinate X of center of ellipse.
+      double cy, //!< coordinate Y of center of ellipse.
+      double rx, //!< radius X.
+      double ry, //!< radius Y.
+      const svg_style& style_info, //!< style (color and width)
+      const std::string& id_name="", //!< ID of group, for example: PLOT_X_TICKS_VALUES.
+      const std::string& class_name="", //!< Name of SVG class, for example: "grid_style".
+      const std::string& clip_name="") //!< name of clip path.
       : cx_(cx), cy_(cy), rx_(rx), ry_(ry), rotate_(0.),
         svg_element(style_info, id_name, class_name, clip_name)
-    { //!< Constructor defines all private data.
+    { //!< Constructor sets ellipse and its style (defaults define all private data).
     }
-    // Constructor that also includes style, id, class and clip.
-    ellipse_element(double cx, double cy,
-                 const svg_style& style_info, //! Colors & widths.
-                 const std::string& id_name = "",
-                 const std::string& class_name = "",
-                 const std::string& clip_name = "")
+    ellipse_element(
+        double cx, //!< coordinate X of center of ellipse.
+        double cy, //!< coordinate Y of center of ellipse.
+        const svg_style& style_info, //!< Style - Colors & widths.
+        const std::string& id_name = "",  //!< ID of group, for example: PLOT_X_TICKS_VALUES.
+        const std::string& class_name = "", //!< Name of SVG class."grid_style"
+        const std::string& clip_name = "") //!< name of clip path.
       : cx_(cx), cy_(cy), rx_(4), ry_(8), // 4 and 8 are the same defaults used above.
-        rotate_(0.),
+        rotate_(0.), // Horizontal.
         svg_element(style_info, id_name, class_name, clip_name)
-    { // Define all private data.
+    {  //!< Constructor that also includes style, id, class and clip.
     }
 
     void write(std::ostream& os)
@@ -537,18 +545,18 @@ class text_parent
     \details This allows an array of both types to be stored in text_element.
   */
   protected:
-    std::string text_;
+    std::string text_; //!< Actual text string for SVG text.
 
   public:
     virtual void write(std::ostream& /* o_str */)
-    {
+    { //! write functions output SVG commands.
     }
 
     text_parent(const std::string& text): text_(text)
-    {
+    { //! Construct from text.
     }
     text_parent(const text_parent& rhs): text_(rhs.text_)
-    {
+    { //! Copy construct.
     }
 }; // class text_parent
 
@@ -559,13 +567,13 @@ class text_element_text : public text_parent
   */
 public:
   text_element_text(const std::string& text): text_parent(text)
-  {
+  { //! Construct from text.
   }
   text_element_text(const text_element_text& rhs): text_parent(rhs)
-  {
+  { //! Copy construct text element
   }
   void write(std::ostream& o_str)
-  {
+  { //! write text to stream.
     o_str << text_;
   }
 }; // class text_element_text
@@ -590,18 +598,19 @@ private:
   bool use_y_; //!> If true then use Y absolute position.
   bool use_text_length_; //!< If true then use user calculated length rather than SVG (not used).
   text_style style_; //!< font variants.
-  bool use_style_;
+  bool use_style_; //!< If true to use
 
 public:
-  tspan_element(const std::string& text, const text_style& style = no_style)
+  tspan_element(const std::string& text, //!< Text string to display.
+    const text_style& style = no_style) //!< Text style (font).
     :
     x_(0), y_(0), dx_(0), dy_(0), rotate_(0), text_length_(0),
     use_x_(false), use_y_(false), use_text_length_(false),
     style_(style), text_parent(text)
-  {
+  { //! Construct tspan element (with all defaults except text string).
   }
 
-  tspan_element(const tspan_element& rhs);
+  tspan_element(const tspan_element& rhs); //!< Copy contructor.
     // TODO all may need refactoring to separate declaration from definition - as example below.
 
   //tspan_element(const tspan_element& rhs)
@@ -627,19 +636,19 @@ public:
 
 
   tspan_element& text(const std::string& text)
-  {
+  { //! Set text string to use with SVG tspan command.
     text_=text;
     return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& dx(double dx)
-  {
+  { //! Relative X position of a 1st single character of text string to use with SVG tspan command.
     dx_ = dx;
     return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& dy(double dy)
-  {
+  { //! Relative Y position of a 1st single character of text string to use with SVG tspan command.
     dy_ = dy;
     return *this; //! \return tspan_element& to make chainable.
   }
@@ -652,14 +661,14 @@ public:
   }
 
   tspan_element& x(double x)
-  {
+  { //! Absolute X position of a 1st single character of text string to use with SVG tspan command.
     x_ = x;
     use_x_ = true;
     return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& y(double y)
-  {
+  {//! Absolute Y position of a 1st single character of text string to use with SVG tspan command.
     y_ = y;
     use_y_ = true;
     return *this; //! \return tspan_element& to make chainable.
@@ -673,21 +682,22 @@ public:
   }
 
   tspan_element& font_size(unsigned int size)
-  {
+  { //! font size of 1st single character of text string to use with SVG tspan command.
     style_.font_size(size);
     use_style_ = true;
     return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& font_family(const std::string& family)
-  {
+  {//! font family of 1st single character of text string to use with SVG tspan command.
     style_.font_family(family);
     use_style_ = true;
     return *this; //! \return tspan_element& to make chainable.
   }
 
   tspan_element& font_style(const std::string& style)
-  { //! font-style: normal | bold | italic | oblique
+  { //! font style of 1st single character of text string to use with SVG tspan command.
+    //! font-style: normal | bold | italic | oblique
     //! Examples: "italic"
     //! http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     style_.font_style(style);
@@ -696,7 +706,8 @@ public:
   }
 
   tspan_element& font_weight(const std::string& w)
-  { //! svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
+  { //! font weight of 1st single character of text string to use with SVG tspan command.
+  //! svg font-weight: normal | bold | bolder | lighter | 100 | 200 .. 900
     //! Examples: "bold", "normal"
     //! http://www.croczilla.com/~alex/conformance_suite/svg/text-fonts-02-t.svg
     //! tests conformance.  Only two weights are supported by Firefox, Opera, Inkscape.
@@ -713,7 +724,7 @@ public:
   }
 
   tspan_element& textstyle(const text_style& style)
-  { //! Set text style for a tspan element.
+  { //! Set text style (font) for a tspan element.
     style_ = style;
     use_style_ = true;
     return *this; //! \return tspan_element& to make chainable.
@@ -732,12 +743,12 @@ public:
   //const text_style& text_style() const;
 
   const text_style& textstyle()
-  { // Access to font family, size ...
+  { //! \return text_style& to permit access to font family, size ...
     return style_;
   }
 
   const text_style& textstyle() const
-  {// const version of access to font family, size ...
+  {//! \return text_style& to permit access to font family, size (const version).
     return style_;
   }
 
@@ -984,7 +995,7 @@ public:
   }
 
   rotate_style rotation() const
-  {
+  { //! \return rotation of text element.
     return rotate_;
   }
 
@@ -1031,16 +1042,16 @@ public:
   }
 
   text_element(
-    //! Coordinates of 1st character EM box, see
-    //! http://www.w3.org/TR/SVG/text.html#TextElement 10.2
-    double x = 0., //! X = Left edge.
-    double y = 0., //! Y =  Bottom left of (western) character (roman capital).
-    //! So any text with Y coordinate = 0 shows only the roman lower case descenders!
-    //! One must increase Y to allow for the height (font size) of the character.
-    const std::string text = "",
-    text_style ts = no_style, // Left to SVG defaults.
-    align_style align = left_align,
-    rotate_style rotate = horizontal)
+    //!< Coordinates of 1st character EM box, see
+    //!< http://www.w3.org/TR/SVG/text.html#TextElement 10.2
+    double x = 0., //!< X = Left edge.
+    double y = 0., //!< Y =  Bottom left of (western) character (roman capital).
+    //!< So any text with Y coordinate = 0 shows only the roman lower case descenders!
+    //!< One must increase Y to allow for the height (font size) of the character.
+    const std::string text = "", //!< Text string to output (may include Unicode string like "&#x221A;" for square root symbol.
+    text_style ts = no_style, //!< Text font style,default left to SVG defaults.
+    align_style align = left_align, //!< Alighment of text, left, center or right, default left_align.
+    rotate_style rotate = horizontal) //!< orientation of text, default horizontal.
     : // Constructor.
     x_(x), y_(y), // location.
     data_(ptr_vector<text_parent>()),
@@ -1056,12 +1067,12 @@ public:
   text_element(const text_element& rhs)
   :
     x_(rhs.x_), y_(rhs.y_), style_(rhs.style_), align_(rhs.align_), rotate_(rhs.rotate_)
-  { // Copy constructor.
+  { //! Copy constructor.
      data_ = (const_cast<text_element&>(rhs)).data_.release();
   }
 
   text_element& operator=(const text_element& rhs)
-  {
+  { //! Assignment operator.
     x_ = rhs.x_;
     y_ = rhs.y_;
     data_.clear(); // Copy data_
@@ -1069,11 +1080,11 @@ public:
     style_ = rhs.style_;
     align_ = rhs.align_;
     rotate_ = rhs.rotate_;
-    return *this; //! to make chainable.
+    return *this; //! \return text_element& to make chainable.
   }
 
   std::string text()
-  {
+  { //! \return text string of a text_element.
     std::stringstream os;
     generate_text(os);
     return os.str();
@@ -1161,18 +1172,18 @@ public:
     */
   public: //temporary for experimental gil
 //  private:
-    std::string element_id; // SVG element id.
-    rect_element rect; //! Clipping rectangle.
+    std::string element_id; //!< SVG element id.
+    rect_element rect; //!< Clipping rectangle.
 
   public:
 
     clip_path_element(const std::string& id, const rect_element& rect)
       : element_id(id), rect(rect)
-      { // Constructor defines all member variables.
+      { //!< Constructor defines all member variables.
       }
 
       void write(std::ostream& os)
-      {
+      { //!< Write clip path to ostream.
         os << "<clipPath id=\"" << element_id << "\">";
         rect.write(os);
         os  << "</clipPath>" << std::endl;
@@ -1187,27 +1198,27 @@ public:
      */
     bool relative; //!< If true relative else absolute.
 
-    virtual void write(std::ostream& rhs) = 0;
+    virtual void write(std::ostream& rhs) = 0; //!< write functions output SVG commands like "M1.2, 3.4",
     virtual ~path_point()
-    {
+    { //! Destructor.
     }
 
     path_point(bool relative) : relative(relative)
-    { // Constructor defines all member variables.
+    { //!< Constructor defines all member variables.
     }
   }; // struct path_point
 
 
   struct m_path: public path_point
   { /*! \struct boost::svg::m_path
-      \brief moveto coordinates (x, y)
-     \details   8.3.2 The "moveto" commands.
+      \brief move to coordinates (x, y)
+     \details See 8.3.2 The "moveto" commands.
      */
-    double x;
-    double y;
+    double x; //!< End of move SVG X coordinate.
+    double y; //!< End of move SVG Y coordinate.
 
     void write(std::ostream& o_str)
-    { //! Example: "M52.8571,180 "
+    { //! write moveto X and Y coordinates to stream, for example: "M52.8571,180 "
       if(relative)
       {
         o_str << "m";
@@ -1216,13 +1227,13 @@ public:
       { // absolute
         o_str << "M";
       }
-      o_str << x << "," << y << " "; // separator changed to comma for clarity.
+      o_str << x << "," << y << " "; // separator changed to comma for clarity when reading XML source.
 
     } // void write(std::ostream& o_str)
 
     m_path(double x, double y, bool relative = false)
       : x(x), y(y), path_point(relative)
-    {
+    { //! Construct a move to
     }
   }; // struct m_path
 
@@ -1236,12 +1247,12 @@ public:
        from the current point to current subpath's initial point.
     */
     void write(std::ostream& o_str)
-    {
+    { //! Write close current path SVG command.
       o_str << "Z";
     }
 
     z_path() : path_point(false)
-    { // Constructor defines all member variables.
+    { //! Constructor defines all member variables.
     }
   }; // struct z_path
 
@@ -1251,11 +1262,10 @@ public:
       \brief Draw a line from the current point to the given (x,y) coordinate
        which becomes the new current point.
     */
-    double x;
-    double y;
-
+    double x; //!< End of line SVG X coordinate.
+    double y; //!< End of line SVG Y coordinate.
     void write(std::ostream& o_str)
-    {
+    { //! Write line to SVG command.
       if(relative)
       {
         o_str << "l";
@@ -1269,7 +1279,7 @@ public:
 
     l_path(double x, double y, bool relative = false)
       : x(x), y(y), path_point(relative)
-    { // Constructor defines all member variables.
+    { //! Constructor defines all member variables.
     }
   }; // struct l_path
 
@@ -1278,9 +1288,9 @@ public:
       \brief  Draws a horizontal line from the current point (cpx, cpy) to (x, cpy).
        which becomes the new current point. No y needed, start from current point y.
     */
-    double x;
+    double x; //!< x horizontal SVG coordinate.
     void write(std::ostream& o_str)
-    {
+    { //! Write horizontal line SVG command.
       if(relative)
       {
         o_str << "h";
@@ -1293,8 +1303,8 @@ public:
     }
 
     h_path(double x, bool relative = false)
-      : x(x), path_point(relative)
-    { // Constructor defines all member variables.
+    :  x(x), path_point(relative)
+    { //!< Constructor defines all member variables.
     }
   }; // struct h_path
 
@@ -1303,9 +1313,9 @@ public:
         \brief Draws a vertical line from the current point (cpx, cpy) to (cpx, y).
         No x coordinate needed - use current point x.
     */
-    double y;
+    double y; //!< Y vertical line SVG coordinate.
     void write(std::ostream& o_str)
-    {
+    { //! Write vertical line SVG command.
       if(relative)
       {
         o_str << "v";
@@ -1319,7 +1329,7 @@ public:
 
     v_path(double y, bool relative = false)
       : y(y), path_point(relative)
-    { // Constructor defines all member variables.
+    { //!< Constructor (defines all member variables).
     }
   }; // struct v_path
 
@@ -1337,7 +1347,7 @@ public:
     double y; //!< Current (start point).
 
     void write(std::ostream& o_str)
-    {
+    { //!< Write a cubic Bezier curve SVG XML to ostream.
       if(relative)
       {
         o_str << "c";
@@ -1346,15 +1356,14 @@ public:
       { // Absolute.
         o_str<<"C";
       }
-      o_str << x1 << "," << y1 << " "
-        << x2 << "," << y2 << " "
+      o_str << x1 << "," << y1 << " " << x2 << "," << y2 << " "
         << x << "," << y << " ";
     } // void write(ostream&)
 
     c_path(double x1, double y1, double x2, double y2,
             double x, double y, bool relative = false)
       : x1(x1), y1(y1), x2(x2), y2(y2), x(x), y(y), path_point(relative)
-    { // Constructor defines all member variables.
+    { //!< Constructor defines all member variables.
     }
   }; // struct c_path
 
@@ -1363,10 +1372,13 @@ public:
       \brief Draws a quadratic Bezier curve from the current point to (x,y).
        using (x1,y1) as the control point.
     */
-    double x1, y1, x, y;
+    double x1; //!< quadratic Bezier curve control X coordinate.
+    double y1; //!< quadratic Bezier curve control Y coordinate.
+    double x; //!< quadratic Bezier curve end X coordinate.
+    double y; //!< quadratic Bezier curve end Y coordinate.
 
     void write(std::ostream& o_str)
-    {
+    { //!< Write a quadratic Bezier curve SVG XML to ostream.
       if(relative)
       {
         o_str << "q";
@@ -1375,13 +1387,12 @@ public:
       { // Absolute.
         o_str << "Q";
       }
-      o_str << x1 << " " << y1 << " "
-         << x << " " << y << " ";
+      o_str << x1 << " " << y1 << " " << x << " " << y << " ";
     }
 
     q_path(double x1, double y1, double x, double y, bool relative = false)
       : x1(x1), y1(y1), x(x), y(y), path_point(relative)
-    { // Constructor.
+    { //! Constructor quadratic Bezier curve.
     }
   }; //struct q_path
 
@@ -1391,10 +1402,12 @@ public:
       \details see also t_path for a quadratic Bezier curve.
 
     */
-    double x1, y1, x, y;
-
+    double x1; //!< Cubic Bezier curve control X coordinate.
+    double y1; //!< Cubic Bezier curve control Y coordinate.
+    double x; //!< Cubic Bezier curve end X coordinate.
+    double y; //!< Cubic Bezier curve end Y coordinate.
     void write(std::ostream& o_str)
-    {
+    { //! Write SVG Cubic Bezier curve command.
       if(relative)
       {
         o_str << "s";
@@ -1409,7 +1422,7 @@ public:
 
     s_path(double x1, double y1, double x, double y, bool relative = false)
       : x1(x1), y1(y1), x(x), y(y), path_point(relative)
-    { // Constructor.
+    { //! Constructor Cubic Bezier curve.
     }
   }; // struct s_path
 
@@ -1418,11 +1431,11 @@ public:
       \brief Draws a quadratic Bezier curve from the current point to (x,y).
       \details see also s_path for a cubic Bezier curve.
     */
-    double x;
-    double y;
+    double x; //!< SVG X coordinate.
+    double y; //!< SVG Y coordinate.
 
     void write(std::ostream& o_str)
-    {
+    { //! Write SVG command for a cubic Bezier curve.
       if(relative)
       {
         o_str << "t";
@@ -1436,14 +1449,14 @@ public:
 
     t_path(double x, double y, bool relative = false)
       : x(x), y(y), path_point(relative)
-    { // Constructor
+    { //! Constructor of path that draws a quadratic Bezier curve from the current point to (x,y)
     }
   }; // struct t_path
 
   struct a_path : public path_point
   { /*! \struct boost::svg::a_path
       \brief Draws a elliptical arc from the current point to (x,y),
-        using two radii, axis rotation, and control two flags.
+        using two radii, axis rotation, and two control flags.
       \details See 8.3.8 The elliptical arc curve commands.!
         Useful for pie charts, etc.
      */
@@ -1490,13 +1503,12 @@ public:
      */
   public: //temporary for experimental gil
 //  private:
-    ptr_vector<path_point> path; // All the (x, y) coordinate pairs,
-    // filled by calls of m, M, l , L... that push_back.
-  public:
+    ptr_vector<path_point> path; //!< All the (x, y) coordinate pairs,
+    //!< filled by calls of m, M, l , L... that push_back.
     // bool fill; now inherited from parent svg class.
 
     path_element(const path_element& rhs)
-    {
+    { //! Copy constructor.
       path = (const_cast<path_element&>(rhs)).path.release();
     }
 
@@ -1506,22 +1518,22 @@ public:
       const std::string& clip_name="")
       :
       svg_element(style_info, id_name, class_name, clip_name)
-    {
+    { //! Construct empty path element.
     }
 
     path_element()
-    {
+    { //! Construct an empty path element.
       // fill now got from the parent svg fill color.
     }
 
     path_element& fill_on(bool on_)
-    { // Set area fill, on or off.
+    { //! Set area fill, on or off.
       style_info_.fill_on(on_);
       return *this; //! \return path_element& to make chainable.
     }
 
     bool fill_on()
-    { // Get area fill, on or off.
+    { //! \return area fill, on or off.
       return style_info_.fill_on();
     }
     // Note 1: return of path_element& permits chaining calls like
@@ -1532,116 +1544,117 @@ public:
     // but upper case (like M) calls m_path(x, y, false) for absolute.
 
     path_element& m(double x, double y)
-    { // relative.
+    { //! Move relative by x and y.
       path.push_back(new m_path(x, y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& M(double x, double y)
-    { // absolute.
+    { //! Move to absolute x and y.
       path.push_back(new m_path(x, y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& z()
-    { // Note lower case z, see path_element& Z() below.
+    { //! Path end. Note lower case z, see path_element& Z() below.
       path.push_back(new z_path());
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& Z()
-    { // Upper case Z also provided for compatibility with
-      // http://www.w3.org/TR/SVG/paths.html#PathDataClosePathCommand 8.3.3 which allows either case.
+    { //! Path end. Note Upper case Z also provided for compatibility with
+      //! http://www.w3.org/TR/SVG/paths.html#PathDataClosePathCommand 8.3.3 which allows either case.
       path.push_back(new z_path());
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& l(double x, double y)
-    {
+    { //! Line to (relative).
       path.push_back(new l_path(x, y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& L(double x, double y)
-    {
+    { //! Line to (absolute).
       path.push_back(new l_path(x, y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& h(double x)
-    {
+    { //! Line horizontal (relative).
       path.push_back(new h_path(x, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& H(double x)
-    {
+    { //! Line horizontal (absolute).
       path.push_back(new h_path(x, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& v(double y)
-    {
+    { //! Line vertical (relative).
       path.push_back(new v_path(y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& V(double y)
-    {
+    {//! Line vertical (absolute).
       path.push_back(new v_path(y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& c(double x1, double y1, double x2, double y2, double x, double y)
-    {
+    { //! Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1).(relative).
       path.push_back(new c_path(x1, y1, x2, y2, x, y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& C(double x1, double y1, double x2, double y2, double x, double y)
-    {
+    { //! Draws a cubic Bezier curve from the current point to (x,y) using (x1,y1).(absolute).
       path.push_back(new c_path(x1, y1, x2, y2, x, y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& q(double x1, double y1, double x, double y)
-    {
+    {  //! Quadratic Curve Bezier (relative).
       path.push_back(new q_path(x1, y1, x, y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& Q(double x1, double y1, double x, double y)
-    {
+    { //! Quadratic Curve Bezier (absolute).
       path.push_back(new q_path(x1, y1, x, y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& s(double x1, double y1, double x, double y)
-    {
+    { //! Draws a cubic Bezier curve from the current point to (x,y) (relative).
       path.push_back(new s_path(x1, y1, x, y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& S(double x1, double y1, double x, double y)
-    { //
+    { //! Draws a cubic Bezier curve from the current point to (x,y) (absolute).
       path.push_back(new s_path(x1, y1, x, y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& t(double x, double y)
-    {
+    { //! Draws a quadratic Bezier curve from the current point to (x,y)(relative).
       path.push_back(new t_path(x, y, true));
       return *this; //! \return path_element& to make chainable.
     }
 
     path_element& T(double x, double y)
-    {
+    { //! Draws a quadratic Bezier curve from the current point to (x,y)(absolute).
       path.push_back(new t_path(x, y, false));
       return *this; //! \return path_element& to make chainable.
     }
 
     void write(std::ostream& o_str)
-    {
+    { //! Write SVG path command.
+      //! Example: \verbatim <path d="M5,175 L5,195 M148.571,175" /> \endverbatim
       if (path.begin() != path.end() )
       { // Is some path info (trying to avoid useless <path d=""/>"
         // TODO or would this omit useful style & attributes?
@@ -1664,7 +1677,7 @@ public:
         }
         o_str<<"/>"; // closing to match <path d=
       }
-      // Example: <path d="M5,175 L5,195 M148.571,175" />
+
     } // void write(std::ostream& o_str)
   }; // class path_element
 
@@ -1673,8 +1686,8 @@ public:
       \brief polyline or polygon point coordinates (x, y)
       \details  9.6 polyline & 9.7 The 'polygon' element.
       */
-    double x;
-    double y;
+    double x; //!< polygon or polyline path point X SVG coordinate.
+    double y; //!< polygon or polyline path point Y SVG coordinate.
     // Polygon & polyline points are always absolute, never relative,
     // and values have no preceeding letter like M or L,
     // So NOT derived from path_point.
@@ -1689,12 +1702,12 @@ public:
 
     poly_path_point(double x, double y)
       : x(x), y(y)
-    {
+    { //! Construct a polygon or polyline path point from X and Y SVG coordinate.
     }
 
     poly_path_point()
       : x(0.), y(0.)
-    { // Default constructor.
+    { //! Default constructor.
     }
 
   }; // struct poly_path_point
@@ -1728,16 +1741,16 @@ public:
     ptr_vector<poly_path_point> poly_points; //!< All the x, y coordinate pairs,
     //!< push_backed by calls of p_path(x, y).
   public:
-    bool fill; // polygon to have fill color.
+    bool fill; //!< polygon to have fill color.
 
     polygon_element(const polygon_element& rhs)
-    { // Copy constructor.
+    { //! Copy constructor.
       poly_points = (const_cast<polygon_element&>(rhs)).poly_points.release();
       // 'empty' the vector of points.
     }
 
     polygon_element() : fill(true)
-    {
+    { //! Default constructor empty polygon (with fill on).
     }
 
     polygon_element (double x, double y, bool f = true) : fill(f)
@@ -1917,7 +1930,7 @@ public:
     //bool fill; // not needed for polyline, unlike polygon.
 
     polyline_element(const polyline_element& rhs)
-    { // copy constructor.
+    { //! copy constructor.
       poly_points = (const_cast<polyline_element&>(rhs)).poly_points.release();
     }
 
@@ -1994,33 +2007,33 @@ public:
   class g_element: public svg_element
   { /*! \class boost::svg::g_element
       \brief g_element (group element) is the node element of our document tree.
-      'g' element is a container element for grouping together  <g> ... </g>
+      'g' element is a container element for grouping together:  \verbatim  <g> ... </g>  \endverbatim
       \details g_element ('g' element is a container element
       for grouping together related graphics elements).\n
       See http://www.w3.org/TR/SVG/struct.html#NewDocument 5.2.1 Overview.
 
-      \verbatim
-      'g' element is a container element for grouping together <g /> </g>
+
+      'g' element is a container element for grouping together \verbatim <g /> </g>\endverbatim
       related graphics elements, for example, an image background rectangle with border and fill:
-      <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
-      \endverbatim.
+      \verbatim <g id="background" fill="rgb(255,255,255)"><rect width="500" height="350"/></g>
+      \endverbatim
    */
   public: //temporary for experimental gil
 
 //  private:
-    ptr_vector<svg_element> children; /*! Children of this group element node,
+    ptr_vector<svg_element> children; /*!< Children of this group element node,
       containg graphics elements like text, circle line, polyline...
     */
-    std::string clip_name;
-    bool clip_on;
+    std::string clip_name;  //!< Name of clip path.
+    bool clip_on; //!< true if to clip anything outside the clip path.
   public:
 
     g_element() : clip_on(false)
-    {
+    { //! Construct g_element (with no clipping).
     }
 
     svg_element& operator[](unsigned int i)
-    {
+    { //! \return child svg_element node.
       return children[i];
     }
 

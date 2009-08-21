@@ -1,9 +1,9 @@
-/* \file svg_test.cpp
+/*! \file svg_test.cpp
    \brief demonstrate boxplot of common functions.
    \details This shows the distribution of the function from the median, quartiles etc.
     This is now obselete - see demo_boxplot.cpp.
 
-  \author Jake Voytko 
+  \author Jake Voytko
   \date Mar 2009
 */
 

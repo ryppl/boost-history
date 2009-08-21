@@ -1,17 +1,13 @@
 [section:howtouse How To Use This Documentation]
 
-* Tutorial pages are intended for those who do not know how to use the program.
+* Tutorials are listed in the Table of Contents and include many examples that should help you get started quickly.
 
-  * The pages that begin with the tag "Tutorial: Simple" are for absolute beginners.
+* Source code of the many Examples will often be your quickest option. They often deliberately use many features,
+often producing examples of outstandingly bad taste!
 
-  * "Tutorial: Full" should give the intermediate user a good
-    reference, as well as show how the program can be used
+* Reference section prepared using Doxygen will help fine-tuning the appearance of your graphs.
 
-  * "Tutorial: Special" shows other features/options that the headers
-    provide to the user.
-
-* The pages labelled "*Reference*" give Doxygen reference information.
-You can find all features with some descriptions, and some examples, in these sections.
+* Several indexes (especially the function index) will also help you find which of the several hundred options you need.
 
 * If you have a feature request, or if it appears that the implementation
 is in error, please check the __todo page first, as well
