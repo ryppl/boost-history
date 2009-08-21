@@ -207,16 +207,6 @@ class job : private boost::noncopyable
                 return false;
             }
 
-            // Map Task
-            if (map_key == typename map_task_type::key_type()
-            ||  value == typename map_task_type::value_type())
-            {
-                BOOST_ASSERT(map_key != typename map_task_type::key_type());
-                BOOST_ASSERT(value != typename map_task_type::value_type());
-                ++result.counters.map_key_errors;
-                return false;
-            }
-
             map_task_runner runner(*this);
             runner(map_key, value);
 
