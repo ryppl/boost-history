@@ -214,18 +214,13 @@ NS_BOOST_MEMORY_END
 
 NS_BOOST_MEMORY_BEGIN
 
-inline void swap(void* a, void* b, size_t cb)
-{
-	void* t = _alloca(cb);
-	memcpy(t, a, cb);
-	memcpy(a, b, cb);
-	memcpy(b, t, cb);
-}
-
 template <class Type>
 void swap_object(Type* a, Type* b)
 {
-	swap(a, b, sizeof(Type));
+	void* t = _alloca(sizeof(Type));
+	memcpy(t, a, sizeof(Type));
+	memcpy(a, b, sizeof(Type));
+	memcpy(b, t, sizeof(Type));
 }
 
 NS_BOOST_MEMORY_END
