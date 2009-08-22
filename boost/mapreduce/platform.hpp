@@ -24,6 +24,10 @@
 #undef max
 #endif
 
+#ifdef __GNUC__
+#include <cstdlib>
+#endif
+
 namespace boost {
 
 namespace mapreduce {
@@ -88,7 +92,14 @@ namespace mapreduce {
 
 namespace linux_os {
 
-std::string    &get_temporary_filename(std::string &pathname);   // !!! not implemented
+std::string get_temporary_filename(std::string &pathname)
+{
+    const std::string tmp = "/tmp/XXXXXX";
+    char* tmpfile = const_cast<char*>(tmp.c_str());
+    mkstemp(tmpfile);
+    std::string res(tmpfile);
+    return res;
+}
 
 #endif
 
