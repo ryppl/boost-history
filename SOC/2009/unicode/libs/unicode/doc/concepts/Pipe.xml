@@ -135,10 +135,6 @@
   </valid-expression>  
 
   <example-model>
-    <apply-template name="boost::one_many_pipe">
-        <type name="OneManyPipe"/>
-    </apply-template>
-  
     <type name="boost::unicode::u8_decoder" />
     <type name="boost::unicode::u16_decoder" />
     <type name="boost::unicode::hangul_composer" />

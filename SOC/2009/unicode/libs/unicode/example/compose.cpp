@@ -9,12 +9,16 @@ Example in development.
 #include <iostream>
 #include <iterator>
 
+#include <boost/unicode/cat.hpp>
+
 #include <boost/range/adaptor/reversed.hpp>
+#include <boost/range/algorithm/copy.hpp>
 #include <boost/assign/list_of.hpp> 
 
 namespace unicode = boost::unicode;
 namespace ucd = unicode::ucd;
 using boost::assign::list_of; 
+using boost::char32;
 
 int main()
 {
@@ -55,6 +59,28 @@ int main()
     boost::char32 bar[] = { 0x20, 0x308 };
     std::cout << "Canonical composition of { " << boost::as_array(bar) << " }: ";
     unicode::compose(bar, std::ostream_iterator<boost::char32>(std::cout, " "));
+    std::cout << std::endl << std::endl;
+    
+    //unicode::decomposed_concat(list_of<char32>(0x48)(0x65)(0x304)(0x301), list_of<char32>(0x330)(0x49), std::ostream_iterator<boost::char32>(std::cout, " "));
     std::cout << std::endl;
+    
+    boost::char32 tmp[] = {0x48, 0x1e17};
+    boost::iterator_range<
+        boost::pipe_iterator<
+            boost::char32*,
+            unicode::decomposer
+        >
+    > r = unicode::decomposed(tmp);
+    
+    std::cout << "Distance: " << std::distance(
+        begin(r),
+        prior(end(r))
+    ) << std::endl;
+    
+    boost::char32 tmp2[] = {0x330, 0x49};
+    unicode::composed_concat(list_of<char32>(0x48)(0x1e17), list_of<char32>(0x330)(0x49), std::ostream_iterator<boost::char32>(std::cout, " "));
+    std::cout << std::endl;
+    
+    std::cout << unicode::composed_concated(tmp, tmp2) << std::endl;
 }
 //]

@@ -123,7 +123,6 @@ struct pipe_iterator
 		return pos;
 	}
 
-private:
 	typedef typename Pipe::output_type T;
 
 	friend class boost::iterator_core_access;

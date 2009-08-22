@@ -69,6 +69,8 @@
     the function object.</simpara>
     </description>
   </associated-type>
+  
+  <refines const="no" concept="Pipe"/>
 
   <valid-expression name="Construction">
     <construct template-parameters="">

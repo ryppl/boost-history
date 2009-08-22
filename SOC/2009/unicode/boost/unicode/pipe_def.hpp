@@ -13,26 +13,6 @@
 
 #include <boost/iterator/pipe_iterator.hpp>
 
-namespace boost
-{
-
-/** INTERNAL ONLY */    
-template<typename Pipe>
-struct identity_pipe : Pipe
-{
-    identity_pipe() {}
-    identity_pipe(Pipe p) : Pipe(p) {}
-};
-
-/** INTERNAL ONLY */
-template<typename Pipe>
-identity_pipe<Pipe> make_identity_pipe(Pipe p)
-{
-    return identity_pipe<Pipe>(p);
-}
-
-}
-
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_PIPE_EAGER_DEF(z, n, text) \
@@ -44,11 +24,11 @@ OutputIterator text(const Range& range, OutputIterator out, const T&... args);
 #else
 #define BOOST_UNICODE_PIPE_EAGER_DEF(z, n, text) \
 template<typename Range, typename OutputIterator BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
-OutputIterator BOOST_PP_TUPLE_ELEM(2, 0, text)(const Range& range, OutputIterator out BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+OutputIterator text(const Range& range, OutputIterator out BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
 { \
     return pipe( \
         range, \
-        BOOST_PP_CAT(make_, BOOST_PP_TUPLE_ELEM(2, 1, text))(BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), r)(BOOST_PP_ENUM_PARAMS(n, t))), \
+        BOOST_PP_CAT(text, r)(BOOST_PP_ENUM_PARAMS(n, t)), \
         out \
     ); \
 }
@@ -61,63 +41,45 @@ OutputIterator BOOST_PP_TUPLE_ELEM(2, 0, text)(const Range& range, OutputIterato
    adapter that wraps the range \c range and converts it step-by-step as
    the range is advanced. */ \
 template<typename Range, typename... T> \
-detail::unspecified<void> BOOST_PP_CAT(text, d)(const Range& range, const T&... args);
+detail::unspecified<void> BOOST_PP_CAT(text, d)(Range&& range, const T&... args);
 #else
 #define BOOST_UNICODE_PIPE_LAZY_DEF(z, n, text) \
 template<typename Range BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
 iterator_range< \
     pipe_iterator< \
         typename range_iterator<const Range>::type, \
-        BOOST_PP_TUPLE_ELEM(2, 1, text) < \
-            unicode::BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), r) \
-        > \
+        unicode::BOOST_PP_CAT(text, r) \
     > \
 > \
-BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), d)(const Range& range BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+BOOST_PP_CAT(text, d)(const Range& range BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
 { \
-    return piped(range, BOOST_PP_CAT(make_, BOOST_PP_TUPLE_ELEM(2, 1, text))(unicode::BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), r)(BOOST_PP_ENUM_PARAMS(n, t)))); \
+    return piped(range, unicode::BOOST_PP_CAT(text, r)(BOOST_PP_ENUM_PARAMS(n, t))); \
 }
 #endif
 
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_PIPE_LAZY_2_DEF(z, n, text) \
-/** Lazily evalutes \c unicode::##text##r by returning a range
-   adapter that wraps the range \c range and converts it step-by-step as
-   the range is advanced. */ \
-template<typename Range, typename... T> \
-detail::unspecified<void> BOOST_PP_CAT(text, d)(Range& range, const T&... args);
+#define BOOST_UNICODE_PIPE_LAZY_2_DEF(z, n, text) 
 #else
 #define BOOST_UNICODE_PIPE_LAZY_2_DEF(z, n, text) \
 template<typename Range BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
 iterator_range< \
     pipe_iterator< \
         typename range_iterator<Range>::type, \
-        BOOST_PP_TUPLE_ELEM(2, 1, text) < \
-            unicode::BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), r) \
-        > \
+        unicode::BOOST_PP_CAT(text, r) \
     > \
 > \
-BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), d)(Range& range BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+BOOST_PP_CAT(text, d)(Range& range BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
 { \
-    return piped(range, BOOST_PP_CAT(make_, BOOST_PP_TUPLE_ELEM(2, 1, text))(unicode::BOOST_PP_CAT(BOOST_PP_TUPLE_ELEM(2, 0, text), r)(BOOST_PP_ENUM_PARAMS(n, t)))); \
+    return piped(range, unicode::BOOST_PP_CAT(text, r)(BOOST_PP_ENUM_PARAMS(n, t))); \
 }
 #endif
 
-#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_REPEAT(n, macro, tuple) \
-BOOST_PP_REPEAT(n, macro, BOOST_PP_TUPLE_ELEM(2, 0, tuple))
-#else
-#define BOOST_UNICODE_REPEAT(n, macro, tuple) \
-BOOST_PP_REPEAT(n, macro, tuple)
-#endif
-
-/** INTERNAL ONLY */
-#define BOOST_UNICODE_PIPE_COMMON_DEF(name, wrapper, n) \
-BOOST_UNICODE_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_EAGER_DEF, (name, wrapper)) \
-BOOST_UNICODE_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_LAZY_DEF, (name, wrapper)) \
-BOOST_UNICODE_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_LAZY_2_DEF, (name, wrapper))
+#define BOOST_UNICODE_PIPE_COMMON_DEF(name, n) \
+BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_EAGER_DEF, name) \
+BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_LAZY_DEF, name) \
+BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_LAZY_2_DEF, name)
 
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
@@ -145,8 +107,8 @@ pipe_output_iterator< \
  * \arg \c name Name of the type modelling the \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly.
  * \arg \c n Maximum number of optional arguments. */
 #define BOOST_UNICODE_ONE_MANY_PIPE_DEF(name, n) \
-BOOST_UNICODE_PIPE_COMMON_DEF(name, one_many_pipe, n) \
-BOOST_UNICODE_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_OUTPUT_DEF, name)
+BOOST_UNICODE_PIPE_COMMON_DEF(name, n) \
+BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_OUTPUT_DEF, name)
 
 /** Defines helper functions for usage of a \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly.
  * Helper functions provide a pseudo-variadic interface where they forward all the extra arguments to
@@ -154,6 +116,6 @@ BOOST_UNICODE_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_PIPE_OUTPUT_DEF, name)
  * \arg \c name Name of the type modelling the \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly.
  * \arg \c n Maximum number of optional arguments. */
 #define BOOST_UNICODE_PIPE_DEF(name, n) \
-BOOST_UNICODE_PIPE_COMMON_DEF(name, identity_pipe, n)
+BOOST_UNICODE_PIPE_COMMON_DEF(name, n)
 
 #endif

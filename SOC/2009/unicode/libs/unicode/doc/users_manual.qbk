@@ -454,6 +454,7 @@ its data in Normalized C form on top of a valid UTF encoding.
 
 [endsect]
 
+[xinclude autodoc1c.xml]
 [xinclude autodoc2.xml]
 
 [section Acknowledgements]

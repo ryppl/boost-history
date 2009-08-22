@@ -14,29 +14,27 @@
 
 #include <boost/iterator/pipe_iterator_fwd.hpp>
 
+#include <boost/type_traits.hpp>
+#include <boost/mpl/logical.hpp>
+#include <boost/utility/enable_if.hpp>
+
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/equal_to.hpp>
+
 namespace boost
 {
 
-/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
- * constructed from a model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly. */
+/** CRTP Utility to define a \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly. */
 template<typename OneManyPipe>
-struct one_many_pipe : OneManyPipe
+struct one_many_pipe
 {
-    BOOST_CONCEPT_ASSERT((OneManyPipeConcept<OneManyPipe>));
-    
-    one_many_pipe() {} // singular
-    
-	one_many_pipe(OneManyPipe p_) : OneManyPipe(p_)
-	{
-	}
-	
 	template<typename In, typename Out>
 	std::pair<In, Out>
 	ltr(In begin, In end, Out out)
 	{
 		BOOST_ASSERT(begin != end);
 		
-		out = OneManyPipe::operator()(*begin, out);
+		out = static_cast<OneManyPipe&>(*this)(*begin, out);
 		return std::make_pair(++begin, out);
 	}
 	
@@ -46,24 +44,18 @@ struct one_many_pipe : OneManyPipe
 	{
 		BOOST_ASSERT(begin != end);
 		
-		out = OneManyPipe::operator()(*--end, out);
+		out = static_cast<OneManyPipe&>(*this)(*--end, out);
 		return std::make_pair(end, out);
 	}
 };
 
-template<typename OneManyPipe>
-BOOST_CONCEPT_REQUIRES(
-    ((OneManyPipeConcept<OneManyPipe>)),
-    (one_many_pipe<OneManyPipe>)
-) make_one_many_pipe(OneManyPipe p)
-{
-	return one_many_pipe<OneManyPipe>(p);
-}
-
-/* TODO: make it work for pipes that don't expose max_output */
+/* TODO: Make it work for types that don't expose max_output */
 /** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
  * constructed from two models of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
- * and that applies one after the other. */
+ * and that applies one after the other.
+ * 
+ * The second pipe must require less input than the output of the first per
+ * step for it to work. */
 template<typename P1, typename P2>
 struct multi_pipe
 {
@@ -84,7 +76,50 @@ struct multi_pipe
     multi_pipe(P1 p1_, P2 p2_ = P2()) : p1(p1_), p2(p2_) {}
     
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out)
+    typename enable_if<
+        mpl::and_<
+            is_base_of<
+                std::forward_iterator_tag,
+                typename std::iterator_traits<Out>::iterator_category
+            >,
+            is_same<
+                typename P1::output_type,
+                typename P2::output_type
+            >
+        >,
+        std::pair<In, Out>
+    >::type
+    ltr(In begin, In end, Out out)
+    {
+        Out b = out;
+        
+        std::pair<In, Out> pair = p1.ltr(begin, end, out);
+        Out e = pair.second;
+        
+        do
+        {
+            tie(b, out) = p2.ltr(b, e, out);
+        }
+        while(b != e);
+        
+        return std::make_pair(pair.first, out);
+    }
+    
+    template<typename In, typename Out>
+    typename disable_if<
+        mpl::and_<
+            is_base_of<
+                std::forward_iterator_tag,
+                typename std::iterator_traits<Out>::iterator_category
+            >,
+            is_same<
+                typename P1::output_type,
+                typename P2::output_type
+            >
+        >,
+        std::pair<In, Out>
+    >::type
+    ltr(In begin, In end, Out out)
     {
         typename P1::output_type buf[max_output::value];
         typename P1::output_type* b = buf;
@@ -102,7 +137,48 @@ struct multi_pipe
     }
     
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    typename enable_if<
+        mpl::and_<
+            is_base_of<
+                std::forward_iterator_tag,
+                typename std::iterator_traits<Out>::iterator_category
+            >,
+            is_same<
+                typename P1::output_type,
+                typename P2::output_type
+            >
+        >,
+        std::pair<In, Out>
+    >::type rtl(In begin, In end, Out out)
+    {
+        Out b = out;
+        
+        std::pair<In, Out> pair = p1.rtl(begin, end, out);
+        Out e = pair.second;
+        
+        do
+        {
+            tie(b, out) = p2.ltr(b, e, out);
+        }
+        while(b != e);
+        
+        return std::make_pair(pair.first, out);
+    }
+    
+    template<typename In, typename Out>
+    typename disable_if<
+        mpl::and_<
+            is_base_of<
+                std::forward_iterator_tag,
+                typename std::iterator_traits<Out>::iterator_category
+            >,
+            is_same<
+                typename P1::output_type,
+                typename P2::output_type
+            >
+        >,
+        std::pair<In, Out>
+    >::type rtl(In begin, In end, Out out)
     {
         typename P1::output_type buf[max_output::value];
         typename P1::output_type* b = buf;
@@ -135,10 +211,75 @@ BOOST_CONCEPT_REQUIRES(
     return multi_pipe<P1, P2>(p1, p2);
 }
 
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+ * that adapts the elements another \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+ * sees with a model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly, assuming its \c max_output is \c 1. */
+template<typename P1, typename P2>
+struct piped_pipe : P2
+{
+    BOOST_CONCEPT_ASSERT((PipeConcept<P1>));
+    BOOST_CONCEPT_ASSERT((PipeConcept<P2>));
+    
+    BOOST_CONCEPT_ASSERT((Convertible<typename P1::output_type, typename P2::input_type>));
+    
+    BOOST_MPL_ASSERT(( mpl::equal_to< typename P1::max_output, mpl::int_<1> > ));
+    
+    typedef typename P1::input_type input_type;
+    typedef typename P2::output_type output_type;
+    
+    piped_pipe() {}
+    piped_pipe(P1 p1_, P2 p2_ = P2()) : P2(p2_), p1(p1_) {}
+    
+    template<typename In, typename Out>
+    std::pair<In, Out> ltr(In begin, In end, Out out)
+    {
+        std::pair<
+            pipe_iterator<In, P1>,
+            Out
+        > pair = P2::ltr(
+            make_pipe_iterator(begin, end, begin, p1),
+            make_pipe_iterator(begin, end, end, p1),
+            out
+        );
+        
+        return std::make_pair(pair.first.base(), pair.second);
+    }
+    
+    template<typename In, typename Out>
+    std::pair<In, Out> rtl(In begin, In end, Out out)
+    {
+        std::pair<
+            pipe_iterator<In, P1>,
+            Out
+        > pair = P2::rtl(
+            make_pipe_iterator(begin, end, begin, p1),
+            make_pipe_iterator(begin, end, end, p1),
+            out
+        );
+        return std::make_pair(pair.first.base(), pair.second);
+    }
+    
+private:
+    P1 p1;
+};
+
+template<typename P1, typename P2>
+BOOST_CONCEPT_REQUIRES(
+    ((PipeConcept<P1>))
+    ((PipeConcept<P2>))
+    ((Convertible<typename P1::output_type, typename P2::input_type>)),
+    (piped_pipe<P1, P2>)
+) make_piped_pipe(P1 p1, P2 p2)
+{
+    return piped_pipe<P1, P2>(p1, p2);
+}
+
+
+
 /** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
  * that casts its input to its template parameter and writes it to its output. */
 template<typename T>
-struct cast_pipe
+struct cast_pipe : one_many_pipe< cast_pipe<T> >
 {
     typedef T input_type;
     typedef T output_type;

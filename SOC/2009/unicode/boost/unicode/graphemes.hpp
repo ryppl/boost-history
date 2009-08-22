@@ -37,8 +37,12 @@ struct grapheme_boundary
     }
 };
 
+#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** Adapts the range of code points \c range into a range of ranges of code points,
  * each subrange being a grapheme cluster. */
+template<typename Range>
+detail::unspecified<void> grapheme_bounded(Range&& range);
+#else
 template<typename Range>
 iterator_range<typename boost::detail::unspecified<
     consumer_iterator<
@@ -51,8 +55,6 @@ grapheme_bounded(const Range& range)
     return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
 }
 
-/** Adapts the range of code points \c range into a range of ranges of code points,
- * each subrange being a grapheme cluster. */
 template<typename Range>
 iterator_range<typename boost::detail::unspecified<
     consumer_iterator<
@@ -64,11 +66,25 @@ grapheme_bounded(Range& range)
 {
     return consumed(range, make_boundary_consumer(unicode::grapheme_boundary()));
 }
+#endif
 
+#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
 /** Adapts the range of Name units \c range into a range of ranges of
 Name units, each subrange being a grapheme cluster. */                 \
+template<typename Range>                                               \
+detail::unspecified<void> Name##_grapheme_bounded(Range&& range);      \
+                                                                       \
+/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
+that tells whether a position lies on a grapheme cluster boundary
+within a range of Name units. */                                       \
+typedef multi_boundary<                                                \
+    Name##_boundary, Name##_decoder,                                   \
+    grapheme_boundary                                                  \
+> Name##_grapheme_boundary;            
+#else
+#define BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(Name)                       \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
     consumer_iterator<                                                 \
@@ -90,8 +106,6 @@ Name##_grapheme_bounded(const Range& range)                            \
     );                                                                 \
 }                                                                      \
                                                                        \
-/** Adapts the range of Name units \c range into a range of ranges of
-Name units, each subrange being a grapheme cluster. */                 \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
     consumer_iterator<                                                 \
@@ -113,13 +127,11 @@ Name##_grapheme_bounded(Range& range)                                  \
     );                                                                 \
 }                                                                      \
                                                                        \
-/** Model of \c \xmlonly<conceptname>BoundaryChecker</conceptname>\endxmlonly
-that tells whether a position lies on a grapheme cluster boundary
-within a range of Name units. */                                       \
 typedef multi_boundary<                                                \
     Name##_boundary, Name##_decoder,                                   \
     grapheme_boundary                                                  \
-> Name##_grapheme_boundary;                                            \
+> Name##_grapheme_boundary;                                            
+#endif
 
 BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u16)
 BOOST_UNICODE_GRAPHEME_BOUNDED_DEF(u8)

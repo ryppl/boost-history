@@ -35,10 +35,8 @@ private:
 
 /** Concept checking class for the \c OneManyPipe concept */
 template<typename X>
-struct OneManyPipeConcept : DefaultConstructible<X>, CopyConstructible<X>
+struct OneManyPipeConcept : PipeConcept<X>
 {
-    typedef typename X::input_type input_type;
-    typedef typename X::output_type output_type;
     
     BOOST_CONCEPT_USAGE(OneManyPipeConcept)
     {
@@ -47,9 +45,9 @@ struct OneManyPipeConcept : DefaultConstructible<X>, CopyConstructible<X>
     }
     
 private:
-    typedef output_iterator_archetype<output_type> out_type;
+    typedef output_iterator_archetype<typename PipeConcept<X>::output_type> out_type;
     
-    input_type in;
+    typename PipeConcept<X>::input_type in;
     out_type out;
 };
 

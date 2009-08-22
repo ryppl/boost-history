@@ -9,6 +9,10 @@
 
 #include <boost/iterator/consumer_iterator_fwd.hpp>
 
+#include <boost/mpl/assert.hpp>
+#include <boost/mpl/equal_to.hpp>
+
+
 namespace boost
 {
 
@@ -151,14 +155,15 @@ BOOST_CONCEPT_REQUIRES(
 
 /** Model of \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
  * that adapts the elements another \c \xmlonly<conceptname>Consumer</conceptname>\endxmlonly
- * sees with a model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly. */
+ * sees with a model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly, assuming its \c max_output is \c 1. */
 template<typename Pipe, typename Consumer>
 struct piped_consumer
 {
     BOOST_CONCEPT_ASSERT((PipeConcept<Pipe>));
     BOOST_CONCEPT_ASSERT((ConsumerConcept<Consumer>));
-    
     BOOST_CONCEPT_ASSERT((Convertible<typename Pipe::output_type, typename Consumer::input_type>));
+    
+    BOOST_MPL_ASSERT(( mpl::equal_to< typename Pipe::max_output, mpl::int_<1> > ));
     
     typedef typename Pipe::input_type input_type;
     
@@ -203,8 +208,6 @@ BOOST_CONCEPT_REQUIRES(
 {
     return piped_consumer<Pipe, Consumer>(p, c);
 }
-
-
 
 template<typename It, typename Consumer>
 BOOST_CONCEPT_REQUIRES(

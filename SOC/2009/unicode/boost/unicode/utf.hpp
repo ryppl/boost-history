@@ -18,12 +18,18 @@ BOOST_UNICODE_ONE_MANY_PIPE_DEF(Name##_encode, 0)
 
 /* */
 
+#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_DECODER_DEF(Name)                                \
 BOOST_UNICODE_PIPE_DEF(Name##_decode, 0)                               \
-                                                                       \
 /** Adapts the range of Name units \c range into a range of ranges of
 Name units, each subrange being a decoded unit. */                     \
+template<typename Range>                                               \
+detail::unspecified<void> Name##_bounded(Range&& range);
+#else
+#define BOOST_UNICODE_DECODER_DEF(Name)                                \
+BOOST_UNICODE_PIPE_DEF(Name##_decode, 0)                               \
+                                                                       \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
     consumer_iterator<                                                 \
@@ -38,8 +44,6 @@ iterator_range<typename boost::detail::unspecified<                    \
     );                                                                 \
 }                                                                      \
                                                                        \
-/** Adapts the range of Name units \c range into a range of ranges of
-Name units, each subrange being a decoded unit. */                     \
 template<typename Range>                                               \
 iterator_range<typename boost::detail::unspecified<                    \
     consumer_iterator<                                                 \
@@ -52,7 +56,8 @@ iterator_range<typename boost::detail::unspecified<                    \
         range,                                                         \
         make_pipe_consumer(unicode::Name##_decoder())                  \
     );                                                                 \
-}                                                                      \
+}                                                                      
+#endif
 
 BOOST_UNICODE_ENCODER_DEF(u16)
 BOOST_UNICODE_DECODER_DEF(u16)

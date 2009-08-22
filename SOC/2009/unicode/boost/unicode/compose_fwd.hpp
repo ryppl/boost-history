@@ -3,21 +3,20 @@
 
 #include <boost/unicode/ucd/properties.hpp>
 #include <boost/unicode/hangul.hpp>
+#include <boost/unicode/combining.hpp>
 
 #include <boost/integer/static_pow.hpp>
 #include <climits>
 
 #include <vector>
 
-#include <boost/throw_exception.hpp>
-#include <stdexcept>
-#ifndef BOOST_NO_STD_LOCALE
-#include <sstream>
-#include <ios>
-#endif
-
 #include <boost/detail/unspecified.hpp>
 #include <boost/iterator/pipe_iterator.hpp>
+
+#include <boost/range/adaptor/reversed.hpp>
+
+#include <boost/utility/enable_if.hpp>
+#include <boost/type_traits.hpp>
 
 namespace boost
 {
@@ -30,30 +29,6 @@ namespace unicode
 #undef BOOST_UNICODE_OPTION
 #endif
 
-namespace detail
-{
-    struct combining_pred
-    {
-        bool operator()(char32 lft, char32 rgt) const
-        {
-            return ucd::get_combining_class(lft) < ucd::get_combining_class(rgt);
-        }
-    };
-    
-    template<typename Size, typename Iterator, typename Comp>
-    void stable_sort_bounded(Iterator begin, Iterator end, Comp comp = std::less<typename std::iterator_traits<Iterator>::value_type>())
-    {
-#if defined(__GLIBCPP__) || defined(__GLIBCXX__) || defined(__SGI_STL_PORT) || defined(_STLPORT_VERSION) 
-        typename std::iterator_traits<Iterator>::value_type buf[Size::value];
-        return std::__stable_sort_adaptive(begin, end, buf, Size::value, comp);
-#else
-        return std::stable_sort(begin, end, comp);
-#endif
-    }
-
-}
-
-/* TODO: special case the case when Out is a RandomAccessIterator */
 /** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
  * that decomposes a combining character sequence, i.e. it transforms a combining
  * character sequence into its canonically ordered decomposed equivalent.
@@ -64,26 +39,69 @@ struct decomposer
     typedef char32 input_type;
     typedef char32 output_type;
     
-    typedef mpl::int_<31> max_output;
+    typedef combining_max max_output;
     
     decomposer(unsigned mask_ = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical)) : mask(mask_)
     {
     }
     
     /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not stream-safe.
-     * \post \c out is in Normalization Form D. */
+     * \post \c out is in Normalization Form D and is stream-safe. */
     template<typename In, typename Out>
-    std::pair<In, Out> ltr(In begin, In end, Out out, bool inverse = false)
+    std::pair<In, Out> ltr(In begin, In end, Out out)
     {
-        In pos = begin;
+        return decompose_impl(
+            *make_consumer_iterator(begin, end, begin, combiner()),
+            out
+        );
+    }
+    
+    /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not stream-safe.
+     * \post \c out is in Normalization Form D and is stream-safe. */
+    template<typename In, typename Out>
+    std::pair<In, Out> rtl(In begin, In end, Out out)
+    {   
+        std::pair<
+            reverse_iterator<In>,
+            Out
+        > p = decompose_impl(
+            make_reversed_range(
+                *prior(
+                    make_consumer_iterator(begin, end, end, combiner())
+                )
+            ),
+            out
+        );
         
+        return std::make_pair(p.first.base(), p.second);
+    }
+    
+private:
+    template<typename Range, typename Out>
+    std::pair<typename range_iterator<const Range>::type, Out> decompose_impl(const Range& range, Out out)
+    {
+        return std::make_pair(end(range), decompose_impl(begin(range), end(range), out));
+    }
+    
+    template<typename In, typename Out>
+    typename disable_if<
+        is_base_of<
+            std::random_access_iterator_tag,
+            typename std::iterator_traits<Out>::iterator_category
+        >,
+        Out
+    >::type
+    decompose_impl(In begin, In end, Out out)
+    {
         char32 buf[max_output::value];
         char32* out_pos = buf;
         
         bool to_sort = false;
-        do
+        
+        for(In pos = begin; pos != end; ++pos)
         {
             char32 ch = *pos;
+
             if(ucd::get_combining_class(ch) != 0)
                 to_sort = true;
         
@@ -98,7 +116,7 @@ struct decomposer
                 if((out_pos + hangul_decomposer::len(ch) - 1) != (buf + max_output::value))
                     out_pos = hangul_decomposer()(ch, out_pos);
                 else
-                    not_stream_safe(begin, end);
+                    detail::not_stream_safe(begin, end);
             }
             else if(out_pos != (buf + max_output::value))
             {
@@ -106,47 +124,65 @@ struct decomposer
             }
             else
             {
-                not_stream_safe(begin, end);
+                detail::not_stream_safe(begin, end);
             }
-            
-            ++pos;
         }
-        while(pos != end && ((!inverse && ucd::get_combining_class(*pos) != 0) || (inverse && ucd::get_combining_class(*pos) == 0)));
         
         if(to_sort)
             detail::stable_sort_bounded<max_output>(buf, out_pos, detail::combining_pred());
 
         out = std::copy(buf, out_pos, out);
-        return std::make_pair(pos, out);
+        return out;
     }
     
-    /** Throws \c std::out_of_range if [<tt>begin</tt>, <tt>end</tt>[ is not stream-safe.
-     * \post \c out is in Normalization Form D. */
     template<typename In, typename Out>
-    std::pair<In, Out> rtl(In begin, In end, Out out)
+    typename enable_if<
+        is_base_of<
+            std::random_access_iterator_tag,
+            typename std::iterator_traits<Out>::iterator_category
+        >,
+        Out
+    >::type
+    decompose_impl(In begin, In end, Out out)
     {
-        std::pair<
-            reverse_iterator<In>,
-            Out
-        > p = ltr(make_reverse_iterator(end), make_reverse_iterator(begin), out, true);
-        return std::make_pair(p.first.base(), p.second);
-    }
-    
-private:
-    template<typename Iterator>
-    static void not_stream_safe(Iterator begin, Iterator end)
-    {
-#ifndef BOOST_NO_STD_LOCALE
-	    std::stringstream ss;
-	    ss << "Invalid Unicode stream-safe combining character sequence " << std::showbase << std::hex;
-	    for(Iterator it = begin; it != end; ++it)
-		    ss << *it << " ";
-	    ss << "encountered while trying to decompose UTF-32 sequence";
-	    std::out_of_range e(ss.str());
-#else
-	    std::out_of_range e("Invalid Unicode stream-safe combining character sequence encountered while trying to decompose UTF-32 sequence");
-#endif
-	    boost::throw_exception(e);
+        char32* out_pos = out;
+        
+        bool to_sort = false;
+        
+        for(In pos = begin; pos != end; ++pos)
+        {
+            char32 ch = *pos;
+
+            if(ucd::get_combining_class(ch) != 0)
+                to_sort = true;
+        
+            iterator_range<const char32*> dec = ucd::get_decomposition(ch);
+            if(!empty(dec) && ((1 << ucd::get_decomposition_type(ch)) & mask))
+            {
+                for(const char32* p = boost::begin(dec); p != boost::end(dec); ++p)
+                    out_pos = decompose_rec(*p, out_pos);
+            }
+            else if(BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical) & mask)
+            {
+                if((out_pos + hangul_decomposer::len(ch) - 1) != (out + max_output::value))
+                    out_pos = hangul_decomposer()(ch, out_pos);
+                else
+                    detail::not_stream_safe(begin, end);
+            }
+            else if(out_pos != (out + max_output::value))
+            {
+                *out_pos++ = ch;
+            }
+            else
+            {
+                detail::not_stream_safe(begin, end);
+            }
+        }
+        
+        if(to_sort)
+            detail::stable_sort_bounded<max_output>(out, out_pos, detail::combining_pred());
+
+        return out_pos;
     }
     
     template<typename OutputIterator>
@@ -311,6 +347,9 @@ struct composer
     }
 };
 
+/** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly
+ * that decomposes using a mask and then recomposes canonically a
+ * sequence of code points. */
 typedef boost::detail::unspecified< multi_pipe<decomposer, composer> >::type normalizer;
 
 } // namespace unicode

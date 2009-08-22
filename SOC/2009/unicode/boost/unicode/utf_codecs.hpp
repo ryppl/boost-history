@@ -78,7 +78,7 @@ inline void invalid_utf_sequence(Iterator begin, Iterator end)
 
 /** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
  * that converts a code point to a sequence of UTF-16 code units. */
-struct u16_encoder
+struct u16_encoder : one_many_pipe<u16_encoder>
 {
     typedef char32 input_type;
 	typedef char16 output_type;
@@ -217,7 +217,7 @@ struct u16_boundary
 
 /** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly
  * that converts a code point to a sequence of UTF-8 code units. */
-struct u8_encoder
+struct u8_encoder : one_many_pipe<u8_encoder>
 {
     typedef char32 input_type;
 	typedef char output_type;
@@ -403,36 +403,73 @@ struct u8_boundary
 namespace detail
 {
 
-template<typename T, typename Enable = void>
-struct is_u32 : mpl::false_ {};
-template<> struct is_u32<char32> : mpl::true_ {};
-template<typename T>
-struct is_u32<T, typename enable_if<
-    mpl::and_<
-        is_same<T, wchar_t>,
-        mpl::bool_<sizeof(T) == 4>
-    >
->::type> : mpl::true_ {};
+    template<typename T, typename Enable = void>
+    struct is_u32 : mpl::false_ {};
+    template<> struct is_u32<char32> : mpl::true_ {};
+    template<typename T>
+    struct is_u32<T, typename enable_if<
+        mpl::and_<
+            is_same<T, wchar_t>,
+            mpl::bool_<sizeof(T) == 4>
+        >
+    >::type> : mpl::true_ {};
 
-template<typename T, typename Enable = void>
-struct is_u16 : mpl::false_ {};
-template<> struct is_u16<char16> : mpl::true_ {};
-template<typename T>
-struct is_u16<T, typename enable_if<
-    mpl::and_<
-        is_same<T, wchar_t>,
-        mpl::bool_<sizeof(T) == 2>
-    >
->::type> : mpl::true_ {};
+    template<typename T, typename Enable = void>
+    struct is_u16 : mpl::false_ {};
+    template<> struct is_u16<char16> : mpl::true_ {};
+    template<typename T>
+    struct is_u16<T, typename enable_if<
+        mpl::and_<
+            is_same<T, wchar_t>,
+            mpl::bool_<sizeof(T) == 2>
+        >
+    >::type> : mpl::true_ {};
 
-template<typename T, typename Enable = void>
-struct is_u8 : mpl::false_ {};
-template<> struct is_u8<char> : mpl::true_ {};
+    template<typename T, typename Enable = void>
+    struct is_u8 : mpl::false_ {};
+    template<> struct is_u8<char> : mpl::true_ {};
+
+    template<typename ValueType, typename Enable = void>
+    struct select_encoder
+    {
+    };
+    
+    template<typename ValueType>
+    struct select_encoder<ValueType, typename enable_if<
+        detail::is_u32<ValueType>
+    >::type>
+    {
+        typedef cast_pipe<char32> type;
+    };
+    
+    template<typename ValueType>
+    struct select_encoder<ValueType, typename enable_if<
+        detail::is_u16<ValueType>
+    >::type>
+    {
+        typedef u16_encoder type;
+    };
+    
+    template<typename ValueType>
+    struct select_encoder<ValueType, typename enable_if<
+        detail::is_u8<ValueType>
+    >::type>
+    {
+        typedef u8_encoder type;
+    };
 
 } // namespace detail
 
+/** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly,
+ * either behaves like \c u16_encoder, a \c u8_encoder depending on the
+ * targeted element type \c ValueType. */
+template<typename ValueType>
+struct utf_encoder : detail::select_encoder<ValueType>::type
+{
+};
+
 /** Model of \c \xmlonly<conceptname>Pipe</conceptname>\endxmlonly,
- * either behaves like \c u16_decoder or \c u8_decoder depending on the
+ * either behaves like \c u16_decoder, a \c u8_decoder or nothing depending on the
  * value type of the input range. */
 struct utf_decoder
 {
@@ -454,7 +491,7 @@ private:
         >
     >::type>
     {
-        typedef one_many_pipe< cast_pipe<char32> > type;
+        typedef cast_pipe<char32> type;
     };
     
     template<typename Iterator>
@@ -490,7 +527,7 @@ public:
     std::pair<In, Out>
 	rtl(In begin, In end, Out out)
     {
-        return typename decoder<In>::type().ltr(begin, end, out);
+        return typename decoder<In>::type().rtl(begin, end, out);
     }
 };
 

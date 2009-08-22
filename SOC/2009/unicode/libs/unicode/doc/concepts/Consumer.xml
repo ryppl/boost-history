@@ -102,6 +102,7 @@
     <apply-template name="boost::boundary_consumer">
         <type name="BoundaryChecker"/>
     </apply-template>
+    <type name="boost::unicode::combiner" />
   </example-model>
 
 </concept>
