@@ -1,7 +1,4 @@
-//#include <algorithm>
-//#include <cmath>
-#//include <numeric>
-
+// Based on code from Christian Henning [chhenning@gmail.com]
 #include <boost/mapreduce.hpp>
 
 namespace prime_calculator {
