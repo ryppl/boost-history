@@ -214,7 +214,7 @@ void run_test(boost::mapreduce::specification spec)
         spec.reduce_tasks = 1;
 
         Job job(datasource, spec);
-        job.run<boost::mapreduce::schedule_policy::sequential<Job> >(result);
+        job.template run<boost::mapreduce::schedule_policy::sequential<Job> >(result);
         std::cout << "\nSequential MapReduce Finished.";
 #else
         std::cout << "\nRunning CPU Parallel MapReduce...";
@@ -225,7 +225,7 @@ void run_test(boost::mapreduce::specification spec)
 
         typename Job::datasource_type datasource(spec);
         Job job(datasource, spec);
-        job.run<boost::mapreduce::schedule_policy::cpu_parallel<Job> >(result);
+        job.template run<boost::mapreduce::schedule_policy::cpu_parallel<Job> >(result);
         std::cout << "\nCPU Parallel MapReduce Finished.\n";
 #endif
 
