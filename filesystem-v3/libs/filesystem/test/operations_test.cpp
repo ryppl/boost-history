@@ -822,7 +822,7 @@ int main( int argc, char * argv[] )
       == fs::initial_path() / "foo" );
 
     fs::path p1( fs::system_complete( "/foo" ) );
-    BOOST_TEST_EQ( p1.size(), 6 );  // this failed during v3 development due to bug
+    BOOST_TEST_EQ( p1.string().size(), 6 );  // this failed during v3 development due to bug
     std::string s1( p1.string()  );
     std::string s2( fs::initial_path().root_path().string()+"foo" );
     BOOST_TEST_EQ( s1, s2 );
@@ -836,11 +836,11 @@ int main( int argc, char * argv[] )
       == fs::initial_path() );
     BOOST_TEST( fs::system_complete( fs::path( fs::initial_path().root_name().string()
       + "foo" ) ).string() == fs::initial_path() / "foo" );
-    BOOST_TEST( fs::system_complete( fs::path( "c:/" ) ).generic()
+    BOOST_TEST( fs::system_complete( fs::path( "c:/" ) ).string()
       == "c:/" );
-    BOOST_TEST( fs::system_complete( fs::path( "c:/foo" ) ).generic()
+    BOOST_TEST( fs::system_complete( fs::path( "c:/foo" ) ).string()
       ==  "c:/foo" );
-    BOOST_TEST( fs::system_complete( fs::path( "//share" ) ).generic()
+    BOOST_TEST( fs::system_complete( fs::path( "//share" ) ).string()
       ==  "//share" );
   } // Windows
 

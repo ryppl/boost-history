@@ -130,41 +130,55 @@ namespace filesystem
 
 # ifdef BOOST_WINDOWS_PATH
 
-  //  generic  ---------------------------------------------------------------//
-
-  const path path::generic() const
-  {
-    path tmp;
-
-    for ( string_type::const_iterator it = m_path.begin();
-          it != m_path.end(); ++it )
-    {
-      tmp.m_path += *it != L'\\' ? *it : L'/';
-    }
-
+  const std::string  path::native_string() const
+  { 
+    std::string tmp;
+    if ( !m_path.empty() )
+      path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
+        tmp, codecvt() );
     return tmp;
   }
-  
-  //  native  ---------------------------------------------------------------//
 
-  const path path::preferred() const
+  void path::m_portable()
   {
-    path tmp;
-
-    for ( string_type::const_iterator it = m_path.begin();
+    for ( string_type::iterator it = m_path.begin();
           it != m_path.end(); ++it )
     {
-      tmp.m_path += *it != L'/' ? *it : L'\\';
+      if ( *it == L'\\' )
+        *it = L'/';
     }
+  }
 
-    return tmp;
+  const std::string path::string() const
+  { 
+    path tmp( *this );
+    tmp.m_portable();
+    return tmp.native_string();
+  }
+
+  const std::wstring path::wstring() const
+  { 
+    path tmp( *this );
+    tmp.m_portable();
+    return tmp.native_wstring();
+  }
+
+  path & path::localize()
+  {
+    for ( string_type::iterator it = m_path.begin();
+          it != m_path.end(); ++it )
+    {
+      if ( *it == L'/' )
+        *it = L'\\';
+    }
+    return *this;
   }
 
 # endif  // BOOST_WINDOWS_PATH
 
-  //  append_separator_if_needed_  -------------------------------------------//
+  //  m_append_separator_if_needed  -----------------------------------------//
 
-  void path::append_separator_if_needed_()
+  void path::m_append_separator_if_needed()
   {
     if ( !m_path.empty() &&
 #   ifdef BOOST_WINDOWS_PATH

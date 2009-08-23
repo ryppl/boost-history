@@ -94,43 +94,43 @@ namespace
 
     path x0;                                           // default constructor
     PATH_IS(x0, L"");
-    BOOST_TEST_EQ( x0.size(), 0 );
+    BOOST_TEST_EQ( x0.native().size(), 0 );
 
     path x1(s.begin(), s.end());                       // iterator range char
     PATH_IS(x1, L"string");
-    BOOST_TEST_EQ( x1.size(), 6 );
+    BOOST_TEST_EQ( x1.native().size(), 6 );
 
     path x2(x1);                                       // copy constructor
     PATH_IS(x2, L"string");
-    BOOST_TEST_EQ( x2.size(), 6 );
+    BOOST_TEST_EQ( x2.native().size(), 6 );
 
     path x3(ws.begin(), ws.end());                     // iterator range wchar_t
     PATH_IS(x3, L"wstring");
-    BOOST_TEST_EQ( x3.size(), 7 );
+    BOOST_TEST_EQ( x3.native().size(), 7 );
 
     path x4(string("std::string"));                    // container char
     PATH_IS(x4, L"std::string");
-    BOOST_TEST_EQ( x4.size(), 11 );
+    BOOST_TEST_EQ( x4.native().size(), 11 );
 
     path x5(wstring(L"std::wstring"));                 // container wchar_t
     PATH_IS(x5, L"std::wstring");
-    BOOST_TEST_EQ( x5.size(), 12 );
+    BOOST_TEST_EQ( x5.native().size(), 12 );
 
     path x6("array char");                             // array char
     PATH_IS(x6, L"array char");
-    BOOST_TEST_EQ( x6.size(), 10 );
+    BOOST_TEST_EQ( x6.native().size(), 10 );
 
     path x7(L"array wchar_t");                         // array wchar_t
     PATH_IS(x7, L"array wchar_t");
-    BOOST_TEST_EQ( x7.size(), 13 );
+    BOOST_TEST_EQ( x7.native().size(), 13 );
 
     path x8( s.c_str() );                              // const char * null terminated
     PATH_IS(x8, L"string");
-    BOOST_TEST_EQ( x8.size(), 6 );
+    BOOST_TEST_EQ( x8.native().size(), 6 );
 
     path x9( ws.c_str() );                             // const wchar_t * null terminated
     PATH_IS(x9, L"wstring");
-    BOOST_TEST_EQ( x9.size(), 7 );
+    BOOST_TEST_EQ( x9.native().size(), 7 );
   }
 
   path x;
@@ -144,11 +144,11 @@ namespace
 
     x = path("yet another path");                      // another path
     PATH_IS(x, L"yet another path");
-    BOOST_TEST_EQ( x.size(), 16 );
+    BOOST_TEST_EQ( x.native().size(), 16 );
 
     x = x;                                             // self-assignment
     PATH_IS(x, L"yet another path");
-    BOOST_TEST_EQ( x.size(), 16 );
+    BOOST_TEST_EQ( x.native().size(), 16 );
 
     x.assign(s.begin(), s.end());                      // iterator range char
     PATH_IS(x, L"string");
@@ -187,14 +187,25 @@ namespace
 #   define BOOST_FS_FOO L"/foo/"
 #   endif
 
+    x = "/foo";
+    x /= path("");                                      // empty path
+    PATH_IS(x, BOOST_FS_FOO);
+
+    x = "/foo";
+    x /= path("/");                                     // slash path
+    PATH_IS(x, BOOST_FS_FOO L"/");
+
+    x = "/foo";
+    x /= path("/boo");                                  // slash path
+    PATH_IS(x, BOOST_FS_FOO L"/boo");
+
+    x = "/foo";
+    x /= x;                                             // self-assignment
+    PATH_IS(x, BOOST_FS_FOO BOOST_FS_FOO  );
 
     x = "/foo";
     x /= path("yet another path");                      // another path
     PATH_IS(x, BOOST_FS_FOO L"yet another path");
-
-    //x = "/foo";
-    //x /= x;                                             // self-assignment
-    //PATH_IS(x, BOOST_FS_FOO L"yet another path" BOOST_FS_FOO L"yet another path");
 
     x = "/foo";
     x.append(s.begin(), s.end());                      // iterator range char
@@ -237,26 +248,26 @@ namespace
 
     path p0( "abc" );
 
-    CHECK( p0.rep().size() == 3 );
-    CHECK( p0.string() == "abc" );
-    CHECK( p0.string().size() == 3 );
-    CHECK( p0.wstring() == L"abc" );
-    CHECK( p0.wstring().size() == 3 );
+    CHECK( p0.native().size() == 3 );
+    CHECK( p0.native_string() == "abc" );
+    CHECK( p0.native_string().size() == 3 );
+    CHECK( p0.native_wstring() == L"abc" );
+    CHECK( p0.native_wstring().size() == 3 );
 
 # ifdef BOOST_WINDOWS_PATH
 
     path p( "abc\\def/ghi" );
 
-    CHECK( wstring( p.c_str() ) == L"abc\\def/ghi" );
+    CHECK( std::wstring( p.c_str() ) == L"abc\\def/ghi" );
 
-    CHECK( p.string() == "abc\\def/ghi" );
-    CHECK( p.wstring() == L"abc\\def/ghi" );
+    CHECK( p.native_string() == "abc\\def/ghi" );
+    CHECK( p.native_wstring() == L"abc\\def/ghi" );
 
-    CHECK( p.generic().string() == "abc/def/ghi" );
-    CHECK( p.generic().wstring() == L"abc/def/ghi" );
+    CHECK( p.string() == "abc/def/ghi" );
+    CHECK( p.wstring() == L"abc/def/ghi" );
 
-    CHECK( p.preferred().string() == "abc\\def\\ghi" );
-    CHECK( p.preferred().wstring() == L"abc\\def\\ghi" );
+    //CHECK( p.preferred().string() == "abc\\def\\ghi" );
+    //CHECK( p.preferred().wstring() == L"abc\\def\\ghi" );
 
 # else  // BOOST_POSIX_PATH
 
@@ -359,15 +370,15 @@ namespace
 
     //  operator /
 
-    CHECK( p1 / p2 == path( "foo/bar" ).preferred() );
-    CHECK( "foo" / p2 == path( "foo/bar" ).preferred() );
-    CHECK( L"foo" / p2 == path( "foo/bar" ).preferred() );
-    CHECK( string( "foo" ) / p2 == path( "foo/bar" ).preferred() );
-    CHECK( wstring( L"foo" ) / p2 == path( "foo/bar" ).preferred() );
-    CHECK( p1 / "bar" == path( "foo/bar" ).preferred() );
-    CHECK( p1 / L"bar" == path( "foo/bar" ).preferred() );
-    CHECK( p1 / string( "bar" ) == path( "foo/bar" ).preferred() );
-    CHECK( p1 / wstring( L"bar" ) == path( "foo/bar" ).preferred() );
+    CHECK( p1 / p2 == path( "foo/bar" ).localize() );
+    CHECK( "foo" / p2 == path( "foo/bar" ).localize() );
+    CHECK( L"foo" / p2 == path( "foo/bar" ).localize() );
+    CHECK( string( "foo" ) / p2 == path( "foo/bar" ).localize() );
+    CHECK( wstring( L"foo" ) / p2 == path( "foo/bar" ).localize() );
+    CHECK( p1 / "bar" == path( "foo/bar" ).localize() );
+    CHECK( p1 / L"bar" == path( "foo/bar" ).localize() );
+    CHECK( p1 / string( "bar" ) == path( "foo/bar" ).localize() );
+    CHECK( p1 / wstring( L"bar" ) == path( "foo/bar" ).localize() );
 
     swap( p1, p2 );
 

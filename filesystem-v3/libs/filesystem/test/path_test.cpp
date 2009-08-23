@@ -33,7 +33,6 @@ using boost::prior;
 #include <boost/detail/lightweight_test.hpp>
 
 #define PATH_CHECK( a, b ) check( a, b, __FILE__, __LINE__ )
-#define DIR_CHECK( a, b ) check_dir( a, b, __FILE__, __LINE__ )
 #define CHECK_EQUAL( a,b ) check_equal( a, b, __FILE__, __LINE__ )
 
 
@@ -44,27 +43,14 @@ namespace
   void check( const fs::path & source,
               const std::string & expected, const char* file, int line )
   {
-    if ( source.string()== expected ) return;
+    if ( source.native_string()== expected ) return;
 
     std::cout << file
-              << '(' << line << "): source.string(): \"" << source.string()
+              << '(' << line << "): source.native_string(): \"" << source.native_string()
               << "\" != expected: \"" << expected
               << "\"" << std::endl;
 
     BOOST_ERROR(0);  // increment error count
-  }
-
-  void check_dir( const fs::path & source,
-              const std::string & expected, const char* file, int line )
-  {
-    if ( source.string() == expected ) return;
-
-    ++::boost::detail::test_errors();
-
-    std::cout << file << '(' << line << "): source.directory_string(): \""
-              << source.string()
-              << "\" != expected: \"" << expected
-              << "\"" << std::endl;
   }
 
   void check_equal( const fs::path & source,
@@ -414,11 +400,11 @@ namespace
     PATH_CHECK( path("") / "..", ".." );
     if ( platform == "Windows" )
     {
-      BOOST_TEST( (b / a).string() == "b\\a" );
-      BOOST_TEST( (bs / a).string() == "b\\a" );
-      BOOST_TEST( (bcs / a).string() == "b\\a" );
-      BOOST_TEST( (b / as).string() == "b\\a" );
-      BOOST_TEST( (b / acs).string() == "b\\a" );
+      BOOST_TEST( (b / a).native_string() == "b\\a" );
+      BOOST_TEST( (bs / a).native_string() == "b\\a" );
+      BOOST_TEST( (bcs / a).native_string() == "b\\a" );
+      BOOST_TEST( (b / as).native_string() == "b\\a" );
+      BOOST_TEST( (b / acs).native_string() == "b\\a" );
       PATH_CHECK( path("a") / "b", "a\\b" );
       PATH_CHECK( path("..") / "", "..\\" );
       PATH_CHECK( path("foo") / path("bar"), "foo\\bar" ); // path arg
@@ -1039,9 +1025,9 @@ namespace
 
     else
     { // POSIX
-      DIR_CHECK( path( "/foo/bar/" ), "/foo/bar/" );
-      DIR_CHECK( path( "//foo//bar//" ), "//foo//bar//" );
-      DIR_CHECK( path( "///foo///bar///" ), "///foo///bar///" );
+      PATH_CHECK( path( "/foo/bar/" ), "/foo/bar/" );
+      PATH_CHECK( path( "//foo//bar//" ), "//foo//bar//" );
+      PATH_CHECK( path( "///foo///bar///" ), "///foo///bar///" );
 
       p = path( "/usr/local/bin:/usr/bin:/bin" );
       BOOST_TEST( p.string() == "/usr/local/bin:/usr/bin:/bin" );
@@ -1065,30 +1051,24 @@ namespace
     PATH_CHECK( "foo/../", "foo/../" );
     PATH_CHECK( "foo/bar/../..", "foo/bar/../.." );
     PATH_CHECK( "foo/bar/../../", "foo/bar/../../" );
-    PATH_CHECK( path("") / "foo", "foo" );
-    PATH_CHECK( path("") / "foo/", "foo/" );
-    PATH_CHECK( path("foo") / "", "foo\\" );
     PATH_CHECK( path( "/" ), "/" );
-    PATH_CHECK( path( "/" ) / "", "/" );
     PATH_CHECK( path( "/f" ), "/f" );
 
     PATH_CHECK( "/foo", "/foo" );
-    PATH_CHECK( path("") / "/foo", "/foo" );
-    PATH_CHECK( path("/foo") / "", "/foo\\" );
-    DIR_CHECK( path( "/foo/bar/" ), "/foo/bar/" );
-    DIR_CHECK( path( "//foo//bar//" ), "//foo//bar//" );
-    DIR_CHECK( path( "///foo///bar///" ), "///foo///bar///" );
-    DIR_CHECK( path( "\\/foo\\/bar\\/" ), "\\/foo\\/bar\\/" );
-    DIR_CHECK( path( "\\//foo\\//bar\\//" ), "\\//foo\\//bar\\//" );
+    PATH_CHECK( path( "/foo/bar/" ), "/foo/bar/" );
+    PATH_CHECK( path( "//foo//bar//" ), "//foo//bar//" );
+    PATH_CHECK( path( "///foo///bar///" ), "///foo///bar///" );
+    PATH_CHECK( path( "\\/foo\\/bar\\/" ), "\\/foo\\/bar\\/" );
+    PATH_CHECK( path( "\\//foo\\//bar\\//" ), "\\//foo\\//bar\\//" );
 
     if ( platform == "Windows" )
     {
       PATH_CHECK( path("c:") / "foo", "c:foo" );
       PATH_CHECK( path("c:") / "/foo", "c:/foo" );
 
-      DIR_CHECK( path( "\\foo\\bar\\" ), "\\foo\\bar\\" );
-      DIR_CHECK( path( "\\\\foo\\\\bar\\\\" ), "\\\\foo\\\\bar\\\\" );
-      DIR_CHECK( path( "\\\\\\foo\\\\\\bar\\\\\\" ), "\\\\\\foo\\\\\\bar\\\\\\" );
+      PATH_CHECK( path( "\\foo\\bar\\" ), "\\foo\\bar\\" );
+      PATH_CHECK( path( "\\\\foo\\\\bar\\\\" ), "\\\\foo\\\\bar\\\\" );
+      PATH_CHECK( path( "\\\\\\foo\\\\\\bar\\\\\\" ), "\\\\\\foo\\\\\\bar\\\\\\" );
 
       PATH_CHECK( path( "\\" ), "\\" );
       PATH_CHECK( path( "\\f" ), "\\f" );
@@ -1186,7 +1166,30 @@ namespace
     PATH_CHECK( ".././.", ".././." );
   }
 
-  //  name_function_tests  ---------------------------------------------------//
+  //  append_tests  --------------------------------------------------------------------//
+
+  void append_tests()
+  {
+    std::cout << "append_tests..." << std::endl;
+
+    if ( platform == "Windows" )
+    {
+    }
+    else
+    {
+    }
+
+
+    PATH_CHECK( path("") / "foo", "foo" );
+    PATH_CHECK( path("") / "foo/", "foo/" );
+    PATH_CHECK( path( "/" ) / "", "/" );
+    PATH_CHECK( path("") / "/foo", "/foo" );
+    PATH_CHECK( path("foo") / "", "foo\\" );
+    PATH_CHECK( path("/foo") / "", "/foo\\" );
+
+  }
+
+  //  name_function_tests  -------------------------------------------------------------//
 
   void name_function_tests()
   {
@@ -1352,6 +1355,7 @@ int main( int, char*[] )
   BOOST_TEST( p4.string() == "foobar" );
 
   construction_tests();
+  append_tests();
   overload_tests();
   query_and_decomposition_tests();
   iterator_tests();

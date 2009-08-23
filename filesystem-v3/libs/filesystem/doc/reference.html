@@ -47,33 +47,33 @@
     <a href="#Header-filesystem-synopsis">
     Header &lt;filesystem&gt; synopsis</a><br>
     <a href="#Path-traits">Path traits</a><br>
-    <a href="#Class-template-basic_path">
-    Class template basic_path</a><br>
+    <a href="#Class-template-path">
+    Class template path</a><br>
     &nbsp;&nbsp;&nbsp;
 <a href="#Pathname-formats">Pathname formats</a><br>
     &nbsp;&nbsp;&nbsp;
 <a href="#Pathname-grammar">Pathname grammar</a><br>
     &nbsp;&nbsp;&nbsp;
-<a href="#Filename-conversion">Filename conversion</a><br>
+<a href="#Input-conversion">Filename conversion</a><br>
     &nbsp;&nbsp;&nbsp;
-<a href="#basic_path-requirements">Requirements</a> </td>
-    <td width="35%" valign="top">&nbsp;Class template basic_path (continued)<br>
+<a href="#path-requirements">Requirements</a> </td>
+    <td width="35%" valign="top">&nbsp;Class template path (continued)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-requirements">basic_path constructors</a><br>
+<a href="#path-requirements">path constructors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-assignments">basic_path assignments</a><br>
+<a href="#path-assignments">path assignments</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-modifiers">basic_path modifiers</a><br>
+<a href="#path-modifiers">path modifiers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-inserter-extractor">basic_path operators</a><br>
+<a href="#path-inserter-extractor">path operators</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-observers">basic_path observers</a><br>
+<a href="#path-decompositions">path observers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-iterators">basic_path iterators</a><br>
+<a href="#path-iterators">path iterators</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-non-member-functions">basic_path non-member functions</a><br>
+<a href="#path-non-member-functions">path non-member functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_path-inserter-extractor">basic_path inserter and extractor</a><span style="background-color: #FFFFFF"><br>
+<a href="#path-inserter-extractor">path inserter and extractor</a><span style="background-color: #FFFFFF"><br>
 </span> &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#Class-template-basic_filesystem_error">Class template 
     basic_filesystem_error</a><br>
@@ -83,26 +83,26 @@
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#basic_filesystem_error-observers">basic_filesystem_error observers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#Class-template-basic_directory_entry">Class template 
-    basic_directory_entry</a><br>
+<a href="#Class-template-directory_entry">Class template 
+    directory_entry</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_directory_entry-constructors">basic_directory_entry constructors</a><br>
+<a href="#directory_entry-constructors">directory_entry constructors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_directory_entry-modifiers">basic_directory_entry modifiers</a><br>
+<a href="#directory_entry-modifiers">directory_entry modifiers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_directory_entry-observers">basic_directory_entry observers</a><br>
+<a href="#directory_entry-observers">directory_entry observers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_directory_entry-comparisons">basic_directory_entry comparisons</a></td>
+<a href="#directory_entry-comparisons">directory_entry comparisons</a></td>
     <td width="89%" valign="top">Filesystem library chapter (continued)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#Class-template-basic_directory_iterator">Class template 
-    basic_directory_iterator</a><br>
+<a href="#Class-template-directory_iterator">Class template 
+    directory_iterator</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#basic_directory_iterator-constructors">basic_directory_iterator 
+<a href="#directory_iterator-constructors">directory_iterator 
     constructors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
-<a href="#Class-template-basic_recursive_directory_iterator">Class template 
-    basic_recursive_directory_iterator</a><br>
+<a href="#Class-template-recursive_directory_iterator">Class template 
+    recursive_directory_iterator</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; <a href="#file_status">Class 
     file_status</a><br>
     <a href="#Non-member-functions">
@@ -211,23 +211,23 @@ modification of
 the same object within a file system.</p>
 <h3><a name="Requirements">Requirements</a></h3>
 <h4><a name="Requirements-on-programs">Requirements on programs</a></h4>
-<p>The arguments for template parameters named <code>Path</code>, <code>Path1</code>, 
-or <code>Path2</code> described in this clause shall be of type <code>basic_path</code>, 
-or a class derived from <code>basic_path</code>, unless otherwise 
+<p>The arguments for template parameters named <code>Path</code>, <code>path</code>, 
+or <code>path</code> described in this clause shall be of type <code>path</code>, 
+or a class derived from <code>path</code>, unless otherwise 
 specified.</p>
 <h4><a name="Requirements-on-implementations">Requirements on implementations</a></h4>
 <p>Some function templates described in this clause have a template parameter 
-named <code>Path</code>, <code>Path1</code>, or <code>Path2</code>. When called 
+named <code>Path</code>, <code>path</code>, or <code>path</code>. When called 
 with a function argument <code>s</code> of type <code>char*</code> or <code>
 std::string</code>, the implementation shall treat the argument as if it were 
 coded <code>path(s)</code>. When called with a function argument <code>s</code> 
 of type <code>wchar_t*</code> or <code>std::wstring</code>, the implementation 
 shall treat the argument as if it were coded <code>wpath(s)</code>. For 
 functions with two arguments, implementations shall not supply this treatment 
-when <code>Path1</code> and <code>Path2</code> are different types.</p>
+when <code>path</code> and <code>path</code> are different types.</p>
 <blockquote>
 <p>[<i>Note:</i> This &quot;do-the-right-thing&quot; rule allows users to write <code>exists(&quot;foo&quot;)</code>, 
-taking advantage of class <code>basic_path</code>'s string conversion 
+taking advantage of class <code>path</code>'s string conversion 
 constructor,&nbsp; rather 
 than the lengthier and more error prone <code>exists(path(&quot;foo&quot;))</code>. This 
 is particularly important for the simple, script-like, programs which are an 
@@ -239,13 +239,13 @@ technique, using
 <code>exists()</code> as an example, is:</p>
   <blockquote>
     <pre>template &lt;class Path&gt;
-  typename boost::enable_if&lt;is_basic_path&lt;Path&gt;,bool&gt;::type exists(const Path&amp; p);
+  typename boost::enable_if&lt;is_path&lt;Path&gt;,bool&gt;::type exists(const path&amp; p);
 inline bool exists(const path&amp; p) { return exists&lt;path&gt;(p); }
 inline bool exists(const wpath&amp; p) { return exists&lt;wpath&gt;(p); }</pre>
   </blockquote>
   <p>&nbsp;The <code>enable_if</code> will fail for a C string or <code>
   std::basic_string</code> argument, which will then be automatically converted 
-  to a <code>basic_path</code> object via the appropriate <code>basic_path</code> conversion 
+  to a <code>path</code> object via the appropriate <code>path</code> conversion 
   constructor.&nbsp;&nbsp; <i>-- end note</i>]</p>
   <p><span style="background-color: #E0E0E0"><i>The two overloads are not given 
   in the normative text because:</i></span></p>
@@ -290,10 +290,10 @@ error_code</code> with the value of ec.</span></p>
   {
     namespace filesystem
     {
-      template &lt;class String, class Traits&gt; class <a href="#Class-template-basic_path">basic_path</a>;
+      class <a href="#Class-template-path">path</a>;
 
       template&lt;class String, class Traits&gt;
-      void swap(basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Traits&gt; &amp; rhs);
+      void swap(path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp; rhs);
 
       template&lt;class String, class Traits&gt; bool operator&lt;(<i>a</i> a, <i>b</i> b);
       template&lt;class String, class Traits&gt; bool operator==(<i>a</i> a, <i>b</i> b);
@@ -311,13 +311,7 @@ error_code</code> with the value of ec.</span></p>
         basic_istream&lt;typename Path::string_type::value_type, typename Path::string_type::traits_type&gt; &amp;
           operator&gt;&gt;(basic_istream&lt;typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp; is, Path &amp; ph);
       
-      struct path_traits;
-      struct wpath_traits;
-
-      typedef basic_path&lt;std::string, path_traits&gt;    path;
-      typedef basic_path&lt;std::wstring, wpath_traits&gt;  wpath;
-
-      template&lt;class Path&gt; struct is_basic_path;
+      template&lt;class Path&gt; struct is_path;
 
       template&lt;class Path&gt; struct slash { static const char value = '/'; };
       template&lt;class Path&gt; struct dot   { static const char value = '.'; };
@@ -325,25 +319,16 @@ error_code</code> with the value of ec.</span></p>
 </span>
       <span style="background-color: #FFFFFF">class filesystem_error;</span><span style="background-color: #FFFF00">
 </span>      
-      template &lt;class Path&gt; class <a href="#Class-template-basic_filesystem_error">basic_filesystem_error</a>;
+      class <a href="#Class-template-basic_filesystem_error">basic_filesystem_error</a>;
 
       typedef basic_filesystem_error&lt;path&gt; filesystem_error;
       typedef basic_filesystem_error&lt;wpath&gt; wfilesystem_error;
 
-      <span style="background-color: #FFFFFF">template &lt;class Path&gt; class <a href="#Class-template-basic_directory_entry">basic_directory_entry</a>;
+      <span style="background-color: #FFFFFF">class <a href="#Class-template-directory_entry">directory_entry</a>;
 
-      typedef basic_directory_entry&lt;path&gt; directory_entry;
-      typedef basic_directory_entry&lt;wpath&gt; wdirectory_entry;
-</span>
-      template &lt;class Path&gt; class <a href="#Class-template-basic_directory_iterator">basic_directory_iterator</a>;
+</span>      class <a href="#Class-template-directory_iterator">directory_iterator</a>;
 
-      typedef basic_directory_iterator&lt;path&gt; directory_iterator;
-      typedef basic_directory_iterator&lt;wpath&gt; wdirectory_iterator;
-
-      template &lt;class Path&gt; class <a href="#Class-template-basic_recursive_directory_iterator">basic_recursive_directory_iterator</a>;
-
-      typedef basic_recursive_directory_iterator&lt;path&gt; <a name="recursive_directory_iterator">recursive_directory_iterator</a>;
-      typedef basic_recursive_directory_iterator&lt;wpath&gt; wrecursive_directory_iterator;
+      class <a href="#Class-template-recursive_directory_iterator">recursive_directory_iterator</a>;
 
       enum file_type { status_unknown, file_not_found, regular_file, directory_file,
                        symlink_file, block_file, character_file, fifo_file, socket_file,
@@ -360,10 +345,10 @@ error_code</code> with the value of ec.</span></p>
       };
 </span>
       //  <a href="#Status-functions">status functions</a>
-      template &lt;class Path&gt; file_status status(const Path&amp; p);
-      template &lt;class Path&gt; file_status status(const Path&amp; p, error_code&amp; ec);
-      template &lt;class Path&gt; file_status symlink_status(const Path&amp; p);
-      template &lt;class Path&gt; file_status symlink_status(const Path&amp; p, error_code&amp; ec);
+      file_status status(const path&amp; p);
+      file_status status(const path&amp; p, error_code&amp; ec);
+      file_status symlink_status(const path&amp; p);
+      file_status symlink_status(const path&amp; p, error_code&amp; ec);
 
       //  <a href="#Predicate-functions">predicate functions</a>
       bool status_known( file_status s ); 
@@ -373,50 +358,40 @@ error_code</code> with the value of ec.</span></p>
       bool is_symlink( file_status s );
       bool is_other( file_status s );
 
-      template &lt;class Path&gt; bool exists(const Path&amp; p);
-      template &lt;class Path&gt; bool is_directory(const Path&amp; p);
-      template &lt;class Path&gt; bool is_regular_file(const Path&amp; p);
-      template &lt;class Path&gt; bool is_other(const Path&amp; p);
-      template &lt;class Path&gt; bool is_symlink(const Path&amp; p);
-      template &lt;class Path&gt; bool is_empty(const Path&amp; p);
+      bool exists(const path&amp; p);
+      bool is_directory(const path&amp; p);
+      bool is_regular_file(const path&amp; p);
+      bool is_other(const path&amp; p);
+      bool is_symlink(const path&amp; p);
+      bool is_empty(const path&amp; p);
 
-      template &lt;class Path1, class Path2&gt;
-        bool equivalent(const Path1&amp; p1, const Path2&amp; p2);
+      bool equivalent(const path&amp; p1, const path&amp; p2);
 
       //  <a href="#Attribute-functions">attribute functions</a>
-      template &lt;class Path&gt; Path current_path();
-      template &lt;class Path&gt; void current_path(const Path&amp; p);
-      template &lt;class Path&gt; const Path&amp; initial_path();
-      template &lt;class Path&gt; <span style="background-color: #FFFFFF; ">uintmax_t</span> file_size(const Path&amp; p);
-<span style="background-color: #FFFFFF">      template &lt;class Path&gt; space_info space(const Path&amp; p);</span><span style="background-color: #FFFF00">
-</span>      template &lt;class Path&gt; std::time_t last_write_time(const Path&amp; p);
-      template &lt;class Path&gt;
-        void last_write_time(const Path&amp; p, const std::time_t new_time);
+      path current_path();
+      void current_path(const path&amp; p);
+      const path&amp; initial_path();
+      <span style="background-color: #FFFFFF; ">uintmax_t</span> file_size(const path&amp; p);
+<span style="background-color: #FFFFFF">      space_info space(const path&amp; p);</span><span style="background-color: #FFFF00">
+</span>      std::time_t last_write_time(const path&amp; p);
+      void last_write_time(const path&amp; p, const std::time_t new_time);
 
       //  <a href="#Operations-functions">operations functions</a>
-      template &lt;class Path&gt; bool create_directory(const Path&amp; dp);
-      template &lt;class Path1, class Path2&gt;
-        void create_hard_link(const Path1&amp; old_fp, const Path2&amp; new_fp);
-<span style="background-color: #FFFFFF">      template &lt;class Path1, class Path2&gt;
-        error_code create_hard_link(const Path1&amp; old_fp, const Path2&amp; new_fp, error_code&amp; ec);
-      template &lt;class Path1, class Path2&gt;
-        void create_symlink(const Path1&amp; old_fp, const Path2&amp; new_fp);
-      template &lt;class Path1, class Path2&gt;
-        error_code create_symlink(const Path1&amp; old_fp, const Path2&amp; new_fp, error_code&amp; ec);
-</span>      template &lt;class Path&gt; bool remove(const Path&amp; p);
-      template &lt;class Path1, class Path2&gt;
-        void rename(const Path1&amp; from_p, const Path2&amp; to_p);
-      template &lt;class Path1, class Path2&gt;
-        void copy_file(const Path1&amp; from_fp, const Path2&amp; to_fp);
-      template &lt;class Path&gt; Path system_complete(const Path&amp; p);
-      template &lt;class Path&gt; Path complete(const Path&amp; p, const Path&amp; base=initial_path&lt;Path&gt;());
+      bool create_directory(const path&amp; p);
+      void create_hard_link(const path&amp; old, const path&amp; new_link);
+<span style="background-color: #FFFFFF">      void create_symlink(const path&amp; old, const path&amp; new_link);
+</span>      bool remove_path(const path&amp; p);
+      void rename_path(const path&amp; old, const path&amp; new_p);
+      void copy_file(const path&amp; from, const path&amp; to);
+      path system_complete(const path&amp; p);
+      path complete(const path&amp; p, const path base=initial_path());
 
       //  <a href="#Convenience-functions">convenience functions</a>
-      template &lt;class Path&gt; bool create_directories(const Path&amp; p);
-      template &lt;class Path&gt; typename Path::string_type extension(const Path&amp; p);
-      template &lt;class Path&gt; typename Path::string_type basename(const Path&amp; p);
+      bool create_directories(const path&amp; p);
+      typename Path::string_type extension(const path&amp; p);
+      typename Path::string_type basename(const path&amp; p);
       template &lt;class Path&gt;
-        Path change_extension(const Path&amp; p, const typename Path::string_type&amp; new_extension);
+        Path change_extension(const path&amp; p, const typename Path::string_type&amp; new_extension);
 
     } // namespace filesystem
   } // namespace boost</pre>
@@ -426,7 +401,7 @@ traits, and defines two classes that satisfy those requirements for paths based
 on <code>string</code> and <code>wstring</code>.. It also defines several path 
 additional path traits structure templates, and defines several specializations 
 of them.</p>
-<p>Class template <code>basic_path</code> defined in this clause requires additional 
+<p>Class template <code>path</code> defined in this clause requires additional 
 types, values, and behavior to complete the definition of its semantics.</p>
 <p>For purposes of exposition, Traits behaves as if it is a class with private 
 members bool m_locked, initialized false, and std::locale m_locale, initialized  </p>
@@ -450,7 +425,7 @@ members bool m_locked, initialized false, and std::locale m_locale, initialized 
     <td width="38%" valign="top"><code>Traits::internal_string_type</code></td>
     <td width="62%">A typedef which is a specialization of <code>basic_string</code>. 
     The <code>value_type</code> is a character type to be used by the program to 
-    represent pathnames. Required be the same type as the <code>basic_path 
+    represent pathnames. Required be the same type as the <code>path 
     String</code> template parameter. </td>
   </tr>
   <tr>
@@ -477,27 +452,41 @@ members bool m_locked, initialized false, and std::locale m_locale, initialized 
     </code><i>Returns:</i> <code>temp</code></td>
   </tr>
 </table>
-<p>Type <code>is_basic_path</code> shall be a <i>UnaryTypeTrait</i> (TR1, 4.1). 
+<p>Type <code>is_path</code> shall be a <i>UnaryTypeTrait</i> (TR1, 4.1). 
 The primary template shall be derived directly or indirectly from <code>
-std::tr1::false_type</code>. Type <code>is_basic_path</code> shall be 
+std::tr1::false_type</code>. Type <code>is_path</code> shall be 
 specialized for <code>path</code>, <code>wpath</code>, and any 
-user-specialized <code>basic_path</code> types, and such specializations shall 
+user-specialized <code>path</code> types, and such specializations shall 
 be derived directly or indirectly from <code>std::tr1::true_type</code>.</p>
 <p>Structure templates <code>slash</code>, <code>dot</code>, and <code>
 <span style="background-color: #FFFFFF">colon</span></code><span style="background-color: #FFFFFF">
 </span>are supplied with 
-values of type <code>char</code>. If a user-specialized <code>basic_path</code> 
+values of type <code>char</code>. If a user-specialized <code>path</code> 
 has a <code>
 value_type</code> type which is not convertible from <code>char</code>, the 
 templates&nbsp; <code>slash</code> and <code>dot</code> shall be specialized to 
 provide <code>value</code> with type which is convertible to <code>
-basic_path::value_type</code>.</p>
-<h3><a name="Class-template-basic_path">Class template <code>basic_path</code></a></h3>
-<p>Class template <code>basic_path</code> provides a portable mechanism for 
+path::value_type</code>.</p>
+<h3><a name="Class-template-path">Class <code>path</code></a></h3>
+<p>An object of class <code>path</code> represents a <a href="#Path">path</a>. The exact string type, 
+format, and encoding are as required by the host operating system.</p>
+<p><i>[Note:</i></p>
+<ul>
+  <li>For POSIX-like operating systems, <code>string_type</code> is <code>std::string</code>, the 
+  format is the <a href="#Pathname-grammar">portable pathname format</a>, and 
+  the encoding follows the conventions of the specific operating system.<br>
+&nbsp;</li>
+  <li>For Windows,&nbsp; <code>string_type</code> is <code>std::wstring</code>, 
+  the format is the Windows pathname format, and the encoding is UTF-16 (UCS-2 
+  for older versions). Windows recognizes either slash or backslash as a 
+  directory separator. The preferred separator is backslash.</li>
+</ul>
+<p><i>-- end note]</i></p>
+<p>Class template <code>path</code> provides a portable mechanism for 
 representing <a href="#Path">paths</a> in C++ programs, using a portable generic 
 pathname <a href="#Pathname-grammar">grammar</a>. When portability is not a 
 requirement, native file system specific formats can be used.&nbsp;Class template
-<code>basic_path</code> is concerned only with the lexical and syntactic aspects 
+<code>path</code> is concerned only with the lexical and syntactic aspects 
 of a path. The path does not have to exist in the operating system's file 
 system, and may contain names which are not even valid for the current operating 
 system. </p>
@@ -511,104 +500,117 @@ system. </p>
   {
     namespace filesystem
     {
-      template &lt;class String, class Traits&gt; class basic_path
+      class path
       {
       public:
-        typedef basic_path&lt;String, Traits&gt; path_type;
-        typedef String string_type;
-        typedef typename String::value_type value_type;
-        typedef Traits traits_type;
-        typedef typename Traits::external_string_type external_string_type; 
+        typedef <b><i>see below</i></b>                     value_type;  // char for POSIX, wchar_t for Windows
+        typedef std::basic_string&lt;value_type&gt; string_type;
+        typedef string_type::size_type        size_type;
+        typedef path_traits::codecvt_type     codecvt_type;
 
-        // <a href="#basic_path-constructors">constructors/destructor</a>
-        basic_path();
-        basic_path(const basic_path&amp; p);
-        basic_path(const string_type&amp; s);
-        basic_path(const value_type* s);
-        template &lt;class InputIterator&gt;
-          basic_path(InputIterator first, InputIterator last);
+        static const value_type generic_separator = <b><i>see below</i></b>;    // '/' for POSIX
+                                                                  // L'/' for Windows
+        static const value_type preferred_separator = <b><i>see below</i></b>;  // '/' for POSIX
+                                                                  // L'\\' for Windows
 
-       ~basic_path();
+        // <a href="#path-constructors">constructors/destructor</a>
+        path();
+        path(const path&amp; p);
 
-        // <a href="#basic_path-assignments">assignments</a>
-        basic_path&amp; operator=(const basic_path&amp; p);
-        basic_path&amp; operator=(const string_type&amp; s);
-        basic_path&amp; operator=(const value_type* s);
-        template &lt;class InputIterator&gt;
-          basic_path&amp; assign(InputIterator first, InputIterator last);
+        template &lt;class ContiguousIterator&gt;
+          path(ContiguousIterator begin, ContiguousIterator end);
 
-        // <a href="#basic_path-modifiers">modifiers</a>
-        basic_path&amp; operator/=(const basic_path&amp; rhs);
-        basic_path&amp; operator/=(const string_type&amp; s);
-        basic_path&amp; operator/=(const value_type* s);
-        template &lt;class InputIterator&gt;
-          basic_path&amp; append(InputIterator first, InputIterator last);
+        template &lt;class PathSource&gt;
+          path(PathSource const &amp; source);
 
+       ~path();
+
+        // <a href="#path-assignments">assignments</a>
+        path&amp; operator=(const path&amp; p);
+
+        template &lt;class ContiguousIterator&gt;
+          path&amp; assign(ContiguousIterator begin, ContiguousIterator end);
+
+        template &lt;class PathSource&gt;
+          path&amp; operator=(PathSource const &amp; source);
+
+        // <a href="#path-appends">appends</a>
+        path&amp; operator/=(const path&amp; p);
+
+        template &lt;class ContiguousIterator&gt;
+          path&amp; append(ContiguousIterator begin, ContiguousIterator end);
+
+        template &lt;class PathSource&gt;
+          path&amp; operator/=(PathSource const &amp; source);
+
+        // <a href="#path-modifiers">modifiers</a>
         <span style="background-color: #FFFFFF">void clear();
-        void swap( basic_path &amp; rhs );</span>
-        basic_path&amp; remove_filename();
-        basic_path&amp; replace_extension(const string_type &amp; new_extension = &quot;&quot;);
+        void swap(path &amp; rhs);</span>
+        path&amp; remove_filename();
+        path&amp; replace_extension(const path &amp; new_extension = path());
 
-        // <a href="#basic_path-observers">observers</a>
-        const string_type string() const;
-        const string_type file_string() const;
-        const string_type directory_string() const;
+        // <a href="#path-decompositions">observers</a>
+        const string_type&amp;  native() const;          // native format, native string-type, native encoding
+        const value_type*   c_str() const;           // native().c_str()
 
-        const external_string_type external_file_string() const;
-        const external_string_type external_directory_string() const;
+        <i><b>const-string</b></i>        native_string() const;   // native format, uses codecvt() for encoding
+        <i><b>const-wstring</b></i>       native_wstring() const;  // native format, uses codecvt() for encoding
 
-        string_type  root_name() const;
-        string_type  root_directory() const;
-        basic_path   root_path() const;
-        basic_path   relative_path() const;
+        <b><i>const-string</i></b>        string() const;          // portable format, uses codecvt() for encoding
+        <b><i>const-wstring</i></b>       wstring() const;         // portable format, uses codecvt() for encoding
 
-        basic_path   parent_path() const;
-        string_type  filename() const;
+        // decomposition
+        path  root_name() const;
+        path  root_directory() const;
+        path  root_path() const;
+        path  relative_path() const;
+        path  parent_path() const;
+        path  filename() const;
+        path  stem() const;
+        path  extension() const;
 
-        string_type  stem() const;
-        string_type  extension() const;
-
+        // query
         bool empty() const;
-        bool is_complete() const;
         bool has_root_name() const;
         bool has_root_directory() const;
         bool has_root_path() const;
         bool has_relative_path() const;
-        bool has_filename() const;
         bool has_parent_path() const;
+        bool has_filename() const;
+        bool is_complete() const;
 
-        // <a href="#basic_path-iterators">iterators</a>
+        // <a href="#path-iterators">iterators</a>
         class iterator;
         typedef iterator const_iterator;
 
         iterator begin() const;
         iterator end() const;
-
+        
+        // encoding conversion
+        static std::locale imbue( const std::locale &amp; loc );
+        static const codecvt_type &amp; codecvt()
       };
 
     } // namespace filesystem
   } // namespace boost</pre>
-<p>A <code>basic_path</code> object stores a possibly empty <a href="#Path">path</a>. 
-The internal form of the stored path is unspecified.</p>
-<p><a name="pathname-resolution">Functions</a> described in this clause which access files or their attributes do so by 
-resolving a <code>basic_path</code> object into a particular file in a file 
-hierarchy. The pathname, suitably converted to the string type, format, and 
-encoding 
-required by the operating system, is resolved as if by the <i>POSIX</i>
-<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
-Pathname Resolution</a> mechanism. The encoding of the resulting pathname is determined by the <code>Traits::to_external</code> conversion function.</p>
+<p><code>value_type</code> is an implementation-defined typedef for the 
+character type used by the implementation to represent paths.</p>
 <blockquote>
-<p>[<i>Note:</i> There is no guarantee that the path stored in a&nbsp; <code>basic_path</code> 
+<p><i>[Note:</i> On POSIX-like systems, including Cygwin, <code>value_type</code> 
+is <code>char</code>. On Windows-like systems, <code>value_type</code> is <code>
+wchar_t</code>. <i>--end note]</i></p>
+</blockquote>
+<p><a name="pathname-resolution">Functions</a> described in this clause which access files or their attributes do so by 
+resolving a <code>path</code> object to a particular file in a file 
+hierarchy. The path is resolved as if by the <i>POSIX</i>
+<a href="http://www.opengroup.org/onlinepubs/000095399/basedefs/xbd_chap04.html#tag_04_11">
+Pathname Resolution</a> mechanism.</p>
+<blockquote>
+<p>[<i>Note:</i> There is no guarantee that the path stored in a&nbsp; <code>path</code> 
 object is valid for a particular operating system or file system. <i>-- end note</i>]</p>
 </blockquote>
-<p>Some functions in this clause return <code>basic_path</code> objects for 
-paths composed partly or wholly of pathnames obtained from the operating system. 
-Such pathnames are suitably converted from the actual format and string 
-type supplied by the operating system. The encoding of the resulting path is determined by the <code>Traits::to_internal</code> conversion function.</p>
-<p>For member functions described as returning &quot;<code>const string_type</code>&quot; or 
-&quot;<code>const external_string_type</code>&quot;, implementations are permitted to return 
-&quot;<code>const string_type&amp;</code>&quot; or&nbsp; &quot;<code>const external_string_type&amp;</code>&quot; 
-respectively.</p>
+<p>For member functions described as returning &quot;<code>const path</code>&quot;, implementations are permitted to return 
+&quot;<code>const path&amp;</code>&quot;.</p>
 <blockquote>
 <p>[<i>Note:</i> This allows implementations to avoid unnecessary copies. 
 Return-by-value is specified as
@@ -633,7 +635,7 @@ subset of the native format for <i>UNIX</i>-like and <i>Windows</i>-like
 operating systems familiar to large numbers of programmers. </span></p>
 <p>Use of the portable format does not alone guarantee 
 portability;  filenames must also be portable.<span style="background-color: #FFFFFF"> 
-See <a href="#Filename-conversion">Filename conversions</a>. Each operating system 
+See <a href="#Input-conversion">Filename conversions</a>. Each operating system 
  
 follows its own rules. Use of the portable format 
 does not change that. </span> <i>-- end note</i>]</p>
@@ -652,7 +654,7 @@ does not change that. </span> <i>-- end note</i>]</p>
   </blockquote>
   </li>
 </ul>
-<p><span style="background-color: #FFFFFF">All <code>basic_path</code> string or sequence arguments that describe a 
+<p><span style="background-color: #FFFFFF">All <code>path</code> string or sequence arguments that describe a 
 path shall accept the portable pathname format, and shall accept the native 
 format if explicitly identified by a native format escape sequence prefix of
 <code>slash slash colon</code>.</span></p>
@@ -754,7 +756,9 @@ form of <i>root-name.</i></p>
 followed by a colon as a native format <i>root-name</i>, 
 and a backslash as a format element equivalent to <i>slash</i>. <i>-- end note</i>]</p>
 </blockquote>
-<h4><a name="Filename-conversion">Filename conversion</a></h4>
+<h4><a name="Input-conversion">Input conversion</a></h4>
+<p><span style="background-color: #FFFF00">To be supplied. Explain when, how 
+codecvt applied.</span></p>
 <p>When converting filenames to the native operating system format, 
 implementations are encouraged, but not required, to convert otherwise invalid 
 characters or character sequences to valid characters or character sequences. 
@@ -773,104 +777,112 @@ Windows currently does not map invalid characters. Pending feedback from the LWG
 Boost may settle on % hex hex as the preferred escape sequence. If so, should 
 there be normative encouragement?</i></span></p>
 </blockquote>
-<h4><a name="basic_path-requirements">Requirements</a></h4>
-<p>The argument for the template parameter named <code>String</code> shall be a 
-class that includes members with the same names, types, values, and semantics as 
-class template <code>basic_string</code>.</p>
-<p>The argument for the template parameter named <code>Traits</code> shall be a 
-class that satisfies the requirements specified in the
-<a href="#Path-Behavior-Traits-Requirements">Path Behavior Traits Requirements</a> 
-table.</p>
-<p>The argument for template parameters named <code>InputIterator</code> shall satisfy the 
-requirements of an input iterator (C++ Std, 24.1.1, Input iterators [lib.input.iterators]) and shall have a value type convertible to
-<code>basic_path::value_type</code>. </p>
-<p>Some function templates with a template 
-parameter named <code>InputIterator</code> also have non-template overloads. Implementations shall 
-only select the function template overload if the type named by <code>InputIterator</code> 
-is not <code>path_format_t</code>.</p>
-<blockquote>
-<p>[<i>Note:</i> This &quot;do-the-right-thing&quot; rule ensures that the 
-overload expected by the user is selected. The implementation technique is unspecified - 
-implementations may use
-<a href="http://www.boost.org/libs/utility/enable_if.html">enable_if</a> or 
-other techniques to achieve the effect. <i>-- end note</i>]</p>
-</blockquote>
-<h4> <a name="basic_path-constructors"> <code>basic_path</code> constructors</a></h4>
-<pre>basic_path();</pre>
+<h4><a name="path-requirements">Requirements</a></h4>
+<p><code>ContiguousIterator</code> is required to be a <code>RandomIterator</code> 
+pointing to contiguous storage. The iterator's value_type is required to be </p>
+<p>PathSource is:</p>
+<ul>
+  <li>A container. The value type is required to be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>An iterator for a null terminated byte-string. The value type is required 
+  to be <code>char</code>, <code>wchar_t</code>, <code>char16_t</code>, or <code>
+  char32_t</code>.</li>
+  <li>A c-array. The value type is required to be <code>char</code>, <code>
+  wchar_t</code>, <code>char16_t</code>, or <code>char32_t</code>.</li>
+  <li>A boost::filesystem::directory_entry.</li>
+</ul>
+<h4> <code><font size="4">class </font></code> <a name="path-constructors"> <code>
+<font size="4">path</font></code> constructors</a></h4>
+<pre>path();</pre>
 <blockquote>
   <p><i>Postconditions:</i> <code>empty()</code>.</p>
   </blockquote>
-<pre>basic_path(const string_type&amp; s);
-basic_path(const value_type * s);
-template &lt;class InputIterator&gt;
-  basic_path(InputIterator s, InputIterator last);</pre>
+<pre>template &lt;class ContiguousIterator&gt;
+  path(ContiguousIterator begin, ContiguousIterator end);</pre>
+<pre>template &lt;class PathSource&gt;
+  path(PathSource const &amp; source);</pre>
 <blockquote>
-  <p><i>Remarks:</i> The format of string <code>s</code> and sequence [<code>first</code>,<code>last</code>) 
-  is described in <a href="#Pathname-formats">Pathname formats</a>.</p>
-  <p><i>Effects:</i> The path elements in string <code>s</code> or sequence [<code>first</code>,<code>last</code>) 
-  are stored.</p>
+  <p><i>Postconditions:</i> <code>native()</code> is a copy of [<code>begin</code>,<code>end</code>) 
+  or <code>source</code>, 
+  converted to the format and encoding required by the host operating system (<a href="#Input-conversion">Input 
+  conversion</a>).</p>
 </blockquote>
-<h4> <a name="basic_path-assignments"> <code>basic_path</code> assignments</a></h4>
-<pre>basic_path&amp; operator=(const string_type&amp; s);
-basic_path&amp; operator=(const value_type* s);
-template &lt;class InputIterator&gt;
-  basic_path&amp; assign(InputIterator first, InputIterator last);</pre>
+<h4> <code><font size="4">class </font></code> <a name="path-assignments"> <code>
+<font size="4">path</font></code> assignments</a></h4>
+<pre>template &lt;class ContiguousIterator&gt;
+  path&amp; assign(ContiguousIterator begin, ContiguousIterator end);</pre>
+<pre>template &lt;class PathSource&gt;
+  path&amp; operator=(PathSource const &amp; source);</pre>
 <blockquote>
-  <p><i>Remarks:</i> The format of string <code>s</code> and sequence [<code>first</code>,<code>last</code>) 
-  is described in <a href="#Pathname-formats">Pathname formats</a>.</p>
-  <p><i>Effects:</i> The path elements in string <code>s</code> or sequence [<code>first</code>,<code>last</code>) 
-  are stored.</p>
+  <p><i>Postconditions:</i> <code>native()</code> is a copy of [<code>begin</code>,<code>end</code>) 
+  or <code>source</code>, 
+  converted to the format and encoding required by the host operating system (<a href="#Input-conversion">Input 
+  conversion</a>).</p>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
-<h4> <a name="basic_path-modifiers"> <code>basic_path</code> modifiers</a></h4>
-<pre>basic_path&amp; operator/=(const basic_path&amp; rhs);</pre>
+<h4> <code><font size="4">class <a name="path-appends">path</a></font></code><a name="path-appends"> 
+appends</a></h4>
+  <p>The append operations use <code>operator/=</code> to denote their semantic 
+  effect of automatically supplying a separator unless an added separator would 
+  be redundant or would change an incomplete path to a complete path.</p>
+  <p>The cases where a separator is automatically supplied are:</p>
+  <ul>
+    <li>On POSIX, when <code>!empty() &amp;&amp; native().back() != '/'</code></li>
+    <li>On Windows, when <code>!empty() &amp;&amp; native().back() != L'/' &amp;&amp; 
+    native().back() != L'\\' &amp;&amp; native().back() != L':'</code></li>
+</ul>
+<pre>path&amp; operator/=(const path&amp; p);</pre>
 <blockquote>
-  <p><i>Effects:</i> The path stored in <code>rhs</code> is appended to the 
-  stored path.</p>
-  <p><i>Returns:</i> <code>*this</code></p>
+  <p><i>Postconditions:</i> <code>native()</code> contains:</p>
+  <ul>
+    <li>the original contents of <code>native()</code>, </li>
+    <li>followed by a <code>native_separator</code>, unless an added separator 
+    would be redundant or would change an incomplete path to a complete path,</li>
+    <li>followed by <code>p.native()</code>.</li>
+  </ul>
 </blockquote>
-<pre>basic_path&amp; operator/=(const string_type&amp; s);
-basic_path&amp; operator/=(const value_type* s);
-template &lt;class InputIterator&gt;
-basic_path&amp; append(InputIterator first, InputIterator last);</pre>
+<pre>template &lt;class ContiguousIterator&gt;
+  path&amp; append(ContiguousIterator begin, ContiguousIterator end);</pre>
+<pre>template &lt;class PathSource&gt;
+  path&amp; operator/=(PathSource const &amp; source);</pre>
 <blockquote>
-  <p><i>Remarks:</i> The format of string <code>s</code> and sequence [<code>first</code>,<code>last</code>) 
-  is described in <a href="#Pathname-formats">Pathname formats</a>.</p>
-<p><i>Effects:</i> The path elements in string <code>s</code> or sequence [<code>first</code>,<code>last</code>) 
-  are appended to the stored path.</p>
+  <p><i>Postconditions:</i> <code>native()</code> contains:</p>
+  <ul>
+    <li>the original contents of <code>native()</code>, </li>
+    <li>followed by a <code>native_separator</code>, unless an added separator 
+    would be redundant or would change an incomplete path to a complete path,</li>
+    <li>followed by a copy of [<code>begin</code>,<code>end</code>) or <code>source</code>, converted to the 
+  format and encoding required by the host operating system (<a href="#Input-conversion">Input 
+  conversion</a>).</li>
+  </ul>
   <p><i>Returns: </i><code>*this</code></p>
   </blockquote>
+<h4> <code><font size="4">class </font></code> <a name="path-modifiers"> <code>
+<font size="4">path</font></code> modifiers</a></h4>
 <pre>void clear();</pre>
 <blockquote>
 <p><i>Postcondition:</i> <code>this-&gt;empty()</code> is true.</p>
 </blockquote>
-<pre><code><span style="background-color: #FFFFFF">void swap( basic_path &amp; rhs );</span></code></pre>
+<pre><code><span style="background-color: #FFFFFF">void swap( path &amp; rhs );</span></code></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
   Swaps the contents of the two paths.</span></p>
   <p><i><span style="background-color: #FFFFFF">Throws: </span></i>
   <span style="background-color: #FFFFFF">nothing.</span></p>
-  <p><i><span style="background-color: #FFFFFF">Postcondition:</span></i><span style="background-color: #FFFFFF">
-  </span><code><span style="background-color: #FFFFFF">this-&gt;string()</span></code><span style="background-color: #FFFFFF"> 
-  contains the same sequence of characters that were in </span><code><span style="background-color: #FFFFFF">
-  rhs.string()</span></code><span style="background-color: #FFFFFF">, </span><code><span style="background-color: #FFFFFF">
-  rhs.string()</span></code><span style="background-color: #FFFFFF"> 
-  contains the same sequence of characters that were is </span><code>
-  <span style="background-color: #FFFFFF">this-&gt;string()</span></code><span style="background-color: #FFFFFF">.</span></p>
   <p><i><span style="background-color: #FFFFFF">Complexity: </span></i>
   <span style="background-color: #FFFFFF">constant time.</span></p>
 </blockquote>
-<pre>basic_path&amp; remove_filename();</pre>
+<pre>path&amp; remove_filename();</pre>
 <blockquote>
-  <p><i>Effects:</i> If <code>has_parent_path()</code> then remove the last <i>filename</i> from the stored path. If that leaves 
-  the stored path with one or more trailing <i>slash</i> elements not 
-  representing&nbsp; <i>root-directory</i>, remove them.</p>
+  <p><i>Effects:</i> If <code>has_parent_path()</code> then remove the last filename from the stored path. If that leaves 
+  the stored path with one or more trailing separator elements not 
+  representing&nbsp;a root-directory, remove them.</p>
   <p><i>Returns:</i> <code>*this</code></p>
   <p>[<i>Note:</i> This function is needed to efficiently implement <code>
-  basic_directory_iterator</code>. It is made public to allow additional uses. <i>-- end 
+  directory_iterator</code>. It is made public to allow additional uses. <i>-- end 
   note</i>]</p>
 </blockquote>
-<pre>basic_path&amp; replace_extension( const string_type &amp; new_extension = &quot;&quot; );</pre>
+<pre>path&amp; replace_extension(const path &amp; new_extension = path());</pre>
 <blockquote>
   <p><i>Postcondition: </i> <code>extension() == <i>replacement</i></code>, 
   where <code><i>replacement</i></code> is <code>new_extension</code> if <code>
@@ -879,49 +891,86 @@ basic_path&amp; append(InputIterator first, InputIterator last);</pre>
   <code>new_extension</code>.</p>
   <p><i>Returns:</i> <code>*this</code></p>
 </blockquote>
-<h4> <a name="basic_path-observers"> <code>basic_path</code> observers</a></h4>
+<h4> <code><font size="4">class </font></code> <a name="path-observers"> <code>
+<font size="4">path</font></code> observers</a></h4>
+<p>Some operating systems, including <i>POSIX</i> and <i>
+Windows</i>, use the same format for paths to directories and paths to regular 
+files.</p>
+<p>Other operating systems, such as OpenVMS, used different formats for paths to 
+directories and paths to regular files. On such systems, implementations shall 
+determine the format according to whether or not the last element is a 
+separator.</p>
+<table border="1" cellpadding="3" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111">
+  <tr>
+    <td colspan="2">
+    <p align="center"><b>OpenVMS</b></td>
+  </tr>
+  <tr>
+    <td><code>path p</code></td>
+    <td><code>p.native()</code></td>
+  </tr>
+  <tr>
+    <td><code>p = &quot;/cats/jane&quot;</code></td>
+    <td> <code>&quot;[CATS]JANE&quot;</code></td>
+  </tr>
+  <tr>
+    <td><code>p = &quot;/cats/jane/&quot;</code></td>
+    <td> <code>&quot;[CATS.JANE]&quot;</code></td>
+  </tr>
+</table>
+<pre>const string_type&amp;  native() const;</pre>
 <blockquote>
+<p><i>Returns:</i> A string formatted and encoded as defined by the 
+implementation. <i>[Note:</i> This is normally the format and encoding of paths 
+for the host operating system. If the implementation emulates a different 
+operating system, such as Cygwin's emulation of Windows, the format and encoding 
+will be that of the emulated operating system. <i>--end note]</i></p>
+</blockquote>
+<pre>const value_type* c_str() const;</pre>
+<blockquote>
+<p>Returns: <code>native().c_str()</code>.</p>
+</blockquote>
+<pre><i><b>const-string</b></i> native_string() const;</pre>
+<blockquote>
+<p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
+std::string</code> or <code>const std::string&amp;</code>.</p>
+<p><i>Returns:</i> A string containing the contents of <code>native()</code>. If
+<code>value_type</code> is not <code>char</code>, the encoding is converted by
+<code>codecvt()</code>.</p>
+<p><i>[Note:</i> For POSIX implementations, no conversion is required; the 
+implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
+</blockquote>
+<pre><i><b>const-wstring</b></i> native_wstring() const; </pre>
+<blockquote>
+<p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
+std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
+<p><i>Returns:</i> A string containing the contents of <code>native()</code>. If
+<code>value_type</code> is not <code>wchar_t</code>, the encoding is converted 
+by <code>codecvt()</code>.</p>
+<p><i>[Note:</i> For Windows implementations, no conversion is required; the 
+implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
+</blockquote>
+<pre><b><i>const-string</i></b> generic_string() const;</pre>
+<blockquote>
+<p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
+std::string</code> or <code>const std::string&amp;</code>.</p>
+<p><i>Returns:</i> A string containing the <a href="#Pathname-grammar">portable 
+representation</a> of the contents of <code>native()</code>. If <code>value_type</code> 
+is not <code>char</code>, the encoding is converted by <code>codecvt()</code>.</p>
+</blockquote>
+<pre><b><i>const-wstring</i></b> generic_wstring() const;</pre>
+<blockquote>
+<p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
+std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
+<p><i>Returns:</i> A string containing the <a href="#Pathname-grammar">portable 
+representation</a> of the contents of <code>native()</code>. If <code>value_type</code> 
+is not <code>wchar_t</code>, the encoding is converted by <code>codecvt()</code>.</p>
+</blockquote>
+<h4> <a name="path-decomposition"> <code><font size="4">class path</font></code> 
+decomposition</a></h4>
 <p><span style="background-color: #E0E0E0"><i>See the
 <a href="#Path-decomposition-table">Path decomposition table</a> for examples 
 for values returned by decomposition functions.</i></span></p>
-</blockquote>
-<pre>const string_type string() const;</pre>
-<blockquote>
-<p><i>Returns:</i> The  stored path, formatted according to the
-<a href="#Pathname-grammar">Pathname grammar</a> rules.</p>
-</blockquote>
-<pre>const string_type file_string() const;</pre>
-<blockquote>
-<p><i>Returns:</i> The  stored path, formatted according to the 
-operating system rules for regular file pathnames, with any
-<a href="#Filename-conversion">Filename conversion</a> applied.</p>
-<p>[<i>Note:</i> For some operating systems, including <i>POSIX</i> and <i>
-Windows</i>, the native format for regular file pathnames and directory 
-pathnames is the same, so <code>file_string()</code> and <code>directory_string()</code> 
-return the same string. On OpenMVS, however, the expression <code>path(&quot;/cats/jane&quot;).file_string()</code> 
-would return the string <code>&quot;[CATS]JANE&quot;</code> while <code>path(&quot;/cats/jane&quot;).directory_string()</code> 
-would return the string <code>&quot;[CATS.JANE]&quot;</code>. <i>-- end note</i>]</p>
-</blockquote>
-<pre>const string_type directory_string() const;</pre>
-<blockquote>
-<p><i>Returns:</i> The  stored path, formatted according to the 
-operating system rules for directory pathnames, with any
-<a href="#Filename-conversion">Filename conversion</a> applied.</p>
-</blockquote>
-<pre>const external_string_type external_file_string() const;</pre>
-<blockquote>
-<p><i>Returns:</i> The  stored path, formatted according to the 
-operating system rules for regular file pathnames, with any
-<a href="#Filename-conversion">Filename conversion</a> applied, and encoded by the <code>Traits::to_external</code> 
-conversion function.</p>
-</blockquote>
-<pre>const external_string_type external_directory_string() const;</pre>
-<blockquote>
-<p><i>Returns:</i> The  stored path, formatted according to the 
-operating system rules for directory pathnames, with any
-<a href="#Filename-conversion">Filename conversion</a> applied, and encoded by the <code>Traits::to_external</code> 
-conversion function.</p>
-</blockquote>
 <pre>string_type root_name() const;</pre>
 <blockquote>
 <p><i>Returns:</i> <i>root-name,</i> if the stored path includes <i>
@@ -934,25 +983,25 @@ root-directory</i>, otherwise <code>string_type()</code>.</p>
 <p>If <i>root-directory</i> is composed <i>slash name</i>, <i>slash</i> is 
 excluded from the returned string.</p>
 </blockquote>
-<pre>basic_path root_path() const;</pre>
+<pre>path root_path() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>root_name() / root_directory()</code></p>
 </blockquote>
-<pre>basic_path relative_path() const;</pre>
+<pre>path relative_path() const;</pre>
 <blockquote>
-<p><i>Returns:</i> A <code>basic_path</code> composed from the the stored path, if any, beginning 
+<p><i>Returns:</i> A <code>path</code> composed from the the stored path, if any, beginning 
 with the first <i>filename</i> after <i>root-path</i>. 
-Otherwise, an empty <code>basic_path</code>.</p>
+Otherwise, an empty <code>path</code>.</p>
 </blockquote>
 <pre>string_type filename() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>empty() ? string_type() : *--end()</code></p>
 </blockquote>
-<pre>basic_path parent_path() const;</pre>
+<pre>path parent_path() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>(string().empty() || begin() == --end()) ? path_type(&quot;&quot;) : 
   <i>br</i></code>, where <code><i>br</i></code> is constructed as if by 
-  starting with an empty <code>basic_path</code> and successively applying <code>
+  starting with an empty <code>path</code> and successively applying <code>
   operator/=</code> for each element in the range <code>begin()</code>, <code>
   --end()</code>.</p>
 </blockquote>
@@ -1008,12 +1057,13 @@ Otherwise, an empty <code>basic_path</code>.</p>
 <blockquote>
   <p><i>Returns:</i> <code>!parent_path().empty()</code></p>
 </blockquote>
-<h4> <a name="basic_path-iterators"> <code>basic_path</code> iterators</a></h4>
-<p> A <code>basic_path::iterator</code> is a constant iterator satisfying all 
+<h4> <code><font size="4">class </font></code> <a name="path-iterators"> <code>
+<font size="4">path</font></code> iterators</a></h4>
+<p> A <code>path::iterator</code> is a constant iterator satisfying all 
 the requirements of a bidirectional iterator (C++ Std, 24.1.4 Bidirectional 
 iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is
 <code>string_type</code>.</p>
-  <p>Calling any non-const member function of a <code>basic_path</code> object 
+  <p>Calling any non-const member function of a <code>path</code> object 
   invalidates all iterators referring to elements of the object.</p>
 <p> The forward traversal order is as follows:</p>
 <ul>
@@ -1033,17 +1083,17 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
-<h4> <a name="basic_path-non-member-functions">
-<span style="background-color: #FFFFFF">basic_path non-member functions</span></a></h4>
+<h4> <a name="path-non-member-functions">
+<span style="background-color: #FFFFFF">path non-member functions</span></a></h4>
 <pre><span style="background-color: #FFFFFF">template&lt;class String, class Traits&gt;
-void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Traits&gt; &amp; rhs )</span></pre>
+void swap( path&lt;String, Traits&gt; &amp; lhs, path&lt;String, Traits&gt; &amp; rhs )</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects: </span></i><code>
   <span style="background-color: #FFFFFF">lhs.swap( 
   rhs )</span></code></p>
 </blockquote>
-  <h4><span style="background-color: #FFFFFF">basic_path non-member operators</span></h4>
-  <p><span style="background-color: #FFFFFF">There are seven basic_path non-member operators (/,
+  <h4><span style="background-color: #FFFFFF">path non-member operators</span></h4>
+  <p><span style="background-color: #FFFFFF">There are seven path non-member operators (/,
   </span> <code><span style="background-color: #FFFFFF">==</span></code><span style="background-color: #FFFFFF">,
   </span> <code>
   <span style="background-color: #FFFFFF">!=</span></code><span style="background-color: #FFFFFF">,
@@ -1064,32 +1114,32 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
       </tr>
       <tr>
         <td width="100%"><span style="background-color: #FFFFFF"><code>
-        basic_path&lt;String, Traits&gt;&amp; a, basic_path&lt;String, Traits&gt;&amp; 
+        path&lt;String, Traits&gt;&amp; a, path&lt;String, Traits&gt;&amp; 
         b</code></span></td>
       </tr>
       <tr>
         <td width="100%"><span style="background-color: #FFFFFF"><code>const 
-        typename basic_path&lt;String, Traits&gt;::string_type&amp; a, 
-        basic_path&lt;String, Traits&gt;&amp; b</code></span></td>
+        typename path&lt;String, Traits&gt;::string_type&amp; a, 
+        path&lt;String, Traits&gt;&amp; b</code></span></td>
       </tr>
       <tr>
         <td width="100%"><span style="background-color: #FFFFFF"><code>const 
-        typename basic_path&lt;String, Traits&gt;::string_type::value_type* a, 
-        basic_path&lt;String, Traits&gt;&amp; b</code></span></td>
+        typename path&lt;String, Traits&gt;::string_type::value_type* a, 
+        path&lt;String, Traits&gt;&amp; b</code></span></td>
       </tr>
       <tr>
         <td width="100%"><span style="background-color: #FFFFFF"><code>const 
-        basic_path&lt;String, Traits&gt;&amp; a, typename basic_path&lt;String, Traits&gt;::string_type&amp; 
+        path&lt;String, Traits&gt;&amp; a, typename path&lt;String, Traits&gt;::string_type&amp; 
         b</code></span></td>
       </tr>
       <tr>
         <td width="100%"><span style="background-color: #FFFFFF"><code>const 
-        basic_path&lt;String, Traits&gt;&amp; a, typename 
-        basic_path&lt;String, Traits&gt;::string_type::value_type* b</code></span></td>
+        path&lt;String, Traits&gt;&amp; a, typename 
+        path&lt;String, Traits&gt;::string_type::value_type* b</code></span></td>
       </tr>
     </table>
   <p><span style="background-color: #FFFFFF">In the </span><b><i>
-  <span style="background-color: #FFFFFF">basic_path non-member operators </span>
+  <span style="background-color: #FFFFFF">path non-member operators </span>
   </i></b><span style="background-color: #FFFFFF">table, </span><code>
   <span style="background-color: #FFFFFF">a</span></code><span style="background-color: #FFFFFF"> 
   and </span><code><span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
@@ -1098,7 +1148,7 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
   table. If </span><code><span style="background-color: #FFFFFF">a</span></code><span style="background-color: #FFFFFF"> 
   or </span><code><span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
   is of type </span><code><span style="background-color: #FFFFFF">const 
-  basic_path&lt;String, Traits&gt;&amp;</span></code><span style="background-color: #FFFFFF">, 
+  path&lt;String, Traits&gt;&amp;</span></code><span style="background-color: #FFFFFF">, 
   then </span><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i></code><span style="background-color: #FFFFFF"> 
   or </span><i><b><span style="background-color: #FFFFFF">b'</span></b></i><span style="background-color: #FFFFFF"> 
   respectively is </span><code><span style="background-color: #FFFFFF">a</span></code><span style="background-color: #FFFFFF"> 
@@ -1106,7 +1156,7 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
   respectively. Otherwise </span><i><b><span style="background-color: #FFFFFF">a</span></b></i><code><i><b><span style="background-color: #FFFFFF">'</span></b></i></code><span style="background-color: #FFFFFF"> 
   or </span><i><b><span style="background-color: #FFFFFF">b'</span></b></i><span style="background-color: #FFFFFF"> 
   respectively represent named or unnamed temporary </span><code>
-  <span style="background-color: #FFFFFF">basic_path&lt;String, Traits&gt;</span></code><span style="background-color: #FFFFFF"> 
+  <span style="background-color: #FFFFFF">path&lt;String, Traits&gt;</span></code><span style="background-color: #FFFFFF"> 
   objects constructed from </span><code><span style="background-color: #FFFFFF">
   a</span></code><span style="background-color: #FFFFFF"> or </span><code>
   <span style="background-color: #FFFFFF">b</span></code><span style="background-color: #FFFFFF"> 
@@ -1114,7 +1164,7 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
 <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="100%" height="280">
   <tr>
     <td width="100%" colspan="3" align="center" height="19"><b><i>
-    <span style="background-color: #FFFFFF">basic_path non-member operators</span></i></b></td>
+    <span style="background-color: #FFFFFF">path non-member operators</span></i></b></td>
   </tr>
   <tr>
     <td width="20%" align="center" height="19"><i><b>
@@ -1128,9 +1178,9 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
     <td width="20%" align="center" height="30" valign="top"><code>
     <span style="background-color: #FFFFFF">a / b</span></code></td>
     <td width="25%" align="center" height="30" valign="top"><code>
-    <span style="background-color: #FFFFFF">basic_path&lt;String, Traits&gt;</span></code></td>
+    <span style="background-color: #FFFFFF">path&lt;String, Traits&gt;</span></code></td>
     <td width="55%" height="30"><code><span style="background-color: #FFFFFF">
-    basic_path&lt;String, Traits&gt; tmp(a);<br>
+    path&lt;String, Traits&gt; tmp(a);<br>
     return tmp /= </span></code><i><b><span style="background-color: #FFFFFF">b'</span></b></i><code><span style="background-color: #FFFFFF">;</span></code></td>
   </tr>
   <tr>
@@ -1197,7 +1247,7 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
   </span> <a name="Path-equality"><span style="background-color: #FFFFFF">Path equality</span></a><span style="background-color: #FFFFFF"> and path 
   equivalence have different semantics.</span></p>
   <p><span style="background-color: #FFFFFF">Equality is determined by </span> <i>
-  <span style="background-color: #FFFFFF">basic_path</span></i><span style="background-color: #FFFFFF">'s 
+  <span style="background-color: #FFFFFF">path</span></i><span style="background-color: #FFFFFF">'s 
   non-member </span> <code><a href="#operator-eq">
   <span style="background-color: #FFFFFF">operator==</span></a></code><span style="background-color: #FFFFFF">, which considers the two path's lexical representations 
   only. Paths &quot;abc&quot; and &quot;ABC&quot; are never equal.</span></p>
@@ -1213,13 +1263,13 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
   file&quot;, and choose the appropriate function accordingly. </span> <i>
   <span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
 </blockquote>
-  <h4><a name="basic_path-inserter-extractor"> <code>
-  <span style="background-color: #FFFFFF">basic_path</span></code><span style="background-color: #FFFFFF"> inserter 
+  <h4><a name="path-inserter-extractor"> <code>
+  <span style="background-color: #FFFFFF">path</span></code><span style="background-color: #FFFFFF"> inserter 
   and extractor</span></a></h4>
 <pre><span style="background-color: #FFFFFF">template&lt;class Path&gt;
   basic_istream&lt;typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp;
     operator&gt;&gt;(basic_istream&lt; typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp; is,
-               Path&amp; ph );</span></pre>
+               path ph );</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:&nbsp; </span></i>
       <code><span style="background-color: #FFFFFF">typename Path::string_type str;<br>
@@ -1233,7 +1283,7 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
 <pre><span style="background-color: #FFFFFF">template&lt;class Path&gt;
   basic_ostream&lt;typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp;
     operator&lt;&lt;(basic_ostream&lt; typename Path::string_type::value_type, typename Path::string_type::traits_type&gt;&amp; os,
-               const Path&amp; ph );</span></pre>
+               const path&amp; ph );</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF">&nbsp;
   </span> <code><span style="background-color: #FFFFFF">os &lt;&lt; ph.string()</span></code></p>
@@ -1245,7 +1295,7 @@ void swap( basic_path&lt;String, Traits&gt; &amp; lhs, basic_path&lt;String, Tra
   {
     namespace filesystem
     {
-      template &lt;class Path&gt; class basic_filesystem_error : public <span style="background-color: #FFFFFF">system</span>_error
+      class basic_filesystem_error : public <span style="background-color: #FFFFFF">system</span>_error
       {
       public:
         typedef Path path_type;
@@ -1378,42 +1428,42 @@ The exact format is unspecified.</p>
 <p>Implementations and users are permitted to provide other specializations of 
 the <code>what</code> member function.</p>
 </blockquote>
-<h3><a name="Class-template-basic_directory_entry">Class template <code>basic_directory_entry</code></a></h3>
+<h3><a name="Class-template-directory_entry">Class template <code>directory_entry</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
     {
-      template &lt;class Path&gt; class basic_directory_entry
+      class directory_entry
       {
       public:
         typedef Path path_type;
         typedef typename Path::string_type string_type;
 
-        // <a href="#basic_directory_entry-constructors">constructors</a>
-        basic_directory_entry();
-        explicit basic_directory_entry(const path_type&amp; p,
+        // <a href="#directory_entry-constructors">constructors</a>
+        directory_entry();
+        explicit directory_entry(const path_type&amp; p,
           <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
 
-        // <a href="#basic_directory_entry-modifiers">modifiers</a>
+        // <a href="#directory_entry-modifiers">modifiers</a>
         void assign(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
         void replace_filename(const string_type&amp; s, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());
 
-        // <a href="#basic_directory_entry-observers">observers</a>
-        const Path&amp; path() const;
-        operator const Path&amp;() const;
+        // <a href="#directory_entry-observers">observers</a>
+        const path&amp; path() const;
+        operator const path() const;
 <span style="background-color: #FFFFFF">
         file_status  status() const;
         file_status  status(error_code&amp; ec) const;
         file_status  symlink_status() const;
         file_status  symlink_status(error_code&amp; ec) const;
 </span><span style="background-color: #FFFF00">
-</span>        // <a href="#basic_directory_entry-comparisons">comparisons</a>
-        bool operator&lt;(const basic_directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator==(const basic_directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator!=(const basic_directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator&gt;(const basic_directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator&lt;=(const basic_directory_entry&lt;Path&gt;&amp; rhs);
-        bool operator&gt;=(const basic_directory_entry&lt;Path&gt;&amp; rhs);
+</span>        // <a href="#directory_entry-comparisons">comparisons</a>
+        bool operator&lt;(const directory_entry&lt;Path&gt;&amp; rhs);
+        bool operator==(const directory_entry&lt;Path&gt;&amp; rhs);
+        bool operator!=(const directory_entry&lt;Path&gt;&amp; rhs);
+        bool operator&gt;(const directory_entry&lt;Path&gt;&amp; rhs);
+        bool operator&lt;=(const directory_entry&lt;Path&gt;&amp; rhs);
+        bool operator&gt;=(const directory_entry&lt;Path&gt;&amp; rhs);
 
       private:
         path_type            m_path;           // for exposition only
@@ -1423,7 +1473,7 @@ the <code>what</code> member function.</p>
 
     } // namespace filesystem
   } // namespace boost</pre>
-<p>A <code>basic_directory_entry</code> object stores a <code>basic_path object</code>, 
+<p>A <code>directory_entry</code> object stores a <code>path object</code>, 
 a <code>file_status</code> object for non-symbolic link status, and a <code>
 file_status</code> object for symbolic link status. The <code>file_status</code> 
 objects act as value caches.</p>
@@ -1438,8 +1488,8 @@ versus one second for cached status queries. Windows XP, 3.0 GHz processor, with
 a moderately fast hard-drive. Similar speedup expected on Linux and BSD-derived 
 Unix variants that provide status during directory iteration.</i></span></p>
 </blockquote>
-<h4> <a name="basic_directory_entry-constructors"> <code>basic_directory_entry </code>constructors</a></h4>
-<pre>basic_directory_entry();</pre>
+<h4> <a name="directory_entry-constructors"> <code>directory_entry </code>constructors</a></h4>
+<pre>directory_entry();</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="36%">
@@ -1461,7 +1511,7 @@ Unix variants that provide status during directory iteration.</i></span></p>
     </tr>
   </table>
 </blockquote>
-<pre>explicit basic_directory_entry(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());</pre>
+<pre>explicit directory_entry(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
   <table border="1" cellpadding="5" cellspacing="0" style="border-collapse: collapse" bordercolor="#111111" width="36%">
@@ -1483,7 +1533,7 @@ Unix variants that provide status during directory iteration.</i></span></p>
     </tr>
   </table>
 </blockquote>
-<h4> <a name="basic_directory_entry-modifiers"> <code>basic_directory_entry </code>modifiers</a></h4>
+<h4> <a name="directory_entry-modifiers"> <code>directory_entry </code>modifiers</a></h4>
 <pre>void assign(const path_type&amp; p, <span style="background-color: #FFFFFF">file_status</span> st=file_status(), <span style="background-color: #FFFFFF">file_status</span> symlink_st=file_status());</pre>
 <blockquote>
   <p><i>Postconditions:</i></p>
@@ -1528,9 +1578,9 @@ Unix variants that provide status during directory iteration.</i></span></p>
     </tr>
   </table>
 </blockquote>
-<h4> <a name="basic_directory_entry-observers"> <code>basic_directory_entry</code> observers</a></h4>
-<pre>const Path&amp; path() const;
-operator const Path&amp;() const;</pre>
+<h4> <a name="directory_entry-observers"> <code>directory_entry</code> observers</a></h4>
+<pre>const path&amp; path() const;
+operator const path() const;</pre>
 <blockquote>
   <p><i>Returns:</i> <code>m_path</code></p>
 </blockquote>
@@ -1593,25 +1643,25 @@ else ec = 0;</span></pre>
   </blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> <code>m_symlink_status</code></span></p>
 </blockquote>
-<h3><a name="Class-template-basic_directory_iterator">Class template <code>basic_directory_iterator</code></a></h3>
+<h3><a name="Class-template-directory_iterator">Class template <code>directory_iterator</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
     {
       template &lt;class Path&gt;
-      class basic_directory_iterator :
-        public iterator&lt;input_iterator_tag, basic_directory_entry&lt;Path&gt; &gt;
+      class directory_iterator :
+        public iterator&lt;input_iterator_tag, directory_entry&lt;Path&gt; &gt;
       {
       public:
         typedef Path path_type;
 
-        // <a href="#basic_directory_iterator-constructors">constructors</a>
-        basic_directory_iterator();
-        explicit basic_directory_iterator(const Path&amp; dp);
-        basic_directory_iterator(const Path&amp; dp, error_code&amp; ec);
-        basic_directory_iterator(const basic_directory_iterator&amp; bdi);
-        basic_directory_iterator&amp; operator=(const basic_directory_iterator&amp; bdi);
-       ~basic_directory_iterator();
+        // <a href="#directory_iterator-constructors">constructors</a>
+        directory_iterator();
+        explicit directory_iterator(const path dp);
+        directory_iterator(const path dp, error_code&amp; ec);
+        directory_iterator(const directory_iterator&amp; bdi);
+        directory_iterator&amp; operator=(const directory_iterator&amp; bdi);
+       ~directory_iterator();
 
         // other members as required by
         //  C++ Std, 24.1.1 Input iterators [lib.input.iterators]
@@ -1619,14 +1669,14 @@ else ec = 0;</span></pre>
 
     } // namespace filesystem
   } // namespace boost</pre>
-<p> <code>basic_directory_iterator</code> satisfies the requirements of an 
+<p> <code>directory_iterator</code> satisfies the requirements of an 
 input iterator (C++ Std, 24.1.1, Input iterators [lib.input.iterators]).</p>
-<p>A <code>basic_directory_iterator</code> reads successive elements from the directory for 
+<p>A <code>directory_iterator</code> reads successive elements from the directory for 
 which it was constructed, as if by calling <i>POSIX</i>
 <code>
-<a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. After a <code>basic_directory_iterator</code> is constructed, and every time 
+<a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. After a <code>directory_iterator</code> is constructed, and every time 
 <code>operator++</code> is called, 
-it reads and stores a value of <code>basic_directory_entry&lt;Path&gt;</code> 
+it reads and stores a value of <code>directory_entry&lt;Path&gt;</code> 
 and possibly stores associated status values. 
 <code>operator++</code> is not equality preserving; that is, <code>i == j</code> does not imply that
 <code>++i == ++j</code>. </p>
@@ -1635,13 +1685,13 @@ and possibly stores associated status values.
 can be used only for single-pass algorithms. <i>--end note</i>]</p>
 </blockquote>
 <p>If the end of the directory elements is reached, the iterator becomes equal to 
-the end iterator value. The constructor <code>basic_directory_iterator()</code> 
+the end iterator value. The constructor <code>directory_iterator()</code> 
 with no arguments always constructs an end iterator object, which is the only 
 legitimate iterator to be used for the end condition. The result of <code>
 operator*</code> on an end iterator is not defined. For any other iterator value 
-a <code>const basic_directory_entry&lt;Path&gt;&amp;</code> is returned. The result of
+a <code>const directory_entry&lt;Path&gt;&amp;</code> is returned. The result of
 <code>operator-&gt;</code> on an end iterator is not defined. For any other 
-iterator value a <code>const basic_directory_entry&lt;Path&gt;*</code> is 
+iterator value a <code>const directory_entry&lt;Path&gt;*</code> is 
 returned. </p>
 <p>Two end iterators are always equal. An end iterator is not equal to a non-end 
 iterator.</p>
@@ -1651,8 +1701,8 @@ Standard Library's istream_iterator wording. Commentary was shortened and
 moved into a note.</span></i></p>
 </blockquote>
 <p>The result of calling the <code>path()</code> member of the <code>
-basic_directory_entry</code> object obtained by dereferencing a <code>
-basic_directory_iterator</code> is a reference to a <code>basic_path</code> 
+directory_entry</code> object obtained by dereferencing a <code>
+directory_iterator</code> is a reference to a <code>path</code> 
 object composed of the directory argument from which the iterator was 
 constructed with filename of the directory entry appended as if by <code>
 operator/=</code>. </p>
@@ -1692,7 +1742,7 @@ int main(int argc, char* argv[])
 <p>Directory iteration shall not yield directory entries for the current (<i>dot</i>) 
 and parent (<i>dot dot</i>) directories.</p>
 <p>The order of directory entries obtained by dereferencing successive 
-increments of a <code>basic_directory_iterator</code> is unspecified.</p>
+increments of a <code>directory_iterator</code> is unspecified.</p>
 <blockquote>
 <p>[<i>Note:</i> Programs performing directory iteration may wish to test if the 
 path obtained by dereferencing a directory iterator actually exists. It could be 
@@ -1701,7 +1751,7 @@ symbolic link to a non-existent file. Programs recursively
 walking directory trees for purposes of removing and renaming entries may wish 
 to avoid following symbolic links.</p>
 <p>If a file  is removed from or added to a directory after the 
-construction of a <code>basic_directory_iterator</code> for the directory, it is 
+construction of a <code>directory_iterator</code> for the directory, it is 
 unspecified whether or not subsequent incrementing of the iterator will ever 
 result in an iterator whose value is the removed or added directory entry. See
 <i>POSIX</i>
@@ -1709,9 +1759,9 @@ result in an iterator whose value is the removed or added directory entry. See
 <a href="http://www.opengroup.org/onlinepubs/000095399/functions/readdir_r.html">readdir_r()</a></code>. <i>
 --end note</i>]</p>
 </blockquote>
-<h4><a name="basic_directory_iterator-constructors"><code>basic_directory_iterator</code> constructors</a></h4>
+<h4><a name="directory_iterator-constructors"><code>directory_iterator</code> constructors</a></h4>
 
-<p><code>basic_directory_iterator();</code></p>
+<p><code>directory_iterator();</code></p>
 
 <blockquote>
 
@@ -1719,7 +1769,7 @@ result in an iterator whose value is the removed or added directory entry. See
 
 </blockquote>
 
-<p><code>explicit basic_directory_iterator(const Path&amp; dp);</code></p>
+<p><code>explicit directory_iterator(const path dp);</code></p>
 
 <blockquote>
 
@@ -1730,7 +1780,7 @@ entry in the directory resolved to by <code>dp</code>, otherwise, the end iterat
 directory_iterator(&quot;.&quot;)</code> rather than <code>directory_iterator(&quot;&quot;)</code>.
 <i>-- end note</i>]</p>
 </blockquote>
-<pre><code>basic_directory_iterator(const Path&amp; dp, error_code&amp; ec );</code></pre>
+<pre><code>directory_iterator(const path dp, error_code&amp; ec );</code></pre>
 <blockquote>
 
 <p><i>Effects:</i> Constructs a iterator representing the first 
@@ -1740,24 +1790,24 @@ represents the end iterator and <code>ec</code> is set to the error code
 reported by the operating system, otherwise to 0.</p>
 
 </blockquote>
-<h3><a name="Class-template-basic_recursive_directory_iterator">Class template <code>basic_recursive_directory_iterator</code></a></h3>
+<h3><a name="Class-template-recursive_directory_iterator">Class template <code>recursive_directory_iterator</code></a></h3>
 <pre>  namespace boost
   {
     namespace filesystem
     {
       template &lt;class Path&gt;
-      class basic_recursive_directory_iterator :
-        public iterator&lt;input_iterator_tag, basic_directory_entry&lt;Path&gt; &gt;
+      class recursive_directory_iterator :
+        public iterator&lt;input_iterator_tag, directory_entry&lt;Path&gt; &gt;
       {
       public:
         typedef Path path_type;
 
         // constructors
-        basic_recursive_directory_iterator();
-        explicit basic_recursive_directory_iterator(const Path&amp; dp);
-        basic_recursive_directory_iterator(const basic_recursive_directory_iterator&amp; brdi);
-        basic_recursive_directory_iterator&amp; operator=(const basic_recursive_directory_iterator&amp; brdi);
-       ~basic_recursive_directory_iterator();
+        recursive_directory_iterator();
+        explicit recursive_directory_iterator(const path dp);
+        recursive_directory_iterator(const recursive_directory_iterator&amp; brdi);
+        recursive_directory_iterator&amp; operator=(const recursive_directory_iterator&amp; brdi);
+       ~recursive_directory_iterator();
 
         // observers
         int level() const;
@@ -1775,8 +1825,8 @@ reported by the operating system, otherwise to 0.</p>
 
     } // namespace filesystem
   } // namespace boost</pre>
-<p>The behavior of a <code>basic_recursive_directory_iterator</code> is the same 
-as a <code>basic_directory_iterator</code> unless otherwise specified.</p>
+<p>The behavior of a <code>recursive_directory_iterator</code> is the same 
+as a <code>directory_iterator</code> unless otherwise specified.</p>
 <ul>
   <li>When an iterator is constructed, <code>m_level</code> is set to 0;</li>
   <li>When an iterator <code>it</code> is incremented, if <code>it-&gt;is_directory()</code> 
@@ -1834,8 +1884,8 @@ file. The internal form of the stored information is unspecified.</p>
 </blockquote>
 <h3><a name="Non-member-functions">Non-member operational functions</a></h3>
 <h4><a name="Status-functions">Status functions</a></h4>
-<pre>template &lt;class Path&gt; file_status status(const Path&amp; p, error_code&amp; ec);
-template &lt;class Path&gt; file_status <a name="symlink_status">symlink_status</a>(const Path&amp; p, error_code&amp; ec);</pre>
+<pre>file_status status(const path&amp; p, error_code&amp; ec);
+file_status <a name="symlink_status">symlink_status</a>(const path&amp; p, error_code&amp; ec);</pre>
 <blockquote>
   <p><i>Returns:</i></p>
   <blockquote>
@@ -1899,7 +1949,7 @@ template &lt;class Path&gt; file_status <a name="symlink_status">symlink_status<
     </ul>
     </blockquote>
 <p>[<i>Note:</i> <code>directory_file</code> implies <code>
-basic_directory_iterator</code> on the file would succeed, and <code>
+directory_iterator</code> on the file would succeed, and <code>
 regular_file</code> implies appropriate <code>&lt;fstream&gt;</code> operations would succeed, 
 assuming no hardware, permission, access, or race 
 condition errors. For <code>regular_file,</code> the converse is not true; lack of
@@ -1907,7 +1957,7 @@ condition errors. For <code>regular_file,</code> the converse is not true; lack 
 fail on a directory.
 <i>-- end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path&gt; file_status status(const Path&amp; p);</pre>
+<pre>file_status status(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i> <code>system_error_code ec;</code><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1916,7 +1966,7 @@ fail on a directory.
   != 0</code></p>
   <p><i>Returns:</i> <code>stat</code></p>
 </blockquote>
-<pre>template &lt;class Path&gt; file_status symlink_status(const Path&amp; p);</pre>
+<pre>file_status symlink_status(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i> <code>system_error_code ec;</code><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -1936,7 +1986,7 @@ fail on a directory.
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   <code>status_known(s) &amp;&amp; s.type() != file_not_found</code></span></p>
 </blockquote>
-<pre>template &lt;class Path&gt; bool <a name="exists">exists</a>(const Path&amp; p);</pre>
+<pre>bool <a name="exists">exists</a>(const path&amp; p);</pre>
 <blockquote>
   <p><i>Returns:</i> <code>exists( status(p) )</code></p>
 </blockquote>
@@ -1945,7 +1995,7 @@ fail on a directory.
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF">
   <code>s.type() == regular_file</code></span></p>
 </blockquote>
-<pre><code>template &lt;class Path&gt; bool is_regular_file(const Path&amp; p);</code></pre>
+<pre><code>bool is_regular_file(const path&amp; p);</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_regular_file( status(p) )</code></p>
 </blockquote>
@@ -1954,7 +2004,7 @@ fail on a directory.
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF"> </span>
   <code><span style="background-color: #FFFFFF">s.type() == directory_file</span></code></p>
 </blockquote>
-<pre><code>template &lt;class Path&gt; bool is_directory(const Path&amp; p);</code></pre>
+<pre><code>bool is_directory(const path&amp; p);</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_directory( status(p) )</code></p>
 </blockquote>
@@ -1963,7 +2013,7 @@ fail on a directory.
   <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF"> </span>
   <code><span style="background-color: #FFFFFF">s.type() == symlink_file</span></code></p>
 </blockquote>
-<pre><code>template &lt;class Path&gt; bool is_symlink(const Path&amp; p);</code></pre>
+<pre><code>bool is_symlink(const path&amp; p);</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_symlink( symlink_status(p) )</code></p>
 </blockquote>
@@ -1975,11 +2025,11 @@ fail on a directory.
   <code>is_other()</code> will remain unchanged even if additional <code>is_xxx()</code> 
   functions are added in the future. <i>-- end note</i>]</span></p>
 </blockquote>
-<pre><code>template &lt;class Path&gt; bool is_other(const Path&amp; p);</code></pre>
+<pre><code>bool is_other(const path&amp; p);</code></pre>
 <blockquote>
   <p><i>Returns:</i> <code>is_other( status(p) )</code></p>
 </blockquote>
-<pre><code>template &lt;class Path&gt; bool <span style="background-color: #FFFFFF; text-decoration:underline">is_</span>empty(const Path&amp; p);</code></pre>
+<pre><code>bool <span style="background-color: #FFFFFF; text-decoration:underline">is_</span>empty(const path&amp; p);</code></pre>
 <blockquote>
   <p><i>Effects:</i> Determines <code>file_status s</code>, as if by <code>
   status(p)</code>.</p>
@@ -1987,17 +2037,17 @@ fail on a directory.
   is_other(s)</code>.</p>
   <p><i>Returns:</i> <code>is_directory(s)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; ? 
-  basic_directory_iterator&lt;Path&gt;(p) == basic_directory_iterator&lt;Path&gt;()<br>
+  directory_iterator&lt;Path&gt;(p) == directory_iterator&lt;Path&gt;()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : file_size(p) == 0;</code></p>
 </blockquote>
-<pre><code>template &lt;class Path1, class Path2&gt; bool <a name="equivalent">equivalent</a>(const Path1&amp; p1, const Path2&amp; p2);</code></pre>
+<pre><code>template &lt;class path, class path&gt; bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);</code></pre>
 <blockquote>
-  <p><i>Requires:</i> <code>Path1::external_string_type</code> and <code>
-  Path2::external_string_type</code> are the same type. </p>
+  <p><i>Requires:</i> <code>path::external_string_type</code> and <code>
+  path::external_string_type</code> are the same type. </p>
   <p><i>Effects:</i> Determines <code>file_status s1</code> and <code>s2</code>, 
   as if by <code>status(p1)</code> and&nbsp; <code>status(p2)</code>, 
   respectively.</p>
-  <p><i>Throws:</i> <code>basic_filesystem_error&lt;Path1&gt;</code><span style="background-color: #FFFFFF"> </span>
+  <p><i>Throws:</i> <code>basic_filesystem_error&lt;path&gt;</code><span style="background-color: #FFFFFF"> </span>
   if <code>(!exists(s1) &amp;&amp; !exists(s2)) || (is_other(s1) &amp;&amp; 
   is_other(s2))</code>.</p>
   <p><i>Returns:</i> <code>true</code>, if <code>sf1 == sf2</code> and <code>p1</code> and <code>p2</code> 
@@ -2023,7 +2073,7 @@ fail on a directory.
 <p>[<i>Note:</i> A strictly limited number of attribute functions are provided 
 because few file system attributes are portable. Even the functions provided will be impossible to implement on some file 
 systems. <i>--end note</i>.]</p>
-<pre>template &lt;class Path&gt; const Path&amp; <a name="initial_path">initial_path</a>();</pre>
+<pre>const path <a name="initial_path">initial_path</a>();</pre>
 <blockquote>
   <p><i>Returns:</i> <code>current_path()</code> at the time of entry to <code>
   main()</code>.</p>
@@ -2038,7 +2088,7 @@ systems. <i>--end note</i>.]</p>
   encouraged to call it immediately on entrance to <code>main()</code> so that 
   they will work correctly with such partial implementations. <i>--end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path&gt; Path current_path();</pre>
+<pre>Path current_path();</pre>
 <blockquote>
   <p><i>Returns:</i> The current path, as if by <i>POSIX</i>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">
@@ -2052,11 +2102,11 @@ systems. <i>--end note</i>.]</p>
   current_path()</code> name was chosen to emphasize that the return is a 
   complete path, not just a single directory name. <i>-- </i><i>end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path&gt; void current_path(const Path&amp; p);</pre>
+<pre>void current_path(const path&amp; p);</pre>
 <blockquote>
 <p><i>Postcondition:</i> equivalent( p, current_path() );</p>
 </blockquote>
-<pre>template &lt;class Path&gt; <span style="background-color: #FFFFFF; ">uintmax_t</span> file_size(const Path&amp; p);</pre>
+<pre><span style="background-color: #FFFFFF; ">uintmax_t</span> file_size(const path&amp; p);</pre>
 <blockquote>
   <p><i>Returns:</i> The size 
   <span style="background-color: #FFFFFF; ">in bytes</span> 
@@ -2066,7 +2116,7 @@ systems. <i>--end note</i>.]</p>
   obtained as if by <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF"><a name="space">template</a> &lt;class Path&gt; space_info space(const Path&amp; p);</span></pre>
+<pre><span style="background-color: #FFFFFF"><a name="space">template</a> &lt;class Path&gt; space_info space(const path&amp; p);</span></pre>
 <blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> A <code>space_info</code> 
   object. The value of the <code>space_info</code> object is determined as if by 
@@ -2080,7 +2130,7 @@ systems. <i>--end note</i>.]</p>
   and <code>available</code> members respectively. Any members for which the 
   value cannot be determined shall be set to -1.</span></p>
 </blockquote>
-<pre>template &lt;class Path&gt; std::time_t last_write_time(const Path&amp; p);</pre>
+<pre>std::time_t last_write_time(const path&amp; p);</pre>
 <blockquote>
   <p><i>Returns:</i> The time of last data modification of <code>p</code>, determined as if by the 
   value of the <i>POSIX</i> <code>
@@ -2088,7 +2138,7 @@ systems. <i>--end note</i>.]</p>
   as if by <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
 </blockquote>
-<pre>template &lt;class Path&gt; void last_write_time(const Path&amp; p, const std::time_t new_time);</pre>
+<pre>void last_write_time(const path&amp; p, const std::time_t new_time);</pre>
 <blockquote>
   <p><i>Effects:</i> Sets the time of last data modification of the file 
   resolved to by <code>p</code> 
@@ -2102,7 +2152,7 @@ systems. <i>--end note</i>.]</p>
   due to coarse time mechanism granularity. <i>-- end note</i>]</p>
 </blockquote>
 <h4>Other o<a name="Operations-functions">perations functions</a></h4>
-<pre>template &lt;class Path&gt; bool create_directory(const Path&amp; dp);</pre>
+<pre>bool create_directory(const path dp);</pre>
 <blockquote>
   <p><i>Effects:</i> Attempts to create the directory <code>dp</code> resolves to, 
   as if by<i> POSIX </i><code>
@@ -2112,13 +2162,13 @@ systems. <i>--end note</i>.]</p>
   <p><i>Returns:</i> True if a new directory was created, otherwise false.</p>
   <p><i>Postcondition:</i> <code>is_directory(dp)</code></p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class Path1, class Path2&gt;
-  error_code create_hard_link(const Path1&amp; to_p, const Path2&amp; from_p, error_code&amp; ec);</span></pre>
+<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
+  error_code create_hard_link(const path&amp; to_p, const path&amp; from_p, error_code&amp; ec);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
-  </span> <code><span style="background-color: #FFFFFF">Path1::external_string_type</span></code><span style="background-color: #FFFFFF"> and
+  </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
   </span> <code>
-  <span style="background-color: #FFFFFF">Path2::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
+  <span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> Establishes the postcondition, as if by
   </span> <i><span style="background-color: #FFFFFF">POSIX</span></i><span style="background-color: #FFFFFF">
   </span> <code>
@@ -2145,26 +2195,26 @@ systems. <i>--end note</i>.]</p>
   for example. Thus hard links should be avoided if wide portability is 
   a concern. </span> <i><span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class Path1, class Path2&gt;
-  void create_hard_link(const Path1&amp; to_p, const Path2&amp; from_p);</span></pre>
+<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
+  void create_hard_link(const path&amp; to_p, const path&amp; from_p);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
-  </span> <code><span style="background-color: #FFFFFF">Path1::external_string_type</span></code><span style="background-color: #FFFFFF"> and
+  </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
   </span> <code>
-  <span style="background-color: #FFFFFF">Path2::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
+  <span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
   As if <code>system_error_code ec( create_hard_link( to_p, from_p ) );</code></span></p>
   <p><span style="font-style: italic; background-color: #FFFFFF">Throws:</span><span style="background-color: #FFFFFF">
-  </span> <code>basic_filesystem_error&lt;Path1, Path2&gt;</code><span style="background-color: #FFFFFF"> 
+  </span> <code>basic_filesystem_error&lt;path, path&gt;</code><span style="background-color: #FFFFFF"> 
   if <code>ec</code> is not zero.</span></p>
   </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class Path1, class Path2&gt;
-  error_code create_symlink(const Path1&amp; to_p, const Path2&amp; from_p, error_code&amp; ec);</span></pre>
+<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
+  error_code create_symlink(const path&amp; to_p, const path&amp; from_p, error_code&amp; ec);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
-  </span> <code><span style="background-color: #FFFFFF">Path1::external_string_type</span></code><span style="background-color: #FFFFFF"> and
+  </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
   </span> <code>
-  <span style="background-color: #FFFFFF">Path2::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
+  <span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> Establishes the postcondition, as if by
   </span> <i><span style="background-color: #FFFFFF">POSIX</span></i><span style="background-color: #FFFFFF">
   </span> <code>
@@ -2182,20 +2232,20 @@ systems. <i>--end note</i>.]</p>
   them only for regular files. Thus symbolic links should be avoided if code portability is 
   a concern. </span> <i><span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class Path1, class Path2&gt;
-  void create_symlink(const Path1&amp; to_p, const Path2&amp; from_p);</span></pre>
+<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
+  void create_symlink(const path&amp; to_p, const path&amp; from_p);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
-  </span> <code><span style="background-color: #FFFFFF">Path1::external_string_type</span></code><span style="background-color: #FFFFFF"> and
+  </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
   </span> <code>
-  <span style="background-color: #FFFFFF">Path2::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
+  <span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> are the same type.</span></p>
   <p><i><span style="background-color: #FFFFFF">Effects:</span></i><span style="background-color: #FFFFFF"> 
   As if <code>system_error_code ec( create_symlink( to_p, from_p ) );</code></span></p>
   <p><span style="font-style: italic; background-color: #FFFFFF">Throws:</span><span style="background-color: #FFFFFF">
-  </span> <code>basic_filesystem_error&lt;Path1, Path2&gt;</code><span style="background-color: #FFFFFF"> 
+  </span> <code>basic_filesystem_error&lt;path, path&gt;</code><span style="background-color: #FFFFFF"> 
   if <code>ec</code> is not zero.</span></p>
   </blockquote>
-<pre>template &lt;class Path&gt; void remove(const Path&amp; p, system::error_code &amp; ec = <i>singular</i> );</pre>
+<pre>void remove(const path&amp; p, system::error_code &amp; ec = <i>singular</i> );</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Removes the file <code>p</code>, 
   as if by<i> POSIX </i><code>
@@ -2218,7 +2268,7 @@ systems. <i>--end note</i>.]</p>
   <p>[<i>Note:</i> A symbolic link is itself removed, rather than the file it 
   resolves to being removed. <i>-- end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path&gt; unsigned long remove_all(const Path&amp; p);</pre>
+<pre>unsigned long remove_all(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i>&nbsp; Recursively deletes the contents of p if it exists, 
   then deletes file <code>p</code> itself, 
@@ -2229,10 +2279,10 @@ systems. <i>--end note</i>.]</p>
   <p>[<i>Note:</i> A symbolic link is itself removed, rather than the file it 
   resolves to being removed. <i>-- end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path1, class Path2&gt; void rename(const Path1&amp; from_p, const Path2&amp; to_p);</pre>
+<pre>template &lt;class path, class path&gt; void rename(const path&amp; from_p, const path&amp; to_p);</pre>
 <blockquote>
-  <p><i>Requires:</i> <code>Path1::external_string_type</code> and <code>
-  Path2::external_string_type</code> are the same type. </p>
+  <p><i>Requires:</i> <code>path::external_string_type</code> and <code>
+  path::external_string_type</code> are the same type. </p>
   <p><i>Effects:</i> Renames <code>from_p</code> to <code>to_p</code>, as if by
   <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/rename.html">
@@ -2245,17 +2295,17 @@ systems. <i>--end note</i>.]</p>
   existing file, it is removed. A symbolic link is itself renamed, rather than 
   the file it resolves to being renamed. <i>-- end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path1, class Path2&gt; void copy_file(const Path1&amp; from_fp, const Path2&amp; to_fp);</pre>
+<pre>template &lt;class path, class path&gt; void copy_file(const path&amp; from_fp, const path&amp; to_fp);</pre>
 <blockquote>
-  <p><i>Requires:</i> <code>Path1::external_string_type</code> and <code>
-  Path2::external_string_type</code> are the same type. </p>
+  <p><i>Requires:</i> <code>path::external_string_type</code> and <code>
+  path::external_string_type</code> are the same type. </p>
   <p><i>Effects:</i> The contents and attributes of the file <code>from_fp</code> 
   resolves to are copied to the file <code>to_fp</code> resolves to.</p>
   <p><i>Throws:</i> <code>basic_filesystem_error&lt;Path&gt;</code> if <code>
   from_fp.empty() || to_fp.empty() ||!exists(from_fp) || !is_regular_file(from_fp) 
   || exists(to_fp)</code></p>
 </blockquote>
-<pre>template &lt;class Path&gt; Path complete(const Path&amp; p, const Path&amp; base=initial_path&lt;Path&gt;());</pre>
+<pre>Path complete(const path&amp; p, const path base=initial_path&lt;Path&gt;());</pre>
 <blockquote>
   <p><i>Effects:</i> Composes a complete path from <code>p</code> and <code>base</code>, 
   using the following rules:</p>
@@ -2294,7 +2344,7 @@ systems. <i>--end note</i>.]</p>
   is expected by program users. <i>-- 
   end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path&gt; Path system_complete(const Path&amp; p);</pre>
+<pre>Path system_complete(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i> Composes a complete path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
@@ -2319,7 +2369,7 @@ systems. <i>--end note</i>.]</p>
   <i>complete()</i> note</a> for usage suggestions. <i>-- end note</i>]</p>
 </blockquote>
 <h4><a name="Convenience-functions">Convenience functions</a></h4>
-<pre>template &lt;class Path&gt; bool create_directories(const Path &amp; p);</pre>
+<pre>bool create_directories(const Path &amp; p);</pre>
 <blockquote>
   <p><i>Requires:</i> <code>p.empty() || <br>
   forall px: px == p || is_parent(px, p): is_directory(px) || !exists( px )</code>
@@ -2334,10 +2384,10 @@ systems. <i>--end note</i>.]</p>
   <tr>
     <td>
     <h4>Deprecated convenience functions</h4>
-    <p>The following functions have been replaced by <code>basic_path</code> 
+    <p>The following functions have been replaced by <code>path</code> 
     member functions <code>extension()</code>, <code>stem()</code>, and <code>
     replace_extension()</code>.</p>
-<pre>template &lt;class Path&gt; typename Path::string_type extension(const Path &amp; p);</pre>
+<pre>typename Path::string_type extension(const Path &amp; p);</pre>
 <blockquote>
   <p><i>Returns:</i> if <code>p.filename()</code> contains a <i>dot</i>, returns 
   the substring of <code>p.filename()</code> starting at the rightmost <i>dot</i> 
@@ -2348,7 +2398,7 @@ systems. <i>--end note</i>.]</p>
   behavior for file systems which append additional elements to extensions, such 
   as alternate data stream or partitioned dataset names. <i>-- end note</i>]</p>
 </blockquote>
-<pre>template &lt;class Path&gt; typename Path::string_type basename(const Path &amp; p);</pre>
+<pre>typename Path::string_type basename(const Path &amp; p);</pre>
 <blockquote>
   <p><i>Returns:</i> if <code>p.filename()</code> contains a <i>dot</i>, returns 
   the substring of <code>p.filename()</code> starting at its beginning and 
@@ -2393,7 +2443,7 @@ automatic conversion to <code>const char*</code>.<i> -- end note</i>]</span></p>
 <p><span style="background-color: #FFFFFF"><i>In 27.8.1.1 Class template 
 basic_filebuf [lib.filebuf] synopsis preceding paragraph 1, add the function:</i></span></p>
 <blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class Path&gt; </span><span style="background-color: #FFFFFF">basic_filebuf</span><span style="background-color: #FFFFFF">&lt;charT,traits&gt;* </span><span style="background-color: #FFFFFF">open(const</span><span style="background-color: #FFFFFF"> Path&amp; p, </span><span style="background-color: #FFFFFF">ios_base::openmode</span><span style="background-color: #FFFFFF"> mode);</span></pre>
+<pre><span style="background-color: #FFFFFF"></span><span style="background-color: #FFFFFF">basic_filebuf</span><span style="background-color: #FFFFFF">&lt;charT,traits&gt;* </span><span style="background-color: #FFFFFF">open(const</span><span style="background-color: #FFFFFF"> path p, </span><span style="background-color: #FFFFFF">ios_base::openmode</span><span style="background-color: #FFFFFF"> mode);</span></pre>
 </blockquote>
 <p><span style="background-color: #FFFFFF"><i>In 27.8.1.3 Member functions [lib.filebuf.members], 
 add the above to the signature preceding paragraph 2, and replace the 
@@ -2413,8 +2463,8 @@ second argument of <i>modstr</i>.</span></p>
 <p><span style="background-color: #FFFFFF"><i>In 27.8.1.5 Class template 
 basic_ifstream [lib.ifstream] synopsis preceding paragraph 1, add the functions:</i></span></p>
 <blockquote>
-  <pre><span style="background-color: #FFFFFF">template &lt;class Path&gt; explicit basic_ifstream(const Path&amp; p, ios_base::openmode mode = ios_base::in);
-template &lt;class Path&gt; void open(const Path&amp; p, ios_base::openmode mode = ios_base::in);</span></pre>
+  <pre><span style="background-color: #FFFFFF">explicit basic_ifstream(const path&amp; p, ios_base::openmode mode = ios_base::in);
+void open(const path&amp; p, ios_base::openmode mode = ios_base::in);</span></pre>
 </blockquote>
 <p><i><span style="background-color: #FFFFFF">In 27.8.1.6 basic_ifstream 
 constructors [lib.ifstream.cons] </span></i>
@@ -2449,8 +2499,8 @@ basic_ofstream [lib.ofstream] synopsis preceding paragraph 1, add the
  
 functions:</i></span></p>
 <blockquote>
-  <pre><span style="background-color: #FFFFFF">template &lt;class Path&gt; explicit basic_ofstream(const Path&amp; p, ios_base::openmode mode = ios_base::out);
-template &lt;class Path&gt; void open(const Path&amp; p, ios_base::openmode mode = ios_base::out);</span></pre>
+  <pre><span style="background-color: #FFFFFF">explicit basic_ofstream(const path&amp; p, ios_base::openmode mode = ios_base::out);
+void open(const path&amp; p, ios_base::openmode mode = ios_base::out);</span></pre>
 </blockquote>
 <p><i><span style="background-color: #FFFFFF">In 27.8.1.9 basic_ofstream 
 constructors [lib.ofstream.cons] </span></i>
@@ -2483,8 +2533,8 @@ appropriate</span></p>
 <p><span style="background-color: #FFFFFF"><i>In 27.8.1.11 Class template 
 basic_fstream [lib.fstream] synopsis preceding paragraph 1, add the  functions:</i></span></p>
 <blockquote>
-  <pre><span style="background-color: #FFFFFF">template &lt;class Path&gt; explicit basic_fstream(const Path&amp; p, ios_base::openmode mode = ios_base::in|ios_base::out);
-template &lt;class Path&gt; void open(const Path&amp; p, ios_base::openmode mode = ios_base::in|ios_base::out);</span></pre>
+  <pre><span style="background-color: #FFFFFF">explicit basic_fstream(const path&amp; p, ios_base::openmode mode = ios_base::in|ios_base::out);
+void open(const path&amp; p, ios_base::openmode mode = ios_base::in|ios_base::out);</span></pre>
 </blockquote>
 <p><i><span style="background-color: #FFFFFF">In 27.8.1.12 basic_fstream 
 constructors [lib.fstream.cons] </span></i>
@@ -3013,7 +3063,7 @@ operating systems that allow slashes in filenames. Thus on <i>POSIX</i>,
 implementation follows encouraged behavior.</span></p>
 <p><span style="background-color: #FFFFFF">For most of the Filesystem Library, 
 there is no existing code, so the issue preserving existing code that uses 
-slashes in filenames doesn't arise. New code simply must use basic_path 
+slashes in filenames doesn't arise. New code simply must use path 
 constructors with <code>path_format_t</code> arguments of <code>native</code>. 
 To preserve existing fstream code that uses slashes in filenames, an 
 implementation may wish to provide a mechanism such as a macro to control 
@@ -3072,7 +3122,7 @@ final document.</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->06 July 2008<!--webbot bot="Timestamp" endspan i-checksum="18830" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 August 2009<!--webbot bot="Timestamp" endspan i-checksum="31532" --></p>
 
 </body>
 

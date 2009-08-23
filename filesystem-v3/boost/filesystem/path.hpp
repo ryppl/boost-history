@@ -30,15 +30,11 @@
    * Document behavior of path::replace_extension has change WRT argument w/o a dot.
    * reference.html: operator /= is underspecified as to when a "/" is appended, and
      whether a '/' or '\' is appended.
-   * path.cpp: locale and detail append/convert need error handling.
    * Provide the name check functions for more character types? Templatize?
    * Why do preferred() and generic() return paths rather than const strings/string refs?
      Either change or document rationale.
    * Use BOOST_DELETED, BOOST_DEFAULTED, where appropriate.
-   * imbue/codecvt too complex. Move to path_traits? Refactor?
-   * path_unit_test, x /= x test failing, commented out. Fix. See test_appends.
    * Add test for scoped_path_locale.
-   * Should there be a public "preferered_separator" const?
      
                          Design Questions
 
@@ -52,7 +48,6 @@
         template< class T >
         T string( const error_code ec = throws() );
      TODO: Yes; all member functions need to be usable in generic code.
-     Can string() and native_string() make use of detail::convert()?
    * Assuming generic versions of string(), native_string(), are the w flavors needed?
      No. KISS. basic_string<char> is special because it is the predominent
      use case. w (and other) flavors can be added later.
@@ -62,7 +57,6 @@
        -- the actual separator used
        -- the preferred separator
        -- the generic separator <-- makes it easier to write portable code
-   * Should the preferred native separator be available?
                                                                                         */
 //--------------------------------------------------------------------------------------// 
 
@@ -132,7 +126,7 @@ namespace filesystem
       const String & source_ )
         : path_error( what_, ec_ ), m_source( source_ ) {}
 
-    const String & rep() const { return m_source; }
+    const String & native() const { return m_source; }
 
   private:
     String m_source;
@@ -148,17 +142,19 @@ namespace filesystem
   {
   public:
 
-    //  string_type is the std::basic_string type corresponding to the character
-    //  type for paths used by the native operating system API.
+    //  value_type is the character type used by the operating system API to
+    //  represent paths.
 
-#ifdef BOOST_WINDOWS_API
-    typedef std::wstring  string_type;  // internal representation type
-#else 
-    typedef std::string   string_type;
-#endif
-    typedef string_type::value_type    value_type;
-    typedef string_type::size_type     size_type;
-    typedef path_traits::codecvt_type  codecvt_type;
+# ifdef BOOST_WINDOWS_API
+    typedef wchar_t                        value_type;
+    static const wchar_t preferred_separator = L'\\';
+# else 
+    typedef char                           value_type;
+    static const char preferred_separator = '/';
+# endif
+    typedef std::basic_string<value_type>  string_type;  
+    typedef string_type::size_type         size_type;
+    typedef path_traits::codecvt_type      codecvt_type;
 
     //  ----- character encoding conversions -----
 
@@ -238,8 +234,8 @@ namespace filesystem
           m_path, codecvt() );
     }
 
-    template <class Pathable>
-    path( Pathable const & pathable )
+    template <class PathSource>
+    path( PathSource const & pathable )
     {
       path_traits::dispatch( pathable, m_path, codecvt() );
     }
@@ -262,8 +258,8 @@ namespace filesystem
       return *this;
     }
 
-    template <class Pathable>
-    path & operator=( Pathable const & range )
+    template <class PathSource>
+    path & operator=( PathSource const & range )
     {
       m_path.clear();
       path_traits::dispatch( range, m_path, codecvt() );
@@ -277,7 +273,7 @@ namespace filesystem
 
     path & operator/=( const path & p )
     {
-      append_separator_if_needed_();
+      m_append_separator_if_needed();
       m_path += p.m_path;
       return *this;
     }
@@ -285,17 +281,17 @@ namespace filesystem
     template <class ContiguousIterator>
     path & append( ContiguousIterator begin, ContiguousIterator end )
     { 
-      append_separator_if_needed_();
+      m_append_separator_if_needed();
       if ( begin != end )
         path_traits::convert( &*begin, &*begin+std::distance(begin, end),
           m_path, codecvt() );
       return *this;
     }
 
-    template <class Pathable>
-    path & operator/=( Pathable const & range )
+    template <class PathSource>
+    path & operator/=( PathSource const & range )
     {
-      append_separator_if_needed_();
+      m_append_separator_if_needed();
       path_traits::dispatch( range, m_path, codecvt() );
       return *this;
     }
@@ -306,14 +302,22 @@ namespace filesystem
     void    swap( path & rhs )  { m_path.swap( rhs.m_path ); }
     path &  remove_filename();
     path &  replace_extension( const path & new_extension = path() );
+
+#   ifdef BOOST_WINDOWS_API
+
+    path & path::localize();  // change slash to backslash
+
+#   else // BOOST_POSIX_API
+
+    path & path::localize() { return *this; }  // POSIX m_path already localized
+
+#   endif
+
 //# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
 //    path &  normalize()         { return m_normalize(); }
 //# endif
 
     //  -----  observers  -----
-
-    std::size_t size() const    { return m_path.size(); }
-
   
     //  For operating systems that format file paths differently than directory
     //  paths, return values from observers are formatted as file names unless there
@@ -323,13 +327,14 @@ namespace filesystem
     //  Implementations are permitted to return const values or const references.
 
     //  The string or path returned by an observer will be described as being formatted
-    //  as "native", "generic", or "internal".
+    //  as "native" or "portable".
     //
-    //  For POSIX, these are all the same format; slashes and backslashes are not modified.
+    //  For POSIX, these are all the same format; slashes and backslashes are as input and
+    //  are not modified.
     //
-    //  For Windows,   native:   slashes are converted to backslashes
-    //                 generic:  backslashes are converted to slashes
-    //                 internal: slashes and backslashes are not modified 
+    //  For Windows,   native:    as input; slashes and backslashes are not modified;
+    //                            this is the format of the internally stored string.
+    //                 portable:  backslashes are converted to slashes
 
 //    template< class T >  
 //    T string( system::error_code & ec = boost::throws() ) const  // internal (i.e. original) format
@@ -337,22 +342,23 @@ namespace filesystem
 //      return path_traits::convert<T>( m_path, ec );
 //    }
 
+    //  -----  native format observers  -----
+    //
+    //  access to the internal representation string is efficient and often convenient,
+    //  but may result in less than fully portable code.
+
+    const string_type &  native() const { return m_path; }
+    const value_type *   c_str() const  { return m_path.c_str(); }
+
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string  string() const   // internal format
-    { 
-      std::string tmp;
-      if ( !m_path.empty() )
-        path_traits::convert( &*m_path.begin(), &*m_path.begin()+m_path.size(),
-          tmp, codecvt() );
-      return tmp;
-    }
-    const std::wstring &  wstring() const { return m_path; }
+    const std::string     native_string() const;
+    const std::wstring &  native_wstring() const { return m_path; }
 
 #   else   // BOOST_POSIX_API
 
-    const std::string &  string() const   { return m_path; }
-    const std::wstring   wstring() const
+    const std::string &  native_string() const   { return m_path; }
+    const std::wstring   native_wstring() const
     { 
       std::wstring tmp;
       if ( !m_path.empty() )
@@ -362,29 +368,20 @@ namespace filesystem
     }
 
 #   endif
-    
-#   ifdef BOOST_WINDOWS_PATH
 
-    const path  preferred() const;   // preferred format
-    const path  generic() const;     // generic format
+    //  -----  portable format observers  -----
 
-#   else // BOOST_POSIX_PATH
+#   ifdef BOOST_WINDOWS_API
 
-    const path  preferred() const   { return m_path; }
-    const path  generic() const     { return m_path; }
+    const std::string    string() const; 
+    const std::wstring   wstring() const;
+
+#   else // BOOST_POSIX_API
+
+    const std::string &  string() const  { return m_path; }
+    const std::wstring   wstring() const;
 
 #   endif
-
-    //  -----  internals observers  -----
-    //
-    //  access to the internal string is efficient and often convenient, but may result in
-    //  less than fully portable code.
-
-    const string_type &  rep() const { return m_path; }  // internal format
-
-    //  c_str() returns a C string suitable for calls to the operating system API.
-    //  On POSIX and Windows that's internal format, on some OS's it may be native format.
-    const value_type *   c_str() const  { return m_path.c_str(); }
 
     //  -----  decomposition  -----
 
@@ -405,8 +402,8 @@ namespace filesystem
     bool has_root_name() const       { return !root_name().empty(); }
     bool has_root_directory() const  { return !root_directory().empty(); }
     bool has_relative_path() const   { return !relative_path().empty(); }
-    bool has_filename() const        { return !m_path.empty(); }
     bool has_parent_path() const     { return !parent_path().empty(); }
+    bool has_filename() const        { return !m_path.empty(); }
     bool is_complete() const
     {
 #   ifdef BOOST_WINDOWS_PATH
@@ -451,7 +448,9 @@ namespace filesystem
     string_type  m_path;  // Windows: as input; backslashes NOT converted to slashes,
                           // slashes NOT converted to backslashes
 
-    void append_separator_if_needed_();
+    void m_append_separator_if_needed();
+    void m_portable();
+
     //path &  m_normalize();
 
     // Was qualified; como433beta8 reports:
@@ -568,11 +567,11 @@ namespace filesystem
   inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs; }
   inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
 # else   // BOOST_POSIX_API
-  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.rep() == rhs.rep(); }
-  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.rep() == rhs; }
-  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.rep() == rhs; }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.rep(); }
-  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.rep(); }
+  inline bool operator==( const path & lhs, const path & rhs ) { return lhs.native() == rhs.native(); }
+  inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs.native() == rhs; }
+  inline bool operator==( const path & lhs, const path::value_type * rhs )  { return lhs.native() == rhs; }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.native(); }
+  inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.native(); }
 # endif
 
 
@@ -586,13 +585,13 @@ namespace filesystem
 
   inline std::ostream & operator<<( std::ostream & os, const path & p )
   {
-    os << p.string();
+    os << p.native_string();
     return os;
   }
   
   inline std::wostream & operator<<( std::wostream & os, const path & p )
   {
-    os << p.wstring();
+    os << p.native_wstring();
     return os;
   }
   
