@@ -13,6 +13,8 @@
 #include <boost/range/algorithm/copy.hpp>
 #include <boost/tuple/tuple.hpp>
 
+#include <boost/detail/unspecified.hpp>
+
 #if defined(BOOST_UNICODE_DOXYGEN_INVOKED) || !defined(BOOST_NO_RVALUE_REFERENCES)
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_FWD_2(macro) \
@@ -141,33 +143,91 @@ OutputIterator composed_concat(const Range1& range1, const Range2& range2, Outpu
 }
 
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_COMPOSED_CONCATED_FWD(cv1, ref1, cv2, ref2) \
+#define BOOST_UNICODE_DECOMPOSED_CONCATED_FWD(cv1, ref1, cv2, ref2) \
 template<typename Range1, typename Range2> \
-iterator_range< \
-    join_iterator< \
-        tuple< \
-            sub_range<cv1 Range1>, \
-            iterator_range< \
-                pipe_iterator< \
-                    join_iterator< \
-                        tuple< \
-                            sub_range<cv1 Range1>, \
-                            sub_range<cv2 Range2> \
-                        > \
-                    >, \
-                    piped_pipe< \
-                        utf_decoder, \
-                        multi_pipe< \
-                            normalizer, \
-                            utf_encoder<typename range_value<cv1 Range1>::type> \
+typename boost::detail::unspecified< \
+    iterator_range< \
+        join_iterator< \
+            tuple< \
+                sub_range<cv1 Range1>, \
+                iterator_range< \
+                    pipe_iterator< \
+                        join_iterator< \
+                            tuple< \
+                                sub_range<cv1 Range1>, \
+                                sub_range<cv2 Range2> \
+                            > \
+                        >, \
+                        piped_pipe< \
+                            utf_decoder, \
+                            multi_pipe< \
+                                combine_sorter, \
+                                utf_encoder<typename range_value<cv1 Range1>::type> \
+                            > \
                         > \
                     > \
-                > \
-            >, \
-            sub_range<cv1 Range2> \
+                >, \
+                sub_range<cv1 Range2> \
+            > \
         > \
     > \
-> composed_concated(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2, unsigned mask = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical)) \
+>::type decomposed_concated(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2) \
+{ \
+    tuple< \
+        sub_range<cv1 Range1>, \
+        sub_range<cv1 Range1>, \
+        sub_range<cv2 Range2>, \
+        sub_range<cv2 Range2> \
+    > \
+    t = cat_limits(range1, range2); \
+     \
+    return joined_n( \
+        t.get<0>(), \
+        piped( \
+            joined_n(t.get<1>(), t.get<2>()), \
+            make_piped_pipe( \
+                utf_decoder(), \
+                make_multi_pipe( \
+                    combine_sorter(), \
+                    utf_encoder<typename range_value<cv1 Range1>::type>() \
+                ) \
+            ) \
+        ), \
+        t.get<3>() \
+    ); \
+}
+BOOST_UNICODE_FWD_2(BOOST_UNICODE_DECOMPOSED_CONCATED_FWD)
+
+/** INTERNAL ONLY */
+#define BOOST_UNICODE_COMPOSED_CONCATED_FWD(cv1, ref1, cv2, ref2) \
+template<typename Range1, typename Range2> \
+typename boost::detail::unspecified< \
+    iterator_range< \
+        join_iterator< \
+            tuple< \
+                sub_range<cv1 Range1>, \
+                iterator_range< \
+                    pipe_iterator< \
+                        join_iterator< \
+                            tuple< \
+                                sub_range<cv1 Range1>, \
+                                sub_range<cv2 Range2> \
+                            > \
+                        >, \
+                        piped_pipe< \
+                            utf_decoder, \
+                            multi_pipe< \
+                                normalizer, \
+                                utf_encoder<typename range_value<cv1 Range1>::type> \
+                            > \
+                        > \
+                    > \
+                >, \
+                sub_range<cv1 Range2> \
+            > \
+        > \
+    > \
+>::type composed_concated(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2, unsigned mask = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical)) \
 { \
     tuple< \
         sub_range<cv1 Range1>, \

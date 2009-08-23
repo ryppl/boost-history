@@ -16,6 +16,22 @@ path-constant images : html ;
 
 import path ;
 
+project
+    : requirements 
+        <doxygen:param>EXTRACT_ALL=YES
+        <doxygen:param>"PREDEFINED=BOOST_UNICODE_DOXYGEN_INVOKED \\
+                                   \"BOOST_UNICODE_DECL= \" \\
+                                   \"BOOST_CONCEPT_REQUIRES(a,b)=/** Requires: a */ b \""
+        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
+        <doxygen:param>EXTRACT_PRIVATE=NO
+        <doxygen:param>ENABLE_PREPROCESSING=YES
+        <doxygen:param>MACRO_EXPANSION=YES
+#        <doxygen:param>EXPAND_ONLY_PREDEF=YES
+        <doxygen:param>SEARCH_INCLUDES=YES
+        <doxygen:param>"INCLUDE_PATH=$(BOOST_ROOT) \\
+                                     ../../../"
+;
+
 boostbook quickbook
     :
         users_manual.qbk
@@ -28,22 +44,11 @@ boostbook quickbook
 
 doxygen autodoc1
     :
-        [ path.glob-tree ../../../boost/iterator : pipe_*.hpp consumer_*.hpp join_*.hpp : .svn detail ]
+        [ path.glob-tree ../../../boost/iterator : pipe_*.hpp consumer_*.hpp join_*.hpp  any_*.hpp : .svn detail ]
+        [ path.glob-tree ../../../boost/range : any_*.hpp : .svn detail ]
+        
 	:
         <xsl:param>boost.doxygen.reftitle="Iterator/Range reference"
-    
-        <doxygen:param>EXTRACT_ALL=YES
-        <doxygen:param>"PREDEFINED=BOOST_UNICODE_DOXYGEN_INVOKED \\
-                                   \"BOOST_UNICODE_DECL= \" \\
-                                   \"BOOST_CONCEPT_REQUIRES(a,b)=/** Requires: a */ b \""
-        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
-        <doxygen:param>EXTRACT_PRIVATE=NO
-        <doxygen:param>ENABLE_PREPROCESSING=YES
-        <doxygen:param>MACRO_EXPANSION=YES
-#        <doxygen:param>EXPAND_ONLY_PREDEF=YES
-        <doxygen:param>SEARCH_INCLUDES=YES
-        <doxygen:param>"INCLUDE_PATH=$(BOOST_ROOT) \\
-                                     ../../../"
 	;
     
 doxygen autodoc2
@@ -52,18 +57,4 @@ doxygen autodoc2
         ../../../boost/cuchar.hpp
 	:
         <xsl:param>boost.doxygen.reftitle="Unicode reference"
-
-    
-        <doxygen:param>EXTRACT_ALL=YES
-        <doxygen:param>"PREDEFINED=BOOST_UNICODE_DOXYGEN_INVOKED \\
-                                   \"BOOST_UNICODE_DECL= \" \\
-                                   \"BOOST_CONCEPT_REQUIRES(a,b)=/** Requires: a */ b \""
-        <doxygen:param>HIDE_UNDOC_MEMBERS=NO
-        <doxygen:param>EXTRACT_PRIVATE=NO
-        <doxygen:param>ENABLE_PREPROCESSING=YES
-        <doxygen:param>MACRO_EXPANSION=YES
-#        <doxygen:param>EXPAND_ONLY_PREDEF=YES
-        <doxygen:param>SEARCH_INCLUDES=YES
-        <doxygen:param>"INCLUDE_PATH=$(BOOST_ROOT) \\
-                                     ../../../"
 	;

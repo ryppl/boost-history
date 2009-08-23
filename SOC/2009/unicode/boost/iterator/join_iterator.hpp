@@ -180,7 +180,7 @@ namespace detail
     template<typename Tuple, typename Variant>
     struct increment_visitor : static_visitor<Variant>
     {
-        increment_visitor(const Tuple& tuple_) : tuple(tuple_) {}
+        increment_visitor(Tuple& tuple_) : tuple(tuple_) {}
         
         template<typename T>
         typename enable_if_c<
@@ -206,13 +206,13 @@ namespace detail
             return t;
         }
         
-        const Tuple& tuple;
+        Tuple& tuple;
     };
     
     template<typename Tuple, typename Variant>
     struct decrement_visitor : static_visitor<Variant>
     {
-        decrement_visitor(const Tuple& tuple_) : tuple(tuple_) {}
+        decrement_visitor(Tuple& tuple_) : tuple(tuple_) {}
 
         template<typename T>
         typename enable_if_c<
@@ -242,7 +242,7 @@ namespace detail
             return --t;
         }
         
-        const Tuple& tuple;
+        Tuple& tuple;
     };
     
     struct equal_visitor : static_visitor<bool>

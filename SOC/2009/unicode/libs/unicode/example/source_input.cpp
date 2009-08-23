@@ -2,7 +2,7 @@
 /*`
 This example shows how to input some non-ASCII unicode
 characters into source files in different means, following the
-[link unicode.unicode_in_source_files.portability_guidelines portability
+[link unicode.appendices.appendix_source.portability_guidelines portability
 guidelines], and then how to convert them to displayable UTF-8.
 
 The following strings are considered:

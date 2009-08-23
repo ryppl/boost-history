@@ -39,6 +39,8 @@ as well as the standard string facilities, judged ill-suited to Unicode.
 
 The current version is locale-agnostic, but a subsystem for tailored locale behaviour may be added in the future.
 
+[warning Boost.Unicode is a library in development and is not part of Boost.]
+
 [heading How to use this manual]
 
 Some icons are used to mark certain topics indicative of their relevance. These
@@ -78,12 +80,13 @@ The UTF-X family of encodings encode a single *code point* into a variable numbe
 
 This encoding is fixed-width, each code unit is simply a code point.
 
-This encoding isn't really recommended
+This encoding isn't really recommended for internal representations other
+that for use with algorithms that strictly require random access of code points.
 
 [heading UTF-16]
 
 Every code point is encoded by one or two code units. If the code point lies within the BMP, it is represented by exactly that code point.
-Otherwise, the code point is represented by two values which both lie in the surrogate category of Unicode code points.
+Otherwise, the code point is represented by two units which both lie in the surrogate category of Unicode code points.
 
 This is the recommended encoding for dealing with Unicode internally for general purposes, since it has fairly low processing overhead
 compared to UTF-8 and doesn't waste as much memory as UTF-32.
@@ -99,26 +102,40 @@ This encoding is popular for data storage and interchange, but can also be usefu
 
 [endsect]
 
-[section Composite characters]
+[section Combining character characters]
 
-Multiple *code points* may be combined to form a single *grapheme cluster*, which corresponds to what a human would call a character.
+A *non-combining code point* may be followed by an arbitrary number of *combining code points* to form a single *combining character sequence*, which is really a composite character.
 
-Certain graphemes are only available as a combination of multiple code points, while some, the ones that are expected to be the most used,
+Certain characters are only available as a combination of multiple code points, while some, the ones that are expected to be the most used,
 are also available as a single precomposed code point. The order of the combined code points may also vary, but all code points combinations
-leading to the same grapheme are still canonically equivalent.
+leading to the same character are still canonically equivalent.
 
-It is thus important to be able to apply algorithms with graphemes as the unit rather than code points to deal with graphemes not representable
-by a single code point.
+While a combining character sequence can be arbitrarily big, the Unicode standard also introduces the concept of a *stream-safe string*, where
+a it is at most 31 code points long, which is largely sufficient for any real use.
+
+[endsect]
+
+[section Grapheme clusters]
+
+Another yet higher-level abstraction of character is that of a *grapheme cluster*, which really corresponds to what a human would call a character.
+All *combining character sequences* are graphemes, but there are other sequences of *code points* that are as well; for example =\r\n= is one.
+
+For certain classes of applications, such as word processors, it is important to operate at the *grapheme* level rather than at the *code point* or
+*combining character sequence* one.
 
 [endsect]
 
 [section Normalization]
 
-The Unicode standard defines four normalized forms in __tr15__ where *grapheme clusters* are either fully compressed or decompressed,
-using either canonical or compatiblity equivalence.
+The Unicode standard defines four normalized forms in __tr15__ where *combining character sequences* are either fully compressed or decompressed,
+using either canonical or compatiblity decompositions.
 
-The Normalized Form C is of a great interest, as it compresses every grapheme so that is uses as few code points as possible. It is also
+The Normalized Form C is of a great interest, as it compresses every grapheme so that is uses as few code points as possible. It's also
+the one that operates best with legacy systems unaware of combining character sequences, font rendering systems and is also
 the normalized form assumed by the XML standard.
+
+On the other hand, the Normalized Form D uses a lot more space, but is more efficient to compute and to use
+when concatenating combining characters to a string while maintaining the form.
 [endsect]
 
 [section Other operations]
@@ -154,12 +171,10 @@ implement facilities not provided by the library core.
 [section Linking the library]
 
 As has been stated in [link unicode.introduction_to_unicode.character_properties Introduction to Unicode], several Unicode algorithms require the usage of a large
-database of information which, as of version 0.1 of this library, is 2.6 MB big on x86 for the "big" version including character names, arabic shaping
-and all the information required for sorting and collations.
-The default version which doesn't include those features is however only 520 KB.
+database of information which, as of the preview 3 of this library, is 600 KB on x86. Note the database does not contain everything one might need at this
+stage of the development of the library.
 
-For this reason, features that can avoid dependency on that database do so; it is not required for conversions for example. All algorithms that depend on the Unicode
-Character Database are documented as such or lie in the =boost::unicode::ucd= namespace. All other features are also header-only.
+Features that can avoid dependency on that database do so; so it is not required for UTF conversions for example, that are purely header-only.
 
 [heading UCD generation]
 
@@ -193,9 +208,8 @@ segmentation (i.e. demarcating sections of a range, like code points,
 grapheme clusters, words, etc.).
 
 [heading Conversion]
-
 Conversions can be applied in a variety of means, all generated from using
-the [conceptref Pipe] and [conceptref OneManyPipe] concepts that perform one step of the conversion:
+the [conceptref Pipe] concept that performs one step of the conversion:
 
 * Eager evaluation, with simply
 loops the =Pipe= until the whole input range has been treated.
@@ -203,7 +217,7 @@ loops the =Pipe= until the whole input range has been treated.
 and converts step-by-step as the range is advanced. The resulting range is
 however read-only. It is implemented in terms of [classref boost::pipe_iterator].
 * Lazy output evaluation, where an output iterator is returned that wraps the output
-and converts every pushed element with a =OneManyPipe=. It is implemented in terms
+and converts every pushed element with a [conceptref OneManyPipe]. It is implemented in terms
 of [classref boost::pipe_output_iterator].
 
 The naming scheme of the utilities within the library reflect this; here is
@@ -214,9 +228,11 @@ for example what is provided to convert UTF-32 to UTF-8:
 * [funcref boost::unicode::u8_encoded] returns a range adapter that does on-the-fly encoding.
 * [funcref boost::unicode::u8_encoded_out] returns an output iterator adapter that will encode its elements before forwarding them to the wrapped output iterator.
 
+[note The library considers a conversion from UTF-32 an "encoding", while a conversion
+to UTF-32 is called a "decoding".
+This is because code points is what the library mainly deals with, and UTF-32 is a sequence of code points.]
 
 [heading Segmentation]
-
 Segmentations are expressed in terms of the [conceptref Consumer] concept, which is inherently
 very similar to the [conceptref Pipe] concept excepts it doesn't perform any kind of transformation,
 it just reads part of the input.
@@ -239,26 +255,27 @@ The naming scheme is as follows:
 * [funcref boost::unicode::u8_grapheme_bounded] adapts its input range in UTF-8 into a range of code units, each range being a grapheme cluster.
 
 [heading UTF type deduction with SFINAE]
-
 Everytime there are two versions for a function or class, one for UTF-8 and
 the other for UTF-16, and deducing which type of UTF encoding to use is
 possible, additional ones are added that will automatically forward to it.
 
 The naming scheme is as follows:
 
-* [funcref boost::unicode::utf_decode] either calls [funcref boost::unicode::u8_decode] or [funcref boost::unicode::u16_decode]
+* [funcref boost::unicode::utf_decode] either behaves like [funcref boost::unicode::u8_decode], [funcref boost::unicode::u16_decode]
 depending on the =value_type= of its input range.
 * [classref boost::unicode::utf_boundary] either behaves like
 [classref boost::unicode::u8_boundary] or [classref boost::unicode::u16_boundary]
 depending on the =value_type= of the input ranges passed to =ltr= and =rtl=.
 
-[endsect]
+[tip Not only UTF-8 and UTF-16 are recognized by UTF type deduction, UTF-32 is as well.]
+
+[endsect] [/Range operations]
 
 [section Composition and Normalization]
 
 Normalized forms are defined in terms of certain decompositions applied
 recursively, followed by certain compositions also applied recursively,
-and finally canonical ordering of combining sequences.
+and finally canonical ordering of combining character sequences.
 
 A decomposition being a conversion of a single code point into several
 and a composition being the opposite conversion, with exceptions.
@@ -279,8 +296,10 @@ decompositions and the canonical decompositions from the UCD, while the
 compatibility decomposition is obtained by applying the Hangul decompositions
 and all decompositions from the UCD.
 
-The [classref boost::unicode::decomposer] template allows to generate a
-model of [conceptref OneManyPipe] that performs any decomposition.
+[classref boost::unicode::decomposer], model of [conceptref Pipe]
+allows to perform any decomposition that matches a certain mask, recursively,
+including Hangul ones (which are treated as canonical decompositions),
+and canonically orders combining sequences as well.
 
 [heading Composition]
 Likewise, Hangul syllable compositions are not provided by the UCD and
@@ -290,32 +309,106 @@ Some distinct code points may have the same decomposition, so certain
 decomposed forms are preferred. That is why an exclusion table is also
 provided by the UCD.
 
-[heading Recursive application and Normalization]
-TODO
-[endsect]
+The library uses a pre-generated prefix tree (or, in the current
+implementation, a lexicographically sorted array) of all canonical
+compositions from their fully decomposed and canonically ordered form to
+identity composable sequences and apply the compositions.
+
+[classref boost::unicode::composer] is a [conceptref Pipe] that uses that
+tree as well as the Hangul compositions.
+
+[heading Normalization]
+Normalization can be performed by applying decomposition followed by
+composition, which is what the current version of [classref boost::unicode::normalizer]
+does.
+
+The Unicode standard however provides as well quick-check properties to
+avoid that operation when possible, but the current version of the library
+does not support that scheme at the moment.
+
+[heading Concatenation]
+Concatenating strings in a given normalization form does not guarantee the result
+is in that same normalization form if the right operand starts with a combining
+code point.
+
+Therefore the library provides functionality to identity the boundaries where
+re-normalization needs to occur as well as eager and lazy versions of the
+concatenation that maintain the input normalization.
+
+Note concatenation with Normalization Form D is slightly more efficient as it only
+requires canonical sorting of the combining character sequence placed at
+the intersection.
+
+See:
+
+* [funcref boost::unicode::cat_limits] to partition into the different sub ranges.
+* [funcref boost::unicode::composed_concat], eager version with input in Normalization Form C.
+* [funcref boost::unicode::composed_concated], lazy version with input in Normalization Form C.
+* [funcref boost::unicode::decomposed_concat], eager version with input in Normalization Form D.
+* [funcref boost::unicode::decomposed_concated], lazy version with input in Normalization Form D.
+
+[endsect] [/Normalization]
 
 [section String searching algorithms]
-The library provides string searching algorithms that are able to search
-for a range of code units within another range of code units, with the
-search lying on the right boundaries specified as a parameter.
+The library provides mechanisms to perform searches at the code unit, code point,
+or grapheme level, and in the future will provide word and sentence level
+as well.
 
-This effectively allows to perform the search at the code unit, code point,
-grapheme or even word level.
+Different approaches to do that are possible:
 
-Different approaches to string searching are being considered:
-
-* [conceptref Consumer]-based, the classic algorithms are simply adapted to segmented ranges.
+* [conceptref Pipe]- or [conceptref Consumer]-based, you may simply run classic search algorithms, such as
+the ones from Boost.StringAlgo, with ranges of the appropriate elements, that elements can be ranges
+themselves (subranges returned by [classref boost::consumer_iterator] are =EqualityComparable=).
 * [conceptref BoundaryChecker]-based, the classic algorithms are run, then false positives
-that don't lie on the right boundaries are discarded.
+that don't lie on the right boundaries are discarded. This has the advantage of reducing conversion and
+iteration overhead in certain situations.
+The most practical way to achieve this is to adapt a =Finder= in Boost.StringAlgo with [classref boost::algorithm::boundary_finder].
 
-Note that the algorithms are not responsible for normalizing input, and that the code points
-will need to be the same for them to compare equal.
+[important You will have to normalize input before the search if you want canonically equivalent things
+to compare equal.]
 
+[endsect] [/String searching]
+
+[endsect] [/Overview]
+
+[section User's Guide]
+[endsect] [/User's Guide]
+
+[section Examples]
+
+[section convert]
+[import ../example/convert.cpp]
+[convert]
+[endsect]
+
+[section characters]
+[import ../example/characters.cpp]
+[characters]
+[endsect]
+
+[section compose]
+[import ../example/compose.cpp]
+[compose]
+[endsect]
+
+[section search]
+[import ../example/search.cpp]
+[search]
+[endsect]
+
+[section source_input]
+[import ../example/source_input.cpp]
+[source_input]
 [endsect]
 
 [endsect]
 
-[section Unicode in source files]
+[xinclude autodoc1c.xml]
+[xinclude autodoc2.xml]
+
+[section Appendices]
+
+[section:appendix_source Appendix A: Unicode in source files]
 
 It is often quite useful to embed strings of text directly into source
 files, and C++, as of the 2003 standard, provides the following ways to
@@ -416,52 +509,63 @@ any compile-time string into a zero-terminated equivalent.
 See the [link unicode.examples.source_input source_input] example for
 demonstrations.
 
-[endsect]
+[endsect] [/Unicode in source]
 
-[section Unicode String type]
+[section Appendix B: Rationale]
 
-A Unicode string type may be added in future versions that maintains
-its data in Normalized C form on top of a valid UTF encoding.
+[heading Pipe concept]
+Centralizing conversion into a single [conceptref Pipe] model allows
+eager and lazy variants of evaluation to be possible for any conversion
+facility.
 
-[endsect]
+Lazy evaluation is believed to be of great interest since it avoids the
+need for memory allocations and buffers and constructing a logic
+conversion is constant-time instead of linear-time since there is no need
+to actually walk the range.
 
-[section Examples]
+Eager evaluations can remain more efficient however, and that is why they
+are provided as well.
 
-[section convert]
-[import ../example/convert.cpp]
-[convert]
-[endsect]
+[endsect] [/Rationale]
 
-[section characters]
-[import ../example/characters.cpp]
-[characters]
-[endsect]
+[section Appendix C: Future Work]
 
-[section compose]
-[import ../example/compose.cpp]
-[compose]
-[endsect]
+[heading Non-checked UTF conversion]
+The library only provides UTF conversion pipes that do extensive checking
+that the input is correct and that the end is not unexpectedly met.
 
-[section search]
-[import ../example/search.cpp]
-[search]
-[endsect]
+These could be avoided when it is known that the input is valid, and
+thus performance be increased. [classref boost::pipe_iterator] could as
+well avoid storing the =begin= and =end= iterator in such cases.
 
-[section source_input]
-[import ../example/source_input.cpp]
-[source_input]
-[endsect]
+[heading Fast Normalization]
+The Unicode standard provides a quick-check scheme to tell whether a string
+is in a normalized form, which could be used to avoid expensive decomposition
+and recomposition.
 
-[endsect]
+[heading Unicode String type]
+Future versions of the library could provide a string type that maintains
+the following invariants: valid UTF, stream-safe and in Normalization Form C.
 
-[xinclude autodoc1c.xml]
-[xinclude autodoc2.xml]
+[endsect] [/Future Work]
 
-[section Acknowledgements]
+[section Appendix D: Acknowledgements]
 
-Eric Niebler for mentoring this project, John Maddock for contributing preliminary on-the-fly UTF conversion, Graham Barnett and Rogier van Dalen for their work
-on Unicode character properties.
+I would like to thank Eric Niebler for mentoring this project
+as part of the Google Summer of Code program, who provided steady help
+and insightful ideas along the development of this project.
 
-Beman Dawes and other members of the mailing list for their suggestions and support.
+Graham Barnett and Rogier van Dalen deserve great thanks as well for
+their work on Unicode character properties, most of the parser of
+Unicode data was written by them.
 
-[endsect]
+John Maddock was also a great help by contributing preliminary on-the-fly UTF conversion
+which helped the library get started, while inspiration from Phil Endecott
+allowed UTF conversion code to be more efficient.
+
+Finally, I thank Beman Dawes and other members of the mailing list for
+their interest and support.
+
+[endsect] [/Acknowledgements]
+
+[endsect] [/Appendices]

@@ -47,17 +47,6 @@ namespace detail
     struct most_converted_type<const A, A> : most_converted_type<A, const A>
     {
     };
-    
-    template<typename A>
-    struct most_converted_type<A, void>
-    {
-        typedef A type;
-    };
-    
-    template<typename A>
-    struct most_converted_type<void, A> : most_converted_type<A, void>
-    {
-    };
 
 } // namespace detail
     
