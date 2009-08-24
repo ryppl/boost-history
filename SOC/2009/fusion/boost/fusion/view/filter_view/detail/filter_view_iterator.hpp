@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -11,6 +12,7 @@
 #include <boost/fusion/iterator/value_of.hpp>
 #include <boost/fusion/algorithm/query/detail/find_if.hpp>
 #include <boost/fusion/support/iterator_base.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/quote.hpp>
 #include <boost/mpl/lambda.hpp>
@@ -46,7 +48,9 @@ namespace boost { namespace fusion
         template<typename OtherIt>
         filter_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
           : first(BOOST_FUSION_FORWARD(OtherIt,it).first)
-        {}
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,filter_view_iterator_tag);
+        }
 
         filter_iterator(Begin const& first,int)
           : first(filter::call(first))
@@ -56,6 +60,8 @@ namespace boost { namespace fusion
         filter_iterator&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
+            BOOST_FUSION_TAG_CHECK(OtherIt,filter_view_iterator_tag);
+
             first=BOOST_FUSION_FORWARD(OtherIt,it).first;
             return *this;
         }

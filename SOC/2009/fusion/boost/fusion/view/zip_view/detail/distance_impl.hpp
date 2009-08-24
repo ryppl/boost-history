@@ -27,20 +27,17 @@ namespace boost { namespace fusion
     {
         template<typename FoundIt, typename SearchIt>
         struct best_distance
-        {
-            typedef typename
-                result_of::distance<
-                    FoundIt
-                  , typename result_of::find_if<
-                        typename SearchIt::iterators
-                      , is_same<
-                            traits::category_of<mpl::_1>
-                          , random_access_iterator_tag
-                        >
-                    >::type
+          : result_of::distance<
+                FoundIt
+              , typename result_of::find_if<
+                    typename SearchIt::iterators
+                  , is_same<
+                        traits::category_of<mpl::_1>
+                      , random_access_iterator_tag
+                    >
                 >::type
-            type;
-        };
+            >
+        {};
 
         template<typename It1, typename It2>
         struct default_distance
@@ -88,8 +85,7 @@ namespace boost { namespace fusion
                     typename detail::remove_reference<ItRef1>::type
                   , typename detail::remove_reference<ItRef2>::type
                 >
-            {
-            };
+            {};
         };
     }
 }}

@@ -72,7 +72,6 @@ namespace boost { namespace fusion
 #else
 // Somehow VC8.0 and VC7.1 does not like this code
 // but barfs somewhere else. 
-
         template <typename Seq1, typename Seq2>
         inline typename
             enable_if<

@@ -11,7 +11,6 @@
 
 #include <boost/mpl/bool.hpp>
 
-//TODO doc!!!
 namespace boost { namespace fusion { namespace extension
 {
     template<typename Tag>

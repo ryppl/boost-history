@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_ALL_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 #include <boost/fusion/iterator/equal_to.hpp>
 #include <boost/fusion/iterator/next.hpp>
@@ -115,10 +116,14 @@ namespace boost { namespace fusion { namespace detail
     struct unrolled_all<0>
     {
         template <typename It0, typename F>
-        static bool
+        static
+#ifndef BOOST_NO_CONSTEXPR
+        constexpr
+#endif
+        bool
         call(It0 const& it0, F const& f)
         {
-            return false;
+            return true;
         }
     };
 }}}

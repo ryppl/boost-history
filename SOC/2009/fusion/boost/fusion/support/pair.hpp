@@ -1,6 +1,7 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2006 Tobias Schwinger
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,7 +11,7 @@
 #define BOOST_FUSION_SUPPORT_PAIR_HPP
 
 #include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
 #   include <boost/call_traits.hpp>
@@ -85,7 +86,7 @@ namespace boost { namespace fusion
             typedef
                 fusion::pair<
                     First
-                  , typename detail::as_fusion_element<Second>::type
+                  , typename traits::deduce<Second>::type
                 >
             type;
         };

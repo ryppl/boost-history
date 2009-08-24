@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 //cschmidt: to avoid cyclic references - as some of the (here unneeded) mpl
 //sequence modification metafunctions might instantiate result_of::as_xxx - just
@@ -29,7 +31,6 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-
     template<typename SeqRef>
     struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)
     {

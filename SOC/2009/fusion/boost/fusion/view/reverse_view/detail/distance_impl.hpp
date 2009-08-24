@@ -21,18 +21,15 @@ namespace boost { namespace fusion { namespace extension
     {
         template<typename BeginRef, typename EndRef>
         struct apply
-        {
-            typedef typename
-                result_of::distance<
-                    typename detail::remove_reference<
-                        BeginRef
-                    >::type::it_type
-                  , typename detail::remove_reference<
-                        EndRef
-                    >::type::it_type
-                >::type
-            type;
-        };
+          : result_of::distance<
+                typename detail::remove_reference<
+                    BeginRef
+                >::type::it_type
+              , typename detail::remove_reference<
+                    EndRef
+                >::type::it_type
+            >
+        {};
     };
 }}}
 

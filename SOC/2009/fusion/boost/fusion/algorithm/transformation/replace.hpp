@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,9 +10,9 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_HPP
 
 #include <boost/fusion/algorithm/transformation/replace_if.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {
@@ -60,9 +61,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
             typedef
-                detail::replace_helper<
-                    typename detail::as_fusion_element<T>::type
-                >
+                detail::replace_helper<typename traits::deduce<T>::type>
             replacer;
 
             typedef typename

@@ -1,7 +1,10 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2007 Tobias Schwinger
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_BEGIN_IMPL_HPP
 #define BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_BEGIN_IMPL_HPP
@@ -24,7 +27,7 @@ namespace boost { namespace fusion { namespace extension
             typedef
                 repetitive_view_iterator<
                     typename seq::seq_type
-                  , typename result_of::begin<seq>::type
+                  , typename result_of::begin<typename seq::seq_type>::type
                   , 0
                 >
             type;
@@ -32,7 +35,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(SeqRef seq)
             {
-                return type(fusion::begin(seq.seq.get()));
+                return type(seq.seq.get(),fusion::begin(seq.seq.get()));
             }
         };
     };

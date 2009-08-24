@@ -20,6 +20,7 @@
 #include <boost/fusion/support/internal/result_of.hpp>
 
 #include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
@@ -72,7 +73,7 @@ namespace boost { namespace fusion { namespace detail
             typedef typename result_of::next<It1&>::type It2;
             It2 it2 = fusion::next(it1);
 
-            return f(fusion::deref(it2),
+            return f(fusion::deref(fusion::next(it1)),
                         f(fusion::deref(it1),
                             f(
                                 fusion::deref(it0),
@@ -93,8 +94,7 @@ namespace boost { namespace fusion { namespace detail
                 BOOST_FUSION_R_ELSE_CLREF(F) f)
         {
             return f(fusion::deref(fusion::next(it0)),
-                    f(fusion::deref(it0),
-                      BOOST_FUSION_FORWARD(State,state)));
+                    f(fusion::deref(it0),BOOST_FUSION_FORWARD(State,state)));
         }
     };
 
@@ -131,20 +131,21 @@ namespace boost { namespace fusion { namespace detail
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         typedef typename
-            internal::result_of<
+            boost::result_of<
                 typename get_func_base<FRef>::type(deref_type, StateRef)
             >::type
         type;
 #else
         typedef typename
-            mpl::eval_if<
-                typename is_lrref<deref_type>::type
-              , internal::result_of<
-                    typename get_func_base<FRef>::type(deref_type, StateRef)
-                >
-              , internal::result_of<
-                    typename get_func_base<FRef>::type(deref_type&&, StateRef)
-                >
+            boost::result_of<
+                typename get_func_base<FRef>::type(
+                typename mpl::if_<
+                    is_lrref<deref_type>
+                  , deref_type
+                  , deref_type&&
+                >::type
+              , StateRef
+                )
             >::type
         type;
 #endif
@@ -211,11 +212,8 @@ namespace boost { namespace fusion { namespace detail
 
     template<typename It0, typename StateRef, typename FRef>
     struct result_of_unrolled_fold<It0, StateRef, FRef, 1>
-    {
-        typedef typename
-            fold_apply_r_else_clref<It0, StateRef, FRef>::type
-        type;
-    };
+      : fold_apply_r_else_clref<It0, StateRef, FRef>
+    {};
 
     template<int SeqSize, typename It0, typename StateRef, typename FRef>
     struct fold_impl

@@ -1,77 +1,120 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2007 Tobias Schwinger
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_SUPPORT_DEDUCE_HPP
 #define BOOST_FUSION_SUPPORT_DEDUCE_HPP
 
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/internal/result_of.hpp>
+#include <boost/fusion/support/internal/ref.hpp>
 
-#include <boost/config.hpp>
-#ifdef BOOST_NO_RVALUE_REFERENCES
-#   include <boost/mpl/eval_if.hpp>
-#   include <boost/mpl/identity.hpp>
-#else
-#   include <boost/mpl/if.hpp>
-#endif
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/identity.hpp>
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/ref.hpp>
 
-namespace boost { namespace fusion { namespace traits
+//TODO doc
+namespace boost { namespace fusion
 {
-    //TODO doc!
-#ifdef BOOST_NO_RVALUE_REFERENCES
-    template <typename T>
-    struct deduce_impl
+    namespace traits
     {
-        typedef T type;
-    };
+        template <typename T>
+        struct deduce
+        {
+            typedef T type;
+        };
 
-    template <typename T>
-    struct deduce_impl<T const&>
-    {
-        typedef T type;
-    };
+        template <typename T>
+        struct deduce<reference_wrapper<T> >
+        {
+            typedef T& type;
+        };
 
-    template <typename T>
-    struct deduce_impl<T const volatile&>
-    {
-        typedef T type;
-    };
+#define BOOST_FUSION_CV_REF_SPECIALIZATION(COMBINATION,_)\
+        template <typename T>\
+        struct deduce<T COMBINATION>\
+        {\
+            typedef detail::is_po_callable<T COMBINATION> is_po_callable;\
+            \
+            typedef typename\
+                mpl::eval_if<\
+                    is_po_callable\
+                  , mpl::if_<\
+                        typename is_po_callable::is_pointer\
+                      , T\
+                      , T COMBINATION\
+                    >\
+                  , deduce<T>\
+                >::type\
+            type;\
+        };\
+        \
+        template <typename T>\
+        struct deduce<reference_wrapper<T> COMBINATION>\
+        {\
+            typedef T& type;\
+        };
 
-    template <typename T>
-    struct deduce
-    {
-        typedef typename detail::as_fusion_element<T>::type element;
-
-        typedef typename
-            mpl::eval_if<
-                mpl::and_<
-                    detail::is_lrref<T>
-                  , is_same<typename detail::identity<T>::type,element>
-                >
-              , deduce_impl<T>
-              , mpl::identity<element>
-            >::type
-        type;
-    };
-#else
-    template <typename T>
-    struct deduce
-    {
-        typedef typename detail::as_fusion_element<T>::type element;
-
-        typedef typename
-            mpl::if_<
-                mpl::and_<
-                    detail::is_lrref<T>
-                  , is_same<typename detail::identity<T>::type,element>
-                >
-              , T
-              , element
-            >::type
-        type;
-    };
+        BOOST_FUSION_CV_REF_SPECIALIZATION(volatile&,_)
+        BOOST_FUSION_CV_REF_SPECIALIZATION(const volatile&,_)
+#ifndef BOOST_NO_RVALUE_REFERENCES
+        BOOST_FUSION_CV_REF_SPECIALIZATION(volatile&&,_)
+        BOOST_FUSION_CV_REF_SPECIALIZATION(const volatile&&,_)
 #endif
-}}}
+        BOOST_FUSION_ALL_CV_REF_COMBINATIONS(BOOST_FUSION_CV_REF_SPECIALIZATION,_)
+
+#undef BOOST_FUSION_CV_REF_SPECIALIZATION
+
+        template <typename T, int N>
+        struct deduce<T(&)[N]>
+        {
+            typedef T(&type)[N];
+        };
+
+        template <typename T, int N>
+        struct deduce<const T(&)[N]>
+        {
+            typedef const T(&type)[N];
+        };
+
+        template <typename T, int N>
+        struct deduce<volatile T(&)[N]>
+        {
+            typedef volatile T(&type)[N];
+        };
+
+        template <typename T, int N>
+        struct deduce<const volatile T(&)[N]>
+        {
+            typedef const volatile T(&type)[N];
+        };
+    }
+
+    namespace detail
+    {
+        template <typename T>
+        struct deduce_ref
+        {
+            typedef typename traits::deduce<T>::type deduced;
+
+            typedef typename
+                mpl::if_<
+                    mpl::and_<
+                        detail::is_lrref<T>
+                      , is_same<typename identity<T>::type,deduced>
+                    >
+                  , T
+                  , typename add_lref<deduced>::type
+                >::type
+            type;
+        };
+    }
+}}
 
 #endif

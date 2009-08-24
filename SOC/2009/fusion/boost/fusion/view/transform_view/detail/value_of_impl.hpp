@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                detail::internal::result_of<
+                boost::result_of<
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
@@ -46,7 +46,7 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<ItRef>::type it;
 
             typedef typename
-                detail::internal::result_of<
+                boost::result_of<
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(

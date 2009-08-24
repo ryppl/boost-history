@@ -1,15 +1,18 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2007 Tobias Schwinger
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_END_IMPL_HPP
 #define BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_END_IMPL_HPP
 
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
 #include <boost/fusion/sequence/intrinsic/end.hpp>
+#include <boost/fusion/iterator/advance_c.hpp>
 #include <boost/fusion/support/category_of.hpp>
-#include <boost/fusion/iterator/detail/advance.hpp>
 
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/negate.hpp>
@@ -28,42 +31,25 @@ namespace boost { namespace fusion
                 mpl::or_<
                     result_of::empty<SeqRef>
                   , mpl::not_<traits::is_bidirectional<SeqRef> >
-                >::type/*false*/
+                >::value/*false*/
         >
         struct get_real_end_it
         {
-            typedef typename result_of::end<SeqRef>::type seq_end;
             typedef
-                mpl::modulus<MaxIndex, result_of::size<SeqRef> >
+                mpl::negate<mpl::modulus<MaxIndex, result_of::size<SeqRef> > >
             backwards_n;
 
             typedef typename
-                mpl::eval_if<
-                    traits::is_random_access<SeqRef>
-                  , result_of::advance<seq_end, mpl::negate<backwards_n> >
-                  , detail::backward<seq_end, backwards_n::value>
+                result_of::advance<
+                    typename result_of::end<SeqRef>::type
+                  , typename backwards_n::type
                 >::type
             type;
 
             static type
-            call_impl(SeqRef seq, mpl::true_ /*is_random_access*/)
-            {
-                return fusion::advance<mpl::negate<backwards_n> >(
-                        fusion::end(seq));
-            }
-
-            static type
-            call_impl(SeqRef seq, mpl::false_ /*is_random_access*/)
-            {
-                return detail::backward<seq_end, backwards_n::value>::call(
-                        fusion::end(seq));
-            }
-
-            static type
             call(SeqRef seq)
             {
-                return call_impl(seq,
-                        typename traits::is_random_access<SeqRef>::type());
+                return fusion::advance<backwards_n>(fusion::end(seq));
             }
         };
 
@@ -79,7 +65,7 @@ namespace boost { namespace fusion
             static type
             call(SeqRef seq)
             {
-                return fusion::end(seq);
+                return type(seq,fusion::end(seq));
             }
         };
     }
@@ -114,7 +100,7 @@ namespace boost { namespace fusion
                 static type
                 call(SeqRef seq)
                 {
-                    return type(gen::call(seq.seq.get()));
+                    return type(seq.seq.get(),gen::call(seq.seq.get()));
                 }
             };
         };

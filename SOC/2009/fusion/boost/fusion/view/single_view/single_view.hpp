@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -14,8 +15,8 @@
 #include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/sequence_base.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/sequence_assign.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/int.hpp>
@@ -117,15 +118,13 @@ namespace boost { namespace fusion
 
     template <typename T>
     inline single_view<
-        typename detail::as_fusion_element<BOOST_FUSION_R_ELSE_CLREF(T)>::type
+        typename traits::deduce<BOOST_FUSION_R_ELSE_CLREF(T)>::type
     >
     make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) v)
     {
         typedef
             single_view<
-                typename detail::as_fusion_element<
-                    BOOST_FUSION_R_ELSE_CLREF(T)
-                >::type
+                typename traits::deduce<BOOST_FUSION_R_ELSE_CLREF(T)>::type
             >
         view;
 

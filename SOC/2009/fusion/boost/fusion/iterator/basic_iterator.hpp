@@ -1,14 +1,15 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_ITERATOR_BASIC_ITERATOR_HPP
 #define BOOST_FUSION_ITERATOR_BASIC_ITERATOR_HPP
 
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/equal_to.hpp>
@@ -40,15 +41,15 @@ namespace boost { namespace fusion
         typename Tag
       , typename Category
       , typename SeqRef
-      , int Pos
+      , int Index
     >
     struct basic_iterator
       : iterator_facade<
-            basic_iterator<Tag,Category,SeqRef,Pos>
+            basic_iterator<Tag,Category,SeqRef,Index>
           , Category
         >
     {
-        typedef mpl::int_<Pos> index;
+        typedef mpl::int_<Index> index;
         typedef SeqRef seq_type;
 
         template <typename ItRef>
@@ -84,7 +85,7 @@ namespace boost { namespace fusion
                     Tag
                   , Category
                   , SeqRef
-                  , Pos + N::value
+                  , Index + N::value
                 >
             type;
 
@@ -129,8 +130,8 @@ namespace boost { namespace fusion
             type;
         };
 
-        template<typename OtherIt>
-        basic_iterator(OtherIt const& it)
+        template<typename OtherSeqRef>
+        basic_iterator(basic_iterator<Tag,Category,OtherSeqRef,Index> const& it)
           : seq(it.seq)
         {}
 
@@ -138,9 +139,9 @@ namespace boost { namespace fusion
           : seq(&seq)
         {}
 
-        template<typename OtherIt>
+        template<typename OtherSeqRef>
         basic_iterator&
-        operator=(OtherIt const& it)
+        operator=(basic_iterator<Tag,Category,OtherSeqRef,Index> const& it)
         {
             seq=it.seq;
             return *this;

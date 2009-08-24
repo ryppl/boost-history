@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -12,6 +13,7 @@
 #include <boost/fusion/algorithm/transformation/insert_range.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/algorithm/transformation/detail/is_in_seq.hpp>
 
 namespace boost { namespace fusion
@@ -24,7 +26,7 @@ namespace boost { namespace fusion
                 Seq
               , Pos
               , BOOST_FUSION_R_ELSE_CLREF(
-                  single_view<typename detail::as_fusion_element<T>::type>)
+                  single_view<typename traits::deduce<T>::type>)
             >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));

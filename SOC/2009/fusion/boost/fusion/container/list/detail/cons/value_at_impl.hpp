@@ -23,17 +23,13 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename
                 detail::remove_reference<Seq>::type
-            identity_sequence;
+            seq;
 
             typedef typename
                 mpl::eval_if<
                     N
-                  , mpl::identity<typename identity_sequence::car_type>
-                    //cschmidt: qualifiers could be moved here, though
-                    //this is not necessary!
-                  , apply<typename identity_sequence::cdr_type
-                        , mpl::int_<N::value-1>
-                    >
+                  , mpl::identity<typename seq::car_type>
+                  , apply<typename seq::cdr_type, mpl::int_<N::value-1> >
                 >::type
             type;
         };

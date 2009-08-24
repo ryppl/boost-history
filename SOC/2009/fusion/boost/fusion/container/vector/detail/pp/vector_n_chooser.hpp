@@ -6,85 +6,54 @@
 ==============================================================================*/
 
 #ifndef BOOST_PP_IS_ITERATING
-#ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
-#define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
+#   ifndef BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
+#   define BOOST_FUSION_CONTAINER_VECTOR_DETAIL_PP_VECTOR_N_CHOOSER_HPP
 
-#include <boost/fusion/container/vector/limits.hpp>
+#   include <boost/fusion/container/vector/limits.hpp>
 //  include vector0..N where N is FUSION_MAX_VECTOR_SIZE
-#include <boost/fusion/container/vector/vector10.hpp>
-#if (FUSION_MAX_VECTOR_SIZE > 10)
-#   include <boost/fusion/container/vector/vector20.hpp>
-#endif
-#if (FUSION_MAX_VECTOR_SIZE > 20)
-#   include <boost/fusion/container/vector/vector30.hpp>
-#endif
-#if (FUSION_MAX_VECTOR_SIZE > 30)
-#   include <boost/fusion/container/vector/vector40.hpp>
-#endif
-#if (FUSION_MAX_VECTOR_SIZE > 40)
-#   include <boost/fusion/container/vector/vector50.hpp>
-#endif
+#   include <boost/fusion/container/vector/vector10.hpp>
+#   if (FUSION_MAX_VECTOR_SIZE > 10)
+#       include <boost/fusion/container/vector/vector20.hpp>
+#   endif
+#   if (FUSION_MAX_VECTOR_SIZE > 20)
+#       include <boost/fusion/container/vector/vector30.hpp>
+#   endif
+#   if (FUSION_MAX_VECTOR_SIZE > 30)
+#       include <boost/fusion/container/vector/vector40.hpp>
+#   endif
+#   if (FUSION_MAX_VECTOR_SIZE > 40)
+#       include <boost/fusion/container/vector/vector50.hpp>
+#   endif
+#   include <boost/fusion/support/internal/template.hpp>
 
-#include <boost/preprocessor/cat.hpp>
-#include <boost/preprocessor/repetition/enum_params.hpp>
-
-#include <boost/mpl/distance.hpp>
-#include <boost/mpl/find.hpp>
-#include <boost/mpl/begin_end.hpp>
-
-namespace boost { namespace fusion
-{
-    struct void_;
-}}
+#   include <boost/preprocessor/cat.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
-    template <int N>
-    struct get_vector_n;
+    VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_VECTOR_SIZE)
+    struct vector_n_chooser;
 
-#define BOOST_PP_FILENAME_1 \
-    <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
-#define BOOST_PP_ITERATION_LIMITS (0, FUSION_MAX_VECTOR_SIZE)
-#include BOOST_PP_ITERATE()
+#   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/vector_n_chooser.hpp>
+#   define BOOST_PP_ITERATION_LIMITS (0, FUSION_MAX_VECTOR_SIZE)
+#   include BOOST_PP_ITERATE()
 
-    template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename T)>
-    struct vector_n_chooser
-    {
-        typedef
-            mpl::BOOST_PP_CAT(vector, FUSION_MAX_VECTOR_SIZE)
-                <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>
-        input;
-
-        typedef typename mpl::begin<input>::type begin;
-        typedef typename mpl::find<input, void_>::type end;
-        typedef typename mpl::distance<begin, end>::type size;
-
-        typedef typename get_vector_n<size::value>::template
-            call<BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, T)>::type
-        type;
-    };
 }}}
 
-#endif
+#   endif
+#else
+#   define BOOST_FUSION_N BOOST_PP_ITERATION()
 
-///////////////////////////////////////////////////////////////////////////////
-//
-//  Preprocessor vertical repetition code
-//
-///////////////////////////////////////////////////////////////////////////////
-#else // defined(BOOST_PP_IS_ITERATING)
-
-#define N BOOST_PP_ITERATION()
-
-    template <>
-    struct get_vector_n<N>
+    VARIADIC_TEMPLATE(BOOST_FUSION_N)
+    struct vector_n_chooser
+        EXPAND_TEMPLATE_ARGUMENTS_SPECIALIZATION(
+            FUSION_MAX_VECTOR_SIZE,BOOST_FUSION_N)
     {
-        template <BOOST_PP_ENUM_PARAMS(FUSION_MAX_VECTOR_SIZE, typename T)>
-        struct call
-        {
-            typedef BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N, T)> type;
-        };
+        typedef
+            BOOST_PP_CAT(vector, BOOST_FUSION_N)<
+                EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
+            >
+        type;
     };
 
-#undef BOOST_FUSION_N
-#endif // defined(BOOST_PP_IS_ITERATING)
+#   undef BOOST_FUSION_N
+#endif

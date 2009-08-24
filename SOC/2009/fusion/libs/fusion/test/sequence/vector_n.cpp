@@ -173,9 +173,7 @@ main()
         cout << "vector20 of int: " << sizeof(vec) << endl;
     }
 
-    //TODO: Due to limitations in Boost.MPL vector only up to
-    //BOOST_MPL_LIMIT_VECTOR_SIZE
-    /*{
+    {
         typedef vector30<
             int, int, int, int, int, int, int, int, int, int
           , int, int, int, int, int, int, int, int, int, int
@@ -206,7 +204,7 @@ main()
 
         type vec; // compile check only
         cout << "vector50 of int: " << sizeof(vec) << endl;
-    }*/
+    }
 
     {
         // testing copy and assign from a view

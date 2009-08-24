@@ -27,16 +27,13 @@ namespace boost { namespace fusion { namespace distance_detail
 
     template <typename Begin, typename End>
     struct next_distance
-    {
-        typedef typename
-            mpl::next<
-                typename linear_distance<
-                    typename result_of::next<Begin>::type
-                  , End
-                >::type
+      : mpl::next<
+            typename linear_distance<
+                typename result_of::next<Begin>::type
+              , End
             >::type
-        type;
-    };
+        >
+    {};
 
     template <typename Begin, typename End>
     struct linear_distance

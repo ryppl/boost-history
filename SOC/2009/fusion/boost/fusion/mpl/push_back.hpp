@@ -22,14 +22,11 @@ namespace boost { namespace mpl
     {
         template <typename Seq, typename T>
         struct apply
-        {
-            typedef typename
-                fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Seq>::type
-                  , typename fusion::result_of::push_back<Seq, T>::type
-                >::type
-            type;
-        };
+          : fusion::result_of::convert<
+                typename fusion::traits::tag_of<Seq>::type
+              , typename fusion::result_of::push_back<Seq, T>::type
+            >
+        {};
     };
 }}
 

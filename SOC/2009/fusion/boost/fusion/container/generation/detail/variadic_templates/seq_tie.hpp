@@ -1,9 +1,11 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
 
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
+
+#include <boost/fusion/support/deduce.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 
@@ -16,7 +18,7 @@ namespace boost { namespace fusion
         {
             typedef
                 BOOST_FUSION_SEQ_NAME<
-                    typename detail::as_fusion_element_ref<Types>::type...
+                    typename detail::deduce_ref<Types>::type...
                 >
             type;
         };

@@ -35,6 +35,10 @@ namespace boost { namespace fusion
                   , result_of::value_of<ItRef>
                 >
             {};
+
+            template<typename It>
+            typename result<poly_value_of(It const&)>::type
+            operator()(It const&);
         };
     }
 
@@ -48,18 +52,15 @@ namespace boost { namespace fusion
         {
             template<typename ItRef>
             struct apply
-            {
-                typedef typename
-                    result_of::transform<
+              : result_of::as_vector<
+                    typename result_of::transform<
                         typename detail::remove_reference<
                             ItRef
                         >::type::iterators
                       , detail::poly_value_of
                     >::type
-                values;
-
-                typedef typename result_of::as_vector<values>::type type;
-            };
+                >
+            {};
         };
     }
 }}

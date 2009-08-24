@@ -1,7 +1,10 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2007 Tobias Schwinger
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_VIEW_REPETITIVE_VIEW_REPETITIVE_VIEW_HPP
 #define BOOST_FUSION_VIEW_REPETITIVE_VIEW_REPETITIVE_VIEW_HPP
@@ -15,7 +18,7 @@
 #include <boost/fusion/view/detail/view_storage.hpp>
 
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/int.hpp>
+#include <boost/mpl/long.hpp>
 #include <boost/integer_traits.hpp>
 
 #include <boost/fusion/view/repetitive_view/detail/repetitive_view_fwd.hpp>
@@ -47,8 +50,8 @@ namespace boost { namespace fusion
         typedef typename storage_type::type seq_type;
 
         typedef typename traits::category_of<seq_type>::type category;
-        typedef mpl::int_<integer_traits<int>::const_max> size;
-        typedef reverse_view_tag fusion_tag;
+        typedef mpl::int_<integer_traits<int>::const_max-1> size;
+        typedef repetitive_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
 
@@ -76,11 +79,13 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename OtherRepetitiveView>
+        template<typename OtherView>
         repetitive_view&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherRepetitiveView) other_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
-            seq=BOOST_FUSION_FORWARD(OtherRepetitiveView,other_view).seq;
+            BOOST_FUSION_TAG_CHECK(OtherView,reverse_view_tag);
+
+            seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
             return *this;
         }
 

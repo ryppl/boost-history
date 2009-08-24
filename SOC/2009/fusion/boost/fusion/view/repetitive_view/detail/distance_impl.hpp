@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_DISTANCE_IMPL_HPP
 #define BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_DISTANCE_IMPL_HPP
@@ -18,18 +20,15 @@ namespace boost { namespace fusion { namespace extension
     {
         template<typename BeginRef, typename EndRef>
         struct apply
-        {
-            typedef
-                mpl::minus<
-                    typename detail::remove_reference<
-                        BeginRef
-                    >::type::index
-                  , typename detail::remove_reference<
-                        EndRef
-                    >::type::index
-                >
-            type;
-        };
+          : mpl::minus<
+                typename detail::remove_reference<
+                    BeginRef
+                >::type::index
+              , typename detail::remove_reference<
+                    EndRef
+                >::type::index
+            >
+        {};
     };
 }}}
 

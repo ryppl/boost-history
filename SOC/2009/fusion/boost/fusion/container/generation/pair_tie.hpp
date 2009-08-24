@@ -9,7 +9,7 @@
 #define BOOST_FUSION_PAIR_TIE_20060812_2058
 
 #include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 
 namespace boost { namespace fusion
 {
@@ -24,7 +24,7 @@ namespace boost { namespace fusion
             typedef
                 fusion::pair<
                     Key
-                  , typename detail::as_fusion_element_ref<T>::type
+                  , typename detail::deduce_ref<T>::type
                 >
             type;
         };

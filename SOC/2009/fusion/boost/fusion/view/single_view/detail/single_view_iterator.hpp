@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -44,8 +45,8 @@ namespace boost { namespace fusion
         typedef single_view_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
 
-        template<typename OtherIt>
-        single_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        template<typename OtherSingleViewRef>
+        single_view_iterator(single_view_iterator<OtherSingleViewRef> const& it)
           : view(it.view)
         {}
 
@@ -53,9 +54,9 @@ namespace boost { namespace fusion
           : view(&view)
         {}
 
-        template<typename OtherIt>
+        template<typename OtherSingleViewRef>
         single_view_iterator&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
+        operator=(single_view_iterator<OtherSingleViewRef> const& it)
         {
             view=it.view;
             return *this;

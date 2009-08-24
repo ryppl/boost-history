@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,9 +10,9 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_TRANSFORM_HPP
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 #include <boost/preprocessor/empty.hpp>
 
@@ -30,16 +31,12 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
             typedef
-                transform_view<
-                    Seq1
-                  , Seq2
-                  , typename detail::as_fusion_element<F>::type
-                >
+                transform_view<Seq1, Seq2, typename traits::deduce<F>::type>
             type;
         };
 
         template <typename Seq, typename F>
-#if defined(BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS)
+#ifdef BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS
         struct transform<Seq, F, void_>
 #else
         struct transform<Seq, F>
@@ -48,9 +45,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
-            typedef
-                transform_view<Seq, typename detail::as_fusion_element<F>::type>
-            type;
+            typedef transform_view<Seq, typename traits::deduce<F>::type> type;
         };
     }
 

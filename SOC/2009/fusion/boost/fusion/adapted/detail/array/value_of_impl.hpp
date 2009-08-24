@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_ARRAY_VALUE_OF_IMPL_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_ARRAY_VALUE_OF_IMPL_HPP
@@ -16,13 +18,10 @@ namespace boost { namespace fusion { namespace extension
     {
         template <typename ItRef>
         struct apply
-        {
-            typedef typename
-                detail::remove_reference<
-                    typename detail::remove_reference<ItRef>::type::seq_type
-                >::type::value_type
-            type;
-        };
+          : detail::remove_reference<
+                typename detail::remove_reference<ItRef>::type::seq_type
+            >::type::value_type
+        {};
     };
 }}}
 

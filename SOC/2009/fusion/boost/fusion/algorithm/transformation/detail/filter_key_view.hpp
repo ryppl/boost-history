@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_FILTER_KEY_VIEW_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_FILTER_KEY_VIEW_HPP
@@ -10,6 +12,7 @@
 #include <boost/fusion/view/detail/view_storage.hpp>
 #include <boost/fusion/support/category_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/mpl/bool.hpp>
 
@@ -17,8 +20,6 @@
 #include <boost/fusion/algorithm/transformation/detail/filter_key_view/has_key_impl.hpp>
 #include <boost/fusion/algorithm/transformation/detail/filter_key_view/at_key_impl.hpp>
 #include <boost/fusion/algorithm/transformation/detail/filter_key_view/value_at_key_impl.hpp>
-
-//TODO: test
 
 namespace boost { namespace fusion
 {
@@ -44,7 +45,9 @@ namespace boost { namespace fusion
             filter_key_view(filter_key_view<OtherSeq,Pred> COMBINATION view)\
               : seq(static_cast<filter_key_view<OtherSeq,Pred>COMBINATION>(\
                     view).seq)\
-            {}
+            {\
+                BOOST_FUSION_TAG_CHECK(OtherSeq,filter_key_view);\
+            }
 
             BOOST_FUSION_ALL_CTOR_COMBINATIONS(
                     BOOST_FUSION_FILTER_KEY_VIEW_CTOR,_)
@@ -64,11 +67,13 @@ namespace boost { namespace fusion
             {}
 #endif
 
-            template<typename OtherFilterKeyView>
+            template<typename OtherView>
             filter_key_view&
-            operator=(BOOST_FUSION_R_ELSE_CLREF(OtherFilterKeyView) other_view)
+            operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
             {
-                seq=BOOST_FUSION_FORWARD(OtherFilterKeyView,other_view).seq;
+                BOOST_FUSION_TAG_CHECK(OtherView, filter_key_view_tag);
+
+                seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
                 return *this;
             }
 

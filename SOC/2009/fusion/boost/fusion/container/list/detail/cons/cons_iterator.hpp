@@ -1,6 +1,7 @@
 /*=============================================================================
     Copyright (c) 2005 Joel de Guzman
     Copyright (c) 2005 Eric Niebler
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -16,16 +17,16 @@ namespace boost { namespace fusion
     struct cons_iterator_tag;
     struct forward_traversal_tag;
 
-    template <typename Cons = nil>
+    template<typename ConsRef>
     struct cons_iterator
-      : iterator_base<cons_iterator<Cons> >
+      : iterator_base<cons_iterator<ConsRef> >
     {
         typedef cons_iterator_tag fusion_tag;
         typedef forward_traversal_tag category;
-        typedef Cons cons_type;
+        typedef ConsRef cons_type;
 
-        template<typename OtherIt>
-        cons_iterator(OtherIt const& it)
+        template<typename OtherConsRef>
+        cons_iterator(cons_iterator<OtherConsRef> const& it)
           : cons(it.cons)
         {}
 
@@ -33,9 +34,9 @@ namespace boost { namespace fusion
           : cons(&cons)
         {}
 
-        template<typename OtherIt>
+        template<typename OtherConsRef>
         cons_iterator&
-        operator=(OtherIt const& other_it)
+        operator=(cons_iterator<OtherConsRef> const& other_it)
         {
             cons=other_it.cons;
             return *this;
@@ -44,6 +45,7 @@ namespace boost { namespace fusion
         typename detail::remove_reference<cons_type>::type* cons;
     };
 
+    //TODO ref test
     struct nil_iterator
       : iterator_base<nil_iterator>
     {

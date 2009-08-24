@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_RESULT_OF_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_RESULT_OF_HPP
@@ -13,17 +15,12 @@
 #include <boost/fusion/support/internal/ref.hpp>
 
 #include <boost/mpl/if.hpp>
-#include <boost/utility/result_of.hpp>
+#include <boost/mpl/or.hpp>
+#include <boost/type_traits/is_pointer.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
-
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
-#   include <boost/mpl/if.hpp>
-#else
-#   include <boost/mpl/eval_if.hpp>
-#   include <boost/mpl/has_xxx.hpp>
-#endif
+#include <boost/utility/result_of.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -51,24 +48,23 @@ namespace boost { namespace fusion { namespace detail
     template<typename FRef>
     struct is_po_callable_impl
     {
-         typedef typename
-             remove_pointer<
-                 typename detail::identity<FRef>::type
-             >::type
-         f;
+        typedef typename detail::identity<FRef>::type f;
+        typedef typename is_pointer<f>::type is_pointer;
 
-         typedef
-             mpl::or_<
-                typename is_function<f>::type
-              , typename is_member_function_pointer<f>::type
-             >
-         type;
+        typedef
+            mpl::or_<
+                is_function<typename remove_pointer<f>::type>
+              , is_member_function_pointer<f>
+            >
+        type;
     };
 
     template<typename FRef>
     struct is_po_callable
       : is_po_callable_impl<FRef>::type
-    {};
+    {
+        typedef typename is_po_callable_impl<FRef>::is_pointer is_pointer;
+    };
 
 //cschmidt: a pp implementation won't be worth the effort
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
@@ -139,12 +135,6 @@ namespace boost { namespace fusion { namespace detail
     {};
 #endif
 
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED)
-    namespace internal
-    {
-        using boost::result_of;
-    }
-
     //cschmidt: The non-decltype result_of does not like ref-qualified
     //'class type' functions
     template<typename FRef>
@@ -167,63 +157,6 @@ namespace boost { namespace fusion { namespace detail
             >::type
         type;
     };
-#else
-    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type)
-
-    template<typename IdentityF>
-    struct get_result_type
-    {
-        typedef typename IdentityF::result_type type;
-    };
-
-    template<typename IdentityF, typename Sig>
-    struct get_result
-      : IdentityF::template result<Sig>
-    {};
-
-    template<typename IdentityF,typename F,typename... Args>
-    struct result_of_class_type
-    {
-        typedef typename
-            mpl::eval_if<
-                detail::has_result_type<IdentityF>
-              , detail::get_result_type<IdentityF>
-                //TODO cschmidt: fallback to boost::result_of (decltype) if
-                //'F::template result' does not exist.
-                //Is this even possible?
-              , detail::get_result<IdentityF,F(Args...)>
-            >::type
-        type;
-    };
-
-    namespace internal
-    {
-        template<typename Sig>
-        struct result_of
-          : boost::result_of<Sig>
-        {};
-
-        template<typename F, typename... Args>
-        struct result_of<F(Args...)>
-        {
-            typedef typename detail::identity<F>::type f;
-
-            typedef typename
-                mpl::eval_if<
-                    is_function<f>
-                  , boost::result_of<F(Args...)>
-                  , result_of_class_type<f,F,Args...>
-                >::type
-            type;
-        };
-    }
-
-    template<typename FRef>
-    struct get_func_base
-    {
-        typedef FRef type;
-    };
-#endif
 }}}
 
 #endif

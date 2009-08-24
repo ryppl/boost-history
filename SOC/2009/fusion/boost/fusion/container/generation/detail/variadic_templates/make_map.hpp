@@ -1,13 +1,15 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAKE_MAP_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_VARIADIC_TEMPLATES_MAKE_MAP_HPP
 
 #include <boost/fusion/container/map/map.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/variadic_templates/variadic_arguments_to_vector.hpp>
 #include <boost/fusion/support/internal/variadic_templates/variadic_quote.hpp>
 
@@ -20,7 +22,7 @@
 #include <boost/mpl/size.hpp>
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/unpack_args.hpp>
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/zip_view.hpp>
 #include <boost/mpl/transform_view.hpp>
 
@@ -52,9 +54,9 @@ namespace boost { namespace fusion
 
             typedef
                 mpl::transform_view<
-                    mpl::zip_view<mpl::vector<keys,types> >
+                    mpl::zip_view<mpl::vector2<keys,types> >
                   , mpl::unpack_args<
-                        pair<mpl::_1, detail::as_fusion_element<mpl::_2> >
+                        pair<mpl::_1, traits::deduce<mpl::_2> >
                     >
                 >
             map_args;

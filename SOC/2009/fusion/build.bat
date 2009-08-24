@@ -1,8 +1,11 @@
 @echo off
-rem Copyright Christopher Schmidt 2009.
-rem Distributed under the Boost Software License, Version 1.0.
-rem (See accompanying file LICENSE_1_0.txt or copy at
-rem http://www.boost.org/LICENSE_1_0.txt)
+rem ===========================================================================
+rem    Copyright (c) 2009 Christopher Schmidt
+rem
+rem   Use, modification and distribution is subject to the Boost Software
+rem   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+rem   http://www.boost.org/LICENSE_1_0.txt)
+rem ===========================================================================
 
 rem (re-)set environment variables
 set BOOST_ROOT=d:/projekte/libs/boost
@@ -19,7 +22,7 @@ if "%1" == "gcc4" (
             call :gcc3
         ) else (
             if "%1" == "" (
-                call :vc9
+                call :gcc4
             ) else (
                 echo Unknown toolset '%1'
                 goto :eof

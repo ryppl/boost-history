@@ -21,11 +21,9 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename
-                detail::remove_reference<ItRef>::type::cons_type
-            cons_type;
-
-            typedef typename
-                detail::remove_reference<cons_type>::type::car_type
+                detail::remove_reference<
+                    typename detail::remove_reference<ItRef>::type::cons_type
+                >::type::car_type
             type;
         };
     };

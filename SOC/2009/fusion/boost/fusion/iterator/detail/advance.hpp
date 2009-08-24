@@ -25,14 +25,11 @@ namespace boost { namespace fusion { namespace detail
 
     template <typename ItRef, int N>
     struct next_forward
-    {
-        typedef typename
-            forward<
-                typename result_of::next<ItRef>::type
-              , N-1
-            >::type
-        type;
-    };
+      : forward<
+            typename result_of::next<ItRef>::type
+          , N-1
+        >
+    {};
 
     template <typename ItRef, int N>
     struct forward
@@ -64,14 +61,11 @@ namespace boost { namespace fusion { namespace detail
 
     template <typename ItRef, int N>
     struct next_backward
-    {
-        typedef typename
-            backward<
-                typename result_of::prior<ItRef>::type
-              , N+1
-            >::type
-        type;
-    };
+      : backward<
+            typename result_of::prior<ItRef>::type
+          , N+1
+        >
+    {};
 
     template <typename ItRef, int N>
     struct backward

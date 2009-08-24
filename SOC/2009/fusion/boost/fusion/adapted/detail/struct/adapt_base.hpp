@@ -1,6 +1,5 @@
 /*=============================================================================
-    Copyright (c) 2001-2007 Joel de Guzman
-    Copyright (c) 2009 Dan Christopher Schmidt
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -9,6 +8,7 @@
 #ifndef BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_BASE_HPP
 #define BOOST_FUSION_ADAPTED_DETAIL_STRUCT_ADAPT_BASE_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/support/tag_of_fwd.hpp>
 
 #include <boost/preprocessor/seq/size.hpp>
@@ -16,12 +16,21 @@
 #include <boost/preprocessor/tuple/elem.hpp>
 #include <boost/preprocessor/tuple/elem.hpp>
 
-#define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(COMBINATION, DATA)      \
+#ifdef BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS
+#   define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(COMBINATION, DATA)   \
+    template <>                                                                 \
+    struct tag_of<BOOST_PP_TUPLE_ELEM(2,0,DATA) COMBINATION,void>               \
+    {                                                                           \
+        typedef BOOST_PP_TUPLE_ELEM(2,1,DATA) type;                             \
+    };
+#else
+#   define BOOST_FUSION_ADAPT_STRUCT_TAG_OF_SPECIALIZATION(COMBINATION, DATA)   \
     template <>                                                                 \
     struct tag_of<BOOST_PP_TUPLE_ELEM(2,0,DATA) COMBINATION>                    \
     {                                                                           \
         typedef BOOST_PP_TUPLE_ELEM(2,1,DATA) type;                             \
     };
+#endif
 
 #define BOOST_FUSION_ADAPT_STRUCT_BASE(NAME,TAG,TUPLE_SEQ,CALLBACK)             \
     BOOST_PP_SEQ_FOR_EACH_I(CALLBACK,NAME,TUPLE_SEQ)                            \

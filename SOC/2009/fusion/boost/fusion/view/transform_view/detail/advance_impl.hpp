@@ -37,7 +37,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(boost::fusion::advance<N>(it.it), *it.f);
+                return type(fusion::advance<N>(it.it), *it.f);
             }
         };
     };
@@ -64,8 +64,8 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(ItRef it)
             {
-                return type(boost::fusion::advance<N>(it.it1),
-                            boost::fusion::advance<N>(it.it2),
+                return type(fusion::advance<N>(it.it1),
+                            fusion::advance<N>(it.it2),
                             it.f);
             }
         };

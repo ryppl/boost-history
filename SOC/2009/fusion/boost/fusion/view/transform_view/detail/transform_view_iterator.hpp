@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +11,7 @@
 
 #include <boost/fusion/support/iterator_base.hpp>
 #include <boost/fusion/support/category_of.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -30,7 +32,9 @@ namespace boost { namespace fusion
         transform_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
           : it(BOOST_FUSION_FORWARD(OtherIt,it).it)
           , f(BOOST_FUSION_FORWARD(OtherIt,it).f)
-        {}
+        {
+            BOOST_FUSION_TAG_CHECK(OtherIt,transform_view_iterator_tag);
+        }
 
         transform_view_iterator(It const& it, transform_type f)
           : it(it)
@@ -41,6 +45,8 @@ namespace boost { namespace fusion
         transform_view_iterator&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it_)
         {
+            BOOST_FUSION_TAG_CHECK(OtherIt,transform_view_iterator_tag);
+
             it=BOOST_FUSION_FORWARD(OtherIt,it_).it;
             f=BOOST_FUSION_FORWARD(OtherIt,it_).f;
             return *this;
@@ -82,6 +88,8 @@ namespace boost { namespace fusion
         transform_view_iterator2&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
         {
+            BOOST_FUSION_TAG_CHECK(OtherIt,transform_view_iterator2_tag);
+
             it1=BOOST_FUSION_FORWARD(OtherIt,it).it1;
             it2=BOOST_FUSION_FORWARD(OtherIt,it).it2;
             f=BOOST_FUSION_FORWARD(OtherIt,it).f;

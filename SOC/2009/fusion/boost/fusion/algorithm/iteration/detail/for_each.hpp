@@ -90,8 +90,7 @@ namespace boost { namespace fusion { namespace detail
     {
         template<typename It, typename F>
         static void call(It const&, BOOST_FUSION_R_ELSE_CLREF(F))
-        {
-        }
+        {}
     };
 }}}
 

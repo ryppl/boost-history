@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/result_of.hpp>
@@ -17,8 +19,6 @@
 
 #   define BOOST_FUSION_ADAPTER_NAME unfused
 #endif
-
-//TODO cschmidt: handle rvalue ref F
 
 namespace boost { namespace fusion
 {
@@ -74,7 +74,7 @@ namespace boost { namespace fusion
 #ifdef BOOST_FUSION_TYPED
 #   define BOOST_FUSION_CALL_OPERATOR(COMBINATION)\
         template<typename... Args>\
-        typename detail::internal::result_of<\
+        typename boost::result_of<\
             typename detail::get_func_base<\
                 typename detail::forward_as<int COMBINATION, F>::type\
             >::type(typename result_of::as_vector<TransformSeq&&>::type&&)\
@@ -87,7 +87,7 @@ namespace boost { namespace fusion
 #else
 #   define BOOST_FUSION_CALL_OPERATOR(COMBINATION)\
         template<typename... Args>\
-        typename detail::internal::result_of<\
+        typename boost::result_of<\
             typename detail::get_func_base<\
                 typename detail::forward_as<int COMBINATION, F>::type\
             >::type(typename result_of::vector_tie<Args&&...>::type&&)\

@@ -1,6 +1,7 @@
 /*=============================================================================
     Copyright (c) 1999-2003 Jaakko Jarvi
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -17,6 +18,11 @@ namespace boost { namespace fusion
     struct vector_tag;
     struct vector_iterator_tag;
     struct random_access_traversal_tag;
+
+#ifndef BOOST_FUSION_PREFER_MPL
+    template<typename Vector, int Index>
+    struct vector_meta_value_at;
+#endif
 
     VARIADIC_TEMPLATE_WITH_DEFAULT(FUSION_MAX_VECTOR_SIZE)
     struct vector;

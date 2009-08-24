@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_ADVANCE_IMPL_HPP
 #define BOOST_FUSION_VIEW_REPETITIVE_VIEW_DETAIL_ADVANCE_IMPL_HPP
@@ -20,8 +22,7 @@ namespace boost { namespace fusion
     namespace detail
     {
         template<
-            typename ItRef
-          , typename It
+            typename It
           , typename N
           , bool /*ReuseOldIterator*/=
                 mpl::or_<
@@ -39,14 +40,14 @@ namespace boost { namespace fusion
             type;
 
             static type
-            call(ItRef it)
+            call(It const& it)
             {
                 return fusion::advance<N>(it.it);
             }
         };
 
-        template<typename ItRef, typename It, typename N>
-        struct get_cyclic_next_iterator<ItRef,It,N,/*ReuseOldIterator*/false>
+        template<typename It, typename N>
+        struct get_cyclic_next_iterator<It,N,/*ReuseOldIterator*/false>
         {
             typedef
                 mpl::modulus<
@@ -63,9 +64,9 @@ namespace boost { namespace fusion
             type;
 
             static type
-            call(ItRef it)
+            call(It const& it)
             {
-                return fusion::advance<real_n>(begin(it.seq));
+                return fusion::advance<real_n>(fusion::begin(it.seq));
             }
         };
     }
@@ -82,7 +83,7 @@ namespace boost { namespace fusion
             struct apply
             {
                 typedef typename detail::remove_reference<ItRef>::type it;
-                typedef detail::get_cyclic_next_iterator<ItRef, it, N> gen;
+                typedef detail::get_cyclic_next_iterator<it, N> gen;
 
                 typedef
                     repetitive_view_iterator<
@@ -99,6 +100,7 @@ namespace boost { namespace fusion
                 }
             };
         };
+
     }
 }}
 

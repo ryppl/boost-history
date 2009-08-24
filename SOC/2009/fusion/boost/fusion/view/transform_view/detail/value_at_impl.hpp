@@ -26,11 +26,11 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                detail::internal::result_of<
+                boost::result_of<
                     typename detail::get_func_base<
                         typename seq::transform_type
                     >::type(
-                    typename boost::fusion::result_of::value_at<
+                    typename fusion::result_of::value_at<
                         typename seq::seq_type
                       , N
                     >::type)
@@ -48,14 +48,14 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                detail::internal::result_of<
+                boost::result_of<
                     typename detail::get_func_base<
                         typename seq::transform_type
                     >::type(
-                    typename boost::fusion::result_of::value_at<
+                    typename fusion::result_of::value_at<
                         typename seq::seq1_type, N
                     >::type
-                  , typename boost::fusion::result_of::value_at<
+                  , typename fusion::result_of::value_at<
                         typename seq::seq2_type, N
                     >::type)
                 >::type

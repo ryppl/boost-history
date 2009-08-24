@@ -32,30 +32,24 @@ namespace boost { namespace fusion {
 
         template <typename Begin, typename End, typename Pred>
         struct recursive_find_if
-        {
-            typedef typename
-                main_find_if<
-                    typename result_of::next<Begin>::type
-                  , End
-                  , Pred
-                >::type
-            type;
-        };
+          : main_find_if<
+                typename result_of::next<Begin>::type
+              , End
+              , Pred
+            >
+        {};
 
         template <typename Begin, typename End, typename Pred>
         struct main_find_if
-        {
-            typedef typename
-                mpl::eval_if<
-                    mpl::or_<
-                        result_of::equal_to<Begin, End>
-                      , mpl::apply1<Pred,Begin>
-                    >
-                  , mpl::identity<Begin>
-                  , recursive_find_if<Begin, End, Pred>
-                >::type
-            type;
-        };
+          : mpl::eval_if<
+                mpl::or_<
+                    result_of::equal_to<Begin, End>
+                  , mpl::apply1<Pred,Begin>
+                >
+              , mpl::identity<Begin>
+              , recursive_find_if<Begin, End, Pred>
+            >
+        {};
 
         template<typename Begin, typename End, typename Pred, bool>
         struct choose_find_if;
@@ -78,91 +72,76 @@ namespace boost { namespace fusion {
 
         template<typename It, typename Pred, int N>
         struct unrolled_find_if
-        {
-            typedef typename
-                mpl::eval_if<
-                    typename mpl::apply1<Pred,It>::type
-                  , mpl::identity<It>
+          : mpl::eval_if<
+                typename mpl::apply1<Pred,It>::type
+              , mpl::identity<It>
+              , mpl::eval_if<
+                    apply_offset_filter<It, Pred, 1>
+                  , result_of::next<It>
                   , mpl::eval_if<
-                        apply_offset_filter<It, Pred, 1>
-                      , result_of::next<It>
+                        apply_offset_filter<It, Pred, 2>
+                      , result_of::advance_c<It, 2>
                       , mpl::eval_if<
-                            apply_offset_filter<It, Pred, 2>
-                          , result_of::advance_c<It, 2>
-                          , mpl::eval_if<
-                                apply_offset_filter<It, Pred, 3>
-                              , result_of::advance_c<It, 3>
-                              , unroll_again<
-                                    It
-                                  , Pred
-                                  , N
-                                >
+                            apply_offset_filter<It, Pred, 3>
+                          , result_of::advance_c<It, 3>
+                          , unroll_again<
+                               It
+                              , Pred
+                              , N
                             >
                         >
                     >
-                >::type
-            type;
-        };
+                >
+            >
+        {};
 
         template<typename It, typename Pred, int n>
         struct unroll_again
-        {
-            typedef typename
-                unrolled_find_if<
-                    typename result_of::advance_c<It, 4>::type
-                  , Pred
-                  , n-4
-                >::type
-            type;
-        };
+          : unrolled_find_if<
+                typename result_of::advance_c<It, 4>::type
+              , Pred
+              , n-4
+            >
+        {};
 
         template<typename It, typename Pred>
         struct unrolled_find_if<It, Pred, 3>
-        {
-            typedef typename
-                mpl::eval_if<
-                    typename mpl::apply1<Pred,It>::type
-                  , mpl::identity<It>
+          : mpl::eval_if<
+                typename mpl::apply1<Pred,It>::type
+              , mpl::identity<It>
+              , mpl::eval_if<
+                    apply_offset_filter<It, Pred, 1>
+                  , result_of::next<It>
                   , mpl::eval_if<
-                        apply_offset_filter<It, Pred, 1>
-                      , result_of::next<It>
-                      , mpl::eval_if<
-                            apply_offset_filter<It, Pred, 2>
-                          , result_of::advance_c<It, 2>
-                          , result_of::advance_c<It, 3>
-                        >
+                        apply_offset_filter<It, Pred, 2>
+                      , result_of::advance_c<It, 2>
+                      , result_of::advance_c<It, 3>
                     >
-                >::type
-            type;
-        };
+                >
+            >
+        {};
 
         template<typename It, typename Pred>
         struct unrolled_find_if<It, Pred, 2>
-        {
-            typedef typename
-                mpl::eval_if<
-                    typename mpl::apply1<Pred,It>::type
-                  , mpl::identity<It>
-                  , mpl::eval_if<
-                        apply_offset_filter<It, Pred, 1>
-                      , result_of::next<It>
-                      , result_of::advance_c<It, 2>
-                    >
-                >::type
-            type;
-        };
+          : mpl::eval_if<
+                typename mpl::apply1<Pred,It>::type
+              , mpl::identity<It>
+              , mpl::eval_if<
+                    apply_offset_filter<It, Pred, 1>
+                  , result_of::next<It>
+                  , result_of::advance_c<It, 2>
+                >
+            >
+        {};
 
         template<typename It, typename Pred>
         struct unrolled_find_if<It, Pred, 1>
-        {
-            typedef typename
-                mpl::eval_if<
-                    typename mpl::apply1<Pred,It>::type
-                  , mpl::identity<It>
-                  , result_of::next<It>
-                >::type
-            type;
-        };
+          : mpl::eval_if<
+                typename mpl::apply1<Pred,It>::type
+              , mpl::identity<It>
+              , result_of::next<It>
+            >
+        {};
 
         template<typename It, typename Pred>
         struct unrolled_find_if<It, Pred, 0>
@@ -172,15 +151,12 @@ namespace boost { namespace fusion {
 
         template<typename Begin, typename End, typename Pred>
         struct choose_find_if<Begin, End, Pred, true>
-        {
-            typedef typename
-                unrolled_find_if<
-                    Begin
-                  , Pred
-                  , result_of::distance<Begin, End>::value
-                >::type
-            type;
-        };
+          : unrolled_find_if<
+                Begin
+              , Pred
+              , result_of::distance<Begin, End>::value
+            >
+        {};
 
         template <typename Begin, typename End, typename Pred>
         struct static_find_if

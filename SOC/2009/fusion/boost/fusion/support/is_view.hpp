@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,6 +11,7 @@
 
 #include <boost/fusion/support/tag_of.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 namespace boost { namespace fusion
 {
@@ -27,11 +29,13 @@ namespace boost { namespace fusion
 
     namespace traits
     {
-        template <typename T>
+        template <typename Seq>
         struct is_view
-          : extension::is_view_impl<typename fusion::traits::tag_of<T>::type>::
-                template apply<typename detail::add_lref<T>::type>::type
-        {};
+          : extension::is_view_impl<typename fusion::traits::tag_of<Seq>::type>::
+                template apply<typename detail::add_lref<Seq>::type>::type
+        {
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+        };
     }
 }}
 

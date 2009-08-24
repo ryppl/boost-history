@@ -8,6 +8,7 @@
 #ifndef BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 #define BOOST_FUSION_ALGORITHM_QUERY_DETAIL_COUNT_HPP
 
+#include <boost/config.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 
@@ -33,7 +34,11 @@ namespace boost { namespace fusion { namespace detail
     struct compare_convertible<false>
     {
         template <typename T1, typename T2>
-        static bool
+        static
+#ifndef BOOST_NO_CONSTEXPR
+        constexpr
+#endif
+        bool
         call(BOOST_FUSION_R_ELSE_CLREF(T1) x, BOOST_FUSION_R_ELSE_CLREF(T2) y)
         {
             return false;

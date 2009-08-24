@@ -15,7 +15,7 @@
 #include <boost/mpl/and.hpp>
 #include <boost/mpl/transform_view.hpp>
 #include <boost/mpl/zip_view.hpp>
-#include <boost/mpl/vector.hpp>
+#include <boost/mpl/vector/vector10.hpp>
 #include <boost/mpl/unpack_args.hpp>
 #include <boost/mpl/find_if.hpp>
 #include <boost/mpl/end.hpp>

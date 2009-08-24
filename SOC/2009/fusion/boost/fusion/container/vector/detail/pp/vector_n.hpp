@@ -1,7 +1,10 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_PP_IS_ITERATING
 #   include <boost/fusion/container/vector/vector_fwd.hpp>
@@ -15,29 +18,27 @@
 #   include <boost/fusion/support/sequence_base.hpp>
 #   include <boost/fusion/support/internal/ref.hpp>
 #   include <boost/fusion/support/internal/sequence_assign.hpp>
+#   include <boost/fusion/support/internal/template.hpp>
 
 #   include <boost/preprocessor/cat.hpp>
 #   include <boost/preprocessor/dec.hpp>
 #   include <boost/preprocessor/empty.hpp>
 #   include <boost/preprocessor/repetition/enum.hpp>
-#   include <boost/preprocessor/repetition/enum_params.hpp>
-#   include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #   include <boost/preprocessor/repetition/repeat.hpp>
 #   include <boost/preprocessor/repetition/repeat_from_to.hpp>
 #   include <boost/preprocessor/iteration/iterate.hpp>
 
 #   include <boost/mpl/int.hpp>
 #   include <boost/mpl/bool.hpp>
-#   include <boost/mpl/at.hpp>
+#   ifdef BOOST_FUSION_PREFER_MPL
+#       include <boost/mpl/at.hpp>
+#   endif
 #   ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #       include <boost/mpl/equal_to.hpp>
 #   endif
 
 #   include <boost/type_traits/add_const.hpp>
 #   include <boost/utility/enable_if.hpp>
-#   ifdef BOOST_NO_RVALUE_REFERENCES
-#       include <boost/call_traits.hpp>
-#   endif
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
@@ -46,37 +47,49 @@
 #   include <boost/fusion/container/vector/detail/deref_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_of_impl.hpp>
 
+namespace boost { namespace fusion
+{
 #   define BOOST_PP_FILENAME_1 <boost/fusion/container/vector/detail/pp/vector_n.hpp>
 #   define BOOST_PP_ITERATION_LIMITS (BOOST_FUSION_FROM, BOOST_FUSION_TO)
 #   include BOOST_PP_ITERATE()
+}}
 
 #else
 #   define BOOST_FUSION_N BOOST_PP_ITERATION()
 
-namespace boost { namespace fusion
-{
 #   if !BOOST_FUSION_N
-    struct void_;
-
-    template <typename T0=void_>
+    VARIADIC_TEMPLATE_WITH_DEFAULT(1)
     struct vector0;
 
     template<>
     struct vector0<void_>
       : sequence_base<vector0<void_> >
 #   else
-    template <BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, typename T)>
+#       ifndef BOOST_FUSION_PREFER_MPL
+    template<typename Vector>
+    struct
+    vector_meta_value_at<Vector,BOOST_PP_DEC(BOOST_FUSION_N)>
+    {
+        typedef typename
+            Vector::BOOST_PP_CAT(t,BOOST_PP_DEC(BOOST_FUSION_N))
+        type;
+    };
+#       endif
+
+    VARIADIC_TEMPLATE(BOOST_FUSION_N)
     struct BOOST_PP_CAT(vector, BOOST_FUSION_N)
       : sequence_base<BOOST_PP_CAT(vector, BOOST_FUSION_N)<
-            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N,T)>
+            EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)>
         >
 #   endif
     {
+#ifdef BOOST_FUSION_PREFER_MPL
         typedef
             mpl::BOOST_PP_CAT(vector, BOOST_FUSION_N)<
-                BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)
+                EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
             >
         types;
+#endif
         typedef vector_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
         typedef mpl::false_ is_view;
@@ -94,18 +107,17 @@ namespace boost { namespace fusion
 #   undef BOOST_FUSION_DEFAULT_MEMBER_INIT
 
 #   if BOOST_FUSION_N
-#       define BOOST_FUSION_SELF_TYPE\
-            BOOST_PP_CAT(vector, N)<BOOST_PP_ENUM_PARAMS(N,T)>
-
 #       define BOOST_FUSION_MEMBER_INIT(Z, N, COMBINATION)\
             BOOST_PP_CAT(m,N)(\
-                BOOST_FUSION_FORWARD(BOOST_FUSION_SELF_TYPE COMBINATION,vec).\
+                BOOST_FUSION_FORWARD(\
+                    BOOST_PP_CAT(vector, N)<EXPAND_TEMPLATE_ARGUMENTS(N)>\
+                        COMBINATION,vec).\
                     BOOST_PP_CAT(m,N))
 
 #       define BOOST_FUSION_VECTOR_CTOR(COMBINATION,_)\
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(\
             BOOST_PP_CAT(vector, BOOST_FUSION_N)<\
-                BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N,T)\
+                EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)\
             > COMBINATION vec)\
           : BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MEMBER_INIT, COMBINATION)\
         {}
@@ -113,7 +125,6 @@ namespace boost { namespace fusion
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_VECTOR_CTOR,_)
 
 #       undef BOOST_FUSION_MEMBER_INIT
-#       undef BOOST_FUSION_SELF_TYPE
 #   else
 #       define BOOST_FUSION_VECTOR_CTOR(COMBINATION,_)\
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(\
@@ -131,22 +142,16 @@ namespace boost { namespace fusion
             BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,N), BOOST_PP_CAT(_,N)))
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
-        template <BOOST_PP_ENUM_PARAMS(N, typename A)>
+        VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
 #endif
 #       if (BOOST_FUSION_N == 1)
         explicit
 #       endif
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
 #ifdef BOOST_NO_RVALUE_REFERENCES
-            BOOST_PP_ENUM_BINARY_PARAMS(
-                    BOOST_FUSION_N,
-                    typename call_traits<T,
-                    >::param_type _)
+            EXPAND_TEMPLATE_ARGUMENTS_CALL_PARAMS(BOOST_FUSION_N)
 #else
-            BOOST_PP_ENUM_BINARY_PARAMS(
-                    BOOST_FUSION_N,
-                    A,
-                    BOOST_FUSION_R_ELSE_CLREF(BOOST_PP_EMPTY()) _)
+            EXPAND_TEMPLATE_ARGUMENTS_PARAMETERS_A_R_ELSE_CLREF(BOOST_FUSION_N)
 #endif
             )
           : BOOST_PP_ENUM(BOOST_FUSION_N, BOOST_FUSION_MEMBER_INIT, _)
@@ -190,7 +195,7 @@ namespace boost { namespace fusion
 
         template <typename Seq>
         BOOST_PP_CAT(vector, BOOST_FUSION_N)<
-            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)
+            EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
         >&
         operator=(BOOST_FUSION_R_ELSE_CLREF(Seq) seq)
         {
@@ -227,43 +232,38 @@ namespace boost { namespace fusion
         }
 
         BOOST_PP_CAT(vector, BOOST_FUSION_N)<
-            BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)
+            EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
         >&
         operator=(
             BOOST_PP_CAT(vector, BOOST_FUSION_N)<
-                BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)
+                EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
             >const& seq)
         {
 #ifdef BOOST_NO_RVALUE_REFERENCES
             return this->operator=<
-                    BOOST_PP_CAT(vector, BOOST_FUSION_N)
-                        <BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)>
+                    BOOST_PP_CAT(vector, BOOST_FUSION_N)<
+                        EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
+                    >
                 >(seq);
 #else
             return this->operator=<
-                    BOOST_PP_CAT(vector, BOOST_FUSION_N)
-                        <BOOST_PP_ENUM_PARAMS(BOOST_FUSION_N, T)> const&
+                    BOOST_PP_CAT(vector, BOOST_FUSION_N)<
+                        EXPAND_TEMPLATE_ARGUMENTS(BOOST_FUSION_N)
+                    > const&
                 >(seq);
 #endif
         }
 
-        template<typename I>
-        typename detail::add_lref<typename mpl::at<types, I>::type>::type
-        at_impl(I)
-        {
-            return at_impl(mpl::int_<I::value>());
-        }
-
-        template<typename I>
-        typename detail::add_lref<
-            typename add_const<typename mpl::at<types, I>::type>::type
-        >::type
-        at_impl(I) const
-        {
-            return at_impl(mpl::int_<I::value>());
-        }
+#   ifdef BOOST_FUSION_PREFER_MPL
+#       define BOOST_FUSION_META_VALUE_AT(N)
+#   else
+#       define BOOST_FUSION_META_VALUE_AT(N)\
+            typedef BOOST_PP_CAT(T,N) BOOST_PP_CAT(t,N);
+#   endif
 
 #   define BOOST_FUSION_MEMBER_DECL(Z, N, _)\
+        BOOST_FUSION_META_VALUE_AT(N)\
+        \
         typename detail::add_lref<BOOST_PP_CAT(T,N)>::type\
         at_impl(mpl::int_<N>)\
         {\
@@ -283,8 +283,9 @@ namespace boost { namespace fusion
         BOOST_PP_REPEAT(BOOST_FUSION_N, BOOST_FUSION_MEMBER_DECL, _)
 
 #   undef BOOST_FUSION_MEMBER_DECL
+#   undef BOOST_FUSION_META_VALUE_AT
     };
-}}
+
 #   undef BOOST_FUSION_N
 #endif
 

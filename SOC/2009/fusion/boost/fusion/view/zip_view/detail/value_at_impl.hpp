@@ -36,6 +36,10 @@ namespace boost { namespace fusion
                   , result_of::value_at<SeqRef, N>
                 >
             {};
+
+            template<typename Seq>
+            typename result<poly_value_at(Seq const&)>::type
+            operator()(Seq const&);
         };
     }
 
@@ -49,18 +53,15 @@ namespace boost { namespace fusion
         {
             template<typename SeqRef, typename N>
             struct apply
-            {
-                typedef typename
-                    result_of::transform<
+              : result_of::as_vector<
+                    typename result_of::transform<
                         typename detail::remove_reference<
                             SeqRef
                         >::type::seqs_type
                       , detail::poly_value_at<N>
                     >::type
-                values;
-
-                typedef typename result_of::as_vector<values>::type type;
-            };
+                >
+            {};
         };
     }
 }}

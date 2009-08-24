@@ -167,9 +167,7 @@ int main()
     > 
     lmedium(BOOST_PP_ENUM(10, INIT, _));
 
-    //TODO cschmidt: uncomment this once mpl got variadic templates
-    //and we are not limited to BOOST_MPL_MAX_VECTOR_SIZE any more!
-    /*vector<
+    vector<
         int, int, int, int, int, int, int, int, int, int
       , int, int, int, int, int, int, int, int, int, int
       , int, int, int, int, int, int, int, int, int, int
@@ -181,7 +179,7 @@ int main()
       , int, int, int, int, int, int, int, int, int, int
       , int, int, int, int, int, int, int, int, int, int
     > 
-    lbig(BOOST_PP_ENUM(30, INIT, _));*/
+    lbig(BOOST_PP_ENUM(30, INIT, _));
 
     // first decide how many repetitions to measure
     long repeats = 100;

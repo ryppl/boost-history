@@ -1,14 +1,17 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_PP_IS_ITERATING
 #ifndef BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAKE_MAP_HPP
 #define BOOST_FUSION_CONTAINER_GENERATION_DETAIL_PP_MAKE_MAP_HPP
 
 #include <boost/fusion/container/map/map.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/pair.hpp>
 
 #include <boost/preprocessor/iterate.hpp>
@@ -71,7 +74,7 @@ namespace boost { namespace fusion
 #define BOOST_FUSION_MAP_ELEMENT(Z,N,_)\
             pair<\
                 BOOST_PP_CAT(K,N)\
-              , typename detail::as_fusion_element<BOOST_PP_CAT(T,N)>::type\
+              , typename traits::deduce<BOOST_PP_CAT(T,N)>::type\
             >
 
             typedef

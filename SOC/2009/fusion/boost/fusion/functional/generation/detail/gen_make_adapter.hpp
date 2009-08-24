@@ -7,7 +7,7 @@
 ==============================================================================*/
 
 #include <boost/fusion/support/internal/ref.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 
@@ -22,7 +22,7 @@ namespace boost { namespace fusion
         {
             typedef
                 BOOST_FUSION_CLASS_TPL_NAME<
-                    typename detail::as_fusion_element<F>::type
+                    typename traits::deduce<F>::type
                 >
             type;
         };

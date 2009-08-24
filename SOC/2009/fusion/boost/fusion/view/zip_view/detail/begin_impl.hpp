@@ -79,8 +79,8 @@ namespace boost { namespace fusion
                 call(SeqRef seq)
                 {
                     return type(
-                            fusion::transform(seq.seqs, detail::poly_begin())
-                          , 0);
+                        fusion::transform(seq.seqs, detail::poly_begin()),
+                        0);
                 }
             };
         };

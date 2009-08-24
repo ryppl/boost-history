@@ -26,7 +26,7 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                detail::internal::result_of<
+                boost::result_of<
                     typename detail::get_func_base<
                         typename seq::transform_type
                     >::type(
@@ -38,7 +38,7 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(SeqRef seq)
             {
-                return seq.f(boost::fusion::at<N>(seq.seq.get()));
+                return seq.f(fusion::at<N>(seq.seq.get()));
             }
         };
     };
@@ -52,15 +52,15 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<SeqRef>::type seq;
 
             typedef typename
-                detail::internal::result_of<
+                boost::result_of<
                     typename detail::get_func_base<
                         typename seq::transform_type
                     >::type(
-                   typename boost::fusion::result_of::at<
-                        typename seq::seq1_type
+                   typename fusion::result_of::at<
+                       typename seq::seq1_type
                       , N
                     >::type
-                  , typename boost::fusion::result_of::at<
+                  , typename fusion::result_of::at<
                         typename seq::seq2_type
                       , N
                     >::type)
@@ -70,8 +70,8 @@ namespace boost { namespace fusion { namespace extension
             static type call(SeqRef seq)
             {
                 return seq.f(
-                        boost::fusion::at<N>(seq.seq1.get()),
-                        boost::fusion::at<N>(seq.seq2.get()));
+                        fusion::at<N>(seq.seq1.get()),
+                        fusion::at<N>(seq.seq2.get()));
             }
         };
     };

@@ -1,6 +1,7 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
     Copyright (c) 2006 Dan Marsden
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -86,6 +87,10 @@ namespace boost { namespace fusion
             struct result<Self(Seq)>
               : result_of::size<Seq>
             {};
+
+            template<typename Seq>
+            typename result<seq_size(Seq const&)>::type
+            operator()(Seq const&);
         };
 
         struct poly_min
@@ -100,6 +105,10 @@ namespace boost { namespace fusion
                     typename detail::remove_reference<SeqSize>::type
                 >
             {};
+
+            template<typename MinSize,typename SeqSize>
+            typename result<poly_min(MinSize const&,SeqSize const&)>::type
+            operator()(MinSize const&, SeqSize const&);
         };
 
         template<typename Seqs>
@@ -173,11 +182,13 @@ namespace boost { namespace fusion
               BOOST_FUSION_FORWARD(OtherSeqs,seqs)))
         {}
 
-        template<typename OtherZipView>
+        template<typename OtherView>
         zip_view&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherZipView) other_zip_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_zip_view)
         {
-            seqs=BOOST_FUSION_FORWARD(OtherZipView,other_zip_view).seqs;
+            BOOST_FUSION_TAG_CHECK(OtherView,zip_view_tag);
+
+            seqs=BOOST_FUSION_FORWARD(OtherView,other_zip_view).seqs;
             return *this;
         }
 

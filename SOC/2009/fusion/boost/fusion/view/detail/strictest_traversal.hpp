@@ -41,6 +41,12 @@ namespace boost { namespace fusion
                     >::type
                 type;
             };
+
+            template<typename NextSeq,typename StrictestSoFar>
+            typename result<
+                strictest_traversal_impl(NextSeq const&, StrictestSoFar const&)
+            >::type
+            operator()(NextSeq const&,StrictestSoFar const&);
         };
 
         template<typename Seq>

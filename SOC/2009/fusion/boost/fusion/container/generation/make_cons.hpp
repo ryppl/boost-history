@@ -10,7 +10,7 @@
 #define BOOST_FUSION_CONTAINER_GENERATION_MAKE_CONS_HPP
 
 #include <boost/fusion/container/list/cons.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 
 namespace boost { namespace fusion
 {
@@ -22,8 +22,8 @@ namespace boost { namespace fusion
         struct make_cons
         {
             typedef
-                cons<typename detail::as_fusion_element<Car>::type
-                   , typename detail::as_fusion_element<Cdr>::type
+                cons<typename traits::deduce<Car>::type
+                   , typename traits::deduce<Cdr>::type
                 >
             type;
         };

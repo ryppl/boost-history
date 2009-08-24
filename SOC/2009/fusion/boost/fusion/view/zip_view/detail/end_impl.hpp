@@ -91,10 +91,10 @@ namespace boost { namespace fusion
                 {
                     return type(
                             fusion::transform(
-                                seq.seqs
-                              , detail::endpoints<typename seq::size>()
-                            )
-                          , 0);
+                                seq.seqs,
+                                detail::endpoints<typename seq::size>()
+                            ),
+                            0);
                 }
             };
         };

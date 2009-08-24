@@ -1,7 +1,9 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_ASSERT_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_ASSERT_HPP
@@ -94,13 +96,17 @@ namespace boost { namespace fusion { namespace detail
         "Index (" BOOST_PP_STRINGIZE(INDEX) ") out of range " \
         "( [0..." BOOST_PP_STRINGIZE(MAX) ") )" \
     )
+#define BOOST_FUSION_TAG_CHECK(TYPE,TAG)\
+    BOOST_FUSION_MPL_ASSERT((is_same<typename traits::tag_of<TYPE>::type,TAG>))
 
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
-#   include <boost/fusion/support/is_view.hpp>
 #   include <boost/fusion/support/is_sequence.hpp>
+#   include <boost/fusion/support/is_view.hpp>
 #   include <boost/fusion/support/is_iterator.hpp>
 #   include <boost/fusion/support/category_of.hpp>
 #   include <boost/fusion/support/tag_of.hpp>
+
+#   include <boost/type_traits/is_same.hpp>
 #endif
 
 #endif

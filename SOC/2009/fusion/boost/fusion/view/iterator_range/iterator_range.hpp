@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -51,21 +52,25 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
 
-        template<typename OtherIteratorRange>
-        iterator_range(BOOST_FUSION_R_ELSE_CLREF(OtherIteratorRange) range)
+        template<typename OtherRange>
+        iterator_range(BOOST_FUSION_R_ELSE_CLREF(OtherRange) range)
           : first(range.first)
           , last(range.last)
-        {}
+        {
+            BOOST_FUSION_TAG_CHECK(OtherRange,iterator_range_tag);
+        }
 
         iterator_range(Begin const& first, End const& last)
           : first(first)
           , last(last)
         {}
 
-        template<typename OtherIteratorRange>
+        template<typename OtherRange>
         iterator_range&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherIteratorRange) other_range)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherRange) other_range)
         {
+            BOOST_FUSION_TAG_CHECK(OtherRange,iterator_range_tag);
+
             first=other_range.first;
             last=other_range.last;
             return *this;

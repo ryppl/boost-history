@@ -31,13 +31,10 @@ namespace boost { namespace fusion
         {
             template <typename SeqRef, typename Key>
             struct apply
-            {
-                typedef typename
-                    result_of::value_of_data<
-                        typename result_of::find_key<SeqRef, Key>::type
-                    >::type
-                type;
-            };
+              : result_of::value_of_data<
+                    typename result_of::find_key<SeqRef, Key>::type
+                >
+            {};
         };
 
         template <>

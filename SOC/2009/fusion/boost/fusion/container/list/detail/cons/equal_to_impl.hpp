@@ -30,8 +30,7 @@ namespace boost { namespace fusion { namespace extension
                     >::type::cons_type
                 >::type
             >
-        {
-        };
+        {};
     };
 }}}
 

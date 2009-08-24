@@ -22,18 +22,11 @@ namespace boost { namespace mpl
     {
         template <typename Seq, typename Key>
         struct apply
-        {
-            typedef typename
-                fusion::result_of::erase_key<Seq, Key>::type
-            result;
-
-            typedef typename
-                fusion::result_of::convert<
-                    typename fusion::traits::tag_of<Seq>::type
-                  , result
-                >::type
-            type;
-        };
+          : fusion::result_of::convert<
+                typename fusion::traits::tag_of<Seq>::type
+              , typename fusion::result_of::erase_key<Seq, Key>::type
+            >::type
+        {};
     };
 }}
 

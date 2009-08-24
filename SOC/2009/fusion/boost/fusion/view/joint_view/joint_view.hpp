@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -68,7 +69,6 @@ namespace boost { namespace fusion
         typedef joint_view_tag fusion_tag;
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
-
         typedef typename
             mpl::plus<
                 result_of::size<seq1_type>
@@ -76,11 +76,13 @@ namespace boost { namespace fusion
             >::type
         size;
 
-        template<typename OtherJointView>
-        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) view)
-          : seq1(BOOST_FUSION_FORWARD(OtherJointView,view).seq1)
-          , seq2(BOOST_FUSION_FORWARD(OtherJointView,view).seq2)
-        {}
+        template<typename OtherView>
+        joint_view(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
+          : seq1(BOOST_FUSION_FORWARD(OtherView,view).seq1)
+          , seq2(BOOST_FUSION_FORWARD(OtherView,view).seq2)
+        {
+            BOOST_FUSION_TAG_CHECK(OtherView,joint_view_tag);
+        }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         joint_view(typename storage1_type::call_param seq1,
@@ -97,12 +99,14 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename OtherJointView>
+        template<typename OtherView>
         joint_view&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherJointView) other_view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
-            seq1=BOOST_FUSION_FORWARD(OtherJointView,other_view).seq1;
-            seq2=BOOST_FUSION_FORWARD(OtherJointView,other_view).seq2;
+            BOOST_FUSION_TAG_CHECK(OtherView,joint_view_tag);
+
+            seq1=BOOST_FUSION_FORWARD(OtherView,other_view).seq1;
+            seq2=BOOST_FUSION_FORWARD(OtherView,other_view).seq2;
             return *this;
         }
 

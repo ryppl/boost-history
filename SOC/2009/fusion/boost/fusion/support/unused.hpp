@@ -10,21 +10,20 @@
 
 #include <boost/config.hpp>
 #if defined(BOOST_MSVC)
-# pragma warning(push)
-# pragma warning(disable: 4522) // multiple assignment operators specified warning
+#   pragma warning(push)
+// multiple assignment operators specified warning
+#   pragma warning(disable: 4522)
 #endif
 
 namespace boost { namespace fusion {
     struct unused_type
     {
         unused_type()
-        {
-        }
+        {}
 
         template <typename T>
         unused_type(T const&)
-        {
-        }
+        {}
 
         template <typename T>
         unused_type const&
@@ -57,7 +56,7 @@ namespace boost { namespace fusion {
 }}
 
 #if defined(BOOST_MSVC)
-# pragma warning(pop)
+#   pragma warning(pop)
 #endif
 
 #endif

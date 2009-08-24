@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -96,11 +97,11 @@ namespace boost { namespace fusion
         category;
         typedef typename result_of::size<seq1_type>::type size;
 
-        template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
-          : seq1(BOOST_FUSION_FORWARD(OtherTransformView,view).seq1)
-          , seq2(BOOST_FUSION_FORWARD(OtherTransformView,view).seq2)
-          , f(BOOST_FUSION_FORWARD(OtherTransformView,view).f)
+        template<typename OtherView>
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
+          : seq1(BOOST_FUSION_FORWARD(OtherView,view).seq1)
+          , seq2(BOOST_FUSION_FORWARD(OtherView,view).seq2)
+          , f(BOOST_FUSION_FORWARD(OtherView,view).f)
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -122,13 +123,15 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename OtherTransformView>
-        OtherTransformView&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) other_view)
+        template<typename OtherView>
+        OtherView&
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
-            seq1=BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq1;
-            seq2=BOOST_FUSION_FORWARD(OtherTransformView,other_view).seq2;
-            f=BOOST_FUSION_FORWARD(OtherTransformView,other_view).f;
+            BOOST_FUSION_TAG_CHECK(OtherView,transform_view2_tag);
+
+            seq1=BOOST_FUSION_FORWARD(OtherView,other_view).seq1;
+            seq2=BOOST_FUSION_FORWARD(OtherView,other_view).seq2;
+            f=BOOST_FUSION_FORWARD(OtherView,other_view).f;
             return *this;
         }
 
@@ -162,10 +165,10 @@ namespace boost { namespace fusion
         typedef fusion_sequence_tag tag;
         typedef mpl::true_ is_view;
 
-        template<typename OtherTransformView>
-        unary_transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
-          : seq(BOOST_FUSION_FORWARD(OtherTransformView,view).seq)
-          , f(BOOST_FUSION_FORWARD(OtherTransformView,view).f)
+        template<typename OtherView>
+        unary_transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
+          : seq(BOOST_FUSION_FORWARD(OtherView,view).seq)
+          , f(BOOST_FUSION_FORWARD(OtherView,view).f)
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -183,12 +186,14 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename OtherTransformView>
+        template<typename OtherView>
         unary_transform_view&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
         {
-            seq=BOOST_FUSION_FORWARD(OtherTransformView,view).seq;
-            f=BOOST_FUSION_FORWARD(OtherTransformView,view).f;
+            BOOST_FUSION_TAG_CHECK(OtherView,transform_view_tag);
+
+            seq=BOOST_FUSION_FORWARD(OtherView,view).seq;
+            f=BOOST_FUSION_FORWARD(OtherView,view).f;
             return *this;
         }
 
@@ -203,9 +208,9 @@ namespace boost { namespace fusion
     {
         typedef unary_transform_view<Seq, F, mpl::true_> base;
 
-        template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
-          : base(BOOST_FUSION_FORWARD(OtherTransformView,view))
+        template<typename OtherView>
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
+          : base(BOOST_FUSION_FORWARD(OtherView,view))
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -221,12 +226,11 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename OtherTransformView>
+        template<typename OtherView>
         transform_view&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
         {
-            *static_cast<base*>(this)=
-                    BOOST_FUSION_FORWARD(OtherTransformView,view);
+            *static_cast<base*>(this)=BOOST_FUSION_FORWARD(OtherView,view);
             return *this;
         }
     };
@@ -237,9 +241,9 @@ namespace boost { namespace fusion
     {
         typedef unary_transform_view<Seq, F, mpl::false_> base;
 
-        template<typename OtherTransformView>
-        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
-          : base(BOOST_FUSION_FORWARD(OtherTransformView,view))
+        template<typename OtherView>
+        transform_view(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
+          : base(BOOST_FUSION_FORWARD(OtherView,view))
         {}
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -255,12 +259,11 @@ namespace boost { namespace fusion
         {}
 #endif
 
-        template<typename OtherTransformView>
+        template<typename OtherView>
         transform_view&
-        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherTransformView) view)
+        operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) view)
         {
-            *static_cast<base*>(this)=
-                    BOOST_FUSION_FORWARD(OtherTransformView,view);
+            *static_cast<base*>(this)=BOOST_FUSION_FORWARD(OtherView,view);
             return *this;
         }
     };

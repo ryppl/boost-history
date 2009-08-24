@@ -9,6 +9,7 @@
 #ifndef BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_GREATER_HPP
 #define BOOST_FUSION_SEQUENCE_COMPARISON_DETAIL_GREATER_HPP
 
+#include <boost/config.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/next.hpp>
@@ -23,7 +24,11 @@ namespace boost { namespace fusion { namespace detail
         typedef typename result_of::end<Seq2>::type end2_type;
 
         template <typename It1, typename I2>
-        static bool
+        static
+#ifndef BOOST_NO_CONSTEXPR
+        constexpr
+#endif
+        bool
         call(It1 const&, I2 const&, mpl::true_)
         {
             return false;

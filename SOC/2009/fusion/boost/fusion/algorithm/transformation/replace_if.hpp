@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -10,9 +11,9 @@
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
 #include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
 
 namespace boost { namespace fusion
 {
@@ -26,8 +27,8 @@ namespace boost { namespace fusion
 
             typedef
                 detail::replace_if_helper<
-                    typename detail::as_fusion_element<F>::type
-                  , typename detail::as_fusion_element<NewValue>::type
+                    typename traits::deduce<F>::type
+                  , typename traits::deduce<NewValue>::type
                 >
             replacer;
 

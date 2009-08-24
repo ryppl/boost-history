@@ -1,11 +1,13 @@
-// Copyright Christopher Schmidt 2009.
-// Distributed under the Boost Software License, Version 1.0.
-// (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
+/*=============================================================================
+    Copyright (c) 2009 Christopher Schmidt
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+==============================================================================*/
 
 #ifndef BOOST_PP_IS_ITERATING
 
-#include <boost/fusion/support/internal/as_fusion_element.hpp>
+#include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/template.hpp>
 
 #include <boost/preprocessor/iterate.hpp>
@@ -40,7 +42,7 @@ namespace boost { namespace fusion
                 BOOST_FUSION_SEQ_NAME<
                     EXPAND_TEMPLATE_ARGUMENTS_BINARY(
                             BOOST_FUSION_N,
-                            typename detail::as_fusion_element<,
+                            typename traits::deduce<,
                             >::type
                     )
                 >

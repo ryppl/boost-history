@@ -1,5 +1,6 @@
 /*=============================================================================
     Copyright (c) 2001-2006 Joel de Guzman
+    Copyright (c) 2009 Christopher Schmidt
 
     Distributed under the Boost Software License, Version 1.0. (See accompanying
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -8,10 +9,14 @@
 #ifndef BOOST_FUSION_SUPPORT_CATEGORY_OF_HPP
 #define BOOST_FUSION_SUPPORT_CATEGORY_OF_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/tag_of.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
-#include <boost/config.hpp>
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/mpl/or.hpp>
+#endif
 #include <boost/mpl/iterator_tags.hpp>
 #include <boost/type_traits/is_base_of.hpp>
 
@@ -89,6 +94,9 @@ namespace boost { namespace fusion
             template<typename T>
             struct apply
             {
+                BOOST_FUSION_MPL_ASSERT((
+                    mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+
                 typedef typename
                     detail::remove_reference<T>::type::category
                 type;
@@ -103,7 +111,10 @@ namespace boost { namespace fusion
           : extension::category_of_impl<
                 typename fusion::traits::tag_of<T>::type
             >::template apply<typename detail::add_lref<T>::type>
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
 
         template <typename T>
         struct is_associative
@@ -111,7 +122,10 @@ namespace boost { namespace fusion
                 associative_sequence_tag
               , typename category_of<T>::type
             >
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
 
         template <typename T>
         struct is_incrementable
@@ -119,7 +133,10 @@ namespace boost { namespace fusion
                 incrementable_traversal_tag
               , typename category_of<T>::type
             >
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
 
         template <typename T>
         struct is_single_pass
@@ -127,7 +144,10 @@ namespace boost { namespace fusion
                 single_pass_traversal_tag
               , typename category_of<T>::type
             >
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
 
         template <typename T>
         struct is_forward
@@ -135,7 +155,10 @@ namespace boost { namespace fusion
                 forward_traversal_tag
               , typename category_of<T>::type
             >
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
 
         template <typename T>
         struct is_bidirectional
@@ -143,7 +166,10 @@ namespace boost { namespace fusion
                 bidirectional_traversal_tag
               , typename category_of<T>::type
             >
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
 
         template <typename T>
         struct is_random_access
@@ -151,7 +177,10 @@ namespace boost { namespace fusion
                 random_access_traversal_tag
               , typename category_of<T>::type
             >
-        {};
+        {
+            BOOST_FUSION_MPL_ASSERT((
+                mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));
+        };
     }
 }}
 
