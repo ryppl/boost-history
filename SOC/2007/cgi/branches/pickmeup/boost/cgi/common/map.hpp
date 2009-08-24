@@ -13,6 +13,7 @@ namespace cgi {
  namespace common {
 
   typedef std::map< ::cgi::common::name, std::string> map;
+  typedef std::multimap< ::cgi::common::name, std::string> multimap;
 
    /**
     * If you want to add a new data type to a request you need to:
@@ -23,7 +24,7 @@ namespace cgi {
     *     next to the other uses of it.
     */
   typedef map        env_map;
-  typedef map        get_map;
+  typedef multimap        get_map;
   typedef map        post_map;
   typedef map        form_map;
   typedef map        cookie_map;

@@ -14,7 +14,7 @@ namespace cgi {
     * Examples:
     *
     * Take a map who's keys are case insensitive:
-    * 
+    *
     *   std::map<common::name,std::string> icase_map;
     *   icase_map["key1"] = "value1";
     *   icase_map["key2"] = "value2";
@@ -40,16 +40,16 @@ namespace cgi {
     * with the same data `foo=bar`.
     */
     template<typename MapT>
-    bool has_key(MapT& data, typename MapT::key_type const& name)
+    bool has_key(MapT& data, typename MapT::key_type const& key)
     {
-        if (!data.empty())
-            for(typename MapT::const_iterator iter = data.begin(), end = data.end();
-                iter != end; ++iter)
-            {
-                if (iter->first == name)
-                    return true;
-            }
-        return false;
+      if (!data.empty())
+        for(typename MapT::const_iterator iter = data.begin(), end = data.end();
+            iter != end; ++iter)
+        {
+          if (iter->first == key)
+            return true;
+        }
+      return false;
     }
 
  } // namespace common

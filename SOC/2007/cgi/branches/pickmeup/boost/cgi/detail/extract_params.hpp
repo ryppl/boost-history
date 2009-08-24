@@ -36,6 +36,7 @@ namespace cgi {
        return ec;// = boost::system::error_code(34, boost::system::errno_ecat);
 
      typedef typename boost::tokenizer<Separator>    tokenizer;
+     typedef typename Map::value_type                value_type;
 
      tokenizer toker(input, separator);
 
@@ -54,16 +55,16 @@ namespace cgi {
        {
 // Empty parameters (eg. `empty` in /path/to/script?empty&foo=bar) aren't
 // guaranteed by the CGI spec to be kept, but you might want to use them.
-// You just have to define `BOOST_CGI_KEEP_EMPTY_VARS` (**FIXME** currently
+// You just have to define `BOOST_CGI_KEEP_EMPTY_VARS` (**TODO** currently
 // on by default).
 // Note that you'll want to check that your server keeps empty query string 
 // parameters.
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
          if (name.empty())
-           destination.insert(std::make_pair(common::name(current_token.c_str()), ""));
+           destination.insert(value_type(current_token.c_str(), ""));
          else
 #endif // BOOST_CGI_KEEP_EMPTY_VARS
-           destination[name.c_str()] = current_token;
+           destination.insert(value_type(name.c_str(), current_token));
          current_token.clear();
          name.clear();
        }else
@@ -73,11 +74,11 @@ namespace cgi {
      }
      // Save the name if the last n/v pair has no value.
      if ( !name.empty() )
-       destination[name.c_str()] = current_token;
+       destination.insert(value_type(name.c_str(), current_token));
 #if defined(BOOST_CGI_KEEP_EMPTY_VARS)
      else // Save the final 'toggle' - eg /path/to/script?foo=bar&toggle
      if ( !current_token.empty() )
-       destination[current_token.c_str()] = "";
+       destination.insert(value_type(current_token.c_str(), ""));
 #endif
 
      return ec;

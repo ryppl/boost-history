@@ -12,10 +12,10 @@ int main()
 
   response resp;
 
-  if (!req[cookie_data]["uuid"].empty())
+  if (!req[cookies]["uuid"].empty())
   { // The cookie has been set correctly!
     boost::system::error_code ec;
-    std::string fwd (req[form_data]["fwd"]);
+    std::string fwd (req[form]["fwd"]);
     resp<< location(fwd);
   //  resp<< location(req.form("fwd"));
   }else

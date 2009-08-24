@@ -65,9 +65,9 @@ int handle_request(fcgi::request& req, boost::system::error_code& ec)
       << "Hello there, universe!<p />";
 
   // Use the function defined above to show some of the request data.
-  format_map(resp, req[env_data], "Environment Variables");
-  format_map(resp, req[get_data], "GET Variables");
-  format_map(resp, req[cookie_data], "Cookie Variables");
+  format_map(resp, req[env], "Environment Variables");
+  format_map(resp, req[get], "GET Variables");
+  format_map(resp, req[cookies], "Cookie Variables");
 
   //log_<< "Handled request, handling another." << std::endl;
 

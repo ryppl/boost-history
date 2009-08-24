@@ -69,7 +69,7 @@ namespace cgi {
       }
 
       if (std::feof(stdin))
-        ec = boost::asio::error::eof;
+        ec = ::cgi::error::eof;
       else
       if (std::ferror(stdin))
         ec = ::cgi::error::bad_read;

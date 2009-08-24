@@ -59,7 +59,7 @@
 //}
 #  define BOOST_CGI_ADD_DEFAULT_HEADER   \
       if (headers_.empty())              \
-        headers_.push_back("Content-type: "BOOST_CGI_DEFAULT_CONTENT_TYPE"\r\n")
+        headers_.push_back("Content-type: "BOOST_CGI_DEFAULT_CONTENT_TYPE" ; Charset: " + charset_ + "\r\n")
 #endif // defined(BOOST_CGI_NO_DEFAULT_CONTENT_TYPE)
 
 
@@ -72,6 +72,7 @@ namespace cgi {
     , ostream_(buffer_.get())
     , http_status_(sc)
     , headers_terminated_(false)
+    , charset_("ISO-8859-1")
   {
   }
 
@@ -85,6 +86,7 @@ namespace cgi {
       http::status_code sc)
     : ostream_(buf)
     , http_status_(sc)
+    , charset_("ISO-8859-1")
   {
   }
 
@@ -391,6 +393,8 @@ namespace cgi {
   void basic_response<T>::prepare_headers(ConstBufferSequence& headers)
   {
     BOOST_CGI_ADD_DEFAULT_HEADER;
+    
+    headers_[0].insert(headers_[0].length()-2, "; charset: " + charset_);
 
     // Terminate the headers.
     if (!headers_terminated_)
@@ -450,6 +454,15 @@ namespace cgi {
       resp.set_header(hdr.content);
       return resp;
     }
+  }
+
+  template<typename CharT> BOOST_CGI_INLINE
+  cgi::common::basic_response<CharT>&
+    operator<< (cgi::common::basic_response<CharT>& resp
+               , cgi::common::charset_header<CharT> const& hdr)
+  {
+    resp.charset() = hdr.content;
+    return resp;
   }
 
   /// You can stream a cgi::cookie into a response.

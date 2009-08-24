@@ -15,7 +15,7 @@
 #include "boost/cgi/common/map.hpp"
 
 // The process' environment
-#if BOOST_WORKAROUND(BOOST_MSVC, BOOST_TESTED_AT(1500))
+#if BOOST_WINDOWS
   // MSVC warns of 'inconsistent dll linkage' here...
   _CRTIMP extern char** _environ;
 #else
@@ -48,8 +48,8 @@ namespace cgi {
     
      BOOST_ASSERT(env && "Trying to save environment, but the passed in environment is empty / invalid.");
 
-     std::string sa;
-     std::string sb;
+     typename MapT::key_type sa;
+     typename MapT::mapped_type sb;
 
      for(; env && *env; ++env)
      {
@@ -65,13 +65,13 @@ namespace cgi {
          sb.assign((*env+i+1), j-i-1);
        else
          sb.clear();
-	   env_map[sa.c_str()] = sb;
+       env_map[sa] = sb;
 #else
        if ((*env)[i+1] != '\0')
        {
          sa.assign(*env, i);
          sb.assign((*env+i+1), j-i-1);
-         env_map[sa.c_str()] = sb;
+         env_map[sa] = sb;
        }
 #endif
 	 }

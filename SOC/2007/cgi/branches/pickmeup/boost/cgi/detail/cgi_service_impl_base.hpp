@@ -97,7 +97,7 @@ namespace cgi {
     {
     }
 
-    typedef implementation_type impl_type;
+    //typedef implementation_type impl_type;
 
     /// Return if the request is still open
     /**
@@ -145,12 +145,13 @@ namespace cgi {
 
       std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
 
-      if (request_method == "GET" && parse_opts & common::parse_get)
+      if ((request_method == "GET" || request_method == "HEAD")
+          && (parse_opts & common::parse_get))
       {
         parse_get_vars(impl, ec);
       }
       else
-      if (request_method == "POST" && parse_opts & common::parse_post)
+      if (request_method == "POST" && (parse_opts & common::parse_post))
       {
         parse_post_vars(impl, ec);
       }
@@ -180,29 +181,8 @@ namespace cgi {
                           ? common::parse_all
                           : (common::parse_env | common::parse_cookie)
                  , ec);
-    }/*
-      detail::save_environment(env_vars(impl.vars_));
-      std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
-      impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
-      impl.client_.bytes_left() = impl.characters_left_;
-
-      std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
-      if (request_method == "GET")
-        parse_get_vars(impl, ec);
-      else
-      if (request_method == "POST" && parse_stdin)
-        parse_post_vars(impl, ec);
-
-      if (ec) return ec;
-
-      parse_cookie_vars(impl, ec);
-      impl.status() = common::loaded;
-
-      //BOOST_ASSERT(impl.status() >= loaded);
-
-      return ec;
     }
-*/
+  
     role_type
     get_role(implementation_type& impl)
     {
@@ -233,7 +213,10 @@ namespace cgi {
     boost::system::error_code
     read_env_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
-      detail::save_environment(env_vars(impl.vars_));
+      // Only do this once.
+      if (!impl.env_parsed_)
+        detail::save_environment(env_vars(impl.vars_));
+      impl.env_parsed_ = true;
       return ec;
     }
 
@@ -254,20 +237,6 @@ namespace cgi {
                 , post_vars(impl.vars_)
                 , env_vars(impl.vars_)["CONTENT_TYPE"]
                 , callback_functor<self_type>(impl, this)
-                  //boost::bind(
-                    //&self_type::read_some
-                    //& typename ::cgi::common::request_base<
-                    //               ::cgi::cgi_service_impl_base<
-                    //                   RequestImplType
-                    //            > >::read_some<
-                    //                typename ::cgi::cgi_service_impl_base<
-                    //                    RequestImplType
-                    //                >::implementation_type
-                    //            >
-                    //&cgi::common::base_type::read_some<typename self_type::implementation_type>
-                    //, this
-                    //, boost::ref(impl)
-                    //)
                 , impl.client_.bytes_left_
                 , impl.stdin_parsed_
                 )

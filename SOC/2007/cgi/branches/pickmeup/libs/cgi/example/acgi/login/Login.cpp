@@ -13,8 +13,8 @@ void show_passed_variables(request& req, response& resp)
            "You provided the following data:"
            "<p>"
            "<h3>Form data:</h3>";
-  for (boost::acgi::map::iterator i = req[form_data].begin();
-       i != req[form_data].end();
+  for (boost::acgi::map::iterator i = req[form].begin();
+       i != req[form].end();
        ++i)
   {
     resp<< "<b>" << i->first << "</b> = <i>" << i->second << "</i>";
@@ -87,7 +87,7 @@ int show_name_error_page(request& req, response& resp)
           "the underscore character."
           "</span>"
           "<input type='text' name='name' value='"
-            << req[post_data]["name"] <<"' />"
+            << req[post]["name"] <<"' />"
           "<input type='button' name='cmd' value='login' />"
          "</form>"
        "</center>";
@@ -135,18 +135,18 @@ int main()
 
   // If there's already a session id set, warn them and then redirect
   // them to where they would be going anyway.
-  if (!req[cookie_data]["uuid"].empty()) {
+  if (!req[cookies]["uuid"].empty()) {
     return show_already_logged_in_page(req, resp);
   }
 
   // If they haven't asked explicitly to log in, show the default page.
-  string cmd (req[post_data]["cmd"]);
+  string cmd (req[post]["cmd"]);
   if (cmd.empty() || cmd != "login") {
     return show_default_page(req, resp);
   }
 
   // If they're name is invalid, inform them.
-  string name (req[post_data]["name"]);
+  string name (req[post]["name"]);
   if (!verify_name(name)) {
     return show_name_error_page(req, resp);
   }
@@ -155,7 +155,7 @@ int main()
   // Here we give them a 'universally unique id' and forward them to a
   // cookie checking page.
   resp<< cookie("uuid", make_uuid())
-      << location("CheckCookie?fwd=" + req[post_data]["fwd"]);
+      << location("CheckCookie?fwd=" + req[post]["fwd"]);
   resp.send(req.client());
 
   return req.close(http::ok);

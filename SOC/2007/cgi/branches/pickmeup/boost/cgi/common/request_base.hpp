@@ -65,9 +65,19 @@ namespace cgi {
         , common::post_map, common::cookie_map
         , common::session_map
       >   var_map_type;
+      
+      /// Construct.
+      impl_base()
+        : vars_(), post_buffer_()
+        , get_parsed_(false), env_parsed_(false)
+      {}
 
       var_map_type vars_;
       buffer_type post_buffer_;
+      /// Whether the get data has been parsed yet.
+      bool get_parsed_;
+      /// Whether the environment has been parsed yet.
+      bool env_parsed_;
 
       mutable_buffers_type prepare(std::size_t size)
       {
@@ -130,7 +140,8 @@ namespace cgi {
 
       std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
 
-      if (request_method == "GET" && parse_opts & common::parse_get)
+      if ((request_method == "GET" || request_method == "HEAD")
+          && (parse_opts & common::parse_get))
       {
         parse_get_vars(impl, ec);
       }
@@ -160,14 +171,16 @@ namespace cgi {
     {
       // Make sure the request is in a pre-loaded state
       //BOOST_ASSERT (impl.status() <= unloaded);
-
-      std::string const& vars (env_vars(impl.vars_)["QUERY_STRING"]);
-      if (!vars.empty())
-        detail::extract_params(vars, get_vars(impl.vars_)
-                              , boost::char_separator<char>
-                                 ("", "=&", boost::keep_empty_tokens)
-                              , ec);
-
+      if (!impl.get_parsed_)
+      {
+        std::string const& vars (env_vars(impl.vars_)["QUERY_STRING"]);
+        if (!vars.empty())
+          detail::extract_params(vars, get_vars(impl.vars_)
+                                , boost::char_separator<char>
+                                   ("", "=&", boost::keep_empty_tokens)
+                                , ec);
+        impl.get_parsed_ = true;
+      }
       return ec;
     }
 

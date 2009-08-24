@@ -216,27 +216,14 @@ int main()
     resp<< req[form]["YearlyIntRate"];
   
     return_(resp, req, 0);
-  }catch(boost::system::system_error* err){
-    std::cout<< "Content-type: text/plain\r\n\r\n"
-             << "Error (" << err->code() << "): " << err->what();
-    return 0;
   }catch(boost::system::system_error& err){
-    std::cout<< "Content-type: text/plain\r\n\r\n"
-             << "Error (" << err.code() << "): " << err.what();
-    return 0;
-  }catch(std::exception* e){
-    std::cout<< "Content-type: text/html\r\n\r\n"
-             << "Exception caught: " << e->what();
-    return 0;
-  }catch(std::exception& e){
-    std::cout<< "Content-type: text/html\r\n\r\n"
-             << "Exception caught: " << e.what();
-    return 0;
+    std::cerr<< "System Error: [" << err.id() << "] - " << err.message() << std::endl;
+  }catch(std::exception const& e){
+    std::cerr<< "Exception: [" << typeid(e).name() << "] - " << e.what() << std::endl;
   }catch(...){
-    std::cout<< "Content-type: text/html\r\n\r\n"
-             << "Unknown error!";    
-    return 0;
+    std::cerr<< "boom<blink>!</blink>";
   }
+  return 0;
 }
 //]
 

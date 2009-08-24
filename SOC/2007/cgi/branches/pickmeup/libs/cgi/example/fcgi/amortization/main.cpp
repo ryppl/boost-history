@@ -38,11 +38,10 @@ std::string string_from_currency(std::string amt)
 template<typename Request>
 void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req)
 {
-  std::string tmp( req.POST("LoanAmt") );
-  dict.SetValue("LoanAmt", tmp.empty() ? "$250,000" : tmp);
-
-  tmp = req.POST("YearlyIntRate");
-  dict.SetValue("YearlyIntRate", tmp.empty() ? "6.000" : tmp);
+  dict.SetValue("LoanAmt", has_key(req[post], "LoanAmt")
+      ? "$250,000" : req[post]["LoanAmt"]);
+  dict.SetValue("YearlyIntRate", has_key(req[post], "YearlyIntRate")
+      ? "6.000" : req[post]["YearlyIntRate"]);
 
   boost::array<std::string, 8> year_opts
     = {{ "5", "7", "10", "20", "30", "40", "50" }};
@@ -52,7 +51,7 @@ void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req
     dict.SetValueAndShowSection("TermYrs", year, "SELECT_TERM_YEARS");
   }
 
-  if (req.POST("Amortize").empty())
+  if (req[post]["Amortize"]).empty())
     dict.ShowSection("NotAmortize");
   else
   {
@@ -107,7 +106,7 @@ int write_amortization_template(Request& req, response& resp)
   std::string h("Content-type: text/html\r\n\r\n");
   write(req.client(), buffer(h));
 
-  std::string arg(req.GET("arg"));
+  std::string arg(req[get]["arg"]));
   if (arg.empty())
     arg = "2"; // set this as default (for no particular reason).
 
@@ -158,10 +157,10 @@ int handle_request(acceptor& a)
     // creating/destructing request objects). You must call close() first though!
     a.accept(req);
 
-    req.load(true);
+    req.load(parse_all);
 
     resp<< content_type("text/html")
-        << "map size := " << req.POST().size() << "<p>";
+        << "map size := " << req[post].size() << "<p>";
   
     ret = write_amortization_template(req, resp);
 
@@ -194,12 +193,17 @@ int main()
     
     return 0;
 
-  }catch(boost::system::error_code& err){
-    std::cerr<< "CGI error(" << err.value() << "): " << err.message() << std::endl;
   }catch(boost::system::system_error& err){
-    std::cerr<< "System error(" << err.code() << "): " << err.what() << std::endl;
+    std::cout<< "Content-type: text/plain\r\n\r\n"
+             << "Error (" << err.code() << "): " << err.what();
+    return 0;
+  }catch(std::exception& e){
+    std::cout<< "Content-type: text/html\r\n\r\n"
+             << "Exception caught: " << e.what();
+    return 0;
   }catch(...){
-    std::cerr<< "ERROR!! BOOM!" << std::endl;
+    std::cout<< "Content-type: text/html\r\n\r\n"
+             << "Unknown error!";    
   }
 }
 //]

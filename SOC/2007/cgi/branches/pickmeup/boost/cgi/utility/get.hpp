@@ -16,9 +16,10 @@ namespace cgi {
     */
     template<typename MapT>
     std::string
-      get_value(MapT& data, common::name const& name, std::string const& default_value)
+      get_value(MapT& data, typename MapT::key_type const& key
+               , typename MapT::mapped_type const& default_value)
     {
-      return has_key(data, name) ? data["name"] : default_value;
+      return has_key(data, key) ? data[key] : default_value;
     }
 
  } // namespace common

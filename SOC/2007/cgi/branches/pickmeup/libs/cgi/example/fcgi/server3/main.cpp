@@ -107,7 +107,7 @@ public:
       }
   
       // Load in the request data so we can access it easily.
-      new_request->load(ec, true); // The 'true' means read and parse POST data.
+      new_request->load(ec, parse_post | parse_cookies); // Read and parse POST data and cookies.
 
       ret = handler_(*new_request, ec);
 

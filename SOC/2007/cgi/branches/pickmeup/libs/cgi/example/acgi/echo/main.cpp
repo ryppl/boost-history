@@ -83,11 +83,13 @@ std::size_t process_id()
 
 int main()
 {
+  response resp;
   try{
     //std::ofstream of("c:/cc/log/cgi.error");
     //if (!of)
     //  throw std::runtime_error("Couldn't open file for writing");
     //std::cerr.rdbuf() = of.rdbuf();
+
     service s;
     request req(s);
 
@@ -97,14 +99,15 @@ int main()
       
       // This spits out a form with a file upload facility (these aren't
       // stored, just parsed. Before parsing the POST'd form data, first
-      // check that the content-length isn't too long.
+      // check that the content-length isn't too long. We need to load
+      // up the request environment to check the content length.
       req.load(parse_env);
-      
-      response resp;
 
       if (req.content_length() > 1000L)
       {
-        resp<< "You're only allowed to upload 1k of data";
+        resp<< content_type("text/html");
+        resp<< "You're only allowed to upload 1k of data.\n"
+            << "Content-length: " << req.content_length();
         // Exit the application here.
         return_(resp, req, 0);
       }
@@ -122,7 +125,6 @@ int main()
         resp.send(req.client());
       }
 
-      response resp;
       resp<< content_type("text/html") <<
              "<html>"
              "<head>"
@@ -132,15 +134,20 @@ int main()
                "</style>"
              "<head>"
              "<body>"
+               "Environment stuffs:<br />"
+               "  > content_type: " << req.env["Content_type"] << "<br />"
+               "  > script uri: " << req.env["script_uri"] << "<br />"
+               "  > count('girl'): " << req.get.count("girl") << "<br />"
+               "Environment stuffs:<br />"
                "Request ID = " << req.id() << "<br />"
                "Process ID = " << process_id() << "<br />"
                "<form method=POST enctype='application/x-www-form-urlencoded'>"
                  "<input type=text name=name value='"
-          <<         (has_key(req[post],"name") ? req[post]["name"] : "")
+          <<         (has_key(req.post,"name") ? req.post["name"] : "")
           <<      "' />"
                  "<br />"
                  "<input type=text name=hello value='"
-          <<         (has_key(req[post],"hello") ? req[post]["hello"] : "")
+          <<         (has_key(req.post,"hello") ? req.post["hello"] : "")
           <<      "' />"
                  "<br />"
                  "<input type=file name=user_file />"
@@ -149,10 +156,10 @@ int main()
                  "<input type=submit value=submit />"
                "</form><p />";
 
-      format_map(resp, req[env], "Environment Variables");
-      format_map(resp, req[get], "GET Variables");
-      format_map(resp, req[post], "POST Variables");
-      format_map(resp, req[cookies], "Cookie Variables");
+      format_map(resp, req.env, "Environment Variables");
+      format_map(resp, req.get, "GET Variables");
+      format_map(resp, req.post, "POST Variables");
+      format_map(resp, req.cookies, "Cookie Variables");
 
       if (req["request_method"] == "GET")
       {
@@ -188,15 +195,30 @@ int main()
     // The request object will be destroyed before the next exception handlers
     // are reached.
 
-  }catch(std::exception* e){
-    std::cout
-    << content_type("text/plain").content
-    << "Exception: " << e->what();
-    return 3;
+    }catch(boost::system::system_error& ec)
+    { // This is the type of error this library throws.
+      std::cout
+      << content_type("text/plain").content
+      << std::endl << std::endl
+      << "Error " << ec.code() << ": "
+            << ec.what()
+            << http::internal_server_error
+            << std::endl
+      << resp.str(); // note the status_code
+      return 2;
+  }catch(std::exception& e){
+      std::cout
+      << content_type("text/plain").content
+      << std::endl << std::endl
+      << "Exception: " << e.what()<< std::endl
+      << resp.str();
+      return 3;
   }catch(...){
-    std::cout<< content_type("text/plain").content
-             << "Unknown error.";
-    return 4;
+      std::cout<< content_type("text/plain").content
+               << std::endl << std::endl
+               << "Unknown error."<< std::endl
+               << resp.str();
+      return 4;
   }
 }
 //]

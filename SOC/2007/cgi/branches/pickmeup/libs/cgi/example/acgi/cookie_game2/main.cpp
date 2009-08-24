@@ -11,15 +11,20 @@
 // Cookie Test With cTemplate
 // --------------------------
 //
-// This file uses Google cTemplate to show the benefits of using an HTML
+// This file uses Google cTemplate [1] to show the benefits of using an HTML
 // template engine. Using cTemplate to separate how you show the response and
 // how you figure out what to respond with, is keeping to the MVC paradigm.
 // Read up on that if you're not familiar; if you already are, you can
 // probably stop scowling at the last cookie_game example now.
-
-//#include <boost/cgi/acgi.hpp>
+//
+// [1] - http://code.google.com/p/google-ctemplate/
+//
+#include <boost/cgi/acgi.hpp>
 #include <boost/cgi/utility.hpp>
 #include <google/template.h>
+#include <boost/throw_exception.hpp>
+#include <boost/system/system_error.hpp>
+#include <boost/filesystem.hpp>
 //]
 
 /**
@@ -31,6 +36,7 @@
 //[main
 
 using namespace boost::acgi;
+namespace fs = boost::filesystem;
 
 // The types we use. Only here because this is an example.
 
@@ -66,6 +72,8 @@ using boost::acgi::content_type;
 // only here to keep the cTemplate code out of the core of this example...
 stencil_type* get_stencil(std::string const& filename)
 {
+  if (!fs::exists(filename))
+    throw std::runtime_error(std::string("Template file not found: '") + fs::path(filename).string() + "'");
   return google::Template::GetTemplate(filename, google::STRIP_WHITESPACE);
 }
 
@@ -98,9 +106,10 @@ int main()
 
     response_type resp;
 
+    // Check if we are resetting the user.
     if (has_key(req[form], "reset") && req[form]["reset"] == "true")
     {
-      resp<< cookie("name")
+      resp<< cookie("name") // delete the 'name' cookie.
           << redirect(req, req.script_name()); // redirect them.
       resp.send(req.client());
       return 0;
@@ -128,7 +137,10 @@ int main()
 
     print_formatted_data(req[cookies], dict);
 
-    dict.SetValue("SCRIPT_NAME", req.script_name());  
+    dict.SetValue("SCRIPT_NAME", req.script_name());
+    // get_value is defined in boost/cgi/util/
+    // Looks up the key in the map, returns a default value if the key 
+    // isn't found.
     dict.SetValue("COOKIE_NAME", get_value(req[form], "name", ""));
     dict.SetValue("COOKIE_VALUE", req[form]["value"]);
 
@@ -145,13 +157,13 @@ int main()
 
     // Send the response to the requestor and return control.
     return_(resp, req, http::ok);
-    
-  }catch(std::exception* e){
-    std::cout<< "Exception: [" << typeid(e).name() << "] - " << e->what() << std::endl;
+
+  }catch(boost::system::system_error& err){
+    std::cerr<< "System Error: [" << err.code() << "] - " << err.what() << std::endl;
   }catch(std::exception const& e){
-    std::cout<< "Exception: [" << typeid(e).name() << "] - " << e.what() << std::endl;
+    std::cerr<< "Exception: [" << typeid(e).name() << "] - " << e.what() << std::endl;
   }catch(...){
-    std::cout<< "boom<blink>.</blink>";
+    std::cerr<< "boom<blink>!</blink>";
   }
 }
 //]

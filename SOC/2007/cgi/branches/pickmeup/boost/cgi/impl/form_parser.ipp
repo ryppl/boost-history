@@ -11,8 +11,8 @@
 
 #include "boost/cgi/error.hpp"
 #include "boost/cgi/basic_client.hpp"
+#include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/detail/url_decode.hpp"
-#include "boost/cgi/common/form_parser.hpp"
 #include "boost/cgi/common/source_enums.hpp"
 
 #include <iostream> // **FIXME**

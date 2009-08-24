@@ -75,17 +75,12 @@ int main()
       if (!a.is_open()) break; // Quit completely if the acceptor bails out.
     }
   */
-  } // This library throws only this type of exception (see Boost.System documentation).
-  catch(boost::system::system_error const& err)
-  {
-    std::cerr<< "System error " << err.code() << ": "
-            << err.what() << std::endl;
-    return 1;
-  }
-  catch(...)
-  {
-    std::cerr<< "Unknown error!" << std::endl;
-    return 2;
+  }catch(boost::system::system_error& err){
+    std::cerr<< "System Error: [" << err.id() << "] - " << err.message() << std::endl;
+  }catch(std::exception const& e){
+    std::cerr<< "Exception: [" << typeid(e).name() << "] - " << e.what() << std::endl;
+  }catch(...){
+    std::cerr<< "boom<blink>!</blink>";
   }
   return ret;
 }

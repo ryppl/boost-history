@@ -55,6 +55,20 @@ namespace cgi {
 
      string_type content;
    };
+   
+   template<typename CharT>
+   struct charset_header
+   {
+     typedef CharT                             char_type;
+     typedef typename std::basic_string<CharT> string_type;
+    
+     charset_header(const string_type& _content)
+       : content(_content)
+     {
+     }
+     
+     string_type content;
+   };
 
 /*
   template<typename StringT>
@@ -87,6 +101,12 @@ namespace cgi {
      content_type(const CharT* str)
    {
      return basic_header<CharT>("Content-type", str);
+   }
+
+   template<typename CharT> charset_header<CharT>
+     charset(const CharT* str)
+   {
+     return charset_header<CharT>(str);
    }
 
    template<typename CharT> basic_header<CharT>

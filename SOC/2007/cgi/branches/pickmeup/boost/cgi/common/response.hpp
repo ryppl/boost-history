@@ -154,6 +154,8 @@ namespace cgi {
     void clear_headers();
 
     void reset_headers();
+    
+    string_type& charset() { return charset_; }
 
     bool headers_terminated() const;
 
@@ -192,6 +194,8 @@ namespace cgi {
   protected:
     // Vector of all the headers, each followed by a CRLF
     std::vector<string_type> headers_;
+    
+    string_type charset_;
 
     // The buffer is a shared_ptr, so you can keep it cached elsewhere.
     boost::shared_ptr<common::streambuf> buffer_;
@@ -242,6 +246,11 @@ namespace cgi {
   cgi::common::basic_response<CharT>&
     operator<< (cgi::common::basic_response<CharT>& resp
                , cgi::common::basic_header<CharT> const& hdr);
+
+  template<typename CharT>
+  cgi::common::basic_response<CharT>&
+    operator<< (cgi::common::basic_response<CharT>& resp
+               , cgi::common::charset_header<CharT> const& hdr);
 
   /// You can stream a cgi::cookie into a response.
   /**

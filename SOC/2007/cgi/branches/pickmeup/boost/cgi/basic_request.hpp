@@ -24,19 +24,19 @@
 #include <boost/system/error_code.hpp>
 #include <boost/asio/basic_io_object.hpp>
 ///////////////////////////////////////////////////////////
-// **FIXME** Half of these are probably useless
-#include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/is_async.hpp"
+#include "boost/cgi/common/path_info.hpp"
 #include "boost/cgi/common/role_type.hpp"
-#include "boost/cgi/http/status_code.hpp"
-#include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/common/source_enums.hpp"
-#include "boost/cgi/fwd/basic_request_fwd.hpp"
 #include "boost/cgi/common/request_service.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/fwd/basic_request_fwd.hpp"
+#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/import/basic_io_object.hpp"
 #include "boost/cgi/detail/basic_sync_io_object.hpp"
-#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
 
 namespace cgi {
  namespace common {
@@ -53,7 +53,7 @@ namespace cgi {
    * 
    * Note: This class isn't thread safe: carrying around a mutex-per-request
    * seems prohibitively expensive. There could be functions which take a mutex
-   * as an arguement and lock it. (Async calls could get messy if you need a
+   * as an argument and lock it. (Async calls could get messy if you need a
    * protected request object).
   **/
   template<typename RequestService
@@ -86,11 +86,75 @@ namespace cgi {
     typedef typename implementation_type::client_type    client_type;
     typedef typename implementation_type::buffer_type    buffer_type;
 
+    /// A proxy class to provide access to the data maps as member variables.
+    /**
+     * This wraps the underlying data map and exposes a std::map-like interface
+     * for the different data maps.
+     *
+     * It also includes an as<> member function which casts the found data into
+     * any type the user specifies.
+     */
+    template<typename MapType>
+    struct data_map_proxy
+    {
+      typedef MapType                                   map_type;
+      typedef typename map_type::key_type               key_type;
+      typedef typename map_type::value_type             value_type;
+      typedef typename map_type::mapped_type            mapped_type;
+      typedef typename map_type::size_type              size_type;
+      typedef typename map_type::iterator               iterator;
+      typedef typename map_type::const_iterator         const_iterator;
+      typedef typename map_type::reverse_iterator       reverse_iterator;
+      typedef typename map_type::const_reverse_iterator const_reverse_iterator;
+      typedef typename map_type::allocator_type         allocator_type;
+      
+      void set(map_type& data) { impl = &data; }
+      
+      iterator begin() { return impl->begin(); }
+      iterator end() { return impl->end(); }
+      const_iterator begin() const { return impl->begin(); }
+      const_iterator end() const { return impl->end(); }
+      
+      reverse_iterator rbegin() { return impl->rbegin(); }
+      reverse_iterator rend() { return impl->rend(); }
+      const_reverse_iterator rbegin() const { return impl->rbegin(); }
+      const_reverse_iterator rend() const { return impl->rend(); }
+
+      bool empty() { return impl->empty(); }
+      
+      void clear() { return impl->clear(); }
+      
+      size_type size() const { return impl->size(); }
+      
+      size_type count(const key_type& key) { return impl->count(key); }
+      
+      template<typename T>
+      T as(key_type const& key) {
+        mapped_type& val((*impl)[key]);
+        return val.empty() ? T() : boost::lexical_cast<T>(val);
+      }
+      
+      mapped_type& operator[](key_type const& varname) {
+        return (*impl)[varname.c_str()];
+      }
+      
+      operator map_type&() { return *impl; }
+
+    private:      
+      map_type* impl;
+    };
+    
+    data_map_proxy<env_map>    env;
+    data_map_proxy<post_map>   post;
+    data_map_proxy<get_map>    get;
+    data_map_proxy<cookie_map> cookies;
+
     basic_request(const parse_options opts = parse_none
                  , char** base_env = NULL)
       : detail::basic_sync_io_object<service_type>()
     {
       if (opts > parse_none) load(opts, base_env);
+      construct();
     }
 
     // Won't throw
@@ -99,7 +163,8 @@ namespace cgi {
                  , char** base_env = NULL)
       : detail::basic_sync_io_object<service_type>()
     {
-        if (opts > parse_none) load(opts, ec);
+      if (opts > parse_none) load(opts, ec);
+      construct();
     }
 
     // Throws
@@ -110,6 +175,7 @@ namespace cgi {
     {
       set_protocol_service(s);
       if (opts > parse_none) load(opts, base_env);
+      construct();
     }
 
     // Won't throw
@@ -121,6 +187,7 @@ namespace cgi {
     {
       set_protocol_service(s);
       if (opts > parse_none) load(opts, ec, base_env);
+      construct();
     }
 
     /// Make a new mutiplexed request from an existing connection.
@@ -132,6 +199,7 @@ namespace cgi {
       boost::system::error_code ec;
       this->service.begin_request_helper(this->implementation
                                         , impl.header_buf_, ec);
+      construct();
       detail::throw_error(ec);
     }
 
@@ -143,12 +211,21 @@ namespace cgi {
       set_protocol_service(*impl.service_);
       this->service.begin_request_helper(this->implementation
                                         , impl.header_buf_, ec);
+      construct();
     }
       
     ~basic_request()
     {
       //if (is_open())
       //  close(http::internal_server_error, 0);
+    }
+    
+    void construct()
+    {
+      this->env.set(env_vars(this->implementation.vars_));
+      this->post.set(post_vars(this->implementation.vars_));
+      this->get.set(get_vars(this->implementation.vars_));
+      this->cookies.set(cookie_vars(this->implementation.vars_));
     }
 
     static pointer create(protocol_service_type& ps)
@@ -176,8 +253,8 @@ namespace cgi {
     {
       boost::system::error_code ec;
       this->service.load(this->implementation, parse_opts, ec);
-      if (!ec && base_env)
-        load(base_env);
+      //if (base_env)
+      //  load(base_env);
       detail::throw_error(ec);
     }
 
@@ -186,8 +263,7 @@ namespace cgi {
       load(parse_options parse_opts, boost::system::error_code& ec
           , char** base_environment = NULL, bool is_command_line = true)
     {
-      boost::system::error_code& ec (
-          this->service.load(this->implementation, parse_opts, ec));
+      this->service.load(this->implementation, parse_opts, ec);
       if (base_environment)
         this->service.load_environment(this->implementation, base_environment
                                       , is_command_line);
@@ -342,11 +418,15 @@ namespace cgi {
     { return env_("AUTH_TYPE"); }
 
     /// Get the content length as a long.
+    /**
+     * The content length defaults to zero if it isn't explicitly set
+     * by your HTTP server.
+     */
     long content_length()
-    { return boost::lexical_cast<long>(env_("CONTENT_LENGTH")); }
-
-    //string_type& content_length()
-    //{ return env_("CONTENT_LENGTH"); }
+    { 
+      string_type& cl(env_("CONTENT_LENGTH"));
+      return boost::lexical_cast<long>(cl.empty() ? "0" : cl); 
+    }
 
     string_type& content_type()
     { return env_("CONTENT_TYPE"); }
@@ -354,7 +434,7 @@ namespace cgi {
     string_type& gateway_interface()
     { return env_("GATEWAY_INTERFACE"); }
 
-    string_type& path_info()
+    common::path_info path_info()
     { return env_("PATH_INFO"); }
 
     string_type& path_translated()
@@ -511,10 +591,12 @@ namespace cgi {
      */
     form_map& operator[](common::form_data_type const&)
     {
-      if (request_method() == "GET")
+      // Save the method as a case-insensitive string (saves on lookups too).
+      common::name rm(request_method().c_str());
+      if (rm == "GET" || rm == "HEAD")
         return get_vars(this->implementation.vars_);
       else
-      if (request_method() == "POST")
+      if (rm == "POST")
         return post_vars(this->implementation.vars_);
       else
         return env_vars(this->implementation.vars_);
