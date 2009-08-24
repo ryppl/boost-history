@@ -1,0 +1,111 @@
+[/==============================================================================
+    Copyright (C) 2001-2009 Joel de Guzman
+    Copyright (C) 2001-2009 Hartmut Kaiser
+
+    Distributed under the Boost Software License, Version 1.0. (See accompanying
+    file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+===============================================================================/]
+
+[section:directive Directive]
+
+This module includes different directives usable to augment and parametrize 
+other parsers. It includes the `no_case`, `lexeme`, `omit`, `raw`, and 
+`skip` directives.
+
+
+[heading Module Header]
+
+    // forwards to <boost/spirit/home/qi/directive.hpp>
+    #include <boost/spirit/include/qi_directive.hpp>
+
+[/------------------------------------------------------------------------------]
+[section:no_case no_case]
+  
+[table
+    [[Name]                         [Description]]
+    [[`boost::spirit::NS::no_case`] [Parser directive that forces its subject 
+                                    parser (and all its children) to do case 
+                                    insensitive matching. `NS` is a 
+                                    __char_encoding_namespace__]]
+]
+
+[heading Description]
+
+The `no_case[]` directive does not consume any input. The actual
+matching is done by its subject parser. It's purpose is to force
+matching of the subject parser (and all its children) to be case
+insensitive. 
+
+[heading Header]
+
+    // forwards to <boost/spirit/home/qi/directive/no_case.hpp>
+    #include <boost/spirit/include/qi_no_case.hpp>
+
+Also, see __include_structure__.
+
+[heading Model of]
+
+The model of `no_case` is the model of its subject parser.
+
+[variablelist Notation
+    [[`p`]      [A parser.]]
+    [[`P`]      [A Parser type.]]
+    [[`ns`]     [A __char_encoding_namespace__.]]
+]
+
+[heading Expression Semantics]
+
+The `no_case[]` directive has no special parser semantics. It is a pure
+modifier directive. It indirectly influences the way all subject parsers
+do their matching. It adds information (the `tag::no_case`) to the
+`Modifier` template parameter used while tranforming the `proto::expr`
+into the corresponding parser expression. This is achieved by the
+following specialization: 
+
+    namespace boost { namespace spirit
+    {
+        template <typename CharEncoding>
+        struct is_modifier_directive<
+                qi::domain
+              , tag::char_code<tag::no_case, CharEncoding> >
+          : mpl::true_ 
+        {};
+    }}
+
+(for more details see the section describing the compilation process of the 
+__boost_proto__ expression into the corresponding parser expressions).
+
+[table
+    [[Expression]       [Semantics]]
+    [[`ns::no_case[p]`] [Force `p` to match its input case in-sensitive.]]
+]
+
+[heading Attributes]
+
+[table
+    [[Expression]       [Attribute]]
+    [[`ns::no_case[p]`] [The attribute of subject parser, `P`.]]
+]
+
+[heading Complexity]
+
+[:The complexity is defined by the complexity of the subject parser, `P`]
+
+[heading Example]
+
+Some using declarations:
+
+[reference_using_declarations_no_case]
+
+Simple usage of `no_case[]`:
+
+[reference_no_case]
+
+A more sophisticated use case of `no_case[]` in conjunction with a symbol 
+table (see __qi_symbols__ for more details):
+
+[reference_symbols_with_no_case]
+
+[endsect]
+
+[endsect]
