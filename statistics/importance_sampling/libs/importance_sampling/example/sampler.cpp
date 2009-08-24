@@ -30,7 +30,7 @@ void example_sampler(std::ostream& out){
     // The quality of the sample is assessed by a series of 
     // kolmorov-distances along the the sample size of the targets.    
     using namespace boost;
-    typedef std::string                                 str_t;
+    typedef std::string                                 str_;
     typedef double                                      val_;
     typedef std::vector<val_>                           vec_;
     typedef range_iterator<vec_>::type                  it_val_;

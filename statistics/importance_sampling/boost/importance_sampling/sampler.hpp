@@ -16,34 +16,34 @@
 #include <boost/range.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/uniform_real.hpp>
-#include <boost/random/categorical_distribution.hpp>
+// TODO #include <boost/random/discrete_distributionhpp> when becomes avail
+#include <boost/random/discrete_distribution_sw_2009.hpp> 
 
 namespace boost{
 namespace is{
 
 // Samples by SIR given a set of proposal values and their unnormalized weights
 //
-// R1:  models Range or a reference thereof
-// U:   models RandomDistribution (uniform)
+// R1:  range type of the values 
+// W:   type of the weights
 //
 // Usage:
 // typedef S<R1,U> s_;
 // typedef s_::result_type res_;
 // s_ s(weights,proposal_draws);
 // res_ res = s(urng);
-//
-// NB: pre-sorting the weights from largest to smallest may speed up execution.
-template<typename R1, template<typename> class Ur = boost::uniform_real>
+template<typename R1,typename W>
 class sampler{
-    typedef typename remove_reference<R1>::type const_values_;
-    typedef is_reference<R1>  is_ref_;
+    typedef typename remove_reference<R1>::type         const_values_;
+    typedef typename remove_cv<const_values_>::type     values_t;    
+    typedef typename range_size<values_t>::type         size_;
+    typedef is_reference<R1>                            is_ref_;
     public:
-    typedef typename range_value<const_values_>::type result_type;
+    typedef typename range_value<const_values_>::type   result_type;
     private:
-    typedef Ur<result_type>                             unif_;
-    typedef random::categorical_distribution<unif_>     mult_dist_t;
+    typedef random::discrete_distribution<size_,W>      discr_dist_t;
     public:
-    typedef typename mult_dist_t::input_type            input_type;
+    typedef typename discr_dist_t::input_type           input_type;
 
     sampler();
     template<typename R0>
@@ -55,69 +55,70 @@ class sampler{
     sampler& operator=(const sampler& that);
 
     template<typename U> result_type operator()(U& urng)const;
-    const mult_dist_t& categorical_distribution()const;
+    const discr_dist_t& discrete_distribution()const;
 
     // TODO os/is
 
     private:
-    mult_dist_t mult_dist_;
+    discr_dist_t discr_dist_;
     typename call_traits<R1>::value_type values_;
 };
 
 // Definition //
 
-template<typename R1, template<typename> class Ur>
-sampler<R1,Ur>::sampler(){
+template<typename R1, typename W>
+sampler<R1,W>::sampler(){
     BOOST_MPL_ASSERT((
         mpl::not_<is_ref_>
     ));
 }
 
-template<typename R1, template<typename> class Ur>
+template<typename R1, typename W>
 template<typename R0>
-sampler<R1,Ur>::sampler(
+sampler<R1,W>::sampler(
     const R0& unnormalized_weights,
     typename call_traits<R1>::param_type values
-):mult_dist_(unnormalized_weights),values_(values){
+):discr_dist_(
+    boost::begin(unnormalized_weights),
+    boost::end(unnormalized_weights)
+),values_(values){
     BOOST_ASSERT(
         size(unnormalized_weights) == size(values_)
     );
 }
     
-template<typename R1, template<typename> class Ur>
-sampler<R1,Ur>::sampler(
-    const sampler& that
-)
-:mult_dist_(that.mult_dist_),values_(that.values_){}
+template<typename R1, typename W>
+sampler<R1,W>::sampler( const sampler& that )
+:discr_dist_(that.discr_dist_),values_(that.values_){}
 
-template<typename R1, template<typename> class Ur>
-sampler<R1,Ur>&
-sampler<R1,Ur>::operator=(const sampler& that){
+template<typename R1, typename W>
+sampler<R1,W>&
+sampler<R1,W>::operator=(const sampler& that){
     if(&that!=this){
         BOOST_MPL_ASSERT((
             mpl::not_<is_ref_>
         ));
-        mult_dist_ = that.mult_dist_;
+        discr_dist_ = that.discr_dist_;
         values_ = that.values_;
     }
     return (*this);
 }
 
 // Random        
-template<typename R1, template<typename> class Ur>
+template<typename R1, typename W>
 template<typename U>
-typename sampler<R1,Ur>::result_type
-sampler<R1,Ur>::operator()(U& urng)const{
-    typedef typename mult_dist_t::result_type k_t;
-    k_t k = mult_dist_(urng);
+typename sampler<R1,W>::result_type
+sampler<R1,W>::operator()(U& urng)const{
+    typedef typename discr_dist_t::result_type k_t;
+    k_t k = discr_dist_(urng);
     BOOST_ASSERT( k < size(values_) );
     return (*next(boost::begin(values_),k));
 }
 
 // Access
-template<typename R1, template<typename> class Ur>
-const typename sampler<R1,Ur>::mult_dist_t&
-sampler<R1,Ur>::categorical_distribution()const{ return mult_dist_; }
+template<typename R1, typename W>
+const typename sampler<R1,W>::discr_dist_t&
+sampler<R1,W>::discrete_distribution()const{ return discr_dist_; }
 
 }//random
 }//boost

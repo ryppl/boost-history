@@ -54,6 +54,9 @@ Ridgeway and Madigan
 
 [ History ]
 
+August 18 2009 : refactored sampler to use discrete_distribution, no longer 
+    categorical_distribution
+    
 July 2009 : Current version
 
 [Output]

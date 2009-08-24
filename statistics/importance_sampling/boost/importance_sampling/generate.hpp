@@ -43,7 +43,8 @@ namespace is{
     ){
         typedef boost::iterator_range<ItW>                  range_w_;
         typedef boost::iterator_range<ItP>                  range_p_;
-        typedef boost::is::sampler<range_p_>                iss_;
+        typedef typename boost::iterator_value<ItW>::type   w_;
+        typedef boost::is::sampler<range_p_,w_>             iss_;
         typedef boost::random::ref_distribution<iss_&>      ref_iss_;
         typedef boost::variate_generator<U&,ref_iss_>       gen_iss_;
         
