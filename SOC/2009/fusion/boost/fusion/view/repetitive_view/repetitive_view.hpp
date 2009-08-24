@@ -83,7 +83,7 @@ namespace boost { namespace fusion
         repetitive_view&
         operator=(BOOST_FUSION_R_ELSE_CLREF(OtherView) other_view)
         {
-            BOOST_FUSION_TAG_CHECK(OtherView,reverse_view_tag);
+            BOOST_FUSION_TAG_CHECK(OtherView,repetitive_view_tag);
 
             seq=BOOST_FUSION_FORWARD(OtherView,other_view).seq;
             return *this;

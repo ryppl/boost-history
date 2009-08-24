@@ -13,6 +13,7 @@
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/advance.hpp>
 
+#include <boost/mpl/less.hpp>
 #include <boost/mpl/modulus.hpp>
 #include <boost/mpl/plus.hpp>
 #include <boost/mpl/or.hpp>
