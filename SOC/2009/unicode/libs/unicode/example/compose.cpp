@@ -82,5 +82,17 @@ int main()
     std::cout << std::endl;
     
     std::cout << unicode::composed_concated(tmp, tmp2) << std::endl;
+    
+    std::cout << "0xAC00: ";
+    unicode::decompose(list_of<char32>(0xAC00), std::ostream_iterator<boost::char32>(std::cout, " "));
+    std::cout << std::endl;
+    
+    std::cout << "0xAC01: ";
+    unicode::decompose(list_of<char32>(0xAC01), std::ostream_iterator<boost::char32>(std::cout, " "));
+    std::cout << std::endl;
+    
+    std::cout << "Composing 0x1100 0x1161 0x11a8: ";
+    unicode::compose(list_of<char32>(0x1100)(0x1161)(0x11a8), std::ostream_iterator<char32>(std::cout, " "));
+    std::cout << std::endl;
 }
 //]

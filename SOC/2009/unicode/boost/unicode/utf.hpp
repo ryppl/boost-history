@@ -6,6 +6,7 @@
 #include <boost/iterator/consumer_iterator.hpp>
 
 #include <boost/unicode/pipe_def.hpp>
+#include <boost/detail/unspecified.hpp>
 
 namespace boost
 {
@@ -66,6 +67,50 @@ BOOST_UNICODE_ENCODER_DEF(u8)
 BOOST_UNICODE_DECODER_DEF(u8)
 
 BOOST_UNICODE_DECODER_DEF(utf)
+
+template<typename ValueType, typename Range, typename OutputIterator>
+OutputIterator utf_encode(const Range& range, OutputIterator out)
+{
+    return pipe(range, utf_encoder<ValueType>(), out);
+}
+
+#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
+template<typename ValueType, typename Range>
+detail::unspecified<void> utf_encoded(Range&& range);
+#else
+template<typename ValueType, typename Range>
+iterator_range<
+    pipe_iterator<
+        typename range_iterator<const Range>::type,
+        utf_encoder<ValueType>
+    >
+> utf_encoded(const Range& range)
+{
+    return piped(range, utf_encoder<ValueType>());
+}
+
+template<typename ValueType, typename Range>
+iterator_range<
+    pipe_iterator<
+        typename range_iterator<Range>::type,
+        utf_encoder<ValueType>
+    >
+> utf_encoded(Range& range)
+{
+    return piped(range, utf_encoder<ValueType>());
+}
+#endif
+
+template<typename ValueType, typename OutputIterator>
+typename boost::detail::unspecified<
+    pipe_output_iterator<
+        OutputIterator,
+        utf_encoder<ValueType>
+    >
+>::type utf_encoded_out(OutputIterator out)
+{
+    return piped_output(out, utf_encoder<ValueType>());
+}
 
 BOOST_UNICODE_ENCODER_DEF(latin1);
 

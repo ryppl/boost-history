@@ -15,6 +15,12 @@
 
 #include <boost/detail/unspecified.hpp>
 
+#include <boost/preprocessor/repetition/enum_params.hpp>
+#include <boost/preprocessor/repetition/enum_binary_params.hpp>
+#include <boost/preprocessor/repetition/repeat.hpp>
+#include <boost/preprocessor/seq/elem.hpp>
+#include <boost/preprocessor/cat.hpp>
+
 #if defined(BOOST_UNICODE_DOXYGEN_INVOKED) || !defined(BOOST_NO_RVALUE_REFERENCES)
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_FWD_2(macro) \
@@ -31,20 +37,6 @@ namespace boost
 {
 namespace unicode
 {
-    
-namespace detail
-{
-    template<typename ValueType, typename OutputIterator>
-    pipe_output_iterator<
-        OutputIterator,
-        utf_encoder<ValueType>
-    > utf_encoded_out(OutputIterator out)
-    {
-	    return piped_output(out, utf_encoder<ValueType>());
-    }
-
-} // namespace detail
-
 /** INTERNAL ONLY */
 #define BOOST_UNICODE_CAT_LIMITS_FWD(cv1, ref1, cv2, ref2) \
 /** Partitions the two input ranges into a total of four ranges,
@@ -99,85 +91,88 @@ cat_limits(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2) \
     ); \
 }
 BOOST_UNICODE_FWD_2(BOOST_UNICODE_CAT_LIMITS_FWD)
-    
-/** Concatenates two ranges of UTF code units and puts the result in \c out.
- * 
- * Throws \c std::out_of_range if the input or resulting strings are not stream-safe.
- * \pre \c Range1 and \c Range2 are in Normalized Form D, have the same value type and are non-empty.
- * \post \c out is in Normalized Form D and is stream-safe. */
-template<typename Range1, typename Range2, typename OutputIterator>
-OutputIterator decomposed_concat(const Range1& range1, const Range2& range2, OutputIterator out)
-{
-    tuple<
-        sub_range<const Range1>,
-        sub_range<const Range1>,
-        sub_range<const Range2>,
-        sub_range<const Range2>
-    >
-    t = cat_limits(range1, range2);
-    
-    out = copy(t.get<0>(), out);
-    out = pipe(joined_n(utf_decoded(t.get<1>()), utf_decoded(t.get<2>())), combine_sorter(), detail::utf_encoded_out<typename range_value<const Range1>::type>(out)).base();
-    return copy(t.get<3>(), out);
-}
 
+#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
+/** INTERNAL ONLY */
+#define BOOST_UNICODE_COMPOSE_CONCAT_DEF(name, nf, pipe, n) \
 /** Concatenates two ranges of UTF code units and puts the result in \c out.
- * 
- * Throws \c std::out_of_range if the input or resulting strings are not stream-safe.
- * \pre \c Range1 and \c Range2 are in Normalized Form C, have the same value type and are non-empty.
- * \post \c out is in Normalized Form C and is stream-safe. */
-template<typename Range1, typename Range2, typename OutputIterator>
-OutputIterator composed_concat(const Range1& range1, const Range2& range2, OutputIterator out, unsigned mask = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical))
-{
-    tuple<
-        sub_range<const Range1>,
-        sub_range<const Range1>,
-        sub_range<const Range2>,
-        sub_range<const Range2>
-    >
-    t = cat_limits(range1, range2);
-    
-    out = copy(t.get<0>(), out);
-    out = pipe(joined_n(t.get<1>(), t.get<2>()), make_piped_pipe(utf_decoder(), normalizer(mask)), detail::utf_encoded_out<typename range_value<const Range1>::type>(out)).base();
-    return copy(t.get<3>(), out);
-}
+   Throws \c std::out_of_range if the input or resulting strings are not stream-safe.
+   \pre \c Range1 and \c Range2 are in Normalized Form nf, have the same value type and are non-empty.
+   \post \c out is in Normalized Form nf and is stream-safe. */ \
+template<typename Range1, typename Range2, typename OutputIterator, typename... T> \
+OutputIterator name##_concat(const Range1& range1, const Range2& range2, OutputIterator out, const T&...);
+#else
+#define BOOST_UNICODE_COMPOSE_CONCAT_DEF(name, nf, pipe, n) \
+BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_COMPOSE_CONCAT_DEF_A, (name)(pipe))
+#endif
 
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_DECOMPOSED_CONCATED_FWD(cv1, ref1, cv2, ref2) \
-template<typename Range1, typename Range2> \
-typename boost::detail::unspecified< \
-    iterator_range< \
-        join_iterator< \
-            tuple< \
-                sub_range<cv1 Range1>, \
-                iterator_range< \
-                    pipe_iterator< \
-                        join_iterator< \
-                            tuple< \
-                                sub_range<cv1 Range1>, \
-                                sub_range<cv2 Range2> \
-                            > \
-                        >, \
-                        piped_pipe< \
-                            utf_decoder, \
-                            multi_pipe< \
-                                combine_sorter, \
-                                utf_encoder<typename range_value<cv1 Range1>::type> \
-                            > \
-                        > \
-                    > \
-                >, \
-                sub_range<cv1 Range2> \
-            > \
-        > \
-    > \
->::type decomposed_concated(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2) \
+#define BOOST_UNICODE_COMPOSE_CONCAT_DEF_A(z, n, seq) \
+template<typename Range1, typename Range2, typename OutputIterator BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
+OutputIterator BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& range1, const Range2& range2, OutputIterator out BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
 { \
     tuple< \
-        sub_range<cv1 Range1>, \
-        sub_range<cv1 Range1>, \
-        sub_range<cv2 Range2>, \
-        sub_range<cv2 Range2> \
+        sub_range<const Range1>, \
+        sub_range<const Range1>, \
+        sub_range<const Range2>, \
+        sub_range<const Range2> \
+    > \
+    t = cat_limits(range1, range2); \
+     \
+    out = copy(t.get<0>(), out); \
+    out = pipe(joined_n(t.get<1>(), t.get<2>()), make_piped_pipe(utf_decoder(), BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t))), utf_encoded_out<typename range_value<const Range1>::type>(out)).base(); \
+    return copy(t.get<3>(), out); \
+}
+
+#ifdef BOOST_UNICODE_DOXYGEN_INVOKED
+/** INTERNAL ONLY */
+#define BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, pipe, n) \
+/** Concatenates two ranges of UTF code units and returns the result as a lazily
+   evaluated range.
+   Throws \c std::out_of_range if the input or resulting strings are not stream-safe.
+   \pre \c Range1 and \c Range2 are in Normalized Form nf, have the same value type and are non-empty.
+   \return Lazy stream-safe range in Normalized Form nf. */ \
+template<typename Range1, typename Range2, typename... T> \
+detail::unspecified<void> name##_concated(const Range1& range1, const Range2& range2, const T&...);
+#else
+#define BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, pipe, n) \
+BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_COMPOSE_CONCATED_DEF_A, (name)(pipe))
+#endif
+
+/** INTERNAL ONLY */
+#define BOOST_UNICODE_COMPOSE_CONCATED_DEF_A(z, n, seq) \
+template<typename Range1, typename Range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_PARAMS(n, typename T)> \
+iterator_range< \
+    join_iterator< \
+        tuple< \
+            iterator_range<typename range_iterator<const Range1>::type>, \
+            iterator_range< \
+                pipe_iterator< \
+                    join_iterator< \
+                        tuple< \
+                            iterator_range<typename range_iterator<const Range1>::type>, \
+                            iterator_range<typename range_iterator<const Range2>::type> \
+                        > \
+                    >, \
+                    piped_pipe< \
+                        utf_decoder, \
+                        multi_pipe< \
+                            BOOST_PP_SEQ_ELEM(1, seq), \
+                            utf_encoder<typename range_value<const Range1>::type> \
+                        > \
+                    > \
+                > \
+            >, \
+            iterator_range<typename range_iterator<const Range2>::type> \
+        > \
+    > \
+> BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concated)(const Range1& range1, const Range2& range2 BOOST_PP_COMMA_IF(n) BOOST_PP_ENUM_BINARY_PARAMS(n, const T, & t)) \
+{ \
+    tuple< \
+        sub_range<const Range1>, \
+        sub_range<const Range1>, \
+        sub_range<const Range2>, \
+        sub_range<const Range2> \
     > \
     t = cat_limits(range1, range2); \
      \
@@ -188,71 +183,22 @@ typename boost::detail::unspecified< \
             make_piped_pipe( \
                 utf_decoder(), \
                 make_multi_pipe( \
-                    combine_sorter(), \
-                    utf_encoder<typename range_value<cv1 Range1>::type>() \
+                    BOOST_PP_SEQ_ELEM(1, seq)(BOOST_PP_ENUM_PARAMS(n, t)), \
+                    utf_encoder<typename range_value<const Range1>::type>() \
                 ) \
             ) \
         ), \
         t.get<3>() \
     ); \
 }
-BOOST_UNICODE_FWD_2(BOOST_UNICODE_DECOMPOSED_CONCATED_FWD)
 
 /** INTERNAL ONLY */
-#define BOOST_UNICODE_COMPOSED_CONCATED_FWD(cv1, ref1, cv2, ref2) \
-template<typename Range1, typename Range2> \
-typename boost::detail::unspecified< \
-    iterator_range< \
-        join_iterator< \
-            tuple< \
-                sub_range<cv1 Range1>, \
-                iterator_range< \
-                    pipe_iterator< \
-                        join_iterator< \
-                            tuple< \
-                                sub_range<cv1 Range1>, \
-                                sub_range<cv2 Range2> \
-                            > \
-                        >, \
-                        piped_pipe< \
-                            utf_decoder, \
-                            multi_pipe< \
-                                normalizer, \
-                                utf_encoder<typename range_value<cv1 Range1>::type> \
-                            > \
-                        > \
-                    > \
-                >, \
-                sub_range<cv1 Range2> \
-            > \
-        > \
-    > \
->::type composed_concated(cv1 Range1 ref1 range1, cv2 Range2 ref2 range2, unsigned mask = BOOST_UNICODE_OPTION(ucd::decomposition_type::canonical)) \
-{ \
-    tuple< \
-        sub_range<cv1 Range1>, \
-        sub_range<cv1 Range1>, \
-        sub_range<cv2 Range2>, \
-        sub_range<cv2 Range2> \
-    > \
-    t = cat_limits(range1, range2); \
-     \
-    return joined_n( \
-        t.get<0>(), \
-        piped( \
-            joined_n(t.get<1>(), t.get<2>()), \
-            make_piped_pipe( \
-                utf_decoder(), \
-                make_multi_pipe( \
-                    normalizer(mask), \
-                    utf_encoder<typename range_value<cv1 Range1>::type>() \
-                ) \
-            ) \
-        ), \
-        t.get<3>() \
-    ); \
-}
-BOOST_UNICODE_FWD_2(BOOST_UNICODE_COMPOSED_CONCATED_FWD)
+#define BOOST_UNICODE_COMPOSE_CAT_DEF(name, nf, pipe, n) \
+BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, pipe, n) \
+BOOST_UNICODE_COMPOSE_CONCAT_DEF(name, nf, pipe, n)
+
+BOOST_UNICODE_COMPOSE_CAT_DEF(composed, C, normalizer, 1)
+BOOST_UNICODE_COMPOSE_CAT_DEF(decomposed, D, combine_sorter, 0)
 
     
 } // namespace unicode

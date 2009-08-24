@@ -206,7 +206,7 @@ private:
 
     static char32 combine_lv_t(char32 lv, char32 t)
     {
-        char32 TIndex = lv - detail::TBase;
+        char32 TIndex = t - detail::TBase;
         return lv + TIndex;
     }
 };

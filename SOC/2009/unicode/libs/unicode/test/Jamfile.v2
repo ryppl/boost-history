@@ -1,0 +1,34 @@
+#==============================================================================
+#    Copyright (c) 2009 Mathias Gaunard
+#
+#   Use, modification and distribution is subject to the Boost Software
+#   License, Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+#   http://www.boost.org/LICENSE_1_0.txt)
+#==============================================================================
+
+import testing ;
+
+project
+    : requirements 
+        <include>../../..
+        <include>$(BOOST_ROOT)
+        <define>BOOST_ALL_NO_LIB=1
+        <toolset>msvc:<define>_SCL_SECURE_NO_WARNINGS
+        <toolset>gcc:<cxxflags>-Wno-multichar
+        <library>../build//boost_unicode/
+		<link>shared:<define>BOOST_UNICODE_DYN_LINK=1
+    ;
+
+test-suite iterator :
+    [ run iterator/test_pipe.cpp ]
+    [ run iterator/test_consumer.cpp ]
+    [ run iterator/test_join.cpp ]
+;
+
+test-suite unicode :
+    [ run unicode/test_compose.cpp ]
+    [ run unicode/test_graphemes.cpp ]
+    [ run unicode/test_utf.cpp ]
+;
+
+test-suite example : ../example//unicode-examples ;

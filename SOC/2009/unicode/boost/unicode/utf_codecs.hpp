@@ -461,8 +461,8 @@ namespace detail
 } // namespace detail
 
 /** Model of \c \xmlonly<conceptname>OneManyPipe</conceptname>\endxmlonly,
- * either behaves like \c u16_encoder, a \c u8_encoder depending on the
- * targeted element type \c ValueType. */
+ * either behaves like \c u16_encoder, \c u8_encoder or nothing
+ * depending on the targeted element type \c ValueType. */
 template<typename ValueType>
 struct utf_encoder : detail::select_encoder<ValueType>::type
 {
