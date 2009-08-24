@@ -6,7 +6,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_SURVIVAL_DATA_ALGORITHM_DETAIL_LOG_SHIFT_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_ALGORITHM_LOG_SHIFT_HPP_ER_2009
+#define BOOST_SURVIVAL_DATA_ALGORITHM_DETAIL_LOG_SHIFT_HPP_ER_2009
 #include <boost/math/special_functions/log1p.hpp>
 
 namespace boost{

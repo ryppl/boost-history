@@ -31,7 +31,7 @@ namespace data {
         typedef T value_type;
         typedef B failure_type;
         // Construction 
-        event();
+        event(); //  (f = false, t = infinity)
         explicit event(B isf,value_type rt);
         event(const event&);
         event& operator=(const event&);

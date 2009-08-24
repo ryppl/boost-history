@@ -35,8 +35,8 @@ ItO logit_log(
         throw std::runtime_error(f.str());
    }
    while(b!=e){
-        (*o) = detail::logit_shift((*b),t0); ++b;
-        (*o) = detail::log_shift((*b),t1); ++b;
+        (*o++) = detail::logit_shift((*b++),t0);
+        (*o++) = detail::log_shift((*b++),t1);
     }
     return o;
 }

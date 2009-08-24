@@ -7,6 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_SURVIVAL_DATA_DATA_MEAN_EVENT_HPP_ER_2009
 #define BOOST_SURVIVAL_DATA_DATA_MEAN_EVENT_HPP_ER_2009
+#include <stdexcept>
 #include <boost/type_traits.hpp>
 #include <boost/range.hpp>
 #include <boost/format.hpp>
@@ -14,6 +15,7 @@
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 #include <boost/survival/constant.hpp>
+#include <boost/math/special_functions/fpclassify.hpp>
 
 namespace boost{
 namespace survival{
@@ -39,7 +41,10 @@ namespace data{
     template<typename T,typename B = bool>
     class mean_event : 
         public event<T,T>, 
-        boost::addable<mean_event<T,B>, addable<event<T,B> > >
+        boost::addable<
+            mean_event<T,B>, 
+            addable<event<T,B> > 
+        >
         // TODO equality_comparable<mean_event<T,B> >
     {
     public:
@@ -58,12 +63,12 @@ namespace data{
         size_type count()const;
             
         // Operators
-        mean_event& operator+=(const mean_event& e);
-        mean_event& operator+=(const event_& e);
-        mean_event& operator()(const event_& e); //same as +=
+        mean_event& operator+=( const mean_event& e );
+        mean_event& operator+=( const event_& e );
+        mean_event& operator()( const event_& e ); //same as +=
         
         // I/O
-        template<class Archive>
+        template<class Archive> 
         void serialize(Archive & ar, const unsigned int version);
         
         private:
@@ -86,10 +91,22 @@ namespace data{
     
     // Constructor
     template<typename T,typename B>
-    mean_event<T,B>::mean_event():super_(),count_(0){}
+    mean_event<T,B>::mean_event()
+    :super_(static_cast<T>(false),static_cast<T>(0)),
+    count_(0){
+        // Using super_() instead, would initialize time to inf.
+    }
 
     template<typename T,typename B>
-    mean_event<T,B>::mean_event(const event_& e):super_(convert(e)),count_(1){}
+    mean_event<T,B>::mean_event(const event_& e)
+    :super_(convert(e)),count_(1){
+        const char* msg = "mean_event::mean_event(e), isinf(e.time())";
+        if(math::isinf(this->time())){
+            throw std::runtime_error(
+                msg
+            );
+        }
+    }
 
     template<typename T,typename B>
     mean_event<T,B>::mean_event(const mean_event& that)
@@ -99,7 +116,7 @@ namespace data{
     mean_event<T,B>& 
     mean_event<T,B>::operator=(const mean_event& that){
         if(&that!=this){
-            super_::operator=(that);
+            super_::operator=( that );
             count_ = that.count_;
         }
         return *this;
@@ -149,7 +166,11 @@ namespace data{
     template<typename T,typename B>
     typename mean_event<T,B>::value_type 
     mean_event<T,B>::impl(
-            size_type n_a,value_type a,size_type n_b,value_type b){
+            size_type n_a,
+            value_type a,
+            size_type n_b,
+            value_type b
+    ){
         return ( (n_a * a) + (n_b * b) ) / (n_a + n_b);
     }
     
@@ -171,9 +192,9 @@ namespace data{
         static value_type one = static_cast<value_type>(1);
         value_type t = e.time();
         if(e.failure()){
-            return super_(one,t);
+            return super_( one, t );
         }else{
-            return super_(zero,t);
+            return super_( zero, t );
         }
     }
 

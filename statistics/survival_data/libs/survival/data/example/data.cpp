@@ -34,19 +34,19 @@ void example_data(std::ostream& out){
     // Statistics
     
     using namespace boost;
-    namespace surv = survival::data;
+    namespace surv = survival;
 
     // [ Types ]
     typedef unsigned val_; // do not modify
     typedef std::vector<val_> vals_;
 
     // Records
-    typedef surv::record<val_> record_;
+    typedef surv::data::record<val_> record_;
     typedef std::vector<record_> records_;
     typedef range_iterator<records_>::type it_record_;
 
     // Events
-    typedef surv::event<val_> event_;
+    typedef surv::data::event<val_> event_;
     typedef std::vector<event_> events_;
     typedef range_iterator<events_>::type it_event_;
 
@@ -61,9 +61,9 @@ void example_data(std::ostream& out){
     typedef range_cycle_::apply<r_x_>::type         x_cycle_;
 
     // Statistics
-    typedef surv::mean_event<val_>                  me_;
+    typedef surv::data::mean_event<val_>            me_;
     typedef std::vector<me_>                        mes_;
-    typedef surv::mean_events_by_covariate<val_,x_> mes_by_x_;
+    typedef surv::data::mean_events_by_covariate<val_,x_> mes_by_x_;
 
     // [ Constants ]
     const unsigned n_record = 4; 
@@ -86,7 +86,7 @@ void example_data(std::ostream& out){
 
     // [ Events ]
     
-    surv::events(
+    surv::data::events(
         begin(records),
         end(records),
         entry_bound,
@@ -187,31 +187,30 @@ void example_data(std::ostream& out){
     
     out << "mean_events : ";
     std::copy(
-        boost::begin(mes),
-        boost::end(mes),
+        boost::begin( mes ),
+        boost::end( mes ),
         std::ostream_iterator<me_>(out," ")
     );
 
     vals_ flat_mes;
-    surv::vectorize_events(
-        boost::begin(mes),
-        boost::end(mes),
-        std::back_inserter(flat_mes)
+    surv::data::vectorize_events(
+        boost::begin( mes ),
+        boost::end( mes ),
+        std::back_inserter( flat_mes )
     );
 
     out << "flattened mean_events : ";
     std::copy(
-        boost::begin(flat_mes),
-        boost::end(flat_mes),
+        boost::begin( flat_mes ),
+        boost::end( flat_mes ),
         std::ostream_iterator<val_>(out," ")
     );
 
-// TODO put elsewhere in example/
-// Dont try this here because val_ = unsigned, but you get the idea
-//    surv::algorithm::logit_log(
-//        boost::begin(flat_mean_events),
-//        boost::end(flat_mean_events),
-//        std::back_inserter(flat_mean_events),
+//    // Dont try this here because val_ = unsigned, but you get the idea
+//    surv::data::logit_log(
+//        boost::begin(flat_mes),
+//        boost::end(flat_mes),
+//        std::back_inserter(flat_mes),
 //        0.01,
 //        0.01
 //    );
