@@ -19,7 +19,7 @@
 #include <boost/type_traits/is_same.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
-namespace explore
+namespace boost { namespace explore
 {
     namespace detail
     {
@@ -79,6 +79,6 @@ namespace explore
             detail::value_matches_map<T>,
             boost::mpl::false_
         > {};
-}
+}}
 
 #endif

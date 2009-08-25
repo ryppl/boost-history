@@ -11,8 +11,8 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <sstream>
-#include <deque>
-#include <boost/explore.hpp>
+#include <boost/explore/deque.hpp>
+#include <boost/explore/iterator_range.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_deque_stream_test )
 {
@@ -37,7 +37,7 @@ BOOST_AUTO_TEST_CASE( basic_deque_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(di.begin(), ++(++di.begin()));
+    str_out << boost::explore::make_iterator_range(di.begin(), ++(++di.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
@@ -69,6 +69,6 @@ BOOST_AUTO_TEST_CASE( deque_in_deque_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(ddi.begin(), ++(++ddi.begin()));
+    str_out << boost::explore::make_iterator_range(ddi.begin(), ++(++ddi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }

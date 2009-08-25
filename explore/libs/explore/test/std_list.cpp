@@ -11,9 +11,9 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <sstream>
-#include <list>
 #include <complex>
-#include <boost/explore.hpp>
+#include <boost/explore/list.hpp>
+#include <boost/explore/iterator_range.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_list_stream_test )
 {
@@ -38,7 +38,7 @@ BOOST_AUTO_TEST_CASE( basic_list_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(lc.begin(), ++(++lc.begin()));
+    str_out << boost::explore::make_iterator_range(lc.begin(), ++(++lc.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[(0,1), (2,3)]");
 }
 
@@ -70,6 +70,6 @@ BOOST_AUTO_TEST_CASE( list_in_list_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(lli.begin(), ++(++lli.begin()));
+    str_out << boost::explore::make_iterator_range(lli.begin(), ++(++lli.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }

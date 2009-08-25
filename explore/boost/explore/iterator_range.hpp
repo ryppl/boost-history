@@ -16,7 +16,7 @@
 #include <boost/range/iterator_range.hpp>
 #include <boost/mpl/if.hpp>
 
-namespace explore
+namespace boost { namespace explore
 {
     // To work around some problems with overriding for operator<< for boost::iterator_range
     // there already exists such an operator that does not do what we want.
@@ -55,6 +55,6 @@ namespace explore
     {
         return stream_container(ostr, r.t.begin(), r.t.end(), typename iterator_range_wrapper<T>::stream_type());
     }
-}
+}}
 
 #endif

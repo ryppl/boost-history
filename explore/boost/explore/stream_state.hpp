@@ -15,7 +15,7 @@
 #include <ios> 
 #include <memory>
 
-namespace explore
+namespace boost { namespace explore
 {
     // forward declaration for deletion callback
     template<typename T>
@@ -66,6 +66,6 @@ namespace explore
         }
         return state;
     }
-}
+}}
 
 #endif

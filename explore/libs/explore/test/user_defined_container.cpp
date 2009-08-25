@@ -39,7 +39,7 @@ private:
 
 std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
 {
-    return explore::stream_container(ostr, u.start(), u.finish());
+    return boost::explore::stream_container(ostr, u.start(), u.finish());
 }
 
 BOOST_AUTO_TEST_CASE( user_defined_stream_test )

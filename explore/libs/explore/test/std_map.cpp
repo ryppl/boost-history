@@ -12,8 +12,9 @@
 #include <string>
 #include <sstream>
 #include <vector>
-#include <map>
-#include <boost/explore.hpp>
+#include <boost/explore/map.hpp>
+#include <boost/explore/vector.hpp>
+#include <boost/explore/iterator_range.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_map_stream_test )
 {
@@ -38,7 +39,7 @@ BOOST_AUTO_TEST_CASE( basic_map_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(mis.begin(), ++(++mis.begin()));
+    str_out << boost::explore::make_iterator_range(mis.begin(), ++(++mis.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 2:second]");
 }
 
@@ -72,7 +73,7 @@ BOOST_AUTO_TEST_CASE( basic_multimap_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(mmis.begin(), ++(++mmis.begin()));
+    str_out << boost::explore::make_iterator_range(mmis.begin(), ++(++mmis.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1:first, 1:single]");
 }
 
@@ -104,6 +105,6 @@ BOOST_AUTO_TEST_CASE( vector_in_map_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(mivi.begin(), ++(++mivi.begin()));
+    str_out << boost::explore::make_iterator_range(mivi.begin(), ++(++mivi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1:[1, 2, 3], 2:[1, 2, 3]]");
 }

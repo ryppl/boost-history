@@ -9,6 +9,7 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
+#include <boost/explore/manipulators.hpp>
 #include <string>
 #include <sstream>
 #include <vector>
@@ -16,21 +17,21 @@
 
 std::ostream& html_table_stream_format(std::ostream& ostr)
 {
-    using namespace explore;
+    using namespace boost::explore;
     ostr << start("<table>\n")
          << separator("")
-         << explore::end("</table>\n");
+         << boost::explore::end("</table>\n");
 
     ostr << start("<tr><td>", 1)
          << separator("</td><td>", 1)
-         << explore::end("</td></tr>\n", 1);
+         << boost::explore::end("</td></tr>\n", 1);
 
     return ostr;
 }
 
 BOOST_AUTO_TEST_CASE( vector_in_c_array_html_stream_test )
 {
-    using namespace explore;
+    using namespace boost::explore;
     std::stringstream str_out;
     str_out << html_table_stream_format;
 

@@ -14,7 +14,7 @@
 
 #include <ostream>
 
-namespace explore
+namespace boost { namespace explore
 {
     struct stream_normal_value
     {
@@ -35,6 +35,6 @@ namespace explore
             ostr << state->assoc_start() << val.first << state->assoc_separator() << val.second << state->assoc_end();
         }
     };
-}
+}}
 
 #endif

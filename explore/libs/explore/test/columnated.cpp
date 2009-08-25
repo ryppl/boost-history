@@ -22,16 +22,16 @@ struct columnated_format
 
     friend std::ostream& operator<<(std::ostream& ostr, const columnated_format& f)
     {
-        using namespace explore;
+        using namespace boost::explore;
         ostr << setrows(f.m_rows) << setitemwidth(f.m_width)
-             << separator("") << start("") << explore::end("");
+             << separator("") << start("") << boost::explore::end("");
         return ostr;
     }
 };
 
 BOOST_AUTO_TEST_CASE( basic_columnate_stream_test )
 {
-    using namespace explore;
+    using namespace boost::explore;
     std::stringstream str_out;
     std::vector<int> vi;
 
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE( basic_columnate_stream_test )
         vi.push_back(i);
     }
 
-    str_out << setrows(3) << start("") << explore::end("") << vi;
+    str_out << setrows(3) << start("") << boost::explore::end("") << vi;
 
     BOOST_CHECK_EQUAL(str_out.str(),
         "0, 1, 2, \n"
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE( basic_columnate_stream_test )
 
     str_out.str("");
 
-    str_out << setrows(3) << setitemwidth(5) << start("") << explore::end("") << vi;
+    str_out << setrows(3) << setitemwidth(5) << start("") << boost::explore::end("") << vi;
 
     BOOST_CHECK_EQUAL(str_out.str(),
         "    0,     1,     2, \n"

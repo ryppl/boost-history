@@ -9,11 +9,10 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <boost/range/iterator_range.hpp>
 #include <string>
 #include <sstream>
-#include <vector>
-#include <boost/explore.hpp>
+#include <boost/explore/iterator_range.hpp>
+#include <boost/explore/vector.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
 {
@@ -38,7 +37,7 @@ BOOST_AUTO_TEST_CASE( basic_vector_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(vi.begin(), ++(++vi.begin()));
+    str_out << boost::explore::make_iterator_range(vi.begin(), ++(++vi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
@@ -70,7 +69,7 @@ BOOST_AUTO_TEST_CASE( vector_in_vector_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(vvi.begin(), ++(++vvi.begin()));
+    str_out << boost::explore::make_iterator_range(vvi.begin(), ++(++vvi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
 

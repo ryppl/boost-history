@@ -12,7 +12,9 @@
 #include <string>
 #include <sstream>
 #include <boost/array.hpp>
-#include <boost/explore.hpp>
+#include <boost/explore/boost_array.hpp>
+#include <boost/explore/vector.hpp>
+#include <boost/explore/iterator_range.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_array_stream_test )
 {
@@ -38,7 +40,7 @@ BOOST_AUTO_TEST_CASE( basic_array_stream_test )
 
     boost::array<int,3>::iterator itr = ai3.begin() + 2;
 
-    str_out << explore::make_iterator_range(ai3.begin(), itr);
+    str_out << boost::explore::make_iterator_range(ai3.begin(), itr);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
@@ -70,6 +72,6 @@ BOOST_AUTO_TEST_CASE( vector_in_array_stream_test )
     str_out.str("");
 
     boost::array<std::vector<int>,3>::iterator itr = av3.begin() + 2;
-    str_out << explore::make_iterator_range(av3.begin(), itr);
+    str_out << boost::explore::make_iterator_range(av3.begin(), itr);
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }

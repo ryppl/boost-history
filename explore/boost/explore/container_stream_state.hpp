@@ -19,7 +19,7 @@ template<typename charType> std::basic_string<charType> init_##name();   \
 template<> std::basic_string<char> init_##name<char>() { return (str); } \
 template<> std::basic_string<wchar_t> init_##name<wchar_t>() { return L##str; }
 
-namespace explore
+namespace boost { namespace explore
 {
     namespace detail
     {
@@ -130,6 +130,6 @@ namespace explore
             return c[index];
         }
     };
-}
+}}
 
 #endif

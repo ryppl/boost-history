@@ -16,13 +16,13 @@
 
 std::ostream& format_2d(std::ostream& ostr)
 {
-    using namespace explore;
+    using namespace boost::explore;
 
     // level 0
-    ostr << start("") << explore::end("") << separator("\n");
+    ostr << start("") << boost::explore::end("") << separator("\n");
 
     // level 1
-    ostr << start("|", 1) << explore::end("|", 1) << separator(" ", 1);
+    ostr << start("|", 1) << boost::explore::end("|", 1) << separator(" ", 1);
 
     return ostr;
 }
@@ -51,16 +51,16 @@ BOOST_AUTO_TEST_CASE( two_dimension_stream_test )
 
 std::ostream& format_3d(std::ostream& ostr)
 {
-    using namespace explore;
+    using namespace boost::explore;
 
     // level 0
-    ostr << start("") << explore::end("") << separator("\n\n");
+    ostr << start("") << boost::explore::end("") << separator("\n\n");
 
     // level 1
-    ostr << start("", 1) << explore::end("", 1) << separator("\n", 1);
+    ostr << start("", 1) << boost::explore::end("", 1) << separator("\n", 1);
 
     // level 2
-    ostr << start("|", 2) << explore::end("|", 2) << separator(" ", 2);
+    ostr << start("|", 2) << boost::explore::end("|", 2) << separator(" ", 2);
 
     return ostr;
 }

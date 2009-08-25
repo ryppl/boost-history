@@ -16,7 +16,7 @@
 
 BOOST_AUTO_TEST_CASE( basic_c_array_stream_test )
 {
-    using namespace explore;
+    using namespace boost::explore;
     std::stringstream str_out;
 
     int arri1[] = {1};
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE( basic_c_array_stream_test )
 
 BOOST_AUTO_TEST_CASE( vector_in_c_array_stream_test )
 {
-    using namespace explore;
+    using namespace boost::explore;
     std::stringstream str_out;
 
     std::vector<int> vi;
@@ -49,4 +49,19 @@ BOOST_AUTO_TEST_CASE( vector_in_c_array_stream_test )
     std::vector<int> arrvi3[] = {vi,vi,vi};
     str_out << arrvi3;
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+}
+
+BOOST_AUTO_TEST_CASE( c_style_string_stream_test )
+{
+    using namespace boost::explore;
+    std::stringstream str_out;
+    
+    const char s[4] = "abc";    
+    str_out << s;
+    BOOST_CHECK_EQUAL(str_out.str(), "abc");
+    
+    str_out.str("");
+     
+    str_out << "def";
+    BOOST_CHECK_EQUAL(str_out.str(), "def");
 }

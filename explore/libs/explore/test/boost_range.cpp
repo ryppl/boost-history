@@ -19,27 +19,27 @@ BOOST_AUTO_TEST_CASE( boost_range_stream_test )
     std::stringstream str_out;
 
     std::vector<int> vi;
-    str_out << explore::make_iterator_range(vi);
+    str_out << boost::explore::make_iterator_range(vi);
     BOOST_CHECK_EQUAL(str_out.str(), "[]");
 
     str_out.str("");
 
     vi.push_back(1);
-    str_out << explore::make_iterator_range(vi);
+    str_out << boost::explore::make_iterator_range(vi);
     BOOST_CHECK_EQUAL(str_out.str(), "[1]");
 
     str_out.str("");
 
     vi.push_back(2);
     vi.push_back(3);
-    str_out << explore::make_iterator_range(vi);
+    str_out << boost::explore::make_iterator_range(vi);
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
 
     str_out.str("");
-    str_out << explore::make_iterator_range(vi.begin()+2, vi.end());
+    str_out << boost::explore::make_iterator_range(vi.begin()+2, vi.end());
     BOOST_CHECK_EQUAL(str_out.str(), "[3]");
 
     str_out.str("");
-    str_out << explore::make_iterator_range(vi.rbegin(), vi.rend());
+    str_out << boost::explore::make_iterator_range(vi.rbegin(), vi.rend());
     BOOST_CHECK_EQUAL(str_out.str(), "[3, 2, 1]");
 }

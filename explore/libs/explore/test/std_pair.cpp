@@ -11,7 +11,9 @@
 #include <boost/test/unit_test.hpp>
 #include <sstream>
 #include <vector>
-#include <boost/explore.hpp>
+#include <boost/explore/pair.hpp>
+#include <boost/explore/vector.hpp>
+#include <boost/explore/iterator_range.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_pair_stream_test )
 {
@@ -47,6 +49,6 @@ BOOST_AUTO_TEST_CASE( pair_in_vector_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(vpi.begin(), ++(++vpi.begin()));
+    str_out << boost::explore::make_iterator_range(vpi.begin(), ++(++vpi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2], [1, 2]]");
 }

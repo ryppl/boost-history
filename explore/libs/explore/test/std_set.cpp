@@ -11,7 +11,11 @@
 #include <boost/test/unit_test.hpp>
 #include <string>
 #include <sstream>
-#include <set>
+#include <vector>
+#include <boost/explore/set.hpp>
+#include <boost/explore/vector.hpp>
+#include <boost/explore/iterator_range.hpp>
+
 #include <boost/explore.hpp>
 
 BOOST_AUTO_TEST_CASE( basic_set_stream_test )
@@ -37,7 +41,7 @@ BOOST_AUTO_TEST_CASE( basic_set_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(si.begin(), ++(++si.begin()));
+    str_out << boost::explore::make_iterator_range(si.begin(), ++(++si.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
 }
 
@@ -71,7 +75,7 @@ BOOST_AUTO_TEST_CASE( basic_multiset_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(msi.begin(), ++(++msi.begin()));
+    str_out << boost::explore::make_iterator_range(msi.begin(), ++(++msi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");	
 }
 
@@ -103,6 +107,6 @@ BOOST_AUTO_TEST_CASE( vector_in_set_stream_test )
 
     str_out.str("");
 
-    str_out << explore::make_iterator_range(svi.begin(), ++(++svi.begin()));
+    str_out << boost::explore::make_iterator_range(svi.begin(), ++(++svi.begin()));
     BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
 }
