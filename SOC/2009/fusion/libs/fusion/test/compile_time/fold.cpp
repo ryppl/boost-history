@@ -19,7 +19,18 @@ namespace
 
   struct f
   {
+#ifdef NO_PREEVALUATE
+    template<typename Sig>
+    struct result;
+
+    template<typename Self, typename D, typename State>
+    struct result<Self(D,State)>
+    {
+        typedef int type;
+    };
+#else
     typedef int result_type;
+#endif
 
     template<int n, int batch>
     int operator()(distinct<n, batch> const& d, int state) const

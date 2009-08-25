@@ -31,7 +31,7 @@ namespace boost { namespace fusion { namespace detail
         }
 
         template<typename OtherT>
-        static typename detail::remove_reference<OtherT>::type*
+        static typename remove_reference<OtherT>::type*
         get_init_type(BOOST_FUSION_R_ELSE_LREF(OtherT) other_t, mpl::false_)
         {
             return &other_t;
@@ -41,8 +41,8 @@ namespace boost { namespace fusion { namespace detail
         typedef typename
             mpl::if_<
                 traits::is_view<T>
-              , typename detail::remove_reference<T>::type
-              , typename detail::add_lref<T>::type
+              , typename remove_reference<T>::type
+              , typename add_lref<T>::type
             >::type
         type;
 
@@ -50,7 +50,7 @@ namespace boost { namespace fusion { namespace detail
         typedef typename
             mpl::if_<
                 traits::is_view<T>
-              , typename detail::add_lref<typename add_const<T>::type>::type
+              , typename add_lref<typename add_const<T>::type>::type
               , type
             >::type
         call_param;
@@ -89,7 +89,7 @@ namespace boost { namespace fusion { namespace detail
 
         typename mpl::if_<
             traits::is_view<T>
-          , typename detail::add_lref<type>::type
+          , typename add_lref<type>::type
           , type
         >::type
         get() const
@@ -98,7 +98,7 @@ namespace boost { namespace fusion { namespace detail
         }
 
     private:
-        typename detail::add_lref<type>::type
+        typename add_lref<type>::type
         get(mpl::true_ /*is_view*/)const
         {
             return t;
@@ -110,7 +110,7 @@ namespace boost { namespace fusion { namespace detail
             return *t;
         }
 
-        typedef typename detail::remove_reference<T>::type non_ref_t;
+        typedef typename remove_reference<T>::type non_ref_t;
         mutable typename
             mpl::if_<
                 traits::is_view<T>

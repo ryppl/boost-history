@@ -12,8 +12,20 @@
 //Therefore we emulate the old behavior if (and only if) the boost
 //implementation falls back to decltype by default.
 
+#include <boost/config.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 
+#if defined(BOOST_NO_DECLTYPE) || !defined(BOOST_NO_VARIADIC_TEMPLATES)
+#   include <boost/mpl/bool.hpp>
+#endif
+#ifdef BOOST_NO_DECLTYPE
+#   include <boost/mpl/has_xxx.hpp>
+#   include <boost/mpl/eval_if.hpp>
+#   include <boost/mpl/identity.hpp>
+#endif
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
+#   include <boost/mpl/identity.hpp>
+#endif
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/type_traits/is_pointer.hpp>
@@ -24,7 +36,7 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    //cschmidt: These metafunction needs to handle
+    //cschmidt: This metafunction needs to handle
     //T()
     //T(&)()
     //T(cv&)()
@@ -46,47 +58,56 @@ namespace boost { namespace fusion { namespace detail
     //& -> &&
 
     template<typename FRef>
-    struct is_po_callable_impl
+    struct is_po_callable
     {
-        typedef typename detail::identity<FRef>::type f;
-        typedef typename is_pointer<f>::type is_pointer;
+        typedef typename identity<FRef>::type identity_f;
+        typedef typename is_pointer<identity_f>::type is_pointer;
+        typedef typename remove_pointer<identity_f>::type f;
 
         typedef
             mpl::or_<
-                is_function<typename remove_pointer<f>::type>
+                is_function<f>
               , is_member_function_pointer<f>
             >
         type;
     };
 
-    template<typename FRef>
-    struct is_po_callable
-      : is_po_callable_impl<FRef>::type
+#ifdef BOOST_NO_DECLTYPE
+    BOOST_MPL_HAS_XXX_TRAIT_DEF(result_type);
+
+    template<typename F>
+    struct get_result_type
     {
-        typedef typename is_po_callable_impl<FRef>::is_pointer is_pointer;
+        typedef typename F::result_type type;
     };
 
-//cschmidt: a pp implementation won't be worth the effort
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
-    template<typename FRef>
-    struct is_preevaluable
-      : mpl::false_
-    {};
-
-    template<typename FRef>
-    struct preevaluate;
+    template<typename F>
+    struct preevaluate_impl
+    {
+        typedef typename has_result_type<F>::type is_preevaluable;
+        typedef typename
+            mpl::eval_if<
+                is_preevaluable
+              , get_result_type<F>
+              , mpl::identity<void>
+            >::type
+        type;
+    };
 #else
-    template<typename FRef>
-    struct is_preevaluable
-      : is_po_callable<FRef>
-    {};
+    template<typename F>
+    struct preevaluate_impl
+    {
+        typedef mpl::false_ is_preevaluable;
+        typedef void type;
+    };
+#endif
 
-    template<typename FRef>
-    struct preevaluate_impl;
-
+    //cschmidt: a pp implementation won't be worth the effort
+#ifndef BOOST_NO_VARIADIC_TEMPLATES
     template<typename Result,typename... Args>
     struct preevaluate_impl<Result (Args...)>
     {
+        typedef mpl::true_ is_preevaluable;
         typedef Result type;
     };
 
@@ -95,6 +116,7 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef Class& class_type;
 
+        typedef mpl::true_ is_preevaluable;
         typedef Result type;
     };
 
@@ -105,7 +127,7 @@ namespace boost { namespace fusion { namespace detail
     struct preevaluate_impl<Result(Class::*)(Args...) const>
     {
         typedef Class const& class_type;
-
+        typedef mpl::true_ is_preevaluable;
         typedef Result type;
     };
 
@@ -113,7 +135,7 @@ namespace boost { namespace fusion { namespace detail
     struct preevaluate_impl<Result(Class::*)(Args...) const volatile>
     {
         typedef Class const volatile& class_type;
-
+        typedef mpl::true_ is_preevaluable;
         typedef Result type;
     };
 
@@ -121,39 +143,39 @@ namespace boost { namespace fusion { namespace detail
     struct preevaluate_impl<Result(Class::*)(Args...) volatile>
     {
         typedef Class volatile& class_type;
-
+        typedef mpl::true_ is_preevaluable;
         typedef Result type;
     };
+#endif
 
     template<typename FRef>
     struct preevaluate
-      : preevaluate_impl<
-            typename remove_pointer<
-                typename detail::identity<FRef>::type
-            >::type
-        >
-    {};
-#endif
+    {
+#if defined(BOOST_NO_VARIADIC_TEMPLATES) && !defined(BOOST_NO_DECLTYPE)
+        typedef mpl::false_ is_preevaluable;
+#else
+        typedef
+            preevaluate_impl<
+                typename remove_pointer<typename identity<FRef>::type>::type
+            >
+        impl;
 
-    //cschmidt: The non-decltype result_of does not like ref-qualified
+        typedef impl gen;
+        typedef typename impl::type type;
+        typedef typename impl::is_preevaluable is_preevaluable;
+#endif
+    };
+
+    //cschmidt: Result_of does not like ref-qualified
     //'class type' functions
     template<typename FRef>
     struct get_func_base
     {
         typedef typename
-            remove_pointer<
-                typename detail::identity<FRef>::type
-            >::type
-        f;
-
-        typedef typename
             mpl::if_<
-                mpl::or_<
-                   typename is_function<f>::type
-                 , typename is_member_function_pointer<f>::type
-                >
+                typename is_po_callable<FRef>::type
               , FRef
-              , f
+              , typename is_po_callable<FRef>::f
             >::type
         type;
     };

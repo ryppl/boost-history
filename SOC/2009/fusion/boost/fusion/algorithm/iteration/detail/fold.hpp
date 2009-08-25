@@ -22,9 +22,9 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/bool.hpp>
-#include <boost/mpl/apply.hpp>
-#include <boost/mpl/identity.hpp>
-#include <boost/type_traits/add_const.hpp>
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/type_traits/add_const.hpp>
+#endif
 
 namespace boost { namespace fusion { namespace detail
 {
@@ -124,105 +124,127 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename It, typename StateRef, typename FRef>
+    template <typename It, typename StateRef, typename F>
     struct fold_apply
     {
-        typedef typename result_of::deref<It>::type deref_type;
-
+        typedef typename
+            boost::result_of<
+                F(
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        typedef typename
-            boost::result_of<
-                typename get_func_base<FRef>::type(deref_type, StateRef)
-            >::type
-        type;
-#else
-        typedef typename
-            boost::result_of<
-                typename get_func_base<FRef>::type(
-                typename mpl::if_<
-                    is_lrref<deref_type>
-                  , deref_type
-                  , deref_type&&
+                typename add_lref<
+                    typename add_const<
+                        typename result_of::deref<It>::type
+                    >::type
                 >::type
-              , StateRef
-                )
+#else
+                typename result_of::deref<It>::type&&
+#endif
+              , StateRef)
             >::type
         type;
-#endif
     };
 
-    template <typename It, typename State, typename FRef>
-    struct fold_apply_r_else_clref
-#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename It, typename State, typename F>
+    struct fold_apply_rvalue_state
       : fold_apply<
             It
+#ifdef BOOST_NO_RVALUE_REFERENCES
           , typename add_lref<typename add_const<State>::type>::type
-          , FRef
-        >
 #else
-      : fold_apply<It,State&&,FRef>
+          , State&&
 #endif
+          , F
+        >
     {};
 
-    template<typename It0, typename StateRef, typename FRef, int N>
+    template<typename It0, typename StateRef, typename F, int N>
     struct result_of_unrolled_fold
     {
-        typedef typename fold_apply<It0, StateRef, FRef>::type rest1;
+        typedef typename fold_apply_rvalue_state<It0, StateRef, F>::type rest1;
         typedef typename result_of::next<It0>::type it1;
-        typedef typename fold_apply_r_else_clref<it1, rest1, FRef>::type rest2;
+        typedef typename fold_apply_rvalue_state<it1, rest1, F>::type rest2;
         typedef typename result_of::next<it1>::type it2;
-        typedef typename fold_apply_r_else_clref<it2, rest2, FRef>::type rest3;
+        typedef typename fold_apply_rvalue_state<it2, rest2, F>::type rest3;
         typedef typename result_of::next<it2>::type it3;
-        typedef typename fold_apply_r_else_clref<it3, rest3, FRef>::type rest4;
-        typedef typename result_of::next<it3>::type it4;
 
         typedef typename
-            mpl::eval_if_c<
-                !(N-4)
-              , mpl::identity<rest4>
-              , result_of_unrolled_fold<
-                    it4
-                  , BOOST_FUSION_R_ELSE_CLREF(rest4)
-                  , FRef
-                  , N-4
-                >
+            result_of_unrolled_fold<
+                typename result_of::next<it3>::type
+              , typename fold_apply_rvalue_state<it3, rest3, F>::type
+              , F
+              , N-4
             >::type
         type;
     };
 
-    template<typename It0, typename StateRef, typename FRef>
-    struct result_of_unrolled_fold<It0, StateRef, FRef, 3>
+    template<typename It0, typename StateRef, typename F>
+    struct result_of_unrolled_fold<It0, StateRef, F, 3>
     {
-        typedef typename fold_apply<It0, StateRef, FRef>::type rest1;
-        typedef typename result_of::next<It0>::type it1;
-        typedef typename fold_apply_r_else_clref<it1, rest1, FRef>::type rest2;
-        typedef typename result_of::next<it1>::type it2;
-
-        typedef typename fold_apply_r_else_clref<it2, rest2, FRef>::type type;
-    };
-
-    template<typename It0, typename StateRef, typename FRef>
-    struct result_of_unrolled_fold<It0, StateRef, FRef, 2>
-    {
-        typedef typename fold_apply<It0, StateRef, FRef>::type rest;
+        typedef typename fold_apply_rvalue_state<It0, StateRef, F>::type rest1;
         typedef typename result_of::next<It0>::type it1;
 
-        typedef typename fold_apply_r_else_clref<it1, rest, FRef>::type type;
+        typedef typename
+            fold_apply_rvalue_state<
+            typename result_of::next<it1>::type
+              , typename fold_apply_rvalue_state<it1, rest1, F>::type
+              , F
+            >::type
+        type;
     };
 
-    template<typename It0, typename StateRef, typename FRef>
-    struct result_of_unrolled_fold<It0, StateRef, FRef, 1>
-      : fold_apply_r_else_clref<It0, StateRef, FRef>
+    template<typename It0, typename StateRef, typename F>
+    struct result_of_unrolled_fold<It0, StateRef, F, 2>
+    {
+        typedef typename
+            fold_apply_rvalue_state<
+                typename result_of::next<It0>::type
+              , typename fold_apply_rvalue_state<It0, StateRef, F>::type
+              , F
+            >::type
+        type;
+    };
+
+    template<typename It0, typename StateRef, typename F>
+    struct result_of_unrolled_fold<It0, StateRef, F, 1>
+      : fold_apply_rvalue_state<It0, StateRef, F>
     {};
+
+    template<typename It0, typename StateRef, typename F>
+    struct result_of_unrolled_fold<It0, StateRef, F, 0>
+    {
+        typedef StateRef type;
+    };
+
+    template<typename It0, typename StateRef, typename FRef, int SeqSize>
+    struct result_of_unrolled_fold_first
+    {
+        typedef typename get_func_base<FRef>::type f;
+
+        typedef typename
+            result_of_unrolled_fold<
+                typename result_of::next<It0>::type
+              , typename fold_apply<It0, StateRef, f>::type
+              , f
+              , SeqSize-1
+            >::type
+        type;
+    };
 
     template<int SeqSize, typename It0, typename StateRef, typename FRef>
     struct fold_impl
     {
+        typedef preevaluate<FRef> preevaluater;
+
         typedef typename
             mpl::eval_if<
-                typename is_preevaluable<FRef>::type
-              , preevaluate<FRef>
-              , result_of_unrolled_fold<It0, StateRef, FRef, SeqSize>
+                typename preevaluater::is_preevaluable
+              , preevaluater
+              , result_of_unrolled_fold_first<
+                    It0
+                  , StateRef
+                  , FRef
+                  , SeqSize
+                >
             >::type
         type;
 

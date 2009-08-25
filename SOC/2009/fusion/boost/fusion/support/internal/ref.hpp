@@ -182,7 +182,7 @@ namespace boost { namespace fusion { namespace detail
                 mpl::eval_if<
                     is_rref<TestType>
                   , mpl::identity<cv_type&&>
-                  , detail::add_lref<cv_type>
+                  , add_lref<cv_type>
                 >,
                 mpl::identity<cv_type>
             >::type

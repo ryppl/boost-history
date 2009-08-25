@@ -39,8 +39,8 @@ namespace boost { namespace fusion { namespace detail
             f(fusion::deref(it3));
 
             for_each_unrolled<N-4>::call(
-                    fusion::next(it3)
-                  , BOOST_FUSION_FORWARD(F,f));
+                    fusion::next(it3),
+                    BOOST_FUSION_FORWARD(F,f));
         }
     };
 
@@ -52,12 +52,10 @@ namespace boost { namespace fusion { namespace detail
         {
             typedef typename result_of::next<It0 const&>::type It1;
             It1 it1(fusion::next(it0));
-            typedef typename result_of::next<It1&>::type It2;
-            It2 it2(fusion::next(it1));
 
             f(fusion::deref(it0));
             f(fusion::deref(it1));
-            f(fusion::deref(it2));
+            f(fusion::deref(fusion::next(it1)));
         }
     };
 
@@ -67,11 +65,8 @@ namespace boost { namespace fusion { namespace detail
         template<typename It0, typename F>
         static void call(It0 const& it0, BOOST_FUSION_R_ELSE_CLREF(F) f)
         {
-            typedef typename result_of::next<It0 const&>::type It1;
-            It1 it1(fusion::next(it0));
-
             f(fusion::deref(it0));
-            f(fusion::deref(it1));
+            f(fusion::deref(fusion::next(it0)));
         }
     };
 

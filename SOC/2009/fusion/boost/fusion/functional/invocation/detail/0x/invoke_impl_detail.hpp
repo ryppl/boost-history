@@ -70,9 +70,13 @@ namespace boost { namespace fusion { namespace detail
         >::type
     invoke_impl_call(F&& f, ClassInstance&& instance,Args&&... args)
     {
-        return (that_ptr<typename detail::preevaluate<F>::class_type>::
+        typedef typename
+            detail::preevaluate<F>::gen::class_type
+        class_type;
+
+        return (that_ptr<class_type>::
                     get(std::forward<ClassInstance>(instance))->*f)(
-                            std::forward<Args>(args)...);
+                        std::forward<Args>(args)...);
     }
 
     namespace bidirectional_traversal
@@ -106,10 +110,12 @@ namespace boost { namespace fusion { namespace detail
         template<typename FRef,typename SeqRef>
         struct invoke_impl
         {
+            typedef detail::preevaluate<FRef> preevaluater;
+
             typedef typename
                 mpl::eval_if<
-                    typename detail::is_preevaluable<FRef>::type
-                  , detail::preevaluate<FRef>
+                    typename preevaluater::is_preevaluable
+                  , preevaluater
                   , invoke_impl_result<
                         FRef
                       , SeqRef
@@ -185,10 +191,12 @@ namespace boost { namespace fusion { namespace detail
         template<typename FRef,typename SeqRef>
         struct invoke_impl
         {
+            typedef detail::preevaluate<FRef> preevaluater;
+
             typedef typename
                 mpl::eval_if<
-                    typename detail::is_preevaluable<FRef>::type
-                  , detail::preevaluate<FRef>
+                    typename preevaluater::is_preevaluable
+                  , preevaluater
                   , invoke_impl_result<
                         FRef
                       , SeqRef

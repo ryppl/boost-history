@@ -44,7 +44,7 @@ namespace boost { namespace fusion
             \
             typedef typename\
                 mpl::eval_if<\
-                    is_po_callable\
+                    typename is_po_callable::type\
                   , mpl::if_<\
                         typename is_po_callable::is_pointer\
                       , T\
