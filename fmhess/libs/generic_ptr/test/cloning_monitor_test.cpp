@@ -13,6 +13,8 @@
 #include <boost/generic_ptr/cloning.hpp>
 #include <boost/generic_ptr/monitor.hpp>
 
+namespace bgp = boost::generic_ptr;
+//
 class event_counting_mutex
 {
 public:
@@ -42,8 +44,8 @@ public:
 
 void clone_test()
 {
-  typedef boost::generic_ptr::monitor<int*, event_counting_mutex> monitor_type;
-  typedef boost::generic_ptr::cloning<monitor_type> cloning_monitor_type;
+  typedef bgp::monitor<int*, bgp::shared<event_counting_mutex*> > monitor_type;
+  typedef bgp::cloning<monitor_type> cloning_monitor_type;
   cloning_monitor_type p0(new int());
   BOOST_TEST(p0.get().get_mutex_ref().lock_count == 0);
   BOOST_TEST(p0.get().get_mutex_ref().unlock_count == 0);

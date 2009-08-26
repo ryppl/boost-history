@@ -216,6 +216,29 @@ int main()
     conversion_to_void_test(p);
     overload_resolution_test(p);
   }
+  { // monitor with plain old mutex pointer
+    X x;
+    boost::mutex mut;
+    bgp::monitor<X*, boost::mutex*> p(&x, &mut);
+    member_access_test(p);
+    // dereference_test(p); // monitors don't support dereference
+    rebind_test(p);
+    cast_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
+    overload_resolution_test(p);
+  }
+  { // monitor with boost::shared_ptr mutex pointer
+    X x;
+    bgp::monitor<X*, boost::shared_ptr<boost::mutex> > p(&x);
+    member_access_test(p);
+    // dereference_test(p); // monitors don't support dereference
+    rebind_test(p);
+    cast_test(p);
+    conversion_to_base_test(p);
+    conversion_to_void_test(p);
+    overload_resolution_test(p);
+  }
   {
     bgp::shared<X*> p(new X());
     member_access_test(p);
