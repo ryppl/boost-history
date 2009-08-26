@@ -72,9 +72,9 @@ inserted with the same property value.&nbsp; To store the result of this
 operation a fairly complex container is required.&nbsp; Resulting geometries are 
 associated with unique subsets of property values of the input geometry.&nbsp; 
 Two suitable containers for storing the result of a property merge operation 
-are:<p><font face="Courier New">std::map&lt;std::set&lt;property_type&gt;, polygon_set_data&lt;coordiante_type&gt; 
+are:<p><font face="Courier New">std::map&lt;std::set&lt;property_type&gt;, polygon_set_data&lt;coordinate_type&gt; 
 &gt;<br>
-std::map&lt;std::vector&lt;property_type&gt;, polygon_set_data&lt;coordiante_type&gt; &gt;</font><p>
+std::map&lt;std::vector&lt;property_type&gt;, polygon_set_data&lt;coordinate_type&gt; &gt;</font><p>
 Example code <a href="gtl_property_merge_usage.htm">property_merge_usage.cpp</a> 
 		demonstrates using the n-layer map-overlay algorithm on polygon data.<h2>Member Functions</h2>
 <table border="1" width="100%" id="table1">
@@ -109,7 +109,7 @@ const property_type&amp; property)</font></td>
 		<td width="586">
 <font face="Courier New">
 template &lt;typename result_type&gt;<br>
-void <b>merge</b>(result_tyep&amp; result)</font></td>
+void <b>merge</b>(result_type&amp; result)</font></td>
 		<td>Accepts a container object that conforms to the expectations defined 
 		above.&nbsp; Performs property merge and populates the container 
 		object.</td>
