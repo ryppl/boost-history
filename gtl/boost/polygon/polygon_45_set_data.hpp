@@ -148,8 +148,8 @@ namespace boost { namespace polygon{
       get_dispatch(output, typename geometry_concept<typename output_container::value_type>::type());
     }
 
-    inline void has_error_data() const { return !error_data_.empty(); }
-    inline unsigned int error_count() const { return error_data_.size() / 4; }
+    inline bool has_error_data() const { return !error_data_.empty(); }
+    inline std::size_t error_count() const { return error_data_.size() / 4; }
     inline void get_error_data(polygon_45_set_data& p) const {
       p.data_.insert(p.data_.end(), error_data_.begin(), error_data_.end());
     }

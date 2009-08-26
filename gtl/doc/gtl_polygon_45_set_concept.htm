@@ -623,6 +623,29 @@ factor)</font>&nbsp;</td>
 		<td width="586"><font face="Courier New">polygon_45_set_data&amp; <b>self_intersect</b>()</font></td>
 		<td>Retain only overlapping regions of geometry within a polygon set.</td>
 	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">bool <b>has_error_data</b>() 
+		const </font></td>
+		<td>Returns true if non-integer intersections resulted in small 
+		artifacts in the output of a boolean.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">std::size_t <b>error_count</b>() 
+		const</font></td>
+		<td>Returns the number of artifacts that may potentially be present in 
+		the output due to non-integer intersections.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">void <b>get_error_data</b>(polygon_45_set_data&amp; 
+		p) const</font></td>
+		<td>Populates the input polygon set with 1x1 unit squares that bound the 
+		error that may be present in the output due to non-integer 
+		intersections.</td>
+	</tr>
+	<tr>
+		<td width="586"><font face="Courier New">polygon_45_set_data&amp; <b>self_intersect</b>()</font></td>
+		<td>Retain only overlapping regions of geometry within a polygon set.</td>
+	</tr>
 	</table>
 	<tr>
 <td style="background-color: rgb(238, 238, 238);" nowrap="1" valign="top">
