@@ -24,17 +24,22 @@
 namespace std
 {
   template<typename T> class shared_ptr;
+  template<typename T> class weak_ptr;
   template<typename T, typename D> class unique_ptr;
 }
 
 namespace boost
 {
   template<typename T> class shared_ptr;
+  template<typename T> class weak_ptr;
   template<typename T> class scoped_ptr;
   template<typename T> class intrusive_ptr;
 
   namespace generic_ptr
   {
+    template<typename GenericPointer> class shared;
+    template<typename GenericPointer> class weak;
+
     namespace detail
     {
       BOOST_MPL_HAS_XXX_TRAIT_DEF(value_type) // defines has_value_type metafunction
@@ -194,6 +199,26 @@ namespace boost
     {
       typedef std::unique_ptr<ValueType, D> other;
     };
+
+    template<typename GenericPointer>
+    struct shared_pointer_traits
+    {};
+    template<typename GenericPointer>
+    struct shared_pointer_traits<shared<GenericPointer> >: public pointer_traits<shared<GenericPointer> >
+    {
+      typedef weak<typename pointer_traits<shared<GenericPointer> >::pointer> weak_type;
+    };
+    template<typename T>
+    struct shared_pointer_traits<boost::shared_ptr<T> >: public pointer_traits<boost::shared_ptr<T> >
+    {
+      typedef boost::weak_ptr<T> weak_type;
+    };
+    template<typename T>
+    struct shared_pointer_traits<std::shared_ptr<T> >: public pointer_traits<std::shared_ptr<T> >
+    {
+      typedef std::weak_ptr<T> weak_type;
+    };
+    //FIXME: add weak_ptr_traits with shared_type typedef?
   } // namespace generic_ptr
 } // namespace boost
 
