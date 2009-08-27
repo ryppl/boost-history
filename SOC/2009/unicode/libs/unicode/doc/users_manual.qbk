@@ -316,7 +316,7 @@ whatever the consuming direction.
 Furthermore, the output shall always be ordered left-to-right, even when
 applying the pipe right-to-left.
 
-Here is an example of a pipe that converts two adjacent elements into the
+Here is an example of a pipe that converts two adjacent numbers into the
 two numbers reversed, in a range of integers that must have an
 even number of elements; indeed, for the two operations to be symmetric
 here, there is not really another way.
