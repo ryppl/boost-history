@@ -18,13 +18,15 @@
 std::ostream& html_table_stream_format(std::ostream& ostr)
 {
     using namespace boost::explore;
+    ostr << level(0);
     ostr << start("<table>\n")
          << separator("")
          << boost::explore::end("</table>\n");
 
-    ostr << start("<tr><td>", 1)
-         << separator("</td><td>", 1)
-         << boost::explore::end("</td></tr>\n", 1);
+    ostr << level(1);
+    ostr << start("<tr><td>")
+         << separator("</td><td>")
+         << boost::explore::end("</td></tr>\n");
 
     return ostr;
 }

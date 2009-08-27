@@ -43,7 +43,7 @@ namespace boost { namespace explore
         typedef std::vector<std::size_t, std::allocator<std::size_t> > size_cont_typ;
 
         container_stream_state()
-            : m_depth(0)
+            : m_depth(0), m_level(0)
         {
             init<Elem>();
         }
@@ -64,24 +64,26 @@ namespace boost { namespace explore
         }
 
         // read
-        const str_typ& separator(std::size_t index = 0) const { return at(m_separator, index); }
-        const str_typ& start(std::size_t index = 0) const { return at(m_start, index); }
-        const str_typ& end(std::size_t index = 0) const { return at(m_end, index); }
-        const str_typ& assoc_separator(std::size_t index = 0) const { return at(m_assoc_separator, index); }
-        const str_typ& assoc_start(std::size_t index = 0) const { return at(m_assoc_start, index); }
-        const str_typ& assoc_end(std::size_t index = 0) const { return at(m_assoc_end, index); }
-        std::size_t rows(std::size_t index = 0) const { return at(m_rows, index); }
-        std::size_t itemwidth(std::size_t index = 0) const { return at(m_itemwidth, index); }
+        const str_typ& separator() const { return at(m_separator); }
+        const str_typ& start(std::size_t index = 0) const { return at(m_start); }
+        const str_typ& end() const { return at(m_end); }
+        const str_typ& assoc_separator() const { return at(m_assoc_separator); }
+        const str_typ& assoc_start() const { return at(m_assoc_start); }
+        const str_typ& assoc_end() const { return at(m_assoc_end); }
+        std::size_t rows() const { return at(m_rows); }
+        std::size_t itemwidth() const { return at(m_itemwidth); }
 
         // write
-        void set_separator(const str_typ& str, std::size_t index = 0) { at(m_separator, index) = str; }
-        void set_start(const str_typ& str, std::size_t index = 0) { at(m_start, index) = str; }
-        void set_end(const str_typ& str, std::size_t index = 0) { at(m_end, index) = str; }
-        void set_assoc_separator(const str_typ& str, std::size_t index = 0) { at(m_assoc_separator, index) = str; }
-        void set_assoc_start(const str_typ& str, std::size_t index = 0) { at(m_assoc_start, index) = str; }
-        void set_assoc_end(const str_typ& str, std::size_t index = 0) { at(m_assoc_end, index) = str; }
-        void set_rows(std::size_t rows, std::size_t index = 0) { at(m_rows, index) = rows; }
-        void set_itemwidth(std::size_t iw, std::size_t index = 0) { at(m_itemwidth, index) = iw; }
+        void set_separator(const str_typ& str) { at(m_separator) = str; }
+        void set_start(const str_typ& str) { at(m_start) = str; }
+        void set_end(const str_typ& str) { at(m_end) = str; }
+        void set_assoc_separator(const str_typ& str) { at(m_assoc_separator) = str; }
+        void set_assoc_start(const str_typ& str) { at(m_assoc_start) = str; }
+        void set_assoc_end(const str_typ& str) { at(m_assoc_end) = str; }
+        void set_rows(std::size_t rows) { at(m_rows) = rows; }
+        void set_itemwidth(std::size_t iw) { at(m_itemwidth) = iw; }
+
+        void set_level(size_t l) { m_level = l; }
 
         std::size_t depth() const
         {
@@ -99,6 +101,7 @@ namespace boost { namespace explore
         str_cont_typ m_assoc_start;
         str_cont_typ m_assoc_end;
         std::size_t m_depth;
+        std::size_t m_level;
 
         size_cont_typ m_rows;
         size_cont_typ m_itemwidth;
@@ -112,22 +115,22 @@ namespace boost { namespace explore
 
         // read
         template<typename T>
-        const T& at(const std::vector<T>& c, std::size_t index) const
+        const T& at(const std::vector<T>& c) const
         {
             // return the highest item if it does not exist at the given index
-            return c[std::min(index, c.size() - 1)];
+            return c[std::min(m_level, c.size() - 1)];
         }
 
         // write
         template<typename T>
-        T& at(std::vector<T>& c, std::size_t index)
+        T& at(std::vector<T>& c)
         {
-            if( c.size() <= index )
+            if( c.size() <= m_level )
             {
-                c.resize(index+1);
+                c.resize(m_level+1);
             }
 
-            return c[index];
+            return c[m_level];
         }
     };
 }}

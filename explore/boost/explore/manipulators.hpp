@@ -23,7 +23,7 @@ namespace boost { namespace explore
         struct depth_guard
         {
             depth_guard(container_stream_state<Elem>* state)
-            : m_state(state)
+            : m_state(state), m_prev_level(state->m_level)
             {
                 ++m_state->m_depth;
             }
@@ -31,10 +31,12 @@ namespace boost { namespace explore
             ~depth_guard()
             {
                 --m_state->m_depth;
+                m_state->m_level = m_prev_level;
             }
             
         private:
             container_stream_state<Elem>* m_state;
+            size_t m_prev_level;
         };
         
         // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
@@ -42,131 +44,141 @@ namespace boost { namespace explore
         template<typename T>
         struct manipfunc
         {
-            manipfunc(void (*fun)(std::ios_base&, T, std::size_t), T val, std::size_t d)
-            : pfun(fun), arg(val), depth(d)
+            manipfunc(void (*fun)(std::ios_base&, T), T val)
+            : pfun(fun), arg(val)
             {
             }
             
-            void (*pfun)(std::ios_base&, T, std::size_t);
+            void (*pfun)(std::ios_base&, T);
             T arg;
-            std::size_t depth;
         };
         
         // stream manipfunc
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<T>& manip)
         {
-            (*manip.pfun)(ostr, manip.arg, manip.depth);
+            (*manip.pfun)(ostr, manip.arg);
             return ostr;
         }
         
         // function ptr for separator manipulator
         template<typename Elem>
-        void separatorFn(std::ios_base& ostr, const Elem* sep, std::size_t depth)
+        void separatorFn(std::ios_base& ostr, const Elem* sep)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_separator(sep, depth);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_separator(sep);
         }
         
         // function ptr for start manipulator
         template<typename Elem>
-        void startFn(std::ios_base& ostr, const Elem* start, std::size_t depth)
+        void startFn(std::ios_base& ostr, const Elem* start)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_start(start, depth);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_start(start);
         }
         
         // function ptr for end manipulator
         template<typename Elem>
-        void endFn(std::ios_base& ostr, const Elem* end, std::size_t depth)
+        void endFn(std::ios_base& ostr, const Elem* end)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_end(end, depth);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_end(end);
         }
         
         // function ptr for associative separator manipulator
         template<typename Elem>
-        void assoc_separatorFn(std::ios_base& ostr, const Elem* sep, std::size_t depth)
+        void assoc_separatorFn(std::ios_base& ostr, const Elem* sep)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_separator(sep, depth);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_separator(sep);
         }
         
         // function ptr for associative start manipulator
         template<typename Elem>
-        void assoc_startFn(std::ios_base& ostr, const Elem* start, std::size_t depth)
+        void assoc_startFn(std::ios_base& ostr, const Elem* start)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_start(start, depth);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_start(start);
         }
         
         // function ptr for associative end manipulator
         template<typename Elem>
-        void assoc_endFn(std::ios_base& ostr, const Elem* end, std::size_t depth)
+        void assoc_endFn(std::ios_base& ostr, const Elem* end)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_end(end, depth);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_end(end);
+        }
+
+        void levelFn(std::ios_base& ostr, std::size_t l)
+        {
+            explore::get_stream_state<container_stream_state<char> >(ostr)->set_level(l);
         }
         
         // function ptr object for setrows
         //template<typename Elem>
-        void setrowsFn(std::ios_base& ostr, std::size_t sz, std::size_t depth)
+        void setrowsFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_stream_state<char> >(ostr)->set_rows(sz, depth);
+            explore::get_stream_state<container_stream_state<char> >(ostr)->set_rows(sz);
         }
         
         // function ptr object for setrows
         //template<typename Elem>
-        void setitemwidthFn(std::ios_base& ostr, std::size_t sz, std::size_t depth)
+        void setitemwidthFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_stream_state<char> >(ostr)->set_itemwidth(sz, depth);
+            explore::get_stream_state<container_stream_state<char> >(ostr)->set_itemwidth(sz);
         }
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> separator(const Elem* sep, std::size_t depth = 0)
+    detail::manipfunc<const Elem*> separator(const Elem* sep)
     {
-        return detail::manipfunc<const Elem*>(&detail::separatorFn, sep, depth);
+        return detail::manipfunc<const Elem*>(&detail::separatorFn, sep);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> start(const Elem* Start, std::size_t depth = 0)
+    detail::manipfunc<const Elem*> start(const Elem* s)
     {
-        return detail::manipfunc<const Elem*>(&detail::startFn, Start, depth);
+        return detail::manipfunc<const Elem*>(&detail::startFn, s);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> end(const Elem* end, std::size_t depth = 0)
+    detail::manipfunc<const Elem*> end(const Elem* e)
     {
-        return detail::manipfunc<const Elem*>(&detail::endFn, end, depth);
+        return detail::manipfunc<const Elem*>(&detail::endFn, e);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> assoc_separator(const Elem* sep, std::size_t depth = 0)
+    detail::manipfunc<const Elem*> assoc_separator(const Elem* sep)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_separatorFn, sep, depth);
+        return detail::manipfunc<const Elem*>(&detail::assoc_separatorFn, sep);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> assoc_start(const Elem* start, std::size_t depth = 0)
+    detail::manipfunc<const Elem*> assoc_start(const Elem* start)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_startFn, start, depth);
+        return detail::manipfunc<const Elem*>(&detail::assoc_startFn, start);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> assoc_end(const Elem* end, std::size_t depth = 0)
+    detail::manipfunc<const Elem*> assoc_end(const Elem* end)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end, depth);
+        return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end);
     }
-    
-    detail::manipfunc<std::size_t> setrows(std::size_t sz, std::size_t depth = 0)
+
+    // manipulator
+    detail::manipfunc<std::size_t> level(std::size_t l)
     {
-        return detail::manipfunc<std::size_t>(detail::setrowsFn, sz, depth);
+        return detail::manipfunc<std::size_t>(&detail::levelFn, l);
+    }
+
+    detail::manipfunc<std::size_t> setrows(std::size_t sz)
+    {
+        return detail::manipfunc<std::size_t>(detail::setrowsFn, sz);
     }
      
-    detail::manipfunc<std::size_t> setitemwidth(std::size_t sz, std::size_t depth = 0)
+    detail::manipfunc<std::size_t> setitemwidth(std::size_t sz)
     {
-        return detail::manipfunc<std::size_t>(detail::setitemwidthFn, sz, depth);
+        return detail::manipfunc<std::size_t>(detail::setitemwidthFn, sz);
     }
      
     // manipulator
@@ -193,30 +205,29 @@ namespace boost { namespace explore
         template<typename T>
         struct begin_end_manipulator
         {
-            begin_end_manipulator(T& startVal, T& endVal, std::size_t d)
-            :startVal_(startVal), endVal_(endVal), depth_(d)
+            begin_end_manipulator(T& startVal, T& endVal)
+            :startVal_(startVal), endVal_(endVal)
             {
             }
             
             T startVal_;
             T endVal_;
-            std::size_t depth_;
         };
         
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<T>& manip)
         {
-            startFn(ostr, manip.startVal_, manip.depth_);
-            endFn(ostr, manip.endVal_, manip.depth_);
+            startFn(ostr, manip.startVal_);
+            endFn(ostr, manip.endVal_);
             return ostr;
         }
     }
     
     template<typename Elem>
-    detail::begin_end_manipulator<const Elem*> begin_end(const Elem* start, const Elem* end, std::size_t depth = 0)
+    detail::begin_end_manipulator<const Elem*> begin_end(const Elem* start, const Elem* end)
     {
         // todo: just use delimiters function and fetch seperator?
-        return detail::begin_end_manipulator<const Elem*>(start, end, depth);
+        return detail::begin_end_manipulator<const Elem*>(start, end);
     }
     
     
@@ -226,31 +237,30 @@ namespace boost { namespace explore
         template<typename T>
         struct delimiters_manipulator
         {
-            delimiters_manipulator(T& startVal, T& seperatorVal, T& endVal, std::size_t d)
-            :startVal_(startVal), seperatorVal_(seperatorVal), endVal_(endVal), depth_(d)
+            delimiters_manipulator(T& startVal, T& seperatorVal, T& endVal)
+            :startVal_(startVal), seperatorVal_(seperatorVal), endVal_(endVal)
             {
             }
             
             T startVal_;
             T seperatorVal_;
             T endVal_;
-            std::size_t depth_;
         };
         
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<T>& manip)
         {
-            startFn(ostr, manip.startVal_, manip.depth_);
-            separatorFn(ostr, manip.seperatorVal_, manip.depth_);
-            endFn(ostr, manip.endVal_, manip.depth_);
+            startFn(ostr, manip.startVal_);
+            separatorFn(ostr, manip.seperatorVal_);
+            endFn(ostr, manip.endVal_);
             return ostr;
         }
     }
     
     template<typename Elem>
-    detail::delimiters_manipulator<const Elem*> delimiters(const Elem* start, const Elem* seperator, const Elem* end, std::size_t depth = 0)
+    detail::delimiters_manipulator<const Elem*> delimiters(const Elem* start, const Elem* seperator, const Elem* end)
     {
-        return detail::delimiters_manipulator<const Elem*>(start, seperator, end, depth);
+        return detail::delimiters_manipulator<const Elem*>(start, seperator, end);
     }
 }}
 

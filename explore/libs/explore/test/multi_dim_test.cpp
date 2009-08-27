@@ -18,11 +18,11 @@ std::ostream& format_2d(std::ostream& ostr)
 {
     using namespace boost::explore;
 
-    // level 0
+    ostr << level(0);
     ostr << start("") << boost::explore::end("") << separator("\n");
 
-    // level 1
-    ostr << start("|", 1) << boost::explore::end("|", 1) << separator(" ", 1);
+    ostr << level(1);
+    ostr << start("|") << boost::explore::end("|") << separator(" ");
 
     return ostr;
 }
@@ -53,14 +53,14 @@ std::ostream& format_3d(std::ostream& ostr)
 {
     using namespace boost::explore;
 
-    // level 0
+    ostr << level(0);
     ostr << start("") << boost::explore::end("") << separator("\n\n");
 
-    // level 1
-    ostr << start("", 1) << boost::explore::end("", 1) << separator("\n", 1);
+    ostr << level(1);
+    ostr << start("") << boost::explore::end("") << separator("\n");
 
-    // level 2
-    ostr << start("|", 2) << boost::explore::end("|", 2) << separator(" ", 2);
+    ostr << level(2);
+    ostr << start("|") << boost::explore::end("|") << separator(" ");
 
     return ostr;
 }

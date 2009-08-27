@@ -25,12 +25,12 @@ namespace boost { namespace explore
         // grab the extra data embedded in the stream object.
         container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
         detail::depth_guard<Elem> guard(state);
-        std::size_t depth = state->depth();
+        state->set_level(state->depth());
 
         // starting delimiter
-        ostr << state->start(depth);
+        ostr << state->start();
 
-        std::size_t rows = state->rows(depth);
+        std::size_t rows = state->rows();
 
         std::size_t cur_row = 0;
         while( first != last )
@@ -41,7 +41,7 @@ namespace boost { namespace explore
             if( ++first != last )
             {
                 // separation delimiter
-                ostr << state->separator(depth);
+                ostr << state->separator();
 
                 if( rows && ++cur_row == rows )
                 {
@@ -52,7 +52,7 @@ namespace boost { namespace explore
         }
 
         // ending delimiter
-        return ostr << state->end(depth);
+        return ostr << state->end();
     }
 
     template<typename Elem, typename Tr, typename FwdIter>
