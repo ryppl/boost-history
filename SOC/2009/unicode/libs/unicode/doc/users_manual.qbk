@@ -58,7 +58,65 @@ icons precede some text to indicate:
 
 [endsect]
 
+[section Motivation]
+
+Most software applications need, at a moment or another, to deal with
+text in a natural language, to analyze it or perform certain operations
+on it.
+
+Solutions to represent and deal with text in languages based on a latin
+alphabet appeared very early in the history of software, but not only
+did they not fulfill all linguistics needs, they only worked for a subset
+of the languages they were supposed to deal with.
+Solutions to deal with text in other languages then emerged after that
+over the years, but were still restricted to a specific language.
+
+Since the late 80's, effort has been made to create an universal solution to
+represent and deal with text in any language, in particular due to
+internationalization considerations.
+
+The Unicode standard was thus born, which not only provides means to
+encode text from any natural language ever created into a digital form,
+but also categorizes characters, allows to identify graphemes, words,
+sentences and lines, and allows to perform case conversion and to sort
+text, either in a language-agnostic or language-tailored manner.
+
+This library aims at providing the mechanisms to deal with text in a
+natural language, in a language- and platform-agnostic way, using the
+foundations of the Unicode standard.
+
+In particular, ability to have a proper abstraction of what a character
+is is deemed important.
+
+[endsect] [/Motivation]
+
 [section Introduction to Unicode]
+
+[section Notion of character]
+
+[variablelist Language terms:
+    [[Character] [a unit of information that roughly corresponds to a grapheme, grapheme-like unit, or symbol, such as in an alphabet or syllabary in the written form of a natural language.]]
+    [[Grapheme] [the fundamental unit in written language.]]
+    [[Glyph] [an element of writing in a natural language, visual variants of the abstract unit known as grapheme.]]
+]
+
+As can be seen, what a character is is loosely defined. There are various
+levels at which to approximate it within Unicode, which are further
+explained below.
+
+[variablelist Unicode terms:
+    [[Code unit] [the unit in terms of which the string of text is encoded in, in one of the Unicode transformation formats.]]
+    [[Code point] [the unit, made of potentially several code units, in which Unicode defines most of it non-encoding-specific operations.]]
+    [[Combining character sequence] [a sequence of code points that is the unit for the Unicode composition and decomposition processes]]
+    [[Grapheme cluster] [a cluster of code points that form a grapheme.]]
+]
+
+The general idea is that "character" in Unicode usually refers to code points,
+and higher levels of abstractions are usually referred to as "abstract
+characters", or directly with their actual name.
+
+[endsect] [/Definitions]
+
 
 [section Character set]
 The Unicode character set is a mapping that associates *code points*, which are integers, to characters for any writing system or language.
@@ -102,26 +160,26 @@ This encoding is popular for data storage and interchange, but can also be usefu
 
 [endsect]
 
-[section Combining character characters]
+[section Combining character sequences]
 
 A *non-combining code point* may be followed by an arbitrary number of *combining code points* to form a single *combining character sequence*, which is really a composite character.
 
 Certain characters are only available as a combination of multiple code points, while some, the ones that are expected to be the most used,
 are also available as a single precomposed code point. The order of the combined code points may also vary, but all code points combinations
-leading to the same character are still canonically equivalent.
+leading to the same abstract character are still canonically equivalent.
 
 While a combining character sequence can be arbitrarily big, the Unicode standard also introduces the concept of a *stream-safe string*, where
-a it is at most 31 code points long, which is largely sufficient for any real use.
+a combining character sequence is at most 31 code points long, which is largely above what is sufficient for any linguistic use.
 
 [endsect]
 
 [section Grapheme clusters]
 
-Another yet higher-level abstraction of character is that of a *grapheme cluster*, which really corresponds to what a human would call a character.
+Another yet higher-level abstraction of character is that of a *grapheme cluster*, i.e. a cluster of *code points* that constitutes a *grapheme*.
 All *combining character sequences* are graphemes, but there are other sequences of *code points* that are as well; for example =\r\n= is one.
 
-For certain classes of applications, such as word processors, it is important to operate at the *grapheme* level rather than at the *code point* or
-*combining character sequence* one.
+For certain classes of applications, such as word processors, it can be important to operate at the *grapheme* level rather than at the *code point* or
+*combining character sequence* one, as this is what the document is composed in terms of.
 
 [endsect]
 
@@ -198,6 +256,123 @@ to prevent duplication of data.
 
 [endsect]
 
+[section The concepts behind this library]
+
+Two concepts are of utmost importance within this library, the [conceptref Consumer]
+concept, which is used for segmentation of text, and, more importantly,
+the [conceptref Pipe] concept, which is used for conversion, including
+transcoding and normalization.
+
+[heading Consumer]
+A model of the [conceptref Consumer] concept is a class that takes an
+input range, specified as two iterators, and consumes it left-to-right
+or right-to-left, that is to say it returns an iterator with the new
+begin in the case of left-to-right consuming, and the new end in the case
+of right-to-left consuming.
+
+Semantically, a right-to-left consuming done after a left-to-right consuming
+should restore the original position. Indeed, both primitives need to
+be provided in a symmetric way in order to implement bidirectional
+iteration.
+
+Here is an example of a consumer that consumes one element in a range
+of integers:
+``struct element_consumer
+{
+    typedef int input_type;
+
+    template<typename In>
+    In ltr(In begin, In end)
+    {
+        return ++begin;
+    }
+    
+    template<typename In>
+    In rtl(In begin, In end)
+    {
+        return --end;
+    }
+};``
+
+A model of the [conceptref Consumer] concept may then be used to segment
+a range. The [classref boost::consumer_iterator], eventually invoked
+by [funcref boost::consumed], can be used to exploit that concept to
+turn a range into a range of subranges.
+
+With the above example, the range would be converted into a range of
+subranges, each subrange being exactly one element.
+
+[heading Pipe]
+A model of the [conceptref Pipe] concept is a class that takes an input
+range, specified as two iterators, consumes it left-to-right
+or right-to-left, writes some elements to an output iterator, and returns
+the new begin in the case of left-to-right consuming or the new end
+in the case of right-to-left consuming, as well as the new output
+iterator.
+
+In terms of semantics, not only does the consuming need to be symmetric,
+but the output shall also be the same for a given consumed subrange,
+whatever the consuming direction.
+Furthermore, the output shall always be ordered left-to-right, even when
+applying the pipe right-to-left.
+
+Here is an example of a pipe that converts two adjacent elements into the
+two numbers reversed, in a range of integers that must have an
+even number of elements; indeed, for the two operations to be symmetric
+here, there is not really another way.
+``struct reverse2_pipe
+{
+    typedef int input_type;
+    typedef int output_type;
+    typedef mpl::int_<2> max_output;
+
+    template<typename In, typename Out>
+    std::pair<In, Out> ltr(In begin, In end, Out out)
+    {
+        int i = *begin++;
+        if(begin == end)
+            throw std::out_of_range();
+            
+        *out++ = *begin++;
+        *out++ = i;
+        return std::make_pair(begin, out);
+    }
+    
+    template<typename In, typename Out>
+    std::pair<In, Out> rtl(In begin, In end, Out out)
+    {
+        *out++ = *--end;
+        if(end == begin)
+            throw std::out_of_range();
+            
+        *out++ = *--end;
+        return std::make_pair(end, out);
+    }
+};``
+
+A model of the [conceptref Pipe] concept may then be used to perform
+a many-to-many conversion on a whole range, be it eagerly (by calling
+repeatly the pipe) or lazily (be evaluating it step by step as an
+iterator adapter is advanced).
+
+The [funcref boost::pipe] function provides the former, while the
+[funcref boost::piped] function which returns a range in terms of
+[classref boost::pipe_iterator] provides the latter.
+
+With the above example, a piped range [1, 2, 3, 4] would be converted
+to [2, 1, 4, 3].
+
+[heading OneManyPipe]
+
+Additionally, there is a refinement of the [conceptref Pipe] concept named
+[conceptref OneManyPipe], where one element is converted to many.
+
+This allows avoiding the consuming altogether so that the pipe can be
+defined as a single function that takes a value, an output iterator,
+and returns it.
+
+[endsect]
+
 [section Overview]
 
 [section Range operations]
@@ -234,7 +409,7 @@ This is because code points is what the library mainly deals with, and UTF-32 is
 
 [heading Segmentation]
 Segmentations are expressed in terms of the [conceptref Consumer] concept, which is inherently
-very similar to the [conceptref Pipe] concept excepts it doesn't perform any kind of transformation,
+very similar to the [conceptref Pipe] concept except it doesn't perform any kind of transformation,
 it just reads part of the input.
 As a matter of fact, a =Pipe= can be converted to =Consumer= using [classref boost::pipe_consumer].
 
@@ -357,12 +532,13 @@ as well.
 Different approaches to do that are possible:
 
 * [conceptref Pipe]- or [conceptref Consumer]-based, you may simply run classic search algorithms, such as
-the ones from Boost.StringAlgo, with ranges of the appropriate elements, that elements can be ranges
-themselves (subranges returned by [classref boost::consumer_iterator] are =EqualityComparable=).
+the ones from Boost.StringAlgo, with ranges of the appropriate elements -- those elements being able
+to be ranges themselves (subranges returned by [classref boost::consumer_iterator] are =EqualityComparable=).
 * [conceptref BoundaryChecker]-based, the classic algorithms are run, then false positives
 that don't lie on the right boundaries are discarded. This has the advantage of reducing conversion and
 iteration overhead in certain situations.
-The most practical way to achieve this is to adapt a =Finder= in Boost.StringAlgo with [classref boost::algorithm::boundary_finder].
+The most practical way to achieve this is to adapt a =Finder= in Boost.StringAlgo with [classref boost::algorithm::boundary_finder],
+and the boundary you are interested in testing, for example [classref boost::unicode::utf_grapheme_boundary].
 
 [important You will have to normalize input before the search if you want canonically equivalent things
 to compare equal.]
@@ -372,6 +548,23 @@ to compare equal.]
 [endsect] [/Overview]
 
 [section User's Guide]
+[section Organization]
+
+[caution The organization of headers may change in the future in order to
+improve compile times.]
+
+[variablelist Main headers
+    [[[headerref boost/cuchar.hpp]] [Primitive types for UTF code units.]]
+    [[[headerref boost/unicode/utf.hpp]] [Conversion between UTF encodings.]]
+    [[[headerref boost/unicode/static_utf.hpp]] [Compile-time conversion between UTF encodings.]]
+    [[[headerref boost/unicode/graphemes.hpp]] [Functions to iterate and identify graphemes.]]
+    [[[headerref boost/unicode/compose.hpp]] [Functions to compose, decompose and normalize unicode strings.]]
+    [[[headerref boost/unicode/cat.hpp]] [Functions to concatenate normalized strings while maintaining a normalized form.]]
+    [[[headerref boost/unicode/search.hpp]] [Utility to adapt Boost.StringAlgo finders to discard matches that lie on certain boundaries.]]
+    [[[headerref boost/unicode/ucd/properties.hpp]] [Access to the properties attached with a code point in the Unicode Character Database.]]
+]
+
+[endsect] [/Organization]
 [endsect] [/User's Guide]
 
 [section Examples]
@@ -513,6 +706,16 @@ demonstrations.
 
 [section Appendix B: Rationale]
 
+[heading Iterators rather than streams]
+The library chooses to base itself upon iterator adapters rather than
+upon streams, even though the latter were designed for conversion
+facilities with buffering and can be configured with locales.
+
+That choice was made because it is believed that the iterator and
+range abstractions are more flexible and easier to deal with, and that
+there are also quite more efficient.
+
+
 [heading Pipe concept]
 Centralizing conversion into a single [conceptref Pipe] model allows
 eager and lazy variants of evaluation to be possible for any conversion
@@ -530,6 +733,11 @@ are provided as well.
 
 [section Appendix C: Future Work]
 
+[heading Type deduction]
+A type deduction, similar to that of Boost.Fusion =result_of= namespace,
+would be useful as a lot of the functions do not have a specified return
+type.
+
 [heading Non-checked UTF conversion]
 The library only provides UTF conversion pipes that do extensive checking
 that the input is correct and that the end is not unexpectedly met.
@@ -542,6 +750,10 @@ well avoid storing the =begin= and =end= iterator in such cases.
 The Unicode standard provides a quick-check scheme to tell whether a string
 is in a normalized form, which could be used to avoid expensive decomposition
 and recomposition.
+
+[heading Forwarding]
+Certain functions that take ranges and return them adapted do not perform
+correct forwarding, and return an adapted const range instead.
 
 [heading Unicode String type]
 Future versions of the library could provide a string type that maintains

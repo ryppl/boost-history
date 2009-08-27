@@ -1,13 +1,18 @@
 //[ search
 /*`
-Example in development.
+This example shows how to search a substring within a string,
+at the grapheme level, using two methods.
+
+In this example we're going to use =BOOST_AUTO= as the
+return type of some of the functions is unspecified, but ideally
+you should try to avoid that dependency by not naming the variables at all,
+or rely on a type deduction system the library doesn't provide yet.
 */
 
 #include <boost/algorithm/string.hpp>
 #include <boost/unicode/search.hpp>
 
-#include <boost/foreach.hpp>
-#include <boost/foreach_auto.hpp>
+#include <boost/typeof/typeof.hpp>
 #include <iostream>
 
 #include <boost/unicode/graphemes.hpp>
@@ -17,34 +22,34 @@ namespace unicode = boost::unicode;
 
 int main()
 {
+/*`
+We define the string we're going to search into, "foo<combining circumflex accent>foo"
+as well as it's version in terms of graphemes
+*/
     char foo[] = "foo\xcc\x82" "foo";
-    //BOOST_AUTO(foo, unicode::utf_grapheme_bounded(foo_));
+    BOOST_AUTO(foo_bounded, unicode::utf_grapheme_bounded(boost::as_literal(foo)));
     
+//` We do the same thing for the string we're going to look for, "foo"
     char search[] = "foo";
+    BOOST_AUTO(search_bounded, unicode::utf_grapheme_bounded(boost::as_literal(search)));
     
-    //BOOST_AUTO(s, unicode::utf_grapheme_bounded(boost::as_literal(search)));
-    BOOST_AUTO(s, boost::as_literal(search));
+//` We perform the search using the ranges of graphemes, i.e. the [conceptref Consumer]-based approach:
+    BOOST_AUTO(range_consumer, boost::algorithm::find_first(foo_bounded, search_bounded));
     
-    // Boost.StringAlgo
+//` We perform the search using the original range, but using an adapted Boost.StringAlgo Finder with the relevant [conceptref BoundaryChecker]:
     BOOST_AUTO(finder,
         boost::algorithm::make_boundary_finder(
-            boost::algorithm::first_finder(s),
+            boost::algorithm::first_finder(search),
             unicode::utf_grapheme_boundary()
         )
     );
+    boost::iterator_range<char*> range_boundary = boost::algorithm::find(foo, finder);
     
-    BOOST_AUTO(f, unicode::make_boundary_finder(
-        unicode::make_simple_finder(s),
-        unicode::utf_grapheme_boundary()
-    )); 
+//` We now display the resulting matches, which should both be pointing to the second occurrence, with their positions within the original UTF-8 string:
+    std::cout << "[" << std::distance(boost::begin(foo), range_consumer.begin().base()) << ", " << std::distance(boost::begin(foo), range_consumer.end().base()) << "] ";
+    std::cout << range_consumer << std::endl;
     
-    //BOOST_AUTO(range, f.ltr(boost::begin(foo), boost::end(foo)));
-    BOOST_AUTO(range, boost::algorithm::find(foo, finder));
-    
-    std::cout << "[" << std::distance(boost::begin(foo), range.begin()) << ", " << std::distance(boost::begin(foo), range.end()) << "] ";
-        
-    BOOST_FOREACH_AUTO(r, range)
-        std::cout << r;
-    std::cout << std::endl;
+    std::cout << "[" << std::distance(boost::begin(foo), range_boundary.begin()) << ", " << std::distance(boost::begin(foo), range_boundary.end()) << "] ";
+    std::cout << range_boundary << std::endl;
 }
 //]

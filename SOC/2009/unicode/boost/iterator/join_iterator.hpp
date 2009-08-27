@@ -14,8 +14,14 @@
 #include <boost/fusion/include/mpl.hpp> 
 #include <boost/fusion/tuple.hpp>
 #include <boost/fusion/adapted.hpp>
-#include <boost/fusion/algorithm/transformation/transform.hpp>
+#include <boost/fusion/container/vector/convert.hpp>
 #include <boost/fusion/include/as_vector.hpp>
+
+#include <boost/fusion/algorithm/transformation/transform.hpp>
+#include <boost/fusion/include/transform.hpp>
+#include <boost/fusion/functional/adapter/unfused.hpp>
+
+#include <boost/functional/forward_adapter.hpp>
 
 #include <boost/variant.hpp>
 
@@ -332,6 +338,57 @@ iterator_range<
     );
 }
 
+struct range_transformer
+{
+    template<typename>
+    struct result {};
+    
+    template<typename F, typename R>
+    struct result<F(R&)>
+    {
+        typedef iterator_range<
+            typename range_iterator<R>::type
+        > type;
+    };
+    
+    template<typename Range>
+    typename result<range_transformer(Range&)>::type
+    operator()(Range& r) const
+    {
+        return make_iterator_range(r);
+    }
+};
+
+struct fused_make_range_tuple
+{
+    template<typename>
+    struct result
+    {
+    };
+    
+    template<typename F, typename Seq>
+    struct result<F(Seq&)>
+    {
+        typedef iterator_range< join_iterator< typename fusion::result_of::as_vector<
+            typename fusion::result_of::transform<
+                Seq const,
+                range_transformer
+            >::type
+        >::type > > type;
+    };
+
+    template<class Seq>
+    typename result<fused_make_range_tuple(Seq&)>::type operator()(Seq const & s) const
+    {
+        return joined(fusion::as_vector(fusion::transform(s, range_transformer())));
+    }
+};
+
+/*forward_adapter<
+    fusion::unfused<fused_make_range_tuple>
+> joined_n;*/
+
+#if 1
 #ifdef BOOST_UNICODE_DOXYGEN_INVOKED
 template<typename... T>
 iterator_range<
@@ -356,6 +413,7 @@ iterator_range< \
         BOOST_PP_COMMA_IF(n) make_iterator_range(BOOST_PP_CAT(t, n)) \
     /**/
 BOOST_PP_REPEAT_FROM_TO(1, 5, BOOST_ITERATOR_JOIN_DEF, ~)
+#endif
 #endif
 
 } // namespace boost

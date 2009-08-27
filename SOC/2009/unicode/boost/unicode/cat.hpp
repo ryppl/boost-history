@@ -100,7 +100,7 @@ BOOST_UNICODE_FWD_2(BOOST_UNICODE_CAT_LIMITS_FWD)
    \pre \c Range1 and \c Range2 are in Normalized Form nf, have the same value type and are non-empty.
    \post \c out is in Normalized Form nf and is stream-safe. */ \
 template<typename Range1, typename Range2, typename OutputIterator, typename... T> \
-OutputIterator name##_concat(const Range1& range1, const Range2& range2, OutputIterator out, const T&...);
+OutputIterator name##_concat(const Range1& range1, const Range2& range2, OutputIterator out, const T&... args);
 #else
 #define BOOST_UNICODE_COMPOSE_CONCAT_DEF(name, nf, pipe, n) \
 BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_COMPOSE_CONCAT_DEF_A, (name)(pipe))
@@ -133,7 +133,7 @@ OutputIterator BOOST_PP_CAT(BOOST_PP_SEQ_ELEM(0, seq), _concat)(const Range1& ra
    \pre \c Range1 and \c Range2 are in Normalized Form nf, have the same value type and are non-empty.
    \return Lazy stream-safe range in Normalized Form nf. */ \
 template<typename Range1, typename Range2, typename... T> \
-detail::unspecified<void> name##_concated(const Range1& range1, const Range2& range2, const T&...);
+detail::unspecified<void> name##_concated(const Range1& range1, const Range2& range2, const T&... args);
 #else
 #define BOOST_UNICODE_COMPOSE_CONCATED_DEF(name, nf, pipe, n) \
 BOOST_PP_REPEAT(BOOST_PP_INC(n), BOOST_UNICODE_COMPOSE_CONCATED_DEF_A, (name)(pipe))
