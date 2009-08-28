@@ -7,7 +7,7 @@
 ///////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_BINARY_OP_DATA_TUPLE_RANGE_HPP_ER_2009
 #define BOOST_BINARY_OP_DATA_TUPLE_RANGE_HPP_ER_2009
-
+#include <boost/mpl/assert.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/range.hpp>
 #include <boost/call_traits.hpp>
@@ -20,6 +20,7 @@ namespace binary_op{
 // Creates a range of tuples from two ranges
 template<typename Rx,typename Ry>
 struct tuple_range{
+
     typedef typename remove_reference<Rx>::type const_rx_;
     typedef typename remove_reference<Ry>::type const_ry_;
     typedef typename range_iterator<const_rx_>::type it_x_;
@@ -36,6 +37,9 @@ struct tuple_range{
 
     typedef iterator_range<zip_iterator_> type;
     
+    BOOST_MPL_ASSERT(( is_reference<Rx> ));
+    BOOST_MPL_ASSERT(( is_reference<Ry> ));
+
     static type make(
         typename call_traits<Rx>::param_type rx,
         typename call_traits<Ry>::param_type ry
@@ -43,14 +47,14 @@ struct tuple_range{
         return type(
             make_zip_iterator(
                 make_tuple(
-                    begin(rx),
-                    begin(ry)
+                    boost::begin(rx),
+                    boost::begin(ry)
                 )
             ),
             make_zip_iterator(
                 make_tuple(
-                    end(rx),
-                    end(ry)
+                    boost::end(rx),
+                    boost::end(ry)
                 )
             )
         );

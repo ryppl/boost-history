@@ -11,5 +11,6 @@
 #include <boost/binary_op/algorithm/include.hpp>
 #include <boost/binary_op/data/include.hpp>
 #include <boost/binary_op/functional/include.hpp>
+#include <boost/binary_op/meta/include.hpp>
 
 #endif
