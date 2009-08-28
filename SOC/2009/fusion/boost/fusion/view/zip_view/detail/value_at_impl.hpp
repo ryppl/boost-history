@@ -45,19 +45,17 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct value_at_impl;
 
         template<>
         struct value_at_impl<zip_view_tag>
         {
-            template<typename SeqRef, typename N>
+            template<typename Seq, typename N>
             struct apply
               : result_of::as_vector<
                     typename result_of::transform<
-                        typename detail::remove_reference<
-                            SeqRef
-                        >::type::seqs_type
+                        typename detail::remove_reference<Seq>::type::seqs_type
                       , detail::poly_value_at<N>
                     >::type
                 >

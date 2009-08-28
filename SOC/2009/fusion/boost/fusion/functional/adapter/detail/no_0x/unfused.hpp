@@ -18,7 +18,19 @@
 
 #include <boost/utility/result_of.hpp>
 
-#include <boost/fusion/container/vector/vector.hpp>
+#include <boost/fusion/container/vector/vector10.hpp>
+#if BOOST_FUSION_UNFUSED_MAX_ARITY>10
+#   include <boost/fusion/container/vector/vector20.hpp>
+#endif
+#if BOOST_FUSION_UNFUSED_MAX_ARITY>20
+#   include <boost/fusion/container/vector/vector30.hpp>
+#endif
+#if BOOST_FUSION_UNFUSED_MAX_ARITY>30
+#   include <boost/fusion/container/vector/vector40.hpp>
+#endif
+#if BOOST_FUSION_UNFUSED_MAX_ARITY>40
+#   include <boost/fusion/container/vector/vector50.hpp>
+#endif
 
 #include <boost/fusion/functional/adapter/limits.hpp>
 #include <boost/fusion/functional/adapter/detail/no_0x/access.hpp>

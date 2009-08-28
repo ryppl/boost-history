@@ -20,14 +20,14 @@ namespace boost { namespace fusion
     struct repetitive_view_iterator_tag;
 
     template<
-        typename SeqRef
+        typename Seq
       , typename It
       , int Index
     >
     struct repetitive_view_iterator
-      : iterator_base<repetitive_view_iterator<SeqRef, It, Index> >
+      : iterator_base<repetitive_view_iterator<Seq, It, Index> >
     {
-        typedef SeqRef seq_type;
+        typedef Seq seq_type;
         typedef It it_type;
         typedef mpl::int_<Index> index;
 
@@ -42,7 +42,7 @@ namespace boost { namespace fusion
             BOOST_FUSION_TAG_CHECK(OtherIt,repetitive_view_iterator_tag);
         }
 
-        repetitive_view_iterator(SeqRef seq, It const& it)
+        repetitive_view_iterator(Seq seq, It const& it)
           : seq(seq)
           , it(it)
         {}
@@ -58,7 +58,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        SeqRef seq;
+        Seq seq;
         It it;
     };
 }}

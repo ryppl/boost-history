@@ -14,20 +14,20 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_of_impl;
 
     template <>
     struct value_of_impl<repetitive_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef typename
                 result_of::value_of<
                     typename result_of::prior<
                         typename detail::remove_reference<
-                            ItRef
+                            It
                         >::type::it_type
                     >::type
                 >::type

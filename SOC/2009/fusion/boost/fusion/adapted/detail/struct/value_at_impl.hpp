@@ -11,15 +11,15 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct value_at_impl;
 
     template <>
     struct value_at_impl<struct_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
-          : struct_member<typename detail::identity<SeqRef>::type, N::value>
+          : struct_member<typename detail::identity<Seq>::type, N::value>
         {};
     };
 

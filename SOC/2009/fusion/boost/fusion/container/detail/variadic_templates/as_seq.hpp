@@ -31,28 +31,25 @@
 
 namespace boost { namespace fusion { namespace detail
 {
-    template<typename SeqRef>
+    template<typename Seq>
     struct BOOST_PP_CAT(BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)
     {
-        struct apply
-        {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+        typedef typename detail::remove_reference<Seq>::type seq;
 
-            typedef typename
-                mpl::apply<
-                    mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
-                  , typename mpl::eval_if<
-                        traits::is_random_access<SeqRef>
-                      , mpl::identity<seq>
-                      , mpl::fold<
-                            seq
-                          , mpl::vector0<>
-                          , mpl::quote2<mpl::push_back>
-                        >
-                    >::type
+        typedef typename
+            mpl::apply<
+                mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
+              , typename mpl::eval_if<
+                    traits::is_random_access<Seq>
+                  , mpl::identity<seq>
+                  , mpl::fold<
+                        seq
+                      , mpl::vector0<>
+                      , mpl::quote2<mpl::push_back>
+                    >
                 >::type
-            type;
-        };
+            >::type
+        type;
     };
 }}}
 

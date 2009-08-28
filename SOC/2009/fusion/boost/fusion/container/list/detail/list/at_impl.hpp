@@ -12,21 +12,21 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct at_impl;
 
     template <>
     struct at_impl<list_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
         {
             typedef typename
                 result_of::at<
                     typename detail::forward_as<
-                        SeqRef
+                        Seq
                       , typename detail::remove_reference<
-                            SeqRef
+                            Seq
                         >::type::storage_type
                     >::type
                   , N
@@ -34,7 +34,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return fusion::at<N>(seq.get_data());
             }

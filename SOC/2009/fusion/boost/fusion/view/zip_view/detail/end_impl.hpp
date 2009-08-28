@@ -65,16 +65,16 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct end_impl;
 
         template<>
         struct end_impl<zip_view_tag>
         {
-            template<typename SeqRef>
+            template<typename Seq>
             struct apply
             {
-                typedef typename detail::remove_reference<SeqRef>::type seq;
+                typedef typename detail::remove_reference<Seq>::type seq;
 
                 typedef
                     zip_view_iterator<
@@ -87,7 +87,7 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef seq)
+                call(Seq seq)
                 {
                     return type(
                             fusion::transform(

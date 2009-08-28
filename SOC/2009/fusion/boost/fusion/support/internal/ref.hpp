@@ -11,27 +11,25 @@
 #include <boost/config.hpp>
 
 #include <boost/preprocessor/empty.hpp>
-#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/if.hpp>
 #ifndef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/mpl/eval_if.hpp>
 #   include <boost/mpl/or.hpp>
+#   include <boost/mpl/identity.hpp>
 #endif
-#include <boost/mpl/not.hpp>
-#include <boost/mpl/and.hpp>
-#include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
 
 #include <boost/type_traits/is_class.hpp>
 #include <boost/type_traits/is_array.hpp>
 #include <boost/type_traits/is_const.hpp>
-#include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/add_const.hpp>
-#include <boost/type_traits/add_volatile.hpp>
-#include <boost/type_traits/remove_const.hpp>
-#include <boost/type_traits/remove_cv.hpp>
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-#   include <utility>
+#ifdef BOOST_FUSION_PROPAGATE_VOLATILE
+#   include <boost/type_traits/is_volatile.hpp>
+#   include <boost/type_traits/add_volatile.hpp>
+#   include <boost/type_traits/remove_cv.hpp>
+#else
+#   include <boost/type_traits/remove_const.hpp>
 #endif
 
 //cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
@@ -73,33 +71,28 @@ namespace boost { namespace fusion { namespace detail
     template<typename T>
     struct is_lrref
       : mpl::false_
-    {
-    };
+    {};
 
     template<typename T>
     struct is_lrref<T&>
       : mpl::true_
-    {
-    };
+    {};
 
 #ifndef BOOST_NO_RVALUE_REFERENCES
     template<typename T>
     struct is_lrref<T&&>
       : mpl::true_
-    {
-    };
+    {};
 
     template<typename T>
     struct is_rref
       : mpl::false_
-    {
-    };
+    {};
 
     template<typename T>
     struct is_rref<T&&>
       : mpl::true_
-    {
-    };
+    {};
 #endif
 
     //cschmidt: workaround until boost::is_reference supports rvalues
@@ -125,25 +118,28 @@ namespace boost { namespace fusion { namespace detail
 
     template <typename T>
     struct add_lref
-      : add_reference<T>
-    {};
-
-#ifndef BOOST_NO_RVALUE_REFERENCES
-    template <typename T>
-    struct add_lref<T&&>
     {
-        typedef T&& type;
+        typedef T& type;
     };
-#endif
+
+    template <typename T>
+    struct add_lref<T&>
+    {
+        typedef T& type;
+    };
 
     template <typename T>
     struct identity
     {
-        typedef typename remove_const<
-            typename remove_cv<
+        typedef typename
+#ifdef BOOST_FUSION_PROPAGATE_VOLATILE
+            remove_cv<
+#else
+            remove_const<
+#endif
                 typename remove_reference<T>::type
             >::type
-        >::type type;
+        type;
     };
 
     template <typename TestType,typename Type>
@@ -157,6 +153,7 @@ namespace boost { namespace fusion { namespace detail
               , typename add_const<Type>::type
               , Type
             >::type
+#ifdef BOOST_FUSION_PROPAGATE_VOLATILE
         const_type;
 
         typedef typename
@@ -165,29 +162,44 @@ namespace boost { namespace fusion { namespace detail
               , typename add_volatile<const_type>::type
               , const_type
             >::type
+#endif
         cv_type;
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
-        typedef typename add_reference<cv_type>::type type;
+        typedef cv_type& type;
 #else
         typedef typename
             mpl::eval_if<
                 //8.5.3p5...
-                mpl::or_<is_class<Type>
-                  , is_array<Type>
-                    //cschmidt: workaround until Boost.type_traits supports
-                    //rvalue refs!
-                  , mpl::not_<is_rref<TestType> >
-                >,
-                mpl::eval_if<
-                    is_rref<TestType>
-                  , mpl::identity<cv_type&&>
-                  , add_lref<cv_type>
-                >,
-                mpl::identity<cv_type>
+                is_rref<TestType>
+              , mpl::if_<
+                    mpl::or_<is_class<Type>, is_array<Type> >
+                  , cv_type&&
+                  , cv_type
+                >
+              , mpl::identity<cv_type&>
             >::type
         type;
 #endif
+    };
+
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    //8.5.3p5...
+    template <typename TestType,typename Type>
+    struct forward_as<TestType,Type&&>
+      : mpl::if_<
+            mpl::or_<is_class<Type>, is_array<Type> >
+          , Type&&
+          , Type
+        >
+    {};
+#endif
+
+    //Optimization
+    template <typename TestType,typename Type>
+    struct forward_as<TestType,Type&>
+    {
+        typedef Type& type;
     };
 }}}
 

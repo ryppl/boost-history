@@ -78,19 +78,19 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct at_impl;
 
         template <>
         struct at_impl<cons_tag>
         {
-            template <typename SeqRef, typename N>
+            template <typename Seq, typename N>
             struct apply
             {
                 typedef typename
                     detail::forward_as<
-                        SeqRef
-                      , typename detail::cons_advance<SeqRef, N::value>::type
+                        Seq
+                      , typename detail::cons_advance<Seq, N::value>::type
                     >::type
                 type;
 
@@ -109,7 +109,7 @@ namespace boost { namespace fusion
                 }
 
                 static type
-                call(SeqRef seq)
+                call(Seq seq)
                 {
                     return call(seq, mpl::int_<N::value>());
                 }

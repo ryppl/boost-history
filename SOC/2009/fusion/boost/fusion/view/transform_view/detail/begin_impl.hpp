@@ -13,32 +13,32 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct begin_impl;
 
     // Unary Version
     template <>
     struct begin_impl<transform_view_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef typename
-                detail::remove_reference<SeqRef>::type
+                detail::remove_reference<Seq>::type
             seq;
 
             typedef
                 transform_view_iterator<
                     typename result_of::begin<typename seq::seq_type>::type
                   , typename detail::forward_as<
-                        SeqRef
+                        Seq
                       , typename seq::transform_type
                     >::type
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(fusion::begin(seq.seq.get()), seq.f);
             }
@@ -49,24 +49,24 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct begin_impl<transform_view2_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef
                 transform_view_iterator2<
                     typename result_of::begin<typename seq::seq1_type>::type
                   , typename result_of::begin<typename seq::seq2_type>::type
                   , typename detail::forward_as<
-                        SeqRef
+                        Seq
                       , typename seq::transform_type
                     >::type
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(
                         fusion::begin(seq.seq1.get()),

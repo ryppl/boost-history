@@ -23,23 +23,22 @@ namespace boost { namespace fusion
                 typename It1::begin_type
               , typename It2::begin_type
             >
-        {
-        };
+        {};
     }
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct equal_to_impl;
 
         template<>
         struct equal_to_impl<joint_view_iterator_tag>
         {
-            template<typename It1Ref, typename It2Ref>
+            template<typename It1, typename It2>
             struct apply
             {
-                typedef typename detail::remove_reference<It1Ref>::type it1;
-                typedef typename detail::remove_reference<It2Ref>::type it2;
+                typedef typename detail::remove_reference<It1>::type it1;
+                typedef typename detail::remove_reference<It2>::type it2;
 
                 typedef
                     mpl::and_<

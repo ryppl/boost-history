@@ -66,9 +66,11 @@ namespace boost { namespace fusion
             /*BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));*/\
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));\
             \
-            return\
-                invoke<typename detail::forward_as<int COMBINATION, F>::type>(\
-                        f,std::forward<Seq>(seq));\
+            return invoke(\
+                static_cast<\
+                    typename detail::forward_as<int COMBINATION, F>::type\
+                >(f),\
+                std::forward<Seq>(seq));\
         }
 
         BOOST_FUSION_CALL_OPERATOR(BOOST_PP_EMPTY());

@@ -12,16 +12,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_at_key;
 
     template <>
     struct value_at_key<detail::filter_key_view_tag>
     {
-        template <typename SeqRef,typename Key>
+        template <typename Seq,typename Key>
         struct apply
           : result_of::value_at_key<
-                typename detail::remove_reference<SeqRef>::type_seq_type
+                typename detail::remove_reference<Seq>::type_seq_type
               , Key
             >
         {};

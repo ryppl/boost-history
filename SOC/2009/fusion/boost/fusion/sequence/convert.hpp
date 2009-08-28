@@ -18,18 +18,18 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct convert_impl
         {
-            template<typename SeqRef>
+            template<typename Seq>
             struct apply
             {
-                typedef typename result_of::as_vector<SeqRef>::type type;
+                typedef typename result_of::as_vector<Seq>::type type;
 
                 static type
-                call(SeqRef seq)
+                call(Seq seq)
                 {
-                    return fusion::as_vector(seq);
+                    return fusion::as_vector(BOOST_FUSION_FORWARD(Seq,seq));
                 }
             };
         };
@@ -39,15 +39,10 @@ namespace boost { namespace fusion
     {
         template <typename Tag, typename Seq>
         struct convert
+          : extension::convert_impl<Tag>::template apply<Seq>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-
-            typedef typename extension::convert_impl<Tag> gen;
-
-            typedef typename
-                gen::template apply<typename detail::add_lref<Seq>::type>::type
-            type;
         };
     }
 

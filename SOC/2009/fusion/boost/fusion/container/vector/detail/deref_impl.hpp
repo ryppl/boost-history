@@ -15,16 +15,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct deref_impl;
 
     template <>
     struct deref_impl<vector_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
             typedef typename it::seq_type vector;
 
             typedef
@@ -47,7 +47,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return it.seq->at_impl(typename it::index());
             }

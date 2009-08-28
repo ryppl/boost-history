@@ -14,16 +14,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct at_impl;
 
     template<>
     struct at_impl<transform_view_tag>
     {
-        template<typename SeqRef, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
                 boost::result_of<
@@ -36,7 +36,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return seq.f(fusion::at<N>(seq.seq.get()));
             }
@@ -46,10 +46,10 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct at_impl<transform_view2_tag>
     {
-        template<typename SeqRef, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
                 boost::result_of<
@@ -67,7 +67,7 @@ namespace boost { namespace fusion { namespace extension
                 >::type
             type;
 
-            static type call(SeqRef seq)
+            static type call(Seq seq)
             {
                 return seq.f(
                         fusion::at<N>(seq.seq1.get()),

@@ -12,16 +12,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_of_data_impl;
 
     template <>
     struct value_of_data_impl<joint_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
           : result_of::value_of_data<
-                typename detail::remove_reference<ItRef>::type::begin_type
+                typename detail::remove_reference<It>::type::begin_type
             >
         {};
     };

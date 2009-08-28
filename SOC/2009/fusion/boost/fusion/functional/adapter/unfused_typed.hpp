@@ -9,7 +9,7 @@
 #define BOOST_FUSION_FUNCTIONAL_ADAPTER_UNFUSED_TYPED_HPP
 
 #include <boost/config.hpp>
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || 1
 #   include <boost/fusion/functional/adapter/detail/no_0x/unfused_typed.hpp>
 #else
 #   define BOOST_FUSION_TYPED

@@ -21,21 +21,21 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct empty_impl
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
-              : mpl::bool_<!result_of::size<SeqRef>::value>
+              : mpl::bool_<!result_of::size<Seq>::value>
             {};
         };
 
         template <>
         struct empty_impl<sequence_facade_tag>
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
-              : detail::remove_reference<SeqRef>::type::template empty<SeqRef>
+              : detail::remove_reference<Seq>::type::template empty<Seq>
             {};
         };
     }
@@ -45,7 +45,7 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct empty
           : extension::empty_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type>::type
+                template apply<Seq>::type
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));

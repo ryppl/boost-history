@@ -49,18 +49,18 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct category_of_impl;
 
         template<>
         struct category_of_impl<mpl_sequence_tag>
         {
-            template<typename SeqRef>
+            template<typename Seq>
             struct apply
               : detail::mpl_iterator_category<
                     typename mpl::iterator_category<
                         typename mpl::begin<
-                            typename detail::identity<SeqRef>::type
+                            typename detail::identity<Seq>::type
                         >::type
                     >::type
                 >
@@ -70,11 +70,11 @@ namespace boost { namespace fusion
         template<>
         struct category_of_impl<mpl_iterator_tag>
         {
-            template<typename ItRef>
+            template<typename It>
             struct apply
               : detail::mpl_iterator_category<
                     typename mpl::iterator_category<
-                        typename detail::identity<ItRef>::type
+                        typename detail::identity<It>::type
                     >::type
                 >
             {};

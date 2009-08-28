@@ -46,10 +46,7 @@ namespace boost { namespace fusion
                 >
             right_type;
             typedef
-                joint_view<
-                    left_type
-                  , typename detail::add_lref<Range>::type
-                >
+                joint_view<left_type, Range>
             left_insert_type;
 
             typedef joint_view<left_insert_type, right_type> type;

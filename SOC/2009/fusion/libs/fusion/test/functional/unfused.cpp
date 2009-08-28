@@ -50,6 +50,7 @@ struct test_func
         return fusion::fold(seq, state, fold_op());
     }
 
+
   private:
 
     struct fold_op

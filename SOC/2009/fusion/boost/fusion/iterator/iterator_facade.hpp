@@ -21,7 +21,7 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct advance_impl;
     }
 
@@ -35,11 +35,11 @@ namespace boost { namespace fusion
 
         //TODO doc
 
-        template <typename ItRef, typename N>
+        template <typename It, typename N>
         struct advance
           :  extension::advance_impl<
-                 typename mpl::apply<mpl::always<void_>,ItRef>::type
-             >::template apply<ItRef,N>
+                 typename mpl::apply<mpl::always<void_>,It>::type
+             >::template apply<It,N>
         {};
     };
 }}

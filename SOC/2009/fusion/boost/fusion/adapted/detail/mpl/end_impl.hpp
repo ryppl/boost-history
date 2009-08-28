@@ -14,25 +14,25 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<mpl_sequence_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 mpl_iterator<
                     typename mpl::end<
-                        typename detail::identity<SeqRef>::type
+                        typename detail::identity<Seq>::type
                     >::type
                 >
             type;
 
             static type
-            call(SeqRef)
+            call(Seq)
             {
                 return type();
             }

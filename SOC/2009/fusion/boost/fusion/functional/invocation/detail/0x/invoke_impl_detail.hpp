@@ -24,23 +24,18 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/mpl/bool.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
-#include <boost/utility/addressof.hpp>
 #include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
-    template<typename FRef, typename... Args>
+    template<typename F, typename... Args>
     struct invoke_impl_result
-    {
-        typedef typename
-            boost::result_of<
-                FRef(Args...)
-            >::type
-        type;
-    };
+      : boost::result_of<typename get_func_base<F>::type(Args...)>
+    {};
 
     template<typename Result, typename F, typename... Args>
     typename
@@ -70,11 +65,7 @@ namespace boost { namespace fusion { namespace detail
         >::type
     invoke_impl_call(F&& f, ClassInstance&& instance,Args&&... args)
     {
-        typedef typename
-            detail::preevaluate<F>::gen::class_type
-        class_type;
-
-        return (that_ptr<class_type>::
+        return (that_ptr<typename detail::preevaluate<F>::gen::class_type>::
                     get(std::forward<ClassInstance>(instance))->*f)(
                         std::forward<Args>(args)...);
     }
@@ -82,7 +73,7 @@ namespace boost { namespace fusion { namespace detail
     namespace bidirectional_traversal
     {
         template<
-            typename FRef
+            typename F
           , typename ArgsSeq
           , bool Empty
           , typename... Args
@@ -93,7 +84,7 @@ namespace boost { namespace fusion { namespace detail
 
             typedef typename
                 invoke_impl_result<
-                    FRef
+                    F
                   , new_args_seq
                   , result_of::empty<new_args_seq>::value
                   , typename result_of::back<ArgsSeq>::type
@@ -102,59 +93,54 @@ namespace boost { namespace fusion { namespace detail
             type;
         };
 
-        template<typename FRef, typename ArgsSeq, typename... Args>
-        struct invoke_impl_result<FRef,ArgsSeq,true,Args...>
-          : detail::invoke_impl_result<FRef,Args...>
+        template<typename F, typename ArgsSeq, typename... Args>
+        struct invoke_impl_result<F,ArgsSeq,true,Args...>
+          : detail::invoke_impl_result<F,Args...>
         {};
 
-        template<typename FRef,typename SeqRef>
+        template<typename F,typename Seq>
         struct invoke_impl
         {
-            typedef detail::preevaluate<FRef> preevaluater;
+            typedef detail::preevaluate<F> preevaluater;
 
             typedef typename
                 mpl::eval_if<
                     typename preevaluater::is_preevaluable
                   , preevaluater
                   , invoke_impl_result<
-                        FRef
-                      , SeqRef
-                      , result_of::empty<SeqRef>::value
+                        F
+                      , Seq
+                      , result_of::empty<Seq>::value
                     >
                 >::type
             type;
 
-            template<typename Seq,typename... Args>
-            static typename
-                enable_if<
-                    typename result_of::empty<Seq&&>::type
-                  , type
-                >::type
-                call_impl(FRef f,Seq&&, Args&&... args)
+            template<typename LeftSeq,typename... Args>
+            static type
+            call_impl(F f,LeftSeq&&, mpl::true_/*SeqEmpty*/,Args&&... args)
             {
                 return detail::invoke_impl_call<type>(
-                        std::forward<FRef>(f),std::forward<Args>(args)...);
+                        std::forward<F>(f),std::forward<Args>(args)...);
             }
 
-            template<typename Seq,typename... Args>
-            static typename
-                disable_if<
-                    typename result_of::empty<Seq&&>::type
-                  , type
-                >::type
-                call_impl(FRef f,Seq&& seq, Args&&... args)
+            template<typename LeftSeq,typename... Args>
+            static type
+            call_impl(F f,LeftSeq&& seq, mpl::false_/*SeqEmpty*/,Args&&... args)
             {
                 return call_impl(
                         f,
-                        fusion::pop_back(std::forward<Seq>(seq)),
-                        fusion::back(std::forward<Seq>(seq)),
+                        fusion::pop_back(std::forward<LeftSeq>(seq)),
+                        mpl::bool_<!(result_of::size<LeftSeq>::value-1)>(),
+                        fusion::back(std::forward<LeftSeq>(seq)),
                         std::forward<Args>(args)...);
             }
 
             static type
-            call(FRef f,SeqRef seq)
+            call(F f,Seq seq)
             {
-                return call_impl(f,std::forward<SeqRef>(seq));
+                return call_impl(f,
+                        std::forward<Seq>(seq),
+                        typename result_of::empty<Seq>::type());
             }
         };
     }
@@ -162,19 +148,19 @@ namespace boost { namespace fusion { namespace detail
     namespace forward_traversal
     {
         template<
-            typename FRef
-          , typename SeqRef
+            typename F
+          , typename Seq
           , int NumArgsLeft
           , typename... Args
         >
         struct invoke_impl_result
           : invoke_impl_result<
-                FRef
-              , SeqRef
+                F
+              , Seq
               , NumArgsLeft-1
               , typename result_of::deref<
                     typename result_of::advance_c<
-                        typename result_of::begin<SeqRef>::type
+                        typename result_of::begin<Seq>::type
                       , NumArgsLeft-1
                     >::type
                 >::type
@@ -182,66 +168,66 @@ namespace boost { namespace fusion { namespace detail
             >
         {};
 
-        template<typename FRef, typename SeqRef, typename... Args>
-        struct invoke_impl_result<FRef,SeqRef,0,Args...>
-          : detail::invoke_impl_result<FRef,Args...>
-        {
-        };
+        template<typename F, typename Seq, typename... Args>
+        struct invoke_impl_result<F,Seq,0,Args...>
+          : detail::invoke_impl_result<F,Args...>
+        {};
 
-        template<typename FRef,typename SeqRef>
+        template<typename F,typename Seq>
         struct invoke_impl
         {
-            typedef detail::preevaluate<FRef> preevaluater;
+            typedef detail::preevaluate<F> preevaluater;
 
             typedef typename
                 mpl::eval_if<
                     typename preevaluater::is_preevaluable
                   , preevaluater
                   , invoke_impl_result<
-                        FRef
-                      , SeqRef
-                      , result_of::size<SeqRef>::value
+                        F
+                      , Seq
+                      , result_of::size<Seq>::value
                     >
                 >::type
             type;
 
-            template<int NumArgsLeft,typename... Args>
-            static typename enable_if_c<!NumArgsLeft,type>::type
-            call_impl(FRef f,SeqRef, Args&&... args)
+            template<typename... Args>
+            static type
+            call_impl(F f,Seq, mpl::int_<0>, Args&&... args)
             {
                 return detail::invoke_impl_call<type>(
-                        std::forward<FRef>(f),std::forward<Args>(args)...);
+                        std::forward<F>(f),std::forward<Args>(args)...);
             }
 
             template<int NumArgsLeft,typename... Args>
-            static typename enable_if_c<NumArgsLeft, type>::type
-            call_impl(FRef f,SeqRef seq, Args&&... args)
+            static type
+            call_impl(F f,Seq seq, mpl::int_<NumArgsLeft>, Args&&... args)
             {
-                return call_impl<NumArgsLeft-1>(
+                return call_impl(
                         f,
                         seq,
+                        mpl::int_<NumArgsLeft-1>(),
                         deref(advance_c<NumArgsLeft-1>(
-                                fusion::begin(std::forward<SeqRef>(seq))
+                            fusion::begin(std::forward<Seq>(seq))
                         )),
                         std::forward<Args>(args)...);
             }
 
             static type
-            call(FRef f,SeqRef seq)
+            call(F f,Seq seq)
             {
-                return call_impl<result_of::size<SeqRef>::value>(
-                        f,
-                        std::forward<SeqRef>(seq));
+                return call_impl(f,
+                        seq,
+                        mpl::int_<result_of::size<Seq>::value>());
             }
         };
     }
 
-    template<typename FRef,typename SeqRef>
+    template<typename F,typename Seq>
     struct invoke_impl
       : mpl::if_<
-            typename traits::is_bidirectional<SeqRef>::type
-          , bidirectional_traversal::invoke_impl<FRef,SeqRef>
-          , forward_traversal::invoke_impl<FRef,SeqRef>
+            traits::is_bidirectional<Seq>
+         , bidirectional_traversal::invoke_impl<F,Seq>
+         , forward_traversal::invoke_impl<F,Seq>
         >::type
     {};
 }}}

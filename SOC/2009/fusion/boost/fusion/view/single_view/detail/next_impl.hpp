@@ -10,25 +10,25 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct next_impl;
 
     template <>
     struct next_impl<single_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef
                 single_view_iterator_end<
                     typename detail::remove_reference<
-                        ItRef
+                        It
                     >::type::view_type
                 >
             type;
 
             static type
-            call(ItRef)
+            call(It)
             {
                 return type();
             }

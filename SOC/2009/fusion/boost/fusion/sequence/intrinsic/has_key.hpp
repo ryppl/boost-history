@@ -24,15 +24,15 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct has_key_impl
         {
-            template <typename SeqRef, typename Key>
+            template <typename Seq, typename Key>
             struct apply
               : mpl::not_<
                     typename result_of::equal_to<
-                        typename result_of::find_key<SeqRef, Key>::type
-                      , typename result_of::end<SeqRef>::type
+                        typename result_of::find_key<Seq, Key>::type
+                      , typename result_of::end<Seq>::type
                     >::type
                 >::type
             {};
@@ -41,10 +41,9 @@ namespace boost { namespace fusion
         template <>
         struct has_key_impl<sequence_facade_tag>
         {
-            template <typename SeqRef, typename Key>
+            template <typename Seq, typename Key>
             struct apply
-              : detail::remove_reference<SeqRef>::type::
-                    template has_key<SeqRef, Key>
+              : detail::remove_reference<Seq>::type::template has_key<Seq, Key>
             {};
         };
     }
@@ -54,7 +53,7 @@ namespace boost { namespace fusion
         template <typename Seq, typename Key>
         struct has_key
           : extension::has_key_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type, Key>
+                template apply<Seq, Key>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));

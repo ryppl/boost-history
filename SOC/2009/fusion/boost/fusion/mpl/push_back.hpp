@@ -14,7 +14,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct push_back_impl;
 
     template <>

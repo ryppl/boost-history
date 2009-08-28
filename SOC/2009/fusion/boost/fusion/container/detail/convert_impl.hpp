@@ -10,6 +10,7 @@
 #   include <boost/fusion/sequence/intrinsic/size.hpp>
 #endif
 #include <boost/fusion/support/internal/ref.hpp>
+#include <boost/fusion/support/internal/assert.hpp>
 
 #include <boost/preprocessor/cat.hpp>
 
@@ -30,34 +31,30 @@ namespace boost { namespace fusion
         template <>
         struct convert_impl<BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tag)>
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
             {
 #ifdef BOOST_NO_VARIADIC_TEMPLATES
                 typedef typename
                     detail::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
-                        result_of::size<SeqRef>::value
-                    >
-                gen;
-
-                typedef typename
-                    gen::template apply<
-                        typename result_of::begin<SeqRef>::type
+                        result_of::size<Seq>::value
+                    >::template apply<
+                        typename result_of::begin<Seq>::type
                     >::type
                 type;
 #else
                 typedef typename
                     detail::BOOST_PP_CAT(
-                        BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<SeqRef>
-                gen;
-
-                typedef typename gen::apply::type type;
+                        BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME),_impl)<
+                        Seq
+                    >::type
+                type;
 #endif
 
-                static type call(SeqRef seq)
+                static type call(Seq seq)
                 {
                     return type(fusion::sequence_assign(
-                            BOOST_FUSION_FORWARD(SeqRef,seq)));
+                            BOOST_FUSION_FORWARD(Seq,seq)));
                 }
             };
         };
@@ -67,14 +64,12 @@ namespace boost { namespace fusion
     {
         template <typename Seq>
         struct BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)
+          : extension::convert_impl<
+                BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tag)
+            >::template apply<Seq>
         {
-            typedef typename
-                extension::convert_impl<
-                    BOOST_PP_CAT(BOOST_FUSION_SEQ_NAME,_tag)
-                >::template apply<typename detail::add_lref<Seq>::type>
-            gen;
-
-            typedef typename gen::type type;
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
         };
     }
 
@@ -88,7 +83,7 @@ namespace boost { namespace fusion
         return
             result_of::BOOST_PP_CAT(as_,BOOST_FUSION_SEQ_NAME)<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
-            >::gen::call(seq);
+            >::call(seq);
     }
 
 }}

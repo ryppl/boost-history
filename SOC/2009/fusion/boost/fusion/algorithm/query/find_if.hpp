@@ -28,22 +28,17 @@ namespace boost { namespace fusion
     {
         template <typename Seq, typename Pred>
         struct find_if
+          : detail::static_find_if<
+                typename begin<Seq>::type
+              , typename end<Seq>::type
+              , mpl::bind1<
+                    typename mpl::lambda<Pred>::type
+                  , mpl::bind1<mpl::quote1<value_of>,mpl::_1>
+                >
+            >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-
-            typedef
-                detail::static_find_if<
-                    typename begin<Seq>::type
-                  , typename end<Seq>::type
-                  , mpl::bind1<
-                        typename mpl::lambda<Pred>::type
-                      , mpl::bind1<mpl::quote1<value_of>,mpl::_1>
-                    >
-                >
-            gen;
-
-            typedef typename gen::type type;
         };
     }
 
@@ -55,7 +50,7 @@ namespace boost { namespace fusion
         return
             result_of::find_if<
                 BOOST_FUSION_R_ELSE_CLREF(Seq), Pred
-            >::gen::call(fusion::begin(seq));
+            >::call(fusion::begin(seq));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -64,7 +59,7 @@ namespace boost { namespace fusion
             result_of::find_if<,Seq,&,Pred>)
     find_if(Seq& seq)
     {
-        return result_of::find_if<Seq&, Pred>::gen::call(fusion::begin(seq));
+        return result_of::find_if<Seq&, Pred>::call(fusion::begin(seq));
     }
 #endif
 }}

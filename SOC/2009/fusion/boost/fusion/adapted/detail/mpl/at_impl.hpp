@@ -13,21 +13,21 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct at_impl;
 
     template <>
     struct at_impl<mpl_sequence_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
         {
             typedef typename
-                mpl::at<typename detail::identity<SeqRef>::type, N>::type
+                mpl::at<typename detail::identity<Seq>::type, N>::type
             type;
 
             static type
-            call(SeqRef)
+            call(Seq)
             {
                 return type();
             }

@@ -46,7 +46,7 @@ namespace boost { namespace fusion { namespace detail
             }
 
             typedef typename result_of::next<It2&>::type It3;
-            It3 it3 = fusion::next(it3);
+            It3 it3 = fusion::next(it2);
             if(!f(fusion::deref(it3)))
             {
                 return false;

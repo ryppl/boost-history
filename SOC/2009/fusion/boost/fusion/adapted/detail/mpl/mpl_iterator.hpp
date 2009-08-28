@@ -12,6 +12,9 @@
 #include <boost/fusion/iterator/iterator_facade.hpp>
 #include <boost/fusion/support/category_of.hpp>
 
+#include <boost/mpl/always.hpp>
+#include <boost/mpl/apply.hpp>
+
 //TODO doc no assoc iterator!
 
 namespace boost { namespace fusion
@@ -21,35 +24,26 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct value_of_impl;
 
-        template <typename Tag>
+        template <typename>
         struct equal_to_impl;
 
-        template <typename Tag>
+        template <typename>
         struct deref_impl;
 
-        template <typename Tag>
+        template <typename>
         struct next_impl;
 
-        template <typename Tag>
+        template <typename>
         struct prior_impl;
 
-        template <typename Tag>
+        template <typename>
         struct advance_impl;
 
-        template <typename Tag>
+        template <typename>
         struct distance_impl;
-    }
-
-    namespace detail
-    {
-        template<typename>
-        struct get_mpl_iterator_tag
-        {
-            typedef mpl_iterator_tag type;
-        };
     }
 
     template <typename It>
@@ -59,57 +53,57 @@ namespace boost { namespace fusion
           , typename traits::category_of<It>::type
         >
     {
-        //cschmidt: void typedef to enable fast SFINAE in get_mpl_it.hpp!
+        //cschmidt: dummy typedef to enable fast SFINAE in get_mpl_it.hpp!
         typedef void void_;
         typedef It it_type;
 
-        template <typename ItRef>
+        template <typename>
         struct value_of
           : extension::value_of_impl<
-                typename detail::get_mpl_iterator_tag<ItRef>::type
-            >::template apply<It&>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
         {};
 
-        template <typename It1Ref, typename It2Ref>
+        template <typename, typename It2>
         struct equal_to
           : extension::equal_to_impl<
-                typename detail::get_mpl_iterator_tag<It1Ref>::type
-            >:: template apply<It&,It2Ref>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It,It2>
         {};
 
-        template <typename ItRef>
+        template <typename>
         struct deref
           : extension::deref_impl<
-                typename detail::get_mpl_iterator_tag<ItRef>::type
-            >::template apply<It&>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
         {};
 
-        template <typename ItRef>
+        template <typename>
         struct next
           : extension::next_impl<
-                typename detail::get_mpl_iterator_tag<ItRef>::type
-            >::template apply<It&>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
         {};
 
-        template <typename ItRef>
+        template <typename>
         struct prior
           : extension::prior_impl<
-                typename detail::get_mpl_iterator_tag<ItRef>::type
-            >::template apply<It&>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
         {};
 
-        template <typename ItRef, typename N>
+        template <typename, typename N>
         struct advance
           : extension::advance_impl<
-                typename detail::get_mpl_iterator_tag<ItRef>::type
-            >::template apply<It&,N>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It,N>
         {};
 
-        template <typename It1Ref, typename It2Ref>
+        template <typename, typename It2>
         struct distance
           : extension::distance_impl<
-                typename detail::get_mpl_iterator_tag<It1Ref>::type
-            >::template apply<It&,It2Ref>
+                typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It,It2>
         {};
     };
 }}

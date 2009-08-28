@@ -13,7 +13,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct front_impl;
 
     template <>

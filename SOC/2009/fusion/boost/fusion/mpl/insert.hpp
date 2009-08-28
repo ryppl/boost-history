@@ -14,7 +14,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct insert_impl;
 
     template <>

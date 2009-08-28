@@ -21,7 +21,7 @@ namespace boost { namespace fusion {
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct prior_impl;
 
         template<>

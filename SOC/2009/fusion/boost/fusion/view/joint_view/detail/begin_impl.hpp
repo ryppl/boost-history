@@ -17,16 +17,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct begin_impl;
 
     template <>
     struct begin_impl<joint_view_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
             typedef typename
                 result_of::begin<typename seq::seq1_type>::type
             begin_type;
@@ -49,13 +49,13 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(SeqRef seq, mpl::true_)
+            call(Seq seq, mpl::true_)
             {
                 return type(fusion::begin(seq.seq2.get()));
             }
 
             static type
-            call(SeqRef seq, mpl::false_)
+            call(Seq seq, mpl::false_)
             {
                 return type(
                         fusion::begin(seq.seq1.get())
@@ -63,7 +63,7 @@ namespace boost { namespace fusion { namespace extension
             }
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return call(seq, equal_to());
             }

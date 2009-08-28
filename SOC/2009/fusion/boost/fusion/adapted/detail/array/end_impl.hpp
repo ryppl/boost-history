@@ -14,26 +14,26 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<array_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 basic_iterator<
                     array_iterator_tag
                   , random_access_traversal_tag
-                  , SeqRef
-                  , detail::remove_reference<SeqRef>::type::static_size
+                  , typename detail::add_lref<Seq>::type
+                  , detail::remove_reference<Seq>::type::static_size
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(seq,0);
             }

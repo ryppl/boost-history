@@ -12,7 +12,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct size_impl;
 
     template <>

@@ -14,13 +14,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct advance_impl;
 
     template<>
     struct advance_impl<reverse_view_iterator_tag>
     {
-        template<typename ItRef, typename N>
+        template<typename It, typename N>
         struct apply
         {
             typedef typename mpl::negate<N>::type neg_dist;
@@ -29,7 +29,7 @@ namespace boost { namespace fusion { namespace extension
                 reverse_view_iterator<
                     typename result_of::advance<
                         typename detail::remove_reference<
-                            ItRef
+                            It
                         >::type::it_type
                       , neg_dist
                     >::type
@@ -37,7 +37,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(fusion::advance<neg_dist>(it.it));
             }

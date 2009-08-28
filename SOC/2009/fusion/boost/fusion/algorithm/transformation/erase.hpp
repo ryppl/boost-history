@@ -64,11 +64,7 @@ namespace boost { namespace fusion
         template <
             typename Seq
           , typename Begin
-          , typename End =
-                typename detail::compute_erase_last<
-                    Seq
-                  , typename detail::add_lref<Begin>::type
-                >::type
+          , typename End=typename detail::compute_erase_last<Seq, Begin>::type
         >
         struct erase
         {

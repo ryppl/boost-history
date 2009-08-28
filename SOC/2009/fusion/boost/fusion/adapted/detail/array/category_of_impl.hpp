@@ -15,13 +15,13 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename SeqRef>
+        template<typename>
         struct category_of_impl;
 
         template<>
         struct category_of_impl<array_tag>
         {
-            template<typename SeqRef>
+            template<typename Seq>
             struct apply
             {
                 typedef random_access_traversal_tag type;

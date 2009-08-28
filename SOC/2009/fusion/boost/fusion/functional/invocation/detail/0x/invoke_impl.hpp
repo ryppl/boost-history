@@ -13,27 +13,19 @@ namespace boost { namespace fusion
     {
         template<typename F, typename Seq>
         struct BOOST_FUSION_INVOKE_NAME
+          : detail::invoke_impl<F, Seq>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-
-            typedef
-                detail::invoke_impl<
-                    typename detail::add_lref<F>::type
-                  , typename detail::add_lref<Seq>::type
-                >
-            gen;
-
-            typedef typename gen::type type;
         };
     }
 
     //TODO doc
     template <typename F, typename Seq>
-    inline typename result_of::BOOST_FUSION_INVOKE_NAME<F, Seq&&>::type
-    BOOST_FUSION_INVOKE_NAME(BOOST_FUSION_R_ELSE_CLREF(F) f, Seq&& seq)
+    inline typename result_of::BOOST_FUSION_INVOKE_NAME<F&&, Seq&&>::type
+    BOOST_FUSION_INVOKE_NAME(F&& f, Seq&& seq)
     {
-        return result_of::BOOST_FUSION_INVOKE_NAME<F, Seq&&>::gen::call(f,seq);
+        return result_of::BOOST_FUSION_INVOKE_NAME<F&&,Seq&&>::call(f,seq);
     }
 }}
 

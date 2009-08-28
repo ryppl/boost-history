@@ -12,18 +12,18 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct key_of_impl;
 
     template <>
     struct key_of_impl<map_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef typename
                 value_of_impl<map_iterator_tag>::
-                    template apply<ItRef>::type::first_type
+                    template apply<It>::type::first_type
             type;
         };
     };

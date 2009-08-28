@@ -13,17 +13,17 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_at_impl;
 
     template <>
     struct value_at_impl<iterator_range_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
         {
             typedef typename
-                detail::remove_reference<SeqRef>::type::begin_type
+                detail::remove_reference<Seq>::type::begin_type
             begin_type;
             typedef typename
                 result_of::advance<begin_type,N>::type

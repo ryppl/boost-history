@@ -13,19 +13,17 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct begin_impl;
 
     template <>
     struct begin_impl<fusion::fusion_sequence_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
-                fusion_iterator<
-                    typename fusion::result_of::begin<SeqRef>::type
-                >
+                fusion_iterator<typename fusion::result_of::begin<Seq>::type>
             type;
         };
     };

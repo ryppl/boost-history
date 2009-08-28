@@ -12,16 +12,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct next_impl;
 
     template <>
     struct next_impl<filter_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
             typedef typename
                 detail::static_find_if<
                     typename result_of::next<typename it::begin_type>::type
@@ -42,7 +42,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(filter::call(it.first),0);
             }

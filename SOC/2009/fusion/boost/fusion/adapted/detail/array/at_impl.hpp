@@ -12,24 +12,24 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct at_impl;
 
     template<>
     struct at_impl<array_tag>
     {
-        template<typename SeqRef, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
             typedef typename
                 detail::forward_as<
-                    SeqRef
-                  , typename detail::remove_reference<SeqRef>::type::value_type
+                    Seq
+                  , typename detail::remove_reference<Seq>::type::value_type
                 >::type
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return seq[N::value];
             }

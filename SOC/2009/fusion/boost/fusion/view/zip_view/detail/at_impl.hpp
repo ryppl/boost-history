@@ -56,20 +56,20 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct at_impl;
 
         template<>
         struct at_impl<zip_view_tag>
         {
-            template<typename SeqRef, typename N>
+            template<typename Seq, typename N>
             struct apply
             {
                 typedef typename
                     result_of::as_vector<
                         typename result_of::transform<
                             typename detail::remove_reference<
-                                SeqRef
+                                Seq
                             >::type::seqs_type
                           , detail::poly_at<N>
                         >::type
@@ -77,7 +77,7 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef seq)
+                call(Seq seq)
                 {
                     return type(sequence_assign(fusion::transform(
                             seq.seqs, detail::poly_at<N>())));

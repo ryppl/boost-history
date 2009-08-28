@@ -12,17 +12,17 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct equal_to_impl;
 
     template<>
     struct equal_to_impl<repetitive_view_iterator_tag>
     {
-        template<typename It1Ref, typename It2Ref>
+        template<typename It1, typename It2>
         struct apply
           : is_same<
-                typename detail::remove_reference<It1Ref>::type::it_type
-              , typename detail::remove_reference<It2Ref>::type::it_type
+                typename detail::remove_reference<It1>::type::it_type
+              , typename detail::remove_reference<It2>::type::it_type
             >
         {};
     };

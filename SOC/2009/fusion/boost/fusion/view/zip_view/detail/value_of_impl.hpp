@@ -27,12 +27,12 @@ namespace boost { namespace fusion
             template<typename T>
             struct result;
 
-            template<typename Self, typename ItRef>
-            struct result<Self(ItRef)>
+            template<typename Self, typename It>
+            struct result<Self(It)>
               : mpl::eval_if<
-                    is_same<ItRef, unused_type const&>
+                    is_same<It, unused_type const&>
                   , mpl::identity<unused_type const&>
-                  , result_of::value_of<ItRef>
+                  , result_of::value_of<It>
                 >
             {};
 
@@ -44,18 +44,18 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct value_of_impl;
 
         template<>
         struct value_of_impl<zip_view_iterator_tag>
         {
-            template<typename ItRef>
+            template<typename It>
             struct apply
               : result_of::as_vector<
                     typename result_of::transform<
                         typename detail::remove_reference<
-                            ItRef
+                            It
                         >::type::iterators
                       , detail::poly_value_of
                     >::type

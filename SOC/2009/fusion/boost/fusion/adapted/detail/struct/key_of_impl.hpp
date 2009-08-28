@@ -10,16 +10,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct key_of_impl;
 
     template <>
     struct key_of_impl<assoc_struct_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 extension::struct_assoc_key<

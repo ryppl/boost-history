@@ -12,16 +12,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct deref_impl;
 
     template <>
     struct deref_impl<set_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 result_of::at<
@@ -36,7 +36,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it_)
+            call(It it_)
             {
                 return at<typename it::index>(it_.seq->get_data());
             }

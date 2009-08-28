@@ -21,7 +21,7 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct is_iterator_impl
         {
             template <typename T>
@@ -37,7 +37,7 @@ namespace boost { namespace fusion
         struct is_iterator
           : extension::is_iterator_impl<
                 typename fusion::traits::tag_of<T>::type
-            >::template apply<typename detail::add_lref<T>::type>::type
+            >::template apply<T>::type
         {};
     }
 }}

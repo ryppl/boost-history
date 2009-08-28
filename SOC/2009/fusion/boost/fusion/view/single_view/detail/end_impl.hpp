@@ -10,19 +10,21 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<single_view_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
-            typedef single_view_iterator_end<SeqRef> type;
+            typedef
+                single_view_iterator_end<typename detail::add_lref<Seq>::type>
+            type;
 
             static type
-            call(SeqRef)
+            call(Seq)
             {
                 return type();
             }

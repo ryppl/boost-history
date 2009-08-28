@@ -15,27 +15,25 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<joint_view_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 concat_iterator<
                     typename result_of::end<
-                        typename detail::remove_reference<
-                            SeqRef
-                        >::type::seq2_type
+                        typename detail::remove_reference<Seq>::type::seq2_type
                     >::type
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(fusion::end(seq.seq2.get()));
             }

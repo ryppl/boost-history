@@ -25,7 +25,6 @@
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/or.hpp>
-//#include <boost/utility/enable_if.hpp>
 #ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #   include <boost/mpl/equal_to.hpp>
 #endif
@@ -165,15 +164,6 @@ namespace boost { namespace fusion
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_);
 
 #undef BOOST_FUSION_CONS_ASSIGN_CTOR
-
-        /*
-        template<typename Seq>
-        vector(typename enable_if_c<sizeof...(Elements)!=1,
-                                BOOST_FUSION_R_ELSE_CLREF(Seq)>::type seq)
-          : base(detail::assign_by_deref(),
-                 fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)))
-        {}
-        */
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
         cons(typename call_traits<Car>::param_type car,Cdr const& cdr)

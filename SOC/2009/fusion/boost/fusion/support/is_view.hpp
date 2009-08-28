@@ -17,12 +17,12 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct is_view_impl
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
-              :  detail::remove_reference<SeqRef>::type::is_view
+              :  detail::remove_reference<Seq>::type::is_view
             {};
         };
     }
@@ -32,7 +32,7 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct is_view
           : extension::is_view_impl<typename fusion::traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type>::type
+                template apply<Seq>::type
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         };

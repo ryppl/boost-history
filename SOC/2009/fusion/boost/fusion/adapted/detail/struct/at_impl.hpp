@@ -14,31 +14,31 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct at_impl;
 
     template <>
     struct at_impl<struct_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
         {
             typedef typename
                 detail::forward_as<
-                    SeqRef
+                    Seq
                   , typename struct_member<
-                        typename detail::identity<SeqRef>::type
+                        typename detail::identity<Seq>::type
                       , N::value
                     >::type
                 >::type
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return
                     struct_member<
-                        typename detail::identity<SeqRef>::type
+                        typename detail::identity<Seq>::type
                       , N::value
                     >::call(seq);
             }

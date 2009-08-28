@@ -19,15 +19,15 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct advance_impl
         {
-            template <typename ItRef, typename N>
+            template <typename It, typename N>
             struct apply
               : mpl::if_c<
                     (N::value > 0)
-                  , detail::forward<ItRef, N::value>
-                  , detail::backward<ItRef, N::value>
+                  , detail::forward<It, N::value>
+                  , detail::backward<It, N::value>
                 >::type
             {};
         };
@@ -35,10 +35,9 @@ namespace boost { namespace fusion
         template <>
         struct advance_impl<iterator_facade_tag>
         {
-            template <typename ItRef, typename N>
+            template <typename It, typename N>
             struct apply
-              : detail::remove_reference<ItRef>::type::
-                    template advance<ItRef, N>
+              : detail::remove_reference<It>::type::template advance<It, N>
             {};
         };
     }
@@ -48,10 +47,7 @@ namespace boost { namespace fusion
         template <typename It, int N>
         struct advance_c
           : extension::advance_impl<typename traits::tag_of<It>::type>::
-                template apply<
-                    typename detail::add_lref<It>::type
-                  , mpl::int_<N>
-                >
+                template apply<It, mpl::int_<N> >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
             BOOST_FUSION_STATIC_ASSERT((
@@ -63,7 +59,7 @@ namespace boost { namespace fusion
         template <typename It, typename N>
         struct advance
           : extension::advance_impl<typename traits::tag_of<It>::type>::
-                template apply<typename detail::add_lref<It>::type, N>
+                template apply<It, N>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
             BOOST_FUSION_STATIC_ASSERT((

@@ -39,20 +39,20 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct advance_impl;
 
         template<>
         struct advance_impl<zip_view_iterator_tag>
         {
-            template<typename ItRef, typename N>
+            template<typename It, typename N>
             struct apply
             {
                 typedef
                     zip_view_iterator<
                         typename result_of::transform<
                             typename detail::remove_reference<
-                                ItRef
+                                It
                             >::type::iterators
                           , detail::poly_advance<N>
                         >::type
@@ -60,7 +60,7 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(ItRef it)
+                call(It it)
                 {
                     return type(
                         fusion::transform(

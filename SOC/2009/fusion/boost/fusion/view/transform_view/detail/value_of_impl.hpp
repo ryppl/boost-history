@@ -13,17 +13,17 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_of_impl;
 
     // Unary Version
     template <>
     struct value_of_impl<transform_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 boost::result_of<
@@ -40,10 +40,10 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct value_of_impl<transform_view_iterator2_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 boost::result_of<

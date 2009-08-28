@@ -23,16 +23,15 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct equal_to_impl;
 
         template <>
         struct equal_to_impl<iterator_facade_tag>
         {
-            template <typename It1Ref, typename It2Ref>
+            template <typename It1, typename It2>
             struct apply
-              : detail::remove_reference<It1Ref>::type::
-                    template equal_to<It1Ref, It2Ref>
+              : detail::remove_reference<It1>::type::template equal_to<It1, It2>
             {};
         };
     }
@@ -42,10 +41,7 @@ namespace boost { namespace fusion
         template <typename It1, typename It2>
         struct equal_to
           : extension::equal_to_impl<typename traits::tag_of<It1>::type>::
-                template apply<
-                    typename detail::add_lref<It1>::type
-                  , typename detail::add_lref<It2>::type
-                >::type
+                template apply<It1, It2>::type
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It1>));
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It2>));

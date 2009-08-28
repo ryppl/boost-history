@@ -52,17 +52,17 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct begin_impl;
 
         template<>
         struct begin_impl<zip_view_tag>
         {
-            template<typename SeqRef>
+            template<typename Seq>
             struct apply
             {
                 typedef typename
-                    detail::remove_reference<SeqRef>::type
+                    detail::remove_reference<Seq>::type
                 seq;
 
                 typedef
@@ -76,7 +76,7 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef seq)
+                call(Seq seq)
                 {
                     return type(
                         fusion::transform(seq.seqs, detail::poly_begin()),

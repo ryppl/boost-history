@@ -10,30 +10,29 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct at_impl;
 
     template <>
     struct at_impl<boost_tuple_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
         {
             typedef typename
                 detail::forward_as<
-                    SeqRef
+                    Seq
                   , typename tuples::element<
                         N::value
-                      , typename detail::identity<SeqRef>::type
+                      , typename detail::identity<Seq>::type
                     >::type
                 >::type
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
-                return tuples::get<N::value>(
-                        BOOST_FUSION_FORWARD(SeqRef,seq));
+                return tuples::get<N::value>(BOOST_FUSION_FORWARD(Seq,seq));
             }
         };
     };

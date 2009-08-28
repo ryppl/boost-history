@@ -13,28 +13,28 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<boost_tuple_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 basic_iterator<
                     boost_tuple_iterator_tag
                   , random_access_traversal_tag
-                  , SeqRef
+                  , typename detail::add_lref<Seq>::type
                   , tuples::length<
-                        typename detail::identity<SeqRef>::type
+                        typename detail::identity<Seq>::type
                     >::value
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(seq,0);
             }

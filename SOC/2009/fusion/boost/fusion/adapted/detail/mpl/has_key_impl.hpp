@@ -13,15 +13,15 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct has_key_impl;
 
     template <>
     struct has_key_impl<mpl_sequence_tag>
     {
-        template <typename SeqRef, typename Key>
+        template <typename Seq, typename Key>
         struct apply
-          : mpl::has_key<typename detail::identity<SeqRef>::type, Key>
+          : mpl::has_key<typename detail::identity<Seq>::type, Key>
         {};
     };
 }}}

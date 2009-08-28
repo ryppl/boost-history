@@ -13,19 +13,17 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct advance_impl;
 
     // Unary Version
     template<>
     struct advance_impl<transform_view_iterator_tag>
     {
-        template<typename ItRef, typename N>
+        template<typename It, typename N>
         struct apply
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type
-            it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef
                 transform_view_iterator<
@@ -35,7 +33,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(fusion::advance<N>(it.it), *it.f);
             }
@@ -46,12 +44,10 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct advance_impl<transform_view_iterator2_tag>
     {
-        template<typename ItRef, typename N>
+        template<typename It, typename N>
         struct apply
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type
-            it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef
                 transform_view_iterator2<
@@ -62,7 +58,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(fusion::advance<N>(it.it1),
                             fusion::advance<N>(it.it2),

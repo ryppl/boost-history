@@ -12,27 +12,25 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<reverse_view_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 reverse_view_iterator<
                     typename result_of::begin<
-                        typename detail::remove_reference<
-                            SeqRef
-                        >::type::seq_type
+                        typename detail::remove_reference<Seq>::type::seq_type
                     >::type
                  >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(fusion::begin(seq.seq.get()));
             }

@@ -63,18 +63,12 @@ namespace boost { namespace fusion { namespace detail
             typedef typename remove_reference<T2>::type T2_nonref;
 #endif
 
-            typedef
-                compare_convertible<
-                    mpl::or_<
-                        is_convertible<T1_nonref, T2_nonref>
-                      , is_convertible<T2_nonref, T1_nonref>
-                    >::value
-                >
-            gen;
-
-            return gen::call(
-                    BOOST_FUSION_FORWARD(T1Ref,x),
-                    BOOST_FUSION_FORWARD(T2,y));
+            return compare_convertible<
+                mpl::or_<
+                    is_convertible<T1_nonref, T2_nonref>
+                  , is_convertible<T2_nonref, T1_nonref>
+                >::value
+            >::call(BOOST_FUSION_FORWARD(T1Ref,x),BOOST_FUSION_FORWARD(T2,y));
         }
 
         T1Ref x;

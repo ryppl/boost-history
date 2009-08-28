@@ -12,7 +12,7 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct empty_impl;
 
     template <>

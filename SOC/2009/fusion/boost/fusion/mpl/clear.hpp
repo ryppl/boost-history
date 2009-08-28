@@ -14,7 +14,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct clear_impl;
 
     template <>

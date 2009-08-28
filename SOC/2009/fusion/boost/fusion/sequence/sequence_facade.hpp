@@ -21,19 +21,19 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct at_key_impl;
 
-        template<typename Tag>
+        template<typename>
         struct empty_impl;
 
-        template<typename Tag>
+        template<typename>
         struct size_impl;
 
-        template<typename Tag>
+        template<typename>
         struct has_key_impl;
 
-        template<typename Tag>
+        template<typename>
         struct value_at_key_impl;
     }
 
@@ -45,44 +45,46 @@ namespace boost { namespace fusion
     struct sequence_facade
       : sequence_base<Derived>
     {
+        //TODO!!!
+        typedef fusion_sequence_tag tag;
         typedef sequence_facade_tag fusion_tag;
         typedef Derived derived_type;
         typedef Category category;
         typedef IsView is_view;
 
-        template<typename SeqRef,typename Key>
+        template<typename Seq,typename Key>
         struct at_key
           : extension::at_key_impl<
-                typename mpl::apply<mpl::always<void_>,SeqRef>::type
-            >::template apply<SeqRef,Key>
+                typename mpl::apply<mpl::always<void_>,Seq>::type
+            >::template apply<Seq,Key>
         {};
 
-        template<typename SeqRef>
+        template<typename Seq>
         struct empty
           : extension::empty_impl<
-                typename mpl::apply<mpl::always<void_>,SeqRef>::type
-            >::template apply<SeqRef>
+                typename mpl::apply<mpl::always<void_>,Seq>::type
+            >::template apply<Seq>
         {};
 
-        template<typename SeqRef>
+        template<typename Seq>
         struct size
           : extension::size_impl<
-                typename mpl::apply<mpl::always<void_>,SeqRef>::type
-            >::template apply<SeqRef>
+                typename mpl::apply<mpl::always<void_>,Seq>::type
+            >::template apply<Seq>
         {};
 
-        template<typename SeqRef,typename Key>
+        template<typename Seq,typename Key>
         struct has_key
           : extension::has_key_impl<
-                typename mpl::apply<mpl::always<void_>,SeqRef>::type
-            >::template apply<SeqRef,Key>
+                typename mpl::apply<mpl::always<void_>,Seq>::type
+            >::template apply<Seq,Key>
         {};
 
-        template<typename SeqRef,typename Key>
+        template<typename Seq,typename Key>
         struct value_at_key
           : extension::value_at_key_impl<
-                typename mpl::apply<mpl::always<void_>,SeqRef>::type
-            >::template apply<SeqRef,Key>
+                typename mpl::apply<mpl::always<void_>,Seq>::type
+            >::template apply<Seq,Key>
         {};
 
     };

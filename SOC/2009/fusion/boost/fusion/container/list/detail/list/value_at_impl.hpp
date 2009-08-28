@@ -13,17 +13,17 @@
 namespace boost { namespace fusion { namespace extension
 {
     //TODO doc
-    template <typename Tag>
+    template <typename>
     struct value_at_impl;
 
     template <>
     struct value_at_impl<list_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
           : result_of::value_at<
                 typename detail::remove_reference<
-                    SeqRef
+                    Seq
                 >::type::storage_type
               , N
             >

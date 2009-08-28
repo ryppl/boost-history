@@ -14,26 +14,26 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct begin_impl;
 
     template <>
     struct begin_impl<struct_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 basic_iterator<
                     struct_iterator_tag
                   , random_access_traversal_tag
-                  , SeqRef
+                  , Seq
                   , 0
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(seq,0);
             }
@@ -43,20 +43,20 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct begin_impl<assoc_struct_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef
                 basic_iterator<
                     assoc_struct_iterator_tag
                   , assoc_struct_category
-                  , SeqRef
+                  , typename detail::add_lref<Seq>::type
                   , 0
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(seq,0);
             }

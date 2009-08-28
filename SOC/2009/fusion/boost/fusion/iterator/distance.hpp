@@ -19,7 +19,7 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct distance_impl
         {
             template <typename BeginRef, typename EndRef>
@@ -44,10 +44,7 @@ namespace boost { namespace fusion
         template <typename Begin, typename End>
         struct distance
           : extension::distance_impl<typename traits::tag_of<Begin>::type>::
-                template apply<
-                    typename detail::add_lref<Begin>::type
-                  , typename detail::add_lref<End>::type
-                >::type
+                template apply<Begin, End>::type
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<Begin>));
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<End>));

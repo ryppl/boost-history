@@ -12,25 +12,25 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct deref_impl;
 
     template <>
     struct deref_impl<joint_view_iterator_tag>
     {
-        template<typename ItRef>
+        template<typename It>
         struct apply
         {
             typedef typename
                 result_of::deref<
                     typename detail::remove_reference<
-                        ItRef
+                        It
                     >::type::begin_type
                 >::type
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return fusion::deref(it.first);
             }

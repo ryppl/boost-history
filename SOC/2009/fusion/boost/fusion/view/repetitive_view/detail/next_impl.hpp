@@ -22,10 +22,10 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct next_impl<repetitive_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
             typedef typename
                 detail::remove_reference<typename it::seq_type>::seq_type
             real_seq_type;
@@ -49,19 +49,19 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call_impl(ItRef it, mpl::true_ /*need_begin_it*/)
+            call_impl(It it, mpl::true_ /*need_begin_it*/)
             {
                 return type(it.seq,fusion::begin(it.seq.seq.get()));
             }
 
             static type
-            call_impl(ItRef it, mpl::false_ /*need_begin_it*/)
+            call_impl(It it, mpl::false_ /*need_begin_it*/)
             {
                 return type(it.seq,fusion::next(it.it));
             }
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return call_impl(it,typename need_begin_it::type());
             }

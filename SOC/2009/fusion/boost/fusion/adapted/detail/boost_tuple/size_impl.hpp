@@ -12,18 +12,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct size_impl;
 
     template <>
     struct size_impl<boost_tuple_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
           : mpl::int_<
-                tuples::length<
-                    typename detail::identity<SeqRef>::type
-                >::value
+                tuples::length<typename detail::identity<Seq>::type>::value
             >
         {};
     };

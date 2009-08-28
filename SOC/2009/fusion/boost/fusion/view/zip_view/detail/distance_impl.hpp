@@ -73,17 +73,17 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct distance_impl;
 
         template<>
         struct distance_impl<zip_view_iterator_tag>
         {
-            template<typename ItRef1, typename ItRef2>
+            template<typename It1, typename It2>
             struct apply
               : detail::zip_view_iterator_distance<
-                    typename detail::remove_reference<ItRef1>::type
-                  , typename detail::remove_reference<ItRef2>::type
+                    typename detail::remove_reference<It1>::type
+                  , typename detail::remove_reference<It2>::type
                 >
             {};
         };

@@ -15,21 +15,21 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct prior_impl<reverse_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef
                 reverse_view_iterator<
                     typename result_of::next<
                         typename detail::remove_reference<
-                            ItRef
+                            It
                         >::type::it_type
                     >::type
                 >
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(fusion::next(it.it));
             }

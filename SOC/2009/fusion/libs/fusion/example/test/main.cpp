@@ -119,17 +119,14 @@ void seq_test(Seq&& seq)
 
 struct identity_int
 {
-    template<typename>
-    struct result
-    {
-        typedef int type;
-    };
-
     int operator()(int i)
     {
         return i;
     }
 };
+
+struct C
+{};
 
 int main()
 {
@@ -149,14 +146,26 @@ int main()
         static_assert(std::is_same<deref<begin<lvec>::type>::type,char&>::value,"");
         static_assert(std::is_same<deref<begin<rvec>::type>::type,char>::value,"");
         static_assert(std::is_same<deref<begin<clvec>::type>::type,const char&>::value,"");
-        //TODO cschmidt: !!!
         static_assert(std::is_same<deref<begin<crvec>::type>::type,const char>::value,"");
+
+        static_assert(std::is_same<deref<begin<fusion::vector<C> >::type>::type,C&>::value,"");
+        static_assert(std::is_same<deref<begin<fusion::vector<C> const>::type>::type,C const&>::value,"");
+        static_assert(std::is_same<deref<begin<fusion::vector<C>&>::type>::type,C&>::value,"");
+        static_assert(std::is_same<deref<begin<fusion::vector<C>&&>::type>::type,C&&>::value,"");
+        static_assert(std::is_same<deref<begin<fusion::vector<C>const&>::type>::type,C const&>::value,"");
+        static_assert(std::is_same<deref<begin<fusion::vector<C>const&&>::type>::type,C const&&>::value,"");
     }
 
     {
-        fusion::vector<moveable> v(0);
-        fusion::vector<moveable> v2=std::move(v);
-        //fusion::vector<moveable> v2=v;
+        using namespace fusion;
+        vector<moveable> v(0);
+        vector<moveable> v2=std::move(v);
+        //vector<moveable> v2=v;
+    }
+
+    {
+        using namespace fusion;
+        deref(begin(vector_tie(int())));
     }
 
     {

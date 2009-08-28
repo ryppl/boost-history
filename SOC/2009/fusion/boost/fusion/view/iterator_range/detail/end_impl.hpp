@@ -10,21 +10,21 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     template <>
     struct end_impl<iterator_range_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
             typedef typename
-                detail::remove_reference<SeqRef>::type::end_type
+                detail::remove_reference<Seq>::type::end_type
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return seq.last;
             }

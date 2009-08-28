@@ -19,14 +19,14 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct is_sequence_impl
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
               : is_base_of<
                     sequence_root
-                  , typename detail::identity<SeqRef>::type
+                  , typename detail::identity<Seq>::type
                 >
             {};
         };
@@ -37,7 +37,7 @@ namespace boost { namespace fusion
         template <typename T>
         struct is_sequence
           : extension::is_sequence_impl<typename traits::tag_of<T>::type>::
-                template apply<typename detail::add_lref<T>::type>
+                template apply<T>
         {};
     }
 }}

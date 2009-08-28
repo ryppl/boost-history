@@ -17,16 +17,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct has_key;
 
     template <>
     struct has_key<detail::filter_key_view_tag>
     {
-        template <typename SeqRef,typename Key>
+        template <typename Seq,typename Key>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
                 mpl::eval_if<

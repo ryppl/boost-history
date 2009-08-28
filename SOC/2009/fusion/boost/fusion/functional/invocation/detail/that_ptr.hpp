@@ -59,7 +59,7 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES)
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || 1
     template <typename PtrOrSmartPtr>
     struct non_const_pointee;
 

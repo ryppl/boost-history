@@ -15,7 +15,6 @@
 #include <boost/mpl/bool.hpp>
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/remove_const.hpp>
-#include <boost/utility/enable_if.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {

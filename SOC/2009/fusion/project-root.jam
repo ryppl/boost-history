@@ -13,13 +13,13 @@ project
     : requirements <include>.
                    <include>$(BOOST_INCLUDES_PATH)
                    <define>BOOST_FUSION_ENABLE_STATIC_ASSERTS
-                   <define>BOOST_FUSION_PREFER_MPL
+#                   <define>BOOST_FUSION_PREFER_MPL
 #                   <toolset>gcc:<cxxflags>-std=c++0x
     : build-dir ../bin
     : default-build debug <link>shared <runtime-link>shared <threading>multi
     ;
 
-build-project libs/fusion/example/test ;
+#build-project libs/fusion/example/test ;
 
 #build-project libs/fusion/doc ;
 #build-project libs/fusion/example/extension ;

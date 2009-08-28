@@ -10,11 +10,15 @@
 #ifndef BOOST_FUSION_ALGORITHM_ITERATION_FOLD_HPP
 #define BOOST_FUSION_ALGORITHM_ITERATION_FOLD_HPP
 
+#include <boost/config.hpp>
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/type_traits/add_const.hpp>
+#endif
 
 namespace boost { namespace fusion {
 
@@ -24,20 +28,23 @@ namespace boost { namespace fusion {
     {
         template <typename Seq, typename State, typename F>
         struct fold
+          : detail::fold_impl<
+                size<Seq>::value
+              , typename begin<Seq>::type
+              , typename detail::add_lref<
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                    typename add_const<
+#endif
+                        State
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                    >::type
+#endif
+                >::type
+              , typename detail::add_lref<F>::type
+            >
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
-
-            typedef
-                detail::fold_impl<
-                    size<Seq>::value
-                  , typename begin<Seq>::type
-                  , typename detail::add_lref<State>::type
-                  , typename detail::add_lref<F>::type
-                >
-            gen;
-
-            typedef typename gen::type type;
         };
     }
 
@@ -57,7 +64,7 @@ namespace boost { namespace fusion {
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(State)
               , BOOST_FUSION_R_ELSE_CLREF(F)
-            >::gen::call(fusion::begin(seq), state, f);
+            >::call(fusion::begin(seq), state, f);
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -71,7 +78,7 @@ namespace boost { namespace fusion {
 #   pragma warning(push)
 #   pragma warning(disable: 4180)
 #endif
-        return result_of::fold<Seq&,State const&,F const&>::gen::call(
+        return result_of::fold<Seq&,State const&,F const&>::call(
                 fusion::begin(seq), state, f);
 #ifdef BOOST_MSVC
 #   pragma warning(pop)

@@ -14,18 +14,18 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct distance_to_impl;
 
     template <>
     struct distance_to_impl<mpl_iterator_tag>
     {
-        template <typename It1Ref, typename It2Ref>
+        template <typename It1, typename It2>
         struct apply
           : mpl::distance<
-                typename detail::identity<It1Ref>::type
+                typename detail::identity<It1>::type
               , typename detail::get_mpl_it<
-                    typename detail::identity<It2Ref>::type
+                    typename detail::identity<It2>::type
                 >::type
             >
         {};

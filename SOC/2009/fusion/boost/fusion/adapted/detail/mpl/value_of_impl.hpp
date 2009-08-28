@@ -12,15 +12,15 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_of_impl;
 
     template <>
     struct value_of_impl<mpl_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
-          : mpl::deref<typename detail::identity<ItRef>::type>
+          : mpl::deref<typename detail::identity<It>::type>
         {};
     };
 }}}

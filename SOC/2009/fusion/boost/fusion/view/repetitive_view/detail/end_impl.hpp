@@ -25,45 +25,45 @@ namespace boost { namespace fusion
     namespace detail
     {
         template<
-            typename SeqRef
+            typename Seq
           , typename MaxIndex
           , bool /*IsEmptyOrForwardOnly*/=
                 mpl::or_<
-                    result_of::empty<SeqRef>
-                  , mpl::not_<traits::is_bidirectional<SeqRef> >
+                    result_of::empty<Seq>
+                  , mpl::not_<traits::is_bidirectional<Seq> >
                 >::value/*false*/
         >
         struct get_real_end_it
         {
             typedef
-                mpl::negate<mpl::modulus<MaxIndex, result_of::size<SeqRef> > >
+                mpl::negate<mpl::modulus<MaxIndex, result_of::size<Seq> > >
             backwards_n;
 
             typedef typename
                 result_of::advance<
-                    typename result_of::end<SeqRef>::type
+                    typename result_of::end<Seq>::type
                   , typename backwards_n::type
                 >::type
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return fusion::advance<backwards_n>(fusion::end(seq));
             }
         };
 
-        template<typename SeqRef, typename MaxIndex>
-        struct get_real_end_it<SeqRef, MaxIndex, /*IsEmptyOrForwardOnly*/true>
+        template<typename Seq, typename MaxIndex>
+        struct get_real_end_it<Seq, MaxIndex, /*IsEmptyOrForwardOnly*/true>
         {
             typedef typename
                 result_of::end<
-                    typename detail::remove_reference<SeqRef>::type::seq_type
+                    typename detail::remove_reference<Seq>::type::seq_type
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(seq,fusion::end(seq));
             }
@@ -72,16 +72,16 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct end_impl;
 
         template <>
         struct end_impl<repetitive_view_tag>
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
             {
-                typedef typename detail::remove_reference<SeqRef>::type seq;
+                typedef typename detail::remove_reference<Seq>::type seq;
                 typedef
                     detail::get_real_end_it<
                         typename seq::seq_type
@@ -98,7 +98,7 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(SeqRef seq)
+                call(Seq seq)
                 {
                     return type(seq.seq.get(),gen::call(seq.seq.get()));
                 }

@@ -11,15 +11,15 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct size_impl;
 
     template<>
     struct size_impl<array_tag>
     {
-        template<typename SeqRef>
+        template<typename Seq>
         struct apply
-          : mpl::int_<detail::remove_reference<SeqRef>::type::static_size>
+          : mpl::int_<detail::remove_reference<Seq>::type::static_size>
         {};
     };
 }}}

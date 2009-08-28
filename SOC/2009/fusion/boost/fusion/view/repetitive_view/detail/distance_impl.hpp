@@ -12,7 +12,7 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct distance_impl;
 
     template<>

@@ -13,13 +13,13 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct is_view_impl;
 
     template<>
     struct is_view_impl<array_tag>
     {
-        template<typename SeqRef>
+        template<typename Seq>
         struct apply
           : mpl::false_
         {};

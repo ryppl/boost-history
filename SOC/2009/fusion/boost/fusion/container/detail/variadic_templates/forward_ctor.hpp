@@ -19,16 +19,21 @@
         typename call_traits<Arguments>::param_type... arguments)
       : BOOST_FUSION_INIT_BASE(arguments)
     {}
+
+    template<typename T>
+    BOOST_FUSION_SEQ_NAME(T const& t)
+      : BOOST_FUSION_INIT_BASE(t)
+    {}
 #   else
     template <typename... OtherArguments>
     explicit
     BOOST_FUSION_SEQ_NAME(OtherArguments&&... arguments)
       : BOOST_FUSION_INIT_BASE(std::forward<OtherArguments>(arguments)...)
     {}
-#   endif
 
-    template<typename SeqAssign>
-    BOOST_FUSION_SEQ_NAME(SeqAssign const& seq_assign)
-      : BOOST_FUSION_INIT_BASE(seq_assign)
+    template<typename T>
+    BOOST_FUSION_SEQ_NAME(T&& t)
+      : BOOST_FUSION_INIT_BASE(std::forward<T>(t))
     {}
+#   endif
 #endif

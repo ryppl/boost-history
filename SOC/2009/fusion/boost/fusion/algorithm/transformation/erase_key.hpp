@@ -41,10 +41,7 @@ namespace boost { namespace fusion
                     traits::is_forward<Seq>
                   , erase<
                         Seq
-                      , typename find_key<
-                            typename detail::add_lref<Seq>::type
-                          , Key
-                        >::type
+                      , typename find_key<Seq, Key>::type
                     >
                   , mpl::identity<
                         detail::filter_key_view<Seq,is_same<mpl::_1,Key> >

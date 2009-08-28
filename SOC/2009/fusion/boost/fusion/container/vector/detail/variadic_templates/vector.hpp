@@ -32,11 +32,14 @@
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
+#include <boost/utility/enable_if.hpp>
 
 #include <utility>
 
 namespace boost { namespace fusion
 {
+    struct fusion_sequence_tag;
+
     namespace detail
     {
         template<int Index,typename... Elements>
@@ -312,14 +315,15 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_VECTOR_ASSIGN_CTOR
 
-        /*
         template<typename Seq>
-        vector(typename enable_if_c<sizeof...(Elements)!=1,
-                                BOOST_FUSION_R_ELSE_CLREF(Seq)>::type seq)
+        vector(
+            typename enable_if_c<
+                sizeof...(Elements)!=1
+              , BOOST_FUSION_R_ELSE_CLREF(Seq)
+            >::type seq)
           : base_type(detail::assign_by_deref(),
-                 fusion::begin(BOOST_FUSION_FORWARD(Seq,seq.seq)))
+                 fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)))
         {}
-        */
 
         template<typename Seq>
         vector&

@@ -15,22 +15,22 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_at_impl;
 
     template <>
     struct value_at_impl<vector_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
 #ifdef BOOST_FUSION_PREFER_MPL
           : mpl::at<
-                typename detail::remove_reference<SeqRef>::type::types
+                typename detail::remove_reference<Seq>::type::types
               , N
             >
 #else
           : vector_meta_value_at<
-                typename detail::remove_reference<SeqRef>::type
+                typename detail::remove_reference<Seq>::type
               , N::value
             >
 #endif

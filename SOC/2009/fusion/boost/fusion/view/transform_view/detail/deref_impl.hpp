@@ -14,32 +14,29 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct deref_impl;
 
     // Unary Version
     template <>
     struct deref_impl<transform_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename
-                detail::remove_reference<ItRef>::type
-            it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 boost::result_of<
                     typename detail::get_func_base<
                         typename it::transform_type
                     >::type(
-                    typename result_of::deref<typename it::it_type>::type
-                    )
+                    typename result_of::deref<typename it::it_type>::type)
                 >::type
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return (*it.f)(fusion::deref(it.it));
             }
@@ -50,10 +47,10 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct deref_impl<transform_view_iterator2_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 boost::result_of<
@@ -66,7 +63,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return (*it.f)(fusion::deref(it.it1), fusion::deref(it.it2));
             }

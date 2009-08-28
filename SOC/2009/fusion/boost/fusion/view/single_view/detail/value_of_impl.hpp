@@ -10,19 +10,19 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct value_of_impl;
 
     template <>
     struct value_of_impl<single_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef typename
                 detail::remove_reference<
                     typename detail::remove_reference<
-                        ItRef
+                        It
                     >::type::view_type
                 >::type::value_type
             type;

@@ -20,22 +20,21 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct size_impl
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
-              : detail::remove_reference<SeqRef>::type::size
+              : detail::remove_reference<Seq>::type::size
             {};
         };
 
         template <>
         struct size_impl<sequence_facade_tag>
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
-              : detail::remove_reference<SeqRef>::type::
-                    template size<SeqRef>::type
+              : detail::remove_reference<Seq>::type::template size<Seq>::type
             {};
         };
     }
@@ -45,7 +44,7 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct size
           : extension::size_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type>::type
+                template apply<Seq>::type
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));

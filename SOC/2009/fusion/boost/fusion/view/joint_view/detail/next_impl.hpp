@@ -15,16 +15,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct next_impl;
 
     template <>
     struct next_impl<joint_view_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename it::begin_type begin_type;
             typedef typename it::end_type end_type;
@@ -43,19 +43,19 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(ItRef it, mpl::true_)
+            call(It it, mpl::true_)
             {
                 return type(it.concat);
             }
 
             static type
-            call(ItRef it, mpl::false_)
+            call(It it, mpl::false_)
             {
                 return type(fusion::next(it.first), it.concat);
             }
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return call(it, equal_to());
             }
@@ -65,21 +65,21 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct next_impl<concat_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef
                 concat_iterator<
                     typename result_of::next<
                         typename detail::remove_reference<
-                            ItRef
+                            It
                         >::type::begin_type
                     >::type
                 >
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(fusion::next(it.first));
             }

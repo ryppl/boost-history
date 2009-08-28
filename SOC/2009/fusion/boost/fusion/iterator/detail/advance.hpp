@@ -20,25 +20,25 @@ namespace boost { namespace fusion { namespace detail
     // Default advance implementation, perform next(it)
     // or prior(it) N times.
 
-    template <typename ItRef, int N>
+    template <typename It, int N>
     struct forward;
 
-    template <typename ItRef, int N>
+    template <typename It, int N>
     struct next_forward
       : forward<
-            typename result_of::next<ItRef>::type
+            typename result_of::next<It>::type
           , N-1
         >
     {};
 
-    template <typename ItRef, int N>
+    template <typename It, int N>
     struct forward
     {
         typedef typename
             mpl::eval_if_c<
                 (N == 0)
-              , mpl::identity<ItRef>
-              , next_forward<ItRef, N>
+              , mpl::identity<It>
+              , next_forward<It, N>
             >::type
         type;
 
@@ -56,25 +56,25 @@ namespace boost { namespace fusion { namespace detail
         }
     };
 
-    template <typename ItRef, int N>
+    template <typename It, int N>
     struct backward;
 
-    template <typename ItRef, int N>
+    template <typename It, int N>
     struct next_backward
       : backward<
-            typename result_of::prior<ItRef>::type
+            typename result_of::prior<It>::type
           , N+1
         >
     {};
 
-    template <typename ItRef, int N>
+    template <typename It, int N>
     struct backward
     {
         typedef typename
             mpl::eval_if_c<
                 (N == 0)
-              , mpl::identity<ItRef>
-              , next_backward<ItRef, N>
+              , mpl::identity<It>
+              , next_backward<It, N>
             >::type
         type;
 

@@ -12,26 +12,26 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct next_impl;
 
     template <>
     struct next_impl<mpl_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
             typedef
                 mpl_iterator<
                     typename mpl::next<
-                        typename detail::identity<ItRef>::type
+                        typename detail::identity<It>::type
                     >::type
                 >
             type;
 
-            template<typename ItRef2>
+            template<typename It2>
             static type
-            call(ItRef2)
+            call(It2)
             {
                 return type();
             }

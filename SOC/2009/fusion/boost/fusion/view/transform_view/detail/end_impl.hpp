@@ -13,30 +13,30 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct end_impl;
 
     // Unary Version
     template <>
     struct end_impl<transform_view_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef
                 transform_view_iterator<
                     typename result_of::end<typename seq::seq_type>::type
                   , typename detail::forward_as<
-                        SeqRef
+                        Seq
                       , typename seq::transform_type
                     >::type
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(fusion::end(seq.seq.get()), seq.f);
             }
@@ -47,24 +47,24 @@ namespace boost { namespace fusion { namespace extension
     template <>
     struct end_impl<transform_view2_tag>
     {
-        template <typename SeqRef>
+        template <typename Seq>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef
                 transform_view_iterator2<
                     typename result_of::end<typename seq::seq1_type>::type
                   , typename result_of::end<typename seq::seq2_type>::type
                   , typename detail::forward_as<
-                        SeqRef
+                        Seq
                       , typename seq::transform_type
                     >::type
                 >
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return type(
                         fusion::end(seq.seq1.get())

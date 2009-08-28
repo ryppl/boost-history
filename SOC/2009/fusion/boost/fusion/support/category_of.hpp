@@ -110,7 +110,7 @@ namespace boost { namespace fusion
         struct category_of
           : extension::category_of_impl<
                 typename fusion::traits::tag_of<T>::type
-            >::template apply<typename detail::add_lref<T>::type>
+            >::template apply<T>
         {
             BOOST_FUSION_MPL_ASSERT((
                 mpl::or_<traits::is_sequence<T>, traits::is_iterator<T> >));

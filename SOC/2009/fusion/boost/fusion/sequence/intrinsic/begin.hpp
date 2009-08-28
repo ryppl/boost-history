@@ -18,15 +18,15 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct begin_impl;
 
         template <>
         struct begin_impl<sequence_facade_tag>
         {
-            template <typename SeqRef>
+            template <typename Seq>
             struct apply
-              : detail::remove_reference<SeqRef>::type::template begin<SeqRef>
+              : detail::remove_reference<Seq>::type::template begin<Seq>
             {};
         };
     }
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
         template <typename Seq>
         struct begin
             : extension::begin_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type>
+                template apply<Seq>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));

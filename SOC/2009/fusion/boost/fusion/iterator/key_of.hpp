@@ -17,16 +17,16 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct key_of_impl;
 
         template <>
         struct key_of_impl<iterator_facade_tag>
         {
-            template <typename ItRef>
+            template <typename It>
             struct apply
-              : detail::remove_reference<ItRef>::type::
-                    template key_of<ItRef>
+              : detail::remove_reference<It>::type::
+                    template key_of<It>
             {};
         };
     }
@@ -36,7 +36,7 @@ namespace boost { namespace fusion
         template <typename It>
         struct key_of
           : extension::key_of_impl<typename traits::tag_of<It>::type>::
-                template apply<typename detail::add_lref<It>::type>
+                template apply<It>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_iterator<It>));
             BOOST_FUSION_MPL_ASSERT((traits::is_associative<It>));

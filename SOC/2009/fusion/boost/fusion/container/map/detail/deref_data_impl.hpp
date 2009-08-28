@@ -13,26 +13,26 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct deref_data_impl;
 
     template <>
     struct deref_data_impl<map_iterator_tag>
     {
-        template <typename ItRef>
+        template <typename It>
         struct apply
         {
-            typedef typename detail::remove_reference<ItRef>::type it;
+            typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
                 detail::forward_as<
                     typename it::seq_type
-                  , typename result_of::value_of<ItRef>::type::second_type
+                  , typename result_of::value_of<It>::type::second_type
                 >::type
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return deref(it).second;
             }

@@ -29,15 +29,15 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct at_impl;
 
         template <>
         struct at_impl<sequence_facade_tag>
         {
-            template <typename SeqRef, typename N>
+            template <typename Seq, typename N>
             struct apply
-              : detail::remove_reference<SeqRef>::type::template at<SeqRef, N>
+              : detail::remove_reference<Seq>::type::template at<Seq, N>
             {};
         };
     }
@@ -47,7 +47,7 @@ namespace boost { namespace fusion
         template <typename Seq, typename N>
         struct at
           : extension::at_impl<typename traits::tag_of<Seq>::type>::
-                template apply<typename detail::add_lref<Seq>::type, N>
+                template apply<Seq, N>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((

@@ -14,16 +14,16 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct value_at_impl;
 
     template<>
     struct value_at_impl<transform_view_tag>
     {
-        template<typename SeqRef, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
                 boost::result_of<
@@ -42,10 +42,10 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct value_at_impl<transform_view2_tag>
     {
-        template<typename SeqRef, typename N>
+        template<typename Seq, typename N>
         struct apply
         {
-            typedef typename detail::remove_reference<SeqRef>::type seq;
+            typedef typename detail::remove_reference<Seq>::type seq;
 
             typedef typename
                 boost::result_of<

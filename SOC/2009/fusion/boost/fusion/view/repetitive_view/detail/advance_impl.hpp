@@ -74,16 +74,16 @@ namespace boost { namespace fusion
 
     namespace extension
     {
-        template<typename Tag>
+        template<typename>
         struct advance_impl;
 
         template<>
         struct advance_impl<repetitive_view_iterator_tag>
         {
-            template<typename ItRef, typename N>
+            template<typename It, typename N>
             struct apply
             {
-                typedef typename detail::remove_reference<ItRef>::type it;
+                typedef typename detail::remove_reference<It>::type it;
                 typedef detail::get_cyclic_next_iterator<it, N> gen;
 
                 typedef
@@ -95,7 +95,7 @@ namespace boost { namespace fusion
                 type;
 
                 static type
-                call(ItRef it)
+                call(It it)
                 {
                     return type(it.seq,gen::call(it));
                 }

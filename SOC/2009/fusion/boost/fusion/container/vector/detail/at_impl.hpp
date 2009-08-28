@@ -16,28 +16,26 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template <typename Tag>
+    template <typename>
     struct at_impl;
 
     template <>
     struct at_impl<vector_tag>
     {
-        template <typename SeqRef, typename N>
+        template <typename Seq, typename N>
         struct apply
         {
             typedef typename
                 detail::forward_as<
-                    SeqRef
+                    Seq
 #ifdef BOOST_FUSION_PREFER_MPL
                   , typename mpl::at<
-                        typename detail::remove_reference<
-                            SeqRef
-                        >::type::types
+                        typename detail::remove_reference<Seq>::type::types
                       , N
                     >::type
 #else
                   , typename vector_meta_value_at<
-                        typename detail::remove_reference<SeqRef>::type
+                        typename detail::remove_reference<Seq>::type
                       , N::value
                     >::type
 #endif
@@ -45,7 +43,7 @@ namespace boost { namespace fusion { namespace extension
             type;
 
             static type
-            call(SeqRef seq)
+            call(Seq seq)
             {
                 return seq.at_impl(mpl::int_<N::value>());
             }

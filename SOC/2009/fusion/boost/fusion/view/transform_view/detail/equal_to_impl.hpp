@@ -12,17 +12,17 @@
 
 namespace boost { namespace fusion { namespace extension
 {
-    template<typename Tag>
+    template<typename>
     struct equal_to_impl;
 
     template<>
     struct equal_to_impl<transform_view_iterator_tag>
     {
-        template<typename ItRef1, typename ItRef2>
+        template<typename It1, typename It2>
         struct apply
           : result_of::equal_to<
-                typename detail::remove_reference<ItRef1>::type::it_type
-              , typename detail::remove_reference<ItRef2>::type::it_type
+                typename detail::remove_reference<It1>::type::it_type
+              , typename detail::remove_reference<It2>::type::it_type
             >
         {};
     };
@@ -30,11 +30,11 @@ namespace boost { namespace fusion { namespace extension
     template<>
     struct equal_to_impl<transform_view_iterator2_tag>
     {
-        template<typename ItRef1, typename ItRef2>
+        template<typename It1, typename It2>
         struct apply
           : result_of::equal_to<
-                typename detail::remove_reference<ItRef1>::type::it1_type
-              , typename detail::remove_reference<ItRef2>::type::it1_type
+                typename detail::remove_reference<It1>::type::it1_type
+              , typename detail::remove_reference<It2>::type::it1_type
             >
         {};
     };

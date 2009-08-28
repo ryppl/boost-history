@@ -8,10 +8,6 @@
 #ifndef BOOST_FUSION_SUPPORT_INTERNAL_RESULT_OF_HPP
 #define BOOST_FUSION_SUPPORT_INTERNAL_RESULT_OF_HPP
 
-//cschmidt: fusion might call result_of on class types without an operator().
-//Therefore we emulate the old behavior if (and only if) the boost
-//implementation falls back to decltype by default.
-
 #include <boost/config.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 
@@ -158,15 +154,13 @@ namespace boost { namespace fusion { namespace detail
             preevaluate_impl<
                 typename remove_pointer<typename identity<FRef>::type>::type
             >
-        impl;
-
-        typedef impl gen;
-        typedef typename impl::type type;
-        typedef typename impl::is_preevaluable is_preevaluable;
+        gen;
+        typedef typename gen::type type;
+        typedef typename gen::is_preevaluable is_preevaluable;
 #endif
     };
 
-    //cschmidt: Result_of does not like ref-qualified
+    //cschmidt: boost::result_of does not like ref-qualified
     //'class type' functions
     template<typename FRef>
     struct get_func_base

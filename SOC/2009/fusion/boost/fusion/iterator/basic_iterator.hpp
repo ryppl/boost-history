@@ -21,103 +21,92 @@ namespace boost { namespace fusion
 {
     namespace extension
     {
-        template <typename Tag>
+        template <typename>
         struct value_of_impl;
 
-        template <typename Tag>
+        template <typename>
         struct deref_impl;
 
-        template <typename Tag>
+        template <typename>
         struct value_of_data_impl;
 
-        template <typename Tag>
+        template <typename>
         struct key_of_impl;
 
-        template <typename Tag>
+        template <typename>
         struct deref_data_impl;
     }
 
-    template<
-        typename Tag
-      , typename Category
-      , typename SeqRef
-      , int Index
-    >
+    template<typename Tag, typename Category, typename SeqRef, int Index>
     struct basic_iterator
-      : iterator_facade<
-            basic_iterator<Tag,Category,SeqRef,Index>
-          , Category
-        >
+      : iterator_facade<basic_iterator<Tag,Category,SeqRef,Index>, Category>
     {
+        BOOST_FUSION_MPL_ASSERT((detail::is_lrref<SeqRef>));
+
         typedef mpl::int_<Index> index;
         typedef SeqRef seq_type;
 
-        template <typename ItRef>
+        template <typename It>
         struct value_of
-          : extension::value_of_impl<Tag>::template apply<ItRef>
+          : extension::value_of_impl<Tag>::template apply<It>
         {};
 
-        template <typename ItRef>
+        template <typename It>
         struct deref
-          : extension::deref_impl<Tag>::template apply<ItRef>
+          : extension::deref_impl<Tag>::template apply<It>
         {};
 
-        template <typename ItRef>
+        template <typename It>
         struct value_of_data
-          : extension::value_of_data_impl<Tag>::template apply<ItRef>
+          : extension::value_of_data_impl<Tag>::template apply<It>
         {};
 
-        template <typename ItRef>
+        template <typename It>
         struct key_of
-          : extension::key_of_impl<Tag>::template apply<ItRef>
+          : extension::key_of_impl<Tag>::template apply<It>
         {};
 
-        template <typename ItRef>
+        template <typename It>
         struct deref_data
-          : extension::deref_data_impl<Tag>::template apply<ItRef>
+          : extension::deref_data_impl<Tag>::template apply<It>
         {};
 
-        template <typename ItRef, typename N>
+        template <typename It, typename N>
         struct advance
         {
             typedef
-                basic_iterator<
-                    Tag
-                  , Category
-                  , SeqRef
-                  , Index + N::value
-                >
+                basic_iterator<Tag, Category, SeqRef, Index + N::value>
             type;
 
             static type
-            call(ItRef it)
+            call(It it)
             {
                 return type(*it.seq,0);
             }
         };
 
-        template <typename ItRef>
+        template <typename It>
         struct next
-          : advance<ItRef, mpl::int_<1> >
+          : advance<It, mpl::int_<1> >
         {};
 
-        template <typename ItRef>
+        template <typename It>
         struct prior
-          : advance<ItRef, mpl::int_<-1> >
+          : advance<It, mpl::int_<-1> >
         {};
 
-        template <typename It1Ref, typename It2Ref>
+        template <typename It1, typename It2>
         struct distance
           : mpl::minus<
-                typename detail::remove_reference<It2Ref>::type::index
-              , typename detail::remove_reference<It1Ref>::type::index
+                typename detail::remove_reference<It2>::type::index
+              , typename detail::remove_reference<It1>::type::index
             >
         {};
 
-        template <typename It1Ref, typename It2Ref>
+        template <typename It1, typename It2>
         struct equal_to
         {
-            typedef typename detail::remove_reference<It2Ref>::type it2;
+            typedef typename detail::remove_reference<It2>::type it2;
 
             typedef
                 mpl::and_<

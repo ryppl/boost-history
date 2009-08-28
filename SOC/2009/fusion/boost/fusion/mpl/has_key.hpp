@@ -12,7 +12,7 @@
 
 namespace boost { namespace mpl
 {
-    template <typename Tag>
+    template <typename>
     struct has_key_impl;
 
     template <>
