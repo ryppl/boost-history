@@ -12,21 +12,27 @@
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
 #include <boost/accumulators/statistics/variance.hpp>
+#include <boost/functional/mean_var_accumulator.hpp>
 
 namespace boost{
 namespace functional{
 
-template<typename T>
-struct zscore{
-    typedef T result_type;
-    zscore(){}
-    template<typename T1>
-    result_type operator()(const A& a, const T1& x)const{
-        T m = static_cast<T>(boost::accumulators::mean(a));
-        T s = static_cast<T>(boost::accumulators::variance(a));
-        s = std::sqrt(s);
-        return (x - m)/s;
-    }
+template<typename T,typename A = typename mean_var_accumulator<T>::type>
+class zscore{
+    public:
+        typedef T result_type;
+        zscore(){}
+        zscore(const A& a):a_(a){}
+        template<typename T1>
+        result_type operator()(const T1& x)const{
+            T m = boost::accumulators::mean(this->a());
+            T s = boost::accumulators::variance(this->a());
+            s = std::sqrt(s);
+            return (x - m)/s;
+        }
+        const A& a()const{ return this->a_; }
+    private:
+        A a_;
 };
 
 
