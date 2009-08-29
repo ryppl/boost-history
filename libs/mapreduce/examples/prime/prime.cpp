@@ -1,4 +1,6 @@
 // Based on code from Christian Henning [chhenning@gmail.com]
+#define _SECURE_SCL 0
+#define _HAS_ITERATOR_DEBUGGING 0
 #include <boost/mapreduce.hpp>
 
 namespace prime_calculator {
@@ -15,7 +17,7 @@ bool const is_prime(long const number)
     long n = std::abs(number);
     long const sqrt_number = static_cast<long>(std::sqrt(static_cast<double>(n)));
 
-    for (long i = 3; i < sqrt_number; ++i)
+    for (long i = 3; i < sqrt_number; i+=2)
     {
         if (n % i == 0)
             return false;
@@ -88,15 +90,16 @@ boost::mapreduce::job<prime_calculator::map_task
 int main(int argc, char* argv[])
 {
     boost::mapreduce::specification spec;
-
-    boost::mapreduce::results result;
-    prime_calculator::job::datasource_type datasource(0, 60000, 1000);
-
     spec.map_tasks    = 0;
     spec.reduce_tasks = std::max(1U, boost::thread::hardware_concurrency());
 
+    int const prime_limit = 100;
+    prime_calculator::job::datasource_type datasource(0, prime_limit, prime_limit/spec.reduce_tasks);
+
+
     std::cout <<"\nRunning Parallel Prime_Calculator MapReduce..." <<std::endl;
     prime_calculator::job job(datasource, spec);
+    boost::mapreduce::results result;
 #ifdef _DEBUG
     job.run<boost::mapreduce::schedule_policy::sequential<prime_calculator::job> >(result);
 #else
@@ -104,12 +107,11 @@ int main(int argc, char* argv[])
 #endif
     std::cout <<"\nMapReduce Finished." <<std::endl;
 
-    for (prime_calculator::job::const_result_iterator it = job.begin_results()
-       ; it!=job.end_results()
-       ; ++it
-    )
+    for (prime_calculator::job::const_result_iterator it = job.begin_results();
+         it!=job.end_results();
+         ++it)
     {
-        std::cout <<it->first <<" ";
+        std::cout <<it->second <<" ";
     }
 
 	return 0;
