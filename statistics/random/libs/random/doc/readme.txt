@@ -13,7 +13,7 @@ erwann.rogard@gmail.com
 
 [ Overview ]
 
-These are C++ that extend the boost::random framework
+These are C++ that extend the boost::random framework.
 
 [ Useful links ]
 
@@ -44,5 +44,6 @@ boost_1_39_0
 
 [ History ]
 
-July 2009 : Current version
+August 18 2009  : renamed multinomial_distribution to categorical_distribution
+July 2009       : Current version
 

@@ -45,8 +45,8 @@ void example_categorical(std::ostream& out){
     out << "categorical : ";
     t.restart();
     binary_op::sort_on_head_greater(
-        boost::begin(weights),
-        boost::end(weights),
+        boost::begin(sorted_weights),
+        boost::end(sorted_weights),
         boost::begin(values)
     );
     cat_dist_ cat_dist(sorted_weights);
@@ -71,10 +71,9 @@ void example_categorical(std::ostream& out){
     out << std::endl << "discrete : ";
     t.restart();
     for(unsigned i = 0; i<m; i++){
-        cat_dist(urng);
+        discr(urng);
     }
     out << (format("t = %1%")%t.elapsed()).str();
-
 
 }
 
