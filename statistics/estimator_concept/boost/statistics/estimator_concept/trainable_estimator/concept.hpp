@@ -13,7 +13,7 @@
 #include <boost/mpl/empty_base.hpp>
 #include <boost/statistics/estimator_concept/trainable/concept.hpp>
 #include <boost/statistics/estimator_concept/estimator/concept.hpp>
-#include <boost/statistics/estimator_concept/trainable_estimator/meta_input.hpp>
+#include <boost/statistics/estimator_concept/meta/estimate_input.hpp>
 
 namespace boost{
 namespace statistics{
