@@ -52,13 +52,13 @@ struct map_task
   : public boost::mapreduce::map_task<std::string, map_value_type>
 {
     template<typename Runtime>
-    static void map(Runtime &runtime, std::string const &key, T &value);
+    void operator()(Runtime &runtime, std::string const &key, T &value) const;
 };
 
 struct reduce_task : public boost::mapreduce::reduce_task<std::string, unsigned>
 {
     template<typename Runtime, typename It>
-    static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
+    void operator()(Runtime &runtime, std::string const &key, It it, It const ite) const
     {
         runtime.emit(key, std::accumulate(it, ite, 0));
     }
@@ -68,10 +68,10 @@ template<> template<typename Runtime>
 void
 map_task<
     std::pair<
-        char const *, char const *> >::map(
+        char const *, char const *> >::operator()(
             Runtime           &runtime,
             std::string const &/*key*/,
-            std::pair<char const *, char const *> &value)
+            std::pair<char const *, char const *> &value) const
 {
     bool in_word = false;
     char const *ptr = value.first;
@@ -117,10 +117,10 @@ map_task<
 
 template<> template<typename Runtime>
 void
-map_task<std::ifstream>::map(
+map_task<std::ifstream>::operator()(
     Runtime            &runtime,
     std::string const  &/*key*/,
-    std::ifstream      &value)
+    std::ifstream      &value) const
 {
     while (!value.eof())
     {

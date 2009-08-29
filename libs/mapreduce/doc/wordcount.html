@@ -57,7 +57,7 @@ reduce (word; string, list(count; unsigned int)) --&gt; list(count; unsigned int
   <code>key</code>/<code>value</code> types of the input of the map task.
 </p>
 <p>
-  The <code>map</code> function takes three parameters; the <code>runtime</code> which is passed by the MapReduce
+  The map function operator takes three parameters; the <code>runtime</code> which is passed by the MapReduce
   library to be used as a callback to <em>emit</em> intermediate key/value pairs. The other two parameters are the
   <code>key</code> and <code>value</code> for the map task to process. Normally these parameters would be expected
   to be passed as a reference-to-const, but this is not a requirement. For example, if the <code>value</code> type
@@ -76,7 +76,7 @@ struct map_task : public boost::mapreduce::map_task&lt;
                              std::pair&lt;char const *, char const *&gt; &gt; // MapValue
 {
     template&lt;typename Runtime&gt;
-    static void map(Runtime &runtime, std::string const &/*key*/, value_type &value)
+    void operator()(Runtime &runtime, std::string const &/*key*/, value_type &value) const
     {
         bool in_word = false;
         char const *ptr = value.first;
@@ -118,7 +118,7 @@ struct map_task : public boost::mapreduce::map_task&lt;
   parameters to define the <code>key</code> and <code>value</code> types output of the reduce task.
 </p>
 <p>
-  The <code>reduce</code> function takes four parameters; the <code>runtime</code> object is the library's
+  The reduce function operator takes four parameters; the <code>runtime</code> object is the library's
   callback as described above. The second parametrer is the <code>key</code> of the reduce task and the
   third and fourth parameters are a pair of iterators dictating the range of <code>value</code> objects
   for the reduce task. In this Word Count example, the <code>key</code> is a text string containing the
@@ -131,7 +131,7 @@ struct map_task : public boost::mapreduce::map_task&lt;
 struct reduce_task : public boost::mapreduce::reduce_task&lt;std::string, unsigned&gt;
 {
     template&lt;typename Runtime, typename It&gt;
-    static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
+    void operator()(Runtime &runtime, std::string const &key, It it, It const ite) const
     {
         runtime.emit(key, std::accumulate(it, ite, 0));
     }

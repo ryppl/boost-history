@@ -60,7 +60,7 @@ class number_source : boost::noncopyable
 struct map_task : public boost::mapreduce::map_task<long, long>
 {
     template<typename Runtime>
-    static void map(Runtime &runtime, key_type const &key, value_type const &value)
+    void operator()(Runtime &runtime, key_type const &key, value_type const &value) const
     {
         BOOST_STATIC_ASSERT((boost::is_same<key_type, value_type>::value));
         for (typename key_type loop=key; loop<=value; ++loop)
@@ -71,7 +71,7 @@ struct map_task : public boost::mapreduce::map_task<long, long>
 struct reduce_task : public boost::mapreduce::reduce_task<bool, long>
 {
     template<typename Runtime, typename It>
-    static void reduce(Runtime &runtime, key_type const &key, It it, It ite)
+    void operator()(Runtime &runtime, key_type const &key, It it, It ite) const
     {
         if (key)
             for_each(it, ite, boost::bind(&Runtime::emit, &runtime, true, _1));

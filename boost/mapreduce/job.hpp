@@ -72,7 +72,7 @@ class job : private boost::noncopyable
         map_task_runner &operator()(typename map_task_type::key_type const &key,
                                     typename map_task_type::value_type     &value)
         {
-            map_task_type::map(*this, key, value);
+            map_task_type()(*this, key, value);
 
             // consolidating map intermediate results can save network time by
             // aggregating the mapped valued at mapper
@@ -128,7 +128,7 @@ class job : private boost::noncopyable
         void operator()(typename reduce_task_type::key_type const &key, It it, It ite)
         {
             ++result_.counters.reduce_keys_executed;
-            reduce_task_type::reduce(*this, key, it, ite);
+            reduce_task_type()(*this, key, it, ite);
             ++result_.counters.reduce_keys_completed;
         }
 

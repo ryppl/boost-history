@@ -40,7 +40,7 @@ struct map_task : public boost::mapreduce::map_task<
                              std::pair<char const *, char const *> >    // MapValue (memory mapped file contents)
 {
     template<typename Runtime>
-    static void map(Runtime &runtime, key_type const &/*key*/, value_type &value)
+    void operator()(Runtime &runtime, key_type const &/*key*/, value_type &value) const
     {
         bool in_word = false;
         char const *ptr = value.first;
@@ -75,7 +75,7 @@ struct reduce_task : public boost::mapreduce::reduce_task<
                                 unsigned>
 {
     template<typename Runtime, typename It>
-    static void reduce(Runtime &runtime, key_type const &key, It it, It const ite)
+    void operator()(Runtime &runtime, key_type const &key, It it, It const ite) const
     {
         runtime.emit(key, std::accumulate(it, ite, 0));
     }

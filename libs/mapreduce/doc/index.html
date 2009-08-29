@@ -84,7 +84,16 @@
               <dl class="fields"> 
                 <p>The latest updates can be found in the <a href='https://svn.boost.org/svn/boost/sandbox'>Boost Sandbox</a></p> 
 
-                <dt>8th August 2009</dt>
+                <dt>29 Aug 2009</dt>
+                <dd>
+                <ul>
+                  <li><i>Breaking change</i>: <code>map_task</code> and <code>reduce_task</code> now must implement a
+                    function operator rather than static methods <code>map</code> and <code>reduce</code>. The functor
+                    signatures are the same the the previous static methods.</li>
+                  <li>Fixed iteration in the case where each result key has multiple values</li>
+                </ul>
+                </dd>
+                <dt>8 Aug 2009</dt>
                 <dd>
                   <a href='http://www.boostpro.com/vault/index.php?action=downloadfile&filename=mapreduce_0_3.zip&directory=&'>
                     DOWNLOAD v0.3
@@ -99,16 +108,16 @@
                     <li>Update documentation</li>
                 </ul></dd>
 
-                <dt>26th July 2009</dt>
+                <dt>26 Jul 2009</dt>
                 <dd><ul><li>Added parametrised file_handler on the datasource.</li>
                     <li>Added memory mapped file support as an alternative to to std::ifstream</li>
                     <li>Added examples directory with wordcount example</li>
                     <li>Removed test directory</li>
                     <li>Code clean-up</li></ul>
                 </dd>
-                <dt>23rd July 2009</dt>
+                <dt>23 Jul 2009</dt>
                 <dd>Added to Boost Sandbox (subversion)</dd>
-                <dt>21st July 2009</dt>
+                <dt>21 Jul 2009</dt>
                 <dd>
                   <a href='http://www.boostpro.com/vault/index.php?action=downloadfile&filename=mapreduce_0_2.zip&directory=&'>
                     DOWNLOAD v0.2
@@ -124,7 +133,7 @@
                 </dd>
               </dl>
               <dl class="fields"> 
-                <dt>19th July 2009</dt>
+                <dt>19 Jul 2009</dt>
                 <dd>
                   <a href='http://www.boostpro.com/vault/index.php?action=downloadfile&filename=mapreduce_0_1.zip&directory=&'>
                     DOWNLOAD v0.1

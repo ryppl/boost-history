@@ -77,7 +77,7 @@ class job;
               <ul>
                 <li>Provide type definitions for Map Key (<code>k1</code>) and Map Value (<code>v1</code>);
                   <code>key_type</code> and <code> value_type</code></li>
-                <li>Implement a static mapper function <code>map()</code></li>
+                <li>Implement a function operator <code>operator()()</code></li>
               </ul>
 <pre>
 struct map_task : public boost::mapreduce::map_task&lt;
@@ -85,7 +85,7 @@ struct map_task : public boost::mapreduce::map_task&lt;
                              std::pair&lt;char const *, char const *&gt; &gt; // MapValue
 {
     template&lt;typename Runtime&gt;
-    static void map(Runtime &runtime, std::string const &key, value_type const &value);
+    void operator()(Runtime &runtime, std::string const &key, value_type const &value) const;
 };
 </pre>
 <p>The MapTask functor is derived from the <code>boost::mapreduce::map_task</code> to define the
@@ -102,13 +102,13 @@ qualifiers on these parametersare optional, but recommended where possible.</p>
               <ul>
                 <li>Provide type definitions for Reduce Key (<code>k2</code>) and Reduce Value (<code>v2</code>);
                   <code>key_type</code> and <code> value_type</code></li>
-                <li>Implement a static reducer function <code>reduce()</code></li>
+                <li>Implement a reducer function operator <code>operator()()</code></li>
               </ul>
 <pre>
 struct reduce_task : public boost::mapreduce::reduce_task&lt;std::string, unsigned&gt;
 {
     template&lt;typename Runtime, typename It&gt;
-    static void reduce(Runtime &runtime, std::string const &key, It it, It const ite)
+    void operator()(Runtime &runtime, std::string const &key, It it, It const ite) const    
     {
         runtime.emit(key, std::accumulate(it, ite, 0));
     }
