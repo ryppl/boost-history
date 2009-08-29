@@ -122,21 +122,6 @@ private:
 		BOOST_ASSERT( ca.empty() );
 	}
 
-	void try_blocked_fibers_()
-	{
-		if ( ums_.has_blocked() )
-		{
-			fiber::sptr_t this_fib = fib_;
-			ums_.put_runnable( this_fib);
-			fiber::sptr_t blocked_fib;
-			ums_.try_take_blocked( blocked_fib);
-			BOOST_ASSERT( blocked_fib);
-			fib_ = blocked_fib;
-			this_fib->switch_to( blocked_fib);
-			fib_ = this_fib;
-		}
-	}
-
 	bool take_global_callable_(
 			callable & ca,
 			posix_time::time_duration const& asleep)
@@ -153,6 +138,7 @@ private:
 		std::size_t idx( rnd_idx_() );
 		for ( std::size_t j( 0); j < pool_.wg_.size(); ++j)
 		{
+			// TODO: not thread-safe -> segfault
 			Worker other( pool_.wg_[idx]);
 			if ( this_thread::get_id() == other.get_id() ) continue;
 			if ( ++idx >= pool_.wg_.size() ) idx = 0;
@@ -162,8 +148,29 @@ private:
 		return false;
 	}
 
+	bool try_blocked_fibers_()
+	{
+		if ( ums_.has_blocked() )
+		{
+			fiber::sptr_t this_fib = fib_;
+			BOOST_ASSERT( this_fib);
+			ums_.put_runnable( this_fib);
+			fiber::sptr_t blocked_fib;
+			ums_.try_take_blocked( blocked_fib);
+			BOOST_ASSERT( blocked_fib);
+			fib_ = blocked_fib;
+			BOOST_ASSERT( this_fib->running() );
+			this_fib->switch_to( blocked_fib);
+			BOOST_ASSERT( this_fib->running() );
+			fib_ = this_fib;
+			return true;
+		}
+		return false;
+	}
+
 	void process_( bool all)
 	{
+		try_blocked_fibers_();
 		callable ca;
 		if ( all ? try_take_local_callable_( ca) || 
 					try_steal_other_callable_( ca) ||
@@ -196,13 +203,14 @@ private:
 			else
 				this_thread::yield();
 		}
-		try_blocked_fibers_();
 	}
 
 	void run_()
-	{
+	{	
+		BOOST_ASSERT( fib_->running() );
 		while ( ! shutdown_() )
 			process_( true);
+		BOOST_ASSERT( fib_->running() );
 	}
 
 	bool shutdown_()
@@ -282,19 +290,17 @@ public:
 
 		ums_.attach();
 
-		fiber::sptr_t fib(
-			fiber::create(
-				bind( & worker_object::run_, this),
-				stack_size_) );
-		fib_.swap( fib);
+		fib_ = fiber::create(
+			bind( & worker_object::run_, this),
+			stack_size_);
 		fib_->run();
-		fib_.reset();
+		BOOST_ASSERT( fib_->exited() );
 	}
 
 	void reschedule_until( function< bool() > const& pred)
 	{
 		while ( ! pred() )
-			process_( false);
+			block();
 	}
 
 	void block()
@@ -306,11 +312,13 @@ public:
 			ums_.try_take_runnable( runnable_fib);
 		else
 			runnable_fib = fiber::create(
-					bind( & worker_object::run_, this),
-					stack_size_);
+				bind( & worker_object::run_, this),
+				stack_size_);
 		BOOST_ASSERT( runnable_fib);
 		fib_ = runnable_fib;
+		BOOST_ASSERT( this_fib->running() );
 		this_fib->switch_to( runnable_fib);
+		BOOST_ASSERT( this_fib->running() );
 		fib_ = this_fib;
 	}
 };

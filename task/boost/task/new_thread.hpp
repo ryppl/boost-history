@@ -43,8 +43,25 @@ struct joiner
 
 }
 
-struct new_thread
+class new_thread
 {
+private:
+	struct wrapper
+	{
+		callable	ca;
+		
+		wrapper( callable const& ca_)
+		: ca( ca_)
+		{}
+		
+		void operator()()
+		{
+			ca();
+			ca.clear();
+		}
+	};
+	
+public:
 	template< typename R >
 	handle< R > operator()( task< R > t)
 	{
@@ -53,7 +70,7 @@ struct new_thread
 		handle< R > h( ctx.get_handle( f) );
 		callable ca( ctx.get_callable( boost::move( t) ) );
 		shared_ptr< thread > thrd(
-			new thread( ca),
+			new thread( wrapper( ca) ),
 			detail::joiner() );
 		ca.reset( thrd);
 
