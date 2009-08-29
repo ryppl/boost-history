@@ -83,17 +83,26 @@ class in_memory
             iterators_.resize(outer_->num_partitions_);
         }
 
+        const_result_iterator &operator=(const_result_iterator const &other);
+
         void increment(void)
         {
-            if (iterators_[index_] != outer_->intermediates_[index_].end())
-                ++iterators_[index_];
-            set_current();
+            ++current_.second;
+            if (current_.second == iterators_[current_.first]->second.end())
+            {
+                if (iterators_[current_.first] != outer_->intermediates_[current_.first].end())
+                    ++iterators_[current_.first];
+
+                set_current();
+            }
+            else
+                value_ = std::make_pair(iterators_[current_.first]->first, *current_.second);
         }
 
         bool const equal(const_result_iterator const &other) const
         {
-            if (index_ == std::numeric_limits<unsigned>::max()  ||  other.index_ == std::numeric_limits<unsigned>::max())
-                return other.index_ == index_;
+            if (current_.first == std::numeric_limits<unsigned>::max()  ||  other.current_.first == std::numeric_limits<unsigned>::max())
+                return other.current_.first == current_.first;
             return value_ == other.value_;
         }
 
@@ -107,7 +116,7 @@ class in_memory
 
         const_result_iterator &end(void)
         {
-            index_ = std::numeric_limits<unsigned>::max();
+            current_.first = std::numeric_limits<unsigned>::max();
             value_ = keyvalue_t();
             iterators_.clear();
             return *this;
@@ -120,26 +129,21 @@ class in_memory
 
         void set_current(void)
         {
-            index_   = 0;
-            current_ = iterators_.begin();
-            for (; index_<outer_->num_partitions_  &&  iterators_[index_] == outer_->intermediates_[index_].end(); ++index_)
-                ++current_;
+            for (current_.first=0; current_.first<outer_->num_partitions_  &&  iterators_[current_.first] == outer_->intermediates_[current_.first].end(); ++current_.first)
+                ;
             
-            for (unsigned loop=index_+1; loop<outer_->num_partitions_; ++loop)
+            for (unsigned loop=current_.first+1; loop<outer_->num_partitions_; ++loop)
             {
-                if (iterators_[loop] != outer_->intermediates_[loop].end()  &&  **current_ > *iterators_[loop])
-                {
-                    index_ = loop;
-                    current_ = iterators_.begin()+loop;
-                }
+                if (iterators_[loop] != outer_->intermediates_[loop].end()  &&  *iterators_[current_.first] > *iterators_[loop])
+                    current_.first = loop;
             }
 
-            if (index_ == outer_->num_partitions_)
+            if (current_.first == outer_->num_partitions_)
                 end();
             else
             {
-                BOOST_ASSERT((*current_)->second.size() == 1);
-                value_ = std::make_pair((*current_)->first, *(*current_)->second.begin());
+                current_.second = iterators_[current_.first]->second.begin();
+                value_ = std::make_pair(iterators_[current_.first]->first, *current_.second);
             }
         }
 
@@ -148,11 +152,23 @@ class in_memory
         std::vector<typename intermediates_t::value_type::const_iterator>
         iterators_t;
 
-        in_memory                     const *outer_;        // parent container
-        iterators_t                          iterators_;    // iterator group
-        unsigned                             index_;        // index of current element
-        keyvalue_t                           value_;        // value of current element
-        typename iterators_t::const_iterator current_;      // iterator of current element
+        typedef
+        std::pair<
+            typename iterators_t::const_iterator,
+            typename intermediates_t::value_type::mapped_type::const_iterator>
+        current_t;
+
+        in_memory const *outer_;        // parent container
+        iterators_t      iterators_;    // iterator group
+        keyvalue_t       value_;        // value of current element
+
+        // the current element consists of an index to the partition
+        // list, and an iterator within that list
+        std::pair<
+            unsigned,                   // index of current element
+            typename                    // iterator of the sub-element
+                intermediates_t::value_type::mapped_type::const_iterator
+        > current_;
 
         friend class in_memory;
     };
