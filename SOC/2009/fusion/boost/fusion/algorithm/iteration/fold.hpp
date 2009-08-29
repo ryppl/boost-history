@@ -16,14 +16,20 @@
 #include <boost/fusion/support/internal/assert.hpp>
 #include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
+<<<<<<< .mine
+#ifdef BOOST_NO_RVALUE_REFERENCES
+#   include <boost/type_traits/add_const.hpp>
+#endif
+=======
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/type_traits/add_const.hpp>
 #endif
 
 namespace boost { namespace fusion {
+>>>>>>> .r55867
 
-    struct random_access_traversal_tag;
-
+namespace boost { namespace fusion
+{
     namespace result_of
     {
         template <typename Seq, typename State, typename F>
@@ -64,7 +70,11 @@ namespace boost { namespace fusion {
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
               , BOOST_FUSION_R_ELSE_CLREF(State)
               , BOOST_FUSION_R_ELSE_CLREF(F)
+<<<<<<< .mine
+            >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)), state, f);
+=======
             >::call(fusion::begin(seq), state, f);
+>>>>>>> .r55867
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

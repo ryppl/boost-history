@@ -39,7 +39,7 @@ namespace boost { namespace fusion
             typename result<poly_begin(BOOST_FUSION_R_ELSE_LREF(Seq))>::type
             operator()(BOOST_FUSION_R_ELSE_LREF(Seq) seq) const
             {
-                return fusion::begin(seq);
+                return fusion::begin(BOOST_FUSION_FORWARD(Seq,seq));
             }
 
             unused_type const&

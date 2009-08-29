@@ -55,7 +55,7 @@ namespace boost { namespace fusion
         return
             detail::unrolled_all<
                 result_of::size<Seq const&>::value
-            >::call(fusion::begin(seq), f);
+            >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)), f);
     }
 #endif
 }}

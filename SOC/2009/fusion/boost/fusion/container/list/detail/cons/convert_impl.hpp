@@ -37,8 +37,8 @@ namespace boost { namespace fusion { namespace extension
             call(Seq seq)
             {
                 return build_cons::call(
-                        fusion::begin(seq),
-                        fusion::end(seq));
+                        fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),
+                        fusion::end(BOOST_FUSION_FORWARD(Seq,seq)));
             }
         };
     };

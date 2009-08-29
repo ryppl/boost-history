@@ -60,50 +60,85 @@ namespace boost { namespace fusion
         template <typename>
         struct value_of
           : extension::value_of_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
+>>>>>>> .r55867
         {};
 
         template <typename, typename It2>
         struct equal_to
           : extension::equal_to_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It,It2>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It,It2>
+>>>>>>> .r55867
         {};
 
         template <typename>
         struct deref
           : extension::deref_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
+>>>>>>> .r55867
         {};
 
         template <typename>
         struct next
           : extension::next_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
+>>>>>>> .r55867
         {};
 
         template <typename>
         struct prior
           : extension::prior_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It>
+>>>>>>> .r55867
         {};
 
         template <typename, typename N>
         struct advance
           : extension::advance_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It,N>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It,N>
+>>>>>>> .r55867
         {};
 
         template <typename, typename It2>
         struct distance
           : extension::distance_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<mpl_iterator_tag>,It>::type
+            >::template apply<It,It2>
+=======
                 typename mpl::apply<mpl::always<mpl_iterator_tag>,It>::type
             >::template apply<It,It2>
+>>>>>>> .r55867
         {};
     };
 }}

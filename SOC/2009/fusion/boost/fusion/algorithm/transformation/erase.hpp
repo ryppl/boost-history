@@ -124,12 +124,12 @@ namespace boost { namespace fusion
 
         return result_type(
                 left_type(
-                    fusion::begin(seq)
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
                   , first
                 )
               , right_type(
                     last
-                  , fusion::end(seq)
+                  , fusion::end(BOOST_FUSION_FORWARD(Seq,seq))
                 ));
     }
 
@@ -158,12 +158,12 @@ namespace boost { namespace fusion
 
         return result_type(
                 left_type(
-                    fusion::begin(seq)
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
                   , first
                 )
               , right_type(
                     last
-                  , fusion::end(seq)
+                  , fusion::end(BOOST_FUSION_FORWARD(Seq,seq))
                 ));
     }
 

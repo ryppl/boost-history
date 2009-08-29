@@ -22,16 +22,15 @@
 #include <boost/mpl/apply.hpp>
 #include <boost/mpl/identity.hpp>
 
-namespace boost { namespace fusion {
-    struct random_access_traversal_tag;
-
+namespace boost { namespace fusion
+{
     namespace detail
     {
         template <typename Begin, typename End, typename Pred>
         struct main_find_if;
 
         template <typename Begin, typename End, typename Pred>
-        struct recursive_find_if
+        struct next_find_if
           : main_find_if<
                 typename result_of::next<Begin>::type
               , End
@@ -47,15 +46,17 @@ namespace boost { namespace fusion {
                   , mpl::apply1<Pred,Begin>
                 >
               , mpl::identity<Begin>
-              , recursive_find_if<Begin, End, Pred>
+              , next_find_if<Begin, End, Pred>
             >
         {};
 
-        template<typename Begin, typename End, typename Pred, bool>
-        struct choose_find_if;
-
-        template<typename Begin, typename End, typename Pred>
-        struct choose_find_if<Begin, End, Pred, false>
+        template<
+            typename Begin
+          , typename End
+          , typename Pred
+          , bool /*IsRandomAccess=false*/
+        >
+        struct choose_find_if
           : main_find_if<Begin, End, Pred>
         {};
 
@@ -85,7 +86,7 @@ namespace boost { namespace fusion {
                             apply_offset_filter<It, Pred, 3>
                           , result_of::advance_c<It, 3>
                           , unroll_again<
-                               It
+                                It
                               , Pred
                               , N
                             >
@@ -150,7 +151,7 @@ namespace boost { namespace fusion {
         };
 
         template<typename Begin, typename End, typename Pred>
-        struct choose_find_if<Begin, End, Pred, true>
+        struct choose_find_if<Begin, End, Pred, /*IsRandomAccess*/true>
           : unrolled_find_if<
                 Begin
               , Pred

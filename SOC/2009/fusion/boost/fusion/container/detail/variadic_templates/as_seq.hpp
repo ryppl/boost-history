@@ -36,6 +36,19 @@ namespace boost { namespace fusion { namespace detail
     {
         typedef typename detail::remove_reference<Seq>::type seq;
 
+<<<<<<< .mine
+        typedef typename
+            mpl::apply1<
+                mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
+              , typename mpl::eval_if<
+                    traits::is_random_access<Seq>
+                  , mpl::identity<seq>
+                  , mpl::fold<
+                        seq
+                      , mpl::vector0<>
+                      , mpl::quote2<mpl::push_back>
+                    >
+=======
         typedef typename
             mpl::apply<
                 mpl::unpack_args<variadic_quote<BOOST_FUSION_SEQ_NAME> >
@@ -47,6 +60,7 @@ namespace boost { namespace fusion { namespace detail
                       , mpl::vector0<>
                       , mpl::quote2<mpl::push_back>
                     >
+>>>>>>> .r55867
                 >::type
             >::type
         type;

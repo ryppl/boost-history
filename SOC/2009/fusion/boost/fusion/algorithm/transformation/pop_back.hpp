@@ -45,8 +45,8 @@ namespace boost { namespace fusion
     {
         return typename
             result_of::pop_back<BOOST_FUSION_R_ELSE_CLREF(Seq)>::type(
-                    fusion::begin(seq)
-                  , fusion::prior(fusion::end(seq)));
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
+                  , fusion::prior(fusion::end(BOOST_FUSION_FORWARD(Seq,seq))));
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
@@ -56,8 +56,8 @@ namespace boost { namespace fusion
     {
         return typename
             result_of::pop_back<Seq&>::type(
-                    fusion::begin(seq)
-                  , fusion::prior(fusion::end(seq)));
+                    fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))
+                  , fusion::prior(fusion::end(BOOST_FUSION_FORWARD(Seq,seq))));
     }
 #endif
 }}

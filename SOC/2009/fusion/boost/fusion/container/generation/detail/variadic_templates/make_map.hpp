@@ -62,7 +62,7 @@ namespace boost { namespace fusion
             map_args;
 
             typedef typename
-                mpl::apply<
+                mpl::apply1<
                     mpl::unpack_args<detail::variadic_quote<map> >
                   , map_args
                 >::type

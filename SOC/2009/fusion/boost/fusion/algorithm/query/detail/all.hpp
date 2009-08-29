@@ -53,8 +53,8 @@ namespace boost { namespace fusion { namespace detail
             }
 
             return unrolled_all<N-4>::call(
-                    fusion::next(it3)
-                  , BOOST_FUSION_FORWARD(F,f));
+                    fusion::next(it3),
+                    BOOST_FUSION_FORWARD(F,f));
         }
     };
 

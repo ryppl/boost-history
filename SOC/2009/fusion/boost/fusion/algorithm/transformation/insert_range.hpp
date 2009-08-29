@@ -79,7 +79,7 @@ namespace boost { namespace fusion
         return typename result::type(\
                 left_insert_type(\
                     left_type(\
-                        fusion::begin(seq),\
+                        fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)),\
                         pos\
                     ),\
                     BOOST_FUSION_FORWARD(Range RANGE_CV_REF_MODIFIER,range)\

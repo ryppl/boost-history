@@ -18,8 +18,6 @@
 
 namespace boost { namespace fusion
 {
-    struct random_access_traversal_tag;
-
     namespace result_of
     {
         template <typename Seq, typename>
@@ -52,7 +50,7 @@ namespace boost { namespace fusion
     inline typename result_of::for_each<Seq&,F const&>::type
     for_each(Seq& seq,F const& f)
     {
-        detail::for_each_unrolled<result_of::size<Seq&>::value>::call(
+        detail::for_each_unrolled<result_of::size<Seq>::value>::call(
                 fusion::begin(seq),f);
     }
 #endif

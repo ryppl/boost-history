@@ -24,12 +24,21 @@
 #include <boost/type_traits/is_const.hpp>
 #include <boost/type_traits/add_reference.hpp>
 #include <boost/type_traits/add_const.hpp>
+<<<<<<< .mine
+#ifndef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+#   include <boost/type_traits/is_volatile.hpp>
+#   include <boost/type_traits/add_volatile.hpp>
+#   include <boost/type_traits/remove_cv.hpp>
+#else
+#   include <boost/type_traits/remove_const.hpp>
+=======
 #ifdef BOOST_FUSION_PROPAGATE_VOLATILE
 #   include <boost/type_traits/is_volatile.hpp>
 #   include <boost/type_traits/add_volatile.hpp>
 #   include <boost/type_traits/remove_cv.hpp>
 #else
 #   include <boost/type_traits/remove_const.hpp>
+>>>>>>> .r55867
 #endif
 
 //cschmidt: We ignore volatile in the BOOST_FUSION_ALL_CV_*-Macros, as we would
@@ -131,12 +140,21 @@ namespace boost { namespace fusion { namespace detail
     template <typename T>
     struct identity
     {
+<<<<<<< .mine
+        typedef typename
+#ifdef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+            remove_const<
+#else
+            remove_cv<
+#endif
+=======
         typedef typename
 #ifdef BOOST_FUSION_PROPAGATE_VOLATILE
             remove_cv<
 #else
             remove_const<
 #endif
+>>>>>>> .r55867
                 typename remove_reference<T>::type
             >::type
         type;
@@ -153,7 +171,11 @@ namespace boost { namespace fusion { namespace detail
               , typename add_const<Type>::type
               , Type
             >::type
+<<<<<<< .mine
+#ifndef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+=======
 #ifdef BOOST_FUSION_PROPAGATE_VOLATILE
+>>>>>>> .r55867
         const_type;
 
         typedef typename

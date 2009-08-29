@@ -55,36 +55,61 @@ namespace boost { namespace fusion
         template<typename Seq,typename Key>
         struct at_key
           : extension::at_key_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<void_>,Seq>::type
+            >::template apply<Seq,Key>
+=======
                 typename mpl::apply<mpl::always<void_>,Seq>::type
             >::template apply<Seq,Key>
+>>>>>>> .r55867
         {};
 
         template<typename Seq>
         struct empty
           : extension::empty_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<void_>,Seq>::type
+            >::template apply<Seq>
+=======
                 typename mpl::apply<mpl::always<void_>,Seq>::type
             >::template apply<Seq>
+>>>>>>> .r55867
         {};
 
         template<typename Seq>
         struct size
           : extension::size_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<void_>,Seq>::type
+            >::template apply<Seq>
+=======
                 typename mpl::apply<mpl::always<void_>,Seq>::type
             >::template apply<Seq>
+>>>>>>> .r55867
         {};
 
         template<typename Seq,typename Key>
         struct has_key
           : extension::has_key_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<void_>,Seq>::type
+            >::template apply<Seq,Key>
+=======
                 typename mpl::apply<mpl::always<void_>,Seq>::type
             >::template apply<Seq,Key>
+>>>>>>> .r55867
         {};
 
         template<typename Seq,typename Key>
         struct value_at_key
           : extension::value_at_key_impl<
+<<<<<<< .mine
+                typename mpl::apply1<mpl::always<void_>,Seq>::type
+            >::template apply<Seq,Key>
+=======
                 typename mpl::apply<mpl::always<void_>,Seq>::type
             >::template apply<Seq,Key>
+>>>>>>> .r55867
         {};
 
     };
