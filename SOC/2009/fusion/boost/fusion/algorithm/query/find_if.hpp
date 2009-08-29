@@ -50,11 +50,7 @@ namespace boost { namespace fusion
         return
             result_of::find_if<
                 BOOST_FUSION_R_ELSE_CLREF(Seq), Pred
-<<<<<<< .mine
             >::call(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)));
-=======
-            >::call(fusion::begin(seq));
->>>>>>> .r55867
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES

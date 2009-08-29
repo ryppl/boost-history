@@ -22,7 +22,7 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;
-            typedef typename
+            typedef
                 detail::static_find_if<
                     typename result_of::next<typename it::begin_type>::type
                   , typename it::end_type

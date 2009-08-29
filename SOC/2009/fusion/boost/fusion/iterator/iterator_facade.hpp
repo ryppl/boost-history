@@ -38,13 +38,8 @@ namespace boost { namespace fusion
         template <typename It, typename N>
         struct advance
           :  extension::advance_impl<
-<<<<<<< .mine
                  typename mpl::apply1<mpl::always<void_>,It>::type
              >::template apply<It,N>
-=======
-                 typename mpl::apply<mpl::always<void_>,It>::type
-             >::template apply<It,N>
->>>>>>> .r55867
         {};
     };
 }}

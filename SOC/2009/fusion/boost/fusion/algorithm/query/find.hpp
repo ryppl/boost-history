@@ -51,7 +51,7 @@ namespace boost { namespace fusion
             result_of::find<,Seq,&, T>) const
     find(Seq& seq)
     {
-        return result_of::find<Seq&, T>::filter::call(seq);
+        return result_of::find<Seq&, T>::call(seq);
     }
 #endif
 }}
