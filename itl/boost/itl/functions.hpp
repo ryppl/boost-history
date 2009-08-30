@@ -9,6 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define __itl_functions_JOFA_090803_H__
 
 #include <boost/utility/enable_if.hpp>
+#include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/type_traits/is_combinable.hpp>
 
 namespace boost{namespace itl
@@ -48,6 +49,29 @@ is_element_greater(const LeftT& left, const RightT& right)
 {
     return Interval_Set::is_element_greater(left, right);
 }
+
+//------------------------------------------------------------------------------
+template<class LeftT, class RightT>
+typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
+                          int>::type
+inclusion_compare(const LeftT& left, const RightT& right)
+{
+    return Interval_Set::subset_compare(left, right, 
+		                                left.begin(), left.end(),
+										right.begin(), right.end());
+}
+
+template<class LeftT, class RightT>
+typename boost::enable_if<is_concept_equivalent<is_element_container,LeftT, RightT>, 
+                          int>::type
+inclusion_compare(const LeftT& left, const RightT& right)
+{
+    return Set::subset_compare(left, right, 
+		                       left.begin(), left.end(),
+							   right.begin(), right.end());
+}
+//------------------------------------------------------------------------------
+
 
 //==============================================================================
 //= Addition
@@ -351,7 +375,34 @@ ObjectT operator & (typename ObjectT::overloadable_type object, const ObjectT& o
 //- intersects
 //------------------------------------------------------------------------------
 template<class LeftT, class RightT>
-typename boost::enable_if<is_inter_combinable<LeftT, RightT>, 
+typename boost::enable_if<is_intra_combinable<LeftT, RightT>, 
+                          bool>::type
+intersects(const LeftT& left, const RightT& right)
+{
+	if(is_total<LeftT>::value || is_total<RightT>::value)
+		return true;
+
+    LeftT intersection;
+
+    typename RightT::const_iterator right_common_lower_;
+    typename RightT::const_iterator right_common_upper_;
+
+    if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
+        return false;
+
+    typename RightT::const_iterator it_ = right_common_lower_;
+    while(it_ != right_common_upper_)
+    {
+        left.add_intersection(intersection, *it_++);
+        if(!intersection.empty())
+            return true;
+    }
+
+    return false; 
+}
+
+template<class LeftT, class RightT>
+typename boost::enable_if<is_cross_combinable<LeftT, RightT>, 
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
@@ -360,7 +411,7 @@ intersects(const LeftT& left, const RightT& right)
     if(left.empty() || right.empty())
         return false;
 
-    typename RightT::const_iterator  right_common_lower_;
+    typename RightT::const_iterator right_common_lower_;
     typename RightT::const_iterator right_common_upper_;
 
     if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))

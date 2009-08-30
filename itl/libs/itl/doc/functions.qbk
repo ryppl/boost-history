@@ -11,9 +11,10 @@
 
 Section [link boost_itl.interface.function_synopsis Function Synopsis] 
 above gave an overview of the polymorphic functions of the itl.
-This is what you will need to find the desired possibilites to combine itl objects.
-Most of the time, the functions and overloads that you intuitively expect
-should be provided, so you won't need to refer to the documentation often.
+This is what you will need to find the desired possibilites to combine itl 
+functions and objects most of the time.
+The functions and overloads that you intuitively expect
+should be provided, so you won't need to refer to the documentation very often.
 
 If you are interested 
 
@@ -24,8 +25,227 @@ If you are interested
 refer to this section that describes the polymorphic function families of the itl
 in detail.
 
-For a concise representaion the same __eiS_phs__ will be used that have been
+[/ JODO placeholders again]
+[h5 Placeholders]
+
+For a concise representation the same __eiS_phs__ will be used that have been
 introduced in section [link boost_itl.interface.function_synopsis Function Synopsis].
+
+[h5 More specific function documentation]
+
+This section covers the most important polymorphical and namespace global
+functions of the *itl*. More specific functions are may be looked up
+in the doxygen generated
+[link interval_template_library_reference reference documentation].
+
+[/ JODO introducing overload tables. ==========================================]
+[section Overload tables]
+
+Many of the *itl's* functions are overloaded for
+elements, segments, element and interval containers.
+But not all type combinations are provided. Also
+the admissable type combinations are different for
+different functions and operations.
+To concisely represent the overloads that can be
+used we use synoptical tables that contain 
+possible type combinations for an operation.
+These are called ['*overload tables*]. As an example
+the overload tables for the inplace intersection 
+`operator &=` are given:
+
+``
+// overload tables for
+T& operator &= (T&, const P&)
+
+element containers:     interval containers:  
+&= | e b s m            &= | e i b p S M    
+---+--------            ---+------------    
+s  | s   s              S  | S S     S       
+m  | m m m m            M  | M M M M M M    
+``
+
+For the binary `T& operator &= (T&, const P&)` there are two
+different tables for the overloads of element and interval containers.
+The first argument type `T` is displayed as row headers
+of the tables. 
+The second argument type `P` is displayed as column headers
+of the tables. 
+If a combination of `T` and `P` is admissable the related 
+cell of the table is non empty.
+It displays the result type of the operation. In this example
+the result type is always equal to the first argument.
+
+The possible types that can be instaniated for `T` and `P`
+are element, interval and container types abbreviated by
+placeholders that are defined 
+[link boost_itl.interface.function_synopsis here]
+and can be summerized as
+
+__s : element set, __S : interval sets, __e : elements, __i : intervals\n
+__m:element map,   __M:interval maps,   __b:element-value pairs, __p:interval-value pairs
+
+
+[endsect][/ Overload tables]
+
+[/ JODO Si Mj and segmentational fineness. ====================================]
+[section Segmentational Fineness]
+
+For overloading tables on infix operators, we need to
+break down __itv_sets__ and __itv_maps__ to the
+specific class templates
+
+[table
+[[][] [][] [][]]
+[[[#ph_def_S1][*S1]][__itv_set__][[#ph_def_S2][*S2]][__sep_itv_set__][[#ph_def_S3][*S3]][__spl_itv_set__]]
+[[[#ph_def_M1][*M1]][__itv_map__][][]                                [[#ph_def_M3][*M3]][__spl_itv_map__]]
+]
+
+
+choosing *Si* and *Mi* as placeholders.
+
+The indices *i* of *Si* and *Mi* represent a property
+called ['*segmentational fineness*] or short ['*fineness*], 
+which is a ['*type trait] on interval containers.
+
+[table
+[[]]
+[[`segmentational_fineness<`[*Si]`>::value` == *i*]]
+[[`segmentational_fineness<`[*Mi]`>::value` == *i*]]
+]
+
+
+Segmentational fineness represents the fact, 
+that for interval containers holding the same elements, a
+splitting interval container may contain more segments as
+a separating container which in turn may contain more
+segments than a joining one. So for an 
+``
+operator >
+``
+where
+``
+x > y   // means that
+x is_finer_than y
+
+// we have
+
+finer                                             coarser
+split_interval_set                           interval_set
+                   > separate_interval_set >  
+split_interval_map                           interval_map
+``
+
+This relation is needed to resolve the instantiation of
+infix operators e.g. `T operator + (P, Q)` for two interval container types
+`P` and `Q`. If both `P` and `Q` are candidates for the result
+type `T`, one of them must be chosen by the compiler.
+We choose the type that is segmentational finer as
+result type `T`. This way we do not loose the ['*segment informations*]
+that are stored in the ['*finer*] one of the container types `P` and `Q`.
+
+``
+// overload tables for
+T operator + (T, const P&)
+T operator + (const P&, T)
+
+element containers:     interval containers:
++  | e b s m            +  | e  i  b  p  S1 S2 S3 M1 M3     
+---+--------            ---+---------------------------
+e  |     s              e  |             S1 S2 S3 
+b  |       m            i  |             S1 S2 S3 
+s  | s   s              b  |                      M1 M3  
+m  |   m   m            p  |                      M1 M3
+                        S1 | S1 S1       S1 S2 S3 
+                        S2 | S2 S2       S2 S2 S3 
+                        S3 | S3 S3       S3 S3 S3 
+                        M1 |       M1 M1          M1 M3
+                        M3 |       M3 M3          M3 M3
+``
+
+
+So looking up a type combination for e.g. 
+`T operator + (interval_map, split_interval_map)`
+which is equivalent to
+`T operator + (M1, M3)`
+we find for row type `M1` and column type `M3`
+that `M3`
+will be assigned as result type, because `M3`
+is finer than `M1`.
+So this type combination will result in
+choosing this
+``
+split_interval_map operator + (const interval_map&, split_interval_map)
+``
+implementation by the compiler.
+
+[endsect][/ Segmentational Fineness]
+
+[/ JODO introducing key types. ================================================]
+[section Key Types]
+
+In an *stl* map `map<K,D>` the first parameter type of the map
+template `K` is called `key_type`. It allows to select key-value pairs
+pairs via `find(const K&)` 
+and to remove key-value pairs using `erase(const K&)`.
+For itl Maps we have generalized key types to a larger
+set of types. Not only the `key_type` (`domain_type`)
+but also an interval type and a set type can be ['*key types*],
+that allow for ['*selection*] and ['*removal*] of map elements 
+segments and submaps.
+
+[table Selection of elements, segments and sub maps using key types
+[[                     ][  __M: __itv_maps__    ][  __m: itl_map        ]]
+[[__e: `domain_type`   ][  key value pair       ][   key value pair ]]
+[[__i: `interval_type` ][  interval value pair  ][					 ]]
+[[__S: __itv_sets__    ][  interval map		    ][					 ]]
+[[__s: __itl_set__     ][                       ][   interval map	 ]]
+]
+
+__biLSubtraction__, __biLerasure__, __biLintersection__, 
+which is a generalized find 
+and __biLcontainedness__ predicates
+can be used with those kinds of key types.
+For instance, the overload table for intersection 
+
+``
+// overload tables for
+T& operator &= (T&, const P&)
+
+element containers:     interval containers:  
+&= | e b s m            &= | e i b p S M    
+---+--------            ---+------------    
+s  | s   s              S  | S S     S       
+m  | m m m m            M  | M M M M M M    
+``
+
+has a part that that allows for selection by key objects
+
+``
+element containers:     interval containers:  
+&= | e b s m            &= | e i b p S M    
+---+--------            ---+------------    
+s  | s   s              S  | S S     S       
+m  | m   m              M  | M M     M      
+``
+
+and another part that provides overloads for 
+generalized intersection:
+
+``
+element containers:     interval containers:  
+&= | e b s m            &= | e i b p S M    
+---+--------            ---+------------    
+s  | s   s              S  | S S     S       
+m  |   m   m            M  |     M M   M      
+``
+
+For `Sets`, the ['*key types*] defined for maps
+are identical with the set types themselves.
+So the distiction between the function groups
+['*selection by key*] and ['*generalized intersection*]
+fall thogether in the well known ['*set intersection*].
+
+[endsect][/ Key Types]
 
 [include functions_cons_copy_dest.qbk]
 [include functions_containedness.qbk]

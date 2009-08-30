@@ -63,7 +63,7 @@ insert | e i b p
 ``
 
 [table Time Complexity for member function insert on itl containers
-[[`T& T::add(const P&)`]      [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
+[[`T& T::insert(const P&)`]    [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
 [[__itl_set__]                 [__Olgn__] []          []        []          ]
 [[__itl_map__]                 []         []          [__Olgn__][]          ]
 [[__itv_set__\n__sep_itv_set__][__Olgn__] [__a_Olgn__][]        []          ]

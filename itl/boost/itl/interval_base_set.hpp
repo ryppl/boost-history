@@ -139,7 +139,7 @@ public:
     void swap(interval_base_set& x) { _set.swap(x._set); }
 
     //==========================================================================
-    //= Emptieness, containment
+    //= Containedness
     //==========================================================================
 
     /** sets the container empty */
@@ -149,11 +149,21 @@ public:
 
     /** Does the container contain the element \c key ? */
     bool contains(const element_type& key)const
-    { return that()->contains_(interval_type(key)); }
+    { return that()->contains(interval_type(key)); }
 
-    /** Does the container contain the interval \c inter_val ? */
-    bool contains(const segment_type& inter_val)const
-    { return that()->contains_(inter_val); }
+    /** Does the container contain the interval \c sub_interval ? */
+    bool contains(const segment_type& sub_interval)const
+	{ 
+		if(sub_interval.empty()) 
+			return true;
+
+		std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
+		if(exterior.first == exterior.second)
+			return false;
+
+		return Interval_Set::is_joinable(*this, exterior.first, exterior.second);
+	}
+
 
     /** Does the container contain the subcontainer \c sub ? */
     bool contains(const interval_base_set& sub)const 
@@ -427,6 +437,9 @@ public:
 protected:
     iterator prior(iterator it_)
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
+
+	const_iterator prior(const_iterator it_)const
+    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
 
     iterator gap_insert(iterator prior_, const interval_type& inter_val)
     {

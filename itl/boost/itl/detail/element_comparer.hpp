@@ -27,9 +27,9 @@ public:
     typedef typename RightT::const_iterator RightIterT;
 
     element_comparer(const LeftT&      left,
-                    const RightT&     right,
-                    const LeftIterT&  left_end,
-                    const RightIterT& right_end)
+                     const RightT&     right,
+                     const LeftIterT&  left_end,
+                     const RightIterT& right_end)
         : _left(left), _right(right),
           _left_end(left_end), _right_end(right_end), 
           _compare_codomain(false), _result(equal)

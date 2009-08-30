@@ -121,15 +121,15 @@ private:
         interval_base_set<split_interval_set<DomainT,Compare,Interval,Alloc>,
                                              DomainT,Compare,Interval,Alloc>;
 
-    /// Does the set contain the interval  <tt>x</tt>?
-    bool contains_(const interval_type& x)const;
+    /// Does the set contain the interval  <tt>sub</tt>?
+    bool contains_(const interval_type& sub)const;
 
-    /// Insertion of an interval <tt>x</tt>
-    void add_(const value_type& x);
-    iterator add_(iterator prior_, const value_type& x);
+    /// Addition of an interval <tt>addend</tt>
+    void add_(const value_type& addend);
+    iterator add_(iterator prior_, const value_type& addend);
 
-    /// Removal of an interval <tt>x</tt>
-    void subtract_(const value_type& x);
+    /// Subtraction of an interval <tt>minuend</tt>
+    void subtract_(const value_type& minuend);
 
 private:
     /// Treatment of adjoint intervals on insertion
@@ -142,17 +142,6 @@ private:
 
     void subtract_rest(const interval_type& x_itv, iterator& it_, iterator& end_  );
 } ;
-
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-inline bool split_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
-{
-    if(interv.empty()) 
-        return true;
-
-    type section;
-    add_intersection(section, interv);
-    return is_element_equal(section, type(interv));
-}
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>

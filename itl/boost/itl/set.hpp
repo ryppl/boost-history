@@ -19,9 +19,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/is_total.hpp>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/detail/subset_comparer.hpp>
 #include <boost/itl/set_algo.hpp>
 #include <boost/itl/predicates.hpp>
 
+#include <boost/utility/enable_if.hpp>
+#include <boost/mpl/or.hpp> 
+#include <boost/mpl/not.hpp> 
+#include <boost/type_traits/is_same.hpp>
 
 namespace boost{namespace itl
 {
@@ -74,12 +79,12 @@ public:
         std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
 
     template <class InputIterator>
-    set(InputIterator first, InputIterator last): 
-        std::set<InputIterator>(first,last) {}
+    set(InputIterator first, InputIterator past): 
+        std::set<InputIterator>(first,past) {}
 
     template <class InputIterator>
-    set(InputIterator first, InputIterator last, const key_compare& comp): 
-        std::set<InputIterator>(first, last, comp) {}
+    set(InputIterator first, InputIterator past, const key_compare& comp): 
+        std::set<InputIterator>(first, past, comp) {}
 
     set(const set& src): base_type::set(src){}
 
@@ -119,7 +124,7 @@ public:
 
 public:
     //==========================================================================
-    //= Emptieness, containment
+    //= Containedness
     //==========================================================================
 
     /// Checks if the element \c value is in the set
@@ -177,6 +182,11 @@ public:
     /** The intersection of set \c sectant with \c *this set is added 
         to \c section. */
     void add_intersection(set& section, const set& sectant)const;
+
+	/** Returns true, if there is an intersection of \c element and \c *this set.
+	    Functions \c intersects and \c contains are identical on arguments
+		of type \c element_type. Complexity: Logarithmic in container size. */
+	bool intersects(const element_type& element)const { return contains(element); }
 
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element);
@@ -523,6 +533,44 @@ operator &  (      itl::set<DomainT,Compare,Alloc>  object,
     return object &= operand; 
 }
 
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(const itl::set<DomainT,Compare,Alloc>&               object, 
+	   const typename itl::set<DomainT,Compare,Alloc>::element_type& element)
+{
+	return object.intersects(element);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(
+	  const typename itl::set<DomainT,Compare,Alloc>::element_type& element,
+               const itl::set<DomainT,Compare,Alloc>&               object)
+{
+	return object.intersects(element);
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
+bool intersects(const itl::set<DomainT,Compare,Alloc>& left, 
+	            const itl::set<DomainT,Compare,Alloc>& right)
+{
+	if(left.iterative_size() < right.iterative_size())
+		return Set::intersects(right, left);
+	else
+		return Set::intersects(left, right);
+}
+
+template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc,
+          class LeftT, class RightT>
+enable_if<mpl::or_<is_same< typename itl::set<DomainT,Compare,Alloc>, LeftT >,
+                   is_same< typename itl::set<DomainT,Compare,Alloc>, RightT>
+                  >, bool>
+is_disjoint(const LeftT& left, const RightT& right)
+{
+	return !intersects(left,right);
+}
+
+
+
 //--------------------------------------------------------------------------
 // itl::set::symmetric_difference operators ^=, ^
 //--------------------------------------------------------------------------
@@ -602,7 +650,10 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 }
 
 
-//-------------------------------------------------------------------------
+
+//-----------------------------------------------------------------------------
+// type traits
+//-----------------------------------------------------------------------------
 template <class Type>
 struct is_set<itl::set<Type> >
 { 

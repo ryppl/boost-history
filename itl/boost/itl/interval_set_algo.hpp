@@ -14,7 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/type_traits/neutron.hpp>
 #include <boost/itl/interval.hpp>
 #include <boost/itl/detail/element_comparer.hpp>
-#include <boost/itl/detail/subset_comparer.hpp>
+#include <boost/itl/detail/interval_subset_comparer.hpp>
 
 namespace boost{namespace itl
 {
@@ -123,29 +123,78 @@ bool is_inclusion_equal(const LeftT& left, const RightT& right)
 }
 
 template<class LeftT, class RightT>
-bool is_contained_in(const LeftT& left, const RightT& right)
+bool is_contained_in(const LeftT& sub, const RightT& super)
 {
     int result =
         subset_compare
         (
-            left, right, 
-            left.begin(), left.end(), 
-            right.begin(), right.end()
+            sub, super, 
+            sub.begin(), sub.end(), 
+            super.begin(), super.end()
         );
     return result == inclusion::subset || result == inclusion::equal;
 }
 
 template<class LeftT, class RightT>
-bool contains(const LeftT& left, const RightT& right)
+bool contains(const LeftT& super, const RightT& sub)
 {
     int result =
         subset_compare
         (
-            left, right, 
-            left.begin(), left.end(), 
-            right.begin(), right.end()
+            super, sub, 
+            super.begin(), super.end(), 
+            sub.begin(), sub.end()
         );
     return result == inclusion::superset || result == inclusion::equal;
+}
+
+template<class IntervalContainerT>
+bool is_joinable(const IntervalContainerT& container, 
+			     typename IntervalContainerT::const_iterator first, 
+			     typename IntervalContainerT::const_iterator past) 
+{
+	if(first == container.end())
+		return true;
+
+	typename IntervalContainerT::const_iterator it_ = first, next_ = first;
+	++next_;
+
+	if(is_interval_map<IntervalContainerT>::value)
+	{
+		const typename IntervalContainerT::codomain_type& co_value 
+			= IntervalContainerT::codomain_value(first);
+		while(it_ != past)
+		{
+			if(IntervalContainerT::codomain_value(next_) != co_value)
+				return false;
+			if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+				return false;
+		}
+	}
+	else
+		while(next_ != container.end() && it_ != past)
+			if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+				return false;
+
+	return true;
+}
+
+template<class IntervalContainerT>
+bool is_dense(const IntervalContainerT& container, 
+			  typename IntervalContainerT::const_iterator first, 
+			  typename IntervalContainerT::const_iterator past) 
+{
+	if(first == container.end())
+		return true;
+
+	typename IntervalContainerT::const_iterator it_ = first, next_ = first;
+	++next_;
+
+	while(next_ != container.end() && it_ != past)
+		if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+			return false;
+
+	return true;
 }
 
 } // namespace Interval_Set

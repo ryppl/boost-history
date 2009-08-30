@@ -98,20 +98,27 @@ public:
     template<class SubType>
     explicit interval_set
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-    { assign(src); }
+    { 
+		assign(src); 
+	}
 
     /// Constructor for a single element
     explicit interval_set(const domain_type& value): base_type() 
     { add(interval_type(value)); }
     /// Constructor for a single interval
     explicit interval_set(const interval_type& itv): base_type() 
-    { add(itv); }
+    { 
+		add(itv); 
+	}
 
     /// Assignment operator
     template<class SubType>
     interval_set& operator =
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-    { assign(src); return *this; }
+    { 
+		assign(src); 
+		return *this; 
+	}
 
 
     /// Assignment from a base interval_set.
@@ -131,16 +138,16 @@ private:
         interval_base_set<interval_set<DomainT,Compare,Interval,Alloc>,
                                        DomainT,Compare,Interval,Alloc>;
 
-    /// Does the set contain the interval  <tt>x</tt>?
-    bool contains_(const interval_type& x)const;
+    /// Does the set contain the interval  <tt>sub</tt>?
+    bool contains_(const interval_type& sub)const;
 
-    /// Insertion of an interval <tt>x</tt>
-    void add_(const value_type& x);
+    /// Insertion of an interval <tt>addend</tt>
+    void add_(const value_type& addend);
 
-    iterator add_(iterator prior_, const value_type& x);
+    iterator add_(iterator prior_, const value_type& addend);
 
-    /// Removal of an interval <tt>x</tt>
-    void subtract_(const value_type& x);
+    /// Removal of an interval <tt>minuend</tt>
+    void subtract_(const value_type& minuend);
 
 private:
     /// Treatment of adjoint intervals on insertion
@@ -148,30 +155,6 @@ private:
 
     iterator join_on_left(iterator& left_, const iterator& right_);
 } ;
-
-
-
-
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-bool interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& x)const
-{ 
-    // Emptiness is contained in everything
-    if(x.empty()) 
-        return true;
-    else if (this->empty())
-        return false;
-    else if(x.upper() < this->lower())
-        return false;
-    else if(this->upper() < x.lower())
-        return false;
-    {
-        typename ImplSetT::const_iterator it_ = this->_set.find(x);
-        if(it_ == this->_set.end())
-            return false;
-        else
-            return x.contained_in(*it_);
-    }
-}
 
 
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>

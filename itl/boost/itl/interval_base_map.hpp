@@ -185,7 +185,7 @@ public:
     { _map.assign_if(src._map, pred); return *this; }
 
     //==========================================================================
-    //= Emptieness, containment
+    //= Containedness
     //==========================================================================
 
     /** clear the map */
@@ -198,28 +198,59 @@ public:
     /** Does the map contain the domain element \c key? */
     bool contains(const domain_type& key)const
     { 
-        typename ImplMapT::const_iterator it_ = _map.find(interval_type(key)); 
-        return it_ != _map.end(); 
+        return Traits::is_total || _map.find(interval_type(key)) != _map.end(); 
     }
+
+    /** Does the map contain the interval \c sub_interval ? */
+    bool contains(const interval_type& sub_interval)const
+	{
+		if(Traits::is_total || sub_interval.empty()) 
+			return true;
+
+		std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
+		if(exterior.first == exterior.second)
+			return false;
+
+		const_iterator last_overlap = prior(exterior.second);
+
+		return 
+			hull(exterior.first->KEY_VALUE, last_overlap->KEY_VALUE).contains(sub_interval)
+		&&	Interval_Set::is_dense(*this, exterior.first, last_overlap);
+	}
+
+    /** Does the map contain the key key set \c sub_set ? */
+	template<class SetType>
+    bool contains(const interval_base_set<SetType,DomainT,Compare,Interval,Alloc>& sub_set)const
+	{ 
+		if(Traits::is_total || sub_set.empty()) 
+			return true;
+
+        return Interval_Set::is_contained_in(sub_set, *this); 
+	}
 
     /** Does the map contain the <tt>key_value_pair = (key,value)</tt>? */
     bool contains(const element_type& key_value_pair)const
     { 
-        return that()->contains_(value_type(interval_type(key_value_pair.key), 
-                                                          key_value_pair.data));    
+        return contains(value_type(interval_type(key_value_pair.key), 
+                                                 key_value_pair.data));    
     }
 
     /** Does the map contain all element value pairs represented by the 
         \c interval_value_pair ? */
-    bool contains(const segment_type& interval_value_pair)const
-    { return that()->contains_(interval_value_pair); }
+    bool contains(const segment_type& interval_value_pair)const;
 
     /** Does <tt>*this</tt> container contain <tt>sub</tt>? */
-    bool contains(const interval_base_map& sub)const 
-    { return sub.contained_in(*this); }
+	template<class MapType>
+    bool contains(const interval_base_map<MapType,DomainT,CodomainT,Traits,
+		                                  Compare,Combine,Section,Interval,Alloc>& sub)const 
+    { 
+		return sub.contained_in(*this); 
+	}
 
     /** <tt>*this</tt> is subset of <tt>super</tt>? */
-    bool contained_in(const interval_base_map& super)const
+	template<class MapType>
+    bool contained_in(const interval_base_map<MapType,DomainT,CodomainT,Traits,
+		                                      Compare,Combine,Section,Interval,Alloc>& super)const
     { 
         return Interval_Set::is_contained_in(*this, super); 
     }
@@ -478,7 +509,8 @@ public:
     )const
     {
         typedef IntervalSet<DomainT,Compare,Interval,Alloc> sectant_type;
-        if(sectant.empty()) return;
+        if(sectant.empty()) 
+			return;
 
         typename sectant_type::const_iterator common_lwb;
         typename sectant_type::const_iterator common_upb;
@@ -512,28 +544,37 @@ public:
     /** Returns \c true, if element \c key is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const domain_type& key)const
-    { return _map.find(interval_type(key)) != _map.end(); }
+    {
+		return contains(key);
+	}
 
     /** Returns \c true, if \c inter_val intersects with \c *this map.
-        Complexity: logarithmic. */
+        Complexity: Logarithmic in iterative size. */
     bool intersects(const interval_type& inter_val)const
-    { return _map.find(inter_val) != _map.end(); }
+    { 
+		if(Traits::is_total)
+			return true;
+		std::pair<const_iterator,const_iterator> overlap = equal_range(inter_val);
+		return overlap.first == overlap.second;
+	}
 
     /** Returns \c true, if \c key_value_pair is found in \c *this map.
         Complexity: logarithmic. */
     bool intersects(const element_type& key_value_pair)const
     { 
-        const_iterator found_ = _map.find(interval_type(key_value_pair.key));
-        return found_ != _map.end() && found_->KEY_VALUE == key_value_pair.data; 
+		return intersects(segment_type(interval_type(key_value_pair.key), key_value_pair.data));
     }
 
     /** Returns \c true, if \c interval_value_pair intersects with \c *this map:
-        Complexity: logarithmic. */
+        Complexity: Linear in iterative_size. */
     bool intersects(const segment_type& interval_value_pair)const
     {
-        type intersection;
-        add(intersection, interval_value_pair);
-        return !intersection.empty(); 
+		if(traits::is_total)
+			return true;
+
+		type intersection;
+		add_intersection(intersection, interval_value_pair);
+		return !intersection.empty(); 
     }
 
 
@@ -661,7 +702,8 @@ public:
     static codomain_type codomain_value(IteratorT value_){ return (*value_).second; }
 
     template<typename LeftIterT, typename RightIterT>
-    static bool key_less(LeftIterT lhs_, RightIterT rhs_) { return key_compare()((*lhs_).first, (*rhs_).first); }
+    static bool key_less(LeftIterT left_, RightIterT right_) 
+	{ return key_compare()((*left_).first, (*right_).first); }
 
     static value_type make_domain_element(const domain_type& dom_val, const codomain_type& codom_val)
     { return value_type(interval_type(dom_val), codom_val); }
@@ -676,6 +718,9 @@ public:
 protected:
 
     iterator prior(iterator it_)
+    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
+
+    const_iterator prior(const_iterator it_)const
     { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
 
     template <class Combiner>
@@ -739,6 +784,43 @@ protected:
 } ;
 
 
+
+//==============================================================================
+//= Containedness
+//==============================================================================
+
+template 
+<
+    class SubType,
+    class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc
+>
+bool interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::contains(const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+               ::segment_type& sub_segment)const
+{
+    interval_type sub_interval = sub_segment.KEY_VALUE;
+    if(sub_interval.empty()) 
+        return true;
+
+	std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
+	if(exterior.first == exterior.second)
+		return false;
+
+	const_iterator last_overlap = prior(exterior.second);
+
+	if(!(sub_segment.CONT_VALUE == exterior.first->CONT_VALUE) )
+		return false;
+
+	return
+		hull(exterior.first->KEY_VALUE, last_overlap->KEY_VALUE).contains(sub_interval)
+	&&	Interval_Set::is_joinable(*this, exterior.first, last_overlap);
+}
+
+
+
+//==============================================================================
+//= Size
+//==============================================================================
 
 template 
 <
@@ -889,7 +971,8 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                     const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                     ::interval_type& sectant_interval)const
 {
-    if(sectant_interval.empty()) return;
+    if(sectant_interval.empty()) 
+		return;
 
     typename ImplMapT::const_iterator first_ = _map.lower_bound(sectant_interval);
     typename ImplMapT::const_iterator end_   = _map.upper_bound(sectant_interval);

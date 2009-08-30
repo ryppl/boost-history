@@ -19,6 +19,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/validate/laws/symmetric_difference.hpp>
 #include <boost/validate/laws/pushouts.hpp>
 #include <boost/validate/laws/set_laws.hpp>
+#include <boost/validate/laws/minor_set_laws.hpp>
 //#include <boost/validate/laws/novial_tree.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
@@ -64,12 +65,24 @@ void test_LawValidater()
     //typedef Balance<itl::tree<int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef InplaceDeMorgan
-        <itl::interval_map<int, int> >  TestLawT;
-    LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef InplaceDeMorgan
+    //    <itl::interval_map<int, int> >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+
+	//typedef IntersectsDefined
+	//	<itl::interval_map<int, int, total_absorber> >  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+
+	//typedef Interinclusion
+	//	<interval_map<int,int>, interval_set<int> >  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+
+	typedef Interinclusion
+		<interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
+	LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-    int test_count = 1000;
+    int test_count = 20000;
     ptime start, stop;
 
     test_law.set_trials_count(test_count);

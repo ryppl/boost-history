@@ -83,7 +83,7 @@ public:
     typedef typename itl::map<DomainT,CodomainT,Traits, Compare,Combine,Section,Alloc> type;
     typedef typename std::map<DomainT, CodomainT, ITL_COMPARE_DOMAIN(Compare,DomainT),
                               allocator_type>              base_type;
-    typedef typename itl::set<DomainT, Compare, Alloc >       set_type;
+    typedef typename itl::set<DomainT, Compare, Alloc >    set_type;
 
     typedef Traits traits;
 
@@ -125,10 +125,10 @@ public:
     map(const key_compare& comp): base_type(comp){}
 
     template <class InputIterator>
-    map(InputIterator f, InputIterator l): base_type(f,l) {}
+    map(InputIterator first, InputIterator past): base_type(first,past) {}
 
     template <class InputIterator>
-    map(InputIterator f, InputIterator l, const key_compare& comp): base_type(f,l,comp) {}
+    map(InputIterator first, InputIterator past, const key_compare& comp): base_type(first,past,comp) {}
 
     map(const map& src): base_type::map(src){}
 
@@ -169,11 +169,18 @@ public:
 
 public:
     //==========================================================================
-    //= Emptieness, containment
+    //= Containedness
     //==========================================================================
 
-    /** Checks if a key element is in the map */
-    bool contains(const DomainT& x)const { return !(find(x) == end()); }
+    /** Checks if a key is in the map */
+    bool contains(const domain_type& key)const { return !(find(key) == end()); }
+
+    /** Checks if a key-value pair is in the map */
+    bool contains(const element_type& key_value_pair)const 
+	{ 
+		const_iterator found_ = find(key_value_pair.first);
+		return found_ != end() && found_->second == key_value_pair.second;
+	}
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const map& super)const 
@@ -193,13 +200,6 @@ public:
 
     size_t cardinality()const { return size(); }
 
-    std::pair<iterator,bool> insert(const value_type& value_pair)
-    {
-        if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == codomain_combine::neutron()) 
-            return std::pair<iterator,bool>(end(),true);
-        else
-            return base_type::insert(value_pair);
-    }
     //==========================================================================
     //= Selection
     //==========================================================================
@@ -242,13 +242,21 @@ public:
     //= Insertion, erasure
     //==========================================================================
 
+    std::pair<iterator,bool> insert(const value_type& value_pair)
+    {
+        if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == codomain_combine::neutron()) 
+            return std::pair<iterator,bool>(end(),true);
+        else
+            return base_type::insert(value_pair);
+    }
+
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
     { (*this)[key_value_pair.KEY_VALUE] = key_value_pair.CONT_VALUE; return *this; }
 
-    /** erase the value pair \c pair(key,val) from the map.
-        Erase only if, the exact value content \c val is stored at key \key. */
-    size_type erase(const value_type& value);
+    /** erase \c key_value_pair from the map.
+        Erase only if, the exact value content \c val is stored for the given key. */
+    size_type erase(const element_type& key_value_pair);
 
     //==========================================================================
     //= Intersection
@@ -265,6 +273,17 @@ public:
 
     /** The intersection of map \c sectant with \c *this map is added to \c section. */
     void add_intersection(map& section, const map& sectant)const;
+
+	/** Returns true, if there is an intersection of \c key and \c *this map.
+	    Functions \c intersects and \c contains are identical on key value arguments
+		of type \c domain_type. Complexity: Logarithmic in container size. */
+	bool intersects(const domain_type& key)const;
+
+	/** Returns true, if there is an intersection of \key_value_pair and \c *this map.
+		If the key is found, the content of \c key_value_pair has to have an intersection 
+		with the content of the data value in the map. 
+		Complexity: Logarithmic in container size. 	*/
+	bool intersects(const element_type& key_value_pair)const;
 
     //==========================================================================
     //= Symmetric difference
@@ -307,6 +326,11 @@ public:
     template<typename IteratorT>
     static const data_type& data_value(IteratorT value_){ return (*value_).second; }
 
+    /** \c codomain_value allows for a uniform access to \c codomain_values which is
+        is used for common algorithms on sets and maps. */
+    template<typename IteratorT>
+    static const codomain_type& codomain_value(IteratorT value_){ return (*value_).second; }
+
     /** \c key_less allows for a uniform notation of key comparison which
         is used for common algorithms on sets and maps. */
     template<typename LeftIterT, typename RightIterT>
@@ -329,6 +353,14 @@ public:
     template<class Predicate>
     map& assign_if(const map& src, const Predicate&);
 
+	/** Copy the key values of the map to \c domain_set. Complexity: Linear. */
+	void domain(set_type& domain_set)const
+	{
+		set_type::iterator prior_ = domain_set.end();
+		const_FORALL_THIS(it_)
+			prior_ = domain_set.insert(prior_, it_->KEY_VALUE);
+	}
+
 private:
     template<class Combiner>
     map& add(const value_type& value_pair);
@@ -340,6 +372,10 @@ private:
     map& subtract(const value_type& value_pair);
 };
 
+
+//==============================================================================
+//= Addition
+//==============================================================================
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
     template <class Combiner>
@@ -395,7 +431,29 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
 }
 
 
+//==============================================================================
+//= Subtraction
+//==============================================================================
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    template <class Combiner>
+map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
+{
+    iterator it_ = find(val.KEY_VALUE);
+    if(it_ != end())
+    {
+        Combiner()((*it_).CONT_VALUE, val.CONT_VALUE);
+        if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == codomain_combine::neutron())
+            erase(it_);
+    }
+    return *this;
+}
 
+
+
+//==============================================================================
+//= Erasure
+//==============================================================================
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::size_type 
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
@@ -416,20 +474,9 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::size_type
 }
 
 
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    template <class Combiner>
-map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
-    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
-{
-    iterator it_ = find(val.KEY_VALUE);
-    if(it_ != end())
-    {
-        Combiner()((*it_).CONT_VALUE, val.CONT_VALUE);
-        if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == codomain_combine::neutron())
-            erase(it_);
-    }
-    return *this;
-}
+//==============================================================================
+//= Intersection
+//==============================================================================
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
@@ -446,7 +493,7 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
         if(it_ != end())
         {
             section.add(*it_);
-            if(is_set<CodomainT>::value)
+            if(is_set<codomain_type>::value)
                 section.template add<codomain_intersect>(sectant); 
             else
                 section.template add<codomain_combine>(sectant);
@@ -505,7 +552,33 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     }
 }
 
+//------------------------------------------------------------------------------
+//- intersects
+//------------------------------------------------------------------------------
 
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+	::intersects(const domain_type& key)const
+{
+	return traits::is_total || contains(key);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+inline bool map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    ::intersects(const element_type& key_value_pair)const
+{
+	if(traits::is_total)
+		return true;
+
+	type intersection;
+	add_intersection(intersection, key_value_pair);
+	return !intersection.empty(); 
+}
+
+
+//==============================================================================
+//= Conversion
+//==============================================================================
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 std::string map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::as_string()const
 { 
@@ -579,6 +652,20 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     return object; 
 }
 
+template <class DomainT, class CodomainT, class Traits, 
+          ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& 
+    erase(map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object, 
+          const set<DomainT,Compare,Alloc>& erasure) 
+{
+    typedef set<DomainT,Compare,Alloc> operand_type;
+
+    const_FORALL(typename operand_type, elem_, erasure) 
+        object.erase(*elem_); 
+
+    return object; 
+}
+
 
 //-----------------------------------------------------------------------------
 // non member functions
@@ -643,7 +730,11 @@ inline bool operator >= (const itl::map<DomainT,CodomainT,Traits,Compare,Combine
     const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& rhs)
 { return !(lhs < rhs); }
 
-//--------------------------------------------------------------------------
+//------------------------------------------------------------------------------
+//==============================================================================
+//= Addition
+//==============================================================================
+
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator += (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
@@ -731,7 +822,9 @@ operator |  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 }
 
 
-//--------------------------------------------------------------------------
+//==============================================================================
+//= Subtraction
+//==============================================================================
 
 /** Subtract a map \c x2 from this map. If an element of \c x2 already exists
     in \c *this, subtract the contents using <tt>operator -=</tt>. */
@@ -775,6 +868,10 @@ operator -  (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 }
 
 
+//==============================================================================
+//= Intersection
+//==============================================================================
+
 /** Intersect map \c x2 and \c *this.
     So \c *this becomes the intersection of \c *this and \c x2 */
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
@@ -782,8 +879,9 @@ inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 {
-    typedef typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> object_type;
-    if(Traits::is_total) return object += operand;
+    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> object_type;
+    if(Traits::is_total) 
+		return object += operand;
     else
     {
         object_type section;
@@ -808,8 +906,11 @@ inline itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& object,
     const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& operand)
 { 
-    Map::intersect(object, operand); 
-    return object; 
+    typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> object_type;
+    object_type section;
+    object.add_intersection(section, operand);
+    object.swap(section);
+    return object;
 }
 
 
@@ -829,7 +930,97 @@ operator & (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Sec
     return object &= operand; 
 }
 
+//------------------------------------------------------------------------------
+//- intersects
+//------------------------------------------------------------------------------
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&              object, 
+	   const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::domain_type& key)
+{
+	return object.intersects(key);
+}
 
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(
+	  const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::domain_type& key,
+               const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&              object)
+{
+	return object.intersects(key);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&               object, 
+	   const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair)
+{
+	return object.intersects(key_value_pair);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(
+	  const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair,
+               const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&               object)
+{
+	return object.intersects(key_value_pair);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&           left, 
+	   const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& right)
+{
+	typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
+	if(is_total<MapT>::value)
+		return true;
+
+	if(left.iterative_size() < right.iterative_size())
+		return Map::key_intersects(right, left);
+	else
+		return Map::key_intersects(left, right);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(
+	  const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& left,
+               const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&           right)
+{
+	typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
+	if(is_total<MapT>::value)
+		return true;
+
+	if(left.iterative_size() < right.iterative_size())
+		return Map::key_intersects(right, left);
+	else
+		return Map::key_intersects(left, right);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& left, 
+	            const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& right)
+{
+	typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
+	if(is_total<MapT>::value)
+		return true;
+
+	if(left.iterative_size() < right.iterative_size())
+		return Map::intersects(right, left);
+	else
+		return Map::intersects(left, right);
+}
+
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc,
+          class LeftT, class RightT>
+enable_if<mpl::or_<is_same< typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>, LeftT >,
+                   is_same< typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>, RightT>
+                  >, bool>
+is_disjoint(const LeftT& left, const RightT& right)
+{
+	return !intersects(left, right);
+}
+
+
+
+//==============================================================================
+//= Symmetric difference
+//==============================================================================
 
 /** Symmetric subtract map \c x2 and \c *this.
     So \c *this becomes the symmetric difference of \c *this and \c x2 */
@@ -865,7 +1056,6 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 
     return stream << "}";
 }
-
 
 //-----------------------------------------------------------------------------
 // type traits

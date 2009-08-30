@@ -168,43 +168,8 @@ loglinear for interval containers.
 
 [section Infix operators]
 
-For every inplace operator
-``
-T& operator o= (T& object, const P& operand)
-``
-the *itl* provides corresponding infix operators.
-``
-T operator o (T object, const P& operand){ return object o= operand; }
-T operator o (const P& operand, T object){ return object o= operand; }
-``
-
-From this implementation of infix `operator o` 
-the compiler will hopefully use return value optimization 
-[@http://en.wikipedia.org/wiki/Return_value_optimization (RVO)]
-creatiing no temporary object and performing one copy of 
-the first argument `object`.
-
-[caution
-Compared to the /inplace/ `operator o=` every use of an 
-/infix/ `operator o` requires ['*one extra copy*] 
-of the first argument `object` that passes a container.]
-
-Use infix operators only, if
-
-* efficiency is not crucial, e.g. the containers copied are small.
-* a concise and short notation is more important than efficiency in your context.
-* you need the result of operator `o=` as a copy anyway.
-
-
 The admissable type combinations for infix `operator +`
-is defined by the overload tables below. For interval containers
-__itv_sets__ __S and __itv_maps__ __M are split up into
-
-``
-S1:          interval_set   M1:       interval_map 
-S2: separate_interval_set
-S3:    split_interval_set   M3: split_interval_map 
-``
+are defined by the overload tables below. 
 
 ``
 // overload tables for
@@ -224,62 +189,6 @@ m  |   m   m            p  |                      M1 M3
                         M1 |       M1 M1          M1 M3
                         M3 |       M3 M3          M3 M3
 ``
-
-[h5 Segmentational Fineness]
-
-The indices `i` of `Si` and `Mi` represent a property
-called ['*segmentational fineness*] or short ['*fineness*]. 
-Segmentational fineness represents the fact, 
-that for interval containers holding the same elements, a
-splitting interval container may contain more segments as
-a separating container which in turn may contain more
-segments than a joining one. So for an 
-``
-operator >
-``
-where
-``
-x > y   // means that
-x is_finer_than y
-
-// we have
-
-finer                                             coarser
-split_interval_set                           interval_set
-                   > separate_interval_set >  
-split_interval_map                           interval_map
-``
-
-This relation is needed to resolve the instantiation of an
-infix `T operator + (P, Q)` for two interval container types
-`P` and `Q`. If both `P` and `Q` are candidates for the result
-type `T`, one of them must be chosen by the compiler.
-We choose the type that is segmentational finer as
-result type `T`. This way we do not loose the ['*segment informations*]
-that are stored in the ['*finer] one of the container types `P` and `Q`.
-
-So looking up a type combination for e.g. 
-`T operator + (interval_map, split_interval_map)`
-which is equivalent to
-`T operator + (M1, M3)`
-we find for row type `M1` and column type `M3`,
-`M3` will be assigned as result type.
-So this type combination will result in
-choosing an 
-``
-split_interval_map operator + (const interval_map&, split_interval_map)
-``
-
-[h5 Time Complexity of infix `operators o`]
-
-The time complexity of all infix operators of the *itl*
-is biased by the extra copy of the `object` argument.
-So all infix `operators o` are at least 
-/linear/ in `n = object.iterative_size()`.
-Taking this into account, the complexities of all 
-infix operators can be determined
-from the corresponding inplace `operators o=` they depend
-on.
 
 [endsect][/ Infix operators]
 

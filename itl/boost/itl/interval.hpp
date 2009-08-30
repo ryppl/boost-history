@@ -130,7 +130,7 @@ public:
     //NOTE: Compiler generated assignment operator = used
 
     //==========================================================================
-    //= Emptieness, containment
+    //= Containedness
     //==========================================================================
     /** Is the interval empty? */
     bool empty()const;

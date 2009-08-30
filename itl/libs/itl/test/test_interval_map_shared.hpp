@@ -422,37 +422,62 @@ template <template<class T, class U,
 void interval_map_contains_4_bicremental_types()
 {
     typedef IntervalMap<T,U> IntervalMapT;
-    //LAW: x.add(e).contains(e); //false! 
-    //LAW: x.insert(e).contains(e); //??
-    T v3 = make<T>(3);
-    T v5 = make<T>(5);
-    T v7 = make<T>(7);
-    T v8 = make<T>(8);
-    T v9 = make<T>(9);
-    T v11 = make<T>(11);
-    U u1 = make<U>(1);
-    
-    typename IntervalMapT::domain_mapping_type v3_u1(v3,u1);
-    typename IntervalMapT::domain_mapping_type v9_u1(v9,u1);
-    typename IntervalMapT::domain_mapping_type v11_u1(v11,u1);
+    IntervalMapT itv_map(K_v(3,1));    
+    BOOST_CHECK_EQUAL( itv_map.contains(K_v(3,1)), true );
 
-    typename IntervalMapT::value_type I3_7I_u1(interval<T>(v3,v7),u1);
-    IntervalMapT im(v3_u1);    
-    BOOST_CHECK_EQUAL( im.contains(v3_u1), true );
+    BOOST_CHECK_EQUAL( IntervalMapT().add(K_v(3,1)).contains(K_v(3,1)), true );
+    BOOST_CHECK_EQUAL( IntervalMapT().insert(K_v(3,1)).contains(K_v(3,1)), true );
+    itv_map.clear();
+    BOOST_CHECK_EQUAL( (itv_map += IIv(3,7,1)).contains(IIv(3,7,1)), true );
 
-    BOOST_CHECK_EQUAL( IntervalMapT().add(v3_u1).contains(v3_u1), true );
-    BOOST_CHECK_EQUAL( IntervalMapT().insert(v3_u1).contains(v3_u1), true );
-    im.clear();
-    BOOST_CHECK_EQUAL( (im += I3_7I_u1).contains(I3_7I_u1), true );
+    IntervalMapT itv_map0 = itv_map;    
 
-    IntervalMapT im0 = im;    
-
-    im.clear();
-    IntervalMapT im2(typename IntervalMapT::value_type(interval<T>::closed(v5,v8),u1));
-    im2.add(v9_u1).add(v11_u1);
-    im += im2;
-    BOOST_CHECK_EQUAL( im.contains(im2), true );    
+    itv_map.clear();
+    IntervalMapT itv_map2(IIv(5,8,1));
+    itv_map2.add(K_v(9,1)).add(K_v(11,1));
+    itv_map += itv_map2;
+    BOOST_CHECK_EQUAL( itv_map.contains(itv_map2), true );    
 }
+
+template <template<class T, class U,
+                   class Traits = partial_absorber,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap, 
+          class T, class U>
+void interval_map_contains_key_objects_4_bicremental_types()
+{
+    typedef IntervalMap<T,U> IntervalMapT;
+	typedef typename IntervalMapT::set_type IntervalSetT;
+    IntervalMapT itv_map; 
+
+	itv_map.add(IDv(1,3,1));
+    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(0)), false );
+    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(2)), true );
+    BOOST_CHECK_EQUAL( itv_map.contains(MK_v(3)), false );
+
+	itv_map.add(IDv(3,6,2));
+    BOOST_CHECK_EQUAL( itv_map.contains(I_I(0,0)), false );
+    BOOST_CHECK_EQUAL( itv_map.contains(I_I(2,4)), true );
+    BOOST_CHECK_EQUAL( itv_map.contains(I_I(6,6)), false );
+
+	itv_map.add(IDv(8,9,2));
+
+	IntervalSetT itv_set;
+	itv_set.add(C_I(1,2)).add(C_D(2,6)).add(I_I(8,8));
+    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), true );
+	itv_set.add(I_I(1,4));
+    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), true );
+	itv_set.add(I_I(1,4));
+    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), true );
+	itv_set.add(I_I(7,7));
+    BOOST_CHECK_EQUAL( itv_map.contains(itv_set), false );
+
+}
+
 
 template <template<class T, class U,
                    class Traits = partial_absorber,
@@ -1068,6 +1093,80 @@ void interval_map_set_4_bicremental_types()
     BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).contains(K_v(4,5)), true );
     BOOST_CHECK_EQUAL( map_a.set(K_v(4,5)).set(CDv(3,5,6)).contains(CDv(3,5,6)), true );
 }
+
+
+template <class T, class U, class Trt,
+          template<class T, class U,
+                   class Traits = Trt,
+                   ITL_COMPARE Compare = ITL_COMPARE_INSTANCE(std::less, U),
+                   ITL_COMBINE Combine = ITL_COMBINE_INSTANCE(itl::inplace_plus, U),
+                   ITL_SECTION Section = ITL_SECTION_INSTANCE(itl::inplace_et, U),
+                   template<class,ITL_COMPARE>class Interval = interval,
+                   ITL_ALLOC   Alloc   = std::allocator
+                  >class IntervalMap
+          >
+void interval_map_inclusion_compare_4_bicremental_types()
+{
+    typedef IntervalMap<T,U,Trt> IntervalMapT;
+	typedef typename IntervalMap<T,U,Trt>::set_type IntervalSetT;
+    typedef itl::map<T,U,Trt> MapT;
+    typedef itl::set<T> SetT;
+
+    IntervalMapT itv_map_sub_a, itv_map_a, itv_map_a2, itv_map_super_a, 
+		         itv_map_b, itv_map_c;
+    itv_map_sub_a.add(IDv(2,4,1)).add(IIv(6,7,3));
+    itv_map_a = itv_map_sub_a; 
+	itv_map_a.add(IIv(9,9,1));
+	itv_map_a2 = itv_map_a;
+	itv_map_c = itv_map_sub_a;
+	itv_map_c.erase(MK_v(7)).add(IIv(11,11,2));
+	itv_map_b = itv_map_a;
+	itv_map_b.set(IIv(6,7,2));
+
+
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalMapT(), IntervalMapT()), inclusion::equal );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, itv_map_a), inclusion::equal );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, itv_map_a2), inclusion::equal );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, IntervalMapT()), inclusion::superset );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, itv_map_sub_a), inclusion::superset );
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalMapT(), itv_map_a), inclusion::subset );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_sub_a, itv_map_a), inclusion::subset );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, itv_map_b), inclusion::unrelated );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, itv_map_c), inclusion::unrelated );
+
+    IntervalSetT set_sub_a, set_a, set_a2, set_b, set_c;
+	itv_map_a.domain(set_a);
+	itv_map_a2.domain(set_a2);
+	itv_map_sub_a.domain(set_sub_a);
+
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalMapT(), IntervalSetT()), inclusion::equal );
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalSetT(), IntervalMapT()), inclusion::equal );
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalSetT(), IntervalSetT()), inclusion::equal );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, set_a), inclusion::equal );
+	BOOST_CHECK_EQUAL( inclusion_compare(set_a, itv_map_a), inclusion::equal );
+	BOOST_CHECK_EQUAL( inclusion_compare(set_a, set_a2), inclusion::equal );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, IntervalSetT()), inclusion::superset );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_a, set_sub_a), inclusion::superset );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalSetT(), itv_map_a), inclusion::subset );
+	BOOST_CHECK_EQUAL( inclusion_compare(set_sub_a, itv_map_a), inclusion::subset );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(set_a, IntervalSetT()), inclusion::superset );
+	BOOST_CHECK_EQUAL( inclusion_compare(set_a, set_sub_a), inclusion::superset );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(IntervalSetT(), set_a), inclusion::subset );
+	BOOST_CHECK_EQUAL( inclusion_compare(set_sub_a, set_a), inclusion::subset );
+
+	BOOST_CHECK_EQUAL( inclusion_compare(set_a, itv_map_c), inclusion::unrelated );
+	BOOST_CHECK_EQUAL( inclusion_compare(itv_map_c, set_a), inclusion::unrelated );
+
+}
+
+
 
 #endif // __test_itl_interval_map_shared_h_JOFA_080920__
 

@@ -37,6 +37,10 @@ BOOST_AUTO_TEST_CASE
 {            interval_map_contains_4_bicremental_types<INTERVAL_MAP, bicremental_type_4, int>();}
 
 BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_map_contains_key_objects_4_bicremental_types)
+{            interval_map_contains_key_objects_4_bicremental_types<INTERVAL_MAP, bicremental_type_4, int>();}
+
+BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_map_operators_4_bicremental_types)
 {            interval_map_operators_4_bicremental_types<INTERVAL_MAP, bicremental_type_5, int>();}
 
@@ -62,6 +66,11 @@ BOOST_AUTO_TEST_CASE
 BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_map_set_4_bicremental_types)
 {            interval_map_set_4_bicremental_types<INTERVAL_MAP, bicremental_type_3, int>();}
+
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_map_inclusion_compare_4_bicremental_types)
+{            interval_map_inclusion_compare_4_bicremental_types<discrete_type_4, int, partial_absorber, INTERVAL_MAP>();}
+
 
 #endif // __itl_fastest_interval_map_cases_hpp_JOFA_090702__
 

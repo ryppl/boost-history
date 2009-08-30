@@ -172,21 +172,6 @@ private:
 
 } ;
 
-
-template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-bool interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::contains_(const value_type& interv_value)const
-{
-    interval_type interv = interv_value.KEY_VALUE;
-    if(interv.empty()) 
-        return true;
-
-    type section;
-    add_intersection(section, interv);
-    return is_element_equal(section, type(interv_value));
-}
-
-
 template <typename DomainT, typename CodomainT, class Traits,
           ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline bool interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>

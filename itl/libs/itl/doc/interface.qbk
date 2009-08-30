@@ -435,9 +435,8 @@ overloaded implementations for the function of that row is shown.
 [/                                           interval  itvset   itvmap  itl:set  itl:map  std:set  std:map]
 [[__biLConsCopyDest__]                         [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
 [[`T::T()`]                                    [1]       [1]      [1]     [1]      [1]      [1]      [1]]
-[[`T::T(const T&)`]                            [A]       [1]      [1]     [1]      [1]      [1]      [1]]
-[[`T::T(const P&)`]                            [ ]   [__eiS]  [__bpM]     [ ]      [ ]      [ ]      [ ]]
-[[`T::T(...)`]                                 [3]       [ ]      [ ]     [3]      [3]      [3]      [3]]
+[[`T::T(const P&)`]                            [A]   [__eiS]  [__bpM]     [1]      [1]      [1]      [1]]
+[/ JODO [`T::T(...)`]                                 [3]       [ ]      [ ]     [3]      [3]      [3]      [3]]
 [[`T& T::operator=(const P&)`]                 [A]     [__S]    [__M]     [1]      [1]      [1]      [1]]
 [[`void T::swap(T&)`]                          [ ]       [1]      [1]     [1]      [1]      [1]      [1]]
 

@@ -70,6 +70,8 @@ namespace boost{namespace itl
         }
     };
 
+	//-----------------------------------------------------------------------------
+
     template<>         
     inline std::string unary_template_to_string<itl::std_equal>::apply()
     { return "=="; }

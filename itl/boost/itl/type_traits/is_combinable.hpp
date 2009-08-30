@@ -14,6 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/mpl/or.hpp> 
 #include <boost/mpl/not.hpp> 
 #include <boost/type_traits/is_same.hpp>
+#include <boost/itl/type_traits/is_concept_equivalent.hpp>
 
 namespace boost{namespace itl
 {
@@ -26,29 +27,6 @@ struct is_overloadable
         is_same<Type, typename Type::overloadable_type>::value;
 };
 
-template<class Type>
-struct is_interval_map
-{
-    typedef is_interval_map<Type> type; 
-    static const bool value =
-        is_interval_container<Type>::value && is_map<Type>::value; 
-};
-
-template<class Type>
-struct is_interval_set
-{ 
-    typedef is_interval_set<Type> type; 
-    static const bool value =
-        is_interval_container<Type>::value && !is_interval_map<Type>::value; 
-};
-
-template<template<class>class IsConcept, class LeftT, class RightT>
-struct is_concept_equivalent
-{
-    typedef is_concept_equivalent<IsConcept, LeftT, RightT> type;
-    static const bool value =
-        mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value;
-};
 
 //------------------------------------------------------------------------------
 template<class LeftT, class RightT>
@@ -71,12 +49,12 @@ struct is_domain_compare_equal
 };
 
 template<class LeftT, class RightT>
-struct is_content_type_equal
+struct is_codomain_type_equal
 {
-    typedef is_content_type_equal<LeftT, RightT> type;
+    typedef is_codomain_type_equal<LeftT, RightT> type;
     static const bool value =
         mpl::and_<is_domain_compare_equal<LeftT, RightT>, 
-                  is_codomain_equal<LeftT, RightT> >::value;//JODO
+                  is_codomain_equal<LeftT, RightT> >::value;
 };
 
 
@@ -89,7 +67,7 @@ struct is_concept_compatible
         mpl::and_
         <
             mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >
-          , is_content_type_equal<LeftT, RightT>
+          , is_codomain_type_equal<LeftT, RightT>
         >::value;
 };
 

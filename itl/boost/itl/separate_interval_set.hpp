@@ -98,7 +98,9 @@ public:
     template<class SubType>
     separate_interval_set
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-    { assign(src); }
+    { 
+		assign(src); 
+	}
 
     /// Constructor for a single element
     explicit separate_interval_set(const domain_type& elem): base_type() { add(elem); }
@@ -109,7 +111,10 @@ public:
     template<class SubType>
     separate_interval_set& operator =
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
-    { assign(src); return *this; }
+    { 
+		assign(src); 
+		return *this; 
+	}
 
     /// Assignment from a base interval_set.
     template<class SubType>
@@ -124,32 +129,20 @@ private:
         interval_base_set<separate_interval_set<DomainT,Compare,Interval,Alloc>,
                                                 DomainT,Compare,Interval,Alloc>;
 
-    /// Does the set contain the interval  <tt>x</tt>?
-    bool contains_(const interval_type& x)const;
+    /// Does the set contain the interval  <tt>sub</tt>?
+    bool contains_(const interval_type& sub)const;
 
-    /// Insertion of an interval <tt>x</tt>
-    void add_(const value_type& x);
-    iterator add_(iterator prior_, const value_type& x);
+    /// Insertion of an interval <tt>addend</tt>
+    void add_(const value_type& addend);
+    iterator add_(iterator prior_, const value_type& addend);
 
-    /// Removal of an interval <tt>x</tt>
-    void subtract_(const value_type& x);
+    /// Removal of an interval <tt>minuend</tt>
+    void subtract_(const value_type& minuend);
 
 private:
     /// Treatment of adjoint intervals on insertion
     void handle_neighbours(const iterator& it_){}
 } ;
-
-
-template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-inline bool separate_interval_set<DomainT,Compare,Interval,Alloc>::contains_(const interval_type& interv)const
-{
-    if(interv.empty()) 
-        return true;
-
-    type section;
-    add_intersection(section, interv);
-    return is_element_equal(section, type(interv));
-}
 
 
 template<class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>

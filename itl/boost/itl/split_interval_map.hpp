@@ -155,20 +155,6 @@ private:
     void erase_rest(const interval_type& inter_val, const CodomainT& co_val, iterator& it_, iterator& last_);
 } ;
 
-
-template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
-bool split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::contains_(const value_type& interv_value)const
-{
-    interval_type interv = interv_value.KEY_VALUE;
-    if(interv.empty()) 
-        return true;
-
-    type section;
-    add_intersection(section, interv);
-    return is_element_equal(section, type(interv_value));
-}
-
 //-----------------------------------------------------------------------------
 // add<Combinator>(pair(interval,value)):
 //-----------------------------------------------------------------------------

@@ -8,23 +8,69 @@
 
 [section Implementation]
 
-The implementation of the *itl's* conainers is based on 
-std::set and std::map. So the underlying datastructure of
+The [link boost_itl.interface previous section] gave an overview over the interface
+of the *itl* outlining 
+[link boost_itl.interface.class_templates class templates], 
+[link boost_itl.interface.associated_types associated types]
+and polymorphic 
+[link boost_itl.interface.function_synopsis functions and operators]. 
+In preparation to the 
+[link boost_itl.function_reference next section], 
+that describes the *itl's* polymorphic functions in
+more detail together with ['*complexity characteristics*], 
+this section summarizes some general informations on
+implementation and performance.
+
+[h5 STL based implementation]
+
+The *implementation* of the *itl's* conainers is based on 
+[*std::set] and [*std::map]. So the underlying datastructure of
 interval containers is a red black tree of intervals or
 interval value pairs. 
-The element containers itl::set and itl::map are wrapper
-classes of std::set and std::map.
-Interval containers are then using itl::sets of intervals
-or itl::maps of interval value pairs as implementing
+The element containers __itl_set__ and __itl_map__ are wrapper
+classes of `std::set` and `std::map`.
+Interval containers are then using __itl_sets__ of intervals
+or __itl_maps__ of interval value pairs as implementing
 containers.
-So all the complexity characteristics of itl conainers
+So all the ['*complexity characteristics*] of itl conainers
 are based on and limited by the ['*red-black tree implementation*]
 of the underlying std::AssociativeContainers.
 
-[section Complexity]
 
-This section gives an overview over the time complextity of
-the basic operations of ['itl containers].
+[section Iterative size]
+
+Throughout the documentation on complexity, 
+big /O/ expressions like __On__ or __Omlgn__ refere to container sizes
+/n/ and /m/. In this documentaion these sizes ['*do not*] refer 
+to the familiar `size` function that returns
+the ['*number of elements*] of a container. Because for an interval container
+``
+interval_set<int> mono;
+mono += interval<int>(1,5); // {[1 ... 5]}
+mono.size()           == 5; // true, 5 elements
+mono.interval_count() == 1; // true, only one interval
+``
+
+it's size and the number of contained intervals is usually different.
+To refer uniformely to a /size/ that matters for iteration, which is
+the decisive kind of size concering algorithmic behavior there is a function
+``
+bool T::iterative_size()const; // Number of entities that can be iterated over.
+``
+for all element and interval containers of the itl. So for
+complexity statements throughout the itl's documentation 
+the sizes will be `iterative_sizes` and big /O/ expressions like
+__Omlgn__ will refer to sizes
+``
+n = y.iterative_size();
+m = x.iterative_size();
+``
+for containers `y` and `x`.
+
+[endsect][/ Iterative size]
+
+
+[section Complexity]
 
 [h4 Complexity of element containers]
 
@@ -35,32 +81,20 @@ deletion and search are all using logarithmic time.
 
 [h4 Complexity of interval containers]
 
-The operations of ['interval containers] behave differently
+The operations on ['interval containers] behave differently
 due to the fact that intervals unlike elements can overlap
-any number of other intervals in a container. So as long as
+any number of other intervals in a container. As long as
 intervals are relatively small or just singleton, interval
 containers behave like containers of elements.
+For large intervals however time consumption of operations
+on interval containers may be worse, because most or all
+intervals of a container may have to be visited.
+As an example, time complexity of __biLAddition__ on
+interval containers is briefly discussed.
 
-In order to present complexity characteristics of the overloaded
-/inplace/ or /op-assign/ `operators o=` in a concise way we use a 
-couple of placeholders.
-
-For an operator
-``
-T& operator o= (T& object, const P& operand)
-``
-
-[table
-[[Placeholder]    []]
-[[`T`]            [an interval container]]
-[[`P`]            [`T::element_type` or]]
-[[]               [`T::segment_type` or]]
-[[]               [an interval container]]
-[[`interval_sets`][__itv_set__ or __sep_itv_set__ or __spl_itv_set__]]
-[[`interval_maps`][__itv_map__ or __spl_itv_map__]]
-[[ /n/ ]          [ /n/ = `object.interval_count()`]]
-[[ /m/ ]          [ /m/ = `operand.interval_count()`, if `operand` is an interval container]]
-]
+More information on ['*complexity characteristics*] 
+of *itl's* functions is contained in section 
+[link boost_itl.function_reference Function Reference]
 
 
 [h5 Time Complexity of Addition]
@@ -68,8 +102,7 @@ T& operator o= (T& object, const P& operand)
 The next table
 gives the time complexities for the overloaded 
 `operator +=` on interval containers.
-The instance types of `T` are given as headers
-of columns 4 to 8.
+The instance types of `T` are given as column headers.
 Instances of type parameter `P` are denoted in
 the second column.
 The third column containes the specific kind of complexity statement. 
@@ -129,59 +162,56 @@ small, performance can be /logarithmic/.
 If /m/ is small compared with /n/ and intervals in `operand`
 are large, performance tends to be /linear/.
 
-[h5 Time Complexity of Subtraction]
+[endsect][/ Complexity]
 
-The next table denotes the time complexity characteristics of
-the ['*subtraction*] on interval containers.
-The table shows almost the same patterns of complexities
-that has been stated for ['*addition*].
+[section Inplace and infix operators]
 
-[table Time Complexity of Subtraction:
-[[]                                              [`P`]               [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
-[/ 1operation                                    2granul.            3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
-[[`T& operator -=(T& object, const P& operand)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[]                                              [`T::segment_type`] [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[]                                              []                  [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
-[[]                                              []                  [amortized]  [__Olgn__]    [__Olgn__]    [__Olgn__]    []            []            ]
-[[]                                              [`interval_sets`]   []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
-[[]                                              [`interval_maps`]   []           [           ] [           ] [           ] [__Omlgnpm__] [__Omlgnpm__] ]
-]
+For the major operations /addition, subtraction, intersection/
+of *itl* containers and for /symmetric difference/
+inplace `operator`s `+= |=, -=, &=` and `^=` 
+are provided.
 
-For __spl_itv_sets__, subtraction of an interval reduces the 
-__spl_itv_set_s__ size particularly in the worst case, where
-the subracted interval `operand` overlaps with 
-all intervals in `object`.
-After a worst case subtraction only 0 to 2 intervals are
-left in `object` after subtraction. That leads to a
-['*logarithmic amortized time*].
-[/ JODO check this]
+For every ['*inplace*] operator
+``
+T& operator o= (T& object, const P& operand)
+``
+the *itl* provides corresponding ['*infix*] operators.
+``
+T operator o (T object, const P& operand){ return object o= operand; }
+T operator o (const P& operand, T object){ return object o= operand; }
+``
+
+From this implementation of the infix `operator o` 
+the compiler will hopefully use return value optimization 
+[@http://en.wikipedia.org/wiki/Return_value_optimization (RVO)]
+creating no temporary object and performing one copy of 
+the first argument `object`.
+
+[caution
+Compared to the /inplace/ `operator o=` every use of an 
+/infix/ `operator o` requires ['*one extra copy*] 
+of the first argument `object` that passes a container.]
+
+Use infix operators only, if
+
+* efficiency is not crucial, e.g. the containers copied are small.
+* a concise and short notation is more important than efficiency in your context.
+* you need the result of operator `o=` as a copy anyway.
+
+[h5 Time Complexity of infix `operators o`]
+
+The time complexity of all infix operators of the *itl*
+is biased by the extra copy of the `object` argument.
+So all infix `operators o` are at least 
+/linear/ in `n = object.iterative_size()`.
+Taking this into account, the complexities of all 
+infix operators can be determined
+from the corresponding inplace `operators o=` they depend
+on.
+
+[endsect][/ Inplace and infix operators]
 
 
-[h5 Time Complexity of Intersection]
 
-The /complexity patterns/ for ['*intersection*] are identical to those for ['*subtraction*].
-
-[table Time Complexity of Intersection:
-[[]                                              [`P`]               [][interval\nset][separate\ninterval\nset][split\ninterval\nset][interval\nmap][split\ninterval\nmap]]
-[/ 1operation                                    2granul.            3case        4itvset       5se_itvset    6sp_itvset    7itv_map      8sp_itvmap]
-[[`T& operator &=(T& object, const P& operand)`] [`T::element_type`] []           [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[]                                              [`T::segment_type`] [best case]  [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    [__Olgn__]    ]
-[[]                                              []                  [worst case] [__On__]      [__On__]      [__On__]      [__On__]      [__On__]      ]
-[[]                                              [`interval_sets`]   []           [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] [__Omlgnpm__] ]
-[[]                                              [`interval_maps`]   []           [           ] [           ] [           ] [__Omlgnpm__] [__Omlgnpm__] ]
-]
-
-We can observe a general pattern, that the major operations on
-interval containers are of ['*logarithmic*], ['*linear*], and ['*loglinear*] time
-complexity for the combination of ['*elements*], ['*segments*] and ['*containers*]
-respectively.
-
-While this section covers the complexity characteristics of
-the most important operations only, more complexity statements
-are included in the doxygen generated 
-[link interval_template_library_reference reference documentation].
-
-[endsect]
-
-[endsect]
+[endsect][/ Implementation]
 
