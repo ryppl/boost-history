@@ -1,0 +1,28 @@
+/*-----------------------------------------------------------------------------+    
+Copyright (c) 2008-2009: Joachim Faulhaber
++------------------------------------------------------------------------------+
+   Distributed under the Boost Software License, Version 1.0.
+      (See accompanying file LICENCE.txt or copy at
+           http://www.boost.org/LICENSE_1_0.txt)
++-----------------------------------------------------------------------------*/
+#ifndef __itl_type_traits_is_concept_equivalent_JOFA_090830_H__
+#define __itl_type_traits_is_concept_equivalent_JOFA_090830_H__
+
+#include <boost/mpl/and.hpp> 
+
+namespace boost{ namespace itl
+{
+
+	template<template<class>class IsConcept, class LeftT, class RightT>
+	struct is_concept_equivalent
+	{
+		typedef is_concept_equivalent<IsConcept, LeftT, RightT> type;
+		static const bool value =
+			mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value;
+	};
+
+}} // namespace boost itl
+
+#endif
+
+
