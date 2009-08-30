@@ -47,7 +47,7 @@ namespace boost { namespace explore
     // returns state information stored in the stream for the given type.  Will allocate
     // state data if needed and create == true.  If create == false and the data does not
     // already exist, it will return 0.
-    // T: the user-defined state class.  Must be default constructible.
+    // T: the user-defined state class.  Must be constructible, accepting a stream pointer.
     template<typename T>
     T* get_stream_state(std::ios_base& stream, bool create)
     {
@@ -60,7 +60,7 @@ namespace boost { namespace explore
         {
             // both creating a new T and registering the callback allocate memory.  Use
             // auto_ptr to satisfy the strong exception guarantee.
-            std::auto_ptr<T> pt(new T);
+            std::auto_ptr<T> pt(new T(&stream));
             stream.register_callback(detail::delete_extra_state<T>, index);
             state = pt.release();
         }

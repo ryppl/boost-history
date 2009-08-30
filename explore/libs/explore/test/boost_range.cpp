@@ -9,37 +9,36 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <sstream>
-#include <vector>
 #include <boost/range/iterator_range.hpp>
 #include <boost/explore.hpp>
+#include "boost_explore_test_tools.hpp"
 
-BOOST_AUTO_TEST_CASE( boost_range_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( boost_range_stream_test, C, test_types )
 {
-    std::stringstream str_out;
+    test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     str_out << boost::explore::make_iterator_range(vi);
-    BOOST_CHECK_EQUAL(str_out.str(), "[]");
+    BOOST_CHECK_EQUAL(output(str_out), "[]");
 
-    str_out.str("");
+    reset(str_out);
 
     vi.push_back(1);
     str_out << boost::explore::make_iterator_range(vi);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1]");
 
-    str_out.str("");
+    reset(str_out);
 
     vi.push_back(2);
     vi.push_back(3);
     str_out << boost::explore::make_iterator_range(vi);
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 2, 3]");
 
-    str_out.str("");
+    reset(str_out);
     str_out << boost::explore::make_iterator_range(vi.begin()+2, vi.end());
-    BOOST_CHECK_EQUAL(str_out.str(), "[3]");
+    BOOST_CHECK_EQUAL(output(str_out), "[3]");
 
-    str_out.str("");
+    reset(str_out);
     str_out << boost::explore::make_iterator_range(vi.rbegin(), vi.rend());
-    BOOST_CHECK_EQUAL(str_out.str(), "[3, 2, 1]");
+    BOOST_CHECK_EQUAL(output(str_out), "[3, 2, 1]");
 }

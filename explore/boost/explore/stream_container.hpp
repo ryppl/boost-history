@@ -24,19 +24,20 @@ namespace boost { namespace explore
     {
         // grab the extra data embedded in the stream object.
         container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
-        detail::depth_guard<Elem> guard(state);
-        state->set_level(state->depth()-1);
+        container_common_stream_state* common_state = explore::get_stream_state<container_common_stream_state>(ostr);
+        detail::depth_guard guard(common_state);
+        common_state->set_level(common_state->depth()-1);
 
         // starting delimiter
         ostr << state->start();
 
-        std::size_t rows = state->rows();
+        std::size_t rows = common_state->rows();
 
         std::size_t cur_row = 0;
         while( first != last )
         {
             // value
-            f(ostr, *first, state);
+            f(ostr, *first, state, common_state);
 
             if( ++first != last )
             {

@@ -19,11 +19,10 @@ namespace boost { namespace explore
 {
     namespace detail
     {
-        template<typename Elem>
         struct depth_guard
         {
-            depth_guard(container_stream_state<Elem>* state)
-            : m_state(state), m_prev_level(state->m_level)
+            depth_guard(container_common_stream_state* state)
+            : m_state(state), m_prev_level(state->get_level())
             {
                 ++m_state->m_depth;
             }
@@ -31,11 +30,11 @@ namespace boost { namespace explore
             ~depth_guard()
             {
                 --m_state->m_depth;
-                m_state->m_level = m_prev_level;
+                m_state->set_level(m_prev_level);
             }
             
         private:
-            container_stream_state<Elem>* m_state;
+            container_common_stream_state* m_state;
             size_t m_prev_level;
         };
         
@@ -76,13 +75,13 @@ namespace boost { namespace explore
                 }
             }
 
-            container_stream_state<char>* m_state;
+            container_common_stream_state* m_state;
         };
 
         template<typename Elem, typename Tr>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, handle_custom_stream& cs)
         {
-            container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
+            container_common_stream_state* state = explore::get_stream_state<container_common_stream_state>(ostr);
             cs.m_state = state;
             if( state->depth() > 0 ) // only needed if nested
             {
@@ -136,21 +135,19 @@ namespace boost { namespace explore
 
         void levelFn(std::ios_base& ostr, std::size_t l)
         {
-            explore::get_stream_state<container_stream_state<char> >(ostr)->set_level(l);
+            explore::get_stream_state<container_common_stream_state>(ostr)->set_level(l);
         }
 
         // function ptr object for setrows
-        //template<typename Elem>
         void setrowsFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_stream_state<char> >(ostr)->set_rows(sz);
+            explore::get_stream_state<container_common_stream_state>(ostr)->set_rows(sz);
         }
         
         // function ptr object for setrows
-        //template<typename Elem>
         void setitemwidthFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_stream_state<char> >(ostr)->set_itemwidth(sz);
+            explore::get_stream_state<container_common_stream_state>(ostr)->set_itemwidth(sz);
         }
     }
     

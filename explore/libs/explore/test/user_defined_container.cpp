@@ -9,10 +9,10 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <sstream>
 #include <vector>
 #include <boost/assign.hpp>
 #include <boost/explore.hpp>
+#include "boost_explore_test_tools.hpp"
 
 class user_vector
 {
@@ -42,13 +42,18 @@ std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
     return boost::explore::stream_container(ostr, u.start(), u.finish());
 }
 
-BOOST_AUTO_TEST_CASE( user_defined_stream_test )
+std::wostream& operator<<(std::wostream& ostr, const user_vector& u)
 {
-    std::stringstream str_out;
+    return boost::explore::stream_container(ostr, u.start(), u.finish());
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( user_defined_stream_test, C, test_types )
+{
+    test_traits<C>::stream_type str_out;
 
     user_vector v;
     str_out << v;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 2, 3]");
 }
 
 class my_container
@@ -61,6 +66,7 @@ public:
     }
 
     friend std::ostream& operator<<(std::ostream& ostr, const my_container& c);
+    friend std::wostream& operator<<(std::wostream& ostr, const my_container& c);
 
 private:
     std::vector<int> m_data;
@@ -72,33 +78,40 @@ std::ostream& operator<<(std::ostream& ostr, const my_container& c)
     return ostr << custom() << delimiters("/", "::", "/") << c.m_data;
 }
 
-BOOST_AUTO_TEST_CASE( custom_stream_test )
+std::wostream& operator<<(std::wostream& ostr, const my_container& c)
+{
+    using namespace boost::explore;
+    return ostr << custom() << delimiters(L"/", L"::", L"/") << c.m_data;
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( custom_stream_test, C, test_types )
 {
     using namespace boost::assign;
     using namespace boost::explore;
-    std::stringstream str_out;
+    test_traits<C>::stream_type str_out;
 
     my_container mc;
     str_out << mc;
-    BOOST_CHECK_EQUAL(str_out.str(), "/1::2::3::4::5::6/");
+    BOOST_CHECK_EQUAL(output(str_out), "/1::2::3::4::5::6/");
 
-    str_out.str("");
+    reset(str_out);
 
     std::vector<my_container> vmc;
     vmc += mc, mc;
-    str_out << delimiters("{\n   ", "\n   ", "\n}") << vmc;
-    BOOST_CHECK_EQUAL(str_out.str(),
+    str_out << delimiters("{\n   ", "\n   ", "\n}") << delimiters(L"{\n   ", L"\n   ", L"\n}") ;
+    str_out << vmc;
+    BOOST_CHECK_EQUAL(output(str_out),
         "{\n"
         "   /1::2::3::4::5::6/\n"
         "   /1::2::3::4::5::6/\n"
         "}");
 
-    str_out.str("");
+    reset(str_out);
 
     std::vector<std::vector<my_container> > vvmc;
     vvmc += vmc, vmc;
-    str_out << level(1) << delimiters("[", " xxx ", "]") << vvmc;
-    BOOST_CHECK_EQUAL(str_out.str(),
+    str_out << level(1) << delimiters("[", " xxx ", "]") << delimiters(L"[", L" xxx ", L"]") << vvmc;
+    BOOST_CHECK_EQUAL(output(str_out),
         "{\n"
         "   [/1::2::3::4::5::6/ xxx /1::2::3::4::5::6/]\n"
         "   [/1::2::3::4::5::6/ xxx /1::2::3::4::5::6/]\n"

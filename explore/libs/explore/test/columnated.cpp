@@ -9,30 +9,30 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <string>
-#include <sstream>
 #include <vector>
 #include <boost/explore.hpp>
+#include "boost_explore_test_tools.hpp"
 
+template<typename C>
 struct columnated_format
 {
     columnated_format(std::size_t rows, std::size_t width) : m_rows(rows), m_width(width) {}
     std::size_t m_rows;
     std::size_t m_width;
 
-    friend std::ostream& operator<<(std::ostream& ostr, const columnated_format& f)
+    friend std::basic_ostream<C>& operator<<(std::basic_ostream<C>& ostr, const columnated_format<C>& f)
     {
         using namespace boost::explore;
         ostr << setrows(f.m_rows) << setitemwidth(f.m_width)
-             << separator("") << start("") << boost::explore::end("");
+            << separator(str_to<C>("")) << start(str_to<C>("")) << boost::explore::end(str_to<C>(""));
         return ostr;
     }
 };
 
-BOOST_AUTO_TEST_CASE( basic_columnate_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( basic_columnate_stream_test, C, test_types )
 {
     using namespace boost::explore;
-    std::stringstream str_out;
+    test_traits<C>::stream_type str_out;
     std::vector<int> vi;
 
     for( int i = 0; i < 12; ++i )
@@ -40,29 +40,29 @@ BOOST_AUTO_TEST_CASE( basic_columnate_stream_test )
         vi.push_back(i);
     }
 
-    str_out << setrows(3) << start("") << boost::explore::end("") << vi;
+    str_out << setrows(3) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
 
-    BOOST_CHECK_EQUAL(str_out.str(),
+    BOOST_CHECK_EQUAL(output(str_out),
         "0, 1, 2, \n"
         "3, 4, 5, \n"
         "6, 7, 8, \n"
         "9, 10, 11");
 
-    str_out.str("");
+    reset(str_out);
 
-    str_out << setrows(3) << setitemwidth(5) << start("") << boost::explore::end("") << vi;
+    str_out << setrows(3) << setitemwidth(5) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
 
-    BOOST_CHECK_EQUAL(str_out.str(),
+    BOOST_CHECK_EQUAL(output(str_out),
         "    0,     1,     2, \n"
         "    3,     4,     5, \n"
         "    6,     7,     8, \n"
         "    9,    10,    11");
 
-    str_out.str("");
+    reset(str_out);
 
-    str_out << columnated_format(3, 5) << vi;
+    str_out << columnated_format<C>(3, 5) << vi;
 
-    BOOST_CHECK_EQUAL(str_out.str(),
+    BOOST_CHECK_EQUAL(output(str_out),
         "    0    1    2\n"
         "    3    4    5\n"
         "    6    7    8\n"

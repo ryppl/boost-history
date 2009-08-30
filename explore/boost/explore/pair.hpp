@@ -20,9 +20,10 @@ namespace std
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::pair<T1, T2>& p)
     {
         using namespace boost::explore;
+        container_common_stream_state* common_state = get_stream_state<container_common_stream_state>(ostr);
+        detail::depth_guard guard(common_state);
+        common_state->set_level(common_state->depth()-1);
         container_stream_state<Elem>* state = get_stream_state<container_stream_state<Elem> >(ostr);
-        detail::depth_guard<Elem> guard(state);
-        state->set_level(state->depth()-1);
         return ostr << state->start() << p.first << state->separator() << p.second << state->end();
     }
 }

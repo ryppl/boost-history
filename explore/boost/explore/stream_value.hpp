@@ -19,9 +19,9 @@ namespace boost { namespace explore
     struct stream_normal_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
         {
-            ostr.width(state->itemwidth());
+            ostr.width(common_state->itemwidth());
             ostr << val;
         }
     };
@@ -30,7 +30,7 @@ namespace boost { namespace explore
     struct stream_associative_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state)
+        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
         {
             ostr << state->assoc_start() << val.first << state->assoc_separator() << val.second << state->assoc_end();
         }

@@ -9,79 +9,77 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <string>
-#include <sstream>
 #include <vector>
 #include <boost/explore/set.hpp>
 #include <boost/explore/vector.hpp>
 #include <boost/explore/iterator_range.hpp>
-
 #include <boost/explore.hpp>
+#include "boost_explore_test_tools.hpp"
 
-BOOST_AUTO_TEST_CASE( basic_set_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( basic_set_stream_test, C, test_types )
 {
-    std::stringstream str_out;
+    test_traits<C>::stream_type str_out;
 
     std::set<int> si;
     str_out << si;
-    BOOST_CHECK_EQUAL(str_out.str(), "[]");
+    BOOST_CHECK_EQUAL(output(str_out), "[]");
 
-    str_out.str("");
+    reset(str_out);
 
     si.insert(1);
     str_out << si;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1]");
 
-    str_out.str("");
+    reset(str_out);
 
     si.insert(2);
     si.insert(3);
     str_out << si;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 2, 3]");
 
-    str_out.str("");
+    reset(str_out);
 
     str_out << boost::explore::make_iterator_range(si.begin(), ++(++si.begin()));
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 2]");
 }
 
-BOOST_AUTO_TEST_CASE( basic_multiset_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( basic_multiset_stream_test, C, test_types )
 {
-    std::stringstream str_out;
+    test_traits<C>::stream_type str_out;
 
     std::multiset<int> msi;
     str_out << msi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[]");
+    BOOST_CHECK_EQUAL(output(str_out), "[]");
 
-    str_out.str("");
-
-    msi.insert(1);
-    str_out << msi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1]");
-
-    str_out.str("");
+    reset(str_out);
 
     msi.insert(1);
     str_out << msi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1]");
 
-    str_out.str("");
+    reset(str_out);
+
+    msi.insert(1);
+    str_out << msi;
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 1]");
+
+    reset(str_out);
 
     msi.insert(2);
     msi.insert(3);
     msi.insert(3);
     str_out << msi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 1, 2, 3, 3]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 1, 2, 3, 3]");
 
-    str_out.str("");
+    reset(str_out);
 
     str_out << boost::explore::make_iterator_range(msi.begin(), ++(++msi.begin()));
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 1]");	
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 1]");	
 }
 
-BOOST_AUTO_TEST_CASE( vector_in_set_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( vector_in_set_stream_test, C, test_types )
 {
-    std::stringstream str_out;
+    test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     vi.push_back(1);
@@ -90,23 +88,23 @@ BOOST_AUTO_TEST_CASE( vector_in_set_stream_test )
 
     std::multiset<std::vector<int> > svi;
     str_out << svi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[]");
+    BOOST_CHECK_EQUAL(output(str_out), "[]");
 
-    str_out.str("");
+    reset(str_out);
 
     svi.insert(vi);
     str_out << svi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3]]");
+    BOOST_CHECK_EQUAL(output(str_out), "[[1, 2, 3]]");
 
-    str_out.str("");
+    reset(str_out);
 
     svi.insert(vi);
     svi.insert(vi);
     str_out << svi;
-    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
+    BOOST_CHECK_EQUAL(output(str_out), "[[1, 2, 3], [1, 2, 3], [1, 2, 3]]");
 
-    str_out.str("");
+    reset(str_out);
 
     str_out << boost::explore::make_iterator_range(svi.begin(), ++(++svi.begin()));
-    BOOST_CHECK_EQUAL(str_out.str(), "[[1, 2, 3], [1, 2, 3]]");
+    BOOST_CHECK_EQUAL(output(str_out), "[[1, 2, 3], [1, 2, 3]]");
 }

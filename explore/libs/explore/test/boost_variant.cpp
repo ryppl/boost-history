@@ -9,28 +9,28 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <string>
-#include <sstream>
 #include <boost/variant.hpp>
 #include <boost/explore.hpp>
+#include "boost_explore_test_tools.hpp"
 
-BOOST_AUTO_TEST_CASE( basic_variant_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( basic_variant_stream_test, C, test_types )
 {
-    std::stringstream str_out;
+    typedef test_traits<C>::string_type string_type;
+    test_traits<C>::stream_type str_out;
 
-    boost::variant< int, std::string, std::vector<int> > varVal;
+    boost::variant< int, string_type, std::vector<int> > varVal;
 
     varVal = 1;
     str_out << varVal;
-    BOOST_CHECK_EQUAL(str_out.str(), "1");
+    BOOST_CHECK_EQUAL(output(str_out), "1");
 
-    str_out.str("");
+    reset(str_out);
 
-    varVal = std::string("some string");
+    varVal = string_type(str_to<C>("some string"));
     str_out << varVal;
-    BOOST_CHECK_EQUAL(str_out.str(), "some string");
+    BOOST_CHECK_EQUAL(output(str_out), "some string");
 
-    str_out.str("");
+    reset(str_out);
 
     std::vector<int> vi;
     vi.push_back(1);
@@ -38,37 +38,38 @@ BOOST_AUTO_TEST_CASE( basic_variant_stream_test )
     vi.push_back(3);
     varVal = vi;
     str_out << varVal;
-    BOOST_CHECK_EQUAL(str_out.str(), "[1, 2, 3]");
+    BOOST_CHECK_EQUAL(output(str_out), "[1, 2, 3]");
 }
 
-BOOST_AUTO_TEST_CASE( cool_variant_stream_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( cool_variant_stream_test, C, test_types )
 {
-   using namespace boost::explore;
-   std::stringstream str_out;
+    using namespace boost::explore;
+    typedef test_traits<C>::string_type string_type;
+    test_traits<C>::stream_type str_out;
 
-   std::vector<boost::variant< int, std::string, std::vector<int> > > varVec;
-   std::string name("Joe");
+    std::vector<boost::variant< int, string_type, std::vector<int> > > varVec;
+    string_type name(str_to<C>("Joe"));
 
-   std::vector<int> favoriteNumbers;
-   favoriteNumbers.push_back(22);
-   favoriteNumbers.push_back(42);
-   favoriteNumbers.push_back(73);
-   
-   varVec.push_back("Hello, my name is ");
-   varVec.push_back(name);
-   varVec.push_back(".  I am ");
-   varVec.push_back(34);
-   varVec.push_back(" years old.  My favorite numbers are: ");
-   varVec.push_back(favoriteNumbers);
-   varVec.push_back(".");
-   
-   str_out << level(0);
-   str_out << start("") << boost::explore::end("") << separator("");
-   
-   // level 1 (for nested collection)
-   str_out << level(1);
-   str_out << start("[") << boost::explore::end("]") << separator(", ");
-   
-   str_out << varVec;
-   BOOST_CHECK_EQUAL(str_out.str(), "Hello, my name is Joe.  I am 34 years old.  My favorite numbers are: [22, 42, 73].");
+    std::vector<int> favoriteNumbers;
+    favoriteNumbers.push_back(22);
+    favoriteNumbers.push_back(42);
+    favoriteNumbers.push_back(73);
+
+    varVec.push_back(str_to<C>("Hello, my name is "));
+    varVec.push_back(name);
+    varVec.push_back(str_to<C>(".  I am "));
+    varVec.push_back(34);
+    varVec.push_back(str_to<C>(" years old.  My favorite numbers are: "));
+    varVec.push_back(favoriteNumbers);
+    varVec.push_back(str_to<C>("."));
+
+    str_out << level(0);
+    str_out << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << separator(str_to<C>(""));
+
+    // level 1 (for nested collection)
+    str_out << level(1);
+    str_out << start(str_to<C>("[")) << boost::explore::end(str_to<C>("]")) << separator(str_to<C>(", "));
+
+    str_out << varVec;
+    BOOST_CHECK_EQUAL(output(str_out), "Hello, my name is Joe.  I am 34 years old.  My favorite numbers are: [22, 42, 73].");
 }

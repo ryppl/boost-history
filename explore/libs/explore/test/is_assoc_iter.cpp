@@ -9,14 +9,13 @@
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
-#include <sstream>
-#include <vector>
 #include <map>
 #include <list>
 #include <boost/explore.hpp>
 #include <boost/explore/is_assoc_iter.hpp>
+#include "boost_explore_test_tools.hpp"
 
-BOOST_AUTO_TEST_CASE( is_assoc_iter_test )
+BOOST_AUTO_TEST_CASE_TEMPLATE( is_assoc_iter_test, C, test_types )
 {
     bool mapHasAssocIter = boost::explore::is_assoc_iter<std::map<int, double>::iterator>::type();
     BOOST_CHECK(mapHasAssocIter);
