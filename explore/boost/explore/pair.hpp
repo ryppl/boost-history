@@ -22,7 +22,7 @@ namespace std
         using namespace boost::explore;
         container_stream_state<Elem>* state = get_stream_state<container_stream_state<Elem> >(ostr);
         detail::depth_guard<Elem> guard(state);
-        state->set_level(state->depth());
+        state->set_level(state->depth()-1);
         return ostr << state->start() << p.first << state->separator() << p.second << state->end();
     }
 }

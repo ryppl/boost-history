@@ -25,7 +25,7 @@ namespace boost { namespace explore
         // grab the extra data embedded in the stream object.
         container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
         detail::depth_guard<Elem> guard(state);
-        state->set_level(state->depth());
+        state->set_level(state->depth()-1);
 
         // starting delimiter
         ostr << state->start();

@@ -10,6 +10,7 @@
 #ifndef BOOST_EXPLORE_CONTAINER_STREAM_STATE_H
 #define BOOST_EXPLORE_CONTAINER_STREAM_STATE_H
 
+#include <cassert>
 #include <string>
 #include <vector>
 
@@ -84,12 +85,10 @@ namespace boost { namespace explore
         void set_itemwidth(std::size_t iw) { at(m_itemwidth) = iw; }
 
         void set_level(size_t l) { m_level = l; }
+        void level_up() { ++m_level; }
+        void level_down() { --m_level; }
 
-        std::size_t depth() const
-        {
-            // we start at 0, increment before use, so we must decrement upon query.
-            return m_depth - 1;
-        }
+        std::size_t depth() const { return m_depth; }
 
     private:
         friend struct detail::depth_guard<Elem>;
@@ -125,6 +124,8 @@ namespace boost { namespace explore
         template<typename T>
         T& at(std::vector<T>& c)
         {
+            assert(m_depth <= m_level);
+
             if( c.size() <= m_level )
             {
                 c.resize(m_level+1);

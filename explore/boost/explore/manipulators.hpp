@@ -52,7 +52,7 @@ namespace boost { namespace explore
             void (*pfun)(std::ios_base&, T);
             T arg;
         };
-        
+
         // stream manipfunc
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<T>& manip)
@@ -60,7 +60,38 @@ namespace boost { namespace explore
             (*manip.pfun)(ostr, manip.arg);
             return ostr;
         }
-        
+
+        struct handle_custom_stream
+        {
+            handle_custom_stream()
+                : m_state(0)
+            {
+            }
+
+            ~handle_custom_stream()
+            {
+                if( m_state && m_state->depth() > 0 ) // only needed if nested
+                {
+                    m_state->level_down();
+                }
+            }
+
+            container_stream_state<char>* m_state;
+        };
+
+        template<typename Elem, typename Tr>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, handle_custom_stream& cs)
+        {
+            container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
+            cs.m_state = state;
+            if( state->depth() > 0 ) // only needed if nested
+            {
+                state->level_up();
+            }
+
+            return ostr;
+        }
+
         // function ptr for separator manipulator
         template<typename Elem>
         void separatorFn(std::ios_base& ostr, const Elem* sep)
@@ -107,7 +138,7 @@ namespace boost { namespace explore
         {
             explore::get_stream_state<container_stream_state<char> >(ostr)->set_level(l);
         }
-        
+
         // function ptr object for setrows
         //template<typename Elem>
         void setrowsFn(std::ios_base& ostr, std::size_t sz)
@@ -165,10 +196,14 @@ namespace boost { namespace explore
         return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end);
     }
 
-    // manipulator
     detail::manipfunc<std::size_t> level(std::size_t l)
     {
         return detail::manipfunc<std::size_t>(&detail::levelFn, l);
+    }
+
+    detail::handle_custom_stream custom()
+    {
+        return detail::handle_custom_stream();
     }
 
     detail::manipfunc<std::size_t> setrows(std::size_t sz)
@@ -246,7 +281,7 @@ namespace boost { namespace explore
             T seperatorVal_;
             T endVal_;
         };
-        
+
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<T>& manip)
         {
