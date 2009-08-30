@@ -12,6 +12,9 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/is_concept_equivalent.hpp>
+#include <boost/itl/type_traits/is_interval_container.hpp>
+#include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/interval.hpp>
 
 namespace boost{namespace itl
@@ -49,6 +52,26 @@ struct empty_codomain_compare
 	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
 	{
 		return inclusion::equal;
+	}
+};
+
+template<class LeftT, class RightT>
+struct map_codomain_compare
+{
+	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+	{
+		using namespace boost::mpl;
+		typedef typename LeftT::codomain_type  LeftCodomainT;
+		typedef typename RightT::codomain_type RightCodomainT;
+
+		return
+			if_<
+				bool_<is_concept_equivalent<is_set,LeftCodomainT,
+				                                   RightCodomainT>::value>,
+			    settic_codomain_compare<LeftT,RightT>,
+				atomic_codomain_compare<LeftT,RightT>
+			>
+			::type::apply(left_, right_);
 	}
 };
 
@@ -91,19 +114,12 @@ public:
     int co_compare(LeftIterT& left, RightIterT& right)
     {
 	    using namespace boost::mpl;
-		typedef typename LeftT::codomain_type  LeftCodomainT;
-		typedef typename RightT::codomain_type RightCodomainT;
 
 		return  
 		    if_<
                 bool_<is_concept_equivalent<is_interval_map,LeftT,RightT>::value>,
-				if_<
-				    bool_<is_concept_equivalent<is_set,LeftCodomainT,
-				                                       RightCodomainT>::value>,
-				    settic_codomain_compare<LeftT,RightT>, // codomain is a set
-					atomic_codomain_compare<LeftT,RightT>  // codomain is not a set
-				>::type,
-                empty_codomain_compare<LeftT,RightT>       // no codomain component exits
+				map_codomain_compare<LeftT,RightT>,
+				empty_codomain_compare<LeftT,RightT>
             >
             ::type::apply(left,right);
     }

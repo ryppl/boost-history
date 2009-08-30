@@ -422,7 +422,7 @@ template <template<class T, class U,
 void interval_map_contains_4_bicremental_types()
 {
     typedef IntervalMap<T,U> IntervalMapT;
-    IntervalMapT itv_map(K_v(3,1));    
+    IntervalMapT itv_map; itv_map.add(K_v(3,1));    
     BOOST_CHECK_EQUAL( itv_map.contains(K_v(3,1)), true );
 
     BOOST_CHECK_EQUAL( IntervalMapT().add(K_v(3,1)).contains(K_v(3,1)), true );

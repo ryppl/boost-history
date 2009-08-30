@@ -356,7 +356,7 @@ public:
 	/** Copy the key values of the map to \c domain_set. Complexity: Linear. */
 	void domain(set_type& domain_set)const
 	{
-		set_type::iterator prior_ = domain_set.end();
+		typename set_type::iterator prior_ = domain_set.end();
 		const_FORALL_THIS(it_)
 			prior_ = domain_set.insert(prior_, it_->KEY_VALUE);
 	}

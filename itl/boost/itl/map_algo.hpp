@@ -184,7 +184,7 @@ bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
     return left_ == left.end() && right_ == right.end();
 }
 
-
+/*CL
 //------------------------------------------------------------------------------
 template<class LeftT, class RightT>
 class subset_comparer
@@ -426,9 +426,7 @@ private:
 
 
 
-
-
-
+*/
 
 } // namespace Map
 }} // namespace boost itl

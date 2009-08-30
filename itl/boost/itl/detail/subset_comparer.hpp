@@ -12,6 +12,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/relation_state.hpp>
 #include <boost/itl/type_traits/neutron.hpp>
+#include <boost/itl/type_traits/is_concept_equivalent.hpp>
+#include <boost/itl/type_traits/is_element_container.hpp>
 #include <boost/itl/interval.hpp>
 
 namespace boost{namespace itl
@@ -49,6 +51,26 @@ struct empty_codomain_compare
 	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
 	{
 		return inclusion::equal;
+	}
+};
+
+template<class LeftT, class RightT>
+struct map_codomain_compare
+{
+	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+	{
+		using namespace boost::mpl;
+		typedef typename LeftT::codomain_type  LeftCodomainT;
+		typedef typename RightT::codomain_type RightCodomainT;
+
+		return
+			if_<
+				bool_<is_concept_equivalent<is_set,LeftCodomainT,
+				                                   RightCodomainT>::value>,
+			    settic_codomain_compare<LeftT,RightT>,
+				atomic_codomain_compare<LeftT,RightT>
+			>
+			::type::apply(left_, right_);
 	}
 };
 
@@ -97,13 +119,8 @@ public:
 		return  
 		    if_<
                 bool_<is_concept_equivalent<is_element_map,LeftT,RightT>::value>,
-				if_<
-				    bool_<is_concept_equivalent<is_set,LeftCodomainT,
-				                                       RightCodomainT>::value>,
-				    settic_codomain_compare<LeftT,RightT>, // codomain is a set
-					atomic_codomain_compare<LeftT,RightT>  // codomain is not a set
-				>::type,
-                empty_codomain_compare<LeftT,RightT>       // no codomain component exits
+				map_codomain_compare<LeftT,RightT>,
+				empty_codomain_compare<LeftT,RightT>
             >
             ::type::apply(left,right);
     }
@@ -124,7 +141,7 @@ public:
             restrict_result(superset);
             return stop;
         }
-        else if(LeftT::domain_compare()(LeftT::key_value(left), RightT::key_value(right)))
+        else if(typename LeftT::domain_compare()(LeftT::key_value(left), RightT::key_value(right)))
         {   // left:  *left . . *joint_     left could be superset
             // right:           *right ...  if joint_ exists
             restrict_result(superset);
@@ -134,7 +151,7 @@ public:
             {
                 LeftIterT joint_ = _left.lower_bound(RightT::key_value(right));
                 if(    joint_ == _left.end() 
-					|| LeftT::domain_compare()(RightT::key_value(right), LeftT::key_value(joint_)))
+					|| typename LeftT::domain_compare()(RightT::key_value(right), LeftT::key_value(joint_)))
                 {
                     _result = unrelated;
                     return stop;
@@ -143,7 +160,7 @@ public:
                     left = joint_;
             }
         }
-        else if(LeftT::domain_compare()(RightT::key_value(right), LeftT::key_value(left)))
+        else if(typename LeftT::domain_compare()(RightT::key_value(right), LeftT::key_value(left)))
         {   // left:             *left   left could be subset
             // right:*right . . .*joint_ if *joint_ exists 
             restrict_result(subset);
@@ -153,7 +170,7 @@ public:
             {
                 RightIterT joint_ = _right.lower_bound(LeftT::key_value(left));
                 if(    joint_ == _right.end()
-					|| LeftT::domain_compare()(LeftT::key_value(left), RightT::key_value(joint_)))
+					|| typename LeftT::domain_compare()(LeftT::key_value(left), RightT::key_value(joint_)))
                 {
                     _result = unrelated;
                     return stop;
