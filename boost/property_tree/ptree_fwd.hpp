@@ -34,7 +34,7 @@ namespace boost { namespace property_tree
     template <typename String, typename Translator>
     class string_path;
 
-    // We'll want to do this with concepts in C++0x.
+    // Texas-style concepts for documentation only.
 #if 0
     concept PropertyTreePath<class Path> {
         // The key type for which this path works.

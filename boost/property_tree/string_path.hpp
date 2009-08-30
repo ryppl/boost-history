@@ -49,15 +49,15 @@ namespace boost { namespace property_tree
         }
 
         template <typename Sequence>
-        std::string dump_sequence(const Sequence &)
+        inline std::string dump_sequence(const Sequence &)
         {
             return "<undumpable sequence>";
         }
-        std::string dump_sequence(const std::string &s)
+        inline std::string dump_sequence(const std::string &s)
         {
             return s;
         }
-        std::string dump_sequence(const std::wstring &s)
+        inline std::string dump_sequence(const std::wstring &s)
         {
             return narrow(s.c_str());
         }

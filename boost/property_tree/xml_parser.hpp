@@ -1,5 +1,6 @@
 // ----------------------------------------------------------------------------
 // Copyright (C) 2002-2006 Marcin Kalicinski
+// Copyright (C) 2009 Sebastian Redl
 //
 // Distributed under the Boost Software License, Version 1.0. 
 // (See accompanying file LICENSE_1_0.txt or copy at 
@@ -15,19 +16,7 @@
 #include <boost/property_tree/detail/xml_parser_error.hpp>
 #include <boost/property_tree/detail/xml_parser_writer_settings.hpp>
 #include <boost/property_tree/detail/xml_parser_flags.hpp>
-
-// Include proper parser
-#if defined(BOOST_PROPERTY_TREE_XML_PARSER_TINYXML)
-#include <boost/property_tree/detail/xml_parser_read_tinyxml.hpp>
-#elif defined(BOOST_PROPERTY_TREE_XML_PARSER_PUGXML)
-#include <boost/property_tree/detail/xml_parser_read_pugxml.hpp>
-#elif defined(BOOST_PROPERTY_TREE_XML_PARSER_PUGIXML)
-#include <boost/property_tree/detail/xml_parser_read_pugixml.hpp>
-#elif defined(BOOST_PROPERTY_TREE_XML_PARSER_SPIRIT)
-#include <boost/property_tree/detail/xml_parser_read_spirit.hpp>
-#else
 #include <boost/property_tree/detail/xml_parser_read_rapidxml.hpp>
-#endif
 
 #include <fstream>
 #include <string>
