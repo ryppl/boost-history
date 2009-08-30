@@ -50,6 +50,7 @@ namespace boost { namespace property_tree { namespace xml_parser
 
             // Data nodes
             case rapidxml::node_data:
+            case rapidxml::node_cdata:
             {
                 if (flags & no_concat_text)
                     pt.push_back(std::make_pair(xmltext<Ch>(), Ptree(node->value())));
