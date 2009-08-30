@@ -12,7 +12,7 @@
 
 #include <boost/config.hpp>
 
-#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED) || 1
+#if defined(BOOST_NO_DECLTYPE) || defined(BOOST_NO_VARIADIC_TEMPLATES) || defined(BOOST_NO_RVALUE_REFERENCES) || !defined(BOOST_FUSION_CPP0X_NO_DEPRECEATED) //|| 1
 #   include <boost/fusion/container/vector/limits.hpp>
 
 #   ifndef BOOST_FUSION_UNFUSED_MAX_ARITY

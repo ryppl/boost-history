@@ -29,17 +29,13 @@
 #       define BOOST_FUSION_STATIC_ASSERT_MSG(PRED,MESSAGE)\
             BOOST_FUSION_STATIC_ASSERT(PRED)
 #   else
+#       include <boost/fusion/support/internal/small_big_type.hpp>
+
 #       include <boost/preprocessor/stringize.hpp>
 #       include <boost/mpl/if.hpp>
 
 namespace boost { namespace fusion { namespace detail
 {
-    typedef char small_type;
-    struct big_type
-    {
-        char data[1024];
-    };
-
     template<typename Pred>
     typename mpl::if_<Pred,small_type,big_type>::type
     evaluate_pred(void(*)(Pred));

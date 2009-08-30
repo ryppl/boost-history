@@ -23,6 +23,7 @@
 #include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/mpl/front.hpp>
 #include <boost/mpl/identity.hpp>
 
@@ -130,7 +131,7 @@ namespace boost { namespace fusion
 
             typedef mpl::or_< boost::is_convertible<that,C*>,
                               boost::is_convertible<that,C&>,
-                              non_const_pointee<that> > non_const_cond;
+                              mpl::not_<const_pointee<that> > > non_const_cond;
 
             typedef typename mpl::eval_if< non_const_cond,
                 mpl::identity<C>, add_const<C> >::type qualified_class;

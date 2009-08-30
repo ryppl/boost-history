@@ -11,6 +11,7 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/sequence/intrinsic/empty.hpp>
 #include <boost/fusion/sequence/intrinsic/back.hpp>
+#include <boost/fusion/sequence/intrinsic/front.hpp>
 #include <boost/fusion/sequence/intrinsic/begin.hpp>
 #include <boost/fusion/iterator/deref.hpp>
 #include <boost/fusion/iterator/advance_c.hpp>
@@ -25,8 +26,15 @@
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/or.hpp>
 #include <boost/mpl/bool.hpp>
+#include <boost/mpl/and.hpp>
+#include <boost/mpl/not.hpp>
 #include <boost/type_traits/is_function.hpp>
 #include <boost/type_traits/is_member_function_pointer.hpp>
+#include <boost/type_traits/is_member_object_pointer.hpp>
+#include <boost/type_traits/is_member_pointer.hpp>
+#include <boost/type_traits/is_base_of.hpp>
+#include <boost/type_traits/is_const.hpp>
+#include <boost/type_traits/is_volatile.hpp>
 #include <boost/type_traits/remove_pointer.hpp>
 #include <boost/utility/enable_if.hpp>
 
@@ -40,9 +48,7 @@ namespace boost { namespace fusion { namespace detail
     template<typename Result, typename F, typename... Args>
     typename
         disable_if<
-            is_member_function_pointer<
-                typename detail::remove_reference<F>::type
-            >
+            is_member_pointer<typename remove_reference<F>::type>
           , Result
         >::type
     invoke_impl_call(F&& f, Args&&... args)
@@ -58,16 +64,130 @@ namespace boost { namespace fusion { namespace detail
     >
     typename
         enable_if<
-            is_member_function_pointer<
-                typename detail::remove_reference<F>::type
-            >
+            is_member_function_pointer<typename remove_reference<F>::type>
           , Result
         >::type
     invoke_impl_call(F&& f, ClassInstance&& instance,Args&&... args)
     {
-        return (that_ptr<typename detail::preevaluate<F>::gen::class_type>::
-                    get(std::forward<ClassInstance>(instance))->*f)(
-                        std::forward<Args>(args)...);
+        return (that_ptr<typename preevaluate<F>::gen::class_type>::get(
+                instance)->*f)(std::forward<Args>(args)...);
+    }
+
+    template<typename>
+    struct split_object_pointer;
+
+    template<class Type,class Class>
+    struct split_object_pointer<Type(Class::*)>
+    {
+        typedef Type type;
+        typedef Class class_type;
+    };
+
+    template<class Type,class Class>
+    struct split_object_pointer<Type(Class::* const)>
+    {
+        typedef Type type;
+        typedef Class class_type;
+    };
+
+    template<class Type,class Class>
+    struct split_object_pointer<Type(Class::* volatile)>
+    {
+        typedef Type type;
+        typedef Class class_type;
+    };
+
+    template<class Type,class Class>
+    struct split_object_pointer<Type(Class::* const volatile)>
+    {
+        typedef Type type;
+        typedef Class class_type;
+    };
+
+    template<typename ClassInstance, typename Sig>
+    struct get_object_pointer_result_type
+    {
+        typedef typename split_object_pointer<Sig>::type  object_type;
+        typedef typename split_object_pointer<Sig>::class_type class_type;
+        typedef typename
+            remove_reference<ClassInstance>::type
+        nonref_class_instance;
+        typedef typename identity<ClassInstance>::type identity_class_instance;
+
+        typedef typename
+            is_base_of<
+                class_type
+              , identity_class_instance
+            >::type
+        is_directly_convertible;
+
+        typedef typename
+            mpl::if_<
+                mpl::or_<
+                    is_const<object_type>
+                  , mpl::and_<
+                        is_directly_convertible
+                      , is_const<nonref_class_instance>
+                    >
+                  , mpl::and_<
+                        mpl::not_<is_directly_convertible>
+                      , const_pointee<ClassInstance>
+                    >
+                >
+              , class_type const
+              , class_type
+            >::type
+        const_class_type;
+        typedef typename
+            mpl::if_<
+                mpl::or_<
+                    is_volatile<object_type>
+                  , mpl::and_<
+                        is_directly_convertible
+                      , is_volatile<nonref_class_instance>
+                    >
+                  , mpl::and_<
+                        mpl::not_<is_directly_convertible>
+                      , volatile_pointee<ClassInstance>
+                    >
+                >
+              , const_class_type volatile
+              , const_class_type
+            >::type
+        cv_class_type;
+
+        typedef typename forward_as<cv_class_type, object_type>::type type;
+    };
+
+    template<typename Sig, typename Seq>
+    struct get_object_pointer_result_type_seq
+      : get_object_pointer_result_type<
+            typename result_of::front<Seq>::type
+          , Sig
+        >
+    {};
+
+    template<
+        typename Result
+      , typename F
+      , typename ClassInstance
+      , typename... Args
+    >
+    typename
+        enable_if<
+            is_member_object_pointer<typename remove_reference<F>::type>
+          , Result
+        >::type
+    invoke_impl_call(F&& f, ClassInstance&& instance,Args&&... args)
+    {
+        BOOST_FUSION_STATIC_ASSERT(!sizeof...(Args));
+
+        return (that_ptr<
+                    typename get_object_pointer_result_type<
+                        ClassInstance&&
+                      , typename remove_reference<F>::type
+                    >::cv_class_type&
+                >::get(instance)->*f);
     }
 
     namespace bidirectional_traversal
@@ -78,12 +198,12 @@ namespace boost { namespace fusion { namespace detail
           , bool Empty
           , typename... Args
         >
-        struct invoke_impl_result
+        struct invoke_impl_result_impl
         {
             typedef typename result_of::pop_back<ArgsSeq>::type new_args_seq;
 
             typedef typename
-                invoke_impl_result<
+                invoke_impl_result_impl<
                     F
                   , new_args_seq
                   , result_of::empty<new_args_seq>::value
@@ -94,24 +214,38 @@ namespace boost { namespace fusion { namespace detail
         };
 
         template<typename F, typename ArgsSeq, typename... Args>
-        struct invoke_impl_result<F,ArgsSeq,true,Args...>
+        struct invoke_impl_result_impl<F,ArgsSeq,true,Args...>
           : detail::invoke_impl_result<F,Args...>
         {};
 
-        template<typename F,typename Seq>
-        struct invoke_impl
+        template<typename F, typename Seq>
+        struct invoke_impl_result
         {
-            typedef detail::preevaluate<F> preevaluater;
+            typedef preevaluate<F> preevaluater;
 
             typedef typename
                 mpl::eval_if<
                     typename preevaluater::is_preevaluable
                   , preevaluater
-                  , invoke_impl_result<
+                  , invoke_impl_result_impl<
                         F
                       , Seq
                       , result_of::empty<Seq>::value
                     >
+                >::type
+            type;
+        };
+
+        template<typename F,typename Seq>
+        struct invoke_impl
+        {
+            typedef typename detail::remove_reference<F>::type f;
+
+            typedef typename
+                mpl::eval_if<
+                    is_member_object_pointer<f>
+                  , get_object_pointer_result_type_seq<f, Seq>
+                  , invoke_impl_result<F, Seq>
                 >::type
             type;
 
@@ -119,7 +253,7 @@ namespace boost { namespace fusion { namespace detail
             static type
             call_impl(F f,LeftSeq&&, mpl::true_/*SeqEmpty*/,Args&&... args)
             {
-                return detail::invoke_impl_call<type>(
+                return invoke_impl_call<type>(
                         std::forward<F>(f),std::forward<Args>(args)...);
             }
 
@@ -153,8 +287,8 @@ namespace boost { namespace fusion { namespace detail
           , int NumArgsLeft
           , typename... Args
         >
-        struct invoke_impl_result
-          : invoke_impl_result<
+        struct invoke_impl_result_impl
+          : invoke_impl_result_impl<
                 F
               , Seq
               , NumArgsLeft-1
@@ -169,24 +303,38 @@ namespace boost { namespace fusion { namespace detail
         {};
 
         template<typename F, typename Seq, typename... Args>
-        struct invoke_impl_result<F,Seq,0,Args...>
+        struct invoke_impl_result_impl<F,Seq,0,Args...>
           : detail::invoke_impl_result<F,Args...>
         {};
 
-        template<typename F,typename Seq>
-        struct invoke_impl
+        template<typename F, typename Seq>
+        struct invoke_impl_result
         {
-            typedef detail::preevaluate<F> preevaluater;
+            typedef preevaluate<F> preevaluater;
 
             typedef typename
                 mpl::eval_if<
                     typename preevaluater::is_preevaluable
                   , preevaluater
-                  , invoke_impl_result<
+                  , invoke_impl_result_impl<
                         F
                       , Seq
                       , result_of::size<Seq>::value
                     >
+                >::type
+            type;
+        };
+
+        template<typename F,typename Seq>
+        struct invoke_impl
+        {
+            typedef typename detail::remove_reference<F>::type f;
+
+            typedef typename
+                mpl::eval_if<
+                    is_member_object_pointer<f>
+                  , get_object_pointer_result_type_seq<f, Seq>
+                  , invoke_impl_result<F, Seq>
                 >::type
             type;
 
@@ -194,7 +342,7 @@ namespace boost { namespace fusion { namespace detail
             static type
             call_impl(F f,Seq, mpl::int_<0>, Args&&... args)
             {
-                return detail::invoke_impl_call<type>(
+                return invoke_impl_call<type>(
                         std::forward<F>(f),std::forward<Args>(args)...);
             }
 
@@ -226,8 +374,8 @@ namespace boost { namespace fusion { namespace detail
     struct invoke_impl
       : mpl::if_<
             traits::is_bidirectional<Seq>
-         , bidirectional_traversal::invoke_impl<F,Seq>
-         , forward_traversal::invoke_impl<F,Seq>
+          , bidirectional_traversal::invoke_impl<F,Seq>
+          , forward_traversal::invoke_impl<F,Seq>
         >::type
     {};
 }}}
