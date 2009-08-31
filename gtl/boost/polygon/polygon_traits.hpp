@@ -384,7 +384,7 @@ namespace boost { namespace polygon{
     typename enable_if<
       typename gtl_and <typename is_polygon_with_holes_type<T>::type, 
                         typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type,
-						manhattan_domain>::type>::type>::type *ptr = 0
+                manhattan_domain>::type>::type>::type * = 0
   ) {
     return polygon_90_traits<T>::begin_compact(polygon);
   }
@@ -396,7 +396,7 @@ namespace boost { namespace polygon{
     typename enable_if< 
     typename gtl_and <typename is_polygon_with_holes_type<T>::type, 
                       typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type,
-					  manhattan_domain>::type>::type>::type *ptr = 0
+              manhattan_domain>::type>::type>::type * = 0
   ) {
     return polygon_90_traits<T>::end_compact(polygon);
   }
@@ -879,7 +879,7 @@ namespace boost { namespace polygon{
     typename gtl_and< typename is_any_mutable_polygon_without_holes_type<polygon_type>::type, 
                       typename gtl_same_type
                       < forty_five_domain, 
-					  typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type>::type *ptr = 0
+        typename geometry_domain<typename geometry_concept<polygon_type>::type>::type>::type>::type>::type * = 0
   ) {
     std::vector<typename std::iterator_traits<typename polygon_traits<polygon_type>::iterator_type>::value_type> points;
     points.reserve(size(polygon));
@@ -896,7 +896,7 @@ namespace boost { namespace polygon{
   template <typename T>
   T&
   scale(T& polygon, double factor,
-  typename enable_if< typename is_any_mutable_polygon_with_holes_type<T>::type>::type *ptr = 0
+  typename enable_if< typename is_any_mutable_polygon_with_holes_type<T>::type>::type * = 0
   ) {
     typedef typename polygon_with_holes_traits<T>::hole_type hole_type;
     hole_type h;
@@ -1039,10 +1039,11 @@ namespace boost { namespace polygon{
   }
 
   template <typename T>
-  typename polygon_traits<T>::coordinate_type
+  typename distance_type_by_domain
+  <typename geometry_domain<typename geometry_concept<T>::type>::type, typename polygon_traits<T>::coordinate_type>::type
   perimeter(const T& polygon,
   typename enable_if< 
-      typename is_polygon_with_holes_type<T>::type>::type *ptr = 0
+      typename is_polygon_with_holes_type<T>::type>::type * = 0
   ) {
     typedef typename distance_type_by_domain
       <typename geometry_domain<typename geometry_concept<T>::type>::type, typename polygon_traits<T>::coordinate_type>::type Unit;

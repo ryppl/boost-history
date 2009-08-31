@@ -51,7 +51,7 @@ namespace boost { namespace polygon{
   template <typename T>
   typename interval_coordinate_type<T>::type
   get(const T& interval, direction_1d dir,
-  typename enable_if<typename gtl_if<typename is_interval_concept<typename geometry_concept<T>::type>::type>::type>::type *ptr = 0
+  typename enable_if<typename gtl_if<typename is_interval_concept<typename geometry_concept<T>::type>::type>::type>::type * = 0
   ) {
     return interval_traits<T>::get(interval, dir); 
   }
@@ -59,7 +59,7 @@ namespace boost { namespace polygon{
   template <typename T, typename coordinate_type>
   void 
   set(T& interval, direction_1d dir, coordinate_type value,
-  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type>::type * = 0
   ) {
     //this may need to be refined
     interval_mutable_traits<T>::set(interval, dir, value); 
@@ -70,7 +70,7 @@ namespace boost { namespace polygon{
   template <typename T>
   T
   construct(typename interval_traits<T>::coordinate_type low_value, typename interval_traits<T>::coordinate_type high_value,
-  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type>::type * = 0
   ) {
     if(low_value > high_value) std::swap(low_value, high_value);
     return interval_mutable_traits<T>::construct(low_value, high_value); 
@@ -80,7 +80,7 @@ namespace boost { namespace polygon{
   T
   copy_construct(const T2& interval,
   typename enable_if< typename gtl_and<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type,
-  typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type>::type *ptr = 0
+  typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type>::type * = 0
   ) {
     return construct<T>
       (get(interval, LOW ),
@@ -91,7 +91,7 @@ namespace boost { namespace polygon{
   T1 &
   assign(T1& lvalue, const T2& rvalue,
   typename enable_if< typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<T1>::type>::type,
-  typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type>::type *ptr = 0) {
+  typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type>::type * = 0) {
     lvalue = copy_construct<T1>(rvalue);
     return lvalue;
   }
@@ -100,7 +100,7 @@ namespace boost { namespace polygon{
   bool 
   equivalence(const T& interval1, const T2& interval2,
   typename enable_if< typename gtl_and< typename is_interval_concept<typename geometry_concept<T>::type>::type,
-  typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type>::type *ptr = 0
+  typename is_interval_concept<typename geometry_concept<T2>::type>::type>::type>::type * = 0
   ) {
     return get(interval1, LOW) ==
       get(interval2, LOW) &&
@@ -113,8 +113,8 @@ namespace boost { namespace polygon{
   contains(const interval_type& interval,
            typename interval_traits<interval_type>::coordinate_type value, 
            bool consider_touch = true,
-		   typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
-		   ) {
+           typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
+           ) {
     if(consider_touch) {
       return value <= high(interval) && value >= low(interval);
     } else {
@@ -126,9 +126,9 @@ namespace boost { namespace polygon{
   bool 
   contains(const interval_type& interval,
            const interval_type_2& value, bool consider_touch = true,
-		   typename enable_if< typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
-		   typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type>::type *ptr = 0
-		   ) {
+           typename enable_if< typename gtl_and< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type,
+           typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type>::type * = 0
+           ) {
     return contains(interval, get(value, LOW), consider_touch) &&
       contains(interval, get(value, HIGH), consider_touch);
   }
@@ -137,21 +137,21 @@ namespace boost { namespace polygon{
   template <typename interval_type>
   typename interval_traits<interval_type>::coordinate_type 
   low(const interval_type& interval,
-  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
+  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
   ) { return get(interval, LOW); }
 
   // get the high coordinate
   template <typename interval_type>
   typename interval_traits<interval_type>::coordinate_type 
   high(const interval_type& interval,
-  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
+  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
   ) { return get(interval, HIGH); }
 
   // get the center coordinate
   template <typename interval_type>
   typename interval_traits<interval_type>::coordinate_type
   center(const interval_type& interval,
-  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
+  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
   ) { return (high(interval) + low(interval))/2; }
 
   // set the low coordinate to v
@@ -159,22 +159,22 @@ namespace boost { namespace polygon{
   void
   low(interval_type& interval,
       typename interval_traits<interval_type>::coordinate_type v,
-	  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
-	  ) { set(interval, LOW, v); }
+      typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
+      ) { set(interval, LOW, v); }
   
   // set the high coordinate to v
   template <typename interval_type>
   void
   high(interval_type& interval,
       typename interval_traits<interval_type>::coordinate_type v,
-	  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
-	  ) { set(interval, HIGH, v); }
+       typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
+       ) { set(interval, HIGH, v); }
   
   // get the magnitude of the interval
   template <typename interval_type>
   typename interval_difference_type<interval_type>::type 
   delta(const interval_type& interval,
-  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
+  typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
   ) { 
     typedef typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference diffT;
     return (diffT)high(interval) - (diffT)low(interval); }
@@ -239,8 +239,8 @@ namespace boost { namespace polygon{
   interval_type&
   move(interval_type& interval,
        typename interval_difference_type<interval_type>::type displacement,
-	   typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type *ptr = 0
-	   ) {
+       typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
+       ) {
     typedef typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference Unit;
     Unit len = delta(interval);
     low(interval, (Unit)low(interval) + displacement);
@@ -284,7 +284,7 @@ namespace boost { namespace polygon{
   template <typename interval_type, typename interval_type_2>
   typename enable_if< 
     typename gtl_and_3<y_i_convolve2,
-	                   typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
+                       typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
                        typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
     interval_type>::type &
   convolve(interval_type& interval,
@@ -303,7 +303,7 @@ namespace boost { namespace polygon{
   template <typename interval_type, typename interval_type_2>
   typename enable_if< 
     typename gtl_and_3< y_i_deconvolve2,
-	                    typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                        typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                         typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
     interval_type>::type &
   deconvolve(interval_type& interval,
@@ -322,7 +322,7 @@ namespace boost { namespace polygon{
   template <typename interval_type, typename interval_type_2>
   typename enable_if< 
     typename gtl_and_3<y_i_reconvolve,
-	                   typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
+                       typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
                        typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type,
     interval_type>::type &
   reflected_convolve(interval_type& interval,
@@ -341,7 +341,7 @@ namespace boost { namespace polygon{
   template <typename interval_type, typename interval_type_2>
   typename enable_if< 
     typename gtl_and_3< y_i_redeconvolve,
-	                    typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
+                        typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type, 
                         typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type, 
     interval_type>::type &
   reflected_deconvolve(interval_type& interval,
@@ -524,7 +524,7 @@ namespace boost { namespace polygon{
   encompass(interval_type& interval, const interval_type_2& b,
   typename enable_if<
     typename gtl_and< typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type,
-	typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type>::type *ptr = 0
+            typename is_interval_concept<typename geometry_concept<interval_type_2>::type>::type>::type>::type * = 0
   ) {
     bool retval = !contains(interval, b, true);
     low(interval, (std::min)(low(interval), low(b)));

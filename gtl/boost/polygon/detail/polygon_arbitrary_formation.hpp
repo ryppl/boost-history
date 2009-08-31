@@ -1993,7 +1993,7 @@ namespace boost { namespace polygon{
                                  iterator previter) {
       active_tail_arbitrary* iterTail = (*previter).second;
       Point prevPoint(polygon_arbitrary_formation<Unit>::x_, 
-                      previter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
+                      (Unit)previter->first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
       iterTail->pushPoint(prevPoint);
       std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
         active_tail_arbitrary::createActiveTailsAsPair(prevPoint, true, 0, false);
@@ -2421,7 +2421,7 @@ namespace boost { namespace polygon{
             currentIter->pt.y() > (*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_))) {
           //splice vertical pair into edge above
           active_tail_arbitrary* tailabove = (*iter).second;
-          Point point(polygon_arbitrary_formation<Unit>::x_, (*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
+          Point point(polygon_arbitrary_formation<Unit>::x_, (Unit)(*iter).first.evalAtX(polygon_arbitrary_formation<Unit>::x_));
           verticalPair.second->pushPoint(point);
           active_tail_arbitrary::joinChains(point, tailabove, verticalPair.first, true, output);
           (*iter).second = verticalPair.second;

@@ -86,7 +86,7 @@ namespace boost { namespace polygon{
   template <typename T>
   typename rectangle_interval_type<T>::type 
   get(const T& rectangle, orientation_2d orient,
-  typename enable_if< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type>::type *ptr = 0
+  typename enable_if< typename gtl_if<typename is_rectangle_concept<typename geometry_concept<T>::type>::type>::type>::type * = 0
   ) {
     return rectangle_traits<T>::get(rectangle, orient); 
   }
@@ -380,8 +380,8 @@ namespace boost { namespace polygon{
   rectangle_type&
   move(rectangle_type& rectangle, orientation_2d orient, 
        typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::coordinate_difference delta,
-	   typename enable_if<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type *ptr = 0
-	   ) {
+       typename enable_if<typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type * = 0
+       ) {
     typename rectangle_traits<rectangle_type>::interval_type ivl = get(rectangle, orient);
     move(ivl, delta);
     set(rectangle, orient, ivl);
@@ -531,7 +531,7 @@ namespace boost { namespace polygon{
   template <typename rectangle_type>
   typename rectangle_difference_type<rectangle_type>::type
   perimeter(const rectangle_type& rectangle,
-  typename enable_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type *ptr = 0
+  typename enable_if< typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type * = 0
   ) {
     return 2 * half_perimeter(rectangle);
   }
@@ -763,8 +763,8 @@ namespace boost { namespace polygon{
   bool 
   encompass(rectangle_type_1& rectangle, const rectangle_type_2& b,
     typename enable_if< typename gtl_and_3<y_r_encompass2,
-	  typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-	  typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type >::type>::type *ptr = 0
+            typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
+            typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type >::type>::type * = 0
   ) {
     //note that operator | is intentional because both should be called regardless
     return encompass(rectangle, horizontal(b), HORIZONTAL) |
@@ -782,7 +782,7 @@ namespace boost { namespace polygon{
   encompass(rectangle_type_1& rectangle, const point_type& b,
     typename enable_if<
     typename gtl_and< typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type_1>::type>::type,
-	typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type>::type *ptr = 0
+            typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type>::type * = 0
   ) {
     typename rectangle_traits<rectangle_type_1>::interval_type hivl, vivl;
     hivl = horizontal(rectangle);
@@ -830,7 +830,7 @@ namespace boost { namespace polygon{
 
   template <typename rectangle_type>
   typename enable_if<typename gtl_and<y_r_get_half, typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type, 
-	  rectangle_type>::type 
+                     rectangle_type>::type 
   get_half(const rectangle_type& rectangle, direction_2d dir) {
     rectangle_type retval(rectangle);
     set(retval, orientation_2d(dir), get_half(get(rectangle, orientation_2d(dir)), direction_1d(dir)));
@@ -867,7 +867,7 @@ namespace boost { namespace polygon{
   typename enable_if< typename gtl_and_3<y_r_eda2,
     typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
     typename is_point_concept<typename geometry_concept<point_type>::type>::type>::type,
-	typename rectangle_difference_type<rectangle_type>::type>::type
+                      typename rectangle_difference_type<rectangle_type>::type>::type
   euclidean_distance(const rectangle_type& lvalue, const point_type& rvalue, orientation_2d orient) {
     return euclidean_distance(get(lvalue, orient), get(rvalue, orient));
   }
@@ -878,8 +878,8 @@ namespace boost { namespace polygon{
   typename enable_if< 
     typename gtl_and_3<y_r_eda, 
       typename is_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type,
-	  typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
-	  typename rectangle_difference_type<rectangle_type>::type>::type
+                       typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
+    typename rectangle_difference_type<rectangle_type>::type>::type
   euclidean_distance(const rectangle_type& lvalue, const rectangle_type_2& rvalue, orientation_2d orient) {
     return euclidean_distance(get(lvalue, orient), get(rvalue, orient));
   }
@@ -930,7 +930,7 @@ namespace boost { namespace polygon{
                                                           typename is_rectangle_concept<typename geometry_concept<rectangle_type_2>::type>::type>::type,
                        typename rectangle_distance_type<rectangle_type>::type>::type 
   euclidean_distance(const rectangle_type& lvalue, const rectangle_type_2& rvalue) {
-	double val = (int)square_euclidean_distance(lvalue, rvalue);
+    double val = (int)square_euclidean_distance(lvalue, rvalue);
     return sqrt(val);
   }
 
@@ -966,7 +966,7 @@ namespace boost { namespace polygon{
 
   template <typename rectangle_type>
   typename enable_if<typename gtl_and<y_r_scale_up, typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type, 
-	  rectangle_type>::type &
+                     rectangle_type>::type &
   scale_up(rectangle_type& rectangle, 
            typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::unsigned_area_type factor) {
     horizontal(rectangle, scale_up(horizontal(rectangle), factor));
@@ -978,7 +978,7 @@ namespace boost { namespace polygon{
   
   template <typename rectangle_type>
   typename enable_if<typename gtl_and<y_r_scale_down, typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type, 
-	  rectangle_type>::type &
+                     rectangle_type>::type &
   scale_down(rectangle_type& rectangle, 
              typename coordinate_traits<typename rectangle_traits<rectangle_type>::coordinate_type>::unsigned_area_type factor) {
     horizontal(rectangle, scale_down(horizontal(rectangle), factor));
@@ -990,7 +990,7 @@ namespace boost { namespace polygon{
 
   template <typename rectangle_type, typename scaling_type>
   typename enable_if<typename gtl_and<y_r_scale, typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type, 
-	  rectangle_type>::type &
+                     rectangle_type>::type &
   scale(rectangle_type& rectangle, const scaling_type& scaling) {
     point_data<typename rectangle_traits<rectangle_type>::coordinate_type> llp(xl(rectangle), yl(rectangle));
     point_data<typename rectangle_traits<rectangle_type>::coordinate_type> urp(xl(rectangle), yl(rectangle));
@@ -1004,7 +1004,7 @@ namespace boost { namespace polygon{
   
   template <typename rectangle_type, typename transformation_type>
   typename enable_if<typename gtl_and<y_r_transform, typename is_mutable_rectangle_concept<typename geometry_concept<rectangle_type>::type>::type>::type, 
-	  rectangle_type>::type &
+                     rectangle_type>::type &
   transform(rectangle_type& rectangle, const transformation_type& transformation) {
     point_data<typename rectangle_traits<rectangle_type>::coordinate_type> llp(xl(rectangle), yl(rectangle));
     point_data<typename rectangle_traits<rectangle_type>::coordinate_type> urp(xh(rectangle), yh(rectangle));

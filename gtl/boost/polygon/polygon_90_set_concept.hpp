@@ -465,7 +465,7 @@ namespace boost { namespace polygon{
   polygon_set_type&
   move(polygon_set_type& polygon_set,
   orientation_2d orient, typename polygon_90_set_traits<polygon_set_type>::coordinate_type displacement,
-	   typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type *ptr = 0) {
+       typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type * = 0) {
     if(orient == HORIZONTAL)
       return move(polygon_set, displacement, 0);
     else 
@@ -476,7 +476,7 @@ namespace boost { namespace polygon{
   polygon_set_type&
   move(polygon_set_type& polygon_set, typename polygon_90_set_traits<polygon_set_type>::coordinate_type x_displacement, 
   typename polygon_90_set_traits<polygon_set_type>::coordinate_type y_displacement,
-  typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type *ptr = 0
+  typename enable_if< typename is_mutable_polygon_90_set_type<polygon_set_type>::type>::type * = 0
   ) {
     typedef typename polygon_90_set_traits<polygon_set_type>::coordinate_type Unit;
     polygon_90_set_data<Unit> ps;

@@ -65,7 +65,7 @@ namespace boost { namespace polygon{
   template <typename T>
   typename point_coordinate_type<T>::type 
   get(const T& point, orientation_2d orient,
-  typename enable_if< typename gtl_if<typename is_point_concept<typename geometry_concept<T>::type>::type>::type>::type *ptr = 0
+  typename enable_if< typename gtl_if<typename is_point_concept<typename geometry_concept<T>::type>::type>::type>::type * = 0
   ) {
     return point_traits<T>::get(point, orient);
   }
@@ -73,7 +73,7 @@ namespace boost { namespace polygon{
   template <typename T, typename coordinate_type>
   void 
   set(T& point, orientation_2d orient, coordinate_type value,
-  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<T>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<T>::type>::type>::type * = 0
   ) {
     point_mutable_traits<T>::set(point, orient, value);
   }
@@ -81,7 +81,7 @@ namespace boost { namespace polygon{
   template <typename T, typename coordinate_type1, typename coordinate_type2>
   T
   construct(coordinate_type1 x_value, coordinate_type2 y_value,
-  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<T>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<T>::type>::type>::type * = 0
   ) {
     return point_mutable_traits<T>::construct(x_value, y_value); 
   }
@@ -90,7 +90,7 @@ namespace boost { namespace polygon{
   T1&
   assign(T1& lvalue, const T2& rvalue,
   typename enable_if< typename gtl_and< typename is_mutable_point_concept<typename geometry_concept<T1>::type>::type,
-                                         typename is_point_concept<typename geometry_concept<T2>::type>::type>::type>::type *ptr = 0
+                                         typename is_point_concept<typename geometry_concept<T2>::type>::type>::type>::type * = 0
   ) {
     set(lvalue, HORIZONTAL, get(rvalue, HORIZONTAL));
     set(lvalue, VERTICAL, get(rvalue, VERTICAL));
@@ -137,7 +137,7 @@ namespace boost { namespace polygon{
   bool
   equivalence(const T& point1, const T2& point2,
     typename enable_if< typename gtl_and<typename gtl_same_type<point_concept, typename geometry_concept<T>::type>::type,
-	typename is_point_concept<typename geometry_concept<T2>::type>::type>::type>::type *ptr = 0
+              typename is_point_concept<typename geometry_concept<T2>::type>::type>::type>::type * = 0
   ) {
     typename point_traits<T>::coordinate_type x1 = x(point1);
     typename point_traits<T2>::coordinate_type x2 = get(point2, HORIZONTAL);
@@ -150,7 +150,7 @@ namespace boost { namespace polygon{
   typename point_difference_type<point_type_1>::type
   manhattan_distance(const point_type_1& point1, const point_type_2& point2,
   typename enable_if< typename gtl_and<typename gtl_same_type<point_concept, typename geometry_concept<point_type_1>::type>::type, 
-  typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type *ptr = 0) {
+  typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type * = 0) {
     return euclidean_distance(point1, point2, HORIZONTAL) + euclidean_distance(point1, point2, VERTICAL);
   }
   
@@ -181,7 +181,7 @@ namespace boost { namespace polygon{
   typename point_difference_type<point_type_1>::type
   distance_squared(const point_type_1& point1, const point_type_2& point2,
     typename enable_if< typename gtl_and<typename is_point_concept<typename geometry_concept<point_type_1>::type>::type,
-	typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type *ptr = 0
+                   typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type * = 0
   ) {
     typedef typename point_traits<point_type_1>::coordinate_type Unit;
     typename coordinate_traits<Unit>::coordinate_difference dx = euclidean_distance(point1, point2, HORIZONTAL);
@@ -195,7 +195,7 @@ namespace boost { namespace polygon{
   point_type_1 &
   convolve(point_type_1& lvalue, const point_type_2& rvalue,
   typename enable_if< typename gtl_and<typename is_mutable_point_concept<typename geometry_concept<point_type_1>::type>::type, 
-  typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type *ptr = 0
+  typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type * = 0
   ) {
     x(lvalue, x(lvalue) + x(rvalue));
     y(lvalue, y(lvalue) + y(rvalue));
@@ -206,7 +206,7 @@ namespace boost { namespace polygon{
   point_type_1 &
   deconvolve(point_type_1& lvalue, const point_type_2& rvalue,
   typename enable_if< typename gtl_and<typename is_mutable_point_concept<typename geometry_concept<point_type_1>::type>::type, 
-  typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type *ptr = 0
+  typename is_point_concept<typename geometry_concept<point_type_2>::type>::type>::type>::type * = 0
   ) {
     x(lvalue, x(lvalue) - x(rvalue));
     y(lvalue, y(lvalue) - y(rvalue));
@@ -216,7 +216,7 @@ namespace boost { namespace polygon{
   template <typename point_type, typename coord_type>
   point_type &
   scale_up(point_type& point, coord_type factor,
-  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type * = 0
   ) {
     typedef typename point_traits<point_type>::coordinate_type Unit;
     x(point, x(point) * (Unit)factor);
@@ -227,7 +227,7 @@ namespace boost { namespace polygon{
   template <typename point_type, typename coord_type>
   point_type &
   scale_down(point_type& point, coord_type factor,
-  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type * = 0
   ) {
     typedef typename point_traits<point_type>::coordinate_type Unit;
     typedef typename coordinate_traits<Unit>::coordinate_distance dt;
@@ -240,8 +240,8 @@ namespace boost { namespace polygon{
   point_type &
   scale(point_type& point, 
         const scaling_type& scaling,
-		typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type *ptr = 0
-		) {
+        typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type * = 0
+        ) {
     typedef typename point_traits<point_type>::coordinate_type Unit;
     Unit x_(x(point)), y_(y(point));
     scaling.scale(x_, y_);
@@ -253,7 +253,7 @@ namespace boost { namespace polygon{
   template <typename point_type, typename transformation_type>
   point_type &
   transform(point_type& point, const transformation_type& transformation,
-  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type *ptr = 0
+  typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type * = 0
   ) {
     typedef typename point_traits<point_type>::coordinate_type Unit;
     Unit x_(x(point)), y_(y(point));
@@ -267,8 +267,8 @@ namespace boost { namespace polygon{
   point_type &
   move(point_type& point, orientation_2d orient,
        typename point_traits<point_type>::coordinate_type displacement,
-	   typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type *ptr = 0
-	   ) {
+       typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type * = 0
+       ) {
     typedef typename point_traits<point_type>::coordinate_type Unit;
     Unit v(get(point, orient));
     set(point, orient, v + displacement);
