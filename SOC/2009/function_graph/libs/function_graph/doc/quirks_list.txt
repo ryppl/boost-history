@@ -1,0 +1,5 @@
+    Users should know that technically a set contains only unique elements. Thus, function graph should only have a set of elements that are all unique somehow. This is mentioned only because function graph does not check for this. However, there is no adverse behavior caused by this when the BGL functions or iterators are used. The issues come up when associative property maps are used.
+
+    Since function graph does not contain the elements it acts over, all property map detail is left up to the user. Associative property maps work very well with function graph.
+
+    Function graphs that don't use boolean or optional<T> returning function, are complete graphs. Say you have n vectors, this means you will have n^2 edges.
