@@ -8,6 +8,8 @@
 #ifndef BOOST_POLYGON_POINT_TRAITS_HPP
 #define BOOST_POLYGON_POINT_TRAITS_HPP
 
+#include "isotropy.hpp"
+
 namespace boost { namespace polygon{
   template <typename T>
   struct point_traits {

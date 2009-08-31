@@ -187,8 +187,8 @@ namespace boost { namespace polygon{
   flip(interval_type& interval,
        typename interval_traits<interval_type>::coordinate_type axis = 0) {
     typename interval_traits<interval_type>::coordinate_type newLow, newHigh;
-    newLow  = axis - high(interval);
-    newHigh = axis - low(interval);
+    newLow  = 2 * axis - high(interval);
+    newHigh = 2 * axis - low(interval);
     low(interval, newLow);
     high(interval, newHigh);
     return interval;

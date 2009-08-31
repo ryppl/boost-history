@@ -135,17 +135,6 @@ namespace boost { namespace polygon{
     return x(point1) == x(point2) && y(point1) == y(point2) && z(point1) == z(point2);
   }
 
-  struct y_p3d_man_dist : gtl_yes {};
-
-  template <typename point_type_1, typename point_type_2>
-  typename enable_if< typename gtl_and_3<y_p3d_man_dist,  typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_1>::type>::type, 
-                                          typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_2>::type>::type>::type,
-                       typename point_3d_difference_type<point_type_1>::type>::type
-  manhattan_distance(const point_type_1& point1, const point_type_2& point2) {
-    return euclidean_distance(point1, point2, HORIZONTAL) + euclidean_distance(point1, point2, VERTICAL) 
-      + euclidean_distance(point1, point2, PROXIMAL);
-  }
-
   struct y_p3d_dist : gtl_yes {};
 
   template <typename point_type_1, typename point_type_2>
@@ -157,6 +146,17 @@ namespace boost { namespace polygon{
     return_type return_value =
       (return_type)get(point1, orient) - (return_type)get(point2, orient);
     return return_value < 0 ? -return_value : return_value;
+  }
+
+  struct y_p3d_man_dist : gtl_yes {};
+
+  template <typename point_type_1, typename point_type_2>
+  typename enable_if< typename gtl_and_3<y_p3d_man_dist,  typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_1>::type>::type, 
+                                          typename gtl_same_type<point_3d_concept, typename geometry_concept<point_type_2>::type>::type>::type,
+                       typename point_3d_difference_type<point_type_1>::type>::type
+  manhattan_distance(const point_type_1& point1, const point_type_2& point2) {
+    return euclidean_distance(point1, point2, HORIZONTAL) + euclidean_distance(point1, point2, VERTICAL) 
+      + euclidean_distance(point1, point2, PROXIMAL);
   }
 
   struct y_p3d_dist2 : gtl_yes {};

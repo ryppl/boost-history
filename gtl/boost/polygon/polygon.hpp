@@ -8,19 +8,6 @@
 #ifndef BOOST_POLYGON_POLYGON_HPP
 #define BOOST_POLYGON_POLYGON_HPP
 
-//external
-#include <cmath>
-#include <vector>
-#include <deque>
-#include <map>
-#include <set>
-#include <list>
-//#include <iostream>
-#include <algorithm>
-#include <limits>
-#include <iterator>
-#include <string>
-
 #include "isotropy.hpp"
 
 //point

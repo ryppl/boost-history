@@ -9,6 +9,21 @@
 #ifndef BOOST_POLYGON_ISOTROPY_HPP
 #define BOOST_POLYGON_ISOTROPY_HPP
 
+//external
+#include <cmath>
+#include <cstddef>
+#include <cstdlib>
+#include <vector>
+#include <deque>
+#include <map>
+#include <set>
+#include <list>
+//#include <iostream>
+#include <algorithm>
+#include <limits>
+#include <iterator>
+#include <string>
+
 #ifndef BOOST_POLYGON_NO_DEPS
 
 #include <boost/config.hpp> 
@@ -180,7 +195,7 @@ namespace boost { namespace polygon{
   struct scaling_policy {
     template <typename T2>
     static inline T round(T2 t2) {
-      return (T)floor(t2+0.5);
+      return (T)std::floor(t2+0.5);
     }
 
     static inline T round(T t2) {
@@ -201,13 +216,6 @@ namespace boost { namespace polygon{
   template <>
   struct geometry_concept<double> { typedef coordinate_concept type; };
 
-  template <typename T1, typename T2, typename T3>
-  struct requires { };
-
-  template <typename T1, typename T3>
-  struct requires<T1, T1, T3> {
-    typedef T3 type;
-  };
 #ifndef BOOST_POLYGON_NO_DEPS
   struct gtl_no : mpl::bool_<false> {};
   struct gtl_yes : mpl::bool_<true> {};
@@ -277,21 +285,6 @@ namespace boost { namespace polygon{
   template <typename T, typename T2>
   struct gtl_different_type { typedef typename gtl_not<typename gtl_same_type<T, T2>::type>::type type; };
 
-  template <typename T1, typename T2>
-  struct requires_type { typedef T2 type; };
-
-  template <typename T, typename T2>
-  struct is_same_type_SFINAE {};
-  template <typename T>
-  struct is_same_type_SFINAE<T, T> { typedef void type; };
-
-  template <typename T, typename T2>
-  struct is_different_type_SFINAE { typedef void type; };
-  template <typename T>
-  struct is_different_type_SFINAE<T, T> {};
-
-
-
   struct manhattan_domain {};
   struct forty_five_domain {};
   struct general_domain {};
@@ -321,7 +314,7 @@ namespace boost { namespace polygon{
 
   // predicated_swap swaps a and b if pred is true
 
-  // predicated_swap is garenteed to behave the same as
+  // predicated_swap is guarenteed to behave the same as
   // if(pred){
   //   T tmp = a;
   //   a = b;
@@ -521,7 +514,7 @@ namespace boost { namespace polygon{
       return direction_2d(direction_2d_enum(val_ ^ 1));
     }
 
-    // N, E are positive, S, W are negative
+    // N, E, U are positive, S, W, D are negative
     inline bool is_positive() const {return (val_ & 1);}
     inline bool is_negative() const {return !is_positive();}
     inline int get_sign() const {return ((is_positive()) << 1) -1;}
