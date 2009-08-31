@@ -11,5 +11,6 @@
 #include <boost/model/algorithm/log_likelihood.hpp>
 #include <boost/model/algorithm/log_likelihoods.hpp>
 #include <boost/model/algorithm/log_posteriors.hpp>
+#include <boost/model/algorithm/log_posteriors2.hpp>
 
 #endif
