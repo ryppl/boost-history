@@ -585,9 +585,9 @@ namespace boolean_op {
     std::cout << ps << std::endl;
     std::cout << polys[0] << std::endl;
     std::cout << polys2[0] << std::endl;
-    //if(polys != polys2) std::cout << "test Polygon45Set failed\n";
-    //return polys == polys2;
-    return true;
+    if(polys != polys2) std::cout << "test Polygon45Set failed\n";
+    return polys == polys2;
+    //return true;
   }
 
   inline int testPolygon45SetDORA() {
@@ -2267,11 +2267,11 @@ int main() {
   p45.set(pts2, pts2 + 3);
   p452.set(pts3, pts3+3);
   if(!test_two_polygons(p45, p452)) return 1;
-  Point pts4[] = {Point(0, 5), Point(2, 3), Point(2,5)};
+  Point pts4[] = {Point(0, 5), Point(3, 2), Point(3,5)};
   Point pts5[] = {Point(0,0), Point(5, 5), Point(5, 0)};
   p45.set(pts4, pts4+3);
   p452.set(pts5, pts5+3);
-  //if(!test_two_polygons(p45, p452)) return 1;
+  if(!test_two_polygons(p45, p452)) return 1;
   }
   {
   std::vector<point_data<int> > pts;
@@ -2900,41 +2900,41 @@ int main() {
         std::cout << rect << std::endl;
       }
     }
-//     //test polygon45set transform
-//     pts.clear();
-//     pts.push_back(Point(10, 10));
-//     pts.push_back(Point(15, 10));
-//     pts.push_back(Point(10, 15));
-//     polyHole.set(pts.begin(), pts.end());
-//     Polygon45Set ps451, ps452;
-//     ps451.insert(polyHole);
-//     ps452 = ps451;
-//     std::cout << (ps451 == ps452) << std::endl;
-//     if(ps451 != ps452) return 1;
-//     ps451.transform(atr);
-//     std::cout << (ps451 == ps452) << std::endl;
-//     if(ps451 == ps452) return 1;
-//     ps451.transform(tr);
-//     std::cout << (ps451 == ps452) << std::endl;
-//     if(ps451 != ps452) return 1;
+    //test polygon45set transform
+    pts.clear();
+    pts.push_back(Point(10, 10));
+    pts.push_back(Point(15, 10));
+    pts.push_back(Point(10, 15));
+    polyHole.set(pts.begin(), pts.end());
+    Polygon45Set ps451, ps452;
+    ps451.insert(polyHole);
+    ps452 = ps451;
+    std::cout << (ps451 == ps452) << std::endl;
+    if(ps451 != ps452) return 1;
+    ps451.transform(atr);
+    std::cout << (ps451 == ps452) << std::endl;
+    if(ps451 == ps452) return 1;
+    ps451.transform(tr);
+    std::cout << (ps451 == ps452) << std::endl;
+    if(ps451 != ps452) return 1;
   
-//     //test polygon45set area
-//     std::cout << ps451.area() << std::endl;
-//     if(ps451.area() != 12.5) return 1;
-//     //test polygon45set scale up down
-//     ps451.scaleUp(3);
-//     std::cout << ps451.area() << std::endl;
-//     if(ps451.area() != 112.5) return 1;
-//     ps451.scaleDown(2);
-//     std::cout << ps451.area() << std::endl;
-//     if(ps451.area() != 32) return 1;
-//     //test polygonset scalue up down
+    //test polygon45set area
+    std::cout << area(ps451) << std::endl;
+    if(area(ps451) != 12.5) return 1;
+    //test polygon45set scale up down
+    ps451.scale_up(3);
+    std::cout << area(ps451) << std::endl;
+    if(area(ps451) != 112.5) return 1;
+    ps451.scale_down(2);
+    std::cout << area(ps451) << std::endl;
+    if(area(ps451) != 32) return 1;
+    //test polygonset scalue up down
   }
   {
     std::cout << (testPolygon45SetRect()) << std::endl;
-    //testPolygon45SetPerterbation(); //re-enable after non-intersection fix
+    testPolygon45SetPerterbation(); //re-enable after non-intersection fix
     testPolygon45Set();
-    //testPolygon45SetDORA();  //re-enable after non-intersection fix
+    testPolygon45SetDORA();  //re-enable after non-intersection fix
     polygon_45_set_data<int> ps45_1, ps45_2, ps45_3;
     ps45_1.insert(rectangle_data<int>(0, 0, 10, 10));
     ps45_2.insert(rectangle_data<int>(5, 5, 15, 15));
