@@ -67,10 +67,10 @@ namespace boost { namespace polygon{
       interval_mutable_traits<T>::set(interval, dir.backward(), value);
   }
   
-  template <typename T>
+  template <typename T, typename T2, typename T3>
   T
-  construct(typename interval_traits<T>::coordinate_type low_value, typename interval_traits<T>::coordinate_type high_value,
-  typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type>::type * = 0
+  construct(T2 low_value, T3 high_value,
+            typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<T>::type>::type>::type * = 0
   ) {
     if(low_value > high_value) std::swap(low_value, high_value);
     return interval_mutable_traits<T>::construct(low_value, high_value); 
@@ -108,13 +108,13 @@ namespace boost { namespace polygon{
       get(interval2, HIGH); 
   }
   
+  struct y_i_contains : gtl_yes {};
+
   template <typename interval_type>
-  bool 
+  typename enable_if< typename gtl_and< y_i_contains, typename is_interval_concept<typename geometry_concept<interval_type>::type>::type >::type, bool>::type 
   contains(const interval_type& interval,
            typename interval_traits<interval_type>::coordinate_type value, 
-           bool consider_touch = true,
-           typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
-           ) {
+           bool consider_touch = true ) {
     if(consider_touch) {
       return value <= high(interval) && value >= low(interval);
     } else {

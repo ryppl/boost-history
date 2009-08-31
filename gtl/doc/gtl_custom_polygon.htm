@@ -59,9 +59,9 @@ struct CPoint {<br>
 &nbsp; int y;<br>
 };<br>
 <br>
-//we have to get CPoint working with gtl to make our polygon<br>
-//that uses CPoint working with gtl<br>
-namespace gtl {<br>
+//we have to get CPoint working with boost polygon to make our polygon<br>
+//that uses CPoint working with boost polygon<br>
+namespace boost { namespace polygon {<br>
 &nbsp; template &lt;&gt;<br>
 &nbsp; struct geometry_concept&lt;CPoint&gt; { typedef point_concept type; };<br>
 &nbsp; template &lt;&gt;<br>
@@ -92,14 +92,14 @@ int value) {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return retval;<br>
 &nbsp;&nbsp;&nbsp; }<br>
 &nbsp; };<br>
-}<br>
+} }<br>
 <br>
 //I'm lazy and use the stl everywhere to avoid writing my own classes<br>
 //my toy polygon is a std::list&lt;CPoint&gt;<br>
 typedef std::list&lt;CPoint&gt; CPolygon;<br>
 <br>
-//we need to specialize our polygon concept mapping in gtl<br>
-namespace gtl {<br>
+//we need to specialize our polygon concept mapping in boost polygon<br>
+namespace boost { namespace polygon {<br>
 &nbsp; //first register CPolygon as a polygon_concept type<br>
 &nbsp; template &lt;&gt;<br>
 &nbsp; struct geometry_concept&lt;CPolygon&gt;{ typedef polygon_concept type; };<br>
@@ -144,7 +144,7 @@ iT input_begin, iT input_end) {<br>
 &nbsp;&nbsp;&nbsp; }<br>
 <br>
 &nbsp; };<br>
-}<br>
+} }<br>
 <br>
 //now there's nothing left to do but test that our polygon<br>
 //works with library interfaces<br>

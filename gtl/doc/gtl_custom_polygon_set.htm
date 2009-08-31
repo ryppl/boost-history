@@ -51,7 +51,7 @@ struct CPoint {<br>
 &nbsp; int y;<br>
 };<br>
 <br>
-namespace gtl {<br>
+namespace boost { namespace polygon {<br>
 &nbsp; template &lt;&gt;<br>
 &nbsp; struct geometry_concept&lt;CPoint&gt; { typedef point_concept type; };<br>
 &nbsp; template &lt;&gt;<br>
@@ -83,13 +83,13 @@ int value) {<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; return retval;<br>
 &nbsp;&nbsp;&nbsp; }<br>
 &nbsp; };<br>
-}<br>
+} }<br>
 <br>
 //the CPolygon example<br>
 typedef std::list&lt;CPoint&gt; CPolygon;<br>
 <br>
-//we need to specialize our polygon concept mapping in gtl<br>
-namespace gtl {<br>
+//we need to specialize our polygon concept mapping in boost polygon<br>
+namespace boost { namespace polygon {<br>
 &nbsp; //first register CPolygon as a polygon_concept type<br>
 &nbsp; template &lt;&gt;<br>
 &nbsp; struct geometry_concept&lt;CPolygon&gt;{ typedef polygon_concept type; };<br>
@@ -138,7 +138,7 @@ iT input_begin, iT input_end) {<br>
 &nbsp;&nbsp;&nbsp; }<br>
 <br>
 &nbsp; };<br>
-}<br>
+} }<br>
 <br>
 //OK, finally we get to declare our own polygon set type<br>
 typedef std::deque&lt;CPolygon&gt; CPolygonSet;<br>
@@ -147,7 +147,7 @@ typedef std::deque&lt;CPolygon&gt; CPolygonSet;<br>
 //because it is a standard container there is a shortcut<br>
 //for mapping it to polygon set concept, but I'll do it<br>
 //the long way that you would use in the general case.<br>
-namespace gtl {<br>
+namespace boost { namespace polygon {<br>
 &nbsp; //first we register CPolygonSet as a polygon set<br>
 &nbsp; template &lt;&gt;<br>
 &nbsp; struct geometry_concept&lt;CPolygonSet&gt; { typedef polygon_set_concept type; 
@@ -198,7 +198,7 @@ and do something<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp; //extra<br>
 &nbsp;&nbsp;&nbsp; }<br>
 &nbsp; };<br>
-}<br>
+} }<br>
 <br>
 int main() {<br>
 &nbsp; long long c1 = clock();<br>
