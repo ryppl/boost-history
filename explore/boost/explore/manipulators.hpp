@@ -75,11 +75,11 @@ namespace boost { namespace explore
                 }
             }
 
-            container_common_stream_state* m_state;
+            mutable container_common_stream_state* m_state;
         };
 
         template<typename Elem, typename Tr>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, handle_custom_stream& cs)
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const handle_custom_stream& cs)
         {
             container_common_stream_state* state = explore::get_stream_state<container_common_stream_state>(ostr);
             cs.m_state = state;
