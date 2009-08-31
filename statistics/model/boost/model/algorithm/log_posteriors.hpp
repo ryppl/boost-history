@@ -15,7 +15,11 @@
 namespace boost{
 namespace model{   
 
+
 // Evaluates the log-postetior for each parameter in [b_p,e_p)
+//
+// Warning : log_posteriors seems very suceptible to precision error.
+// log_posteriors2 appears to correct this problem.
 template<
     typename T,typename D,typename M,typename Rx,typename Ry,typename ItP,
     typename ItLw
