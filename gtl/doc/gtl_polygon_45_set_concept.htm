@@ -61,7 +61,7 @@
 </p><h1>Polygon 45 Set Concept</h1>
 
 <p> 
-<p>The polygon 45 set concept tag is <font face="Courier New">
+<p>The polygon_45_set concept tag is <font face="Courier New">
 polygon_45_set_concept</font></p>
 <p> 
 <font face="Times New Roman">The semantic of a polygon_45_set is zero or more 
@@ -76,7 +76,7 @@ intersection point.&nbsp; In the case that data represented contains no
 45-degree angles and is Manhattan a runtime check will default to the Manhattan 
 algorithm.&nbsp; The results of which are identical to what the 45-degree 
 algorithm would do, but obtained more efficiently.</font><p> 
-<font face="Times New Roman">The motivation for providing the polygon 45 set is 
+<font face="Times New Roman">The motivation for providing the polygon_45_set is 
 to extend the special case of Manhattan geometry capability of the library to 
 encompass the slightly less common, but still important special case of geometry 
 that is described by angles that are multiples of 45-degress with respect to the 
@@ -304,20 +304,20 @@ together.</p>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>interact</b>(T1&amp; a, const T2&amp; b)</font></td>
-		<td>Given an object that models polygon 45 set and an object that models 
-		polygon 45 set or one of its refinements, modifies a to retain only 
+		<td>Given an object that models polygon_45_set and an object that models 
+		polygon_45_set or one of its refinements, modifies a to retain only 
 		regions that overlap or touch regions in b.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		T&amp; <b>self_intersect</b>(T&amp; polygon_set)</font></td>
-		<td>Given an object that models polygon 45 set that has self overlapping 
+		<td>Given an object that models polygon_45_set that has self overlapping 
 		regions, modifies the argument to contain only the regions of overlap.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		T&amp; <b>self_xor</b>(T&amp; polygon_set)</font></td>
-		<td>Given an object that models polygon 45 set that has self overlapping 
+		<td>Given an object that models polygon_45_set that has self overlapping 
 		regions, modifies the argument to contain only the regions that do not 
 		overlap.</td>
 	</tr>

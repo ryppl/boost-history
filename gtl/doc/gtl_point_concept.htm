@@ -69,7 +69,7 @@ geometry concept meta-function for that type.&nbsp; In the example below CPoint 
 point&nbsp; concept.<p> 
 <font face="Courier New">template &lt;&gt;<br>
 struct geometry_concept&lt;CPoint&gt; { typedef point_concept type; };</font><p> 
-<font face="Times New Roman">The semantic of an point is that it has an x and y 
+<font face="Times New Roman">The semantic of a point is that it has an x and y 
 coordinate.&nbsp; A std::pair&lt;int, int&gt;, boost::tuple&lt;int, int&gt; or boost::array&lt;int, 2&gt; 
 could all be made models of point by simply providing indirect access to their 
 elements through traits, however, these objects cannot be made a model of both 
@@ -243,7 +243,7 @@ how to map a
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
-		coordinate_distance <b>manhattan_distance</b>(const T1&amp;,<br>
+		coordinate_difference <b>manhattan_distance</b>(const T1&amp;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 		const T2&amp;)</font></td>
 		<td>Returns the distance in x plus the distance in y from an object that 
@@ -252,7 +252,7 @@ how to map a
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
-		coordinate_distance <b>distance_squared</b>(const T1&amp;,<br>
+		coordinate_difference <b>distance_squared</b>(const T1&amp;,<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 		const T2&amp;)</font></td>
 		<td>Returns the square of the distance in x plus the square of the 

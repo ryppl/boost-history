@@ -128,14 +128,14 @@ specified in its template parameter.</p>
 <table border="1" width="100%" id="table1">
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
-		iterator_type <b>begin_compact</b>(const T&amp; polygon)</font></td>
+		compact_iterator_type <b>begin_compact</b>(const T&amp; polygon)</font></td>
 		<td><font face="Times New Roman">Expects a model of polygon_90.&nbsp; 
 		Returns the begin iterator over the range of coordinates that correspond 
 		to horizontal and vertical edges.</font></td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
-		iterator_type <b>end_compact</b>(const T&amp; polygon)</font></td>
+		compact_iterator_type <b>end_compact</b>(const T&amp; polygon)</font></td>
 		<td><font face="Times New Roman">Expects a model of polygon_90.&nbsp; 
 		Returns the end iterator over the range of coordinates that correspond 
 		to horizontal and vertical edges.</font></td>
@@ -275,7 +275,7 @@ specified in its template parameter.</p>
 <p> 
 <p>The library provides a model of polygon 90 concept declared
 <font face="Courier New">
-template&lt;typename T&gt; poolygon_90_data </font>where T is the coordinate type.</p>
+template&lt;typename T&gt; polygon_90_data </font>where T is the coordinate type.</p>
 <p>This data type is used internally when a Manhattan polygon is needed and is 
 available to the library user who finds it convenient to use a library polygon 
 data type instead of providing their own.&nbsp; The data type is implemented to 
@@ -307,12 +307,12 @@ be convenient to use with the library traits.</p>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New"><b>polygon_90_data</b>(const 
-		poolygon_90_data* that)</font></td>
+		polygon_90_data&amp; that)</font></td>
 		<td><font face="Times New Roman">Copy construct</font></td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">polygon_90_data&amp; <b>operator=</b>(const 
-		poolygon_90_data&amp; that)</font></td>
+		polygon_90_data&amp; that)</font></td>
 		<td>Assignment operator.</td>
 	</tr>
 	<tr>

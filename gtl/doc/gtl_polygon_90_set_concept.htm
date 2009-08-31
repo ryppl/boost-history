@@ -61,10 +61,10 @@
 </p><h1>Polygon 90 Set Concept</h1>
 
 <p> 
-<p>The polygon 90 set concept tag is <font face="Courier New">
+<p>The polygon_90_set concept tag is <font face="Courier New">
 polygon_90_set_concept</font></p>
 <p> 
-<font face="Times New Roman">The semantic of a polygon 90 set is zero or more 
+<font face="Times New Roman">The semantic of a polygon_90_set is zero or more 
 Manhattan geometry regions.</font><p> 
 <font face="Times New Roman">The motivation for providing the 
 polygon_90_set_concept is that it is a very common special case of planar 
@@ -79,7 +79,7 @@ and vectors of models of polygon_90_concept or polygon_90_with_holes_concept or
 rectangle_concept are automatically models of polygon_90_set_concept.</p>
 <h2>Operators</h2>
 <p>The return type of some operators is the <font face="Courier New">polygon_90_set_view</font> 
-operator template type.&nbsp; This type is itself a model of the polygon 90 set 
+operator template type.&nbsp; This type is itself a model of the polygon_90_set 
 concept, but furthermore can be used as an argument to the <font face="Courier New">polygon_90_set_data</font> 
 constructor and assignment operator.&nbsp; The operator template exists to 
 eliminate temp copies of intermediate results when Boolean operators are chained 
@@ -279,20 +279,20 @@ together.</p>
 		<td width="586"><font face="Courier New">template &lt;typename T1, typename 
 		T2&gt;<br>
 		T1&amp; <b>interact</b>(T1&amp; a, const T2&amp; b)</font></td>
-		<td>Given an object that models polygon 90 set and an object that models 
-		polygon 90 set or one of its refinements, modifies a to retain only 
+		<td>Given an object that models polygon_90_set and an object that models 
+		polygon_90_set or one of its refinements, modifies a to retain only 
 		regions that overlap or touch regions in b.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		T&amp; <b>self_intersect</b>(T&amp; polygon_set)</font></td>
-		<td>Given an object that models polygon 90 set that has self overlapping 
+		<td>Given an object that models polygon_90_set that has self overlapping 
 		regions, modifies the argument to contain only the regions of overlap.</td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
 		T&amp; <b>self_xor</b>(T&amp; polygon_set)</font></td>
-		<td>Given an object that models polygon 90 set that has self overlapping 
+		<td>Given an object that models polygon_90_set that has self overlapping 
 		regions, modifies the argument to contain only the regions that do not 
 		overlap.</td>
 	</tr>

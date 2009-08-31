@@ -86,14 +86,14 @@ struct coordinate_traits&lt;int&gt; {<br>
 &nbsp;&nbsp;&nbsp;&nbsp; typedef long long coordinate_difference;<br>
 &nbsp;&nbsp;&nbsp;&nbsp; typedef long double coordinate_distance;<br>
 };</font><p> 
-By making use the the coordinate traits of int the library is able to avoid 
+By making use of the coordinate traits of int the library is able to avoid 
 overflow and handle the normal issues encountered when programming integer 
 geometry.&nbsp; For the out of the ordinary issues there is a special 
 meta-function that provides the library with a numerical type suitable for exact 
 numerical calculations.&nbsp; It defaults to the highest precision data type 
 available in most compilers, long double, but can be overridden by specializing 
 for a particular coordinate type.&nbsp; Use of gmp multi-precision rational or 
-similar data type is reccomended for numerically robust calculations in the 
+similar data type is recommended for numerically robust calculations in the 
 general polygon algorithms.<p> 
 <font face="Courier New">template &lt;typename T&gt;<br>
 struct high_precision_type {<br>

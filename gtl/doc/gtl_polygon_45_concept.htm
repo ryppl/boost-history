@@ -267,7 +267,7 @@ specified in its template parameter.</p>
 <p> 
 <p>The library provides a model of polygon 45 concept declared
 <font face="Courier New">
-template&lt;typename T&gt; poolygon_45_data </font>where T is the coordinate type.</p>
+template&lt;typename T&gt; polygon_45_data </font>where T is the coordinate type.</p>
 <p>This data type is used internally when a 45-degree polygon is needed and is 
 available to the library user who finds it convenient to use a library polygon 
 data type instead of providing their own.&nbsp; The data type is implemented to 
@@ -292,12 +292,12 @@ be convenient to use with the library traits.</p>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New"><b>polygon_45_data</b>(const 
-		poolygon_45_data* that)</font></td>
+		polygon_45_data&amp; that)</font></td>
 		<td><font face="Times New Roman">Copy construct</font></td>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">polygon_45_data&amp; <b>operator=</b>(const 
-		poolygon_45_data&amp; that)</font></td>
+		polygon_45_data&amp; that)</font></td>
 		<td>Assignment operator.</td>
 	</tr>
 	<tr>

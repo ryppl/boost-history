@@ -119,7 +119,7 @@ T(interval_horizontal, interval_vertical); }<br>
 <table border="1" width="100%" id="table1">
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
-		interval_type <b>get</b>(const T&amp; rectangle, orientatin_2d)</font></td>
+		interval_type <b>get</b>(const T&amp; rectangle, orientation_2d)</font></td>
 		<td><font face="Times New Roman">Expects a model of rectangle.&nbsp; 
 		Returns the x interval or y interval of the rectangle, depending on the 
 		orientation_2d value.</font><font face="Courier New"><br>
@@ -135,7 +135,7 @@ T(interval_horizontal, interval_vertical); }<br>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New">template &lt;typename T&gt;<br>
-		interval_type <b>get</b>(const T&amp; rectangle, orientatin_2d, 
+		interval_type <b>get</b>(const T&amp; rectangle, orientation_2d, 
 		<br>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; direction_1d)</font></td>
 		<td><font face="Times New Roman">Expects a model of rectangle.&nbsp; 
 		Returns the coordinate specificed by the direction_1d value of the x interval or y interval of the rectangle, depending on the 
@@ -551,7 +551,7 @@ T(interval_horizontal, interval_vertical); }<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; 
 		bool consider_touch = true) </font></td>
 		<td>Sets rectangle a to the intersection of rectangle a and interval b 
-		along the orinetation_2d 
+		along the orientation_2d 
 		and returns true.&nbsp; If the does not intersect the interval, the 
 		rectangle is unchanged and the function returns false.&nbsp; If the flag consider_touch is true 
 		intervals that abut are considered to intersect.</td>
@@ -684,7 +684,7 @@ convenient to use with the library traits.</p>
 	</tr>
 	<tr>
 		<td width="586"><font face="Courier New"><b>rectangle_data</b>(const 
-		rectangle_data* that)</font></td>
+		rectangle_data&amp; that)</font></td>
 		<td><font face="Times New Roman">Copy construct</font></td>
 	</tr>
 	<tr>
