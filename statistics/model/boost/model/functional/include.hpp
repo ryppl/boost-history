@@ -11,5 +11,6 @@
 #include <boost/model/functional/log_likelihood_accumulator.hpp>
 #include <boost/model/functional/log_likelihood_evaluator.hpp>
 #include <boost/model/functional/log_posterior_evaluator.hpp>
+#include <boost/model/functional/log_prior_evaluator.hpp>
 
 #endif
