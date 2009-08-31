@@ -161,7 +161,11 @@ public:
 		if(exterior.first == exterior.second)
 			return false;
 
-		return Interval_Set::is_joinable(*this, exterior.first, exterior.second);
+		const_iterator last_overlap = prior(exterior.second);
+
+		return 
+			hull(*(exterior.first), *last_overlap).contains(sub_interval)
+		&&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
 	}
 
 
@@ -439,7 +443,7 @@ protected:
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
 	const_iterator prior(const_iterator it_)const
-    { return it_ == this->_map.begin() ? this->_map.end() : --it_; }
+    { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
     iterator gap_insert(iterator prior_, const interval_type& inter_val)
     {

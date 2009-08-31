@@ -77,8 +77,12 @@ void test_LawValidater()
 	//	<interval_map<int,int>, interval_set<int> >  TestLawT;
 	//LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef Interinclusion
-		<interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
+	//typedef Interinclusion
+	//	<interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
+
+	typedef AddendInclusion
+		<interval_set<int>, int >  TestLawT;
 	LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------

@@ -62,8 +62,7 @@ inline NumTV rnd_0_to_excl(NumTV exclusive_upb)
 template <class NumTV>
 inline NumTV rnd_within_exUpb(NumTV lwb, NumTV exclusive_upb) 
 { 
-    NumTV some = static_cast<NumTV>(RND_WITHIN_EXUPB(lwb,exclusive_upb)); 
-    return some;
+    return static_cast<NumTV>(RND_WITHIN_EXUPB(lwb,exclusive_upb)); 
 }
 
 template <class NumTV>

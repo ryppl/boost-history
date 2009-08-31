@@ -150,6 +150,63 @@ namespace boost{namespace itl
         }
     };
 
+
+    template <typename Type, typename CoType>
+    class AddendInclusion 
+        : public Law<AddendInclusion<Type,CoType>, LOKI_TYPELIST_2(Type,CoType), LOKI_TYPELIST_1(bool)> 
+    {
+        /** (a + i).contains(i)
+        Input  = (a := inVal1, i := inVal2)
+        Output = (lhs_result, rhs_result)
+        */
+    public:
+        std::string name()const { return "AddendInclusion"; }
+        std::string formula()const { return "(a + i).contains(i)"; }
+
+        std::string typeString()const
+        {
+            return "AddendInclusion<"+  type_to_string<Type>::apply()+","
+                                    +type_to_string<CoType>::apply()+">";
+        }
+
+    public:
+
+        bool holds()
+        {
+            // (a + i).contains(i)
+			Type   value_a = this->template getInputValue<operand_a>();
+			CoType value_i = this->template getInputValue<operand_b>();
+			return (value_a + value_i).contains(value_i);
+		}
+
+        bool debug_holds()
+		{
+			return holds();
+			/*
+			// a.contains(a & b)
+			Type   value_a = this->template getInputValue<operand_a>();
+			CoType value_b = this->template getInputValue<operand_b>();
+			Type   a_sec_b = value_a & value_b;
+			bool result = value_a.contains(value_a & value_b);
+			// -------------------------------------------
+			cout << "a = " << value_a << endl;
+			cout << "b = " << value_b << endl;
+			cout << "a&b = " << a_sec_b << endl;
+			cout << "a.contains(a&b) = " << result << endl;
+			// -------------------------------------------
+			value_a.contains(a_sec_b);
+
+			return result;
+			*/
+		}
+
+        size_t size()const 
+        { 
+            return value_size<  Type>::apply(this->template getInputValue<operand_a>())+
+                   value_size<CoType>::apply(this->template getInputValue<operand_b>());
+        }
+    };
+
 }} // namespace itl boost
 
 #endif // __itl_minor_set_laws_JOFA_070411__
