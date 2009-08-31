@@ -28,7 +28,11 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
     * dist_random : maps http://www.boost.org/doc/libs/1_35_0/libs/math/doc/sf_and_dist/html/math_toolkit/dist.html 
 	to their http://www.boost.org/doc/libs/1_39_0/libs/random/random-distributions.html
 
+    * estimator_concept
+
     * functional
+
+    * goodness_of_fit
 
     * importance_sampling
 
@@ -62,7 +66,7 @@ I welcome feedback including bug reports at erwann.rogard@gmail.com
 
     * survival_model 
 
-    * tree : uses a vector to create a tree view
+    * tree_view : uses a vector to create a tree view
 
     * vector_space 
 
