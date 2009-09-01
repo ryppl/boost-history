@@ -558,6 +558,7 @@ inline transaction::transaction() :
 #endif
 
    put_tx_inflight();
+   transactions().push(this);
 }
 
 //--------------------------------------------------------------------------
@@ -760,6 +761,8 @@ inline transaction::~transaction()
    if (!hasLock()) lock_tx();
    abort();
    unlock_tx();
+   transactions().pop();
+
 }
 
 //--------------------------------------------------------------------------

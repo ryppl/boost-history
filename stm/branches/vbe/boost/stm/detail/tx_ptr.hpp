@@ -175,8 +175,10 @@ class rd_ptr {
 public:
  
     inline rd_ptr(transaction &t, tx_ptr<T> const & tx_obj) : 
-        tx_obj_p_(t.read_ptr(tx_obj.ptr_))
-    {}
+        //tx_obj_p_(t.read_ptr(tx_obj.ptr_))
+        tx_obj_p_(&t.insert_and_return_read_memory(*tx_obj.ptr_))
+
+{}
 
     const T* get() const {
         //if (tx_obj_p_->transaction_->forced_to_abort()) {

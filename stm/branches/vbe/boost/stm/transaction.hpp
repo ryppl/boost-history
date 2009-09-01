@@ -1201,6 +1201,7 @@ template <class T> T* cache_new_copy(const T& val) {
       else return *static_cast<T*>(i->second);
    }
 
+public:
    //-------------------------------------------------------------------
    template <typename T>
    T& insert_and_return_read_memory(T& in)
@@ -1231,6 +1232,7 @@ template <class T> T* cache_new_copy(const T& val) {
       return in;
    }
 
+private:
    template <typename T>
    T& deferred_write(T& in)
    {
