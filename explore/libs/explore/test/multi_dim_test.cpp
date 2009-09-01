@@ -41,7 +41,7 @@ std::wostream& format_2d(std::wostream& ostr)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( two_dimension_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     std::vector<std::vector<int> > vvi;
@@ -95,7 +95,7 @@ std::wostream& format_3d(std::wostream& ostr)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( three_dimension_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     std::vector<std::vector<int> > vvi;

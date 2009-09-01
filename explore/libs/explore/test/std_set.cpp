@@ -18,7 +18,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_set_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::set<int> si;
     str_out << si;
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_set_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_multiset_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::multiset<int> msi;
     str_out << msi;
@@ -79,7 +79,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_multiset_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( vector_in_set_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     vi.push_back(1);

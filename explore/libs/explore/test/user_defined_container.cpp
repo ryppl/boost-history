@@ -49,7 +49,7 @@ std::wostream& operator<<(std::wostream& ostr, const user_vector& u)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( user_defined_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     user_vector v;
     str_out << v;
@@ -88,7 +88,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( custom_stream_test, C, test_types )
 {
     using namespace boost::assign;
     using namespace boost::explore;
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     my_container mc;
     str_out << mc;

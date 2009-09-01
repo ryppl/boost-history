@@ -16,7 +16,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_tuple_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     boost::tuples::tuple<int, double> t(1, 3.14);
     str_out << t;

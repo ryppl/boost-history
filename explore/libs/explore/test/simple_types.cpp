@@ -16,7 +16,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( int_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     int i = 123;
 
     str_out << i;
@@ -35,7 +35,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( int_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( float_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     float f = 1.234f;
 
     str_out << std::setprecision(4) << f;
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( float_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( double_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     double d = 1.2341234f;
 
     str_out << std::setprecision(7) << d;
@@ -59,7 +59,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( double_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( bool_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     bool b  = true;
 
     str_out << std::boolalpha << b;
@@ -74,7 +74,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( bool_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( char_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     char c = 'c';
 
     str_out << c;

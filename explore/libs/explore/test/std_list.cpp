@@ -16,7 +16,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_list_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::list<std::complex<double> > lc;
     str_out << lc;
@@ -43,7 +43,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_list_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( list_in_list_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::list<int> li;
     li.push_back(1);

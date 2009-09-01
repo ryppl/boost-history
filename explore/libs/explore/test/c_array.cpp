@@ -16,7 +16,7 @@
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_c_array_stream_test, C, test_types )
 {
     using namespace boost::explore;
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     int arri1[] = {1};
     str_out << arri1;
@@ -32,7 +32,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_c_array_stream_test, C, test_types )
 BOOST_AUTO_TEST_CASE_TEMPLATE( vector_in_c_array_stream_test, C, test_types )
 {
     using namespace boost::explore;
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     vi.push_back(1);

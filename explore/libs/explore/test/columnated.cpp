@@ -32,7 +32,7 @@ struct columnated_format
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_columnate_stream_test, C, test_types )
 {
     using namespace boost::explore;
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     std::vector<int> vi;
 
     for( int i = 0; i < 12; ++i )

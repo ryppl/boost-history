@@ -16,7 +16,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_pair_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::pair<int,int> pi = std::make_pair(1,2);
     str_out << pi;
@@ -25,7 +25,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_pair_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( pair_in_vector_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<std::pair<int,int> > vpi;
     str_out << vpi;

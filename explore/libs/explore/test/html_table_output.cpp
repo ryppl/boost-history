@@ -49,7 +49,7 @@ std::wostream& html_table_stream_format(std::wostream& ostr)
 BOOST_AUTO_TEST_CASE_TEMPLATE( vector_in_c_array_html_stream_test, C, test_types )
 {
     using namespace boost::explore;
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     str_out << html_table_stream_format;
 
     std::vector<int> vi;

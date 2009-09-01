@@ -17,7 +17,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(basic_array_stream_test, C, test_types)
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     boost::array<int,0> ai0;
     str_out << ai0;
@@ -45,7 +45,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE(basic_array_stream_test, C, test_types)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE(vector_in_array_stream_test, C, test_types)
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     vi.push_back(1);

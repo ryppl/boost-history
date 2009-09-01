@@ -15,7 +15,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_deque_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::deque<int> di;
     str_out << di;
@@ -42,7 +42,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_deque_stream_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( deque_in_deque_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::deque<int> di;
     di.push_back(1);

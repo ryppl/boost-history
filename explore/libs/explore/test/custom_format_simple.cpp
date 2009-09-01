@@ -33,7 +33,7 @@ std::wostream& basic_stream_format(std::wostream& ostr)
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_vector_custom_format_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     str_out << basic_stream_format;
 
     std::vector<int> vi;
@@ -66,8 +66,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_vector_custom_format_stream_test, C, test_t
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_map_custom_format_stream_test, C, test_types )
 {
-    typedef test_traits<C>::string_type string_type;
-    test_traits<C>::stream_type str_out;
+    typedef typename test_traits<C>::string_type string_type;
+    typename test_traits<C>::stream_type str_out;
     str_out << basic_stream_format;
 
     std::map<int, string_type> mis;
@@ -96,7 +96,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_map_custom_format_stream_test, C, test_type
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( begin_end_helper_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     
     std::vector<int> vi;
     vi.push_back(1);
@@ -108,7 +108,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( begin_end_helper_test, C, test_types )
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( delimeters_helper_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
     
     std::vector<int> vi;
     vi.push_back(1);

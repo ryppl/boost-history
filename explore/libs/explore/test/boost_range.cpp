@@ -15,7 +15,7 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( boost_range_stream_test, C, test_types )
 {
-    test_traits<C>::stream_type str_out;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<int> vi;
     str_out << boost::explore::make_iterator_range(vi);

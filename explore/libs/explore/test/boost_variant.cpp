@@ -15,8 +15,8 @@
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_variant_stream_test, C, test_types )
 {
-    typedef test_traits<C>::string_type string_type;
-    test_traits<C>::stream_type str_out;
+    typedef typename test_traits<C>::string_type string_type;
+    typename test_traits<C>::stream_type str_out;
 
     boost::variant< int, string_type, std::vector<int> > varVal;
 
@@ -44,8 +44,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_variant_stream_test, C, test_types )
 BOOST_AUTO_TEST_CASE_TEMPLATE( cool_variant_stream_test, C, test_types )
 {
     using namespace boost::explore;
-    typedef test_traits<C>::string_type string_type;
-    test_traits<C>::stream_type str_out;
+    typedef typename test_traits<C>::string_type string_type;
+    typename test_traits<C>::stream_type str_out;
 
     std::vector<boost::variant< int, string_type, std::vector<int> > > varVec;
     string_type name(str_to<C>("Joe"));
