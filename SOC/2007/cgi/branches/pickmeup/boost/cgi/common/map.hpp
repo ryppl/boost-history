@@ -24,7 +24,7 @@ namespace cgi {
     *     next to the other uses of it.
     */
   typedef map        env_map;
-  typedef multimap        get_map;
+  typedef map        get_map;
   typedef map        post_map;
   typedef map        form_map;
   typedef map        cookie_map;

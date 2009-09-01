@@ -137,7 +137,7 @@ int main()
                "Environment stuffs:<br />"
                "  > content_type: " << req.env["Content_type"] << "<br />"
                "  > script uri: " << req.env["script_uri"] << "<br />"
-               "  > count('girl'): " << req.get.count("girl") << "<br />"
+               "  > count('foo'): " << req.get.count("foo") << "<br />"
                "Environment stuffs:<br />"
                "Request ID = " << req.id() << "<br />"
                "Process ID = " << process_id() << "<br />"

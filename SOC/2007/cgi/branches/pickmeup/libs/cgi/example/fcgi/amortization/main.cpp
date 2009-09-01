@@ -21,6 +21,7 @@
 #include <iostream>
 #include <iomanip>
 #include <boost/cgi/fcgi.hpp>
+#include <boost/cgi/utility.hpp>
 #include <boost/algorithm/string/regex.hpp>
 #include <google/template.h>
 
@@ -38,10 +39,10 @@ std::string string_from_currency(std::string amt)
 template<typename Request>
 void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req)
 {
-  dict.SetValue("LoanAmt", has_key(req[post], "LoanAmt")
-      ? "$250,000" : req[post]["LoanAmt"]);
-  dict.SetValue("YearlyIntRate", has_key(req[post], "YearlyIntRate")
-      ? "6.000" : req[post]["YearlyIntRate"]);
+  dict.SetValue("LoanAmt", has_key(req.post, "LoanAmt")
+      ? "$250,000" : req.post["LoanAmt"]);
+  dict.SetValue("YearlyIntRate", has_key(req.post, "YearlyIntRate")
+      ? "6.000" : req.post["YearlyIntRate"]);
 
   boost::array<std::string, 8> year_opts
     = {{ "5", "7", "10", "20", "30", "40", "50" }};
@@ -51,13 +52,13 @@ void fill_amortization_dictionary(google::TemplateDictionary& dict, Request& req
     dict.SetValueAndShowSection("TermYrs", year, "SELECT_TERM_YEARS");
   }
 
-  if (req[post]["Amortize"]).empty())
+  if (req.post["Amortize"].empty())
     dict.ShowSection("NotAmortize");
   else
   {
-    double P = boost::lexical_cast<double>(string_from_currency(req.POST("LoanAmt")));
-    double i = boost::lexical_cast<double>(req.POST("YearlyIntRate")) / 1200;
-    double n = boost::lexical_cast<double>(req.POST("TermYrs")) * 12;
+    double P = boost::lexical_cast<double>(string_from_currency(req.post["LoanAmt"]));
+    double i = boost::lexical_cast<double>(req.post["YearlyIntRate"]) / 1200;
+    double n = boost::lexical_cast<double>(req.post["TermYrs"]) * 12;
     double monthly_payments = (P*i) / (1 - std::pow((1+i), -n));
     
     google::TemplateDictionary* sub_dict = dict.AddSectionDictionary("RegPmtSummary");
@@ -101,12 +102,12 @@ int write_amortization_template(Request& req, response& resp)
   fill_amortization_dictionary(dict, req);
 
   google::Template* tmpl
-    = google::Template::GetTemplate("amortization.tpl", google::STRIP_WHITESPACE);
+    = google::Template::GetTemplate("../templates/amortization.html", google::STRIP_WHITESPACE);
 
   std::string h("Content-type: text/html\r\n\r\n");
   write(req.client(), buffer(h));
 
-  std::string arg(req[get]["arg"]));
+  std::string arg(req.get["arg"]);
   if (arg.empty())
     arg = "2"; // set this as default (for no particular reason).
 
@@ -160,7 +161,7 @@ int handle_request(acceptor& a)
     req.load(parse_all);
 
     resp<< content_type("text/html")
-        << "map size := " << req[post].size() << "<p>";
+        << "map size := " << req.post.size() << "<p>";
   
     ret = write_amortization_template(req, resp);
 
@@ -186,8 +187,7 @@ int main()
   try{
 
     service s;
-    acceptor a(s, true); // The true means default-initialise.
-                         // Unfortunately this only works on linux w. apache for now.
+    acceptor a(s, 8010); // Listen on port 8010.
 
     accept_requests(a);
     

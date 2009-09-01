@@ -42,8 +42,8 @@
 
 [def __current_branch__ http://svn.boost.org/trac/boost/browser/sandbox/SOC/2007/cgi/branches/release]
 
-[def __examples__ [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2007/cgi/branches/release/libs/cgi/example examples]]
-[def __amort_example__ [@http://svn.boost.org/trac/boost/browser/sandbox/SOC/2007/cgi/branches/release/libs/cgi/example/acgi/amortization Amortization]]
+[def __examples__ [@/docs/examples/examples.html examples]]
+[def __amort_example__ [@/docs/examples/examples.html#cgi.examples.acgi_examples.amortization Amortization]]
 
 
 [def __GET__  `GET` ]
@@ -86,20 +86,6 @@ These documents are either hosted at [@http://sourceforge.net/projects/cgi/ sour
 [include preface.qbk]
 
 [include:intro introduction.qbk]
-
-[/
-/[section:gs Getting Started]
-/
-/This section of the documentation is probably best read before the [link __tutorial__ tutorial]. In a nutshell, this is a quick and dirty run-through of how to get and install the library [-and configure your server].
-/
-/[include:building user_guide/building.qbk]
-/
-/[include:server_config user_guide/server_configuration.qbk]
-/
-[include:headers user_guide/headers.qbk]
-/
-/[endsect]
-/]
 
 [include user_guide.qbk]
 

@@ -13,19 +13,20 @@
 #include <boost/system/error_code.hpp>
 #include <boost/fusion/include/vector.hpp>
 ////////////////////////////////////////////////////////////////
+#include "boost/cgi/fcgi/client.hpp"
+#include "boost/cgi/fcgi/request_service.hpp"
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/tags.hpp"
-#include "boost/cgi/fcgi/client.hpp"
-#include "boost/cgi/import/read.hpp"
-#include "boost/cgi/http/status_code.hpp"
 #include "boost/cgi/common/role_type.hpp"
-#include "boost/cgi/import/io_service.hpp"
-#include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/common/form_parser.hpp"
 #include "boost/cgi/common/source_enums.hpp"
 #include "boost/cgi/common/request_base.hpp"
+#include "boost/cgi/common/parse_options.hpp"
+#include "boost/cgi/http/status_code.hpp"
+#include "boost/cgi/import/read.hpp"
+#include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/service_base.hpp"
-#include "boost/cgi/fcgi/request_service.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
 
 namespace cgi {
 
@@ -170,7 +171,7 @@ namespace cgi {
 /*/
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::load(
-        implementation_type& impl, bool parse_stdin
+        implementation_type& impl, common::parse_options opts
       , boost::system::error_code& ec)
     {
       //int header_len( get_length_of_header(impl, ec) );
@@ -211,7 +212,7 @@ namespace cgi {
 
       read_env_vars(impl, ec);
 
-      if (parse_stdin)
+      if (opts & common::parse_post_only)
       {
         while(!ec 
           && impl.client_.status() < common::stdin_read
@@ -220,15 +221,28 @@ namespace cgi {
           parse_packet(impl, ec);
         }
       }
+      if (ec == error::eof) {
+        ec = boost::system::error_code();
+        return ec;
+      }
+      //else
+      //if (ec == error::empty_packet_read)
+      //  return ec;
+      
       const std::string& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
       if (request_method == "GET")
+      {
         if (parse_get_vars(impl, ec))
           return ec;
+      }
       else
-      if (request_method == "POST" && parse_stdin)
+      if (request_method == "POST" 
+          && opts > common::parse_env
+          && opts & common::parse_post_only)
+      {
         if (parse_post_vars(impl, ec))
 	      return ec;
-
+      }
       parse_cookie_vars(impl, ec);
 
       return ec;
@@ -307,7 +321,7 @@ namespace cgi {
     {
       if (impl.client_.status_ == common::closed_)
       {
-        ec = error::client_closed;
+        ec = common::error::client_closed;
         return 0;
       }
 
@@ -334,21 +348,27 @@ namespace cgi {
 
         if (state)
           // the header has been handled and all is ok; continue.
-          return ec;
+          impl.client_.status(common::params_read);
         else
         if (!state)
           // The header is confusing; something's wrong. Abort.
-          return error::bad_header_type;
+          ec = error::bad_header_type;
+        else // => (state == boost::indeterminate)
+        {
+          std::size_t remaining(fcgi::spec::get_length(impl.header_buf_));
 
-        // else => (state == boost::indeterminate)
+          if (remaining)
+          {
+            implementation_type::mutable_buffers_type buf
+              = impl.prepare_misc(remaining);
 
-        implementation_type::mutable_buffers_type buf
-            = impl.prepare_misc(fcgi::spec::get_length(impl.header_buf_));
+            if (this->read_body(impl, buf, ec))
+              return ec;
 
-        if (this->read_body(impl, buf, ec))
-          return ec;
-
-        this->parse_body(impl, buf, ec);
+            this->parse_body(impl, buf, ec);
+          } else
+            ec = error::couldnt_write_complete_packet;
+        }
 
       } // while(!ec && !params_read(impl))
       return ec;
@@ -443,7 +463,7 @@ namespace cgi {
       if (0 == len)
       { // This is the final param record.
         
-        impl.client_.status_ = common::params_read;
+        impl.client_.status(common::params_read);
 
         //std::cerr<< "[hw] Final PARAM record found." << std::endl;
         return ec;
@@ -530,11 +550,21 @@ namespace cgi {
       switch(fcgi::spec::get_type(impl.header_buf_))
       {
       case BEGIN_REQUEST:
-      case PARAMS:
-      case STDIN:
       case DATA:
       case GET_VALUES:
         return boost::indeterminate;
+      case STDIN:
+        if (0 == fcgi::spec::get_length(impl.header_buf_)) {
+          impl.client_.status(common::stdin_read);
+          return true;
+        } else
+          return boost::indeterminate; //0 == fcgi::spec::get_length(impl.header_buf_) ? true : boost::indeterminate;
+      case PARAMS:
+        if (0 == fcgi::spec::get_length(impl.header_buf_)) {
+          impl.client_.status(common::params_read);
+          return true;
+        } else
+          return boost::indeterminate; //0 == fcgi::spec::get_length(impl.header_buf_) ? true : boost::indeterminate;
       case ABORT_REQUEST:
         return false;
       case UNKNOWN_TYPE:
@@ -564,14 +594,19 @@ namespace cgi {
       }
       // else route (ie. state == boost::indeterminate)
 
-      implementation_type::mutable_buffers_type buf
-        = impl.prepare(fcgi::spec::get_length(impl.header_buf_));
+      std::size_t remaining(fcgi::spec::get_length(impl.header_buf_));
+      if (remaining)
+      {
+        implementation_type::mutable_buffers_type buf
+          = impl.prepare(remaining);
 
-      if (this->read_body(impl, buf, ec))
-        return ec;
+        if (this->read_body(impl, buf, ec))
+          return ec;
 
-      this->parse_body(impl, buf, ec);
-
+        this->parse_body(impl, buf, ec);
+      } 
+      //else
+      //  ec = error::empty_packet_read;
       return ec;
     }
 
@@ -603,7 +638,6 @@ namespace cgi {
             , boost::asio::buffer_size(buf), ec);
     }
 
-
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::begin_request_helper(
         implementation_type& impl
@@ -622,7 +656,6 @@ namespace cgi {
         
        impl.request_role_
          = fcgi::spec::begin_request::get_role(impl.header_buf_);
-       // **FIXME** (rm impl.request_role_)
        impl.client_.role_ = impl.request_role_;
        impl.client_.keep_connection_
          = fcgi::spec::begin_request::get_flags(impl.header_buf_)

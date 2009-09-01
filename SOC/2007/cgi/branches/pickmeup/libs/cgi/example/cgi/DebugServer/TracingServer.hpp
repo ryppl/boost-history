@@ -38,6 +38,5 @@ public:
 
     void bomb_out(std::string const& error, response_type&, request_type&);
     void bomb_out(boost::system::system_error* err, response_type&, request_type&);
-    void bomb_out(std::exception* e, response_type&, request_type&);
     void bomb_out(std::exception& e, response_type&, request_type&);
 };

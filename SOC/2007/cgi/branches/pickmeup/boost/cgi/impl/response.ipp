@@ -302,6 +302,7 @@ namespace cgi {
     return rdbuf()->size();
   }
 
+  /// Get the response as a string.
   template<typename T> BOOST_CGI_INLINE  
   typename basic_response<T>::string_type
     basic_response<T>::str() const

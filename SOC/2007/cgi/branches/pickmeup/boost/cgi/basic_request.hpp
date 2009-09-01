@@ -110,35 +110,37 @@ namespace cgi {
       
       void set(map_type& data) { impl = &data; }
       
-      iterator begin() { return impl->begin(); }
-      iterator end() { return impl->end(); }
-      const_iterator begin() const { return impl->begin(); }
-      const_iterator end() const { return impl->end(); }
+      iterator begin() { BOOST_ASSERT(impl); return impl->begin(); }
+      iterator end() { BOOST_ASSERT(impl); return impl->end(); }
+      const_iterator begin() const { BOOST_ASSERT(impl); return impl->begin(); }
+      const_iterator end() const { BOOST_ASSERT(impl); return impl->end(); }
       
-      reverse_iterator rbegin() { return impl->rbegin(); }
-      reverse_iterator rend() { return impl->rend(); }
-      const_reverse_iterator rbegin() const { return impl->rbegin(); }
-      const_reverse_iterator rend() const { return impl->rend(); }
+      reverse_iterator rbegin() { BOOST_ASSERT(impl); return impl->rbegin(); }
+      reverse_iterator rend() { BOOST_ASSERT(impl); return impl->rend(); }
+      const_reverse_iterator rbegin() const { BOOST_ASSERT(impl); return impl->rbegin(); }
+      const_reverse_iterator rend() const { BOOST_ASSERT(impl); return impl->rend(); }
 
-      bool empty() { return impl->empty(); }
+      bool empty() { BOOST_ASSERT(impl); return impl->empty(); }
       
-      void clear() { return impl->clear(); }
+      void clear() { BOOST_ASSERT(impl); return impl->clear(); }
       
-      size_type size() const { return impl->size(); }
+      size_type size() const { BOOST_ASSERT(impl); return impl->size(); }
       
-      size_type count(const key_type& key) { return impl->count(key); }
+      size_type count(const key_type& key) { BOOST_ASSERT(impl); return impl->count(key); }
       
       template<typename T>
       T as(key_type const& key) {
+        BOOST_ASSERT(impl);
         mapped_type& val((*impl)[key]);
         return val.empty() ? T() : boost::lexical_cast<T>(val);
       }
       
       mapped_type& operator[](key_type const& varname) {
+        BOOST_ASSERT(impl); 
         return (*impl)[varname.c_str()];
       }
       
-      operator map_type&() { return *impl; }
+      operator map_type&() { BOOST_ASSERT(impl); return *impl; }
 
     private:      
       map_type* impl;
@@ -147,6 +149,7 @@ namespace cgi {
     data_map_proxy<env_map>    env;
     data_map_proxy<post_map>   post;
     data_map_proxy<get_map>    get;
+    data_map_proxy<form_map>   form;
     data_map_proxy<cookie_map> cookies;
 
     basic_request(const parse_options opts = parse_none
@@ -252,9 +255,7 @@ namespace cgi {
     void load(parse_options parse_opts = parse_env, char** base_env = NULL)
     {
       boost::system::error_code ec;
-      this->service.load(this->implementation, parse_opts, ec);
-      //if (base_env)
-      //  load(base_env);
+      load(parse_opts, ec, base_env);
       detail::throw_error(ec);
     }
 
@@ -267,7 +268,15 @@ namespace cgi {
       if (base_environment)
         this->service.load_environment(this->implementation, base_environment
                                       , is_command_line);
-      return ec;      
+      if (parse_opts > parse_env && parse_opts & parse_form)
+      {
+        common::name rm(request_method().c_str());
+        form.set(
+          (rm == "GET" || rm == "HEAD") ? get :
+              rm == "POST" ? post : env
+        );
+      }
+      return ec;
     }
 
     void load(char** base_environment, bool is_command_line = true)

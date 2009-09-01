@@ -21,6 +21,7 @@
 #include "boost/cgi/common/map.hpp"
 #include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
+#include "boost/cgi/detail/save_environment.hpp"
 
 namespace cgi {
  namespace common {
@@ -81,6 +82,8 @@ namespace cgi {
 
       mutable_buffers_type prepare(std::size_t size)
       {
+        // Make sure we're not trying to make a zero-sized buffer.
+        BOOST_ASSERT(size && "Attempting to allocate a zero-sized buffer.");
         std::size_t bufsz(post_buffer_.size());
         post_buffer_.resize(bufsz + size);
         return boost::asio::buffer(&post_buffer_[bufsz], size);

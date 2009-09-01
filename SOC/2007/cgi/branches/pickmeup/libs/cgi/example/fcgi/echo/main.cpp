@@ -19,6 +19,7 @@
 #include <boost/program_options/environment_iterator.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/fcgi.hpp"
+#include "boost/cgi/utility/commit.hpp"
 
 using namespace std;
 using namespace boost::fcgi;
@@ -91,7 +92,7 @@ int handle_request(Request& req)
   //
   // Load in the request data so we can access it easily.
   //
-  req.load(ec, true); // The 'true' means read and parse STDIN (ie. POST) data.
+  req.load(parse_all); // Read and parse STDIN (ie. POST) data.
 
   //
   // Construct a `response` object (makes writing/sending responses easier).
@@ -116,12 +117,12 @@ int handle_request(Request& req)
          "<body>"
            "Request ID = " << req.id() << "<br />"
            "Process ID = " << process_id() << "<br />"
-           "<form method=POST enctype='multipart/form-data'>"
+           "<form method=post>" // enctype=\"multipart/form-data\">"
              "<input type=text name=name value='"
-      <<         req[post]["name"] << "' />"
+      <<         req.post["name"] << "' />"
              "<br />"
              "<input type=text name=hello value='"
-      <<         req[post]["hello"] << "' />"
+      <<         req.post["hello"] << "' />"
              "<br />"
              "<input type=file name=user_file />"
              "<input type=hidden name=cmd value=multipart_test />"
@@ -133,10 +134,10 @@ int handle_request(Request& req)
   // Use the function defined above to show some of the request data.
   // (this function isn't part of the library)
   //
-  format_map(resp, req[env], "Environment Variables");
-  format_map(resp, req[get], "GET Variables");
-  format_map(resp, req[post], "POST Variables");
-  format_map(resp, req[cookies], "Cookie Variables");
+  format_map(resp, req.env, "Environment Variables");
+  format_map(resp, req.get, "GET Variables");
+  format_map(resp, req.post, "POST Variables");
+  format_map(resp, req.cookies, "Cookie Variables");
 
   // Print the complete buffer containing the POST data and the FastCGI params.
   resp<< "<pre>";
@@ -152,10 +153,10 @@ int handle_request(Request& req)
   //
   resp<< "Response content-length == "
       << resp.content_length() // the content-length (returns std::size_t)
-      << content_length(resp); // a content-length header
+      ;//<< content_length(resp); // a content-length header
 
-  // This funky macro finishes up:
-  return_(resp, req, 0);
+  // This function finishes up:
+  return commit(req, resp, 0);
   //
   // It is equivalent to the below, where the third argument is represented by
   // `program_status`:
@@ -174,8 +175,13 @@ try {
 
   // Make a `service` (more about this in other examples).
   service s;
+  
+  using boost::asio::ip::tcp;
+
+  //tcp::endpoint endpoint(tcp::v4(), 8009);
   // Make an `acceptor` for accepting requests through.
-  acceptor a(s);
+  acceptor a(s, 8009);    // The acceptor is for accepting requests.
+  cerr<< "Listening" << endl;
 
   //
   // After the initial setup, we can enter a loop to handle one request at a
@@ -193,6 +199,8 @@ try {
     for (;;)
     {
       a.accept(req);
+      cerr<< "is_cgi ? " << a.is_cgi() << endl;
+      cerr<< "Accepted" << endl;
       ret = handle_request(req);
       if (ret)
         break;
@@ -207,13 +215,13 @@ try {
   
   return ret;
 
-}catch(boost::system::system_error& se){
+}catch(boost::system::system_error const& se){
   // This is the type of error thrown by the library.
   cerr<< "[fcgi] System error: " << se.what() << endl;
   return 1313;
-}catch(exception* e){
+}catch(exception const& e){
   // Catch any other exceptions
-  cerr<< "[fcgi] Exception: " << e->what() << endl;
+  cerr<< "[fcgi] Exception: " << e.what() << endl;
   return 666;
 }catch(...){
   cerr<< "[fcgi] Uncaught exception!" << endl;

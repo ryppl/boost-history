@@ -41,7 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
-				AdditionalIncludeDirectories="&quot;C:\Code\C++\Boost.CGI\current&quot;;&quot;C:\Code\C++\boost\svn\branches\release&quot;"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"

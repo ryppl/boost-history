@@ -1,6 +1,11 @@
 
 #undef max
 #undef min
+/**
+ * You need Boost.Chrono from the Boost sandbox svn.
+ *
+ * See http://svn.boost.org/trac/boost/browser/sandbox/chrono/.
+ */
 #include <boost/chrono/chrono.hpp>
 
 //using namespace boost::chrono;

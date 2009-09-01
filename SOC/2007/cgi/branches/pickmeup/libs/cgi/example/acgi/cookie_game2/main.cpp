@@ -107,7 +107,7 @@ int main()
     response_type resp;
 
     // Check if we are resetting the user.
-    if (has_key(req[form], "reset") && req[form]["reset"] == "true")
+    if (has_key(req.form, "reset") && req.form["reset"] == "true")
     {
       resp<< cookie("name") // delete the 'name' cookie.
           << redirect(req, req.script_name()); // redirect them.
@@ -115,13 +115,13 @@ int main()
       return 0;
     }
 
-    if (has_key(req[form], "name"))
+    if (has_key(req.form, "name"))
     {
       // If requested by the user, delete the cookie.
-      if (has_key(req[form], "del"))
-        resp<< cookie(req[form]["name"]);
+      if (has_key(req.form, "del"))
+        resp<< cookie(req.form["name"]);
       else // Set the cookie.
-        resp<< cookie(req[form]["name"], req[form]["value"]);
+        resp<< cookie(req.form["name"], req.form["value"]);
       resp<< redirect(req, req.script_name());
       // Exit here.
       return_(resp, req, http::ok);
@@ -130,19 +130,19 @@ int main()
     dictionary_type dict("cookie-game dict");
 
     // First, see if they have a cookie set
-    if (has_key(req[cookies], "name"))
-      dict.SetValueAndShowSection("USER_NAME", req[cookies]["name"], "HAS_NAME_IN_COOKIE_true");
+    if (has_key(req.cookies, "name"))
+      dict.SetValueAndShowSection("USER_NAME", req.cookies["name"], "HAS_NAME_IN_COOKIE_true");
     else
       dict.ShowSection("HAS_NAME_IN_COOKIE_false");
 
-    print_formatted_data(req[cookies], dict);
+    print_formatted_data(req.cookies, dict);
 
     dict.SetValue("SCRIPT_NAME", req.script_name());
     // get_value is defined in boost/cgi/util/
     // Looks up the key in the map, returns a default value if the key 
     // isn't found.
-    dict.SetValue("COOKIE_NAME", get_value(req[form], "name", ""));
-    dict.SetValue("COOKIE_VALUE", req[form]["value"]);
+    dict.SetValue("COOKIE_NAME", get_value(req.form, "name", ""));
+    dict.SetValue("COOKIE_VALUE", req.form["value"]);
 
     // Load the HTML stencil now from the index.html file.
     stencil_type* stencil = get_stencil("../templates/index.html");

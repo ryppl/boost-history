@@ -149,7 +149,7 @@ namespace cgi {
 
       write(*connection_, bufs, boost::asio::transfer_all(), ec);
 
-      if (!keep_connection_)
+      if (!ec && !keep_connection_)
         connection_->close();
 
       return ec;
@@ -221,7 +221,7 @@ namespace cgi {
 
       if (0 != (total_buffer_size + fcgi::spec::header_length::value
           - bytes_transferred))
-        ec = error::couldnt_write_complete_packet;
+        ec = ::cgi::error::couldnt_write_complete_packet;
 
       return bytes_transferred;
     }
@@ -264,9 +264,16 @@ namespace cgi {
     }
 
 
+    /// Get the status of the client.
     const client_status& status() const
     {
       return status_;
+    }
+
+    /// Set the status of the client.
+    void status(client_status status)
+    {
+      status_ = status;
     }
 
     bool keep_connection() const

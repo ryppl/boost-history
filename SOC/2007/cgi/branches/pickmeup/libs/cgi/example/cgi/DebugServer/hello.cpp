@@ -10,7 +10,6 @@
 // Uses a server class that catches and reports errors in your handler.
 #include "TracingServer.hpp"
 
-using boost::cgi::form;
 using boost::cgi::request;
 using boost::cgi::response;
 using boost::cgi::header;
@@ -51,8 +50,8 @@ int cgi_handler(request& req, response& resp)
            "</p>"               
            "</body>"
            "</html>";
-    if (req[form]["badger"] == "bait!")      throw std::runtime_error("AOUHFAEOUHAEOUHAEOUHOUH!!!!!!");
-    else if (has_key(req[form], "spam"))   return 33;
+    if (req.get["badger"] == "bait!")      throw std::runtime_error("You asked for an error, you got one.");
+    else if (has_key(req.get, "spam"))   return 33;
     return 0;
 }
 

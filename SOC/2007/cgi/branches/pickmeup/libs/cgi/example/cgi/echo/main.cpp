@@ -38,15 +38,14 @@ void show_map_contents(OStreamT& os, MapT& m, const std::string& title)
 
 int main()
 {
-  request req; // A basic CGI request auto-parses everything (including POST data).
+  request req(parse_all); // A basic CGI request auto-parses everything (including POST data).
   response resp;
 
   resp<< "Request id = " << req.id() << "<p/>";
 
-  show_map_contents(resp, req[env], "Environment Variables");
-  show_map_contents(resp, req[get], "GET Variables");
-  show_map_contents(resp, req[post], "POST Variables");
-  show_map_contents(resp, req[cookies], "Cookie Variables");
+  show_map_contents(resp, req.env, "Environment Variables");
+  show_map_contents(resp, req.form, "Form [" + req.request_method() + "] Variables");
+  show_map_contents(resp, req.cookies, "Cookie Variables");
 
   // Note that this (and any other) HTTP header can go either before or after
   // the response contents.

@@ -209,7 +209,7 @@ int main()
   response resp;
   resp<< content_type("text/plain");
 
-  if (has_key(req[form], "reset") && req[form]["reset"] == "true")
+  if (has_key(req.form, "reset") && req.form["reset"] == "true")
   {
     resp<< cookie("name")
         << redirect(req, req.script_name()); // redirect them.
@@ -217,12 +217,12 @@ int main()
     return 0;
   }
 
-  if (has_key(req[form], "name"))
+  if (has_key(req.form, "name"))
   {
-    if (has_key(req[form], "del"))
-      resp<< cookie(req[form]["name"]);
+    if (has_key(req.form, "del"))
+      resp<< cookie(req.form["name"]);
     else
-      resp<< cookie(req[form]["name"], req[form]["value"]);
+      resp<< cookie(req.form["name"], req.form["value"]);
     resp<< redirect(req, req.script_name());
     return_(resp, req, http::ok);
   }
@@ -240,8 +240,8 @@ int main()
          "<body>";
 
   // First, see if they have a cookie set
-  if (has_key(req[cookies], "name"))
-      resp<< "<h1>Hello again " << req[cookies]["name"] << "</h1>"
+  if (has_key(req.cookies, "name"))
+      resp<< "<h1>Hello again " << req.cookies["name"] << "</h1>"
           << "<p><a href='?reset=true'><input type='submit' value='Reset' /></a></p>";
   else
     resp<< "<h1>Hello there.</h1>";
@@ -249,13 +249,13 @@ int main()
   resp<< "<p>You can add cookies using the form below. If you add a cookie value for 'name', it will show up above.</p>"
          "<p>Here is list of the cookies you currently have:</p>";
   
-  print_formatted_data(resp, req[cookies]);
+  print_formatted_data(resp, req.cookies);
   
   resp<< "<form method='get' action='" << req.script_name() << "' id='getform'>"
            "<label for='name' class='name'>Name:</label>"
-           "<input id='name' name='name' class='value' type='text' value='" << req[form]["name"] << "'>""</input>"
+           "<input id='name' name='name' class='value' type='text' value='" << req.form["name"] << "'>""</input>"
            "<label for='value' class='name'>Value:</label>"
-           "<input id='value' name='value' class='value' type='text' value='" << req[form]["value"] << "'>""</input>"
+           "<input id='value' name='value' class='value' type='text' value='" << req.form["value"] << "'>""</input>"
            "<label for='del' class='name'>Delete this cookie?</label>"
            "<input id='del' name='del' class='value' type='checkbox'></input>"
            "<div class='clear'></div>"

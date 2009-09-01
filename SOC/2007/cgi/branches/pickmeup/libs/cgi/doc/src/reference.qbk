@@ -17,11 +17,12 @@ Requests
 
   * Request Data
       * environment
-        * operator[""] (operator[] on the environment map)
-        * operator[env] (request meta-data)
-        * operator[get] (GET data)
-        * operator[post] (POST data)
-        * operator[cookies] (cookie data)
+        * member variables
+          * env (request meta-data)
+          * get (GET data)
+          * post (POST data)
+          * cookies (cookie data)
+          * form (GET, POST or env data, depending on the request method)
         * member functions
           * script_name()
           * request_method()
@@ -57,6 +58,7 @@ Responses
   * send()
   * clear()
   * data()
+  * charset() // get / set the charset of the request.
   * content_length()
 
 [endsect] [/ quick_reference]

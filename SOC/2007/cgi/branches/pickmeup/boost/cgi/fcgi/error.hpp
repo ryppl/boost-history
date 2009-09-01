@@ -8,10 +8,7 @@
 // Abstract:
 // ---------
 //
-// The errors for everything are defined in here. ie. FastCGI,
-// CGI and SCGI errors.
-//
-// **FIXME** This is a mess.
+// FastCGI errors are defined in here.
 //
 ////////////////////////////////////////////////////////////////
 #ifndef BOOST_FCGI_ERROR_HPP_INCLUDED__
@@ -68,6 +65,9 @@ enum fcgi_errors
   // A client wasn't able to open.
   client_not_open,
   
+  // An empty FastCGI packet was read (eg. STDIN or GET_PARAM data has been read).
+  //empty_packet_read,
+  
   // End of File (read zero bytes)
   eof
 };
@@ -90,6 +90,8 @@ public:
              "multiplexed). This isn't handled for now. **FIXME**";
     case accepting_on_an_open_request:
       return "You called async_accept before closing a request.";
+    //case empty_packet_read:
+    //  return "An empty FastCGI packet was read (eg. STDIN or GET_PARAM data has been read).";
     default:
       return "(FastCGI) BOOM!!!";
     }

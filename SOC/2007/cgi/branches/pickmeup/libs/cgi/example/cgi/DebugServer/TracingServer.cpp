@@ -175,10 +175,9 @@ void TracingServer::bomb_out(std::string const& error, response_type& response, 
             //style='"
               //      "border-color: #ca3766;" "border-width: 1px 0 1px 0;" "border-style: solid;"
                 //    "padding: 2px 8px 2px 8px;" "margin: 1em" "'>";
-    detail::format_map(resp2, request[boost::cgi::env], "Env data");
-    //detail::format_map(resp2, request[boost::cgi::env_map], "Env data");
-    detail::format_map(resp2, request[boost::cgi::form], "Form (" + request.request_method() + ") data");
-    detail::format_map(resp2, request[boost::cgi::cookies], "Cookies");
+    detail::format_map(resp2, request.env, "Environment data");
+    detail::format_map(resp2, request.form, "Form [" + request.request_method() + "] Variables");
+    detail::format_map(resp2, request.cookies, "Cookies");
     resp2<< "</div>"
             "<p>The headers sent in the original (broken) response were:</p>"
             "<div class=\"info\">"
@@ -212,15 +211,6 @@ void TracingServer::bomb_out(boost::system::system_error* err, response_type& re
     bomb_out(err_msg, response, request);
 }
 
-void TracingServer::bomb_out(std::exception* e, response_type& response, request_type& request) {
-    typedef request_type::string_type string;
-    string err_msg("<ul class=nvpair>std::exception*<li class=name>What:</li>");
-    err_msg += string("<li class=value>") + e->what() + "</li>" 
-            + "<li class=name>Type:</li>"
-            + "<li class=value>" + typeid(e).name() + "</li><br class=clear /></ul>";
-    bomb_out(err_msg, response, request);
-}
-
 void TracingServer::bomb_out(std::exception& e, response_type& response, request_type& request) {
     typedef request_type::string_type string;
     string err_msg("<ul class=nvpair>std::exception<li class=name>What:</li>");
@@ -238,7 +228,7 @@ bool TracingServer::run(callback_type const& callback)
     try {
         request.load(boost::cgi::parse_all);
         int ret(callback(request, response));
-        if (request[boost::cgi::form]["debug"] == "1") {
+        if (request.form["debug"] == "1") {
             bomb_out("** Debug mode ** - client callback returned code #" + boost::lexical_cast<std::string>(ret)
                     , response, request);
         }else
@@ -251,8 +241,6 @@ bool TracingServer::run(callback_type const& callback)
         }
     }catch(boost::system::system_error* err) {
         bomb_out(err, response, request); return false;
-    }catch(std::exception* e) {
-        bomb_out(e, response, request); return false;
     }catch(std::exception& e) {
         bomb_out(e, response, request); return false;
     }catch(...){

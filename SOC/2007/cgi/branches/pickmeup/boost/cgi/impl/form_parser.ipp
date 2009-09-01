@@ -74,14 +74,12 @@ namespace cgi {
     {
       BOOST_ASSERT(!content_type_.empty());
 
-      if (boost::algorithm::ifind_first(content_type_,
-            "application/x-www-form-urlencoded"))
+      if (content_type_.find("application/x-www-form-urlencoded") != std::string::npos)
       {
         parse_url_encoded_form(ec);
       }
-      else
-      if (boost::algorithm::ifind_first(content_type_,
-            "multipart/form-data"))
+       else
+      if (content_type_.find("multipart/form-data") != std::string::npos)
       {
         parse_multipart_form(ec);
       }
@@ -95,63 +93,58 @@ namespace cgi {
     boost::system::error_code
       form_parser::parse_url_encoded_form(boost::system::error_code& ec)
     {
-      std::string name;
-      std::string str;
+     typedef buffer_type buffer_type;
+     typedef std::string string_type; // Ahem.
+     buffer_type& str(buffer_);
+     string_type result;
+     string_type name;
 
-      char ch;
-      char ch1;
-      while( bytes_left_ )
-      {
-        ch = getchar();
-        --bytes_left_;
+     if (str.size() == 0)
+    	 return ec;
 
-        switch(ch)
-        {
-        case '%': // unencode a hex character sequence
-          if (bytes_left_ >= 2)
-          {
-            ch = getchar();
-            ch1 = getchar();
-            if (std::isxdigit(ch) && std::isxdigit(ch1))
-            {
-              str.append(1, detail::hex_to_char(ch, ch1));
-            }
-            else // we don't have a hex sequence
-            { // **FIXME** isn't this broken? What about '%%53' ? - use url_decode instead!
-              str.append(1, '%').append(1, ch).append(1, ch1);
-            }
-            bytes_left_ -= 2;
-          }
-          else // There aren't enough characters to make a hex sequence
-          {
-            str.append(1, '%');
-            --bytes_left_;
-          }
-          break;
-        case '+':
-            str.append(1, ' ');
-            break;
-        case ' ': // skip spaces
-            break;
-        case '=': // the name is complete, now get the corresponding value
-            name.swap(str);
-            break;
-        case '&': // we now have the name/value pair, so save it
-            // **FIXME** have to have .c_str() ?
-            data_map_[name.c_str()] = str;
-            str.clear();
-            name.clear();
+     for( buffer_type::const_iterator iter (str.begin()), end (str.end())
+        ; iter != end; ++iter )
+     {
+       switch( *iter )
+       {
+         case ' ':
            break;
-        default:
-            str.append(1, ch);
-        }
-      }
+         case '+':
+           result.append(1, ' ');
+           break;
+         case '%':
+           if (std::distance(iter, end) <= 2
+            || !std::isxdigit(*(iter+1))
+            || !std::isxdigit(*(iter+2)))
+           {
+             result.append(1, '%');
+           }
+           else // we've got a properly encoded hex value.
+           {
+             char ch = *++iter; // need this because order of function arg
+                                // evaluation is UB.
+             result.append(1, hex_to_char(ch, *++iter));
+           }
+           break;
+         case '=': // the name is complete, now get the corresponding value
+            name.swap(result);
+            break;
+         case '&': // we now have the name/value pair, so save it
+            // **FIXME** have to have .c_str() ?
+            data_map_[name.c_str()] = result;
+            result.clear();
+            name.clear();
+            break;
+         default:
+           result.append(1, *iter);
+       }
+     }
+#if defined(BOOST_CGI_KEEP_EMPTY_VARS)
       // save the last param (it won't have a trailing &)
       if( !name.empty() )
-          // **FIXME** have to have .c_str() ?
-          data_map_[name.c_str()] = str;
-
-      return ec;
+          data_map_[name.c_str()] = result;
+#endif // BOOST_CGI_KEEP_EMPTY_VARS
+     return ec;
     }
 
     /// Parse a multipart form.
@@ -160,6 +153,7 @@ namespace cgi {
       form_parser::parse_multipart_form(boost::system::error_code& ec)
     {
       parse_boundary_marker(ec);
+      
       std::cerr<< "Parsed boundary marker" << std::endl;
       move_to_start_of_first_part(ec);
       std::cerr<< (ec ? "Error finding first multipart section" : "Moved to start of actual data") << std::endl;
@@ -480,6 +474,7 @@ namespace cgi {
 
       // **FIXME** (don't use Boost.Regex)
       std::cerr<< " :{ " << content_type_ << " }: " << std::endl;
+      
       /*
       std::string::size_type sz = content_type_.find("=");
       if (sz == std::string::npos)

@@ -14,6 +14,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/asio/basic_io_object.hpp>
 #include <boost/asio/ip/basic_endpoint.hpp>
+#include <boost/asio/ip/tcp.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/common/basic_protocol_service.hpp"
@@ -55,50 +56,36 @@ namespace cgi {
     //}
 
     template<typename IoServiceProvider>
-    explicit basic_request_acceptor
-    (
-        common::basic_protocol_service<protocol_type, IoServiceProvider>& ps
-      , bool default_init = true
-    )
-      : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
-    {
-      this->service.set_protocol_service(this->implementation, ps);
-      if (default_init)
-      {
-        boost::system::error_code ec;
-        this->service.default_init(this->implementation, ec);
-        if (ec)
-        {
-          boost::system::system_error err(ec, "Problem constructing acceptor");
-          boost::throw_exception(err);
-        }
-      }
-    }
-    
-    template<typename IoServiceProvider>
     explicit basic_request_acceptor(
           common::basic_protocol_service<protocol_type, IoServiceProvider>& ps,
-          port_number_type port_num)
+          port_number_type port_num = 0)
       : boost::asio::basic_io_object<RequestAcceptorService>(ps.io_service())
     {
       this->service.set_protocol_service(this->implementation, ps);
       this->implementation.port_num_ = port_num;
-
-      this->implementation.endpoint_.port(port_num);
-      //std::cerr<< "___________ protocol := " << 
-      //(this->implementation.endpoint_.protocol() == boost::asio::ip::tcp::v4()) << std::endl;
-      using boost::asio::ip::tcp;
-      // This strange-looking conditional checks there's no error at each
-      // stage of preparation.
-      boost::system::error_code ec;
-      //if (//this->service.open(this->implementation, tcp::v4(), ec)
-      //||
-      //this->service.bind(this->implementation
-      //                      , tcp::endpoint(tcp::v4(), port_num), ec)
-      //||  this->service.listen(this->implementation, ec))
       
+      if (!port_num)
       {
-        detail::throw_error(ec);
+        boost::system::error_code ec;
+        if (this->service.default_init(this->implementation, ec)) {
+          detail::throw_error(ec);
+        }
+      }
+      else
+      {
+        boost::asio::ip::tcp::endpoint
+          endpoint(boost::asio::ip::tcp::v4(), port_num);
+        this->implementation.endpoint_ = endpoint;
+        // This strange-looking conditional checks there's no error at each
+        // stage of preparation.
+        boost::system::error_code ec;
+        if (
+           this->service.open(this->implementation, endpoint.protocol(), ec)
+        || this->service.bind(this->implementation, endpoint, ec)
+        || this->service.listen(this->implementation, 15, ec))
+        {
+          detail::throw_error(ec);
+        }
       }
     }
 
@@ -116,7 +103,7 @@ namespace cgi {
       boost::system::error_code ec;
       if (this->service.open(this->implementation, endpoint.protocol(), ec)
       ||  this->service.bind(this->implementation, endpoint, ec)
-      ||  this->service.listen(this->implementation, ec))
+      ||  this->service.listen(this->implementation, 15, ec))
       {
         detail::throw_error(ec);
       }
@@ -180,6 +167,14 @@ namespace cgi {
       listen(int backlog, boost::system::error_code& ec)
     {
       return this->service.listen(this->implementation, backlog, ec);
+    }
+
+    template<typename Endpoint>
+    void bind(Endpoint& ep)
+    {
+      boost::system::error_code ec;
+      this->service.bind(this->implementation, ep, ec);
+      detail::throw_error(ec);
     }
 
     template<typename Endpoint>

@@ -146,19 +146,20 @@ namespace cgi {
       std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
 
       if ((request_method == "GET" || request_method == "HEAD")
-          && (parse_opts & common::parse_get))
+          && parse_opts > common::parse_env
+          && parse_opts & common::parse_get_only)
       {
         parse_get_vars(impl, ec);
       }
       else
-      if (request_method == "POST" && (parse_opts & common::parse_post))
+      if (request_method == "POST" && (parse_opts & common::parse_post_only))
       {
         parse_post_vars(impl, ec);
       }
 
       if (ec) return ec;
 
-      if (parse_opts & common::parse_cookie)
+      if (parse_opts & common::parse_cookie_only)
       {
         if (parse_cookie_vars(impl, ec)) // returns an error_code
           return ec;

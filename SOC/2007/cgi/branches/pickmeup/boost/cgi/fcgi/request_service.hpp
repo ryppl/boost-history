@@ -84,6 +84,8 @@ namespace cgi {
 
       mutable_buffers_type prepare_misc(std::size_t size)
       {
+        // Make sure we're not trying to make a zero-sized buffer.
+        BOOST_ASSERT(size && "Attempting to allocate a zero-sized buffer.");
         std::size_t bufsz(param_buffer_.size());
         param_buffer_.resize(bufsz + size);
         return boost::asio::buffer(&param_buffer_[bufsz], size);
@@ -176,7 +178,7 @@ namespace cgi {
      */
 
     boost::system::error_code
-    load(implementation_type& impl, bool parse_stdin
+    load(implementation_type& impl, common::parse_options opts
           , boost::system::error_code& ec);
 /*
     boost::system::error_code
