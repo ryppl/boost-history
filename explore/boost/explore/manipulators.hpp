@@ -233,8 +233,11 @@ namespace boost { namespace explore
     
     namespace detail
     {
+        struct standard_tag;
+        struct assoc_tag;
+        
         // begin_end manipulator
-        template<typename T>
+        template<typename Tag, typename T>
         struct begin_end_manipulator
         {
             begin_end_manipulator(T& startVal, T& endVal)
@@ -246,17 +249,9 @@ namespace boost { namespace explore
             T endVal_;
         };
         
-        template<typename T>
-        struct assoc_item_begin_end_manipulator : public detail::begin_end_manipulator<T>
-        {
-            assoc_item_begin_end_manipulator(T& startVal, T& endVal)
-            :begin_end_manipulator<T>(startVal, endVal)
-            {
-            }
-        };
         
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<standard_tag,T>& manip)
         {
             startFn(ostr, manip.startVal_);
             endFn(ostr, manip.endVal_);
@@ -264,7 +259,7 @@ namespace boost { namespace explore
         }
         
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const assoc_item_begin_end_manipulator<T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<assoc_tag,T>& manip)
         {
             assoc_item_startFn(ostr, manip.startVal_);
             assoc_item_endFn(ostr, manip.endVal_);
@@ -273,24 +268,24 @@ namespace boost { namespace explore
     }
     
     template<typename Elem>
-    detail::begin_end_manipulator<const Elem*> begin_end(const Elem* start, const Elem* end)
+    detail::begin_end_manipulator<detail::standard_tag,const Elem*> begin_end(const Elem* start, const Elem* end)
     {
         // todo: just use delimiters function and fetch seperator?
-        return detail::begin_end_manipulator<const Elem*>(start, end);
+        return detail::begin_end_manipulator<detail::standard_tag,const Elem*>(start, end);
     }
     
     template<typename Elem>
-    detail::assoc_item_begin_end_manipulator<const Elem*> assoc_item_begin_end(const Elem* start, const Elem* end)
+    detail::begin_end_manipulator<detail::assoc_tag,const Elem*> assoc_item_begin_end(const Elem* start, const Elem* end)
     {
         // todo: just use delimiters function and fetch seperator?
-        return detail::assoc_item_begin_end_manipulator<const Elem*>(start, end);
+        return detail::begin_end_manipulator<detail::assoc_tag,const Elem*>(start, end);
     }
     
     
     // manipulator
     namespace detail
     {
-        template<typename T>
+        template<typename Tag, typename T>
         struct delimiters_manipulator
         {
             delimiters_manipulator(T& startVal, T& seperatorVal, T& endVal)
@@ -302,18 +297,9 @@ namespace boost { namespace explore
             T seperatorVal_;
             T endVal_;
         };
-        
-        template<typename T>
-        struct assoc_item_delimiters_manipulator : public detail::delimiters_manipulator<T>
-        {
-            assoc_item_delimiters_manipulator(T& startVal, T& seperatorVal, T& endVal)
-            : delimiters_manipulator<T>(startVal, seperatorVal, endVal)
-            {
-            }
-        };
 
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<standard_tag,T>& manip)
         {
             startFn(ostr, manip.startVal_);
             separatorFn(ostr, manip.seperatorVal_);
@@ -322,7 +308,7 @@ namespace boost { namespace explore
         }
         
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const assoc_item_delimiters_manipulator<T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<assoc_tag,T>& manip)
         {
             assoc_item_startFn(ostr, manip.startVal_);
             assoc_item_separatorFn(ostr, manip.seperatorVal_);
@@ -332,15 +318,15 @@ namespace boost { namespace explore
     }
     
     template<typename Elem>
-    detail::delimiters_manipulator<const Elem*> delimiters(const Elem* start, const Elem* seperator, const Elem* end)
+    detail::delimiters_manipulator<detail::standard_tag,const Elem*> delimiters(const Elem* start, const Elem* seperator, const Elem* end)
     {
-        return detail::delimiters_manipulator<const Elem*>(start, seperator, end);
+        return detail::delimiters_manipulator<detail::standard_tag,const Elem*>(start, seperator, end);
     }
     
     template<typename Elem>
-    detail::assoc_item_delimiters_manipulator<const Elem*> assoc_item_delimiters(const Elem* start, const Elem* seperator, const Elem* end)
+    detail::delimiters_manipulator<detail::assoc_tag,const Elem*> assoc_item_delimiters(const Elem* start, const Elem* seperator, const Elem* end)
     {
-        return detail::assoc_item_delimiters_manipulator<const Elem*>(start, seperator, end);
+        return detail::delimiters_manipulator<detail::assoc_tag,const Elem*>(start, seperator, end);
     }
 }}
 
