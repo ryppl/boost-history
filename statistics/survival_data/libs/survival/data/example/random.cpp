@@ -28,12 +28,12 @@
 #include <boost/standard_distribution/distributions/normal.hpp>         //prior
 #include <boost/standard_distribution/distributions/exponential.hpp>    //data
 
-#include <boost/non_param/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
 
 #include <boost/matrix_view/algorithm/transform_column.hpp> 
 #include <boost/dist_random/include.hpp>
 
-#include <boost/model/include.hpp>
+#include <boost/statistics/model/include.hpp>
 #include <boost/survival/data/include.hpp>
 #include <boost/survival/model/models/exponential/include.hpp>
 
@@ -42,6 +42,7 @@ void example_random(std::ostream& out){
     out << "-> example_random : ";
     
     using namespace boost;
+    using namespace statistics;
     namespace surv = survival;
 
     // Generates batches of iid random records as follows:
@@ -211,7 +212,8 @@ void example_random(std::ostream& out){
                     fd_ fail_dist = surv::data::make_failure_distribution(mcp);
 
                     kss.clear();
-                    non_param::sequential_kolmogorov_smirnov_distance(
+                    statistics::empirical_cdf
+                     ::sequential_kolmogorov_smirnov_distance(
                         fail_dist,
                         boost::begin( fts ),
                         boost::end( fts ),

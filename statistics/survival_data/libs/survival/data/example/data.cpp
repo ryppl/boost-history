@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::example::data.cpp                                         //
+// statistics::survival::data::example::data.cpp                             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -34,7 +34,12 @@ void example_data(std::ostream& out){
     // Statistics
     
     using namespace boost;
+<<<<<<< .mine
+    using namespace statistics;
+    namespace surv = statistics::survival;
+=======
     namespace surv = survival;
+>>>>>>> .r55939
 
     // [ Types ]
     typedef unsigned val_; // do not modify

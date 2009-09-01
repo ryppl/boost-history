@@ -1,18 +1,19 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::algorithm::logit_log.hpp                                  //
+// statistics::survival::data::algorithm::logit_log.hpp                      //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_ALGORITHM_LOGIT_LOG_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_ALGORITHM_LOGIT_LOG_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_LOGIT_LOG_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_LOGIT_LOG_HPP_ER_2009
 #include <stdexcept>
 #include <iterator>
 #include <boost/format.hpp>
 #include <boost/survival/data/algorithm/detail/log_shift.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 
@@ -43,6 +44,7 @@ ItO logit_log(
 
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

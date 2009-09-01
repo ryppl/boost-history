@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data:data::mean_event.hpp                                       //
+// statistics::survival::data:data::mean_event.hpp                           //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_DATA_MEAN_EVENT_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_DATA_MEAN_EVENT_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_DATA_MEAN_EVENT_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_DATA_MEAN_EVENT_HPP_ER_2009
 #include <stdexcept>
 #include <boost/type_traits.hpp>
 #include <boost/range.hpp>
@@ -18,6 +18,7 @@
 #include <boost/math/special_functions/fpclassify.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 
@@ -200,6 +201,7 @@ namespace data{
 
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

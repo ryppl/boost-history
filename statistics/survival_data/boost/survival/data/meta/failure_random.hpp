@@ -1,17 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::meta::failure_random.hpp                                  //
+// statistics::survival::data::meta::failure_random.hpp                      //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_META_FAILURE_RANDOM_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_META_FAILURE_RANDOM_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_META_FAILURE_RANDOM_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_META_FAILURE_RANDOM_HPP_ER_2009
 #include <boost/dist_random/include.hpp>
-#include <boost/model/wrap/aggregate/model_covariate_parameter.hpp>
+#include <boost/statistics/model/wrap/aggregate/model_covariate_parameter.hpp>
 #include <boost/survival/data/meta/failure_distribution.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 
@@ -30,13 +31,13 @@ namespace data{
 
     template<typename M,typename X,typename P>
     typename meta_failure_random<M>::type 
-    make_failure_random(boost::model::model_covariate_parameter_<M,X,P>);
+    make_failure_random(boost::statistics::model::model_covariate_parameter_<M,X,P>);
 
     // Implementation //
 
     template<typename M,typename X,typename P>
     typename meta_failure_random<M>::type 
-    make_failure_random(boost::model::model_covariate_parameter_<M,X,P> mcp){
+    make_failure_random(boost::statistics::model::model_covariate_parameter_<M,X,P> mcp){
         typedef meta_failure_random<M>                              map_;
         typedef typename map_::map2_                                map2_;
         return map2_::make(
@@ -46,6 +47,7 @@ namespace data{
 
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

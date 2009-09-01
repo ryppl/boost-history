@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::record.hpp                                                //
+// statistics::survival::data::record.hpp                                    //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_RECORDER_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_RECORDER_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_RECORDER_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_RECORDER_HPP_ER_2009
 #include <ostream>
 #include <limits>
 #include <boost/operators.hpp>
@@ -18,6 +18,7 @@
 #include <boost/survival/data/data/event.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 
@@ -79,7 +80,7 @@ record<T>::record(value_type t,value_type rt)
 // Assign
 template<typename T>
 void record<T>::set_failure_time(value_type rt){
-    static const char* method = "survival::record::set_failure_time(%1%)";
+    static const char* method = "statistics::survival::record::set_failure_time(%1%)";
     if(math::isinf(this->failure_time_)){
         this->failure_time_ = rt;
     }else{
@@ -132,7 +133,7 @@ time_since_entry(const record<T>& r, typename record<T>::value_type t)
 
 template<typename T>    
 event<T>  make_event(const record<T>& r, typename record<T>::value_type t){
-    static const char* fun = "survival::make_event(%1%,%2)";
+    static const char* fun = "statistics::survival::make_event(%1%,%2)";
     typedef typename record<T>::value_type value_t;
     value_t eps = math::tools::epsilon<T>();
     value_t dt = time_since_entry(r,t); 
@@ -152,6 +153,7 @@ event<T>  make_event(const record<T>& r, typename record<T>::value_type t){
 
 }// data                
 }// survival
+}// statistics
 }// boost
 
 #endif

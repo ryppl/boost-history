@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::meta::random_input.hpp                                    //
+// statistics::survival::data::meta::random_input.hpp                        //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_META_RANDOM_INPUT_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_META_RANDOM_INPUT_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_META_RANDOM_INPUT_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_META_RANDOM_INPUT_HPP_ER_2009
 #include <boost/survival/data/meta/failure_distribution.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 namespace meta{
@@ -27,6 +28,7 @@ namespace meta{
 }// meta
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

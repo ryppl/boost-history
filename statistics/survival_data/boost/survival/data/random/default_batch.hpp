@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::random::default_batch.hpp                                 //
+// statistics::survival::data::random::default_batch.hpp                     //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_RANDOM_DEFAULT_BATCH_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_RANDOM_DEFAULT_BATCH_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_RANDOM_DEFAULT_BATCH_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_RANDOM_DEFAULT_BATCH_HPP_ER_2009
 #include <boost/random/gen_to_random.hpp>
 #include <boost/functional/clock.hpp>
 #include <boost/shared_ptr.hpp>
@@ -17,6 +17,7 @@
 
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 namespace random{
@@ -86,6 +87,7 @@ namespace random{
 }// random    
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

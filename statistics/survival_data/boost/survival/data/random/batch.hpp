@@ -1,18 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::random::batch.hpp                                         //
+// statistics::survival::data::random::batch.hpp                             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_RANDOM_BATCH_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_RANDOM_BATCH_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_RANDOM_BATCH_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_RANDOM_BATCH_HPP_ER_2009
 #include <iostream> // TODO remove
 #include <boost/format.hpp>
 #include <boost/range.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/random/gen_to_random.hpp>
-#include <boost/model/wrap/aggregate/model_covariate_parameter.hpp>
+#include <boost/statistics/model/wrap/aggregate/model_covariate_parameter.hpp>
 #include <boost/survival/data/data/record.hpp>
 #include <boost/survival/data/random/failure_time.hpp>
 #include <boost/survival/data/meta/random_input.hpp>
@@ -20,6 +20,7 @@
 #include <boost/iterator/range_cycle.hpp> 
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 namespace random{
@@ -116,7 +117,7 @@ namespace random{
         const model_parameter_& mp 
             = static_cast<const model_parameter_&>(*this);
         value_type ft = random::failure_time<value_type>(
-            boost::model::make_model_covariate_parameter(
+            boost::statistics::model::make_model_covariate_parameter(
                 mp.model(),
                 this->covariate(),
                 mp.parameter()
@@ -146,6 +147,7 @@ namespace random{
 }// random    
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

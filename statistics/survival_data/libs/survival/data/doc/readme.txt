@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// survival::data::doc::readme                                              //
+// statistics::survival::data::doc::readme                                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -25,9 +25,9 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 /boost_1_39_0/ 
 /sandbox/statistics/joint_dist/ 
 /sandbox/statistics/survival_model/ 
-/sandbox/statistics/non_param/ 
+/sandbox/statistics/empirical_cdf/ 
 /sandbox/statistics/matrix_view/ 
-/sandbox/statistics/non_param/ 
+/sandbox/statistics/empirical_cdf/ 
 /sandbox/statistics/random/ 
 /sandbox/statistics/scalar_dist/ 
 /sandbox/statistics/dist_random/ 
@@ -77,7 +77,7 @@ http://en.wikipedia.org/wiki/Survival_analysis
         
 [ meta ]
 
-    A bridge between survival::data and survival::model
+    A bridge between statistics::survival::data and statistics::survival::model
     
     
 [ Output ]

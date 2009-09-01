@@ -1,17 +1,18 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::algorithm::make_mean_events.hpp                           //
+// statistics::survival::data::algorithm::make_mean_events.hpp               //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_ALGORITHM_VECTORIZE_EVENTS_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_ALGORITHM_VECTORIZE_EVENTS_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_VECTORIZE_EVENTS_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_VECTORIZE_EVENTS_HPP_ER_2009
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 
@@ -49,6 +50,7 @@ ItO vectorize_events(
 
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

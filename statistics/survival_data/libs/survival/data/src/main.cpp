@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::src::main.cpp                                                   //
+// statistics::survival::src::main.cpp                                       //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //

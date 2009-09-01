@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::algorithm::events.hpp                                     //
+// statistics::survival::data::algorithm::events.hpp                         //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_ALGORITHM_EVENTS_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_ALGORITHM_EVENTS_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_EVENTS_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_EVENTS_HPP_ER_2009
 #include <algorithm>
 #include <ext/algorithm>
 #include <boost/lambda/lambda.hpp>
@@ -15,6 +15,7 @@
 #include <boost/survival/data/data/record.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 
@@ -60,6 +61,7 @@ namespace data{
 
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

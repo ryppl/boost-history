@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::example::random.h                                         //
+// statistics::survival::data::example::random.h                             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //

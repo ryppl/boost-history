@@ -1,15 +1,16 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survival::data::algorithm::log_shift.hpp                                  //
+// statistics::survival::data::algorithm::log_shift.hpp                      //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_DATA_ALGORITHM_DETAIL_LOG_SHIFT_HPP_ER_2009
-#define BOOST_SURVIVAL_DATA_ALGORITHM_DETAIL_LOG_SHIFT_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_DETAIL_LOG_SHIFT_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_DATA_ALGORITHM_DETAIL_LOG_SHIFT_HPP_ER_2009
 #include <boost/math/special_functions/log1p.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
 namespace data{
 namespace detail{
@@ -36,6 +37,7 @@ namespace detail{
 }// detail
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif
