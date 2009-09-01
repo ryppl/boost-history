@@ -22,9 +22,6 @@
 namespace boost { namespace property_tree { namespace ini_parser
 {
 
-    /** Skip check if ptree is a valid ini */
-    static const int skip_ini_validity_check = 1;
-
     /**
      * Determines whether the @c flags are valid for use with the ini_parser.
      * @param flags value to check for validity as flags to ini_parser.
@@ -32,7 +29,7 @@ namespace boost { namespace property_tree { namespace ini_parser
      */
     inline bool validate_flags(int flags)
     {
-        return (flags & ~skip_ini_validity_check) == 0;
+        return flags == 0;
     }
 
     /** Indicates an error parsing INI formatted data. */
@@ -101,13 +98,16 @@ namespace boost { namespace property_tree { namespace ini_parser
                 }
                 else if (line[0] == lbracket)
                 {
+                    // If the previous section was empty, drop it again.
+                    if (section && section->empty())
+                        local.pop_back();
                     typename Str::size_type end = line.find(rbracket);
                     if (end == Str::npos)
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error(
                             "unmatched '['", "", line_no));
                     Str key = detail::trim(line.substr(1, end - 1),
                                            stream.getloc());
-                    if (local.find(key) != local.end())
+                    if (local.find(key) != local.not_found())
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error(
                             "duplicate section name", "", line_no));
                     section = &local.push_back(
@@ -127,13 +127,16 @@ namespace boost { namespace property_tree { namespace ini_parser
                                            stream.getloc());
                     Str data = detail::trim(line.substr(eqpos + 1, Str::npos),
                                             stream.getloc());
-                    if (container.find(key) != container.end())
+                    if (container.find(key) != container.not_found())
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error(
                             "duplicate key name", "", line_no));
                     container.push_back(std::make_pair(key, Ptree(data)));
                 }
             }
         }
+        // If the last section was empty, drop it again.
+        if (section && section->empty())
+            local.pop_back();
 
         // Swap local ptree with result ptree
         pt.swap(local);
@@ -169,11 +172,32 @@ namespace boost { namespace property_tree { namespace ini_parser
         }
     }
 
+    namespace detail
+    {
+        template<class Ptree>
+        void check_dupes(const Ptree &pt)
+        {
+            if(pt.size() <= 1)
+                return;
+            const typename Ptree::key_type *lastkey = 0;
+            typename Ptree::const_assoc_iterator it = pt.ordered_begin(),
+                                                 end = pt.not_found();
+            lastkey = &it->first;
+            for(++it; it != end; ++it) {
+                if(*lastkey == it->first)
+                    BOOST_PROPERTY_TREE_THROW(ini_parser_error(
+                        "duplicate key", "", 0));
+                lastkey = &it->first;
+            }
+        }
+    }
+
     /**
      * Translates the property tree to INI and writes it the given output
      * stream.
-     * @pre @e pt cannot have keys with data at its root level.
-     * @pre @e pt cannot be deaper than two levels.
+     * @pre @e pt cannot have data in its root.
+     * @pre @e pt cannot have keys both data and children.
+     * @pre @e pt cannot be deeper than two levels.
      * @pre There cannot be duplicate keys on any given level of @e pt.
      * @throw ini_parser_error In case of error translating the property tree to
      *                         INI or writing to the output stream.
@@ -181,10 +205,7 @@ namespace boost { namespace property_tree { namespace ini_parser
      *               property tree.
      * @param pt The property tree to tranlsate to INI and output.
      * @param flags The flags to use when writing the INI file.
-     *              The following flags are supported:
-     * @li @c skip_ini_validity_check -- Skip check if ptree is a valid ini. The
-     *     validity check covers the preconditions but takes <tt>O(n log n)</tt>
-     *     time.
+     *              No flags are currently supported.
      */
     template<class Ptree>
     void write_ini(std::basic_ostream<
@@ -193,54 +214,54 @@ namespace boost { namespace property_tree { namespace ini_parser
                    const Ptree &pt,
                    int flags = 0)
     {
+        using detail::check_dupes;
 
         typedef typename Ptree::key_type::value_type Ch;
         typedef std::basic_string<Ch> Str;
 
         BOOST_ASSERT(validate_flags(flags));
+        (void)flags;
 
-        // Verify if ptree is not too rich to be saved as ini
-        if (!(flags & skip_ini_validity_check)) {
-            for (typename Ptree::const_iterator it = pt.begin(), end = pt.end();
-                 it != end; ++it)
-            {
+        if (!pt.data().empty())
+            BOOST_PROPERTY_TREE_THROW(ini_parser_error(
+                "ptree has data on root", "", 0));
+        check_dupes(pt);
+
+        for (typename Ptree::const_iterator it = pt.begin(), end = pt.end();
+             it != end; ++it)
+        {
+            check_dupes(it->second);
+            if (it->second.empty()) {
+                stream << it->first << Ch('=')
+                    << it->second.template get_value<
+                        std::basic_string<Ch> >()
+                    << Ch('\n');
+            } else {
                 if (!it->second.data().empty())
                     BOOST_PROPERTY_TREE_THROW(ini_parser_error(
-                        "ptree has data on root level keys", "", 0));
-                if (pt.count(it->first) > 1)
-                    BOOST_PROPERTY_TREE_THROW(ini_parser_error(
-                        "duplicate section name", "", 0));
+                        "mixed data and children", "", 0));
+                stream << Ch('[') << it->first << Ch(']') << Ch('\n');
                 for (typename Ptree::const_iterator it2 = it->second.begin(),
-                     end2 = it->second.end(); it2 != end2; ++it2)
+                         end2 = it->second.end(); it2 != end2; ++it2)
                 {
                     if (!it2->second.empty())
                         BOOST_PROPERTY_TREE_THROW(ini_parser_error(
                             "ptree is too deep", "", 0));
-                    if (it->second.count(it2->first) > 1)
-                        BOOST_PROPERTY_TREE_THROW(ini_parser_error(
-                            "duplicate key name", "", 0));
+                    stream << it2->first << Ch('=')
+                        << it2->second.template get_value<
+                            std::basic_string<Ch> >()
+                        << Ch('\n');
                 }
             }
-        }
-
-        // Write ini
-        for (typename Ptree::const_iterator it = pt.begin(), end = pt.end();
-             it != end; ++it)
-        {
-            stream << Ch('[') << it->first << Ch(']') << Ch('\n');
-            for (typename Ptree::const_iterator it2 = it->second.begin(),
-                     end2 = it->second.end(); it2 != end2; ++it2)
-                stream << it2->first << Ch('=')
-                    << it2->second.template get_value<std::basic_string<Ch> >()
-                    << Ch('\n');
         }
 
     }
 
     /**
      * Translates the property tree to INI and writes it the given file.
-     * @pre @e pt cannot have keys with data at its root level.
-     * @pre @e pt cannot be deaper than two levels.
+     * @pre @e pt cannot have data in its root.
+     * @pre @e pt cannot have keys both data and children.
+     * @pre @e pt cannot be deeper than two levels.
      * @pre There cannot be duplicate keys on any given level of @e pt.
      * @throw info_parser_error In case of error translating the property tree
      *                          to INI or writing to the file.

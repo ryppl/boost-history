@@ -388,6 +388,20 @@ namespace boost { namespace property_tree
 
     template<class K, class D, class C> inline
     typename basic_ptree<K, D, C>::assoc_iterator
+        basic_ptree<K, D, C>::ordered_begin()
+    {
+        return assoc_iterator(subs::assoc(this).begin());
+    }
+
+    template<class K, class D, class C> inline
+    typename basic_ptree<K, D, C>::const_assoc_iterator
+        basic_ptree<K, D, C>::ordered_begin() const
+    {
+        return const_assoc_iterator(subs::assoc(this).begin());
+    }
+
+    template<class K, class D, class C> inline
+    typename basic_ptree<K, D, C>::assoc_iterator
         basic_ptree<K, D, C>::not_found()
     {
         return assoc_iterator(subs::assoc(this).end());

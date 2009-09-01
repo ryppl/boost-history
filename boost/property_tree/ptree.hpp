@@ -181,6 +181,11 @@ namespace boost { namespace property_tree
 
         // Associative view
 
+        /** Returns an iterator to the first child, in order. */
+        assoc_iterator ordered_begin();
+        /** Returns an iterator to the first child, in order. */
+        const_assoc_iterator ordered_begin() const;
+
         /** Returns the not-found iterator. Equivalent to end() in a real
          * associative container.
          */
