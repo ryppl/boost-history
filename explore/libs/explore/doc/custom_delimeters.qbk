@@ -10,13 +10,13 @@
 Explore provides the ability to change the strings used in the container streaming process through the use of several new stream manipulators.
 
 [table Explore Stream Manipulators
-    [[Manipulator]            [Default][Description]]
-    [[start(char*)]           ['\[']   [Changes the string output at the beginning of a container.]]
-    [[end(char*)]             ['\]']   [Changes the string output at the end of a container.]]
-    [[seperator(char*)]       [', ']   [Changes the string output in between elements.]]
-    [[assoc_start(char*)]     ['']     [Changes the string output at the front of an association.]]
-    [[assoc_end(char*)]       ['']     [Changes the string output at the end of an association.]]
-    [[assoc_seperator(char*)] [':']    [Changes the string output in between elements of an association.]]
+    [[Manipulator]                 [Default][Description]]
+    [[start(char*)]                ['\[']   [Changes the string output at the beginning of a container.]]
+    [[end(char*)]                  ['\]']   [Changes the string output at the end of a container.]]
+    [[seperator(char*)]            [', ']   [Changes the string output in between elements.]]
+    [[assoc_item_start(char*)]     ['']     [Changes the string output at the front of an association item.]]
+    [[assoc_item_end(char*)]       ['']     [Changes the string output at the end of an association item.]]
+    [[assoc_item_seperator(char*)] [':']    [Changes the string output in between elements of an association item.]]
 ]
 
 For example, to change the beginning and end output of a container to be the greater and less than symbols, you would do the following.

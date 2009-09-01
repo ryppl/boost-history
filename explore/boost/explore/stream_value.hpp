@@ -32,7 +32,7 @@ namespace boost { namespace explore
         template<typename Elem, typename Tr, typename T>
         void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
         {
-            ostr << state->assoc_start() << val.first << state->assoc_separator() << val.second << state->assoc_end();
+            ostr << state->assoc_item_start() << val.first << state->assoc_item_separator() << val.second << state->assoc_item_end();
         }
     };
 }}

@@ -114,23 +114,23 @@ namespace boost { namespace explore
         
         // function ptr for associative separator manipulator
         template<typename Elem>
-        void assoc_separatorFn(std::ios_base& ostr, const Elem* sep)
+        void assoc_item_separatorFn(std::ios_base& ostr, const Elem* sep)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_separator(sep);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_item_separator(sep);
         }
         
         // function ptr for associative start manipulator
         template<typename Elem>
-        void assoc_startFn(std::ios_base& ostr, const Elem* start)
+        void assoc_item_startFn(std::ios_base& ostr, const Elem* start)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_start(start);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_item_start(start);
         }
         
         // function ptr for associative end manipulator
         template<typename Elem>
-        void assoc_endFn(std::ios_base& ostr, const Elem* end)
+        void assoc_item_endFn(std::ios_base& ostr, const Elem* end)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_end(end);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_item_end(end);
         }
 
         void levelFn(std::ios_base& ostr, std::size_t l)
@@ -174,23 +174,23 @@ namespace boost { namespace explore
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> assoc_separator(const Elem* sep)
+    detail::manipfunc<const Elem*> assoc_item_separator(const Elem* sep)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_separatorFn, sep);
+        return detail::manipfunc<const Elem*>(&detail::assoc_item_separatorFn, sep);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> assoc_start(const Elem* start)
+    detail::manipfunc<const Elem*> assoc_item_start(const Elem* start)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_startFn, start);
+        return detail::manipfunc<const Elem*>(&detail::assoc_item_startFn, start);
     }
     
     // manipulator
     template<typename Elem>
-    detail::manipfunc<const Elem*> assoc_end(const Elem* end)
+    detail::manipfunc<const Elem*> assoc_item_end(const Elem* end)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_endFn, end);
+        return detail::manipfunc<const Elem*>(&detail::assoc_item_endFn, end);
     }
 
     detail::manipfunc<std::size_t> level(std::size_t l)
@@ -246,11 +246,28 @@ namespace boost { namespace explore
             T endVal_;
         };
         
+        template<typename T>
+        struct assoc_item_begin_end_manipulator : public detail::begin_end_manipulator<T>
+        {
+            assoc_item_begin_end_manipulator(T& startVal, T& endVal)
+            :begin_end_manipulator<T>(startVal, endVal)
+            {
+            }
+        };
+        
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<T>& manip)
         {
             startFn(ostr, manip.startVal_);
             endFn(ostr, manip.endVal_);
+            return ostr;
+        }
+        
+        template<typename Elem, typename Tr, typename T>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const assoc_item_begin_end_manipulator<T>& manip)
+        {
+            assoc_item_startFn(ostr, manip.startVal_);
+            assoc_item_endFn(ostr, manip.endVal_);
             return ostr;
         }
     }
@@ -260,6 +277,13 @@ namespace boost { namespace explore
     {
         // todo: just use delimiters function and fetch seperator?
         return detail::begin_end_manipulator<const Elem*>(start, end);
+    }
+    
+    template<typename Elem>
+    detail::assoc_item_begin_end_manipulator<const Elem*> assoc_item_begin_end(const Elem* start, const Elem* end)
+    {
+        // todo: just use delimiters function and fetch seperator?
+        return detail::assoc_item_begin_end_manipulator<const Elem*>(start, end);
     }
     
     
@@ -278,6 +302,15 @@ namespace boost { namespace explore
             T seperatorVal_;
             T endVal_;
         };
+        
+        template<typename T>
+        struct assoc_item_delimiters_manipulator : public detail::delimiters_manipulator<T>
+        {
+            assoc_item_delimiters_manipulator(T& startVal, T& seperatorVal, T& endVal)
+            : delimiters_manipulator<T>(startVal, seperatorVal, endVal)
+            {
+            }
+        };
 
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<T>& manip)
@@ -287,12 +320,27 @@ namespace boost { namespace explore
             endFn(ostr, manip.endVal_);
             return ostr;
         }
+        
+        template<typename Elem, typename Tr, typename T>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const assoc_item_delimiters_manipulator<T>& manip)
+        {
+            assoc_item_startFn(ostr, manip.startVal_);
+            assoc_item_separatorFn(ostr, manip.seperatorVal_);
+            assoc_item_endFn(ostr, manip.endVal_);
+            return ostr;
+        }
     }
     
     template<typename Elem>
     detail::delimiters_manipulator<const Elem*> delimiters(const Elem* start, const Elem* seperator, const Elem* end)
     {
         return detail::delimiters_manipulator<const Elem*>(start, seperator, end);
+    }
+    
+    template<typename Elem>
+    detail::assoc_item_delimiters_manipulator<const Elem*> assoc_item_delimiters(const Elem* start, const Elem* seperator, const Elem* end)
+    {
+        return detail::assoc_item_delimiters_manipulator<const Elem*>(start, seperator, end);
     }
 }}
 

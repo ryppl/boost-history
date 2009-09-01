@@ -21,14 +21,14 @@ std::ostream& basic_stream_format(std::ostream& ostr)
 {
     using namespace boost::explore;
     return ostr << start("<=") << separator("#") << end("=>")
-        << assoc_start("<=") << assoc_separator("#") << assoc_end("=>");
+                << assoc_item_start("\\") << assoc_item_separator("**") << assoc_item_end("//");
 }
 
 std::wostream& basic_stream_format(std::wostream& ostr)
 {
     using namespace boost::explore;
     return ostr << start(L"<=") << separator(L"#") << end(L"=>")
-        << assoc_start(L"<=") << assoc_separator(L"#") << assoc_end(L"=>");
+                << assoc_item_start(L"\\") << assoc_item_separator(L"**") << assoc_item_end(L"//");
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_vector_custom_format_stream_test, C, test_types )
@@ -78,7 +78,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_map_custom_format_stream_test, C, test_type
 
     mis.insert(std::make_pair(1, str_to<C>("first")));
     str_out << mis;
-    BOOST_CHECK_EQUAL(output(str_out), "<=<=1#first=>=>");
+    BOOST_CHECK_EQUAL(output(str_out), "<=\\1**first//=>");
 
     reset(str_out);
 
@@ -86,12 +86,12 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_map_custom_format_stream_test, C, test_type
     mis.insert(std::make_pair(3, str_to<C>("third")));
 
     str_out << mis;
-    BOOST_CHECK_EQUAL(output(str_out), "<=<=1#first=>#<=2#second=>#<=3#third=>=>");
+    BOOST_CHECK_EQUAL(output(str_out), "<=\\1**first//#\\2**second//#\\3**third//=>");
 
     reset(str_out);
 
     str_out << boost::explore::make_iterator_range(mis.begin(), ++(++mis.begin()));
-    BOOST_CHECK_EQUAL(output(str_out), "<=<=1#first=>#<=2#second=>=>");
+    BOOST_CHECK_EQUAL(output(str_out), "<=\\1**first//#\\2**second//=>");
 }
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( begin_end_helper_test, C, test_types )
@@ -116,4 +116,29 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( delimeters_helper_test, C, test_types )
     vi.push_back(3);
     str_out << boost::explore::delimiters(str_to<C>("F "), str_to<C>(" - "), str_to<C>(" L")) << vi;
     BOOST_CHECK_EQUAL(output(str_out), "F 1 - 2 - 3 L");
+}
+
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( assoc_item_begin_end_helper_test, C, test_types )
+{
+    typename test_traits<C>::stream_type str_out;
+    
+    std::map<int,int> mii;
+    mii.insert( std::make_pair(1,10) );
+    mii.insert( std::make_pair(2,20) );
+    mii.insert( std::make_pair(3,30) );
+    str_out << boost::explore::assoc_item_begin_end(str_to<C>("\\"), str_to<C>("//")) << mii;
+    BOOST_CHECK_EQUAL(output(str_out), "[\\1:10//, \\2:20//, \\3:30//]");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( assoc_item_delimeters_helper_test, C, test_types )
+{
+    typename test_traits<C>::stream_type str_out;
+    
+    std::map<int,int> mii;
+    mii.insert( std::make_pair(1,10) );
+    mii.insert( std::make_pair(2,20) );
+    mii.insert( std::make_pair(3,30) );
+    str_out << boost::explore::assoc_item_delimiters(str_to<C>("\\"), str_to<C>("--"), str_to<C>("//")) << mii;
+    BOOST_CHECK_EQUAL(output(str_out), "[\\1--10//, \\2--20//, \\3--30//]");
 }

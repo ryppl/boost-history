@@ -28,9 +28,9 @@ namespace boost { namespace explore
         BOOST_EXPLORE_INIT_STRING(separator, ", ")
         BOOST_EXPLORE_INIT_STRING(start, "[")
         BOOST_EXPLORE_INIT_STRING(end, "]")
-        BOOST_EXPLORE_INIT_STRING(assoc_separator, ":")
-        BOOST_EXPLORE_INIT_STRING(assoc_start, "")
-        BOOST_EXPLORE_INIT_STRING(assoc_end, "")
+        BOOST_EXPLORE_INIT_STRING(assoc_item_separator, ":")
+        BOOST_EXPLORE_INIT_STRING(assoc_item_start, "")
+        BOOST_EXPLORE_INIT_STRING(assoc_item_end, "")
 
         struct depth_guard;
 
@@ -127,26 +127,26 @@ namespace boost { namespace explore
             init(m_separator, detail::init_separator<El>());
             init(m_start, detail::init_start<El>());
             init(m_end, detail::init_end<El>());
-            init(m_assoc_separator, detail::init_assoc_separator<El>());
-            init(m_assoc_start, detail::init_assoc_start<El>());
-            init(m_assoc_end, detail::init_assoc_end<El>());
+            init(m_assoc_item_separator, detail::init_assoc_item_separator<El>());
+            init(m_assoc_item_start, detail::init_assoc_item_start<El>());
+            init(m_assoc_item_end, detail::init_assoc_item_end<El>());
         }
 
         // read
         const str_typ& separator() const { return at(m_separator); }
         const str_typ& start(std::size_t index = 0) const { return at(m_start); }
         const str_typ& end() const { return at(m_end); }
-        const str_typ& assoc_separator() const { return at(m_assoc_separator); }
-        const str_typ& assoc_start() const { return at(m_assoc_start); }
-        const str_typ& assoc_end() const { return at(m_assoc_end); }
+        const str_typ& assoc_item_separator() const { return at(m_assoc_item_separator); }
+        const str_typ& assoc_item_start() const { return at(m_assoc_item_start); }
+        const str_typ& assoc_item_end() const { return at(m_assoc_item_end); }
 
         // write
         void set_separator(const str_typ& str) { at(m_separator) = str; }
         void set_start(const str_typ& str) { at(m_start) = str; }
         void set_end(const str_typ& str) { at(m_end) = str; }
-        void set_assoc_separator(const str_typ& str) { at(m_assoc_separator) = str; }
-        void set_assoc_start(const str_typ& str) { at(m_assoc_start) = str; }
-        void set_assoc_end(const str_typ& str) { at(m_assoc_end) = str; }
+        void set_assoc_item_separator(const str_typ& str) { at(m_assoc_item_separator) = str; }
+        void set_assoc_item_start(const str_typ& str) { at(m_assoc_item_start) = str; }
+        void set_assoc_item_end(const str_typ& str) { at(m_assoc_item_end) = str; }
 
     private:
         container_common_stream_state* common()
@@ -167,9 +167,9 @@ namespace boost { namespace explore
         str_cont_typ m_separator;
         str_cont_typ m_start;
         str_cont_typ m_end;
-        str_cont_typ m_assoc_separator;
-        str_cont_typ m_assoc_start;
-        str_cont_typ m_assoc_end;
+        str_cont_typ m_assoc_item_separator;
+        str_cont_typ m_assoc_item_start;
+        str_cont_typ m_assoc_item_end;
 
         std::ios_base* m_stream;
 
