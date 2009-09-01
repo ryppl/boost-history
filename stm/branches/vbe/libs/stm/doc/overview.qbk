@@ -44,7 +44,7 @@ This documentation makes use of the following naming and formatting conventions.
 
 Finally, you can mentally add the following to any code fragments in this document:
 
-    // Include all of InterThreads
+    // Include all the stm header files
     #include <boost/stm.hpp>
 
     // Create a namespace aliases

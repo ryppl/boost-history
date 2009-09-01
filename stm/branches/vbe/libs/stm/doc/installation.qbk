@@ -33,14 +33,17 @@ Boost.STM is not a header only library. You need to compile it before use.
 [heading Requirements]
 [/=========================]
 
-[*Boost.STM] depends on Boost. You must use either Boost version 1.38.x
-or the version in SVN trunk (even if Boost version 1.35.x should works also). 
+[*Boost.STM] depends on Boost. We have tested it with the Boost version 1.38.x (even if Boost version 1.35.x should works also). 
 In particular, [*Boost.STM] depends on:
 
 
 [variablelist
 [
     [[@http://www.boost.org/libs/dynamic_bitset [*Boost.DynamicBitset]]]
+    [dynamic_bitsets]
+]
+[
+    [[@http://www.boost.org/libs/blom_filters [*Boost.BlomFilters]]]
     [dynamic_bitsets]
 ]
 [
