@@ -13,6 +13,14 @@ to trim whitespace from the edges of character data. This behaviour exists for
 compatibility with older versions of PropertyTree and will be made configurable
 in the future.
 
+Please note that RapidXML does not understand the encoding specification. If
+you pass it a character buffer, it assumes the data is already correctly
+encoded; if you pass it a filename, it will read the file using the character
+conversion of the locale you give it (or the global locale if you give it none).
+This means that, in order to parse a UTF-8-encoded XML file into a wptree, you
+have to supply an alternate locale, either directly or by replacing the global
+one.
+
 XML / property tree conversion schema (__read_xml__ and __write_xml__):
 
 * Each XML element corresponds to a property tree node. The child elements

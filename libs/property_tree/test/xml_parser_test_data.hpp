@@ -571,7 +571,6 @@ const char *ok_data_4 =
     "  \n"
     "  Based on RSS DTD originally created by\n"
     "  Lars Marius Garshol - larsga@ifi.uio.no.\n"
-    "  $Id$\n"
     "  \n"
     "-->\n"
     "<!ELEMENT rss (channel)>\n"
