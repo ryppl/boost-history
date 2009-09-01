@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// survial::data::constant.hpp                                               //
+// statistics::survival::data::constant.hpp                                  //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_CONSTANT_HPP_ER_2009
-#define BOOST_SURVIVAL_CONSTANT_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_CONSTANT_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_CONSTANT_HPP_ER_2009
 #include <limits>
 #include <iostream>
 #include <boost/numeric/conversion/converter.hpp>
@@ -14,6 +14,7 @@
 #include <boost/type_traits.hpp>
 
 namespace boost{
+namespace statistics{
 namespace survival{
         
         template<typename T>
@@ -48,6 +49,8 @@ namespace survival{
         template<typename T>
         T constant<T>::sig_nan_ = std::numeric_limits<T>::signaling_NaN();
         
-}
-}
+}// survival
+}// statistics
+}// boost
+
 #endif
