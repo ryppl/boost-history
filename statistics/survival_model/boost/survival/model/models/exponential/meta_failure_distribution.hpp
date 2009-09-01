@@ -5,15 +5,17 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_MODEL_MODELS_META_FAILURE_DISTRIBUTION_HPP_ER_2009
-#define BOOST_SURVIVAL_MODEL_MODELS_META_FAILURE_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_META_FAILURE_DISTRIBUTION_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_META_FAILURE_DISTRIBUTION_HPP_ER_2009
 #include <cmath>
-#include <boost/model/wrap/aggregate/model_covariate_parameter.hpp>
+#include <boost/statistics/model/wrap/aggregate/model_covariate_parameter.hpp>
 #include <boost/standard_distribution/distributions/exponential.hpp>
 #include <boost/survival/data/meta/failure_distribution.hpp>
 #include <boost/survival/model/models/exponential/model.hpp>
 
 namespace boost{
+namespace statistics{
+
 namespace survival{
 namespace data{
     
@@ -24,7 +26,7 @@ namespace data{
         
         template<typename X,typename P>
         static type make(
-            boost::model::model_covariate_parameter_<model_,X,P> mcp
+            boost::statistics::model::model_covariate_parameter_<model_,X,P> mcp
         ){
             T lambda = model_::log_rate(
                 mcp.covariate(),
@@ -41,6 +43,7 @@ namespace data{
 
 }// data
 }// survival
+}// statistics
 }// boost
 
 #endif

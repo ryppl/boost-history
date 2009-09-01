@@ -5,8 +5,8 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_MODEL_MODELS_EXPONENTIAL_MODEL_HPP_ER_2009
-#define BOOST_SURVIVAL_MODEL_MODELS_EXPONENTIAL_MODEL_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_EXPONENTIAL_MODEL_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_EXPONENTIAL_MODEL_HPP_ER_2009
 #include <numeric>
 #include <boost/mpl/assert.hpp>
 #include <boost/archive/text_oarchive.hpp>
@@ -16,6 +16,8 @@
 #include <boost/range.hpp>
 
 namespace boost{
+namespace statistics{
+
 namespace survival{
 namespace model{
 namespace exponential{
@@ -75,6 +77,7 @@ namespace exponential{
 }// exponential
 }// model    
 }// survival
+}// statistics
 }// boost
 
 #endif 

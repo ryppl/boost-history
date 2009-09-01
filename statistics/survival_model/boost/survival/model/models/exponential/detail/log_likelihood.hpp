@@ -5,14 +5,16 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_MODEL_MODELS_EXPONENTIAL_DETAIL_LOG_LIKELIHOOD_HPP_ER_2009
-#define BOOST_SURVIVAL_MODEL_MODELS_EXPONENTIAL_DETAIL_LOG_LIKELIHOOD_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_EXPONENTIAL_DETAIL_LOG_LIKELIHOOD_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_EXPONENTIAL_DETAIL_LOG_LIKELIHOOD_HPP_ER_2009
 #include <cmath>
 #include <stdexcept>
 #include <boost/format.hpp>
 #include <boost/survival/data/data/event.hpp>
 
 namespace boost{
+namespace statistics{
+
 namespace survival{
 namespace model{
 namespace exponential{
@@ -50,10 +52,11 @@ namespace detail{
         return result;
     }
             
-}// dlog_rateil
+}// detail
 }// exponential
 }// model
 }// survival
+}// statistics
 }// boost
 
 #endif 

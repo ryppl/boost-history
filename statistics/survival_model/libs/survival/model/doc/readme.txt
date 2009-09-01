@@ -37,7 +37,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 /sandbox/statistics/importance_sampling/ 
 /sandbox/statistics/importance_weights/ 
 /sandbox/statistics/joint_dist/ 
-/sandbox/statistics/non_param/ 
+/sandbox/statistics/empirical_cdf/ 
 /sandbox/statistics/mpl/ 
 /sandbox/statistics/random/ 
 /sandbox/statistics/binary_op/ 

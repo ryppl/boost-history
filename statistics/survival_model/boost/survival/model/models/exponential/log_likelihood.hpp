@@ -5,13 +5,14 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_SURVIVAL_MODEL_MODELS_EXPONENTIAL_LOG_LIKELIHOOD_HPP_ER_2009
-#define BOOST_SURVIVAL_MODEL_MODELS_EXPONENTIAL_LOG_LIKELIHOOD_HPP_ER_2009
+#ifndef BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_EXPONENTIAL_LOG_LIKELIHOOD_HPP_ER_2009
+#define BOOST_STATISTICS_SURVIVAL_MODEL_MODELS_EXPONENTIAL_LOG_LIKELIHOOD_HPP_ER_2009
 #include <boost/survival/model/meta/model_data.hpp>
 #include <boost/survival/model/models/exponential/model.hpp>
 #include <boost/survival/model/models/exponential/detail/log_likelihood.hpp>
 
 namespace boost{
+namespace statistics{
 namespace model{
     
     // Models Model (sandbox/statistics/model).
@@ -56,6 +57,7 @@ namespace model{
     }
 
 }// model
+}// statistics
 }// boost
 
 #endif 

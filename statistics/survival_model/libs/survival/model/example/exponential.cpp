@@ -35,7 +35,7 @@
 #include <libs/survival/model/example/exponential.h>
 
 // Must come after the model to be used
-#include <boost/model/include.hpp>
+#include <boost/statistics/model/include.hpp>
 
 #include <libs/survival/model/example/exponential.h>
 
@@ -50,6 +50,7 @@ void example_exponential(std::ostream& out){
     // Evaluates the likelihoods and posteriors
     
     using namespace boost;
+    using namespace statistics;
     namespace surv = survival;
 
     // [ Types ]

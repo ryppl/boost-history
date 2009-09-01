@@ -29,12 +29,12 @@
 
 #include <boost/standard_distribution/distributions/normal.hpp>
 #include <boost/math/distributions/uniform.hpp>
-#include <boost/non_param/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
 #include <boost/survival/data/include.hpp>
 #include <boost/survival/model/models/exponential/include.hpp>
 
 // Must come after the model to be used
-#include <boost/model/include.hpp>
+#include <boost/statistics/model/include.hpp>
 
 #include <boost/importance_weights/algorithm/prepare_weights.hpp>
 #include <boost/importance_sampling/include.hpp>
@@ -56,6 +56,7 @@ void example_posterior_analysis(std::ostream& out){
     // Checks the cg data against U[0,1] using Kolmogorov Smirnov
     
     using namespace boost;
+    using namespace statistics;
     namespace surv = survival;
     namespace iw = importance_weights;
 
@@ -144,7 +145,7 @@ void example_posterior_analysis(std::ostream& out){
         BOOST_ASSERT( n_batch % n_true_pars_kss == 0);
         vals_ true_pars_kss;
         true_pars_kss.reserve(n_true_pars_kss);
-        non_param::sequential_kolmogorov_smirnov_distance(
+        statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
             mprior,
             boost::begin(true_pars),
             boost::end(true_pars),
@@ -236,7 +237,7 @@ void example_posterior_analysis(std::ostream& out){
             BOOST_ASSERT( n_batch % n_p_pars_kss == 0);
             vals_ p_pars_kss;
             p_pars_kss.reserve(n_p_pars_kss);
-            non_param::sequential_kolmogorov_smirnov_distance(
+            statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
                 mproposal,
                 boost::begin(p_pars),
                 boost::end(p_pars),
@@ -347,7 +348,7 @@ void example_posterior_analysis(std::ostream& out){
                 n_t_pars
             );
             oa_t_pars << t_pars;
-            val_ plt =  algorithm::proportion_less_than(
+            val_ plt =  statistics::empirical_cdf::proportion_less_than(
                 boost::begin( t_pars ),
                 boost::end( t_pars ),
                true_pars[i]
@@ -369,7 +370,7 @@ void example_posterior_analysis(std::ostream& out){
         BOOST_ASSERT( n_batch % n_ks == 0 );
         vals_ kss;
         kss.reserve( n_batch );
-        non_param::sequential_kolmogorov_smirnov_distance(
+        statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
             munif_(),
             boost::begin( cgs ),
             boost::end( cgs ),
