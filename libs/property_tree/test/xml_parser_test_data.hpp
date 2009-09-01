@@ -731,6 +731,15 @@ const char *ok_data_4 =
     "</channel>\n"
     "</rss>\n";
 
+// Correct, with UTF-8 data
+const char ok_data_5[] = {
+  '<', '?', 'x', 'm', 'l', ' ', 'v', 'e', 'r', 's', 'i', 'o', 'n', '=', '"',
+  '1', '.', '0', '"', ' ', 'e', 'n', 'c', 'o', 'd', 'i', 'n', 'g', '=', '"',
+  'u', 't', 'f', '-', '8', '"', '?', '>', '\n', /*39 chars*/
+  '<', 'd', 'o', 'c', '>', 0xC3, 0xA4, '<', '/', 'd', 'o', 'c', '>',
+  0
+};
+
 // Erroneous
 const char *error_data_1 = 
     "a";      // bogus character
