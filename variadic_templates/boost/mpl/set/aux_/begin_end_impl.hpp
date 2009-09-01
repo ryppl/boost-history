@@ -17,7 +17,7 @@
 //GhangeLog:
 //  2007-01-28.1246.CST Larry Evans
 //    WHAT:
-//      copied from corresponding boost-cvs file and renamed set0<> to set<>
+//      copied from corresponding boost-cvs file and renamed set0<> to set0
 //    WHY:
 //      In variadic template version of library, there's no set0.
 //
@@ -41,7 +41,7 @@ struct end_impl< aux::set_tag >
 {
     template< typename Set > struct apply
     {
-        typedef s_iter< Set,set<> > type;
+        typedef s_iter< Set,set0 > type;
     };
 };
 

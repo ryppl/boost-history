@@ -84,6 +84,15 @@ struct v_item<T,Base,1> //extend Base at front with T.
     using Base::item_;
 };
 
+template
+    < typename T
+    , typename Base
+    >
+struct v_item_fold
+    : v_item<T,Base,1>
+{
+};
+
 // "erasure" item
 template< 
       typename Base

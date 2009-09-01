@@ -12,8 +12,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/08/25 12:20:04 $
-// $Revision: 1.2 $
+// $Date: 2009/08/30 12:37:14 $
+// $Revision: 1.3 $
 
 #include <boost/mpl/set_fwd.hpp>
 
@@ -51,9 +51,9 @@ namespace boost { namespace mpl {
 
 #endif
 
-template<> struct set<>
+struct set0
 {
-    typedef set<>           item_;
+    typedef set0           item_;
     typedef item_           type;
     typedef aux::set_tag    tag;
     typedef void_           last_masked_;
@@ -61,8 +61,8 @@ template<> struct set<>
     typedef long_<0>        size;
     typedef long_<1>        order;
 
-    BOOST_MPL_AUX_SET0_OVERLOAD( aux::no_tag, ORDER_BY_KEY, set<>, void const volatile* );
-    BOOST_MPL_AUX_SET0_OVERLOAD( aux::yes_tag, IS_MASKED, set<>, void const volatile* );
+    BOOST_MPL_AUX_SET0_OVERLOAD( aux::no_tag, ORDER_BY_KEY, set0, void const volatile* );
+    BOOST_MPL_AUX_SET0_OVERLOAD( aux::yes_tag, IS_MASKED, set0, void const volatile* );
 };
 
 }}

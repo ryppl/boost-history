@@ -16,7 +16,6 @@
 // $Revision: 1.1 $
 
 #include <boost/mpl/clear_fwd.hpp>
-#include <boost/mpl/map_fwd.hpp>
 #include <boost/mpl/map/aux_/map0.hpp>
 #include <boost/mpl/map/aux_/tag.hpp>
 

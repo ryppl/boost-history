@@ -7,6 +7,7 @@
 //!  indirectly #includes vector_fwd.hpp.
 //!
 #include <boost/mpl/vector/vector0.hpp>
+#include <boost/mpl/foldr_pkg.hpp>
 
 namespace boost
 {
@@ -14,18 +15,15 @@ namespace mpl
 {
 
   template
-  < typename Head
-  , typename... Tail
+  < typename... Values
   >
   struct
 vector
-  < Head
-  , Tail...
-  >
-  : v_item
-    < Head
-    , vector<Tail...>
-    >
+  : foldr_pkg
+    < vector0
+    , v_item_fold<arg<1>,arg<2> >
+    , Values...
+    >::type
 //!
 //!@nv-mpl_repl:
 //!  This specialization corresponds to all of the vectorI
@@ -36,18 +34,19 @@ vector
 //!
 //!@nv-mpl_diff:
 //!  WHAT:
-//!    Instead of adding items from the tail, items are added from
-//!    head.
+//!    1) Instead of adding items from the tail, items are added from
+//!       head.
+//!    2) foldr_pkg is used instead of recursive call of vector.
 //!  WHY:
-//!    The variadic template compiler doesn't allow parameter
-//!    packs to be followed by anything else (designated here as the
-//!    [PACKS@END_CONSTRAINT]).  IOW:
-//!      vector<typename Head..., typename Tail>
-//!    is not allowed because paramerter pack, Head..., is followed
-//!    by non-pack Tail.
+//!    1) The variadic template compiler doesn't allow parameter
+//!       packs to be followed by anything else (designated here as the
+//!       [PACKS@END_CONSTRAINT]).  IOW:
+//!         vector<typename Head..., typename Tail>
+//!       is not allowed because paramerter pack, Head..., is followed
+//!       by non-pack Tail.
+//!    2) Try and generalize the way sequences are constructed.
 //!
 {
-    typedef vector type;
 };
 
 }//exit mpl namespace

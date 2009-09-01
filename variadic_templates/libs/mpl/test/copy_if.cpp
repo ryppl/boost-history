@@ -34,6 +34,8 @@ MPL_TEST_CASE()
         >::type result;
 
     MPL_ASSERT_RELATION(size<result>::value, ==, 5);
+//    MPL_ASSERT(( is_same<void,begin<answer>::type> ));
+ //   MPL_ASSERT(( is_same<void,begin<result>::type> ));
     MPL_ASSERT(( equal<result,answer> ));
 }
 

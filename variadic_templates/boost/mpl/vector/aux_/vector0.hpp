@@ -11,8 +11,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/05/09 19:46:56 $
-// $Revision: 1.6 $
+// $Date: 2009/08/29 22:43:12 $
+// $Revision: 1.8 $
 
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/void.hpp>
@@ -42,13 +42,8 @@ namespace boost
 namespace mpl
 {
 
-  template
-  <
-  >
   struct
-vector
-  <
-  >
+vector0
 //!  
 //!@nv-mpl_repl:
 //!  This specialization replaces the vector0 template
@@ -57,7 +52,7 @@ vector
 //!
 {
     typedef aux::vector_tag tag;
-    typedef vector         type;
+    typedef vector0        type;
     static long const push_back0_index=
       0
     //|

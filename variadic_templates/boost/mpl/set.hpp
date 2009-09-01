@@ -11,11 +11,13 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Source: /home/evansl/prog_dev/boost-svn/ro/boost-vrtmp/boost/mpl/RCS/set.hpp,v $
-// $Date: 2009/08/25 20:17:50 $
-// $Revision: 1.9 $
+// $Date: 2009/08/30 12:18:00 $
+// $Revision: 1.10 $
 
 #include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/set/set0.hpp>
+#include <boost/mpl/foldr_pkg.hpp>
+#include <boost/mpl/quote.hpp>
 
 namespace boost
 {
@@ -23,20 +25,15 @@ namespace mpl
 {
 
   template
-  < class MemberKey
-  , typename... MembersOther
+  < typename... Values
   >
   struct
 set
-  < MemberKey
-  , MembersOther...
-  >
-: s_item
-  < MemberKey
-  , typename set
-    < MembersOther...
-    >::item_
-  >
+  : foldr_pkg
+    < set0
+    , s_item<arg<1>,arg<2> >
+    , Values...
+    >::type
 //!
 //!@nv-mpl_repl:
 //!  This specialization corresponds to all of the setI
@@ -46,21 +43,8 @@ set
 //!  for some N in 10,20,...
 //!
 //!@nv-mpl_diff:
-//!  WHAT:
-//!    Instead of adding items to s_item from the tail, items are added from
-//!    head.
-//!  WHY:
-//!    The variadic template compiler doesn't allow parameter
-//!    packs to be followed by anything else (designated here as the
-//!    [PACKS@END_CONSTRAINT]).  IOW:
-//!      set<typename Head..., typename Tail>
-//!    is not allowed because paramerter pack, Head..., is followed
-//!    by non-pack Tail.
-//!
+//!  Similar to that of vector.hpp.
 {
-        typedef 
-      set
-    type;
 };
 
 }//exit mpl namespace

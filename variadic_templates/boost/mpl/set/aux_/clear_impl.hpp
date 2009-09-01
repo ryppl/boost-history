@@ -12,8 +12,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/08/25 11:56:04 $
-// $Revision: 1.1 $
+// $Date: 2009/08/29 14:15:00 $
+// $Revision: 1.2 $
 
 #include <boost/mpl/clear_fwd.hpp>
 #include <boost/mpl/set/aux_/set0.hpp>
@@ -26,7 +26,7 @@ struct clear_impl< aux::set_tag >
 {
     template< typename Set > struct apply
     {
-        typedef set<> type;
+        typedef set0 type;
     };
 };
 

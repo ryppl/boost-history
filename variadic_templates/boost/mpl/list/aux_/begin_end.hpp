@@ -11,14 +11,13 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/05/08 22:20:07 $
-// $Revision: 1.1 $
+// $Date: 2009/08/30 04:12:38 $
+// $Revision: 1.3 $
 
 #include <boost/mpl/begin_end_fwd.hpp>
 #include <boost/mpl/list/aux_/iterator.hpp>
 #include <boost/mpl/list/aux_/tag.hpp>
-#include <boost/mpl/list/aux_/item.hpp>
-#include <boost/mpl/list_fwd.hpp>
+#include <boost/mpl/list/aux_/list0.hpp>
 
 namespace boost { namespace mpl {
 
@@ -27,7 +26,7 @@ struct begin_impl< aux::list_tag >
 {
     template< typename List > struct apply
     {
-        typedef l_iter<typename List::type> type;
+        typedef l_iter<typename List::pkg_type> type;
     };
 };
 
@@ -36,7 +35,7 @@ struct end_impl< aux::list_tag >
 {
     template< typename > struct apply
     {
-        typedef l_iter<list<> > type;
+        typedef l_iter<list0> type;
     };
 };
 

@@ -11,17 +11,16 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2008-10-10 04:10:26 -0500 (Fri, 10 Oct 2008) $
-// $Revision: 49239 $
+// $Date: 2009/08/30 04:13:27 $
+// $Revision: 1.2 $
 
 #include <boost/mpl/iterator_tags.hpp>
 #include <boost/mpl/next_prior.hpp>
 #include <boost/mpl/deref.hpp>
-#include <boost/mpl/list/aux_/item.hpp>
+#include <boost/mpl/list/aux_/list0.hpp>
 #include <boost/mpl/aux_/na.hpp>
 #include <boost/mpl/aux_/lambda_spec.hpp>
 #include <boost/mpl/aux_/config/ctps.hpp>
-#include <boost/mpl/list_fwd.hpp>
 
 namespace boost { namespace mpl {
 
@@ -60,7 +59,7 @@ struct l_iter
 #endif
 
 
-template<> struct l_iter<list<> >
+template<> struct l_iter<list0>
 {
     typedef aux::l_iter_tag tag;
     typedef forward_iterator_tag category;

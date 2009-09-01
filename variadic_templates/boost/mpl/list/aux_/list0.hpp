@@ -13,23 +13,22 @@
 //!  WHY:
 //!    Make consistent with the vector files.
 //!
-#include <boost/mpl/list_fwd.hpp>
+#include <boost/mpl/list/aux_/item.hpp>
 
 namespace boost
 {
 namespace mpl
 {
 
-  template
-  <
-  >
-  struct
-list
-  <
-  >
+struct list0
 {
+#if BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
+    typedef int begin;
+#endif
     typedef aux::list_tag tag;
-    typedef list type;
+    typedef list0 type;
+    typedef list0 pkg_type;
+    
     typedef long_<0> size;
 };
 

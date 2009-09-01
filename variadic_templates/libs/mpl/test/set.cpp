@@ -9,8 +9,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/08/27 16:21:07 $
-// $Revision: 1.6 $
+// $Date: 2009/08/30 17:46:06 $
+// $Revision: 1.10 $
 
 #include <boost/mpl/set.hpp>
 #include <boost/mpl/contains.hpp>
@@ -40,7 +40,7 @@ void empty_set_test()
     MPL_ASSERT_RELATION( size<s>::value, ==, 0 );
     MPL_ASSERT(( empty<s> ));
     
-    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set<> > ));
+    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set0 > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,int>::type, void_ > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,char>::type, void_ > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,long>::type, void_ > ));
@@ -70,7 +70,7 @@ void int_set_test()
     MPL_ASSERT_RELATION( size<s>::value, ==, 1 );
     MPL_ASSERT_NOT(( empty<s> ));
     
-    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set<> > ));
+    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set0 > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,int>::type, int > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,char>::type, void_ > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,long>::type, void_ > ));
@@ -102,7 +102,7 @@ void int_char_set_test()
 {
     MPL_ASSERT_RELATION( size<s>::value, ==, 2 );
     MPL_ASSERT_NOT(( empty<s> ));
-    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set<> > ));
+    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set0 > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,int>::type, int > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,char>::type, char > ));
 
@@ -131,7 +131,7 @@ void int_char_long_set_test()
 {
     MPL_ASSERT_RELATION( size<s>::value, ==, 3 );
     MPL_ASSERT_NOT(( empty<s> ));
-    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set<> > ));
+    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME clear<s>::type, set0 > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,int>::type, int > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,char>::type, char > ));
     MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME at<s,long>::type, long > ));
@@ -214,35 +214,26 @@ void basic_set_test()
 }
 
 
-template< typename S1, typename S2 >
-void numbered_vs_variadic_set_test()
-{
-    MPL_ASSERT(( is_same< S1, BOOST_DEDUCED_TYPENAME S1::type > ));
-    MPL_ASSERT(( is_same< BOOST_DEDUCED_TYPENAME S2::type, S1 > ));
-}
-
-
 MPL_TEST_CASE()
 {
+//!
+//!@nv-mpl_diff:
+//!  WHAT:
+//!    1) Numbered set types (e.g. set0,set1,set2) 
+//!       and variables (those with names ending in 2, e.g. s02,s12)
+//!       removed.
+//!  WHY:
+//!    1) Numbered set's no longer needed.
+//|
     typedef mpl::set<> s01;
-    typedef mpl::set<>  s02;
     typedef mpl::set<int> s11;
-    typedef mpl::set<int>  s12;
     typedef mpl::set<int,char> s21;
-    typedef mpl::set<int,char> s22;
     typedef mpl::set<char,int>  s23;
     typedef mpl::set<int,char,long> s31;
-    typedef mpl::set<int,char,long>  s32;
     typedef mpl::set<int,long,char>  s33;
     typedef mpl::set<long,char,int>  s34;
-
-    numbered_vs_variadic_set_test<s01,s02>();
-    numbered_vs_variadic_set_test<s11,s12>();
-    numbered_vs_variadic_set_test<s21,s22>();
-    numbered_vs_variadic_set_test<s31,s32>();
-
+    
     basic_set_test<s01,s11,s21,s31>();
-    basic_set_test<s02,s12,s22,s32>();
     basic_set_test<s01,s11,s23,s31>();
     basic_set_test<s01,s11,s23,s33>();
     basic_set_test<s01,s11,s23,s34>();
@@ -305,11 +296,9 @@ MPL_TEST_CASE()
           char,int const,long*,UDT* const,incomplete,abstract
         , incomplete volatile&,abstract const&
         > s;
-
     set_types_variety_test<s>();
     set_types_variety_test<s::type>();
 }
-
 
 template <class S>
 void find_test()
@@ -329,3 +318,4 @@ MPL_TEST_CASE()
     find_test<s>();
     find_test<s::type>();
 }
+

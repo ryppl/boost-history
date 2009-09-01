@@ -11,8 +11,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/05/08 22:12:12 $
-// $Revision: 1.5 $
+// $Date: 2009/08/30 14:45:16 $
+// $Revision: 1.7 $
 
 #include <boost/mpl/list/aux_/tag.hpp>
 #include <boost/mpl/aux_/config/msvc.hpp>
@@ -21,8 +21,7 @@
 namespace boost { namespace mpl {
 
 template<
-      typename Size
-    , typename T
+      typename T
     , typename Next
     >
 struct l_item
@@ -33,8 +32,9 @@ struct l_item
 #endif
     typedef aux::list_tag tag;
     typedef l_item type;
+    typedef l_item pkg_type;
 
-    typedef Size size;
+    typedef typename next<typename Next::size>::type size;
     typedef T item;
     typedef Next next;
 };
