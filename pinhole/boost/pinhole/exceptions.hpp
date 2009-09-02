@@ -41,6 +41,8 @@ namespace boost { namespace pinhole
     typedef ::boost::error_info< struct tag_property_type,   const std::string > exception_property_type;
     typedef ::boost::error_info< struct tag_actual_type,     const std::string > exception_actual_type;
     typedef ::boost::error_info< struct tag_action_name,     const std::string > exception_action_name;
+    typedef ::boost::error_info< struct tag_signal_name,     const std::string > exception_signal_name;
+    typedef ::boost::error_info< struct tag_signal_type,     const std::string > exception_signal_type;
     typedef ::boost::error_info< struct tag_path,            const std::string > exception_path;
     typedef ::boost::error_info< struct tag_path_section,    const std::string > exception_path_section;
 }}

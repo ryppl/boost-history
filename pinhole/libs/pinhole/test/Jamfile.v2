@@ -29,6 +29,7 @@ project
   [ run test_string_properties.cpp  ]
   
   [ run test_actions.cpp  ]
+  [ run test_signals.cpp  ]
  
   [ run test_tokenizer.cpp ]
   [ run test_depth_first_iterator.cpp ]

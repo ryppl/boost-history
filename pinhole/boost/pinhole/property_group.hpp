@@ -11,12 +11,13 @@
 #include "types.hpp"
 #include "map_key_value_iterators.hpp"
 #include "property_info.hpp"
+#include "signal_info.hpp"
 #include "action_info.hpp"
 #include "property_manager.hpp"
 #include <sstream>
 
 #include <boost/bind.hpp>
-#include <boost/type_traits.hpp>
+#include <boost/type_traits/add_reference.hpp>
 #include <boost/function.hpp>
 #include <boost/static_assert.hpp>
 #include <boost/any.hpp>
@@ -545,7 +546,7 @@ namespace boost { namespace pinhole
             typedef map_key_iterator<action_collection::const_iterator> const_action_iterator;
 
             /**
-             * Retrieves an iterator pointing to the name of the first property.
+             * Retrieves an iterator pointing to the name of the first action.
              */
             action_iterator action_begin()
             {
@@ -553,7 +554,7 @@ namespace boost { namespace pinhole
             }
 
             /**
-             * Retrieves an iterator pointing to the name of the first property.
+             * Retrieves an iterator pointing to the name of the first action.
              */
             const_action_iterator action_begin() const
             {
@@ -561,7 +562,7 @@ namespace boost { namespace pinhole
             }
 
             /**
-             * Retrieves an iterator pointing to the end of the property list.
+             * Retrieves an iterator pointing to the end of the action list.
              */
             action_iterator action_end()
             {
@@ -569,7 +570,7 @@ namespace boost { namespace pinhole
             }
 
             /**
-             * Retrieves an iterator pointing to the end of the property list.
+             * Retrieves an iterator pointing to the end of the action list.
              */
             const_action_iterator action_end() const
             {
@@ -577,7 +578,7 @@ namespace boost { namespace pinhole
             }
 
             /**
-             * Retrieves the number of properties.
+             * Retrieves the number of actions.
              */
             action_size_type action_count() const
             {
@@ -633,6 +634,114 @@ namespace boost { namespace pinhole
                 else
                 {
                     throw ::boost::enable_error_info(std::out_of_range("The requested action does not exist.")) << ::boost::pinhole::exception_action_name(action);
+                }
+            }
+        //@}
+        
+        /** @name Signals */
+        //@{
+            typedef signal_collection::size_type signal_size_type;
+            typedef map_key_iterator<signal_collection::iterator> signal_iterator;
+            typedef map_key_iterator<signal_collection::const_iterator> const_signal_iterator;
+            
+            /**
+             * Retrieves an iterator pointing to the name of the first signal.
+             */
+            signal_iterator signal_begin()
+            {
+                return signal_iterator( m_signals.begin() );
+            }
+            
+            /**
+             * Retrieves an iterator pointing to the name of the first signal.
+             */
+            const_signal_iterator signal_begin() const
+            {
+                return const_signal_iterator( m_signals.begin() );
+            }
+            
+            /**
+             * Retrieves an iterator pointing to the end of the signal list.
+             */
+            signal_iterator signal_end()
+            {
+                return signal_iterator( m_signals.end() );
+            }
+            
+            /**
+             * Retrieves an iterator pointing to the end of the signal list.
+             */
+            const_signal_iterator signal_end() const
+            {
+                return const_signal_iterator( m_signals.end() );
+            }
+            
+            /**
+             * Retrieves the number of properties.
+             */
+            signal_size_type signal_count() const
+            {
+                return m_signals.size();
+            }
+            
+            /**
+             * Returns whether the signal exists.
+             * @retval true Signal exists.
+             * @retval false Signal does not exist.
+             */
+            bool is_valid_signal( const std::string &signal ) const
+            {
+                return m_signals.find(signal) != m_signals.end();
+            }
+            
+            /**
+             * Returns a signal.
+             * @param signal The name of the signal.
+             * @throw std::out_of_range The signal requested does not exist.
+             */
+            template<typename SignalType>
+            typename boost::add_reference<SignalType>::type get_signal(const std::string &signal) const
+            {
+                typedef typename boost::add_reference<SignalType>::type SignalTypeRef;
+                
+                signal_collection::const_iterator itemItr = m_signals.find(signal);
+                
+                if( m_signals.end() != itemItr )
+                {
+                    detail::signal_info_base* signalInfo = (*itemItr).second;
+                    
+                    if( typeid(SignalTypeRef) == signalInfo->m_type )
+                    {
+                        return static_cast<detail::signal_info<SignalTypeRef>*>(signalInfo)->m_signal;
+                    }
+                    
+                    throw ::boost::enable_error_info(std::bad_cast())
+                        << ::boost::pinhole::exception_additional_info("Attempted to get a signal using a type different from the signal's type.")
+                        << ::boost::pinhole::exception_property_name(signal)
+                        << ::boost::pinhole::exception_requested_type(typeid(SignalType).name())
+                        << ::boost::pinhole::exception_signal_type(signalInfo->m_type.name());
+                }
+                
+                throw ::boost::enable_error_info(std::out_of_range("The requested signal does not exist.")) << ::boost::pinhole::exception_signal_name(signal);
+            }
+            
+            /**
+             * Gets an anction's metadata object.
+             * @param property The name of the property.
+             * @return The metadata object of the property.
+             * @throw std::out_of_range The property requested does not exist.
+             */
+            const boost::any& get_signal_metadata(const std::string &signal) const
+            {
+                signal_collection::const_iterator itemItr = m_signals.find(signal);
+                
+                if( itemItr != m_signals.end() )
+                {
+                    return( (*itemItr).second->m_metadata );
+                }
+                else
+                {
+                    throw ::boost::enable_error_info(std::out_of_range("The requested signal does not exist.")) << ::boost::pinhole::exception_signal_name(signal);
                 }
             }
         //@}
@@ -728,6 +837,42 @@ namespace boost { namespace pinhole
                 m_actions.insert( std::make_pair(name, action_info) );
             }
         }
+        
+        /**
+         * Adds a signal to the signal list.
+         * @param name The name of the property.
+         * @param signal The signal to add.
+         * @param metadata A pointer to the editor to be used with this signal, or null
+         *                 if there isn't one.
+         */
+        template< typename SignalType>
+        void add_signal( std::string name,
+                         SignalType& signal,
+                         boost::any metadata = boost::any() )
+        {
+            typedef typename boost::add_reference<SignalType>::type SignalTypeRef;
+            
+            detail::signal_info<SignalTypeRef> *sig = new detail::signal_info<SignalTypeRef>(signal);
+            
+            // Fill out property information
+            
+            sig->m_name     = name;
+            sig->m_metadata = metadata;
+            
+            // Store property information
+            
+            signal_collection::iterator previousInstance = m_signals.find(name);
+            if( m_signals.end() != previousInstance )
+            {
+                // Object already exists. Destroy existing instance and replace it.
+                delete (*previousInstance).second;
+                (*previousInstance).second = sig;
+            }
+            else
+            {
+                m_signals.insert( std::make_pair(name, sig) );
+            }
+        }
 
         /**
         * Adds this property to the specified category.
@@ -748,7 +893,8 @@ namespace boost { namespace pinhole
             category_collection m_category_collection;
             children_collection m_children_collection;
             property_collection m_properties;
-            action_collection m_actions;
+            signal_collection   m_signals;
+            action_collection   m_actions;
         #if defined(BOOST_MSVC)
             #pragma warning(pop)
         #endif
