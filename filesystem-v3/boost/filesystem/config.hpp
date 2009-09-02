@@ -25,6 +25,12 @@
 #include <boost/config.hpp>
 #include <boost/detail/workaround.hpp> 
 
+//  BOOST_FILESYSTEM_DEPRECATED needed for source compiles -----------------------------//
+
+# ifdef BOOST_FILESYSTEM_SOURCE
+#   define BOOST_FILESYSTEM_DEPRECATED
+# endif
+
 //  determine platform  ----------------------------------------------------------------//
 
 //  BOOST_POSIX_API or BOOST_WINDOWS_API specify which API to use
@@ -32,15 +38,15 @@
 # if defined( BOOST_WINDOWS_API ) && defined( BOOST_POSIX_API )
 #   error both BOOST_WINDOWS_API and BOOST_POSIX_API are defined
 # elif !defined( BOOST_WINDOWS_API ) && !defined( BOOST_POSIX_API )
-#   if (defined(_WIN32) || defined(__WIN32__) || defined(WIN32)) && !defined(BOOST_NO_STD_WSTRING)
+#   if defined(_WIN32) || defined(__WIN32__) || defined(WIN32)
 #     define BOOST_WINDOWS_API
 #   else
 #     define BOOST_POSIX_API 
 #   endif
 # endif
 
-# if defined( BOOST_WINDOWS_API ) && defined( BOOST_NO_STD_WSTRING )
-#   error BOOST_WINDOWS_API can not be used when BOOST_NO_STD_WSTRING is defined
+# if defined( BOOST_NO_STD_WSTRING )
+#   error Boost.Filesystem V3 and later requires std::wstring support
 # endif
 
 //  BOOST_WINDOWS_PATH enables Windows path syntax recognition
@@ -49,19 +55,14 @@
 //  that isn't possible for v3 because BOOST_WINDOWS_PATH requires wstring support
 
 # if !defined(BOOST_POSIX_PATH) && (defined(_WIN32) || defined(__WIN32__) || defined(WIN32) \
-  || (defined(__CYGWIN__) && !defined(BOOST_NO_STD_WSTRING)))
+  || defined(__CYGWIN__))
 #   define BOOST_WINDOWS_PATH
-# endif
-
-//  narrow support only for badly broken compilers or libraries  -----------------------//
-
-# if defined(BOOST_NO_STD_WSTRING) || defined(BOOST_NO_SFINAE) || defined(BOOST_NO_STD_LOCALE) || BOOST_WORKAROUND(__BORLANDC__, BOOST_TESTED_AT(0x592))
-#   define BOOST_FILESYSTEM_NARROW_ONLY
 # endif
 
 //  enable dynamic linking on Windows  -------------------------------------------------//
 
-#  if (defined(BOOST_ALL_DYN_LINK) || defined(BOOST_FILESYSTEM_DYN_LINK)) && defined(__BORLANDC__) && defined(__WIN32__)
+#  if (defined(BOOST_ALL_DYN_LINK) || defined(BOOST_FILESYSTEM_DYN_LINK)) \
+  && BOOST_WORKAROUND(__BORLANDC__, <0x610) && defined(__WIN32__)
 #    error Dynamic linking Boost.Filesystem does not work for Borland; use static linking instead
 #  endif
 

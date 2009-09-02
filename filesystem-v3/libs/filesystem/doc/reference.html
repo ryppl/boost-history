@@ -48,7 +48,7 @@
     Header &lt;filesystem&gt; synopsis</a><br>
     <a href="#Path-traits">Path traits</a><br>
     <a href="#Class-template-path">
-    Class template path</a><br>
+    Class path</a><br>
     &nbsp;&nbsp;&nbsp;
 <a href="#Pathname-formats">Pathname formats</a><br>
     &nbsp;&nbsp;&nbsp;
@@ -57,7 +57,7 @@
 <a href="#Input-conversion">Filename conversion</a><br>
     &nbsp;&nbsp;&nbsp;
 <a href="#path-requirements">Requirements</a> </td>
-    <td width="35%" valign="top">&nbsp;Class template path (continued)<br>
+    <td width="35%" valign="top">&nbsp;Class  path (continued)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#path-requirements">path constructors</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -70,6 +70,8 @@
 <a href="#path-decompositions">path observers</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#path-iterators">path iterators</a><br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+    <a href="#path-deprecated-functions">path deprecated functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 <a href="#path-non-member-functions">path non-member functions</a><br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
@@ -343,12 +345,19 @@ error_code</code> with the value of ec.</span></p>
         uintmax_t free;
         uintmax_t available;
       };
-</span>
-      //  <a href="#Status-functions">status functions</a>
-      file_status status(const path&amp; p);
-      file_status status(const path&amp; p, error_code&amp; ec);
-      file_status symlink_status(const path&amp; p);
-      file_status symlink_status(const path&amp; p, error_code&amp; ec);
+
+      BOOST_SCOPED_ENUM_START(<a name="copy_option">copy_option</a>)
+      {
+        fail_if_exists,
+        overwrite_if_exists
+      };
+      BOOST_SCOPED_ENUM_END
+
+</span>      //  <a href="#Status-functions">status functions</a>
+      file_status status(const path&amp; p,
+                         system::error_code &amp; ec = throws());
+      file_status symlink_status(const path&amp; p,
+                                 system::error_code &amp; ec = throws());
 
       //  <a href="#Predicate-functions">predicate functions</a>
       bool status_known( file_status s ); 
@@ -358,34 +367,56 @@ error_code</code> with the value of ec.</span></p>
       bool is_symlink( file_status s );
       bool is_other( file_status s );
 
-      bool exists(const path&amp; p);
-      bool is_directory(const path&amp; p);
-      bool is_regular_file(const path&amp; p);
-      bool is_other(const path&amp; p);
-      bool is_symlink(const path&amp; p);
-      bool is_empty(const path&amp; p);
+      bool exists(const path&amp; p,
+                  system::error_code &amp; ec = throws());
+      bool is_directory(const path&amp; p,
+                        system::error_code &amp; ec = throws());
+      bool is_regular_file(const path&amp; p,
+                           system::error_code &amp; ec = throws());
+      bool is_other(const path&amp; p,
+                    system::error_code &amp; ec = throws());
+      bool is_symlink(const path&amp; p,
+                      system::error_code &amp; ec = throws());
+      bool is_empty(const path&amp; p,
+                    system::error_code &amp; ec = throws());
 
-      bool equivalent(const path&amp; p1, const path&amp; p2);
+      bool equivalent(const path&amp; p1, const path&amp; p2, system::error_code &amp; ec = throws());
 
       //  <a href="#Attribute-functions">attribute functions</a>
-      path current_path();
-      void current_path(const path&amp; p);
-      const path&amp; initial_path();
-      <span style="background-color: #FFFFFF; ">uintmax_t</span> file_size(const path&amp; p);
-<span style="background-color: #FFFFFF">      space_info space(const path&amp; p);</span><span style="background-color: #FFFF00">
-</span>      std::time_t last_write_time(const path&amp; p);
-      void last_write_time(const path&amp; p, const std::time_t new_time);
+      path         current_path(system::error_code &amp; ec = throws());
+      void         current_path(const path&amp; p,
+                                system::error_code &amp; ec = throws());
+      const path&amp;  initial_path(system::error_code &amp; ec = throws());
+      <span style="background-color: #FFFFFF; ">uintmax_t</span>    file_size(const path&amp; p,
+                             system::error_code &amp; ec = throws());
+<span style="background-color: #FFFFFF">      space_info   space(const path&amp; p</span>,
+                         system::error_code &amp; ec = throws()<span style="background-color: #FFFFFF">);</span><span style="background-color: #FFFF00">
+</span>      std::time_t  last_write_time(const path&amp; p,
+                                   system::error_code &amp; ec = throws());
+      void         last_write_time(const path&amp; p, const std::time_t new_time,
+                                   system::error_code &amp; ec = throws());
 
       //  <a href="#Operations-functions">operations functions</a>
-      bool create_directory(const path&amp; p);
-      void create_hard_link(const path&amp; old, const path&amp; new_link);
-<span style="background-color: #FFFFFF">      void create_symlink(const path&amp; old, const path&amp; new_link);
-</span>      bool remove_path(const path&amp; p);
-      void rename_path(const path&amp; old, const path&amp; new_p);
-      void copy_file(const path&amp; from, const path&amp; to);
-      path system_complete(const path&amp; p);
-      path complete(const path&amp; p, const path base=initial_path());
-
+      bool create_directory(const path&amp; p,
+                            system::error_code &amp; ec = throws());
+      void create_hard_link(const path&amp; old, const path&amp; new_link,
+                            system::error_code &amp; ec = throws());
+<span style="background-color: #FFFFFF">      void create_symlink(const path&amp; old, const path&amp; new_link</span>,
+                          system::error_code &amp; ec = throws()<span style="background-color: #FFFFFF">);
+</span>      bool <span style="background-color: #FFFF00">remove_path</span>(const path&amp; p,
+                       system::error_code &amp; ec = throws());
+      void <span style="background-color: #FFFF00">rename_path</span>(const path&amp; old, const path&amp; new_p,
+                       system::error_code &amp; ec = throws());
+      void copy_file( const path &amp; from, const path &amp; to,
+                      BOOST_SCOPED_ENUM(copy_option) option,
+                      system::error_code &amp; ec = throws() );
+      void copy_file( const path &amp; from, const path &amp; to,
+                      system::error_code &amp; ec = throws() )
+      path system_complete(const path&amp; p,
+                           system::error_code &amp; ec = throws());
+<span style="background-color: #FFFF00">      path </span><span style="background-color: #FFFF00">complete(const</span><span style="background-color: #FFFF00"> path&amp; p,
+                    const path base=</span><span style="background-color: #FFFF00">initial_path</span><span style="background-color: #FFFF00">());
+</span>
       //  <a href="#Convenience-functions">convenience functions</a>
       bool create_directories(const path&amp; p);
       typename Path::string_type extension(const path&amp; p);
@@ -505,13 +536,7 @@ system. </p>
       public:
         typedef <b><i>see below</i></b>                     value_type;  // char for POSIX, wchar_t for Windows
         typedef std::basic_string&lt;value_type&gt; string_type;
-        typedef string_type::size_type        size_type;
         typedef path_traits::codecvt_type     codecvt_type;
-
-        static const value_type generic_separator = <b><i>see below</i></b>;    // '/' for POSIX
-                                                                  // L'/' for Windows
-        static const value_type preferred_separator = <b><i>see below</i></b>;  // '/' for POSIX
-                                                                  // L'\\' for Windows
 
         // <a href="#path-constructors">constructors/destructor</a>
         path();
@@ -836,8 +861,14 @@ appends</a></h4>
   <p><i>Postconditions:</i> <code>native()</code> contains:</p>
   <ul>
     <li>the original contents of <code>native()</code>, </li>
-    <li>followed by a <code>native_separator</code>, unless an added separator 
-    would be redundant or would change an incomplete path to a complete path,</li>
+    <li>followed by an added native separator, unless:<ul>
+    <li>an added separator 
+    would be redundant, or</li>
+    <li>would change an incomplete path to a complete path, or</li>
+    <li><code>p.empty()</code>, or</li>
+    <li><code>*p.native().cbegin()</code> is a separator,</li>
+  </ul>
+    </li>
     <li>followed by <code>p.native()</code>.</li>
   </ul>
 </blockquote>
@@ -849,8 +880,14 @@ appends</a></h4>
   <p><i>Postconditions:</i> <code>native()</code> contains:</p>
   <ul>
     <li>the original contents of <code>native()</code>, </li>
-    <li>followed by a <code>native_separator</code>, unless an added separator 
-    would be redundant or would change an incomplete path to a complete path,</li>
+    <li>followed by an added native separator, unless:<ul>
+    <li>an added separator 
+    would be redundant, or</li>
+    <li>would change an incomplete path to a complete path, or</li>
+    <li><code>source</code> is empty, or</li>
+    <li><code>source</code> begins with a separator,</li>
+  </ul>
+    </li>
     <li>followed by a copy of [<code>begin</code>,<code>end</code>) or <code>source</code>, converted to the 
   format and encoding required by the host operating system (<a href="#Input-conversion">Input 
   conversion</a>).</li>
@@ -950,7 +987,7 @@ by <code>codecvt()</code>.</p>
 <p><i>[Note:</i> For Windows implementations, no conversion is required; the 
 implementation will simply return <code>native()</code>. <i>-- end note]</i></p>
 </blockquote>
-<pre><b><i>const-string</i></b> generic_string() const;</pre>
+<pre><b><i>const-string</i></b> string() const;</pre>
 <blockquote>
 <p><b><i><code>const-string</code></i></b> is permitted to be <code>const 
 std::string</code> or <code>const std::string&amp;</code>.</p>
@@ -958,7 +995,7 @@ std::string</code> or <code>const std::string&amp;</code>.</p>
 representation</a> of the contents of <code>native()</code>. If <code>value_type</code> 
 is not <code>char</code>, the encoding is converted by <code>codecvt()</code>.</p>
 </blockquote>
-<pre><b><i>const-wstring</i></b> generic_wstring() const;</pre>
+<pre><b><i>const-wstring</i></b> wstring() const;</pre>
 <blockquote>
 <p><b><i><code>const-wstring</code></i></b> is permitted to be <code>const 
 std::wstring</code> or <code>const std::wstring&amp;</code>.</p>
@@ -1083,6 +1120,35 @@ iterators [lib.bidirectional.iterators]). Its <code>value_type</code> is
 <blockquote>
   <p><i>Returns:</i> The end iterator.</p>
 </blockquote>
+<h4> <code><font size="4">class <a name="path-deprecated-functions">path</a></font></code><a name="path-deprecated-functions"> 
+deprecated functions</a></h4>
+<p> <span style="background-color: #FFFF00">index.htm</span><span style="background-color: #FFFF00"> 
+also has a section (see macros) partially duplicating this material. Change to 
+reference this.</span></p>
+<p> Several member functions from previous versions of <code>class path</code> 
+have been deprecated, either because they have been renamed or because the 
+functionality is no longer desirable or has become obsolete.</p>
+<p> Deprecated functions available by default; will be suppressed if <code>
+BOOST_FILESYSTEM_NO_DEPRECATED</code> is defined:</p>
+<blockquote>
+  <pre>path&amp;  remove_leaf()           { return remove_filename(); }
+path   leaf() const            { return filename(); }
+path   branch_path() const     { return parent_path(); }
+bool   has_leaf() const        { return !m_path.empty(); }
+bool   has_branch_path() const { return !parent_path().empty(); }</pre>
+</blockquote>
+<p> Deprecated functions not available by default; will be supplied if <code>
+BOOST_FILESYSTEM_DEPRECATED</code> is defined:</p>
+<blockquote>
+  <pre>const std::string  file_string() const               { return native_string(); }
+const std::string  directory_string() const          { return native_string(); }
+const std::string  native_file_string() const        { return native_string(); }
+const std::string  native_directory_string() const   { return native_string(); }
+const string_type  external_file_string() const      { return native(); }
+const string_type  external_directory_string() const { return native(); }</pre>
+</blockquote>
+<p>Functions no longer available:</p>
+<p><span style="background-color: #FFFF00">TBS</span></p>
 <h4> <a name="path-non-member-functions">
 <span style="background-color: #FFFFFF">path non-member functions</span></a></h4>
 <pre><span style="background-color: #FFFFFF">template&lt;class String, class Traits&gt;
@@ -2040,10 +2106,8 @@ fail on a directory.
   directory_iterator&lt;Path&gt;(p) == directory_iterator&lt;Path&gt;()<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp; : file_size(p) == 0;</code></p>
 </blockquote>
-<pre><code>template &lt;class path, class path&gt; bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);</code></pre>
+<pre><code>bool <a name="equivalent">equivalent</a>(const path&amp; p1, const path&amp; p2);</code></pre>
 <blockquote>
-  <p><i>Requires:</i> <code>path::external_string_type</code> and <code>
-  path::external_string_type</code> are the same type. </p>
   <p><i>Effects:</i> Determines <code>file_status s1</code> and <code>s2</code>, 
   as if by <code>status(p1)</code> and&nbsp; <code>status(p2)</code>, 
   respectively.</p>
@@ -2088,7 +2152,7 @@ systems. <i>--end note</i>.]</p>
   encouraged to call it immediately on entrance to <code>main()</code> so that 
   they will work correctly with such partial implementations. <i>--end note</i>]</p>
 </blockquote>
-<pre>Path current_path();</pre>
+<pre>path current_path();</pre>
 <blockquote>
   <p><i>Returns:</i> The current path, as if by <i>POSIX</i>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/getcwd.html">
@@ -2116,7 +2180,7 @@ systems. <i>--end note</i>.]</p>
   obtained as if by <i>POSIX</i> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/stat.html">stat()</a></code>.</p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF"><a name="space">template</a> &lt;class Path&gt; space_info space(const path&amp; p);</span></pre>
+<pre><span style="background-color: #FFFFFF">space_info space(const path&amp; p);</span></pre>
 <blockquote>
   <p><span style="background-color: #FFFFFF"><i>Returns:</i> A <code>space_info</code> 
   object. The value of the <code>space_info</code> object is determined as if by 
@@ -2162,8 +2226,7 @@ systems. <i>--end note</i>.]</p>
   <p><i>Returns:</i> True if a new directory was created, otherwise false.</p>
   <p><i>Postcondition:</i> <code>is_directory(dp)</code></p>
 </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
-  error_code create_hard_link(const path&amp; to_p, const path&amp; from_p, error_code&amp; ec);</span></pre>
+<pre><span style="background-color: #FFFFFF">void create_hard_link(const path&amp; to_p, const path&amp; from_p, error_code&amp; ec);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
@@ -2174,9 +2237,6 @@ systems. <i>--end note</i>.]</p>
   </span> <code>
   <a href="http://www.opengroup.org/onlinepubs/000095399/functions/link.html">
   <span style="background-color: #FFFFFF">link()</span></a></code><span style="background-color: #FFFFFF">.</span></p>
-  <p><i><span style="background-color: #FFFFFF">Returns:</span></i><span style="background-color: #FFFFFF"> If the 
-  postcondition cannot be established, a system error code 
-  indicating the reason for the failure, otherwise 0.</span></p>
   <p><i><span style="background-color: #FFFFFF">Postcondition:</span></i></p>
   <ul>
     <li><span style="background-color: #FFFFFF">&nbsp;</span><code><span style="background-color: #FFFFFF">exists(to_p) &amp;&amp; exists(from_p) &amp;&amp; equivalent(to_p, 
@@ -2195,8 +2255,7 @@ systems. <i>--end note</i>.]</p>
   for example. Thus hard links should be avoided if wide portability is 
   a concern. </span> <i><span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
-  void create_hard_link(const path&amp; to_p, const path&amp; from_p);</span></pre>
+<pre><span style="background-color: #FFFFFF">void create_hard_link(const path&amp; to_p, const path&amp; from_p);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
@@ -2208,8 +2267,7 @@ systems. <i>--end note</i>.]</p>
   </span> <code>basic_filesystem_error&lt;path, path&gt;</code><span style="background-color: #FFFFFF"> 
   if <code>ec</code> is not zero.</span></p>
   </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
-  error_code create_symlink(const path&amp; to_p, const path&amp; from_p, error_code&amp; ec);</span></pre>
+<pre><span style="background-color: #FFFFFF">void create_symlink(const path&amp; to_p, const path&amp; from_p, error_code&amp; ec);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
@@ -2232,8 +2290,7 @@ systems. <i>--end note</i>.]</p>
   them only for regular files. Thus symbolic links should be avoided if code portability is 
   a concern. </span> <i><span style="background-color: #FFFFFF">-- end note</span></i><span style="background-color: #FFFFFF">]</span></p>
   </blockquote>
-<pre><span style="background-color: #FFFFFF">template &lt;class path, class path&gt;
-  void create_symlink(const path&amp; to_p, const path&amp; from_p);</span></pre>
+<pre><span style="background-color: #FFFFFF">void create_symlink(const path&amp; to_p, const path&amp; from_p);</span></pre>
 <blockquote>
   <p><i><span style="background-color: #FFFFFF">Requires:</span></i><span style="background-color: #FFFFFF">
   </span> <code><span style="background-color: #FFFFFF">path::external_string_type</span></code><span style="background-color: #FFFFFF"> and
@@ -2295,17 +2352,25 @@ systems. <i>--end note</i>.]</p>
   existing file, it is removed. A symbolic link is itself renamed, rather than 
   the file it resolves to being renamed. <i>-- end note</i>]</p>
 </blockquote>
-<pre>template &lt;class path, class path&gt; void copy_file(const path&amp; from_fp, const path&amp; to_fp);</pre>
+<pre>void copy_file(const path &amp; from, const path &amp; to,
+               BOOST_SCOPED_ENUM(copy_option) option,
+               system::error_code &amp; ec = throws());</pre>
 <blockquote>
-  <p><i>Requires:</i> <code>path::external_string_type</code> and <code>
-  path::external_string_type</code> are the same type. </p>
-  <p><i>Effects:</i> The contents and attributes of the file <code>from_fp</code> 
-  resolves to are copied to the file <code>to_fp</code> resolves to.</p>
+  <p><i>Effects:</i> The contents and attributes of the file <code>from</code> 
+  resolves to are copied to the file <code>to</code> resolves to.</p>
   <p><i>Throws:</i> <code>basic_filesystem_error&lt;Path&gt;</code> if <code>
-  from_fp.empty() || to_fp.empty() ||!exists(from_fp) || !is_regular_file(from_fp) 
-  || exists(to_fp)</code></p>
+  from.empty() || to.empty() ||!exists(from) || !is_regular_file(from) || 
+  (option==<a href="file:///C:/boost/trunk/libs/filesystem/doc/reference.html#copy_option">copy_option</a>::fail_if_exists 
+  &amp;&amp; exists(to))</code></p>
 </blockquote>
-<pre>Path complete(const path&amp; p, const path base=initial_path&lt;Path&gt;());</pre>
+<pre>void copy_file(const path &amp; from, const path &amp; to,
+               system::error_code &amp; ec = throws());</pre>
+<blockquote>
+  <p><i>Effects:</i><code>copy_file(from, to, 
+  copy_option::fail_if_exists, ec)</code>.</p>
+  
+</blockquote>
+<pre>path complete(const path&amp; p, const path&amp; base=initial_path());</pre>
 <blockquote>
   <p><i>Effects:</i> Composes a complete path from <code>p</code> and <code>base</code>, 
   using the following rules:</p>
@@ -2344,7 +2409,7 @@ systems. <i>--end note</i>.]</p>
   is expected by program users. <i>-- 
   end note</i>]</p>
 </blockquote>
-<pre>Path system_complete(const path&amp; p);</pre>
+<pre>path system_complete(const path&amp; p);</pre>
 <blockquote>
   <p><i>Effects:</i> Composes a complete path from <code>p</code>, using the 
   same rules used by the operating system to resolve a path passed as the 
@@ -3118,11 +3183,11 @@ final document.</p>
   </tr>
 </table>
 <hr>
-<p>© Copyright Beman Dawes, 2002, 2006, 2007</p>
+<p>© Copyright Beman Dawes, 2002, 2006, 2007, 2009</p>
 <p>Distributed under the Boost Software License, Version 1.0. See
 <a href="http://www.boost.org/LICENSE_1_0.txt">www.boost.org/LICENSE_1_0.txt</a></p>
 <p>Revised
-<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->23 August 2009<!--webbot bot="Timestamp" endspan i-checksum="31532" --></p>
+<!--webbot bot="Timestamp" S-Type="EDITED" S-Format="%d %B %Y" startspan -->02 September 2009<!--webbot bot="Timestamp" endspan i-checksum="39498" --></p>
 
 </body>
 

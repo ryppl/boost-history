@@ -64,7 +64,24 @@ namespace path_traits {
  
   typedef std::codecvt<wchar_t, char, std::mbstate_t> codecvt_type;
 
-  //  Pathable dispatchers
+  //  Pathable empty
+
+  template <class Container> inline
+    bool empty( const Container & c )
+      { return c.begin() == c.end(); }
+
+  template <class T> inline
+    bool empty( T * const & c_str )
+  {
+    BOOST_ASSERT( c_str );
+    return !*c_str;
+  }
+
+  template <typename T, size_t N> inline
+     bool empty( T (&array)[N] )
+       { return N <= 1; }
+
+  //  Pathable dispatch
 
   template <class Container, class U> inline
   void dispatch( const Container & c, U & to, const codecvt_type & cvt )
@@ -77,7 +94,8 @@ namespace path_traits {
   template <class T, class U> inline
   void dispatch( T * const & c_str, U & to, const codecvt_type & cvt )
   {
-//    std::cout << "dispatch() const T *\n"; 
+//    std::cout << "dispatch() const T *\n";
+    BOOST_ASSERT( c_str );
     convert( c_str, to, cvt );
   }
   

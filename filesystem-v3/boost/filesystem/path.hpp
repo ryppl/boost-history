@@ -25,22 +25,16 @@
      reference.html#Path-decomposition-table needs rows for //, //netname, //netname/foo
      Make sure current trunk has passing tests for those cases, all decompositions.
      See test_decompositions() in path_unit_test.cpp
-   * Get the deprecated names working.
    * Document leading //: no longer treated specially.
    * Document behavior of path::replace_extension has change WRT argument w/o a dot.
-   * reference.html: operator /= is underspecified as to when a "/" is appended, and
-     whether a '/' or '\' is appended.
    * Provide the name check functions for more character types? Templatize?
-   * Why do preferred() and generic() return paths rather than const strings/string refs?
-     Either change or document rationale.
    * Use BOOST_DELETED, BOOST_DEFAULTED, where appropriate.
    * Add test for scoped_path_locale.
+   * Add codepage 936/950/etc test cases.
      
                          Design Questions
 
 
-   * Should path_locale use thread local storage?
-   * Will locale overloads be needed in practice?
    * Is it OK for single-element decomposition functions to return paths? Yes;
      keep the interface simple and usable in generic code at the expense of some
      notational convenience.
@@ -52,7 +46,6 @@
      No. KISS. basic_string<char> is special because it is the predominent
      use case. w (and other) flavors can be added later.
    * Should UDT's be supported? Yes. Easy to do and pretty harmless.
-   * Remove all support for environments that don't support wstring.
    * Should path iteration to a separator result in:
        -- the actual separator used
        -- the preferred separator
@@ -68,10 +61,8 @@
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/iterator/iterator_facade.hpp>
-//#include <boost/utility/enable_if.hpp>
 #include <boost/throw_exception.hpp>
 #include <boost/shared_ptr.hpp>
-//#include <boost/type_traits/is_same.hpp>
 #include <boost/static_assert.hpp>
 #include <string>
 #include <cstring>
@@ -147,13 +138,10 @@ namespace filesystem
 
 # ifdef BOOST_WINDOWS_API
     typedef wchar_t                        value_type;
-    static const wchar_t preferred_separator = L'\\';
 # else 
     typedef char                           value_type;
-    static const char preferred_separator = '/';
 # endif
     typedef std::basic_string<value_type>  string_type;  
-    typedef string_type::size_type         size_type;
     typedef path_traits::codecvt_type      codecvt_type;
 
     //  ----- character encoding conversions -----
@@ -271,30 +259,13 @@ namespace filesystem
     //  if a separator is added, it is the preferred separator for the platform;
     //  slash for POSIX, backslash for Windows
 
-    path & operator/=( const path & p )
-    {
-      m_append_separator_if_needed();
-      m_path += p.m_path;
-      return *this;
-    }
+    path & operator/=( const path & p );
 
     template <class ContiguousIterator>
-    path & append( ContiguousIterator begin, ContiguousIterator end )
-    { 
-      m_append_separator_if_needed();
-      if ( begin != end )
-        path_traits::convert( &*begin, &*begin+std::distance(begin, end),
-          m_path, codecvt() );
-      return *this;
-    }
+    path & append( ContiguousIterator begin, ContiguousIterator end );
 
     template <class PathSource>
-    path & operator/=( PathSource const & range )
-    {
-      m_append_separator_if_needed();
-      path_traits::dispatch( range, m_path, codecvt() );
-      return *this;
-    }
+    path & operator/=( PathSource const & range );
 
     //  -----  modifiers  -----
 
@@ -305,17 +276,13 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    path & path::localize();  // change slash to backslash
+    path & localize();  // change slash to backslash
 
 #   else // BOOST_POSIX_API
 
-    path & path::localize() { return *this; }  // POSIX m_path already localized
+    path & localize() { return *this; }  // POSIX m_path already localized
 
 #   endif
-
-//# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-//    path &  normalize()         { return m_normalize(); }
-//# endif
 
     //  -----  observers  -----
   
@@ -379,7 +346,7 @@ namespace filesystem
 #   else // BOOST_POSIX_API
 
     const std::string &  string() const  { return m_path; }
-    const std::wstring   wstring() const;
+    const std::wstring   wstring() const { return native_wstring(); }
 
 #   endif
 
@@ -432,6 +399,43 @@ namespace filesystem
     iterator begin() const;
     iterator end() const;
 
+    //  -----  deprecated functions  -----
+
+# if defined(BOOST_FILESYSTEM_DEPRECATED) && defined(BOOST_FILESYSTEM_NO_DEPRECATED)
+#   error both BOOST_FILESYSTEM_DEPRECATED and BOOST_FILESYSTEM_NO_DEPRECATED are defined
+# endif
+
+# if !defined(BOOST_FILESYSTEM_NO_DEPRECATED)
+    //  recently deprecated functions supplied by default
+    path &  remove_leaf()            { return remove_filename(); }
+    path    leaf() const             { return filename(); }
+    path    branch_path() const      { return parent_path(); }
+    bool    has_leaf() const         { return !m_path.empty(); }
+    bool    has_branch_path() const  { return !parent_path().empty(); }
+# endif
+
+# if defined(BOOST_FILESYSTEM_DEPRECATED)
+    //  deprecated functions with enough signature or semantic changes that they are
+    //  not supplied by default 
+    const std::string file_string() const               { return native_string(); }
+    const std::string directory_string() const          { return native_string(); }
+    const std::string native_file_string() const        { return native_string(); }
+    const std::string native_directory_string() const   { return native_string(); }
+    const string_type external_file_string() const      { return native(); }
+    const string_type external_directory_string() const { return native(); }
+
+    //  older functions no longer supported
+    //typedef bool (*name_check)( const std::string & name );
+    //basic_path( const string_type & str, name_check ) { operator/=( str ); }
+    //basic_path( const typename string_type::value_type * s, name_check )
+    //  { operator/=( s );}
+    //static bool default_name_check_writable() { return false; } 
+    //static void default_name_check( name_check ) {}
+    //static name_check default_name_check() { return 0; }
+    //basic_path & canonize();
+    //basic_path & normalize();
+# endif
+
 //--------------------------------------------------------------------------------------//
 //                            class path private members                                //
 //--------------------------------------------------------------------------------------//
@@ -448,7 +452,12 @@ namespace filesystem
     string_type  m_path;  // Windows: as input; backslashes NOT converted to slashes,
                           // slashes NOT converted to backslashes
 
-    void m_append_separator_if_needed();
+    string_type::size_type m_append_separator_if_needed();
+    //  Returns: If separator is to be appended, m_path.size() before append. Otherwise 0.
+    //  Note: An append is never performed if size()==0, so a returned 0 is unambiguous.
+
+    void m_erase_redundant_separator( string_type::size_type sep_pos );
+    
     void m_portable();
 
     //path &  m_normalize();
@@ -468,6 +477,10 @@ namespace filesystem
     static const codecvt_type *&  wchar_t_codecvt_facet();
 
   };  // class path
+
+# if defined(BOOST_FILESYSTEM_DEPRECATED)
+  typedef path wpath;
+# endif
 
   //------------------------------------------------------------------------------------//
   //                             class path::iterator                                   //
@@ -619,6 +632,37 @@ namespace filesystem
   BOOST_FILESYSTEM_DECL bool portable_directory_name( const std::string & name );
   BOOST_FILESYSTEM_DECL bool portable_file_name( const std::string & name );
   BOOST_FILESYSTEM_DECL bool native( const std::string & name );
+ 
+//--------------------------------------------------------------------------------------//
+//                     class path member template implementation                        //
+//--------------------------------------------------------------------------------------//
+
+  template <class ContiguousIterator>
+  path & path::append( ContiguousIterator begin, ContiguousIterator end )
+  { 
+    if ( begin == end )
+      return *this;
+    string_type::size_type sep_pos( m_append_separator_if_needed() );
+    if ( begin != end )
+      path_traits::convert( &*begin, &*begin+std::distance(begin, end),
+        m_path, codecvt() );
+    if ( sep_pos )
+      m_erase_redundant_separator( sep_pos );
+    return *this;
+  }
+
+  template <class PathSource>
+  path & path::operator/=( PathSource const & range )
+  {
+    if ( path_traits::empty( range ) )
+      return *this;
+    string_type::size_type sep_pos( m_append_separator_if_needed() );
+    path_traits::dispatch( range, m_path, codecvt() );
+    if ( sep_pos )
+      m_erase_redundant_separator( sep_pos );
+    return *this;
+  }
+
 
 }  // namespace filesystem
 }  // namespace boost

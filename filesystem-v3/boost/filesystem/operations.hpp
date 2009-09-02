@@ -18,7 +18,6 @@
 *  Scoped enum workaround for file_type.
 *  Enable all BOOST_FILESYSTEM_NO_DEPRECATED code.
 *  Vista symlink_status support.
-*  Merge fixes from trunk
 *  rename and remove really need to be renamed. If users says "using namespace boost::filesystem"
    and some header included stdio, there is just too much chance of silent error.
 *  create_directories error handling.
@@ -37,6 +36,7 @@
 
 #include <boost/filesystem/path.hpp>
 
+#include <boost/detail/scoped_enum_emulation.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/shared_ptr.hpp>
@@ -109,11 +109,13 @@ namespace boost
   };
 
   inline bool status_known( file_status f ) { return f.type() != status_unknown; }
-  inline bool exists( file_status f )       { return f.type() != status_unknown && f.type() != file_not_found; }
+  inline bool exists( file_status f )       { return f.type() != status_unknown
+                                                && f.type() != file_not_found; }
   inline bool is_regular_file(file_status f){ return f.type() == regular_file; }
   inline bool is_directory( file_status f ) { return f.type() == directory_file; }
   inline bool is_symlink( file_status f )   { return f.type() == symlink_file; }
-  inline bool is_other( file_status f )     { return exists(f) && !is_regular_file(f) && !is_directory(f) && !is_symlink(f); }
+  inline bool is_other( file_status f )     { return exists(f) && !is_regular_file(f)
+                                                && !is_directory(f) && !is_symlink(f); }
 
 # ifndef BOOST_FILESYSTEM_NO_DEPRECATED
   inline bool is_regular( file_status f )   { return f.type() == regular_file; }
@@ -141,34 +143,21 @@ namespace boost
   file_status symlink_status( const path & p,
                       system::error_code & ec = throws() );
     
-  inline bool exists( const path & p, system::error_code & ec = throws() ) { return exists( status( p, ec ) ); }
-  inline bool is_directory( const path & p, system::error_code & ec = throws() )  { return is_directory( status( p, ec ) ); }
-  inline bool is_regular_file( const path & p, system::error_code & ec = throws() )  { return is_regular_file( status( p, ec ) ); }
-  inline bool is_other( const path & p, system::error_code & ec = throws() ) { return is_other( status( p, ec ) ); }
-  inline bool is_symlink( const path & p, system::error_code & ec = throws() ) { return is_symlink( symlink_status( p, ec ) ); }
+  inline bool exists( const path & p, system::error_code & ec = throws() )
+    { return exists( status( p, ec ) ); }
+  inline bool is_directory( const path & p, system::error_code & ec = throws() )
+    { return is_directory( status( p, ec ) ); }
+  inline bool is_regular_file( const path & p, system::error_code & ec = throws() )
+    { return is_regular_file( status( p, ec ) ); }
+  inline bool is_other( const path & p, system::error_code & ec = throws() )
+    { return is_other( status( p, ec ) ); }
+  inline bool is_symlink( const path & p, system::error_code & ec = throws() )
+    { return is_symlink( symlink_status( p, ec ) ); }
 
-#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED
-  inline bool is_regular( const path & p, system::error_code & ec = throws() ) { return is_regular( status( p, ec ) ); }
-#   endif
-
-
-//    // VC++ 7.0 and earlier has a serious namespace bug that causes a clash
-//    // between boost::filesystem::is_empty and the unrelated type trait
-//    // boost::is_empty.
-//
-//# if !defined( BOOST_MSVC ) || BOOST_MSVC > 1300
-//    BOOST_FS_FUNC(bool) is_empty( const Path & ph )
-//# else
-//    BOOST_FS_FUNC(bool) _is_empty( const Path & ph )
-//# endif
-//    {
-//      detail::query_pair result(
-//        detail::is_empty_api( ph.external_file_string() ) );
-//      if ( result.first )
-//        boost::throw_exception( basic_filesystem_error<Path>(
-//          "boost::filesystem::is_empty", ph, result.first ) );
-//      return result.second;
-//    }
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+  inline bool is_regular( const path & p, system::error_code & ec = throws() )
+    { return is_regular( status( p, ec ) ); }
+# endif
 
   BOOST_FILESYSTEM_DECL
   bool is_empty( const path & p, system::error_code & ec = throws() );
@@ -199,9 +188,19 @@ namespace boost
   void copy_directory( const path & from, const path & to,
                        system::error_code & ec = throws() );
 
+  BOOST_SCOPED_ENUM_START(copy_option)
+    { fail_if_exists, overwrite_if_exists };
+  BOOST_SCOPED_ENUM_END
+
   BOOST_FILESYSTEM_DECL
   void copy_file( const path & from, const path & to,
+                  BOOST_SCOPED_ENUM(copy_option) option,  // See ticket #2925
                   system::error_code & ec = throws() );
+
+  inline
+  void copy_file( const path & from, const path & to,
+                  system::error_code & ec = throws() )
+    { copy_file( from, to, copy_option::fail_if_exists, ec ); }
 
   BOOST_FILESYSTEM_DECL
   void copy_symlink( const path & from, const path & to,
@@ -270,6 +269,11 @@ namespace boost
   BOOST_FILESYSTEM_DECL
   space_info space( const path & p, system::error_code & ec = throws() ); 
 
+# ifndef BOOST_FILESYSTEM_NO_DEPRECATED
+    inline bool symbolic_link_exists( const path & ph )
+      { return is_symlink( symlink_status(ph) ); }
+# endif
+
   BOOST_FILESYSTEM_DECL
   path system_complete( const path & p, system::error_code & ec = throws() ); 
 
@@ -319,7 +323,7 @@ public:
   file_status   symlink_status( system::error_code & ec = throws() ) const;
 
   //// conversion simplifies the most common use of directory_entry
-  // Removed; poor design + too likely to conflict with path v3 constructor templates
+  // Removed; poor design and too likely to conflict with path v3 constructor templates
   //operator const boost::filesystem::path &() const { return m_path; }
 
 //#   ifndef BOOST_FILESYSTEM_NO_DEPRECATED

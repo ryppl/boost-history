@@ -27,8 +27,6 @@
 
 namespace fs = boost::filesystem;
 using boost::filesystem::path;
-using boost::next;
-using boost::prior;
 
 #include <boost/detail/lightweight_test.hpp>
 
@@ -43,14 +41,15 @@ namespace
   void check( const fs::path & source,
               const std::string & expected, const char* file, int line )
   {
-    if ( source.native_string()== expected ) return;
+    if ( source.native_string() == expected )
+      return;
 
     std::cout << file
-              << '(' << line << "): source.native_string(): \"" << source.native_string()
+              << '(' << line << "): source: \"" << source
               << "\" != expected: \"" << expected
               << "\"" << std::endl;
 
-    BOOST_ERROR(0);  // increment error count
+    ++::boost::detail::test_errors();
   }
 
   void check_equal( const fs::path & source,
@@ -60,7 +59,7 @@ namespace
 
     ++::boost::detail::test_errors();
 
-    std::cout << file << '(' << line << "): source: \"" << source.string()
+    std::cout << file << '(' << line << "): source: \"" << source
               << "\" != expected: \"" << expected
               << "\"" << std::endl;
   }
@@ -142,18 +141,18 @@ namespace
 
     itr_ck = "foo";
     BOOST_TEST( *itr_ck.begin() == std::string( "foo" ) );
-    BOOST_TEST( next( itr_ck.begin() ) == itr_ck.end() );
-    BOOST_TEST( *prior( itr_ck.end() ) == std::string( "foo" ) );
-    BOOST_TEST( prior( itr_ck.end() ) == itr_ck.begin() );
+    BOOST_TEST( boost::next( itr_ck.begin() ) == itr_ck.end() );
+    BOOST_TEST( *boost::prior( itr_ck.end() ) == std::string( "foo" ) );
+    BOOST_TEST( boost::prior( itr_ck.end() ) == itr_ck.begin() );
 
     itr_ck = path( "/foo" );
     BOOST_TEST( *itr_ck.begin() == std::string( "/" ) );
-    BOOST_TEST( *next( itr_ck.begin() ) == std::string( "foo" ) );
-    BOOST_TEST( next(next( itr_ck.begin() )) == itr_ck.end() );
-    BOOST_TEST( next( itr_ck.begin() ) == prior( itr_ck.end() ) );
-    BOOST_TEST( *prior( itr_ck.end() ) == std::string( "foo" ) );
-    BOOST_TEST( *prior(prior( itr_ck.end() )) == std::string( "/" ) );
-    BOOST_TEST( prior(prior( itr_ck.end() )) == itr_ck.begin() );
+    BOOST_TEST( *boost::next( itr_ck.begin() ) == std::string( "foo" ) );
+    BOOST_TEST( boost::next(boost::next( itr_ck.begin() )) == itr_ck.end() );
+    BOOST_TEST( boost::next( itr_ck.begin() ) == boost::prior( itr_ck.end() ) );
+    BOOST_TEST( *boost::prior( itr_ck.end() ) == std::string( "foo" ) );
+    BOOST_TEST( *boost::prior(boost::prior( itr_ck.end() )) == std::string( "/" ) );
+    BOOST_TEST( boost::prior(boost::prior( itr_ck.end() )) == itr_ck.begin() );
 
     itr_ck = "/foo/bar";
     itr = itr_ck.begin();
@@ -406,7 +405,7 @@ namespace
       BOOST_TEST( (b / as).native_string() == "b\\a" );
       BOOST_TEST( (b / acs).native_string() == "b\\a" );
       PATH_CHECK( path("a") / "b", "a\\b" );
-      PATH_CHECK( path("..") / "", "..\\" );
+      PATH_CHECK( path("..") / "", ".." );
       PATH_CHECK( path("foo") / path("bar"), "foo\\bar" ); // path arg
       PATH_CHECK( path("foo") / "bar", "foo\\bar" );       // const char * arg
       PATH_CHECK( path("foo") / path("woo/bar").filename(), "foo\\bar" ); // const std::string & arg
@@ -531,17 +530,6 @@ namespace
     BOOST_TEST( path("a/b") < path("a.b") );
 
     // make sure the derivative operators also work
-    BOOST_TEST( a == a2 );
-    BOOST_TEST( as == a2 );
-    BOOST_TEST( acs == a2 );
-    BOOST_TEST( a == as2 );
-    BOOST_TEST( a == acs2 );
-
-    BOOST_TEST( a != b );
-    BOOST_TEST( as != b );
-    BOOST_TEST( acs != b );
-    BOOST_TEST( a != bs );
-    BOOST_TEST( a != bcs );
 
     BOOST_TEST( b > a );
     BOOST_TEST( b > as );
@@ -578,6 +566,30 @@ namespace
     BOOST_TEST( acs2 >= a );
     BOOST_TEST( a2 >= as );
     BOOST_TEST( a2 >= acs );
+
+    //  operator == and != are implemented separately, so test separately
+
+    path p1( "fe/fi/fo/fum" );
+    path p2( p1 );
+    path p3( "fe/fi/fo/fumm" );
+    BOOST_TEST( p1.string() != p3.string() );
+
+    // check each overload
+    BOOST_TEST( p1 != p3 );
+    BOOST_TEST( p1 != p3.string() );
+    BOOST_TEST( p1 != p3.string().c_str() );
+    BOOST_TEST( p1.string() != p3 );
+    BOOST_TEST( p1.string().c_str() != p3 );
+
+    p3 = p2;
+    BOOST_TEST( p1.string() == p3.string() );
+
+    // check each overload
+    BOOST_TEST( p1 == p3 );
+    BOOST_TEST( p1 == p3.string() );
+    BOOST_TEST( p1 == p3.string().c_str() );
+    BOOST_TEST( p1.string() == p3 );
+    BOOST_TEST( p1.string().c_str() == p3 );
   }
 
   //  query_and_decomposition_tests  -----------------------------------------//
@@ -1168,24 +1180,102 @@ namespace
 
   //  append_tests  --------------------------------------------------------------------//
 
+  void append_test_aux( const path & p, const std::string & s, const std::string & expect )
+  {
+    PATH_CHECK( p / path(s), expect );
+    PATH_CHECK( p / s.c_str(), expect );
+    PATH_CHECK( p / s, expect );
+    path x(p);
+    x.append( s.begin(), s.end() );
+    PATH_CHECK( x, expect );
+  }
+
   void append_tests()
   {
     std::cout << "append_tests..." << std::endl;
 
+    // There are many control paths to be exercised, since empty paths and arguments,
+    // paths with trailing separators, arguments with leading separators, with or without
+    // other characters being present, are all separate cases that need to be tested.
+    // Furthermore, some of the code to be tested is specific to argument categories,
+    // so that results in further permutations to be tested.
+
+    //// code to generate test cases
+    //// 
+    //// expected results must be checked by hand
+    //// "foo\bar" expected result must be edited by hand and moved for Windows/POSIX
+    ////
+    //const char * x[]    = { "", "/", "foo", "foo/" };
+    //const char * y[] = { "", "/", "bar", "/bar" };
+
+    //for ( int i = 0; i < sizeof(x)/sizeof(char*); ++i )
+    //  for ( int j = 0; j < sizeof(y)/sizeof(char*); ++j )
+    //  {
+    //    std::cout << "\n    PATH_CHECK( path(\"" << x[i] << "\") / \"" << y[j] << "\", \"" 
+    //              << path(x[i]) / y[j] << "\" );\n";
+    //    std::cout << "    append_test_aux( \"" << x[i] << "\", \"" << y[j] << "\", \""
+    //              << path(x[i]) / y[j] << "\");\n";
+    //  }
+
+    PATH_CHECK( path("") / "", "" );
+    append_test_aux( "", "", "");
+
+    PATH_CHECK( path("") / "/", "/" );
+    append_test_aux( "", "/", "/");
+
+    PATH_CHECK( path("") / "bar", "bar" );
+    append_test_aux( "", "bar", "bar");
+
+    PATH_CHECK( path("") / "/bar", "/bar" );
+    append_test_aux( "", "/bar", "/bar");
+
+    PATH_CHECK( path("/") / "", "/" );
+    append_test_aux( "/", "", "/");
+
+    PATH_CHECK( path("/") / "/", "//" );
+    append_test_aux( "/", "/", "//");
+
+    PATH_CHECK( path("/") / "bar", "/bar" );
+    append_test_aux( "/", "bar", "/bar");
+
+    PATH_CHECK( path("/") / "/bar", "//bar" );
+    append_test_aux( "/", "/bar", "//bar");
+
+    PATH_CHECK( path("foo") / "", "foo" );
+    append_test_aux( "foo", "", "foo");
+
+    PATH_CHECK( path("foo") / "/", "foo/" );
+    append_test_aux( "foo", "/", "foo/");
+
+    PATH_CHECK( path("foo") / "/bar", "foo/bar" );
+    append_test_aux( "foo", "/bar", "foo/bar");
+
+    PATH_CHECK( path("foo/") / "", "foo/" );
+    append_test_aux( "foo/", "", "foo/");
+
+    PATH_CHECK( path("foo/") / "/", "foo//" );
+    append_test_aux( "foo/", "/", "foo//");
+
+    PATH_CHECK( path("foo/") / "bar", "foo/bar" );
+    append_test_aux( "foo/", "bar", "foo/bar");
+
+    PATH_CHECK( path("foo/") / "/bar", "foo//bar" );
+    append_test_aux( "foo/", "/bar", "foo//bar");
+
     if ( platform == "Windows" )
     {
+      PATH_CHECK( path("foo") / "bar", "foo\\bar" );
+      append_test_aux( "foo", "bar", "foo\\bar");
+
+      // hand created test case specific to Windows
+      PATH_CHECK( path("c:") / "bar", "c:bar" );
+      append_test_aux( "c:", "bar", "c:bar" );
     }
     else
     {
+      PATH_CHECK( path("foo") / "bar", "foo/bar" );
+      append_test_aux( "foo", "bar", "foo/bar");
     }
-
-
-    PATH_CHECK( path("") / "foo", "foo" );
-    PATH_CHECK( path("") / "foo/", "foo/" );
-    PATH_CHECK( path( "/" ) / "", "/" );
-    PATH_CHECK( path("") / "/foo", "/foo" );
-    PATH_CHECK( path("foo") / "", "foo\\" );
-    PATH_CHECK( path("/foo") / "", "/foo\\" );
 
   }
 
@@ -1379,33 +1469,12 @@ int main( int, char*[] )
 
   std::string s1( "//:somestring" );  // this used to be treated specially
 
-# ifndef BOOST_NO_MEMBER_TEMPLATES
-
   // check the path member templates
   p5.assign( s1.begin(), s1.end() );
 
   PATH_CHECK( p5, "//:somestring" );
   p5 = s1;
   PATH_CHECK( p5, "//:somestring" );
-
-  char c0 = 'a';
-  p5.assign( &c0, &c0 );
-  PATH_CHECK( p5, "" );
-  p5 /= "";
-  PATH_CHECK( p5, "" );
-  p5 /= "foo/bar";
-  PATH_CHECK( p5, "foo/bar" );
-  p5 /= "";
-  PATH_CHECK( p5, "foo/bar\\" );
-  p5.append( &c0, &c0 );
-  PATH_CHECK( p5, "foo/bar\\" );
-  p5 /= "";
-  PATH_CHECK( p5, "foo/bar\\" );
-  char bf[]= "bar/foo";
-  p5.assign( bf, bf + sizeof(bf) - 1 ); 
-  PATH_CHECK( p5, bf );
-  p5.append( bf, bf + sizeof(bf) - 1 ); 
-  PATH_CHECK( p5, "bar/foo\\bar/foo" );
 
   // this code, courtesy of David Whetstone, detects a now fixed bug that
   // derefereced the end iterator (assuming debug build with checked itors)
@@ -1415,8 +1484,6 @@ int main( int, char*[] )
   PATH_CHECK( p5, s2 );
   p5.assign( s1.begin(), s1.begin() + 1 );
   PATH_CHECK( p5, "/" );
-
-# endif
 
   BOOST_TEST( p1 != p4 );
   BOOST_TEST( p1.string() == p2.string() );

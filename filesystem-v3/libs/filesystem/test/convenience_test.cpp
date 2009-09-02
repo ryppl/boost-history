@@ -23,12 +23,6 @@ namespace sys = boost::system;
 #include <fstream>
 #include <iostream>
 
-#ifndef BOOST_FILESYSTEM_NARROW_ONLY
-# define BOOST_FS_IS_EMPTY fs::is_empty
-#else
-# define BOOST_FS_IS_EMPTY fs::_is_empty
-#endif
-
 namespace
 {
   template< typename F >

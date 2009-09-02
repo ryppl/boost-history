@@ -8,8 +8,10 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
-//  This test verifies that various deprecated names still compile. This is
+//  This test verifies that various deprecated names still work. This is
 //  important to preserve existing code that uses the old names.
+
+#define BOOST_FILESYSTEM_DEPRECATED
 
 #include <boost/filesystem.hpp>
 #include <boost/detail/lightweight_test.hpp>
@@ -30,7 +32,7 @@ namespace
 
     ++::boost::detail::test_errors();
 
-    std::cout << '(' << line << ") source.string(): \"" << source.string()
+    std::cout << '(' << line << ") source.native_string(): \"" << source.native_string()
               << "\" != expected: \"" << expected
               << "\"" << std::endl;
   }
@@ -141,7 +143,7 @@ namespace
   //  }
   //}
 
-  //  Compile-only tests. Not intended to be executed.
+  //  Compile-only tests not intended to be executed -----------------------------------//
 
   void compile_only()
   {
@@ -154,10 +156,30 @@ namespace
     p.directory_string();
   }
 
+  //  rename_test ----------------------------------------------------------------------//
+
+  void rename_test()
+  {
+    fs::path p( "foo/bar/blah" );
+
+    BOOST_TEST_EQ( path("foo/bar/blah").remove_leaf(), "foo/bar" );
+    BOOST_TEST_EQ( p.leaf(), "blah" );
+    BOOST_TEST_EQ( p.branch_path(), "foo/bar" );
+    BOOST_TEST( p.has_leaf() );
+    BOOST_TEST( p.has_branch_path() );
+
+    if ( platform == "Windows" )
+    {
+      BOOST_TEST_EQ( path("foo\\bar\\blah").remove_leaf(), "foo\\bar" );
+      p = "foo\\bar\\blah";
+      BOOST_TEST_EQ( p.branch_path(), "foo\\bar" );
+    }
+  }
+
 } // unnamed namespace
 
 
-//----------------------------------------------------------------------------//
+//--------------------------------------------------------------------------------------//
 
 int main( int /*argc*/, char * /*argv*/[] )
 {
@@ -169,18 +191,20 @@ int main( int /*argc*/, char * /*argv*/[] )
                : "POSIX";
   std::cout << "Platform is " << platform << '\n';
 
-  path::default_name_check( fs::no_check );
+  //path::default_name_check( fs::no_check );
 
   fs::directory_entry de( "foo/bar" );
 
   de.replace_leaf( "", fs::file_status(), fs::file_status() );
 
-  de.leaf();
-  de.string();
+  //de.leaf();
+  //de.string();
 
   fs::path ng( " no-way, Jose" );
   BOOST_TEST( !fs::is_regular( ng ) );  // verify deprecated name still works
   BOOST_TEST( !fs::symbolic_link_exists( "nosuchfileordirectory" ) );
+
+  rename_test();
 
   //check_normalize();
  

@@ -55,9 +55,9 @@ namespace
   //                        miscellaneous class path helpers                            //
   //------------------------------------------------------------------------------------//
 
-  typedef path::size_type    size_type;
-  typedef path::string_type  string_type;
-  typedef path::value_type   value_type;
+  typedef path::value_type        value_type;
+  typedef path::string_type       string_type;
+  typedef string_type::size_type  size_type;
 
   const std::size_t default_codecvt_buf_size = BOOST_FILESYSTEM_CODECVT_BUF_SIZE;
 
@@ -128,6 +128,16 @@ namespace boost
 namespace filesystem
 {
 
+  path & path::operator/=( const path & p )
+  {
+    if ( p.empty() )
+      return *this;
+    if ( !is_separator( *p.m_path.begin() ) )
+      m_append_separator_if_needed();
+    m_path += p.m_path;
+    return *this;
+  }
+
 # ifdef BOOST_WINDOWS_PATH
 
   const std::string  path::native_string() const
@@ -176,9 +186,9 @@ namespace filesystem
 
 # endif  // BOOST_WINDOWS_PATH
 
-  //  m_append_separator_if_needed  -----------------------------------------//
+  //  m_append_separator_if_needed  ----------------------------------------------------//
 
-  void path::m_append_separator_if_needed()
+  path::string_type::size_type path::m_append_separator_if_needed()
   {
     if ( !m_path.empty() &&
 #   ifdef BOOST_WINDOWS_PATH
@@ -186,11 +196,27 @@ namespace filesystem
 #   endif
       !is_separator( *(m_path.end()-1) ) )
     {
+      string_type::size_type tmp( m_path.size() );
       m_path += preferred_separator;
+      return tmp;
     }
+    return 0;
   }
 
-  //  decomposition  ---------------------------------------------------------//
+  //  m_erase_redundant_separator  -----------------------------------------------------//
+
+  void path::m_erase_redundant_separator( string_type::size_type sep_pos )
+  {
+    if ( sep_pos                         // a separator was added
+      && sep_pos < m_path.size()         // and something was appended
+      && (m_path[sep_pos+1] == separator // and it was also separator
+#   ifdef BOOST_WINDOWS_PATH
+       || m_path[sep_pos+1] == preferred_separator  // or preferred_separator
+#   endif
+       )) { m_path.erase( sep_pos, 1 ); } // erase the added separator
+  }
+
+  //  decomposition  -------------------------------------------------------------------//
 
   path  path::root_path() const
   { 
@@ -560,7 +586,7 @@ namespace filesystem
   {
     iterator itr;
     itr.m_path_ptr = this;
-    path::size_type element_size;
+    size_type element_size;
     first_element( m_path, itr.m_pos, element_size );
     itr.m_element = m_path.substr( itr.m_pos, element_size );
     if ( itr.m_element.m_path == preferred_separator_string )

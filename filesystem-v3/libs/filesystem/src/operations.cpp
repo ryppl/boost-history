@@ -54,10 +54,7 @@ using boost::system::system_category;
 using boost::throw_exception;
 using boost::throws;
 using std::string;
-
-# ifndef BOOST_FILESYSTEM_NARROW_ONLY
-    using std::wstring;
-# endif
+using std::wstring;
 
 # if defined(BOOST_WINDOWS_API)
 
@@ -137,7 +134,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_DELETE_FILE(P) (::unlink( P ) == 0)
 #   define BOOST_COPY_DIRECTORY(F,T) (!(::stat( from.c_str(), &from_stat ) != 0\
          || ::mkdir( to.c_str(),from_stat.st_mode ) != 0))
-#   define BOOST_COPY_FILE(F,T) copy_file_api(F, T)
+#   define BOOST_COPY_FILE(F,T,FailIfExistsBool) copy_file_api(F, T, FailIfExistsBool)
 #   define BOOST_MOVE_FILE(F,T) (::rename(F, T) == 0)
 
 #   define BOOST_ERROR_NOT_SUPPORTED ENOSYS
@@ -153,7 +150,7 @@ namespace std { using ::strcmp; using ::remove; using ::rename; }
 #   define BOOST_REMOVE_DIRECTORY(P) (::RemoveDirectoryW(P) != 0)
 #   define BOOST_DELETE_FILE(P) (::DeleteFileW(P) != 0)
 #   define BOOST_COPY_DIRECTORY(F,T) (::CreateDirectoryExW( F, T, 0 ) != 0)
-#   define BOOST_COPY_FILE(F,T) (::CopyFileW( F, T, /*fail_if_exists=*/true ) != 0)
+#   define BOOST_COPY_FILE(F,T,FailIfExistsBool) (::CopyFileW(F, T, FailIfExistsBool) != 0)
 #   define BOOST_MOVE_FILE(F,T) (::MoveFileW( F, T ) != 0)
 #   define BOOST_READ_SYMLINK(P,T)
 
@@ -424,23 +421,32 @@ namespace
 
 # else
 
-  bool // true if ok occurred
+  bool // true if ok
   copy_file_api( const std::string & from_p,
-    const std::string & to_p )
+    const std::string & to_p, bool fail_if_exists )
   {
     const std::size_t buf_sz = 32768;
     boost::scoped_array<char> buf( new char [buf_sz] );
-    int infile=0, outfile=0;  // init quiets compiler warning
-    struct stat from_stat;
+    int infile=-1, outfile=-1;  // -1 means not open
 
-    if ( ::stat( from_p.c_str(), &from_stat ) != 0
-      || (infile = ::open( from_p.c_str(),
-                          O_RDONLY )) < 0
-      || (outfile = ::open( to_p.c_str(),
-                            O_WRONLY | O_CREAT | O_EXCL,
-                            from_stat.st_mode )) < 0 )
-    { //  error
-      if ( infile >= 0 ) ::close( infile );
+    // bug fixed: code previously did a stat() on the from_file first, but that
+    // introduced a gratuitous race condition; the stat() is now done after the open()
+
+    if ( (infile = ::open( from_p.c_str(), O_RDONLY )) < 0 )
+      { return false; }
+
+    struct stat from_stat;
+    if ( ::stat( from_p.c_str(), &from_stat ) != 0 )
+      { return false; }
+
+    int oflag = O_CREAT | O_WRONLY;
+    if ( fail_if_exists ) oflag |= O_EXCL;
+    if (  (outfile = ::open( to_p.c_str(), oflag, from_stat.st_mode )) < 0 )
+    {
+      int open_errno = errno;
+      BOOST_ASSERT( infile >= 0 );
+      ::close( infile );
+      errno = open_errno;
       return false;
     }
 
@@ -466,7 +472,7 @@ namespace
     if ( ::close( infile) < 0 ) sz_read = -1;
     if ( ::close( outfile) < 0 ) sz_read = -1;
 
-    return sz_read >= 0;  // true if ok
+    return sz_read >= 0;
   }
 
 #endif
@@ -529,18 +535,17 @@ namespace boost
   BOOST_FILESYSTEM_DECL
   path complete( const path & p, const path & base )
   {
-    BOOST_ASSERT( base.is_complete()
-      && (p.is_complete() || !p.has_root_name())
-      && "boost::filesystem::complete() precondition not met" );
-#   ifdef BOOST_WINDOWS_PATH
-    if (p.empty() || p.is_complete())
+    if ( p.empty() || base.empty() )
       return p;
-    return !p.has_root_name() && p.has_root_directory()
+    if ( p.has_root_name() )
+    {
+      return p.has_root_directory()
+        ? p
+        : p.root_name() / base.root_directory() / base.relative_path() / p.relative_path();
+    }
+    return p.has_root_directory()
       ? base.root_name() / p
       : base / p;
-#   else
-    return (p.empty() || p.is_complete()) ? p : base / p;
-#   endif
   }
 
   BOOST_FILESYSTEM_DECL
@@ -559,7 +564,7 @@ namespace boost
     }
     else if( is_regular_file( s ) )
     {
-      copy_file( from, to, ec );
+      copy_file( from, to, copy_option::fail_if_exists, ec );
     }
     else
     {
@@ -581,10 +586,13 @@ namespace boost
   }
 
   BOOST_FILESYSTEM_DECL
-  void copy_file( const path & from, const path & to, error_code & ec )
+  void copy_file( const path & from, const path & to,
+                  BOOST_SCOPED_ENUM(copy_option) option,
+                  error_code & ec )
   {
-    error( !BOOST_COPY_FILE( from.c_str(), to.c_str() ),
-      from, to, ec, "boost::filesystem::copy_file" );
+    error( !BOOST_COPY_FILE( from.c_str(), to.c_str(),
+      option == copy_option::fail_if_exists ),
+        from, to, ec, "boost::filesystem::copy_file" );
   }
 
   BOOST_FILESYSTEM_DECL

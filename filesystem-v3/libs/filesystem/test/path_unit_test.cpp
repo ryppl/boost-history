@@ -54,7 +54,8 @@ namespace
     ++::boost::detail::test_errors();
 
     std::cout << file;
-    std::wcout << L'(' << line << L"): source.wstring(): \"" << source.wstring()
+    std::wcout << L'(' << line << L"): source.native_wstring(): \""
+               << source.native_wstring()
                << L"\" != expected: \"" << expected
                << L"\"\n" ;
   }
@@ -189,19 +190,19 @@ namespace
 
     x = "/foo";
     x /= path("");                                      // empty path
-    PATH_IS(x, BOOST_FS_FOO);
+    PATH_IS(x, L"/foo");
 
     x = "/foo";
     x /= path("/");                                     // slash path
-    PATH_IS(x, BOOST_FS_FOO L"/");
+    PATH_IS(x, L"/foo/");
 
     x = "/foo";
     x /= path("/boo");                                  // slash path
-    PATH_IS(x, BOOST_FS_FOO L"/boo");
+    PATH_IS(x, L"/foo/boo");
 
     x = "/foo";
-    x /= x;                                             // self-assignment
-    PATH_IS(x, BOOST_FS_FOO BOOST_FS_FOO  );
+    x /= x;                                             // self-append
+    PATH_IS(x, L"/foo/foo");
 
     x = "/foo";
     x /= path("yet another path");                      // another path
@@ -275,14 +276,14 @@ namespace
 
     CHECK( string( p.c_str() ) == "abc\\def/ghi" );
 
+    CHECK( p.native_string() == "abc\\def/ghi" );
+    CHECK( p.native_wstring() == L"abc\\def/ghi" );
+
     CHECK( p.string() == "abc\\def/ghi" );
     CHECK( p.wstring() == L"abc\\def/ghi" );
 
-    CHECK( p.generic().string() == "abc\\def/ghi" );
-    CHECK( p.generic().wstring() == L"abc\\def/ghi" );
-
-    CHECK( p.preferred().string() == "abc\\def/ghi" );
-    CHECK( p.preferred().wstring() == L"abc\\def/ghi" );
+    //CHECK( p.preferred().string() == "abc\\def/ghi" );
+    //CHECK( p.preferred().wstring() == L"abc\\def/ghi" );
 
 # endif 
   }

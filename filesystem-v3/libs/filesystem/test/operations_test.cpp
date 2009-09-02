@@ -952,12 +952,33 @@ int main( int argc, char * argv[] )
 
   // copy_file() tests
   std::cout << "begin copy_file test..." << std::endl;
+  BOOST_TEST( fs::exists( file_ph ) );
+  fs::remove( d1 / "f2" );  // remove possible residue from prior testing
+  BOOST_TEST( fs::exists( d1 ) );
+  BOOST_TEST( !fs::exists( d1 / "f2" ) );
+  std::cout << " copy " << file_ph << " to " << d1 / "f2" << std::endl;
   fs::copy_file( file_ph, d1 / "f2" );
-  std::cout << "copying complete" << std::endl;
+  std::cout << " copy complete" << std::endl;
   BOOST_TEST( fs::exists( file_ph ) );
   BOOST_TEST( fs::exists( d1 / "f2" ) );
   BOOST_TEST( !fs::is_directory( d1 / "f2" ) );
   verify_file( d1 / "f2", "foobar1" );
+
+  bool copy_ex_ok = false;
+  try { fs::copy_file( file_ph, d1 / "f2" ); }
+  catch ( const fs::filesystem_error & ) { copy_ex_ok = true; }
+  BOOST_TEST( copy_ex_ok );
+
+  copy_ex_ok = false;
+  try { fs::copy_file( file_ph, d1 / "f2", fs::copy_option::fail_if_exists ); }
+  catch ( const fs::filesystem_error & ) { copy_ex_ok = true; }
+  BOOST_TEST( copy_ex_ok );
+
+  copy_ex_ok = true;
+  try { fs::copy_file( file_ph, d1 / "f2", fs::copy_option::overwrite_if_exists ); }
+  catch ( const fs::filesystem_error & ) { copy_ex_ok = false; }
+  BOOST_TEST( copy_ex_ok );
+
   std::cout << "copy_file test complete" << std::endl;
 
   rename_tests();
