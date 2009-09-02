@@ -148,8 +148,9 @@ void test_LawValidater()
 
     //-----------------------------------------------------------------------------
 	// Set the test automatons parameters:
-	// Size of polygon sets is in [0 .. |set|]
-	// Size of polygon sets is in [0 .. |set|]
+	// Size of polygon sets is in [0 .. |set| ]
+	// Size of polygon sets is in [0 .. |poly|]
+	// Coordinates in [min .. max)
 	//                                         |set|,|poly|, min, max 
 	GentorProfileSgl::it()->set_polygon_profile(1,    3,     0,   10);
 	int test_count = 10000;

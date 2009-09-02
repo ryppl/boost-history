@@ -80,10 +80,12 @@ namespace boost{namespace itl
     };
 
 
-
-    template <typename Type>
+    template <typename Type> //Type can be more than one parameter for mixed laws with different types
     class PolygonSymmetricDifference 
         : public Law<PolygonSymmetricDifference<Type>, 
+		             // Input type list          Result type list
+					 // Types of the variables   Tpyes of the righthand and the lefthand side.
+					 // in a law                 Can be more, if you want to see interim results.
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         // a o b == b o a computed as
@@ -92,6 +94,7 @@ namespace boost{namespace itl
         //Output = (sum_lhs, sum_rhs)
         
     public:
+		// These are descriptive informations to create readable output.
         std::string name()const { return "Polygon Symmetric Difference"; }
         std::string formula()const { return "(a+b) - (a&b) == (a-b) + (b-a)"; }
 
@@ -102,17 +105,21 @@ namespace boost{namespace itl
 
     public:
 
+		// Define a size measure for the laws input variables. According to
+		// this size the smallest law instances are collected if violations occur.
         size_t size()const 
         { 
             return value_size<Type>::apply(this->template getInputValue<operand_a>())+
                    value_size<Type>::apply(this->template getInputValue<operand_b>());
         }
 
+		// This function has to be coded to test the validity of a law instance.
         bool holds()
         {
 			using namespace boost::polygon;
 			using namespace boost::polygon::operators;
 
+			// There are predifined constants operand_a, _b, ..., lhs_reult, rhs_result in the base class.
 			//std::cout << this->template getInputValue<operand_a>().as_string() << std::endl;
 
 			// --- left hand side ------------------------
@@ -135,6 +142,7 @@ namespace boost{namespace itl
             Type rhs = a_minus_b;
             boost::polygon::operators::operator+=(rhs, b_minus_a);
 
+			// Set the output variables of this law instance.
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
 
