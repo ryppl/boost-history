@@ -6,10 +6,6 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "geos_check", "geos\geos_che
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "wykobi_check", "wykobi\wykobi_check.vcproj", "{B0DEE6FF-F197-4EAE-BC00-5228EE05E293}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "ogr_check", "gdal\ogr_check.vcproj", "{600AA64F-7DDD-4462-BA80-26CE8A6463B9}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gengeomalg_check2008", "gengeomalg\gengeomalg_check2008.vcproj", "{84864F93-CC1B-4014-A059-F9710C9718A6}"
-EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "gtl_check2008", "gtl\gtl_check2008.vcproj", "{EF394DD6-D508-4A72-B9B9-756AC2AFD5B9}"
 EndProject
 Global
@@ -30,14 +26,6 @@ Global
 		{B0DEE6FF-F197-4EAE-BC00-5228EE05E293}.Debug|Win32.Build.0 = Debug|Win32
 		{B0DEE6FF-F197-4EAE-BC00-5228EE05E293}.Release|Win32.ActiveCfg = Release|Win32
 		{B0DEE6FF-F197-4EAE-BC00-5228EE05E293}.Release|Win32.Build.0 = Release|Win32
-		{600AA64F-7DDD-4462-BA80-26CE8A6463B9}.Debug|Win32.ActiveCfg = Debug|Win32
-		{600AA64F-7DDD-4462-BA80-26CE8A6463B9}.Debug|Win32.Build.0 = Debug|Win32
-		{600AA64F-7DDD-4462-BA80-26CE8A6463B9}.Release|Win32.ActiveCfg = Release|Win32
-		{600AA64F-7DDD-4462-BA80-26CE8A6463B9}.Release|Win32.Build.0 = Release|Win32
-		{84864F93-CC1B-4014-A059-F9710C9718A6}.Debug|Win32.ActiveCfg = Debug|Win32
-		{84864F93-CC1B-4014-A059-F9710C9718A6}.Debug|Win32.Build.0 = Debug|Win32
-		{84864F93-CC1B-4014-A059-F9710C9718A6}.Release|Win32.ActiveCfg = Release|Win32
-		{84864F93-CC1B-4014-A059-F9710C9718A6}.Release|Win32.Build.0 = Release|Win32
 		{EF394DD6-D508-4A72-B9B9-756AC2AFD5B9}.Debug|Win32.ActiveCfg = Debug|Win32
 		{EF394DD6-D508-4A72-B9B9-756AC2AFD5B9}.Debug|Win32.Build.0 = Debug|Win32
 		{EF394DD6-D508-4A72-B9B9-756AC2AFD5B9}.Release|Win32.ActiveCfg = Release|Win32
