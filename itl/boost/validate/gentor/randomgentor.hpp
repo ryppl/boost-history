@@ -15,6 +15,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl_xt/setgentor.hpp>
 #include <boost/itl_xt/mapgentor.hpp>
 #include <boost/itl_xt/itvgentor.hpp>
+
+#include <libs/validate/example/labat_polygon_/point_gentor.hpp>
+#include <libs/validate/example/labat_polygon_/polygon_gentor.hpp>
+
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>
@@ -29,11 +33,32 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
 
-    // ----------------------------------------------------------
+    // -------------------------------------------------------------------------
     template <class ValueT> class RandomGentor;
     template <> class RandomGentor<int> : public NumberGentorT<int> {};
     template <> class RandomGentor<nat> : public NumberGentorT<nat> {};
     template <> class RandomGentor<double> : public NumberGentorT<double> {};
+
+    // -------------------------------------------------------------------------
+	template <class DomainT>
+	class RandomGentor<itl::interval<DomainT> > :
+		public ItvGentorT<DomainT> {};
+
+#ifdef LAW_BASED_TEST_BOOST_POLYGON
+    // -------------------------------------------------------------------------
+    template <class DomainT> 
+    class RandomGentor<itl::point<DomainT> > :
+        public point_gentor<DomainT> {};
+
+    template <class PointT> 
+    class RandomGentor<itl::list<PointT> > :
+        public polygon_gentor<itl::list<PointT> > {};
+
+    template <class PointT> 
+    class RandomGentor<itl::list<itl::list<PointT> > > :
+        public polygon_set_gentor<itl::list<itl::list<PointT> > > {};
+#endif //LAW_BASED_TEST_BOOST_POLYGON
+
 
     // ----- sets --------------------------------------------------------------
     //template <class DomainT, template<class>class Set> 
@@ -152,6 +177,67 @@ namespace boost{namespace itl
         }
     };
 
+
+    template <> 
+	struct Calibrater<itl::interval<int>, RandomGentor>
+    {
+        static void apply(RandomGentor<itl::interval<int> >& gentor) 
+        {
+            // Set the range within which the sizes of the generated object varies.
+            gentor.setRange(GentorProfileSgl::it()->range_int());
+        }
+    };
+
+
+#ifdef LAW_BASED_TEST_BOOST_POLYGON
+	//--------------------------------------------------------------------------
+	// boost::polygon
+	//--------------------------------------------------------------------------
+    template <> 
+	struct Calibrater<itl::point<int>, RandomGentor>
+    {
+        static void apply(RandomGentor<itl::point<int> >& gentor) 
+        {
+            // Set the range within which the sizes of the generated object varies.
+            gentor.setRange(GentorProfileSgl::it()->range_int());
+        }
+    };
+
+    template <> 
+	struct Calibrater<itl::list<point<int> >, RandomGentor>
+    {
+        static void apply(RandomGentor<itl::list<point<int> > >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_codomain_ContainerSize());
+			point_gentor<int>* pointGentor = new point_gentor<int>;
+            pointGentor->setRange(GentorProfileSgl::it()->range_int());
+            gentor.setDomainGentor(pointGentor);
+			gentor.setUnique(true);
+        }
+    };
+
+    template <> 
+	struct Calibrater<itl::list<list<point<int> > >, RandomGentor>
+    {
+        static void apply(RandomGentor<itl::list<list<point<int> > > >& gentor) 
+        {
+			point_gentor<int>* pointGentor = new point_gentor<int>;
+            pointGentor->setRange(GentorProfileSgl::it()->range_int());
+
+			polygon_gentor<list<point<int> > >* polyGentor = new polygon_gentor<list<point<int> > >;
+            polyGentor->setDomainGentor(pointGentor);
+            polyGentor->setRangeOfSampleSize(GentorProfileSgl::it()->range_codomain_ContainerSize());
+			polyGentor->setUnique(true);
+
+            gentor.setDomainGentor(polyGentor);
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+        }
+    };
+
+	//--------------------------------------------------------------------------
+	// nogylop::tsoob
+	//--------------------------------------------------------------------------
+#endif // LAW_BASED_TEST_BOOST_POLYGON
 
     template <> 
     struct Calibrater<itl::set<int>, RandomGentor>

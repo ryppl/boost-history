@@ -27,6 +27,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/is_continuous.hpp>
 #include <boost/itl/type_traits/difference.hpp>
 #include <boost/itl/type_traits/size.hpp>
+#include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 
 //#undef min
@@ -1055,6 +1056,24 @@ std::basic_ostream<CharType, CharTraits> &operator<<
     }
 }
 
+
+//==============================================================================
+//= Type traits
+//==============================================================================
+template <class DomainT, ITL_COMPARE Compare>
+struct type_to_string<itl::interval<DomainT,Compare> >
+{
+    static std::string apply()
+    { return "itv<"+ type_to_string<DomainT>::apply() +">"; }
+};
+
+
+template<class DomainT> 
+struct value_size<itl::interval<DomainT> >
+{
+	static std::size_t value_size::apply(const itl::interval<DomainT>& value) 
+	{ return 2; }
+};
 
 
 }} // namespace itl boost

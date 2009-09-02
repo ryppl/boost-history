@@ -47,17 +47,19 @@ class ItvGentorT: public RandomGentorAT<ItvTV>
 public:
     virtual void some(ItvTV& x);
 
+	void setRange(const itl::interval<ItvDomTV>& range)
+    { m_valueRange = range; }
+
     void setValueRange(ItvDomTV low, ItvDomTV up)
     { m_valueRange.set(low,up, itl::right_open); }
 
     void setMaxIntervalLength(ItvDomTV len) { m_maxIntervalLength=len; }
     void setProbDerivation();
 
-
 private:
     NumberGentorT<ItvDomTV> m_ItvDomTVGentor;
 
-    interval<ItvDomTV> m_valueRange;
+    interval<ItvDomTV>    m_valueRange;
     ItvDomTV              m_maxIntervalLength;
 };
 

@@ -34,9 +34,9 @@ struct value_size
 };
 
 
-
 template<> inline std::size_t value_size<int>::apply(const int& value) 
 { return abs(value); }
+
 template<> inline std::size_t value_size<double>::apply(const double& value) 
 { return static_cast<int>(abs(value)); }
 

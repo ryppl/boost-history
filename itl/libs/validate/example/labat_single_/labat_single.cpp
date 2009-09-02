@@ -82,7 +82,7 @@ void test_LawValidater()
 	//LawValidater<TestLawT, RandomGentor> test_law;
 
 	typedef AddendInclusion
-		<interval_set<int>, int >  TestLawT;
+		<interval_set<int>, itl::interval<int> >  TestLawT;
 	LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------

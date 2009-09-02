@@ -108,6 +108,32 @@ void GentorProfile::set_std_profile(int unit, int factor)
     set_laws_per_cycle(std::max(1, 100/factor));
 }
 
+void GentorProfile::set_polygon_profile(int max_polygon_set_size, int max_polygon_size, int min_coord, int max_coord)
+{
+	int factor = 1;
+	int unit  = max_polygon_set_size+1;
+    int value = unit*factor;
+    _unit     = unit;
+    _scaling  = factor;
+    set_defaults();
+
+    // Codomain values
+    set_range_int(min_coord, max_coord);
+    set_range_nat(0, 16);
+    set_range_double(0.0, 1.0);
+    set_range_codomain_ContainerSize(0, max_polygon_size+1);
+
+    // Parameter that influence speed
+    set_range_ContainerSize(0, value);
+    set_range_interval_int(-value, value);
+    set_range_interval_double(-value, value);
+    set_maxIntervalLength(value);
+
+    // Parameter to influence frequencies of output update.
+    set_repeat_count(1);
+    set_trials_count(adjusted_trials_count());
+    set_laws_per_cycle(std::max(1, 100/factor));
+}
 
 
 GentorProfile::GentorProfile()

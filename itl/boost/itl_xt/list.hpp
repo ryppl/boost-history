@@ -138,6 +138,8 @@ namespace boost{namespace itl
             sublist in the list \c super */
         bool contained_in(const list& super)const { return is_subsequence(super); }
 
+		size_t iterative_size()const{ return size(); }
+
         //JODO concept InplaceAddable
         /// Add a list \c tail to this list.
         list& operator += (const list& tail) { splice(end(), list(tail)); return *this; }
@@ -422,18 +424,25 @@ namespace boost{namespace itl
         if(it == end()) return std::string("");
         else
         {
-            std::string y = to_string<DataT>::apply(*it);
+			std::string y = "{"+to_string<DataT>::apply(*it);
             it++;
             while(it != end()) 
             { 
                 y+=sep; 
-                y += to_string<DataT>::value(*it); 
+                y += to_string<DataT>::apply(*it); 
                 it++; 
             }
+			y += "}";
             return y;
         }
     }
 
+	template <class Type>
+	struct type_to_string<itl::list<Type> >
+	{
+		static std::string apply()
+		{ return "list<"+ type_to_string<Type>::apply() +">"; }
+	};
 
 }} // namespace itl boost
 
