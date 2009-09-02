@@ -622,41 +622,36 @@ namespace boost { namespace pinhole
         /**
          * Adds a property to the property list.
          * @param name The name of the property.
-         * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          */
         template<typename Setter, typename Getter>
         void add_property( std::string name, 
-                           std::string description,
                            Setter setter,
                            Getter getter)
         {
             boost::any no_metadata;
-            internal_add_property< typename Getter::result_type >( name, description, setter, getter, no_metadata);
+            internal_add_property< typename Getter::result_type >( name, setter, getter, no_metadata);
         }
         
         /**
          * Adds a property to the property list.
          * @param name The name of the property.
-         * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          */
         template<typename Getter>
         void add_property( std::string name, 
-                           std::string description,
                            no_setter_struct setter,
                            Getter getter)
         {
             boost::any no_metadata;
-            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, no_metadata);
+            internal_add_property< typename Getter::result_type >( name, NULL, getter, no_metadata);
         }
     
         /**
          * Adds a property to the property list.
          * @param name The name of the property.
-         * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          * @param metadata A pointer to the editor to be used with this property, or null
@@ -664,18 +659,16 @@ namespace boost { namespace pinhole
          */
         template< typename Setter, typename Getter>
         void add_property( std::string name,
-                           std::string description,
                            Setter setter,
                            Getter getter,
                            boost::any metadata )
         {
-            internal_add_property< typename Getter::result_type >( name, description, setter, getter, metadata);
+            internal_add_property< typename Getter::result_type >( name, setter, getter, metadata);
         }
 
         /**
          * Adds a property to the property list.
          * @param name The name of the property.
-         * @param description A brief description of the property for the user interface.
          * @param setter The function used to set the property.
          * @param getter The function used to get the property.
          * @param metadata A pointer to the editor to be used with this property, or null
@@ -683,28 +676,24 @@ namespace boost { namespace pinhole
          */
         template< typename Getter>
         void add_property( std::string name,
-                           std::string description,
                            no_setter_struct,
                            Getter getter,
                            boost::any metadata )
         {
-            internal_add_property< typename Getter::result_type >( name, description, NULL, getter, metadata);
+            internal_add_property< typename Getter::result_type >( name, NULL, getter, metadata);
         }
 
         /**
          * Adds an action to the action list.
          * @param The name of the action.
-         * @param description A brief description of the action for the user interface.
          * @param action The function used to trigger the action.
          */
         void add_action( std::string name, 
-                         std::string description,
                          boost::function<void ()> action )
         {
             detail::action_info *action_info = new detail::action_info();
             
             action_info->m_name        = name;
-            action_info->m_description = description;
             action_info->m_action      = action;
             
             action_collection::iterator previousInstance = m_actions.find(name);
@@ -747,7 +736,6 @@ namespace boost { namespace pinhole
     protected:
         template<typename Value_Type>
         void internal_add_property( const std::string &name, 
-                                    const std::string &description,
                                     boost::function<void (const Value_Type&)> setter, 
                                     boost::function<Value_Type ()> getter,
                                     boost::any &metadata )
@@ -758,7 +746,6 @@ namespace boost { namespace pinhole
             // Fill out property information
 
             prop->m_name        = name;
-            prop->m_description = description;
             if( NULL != setter )
             {
             prop->setter = setter;

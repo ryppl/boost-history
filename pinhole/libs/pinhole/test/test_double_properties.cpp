@@ -29,8 +29,8 @@ public:
         m_double_Func = 1.1;
 	    m_double_Var  = 1.1;
 
-		add_property("Double_Func", "Double1 description", BOOST_SETTER(&TestGroup::SetDouble), BOOST_GETTER(&TestGroup::GetDouble) );
-		add_property("Double_Var",  "Double2 description", BOOST_SETTER_VAR(m_double_Var),      BOOST_GETTER_VAR(m_double_Var) );
+		add_property("Double_Func", BOOST_SETTER(&TestGroup::SetDouble), BOOST_GETTER(&TestGroup::GetDouble) );
+		add_property("Double_Var",  BOOST_SETTER_VAR(m_double_Var),      BOOST_GETTER_VAR(m_double_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)

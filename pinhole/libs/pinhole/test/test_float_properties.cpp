@@ -29,8 +29,8 @@ public:
         m_float_Func = 1.1f;
 	    m_float_Var  = 1.1f;
 
-		add_property("Float_Func", "Float description", BOOST_SETTER(&TestGroup::SetFloat), BOOST_GETTER(&TestGroup::GetFloat) );
-		add_property("Float_Var",  "Float description", BOOST_SETTER_VAR(m_float_Var),      BOOST_GETTER_VAR(m_float_Var) );
+		add_property("Float_Func", BOOST_SETTER(&TestGroup::SetFloat), BOOST_GETTER(&TestGroup::GetFloat) );
+		add_property("Float_Var",  BOOST_SETTER_VAR(m_float_Var),      BOOST_GETTER_VAR(m_float_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)

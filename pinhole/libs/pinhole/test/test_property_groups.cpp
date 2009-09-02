@@ -44,9 +44,9 @@ class TestPropertyChildGroup : public property_group
 public:
     TestPropertyChildGroup( property_group *pParentGroup) : property_group( PROPERTY_GROUP_CHILD_NAME, pParentGroup )
     {
-        add_property(PROP_FLOAT,  "PropFloat description",  BOOST_SETTER(&TestPropertyChildGroup::SetFloat),  BOOST_GETTER(&TestPropertyChildGroup::GetFloat));
-        add_property(PROP_INT,    "PropInt description",    BOOST_SETTER(&TestPropertyChildGroup::SetInt),    BOOST_GETTER(&TestPropertyChildGroup::GetInt));
-        add_property(PROP_STRING, "PropString description", BOOST_SETTER(&TestPropertyChildGroup::SetString), BOOST_GETTER(&TestPropertyChildGroup::GetString));
+        add_property(PROP_FLOAT,  BOOST_SETTER(&TestPropertyChildGroup::SetFloat),  BOOST_GETTER(&TestPropertyChildGroup::GetFloat));
+        add_property(PROP_INT,    BOOST_SETTER(&TestPropertyChildGroup::SetInt),    BOOST_GETTER(&TestPropertyChildGroup::GetInt));
+        add_property(PROP_STRING, BOOST_SETTER(&TestPropertyChildGroup::SetString), BOOST_GETTER(&TestPropertyChildGroup::GetString));
     
         add_category(PROPERTY_GROUP_CATEGORY1);
         add_category(PROPERTY_GROUP_CATEGORY2);
@@ -77,10 +77,10 @@ public:
 
         m_bool_var = false;
 
-        add_property(PROP_STRING,   "PropString description", BOOST_SETTER(&TestPropertyGroup::SetString), BOOST_GETTER(&TestPropertyGroup::GetString));
-        add_property(PROP_FLOAT,    "PropFloat description",  BOOST_SETTER(&TestPropertyGroup::SetFloat),  BOOST_GETTER(&TestPropertyGroup::GetFloat));
-        add_property(PROP_INT,      "PropInt description",    BOOST_SETTER(&TestPropertyGroup::SetInt),    BOOST_GETTER(&TestPropertyGroup::GetInt));
-        add_property(PROPERTY_BOOL, "PropBool description",   BOOST_SETTER(&TestPropertyGroup::SetBool),   BOOST_GETTER(&TestPropertyGroup::GetBool));
+        add_property(PROP_STRING,   BOOST_SETTER(&TestPropertyGroup::SetString), BOOST_GETTER(&TestPropertyGroup::GetString));
+        add_property(PROP_FLOAT,    BOOST_SETTER(&TestPropertyGroup::SetFloat),  BOOST_GETTER(&TestPropertyGroup::GetFloat));
+        add_property(PROP_INT,      BOOST_SETTER(&TestPropertyGroup::SetInt),    BOOST_GETTER(&TestPropertyGroup::GetInt));
+        add_property(PROPERTY_BOOL, BOOST_SETTER(&TestPropertyGroup::SetBool),   BOOST_GETTER(&TestPropertyGroup::GetBool));
 
         add_category(PROPERTY_GROUP_CATEGORY1);
         add_category(PROPERTY_GROUP_CATEGORY2);
@@ -213,19 +213,19 @@ BOOST_AUTO_TEST_CASE( TestNumberOfProperties )
     
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 0u );
 
-    testGroup.add_property("Test1", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test1", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 1u );
 
-    testGroup.add_property("Test2", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test2", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 2u );
 
-    testGroup.add_property("Test3", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test3", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 3u );
 
-    testGroup.add_property("Test4", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test4", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 4u );
 
-    testGroup.add_property("Test5", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test5", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 5u );
 }
 
@@ -352,8 +352,8 @@ BOOST_AUTO_TEST_CASE( TestNoCopyConstructorProperties )
 
     // For this test, testGroup shouldn't have a copy constructor
     property_group testGroup("TEST_GROUP", NULL);
-    testGroup.add_property("Test1", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
-    testGroup.add_property("Test2", "", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test1", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("Test2", BOOST_SETTER_NONE, BOOST_GETTER_VAR(test_bool));
     BOOST_CHECK_EQUAL( testGroup.prop_count(), 2u );
 
     property_group copiedGroup( testGroup );
@@ -372,8 +372,8 @@ BOOST_AUTO_TEST_CASE( TestNoCopyConstructorActions )
 {
     // For this test, testGroup shouldn't have a copy constructor
     property_group testGroup("TEST_GROUP", NULL);
-    testGroup.add_action("Test1", "", boost::bind(NullOpFunction));
-    testGroup.add_action("Test2", "", boost::bind(NullOpFunction));
+    testGroup.add_action("Test1", boost::bind(NullOpFunction));
+    testGroup.add_action("Test2", boost::bind(NullOpFunction));
     BOOST_CHECK_EQUAL( testGroup.action_count(), 2u );
 
     property_group copiedGroup( testGroup );
@@ -404,8 +404,8 @@ BOOST_AUTO_TEST_CASE( TestIsReadOnly )
     bool test_bool(false);
 
     property_group testGroup("TEST_GROUP", NULL);
-    testGroup.add_property("read_only", "", BOOST_SETTER_NONE,           BOOST_GETTER_VAR(test_bool));
-    testGroup.add_property("writable",  "", BOOST_SETTER_VAR(test_bool), BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("read_only", BOOST_SETTER_NONE,           BOOST_GETTER_VAR(test_bool));
+    testGroup.add_property("writable",  BOOST_SETTER_VAR(test_bool), BOOST_GETTER_VAR(test_bool));
     
     BOOST_CHECK_EQUAL( testGroup.is_read_only("read_only"), true );
     BOOST_CHECK_EQUAL( testGroup.is_read_only("writable"),  false );

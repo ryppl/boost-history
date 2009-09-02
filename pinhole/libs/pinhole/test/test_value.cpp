@@ -25,7 +25,7 @@ public:
         property_group( lexical_cast<string>(name), pParentGroup ),
         m_int(id)
     {
-        add_property("ID", "ID", BOOST_SETTER_VAR(m_int), BOOST_GETTER_VAR(m_int));
+        add_property("ID", BOOST_SETTER_VAR(m_int), BOOST_GETTER_VAR(m_int));
     }
 
     int m_int;
@@ -38,7 +38,7 @@ public:
       property_group( lexical_cast<string>(name), pParentGroup ),
           m_int(id)
       {
-          add_property("ID", "ID", BOOST_SETTER_NONE, BOOST_GETTER_VAR(m_int));
+          add_property("ID", BOOST_SETTER_NONE, BOOST_GETTER_VAR(m_int));
       }
 
       int m_int;

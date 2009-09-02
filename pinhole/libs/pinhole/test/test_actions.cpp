@@ -32,8 +32,8 @@ public:
         bTriggeredAction1 = false;
         bTriggeredAction2 = false;
 
-        add_action(ACTION_1, "First BOOST_ACTION",  BOOST_ACTION(&TestActionsFixture::Action1));
-        add_action(ACTION_2, "Second BOOST_ACTION", BOOST_ACTION(&TestActionsFixture::Action2));
+        add_action(ACTION_1, BOOST_ACTION(&TestActionsFixture::Action1));
+        add_action(ACTION_2, BOOST_ACTION(&TestActionsFixture::Action2));
     }
 #if defined(BOOST_MSVC)
 #pragma warning(pop)

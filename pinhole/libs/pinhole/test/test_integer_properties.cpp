@@ -29,8 +29,8 @@ public:
         m_int_Func = 0;
 	    m_int_Var  = 0;
 
-		add_property("Int_Func", "Int1 description", BOOST_SETTER(&TestGroup::SetInt), BOOST_GETTER(&TestGroup::GetInt) );
-		add_property("Int_Var",  "Int2 description", BOOST_SETTER_VAR(m_int_Var),      BOOST_GETTER_VAR(m_int_Var) );
+		add_property("Int_Func", BOOST_SETTER(&TestGroup::SetInt), BOOST_GETTER(&TestGroup::GetInt) );
+		add_property("Int_Var",  BOOST_SETTER_VAR(m_int_Var),      BOOST_GETTER_VAR(m_int_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)

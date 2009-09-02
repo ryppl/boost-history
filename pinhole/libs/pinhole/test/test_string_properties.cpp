@@ -26,10 +26,10 @@ public:
 #endif
 	TestGroup() : property_group( "PropertyGroupName", NULL )
 	{
-		add_property("String_Func",  "String1 description",  BOOST_SETTER(&TestGroup::SetString),  BOOST_GETTER(&TestGroup::GetString) );
-		add_property("String_Var",   "String2 description",  BOOST_SETTER_VAR(m_string_Var),       BOOST_GETTER_VAR(m_string_Var) );
-        add_property("WString_Func", "Wstring1 description", BOOST_SETTER(&TestGroup::SetWString), BOOST_GETTER(&TestGroup::GetWString) );
-        add_property("WString_Var",  "Wstring2 description", BOOST_SETTER_VAR(m_wstring_Var),      BOOST_GETTER_VAR(m_wstring_Var) );
+		add_property("String_Func",  BOOST_SETTER(&TestGroup::SetString),  BOOST_GETTER(&TestGroup::GetString) );
+		add_property("String_Var",   BOOST_SETTER_VAR(m_string_Var),       BOOST_GETTER_VAR(m_string_Var) );
+        add_property("WString_Func", BOOST_SETTER(&TestGroup::SetWString), BOOST_GETTER(&TestGroup::GetWString) );
+        add_property("WString_Var",  BOOST_SETTER_VAR(m_wstring_Var),      BOOST_GETTER_VAR(m_wstring_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)

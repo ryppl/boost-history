@@ -273,7 +273,6 @@ namespace boost { namespace pinhole { namespace detail
         virtual ~property_info_base(){;}
 
         std::string           m_name;
-        std::string           m_description;
         boost::any            m_metadata;
         const std::type_info &m_type;
 

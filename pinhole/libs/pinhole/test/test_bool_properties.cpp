@@ -29,8 +29,8 @@ public:
         m_bool_Func = false;
 	    m_bool_Var  = false;
 
-		add_property("Bool_Func", "Bool1 description", BOOST_SETTER(&TestGroup::SetBool), BOOST_GETTER(&TestGroup::GetBool) );
-		add_property("Bool_Var",  "Bool2 description", BOOST_SETTER_VAR(m_bool_Var),      BOOST_GETTER_VAR(m_bool_Var) );
+		add_property("Bool_Func", BOOST_SETTER(&TestGroup::SetBool), BOOST_GETTER(&TestGroup::GetBool) );
+		add_property("Bool_Var",  BOOST_SETTER_VAR(m_bool_Var),      BOOST_GETTER_VAR(m_bool_Var) );
 	}
 #if defined(BOOST_MSVC)
     #pragma warning(pop)
