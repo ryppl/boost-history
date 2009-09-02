@@ -477,10 +477,9 @@ namespace boost { namespace pinhole
             }
 
             /**
-            * Gets a property's Editor object.
+            * Gets a property's metadata object.
             * @param property The name of the property.
-            * @return The Editor of the property.
-            * @throw no_metadata_defined_error There isn't a property editor associated with this property.
+            * @return The metadata object of the property.
             * @throw std::out_of_range The property requested does not exist.
             */
             const boost::any& get_metadata(const std::string &property) const
@@ -616,7 +615,26 @@ namespace boost { namespace pinhole
                         << ::boost::pinhole::exception_action_name(action);
                 }
             }
-
+        
+            /**
+             * Gets an anction's metadata object.
+             * @param property The name of the property.
+             * @return The metadata object of the property.
+             * @throw std::out_of_range The property requested does not exist.
+             */
+            const boost::any& get_action_metadata(const std::string &action) const
+            {
+                action_collection::const_iterator itemItr = m_actions.find(action);
+                
+                if( itemItr != m_actions.end() )
+                {
+                    return( (*itemItr).second->m_metadata );
+                }
+                else
+                {
+                    throw ::boost::enable_error_info(std::out_of_range("The requested action does not exist.")) << ::boost::pinhole::exception_action_name(action);
+                }
+            }
         //@}
         
         /**
@@ -689,12 +707,14 @@ namespace boost { namespace pinhole
          * @param action The function used to trigger the action.
          */
         void add_action( std::string name, 
-                         boost::function<void ()> action )
+                         boost::function<void ()> action,
+                         boost::any metadata = boost::any() )
         {
             detail::action_info *action_info = new detail::action_info();
             
             action_info->m_name        = name;
             action_info->m_action      = action;
+            action_info->m_metadata    = metadata;
             
             action_collection::iterator previousInstance = m_actions.find(name);
             if( m_actions.end() != previousInstance )

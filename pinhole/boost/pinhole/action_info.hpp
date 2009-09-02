@@ -33,6 +33,7 @@ namespace boost { namespace pinhole { namespace detail
 
         action_type m_action;
         std::string m_name;
+        boost::any  m_metadata;
 
         /**
          * Calls the appropriate action function for this parameter.

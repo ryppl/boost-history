@@ -33,7 +33,7 @@ public:
         bTriggeredAction2 = false;
 
         add_action(ACTION_1, BOOST_ACTION(&TestActionsFixture::Action1));
-        add_action(ACTION_2, BOOST_ACTION(&TestActionsFixture::Action2));
+        add_action(ACTION_2, BOOST_ACTION(&TestActionsFixture::Action2), string("some info"));
     }
 #if defined(BOOST_MSVC)
 #pragma warning(pop)
@@ -69,6 +69,7 @@ BOOST_AUTO_TEST_CASE( TestNonExistentAction )
 	TestActionsFixture testFixture;
 	
 	BOOST_CHECK_THROW( testFixture.trigger("NonExistent Action"), std::out_of_range );
+    BOOST_CHECK_THROW( testFixture.get_action_metadata( "NonExistent Action" ), std::out_of_range );
 }
 
 BOOST_AUTO_TEST_CASE( TestGetActionCollection )
@@ -84,4 +85,11 @@ BOOST_AUTO_TEST_CASE( TestGetActionCollection )
     BOOST_CHECK_EQUAL( *itr, ACTION_2 );
     ++itr;
     BOOST_CHECK( itr == itrEnd );
+}
+
+BOOST_AUTO_TEST_CASE( TestActionMetadata )
+{
+	TestActionsFixture testFixture;
+	
+    BOOST_CHECK_EQUAL( any_cast<string>(testFixture.get_action_metadata(ACTION_2)), string("some info") );
 }
