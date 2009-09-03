@@ -50,13 +50,18 @@ namespace importance_weights{
         static val_ one = static_cast<val_>(1);
 
         acc_ acc;
-        std::for_each(b_w,e_w, lambda::bind<void>(boost::ref(acc),lambda::_1));
+        std::for_each(
+            b_w,
+            e_w, 
+            lambda::bind<void>(boost::ref(acc),lambda::_1)
+        );
         val_ v = static_cast<val_>(
             boost::accumulators::variance(acc)
         );
         val_ c = static_cast<val_>(
             boost::accumulators::mean(acc)
         );
+        
         v /= (c*c);
 
         return one / (one + v);

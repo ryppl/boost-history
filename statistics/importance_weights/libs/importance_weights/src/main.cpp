@@ -12,7 +12,7 @@ int main(){
 
     example_scale_to_finite_sum(std::cout);
 
-    // See package statistics/importance_sampling for more examples.
+    // See sandbox/statistics/importance_sampling for more examples.
 
     return 0;
 }

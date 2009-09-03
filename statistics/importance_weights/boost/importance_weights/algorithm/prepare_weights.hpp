@@ -9,10 +9,11 @@
 #define BOOST_IMPORTANCE_WEIGHTS_ALGORITHM_PREPARE_WEIGHTS_HPP_ER_2009
 #include <iterator>
 #include <functional>
+#include <boost/format.hpp>
 #include <boost/lambda/lambda.hpp>
 #include <boost/math/tools/precision.hpp>
-#include <boost/binary_op/algorithm/sort_on_head.hpp>
-#include <boost/non_param/algorithm/proportion_less_than.hpp>
+//#include <boost/binary_op/algorithm/sort_on_head.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/proportion_less_than.hpp>
 #include <boost/importance_weights/algorithm/apply_exp_offset.hpp>
 #include <boost/importance_weights/algorithm/scale_to_finite_sum.hpp>
 #include <boost/importance_weights/algorithm/effective_sample_size.hpp>
@@ -45,7 +46,7 @@ namespace importance_weights{
         // [ Side effect ] 
         // 1) w <- exp(lw+offset)
         // 2) if needed, w <- w/c such that sum{w} < inf
-        // 3) Sorts [b_w,e_w) in decr order, and [b_p,e_p) accordingly
+        // Deprecated: 3) Sorts [b_w,e_w) in decr order, and [b_p,e_p) accordingly
         template<typename ItW,typename ItP>
         void operator()(
             ItW b_w,    // log( unnormalized weights )
@@ -68,14 +69,18 @@ namespace importance_weights{
     // Implementation
 
     template<typename T>
-    std::ostream& operator<<(std::ostream& out, 
-        const prepare_weights<T>& that){
-        out 
-            << '(' << that.offset
-            << ',' << that.scaling_factor
-            << ',' << that.pc_ess
-            << ',' << that.pc_lt_eps
-            << ')';
+    std::ostream& operator<<(
+        std::ostream& out, 
+        const prepare_weights<T>& that
+    ){
+        out << 
+            (
+                format("(%1%,%2%,%3%,%4%)")
+                % that.offset
+                % that.scaling_factor
+                % that.pc_ess
+                % that.pc_lt_eps
+            ).str();
         return out;
     }
 
@@ -119,13 +124,14 @@ namespace importance_weights{
             max_log
         );
 
+        // Deprecated because of discrete_distribution (see importance_sampling)
         // crucial that this step precedes scale_to_finite_sum because
         // finiteness is not nec preserved by reordering (non associativity)
-        binary_op::sort_on_head_greater(
-            b_w,
-            e_w,
-            b_p
-        );  
+        //binary_op::sort_on_head_greater(
+        //    b_w,
+        //    e_w,
+        //    b_p
+        //);  
 
         // if max_log is small enough (which costs precision), this does not 
         // nothing i.e. scaling_factor = 1
@@ -146,6 +152,7 @@ namespace importance_weights{
         value_type n_lt_eps 
             = static_cast<value_type>( std::distance(i_lt_eps,e_w) );
         
+        
         // Increasing max_log should decrease this number
         pc_lt_eps = n_lt_eps / ( n_lt_eps + n_gt_eps ) ;
 
@@ -154,6 +161,7 @@ namespace importance_weights{
             b_w,
             e_w
         );
+        
     }
 
 }// importance_weights
