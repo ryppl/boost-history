@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::survival::model::example::model::exponential.cpp                          //
+// statistics::survival::model::example::model::exponential.cpp              //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -188,7 +188,7 @@ void example_exponential(std::ostream& out){
     // [ Posteriors ]
 
     vals_ lpos;
-    model::log_posteriors<val_>(
+    model::log_posteriors2<val_>(
         model::make_prior_model_dataset(mprior,model,r_x,events),
         boost::begin(pars),
         boost::end(pars),

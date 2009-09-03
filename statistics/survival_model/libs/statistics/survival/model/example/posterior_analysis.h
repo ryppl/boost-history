@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::survival::model::example::model::posterior_analysis.h                     //
+// statistics::survival::model::example::model::posterior_analysis.h         //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
