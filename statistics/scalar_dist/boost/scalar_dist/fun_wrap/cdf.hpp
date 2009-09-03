@@ -19,7 +19,8 @@ namespace math{
         template<typename D> struct cdf_
             : detail::fun_wrap<D,math::cdf>{};
     }
-}
-}
+
+}// math
+}// boost
 
 #endif
