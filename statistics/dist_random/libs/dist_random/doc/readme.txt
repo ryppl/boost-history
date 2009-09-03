@@ -56,7 +56,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 boost_1_39_0
 /sandbox/arithmetic/ 
 /sandbox/statistics/scalar_dist/ 
-/sandbox/statistics/non_param/ 
+/sandbox/statistics/empirical_cdf/ 
 /sandbox/statistics/random/ 
 /sandbox/statistics/standard_distribution/ 
 

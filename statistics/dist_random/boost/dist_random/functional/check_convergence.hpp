@@ -21,7 +21,7 @@
 
 #include <boost/random/ref_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
-#include <boost/non_param/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
 
 namespace boost{
 namespace random{
@@ -108,7 +108,7 @@ namespace random{
         vg_ vg(urng,rdist);
 
         std::generate_n(boost::begin(draws_),n_draw,vg);
-        non_param::sequential_kolmogorov_smirnov_distance(
+        statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
             mdist,
             boost::begin(draws()),
             boost::end(draws()),
