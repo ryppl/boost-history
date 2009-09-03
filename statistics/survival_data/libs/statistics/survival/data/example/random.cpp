@@ -98,7 +98,7 @@ void example_random(std::ostream& out){
     // [Constants]
     const unsigned      k                   = 2;        // # number x values
     const unsigned      n_record            = 1e2;
-    const unsigned      n_batch             = 1e4;
+    const unsigned      n_batch             = 5e4;
     const unsigned      n_ks_data           = n_record/k;
     const val_          mu                  = 0.0;
     const val_          sigma               = 5.0;

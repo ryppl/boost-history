@@ -13,7 +13,7 @@
 int main(){
 
     example_data(std::cout);
-    //example_random(std::cout);
+    example_random(std::cout);
 
     return 0;
 }
