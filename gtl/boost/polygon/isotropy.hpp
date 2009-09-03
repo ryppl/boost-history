@@ -124,6 +124,97 @@ namespace boost { namespace polygon{
     POLYGON_SET_CONCEPT
   };
 
+  struct undefined_concept {};
+
+  template <typename T>
+  struct geometry_concept { typedef undefined_concept type; }; 
+
+  template <typename GCT, typename T>
+  struct view_of {};
+
+  template <typename T1, typename T2>
+  view_of<T1, T2> view_as(const T2& obj) { return view_of<T1, T2>(obj); }  
+
+  template <typename T>
+  struct coordinate_traits {};
+
+  template <typename T>
+  struct high_precision_type {
+    typedef long double type;
+  };
+
+  template <>
+  struct coordinate_traits<int> {
+    typedef int coordinate_type;
+    typedef long double area_type;
+#ifdef BOOST_POLYGON_USE_LONG_LONG
+    typedef polygon_long_long_type manhattan_area_type;
+    typedef polygon_ulong_long_type unsigned_area_type;
+    typedef polygon_long_long_type coordinate_difference;
+#else
+    typedef long manhattan_area_type;
+    typedef unsigned long unsigned_area_type;
+    typedef long coordinate_difference;
+#endif
+    typedef long double coordinate_distance;
+  };
+
+#ifdef BOOST_POLYGON_USE_LONG_LONG
+  template <>
+  struct coordinate_traits<polygon_long_long_type> {
+    typedef polygon_long_long_type coordinate_type;
+    typedef long double area_type;
+    typedef polygon_long_long_type manhattan_area_type;
+    typedef polygon_ulong_long_type unsigned_area_type;
+    typedef polygon_long_long_type coordinate_difference;
+    typedef long double coordinate_distance;
+  };
+#endif
+
+  template <>
+  struct coordinate_traits<float> {
+    typedef float coordinate_type;
+    typedef float area_type;
+    typedef float manhattan_area_type;
+    typedef float unsigned_area_type;
+    typedef float coordinate_difference;
+    typedef float coordinate_distance;
+  };
+
+  template <>
+  struct coordinate_traits<double> {
+    typedef double coordinate_type;
+    typedef double area_type;
+    typedef double manhattan_area_type;
+    typedef double unsigned_area_type;
+    typedef double coordinate_difference;
+    typedef double coordinate_distance;
+  };
+
+  template <typename T>
+  struct scaling_policy {
+    template <typename T2>
+    static inline T round(T2 t2) {
+      return (T)std::floor(t2+0.5);
+    }
+
+    static inline T round(T t2) {
+      return t2;
+    }
+  };
+
+  struct coordinate_concept {};
+
+  template <>
+  struct geometry_concept<int> { typedef coordinate_concept type; };
+#ifdef BOOST_POLYGON_USE_LONG_LONG
+  template <>
+  struct geometry_concept<polygon_long_long_type> { typedef coordinate_concept type; };
+#endif
+  template <>
+  struct geometry_concept<float> { typedef coordinate_concept type; };
+  template <>
+  struct geometry_concept<double> { typedef coordinate_concept type; };
 
 #ifndef BOOST_POLYGON_NO_DEPS
   struct gtl_no : mpl::bool_<false> {};
@@ -194,102 +285,6 @@ namespace boost { namespace polygon{
   template <typename T, typename T2>
   struct gtl_different_type { typedef typename gtl_not<typename gtl_same_type<T, T2>::type>::type type; };
 
-  struct undefined_concept {};
-
-  template <typename T>
-  struct geometry_concept { typedef undefined_concept type; }; 
-
-  template <typename GCT, typename T>
-  struct view_of {};
-
-  template <typename T1, typename T2>
-  view_of<T1, T2> view_as(const T2& obj) { return view_of<T1, T2>(obj); }  
-
-  template <typename T>
-  struct coordinate_traits {};
-
-  template <typename T>
-  struct high_precision_type {
-    typedef long double type;
-  };
-
-  template <>
-  struct coordinate_traits<int> {
-    typedef int coordinate_type;
-    typedef long double area_type;
-#ifdef BOOST_POLYGON_USE_LONG_LONG
-    typedef polygon_long_long_type manhattan_area_type;
-    typedef polygon_ulong_long_type unsigned_area_type;
-    typedef polygon_long_long_type coordinate_difference;
-#else
-    typedef long manhattan_area_type;
-    typedef unsigned long unsigned_area_type;
-    typedef long coordinate_difference;
-#endif
-    typedef long double coordinate_distance;
-    typedef gtl_yes is_integer_type;
-  };
-
-#ifdef BOOST_POLYGON_USE_LONG_LONG
-  template <>
-  struct coordinate_traits<polygon_long_long_type> {
-    typedef polygon_long_long_type coordinate_type;
-    typedef long double area_type;
-    typedef polygon_long_long_type manhattan_area_type;
-    typedef polygon_ulong_long_type unsigned_area_type;
-    typedef polygon_long_long_type coordinate_difference;
-    typedef long double coordinate_distance;
-    typedef gtl_yes is_integer_type;
-  };
-#endif
-
-  template <>
-  struct coordinate_traits<float> {
-    typedef float coordinate_type;
-    typedef float area_type;
-    typedef float manhattan_area_type;
-    typedef float unsigned_area_type;
-    typedef float coordinate_difference;
-    typedef float coordinate_distance;
-    typedef gtl_no is_integer_type;
-  };
-
-  template <>
-  struct coordinate_traits<double> {
-    typedef double coordinate_type;
-    typedef double area_type;
-    typedef double manhattan_area_type;
-    typedef double unsigned_area_type;
-    typedef double coordinate_difference;
-    typedef double coordinate_distance;
-    typedef gtl_no is_integer_type;
-  };
-
-  template <typename T>
-  struct scaling_policy {
-    template <typename T2>
-    static inline T round(T2 t2) {
-      return (T)std::floor(t2+0.5);
-    }
-
-    static inline T round(T t2) {
-      return t2;
-    }
-  };
-
-  struct coordinate_concept {};
-
-  template <>
-  struct geometry_concept<int> { typedef coordinate_concept type; };
-#ifdef BOOST_POLYGON_USE_LONG_LONG
-  template <>
-  struct geometry_concept<polygon_long_long_type> { typedef coordinate_concept type; };
-#endif
-  template <>
-  struct geometry_concept<float> { typedef coordinate_concept type; };
-  template <>
-  struct geometry_concept<double> { typedef coordinate_concept type; };
-
   struct manhattan_domain {};
   struct forty_five_domain {};
   struct general_domain {};
@@ -314,6 +309,8 @@ namespace boost { namespace polygon{
     typedef typename coordinate_traits<coordinate_type_1>::coordinate_difference Unit;
     return (lvalue < rvalue) ? (Unit)rvalue - (Unit)lvalue : (Unit)lvalue - (Unit)rvalue;
   }
+
+
 
   // predicated_swap swaps a and b if pred is true
 

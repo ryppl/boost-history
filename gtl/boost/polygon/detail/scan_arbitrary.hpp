@@ -64,99 +64,59 @@ namespace boost { namespace polygon{
       return lp(pt, pt1) && lp(pt2, pt);
     }
     
-    static inline bool is_unit_integer() {
-      typedef typename coordinate_traits<Unit>::is_integer_type result_type;
-      return result_type::value;
-    }
-
     //quadratic algorithm to do same work as optimal scan for cross checking
     //assume sorted input
     template <typename iT>
     static inline void validate_scan(std::map<segment_id, std::set<Point> >& intersection_points,
                                      iT begin, iT end) {
-      if(is_unit_integer()) {
-        std::set<Point> pts;
-        std::vector<std::pair<half_edge, segment_id> > data(begin, end);
-        for(std::size_t i = 0; i < data.size(); ++i) {
-          if(data[i].first.second < data[i].first.first) {
-            std::swap(data[i].first.first, data[i].first.second);
-          }
+      std::set<Point> pts;
+      std::vector<std::pair<half_edge, segment_id> > data(begin, end);
+      for(std::size_t i = 0; i < data.size(); ++i) {
+        if(data[i].first.second < data[i].first.first) {
+          std::swap(data[i].first.first, data[i].first.second);
         }
-        std::sort(data.begin(), data.end());
-        //find all intersection points
-        for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
-            outer != data.end(); ++outer) {
-          const half_edge& he1 = (*outer).first;
-          //its own end points
-          pts.insert(he1.first);
-          pts.insert(he1.second);
-          for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
-              inner != data.end(); ++inner) {
-            const half_edge& he2 = (*inner).first;
-            if(he1 == he2) continue;
-            if((std::min)(he2. first.get(HORIZONTAL),
-                          he2.second.get(HORIZONTAL)) > 
-               (std::max)(he1.second.get(HORIZONTAL),
-                          he1.first.get(HORIZONTAL)))
-              break;
-            Point intersection;
-            if(compute_intersection(intersection, he1, he2)) {
-              //their intersection point
-              pts.insert(intersection);
-            } 
-          }
+      }
+      std::sort(data.begin(), data.end());
+      //find all intersection points
+      for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
+          outer != data.end(); ++outer) {
+        const half_edge& he1 = (*outer).first;
+        //its own end points
+        pts.insert(he1.first);
+        pts.insert(he1.second);
+        for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
+            inner != data.end(); ++inner) {
+          const half_edge& he2 = (*inner).first;
+          if(he1 == he2) continue;
+          if((std::min)(he2. first.get(HORIZONTAL),
+                        he2.second.get(HORIZONTAL)) > 
+             (std::max)(he1.second.get(HORIZONTAL),
+                        he1.first.get(HORIZONTAL)))
+            break;
+          Point intersection;
+          if(compute_intersection(intersection, he1, he2)) {
+            //their intersection point
+            pts.insert(intersection);
+          } 
         }
-        //find all segments that interact with intersection points
-        for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
-            outer != data.end(); ++outer) {
-          const half_edge& he1 = (*outer).first;
-          segment_id id1 = (*outer).second;
-          typedef rectangle_data<Unit> Rectangle;
-          Rectangle rect1;
-          set_points(rect1, he1.first, he1.second);
-          typename std::set<Point>::iterator itr = pts.lower_bound((std::min)(he1.first, he1.second));
-          typename std::set<Point>::iterator itr2 = pts.upper_bound((std::max)(he1.first, he1.second));
-          while(itr != pts.end() && itr != pts.begin() && (*itr).get(HORIZONTAL) >= (std::min)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) --itr;
-          while(itr2 != pts.end() && (*itr2).get(HORIZONTAL) <= (std::max)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) ++itr2;
-          //itr = pts.begin();
-          //itr2 = pts.end();
-          for( ; itr != itr2; ++itr) {
-            if(intersects_grid(*itr, he1))
-              intersection_points[id1].insert(*itr);
-          }
-        }
-      } else {
-        //no snap rounding in floating point case
-        std::vector<std::pair<half_edge, segment_id> > data(begin, end);
-        for(std::size_t i = 0; i < data.size(); ++i) {
-          if(data[i].first.second < data[i].first.first) {
-            std::swap(data[i].first.first, data[i].first.second);
-          }
-        }
-        std::sort(data.begin(), data.end());
-        //find all intersection points
-        for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
-            outer != data.end(); ++outer) {
-          const half_edge& he1 = (*outer).first;
-          //its own end points
-          intersection_points[(*outer).second].insert(he1.first);
-          intersection_points[(*outer).second].insert(he1.second);
-          for(typename std::vector<std::pair<half_edge, segment_id> >::iterator inner = outer;
-              inner != data.end(); ++inner) {
-            const half_edge& he2 = (*inner).first;
-            if(he1 == he2) continue;
-            if((std::min)(he2. first.get(HORIZONTAL),
-                          he2.second.get(HORIZONTAL)) > 
-               (std::max)(he1.second.get(HORIZONTAL),
-                          he1.first.get(HORIZONTAL)))
-              break;
-            Point intersection;
-            if(compute_intersection(intersection, he1, he2)) {
-              //their intersection point
-              intersection_points[(*outer).second].insert(intersection);
-              intersection_points[(*inner).second].insert(intersection);
-            } 
-          }
+      }
+      //find all segments that interact with intersection points
+      for(typename std::vector<std::pair<half_edge, segment_id> >::iterator outer = data.begin();
+          outer != data.end(); ++outer) {
+        const half_edge& he1 = (*outer).first;
+        segment_id id1 = (*outer).second;
+        typedef rectangle_data<Unit> Rectangle;
+        Rectangle rect1;
+        set_points(rect1, he1.first, he1.second);
+        typename std::set<Point>::iterator itr = pts.lower_bound((std::min)(he1.first, he1.second));
+        typename std::set<Point>::iterator itr2 = pts.upper_bound((std::max)(he1.first, he1.second));
+        while(itr != pts.end() && itr != pts.begin() && (*itr).get(HORIZONTAL) >= (std::min)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) --itr;
+        while(itr2 != pts.end() && (*itr2).get(HORIZONTAL) <= (std::max)(he1.first.get(HORIZONTAL), he1.second.get(HORIZONTAL))) ++itr2;
+        //itr = pts.begin();
+        //itr2 = pts.end();
+        for( ; itr != itr2; ++itr) {
+          if(intersects_grid(*itr, he1))
+            intersection_points[id1].insert(*itr);
         }
       }
     }

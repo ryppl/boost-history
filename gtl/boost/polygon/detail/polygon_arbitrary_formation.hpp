@@ -8,7 +8,6 @@
 #ifndef BOOST_POLYGON_POLYGON_ARBITRARY_FORMATION_HPP
 #define BOOST_POLYGON_POLYGON_ARBITRARY_FORMATION_HPP
 namespace boost { namespace polygon{
-
   template <typename T, typename T2>
   struct PolyLineArbitraryByConcept {};
 
@@ -42,45 +41,30 @@ namespace boost { namespace polygon{
       return lp(pt, pt1) && lp(pt2, pt);
     }
     
-    template <typename T>
-    static inline Unit compute_intercept(const T& dy2,
-                                         const T& dx1,
-                                         const T& dx2) {
-      //intercept = dy2 * dx1 / dx2
-      //return (Unit)(((T)dy2 * (T)dx1) / (T)dx2);
-      T dx1_q = dx1 / dx2;
-      T dx1_r = dx1 % dx2;
-      return static_cast<Unit>(dx1_q * dy2 + (dy2 * dx1_r)/dx2);
-    }
-
-    template <typename area_type, typename integer = gtl_yes>
-    struct equal_slope_i {
-      static inline bool call(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
-        typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
-        unsigned_product_type cross_1 = (unsigned_product_type)(dx2 < 0 ? -dx2 :dx2) * (unsigned_product_type)(dy1 < 0 ? -dy1 : dy1);
-        unsigned_product_type cross_2 = (unsigned_product_type)(dx1 < 0 ? -dx1 :dx1) * (unsigned_product_type)(dy2 < 0 ? -dy2 : dy2);
-        int dx1_sign = dx1 < 0 ? -1 : 1;
-        int dx2_sign = dx2 < 0 ? -1 : 1;
-        int dy1_sign = dy1 < 0 ? -1 : 1;
-        int dy2_sign = dy2 < 0 ? -1 : 1;
-        int cross_1_sign = dx2_sign * dy1_sign;
-        int cross_2_sign = dx1_sign * dy2_sign;
-        return cross_1 == cross_2 && (cross_1_sign == cross_2_sign || cross_1 == 0);
-      }
-    };
-
     template <typename area_type>
-    struct equal_slope_i<area_type, gtl_no> {
-      static inline bool call(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
-        return dx1* dy2 == dx2 * dy1;
-      }
-    };
+    static inline Unit compute_intercept(const area_type& dy2,
+                                         const area_type& dx1,
+                                         const area_type& dx2) {
+      //intercept = dy2 * dx1 / dx2
+      //return (Unit)(((area_type)dy2 * (area_type)dx1) / (area_type)dx2);
+      area_type dx1_q = dx1 / dx2;
+      area_type dx1_r = dx1 % dx2;
+      return dx1_q * dy2 + (dy2 * dx1_r)/dx2;
+    }
 
     template <typename area_type>
     static inline bool equal_slope(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
-      return equal_slope_i<area_type, typename coordinate_traits<Unit>::is_integer_type>::call(dx1, dy1, dx2, dy2);
+      typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
+      unsigned_product_type cross_1 = (unsigned_product_type)(dx2 < 0 ? -dx2 :dx2) * (unsigned_product_type)(dy1 < 0 ? -dy1 : dy1);
+      unsigned_product_type cross_2 = (unsigned_product_type)(dx1 < 0 ? -dx1 :dx1) * (unsigned_product_type)(dy2 < 0 ? -dy2 : dy2);
+      int dx1_sign = dx1 < 0 ? -1 : 1;
+      int dx2_sign = dx2 < 0 ? -1 : 1;
+      int dy1_sign = dy1 < 0 ? -1 : 1;
+      int dy2_sign = dy2 < 0 ? -1 : 1;
+      int cross_1_sign = dx2_sign * dy1_sign;
+      int cross_2_sign = dx1_sign * dy2_sign;
+      return cross_1 == cross_2 && (cross_1_sign == cross_2_sign || cross_1 == 0);
     }
-      
 
     static inline bool equal_slope(const Unit& x, const Unit& y,
                                    const Point& pt1, const Point& pt2) {
@@ -93,71 +77,36 @@ namespace boost { namespace polygon{
       return equal_slope(dx1, dy1, dx2, dy2);
     }
 
-    template <typename area_type, typename integer = gtl_yes>
-    struct less_slope_i {
-      static inline bool call(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
-        //reflect x and y slopes to right hand side half plane
-        if(dx1 < 0) {
-          dy1 *= -1;
-          dx1 *= -1;
-        } else if(dx1 == 0) {
-          //if the first slope is vertical the first cannot be less
-          return false;
-        }
-        if(dx2 < 0) {
-          dy2 *= -1;
-          dx2 *= -1;
-        } else if(dx2 == 0) {
-          //if the second slope is vertical the first is always less unless it is also vertical, in which case they are equal 
-          return dx1 != 0;
-        }
-        typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
-        unsigned_product_type cross_1 = (unsigned_product_type)(dx2 < 0 ? -dx2 :dx2) * (unsigned_product_type)(dy1 < 0 ? -dy1 : dy1);
-        unsigned_product_type cross_2 = (unsigned_product_type)(dx1 < 0 ? -dx1 :dx1) * (unsigned_product_type)(dy2 < 0 ? -dy2 : dy2);
-        int dx1_sign = dx1 < 0 ? -1 : 1;
-        int dx2_sign = dx2 < 0 ? -1 : 1;
-        int dy1_sign = dy1 < 0 ? -1 : 1;
-        int dy2_sign = dy2 < 0 ? -1 : 1;
-        int cross_1_sign = dx2_sign * dy1_sign;
-        int cross_2_sign = dx1_sign * dy2_sign;
-        if(cross_1_sign < cross_2_sign) return true;
-        if(cross_2_sign < cross_1_sign) return false;
-        if(cross_1_sign == -1) return cross_2 < cross_1;
-        return cross_1 < cross_2;
-      }
-    };
-
-    template <typename area_type>
-    struct less_slope_i<area_type, gtl_no> {
-      static inline bool call(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
-        //reflect x and y slopes to right hand side half plane
-        if(dx1 < 0) {
-          dy1 *= -1;
-          dx1 *= -1;
-        } else if(dx1 == 0) {
-          //if the first slope is vertical the first cannot be less
-          return false;
-        }
-        if(dx2 < 0) {
-          dy2 *= -1;
-          dx2 *= -1;
-        } else if(dx2 == 0) {
-          //if the second slope is vertical the first is always less unless it is also vertical, in which case they are equal 
-          return dx1 != 0;
-        }
-        area_type cross_1 = dx2 * dy1;
-        area_type cross_2 = dx1 * dy2;
-        if(cross_1 < 0 && cross_2 >= 0) return true;
-        if(cross_2 < 0 && cross_1 >= 0) return false;
-        if(cross_1 < 0) return cross_2 < cross_1;
-        return cross_1 < cross_2;
-      }
-    };
-
     template <typename area_type>
     static inline bool less_slope(area_type dx1, area_type dy1, area_type dx2, area_type dy2) {
-      return less_slope_i<area_type, 
-        typename coordinate_traits<Unit>::is_integer_type>::call(dx1, dy1, dx2, dy2);
+      //reflext x and y slopes to right hand side half plane
+      if(dx1 < 0) {
+        dy1 *= -1;
+        dx1 *= -1;
+      } else if(dx1 == 0) {
+        //if the first slope is vertical the first cannot be less
+        return false;
+      }
+      if(dx2 < 0) {
+        dy2 *= -1;
+        dx2 *= -1;
+      } else if(dx2 == 0) {
+        //if the second slope is vertical the first is always less unless it is also vertical, in which case they are equal 
+        return dx1 != 0;
+      }
+      typedef typename coordinate_traits<Unit>::unsigned_area_type unsigned_product_type;
+      unsigned_product_type cross_1 = (unsigned_product_type)(dx2 < 0 ? -dx2 :dx2) * (unsigned_product_type)(dy1 < 0 ? -dy1 : dy1);
+      unsigned_product_type cross_2 = (unsigned_product_type)(dx1 < 0 ? -dx1 :dx1) * (unsigned_product_type)(dy2 < 0 ? -dy2 : dy2);
+      int dx1_sign = dx1 < 0 ? -1 : 1;
+      int dx2_sign = dx2 < 0 ? -1 : 1;
+      int dy1_sign = dy1 < 0 ? -1 : 1;
+      int dy2_sign = dy2 < 0 ? -1 : 1;
+      int cross_1_sign = dx2_sign * dy1_sign;
+      int cross_2_sign = dx1_sign * dy2_sign;
+      if(cross_1_sign < cross_2_sign) return true;
+      if(cross_2_sign < cross_1_sign) return false;
+      if(cross_1_sign == -1) return cross_2 < cross_1;
+      return cross_1 < cross_2;
     }
 
     static inline bool less_slope(const Unit& x, const Unit& y,
@@ -388,27 +337,6 @@ namespace boost { namespace polygon{
       return q + r;
     }
 
-    template <typename T, typename integer = gtl_yes>
-    struct truncate_down_i {
-      static inline Unit call(const T& t) {
-        Unit retval = static_cast<Unit>(t);
-        if(t < static_cast<T>(retval)) --retval;
-        return retval;
-      }
-    };
-
-    template <typename T>
-    struct truncate_down_i<T, gtl_no> {
-      static inline Unit call(const T& t) {
-        return static_cast<Unit>(t);
-      }
-    };
-
-    template <typename T>
-    static inline Unit truncate_down(const T& t) {
-      return truncate_down_i<T, typename coordinate_traits<Unit>::is_integer_type>::call(t);
-    }
-
     static inline bool compute_intersection(Point& intersection, const half_edge& he1, const half_edge& he2) {
       typedef typename high_precision_type<Unit>::type high_precision;
       typedef rectangle_data<Unit> Rectangle;
@@ -466,8 +394,11 @@ namespace boost { namespace polygon{
       //std::cout << "cross2 " << dy2 << " " << dx1 << " " << dy2 * dx1 << std::endl;
       //Unit exp_x = compute_x_intercept<at>(x11, x21, y11, y21, dy1, dy2, dx1, dx2);
       //Unit exp_y = compute_x_intercept<at>(y11, y21, x11, x21, dx1, dx2, dy1, dy2);
-      Unit x_unit = truncate_down(x);
-      Unit y_unit = truncate_down(y);
+      Unit x_unit = (Unit)x;
+      Unit y_unit = (Unit)y;
+      //truncate downward if it went up due to negative number
+      if(x < (high_precision)x_unit) --x_unit;
+      if(y < (high_precision)y_unit) --y_unit;
       //if(x != exp_x || y != exp_y)
       //  std::cout << exp_x << " " << exp_y << " " << x << " " << y << std::endl;
       //Unit y1 = evalAtXforY(exp_x, he1.first, he1.second);
