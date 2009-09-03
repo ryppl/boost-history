@@ -13,7 +13,7 @@
 #include <boost/math/tools/precision.hpp>
 #include <boost/random/variate_generator.hpp>
 #include <boost/utility.hpp>
-#include <boost/non_param/algorithm/proportion_less_than.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/proportion_less_than.hpp>
 #include <boost/importance_sampling/sampler.hpp>
 #include <boost/random/ref_distribution.hpp>
 

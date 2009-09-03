@@ -10,15 +10,16 @@
 #include <algorithm>
 #include <iterator>
 #include <boost/bind.hpp>
-#include <boost/random.hpp>
+#include <boost/random/mersenne_twister.hpp>
 #include <boost/format.hpp>
 #include <boost/function.hpp>
 #include <boost/math/tools/precision.hpp>
-#include <boost/random/normal_distribution.hpp>
-// Must come before non_param/algorithm/sequential_kolmogorov_smirnov_distance:
+// Must come before empirical_cdf/algorithm/sequential_kolmogorov_smirnov_distance:
 #include <boost/standard_distribution/distributions/normal.hpp>
-#include <boost/non_param/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/sequential_kolmogorov_smirnov_distance.hpp>
 #include <boost/scalar_dist/include.hpp>
+#include <boost/dist_random/distributions/normal.hpp>
+#include <boost/dist_random/random/generate_n.hpp>
 #include <boost/importance_weights/algorithm/prepare_weights.hpp>
 #include <boost/importance_sampling/include.hpp>
 
@@ -37,9 +38,7 @@ void example_sampler(std::ostream& out){
     typedef std::vector<vec_>                           mat_;
     typedef math::normal_distribution<val_>             mnd_;
     typedef math::meta_ratio_pdf<mnd_,mnd_>             meta_ratio_;
-    typedef normal_distribution<val_>                   rd_;
     typedef mt19937                                     urng_;
-    typedef variate_generator<urng_&, rd_>              gen_t;
     typedef function<val_(mnd_,val_)>                   pdf_fun_; 
     typedef importance_weights::prepare_weights<val_>   prepare_weights_;
 
@@ -57,25 +56,20 @@ void example_sampler(std::ostream& out){
     prepare_weights_ prepare_weights( max_log );
     mnd_ md_proposal( mu, sigma );               
     mnd_ md_target( target_mu, target_sigma );   
-    rd_ rd( mu, sigma );
 
     urng_ urng;
     vec_ vec_ks; vec_ks.reserve(n_ks * n_t_pl);
-    vec_ proposals;
-    proposals.reserve(n_p);
+    vec_ proposals( n_p );
     vec_ targets; 
     targets.reserve( n_ks * n_t_pl );
-    vec_ is_weights;
-    is_weights.reserve(n_p);
-    gen_t gen(urng,rd);
-    std::generate_n( std::back_inserter(proposals), n_p, gen );
+    vec_ is_weights( n_p );
 
-    is_weights.clear();
-    math::transform<math::fun_wrap::log_unnormalized_pdf_>(
-        meta_ratio_::make(md_target,md_proposal),
-        boost::begin(proposals),
-        boost::end(proposals),
-        std::back_inserter(is_weights)
+    generate_function_n<math::fun_wrap::log_unnormalized_pdf_>( 
+        boost::begin( proposals ), 
+        boost::begin( is_weights ),
+        n_p,
+        md_proposal, 
+        urng
     );
 
     prepare_weights(
@@ -100,7 +94,7 @@ void example_sampler(std::ostream& out){
     {
         // i       0       1        ...    n-1           
         // [b,e)  [0,m)    [m,2m)   ...    [(n-1)m,n m)
-        boost::non_param::sequential_kolmogorov_smirnov_distance(
+        statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
             md_target,
             boost::begin(targets),
             boost::end(targets),

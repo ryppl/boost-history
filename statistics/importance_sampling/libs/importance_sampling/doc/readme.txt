@@ -16,7 +16,17 @@ erwann.rogard@gmail.com
 These are C++ tools for sampling by importance weights. For example:
     generate(urng,b_w, e_w, b_p, b_t, n);
 
-See the related package sandbox/statistics/importance_weights
+
+[ Advice ]
+
+To compute the appropriate weights, we recommend using prepare_weights defined
+in the package sandbox/statistics/importance_weights
+
+To ensure that the draws are from the desired target distribution, we recommend
+monitoring
+a) The effective sample size (ESS) 
+b) The uniformity of the Cook-Gelman statistics. The latter may be violated by
+either i) too small a ESS ii) incorrect computations
 
 [ Compiler ]
 
@@ -25,11 +35,18 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 [ Dependencies ]
 
 /usr/local/boost_1_39_0/ 
-/sandbox/statistics/utility/ 
-/sandbox/statistics/standard_distribution/ 
-/sandbox/statistics/stl/
 
-Link to libboost_serialization-gcc40-mt-1_37.a
+/sandbox/statistics/arithmetic/ 
+/sandbox/statistics/dist_random/ 
+/sandbox/statistics/random/ 
+/sandbox/statistics/functional/ 
+/sandbox/statistics/binary_op/ 
+/sandbox/statistics/importance_weights/ 
+/sandbox/statistics/scalar_dist/ 
+/sandbox/statistics/empirical_cdf/ 
+/sandbox/statistics/standard_distribution/ 
+/sandbox/statistics/importance_sampling/
+
 
 [ Models RandomDistribution ]
     Let R denote a range of values (not restricted to scalars) representing
@@ -62,8 +79,6 @@ July 2009 : Current version
 [Output]
 
 Here's the ouput from main.cpp:
-
-->example_sampler : 
 
 ->example_sampler : 
 
