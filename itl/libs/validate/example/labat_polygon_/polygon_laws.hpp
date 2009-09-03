@@ -28,7 +28,7 @@ namespace boost{namespace itl
         // a o b == b o a computed as
         //lsum=a; lsum+=b; rsum=b; rsum+=a => lsum==rsum 
         //Input  = (a := inVal1, b := inVal2)
-        //Output = (sum_lhs, sum_rhs)
+        //Output = (lhs_result, lhs_result)
         
     public:
         std::string name()const { return "Polygon Commutativity"; }
@@ -88,8 +88,7 @@ namespace boost{namespace itl
 					 // in a law                 Can be more, if you want to see interim results.
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
-        // a o b == b o a computed as
-        //lsum=a; lsum+=b; rsum=b; rsum+=a => lsum==rsum 
+        // (a+b) - (a&b) == (a-b) + (b-a)
         //Input  = (a := inVal1, b := inVal2)
         //Output = (sum_lhs, sum_rhs)
         
