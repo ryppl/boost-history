@@ -1,6 +1,15 @@
+// Copyright 2009 Robert Stewart, Steven Watanabe, Roman Perepelitsa & Frédéric Bron
+//
+//  Use, modification and distribution are subject to the Boost Software License,
+//  Version 1.0. (See accompanying file LICENSE_1_0.txt or copy at
+//  http://www.boost.org/LICENSE_1_0.txt).
+//
+//  See http://www.boost.org/libs/type_traits for most recent version including documentation.
+
 #include <boost/config.hpp>
 #include <boost/type_traits/remove_cv.hpp>
 #include <boost/type_traits/integral_constant.hpp>
+#include <boost/type_traits/detail/yes_no_type.hpp>
 
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
@@ -8,7 +17,7 @@
 namespace boost {
 namespace detail {
 
-// This namespace ensures that ADL doesn't mess things up.
+// This namespace ensures that ADL does not mess things up.
 namespace BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
 
 // a type returned from comparison operator when no such operator is found in the
@@ -20,29 +29,24 @@ struct tag { } ;
 // might be found via ADL.
 struct any { template <class T> any(T const&) ; } ;
 
+// when operator< is not available, this one is used
 tag operator BOOST_TT_TRAIT_OP (const any&, const any&) ;
 
-// In case a comparison operator is found that returns void, we'll use (x comp x),0
-tag operator,(tag, int) ;
+::boost::type_traits::yes_type is_bool(bool) ; // this version is preferred for types convertible to bool
+::boost::type_traits::no_type is_bool(...) ; // this version is used otherwise
 
-// two check overloads help us identify which comparison operator was picked
-
-// check(tag) returns a reference to char[2] (sizeof>1)
-char (& check(tag))[2] ;
-
-// check(not tag) returns char (sizeof==1)
-template <class T> char check(T const&) ;
-
-template <class T>
+template < typename T, typename U >
 struct BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl) {
-	static typename boost::remove_cv<T>::type &x ;
-	static const bool value = sizeof(check((x BOOST_TT_TRAIT_OP x, 0))) == 1 ;
+	static T make_T() ;
+	static U make_U() ;
+	static const bool value =
+		sizeof(is_bool(make_T() BOOST_TT_TRAIT_OP make_U())) == sizeof(::boost::type_traits::yes_type) ;
 } ;
 
 } // namespace impl
 } // namespace detail
 
-BOOST_TT_AUX_BOOL_TRAIT_DEF1(BOOST_TT_TRAIT_NAME,T,::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)<T>::value)
+BOOST_TT_AUX_BOOL_TRAIT_DEF2(BOOST_TT_TRAIT_NAME,T,U=T,(::boost::detail::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)::BOOST_JOIN(BOOST_TT_TRAIT_NAME,_impl)<T,U>::value))
 
 } // namespace boost
 
