@@ -1071,7 +1071,7 @@ struct type_to_string<itl::interval<DomainT,Compare> >
 template<class DomainT> 
 struct value_size<itl::interval<DomainT> >
 {
-    static std::size_t value_size::apply(const itl::interval<DomainT>& value) 
+    static std::size_t apply(const itl::interval<DomainT>& value) 
     { return 2; }
 };
 
