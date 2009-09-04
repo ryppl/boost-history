@@ -14,4 +14,4 @@
 #define BOOST_TT_TRAIT_NAME is_less_comparable
 #define BOOST_TT_TRAIT_OP <
 
-#include "binary_op_traits_test.hpp"
+#include "is_comparable_test.hpp"

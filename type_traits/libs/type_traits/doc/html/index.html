@@ -3,7 +3,7 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Chapter 1. Boost.TypeTraits</title>
 <link rel="stylesheet" href="../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets Vsnapshot_2006-12-17_0120">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
 <link rel="start" href="index.html" title="Chapter 1. Boost.TypeTraits">
 <link rel="next" href="boost_typetraits/intro.html" title="Introduction">
 </head>
@@ -25,12 +25,13 @@
 <div><div class="author"><h3 class="author">
 <span class="firstname">various</span> <span class="surname">authors</span>
 </h3></div></div>
-<div><p class="copyright">Copyright © 2000, 2006 Adobe Systems Inc, David Abrahams,
-      Steve Cleary, Beman Dawes, Aleksey Gurtovoy, Howard Hinnant, Jesse Jones, Mat
-      Marcus, Itay Maman, John Maddock, Alexander Nasonov, Thorsten Ottosen, Robert
-      Ramey and Jeremy Siek</p></div>
+<div><p class="copyright">Copyright © 2000, 2009 Adobe Systems Inc, David Abrahams,
+      Frédéric Bron, Steve Cleary, Beman Dawes, Aleksey Gurtovoy, Howard Hinnant,
+      Jesse Jones, Mat Marcus, Itay Maman, John Maddock, Alexander Nasonov, Thorsten
+      Ottosen, Roman Perepelitsa, Robert Ramey, Jeremy Siek, Robert Stewart and Steven
+      Watanabe</p></div>
 <div><div class="legalnotice">
-<a name="id447505"></a><p>
+<a name="id2611756"></a><p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>
@@ -117,24 +118,33 @@
 <dt><span class="section"><a href="boost_typetraits/reference/is_convertible.html"> is_convertible</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_empty.html"> is_empty</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_enum.html"> is_enum</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_equal_to_comparable.html"> is_equal_to_comparable</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_floating_point.html"> is_floating_point</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_function.html"> is_function</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_fundamental.html"> is_fundamental</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_greater_comparable.html"> is_greater_comparable</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_greater_equal_comparable.html">
+      is_greater_equal_comparable</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_integral.html"> is_integral</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_less_comparable.html"> is_less_comparable</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_less_equal_comparable.html">
+      is_less_equal_comparable</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_member_function_pointer.html">
       is_member_function_pointer</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_member_object_pointer.html">
       is_member_object_pointer</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_member_pointer.html"> is_member_pointer</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_not_equal_to_comparable.html">
+      is_not_equal_to_comparable</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_object.html"> is_object</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_pod.html"> is_pod</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_pointer.html"> is_pointer</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_polymorphic.html"> is_polymorphic</a></span></dt>
+<dt><span class="section"><a href="boost_typetraits/reference/is_reference.html"> is_reference</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_same.html"> is_same</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_scalar.html"> is_scalar</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_signed.html"> is_signed</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_stateless.html"> is_stateless</a></span></dt>
-<dt><span class="section"><a href="boost_typetraits/reference/is_reference.html"> is_reference</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_union.html"> is_union</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_unsigned.html"> is_unsigned</a></span></dt>
 <dt><span class="section"><a href="boost_typetraits/reference/is_void.html"> is_void</a></span></dt>
@@ -163,7 +173,7 @@
   </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
-<td align="left"><p><small>Last revised: February 21, 2008 at 13:51:18 +0000</small></p></td>
+<td align="left"><p><small>Last revised: August 07, 2008 at 12:47:12 +0200</small></p></td>
 <td align="right"><div class="copyright-footer"></div></td>
 </tr></table>
 <hr>

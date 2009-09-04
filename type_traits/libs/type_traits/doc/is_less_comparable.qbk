@@ -1,0 +1,32 @@
+[/
+  Copyright 2009  Robert Stewart, Steven Watanabe, Roman Perepelitsa & Frédéric Bron.
+  Distributed under the Boost Software License, Version 1.0.
+  (See accompanying file LICENSE_1_0.txt or copy at
+  http://www.boost.org/LICENSE_1_0.txt).
+]
+  
+[section:is_less_comparable is_less_comparable]
+   template <class T, class U=T>
+   struct is_less_comparable : public __tof {};
+  
+__inherit If a value `t` of type `T` can be compared with a value `u` of type `U`
+  using `operator<` to determine whether `t` is less than `u`
+  (i.e. if `t<u` is meaningfull and its result is convertible to `bool`),
+  then inherits from __true_type, otherwise inherits from __false_type.
+  
+__header ` #include <boost/type_traits/is_less_comparable.hpp>` or ` #include <boost/type_traits.hpp>`
+  
+__examples
+  
+[:`is_less_comparable<T, U>::value_type` is the type `bool`.]
+  
+[:`is_less_comparable<int>` inherits from `__true_type`.]
+  
+[:`is_less_comparable<float>::type` is the type `__true_type`.]
+  
+[:`is_less_comparable<long>::value` is a `bool` integral constant
+expression that evaluates to /true/.]
+  
+[:`is_less_comparable<int, double>` inherits from `__true_type`.]
+  
+[endsect]
