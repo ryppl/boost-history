@@ -110,8 +110,8 @@ void GentorProfile::set_std_profile(int unit, int factor)
 
 void GentorProfile::set_polygon_profile(int max_polygon_set_size, int max_polygon_size, int min_coord, int max_coord)
 {
-	int factor = 1;
-	int unit  = max_polygon_set_size+1;
+    int factor = 1;
+    int unit  = max_polygon_set_size+1;
     int value = unit*factor;
     _unit     = unit;
     _scaling  = factor;

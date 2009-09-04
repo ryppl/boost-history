@@ -123,10 +123,6 @@ interval_set<string, german_compare>      sections; // 2nd parameter is a templa
 std::set<string, german_compare<string> > words;    // 2nd parameter is a type
 ``
 
-[/ This choice has been made, because template parameters have to be 
-instantiated with different types inside itl class templates. This problem
-is described in detail in section JODO.]
-
 [endsect][/ Class templates]
 
 [section Required Concepts]
@@ -436,7 +432,7 @@ overloaded implementations for the function of that row is shown.
 [[__biLConsCopyDest__]                         [ ]       [ ]      [ ]     [ ]      [ ]      [ ]      [ ]]
 [[`T::T()`]                                    [1]       [1]      [1]     [1]      [1]      [1]      [1]]
 [[`T::T(const P&)`]                            [A]   [__eiS]  [__bpM]     [1]      [1]      [1]      [1]]
-[/ JODO [`T::T(...)`]                                 [3]       [ ]      [ ]     [3]      [3]      [3]      [3]]
+[/ FYI [`T::T(...)`]                                 [3]       [ ]      [ ]     [3]      [3]      [3]      [3]]
 [[`T& T::operator=(const P&)`]                 [A]     [__S]    [__M]     [1]      [1]      [1]      [1]]
 [[`void T::swap(T&)`]                          [ ]       [1]      [1]     [1]      [1]      [1]      [1]]
 
@@ -522,7 +518,8 @@ overloaded implementations for the function of that row is shown.
 [[`pair<J,J> T::equal_range(const key_value&)`][ ]       [2]      [2]     [2]      [2]      [2]      [2]]
 
 [[__biLStreaming__]      [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map][std::set][std::map]]
-[[`std::basic_ostream operator << (...)`]      [1]       [1]      [1]     [1]      [1]      [1]      [1]]
+[[`std::basic_ostream operator << (basic_ostream&, const T&)`]      
+                                               [1]       [1]      [1]     [1]      [1]      [1]      [1]]
 [[`std::string T::as_string()`]                [1]       [1]      [1]     [1]      [1]      [ ]      [ ]]
 ]
 

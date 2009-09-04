@@ -22,6 +22,25 @@
 Functions and operators that implement ['*Subtraction*] on *itl* objects
 are given in the table above.
 
+[table
+[[]      [Description of Subtraction]]
+[[`Sets`][Subtraction on Sets implements ['*set difference*]]]
+[[`Maps`][Subtraction on Maps implements a ['*map difference*] function similar to /set difference/.
+          If, on subtraction of an element value pair `(k,v)` it's key `k` is in the map 
+          already, the subtraction function is propagated to the associated value.
+          On the associated value an aggregation is performed, that reverses 
+          the effect of the corresponding addition function.
+        
+          Find more on 
+          [link boost_itl.concepts.addability__subtractability_and_aggregate_on_overlap ['subtractability of maps]]
+          and related 
+          [link boost_itl.semantics.maps ['semantical issues]] 
+          following the links. 
+        
+         ]]
+]
+
+
 [endsect][/ Synopsis]
 
 

@@ -25,7 +25,6 @@ If you are interested
 refer to this section that describes the polymorphic function families of the itl
 in detail.
 
-[/ JODO placeholders again]
 [h5 Placeholders]
 
 For a concise representation the same __eiS_phs__ will be used that have been
@@ -34,11 +33,10 @@ introduced in section [link boost_itl.interface.function_synopsis Function Synop
 [h5 More specific function documentation]
 
 This section covers the most important polymorphical and namespace global
-functions of the *itl*. More specific functions are may be looked up
+functions of the *itl*. More specific functions can be looked up
 in the doxygen generated
 [link interval_template_library_reference reference documentation].
 
-[/ JODO introducing overload tables. ==========================================]
 [section Overload tables]
 
 Many of the *itl's* functions are overloaded for
@@ -87,7 +85,6 @@ __m:element map,   __M:interval maps,   __b:element-value pairs, __p:interval-va
 
 [endsect][/ Overload tables]
 
-[/ JODO Si Mj and segmentational fineness. ====================================]
 [section Segmentational Fineness]
 
 For overloading tables on infix operators, we need to
@@ -105,7 +102,7 @@ choosing *Si* and *Mi* as placeholders.
 
 The indices *i* of *Si* and *Mi* represent a property
 called ['*segmentational fineness*] or short ['*fineness*], 
-which is a ['*type trait] on interval containers.
+which is a ['*type trait*] on interval containers.
 
 [table
 [[]]
@@ -180,7 +177,6 @@ implementation by the compiler.
 
 [endsect][/ Segmentational Fineness]
 
-[/ JODO introducing key types. ================================================]
 [section Key Types]
 
 In an *stl* map `map<K,D>` the first parameter type of the map
@@ -201,8 +197,8 @@ segments and submaps.
 [[__s: __itl_set__     ][                       ][   interval map	 ]]
 ]
 
-__biLSubtraction__, __biLerasure__, __biLintersection__, 
-which is a generalized find 
+__biLSubtraction__, __biLerasure__, __biLintersection__
+[/ , which is a generalized find ]
 and __biLcontainedness__ predicates
 can be used with those kinds of key types.
 For instance, the overload table for intersection 

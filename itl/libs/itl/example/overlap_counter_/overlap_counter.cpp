@@ -33,44 +33,46 @@ using namespace std;
 using namespace boost::itl;
 
 
-/*  A interval_map<int, int> is a map<Interval<int>, int> that maps intervals
-    to int values. On overlap of intervals it sums up the associated int 
-    values.    */
-typedef interval_map<int, int> OverlapCounterTD;
+/* The most simple example of an interval_map is an overlap counter.
+   If intervals are added that are associated with the value 1,
+   all overlaps of added intervals are counted as a result in the
+   associated values. 
+*/
+typedef interval_map<int, int> OverlapCounterT;
 
-void print_overlaps(const OverlapCounterTD& counter)
+void print_overlaps(const OverlapCounterT& counter)
 {
-    for(OverlapCounterTD::const_iterator it = counter.begin(); it != counter.end(); it++)
+    for(OverlapCounterT::const_iterator it = counter.begin(); it != counter.end(); it++)
     {
-        interval<int> itv = (*it).first;
+        interval<int> itv  = (*it).first;
         int overlaps_count = (*it).second;
         if(overlaps_count == 1)
-            cout << "in interval " << itv.as_string() << " intervals do not overlap" << endl;
+            cout << "in interval " << itv << " intervals do not overlap" << endl;
         else
-            cout << "in interval " << itv.as_string() << ": "<< overlaps_count << " intervals overlap" << endl;
+            cout << "in interval " << itv << ": "<< overlaps_count << " intervals overlap" << endl;
     }
 }
 
 void overlap_counter()
 {
-    OverlapCounterTD overlap_counter;
+    OverlapCounterT overlap_counter;
     interval<int> itv;
 
     itv = interval<int>::rightopen(4,8);
     cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
-    overlap_counter += make_pair(itv, 1);
+    overlap_counter += make_pair(interval<int>::rightopen(4,8), 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
     itv = interval<int>::rightopen(6,9);
     cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
-    overlap_counter += make_pair(itv, 1);
+    overlap_counter += make_pair(interval<int>::rightopen(6,9), 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
     itv = interval<int>::rightopen(1,9);
     cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
-    overlap_counter += make_pair(itv, 1);
+    overlap_counter += make_pair(interval<int>::rightopen(1,9), 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
     

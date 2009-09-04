@@ -22,6 +22,16 @@
 Functions and operators that implement ['*symmetric difference*] on *itl* objects
 are given in the table above.
 
+[table
+[[]      [Description of symmetric difference]]
+[[`Sets`][`operator ^` implements ['*set symmetric difference*]]]
+[[`Maps`][`operator ^` implements a ['*map symmetric difference*] 
+          function similar to /set symmetric difference/.
+          All pairs that are common to both arguments are removed. All others unified.
+         ]]
+]
+
+
 [endsect][/ Synopsis Symmetric difference]
 
 [section Member functions][/ Symmetric difference]

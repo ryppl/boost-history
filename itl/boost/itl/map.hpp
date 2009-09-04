@@ -177,10 +177,10 @@ public:
 
     /** Checks if a key-value pair is in the map */
     bool contains(const element_type& key_value_pair)const 
-	{ 
-		const_iterator found_ = find(key_value_pair.first);
-		return found_ != end() && found_->second == key_value_pair.second;
-	}
+    { 
+        const_iterator found_ = find(key_value_pair.first);
+        return found_ != end() && found_->second == key_value_pair.second;
+    }
 
     /** Is <tt>*this</tt> contained in <tt>super</tt>? */
     bool contained_in(const map& super)const 
@@ -274,16 +274,16 @@ public:
     /** The intersection of map \c sectant with \c *this map is added to \c section. */
     void add_intersection(map& section, const map& sectant)const;
 
-	/** Returns true, if there is an intersection of \c key and \c *this map.
-	    Functions \c intersects and \c contains are identical on key value arguments
-		of type \c domain_type. Complexity: Logarithmic in container size. */
-	bool intersects(const domain_type& key)const;
+    /** Returns true, if there is an intersection of \c key and \c *this map.
+        Functions \c intersects and \c contains are identical on key value arguments
+        of type \c domain_type. Complexity: Logarithmic in container size. */
+    bool intersects(const domain_type& key)const;
 
-	/** Returns true, if there is an intersection of \key_value_pair and \c *this map.
-		If the key is found, the content of \c key_value_pair has to have an intersection 
-		with the content of the data value in the map. 
-		Complexity: Logarithmic in container size. 	*/
-	bool intersects(const element_type& key_value_pair)const;
+    /** Returns true, if there is an intersection of \key_value_pair and \c *this map.
+        If the key is found, the content of \c key_value_pair has to have an intersection 
+        with the content of the data value in the map. 
+        Complexity: Logarithmic in container size.     */
+    bool intersects(const element_type& key_value_pair)const;
 
     //==========================================================================
     //= Symmetric difference
@@ -353,13 +353,13 @@ public:
     template<class Predicate>
     map& assign_if(const map& src, const Predicate&);
 
-	/** Copy the key values of the map to \c domain_set. Complexity: Linear. */
-	void domain(set_type& domain_set)const
-	{
-		typename set_type::iterator prior_ = domain_set.end();
-		const_FORALL_THIS(it_)
-			prior_ = domain_set.insert(prior_, it_->KEY_VALUE);
-	}
+    /** Copy the key values of the map to \c domain_set. Complexity: Linear. */
+    void domain(set_type& domain_set)const
+    {
+        typename set_type::iterator prior_ = domain_set.end();
+        const_FORALL_THIS(it_)
+            prior_ = domain_set.insert(prior_, it_->KEY_VALUE);
+    }
 
 private:
     template<class Combiner>
@@ -558,21 +558,21 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline bool map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-	::intersects(const domain_type& key)const
+    ::intersects(const domain_type& key)const
 {
-	return traits::is_total || contains(key);
+    return traits::is_total || contains(key);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 inline bool map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::intersects(const element_type& key_value_pair)const
 {
-	if(traits::is_total)
-		return true;
+    if(traits::is_total)
+        return true;
 
-	type intersection;
-	add_intersection(intersection, key_value_pair);
-	return !intersection.empty(); 
+    type intersection;
+    add_intersection(intersection, key_value_pair);
+    return !intersection.empty(); 
 }
 
 
@@ -881,7 +881,7 @@ operator &= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
 {
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> object_type;
     if(Traits::is_total) 
-		return object += operand;
+        return object += operand;
     else
     {
         object_type section;
@@ -935,75 +935,75 @@ operator & (const typename itl::map<DomainT,CodomainT,Traits,Compare,Combine,Sec
 //------------------------------------------------------------------------------
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&              object, 
-	   const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::domain_type& key)
+       const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::domain_type& key)
 {
-	return object.intersects(key);
+    return object.intersects(key);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(
-	  const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::domain_type& key,
+      const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::domain_type& key,
                const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&              object)
 {
-	return object.intersects(key);
+    return object.intersects(key);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&               object, 
-	   const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair)
+       const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair)
 {
-	return object.intersects(key_value_pair);
+    return object.intersects(key_value_pair);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(
-	  const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair,
+      const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::element_type& key_value_pair,
                const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&               object)
 {
-	return object.intersects(key_value_pair);
+    return object.intersects(key_value_pair);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&           left, 
-	   const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& right)
+       const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& right)
 {
-	typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
-	if(is_total<MapT>::value)
-		return true;
+    typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
+    if(is_total<MapT>::value)
+        return true;
 
-	if(left.iterative_size() < right.iterative_size())
-		return Map::key_intersects(right, left);
-	else
-		return Map::key_intersects(left, right);
+    if(left.iterative_size() < right.iterative_size())
+        return Map::key_intersects(right, left);
+    else
+        return Map::key_intersects(left, right);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(
-	  const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& left,
+      const typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::set_type& left,
                const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&           right)
 {
-	typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
-	if(is_total<MapT>::value)
-		return true;
+    typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
+    if(is_total<MapT>::value)
+        return true;
 
-	if(left.iterative_size() < right.iterative_size())
-		return Map::key_intersects(right, left);
-	else
-		return Map::key_intersects(left, right);
+    if(left.iterative_size() < right.iterative_size())
+        return Map::key_intersects(right, left);
+    else
+        return Map::key_intersects(left, right);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& left, 
-	            const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& right)
+                const map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& right)
 {
-	typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
-	if(is_total<MapT>::value)
-		return true;
+    typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> MapT;
+    if(is_total<MapT>::value)
+        return true;
 
-	if(left.iterative_size() < right.iterative_size())
-		return Map::intersects(right, left);
-	else
-		return Map::intersects(left, right);
+    if(left.iterative_size() < right.iterative_size())
+        return Map::intersects(right, left);
+    else
+        return Map::intersects(left, right);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc,
@@ -1013,7 +1013,7 @@ enable_if<mpl::or_<is_same< typename itl::map<DomainT,CodomainT,Traits,Compare,C
                   >, bool>
 is_disjoint(const LeftT& left, const RightT& right)
 {
-	return !intersects(left, right);
+    return !intersects(left, right);
 }
 
 

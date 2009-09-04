@@ -27,52 +27,52 @@ namespace Interval_Set
 template<class LeftT, class RightT>
 struct settic_codomain_compare
 {
-	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
-	{
-		return inclusion_compare( LeftT::codomain_value(left_), 
-			                     RightT::codomain_value(right_));
-	}
+    static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+    {
+        return inclusion_compare( LeftT::codomain_value(left_), 
+                                 RightT::codomain_value(right_));
+    }
 };
 
 template<class LeftT, class RightT>
 struct atomic_codomain_compare
 {
-	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
-	{
-		if(LeftT::codomain_value(left_) == RightT::codomain_value(right_))
-			return inclusion::equal;
-		else
-			return inclusion::unrelated;
-	}
+    static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+    {
+        if(LeftT::codomain_value(left_) == RightT::codomain_value(right_))
+            return inclusion::equal;
+        else
+            return inclusion::unrelated;
+    }
 };
 
 template<class LeftT, class RightT>
 struct empty_codomain_compare
 {
-	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
-	{
-		return inclusion::equal;
-	}
+    static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+    {
+        return inclusion::equal;
+    }
 };
 
 template<class LeftT, class RightT>
 struct map_codomain_compare
 {
-	static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
-	{
-		using namespace boost::mpl;
-		typedef typename LeftT::codomain_type  LeftCodomainT;
-		typedef typename RightT::codomain_type RightCodomainT;
+    static int apply(typename LeftT::const_iterator& left_, typename RightT::const_iterator& right_)
+    {
+        using namespace boost::mpl;
+        typedef typename LeftT::codomain_type  LeftCodomainT;
+        typedef typename RightT::codomain_type RightCodomainT;
 
-		return
-			if_<
-				bool_<is_concept_equivalent<is_set,LeftCodomainT,
-				                                   RightCodomainT>::value>,
-			    settic_codomain_compare<LeftT,RightT>,
-				atomic_codomain_compare<LeftT,RightT>
-			>
-			::type::apply(left_, right_);
-	}
+        return
+            if_<
+                bool_<is_concept_equivalent<is_set,LeftCodomainT,
+                                                   RightCodomainT>::value>,
+                settic_codomain_compare<LeftT,RightT>,
+                atomic_codomain_compare<LeftT,RightT>
+            >
+            ::type::apply(left_, right_);
+    }
 };
 
 
@@ -113,13 +113,13 @@ public:
 
     int co_compare(LeftIterT& left, RightIterT& right)
     {
-	    using namespace boost::mpl;
+        using namespace boost::mpl;
 
-		return  
-		    if_<
+        return  
+            if_<
                 bool_<is_concept_equivalent<is_interval_map,LeftT,RightT>::value>,
-				map_codomain_compare<LeftT,RightT>,
-				empty_codomain_compare<LeftT,RightT>
+                map_codomain_compare<LeftT,RightT>,
+                empty_codomain_compare<LeftT,RightT>
             >
             ::type::apply(left,right);
     }
@@ -212,8 +212,8 @@ public:
 
         // left and right have intervals with nonempty intersection:
         if(compare_codomain())
-			if(unrelated == restrict_result(co_compare(left,right)))
-				return stop;
+            if(unrelated == restrict_result(co_compare(left,right)))
+                return stop;
 
         // examine left borders only. Right borders are checked in proceed
         if(LeftT::key_value(left).lower_less(RightT::key_value(right)))
@@ -256,15 +256,15 @@ public:
             //else   ..)   [...
             //          [..
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
         else
         {   // left: ..)[..  left could be subset
             // right:.......)
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
 
         return proceed(left, right);
@@ -291,14 +291,14 @@ public:
             //else       [....)
             //   ..)   [..
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
         else
         {
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
 
         return proceed(left, right);

@@ -23,10 +23,30 @@
 
 Functions and operators that implement ['*Addition*] on *itl* objects
 are given in the table above.
-
-[note `operator |=` and `operator |` are implemented just as `operator +=` and `operator +`.
+`operator |=` and `operator |` are identical to `operator +=` and `operator +`.
 This is a redundancy that has been introduced deliberately, because 
 a /set union/ semantics is often attached `operators |=` and `|`. 
+
+[table
+[[]      [Description of Addition]]
+[[`Sets`][Addition on Sets implements ['*set union*]]]
+[[`Maps`][Addition on Maps implements a ['*map union*] function similar to /set union/.
+          If, on insertion of an element value pair `(k,v)` it's key `k` is in the map 
+          already, the addition function is propagated to the associated value.
+          This functionality has been introduced as /aggregate on collision/
+          for element maps and /aggregate on overlap/ for interval maps. 
+        
+          Find more on 
+          [link boost_itl.concepts.addability__subtractability_and_aggregate_on_overlap ['addability of maps]]
+          and related 
+          [link boost_itl.semantics.maps ['semantical issues]] 
+          following the links. 
+        
+          Examples, demonstrating Addition on interval containers are
+          [link boost_itl.examples.overlap_counter ['overlap counter]],
+          [link boost_itl.examples.party ['party]] and
+          [link boost_itl.examples.partys_height_average ['party's height average.]] 
+         ]]
 ]
 
 [endsect][/ Synopsis]

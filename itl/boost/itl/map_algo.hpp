@@ -47,7 +47,7 @@ bool contained_in(const MapType& sub, const MapType& super)
 template<class MapType>
 bool contained_in(const typename MapType::set_type& sub, const MapType& super)
 {
-	typedef typename MapType::set_type SetType;
+    typedef typename MapType::set_type SetType;
 
     if(sub.empty())                      return true;
     if(super.empty())                    return false;
@@ -61,7 +61,7 @@ bool contained_in(const typename MapType::set_type& sub, const MapType& super)
         return false;
 
     typename SetType::const_iterator sub_ = sub.begin();
-	typename MapType::const_iterator super_;
+    typename MapType::const_iterator super_;
     while(sub_ != sub.end())
     {
         super_ = super.find(*sub_++);
@@ -75,33 +75,33 @@ bool contained_in(const typename MapType::set_type& sub, const MapType& super)
 template <class MapType>
 bool intersects(const MapType& left, const MapType& right)
 {
-	typename MapType::const_iterator right_common_lower_;
-	typename MapType::const_iterator right_common_upper_;
-	if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
-		return false;
+    typename MapType::const_iterator right_common_lower_;
+    typename MapType::const_iterator right_common_upper_;
+    if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
+        return false;
 
-	typename MapType::const_iterator right_ = right_common_lower_;
-	while(right_ != right_common_upper_)
-		if(left.intersects(*right_++))
-			return true;
+    typename MapType::const_iterator right_ = right_common_lower_;
+    while(right_ != right_common_upper_)
+        if(left.intersects(*right_++))
+            return true;
 
-	return false;
+    return false;
 }
 
 template <class ObjectT, class CoObjectT>
 bool key_intersects(const ObjectT& left, const CoObjectT& right)
 {
-	typename CoObjectT::const_iterator right_common_lower_;
-	typename CoObjectT::const_iterator right_common_upper_;
-	if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
-		return false;
+    typename CoObjectT::const_iterator right_common_lower_;
+    typename CoObjectT::const_iterator right_common_upper_;
+    if(!Set::common_range(right_common_lower_, right_common_upper_, right, left))
+        return false;
 
-	typename CoObjectT::const_iterator right_ = right_common_lower_;
-	while(right_ != right_common_upper_)
-		if(left.intersects(CoObjectT::key_value(right_++)))
-			return true;
+    typename CoObjectT::const_iterator right_ = right_common_lower_;
+    while(right_ != right_common_upper_)
+        if(left.intersects(CoObjectT::key_value(right_++)))
+            return true;
 
-	return false;
+    return false;
 }
 
 //----------------------------------------------------------------------
@@ -222,10 +222,10 @@ public:
 
     int co_compare(LeftIterT& left, RightIterT& right)
     {
-	    using namespace boost::mpl;
+        using namespace boost::mpl;
 
-		return  
-		    if_<
+        return  
+            if_<
                 bool_<is_concept_equivalent<is_interval_map,LeftT,RightT>::value>,
                 map_codomain_compare<LeftT,RightT>,
                 empty_codomain_compare<LeftT,RightT>
@@ -321,8 +321,8 @@ public:
 
         // left and right have intervals with nonempty intersection:
         if(compare_codomain())
-			if(unrelated == restrict_result(co_compare(left,right)))
-				return stop;
+            if(unrelated == restrict_result(co_compare(left,right)))
+                return stop;
 
         // examine left borders only. Right borders are checked in proceed
         if(LeftT::key_value(left).lower_less(RightT::key_value(right)))
@@ -365,15 +365,15 @@ public:
             //else   ..)   [...
             //          [..
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
         else
         {   // left: ..)[..  left could be subset
             // right:.......)
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
 
         return proceed(left, right);
@@ -400,14 +400,14 @@ public:
             //else       [....)
             //   ..)   [..
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
         else
         {
             if(compare_codomain() && !LeftT::key_value(left).is_disjoint(RightT::key_value(right)) )
-				if(unrelated == restrict_result(co_compare(left,right)))
-					return stop;
+                if(unrelated == restrict_result(co_compare(left,right)))
+                    return stop;
         }
 
         return proceed(left, right);

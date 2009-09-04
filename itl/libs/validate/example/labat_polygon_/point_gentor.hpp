@@ -23,31 +23,31 @@ namespace boost{namespace itl
 template<class DomainT>
 struct point
 {
-	//CL typedef DomainT coordinate_type;
+    //CL typedef DomainT coordinate_type;
 
-	std::string as_string()const
-	{
-		return std::string(
-		"(" + to_string<DomainT>::apply(x) + "," + 
-			  to_string<DomainT>::apply(y) + ")"
-		);
-	}
+    std::string as_string()const
+    {
+        return std::string(
+        "(" + to_string<DomainT>::apply(x) + "," + 
+              to_string<DomainT>::apply(y) + ")"
+        );
+    }
 
-	DomainT x;
-	DomainT y;
+    DomainT x;
+    DomainT y;
 };
 
 template<class DomainT>
 bool operator == (const point<DomainT>& left, const point<DomainT>& right)
 {
-	return left.x == right.x && left.y == right.y;
+    return left.x == right.x && left.y == right.y;
 }
 
 template <class Type>
 struct type_to_string<itl::point<Type> >
 {
-	static std::string apply()
-	{ return "point<"+ type_to_string<Type>::apply() +">"; }
+    static std::string apply()
+    { return "point<"+ type_to_string<Type>::apply() +">"; }
 };
 
 template <class DomainT, class PointT = point<DomainT> > 
@@ -56,7 +56,7 @@ class point_gentor: public RandomGentorAT<PointT>
 public:
     virtual void some(PointT& x);
 
-	void setRange(const itl::interval<DomainT>& range)
+    void setRange(const itl::interval<DomainT>& range)
     { m_valueRange = range; }
 
     void setValueRange(DomainT low, DomainT up)
@@ -76,8 +76,8 @@ private:
 template <class DomainT, class PointT>
 void point_gentor<DomainT, PointT>::some(PointT& value)
 {
-	value.x = m_DomainTGentor(m_valueRange);
-	value.y = m_DomainTGentor(m_valueRange);
+    value.x = m_DomainTGentor(m_valueRange);
+    value.y = m_DomainTGentor(m_valueRange);
 };
 
 }} // namespace itl boost

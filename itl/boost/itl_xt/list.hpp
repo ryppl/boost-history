@@ -138,7 +138,7 @@ namespace boost{namespace itl
             sublist in the list \c super */
         bool contained_in(const list& super)const { return is_subsequence(super); }
 
-		size_t iterative_size()const{ return size(); }
+        size_t iterative_size()const{ return size(); }
 
         //JODO concept InplaceAddable
         /// Add a list \c tail to this list.
@@ -424,7 +424,7 @@ namespace boost{namespace itl
         if(it == end()) return std::string("");
         else
         {
-			std::string y = "{"+to_string<DataT>::apply(*it);
+            std::string y = "{"+to_string<DataT>::apply(*it);
             it++;
             while(it != end()) 
             { 
@@ -432,17 +432,17 @@ namespace boost{namespace itl
                 y += to_string<DataT>::apply(*it); 
                 it++; 
             }
-			y += "}";
+            y += "}";
             return y;
         }
     }
 
-	template <class Type>
-	struct type_to_string<itl::list<Type> >
-	{
-		static std::string apply()
-		{ return "list<"+ type_to_string<Type>::apply() +">"; }
-	};
+    template <class Type>
+    struct type_to_string<itl::list<Type> >
+    {
+        static std::string apply()
+        { return "list<"+ type_to_string<Type>::apply() +">"; }
+    };
 
 }} // namespace itl boost
 

@@ -8,6 +8,49 @@
 
 [section Concepts]
 
+[section Naming]
+
+The *itl* is about sets and maps and a useful
+implementation of sets and maps usings intervals.
+In the documentation of the *itl* the different
+set and map types are grouped in various ways.
+In order to distinguish those groups we use
+a naming convention.
+
+Names of concepts start with a capital letter.
+So `Set` and `Map` stand for the concepts of
+a set and a map as defined in the *itl*.
+When we talk about `Sets` and `Maps` though, 
+most of the time we do not not talk about the
+concepts themselves but the set of types
+that implement those concepts in the *itl*.
+The main groups ['*itl containers*] can be
+devided in are summarized in the next table:
+
+[table
+[[]                  []                                             []           ]
+[[]                  [`Set`]                                        [`Map`]      ]
+[[element container] [__itl_set__]                                  [__itl_map__]]
+[[interval container][__itv_set__, __sep_itv_set__, __spl_itv_set__][__itv_map__, __spl_itv_map__]]
+]
+
+* Containers __itl_set__, __itv_set__, __sep_itv_set__, __spl_itv_set__
+  are models of concept `Set`. 
+* Containers __itl_map__, __itv_map__, __spl_itv_map__
+  are models of concept `Map`. 
+* Containers that are ['*implemented*] using elements or element value pairs
+  are called ['*element containers*].
+* Containers that are ['*implemented*] using intervals or interval value pairs
+  (also called segments) are called ['*interval containers*].
+* When we talk about `Sets` or `Maps` we abstract from the way they are implemented.
+* When we talk about /element containers/ or /interval containers/ 
+  we refer to the way they are implemented.
+* The *itl's* element containers
+  are always denoted qualified as __itl_set__ of __itl_map__ 
+  to avoid confusion with `std::set` and `std::map`. 
+
+[endsect][/ Naming]
+
 [section Aspects]
 
 There are two major ['*aspects*] or ['*views*] of itl containers. The first and predominant
@@ -104,11 +147,11 @@ to the `Set` concept above.
 [[empty map   ]    []       [`Map::Map()`]                                   ]
 [[subset relation] []       [`bool Map::contained_in(const Map& s2)const`]   ]
 [[equality       ] []       [`bool is_element_equal(const Map& s1, const Map& s2)`]]
-[[set union]       [inplace][`Map& operator += (Map& s1, const Map& s2)`]        ]
+[[map union]       [inplace][`Map& operator += (Map& s1, const Map& s2)`]        ]
 [[]                []       [`Map  operator +  (const Map& s1, const Map& s2)`]]
-[[set difference]  [inplace][`Map& operator -= (Map& s1, const Map& s2)`]        ]
+[[map difference]  [inplace][`Map& operator -= (Map& s1, const Map& s2)`]        ]
 [[]                []       [`Map  operator -  (const Map& s1, const Map& s2)`]]
-[[set intersection][inplace][`Map& operator &= (Map& s1, const Map& s2)`]        ]
+[[map intersection][inplace][`Map& operator &= (Map& s1, const Map& s2)`]        ]
 [[]                []       [`Map  operator &  (const Map& s1, const Map& s2)`]]
 ]
 
@@ -128,7 +171,7 @@ and intervals that again serve for implementing
 [section Addability, Subtractability and Aggregate on Overlap]
 
 While ['*addition*] and ['*subtraction*] on `Sets` 
-are implemented as ['*set union*] and ['*set difference], 
+are implemented as ['*set union*] and ['*set difference*], 
 for `Maps` we want to implement ['*aggregation*] on
 the associated values for the case of collision (of key elements)
 or overlap (of key intervals), which has been refered to as 

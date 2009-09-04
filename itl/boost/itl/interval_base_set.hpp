@@ -153,20 +153,20 @@ public:
 
     /** Does the container contain the interval \c sub_interval ? */
     bool contains(const segment_type& sub_interval)const
-	{ 
-		if(sub_interval.empty()) 
-			return true;
+    { 
+        if(sub_interval.empty()) 
+            return true;
 
-		std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
-		if(exterior.first == exterior.second)
-			return false;
+        std::pair<const_iterator, const_iterator> exterior = equal_range(sub_interval);
+        if(exterior.first == exterior.second)
+            return false;
 
-		const_iterator last_overlap = prior(exterior.second);
+        const_iterator last_overlap = prior(exterior.second);
 
-		return 
-			hull(*(exterior.first), *last_overlap).contains(sub_interval)
-		&&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
-	}
+        return 
+            hull(*(exterior.first), *last_overlap).contains(sub_interval)
+        &&  Interval_Set::is_joinable(*this, exterior.first, last_overlap);
+    }
 
 
     /** Does the container contain the subcontainer \c sub ? */
@@ -442,7 +442,7 @@ protected:
     iterator prior(iterator it_)
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
-	const_iterator prior(const_iterator it_)const
+    const_iterator prior(const_iterator it_)const
     { return it_ == this->_set.begin() ? this->_set.end() : --it_; }
 
     iterator gap_insert(iterator prior_, const interval_type& inter_val)

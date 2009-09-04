@@ -64,12 +64,10 @@ content is a set of party guests represented by their name strings.
 As time goes by, groups of people join the party and leave later in the evening.
 So we add a time interval and a name set to the __itv_map__ for the attendance
 of each group of people, that come together and leave together.
-
 On every overlap of intervals, the corresponding name sets are accumulated. At
 the points of overlap the intervals are split. The accumulation of content
 is done via an operator += that has to be implemented
 for the content parameter of the __itv_map__.
-
 Finally the interval_map contains the history of attendance and all points in
 time, where the group of party guests changed.
 
@@ -77,7 +75,6 @@ Party demonstrates a principle that we call
 ['*aggregate on overlap (aggrovering)*]:
 On insertion a value associated to the interval is aggregated with those
 values in the interval_map that overlap with the inserted value.
-
 There are two behavioral aspects to ['*aggrovering*]: a ['*decompositional
 behavior*] and an ['*accumulative behavior*].
 
@@ -89,12 +86,29 @@ behavior*] and an ['*accumulative behavior*].
   an insertion for the associated values.
 	
 The aggregation function is += by default. Different aggregations can
-be used, if desired. In the example the history of the tallest party guest's
-height is calculated using [classref boost::itl::inplace_max inplace_max] 
-as aggregation function. 
+be used, if desired.
+
 	
 [example_boost_party]
-[endsect]
+
+[caution
+
+We are introducing __itv_maps__ using an 
+['interval map ['*of sets of strings*]],
+because of it's didactical advantages. The party example is
+used to give an immediate and depictive access to the basic ideas of
+interval maps and /aggregate on overlap/.
+For real world applications, an interval_map of sets is
+not necessarily recommended.
+It has the same efficiency problems as
+a `std::map` of `std::sets`.
+There is a big realm though of using
+interval_maps with numerical and other
+efficient codomain types.
+]
+
+[endsect] [/ Party]
+
 
 [section Interval]
 

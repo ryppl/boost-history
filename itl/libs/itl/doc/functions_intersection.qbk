@@ -22,6 +22,32 @@
 Functions and operators that implement ['*intersection*] on *itl* objects
 are given in the table above.
 
+
+[table
+[[]      [Description of Intersection]]
+[[`Sets`][Intersection on Sets implements ['*set intersection*]]]
+[[`Maps`][Intersection on Maps implements a ['*map intersection*] function similar to /set intersection/.
+          If, on intersection, an element value pair `(k,v)` it's key `k` is in the map 
+          already, the intersection function is propagated to the associated value,
+          if it exists for the Map's codomain_type. 
+          
+          If the codomain_type has no intersection operation, associated 
+          values are combined using addition. For partial map types this
+          results in an addition on the intersection of the domains of
+          the intersected sets. For total maps intersection and
+          addition are identical in this case.
+                  
+          See also
+          [link boost_itl.semantics.quantifiers__maps_of_numbers.intersection_on_quantifiers ['intersection on Maps of numbers]]. 
+        
+          A Map can be intersected with key types: an element 
+          (an interval for interval_maps) and and a Set. This 
+          results in the selection of a submap, and can be
+          defined as a generalized selection function on Maps.
+         ]]
+]
+
+
 [endsect][/ Synopsis Intersection]
 
 

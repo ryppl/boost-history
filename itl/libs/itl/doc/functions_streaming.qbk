@@ -12,8 +12,15 @@
 
 [table
 [[['*Streaming, conversion*]]             [interval][__ch_itv_sets__][__ch_itv_maps__][itl::set][itl::map]  ]
-[[`std::basic_ostream operator << (...)`]      [1]       [1]      [1]     [1]      [1]      ]
+[[`std::basic_ostream operator << (basic_ostream&, const T&)`]      [1]       [1]      [1]     [1]      [1]      ]
 [[`std::string T::as_string()`]                [1]       [1]      [1]     [1]      [1]      ]
+]
+
+[table
+[[['*Streaming, conversion*]]                         [Desctription]  ]
+[[`std::basic_ostream operator << (basic_ostream&, const T&)`] 
+                                [Serializes the argument of type T to an output stream]   ]
+[[`std::string T::as_string()`] [Returns a string representation of the object of type `T`]]
 ]
 
 [endsect][/ Streaming, conversion]

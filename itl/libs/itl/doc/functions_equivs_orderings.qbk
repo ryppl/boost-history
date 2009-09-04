@@ -42,7 +42,7 @@ equality and lexicographical comparison, that depends on
 the equality of template parameter `Compare`.
 
 Equality and compare operators are defined for all *itl*
-objects but there are no overload between different types.
+objects but there are no overloads between different types.
 
 Containers of different segmentation are different,
 even if their elements are the same:
@@ -104,7 +104,7 @@ for __itl_maps__ and __itv_maps__. It yields true, if
 two maps are sequential element equal except for value
 pairs whose associated values are neutral elements.
 
-[*Complexity] is linear is the `iterative_size` of the
+[*Complexity] is linear in the `iterative_size` of the
 larger container to compare.
 
 [endsect]

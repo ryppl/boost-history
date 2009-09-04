@@ -13,13 +13,13 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{ namespace itl
 {
 
-	template<template<class>class IsConcept, class LeftT, class RightT>
-	struct is_concept_equivalent
-	{
-		typedef is_concept_equivalent<IsConcept, LeftT, RightT> type;
-		static const bool value =
-			mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value;
-	};
+    template<template<class>class IsConcept, class LeftT, class RightT>
+    struct is_concept_equivalent
+    {
+        typedef is_concept_equivalent<IsConcept, LeftT, RightT> type;
+        static const bool value =
+            mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value;
+    };
 
 }} // namespace boost itl
 

@@ -57,8 +57,8 @@ typename boost::enable_if<is_inter_combinable<LeftT, RightT>,
 inclusion_compare(const LeftT& left, const RightT& right)
 {
     return Interval_Set::subset_compare(left, right, 
-		                                left.begin(), left.end(),
-										right.begin(), right.end());
+                                        left.begin(), left.end(),
+                                        right.begin(), right.end());
 }
 
 template<class LeftT, class RightT>
@@ -67,8 +67,8 @@ typename boost::enable_if<is_concept_equivalent<is_element_container,LeftT, Righ
 inclusion_compare(const LeftT& left, const RightT& right)
 {
     return Set::subset_compare(left, right, 
-		                       left.begin(), left.end(),
-							   right.begin(), right.end());
+                               left.begin(), left.end(),
+                               right.begin(), right.end());
 }
 //------------------------------------------------------------------------------
 
@@ -379,8 +379,8 @@ typename boost::enable_if<is_intra_combinable<LeftT, RightT>,
                           bool>::type
 intersects(const LeftT& left, const RightT& right)
 {
-	if(is_total<LeftT>::value || is_total<RightT>::value)
-		return true;
+    if(is_total<LeftT>::value || is_total<RightT>::value)
+        return true;
 
     LeftT intersection;
 

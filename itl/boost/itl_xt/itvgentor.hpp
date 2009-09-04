@@ -47,7 +47,7 @@ class ItvGentorT: public RandomGentorAT<ItvTV>
 public:
     virtual void some(ItvTV& x);
 
-	void setRange(const itl::interval<ItvDomTV>& range)
+    void setRange(const itl::interval<ItvDomTV>& range)
     { m_valueRange = range; }
 
     void setValueRange(ItvDomTV low, ItvDomTV up)

@@ -22,15 +22,16 @@
 
 [h5 Erasure]
 
-[/ JODO Does not apply to iterator based erasure]
 The effects of ['*erasure*] implemented by `erase` and ['*subtraction*]
 implemented by `subtract` and `operator -=` are identical for all Set-types of
 the *itl*.
 
 For Map-types, `erase` provides the *stl* semantics of erasure in
-contrast to `add` and `operator +=`, that implement a generalized subtraction,
-that performs inverse aggregations if key values collode or key intervals overlap.
+contrast to `subtract` and `operator -=`, that implement a generalized subtraction,
+that performs inverse aggregations if key values collide or key intervals overlap.
 
+Using iterators it is possible to erase objects or ranges of 
+objects the iterator is pointing at from itl Sets and Maps.
 
 [endsect][/ Synopsis Erasure]
 
@@ -71,7 +72,7 @@ T& operator erase(T&, const P&)
 
 element containers:     interval containers:  
 erase | e b s m         erase | e i b p S M    
-   ---+--------            ---+------------    
+------+--------         ------+------------    
    s  | s   s              S  | S S     S       
    m  | m m m m            M  | M M M M M M    
 ``

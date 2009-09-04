@@ -183,10 +183,10 @@ public:
         to \c section. */
     void add_intersection(set& section, const set& sectant)const;
 
-	/** Returns true, if there is an intersection of \c element and \c *this set.
-	    Functions \c intersects and \c contains are identical on arguments
-		of type \c element_type. Complexity: Logarithmic in container size. */
-	bool intersects(const element_type& element)const { return contains(element); }
+    /** Returns true, if there is an intersection of \c element and \c *this set.
+        Functions \c intersects and \c contains are identical on arguments
+        of type \c element_type. Complexity: Logarithmic in container size. */
+    bool intersects(const element_type& element)const { return contains(element); }
 
     /** If \c *this set contains \c element it is erased, otherwise it is added. */
     set& flip(const element_type& element);
@@ -536,27 +536,27 @@ operator &  (      itl::set<DomainT,Compare,Alloc>  object,
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(const itl::set<DomainT,Compare,Alloc>&               object, 
-	   const typename itl::set<DomainT,Compare,Alloc>::element_type& element)
+       const typename itl::set<DomainT,Compare,Alloc>::element_type& element)
 {
-	return object.intersects(element);
+    return object.intersects(element);
 }
 
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
 bool intersects(
-	  const typename itl::set<DomainT,Compare,Alloc>::element_type& element,
+      const typename itl::set<DomainT,Compare,Alloc>::element_type& element,
                const itl::set<DomainT,Compare,Alloc>&               object)
 {
-	return object.intersects(element);
+    return object.intersects(element);
 }
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc>
 bool intersects(const itl::set<DomainT,Compare,Alloc>& left, 
-	            const itl::set<DomainT,Compare,Alloc>& right)
+                const itl::set<DomainT,Compare,Alloc>& right)
 {
-	if(left.iterative_size() < right.iterative_size())
-		return Set::intersects(right, left);
-	else
-		return Set::intersects(left, right);
+    if(left.iterative_size() < right.iterative_size())
+        return Set::intersects(right, left);
+    else
+        return Set::intersects(left, right);
 }
 
 template <typename DomainT, ITL_COMPARE Compare, ITL_ALLOC Alloc,
@@ -566,7 +566,7 @@ enable_if<mpl::or_<is_same< typename itl::set<DomainT,Compare,Alloc>, LeftT >,
                   >, bool>
 is_disjoint(const LeftT& left, const RightT& right)
 {
-	return !intersects(left,right);
+    return !intersects(left,right);
 }
 
 

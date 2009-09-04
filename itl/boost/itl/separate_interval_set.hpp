@@ -99,8 +99,8 @@ public:
     separate_interval_set
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     { 
-		assign(src); 
-	}
+        assign(src); 
+    }
 
     /// Constructor for a single element
     explicit separate_interval_set(const domain_type& elem): base_type() { add(elem); }
@@ -112,9 +112,9 @@ public:
     separate_interval_set& operator =
         (const interval_base_set<SubType,DomainT,Compare,Interval,Alloc>& src)
     { 
-		assign(src); 
-		return *this; 
-	}
+        assign(src); 
+        return *this; 
+    }
 
     /// Assignment from a base interval_set.
     template<class SubType>

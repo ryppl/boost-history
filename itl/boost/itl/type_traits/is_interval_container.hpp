@@ -16,21 +16,21 @@ namespace boost{ namespace itl
         static const bool value = false; 
     };
 
-	template<class Type>
-	struct is_interval_map
-	{
-		typedef is_interval_map<Type> type; 
-		static const bool value =
-			is_interval_container<Type>::value && is_map<Type>::value; 
-	};
+    template<class Type>
+    struct is_interval_map
+    {
+        typedef is_interval_map<Type> type; 
+        static const bool value =
+            is_interval_container<Type>::value && is_map<Type>::value; 
+    };
 
-	template<class Type>
-	struct is_interval_set
-	{ 
-		typedef is_interval_set<Type> type; 
-		static const bool value =
-			is_interval_container<Type>::value && !is_interval_map<Type>::value; 
-	};
+    template<class Type>
+    struct is_interval_set
+    { 
+        typedef is_interval_set<Type> type; 
+        static const bool value =
+            is_interval_container<Type>::value && !is_interval_map<Type>::value; 
+    };
 
 
 }} // namespace boost itl

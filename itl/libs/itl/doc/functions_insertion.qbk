@@ -27,7 +27,7 @@ the *itl*.
 
 For Map-types, `insert` provides the *stl* semantics of insertion in
 contrast to `add` and `operator +=`, that implement a generalized addition,
-that performs aggregations if key values collode or key intervals overlap.
+that performs aggregations if key values collide or key intervals overlap.
 `insert` on Maps does not alter a maps content at the points, where
 the keys of the object to inserted overlap or collide with keys that
 are already in the map. 

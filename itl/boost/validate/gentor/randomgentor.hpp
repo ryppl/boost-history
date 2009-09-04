@@ -40,9 +40,9 @@ namespace boost{namespace itl
     template <> class RandomGentor<double> : public NumberGentorT<double> {};
 
     // -------------------------------------------------------------------------
-	template <class DomainT>
-	class RandomGentor<itl::interval<DomainT> > :
-		public ItvGentorT<DomainT> {};
+    template <class DomainT>
+    class RandomGentor<itl::interval<DomainT> > :
+        public ItvGentorT<DomainT> {};
 
 #ifdef LAW_BASED_TEST_BOOST_POLYGON
     // -------------------------------------------------------------------------
@@ -179,7 +179,7 @@ namespace boost{namespace itl
 
 
     template <> 
-	struct Calibrater<itl::interval<int>, RandomGentor>
+    struct Calibrater<itl::interval<int>, RandomGentor>
     {
         static void apply(RandomGentor<itl::interval<int> >& gentor) 
         {
@@ -190,11 +190,11 @@ namespace boost{namespace itl
 
 
 #ifdef LAW_BASED_TEST_BOOST_POLYGON
-	//--------------------------------------------------------------------------
-	// boost::polygon
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    // boost::polygon
+    //--------------------------------------------------------------------------
     template <> 
-	struct Calibrater<itl::point<int>, RandomGentor>
+    struct Calibrater<itl::point<int>, RandomGentor>
     {
         static void apply(RandomGentor<itl::point<int> >& gentor) 
         {
@@ -204,39 +204,39 @@ namespace boost{namespace itl
     };
 
     template <> 
-	struct Calibrater<itl::list<point<int> >, RandomGentor>
+    struct Calibrater<itl::list<point<int> >, RandomGentor>
     {
         static void apply(RandomGentor<itl::list<point<int> > >& gentor) 
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_codomain_ContainerSize());
-			point_gentor<int>* pointGentor = new point_gentor<int>;
+            point_gentor<int>* pointGentor = new point_gentor<int>;
             pointGentor->setRange(GentorProfileSgl::it()->range_int());
             gentor.setDomainGentor(pointGentor);
-			gentor.setUnique(true);
+            gentor.setUnique(true);
         }
     };
 
     template <> 
-	struct Calibrater<itl::list<list<point<int> > >, RandomGentor>
+    struct Calibrater<itl::list<list<point<int> > >, RandomGentor>
     {
         static void apply(RandomGentor<itl::list<list<point<int> > > >& gentor) 
         {
-			point_gentor<int>* pointGentor = new point_gentor<int>;
+            point_gentor<int>* pointGentor = new point_gentor<int>;
             pointGentor->setRange(GentorProfileSgl::it()->range_int());
 
-			polygon_gentor<list<point<int> > >* polyGentor = new polygon_gentor<list<point<int> > >;
+            polygon_gentor<list<point<int> > >* polyGentor = new polygon_gentor<list<point<int> > >;
             polyGentor->setDomainGentor(pointGentor);
             polyGentor->setRangeOfSampleSize(GentorProfileSgl::it()->range_codomain_ContainerSize());
-			polyGentor->setUnique(true);
+            polyGentor->setUnique(true);
 
             gentor.setDomainGentor(polyGentor);
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
         }
     };
 
-	//--------------------------------------------------------------------------
-	// nogylop::tsoob
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
+    // nogylop::tsoob
+    //--------------------------------------------------------------------------
 #endif // LAW_BASED_TEST_BOOST_POLYGON
 
     template <> 

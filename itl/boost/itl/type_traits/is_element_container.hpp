@@ -17,20 +17,20 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{ namespace itl
 {
     template <class Type> 
-	struct is_element_container
+    struct is_element_container
     { 
         typedef is_element_container<Type> type;
-		static const bool value = 
-			mpl::and_<is_set<Type>, mpl::not_<is_interval_container<Type> > >::value;
+        static const bool value = 
+            mpl::and_<is_set<Type>, mpl::not_<is_interval_container<Type> > >::value;
     };
 
-	template<class Type> 
-	struct is_element_map
-	{
-		typedef is_element_map<Type> type;
-		static const bool value = 
-			mpl::and_<is_map<Type>, mpl::not_<is_interval_container<Type> > >::value;
-	};
+    template<class Type> 
+    struct is_element_map
+    {
+        typedef is_element_map<Type> type;
+        static const bool value = 
+            mpl::and_<is_map<Type>, mpl::not_<is_interval_container<Type> > >::value;
+    };
 
 
 }} // namespace boost itl

@@ -56,11 +56,11 @@ void polygon_gentor<PolygonT>::some(PolygonT& x)
 
     DomainTD key, first; 
 
-	if(m_sampleSize == 0)
-		return;
+    if(m_sampleSize == 0)
+        return;
 
-	m_domainGentor->some(first);
-	x.push_back(first);
+    m_domainGentor->some(first);
+    x.push_back(first);
 
     for(int i=1; i<m_sampleSize; i++)
     {
@@ -77,8 +77,8 @@ void polygon_gentor<PolygonT>::some(PolygonT& x)
         m_sample.push_back(key);
     }
 
-	if(m_sampleSize > 1 && !(*x.rbegin() == first))
-		x.push_back(first);
+    if(m_sampleSize > 1 && !(*x.rbegin() == first))
+        x.push_back(first);
 }
 
 
@@ -150,11 +150,11 @@ void polygon_set_gentor<PolygonSetT>::some(PolygonSetT& x)
 
     DomainTD key, first; 
 
-	if(m_sampleSize == 0)
-		return;
+    if(m_sampleSize == 0)
+        return;
 
-	m_domainGentor->some(first);
-	x.push_back(first);
+    m_domainGentor->some(first);
+    x.push_back(first);
 
     for(int i=1; i<m_sampleSize; i++)
     {
@@ -172,8 +172,8 @@ void polygon_set_gentor<PolygonSetT>::some(PolygonSetT& x)
         m_sample.push_back(key);
     }
 
-	if(m_sampleSize > 1)
-		x.push_back(first);
+    if(m_sampleSize > 1)
+        x.push_back(first);
 }
 
 

@@ -73,14 +73,14 @@ int polygon_test() {
   for(int i = 0; i < 100; ++i)
   {
     if(i%10==0)
-		std::cout << ".";
+        std::cout << ".";
     test_polygon_set<CPolygonSet>();
   }
   long long c2 = clock();
   for(int i = 0; i < 100; ++i)
   {
     if(i%10==0)
-		std::cout << ".";
+        std::cout << ".";
     test_polygon_set<gtl::polygon_set_data<int> >();
   }
   long long c3 = clock();
@@ -98,38 +98,38 @@ int polygon_test() {
 // This function tests the generator for polygon sets.
 void test_polyset_gen()
 {
-	typedef itl::list<point<int> > PolygonT;
-	typedef itl::list<PolygonT>    PolygonSetT;
+    typedef itl::list<point<int> > PolygonT;
+    typedef itl::list<PolygonT>    PolygonSetT;
 
-	point_gentor<int> pointgen;
-	pointgen.setRange(interval<int>::rightopen(-99, 100));
+    point_gentor<int> pointgen;
+    pointgen.setRange(interval<int>::rightopen(-99, 100));
 
-	PolygonT some_poly;
-	polygon_gentor<PolygonT> polygen;
-	polygen.setDomainGentor(&pointgen);
-	polygen.setRangeOfSampleSize(interval<int>::rightopen(1, 5));
+    PolygonT some_poly;
+    polygon_gentor<PolygonT> polygen;
+    polygen.setDomainGentor(&pointgen);
+    polygen.setRangeOfSampleSize(interval<int>::rightopen(1, 5));
 
-	PolygonSetT some_polyset;
-	polygon_set_gentor<PolygonSetT> polysetgen;
-	polysetgen.setDomainGentor(&polygen);
-	polysetgen.setRangeOfSampleSize(interval<int>::rightopen(1, 3));
+    PolygonSetT some_polyset;
+    polygon_set_gentor<PolygonSetT> polysetgen;
+    polysetgen.setDomainGentor(&polygen);
+    polysetgen.setRangeOfSampleSize(interval<int>::rightopen(1, 3));
 
-	for(int idx=0; idx<10; idx++)
-	{
-		polysetgen.some(some_polyset);
-		cout << "[";
-		for(PolygonSetT::iterator its_ = some_polyset.begin();
-			its_ != some_polyset.end(); ++its_)
-		{
-			PolygonT& some_poly_ = *its_;
-			cout << "{";
-			for(PolygonT::iterator it_ = some_poly_.begin();
-				it_ != some_poly_.end(); ++it_)
-				cout << "(" << it_->x << "," << it_->y << ")";
-			cout << "}\n";
-		}
-		cout << "]\n";
-	}
+    for(int idx=0; idx<10; idx++)
+    {
+        polysetgen.some(some_polyset);
+        cout << "[";
+        for(PolygonSetT::iterator its_ = some_polyset.begin();
+            its_ != some_polyset.end(); ++its_)
+        {
+            PolygonT& some_poly_ = *its_;
+            cout << "{";
+            for(PolygonT::iterator it_ = some_poly_.begin();
+                it_ != some_poly_.end(); ++it_)
+                cout << "(" << it_->x << "," << it_->y << ")";
+            cout << "}\n";
+        }
+        cout << "]\n";
+    }
 }
 
 
@@ -138,25 +138,25 @@ void test_polyset_gen()
 void test_LawValidater()
 {
 
-	//typedef PolygonCommutativity
-	//	< CPolygonSet >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef PolygonCommutativity
+    //    < CPolygonSet >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef PolygonSymmetricDifference
-		< CPolygonSet >  TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
+    typedef PolygonSymmetricDifference
+        < CPolygonSet >  TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-	// Set the test automatons parameters:
-	// Size of polygon sets is in [0 .. |set| ]
-	// Size of polygon sets is in [0 .. |poly|]
-	// Coordinates in [min .. max)
-	//                                         |set|,|poly|, min, max 
-	GentorProfileSgl::it()->set_polygon_profile(1,    3,     0,   10);
-	int test_count = 10000;
+    // Set the test automatons parameters:
+    // Size of polygon sets is in [0 .. |set| ]
+    // Size of polygon sets is in [0 .. |poly|]
+    // Coordinates in [min .. max)
+    //                                         |set|,|poly|, min, max 
+    GentorProfileSgl::it()->set_polygon_profile(1,    3,     0,   10);
+    int test_count = 10000;
 
     ptime start, stop;
-	test_law.set_trials_count(test_count);
+    test_law.set_trials_count(test_count);
 
     std::cout << "Start\n";
     start = ptime(microsec_clock::local_time());
@@ -169,10 +169,10 @@ void test_LawValidater()
 
 int main()
 {
-	//test_polyset_gen();
-	//polygon_test();
-	//test_polygon_set<CPolygonSet>();
-	test_LawValidater();
+    //test_polyset_gen();
+    //polygon_test();
+    //test_polygon_set<CPolygonSet>();
+    test_LawValidater();
 }
 
 

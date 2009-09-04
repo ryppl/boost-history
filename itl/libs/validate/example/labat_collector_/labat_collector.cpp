@@ -24,8 +24,8 @@ void test_collector_driver()
     ">> Output will be generated in a few seconds\n"
     ">> terminate by typing <CTRL>C\n"
     ">> ------------------------------------------------------ <<\n";
+    GentorProfileSgl::it()->set_std_profile(6,1);
     GentorProfileSgl::it()->report_profile();
-
     validater.validate();
 };
 

@@ -137,7 +137,7 @@ namespace boost{namespace itl
 
         void set_std_profile(int unit, int factor)     { return m_profile.set_std_profile(unit, factor); }
         void set_polygon_profile(int max_polygon_set_size, int max_polygon_size, int min_coord, int max_coord)
-		{ return m_profile.set_polygon_profile(max_polygon_set_size, max_polygon_size, min_coord, max_coord); }
+        { return m_profile.set_polygon_profile(max_polygon_set_size, max_polygon_size, min_coord, max_coord); }
 
 
     private:

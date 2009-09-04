@@ -39,56 +39,56 @@ namespace boost{namespace itl
 
         bool holds()
         {
-			// is_total<T> || intersects(a, b) == !(a & b).empty()
+            // is_total<T> || intersects(a, b) == !(a & b).empty()
             // --- left hand side ------------------------
             bool a_intersects_b 
-				= intersects(this->template getInputValue<operand_a>(),
-				             this->template getInputValue<operand_b>());
+                = intersects(this->template getInputValue<operand_a>(),
+                             this->template getInputValue<operand_b>());
             // --- right hand side ------------------------
-			Type a_sec_b = this->template getInputValue<operand_a>();
-			a_sec_b &= this->template getInputValue<operand_b>();
+            Type a_sec_b = this->template getInputValue<operand_a>();
+            a_sec_b &= this->template getInputValue<operand_b>();
 
-			bool a_sec_b_non_empty = !a_sec_b.empty();
+            bool a_sec_b_non_empty = !a_sec_b.empty();
 
             this->template setOutputValue<lhs_result>(a_intersects_b);
             this->template setOutputValue<rhs_result>(a_sec_b_non_empty);
 
-			if(is_total<Type>::value)
-				// For a total map y, y.empty() does not mean that y is empty
-				// it means that y is a null vector. In this sense total maps
-				// always intersect with themselves and with key sets.
-				return a_intersects_b == true;
-			else
-				return a_intersects_b == a_sec_b_non_empty;
-		}
+            if(is_total<Type>::value)
+                // For a total map y, y.empty() does not mean that y is empty
+                // it means that y is a null vector. In this sense total maps
+                // always intersect with themselves and with key sets.
+                return a_intersects_b == true;
+            else
+                return a_intersects_b == a_sec_b_non_empty;
+        }
 
         bool debug_holds()
-		{ 
-			// intersects(a, b) == !(a & b).empty() : Definition of intersects predicate 
+        { 
+            // intersects(a, b) == !(a & b).empty() : Definition of intersects predicate 
             // --- left hand side ------------------------
-			Type value_a = this->template getInputValue<operand_a>();
-			Type value_b = this->template getInputValue<operand_b>();
-			cout << "a = " << value_a << endl;
-			cout << "b = " << value_b << endl;
-			cout << "a&b = " << (value_a & value_b) << endl;
+            Type value_a = this->template getInputValue<operand_a>();
+            Type value_b = this->template getInputValue<operand_b>();
+            cout << "a = " << value_a << endl;
+            cout << "b = " << value_b << endl;
+            cout << "a&b = " << (value_a & value_b) << endl;
 
             bool a_intersects_b 
-				= intersects(this->template getInputValue<operand_a>(),
-				             this->template getInputValue<operand_b>());
+                = intersects(this->template getInputValue<operand_a>(),
+                             this->template getInputValue<operand_b>());
             // --- right hand side ------------------------
-			Type a_sec_b = this->template getInputValue<operand_a>();
-			a_sec_b &= this->template getInputValue<operand_b>();
+            Type a_sec_b = this->template getInputValue<operand_a>();
+            a_sec_b &= this->template getInputValue<operand_b>();
 
-			bool a_sec_b_non_empty = !a_sec_b.empty();
+            bool a_sec_b_non_empty = !a_sec_b.empty();
 
             this->template setOutputValue<lhs_result>(a_intersects_b);
             this->template setOutputValue<rhs_result>(a_sec_b_non_empty);
 
-			if(is_total<Type>::value)
-				return a_intersects_b == true;
-			else
-				return a_intersects_b == a_sec_b_non_empty;
-		}
+            if(is_total<Type>::value)
+                return a_intersects_b == true;
+            else
+                return a_intersects_b == a_sec_b_non_empty;
+        }
 
         size_t size()const 
         { 
@@ -119,29 +119,29 @@ namespace boost{namespace itl
 
         bool holds()
         {
-			// a.contains(a & b)
-			Type   value_a = this->template getInputValue<operand_a>();
-			CoType value_b = this->template getInputValue<operand_b>();
-			return value_a.contains(value_a & value_b);
-		}
+            // a.contains(a & b)
+            Type   value_a = this->template getInputValue<operand_a>();
+            CoType value_b = this->template getInputValue<operand_b>();
+            return value_a.contains(value_a & value_b);
+        }
 
         bool debug_holds()
-		{ 
-			// a.contains(a & b)
-			Type   value_a = this->template getInputValue<operand_a>();
-			CoType value_b = this->template getInputValue<operand_b>();
-			Type   a_sec_b = value_a & value_b;
-			bool result = value_a.contains(value_a & value_b);
+        { 
+            // a.contains(a & b)
+            Type   value_a = this->template getInputValue<operand_a>();
+            CoType value_b = this->template getInputValue<operand_b>();
+            Type   a_sec_b = value_a & value_b;
+            bool result = value_a.contains(value_a & value_b);
             // -------------------------------------------
-			cout << "a = " << value_a << endl;
-			cout << "b = " << value_b << endl;
-			cout << "a&b = " << a_sec_b << endl;
-			cout << "a.contains(a&b) = " << result << endl;
+            cout << "a = " << value_a << endl;
+            cout << "b = " << value_b << endl;
+            cout << "a&b = " << a_sec_b << endl;
+            cout << "a.contains(a&b) = " << result << endl;
             // -------------------------------------------
-			value_a.contains(a_sec_b);
+            value_a.contains(a_sec_b);
 
-			return result;
-		}
+            return result;
+        }
 
         size_t size()const 
         { 
@@ -174,31 +174,31 @@ namespace boost{namespace itl
         bool holds()
         {
             // (a + i).contains(i)
-			Type   value_a = this->template getInputValue<operand_a>();
-			CoType value_i = this->template getInputValue<operand_b>();
-			return (value_a + value_i).contains(value_i);
-		}
+            Type   value_a = this->template getInputValue<operand_a>();
+            CoType value_i = this->template getInputValue<operand_b>();
+            return (value_a + value_i).contains(value_i);
+        }
 
         bool debug_holds()
-		{
-			return holds();
-			/*
-			// a.contains(a & b)
-			Type   value_a = this->template getInputValue<operand_a>();
-			CoType value_b = this->template getInputValue<operand_b>();
-			Type   a_sec_b = value_a & value_b;
-			bool result = value_a.contains(value_a & value_b);
-			// -------------------------------------------
-			cout << "a = " << value_a << endl;
-			cout << "b = " << value_b << endl;
-			cout << "a&b = " << a_sec_b << endl;
-			cout << "a.contains(a&b) = " << result << endl;
-			// -------------------------------------------
-			value_a.contains(a_sec_b);
+        {
+            return holds();
+            /*
+            // a.contains(a & b)
+            Type   value_a = this->template getInputValue<operand_a>();
+            CoType value_b = this->template getInputValue<operand_b>();
+            Type   a_sec_b = value_a & value_b;
+            bool result = value_a.contains(value_a & value_b);
+            // -------------------------------------------
+            cout << "a = " << value_a << endl;
+            cout << "b = " << value_b << endl;
+            cout << "a&b = " << a_sec_b << endl;
+            cout << "a.contains(a&b) = " << result << endl;
+            // -------------------------------------------
+            value_a.contains(a_sec_b);
 
-			return result;
-			*/
-		}
+            return result;
+            */
+        }
 
         size_t size()const 
         { 

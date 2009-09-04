@@ -13,7 +13,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 namespace boost{ namespace itl
 {
 
-/*JODO completion like that:
+/*FYI completion like that:
 std::string make(int n)
 {
     std::string value = neutron<std::string>::value();

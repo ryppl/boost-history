@@ -150,51 +150,51 @@ bool contains(const LeftT& super, const RightT& sub)
 
 template<class IntervalContainerT>
 bool is_joinable(const IntervalContainerT& container, 
-			     typename IntervalContainerT::const_iterator first, 
-			     typename IntervalContainerT::const_iterator past) 
+                 typename IntervalContainerT::const_iterator first, 
+                 typename IntervalContainerT::const_iterator past) 
 {
-	if(first == container.end())
-		return true;
+    if(first == container.end())
+        return true;
 
-	typename IntervalContainerT::const_iterator it_ = first, next_ = first;
-	++next_;
+    typename IntervalContainerT::const_iterator it_ = first, next_ = first;
+    ++next_;
 
-	if(is_interval_map<IntervalContainerT>::value)
-	{
-		const typename IntervalContainerT::codomain_type& co_value 
-			= IntervalContainerT::codomain_value(first);
-		while(it_ != past)
-		{
-			if(IntervalContainerT::codomain_value(next_) != co_value)
-				return false;
-			if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
-				return false;
-		}
-	}
-	else
-		while(next_ != container.end() && it_ != past)
-			if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
-				return false;
+    if(is_interval_map<IntervalContainerT>::value)
+    {
+        const typename IntervalContainerT::codomain_type& co_value 
+            = IntervalContainerT::codomain_value(first);
+        while(it_ != past)
+        {
+            if(IntervalContainerT::codomain_value(next_) != co_value)
+                return false;
+            if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+                return false;
+        }
+    }
+    else
+        while(next_ != container.end() && it_ != past)
+            if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+                return false;
 
-	return true;
+    return true;
 }
 
 template<class IntervalContainerT>
 bool is_dense(const IntervalContainerT& container, 
-			  typename IntervalContainerT::const_iterator first, 
-			  typename IntervalContainerT::const_iterator past) 
+              typename IntervalContainerT::const_iterator first, 
+              typename IntervalContainerT::const_iterator past) 
 {
-	if(first == container.end())
-		return true;
+    if(first == container.end())
+        return true;
 
-	typename IntervalContainerT::const_iterator it_ = first, next_ = first;
-	++next_;
+    typename IntervalContainerT::const_iterator it_ = first, next_ = first;
+    ++next_;
 
-	while(next_ != container.end() && it_ != past)
-		if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
-			return false;
+    while(next_ != container.end() && it_ != past)
+        if(!IntervalContainerT::key_value(it_++).touches(IntervalContainerT::key_value(next_++)))
+            return false;
 
-	return true;
+    return true;
 }
 
 } // namespace Interval_Set

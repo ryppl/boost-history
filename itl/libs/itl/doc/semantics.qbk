@@ -157,7 +157,7 @@ Associativity<S,&,== >: S a,b,c; a&(b&c) == (a&b)&c
 Commutativity<S,&,== >: S a,b;       a&b == b&a
 ``
 
-[/ JODO
+[/ FYI
 Neutrality has *not* been validated to avoid 
 additional requirements on the sets template
 parameters.] 
@@ -298,7 +298,7 @@ the semantics of the type `CodomainT` of the map's associated
 values.
 
 This is less magical as it might seem at first glance.
-If for instance, if we instantiate an __itv_map__ to 
+If, for instance, we instantiate an __itv_map__ to 
 collect and concatenate
 `std::strings` associated to intervals,
 

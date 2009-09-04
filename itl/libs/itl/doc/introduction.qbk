@@ -8,6 +8,14 @@
 
 [section Introduction]
 
+[note [* This is not an official boost library]
+
+The /Interval Template Library/ is currently submitted 
+for a formal review on the boost developer's list.
+Depending on the review's result the library might or 
+might not become a boost library. 
+]
+
 Intervals are almost ubiquitous in software development. Yet they are
 very easily coded into user defined classes by a pair of numbers
 so they are only /implicitly/ used most of the time. The meaning of

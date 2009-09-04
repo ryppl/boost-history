@@ -69,21 +69,21 @@ void test_LawValidater()
     //    <itl::interval_map<int, int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-	//typedef IntersectsDefined
-	//	<itl::interval_map<int, int, total_absorber> >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef IntersectsDefined
+    //    <itl::interval_map<int, int, total_absorber> >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	//typedef Interinclusion
-	//	<interval_map<int,int>, interval_set<int> >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef Interinclusion
+    //    <interval_map<int,int>, interval_set<int> >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	//typedef Interinclusion
-	//	<interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef Interinclusion
+    //    <interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef AddendInclusion
-		<interval_set<int>, itl::interval<int> >  TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
+    typedef AddendInclusion
+        <interval_set<int>, itl::interval<int> >  TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
     int test_count = 20000;
