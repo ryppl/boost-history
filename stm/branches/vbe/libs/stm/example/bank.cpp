@@ -49,6 +49,8 @@ public:
     }
 };
 
+typedef BankAccount account;
+
 struct bank{ //persistent object
     vector<tx_ptr<BankAccount> > accounts;
     int overall_balance() const{
@@ -61,83 +63,208 @@ struct bank{ //persistent object
     void  print_balance() const{
         foreach(BankAccount const* a,this->accounts){
             cerr << a->Nb()  << "=" << a->Balance() << endl;
-
         }
     }
 };
 
 struct teller {
-    teller(tx_ptr<bank> const &b)
-        : bank_(b){}
+    teller(bank* b)
+        : bank_(b){
+            cerr << "teller this=" <<this<< endl;
+            cerr << "ptr=" <<bank_<< endl;
+            cerr << "size=" <<bank_->accounts.size()<< endl;
+            }
+            ~teller() {
+            cerr << "~this=" <<this<< endl;
+                }
     void operator()(){  //thread start
-        //thread_initializer thi;
-        transaction::initialize_thread();
+        cerr << "this=" <<this<< endl;
+        cerr << "start"<< endl;
+        thread_initializer thi;
+        cerr << "initialize_thread"<< endl;
         //while(!exit)
-        for(int i=100; i>0;--i) 
+        for(int i=10; i>0;--i) 
         {
+            cerr << "c="<< i<<endl;
             atomic(_) {
                 int amount=random() % 1000;
                 #if 0
                 tx_ptr<bank> rd_bank(bank_);
                 #else
-                rd_ptr<bank> rd_bank(_,bank_);
+                //rd_ptr<bank> rd_bank(_,bank_);
+                bank* rd_bank = bank_;
+                //cerr << "rd_bank"<< endl;
                 #endif
+                //cerr << "ptr=" <<rd_bank<< endl;
+                //cerr << "size=" <<rd_bank->accounts.size()<< endl;
                 int acc1=random() % rd_bank->accounts.size();
                 int acc2=random() % rd_bank->accounts.size();
                 rd_bank->accounts[acc1]->Withdraw(amount);
-                rd_bank->accounts[acc2]->Deposit(amount);
+                rd_bank->accounts[acc2]->Deposit(amount+1);
             } catch(...) {
                 cerr << "aborted"<< endl;
             }
         }
-        transaction::terminate_thread();
+            cerr << "ptr=" <<bank_<< endl;
+            cerr << "size=" <<bank_->accounts.size()<< endl;
+            cerr << "balance=" <<bank_->overall_balance()<< endl;
+        cerr << "end"<< endl;
     }
-    tx_ptr<bank> const & bank_;
+    bank* bank_;
     static bool volatile exit;
 };
 
 bool volatile teller::exit=false;
 
 
-void create_db(tx_ptr<bank> &mybank, int nr_of_accounts){
-    use_atomic(_) {
+void create_db(bank* b, int nr_of_accounts){
+    //use_atomic(_) 
+    {
         for(int c=0;c<nr_of_accounts;++c){
+    //cerr << "c=" <<c<< endl;
             tx_ptr<BankAccount> acc(make_tx_ptr<BankAccount>(c));
-            mybank->accounts.push_back(acc);
+    //cerr << "ptr=" <<acc.ptr_<< endl;
+            b->accounts.push_back(acc);
+    //cerr << "size=" <<mybank->accounts.size()<< endl;
         }
     }
 }
 
-   
-int main() {
-    transaction::enable_dynamic_priority_assignment();
-    transaction::do_deferred_updating();
-    transaction::initialize();
-    transaction::initialize_thread();
-    //thread_initializer thi;
-    srand(time(0));
+tx_ptr<BankAccount> a;
+void account_withdraw_thr_basic() {
+    thread_initializer thi;
+    use_atomic(_) {
+        a->Withdraw(10);
+    }
+}
+void account_withdraw_thr() {
+    thread_initializer thi;
+    use_atomic(_) {
+        make_wr_ptr(_,a)->Withdraw(10);
+    }
+}
+
+void account_deposit_thr_basic() {
+    thread_initializer thi;
+    use_atomic(_) {
+        a->Deposit(10);
+    }
+}
+void account_deposit_thr() {
+    thread_initializer thi;
+    use_atomic(_) {
+        make_wr_ptr(_,a)->Deposit(10);
+    }
+}
+
+int test_account() {
+    a=make_tx_ptr<account>(1);
+    thread  th1(account_withdraw_thr);
+    thread  th2(account_deposit_thr);
+    thread  th3(account_withdraw_thr_basic);
+    thread  th4(account_deposit_thr_basic);
+
+    th1.join(); 
+    th2.join(); 
+    th3.join(); 
+    th4.join(); 
+    cerr << "ptr=" << a.ptr_ << " nb=" << a->Nb() << " bal=" << a->Balance() << endl;
+    int res = (a->Balance()==0?0:1);
+    //boost::stm::delete_ptr(a);
+    return res;
+}
+
+tx_ptr<std::vector<int> > v;
+
+void vector_int_assign_basic() {
+    thread_initializer thi;
+    use_atomic(_) {
+        (*v)[0]+=10;
+    }
+}
+
+void vector_int_assign() {
+    thread_initializer thi;
+    use_atomic(_) {
+        wr_ptr<std::vector<int> > wrv(_,v);
+        (*wrv)[0]+=10;
+    }
+}
+
+int test_vector_int() {
+    v=make_tx_ptr<std::vector<int> >();
+    cerr << "ptr=" << v.ptr_ << endl;
+    v->push_back(10);
+    cerr << "ptr=" << v.ptr_ << " v[0]="  <<  v.ptr_->value[0] << endl;
+    
+    thread  th1(vector_int_assign);
+    thread  th2(vector_int_assign_basic);
+    thread  th3(vector_int_assign);
+
+    th1.join(); 
+    th2.join(); 
+    th3.join(); 
+    cerr << "ptr=" << v.ptr_ << " v[0]=" << (*v)[0] << endl;
+    //cerr << "ptr=" << v.ptr_ << " v[0]="  <<  v.ptr_->value[0] << endl;
+    //cerr << "ptr=" << v.ptr_ << " v[0]="  <<  0 << endl;
+    int res = ((*v)[0]==40?0:1);
+
+    //boost::stm::delete_ptr(v);
+    return res;
+}
+
+
+int test_xxxx() {
+    string wait; 
      
-    int nr_of_threads=10;
+    //int nr_of_threads=10;
     int nr_of_accounts=200;
 
-    tx_ptr<bank> mybank(make_tx_ptr<bank>());
+    cerr << __LINE__ << endl;
+    //cin >> wait;teller::exit=true;
+    bank abank;
+    bank* mybank=&abank;
     create_db(mybank,nr_of_accounts);
+    cerr << __LINE__ << endl;
+    //cin >> wait;teller::exit=true;
+    //use_atomic(_) 
+    {
 
-    cerr << "overall balance before: " << mybank->overall_balance() << endl;
-    string wait; 
-#if 0
-    thread*  th1= new thread(teller(mybank));
-    thread*  th2= new thread(teller(mybank));
+    //cerr << "size=" <<mybank.ptr_->value.accounts.size()<< endl;
+    cerr << __LINE__ << " size=" <<mybank->accounts.size()<< endl;
+    cerr << __LINE__ << " overall balance before: " << mybank->overall_balance() << endl;
+    }
+    
+#if 0    
+    mybank->accounts[0]->Withdraw(10);
+    mybank->accounts[1]->Deposit(100);
+#endif
+#if 0    
+    teller t(mybank);
+    t();
+    //cerr << "size=" <<mybank->accounts.size()<< endl;
+    //cerr << "overall balance before: " << mybank->overall_balance() << endl;
+    cerr << __LINE__ << endl;
+#endif    
+#if 1
+    teller t(mybank);
+    cerr << "t=" <<&t<< endl;
+    thread*  th1= new thread(boost::ref(t));
+    //thread*  th2= new thread(teller(mybank));
 
     cin >> wait;teller::exit=true;
+    cerr << __LINE__ << endl;
     th1->join(); 
     delete th1;
-    th2->join(); 
-    delete th2;
-#endif
+    //th2->join(); 
+    //delete th2;
+            use_atomic(_) {
     cerr << "overall balance after: " << mybank->overall_balance() << endl;
     cerr << "balances after: " <<endl;
     mybank->print_balance();
+            }
+#endif            
+#if 0
 
 
 	list<shared_ptr<thread> > threads;
@@ -156,9 +283,22 @@ int main() {
     cerr << "overall balance after: " << mybank->overall_balance() << endl;
     cerr << "balances after: " << endl;
     mybank->print_balance();
+#endif
 
-    transaction::terminate_thread();
-    return 0;
-    
+    return 0;    
 }    
     
+int main() {
+    transaction::enable_dynamic_priority_assignment();
+    transaction::do_deferred_updating();
+    transaction::initialize();
+    thread_initializer thi;
+    srand(time(0));
+    
+    int res=0;
+    res+=test_account();
+    res+=test_vector_int();
+    
+    return res;
+    
+}

@@ -15,9 +15,9 @@
 #ifndef TEST_LINKED_LIST_H
 #define TEST_LINKED_LIST_H
 
-//#define BOOST_STM_USES_AS_NEW 1
-//#define BOOST_STM_USES_PARAM 1
-#define BOOST_STM_LL_USES_NODE 1
+#define BOOST_STM_USES_AS_NEW 1
+#define BOOST_STM_USES_PARAM 1
+//#define BOOST_STM_LL_USES_NODE 1
 
 #include "main.h"
 #include <boost/stm/transaction.hpp>
@@ -335,8 +335,7 @@ private:
          list_node<T> node(val);
          list_node<T> *newNode = t.new_memory_copy(node);
 #else
-         t.throw_if_forced_to_abort_on_new();
-         list_node<T> *newNode = t.as_new(new list_node<T>(val));
+         list_node<T> *newNode = (t.throw_if_forced_to_abort_on_new(),t.as_new(new list_node<T>(val)));
 #endif
          //--------------------------------------------------------------------
          // if cur->next() is null it means our newNode value is greater than

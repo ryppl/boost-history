@@ -1666,7 +1666,20 @@ inline void transaction::validating_direct_commit()
 
       tx_type_ref() = eNormalTx;
 #if PERFORMING_LATM
-      get_tx_conflicting_locks().clear();
+      get_tx_conflicting_locks().clear(); 
+      /* BACKTRACE
+#2  0x00459309 in std::set<__pthread_mutex_t**, std::less<__pthread_mutex_t**>,
+std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
+    at /usr/lib/gcc/i686-pc-cygwin/3.4.4/include/c++/bits/stl_set.h:413
+#3  0x0041e8c1 in boost::stm::transaction::invalidating_deferred_commit (
+    this=0x191ccc40) at ../../../boost/stm/detail/transaction_impl.hpp:1593
+#4  0x0041f707 in boost::stm::transaction::invalidating_deferred_end_transaction
+ (this=0x191ccc40) at ../../../boost/stm/detail/transaction_impl.hpp:1002
+#5  0x0041fa0c in boost::stm::transaction::end (this=0x191ccc40)
+    at ../../../boost/stm/detail/transaction_impl.hpp:796
+#6  0x0040142e in account_withdraw_thr ()
+    at C:\cygwin\sandbox\stm\branches\vbe\libs\stm\example\bank.cpp:144
+      */
       clear_latm_obtained_locks();
 #endif
       state_ = e_committed;

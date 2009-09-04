@@ -70,6 +70,7 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
+    
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
    typedef except_and_back_off_on_abort_notice_cm contention_manager_type;  
@@ -171,39 +172,32 @@ public:
 
    typedef std::multimap<size_t, MemoryContainerList > DeletionBuffer;
 
-#if 0
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-   typedef pthread_mutex_t Mutex;
-#else
-   typedef boost::mutex Mutex;
-#endif
-#endif
-    typedef std::set<Mutex*> MutexSet;
+   typedef std::set<Mutex*> MutexSet;
 
    typedef std::set<size_t> ThreadIdSet;
 
    typedef std::map<size_t, MemoryContainerList*> ThreadMemoryContainerList;
 
    typedef std::pair<size_t, Mutex*> thread_mutex_pair;
-#ifndef MAP_THREAD_MUTEX_CONTAINER
-   typedef vector_map<size_t, Mutex*> ThreadMutexContainer;
-#else
-   typedef std::map<size_t, Mutex*> ThreadMutexContainer;
-#endif
+    #ifndef MAP_THREAD_MUTEX_CONTAINER
+    typedef vector_map<size_t, Mutex*> ThreadMutexContainer;
+    #else
+    typedef std::map<size_t, Mutex*> ThreadMutexContainer;
+    #endif
 
    typedef std::map<size_t, MutexSet* > ThreadMutexSetContainer;
    typedef std::map<size_t, bloom_filter*> ThreadBloomFilterList;
-#ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
-typedef std::map<size_t, boost::dynamic_bitset<>*> ThreadBitVectorList;
-#else
-typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
-#endif
+    #ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
+    typedef std::map<size_t, boost::dynamic_bitset<>*> ThreadBitVectorList;
+    #else
+    typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
+    #endif
    typedef std::pair<size_t, int*> thread_bool_pair;
-#ifndef MAP_THREAD_BOOL_CONTAINER
+    #ifndef MAP_THREAD_BOOL_CONTAINER
    typedef vector_map<size_t, int*> ThreadBoolContainer;
-#else
+    #else
    typedef std::map<size_t, int*> ThreadBoolContainer;
-#endif
+    #endif
 
    typedef std::map<Mutex*, ThreadIdSet > MutexThreadSetMap;
    typedef std::map<Mutex*, size_t> MutexThreadMap;
@@ -213,24 +207,24 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    typedef InflightTxes in_flight_transaction_container;
    typedef in_flight_transaction_container in_flight_trans_cont;
 
-#ifdef USE_SINGLE_THREAD_CONTEXT_MAP
-   struct tx_context
-   {
-#if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+    #ifdef USE_SINGLE_THREAD_CONTEXT_MAP
+    struct tx_context
+    {
+        #if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
         monotonic_storage<6*1000*1000> mstorage_;
-#endif       
-      MemoryContainerList newMem;
-      MemoryContainerList delMem;
-      WriteContainer writeMem;
-      bloom_filter wbloom;
-      bloom_filter bloom;
-      TxType txType;
+        #endif       
+        MemoryContainerList newMem;
+        MemoryContainerList delMem;
+        WriteContainer writeMem;
+        bloom_filter wbloom;
+        bloom_filter bloom;
+        TxType txType;
 
-      int abort;
-   };
+        int abort;
+    };
 
 
-#ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
+    #ifdef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 
     // thread specific data
     struct tss_context
@@ -238,23 +232,23 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
         inline tss_context()
         : tx_()
         , transactions()
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-#if WIN32
+        #ifndef BOOST_STM_USE_BOOST_MUTEX
+        #if WIN32
         , mutex_(PTHREAD_MUTEX_INITIALIZER)
-#endif
-#else
+        #endif
+        #else
         , mutex_()
-#endif
+        #endif
 
-#if PERFORMING_LATM
+        #if PERFORMING_LATM
         , blocked_(false)
-#endif
+        #endif
         {
             // the current transaction is 0
             transactions.push(0);
-#ifndef BOOST_STM_USE_BOOST_MUTEX
+            #ifndef BOOST_STM_USE_BOOST_MUTEX
             pthread_mutex_init(&mutex_, 0);
-#endif
+            #endif
         }
         inline ~tss_context() {
            pthread_mutex_destroy(&mutex_);
@@ -263,26 +257,26 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
         tx_context tx_;
         TransactionStack transactions;
         Mutex mutex_;
-#if PERFORMING_LATM
+        #if PERFORMING_LATM
         int blocked_;
-#endif
-#if PERFORMING_LATM
-#if USING_TRANSACTION_SPECIFIC_LATM
+        #endif
+        #if PERFORMING_LATM
+        #if USING_TRANSACTION_SPECIFIC_LATM
         MutexSet conflictingMutex_;
-#endif
+        #endif
         MutexSet obtainedLocks_;
         MutexSet currentlyLockedLocks_;
-#endif
-   };
+        #endif
+    };
 
-#endif
+    #endif
 
-#ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
-   typedef std::map<size_t, tx_context*> tss_context_map_type;
-#else
-   typedef std::map<size_t, tss_context*> tss_context_map_type;
-#endif
-#endif
+    #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
+    typedef std::map<size_t, tx_context*> tss_context_map_type;
+    #else
+    typedef std::map<size_t, tss_context*> tss_context_map_type;
+    #endif
+    #endif
 
    //--------------------------------------------------------------------------
    // transaction static methods
@@ -290,7 +284,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    static void initialize();
    static void initialize_thread();
    static void terminate_thread();
-#if defined(BOOST_STM_CM_STATIC_CONF)
+    #if defined(BOOST_STM_CM_STATIC_CONF)
    //static contention_manager_type cm_;
    //inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
    inline static contention_manager_type* get_contention_manager() { 
@@ -319,7 +313,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    static void cm_perform_isolated_tx_wait_priority_promotion(transaction &t) {return contention_manager_type::perform_isolated_tx_wait_priority_promotion(t); }
    static void cm_perform_irrevocable_tx_wait_priority_promotion(transaction &t) {return contention_manager_type::perform_irrevocable_tx_wait_priority_promotion(t); }
 
-#else   
+    #else   
    static base_contention_manager *cm_;
    inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
    inline static base_contention_manager* get_contention_manager() { return cm_; }
@@ -346,7 +340,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    static void cm_perform_isolated_tx_wait_priority_promotion(transaction &t) {return cm_->perform_isolated_tx_wait_priority_promotion(t); }
    static void cm_perform_irrevocable_tx_wait_priority_promotion(transaction &t) {return cm_->perform_irrevocable_tx_wait_priority_promotion(t); }
 
-#endif   
+    #endif   
 
    inline static void enableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(true); }
    inline static void disableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(false); }
@@ -407,9 +401,9 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
 
    inline static bool validating()
    {
-#ifdef PERFORMING_VALIDATION
+    #ifdef PERFORMING_VALIDATION
       return true;
-#endif
+    #endif
       return false;
    }
 
@@ -458,7 +452,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    static bool doing_tx_lock_protection();
 
 
-#ifdef WIN32
+    #ifdef WIN32
    template <typename T>
    inline static int lock_(T *lock) { throw "unsupported lock type"; }
 
@@ -485,7 +479,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
 
    template <>
    inline static int unlock_(Mutex *lock) { return pthread_unlock(lock); }
-#else
+    #else
    inline static int lock_(PLOCK &lock) { return pthread_lock(&lock); }
    inline static int lock_(PLOCK *lock) { return pthread_lock(lock); }
 
@@ -494,7 +488,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
 
    inline static int unlock_(PLOCK &lock) { return pthread_unlock(&lock); }
    inline static int unlock_(PLOCK *lock) { return pthread_unlock(lock); }
-#endif
+    #endif
 
    static int pthread_lock(Mutex *lock);
    static int pthread_trylock(Mutex *lock);
@@ -503,7 +497,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
 
 
    //--------------------------------------------------------------------------
-#if PERFORMING_LATM
+    #if PERFORMING_LATM
    //--------------------------------------------------------------------------
    inline static void tm_lock_conflict(Mutex &lock)
    {
@@ -517,7 +511,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    void must_be_in_conflicting_lock_set(Mutex *inLock);
    static void must_be_in_tm_conflicting_lock_set(Mutex *inLock);
 
-#if USING_TRANSACTION_SPECIFIC_LATM
+    #if USING_TRANSACTION_SPECIFIC_LATM
    void see_if_tx_must_block_due_to_tx_latm();
 
    inline void lock_conflict(Mutex &lock)
@@ -534,7 +528,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
 
    void clear_tx_conflicting_locks();
    //MutexSet get_tx_conflicting_locks() { return conflictingMutexRef_; }
-#endif
+    #endif
 
    void add_to_obtained_locks(Mutex* );
    static void unblock_conflicting_threads(Mutex *mutex);
@@ -546,7 +540,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    void remove_from_currently_locked_locks(Mutex *m);
    bool is_currently_locked_lock(Mutex *m);
    bool is_on_obtained_locks_list(Mutex *m);
-#endif
+    #endif
 
    //--------------------------------------------------------------------------
    //--------------------------------------------------------------------------
@@ -624,9 +618,9 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    // transaction is direct or deferred.
    //
    //--------------------------------------------------------------------------
-#ifndef DISABLE_READ_SETS
+    #ifndef DISABLE_READ_SETS
    inline size_t const read_set_size() const { return readListRef_.size(); }
-#endif
+    #endif
 
    inline size_t const writes() const { return write_list()->size(); }
    inline bool written() const {return !write_list()->empty();}
@@ -660,21 +654,21 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
       }
    }
 
-   //--------------------------------------------------------------------------
-   template <typename T>
-   inline bool has_been_read(T const & in)
-   {
-#ifndef DISABLE_READ_SETS
-      ReadContainer::iterator i = readList().find
-         (static_cast<base_transaction_object*>(&in));
-      //----------------------------------------------------------------
-      // if this object is already in our read list, bail
-      //----------------------------------------------------------------
-      return i != readList().end();
-#else
-      return bloom().exists((size_t)&in);
-#endif
-   }
+    //--------------------------------------------------------------------------
+    template <typename T>
+    inline bool has_been_read(T const & in)
+    {
+        #ifndef DISABLE_READ_SETS
+        ReadContainer::iterator i = readList().find
+            (static_cast<base_transaction_object*>(&in));
+        //----------------------------------------------------------------
+        // if this object is already in our read list, bail
+        //----------------------------------------------------------------
+        return i != readList().end();
+        #else
+        return bloom().exists((size_t)&in);
+        #endif
+    }
 
    //--------------------------------------------------------------------------
    template <typename T>
@@ -736,6 +730,11 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
       {
          deferred_delete_memory(in);
       }
+   }
+
+   template <typename T>
+   inline void delete_tx_ptr(T *in) {
+       delete_memory(*in);
    }
 
    //--------------------------------------------------------------------------
@@ -906,50 +905,7 @@ typedef std::map<size_t, bit_vector*> ThreadBitVectorList;
    inline size_t const & thread_id() const { return threadId_; }
 
 private:
-
-template <class T> T* cache_allocate() {
-#if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-    return  reinterpret_cast<T*>(T::retrieve_mem(sizeof(T)));
-#elif defined(BOOST_STM_CACHE_USE_MALLOC)
-    return  reinterpret_cast<T*>(malloc(sizeof(T)));   
-#elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-    return reinterpret_cast<T*>(context_.mstorage_.allocate<T>());
-#else 
-    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER or BOOST_STM_CACHE_USE_MALLOC must be defined"
-#endif
-}
-
-inline void cache_release(base_transaction_object* ptr) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
-    if (ptr) {
-    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-        ptr->return_this_mem();
-#elif defined(BOOST_STM_CACHE_USE_MALLOC)
-        free(ptr);
-#elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-#else 
-    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER or BOOST_STM_CACHE_USE_MALLOC must be defined"#endif
-#endif
-    }
-#else
-    delete ptr;    
-#endif
-}
-template <class T> T* cache_new_copy(const T& val) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
-    T* p = cache_allocate<T>();
-    if (p==0) {
-        //std::cout << __LINE__ << " malloc ERROR" << std::endl;
-        throw std::bad_alloc();
-    }
-    std::uninitialized_copy(&val,(&val)+1, p); 
-    return p;
-#else
-    return new T(val);    
-#endif
-}
-
-
+    
 
 #ifdef LOGGING_BLOCKS
    static std::string outputBlockedThreadsAndLockedLocks();
@@ -2056,15 +2012,212 @@ private:
    inline transaction_state const & state() const { return state_; }
 
    inline WriteContainer& writeList() { return *write_list(); }
-#ifndef DISABLE_READ_SETS
+    #ifndef DISABLE_READ_SETS
    inline ReadContainer& readList() { return readListRef_; }
-#endif
+    #endif
 
 public:
-    inline static transaction* transaction::current_transaction() {return transactions(THREAD_ID).top();}
+    inline static transaction* current_transaction() {return transactions(THREAD_ID).top();}
     
 
 };
+
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+template <class T> T* cache_allocate() {
+    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
+    return  reinterpret_cast<T*>(T::retrieve_mem(sizeof(T)));
+    #elif defined(BOOST_STM_CACHE_USE_MALLOC)
+    return  reinterpret_cast<T*>(malloc(sizeof(T)));   
+    #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+    return reinterpret_cast<T*>(context_.mstorage_.allocate<T>());
+    #else 
+    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
+    #endif
+}
+
+// this function must be specialized for objects that are non transactional 
+// by deleting the object
+
+#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
+namespace partial_specialization_workaround {
+template <class T>
+struct cache_deallocate;
+    
+template <class T>
+struct cache_deallocate {
+    static void apply(T* ptr) {
+        if (ptr) {
+        #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
+            //ptr->return_this_mem();
+            base_transaction_object::return_mem(ptr,sizeof(T));
+        #elif defined(BOOST_STM_CACHE_USE_MALLOC)
+            free(ptr);
+        #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+        #else 
+        #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
+        #endif
+        }
+    }
+};
+template <class T>
+struct cache_deallocate<transactional_object<std::vector<T> > > {
+    static void apply(transactional_object<std::vector<T> >* ptr) {
+        delete ptr;
+    }
+};
+
+}
+
+template <class T> void cache_deallocate(T*ptr) {
+    partial_specialization_workaround::cache_deallocate<T>::apply(ptr);
+}
+
+#else //!BOOST_STM_NO_PARTIAL_SPECIALIZATION
+
+template <class T>  
+inline void cache_deallocate(transactional_object<std::vector<T> >* ptr) {
+    delete ptr;
+}
+
+template <class T>  
+inline void cache_deallocate(T* ptr) {
+    if (ptr) {
+    #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
+        //ptr->return_this_mem();
+        base_transaction_object::return_mem(ptr,sizeof(T));
+    #elif defined(BOOST_STM_CACHE_USE_MALLOC)
+        free(ptr);
+    #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+    #else 
+    #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER or BOOST_STM_CACHE_USE_MALLOC must be defined"#endif
+    #endif
+    }
+}
+#endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
+
+// this function must be specialized for objects that are non transactional,
+// by calling to new of the copy constructor 
+
+#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
+namespace partial_specialization_workaround {
+template <class T>
+struct cache_new_copy_constructor;
+    
+template <class T>
+struct cache_new_copy_constructor {
+    static inline T* apply(const T& val) {
+        T* p = cache_allocate<T>();
+        if (p==0) {
+            //std::cout << __LINE__ << " malloc ERROR" << std::endl;
+            throw std::bad_alloc();
+        }
+        boost::stm::cache_restore(&val, p);
+        //std::uninitialized_copy(&val,(&val)+1, p); 
+        return p;
+    }
+};
+
+template <class T, class A>
+struct cache_new_copy_constructor<transactional_object<std::vector<T,A> > > {
+    static inline transactional_object<std::vector<T,A> >* apply(const transactional_object<std::vector<T,A> >& val) {
+        return new transactional_object<std::vector<T,A> >(val);    
+    }
+};
+} // partial_specialization_workaround
+
+template <class T>
+inline T* cache_new_copy_constructor(const T& val) {
+    return partial_specialization_workaround::cache_new_copy_constructor<T>::apply(val);
+}
+#else //BOOST_STM_NO_PARTIAL_SPECIALIZATION
+
+template <class T> 
+inline transactional_object<std::vector<T> >* cache_new_copy_constructor(const transactional_object<std::vector<T> >& val) {
+    return new transactional_object<std::vector<T> >(val);    
+}
+
+template <class T> 
+inline T* cache_new_copy_constructor(const T& val) {
+    T* p = cache_allocate<T>();
+    if (p==0) {
+        //std::cout << __LINE__ << " malloc ERROR" << std::endl;
+        throw std::bad_alloc();
+    }
+    cache_restore(&val, p);
+    //std::uninitialized_copy(&val,(&val)+1, p); 
+    return p;
+}
+#endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
+#endif // BOOST_STM_USE_UNASIGNED_COPY
+
+inline void cache_release(base_transaction_object* ptr) {
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+    //cache_deallocate(ptr);
+    ptr->cache_deallocate();
+#else
+    delete ptr;    
+#endif
+}
+
+template <class T> 
+inline T* cache_new_copy(const T& val) {
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+    return cache_new_copy_constructor(val);
+#else
+    return new T(val);    
+#endif
+}
+
+template <class T> void cache_restore(const T* const ori, T* target);
+// When BOOST_STM_USE_UNASIGNED_COPY is defined 
+// this function must be specialized for objects that are non transactional by deleting the object, e.g.
+
+#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+namespace partial_specialization_workaround {
+template <class T> struct cache_restore;
+
+
+template <class T>
+struct cache_restore {
+    static inline void apply(const T* const ori, T* target) {
+        std::uninitialized_copy(ori,ori+1, target); 
+    }
+};
+
+template <class T>
+struct cache_restore<transactional_object<std::vector<T> > > {
+    static inline void apply(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
+        *target=*ori;
+    }
+};
+
+} // partial_specialization_workaround
+#endif
+
+template <class T> void cache_restore(const T* const ori, T* target) {
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+    partial_specialization_workaround::cache_restore<T>::apply(ori, target);
+#else
+    *target=*ori;
+#endif
+}
+
+#else
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+template <class T> void cache_restore(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
+    *target=*ori;
+}
+#endif
+
+template <class T> void cache_restore(const T* const ori, T* target) {
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
+    std::uninitialized_copy(ori,ori+1, target); 
+#else
+    *target=*ori;
+#endif
+}
+#endif
 
 
 struct thread_initializer {

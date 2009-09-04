@@ -50,6 +50,9 @@
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
+template <class T> void cache_deallocate(T*);
+template <class T> void cache_restore(const T* const ori, T* target);
+template <class T> inline T* cache_new_copy_constructor(const T&);
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
 typedef pthread_mutex_t PLOCK;
@@ -206,9 +209,7 @@ public:
 #endif
    virtual ~base_transaction_object() {};
 #ifdef BOOST_STM_USE_UNASIGNED_COPY      
-#if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-    virtual void return_this_mem()=0;
-#endif       
+    virtual void cache_deallocate()=0;
 #endif       
 
    void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
@@ -289,15 +290,6 @@ private:
 };
 
 
-
-template <class T> void cache_restore(const T* const ori, T* target) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
-    std::uninitialized_copy(ori,ori+1, target); 
-#else
-    *target=*ori;
-#endif
-}
-
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 template <class Derived>
@@ -319,10 +311,11 @@ public:
    }
 #endif
 
-#ifdef BOOST_STM_USE_UNASIGNED_COPY      
-#if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-    void return_this_mem() {base_transaction_object::return_mem(this,sizeof(Derived));};
-#endif       
+#ifdef BOOST_STM_USE_UNASIGNED_COPY     
+    virtual void cache_deallocate() {
+        boost::stm::cache_deallocate(this);
+    }
+   
 #endif       
 
 #if USE_STM_MEMORY_MANAGER
@@ -396,23 +389,29 @@ private:
 
 //-----------------------------------------------------------------------------
 // transactional object wrapper
+// A transactional_object<T> is a base_transaction_object wrapping an instance of type T
+// 
+// If a class D inherits from B we have that transactional_object<D> dont inherits from transactional_object<B>, but
+// we can static/dynamic cast them robustly. 
+// Evidently the std::static_cast/std::dynamic_cast do not works. We need to define the specific cast
+// 
+// transactional_object<D>* d=...; 
+// transactional_object<B>* b=tx_static_cast<B>(d);
+// 
+// transactional_object<B>* b=...; 
+// transactional_object<D>* d=tx_dynamic_cast<B>(b);
+// 
 //-----------------------------------------------------------------------------
+
 
 template <typename T>
 class transactional_object : public base_transaction_object {
 public:    
     T value;
-
-    static transactional_object<T>* up_cast(T* ptr) {
-        return reinterpret_cast<transactional_object<T>*>(reinterpret_cast<char*>(ptr)-offsetof(transactional_object<T>, value));
-    }
+   
     transactional_object() {}
     transactional_object(const T*ptr) 
         : base_transaction_object()
-        , value(*ptr) {}
-            
-    transactional_object(transaction*tx, const T*ptr) 
-        : base_transaction_object(tx)
         , value(*ptr) {}
             
     transactional_object(transactional_object<T> const & r) 
@@ -423,6 +422,11 @@ public:
     transactional_object(T1 const &p1) 
         : base_transaction_object()
         , value(p1) {}
+
+    template <typename T1, typename T2>
+    transactional_object(T1 const &p1, T2 const &p2) 
+        : base_transaction_object()
+        , value(p1,p2) {}
 
     transactional_object & operator=(transactional_object const & r)  // never throws        
     {
@@ -437,9 +441,9 @@ public:
     }
 
 #ifdef BOOST_STM_USE_UNASIGNED_COPY      
-#if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-    void return_this_mem() {return_mem(this,sizeof(transactional_object<T>));};
-#endif       
+    virtual void cache_deallocate() {
+        boost::stm::cache_deallocate(this);
+    }
 #endif       
 
 #if USE_STM_MEMORY_MANAGER
@@ -455,6 +459,25 @@ public:
 #endif
     
 };
+
+// gets the transactional_object<T> pointer wrapping the T pointer
+template <typename T>
+static transactional_object<T>* up_cast(T* ptr) {
+    return reinterpret_cast<transactional_object<T>*>(reinterpret_cast<char*>(ptr)-offsetof(transactional_object<T>, value));
+}
+    
+// 
+template <typename T, typename U>
+static transactional_object<T>* tx_static_cast(transactional_object<U>* ptr) {
+    return up_cast(static_cast<T*>(&ptr->value));
+}
+    
+template <typename T, typename U>
+static transactional_object<T>* tx_dynamic_cast(transactional_object<U>* ptr) {
+    T* p = dynamic_cast<T*>(&ptr->value);
+    if (p==0) return 0;
+    return up_cast(p);
+}
 
 
 //-----------------------------------------------------------------------------

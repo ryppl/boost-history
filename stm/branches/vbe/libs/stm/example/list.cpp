@@ -1,72 +1,4 @@
-
-
-class BankAccount 
-{
-protected:
-    int nb_;
-    int balance_;
-public:
-    BankAccount(int bnb) : nb_(nb), balance_(0) {}
-    BankAccount(const BankAccount &rhs) {
-        atomic(_) balance_=rhs.balance_;
-    }
-
-    BankAccount& operator=(BankAccount &rhs)
-    {
-        if(&rhs == this) return *this;
-
-        atomic(_) {
-            balance_=rhs.balance_;
-            return *this;
-        }
-    }
-
-    void Deposit(int amount) {
-        atomic(_) balance_ += amount;
-    }
-    int Withdraw(int amount) {
-        atomic(_) {
-            balance_ -= amount;
-            return amount;
-        }
-    }
-    int GetBalance() {
-        atomic(_) return balance_;
-    }
-};
-
-tx_ptr<BankAccount> JoesAccount(new transactional_object<BankAccount>(0));
-tx_ptr<BankAccount> A(new transactional_object<BankAccount>(1));
-tx_ptr<BankAccount> B(new transactional_object<BankAccount>(2));
-
-void bankAgent()
-{
-    for (int i =10; i>0; --i) {
-        //...
-        atomic(_) JoesAccount->Deposit(500);
-        //...
-    }
-}
-
-void Joe() {
-    for (int i =10; i>0; --i) {
-        //...
-        int myPocket;
-        atomic(_) {
-            myPocket= JoesAccount->Withdraw(100);
-        }
-        std::cout << myPocket << std::endl;
-        //...
-    }
-}
-
-    atomic(_) {
-        *B = *A;
-    }
-    
-    
-    
-   //////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 //
 // (C) Copyright Justin E. Gottchlich 2009.
 // (C) Copyright Vicente J. Botet Escriba 2009.
@@ -80,432 +12,185 @@ void Joe() {
 //////////////////////////////////////////////////////////////////////////////
 
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef TEST_LINKED_LIST_H
-#define TEST_LINKED_LIST_H
 
-//#define BOOST_STM_USES_AS_NEW 1
-//#define BOOST_STM_USES_PARAM 1
-#define BOOST_STM_LL_USES_NODE 1
+#include <boost/stm.hpp>
+#include <boost/thread.hpp>
+#include <stdlib.h>
 
-#include "main.h"
-#include <boost/stm/transaction.hpp>
+using namespace std;
+using namespace boost;
+using namespace boost::stm;
 
-#include <fstream>
+#define BOOST_STM_NEW(T, P) \
+    ((T).throw_if_forced_to_abort_on_new(), \
+    (T).as_new(new P))
 
-#define BIG_SIZE 1000
+#define BOOST_STM_NEW_1(P) \
+    ((boost::stm::transaction::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::transaction::current_transaction(), P):new P)
+
 ///////////////////////////////////////////////////////////////////////////////
+namespace test {
 template <typename T>
 class list_node
 {
 public:
 
-   list_node() : value_(0), next_(0) {
-       }
-   explicit list_node(T const &rhs) : value_(rhs), next_(NULL) {
-       }
+   list_node() : value_(), next_() {}
+   explicit list_node(T const &rhs) : value_(rhs), next_() {}
+   list_node(T const &rhs, tx_ptr<list_node<T> > next) : value_(rhs), next_(next) {}
 
    // zero initialization for native types
-   void clear() { value_ = T(); next_ = NULL; }
+   void clear() { value_ = T(); next_ = 0; }
 
-   T &value() { return value_; }
-   T const &value() const { return value_; }
-
-   list_node const *next() const { return next_->get(); }
-
-   void next(list_node const *rhs, boost::stm::transaction &t)
-   {
-      if (NULL == rhs) next_ = NULL;
-      else { 
-          tx_ptr<list_node> tmp(rhs);
-          next_ = tmp;
-      }
-   }
-
-private:
 
    T value_;
-   tx_ptr<list_node> next_;
-
+   tx_ptr<list_node<T> > next_;
 };
 
 ////////////////////////////////////////////////////////////////////////////
 template <typename T>
-class LinkedList
+class list
 {
 public:
 
     typedef tx_ptr<list_node<T> > node_type;
-    LinkedList() { head_->value() = T(); }
+    tx_ptr<list_node<T> > head_;
+    tx_ptr<std::size_t> size_;
+    list() 
+    : head_(BOOST_STM_NEW_1(transactional_object<list_node<T> >())) 
+    , size_(BOOST_STM_NEW_1(transactional_object<std::size_t>(0))) 
+    { }
 
-    ~LinkedList() { quick_clear(); }
+    ~list() { }
 
-   void move(node_type const &node1, node_type const &node2)
-   {
-      using namespace boost::stm;
-      bool succeeded1 = true, succeeded2 = true;
-      transaction_state state = e_no_state;
+    std::size_t size() {
+        std::size_t res=0;
+        use_atomic(_) {
+            rd_ptr<std::size_t> s(_, size_);
+            res=*s;
+        }
+        return res;
+    }
 
-      do
-      {
-         try
-         {
-            transaction t;
-            succeeded1 = internal_remove(node1);
-            succeeded2 = internal_insert(node2);
-            t.end();
-         }
-         catch (aborted_transaction_exception&) {}
-
-         if (!succeeded1 || !succeeded2)
-         {
-            return false; // auto abort of t
-         }
-
-      } while (e_committed != state);
-
-      return true;
+    //--------------------------------------------------------------------------
+    // find the location to insert the node. if the value already exists, fail
+    //--------------------------------------------------------------------------
+    void insert(const T& val) {
+        use_atomic(_) {
+            upgrd_ptr<list_node<T> > prev(_, head_);
+            upgrd_ptr<list_node<T> > curr(_, head_->next_);
+            while (curr) {
+                if (curr->value_ == val) return;
+                else if (curr->value_ > val) break;
+                prev = curr;
+                curr = curr->next_;
+            }        
+            if (!curr || (curr->value_ > val)) {
+                wr_ptr<list_node<T> > insert_point(_,prev);
+                insert_point->next_=BOOST_STM_NEW(_,transactional_object<list_node<T> >(val, curr));
+                ++(*size_);
+                
+            }
+        }
    }
 
-   ////////////////////////////////////////////////////////////////////////////
-   bool insert(list_node<T> const &node)
-   {
-      atomic(_) { return internal_insert(node, t); }
-   }
-#ifdef BOOST_STM_USES_PARAM
-   bool insert(T val)
-#else
-   bool insert(const T& val)
-#endif
-   {
-        atomic(_) { return internal_insert(val, t); }
-   }
-   ////////////////////////////////////////////////////////////////////////////
-#ifdef BOOST_STM_USES_PARAM
-   bool lookup(T val)
-#else
-   bool lookup(T const &val)
-#endif
-   {
-      atomic(_) { return internal_lookup(val, t); }
-   }
+    // search function
+    bool lookup(const T& val) const {
+        bool found = false;
+        use_atomic(_) {
+            rd_ptr<list_node<T> > curr(_, head_);
+            curr = curr->next_;
+            while (curr) {
+                if (curr->value_ >= val) break;
+                curr = curr->next_;
+            }
 
-   ////////////////////////////////////////////////////////////////////////////
-   bool remove(list_node<T> const &node)
-   {
-      atomic(_) { return internal_remove(node, t); }
-   }
+            found = ((curr) && (curr->value_ == val));
+        }
+        return found;
+    }
 
-#ifdef BOOST_STM_USES_PARAM
-   bool remove(T val)
-#else
-   bool remove(T const &val)
-#endif
-   {
-      atomic(_) { return internal_remove(val, t); }
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   void outputList(std::ofstream &o)
-   {
-      int i = 0;
-      for (list_node<T> const *cur = head_->next(); cur != NULL; cur = cur->next())
-      {
-         o << "element [" << i++ << "]: " << cur->value() << std::endl;
-      }
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   int walk_size()
-   {
-      int i = 0;
-      for (list_node<T> const *cur = head_.next(); cur != NULL; cur = cur->next())
-      {
-         ++i;
-      }
-
-      return i;
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   void quick_clear()
-   {
-      for (list_node<T> const *cur = head_.next(); cur != NULL;)
-      {
-         list_node<T> const *prev = cur;
-         cur = cur->next();
-         delete prev;
-      }
-
-      head_.clear();
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   boost::stm::transaction_state clear()
-   {
-      atomic(_) {
-
-      for (list_node<T> const *cur = head_->next(); cur != NULL;)
-      {
-         list_node<T> const *prev = cur;
-         cur = cur->next();
-         prev.delete_memory();
-      }
-
-      head_->clear();
-
-      return t.end();
-   }
-
-private:
-
-   //--------------------------------------------------------------------------
-   // find the location to insert the node. if the value already exists, fail
-   //--------------------------------------------------------------------------
-   bool internal_insert(node_type n)
-   {
-      if (0 != head_->next_)
-      {
-         node_type prev = head_;
-         node_type cur = head_->next_;
-         T val = n->value_;
-
-         while (true)
-         {
-            if (cur->value_ == val) return false;
-            else if (cur->value_ > val || !cur->next_) break;
-
-            prev = cur;
-
-            node_type curNext = cur->next_;
-
-            if (!curNext) break;
-
-            cur = curNext;
-         }
-
-         //--------------------------------------------------------------------
-         // if cur->next() is null it means our newNode value is greater than
-         // cur, so insert ourselves after cur.
-         //--------------------------------------------------------------------
-         if (val > cur->value()) cur->next=n;
-         //--------------------------------------------------------------------
-         // otherwise, we are smaller than cur, so insert between prev and cur
-         //--------------------------------------------------------------------
-         else
-         {
-            n->next=cur;
-            prev->next_=n;
-         }
-      }
-      else
-      {
-         head_.next_=n;
-      }
-
-      return true;
-   }
-
-#ifdef BOOST_STM_USES_PARAM
-   bool internal_insert(T val, boost::stm::transaction &t)
-#else
-   bool internal_insert(const T& val, boost::stm::transaction &t)
-#endif
-   {
-      //T val = valr;
-      if (0 != head_->next())
-      {
-         node_type_ptr const prev = &head_;
-         node_type_ptr const cur = head_->next_;
-
-         while (true)
-         {
-            if (cur->value() == val) return false;
-            else if (cur->value() > val || !cur->next()) break;
-
-            prev = cur;
-
-            node_type_ptr curNext = cur->next();
-
-            if (0 == curNext) break;
-
-            cur = curNext;
-         }
-         t.throw_if_forced_to_abort_on_new();
-         node_type_ptr newNode(new transactional_object<list_node<T> >(val)));
-         //--------------------------------------------------------------------
-         // if cur->next() is null it means our newNode value is greater than
-         // cur, so insert ourselves after cur.
-         //--------------------------------------------------------------------
-         if (val > cur->value()) cur->next_ = newNode;
-         //--------------------------------------------------------------------
-         // otherwise, we are smaller than cur, so insert between prev and cur
-         //--------------------------------------------------------------------
-         else
-         {
-            newNode->next= cur;
-            prev->next_=newNode;
-         }
-      }
-      else
-      {
-         t.throw_if_forced_to_abort_on_new();
-         node_type_ptr newNode(new transactional_object<list_node<T> >(val)));
-         head_->next_ = newNode;
-      }
-
-      t.end();
-      return true;
-   }
-   //--------------------------------------------------------------------------
-   // find the location to insert the node. if the value already exists, bail
-   //--------------------------------------------------------------------------
-#ifdef BOOST_STM_USES_PARAM
-   bool internal_lookup(T val, boost::stm::transaction &t)
-#else
-   bool internal_lookup(T const &val, boost::stm::transaction &t)
-#endif
-   {
-      node_type_ptr cur = head_;
-
-      for (; true ; cur = cur->next() )
-      {
-         if (cur->value() == val)
-         {
-            return true;
-         }
-
-         if (0 == cur->next()) break;
-      }
-
-      return false;
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   bool internal_remove(list_node<T> const &rhs, boost::stm::transaction &t)
-   {
-      for (rd_ptr<list_node<T> > prev(head_), rd_ptr<list_node<T> > cur(t, prev->next_); 
-            0!=cur; 
-            prev = cur, cur=cur->next_) {
-         if (cur->value_ == rhs.value_) {
-            wr_ptr<list_node<T> > wr_prev(t, prev);
-            wr_prev->next_=cur->next();
-            cur.delete_memory();
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-#ifdef BOOST_STM_USES_PARAM
-   bool internal_remove(T value, boost::stm::transaction &t)
-#else
-   bool internal_remove(T const &value, boost::stm::transaction &t)
-#endif
-   {
-      list_node<T> const *prev = &t.read(head_);
-
-      for (list_node<T> const *cur = prev; cur != NULL; prev = cur)
-      {
-         cur = t.read(*cur).next();
-
-         if (NULL == cur) break;
-
-         if (cur->value() == value)
-         {
-            list_node<T> const *curNext = t.read(*cur).next();
-
-            t.delete_memory(*cur);
-            t.write(*(list_node<T>*)prev).next(curNext, t);
-            t.end();
-            return true;
-         }
-      }
-
-      return false;
-   }
-   //--------------------------------------------------------------------------
-   // find the location to insert the node. if the value already exists, bail
-   //--------------------------------------------------------------------------
-   bool internal_insert(list_node<T> const &rhs)
-   {
-      using namespace boost::stm;
-      transaction t;
-
-      list_node<T> const *headP = &t.read(head_);
-
-      if (NULL != headP->next())
-      {
-         list_node<T> const *prev = headP;
-         list_node<T> const *cur = t.read_ptr(headP->next());
-         T val = rhs.value();
-
-         while (true)
-         {
-            if (cur->value() == val) return false;
-            else if (cur->value() > val || !cur->next()) break;
-
-            prev = cur;
-
-            list_node<T> const *curNext = t.read_ptr(cur->next());
-
-            if (NULL == curNext) break;
-
-            cur = curNext;
-         }
-
-         list_node<T> *newNode = t.new_memory_copy(rhs);
-
-         //--------------------------------------------------------------------
-         // if cur->next() is null it means our newNode value is greater than
-         // cur, so insert ourselves after cur.
-         //--------------------------------------------------------------------
-         if (NULL == cur->next()) t.write_ptr((list_node<T>*)cur)->next_for_new_mem(newNode, t);
-         //--------------------------------------------------------------------
-         // otherwise, we are smaller than cur, so insert between prev and cur
-         //--------------------------------------------------------------------
-         else
-         {
-            newNode->next(cur, t);
-            t.write_ptr((list_node<T>*)prev)->next_for_new_mem(newNode, t);
-         }
-      }
-      else
-      {
-         list_node<T> *newNode = t.new_memory_copy(rhs);
-         t.write(head_).next_for_new_mem(newNode, t);
-      }
-
-      t.end();
-      return true;
-   }
-
-   ////////////////////////////////////////////////////////////////////////////
-   bool internal_remove(list_node<T> const &rhs)
-   {
-      using namespace boost::stm;
-      transaction t;
-
-      list_node<T> const *prev = &t.read(head_);
-
-      for (list_node<T> const *cur = prev; cur != NULL;
-           prev = cur, cur = t.read(*cur).next())
-      {
-         if (cur->value() == rhs.value())
-         {
-            t.write(*(list_node<T>*)prev).next(t.read_ptr(cur)->next(), t);
-            t.delete_memory(*cur);
-            t.end();
-            return true;
-         }
-      }
-
-      return false;
-   }
-
-   tx_obj<list_node<T> > head_;
+    // remove a node if its value == val
+    void remove(const T& val)
+    {
+        use_atomic(_) {
+            // find the node whose val matches the request
+            upgrd_ptr<list_node<T> > prev(_,head_);
+            upgrd_ptr<list_node<T> > curr(_,prev->next_);
+            while (curr) {
+                // if we find the node, disconnect it and end the search
+                if (curr->value_ == val) {
+                    wr_ptr<list_node<T> > mod_point(_,prev);
+                    mod_point->next_=curr->next_;
+                    // delete curr...
+                    delete_ptr(_,curr);                   
+                    --(*size_);
+                    break;
+                } else if (curr->value_ > val) {
+                    // this means the search failed
+                    break;
+                }
+                prev = curr;
+                curr = prev->next_;
+            }
+        }
+    }
+    
 };
+}
+tx_ptr<test::list<int> > l;
 
+void insert1() {
+    thread_initializer thi;
+    use_atomic(_) {
+        //wr_ptr<test::list<int> > w(_,l);
+        //w->insert(1);
+        make_wr_ptr(_,l)->insert(1);
+    }
+}
+void insert2() {
+    thread_initializer thi;
+    use_atomic(_) {
+        //wr_ptr<test::list<int> > w(_,l);
+        //w->insert(2);
+        make_wr_ptr(_,l)->insert(2);
+    }
+}
 
-#endif // TEST_LINKED_LIST_H
- 
+void insert3() {
+    thread_initializer thi;
+    use_atomic(_) {
+        //wr_ptr<test::list<int> > w(_,l);
+        //w->insert(3);
+        make_wr_ptr(_,l)->insert(3);
+    }
+}
+int test1() {
+    l=boost::stm::make_tx_ptr<test::list<int> >();
+    thread  th1(insert1);
+    //thread  th2(insert2);
+    //thread  th3(insert2);
+    //thread  th4(insert3);
+
+    th1.join(); 
+    //th2.join(); 
+    //th3.join(); 
+    //th4.join(); 
+    int res = (l->size()==1?0:1);
+    //boost::stm::delete_ptr(l);
+    return res;
+}
+
+int main() {
+    transaction::enable_dynamic_priority_assignment();
+    transaction::do_deferred_updating();
+    transaction::initialize();
+    thread_initializer thi;
+    srand(time(0));
+    
+    int res=0;
+    res+=test1();
+    
+    return res;
+    
+}
