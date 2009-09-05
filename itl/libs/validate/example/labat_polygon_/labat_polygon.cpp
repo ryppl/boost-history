@@ -6,7 +6,7 @@ Copyright (c) 2009-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma warning( disable : 4800 )
+#pragma warning( disable : 4800 ) //'int' : forcing value to bool 'true' or 'false' (performance warning)
 #pragma warning( disable : 4244 ) //'argument' : conversion from 'T1' to 'T2', possible loss of data
 
 #include <boost/polygon/polygon.hpp>

@@ -30,9 +30,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 
-//#undef min
-//#undef max
-
 #define BOUND_VALUE first
 #define BOUND_TYPES second
 
@@ -897,8 +894,21 @@ inline DomainT interval<DomainT,Compare>::last()const
     return is_right(closed_bounded) ? _upb : pred(_upb); 
 }
 
+//------------------------------------------------------------------------------
+// There is an error C2244 under msvc-8 with memeber function 
+// size_type interval::cardinality()const. 
+// It seems that the compiler is unable to substitute 
+//
+// typename interval<DomainT,Compare>::size_type
+// by
+// typename itl::size<DomainT>::type
+// 
+// If msvc-8 is not supported any more result type
+// typename itl::size<DomainT>::type can be rplaced with the more systematic
+// typename interval<DomainT,Compare>::size_type
+
 template <class DomainT, ITL_COMPARE Compare>
-inline typename interval<DomainT,Compare>::size_type interval<DomainT,Compare>::cardinality()const
+inline typename itl::size<DomainT>::type interval<DomainT,Compare>::cardinality()const
 {
     using namespace boost::mpl;
     return if_<

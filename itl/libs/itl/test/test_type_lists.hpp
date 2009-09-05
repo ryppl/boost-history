@@ -17,13 +17,18 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/itl/interval.hpp>
 
+#if(_MSC_VER < 1500 && defined(_DEBUG) ) // 1500 = MSVC-9.0
+typedef int boost_posix_time_ptime;
+#else
+typedef boost::posix_time::ptime boost_posix_time_ptime;
+#endif
 
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
     ,short, int, long
     ,float, double
     ,boost::rational<int>
-    ,boost::posix_time::ptime
+    ,boost_posix_time_ptime
 //    ,boost::gregorian::date
 > bicremental_types;
 
@@ -31,7 +36,7 @@ typedef unsigned int             bicremental_type_1;
 typedef          int             bicremental_type_2;
 typedef          double          bicremental_type_3;
 typedef boost::rational<int>     bicremental_type_4;
-typedef boost::posix_time::ptime bicremental_type_5;
+typedef boost_posix_time_ptime   bicremental_type_5;
 typedef unsigned short           bicremental_type_6;
 typedef          short           bicremental_type_7;
 typedef          float           bicremental_type_8;
@@ -64,12 +69,12 @@ typedef unsigned int  integral_type_4;
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
     ,short, int, long
-    ,boost::posix_time::ptime
+    ,boost_posix_time_ptime
 //    ,boost::gregorian::date
 > discrete_types;
 
 typedef int                      discrete_type_1;
-typedef boost::posix_time::ptime discrete_type_2;
+typedef boost_posix_time_ptime   discrete_type_2;
 typedef unsigned int             discrete_type_3;
 typedef short                    discrete_type_4;
 typedef unsigned int             discrete_type_5;
@@ -91,13 +96,13 @@ typedef ::boost::mpl::list<
     ,float, double
     ,boost::rational<int>
     ,std::string
-    ,boost::posix_time::ptime
+    ,boost_posix_time_ptime
 //    ,boost::gregorian::date
 > ordered_types;
 
 typedef int                      ordered_type_1;
 typedef std::string              ordered_type_2;
-typedef boost::posix_time::ptime ordered_type_3;
+typedef boost_posix_time_ptime   ordered_type_3;
 typedef boost::rational<int>     ordered_type_4;
 typedef double                   ordered_type_5;
 
