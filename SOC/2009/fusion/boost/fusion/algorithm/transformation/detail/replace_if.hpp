@@ -98,7 +98,7 @@ namespace boost { namespace fusion { namespace detail
         }
 
         F f;
-        mutable typename remove_const<NewValue>::type new_value;
+        mutable NewValue new_value;
     };
 }}}
 
