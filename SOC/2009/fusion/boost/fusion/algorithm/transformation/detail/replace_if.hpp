@@ -10,7 +10,6 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 
 #include <boost/mpl/if.hpp>
-#include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/and.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
@@ -25,20 +24,17 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename Self, typename U>
         struct result<Self(U)>
-          : mpl::eval_if<
-                is_convertible<
-                    typename remove_reference<NewValue>::type*
-                  , typename remove_reference<U>::type*
-                >
-              , mpl::if_<
-                    mpl::and_<
-                        is_rref<NewValue>
-                      , is_lrref<U>
+          : mpl::if_<
+                mpl::and_<
+                    is_convertible<
+                        typename remove_reference<NewValue>::type*
+                      , typename remove_reference<U>::type*
                     >
-                  , U
-                  , typename remove_reference<U>::type&
+                  , is_rref<NewValue>
+                  , is_lrref<U>
                 >
-              , mpl::identity<U>
+              , typename remove_reference<U>::type&
+              , U
             >
         {};
 
