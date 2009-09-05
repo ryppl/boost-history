@@ -18,7 +18,7 @@ void example_tree(std::ostream& out){
     
     const unsigned n_branches = 3;
     typedef tree_view::dynamic_stage<n_branches>     stage_;
-    typedef tree_view::node<n_branches> node_;
+    typedef tree_view::node<n_branches>              node_;
 
     using namespace boost;
     const unsigned n_stages = 4;
@@ -36,7 +36,7 @@ void example_tree(std::ostream& out){
     out << std::endl;
     node_ the_last = last( root_node, n_stages-1);
 
-    {   // Visits all nodes from the root node to that prior to the_last
+    {   // Breadth-first visitation
         out << node_::header << std::endl;
         node_ node = root_node;
         unsigned old_stage = node.stage;
@@ -52,7 +52,7 @@ void example_tree(std::ostream& out){
     }
 
     out << std::endl;
-    {   // Visits all nodes from that prior to the_last to the root_node
+    {   // Breadth-first visitation, in reverse
         out << node_::header;
         node_ node = the_last;
         

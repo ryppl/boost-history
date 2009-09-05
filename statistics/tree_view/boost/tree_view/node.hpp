@@ -16,11 +16,28 @@
 namespace boost{
 namespace tree_view{
 
-// n = 3
-//                                             ( 1 )                                          n^0
-//                                         ( 1 , 2 ,3)                                        n^1
-//                    ( 1 , 2 , 3 )        ( 1 ,[2], 3 )            ( 1, 2 , 3 )              n^2
-//            (1,2,3) (1,2,3)(1,2,3)  (1,2,3) (1,2,3) (1,2,3)  (1,2,3) (1,2,3) (1,2,3)        n^3
+// n = 3 :
+//
+// j:   0   1   2        
+//
+// i:   0->(            k:  0->(
+//          1->(                0->(
+//              4                   0
+//              5                   1
+//              6                   2
+//          )                   )
+//          2->(                1->(
+//              7                   3
+//              8                   4
+//              9                   5
+//          )                   )
+//          3->(                2->(
+//              10                  6
+//              11                  7
+//              12                  8
+//          )                   )
+//      )
+
 
     // n : number of branches
     // m : number of stages
@@ -49,8 +66,8 @@ namespace tree_view{
         node(unsigned j,unsigned k);
         this_& operator++();
         this_& operator--();
-        bool operator==(const this_&);
-        bool operator<(const this_&);
+        bool operator==(const this_&)const;
+        bool operator<(const this_&)const;
         
         static std::string header;
 
@@ -61,17 +78,27 @@ namespace tree_view{
     template<unsigned n,unsigned m> std::ostream& 
     operator<<(std::ostream& out, const tree_view::node<n,m>& that);
 
-    template<unsigned n,unsigned m> typename tree_view::node<n,m>::size_type 
+    template<unsigned n,unsigned m> 
+    bool 
+    is_root(const tree_view::node<n,m>& that);
+
+    template<unsigned n,unsigned m> 
+    typename tree_view::node<n,m>::size_type 
     position(const tree_view::node<n,m>& that);
-    template<unsigned n,unsigned m> tree_view::node<n,m> root(const tree_view::node<n,m>& leaf);
-    // The leaf(root) is node in the next stage, rooted at root, and 
-    // which occupies the same position as root among its neighbors.
-    template<unsigned n,unsigned m> tree_view::node<n,m> leaf(const tree_view::node<n,m>& root);
+    
+    template<unsigned n,unsigned m> 
+    tree_view::node<n,m> 
+    parent(const tree_view::node<n,m>& child);
 
-    // To visit all the nodes sharing the same root:
-    // node<n,m> node = leaf(the_root);
-    // while(root(node++)!=the_root){...}
+    // first_child(a) is first node in the next stage, parented at a
+    // To visit all the nodes sharing the same parent:
+    // node<n,m> node = first_child(a);
+    // while(parent(node++)!=a){...}
+    template<unsigned n,unsigned m> 
+    tree_view::node<n,m> 
+    first_child(const tree_view::node<n,m>& parent);
 
+    // -> firs, back and last of each stage 
     template<unsigned n,unsigned m> 
     tree_view::node<n,m> 
     first(const tree_view::node<n,m>& root,unsigned stage);
@@ -83,6 +110,15 @@ namespace tree_view{
     template<unsigned n,unsigned m> 
     tree_view::node<n,m> 
     last(const tree_view::node<n,m>& root,unsigned stage);
+    // <-
+
+    template<unsigned n,unsigned m>
+    tree_view::node<n,m>
+    prior(const tree_view::node<n,m>& node);
+
+    template<unsigned n,unsigned m>
+    tree_view::node<n,m>
+    next(const tree_view::node<n,m>& node);
 
 namespace tree_view{
 
@@ -145,12 +181,12 @@ namespace tree_view{
     }
 
     template<unsigned n,unsigned m>
-    bool node<n,m>::operator==(const this_& that){
-        return (this->position()) == (that.position());
+    bool node<n,m>::operator==(const this_& that)const{
+        return position(*this) == position(that);
     }
 
     template<unsigned n,unsigned m>
-    bool node<n,m>::operator<(const this_& that){
+    bool node<n,m>::operator<(const this_& that)const{
         return position(*this) < position(that);
     }
 
@@ -166,8 +202,17 @@ namespace tree_view{
         return out;
     }
 
+    template<unsigned n,unsigned m> 
+    bool 
+    is_root(const tree_view::node<n,m>& that){
+        typedef tree_view::node<n,m> node_;
+        static const node_ root_node;
+        return that == root_node;
+    }
+
     template<unsigned n,unsigned m>
-    tree_view::node<n,m> leaf(const tree_view::node<n,m>& that){
+    tree_view::node<n,m> 
+    first_child(const tree_view::node<n,m>& that){
         typedef tree_view::node<n,m> node_;
         node_ node = that;
         ++node.stage;
@@ -177,10 +222,10 @@ namespace tree_view{
 
     template<unsigned n,unsigned m>
     tree_view::node<n,m> 
-    root(const tree_view::node<n,m>& that){
+    parent(const tree_view::node<n,m>& that){
         typedef tree_view::node<n,m> node_;
-        const char* msg = "node<n,m>::jump_to_root() already at root";
-        if(that.stage == 0 ){
+        const char* msg = "node<n,m>::parent() root has no parent";
+        if( that.stage == 0 ){
             throw std::out_of_range(
                 msg
             );
@@ -221,6 +266,21 @@ namespace tree_view{
         return first(root,stage+1);
     }
 
+    template<unsigned n,unsigned m>
+    tree_view::node<n,m>
+    prior(const tree_view::node<n,m>& node){
+        typedef tree_view::node<n,m> node_;
+        node_ new_node = node;
+        return --new_node;
+    }
+
+    template<unsigned n,unsigned m>
+    tree_view::node<n,m>
+    next(const tree_view::node<n,m>& node){
+        typedef tree_view::node<n,m> node_;
+        node_ new_node = node;
+        return ++new_node;
+    }
 
 }// boost
 

@@ -13,12 +13,13 @@ erwann.rogard@gmail.com
 [ Overview ]
 
     Maps a vector to a tree view, where each node has a fixed number of
-    branches. 
+    branches. Both breadth-first and depth-first visitation procedure are 
+    offered.
+        
+[ More advanced graph packages: ]
     
-[ Useful links ]
-
-    A comprehensive tree framework that is unrelated to this package:
-        http://raz.or.at/soc2006/doc/html/
+   http://raz.or.at/soc2006/doc/html/
+   http://www.boost.org/doc/libs/1_40_0/libs/graph/doc/index.html
 
 [ Compiler ]
 
@@ -33,6 +34,10 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 Here's the current link to switch:
 http://www.boostpro.com/vault/index.php?action=downloadfile&filename=switch.zip&directory=&
 
+[ Sources ] 
+http://en.wikipedia.org/wiki/Tree_%28data_structure%29
+http://en.wikipedia.org/wiki/Depth-first_search
+http://en.wikipedia.org/wiki/Breadth-first_search
 
 [ History ]
 

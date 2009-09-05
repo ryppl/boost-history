@@ -1,18 +1,14 @@
 ///////////////////////////////////////////////////////////////////////////////
-// example::tree.h                                                           //
+// tree_view::example::depth_first.h                                         //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#include <iostream>
-#include <libs/tree_view/example/tree.h>
-#include <libs/tree_view/example/depth_first.h>
+#ifndef LIBS_TREE_VIEW_EXAMPLE_DEPTH_FIRST_HPP_ER_2009
+#define LIBS_TREE_VIEW_EXAMPLE_DEPTH_FIRST_HPP_ER_2009
+#include <ostream>
 
-int main(){
-    
-    // example_tree(std::cout);
-    example_depth_first(std::cout);
-    
-    return 0;
-}
+void example_depth_first(std::ostream& os);
+
+#endif

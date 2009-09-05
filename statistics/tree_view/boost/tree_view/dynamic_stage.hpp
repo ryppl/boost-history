@@ -16,6 +16,8 @@
 namespace boost{
 namespace tree_view{
 
+    // A runtime (a.k.a dynamic) version of stage
+    //
     // n : number of branches
     // m : number of stages
     template<unsigned n,unsigned m = BOOST_SWITCH_LIMIT>
