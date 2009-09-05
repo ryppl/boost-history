@@ -125,9 +125,6 @@ struct identity_int
     }
 };
 
-struct C
-{};
-
 int main()
 {
     {

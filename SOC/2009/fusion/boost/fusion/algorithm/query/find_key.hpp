@@ -33,6 +33,7 @@ namespace boost { namespace fusion
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_associative<Seq>));
         };
     }
 

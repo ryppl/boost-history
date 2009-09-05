@@ -14,6 +14,10 @@
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
 
+#ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
+#   include <boost/type_traits/is_convertible.hpp>
+#endif
+
 namespace boost { namespace fusion
 {
     namespace detail
@@ -80,6 +84,16 @@ namespace boost { namespace fusion
             BOOST_FUSION_R_ELSE_CLREF(OldValue) old_value,
             BOOST_FUSION_R_ELSE_CLREF(NewValue) new_value)
     {
+        BOOST_FUSION_MPL_ASSERT((
+            is_convertible<
+                typename traits::deduce<
+                    BOOST_FUSION_R_ELSE_CLREF(NewValue)
+                >::type*
+              , typename traits::deduce<
+                    BOOST_FUSION_R_ELSE_CLREF(OldValue)
+                >::type*
+            >));
+
         typedef typename
             result_of::replace<
                 BOOST_FUSION_R_ELSE_CLREF(Seq)
@@ -92,6 +106,25 @@ namespace boost { namespace fusion
                   , replacer(BOOST_FUSION_FORWARD(OldValue,old_value),0)
                   , BOOST_FUSION_FORWARD(NewValue,new_value));
     }
+
+#ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename Seq, typename OldValue, typename NewValue>
+    inline typename result_of::replace<Seq&, OldValue const&>::type
+    replace(Seq& seq, OldValue const& old_value, NewValue const& new_value)
+    {
+        BOOST_FUSION_MPL_ASSERT((
+            is_convertible<
+                typename traits::deduce<NewValue const&>::type*
+              , typename traits::deduce<OldValue const&>::type*
+            >));
+
+        typedef typename
+            result_of::replace<Seq&, OldValue const&>::replacer
+        replacer;
+
+        return replace_if(seq,replacer(old_value,0), new_value);
+    }
+#endif
 }}
 
 #endif

@@ -9,8 +9,9 @@
 #ifndef BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_DETAIL_REPLACE_IF_HPP
 
-#include <boost/fusion/support/internal/result_of.hpp>
-
+#include <boost/mpl/if.hpp>
+#include <boost/mpl/eval_if.hpp>
+#include <boost/mpl/and.hpp>
 #include <boost/type_traits/is_convertible.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
@@ -24,9 +25,22 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename Self, typename U>
         struct result<Self(U)>
-        {
-            typedef U type;
-        };
+          : mpl::eval_if<
+                is_convertible<
+                    typename remove_reference<NewValue>::type*
+                  , typename remove_reference<U>::type*
+                >
+              , mpl::if_<
+                    mpl::and_<
+                        is_rref<NewValue>
+                      , is_lrref<U>
+                    >
+                  , U
+                  , typename remove_reference<U>::type&
+                >
+              , mpl::identity<U>
+            >
+        {};
 
         template<typename OtherF, typename OtherNewValue>
         replace_if_helper(
