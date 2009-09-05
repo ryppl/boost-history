@@ -18,7 +18,7 @@ namespace tree_view{
     // The tree structure has a root node (stage 0) with n adjacent 
     // nodes (stage 1), each of which have n adjacent nodes (stage 2) etc.
     // The nodes are stored in a vector, starting with the root node,
-    // followed by those in stage1, then those in stage 2 etc.
+    // followed by those in stage1, then those in stage 2 etc. (breadth first)
     
     // j : stage
     // n : number of branches per node

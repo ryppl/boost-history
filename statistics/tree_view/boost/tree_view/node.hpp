@@ -16,7 +16,12 @@
 namespace boost{
 namespace tree_view{
 
-// n = 3 :
+// Data structure reprensentation:
+// i : position in physical storage
+// k : position in stage
+// j : stage
+//
+// Example for n = 3 :
 //
 // j:   0   1   2        
 //
@@ -38,7 +43,8 @@ namespace tree_view{
 //          )                   )
 //      )
 
-
+    // Data structure representing a node in a tree
+    //
     // n : number of branches
     // m : number of stages
     template<unsigned n,unsigned m = BOOST_SWITCH_LIMIT>
@@ -64,6 +70,8 @@ namespace tree_view{
         
         node();
         node(unsigned j,unsigned k);
+        
+        // ++ and -- are along breadth-first
         this_& operator++();
         this_& operator--();
         bool operator==(const this_&)const;
@@ -90,7 +98,7 @@ namespace tree_view{
     tree_view::node<n,m> 
     parent(const tree_view::node<n,m>& child);
 
-    // first_child(a) is first node in the next stage, parented at a
+    // first_child(a) is first node in the next stage, with parent a.
     // To visit all the nodes sharing the same parent:
     // node<n,m> node = first_child(a);
     // while(parent(node++)!=a){...}
@@ -98,7 +106,8 @@ namespace tree_view{
     tree_view::node<n,m> 
     first_child(const tree_view::node<n,m>& parent);
 
-    // -> firs, back and last of each stage 
+    // -> first, back and last of each stage 
+    // [first,...,back,last)
     template<unsigned n,unsigned m> 
     tree_view::node<n,m> 
     first(const tree_view::node<n,m>& root,unsigned stage);
@@ -112,6 +121,7 @@ namespace tree_view{
     last(const tree_view::node<n,m>& root,unsigned stage);
     // <-
 
+    // prior and next by breadth first.
     template<unsigned n,unsigned m>
     tree_view::node<n,m>
     prior(const tree_view::node<n,m>& node);
@@ -193,7 +203,10 @@ namespace tree_view{
 }
 
     template<unsigned n,unsigned m> 
-    std::ostream& operator<<(std::ostream& out, const tree_view::node<n,m>& that){
+    std::ostream& operator<<(
+        std::ostream& out, 
+        const tree_view::node<n,m>& that
+    ){
         out 
             << '(' << that.stage 
             << ',' << that.position_in_stage

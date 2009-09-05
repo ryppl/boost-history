@@ -17,6 +17,7 @@
 namespace boost{
 namespace tree_view{
 
+    // Manages a node that moves in the tree according to breadth-first
     template<unsigned n,unsigned m = BOOST_SWITCH_LIMIT>
     class depth_first
         : incrementable<
@@ -27,21 +28,24 @@ namespace tree_view{
         typedef node<n,m> node_type;
         public:
         
+        // [ Construction ]
         depth_first();
+        // Initialized with the root node:
         depth_first(unsigned n_stages); //terminal stage = n_stages - 1
         
         // [ Update ]
-        void operator++();
+        void operator++(); 
         
         // [ Access ]
-        bool is_subtree()const;
+        // Whether the subtree rooted at the current node was visited
+        bool is_subtree()const; 
         const node_type& node()const;
         unsigned n_stages()const;
 
         private:
         const bools_& tree()const{ return this->tree_; }
         unsigned    n_stages_;
-        bools_      tree_;
+        bools_      tree_; // keeps is_subtree for each node in the tree
         node_type   node_;
     };
     
