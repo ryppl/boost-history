@@ -21,7 +21,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <iostream>
 #include <string>
 #include <math.h>
-#include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/interval.hpp>
 #include "../toytime.hpp"
 
@@ -38,17 +37,17 @@ int main()
     interval<string> city_interval = interval<string>::leftopen("Barcelona", "Boston");
     interval<Time>   time_interval = interval<Time>::open(Time(monday,8,30), Time(monday,17,20));
 
-    cout << "Interval<int>: "    << int_interval.as_string() << endl;
-    cout << "Interval<double>: " << sqrt_interval.as_string() << " does " 
+    cout << "Interval<int>: "    << int_interval  << endl;
+    cout << "Interval<double>: " << sqrt_interval << " does " 
                                  << string(sqrt_interval.contains(sqrt(2.0))?"":"NOT") 
                                  << " contain sqrt(2)" << endl;
-    cout << "Interval<string>: " << city_interval.as_string() << " does "  
+    cout << "Interval<string>: " << city_interval << " does "  
                                  << string(city_interval.contains("Barcelona")?"":"NOT") 
                                  << " contain 'Barcelona'" << endl;
-    cout << "Interval<string>: " << city_interval.as_string() << " does "  
+    cout << "Interval<string>: " << city_interval << " does "  
                                  << string(city_interval.contains("Berlin")?"":"NOT") 
                                  << " contain 'Berlin'" << endl;
-    cout << "Interval<Time>: " << time_interval.as_string() << endl;
+    cout << "Interval<Time>: "   << time_interval << endl;
 
     return 0;
 }

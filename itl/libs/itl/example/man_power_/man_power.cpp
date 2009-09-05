@@ -29,7 +29,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 // and a few lines of adapter code.
 #include <boost/itl/gregorian.hpp> 
 
-#include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/interval_map.hpp>
 
 using namespace std;

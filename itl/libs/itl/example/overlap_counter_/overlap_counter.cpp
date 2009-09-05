@@ -26,7 +26,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 //[example_overlap_counter
 #include <stdio.h>
 #include <iostream>
-#include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/split_interval_map.hpp>
 
 using namespace std;
