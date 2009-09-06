@@ -15,18 +15,28 @@ namespace boost{
 namespace statistics{
 namespace model{
     
-    // Models Model (sandbox/statistics/model).
+    // Models HasLogLikelihood (sandbox/statistics/model/concept).
     //
     // Intentionally not in namespace survival
-    template<typename T,typename X,typename B>
+    template<typename T,typename X,typename P>
     T log_likelihood(
         typename survival::model::meta::model_data<
             T,
             survival::model::exponential::model<T>,
             X
         >::type md,
-        const B& beta
+        const P& beta
     ){
+        // TODO check
+        // Models:
+        //HasLogLikelihood<
+        //    T,
+        //    survival::model::exponential::model<T>,
+        //    X,
+        //    typename meta::response<T>::type,
+        //    P
+        //>
+
         typedef survival::model::exponential::model<T> model_;
     
         T lr = model_::log_rate(
@@ -39,7 +49,7 @@ namespace model{
         );
     }
 
-    // If B == X we need this overload, or else the compiler cannot find
+    // If P == X we need this overload, or else the compiler cannot find
     // the above definition
     template<typename T,typename X>
     T log_likelihood(

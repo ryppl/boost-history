@@ -13,17 +13,13 @@ erwann.rogard@gmail.com
 
 [ Overview ]
 
-    In this C++ library, we provide models of Model (statistics/model) in the 
-    survival modeling framework.
+    In this C++ library, we provide models of HasLogLikelihood ( defined in statistics/model) for 
+    survival likelihoods.
 
 [ Notation ] 
 
-    See statistics/model/libs/model/doc/readme and the concept Model. Let mcp 
-    denote an instance of model_covariate_parameter_<M, X, P>
+    See statistics/model/libs/model/doc/readme. Let mcp  an instance of model_covariate_parameter_<M, X, P>
 
-[ Bug ]
-
-    See libs/statistics/survival/example/posterior_analysis.cpp     
 
 [ Compiler ]
 
@@ -58,17 +54,7 @@ July 2009 : Creation
 
 [ models ]
 
-These are models of [ SurvivalModel ] defined as:
-
-Let U/u denote a type/object modeling UniformaRandomNumberGenerator (see 
-Boost.Random)
-
-M refines SurvivalModel if it models Model with the requirement that
-    Expression                          Returns
-    random::failure_time<T>(mcp,urng)   Object of type T
-
-Modeled by : 
-    model::exponential::model
+    e.g. model::exponential::model
 
 [ meta ]
 

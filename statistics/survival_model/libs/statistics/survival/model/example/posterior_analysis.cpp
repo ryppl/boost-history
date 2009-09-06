@@ -34,11 +34,8 @@
 #include <boost/statistics/survival/data/include.hpp>
 #include <boost/statistics/survival/model/models/exponential/include.hpp>
 
-// Must come after the model to be used
+// Must come after survival/model/models/exponential/include
 #include <boost/statistics/model/include.hpp>
-
-#include <boost/importance_weights/algorithm/prepare_weights.hpp>
-#include <boost/importance_sampling/include.hpp>
 
 #include <libs/statistics/survival/model/example/posterior_analysis.h>
 
@@ -59,6 +56,7 @@ void example_posterior_analysis(std::ostream& out){
     using namespace boost;
     using namespace statistics;
     namespace surv = survival;
+    namespace e_cdf = empirical_cdf;
     namespace iw = importance_weights;
 
     // Types
@@ -146,7 +144,7 @@ void example_posterior_analysis(std::ostream& out){
         BOOST_ASSERT( n_batch % n_true_pars_kss == 0);
         vals_ true_pars_kss;
         true_pars_kss.reserve(n_true_pars_kss);
-        statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
+        e_cdf::sequential_kolmogorov_smirnov_distance(
             mprior,
             boost::begin(true_pars),
             boost::end(true_pars),
@@ -176,8 +174,7 @@ void example_posterior_analysis(std::ostream& out){
 
     // Targets
     const long n_t_pars = 1e4;
-    pars_ t_pars; 
-    t_pars.reserve( n_t_pars );
+    pars_ t_pars( n_t_pars );
     ofs_ ofs_t_pars(t_pars_path);
     oa_ oa_t_pars(ofs_t_pars);
     
@@ -205,16 +202,18 @@ void example_posterior_analysis(std::ostream& out){
     // This one size fits all proposal is likely to result in a small ESS. You
     // can monitor the ESS by calling out << pws. Ultimately, uniformity of
     // the Cook-Gelman will determine if either the computations are wrong
-    // or if n_proposal is too small. n_proposal = 1e4 works for N(0,5).
+    // or if n_proposal is too small. n_proposal = 1e4 works fine for N(0,5).
     mproposal_  mproposal = mprior; 
     pars_ p_pars (n_proposal); 
     vals_ p_lpdfs(n_proposal);
 
-
     // Weights
     const val_ max_log = 100.0;
-    typedef iw::prepare_weights<val_> pws_;
-    pws_ pws( max_log );
+    typedef model::importance_sampler<val_> model_is_;
+    model_is_ model_is( max_log );
+
+    // typedef iw::prepare_weights<val_> pws_;
+    // pws_ pws( max_log );
     vals_ iws; 
     iws.reserve( n_proposal );
         
@@ -239,7 +238,7 @@ void example_posterior_analysis(std::ostream& out){
             BOOST_ASSERT( n_batch % n_p_pars_kss == 0 );
             vals_ p_pars_kss;
             p_pars_kss.reserve(n_p_pars_kss);
-            statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
+            e_cdf::sequential_kolmogorov_smirnov_distance(
                 mproposal,
                 boost::begin(p_pars),
                 boost::end(p_pars),
@@ -282,45 +281,23 @@ void example_posterior_analysis(std::ostream& out){
             pmd_ pmd( mprior, model, x_cycle, events);
             iws.resize( size( p_pars ) );
 
-            // The reason I uncomment the if statement is that log_posteriors2
-            // is supposed to work for either case. 
-            //if(
-            //    make_distribution_primitives( mprior ) 
-            //    ==make_distribution_primitives( mproposal )
-            //){
-            //    model::log_likelihoods<val_>(
-            //        pmd,
-            //        boost::begin( p_pars ),
-            //        boost::end( p_pars ),
-            //        boost::begin( iws )  
-            //    );            
-            //}else{
-                statistics::model::log_posteriors<val_>(
-                    pmd,
-                    boost::begin( p_pars ),
-                    boost::end( p_pars ),
-                    boost::begin( p_lpdfs ),   
-                    boost::begin( iws )  
-                ); 
-            //}
-
-            pws(
-                boost::begin( iws ),
-                boost::end( iws ),
-                boost::begin( p_pars )
-            );
             t_pars.clear();
             t_pars.resize( n_t_pars );
-            is::generate(
-                urng,
-                boost::begin( iws ),
-                boost::end( iws ),
+            model_is.prepare_weights(
+                pmd,
+                boost::begin( p_pars ),       
+                boost::end( p_pars ),    
+                boost::begin( p_lpdfs )
+            );            
+            model_is.generate_n(
+                boost::begin(t_pars),
+                n_t_pars,
                 boost::begin( p_pars ),
-                boost::begin( t_pars ),
-                n_t_pars
+                urng
             );
+
             oa_t_pars << t_pars;
-            val_ plt =  statistics::empirical_cdf::proportion_less_than(
+            val_ plt = e_cdf::proportion_less_than(
                 boost::begin( t_pars ),
                 boost::end( t_pars ),
                true_pars[i]
@@ -334,8 +311,8 @@ void example_posterior_analysis(std::ostream& out){
                 f 
                 % i  
                 % t.elapsed() 
-                % pws; 
-                out << std::endl << std::setprecision( 10 ) <<  f.str();  
+                % model_is.pws(); 
+                out << std::endl <<  f.str();  
             }
         }// Proposal sample
     }// loop over batches
@@ -345,7 +322,7 @@ void example_posterior_analysis(std::ostream& out){
         BOOST_ASSERT( n_batch % n_ks == 0 );
         vals_ kss;
         kss.reserve( n_batch );
-        statistics::empirical_cdf::sequential_kolmogorov_smirnov_distance(
+        e_cdf::sequential_kolmogorov_smirnov_distance(
             munif_(),
             boost::begin( cgs ),
             boost::end( cgs ),
