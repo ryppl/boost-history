@@ -14,6 +14,12 @@
 #include <boost/explore/stream_value.hpp>
 #include <boost/explore/stream_state.hpp>
 #include <boost/explore/container_stream_state.hpp>
+#include <boost/static_assert.hpp>
+#include <boost/type_traits/is_same.hpp>
+#include <boost/type_traits/remove_pointer.hpp>
+#include <boost/type_traits/remove_reference.hpp>
+#include <boost/type_traits/remove_const.hpp>
+#include <iostream>
 
 namespace boost { namespace explore
 {
@@ -56,6 +62,21 @@ namespace boost { namespace explore
         template<typename Elem, typename Tr, typename T>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<T>& manip)
         {
+            typedef typename boost::remove_const< 
+                        typename boost::remove_reference<
+                            typename boost::remove_pointer<T>::type 
+                        >::type
+                    >::type char_type;
+            
+            BOOST_STATIC_ASSERT(( boost::is_same<Elem, char_type>::value ));
+            
+            (*manip.pfun)(ostr, manip.arg);
+            return ostr;
+        }
+        
+        template<typename Elem, typename Tr>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<std::size_t>& manip)
+        {   
             (*manip.pfun)(ostr, manip.arg);
             return ostr;
         }
@@ -158,11 +179,23 @@ namespace boost { namespace explore
         return detail::manipfunc<const Elem*>(&detail::separatorFn, sep);
     }
     
+    template<typename Elem, typename Tr>
+    const std::basic_string<Elem>& get_separator(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->separator();
+    }
+    
     // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> start(const Elem* s)
     {
         return detail::manipfunc<const Elem*>(&detail::startFn, s);
+    }
+    
+    template<typename Elem, typename Tr>
+    const std::basic_string<Elem>& get_start(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->start();
     }
     
     // manipulator
@@ -172,11 +205,23 @@ namespace boost { namespace explore
         return detail::manipfunc<const Elem*>(&detail::endFn, e);
     }
     
+    template<typename Elem, typename Tr>
+    const std::basic_string<Elem>& get_end(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->end();
+    }
+    
     // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_separator(const Elem* sep)
     {
         return detail::manipfunc<const Elem*>(&detail::assoc_item_separatorFn, sep);
+    }
+    
+    template<typename Elem, typename Tr>
+    const std::basic_string<Elem>& get_assoc_item_separator(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_separator();
     }
     
     // manipulator
@@ -186,32 +231,60 @@ namespace boost { namespace explore
         return detail::manipfunc<const Elem*>(&detail::assoc_item_startFn, start);
     }
     
+    template<typename Elem, typename Tr>
+    const std::basic_string<Elem>& get_assoc_item_start(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_start();
+    }
+    
     // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_end(const Elem* end)
     {
         return detail::manipfunc<const Elem*>(&detail::assoc_item_endFn, end);
     }
-
+    
+    template<typename Elem, typename Tr>
+    const std::basic_string<Elem>& get_assoc_item_end(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_end();
+    }
+    
+    // manipulator
     detail::manipfunc<std::size_t> level(std::size_t l)
     {
         return detail::manipfunc<std::size_t>(&detail::levelFn, l);
     }
-
-    detail::handle_custom_stream custom()
+    
+    template<typename Elem, typename Tr>
+    std::size_t get_level(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return detail::handle_custom_stream();
+        return explore::get_stream_state<container_common_stream_state>(ostr)->get_level();
     }
 
-    detail::manipfunc<std::size_t> setrows(std::size_t sz)
+    // manipulator
+    detail::manipfunc<std::size_t> rows(std::size_t sz)
     {
         return detail::manipfunc<std::size_t>(detail::setrowsFn, sz);
     }
-     
-    detail::manipfunc<std::size_t> setitemwidth(std::size_t sz)
+    
+    template<typename Elem, typename Tr>
+    std::size_t get_rows(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_common_stream_state>(ostr)->get_level();
+    }    
+    
+    // manipulator
+    detail::manipfunc<std::size_t> item_width(std::size_t sz)
     {
         return detail::manipfunc<std::size_t>(detail::setitemwidthFn, sz);
     }
+    
+    template<typename Elem, typename Tr>
+    std::size_t get_item_width(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_common_stream_state>(ostr)->get_level();
+    }    
      
     // manipulator
     template<typename Elem, typename Tr>
@@ -220,15 +293,10 @@ namespace boost { namespace explore
         get_stream_state<container_stream_state<Elem> >(ostr)->template init<Elem>();
         return ostr;
     }
-    
-    // manipulator
-    template<typename Elem, typename Tr>
-    std::basic_ostream<Elem, Tr>& format_html_list(std::basic_ostream<Elem, Tr>& ostr)
+
+    detail::handle_custom_stream custom()
     {
-        return ostr
-        << start("<ul>\n   <li>")
-        << separator("\n   <li>")
-        << end("\n</ul>");
+        return detail::handle_custom_stream();
     }
     
     namespace detail

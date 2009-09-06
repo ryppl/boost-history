@@ -23,8 +23,8 @@ struct columnated_format
     friend std::basic_ostream<C>& operator<<(std::basic_ostream<C>& ostr, const columnated_format<C>& f)
     {
         using namespace boost::explore;
-        ostr << setrows(f.m_rows) << setitemwidth(f.m_width)
-            << separator(str_to<C>("")) << start(str_to<C>("")) << boost::explore::end(str_to<C>(""));
+        ostr << rows(f.m_rows) << item_width(f.m_width)
+             << separator(str_to<C>("")) << start(str_to<C>("")) << boost::explore::end(str_to<C>(""));
         return ostr;
     }
 };
@@ -40,7 +40,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_columnate_stream_test, C, test_types )
         vi.push_back(i);
     }
 
-    str_out << setrows(3) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
+    str_out << rows(3) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
 
     BOOST_CHECK_EQUAL(output(str_out),
         "0, 1, 2, \n"
@@ -50,7 +50,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_columnate_stream_test, C, test_types )
 
     reset(str_out);
 
-    str_out << setrows(3) << setitemwidth(5) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
+    str_out << rows(3) << item_width(5) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
 
     BOOST_CHECK_EQUAL(output(str_out),
         "    0,     1,     2, \n"
