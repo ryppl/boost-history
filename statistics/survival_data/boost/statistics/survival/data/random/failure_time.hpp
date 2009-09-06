@@ -10,6 +10,7 @@
 #include <boost/dist_random/include.hpp>
 #include <boost/statistics/model/wrap/aggregate/model_covariate_parameter.hpp>
 #include <boost/statistics/survival/data/meta/failure_distribution.hpp>
+#include <boost/statistics/survival/model/concept/random_failure.hpp>
 
 namespace boost{
 namespace statistics{
@@ -34,6 +35,10 @@ namespace random{
         boost::statistics::model::model_covariate_parameter_<M,X,P> mcp,
         U& urng
     ){
+        BOOST_CONCEPT_ASSERT((
+            survival::model::RandomFailure<T,M,X,P,U>
+        ));
+    
         return make_failure_random(mcp)(urng);
     }
  

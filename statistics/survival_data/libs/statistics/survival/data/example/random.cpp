@@ -163,7 +163,7 @@ void example_random(std::ostream& out){
             par_ par = boost::sample(mprior,urng);
             oa_pars << par; 
             ofs_pars.flush();
-            meta_batch_::rcov_ r = meta_batch_::rcov(
+            meta_batch_::rcov_ r_x = meta_batch_::rcov(
                 x_vals,
                 0,
                 n_record
@@ -172,7 +172,7 @@ void example_random(std::ostream& out){
                 model,
                 par,
                 clock, 
-                r
+                r_x
             );
             true_pars.push_back( par );
             vg_r vg_r( urng, batch );

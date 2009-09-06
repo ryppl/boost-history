@@ -23,19 +23,21 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 [ Dependencies ]
 
 /boost_1_39_0/ 
-/sandbox/statistics/joint_dist/ 
-/sandbox/statistics/survival_model/ 
+/sandbox/statistics/arithmetic/ 
+/sandbox/statistics/binary_op/ 
+/sandbox/statistics/dist_random/ 
 /sandbox/statistics/empirical_cdf/ 
 /sandbox/statistics/matrix_view/ 
-/sandbox/statistics/empirical_cdf/ 
+/sandbox/statistics/functional/ 
+/sandbox/statistics/iterator/ 
+/sandbox/statistics/importance_weights/
+/sandbox/statistics/importance_sampling/
+/sandbox/statistics/joint_dist/ 
 /sandbox/statistics/random/ 
 /sandbox/statistics/scalar_dist/ 
-/sandbox/statistics/dist_random/ 
-/sandbox/statistics/binary_op/ 
-/sandbox/statistics/functional/ 
-/sandbox/statistics/arithmetic/ 
-/sandbox/statistics/iterator/ 
 /sandbox/statistics/standard_distribution/ 
+/sandbox/statistics/survival_model/ 
+
 
 Link to : libboost_serialization-xgcc42-mt-1_39.a
 

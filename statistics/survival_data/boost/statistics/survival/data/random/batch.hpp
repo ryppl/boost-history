@@ -39,15 +39,15 @@ namespace random{
         typename RdX,  // RandomDistribution                // covariate
         typename I = typename meta::random_input<M>::type
     >
-    class batch : public model::model_parameter_<M,P>{
+    class batch : public statistics::model::model_parameter_<M,P>{
         public:
         typedef T                                           value_type;
         typedef I                                           input_type; 
         typedef record<value_type>                          result_type;
         typedef typename RdX::result_type                   covariate_type;
 
-        typedef model::model_parameter_<M,P>                model_parameter_;
-        typedef model::model_covariate_parameter_<M,covariate_type,P> 
+        typedef statistics::model::model_parameter_<M,P>    model_parameter_;
+        typedef statistics::model::model_covariate_parameter_<M,covariate_type,P> 
                                                 model_covariate_parameter_;
 
         // Constructor

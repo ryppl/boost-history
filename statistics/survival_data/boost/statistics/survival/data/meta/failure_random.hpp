@@ -31,13 +31,17 @@ namespace data{
 
     template<typename M,typename X,typename P>
     typename meta_failure_random<M>::type 
-    make_failure_random(boost::statistics::model::model_covariate_parameter_<M,X,P>);
+    make_failure_random(
+        boost::statistics::model::model_covariate_parameter_<M,X,P>
+    );
 
     // Implementation //
 
     template<typename M,typename X,typename P>
     typename meta_failure_random<M>::type 
-    make_failure_random(boost::statistics::model::model_covariate_parameter_<M,X,P> mcp){
+    make_failure_random(
+        boost::statistics::model::model_covariate_parameter_<M,X,P> mcp
+    ){
         typedef meta_failure_random<M>                              map_;
         typedef typename map_::map2_                                map2_;
         return map2_::make(
