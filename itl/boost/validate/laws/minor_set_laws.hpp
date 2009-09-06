@@ -68,9 +68,9 @@ namespace boost{namespace itl
             // --- left hand side ------------------------
             Type value_a = this->template getInputValue<operand_a>();
             Type value_b = this->template getInputValue<operand_b>();
-            cout << "a = " << value_a << endl;
-            cout << "b = " << value_b << endl;
-            cout << "a&b = " << (value_a & value_b) << endl;
+            std::cout << "a = " << value_a << std::endl;
+            std::cout << "b = " << value_b << std::endl;
+            std::cout << "a&b = " << (value_a & value_b) << std::endl;
 
             bool a_intersects_b 
                 = intersects(this->template getInputValue<operand_a>(),
@@ -133,10 +133,10 @@ namespace boost{namespace itl
             Type   a_sec_b = value_a & value_b;
             bool result = value_a.contains(value_a & value_b);
             // -------------------------------------------
-            cout << "a = " << value_a << endl;
-            cout << "b = " << value_b << endl;
-            cout << "a&b = " << a_sec_b << endl;
-            cout << "a.contains(a&b) = " << result << endl;
+            std::cout << "a = " << value_a << std::endl;
+            std::cout << "b = " << value_b << std::endl;
+            std::cout << "a&b = " << a_sec_b << std::endl;
+            std::cout << "a.contains(a&b) = " << result << std::endl;
             // -------------------------------------------
             value_a.contains(a_sec_b);
 
@@ -189,10 +189,10 @@ namespace boost{namespace itl
             Type   a_sec_b = value_a & value_b;
             bool result = value_a.contains(value_a & value_b);
             // -------------------------------------------
-            cout << "a = " << value_a << endl;
-            cout << "b = " << value_b << endl;
-            cout << "a&b = " << a_sec_b << endl;
-            cout << "a.contains(a&b) = " << result << endl;
+            std::cout << "a = " << value_a << std::endl;
+            std::cout << "b = " << value_b << std::endl;
+            std::cout << "a&b = " << a_sec_b << std::endl;
+            std::cout << "a.contains(a&b) = " << result << std::endl;
             // -------------------------------------------
             value_a.contains(a_sec_b);
 

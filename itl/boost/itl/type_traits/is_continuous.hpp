@@ -9,6 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #define __itl_type_traits_is_continuous_JOFA_080910_H__
 
 #include <string>
+#include <boost/config.hpp>
 
 namespace boost{ namespace itl
 {

@@ -10,6 +10,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 
 #include <boost/mpl/and.hpp> 
 #include <boost/mpl/not.hpp> 
+#include <boost/itl/type_traits/is_map.hpp> 
 
 namespace boost{ namespace itl
 {

@@ -12,6 +12,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <iostream>
 #include <stdio.h>
 #include <time.h>
+#include <boost/config/warning_disable.hpp>
 #include <boost/validate/validater/algebra_validater.hpp>
 #include <boost/validate/utility.hpp>
 
