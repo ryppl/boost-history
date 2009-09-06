@@ -30,6 +30,10 @@
 #include "memory/pool.hpp"
 #endif
 
+#ifndef BOOST_MEMORY_POOLS_HPP
+#include "memory/pools.hpp"
+#endif
+
 #ifndef BOOST_MEMORY_OBJECT_POOL_HPP
 #include "memory/object_pool.hpp"
 #endif
