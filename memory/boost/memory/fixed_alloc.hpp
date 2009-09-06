@@ -195,6 +195,12 @@ public:
 		return p;
 	}
 
+	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb)
+	{
+		BOOST_MEMORY_ASSERT(cb == element_size());
+		return allocate();
+	}
+
 	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p)
 	{
 		MemBlock* const blk = chunkHeader_(p);
