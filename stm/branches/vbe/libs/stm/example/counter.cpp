@@ -12,41 +12,71 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/stm.hpp>
-#include <boost/foreach.hpp>
 #include <boost/thread.hpp>
-#include <boost/shared_ptr.hpp>
-//#include <string>
 #include <vector>
 #include <list>
-//#include <iostream>
 #include <stdlib.h>
-#define foreach BOOST_FOREACH
 
 using namespace std;
 using namespace boost;
 using namespace boost::stm;
 
-stm::tx_ptr<int> counter;
+stm::tx_obj<int> counter(0);
+stm::tx_obj<int> counter2(0);
 
 void inc() {
     thread_initializer thi;
     
     use_atomic(_) {
-        *counter+=*counter;
+        ++counter;
     }
 }
-void check() {
-    //thread_initializer thi;
+void decr() {
+    thread_initializer thi;
     
     use_atomic(_) {
-        assert(*counter==4);
+        --counter;
     }
 }
+bool check(int val) {
+    //thread_initializer thi;
+    bool res;
+    use_atomic(_) {
+        res =(*counter==val);
+    }
+    return res;
+}
+
+bool assign() {
+    //thread_initializer thi;
+    use_atomic(_) {
+        counter=1;
+        counter2=counter;
+    }
+    bool res;
+    use_atomic(_) {
+        res =(*counter==1) && (*counter2==1) && (counter==counter2) ;
+    }
+    return res;
+}
+
+bool test_const(stm::tx_obj<int> const& c) {
+    //thread_initializer thi;
+    use_atomic(_) {
+        counter2=c;
+    }
+    bool res;
+    use_atomic(_) {
+        res =(c==counter2) ;
+    }
+    return res;
+}
+
 int test_counter() {
-    counter=make_tx_ptr<int>(0);
+    //counter=make_tx_ptr<int>(0);
     
     thread  th1(inc);
-    thread  th2(inc);
+    thread  th2(decr);
     thread  th3(inc);
     thread  th4(inc);
 
@@ -55,9 +85,10 @@ int test_counter() {
     th3.join(); 
     th4.join(); 
     
-    check();
-    boost::stm::delete_ptr(counter);
-    return 0;
+    bool fails=!check(2);
+    fails = fails || !assign();
+    fails = fails || !test_const(counter);
+    return fails;
 }
 
 int main() {

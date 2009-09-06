@@ -51,17 +51,17 @@ public:
 
 typedef BankAccount account;
 
-struct bank{ //persistent object
+struct bank{
     vector<tx_ptr<BankAccount> > accounts;
     int overall_balance() const{
         int tmp=0;
-        foreach(BankAccount const* a,this->accounts){
+        foreach(tx_ptr<BankAccount> const &a, this->accounts){
             tmp+=a->Balance();
         }
         return tmp;
     }
     void  print_balance() const{
-        foreach(BankAccount const* a,this->accounts){
+        foreach(tx_ptr<BankAccount> const &a, this->accounts){
             cerr << a->Nb()  << "=" << a->Balance() << endl;
         }
     }

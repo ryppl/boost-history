@@ -30,6 +30,97 @@ class wr_ptr;
 template <typename T>
 class upgrd_ptr;
     
+//-----------------------------------------------------------------------------
+// class tx_obj wraps a transactional_object providing builting operators
+//-----------------------------------------------------------------------------
+
+template <typename T>
+class tx_obj {
+public:
+    transactional_object<T> obj_;
+
+    //-----------------------------------------------------------------------------
+    // default constructor valid ony if T has a default constructor
+
+    tx_obj() : obj_() {}
+        
+    // 
+    template<class Y> 
+    tx_obj(tx_obj<Y> const& r) : obj_(r.ref()) {} // throws only if obj_ contructor throws
+        
+    template <typename T1>
+    tx_obj(T1 p1) : obj_(p1) {}
+        
+    bool operator==(const tx_obj<T>& rhs) const {
+        return this->ref()==rhs.ref();
+    }
+    
+    bool operator==(const T& rhs) const {
+        return this->ref()==rhs;
+    }
+    
+    //operator T() const { return *this->get(); }
+    
+    T* operator->() {
+        return this->get();
+    }
+    const T* operator->() const {
+        return this->get();
+    }
+    T& operator*() {
+        return this->ref();
+    }
+    const T& operator*() const {
+        return this->ref();
+    }
+    T* get() {
+        return &this->ref();        
+    }
+    const T* get() const {
+        return &this->ref();        
+    }
+    T& ref() {
+        transaction* tx=transaction::current_transaction();
+        if (tx!=0) {
+            if (tx->forced_to_abort()) {
+                tx->lock_and_abort();
+                throw aborted_transaction_exception("aborting transaction");
+            }
+            return tx->write(obj_).value;
+        }
+        return obj_.value;
+    }
+
+    const T& ref() const {
+        transaction* tx=transaction::current_transaction();
+        if (tx!=0) {
+            if (tx->forced_to_abort()) {
+                tx->lock_and_abort();
+                throw aborted_transaction_exception("aborting transaction");
+            }
+            return tx->read(obj_).value;
+        }
+        return obj_.value;
+    }
+    
+    
+    tx_obj& operator--() { --ref(); return *this; }
+    T operator--(int) { T n = obj_.value_; --ref(); return n; }
+    
+    tx_obj& operator++() { ++ref(); return *this; }
+    T operator++(int) { T n = obj_.value_; ++ref(); return n; }
+
+    tx_obj& operator+=(T const &rhs) {
+        ref() += rhs;
+        return *this;
+    }
+
+    T operator+(T const &rhs) const {
+        return ref()+rhs;
+    }
+    
+};    
+
     
 //-----------------------------------------------------------------------------
 // a tx_ptr<T> is an smart pointer to a transactional_object<T> (which contains an instance of T). 
@@ -52,6 +143,8 @@ public:
     explicit tx_ptr(Y * ptr) : ptr_(new transactional_object<Y>(ptr)) {}   
         
     explicit tx_ptr(transactional_object<T>* ptr) : ptr_(ptr) {}
+        
+    tx_ptr(tx_obj<T>& r) : ptr_(r->obj_) {}
 
     template<class Y> 
     tx_ptr(tx_ptr<Y> const& r) : ptr_(r.ptr_) {}// never throws
@@ -72,15 +165,14 @@ public:
         return *this;
     }
     template<class Y> 
-    tx_ptr & operator=(transactional_object<Y>* ptr)  { // never throws        
+    tx_ptr& operator=(transactional_object<Y>* ptr)  { // never throws        
         ptr_=ptr;
         return *this;
     }
     
-    // two transactional pointers are equal if they point to the same cache on the current transaction.    
-    bool operator==(const tx_ptr<T>& rhs) {
-        return ptr_==rhs.ptr_ || this->get()==rhs.ptr_ || ptr_==rhs.get();
-    }
+    //bool operator==(const tx_ptr<T>& rhs) const {
+    //    return ptr_==rhs.ptr_ || this->get()==rhs.ptr_ || ptr_==rhs.get();
+    //}
     
     T* operator->() const {
         return this->get();
@@ -100,35 +192,29 @@ public:
         }
         return &ptr_->value;
     }
-    operator T*() const { return this->get(); }
     
     typedef transactional_object<T>* this_type::*unspecified_bool_type;
 
-    #if 0
-    operator unspecified_bool_type() const 
-    {
+    operator unspecified_bool_type() const {
         return ptr_ == 0? 0: &this_type::ptr_;
     }
-    #endif
-    void swap(tx_ptr & other) // never throws
-    {
+    void swap(tx_ptr & other) { // never throws
         std::swap(ptr_, other.ptr_);
     }
 };    
 
+// two transactional pointers are equal if they point to the same cache on the current transaction.    
 template <typename T, typename U>
 bool operator==(const tx_ptr<T>& lhs, const tx_ptr<U>& rhs) {
-    return lhs.get()==rhs.get();
+        return lhs.ptr_==rhs.ptr_ || lhs.get()==rhs.ptr_ || lhs.ptr_==rhs.get();
 }
 
 template <typename T, typename U>
 bool operator!=(const tx_ptr<T>& lhs, const tx_ptr<U>& rhs) {
-    return lhs.get()!=rhs.get();
+    return lhs.ptr_!=rhs.ptr_ && lhs.get()!=rhs.ptr_ && lhs.ptr_!=rhs.get();
 }
 
-
-template<class T> inline void swap(tx_ptr<T> & a, tx_ptr<T> & b)
-{
+template<class T> inline void swap(tx_ptr<T> & a, tx_ptr<T> & b) {
     a.swap(b);
 }
 
@@ -146,8 +232,9 @@ tx_ptr<T> make_tx_ptr(A1 const &a1) {
 template <typename T>    
 void delete_ptr(tx_ptr<T> ptr) {
     if (ptr.ptr_==0) return;
-    if (ptr.ptr_->transaction_==0) delete ptr.ptr_;      
-    ptr.ptr_->transaction_->delete_tx_ptr(ptr.ptr_);
+    transaction* tx=transaction::current_transaction();
+    if (tx==0) delete ptr.ptr_;      
+    tx->delete_tx_ptr(ptr.ptr_);
 }
 
 
@@ -163,44 +250,10 @@ static tx_ptr<T> tx_static_cast(tx_ptr<U> ptr) {
 }
     
 template <typename T, typename U>
-static tx_ptr<T>* tx_dynamic_cast(tx_ptr<U>* ptr) {
+static tx_ptr<T>* tx_dynamic_cast(tx_ptr<U> ptr) {
     return tx_ptr<T>(tx_dynamic_cast<T>(ptr->ptr_));
 }
 
-
-template <typename T>
-class tx_obj {
-public:
-    transactional_object<T> obj_;
-    transactional_object<T> * ptr_;
-
-    tx_obj() : obj_(), ptr_(&obj_) {}
-    template <typename T1>
-    tx_obj(T1 p1) : obj_(p1), ptr_(&obj_) {}
-        
-    bool operator==(const tx_obj<T>& rhs) {
-        return *this->get()==*rhs.get();
-    }
-    T* operator->() {
-        return this->get();
-    }
-    T& operator*() {
-        return *this->get();
-    }
-    T* get() {
-        if (0==ptr_->transaction_) { 
-            transaction* tx=transaction::current_transaction();
-            if (tx!=0) {
-                if (tx->forced_to_abort()) {
-                     tx->lock_and_abort();
-                     throw aborted_transaction_exception("aborting transaction");
-                }
-                ptr_=tx->write_ptr(ptr_);
-            }
-        }
-        return &ptr_->value;
-    }
-};    
 
 //-----------------------------------------------------------------------------
 // A rd_ptr<T> ("read pointer") points to an object that the current 
@@ -217,63 +270,78 @@ public:
     
 template <typename T>
 class rd_ptr {
-    typedef tx_ptr<T> this_type;
+    typedef rd_ptr<T> this_type;
 public:
+    mutable transactional_object<T>* ptr_;
  
     inline rd_ptr(transaction &t, tx_ptr<T> tx_obj) : 
         ptr_(&t.insert_and_return_read_memory(*tx_obj.ptr_))
     {}
 
+    inline rd_ptr(transaction &t, tx_obj<T> const& tx_obj) : 
+        ptr_(&t.insert_and_return_read_memory(tx_obj.obj_))
+    {}
+
     template<class Y> 
-    rd_ptr & operator=(tx_ptr<Y> const & r) { // never throws        
+    rd_ptr & operator=(tx_ptr<Y> r) { // never throws        
         //this_type(r).swap(*this);
         ptr_=r.ptr_;
         return *this;
     }
     
+    template<class Y> 
+    rd_ptr& operator=(tx_obj<Y> const & r) { // never throws        
+        //this_type(r).swap(*this);
+        ptr_=r.get();
+        return *this;
+    }
+    
     const T* get() const {
-        //if (ptr_->transaction_->forced_to_abort()) {
-        //    ptr_->transaction_->lock_and_abort();
-        //    throw aborted_transaction_exception("aborting transaction");
-        //}
-
         return &ptr_->value;
     }
 
     inline const T & operator*() const { return *get(); }
     inline const T* operator->() const { return get(); }
     
-    operator const T*() const { return get(); }
     
     typedef transactional_object<T>* this_type::*unspecified_bool_type;
 
-    #if 0
     operator unspecified_bool_type() const 
     {
         return ptr_ == 0? 0: &this_type::ptr_;
     }
-    #endif    
-//private:
-    mutable transactional_object<T>* ptr_;
+
 };
 
 template <typename T>    
-rd_ptr<T> make_rd_ptr(transaction& tx, tx_ptr<T>& ptr) {
+rd_ptr<T> make_rd_ptr(transaction& tx, tx_ptr<T> ptr) {
     return rd_ptr<T>(tx, ptr);
+}
+template <typename T>    
+rd_ptr<T> make_rd_ptr(transaction& tx, tx_obj<T> const & ref) {
+    return rd_ptr<T>(tx, ref);
 }
 
 template <typename T>    
-rd_ptr<T> make_rd_ptr(tx_ptr<T>& ptr) {
+rd_ptr<T> make_rd_ptr(tx_ptr<T> ptr) {
     transaction* tx = transaction::current_transaction();
     assert(tx==0);
     return rd_ptr<T>(*tx, ptr);
 }
 
 template <typename T>    
+rd_ptr<T> make_rd_ptr(tx_obj<T> const & ref) {
+    transaction* tx = transaction::current_transaction();
+    assert(tx==0);
+    return rd_ptr<T>(*tx, ref);
+}
+
+template <typename T>    
 void delete_ptr(rd_ptr<T> ptr) {
     if (ptr.ptr_==0) return;
-    if (ptr.ptr_->transaction_==0) delete ptr.ptr_;      
-    ptr.ptr_->transaction_->delete_tx_ptr(ptr.ptr_);
+    transaction* tx=transaction::current_transaction();
+    if (tx==0) delete ptr.ptr_;      
+    tx->delete_tx_ptr(ptr.ptr_);
 }
 
 template <typename T>    
@@ -299,14 +367,20 @@ template <typename T>
 class upgrd_ptr {
     typedef tx_ptr<T> this_type;
 public:
+    mutable transaction* tx_;
+    mutable transactional_object<T>* ptr_;
+    mutable bool written_;
  
-    inline upgrd_ptr() : tx_(0) {}
+    //inline upgrd_ptr() : tx_(0) {}
     inline upgrd_ptr(transaction &t, tx_ptr<T> tx_obj) : tx_(&t),
         ptr_(const_cast<transactional_object<T>*>(t.read_ptr(tx_obj.ptr_))), written_(false)    {}
 
     template<class Y> 
     upgrd_ptr & operator=(tx_ptr<Y> const&  r) { // never throws        
         //this_type(r).swap(*this);
+        transaction* tx=transaction::current_transaction();
+        if (tx==0) throw "error";
+        tx_=tx;
         ptr_=r.ptr_;
         written_=false;
         return *this;
@@ -340,12 +414,10 @@ public:
     
     typedef transactional_object<T>* this_type::*unspecified_bool_type;
 
-    #if 1
     operator unspecified_bool_type() const 
     {
         return ptr_ == 0? 0: &this_type::ptr_;
     }
-    #endif
     void write_ptr(transactional_object<T>* ptr) {
         ptr_ = ptr;
         written_ = true;
@@ -374,17 +446,19 @@ public:
         return ptr_;
     }
 
-//private:
-    mutable transaction* tx_;
-    mutable transactional_object<T>* ptr_;
-    mutable bool written_;
 };
 
 template <typename T>    
-void delete_ptr(upgrd_ptr<T> ptr) {
+void delete_ptr(upgrd_ptr<T> const& ptr) {
     if (ptr.ptr_==0) return;
-    if (ptr.ptr_->transaction_==0) delete ptr.ptr_;      
-    ptr.ptr_->transaction_->delete_tx_ptr(ptr.ptr_);
+    if (ptr.tx_==0) delete ptr.ptr_;      
+    ptr.tx_->delete_tx_ptr(ptr.ptr_);
+}
+
+template <typename T>    
+void delete_ptr(transaction& tx, upgrd_ptr<T> const& ptr) {
+    if (ptr.ptr_==0) return;
+    tx.delete_tx_ptr(ptr.ptr_);
 }
 
 //-----------------------------------------------------------------------------
@@ -397,20 +471,22 @@ template <typename T>
 class wr_ptr {
     typedef tx_ptr<T> this_type;
 public:
+    mutable transaction& tx_;
+    mutable transactional_object<T>* ptr_;
  
-    inline wr_ptr(transaction &t, tx_ptr<T> tx_obj) : 
+    inline wr_ptr(transaction &t, tx_ptr<T> tx_obj) : tx_(t),
         ptr_(t.write_ptr(tx_obj.ptr_))
     {}
 
-    inline wr_ptr(transaction &t, upgrd_ptr<T> tx_obj) : 
+    inline wr_ptr(transaction &t, upgrd_ptr<T> tx_obj) : tx_(t),
         ptr_(t.write_ptr(tx_obj.ptr_))
     {
         tx_obj.write_ptr(ptr_);
     }
 
     T* get() {
-        if (ptr_->transaction_->forced_to_abort()) {
-            ptr_->transaction_->lock_and_abort();
+        if (tx_.forced_to_abort()) {
+            tx_.lock_and_abort();
             throw aborted_transaction_exception("aborting transaction");
         }
         return &ptr_->value;
@@ -418,19 +494,13 @@ public:
     
     inline T& operator*() { return *get(); }
     inline T* operator->() { return get(); }
-
-    operator const T*() const { return get(); }
-    
+  
     typedef transactional_object<T>* this_type::*unspecified_bool_type;
 
-    #if 0
     operator unspecified_bool_type() const 
     {
         return ptr_ == 0? 0: &this_type::ptr_;
     }
-    #endif
-//private:   
-    mutable transactional_object<T>* ptr_;
 };
 
 template <typename T>    
@@ -442,17 +512,20 @@ wr_ptr<T> make_wr_ptr(transaction& tx, tx_ptr<T>& ptr) {
 template <typename T>    
 wr_ptr<T> make_wr_ptr(tx_ptr<T>& ptr) {
     transaction* tx = transaction::current_transaction();
-    if (tx==0) throw "error";
     return wr_ptr<T>(*tx, ptr);
 }
 
 template <typename T>    
 void delete_ptr(wr_ptr<T> ptr) {
     if (ptr.ptr_==0) return;
-    if (ptr.ptr_->transaction_==0) delete ptr.ptr_;      
-    ptr.ptr_->transaction_->delete_tx_ptr(ptr.ptr_);
+    ptr.tx_.delete_tx_ptr(ptr.ptr_);
 }
 
+template <typename T>    
+void delete_ptr(transaction& tx, wr_ptr<T> const& ptr) {
+    if (ptr.ptr_==0) return;
+    tx.delete_tx_ptr(ptr.ptr_);
+}
 
 //=========================
 

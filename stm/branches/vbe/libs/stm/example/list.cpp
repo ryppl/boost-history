@@ -11,8 +11,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-///////////////////////////////////////////////////////////////////////////////
-
 #include <boost/stm.hpp>
 #include <boost/thread.hpp>
 #include <stdlib.h>
@@ -21,14 +19,8 @@ using namespace std;
 using namespace boost;
 using namespace boost::stm;
 
-#define BOOST_STM_NEW(T, P) \
-    ((T).throw_if_forced_to_abort_on_new(), \
-    (T).as_new(new P))
+//--------------------------------------------------------------------------
 
-#define BOOST_STM_NEW_1(P) \
-    ((boost::stm::transaction::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::transaction::current_transaction(), P):new P)
-
-///////////////////////////////////////////////////////////////////////////////
 namespace test {
 template <typename T>
 class list_node
@@ -47,7 +39,7 @@ public:
    tx_ptr<list_node<T> > next_;
 };
 
-////////////////////////////////////////////////////////////////////////////
+//--------------------------------------------------------------------------
 template <typename T>
 class list
 {
@@ -63,7 +55,7 @@ public:
 
     ~list() { }
 
-    std::size_t size() {
+    std::size_t size() const {
         std::size_t res=0;
         use_atomic(_) {
             rd_ptr<std::size_t> s(_, size_);
@@ -77,9 +69,11 @@ public:
     //--------------------------------------------------------------------------
     void insert(const T& val) {
         use_atomic(_) {
+            cerr << "try" << endl;
             upgrd_ptr<list_node<T> > prev(_, head_);
             upgrd_ptr<list_node<T> > curr(_, head_->next_);
             while (curr) {
+                cerr << "curr" << curr << endl;
                 if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
                 prev = curr;
@@ -138,21 +132,34 @@ public:
     
 };
 }
+//--------------------------------------------------------------------------
+
 tx_ptr<test::list<int> > l;
 
+void create() {
+    //l=boost::stm::make_tx_ptr<test::list<int> >();
+    atomic(_) {
+        cerr << "create" << endl;
+        l=BOOST_STM_NEW(_,transactional_object<test::list<int> >());
+        cerr << "create" << endl;
+        cerr << l->size() << endl;
+    } catch (...) {  
+        cerr << "aborted" << endl;
+    }
+    cerr << l->size() << endl;
+}
 void insert1() {
     thread_initializer thi;
-    use_atomic(_) {
-        //wr_ptr<test::list<int> > w(_,l);
-        //w->insert(1);
+    atomic(_) {
+        cerr << "try" << endl;
         make_wr_ptr(_,l)->insert(1);
+    } catch(...) {
+        cerr << "aborted" << endl;
     }
 }
 void insert2() {
     thread_initializer thi;
     use_atomic(_) {
-        //wr_ptr<test::list<int> > w(_,l);
-        //w->insert(2);
         make_wr_ptr(_,l)->insert(2);
     }
 }
@@ -160,13 +167,20 @@ void insert2() {
 void insert3() {
     thread_initializer thi;
     use_atomic(_) {
-        //wr_ptr<test::list<int> > w(_,l);
-        //w->insert(3);
         make_wr_ptr(_,l)->insert(3);
     }
 }
+bool check_size(std::size_t val) {
+    int res;
+    use_atomic(_) {
+        cerr << "size" <<make_rd_ptr(_,l)->size()<< endl;
+        res = make_rd_ptr(_,l)->size()==val;
+    }
+    return res;
+}
 int test1() {
-    l=boost::stm::make_tx_ptr<test::list<int> >();
+    create();
+    #if 1
     thread  th1(insert1);
     //thread  th2(insert2);
     //thread  th3(insert2);
@@ -176,9 +190,11 @@ int test1() {
     //th2.join(); 
     //th3.join(); 
     //th4.join(); 
-    int res = (l->size()==1?0:1);
+    #endif
+    bool fails=true;
+    fails= !check_size(1);
     //boost::stm::delete_ptr(l);
-    return res;
+    return fails;
 }
 
 int main() {

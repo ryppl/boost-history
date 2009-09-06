@@ -70,13 +70,13 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
-    
+
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
-   typedef except_and_back_off_on_abort_notice_cm contention_manager_type;  
-#endif   
-#endif   
-    
+   typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
+#endif
+#endif
+
    enum LatmType
    {
       kMinLatmType = 0,
@@ -97,15 +97,15 @@ namespace boost { namespace stm {
 
    typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
-   
+
 #if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-   template <std::size_t size> 
+   template <std::size_t size>
    struct monotonic_storage {
        char storage_[size];
        char* ptr_;
     public:
         monotonic_storage() : ptr_(&storage_[0]) {}
-        template <typename T> 
+        template <typename T>
         char* allocate() {
             union aligned_storage {
                 char val[sizeof(T)] ;
@@ -117,7 +117,7 @@ namespace boost { namespace stm {
         }
         void reset() {ptr_=&storage_[0];}
    };
-#endif   
+#endif
 
 class transaction;
     struct TransactionsStack {
@@ -132,7 +132,7 @@ class transaction;
         std::size_t size() {return stack_.size();}
         transaction* top() {return stack_.top();}
     };
-   
+
 ///////////////////////////////////////////////////////////////////////////////
 // transaction Class
 ///////////////////////////////////////////////////////////////////////////////
@@ -212,7 +212,7 @@ public:
     {
         #if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
         monotonic_storage<6*1000*1000> mstorage_;
-        #endif       
+        #endif
         MemoryContainerList newMem;
         MemoryContainerList delMem;
         WriteContainer writeMem;
@@ -287,8 +287,8 @@ public:
     #if defined(BOOST_STM_CM_STATIC_CONF)
    //static contention_manager_type cm_;
    //inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
-   inline static contention_manager_type* get_contention_manager() { 
-       static contention_manager_type cm_;return &cm_; 
+   inline static contention_manager_type* get_contention_manager() {
+       static contention_manager_type cm_;return &cm_;
    }
    static void cm_abort_on_new(transaction const &t) {return contention_manager_type::abort_on_new(t); }
    static void cm_abort_on_delete(transaction const &t,
@@ -313,7 +313,7 @@ public:
    static void cm_perform_isolated_tx_wait_priority_promotion(transaction &t) {return contention_manager_type::perform_isolated_tx_wait_priority_promotion(t); }
    static void cm_perform_irrevocable_tx_wait_priority_promotion(transaction &t) {return contention_manager_type::perform_irrevocable_tx_wait_priority_promotion(t); }
 
-    #else   
+    #else
    static base_contention_manager *cm_;
    inline static void contention_manager(base_contention_manager *rhs) { delete cm_; cm_ = rhs; }
    inline static base_contention_manager* get_contention_manager() { return cm_; }
@@ -340,7 +340,7 @@ public:
    static void cm_perform_isolated_tx_wait_priority_promotion(transaction &t) {return cm_->perform_isolated_tx_wait_priority_promotion(t); }
    static void cm_perform_irrevocable_tx_wait_priority_promotion(transaction &t) {return cm_->perform_irrevocable_tx_wait_priority_promotion(t); }
 
-    #endif   
+    #endif
 
    inline static void enableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(true); }
    inline static void disableLoggingOfAbortAndCommitSetSize() { bookkeeping_.setIsLoggingAbortAndCommitSize(false); }
@@ -905,7 +905,7 @@ public:
    inline size_t const & thread_id() const { return threadId_; }
 
 private:
-    
+
 
 #ifdef LOGGING_BLOCKS
    static std::string outputBlockedThreadsAndLockedLocks();
@@ -1230,7 +1230,9 @@ private:
 #endif
          return *static_cast<T*>(returnValue);
       }
-      else return *static_cast<T*>(i->second);
+      else {
+          return *static_cast<T*>(i->second);
+      }
    }
 
    //--------------------------------------------------------------------------
@@ -1851,7 +1853,7 @@ private:
 #endif
 
 
-    
+
 ////////////////////////////////////////
 #else   // USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////
@@ -2018,7 +2020,7 @@ private:
 
 public:
     inline static transaction* current_transaction() {return transactions(THREAD_ID).top();}
-    
+
 
 };
 
@@ -2027,22 +2029,22 @@ template <class T> T* cache_allocate() {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
     return  reinterpret_cast<T*>(T::retrieve_mem(sizeof(T)));
     #elif defined(BOOST_STM_CACHE_USE_MALLOC)
-    return  reinterpret_cast<T*>(malloc(sizeof(T)));   
+    return  reinterpret_cast<T*>(malloc(sizeof(T)));
     #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
     return reinterpret_cast<T*>(context_.mstorage_.allocate<T>());
-    #else 
+    #else
     #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
     #endif
 }
 
-// this function must be specialized for objects that are non transactional 
+// this function must be specialized for objects that are non transactional
 // by deleting the object
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
 namespace partial_specialization_workaround {
 template <class T>
 struct cache_deallocate;
-    
+
 template <class T>
 struct cache_deallocate {
     static void apply(T* ptr) {
@@ -2053,7 +2055,7 @@ struct cache_deallocate {
         #elif defined(BOOST_STM_CACHE_USE_MALLOC)
             free(ptr);
         #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-        #else 
+        #else
         #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER must be defined"
         #endif
         }
@@ -2074,12 +2076,12 @@ template <class T> void cache_deallocate(T*ptr) {
 
 #else //!BOOST_STM_NO_PARTIAL_SPECIALIZATION
 
-template <class T>  
+template <class T>
 inline void cache_deallocate(transactional_object<std::vector<T> >* ptr) {
     delete ptr;
 }
 
-template <class T>  
+template <class T>
 inline void cache_deallocate(T* ptr) {
     if (ptr) {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
@@ -2088,7 +2090,7 @@ inline void cache_deallocate(T* ptr) {
     #elif defined(BOOST_STM_CACHE_USE_MALLOC)
         free(ptr);
     #elif defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-    #else 
+    #else
     #error "BOOST_STM_CACHE_USE_MEMORY_MANAGER or BOOST_STM_CACHE_USE_MALLOC must be defined"#endif
     #endif
     }
@@ -2096,13 +2098,13 @@ inline void cache_deallocate(T* ptr) {
 #endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
 
 // this function must be specialized for objects that are non transactional,
-// by calling to new of the copy constructor 
+// by calling to new of the copy constructor
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
 namespace partial_specialization_workaround {
 template <class T>
 struct cache_new_copy_constructor;
-    
+
 template <class T>
 struct cache_new_copy_constructor {
     static inline T* apply(const T& val) {
@@ -2112,7 +2114,7 @@ struct cache_new_copy_constructor {
             throw std::bad_alloc();
         }
         boost::stm::cache_restore(&val, p);
-        //std::uninitialized_copy(&val,(&val)+1, p); 
+        //std::uninitialized_copy(&val,(&val)+1, p);
         return p;
     }
 };
@@ -2120,7 +2122,7 @@ struct cache_new_copy_constructor {
 template <class T, class A>
 struct cache_new_copy_constructor<transactional_object<std::vector<T,A> > > {
     static inline transactional_object<std::vector<T,A> >* apply(const transactional_object<std::vector<T,A> >& val) {
-        return new transactional_object<std::vector<T,A> >(val);    
+        return new transactional_object<std::vector<T,A> >(val);
     }
 };
 } // partial_specialization_workaround
@@ -2131,12 +2133,12 @@ inline T* cache_new_copy_constructor(const T& val) {
 }
 #else //BOOST_STM_NO_PARTIAL_SPECIALIZATION
 
-template <class T> 
+template <class T>
 inline transactional_object<std::vector<T> >* cache_new_copy_constructor(const transactional_object<std::vector<T> >& val) {
-    return new transactional_object<std::vector<T> >(val);    
+    return new transactional_object<std::vector<T> >(val);
 }
 
-template <class T> 
+template <class T>
 inline T* cache_new_copy_constructor(const T& val) {
     T* p = cache_allocate<T>();
     if (p==0) {
@@ -2144,7 +2146,7 @@ inline T* cache_new_copy_constructor(const T& val) {
         throw std::bad_alloc();
     }
     cache_restore(&val, p);
-    //std::uninitialized_copy(&val,(&val)+1, p); 
+    //std::uninitialized_copy(&val,(&val)+1, p);
     return p;
 }
 #endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
@@ -2155,21 +2157,21 @@ inline void cache_release(base_transaction_object* ptr) {
     //cache_deallocate(ptr);
     ptr->cache_deallocate();
 #else
-    delete ptr;    
+    delete ptr;
 #endif
 }
 
-template <class T> 
+template <class T>
 inline T* cache_new_copy(const T& val) {
 #ifdef BOOST_STM_USE_UNASIGNED_COPY
     return cache_new_copy_constructor(val);
 #else
-    return new T(val);    
+    return new T(val);
 #endif
 }
 
 template <class T> void cache_restore(const T* const ori, T* target);
-// When BOOST_STM_USE_UNASIGNED_COPY is defined 
+// When BOOST_STM_USE_UNASIGNED_COPY is defined
 // this function must be specialized for objects that are non transactional by deleting the object, e.g.
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
@@ -2181,7 +2183,7 @@ template <class T> struct cache_restore;
 template <class T>
 struct cache_restore {
     static inline void apply(const T* const ori, T* target) {
-        std::uninitialized_copy(ori,ori+1, target); 
+        std::uninitialized_copy(ori,ori+1, target);
     }
 };
 
@@ -2212,18 +2214,22 @@ template <class T> void cache_restore(const transactional_object<std::vector<T> 
 
 template <class T> void cache_restore(const T* const ori, T* target) {
 #ifdef BOOST_STM_USE_UNASIGNED_COPY
-    std::uninitialized_copy(ori,ori+1, target); 
+    std::uninitialized_copy(ori,ori+1, target);
 #else
     *target=*ori;
 #endif
 }
 #endif
 
-
+//-----------------------------------------------------------------------------
+// scoped thread initializer calling transaction::initialize_thread() in the
+// constructor and transaction::terminate_thread() in the destructor
+//-----------------------------------------------------------------------------
 struct thread_initializer {
     thread_initializer() {transaction::initialize_thread();}
     ~thread_initializer() {transaction::terminate_thread();}
 };
+
 #if 0
 
 template <>
@@ -2252,18 +2258,29 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 // rand()+1 check is necessarily complex so smart compilers can't
 // optimize the if away
 //---------------------------------------------------------------------------
-#define use_atomic(T) if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
-#define try_atomic(T) if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
-#define atomic(T)     if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
+//#define use_atomic(T) if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
+//#define try_atomic(T) if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
+//#define atomic(T)     if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
 
+#define use_atomic(T) for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
+#define try_atomic(T) for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
+#define atomic(T)     for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
 
 
 #define catch_before_retry(E) catch (boost::stm::aborted_tx &E)
 #define before_retry catch (boost::stm::aborted_tx &)
 #define end_atom catch (boost::stm::aborted_tx &) {}
 
-} // core namespace
-}
+#define BOOST_STM_NEW(T, P) \
+    ((T).throw_if_forced_to_abort_on_new(), \
+    (T).as_new(new P))
+
+#define BOOST_STM_NEW_1(P) \
+    ((boost::stm::transaction::current_transaction()!=0)?BOOST_STM_NEW(*boost::stm::transaction::current_transaction(), P):new P)
+
+} // stm  namespace
+} // boost namespace
+
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
 #include <boost/stm/detail/auto_lock.hpp>

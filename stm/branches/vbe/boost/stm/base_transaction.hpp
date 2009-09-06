@@ -50,16 +50,21 @@
 
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
+
+//-----------------------------------------------------------------------------
+// forward declarations    
+//-----------------------------------------------------------------------------
+
 template <class T> void cache_deallocate(T*);
 template <class T> void cache_restore(const T* const ori, T* target);
 template <class T> inline T* cache_new_copy_constructor(const T&);
+class transaction;
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
 typedef pthread_mutex_t PLOCK;
 #else
 typedef boost::mutex PLOCK;
 #endif
-
 
 //-----------------------------------------------------------------------------
 // boolean which is used to invoke "begin_transaction()" upon transaction
@@ -171,13 +176,24 @@ typedef aborted_transaction_exception aborted_tx;
    inline void unlock(PLOCK &lock) { lock.unlock(); }
    inline void unlock(PLOCK *lock) { lock->unlock(); }
 #endif
-//-----------------------------------------------------------------------------
-// forward declaration
-//-----------------------------------------------------------------------------
-class transaction;
 
 //-----------------------------------------------------------------------------
+// this is the base class of all the transactional objects.
+// it tracks:   
+//      transactionThread_: the thread identifier holding the write acces to this transactional object
+//      transaction_: the pointer to the transaction
+//      version: the version when performing validation   
+//      newMemory_: states whether this object is a new object
+// transactional objets must specialize the pure virtual functions
+//      copy_state(base_transaction_object const * const rhs)
+//      move_state(base_transaction_object * rhs) if BUILD_MOVE_SEMANTICS
+//      cache_deallocate() if BOOST_STM_USE_UNASIGNED_COPY
+// copy_state is used to copy the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
+// move_state is used to move the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used
+// cache_deallocate is used to release the backup/working copy when the transaction ends if direct/defered policy is used
+// when USE_STM_MEMORY_MANAGER is defined this class provides two functions (retrieve_mem and return_mem) and  to manage a pool of memory
 //-----------------------------------------------------------------------------
+
 class base_transaction_object
 {
 public:
@@ -190,8 +206,8 @@ public:
 #endif
    {}
 
-#if 0       
-    base_transaction_object(const base_transaction_object &t) 
+#if 0
+    base_transaction_object(const base_transaction_object &t)
         : transactionThread_(kInvalidThread)
         , newMemory_(0)
         , transaction_(t)
@@ -199,8 +215,8 @@ public:
         , version_(0)
 #endif
    {}
-#endif       
-       
+#endif
+
    virtual void copy_state(base_transaction_object const * const rhs) = 0;
 #if BUILD_MOVE_SEMANTICS
    virtual void move_state(base_transaction_object * rhs) = 0;
@@ -208,9 +224,9 @@ public:
    virtual void move_state(base_transaction_object * rhs) {};
 #endif
    virtual ~base_transaction_object() {};
-#ifdef BOOST_STM_USE_UNASIGNED_COPY      
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
     virtual void cache_deallocate()=0;
-#endif       
+#endif
 
    void transaction_thread(size_t rhs) const { transactionThread_ = rhs; }
    size_t const & transaction_thread() const { return transactionThread_; }
@@ -226,7 +242,7 @@ public:
 
    transaction*& get_transaction() const {return transaction_;}
    //transaction* get_transaction() const {return transaction_;}
-   
+
 #if PERFORMING_VALIDATION
    size_t version_;
 #endif
@@ -291,6 +307,12 @@ private:
 
 
 //-----------------------------------------------------------------------------
+// transaction object mixin
+// Provides the definition of the virtual functions
+//      copy_state: relaying on the cache_restore<T> generic function
+//      move_state and
+//      cache_deallocate: relaying on the cache_restore<T> generic function
+// Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 //-----------------------------------------------------------------------------
 template <class Derived>
 class transaction_object : public base_transaction_object
@@ -300,7 +322,7 @@ public:
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
-        cache_restore(static_cast<Derived const * const>(rhs), static_cast<Derived *>(this));
+        boost::stm::cache_restore(static_cast<Derived const * const>(rhs), static_cast<Derived *>(this));
    }
 
 #if BUILD_MOVE_SEMANTICS
@@ -311,12 +333,12 @@ public:
    }
 #endif
 
-#ifdef BOOST_STM_USE_UNASIGNED_COPY     
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
     virtual void cache_deallocate() {
         boost::stm::cache_deallocate(this);
     }
-   
-#endif       
+
+#endif
 
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
@@ -390,61 +412,66 @@ private:
 //-----------------------------------------------------------------------------
 // transactional object wrapper
 // A transactional_object<T> is a base_transaction_object wrapping an instance of type T
-// 
+// Provides the definition of the virtual functions
+//      forward constructors to the wrapped type
+//      copy_state: relaying on the cache_restore<T> generic function
+//      move_state and
+//      cache_deallocate: relaying on the cache_restore<T> generic function
+// Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
+//
 // If a class D inherits from B we have that transactional_object<D> dont inherits from transactional_object<B>, but
-// we can static/dynamic cast them robustly. 
+// we can static/dynamic cast them robustly.
 // Evidently the std::static_cast/std::dynamic_cast do not works. We need to define the specific cast
-// 
-// transactional_object<D>* d=...; 
+//
+// transactional_object<D>* d=...;
 // transactional_object<B>* b=tx_static_cast<B>(d);
-// 
-// transactional_object<B>* b=...; 
+//
+// transactional_object<B>* b=...;
 // transactional_object<D>* d=tx_dynamic_cast<B>(b);
-// 
+//
 //-----------------------------------------------------------------------------
-
 
 template <typename T>
 class transactional_object : public base_transaction_object {
-public:    
+public:
     T value;
-   
+
     transactional_object() {}
-    transactional_object(const T*ptr) 
+    transactional_object(const T*ptr)
         : base_transaction_object()
         , value(*ptr) {}
-            
-    transactional_object(transactional_object<T> const & r) 
+
+    transactional_object(transactional_object<T> const & r)
         : base_transaction_object(r)
         , value(r.value) {}
-            
+
     template <typename T1>
-    transactional_object(T1 const &p1) 
+    transactional_object(T1 const &p1)
         : base_transaction_object()
         , value(p1) {}
 
     template <typename T1, typename T2>
-    transactional_object(T1 const &p1, T2 const &p2) 
+    transactional_object(T1 const &p1, T2 const &p2)
         : base_transaction_object()
         , value(p1,p2) {}
 
-    transactional_object & operator=(transactional_object const & r)  // never throws        
+    transactional_object & operator=(transactional_object const & r)  // =default never throws
     {
         this->transaction_=r.transaction_;
         value = r.value;
         return *this;
     }
-            
+
     virtual void copy_state(base_transaction_object const * const rhs) {
-        cache_restore(static_cast<transactional_object<T> const * const>(rhs), 
+        cache_restore(static_cast<transactional_object<T> const * const>(rhs),
                       static_cast<transactional_object<T> *>(this));
     }
 
-#ifdef BOOST_STM_USE_UNASIGNED_COPY      
+#ifdef BOOST_STM_USE_UNASIGNED_COPY
     virtual void cache_deallocate() {
         boost::stm::cache_deallocate(this);
     }
-#endif       
+#endif
 
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
@@ -457,26 +484,33 @@ public:
       return_mem(mem, sizeof(transactional_object<T>));
    }
 #endif
-    
+
 };
 
+//-----------------------------------------------------------------------------
 // gets the transactional_object<T> pointer wrapping the T pointer
+//-----------------------------------------------------------------------------
 template <typename T>
-static transactional_object<T>* up_cast(T* ptr) {
+static transactional_object<T>* tx_up_cast(T* ptr) {
     return reinterpret_cast<transactional_object<T>*>(reinterpret_cast<char*>(ptr)-offsetof(transactional_object<T>, value));
 }
-    
-// 
+
+//-----------------------------------------------------------------------------
+// static_cast two transactional_object's
+//-----------------------------------------------------------------------------
 template <typename T, typename U>
 static transactional_object<T>* tx_static_cast(transactional_object<U>* ptr) {
-    return up_cast(static_cast<T*>(&ptr->value));
+    return tx_up_cast(static_cast<T*>(&ptr->value));
 }
-    
+
+//-----------------------------------------------------------------------------
+// dynamic_cast two transactional_object's
+//-----------------------------------------------------------------------------
 template <typename T, typename U>
 static transactional_object<T>* tx_dynamic_cast(transactional_object<U>* ptr) {
     T* p = dynamic_cast<T*>(&ptr->value);
     if (p==0) return 0;
-    return up_cast(p);
+    return tx_up_cast(p);
 }
 
 
