@@ -212,6 +212,12 @@ public:
 		if (--blk->nUsed == 0 && blk != m_lastBlock)
 			do_deallocate_block_(blk);
 	}
+
+	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p, size_t cb)
+	{
+		BOOST_MEMORY_ASSERT(cb == element_size());
+		deallocate(p);
+	}
 };
 
 #pragma pack()

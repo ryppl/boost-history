@@ -83,6 +83,10 @@ public:
 		// no action
 	}
 
+	void BOOST_MEMORY_CALL deallocate(void* p) {
+		// no action
+	}
+
 	template <class Type>
 	void BOOST_MEMORY_CALL destroy(Type* obj) {
 		// no action

@@ -214,6 +214,11 @@ public:
 		return p2;
 	}
 
+	void BOOST_MEMORY_CALL deallocate(void* p)
+	{
+		// no action
+	}
+
 	void BOOST_MEMORY_CALL deallocate(void* p, size_t cb)
 	{
 		// no action
