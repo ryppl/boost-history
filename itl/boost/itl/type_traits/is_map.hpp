@@ -8,6 +8,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef __itl_type_traits_is_map_JOFA_081107_H__
 #define __itl_type_traits_is_map_JOFA_081107_H__
 
+#include <boost/config.hpp>
+
 namespace boost{ namespace itl
 {
     template <class Type> struct is_map

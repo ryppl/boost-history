@@ -45,7 +45,6 @@ public:
     void setProfile()
     {
         const int sum_of_shares = 100;
-        const int law_share  = sum_of_shares / Laws_size;
 
         _lawChoice.setSize(Laws_size);
         _lawChoice.setMaxWeights(sum_of_shares);

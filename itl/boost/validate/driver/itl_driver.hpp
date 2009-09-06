@@ -94,7 +94,7 @@ namespace boost{namespace itl
                 long law_validation_count = it->CONT_VALUE.count();
                 double avg_law_evaluation_time = 
                     it->CONT_VALUE.time()/(law_validation_count);
-                printf("%3d %-58s%9d%7.0lf\n", 
+                printf("%3d %-58s%9ld%7.0lf\n", 
                     valid_count, it->KEY_VALUE.c_str(), law_validation_count, avg_law_evaluation_time);
 
                 avg_evaluation_time += avg_law_evaluation_time;
@@ -105,7 +105,7 @@ namespace boost{namespace itl
             std::cout << "------------------------------------------------------------------------------" << std::endl;
             // Summary for the current cycle
             double avg_evaluation_time_per_law = avg_evaluation_time/_frequencies.size();
-            printf( "    %10.3lf%-50s%7d%7.0lf\n", 
+            printf( "    %10.3lf%-50s%7ld%7.0lf\n", 
                     avg_evaluation_time_per_law, " ", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
