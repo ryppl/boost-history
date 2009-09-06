@@ -19,7 +19,6 @@ Function-templates for discrete Datatypes like int, unsigned or
 #include <stdio.h>
 #include <string>
 #include <sstream>
-#pragma warning(disable: 4996) //warns against usage of printf other format-functions
 
 namespace boost{ namespace itl
 {    
