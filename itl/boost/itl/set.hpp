@@ -658,27 +658,27 @@ template <class Type>
 struct is_set<itl::set<Type> >
 { 
     typedef is_set<itl::set<Type> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template <class Type>
 struct is_interval_container<itl::set<Type> >
 { 
     typedef is_interval_container<itl::set<Type> > type;
-    static const bool value = false; 
+    BOOST_STATIC_CONSTANT(bool, value = false); 
 };
 
 template <class Type>
 struct is_interval_splitter<itl::set<Type> >
-{ static const bool value = false; };
+{ BOOST_STATIC_CONSTANT(bool, value = false); };
 
 template <class Type>
 struct absorbs_neutrons<itl::set<Type> >
-{ static const bool value = false; };
+{ BOOST_STATIC_CONSTANT(bool, value = false); };
 
 template <class Type>
 struct is_total<itl::set<Type> >
-{ static const bool value = false; };
+{ BOOST_STATIC_CONSTANT(bool, value = false); };
 
 template <class Type>
 struct type_to_string<itl::set<Type> >

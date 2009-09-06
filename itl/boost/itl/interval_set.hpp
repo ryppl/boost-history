@@ -327,14 +327,14 @@ template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class I
 struct is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_set<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template <class DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 struct is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_container<itl::interval_set<DomainT,Compare,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 

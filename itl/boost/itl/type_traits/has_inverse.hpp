@@ -16,7 +16,7 @@ namespace boost{ namespace itl
     template <class Type> struct has_inverse
     { 
         typedef has_inverse<Type> type;
-        static const bool value = is_signed<Type>::value; 
+        BOOST_STATIC_CONSTANT(bool, value = (is_signed<Type>::value)); 
     };
 
 }} // namespace boost itl

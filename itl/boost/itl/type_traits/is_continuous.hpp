@@ -17,17 +17,17 @@ namespace boost{ namespace itl
     template<> struct is_continuous<float>
     {
         typedef is_continuous<float> type;
-        static const bool value = true;
+        BOOST_STATIC_CONSTANT(bool, value = true);
     };
     template<> struct is_continuous<double>
     {
         typedef is_continuous<double> type;
-        static const bool value = true;
+        BOOST_STATIC_CONSTANT(bool, value = true);
     };
     template<> struct is_continuous<std::string>
     {
         typedef is_continuous<std::string> type;
-        static const bool value = true;
+        BOOST_STATIC_CONSTANT(bool, value = true);
     };
 
 #ifdef ITL_NEEDS_RATIONAL_IS_CONTINUOUS
@@ -36,14 +36,14 @@ namespace boost{ namespace itl
     struct is_continuous<boost::rational<Integral> >
     {
         typedef is_continuous<boost::rational<Integral> > type;
-        static const bool value = true;
+        BOOST_STATIC_CONSTANT(bool, value = true);
     };
 #endif
 
     template <class Type> struct is_continuous
     {
         typedef is_continuous<Type> type;
-        static const bool value = false;
+        BOOST_STATIC_CONSTANT(bool, value = false);
     };
 
 

@@ -13,7 +13,7 @@ namespace boost{ namespace itl
     template <class Type> struct absorbs_neutrons
     {
         typedef absorbs_neutrons<Type> type;
-        static const bool value = false; 
+        BOOST_STATIC_CONSTANT(bool, value = false); 
     };
 
 }} // namespace boost itl

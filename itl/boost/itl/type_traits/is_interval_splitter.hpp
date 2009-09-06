@@ -13,7 +13,7 @@ namespace boost{ namespace itl
     template <class Type> struct is_interval_splitter
     { 
         typedef is_interval_splitter<Type> type;
-        static const bool value = false; 
+        BOOST_STATIC_CONSTANT(bool, value = false); 
     };
 
 }} // namespace boost itl

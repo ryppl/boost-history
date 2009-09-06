@@ -1490,7 +1490,7 @@ template
 struct is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef is_set<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template 
@@ -1501,7 +1501,7 @@ template
 struct is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef is_map<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template 
@@ -1512,7 +1512,7 @@ template
 struct has_inverse<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef has_inverse<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    static const bool value = has_inverse<CodomainT>::value; 
+    BOOST_STATIC_CONSTANT(bool, value = (has_inverse<CodomainT>::value)); 
 };
 
 template 
@@ -1523,7 +1523,7 @@ template
 struct is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> >
 { 
     typedef is_interval_container<itl::interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 

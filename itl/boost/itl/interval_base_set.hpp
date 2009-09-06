@@ -745,7 +745,7 @@ template<class SubType,
 struct is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_set<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 template<class SubType,
@@ -753,7 +753,7 @@ template<class SubType,
 struct is_interval_container<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> >
 { 
     typedef is_interval_container<itl::interval_base_set<SubType,DomainT,Compare,Interval,Alloc> > type;
-    static const bool value = true; 
+    BOOST_STATIC_CONSTANT(bool, value = true); 
 };
 
 

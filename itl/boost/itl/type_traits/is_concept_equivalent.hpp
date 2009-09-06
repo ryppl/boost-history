@@ -17,8 +17,9 @@ namespace boost{ namespace itl
     struct is_concept_equivalent
     {
         typedef is_concept_equivalent<IsConcept, LeftT, RightT> type;
-        static const bool value =
-            mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value;
+        BOOST_STATIC_CONSTANT(bool, value =
+            (mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >::value)
+			);
     };
 
 }} // namespace boost itl

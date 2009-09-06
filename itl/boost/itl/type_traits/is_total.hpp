@@ -13,7 +13,7 @@ namespace boost{ namespace itl
     template <class Type> struct is_total
     { 
         typedef is_total<Type> type;
-        static const bool value = false; 
+        BOOST_STATIC_CONSTANT(bool, value = false); 
     };
 
 }} // namespace boost itl
