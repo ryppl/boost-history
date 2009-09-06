@@ -8,6 +8,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #ifndef __itl_type_traits_is_interval_container_JOFA_081004_H__
 #define __itl_type_traits_is_interval_container_JOFA_081004_H__
 
+#include <boost/mpl/and.hpp> 
+
 namespace boost{ namespace itl
 {
     template <class Type> struct is_interval_container
@@ -21,7 +23,7 @@ namespace boost{ namespace itl
     {
         typedef is_interval_map<Type> type; 
         static const bool value =
-            is_interval_container<Type>::value && is_map<Type>::value; 
+			mpl::and_<is_interval_container<Type>, is_map<Type> >::value; 
     };
 
     template<class Type>

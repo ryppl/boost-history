@@ -236,7 +236,7 @@ struct is_interval_set_right_combinable
         mpl::and_
         <
             is_interval_set<GuideT>
-          ,    mpl::or_
+          , mpl::or_
             <
                 is_interval_set_derivative<GuideT, CompanionT> 
               , is_concept_compatible<is_interval_set, GuideT, CompanionT>
@@ -409,9 +409,12 @@ struct is_coarser_interval_set_companion
 {
     typedef is_coarser_interval_set_companion<GuideT, CompanionT> type;
     static const bool value =
-           is_interval_set_companion<GuideT, CompanionT>::value
-        && (  segmentational_fineness<GuideT>::value 
-            > segmentational_fineness<CompanionT>::value);
+		mpl::and_
+		<
+           is_interval_set_companion<GuideT, CompanionT>
+         , mpl::bool_<(  segmentational_fineness<GuideT>::value 
+                       > segmentational_fineness<CompanionT>::value)>
+		>::value;
 };
 
 template<class GuideT, class CompanionT> 
@@ -419,9 +422,12 @@ struct is_coarser_interval_map_companion
 {
     typedef is_coarser_interval_map_companion<GuideT, CompanionT> type;
     static const bool value =
-           is_interval_map_companion<GuideT, CompanionT>::value
-        && (  segmentational_fineness<GuideT>::value 
-            > segmentational_fineness<CompanionT>::value);
+		mpl::and_
+		<
+           is_interval_map_companion<GuideT, CompanionT>
+         , mpl::bool_<(  segmentational_fineness<GuideT>::value 
+                       > segmentational_fineness<CompanionT>::value)>
+		>::value;
 };
 
 //------------------------------------------------------------------------------
