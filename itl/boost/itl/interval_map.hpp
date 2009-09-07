@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_interval_map_h_JOFA_080705__
-#define __itl_interval_map_h_JOFA_080705__
+#ifndef BOOST_ITL_INTERVAL_MAP_HPP_JOFA_080705
+#define BOOST_ITL_INTERVAL_MAP_HPP_JOFA_080705
 
 #include <boost/assert.hpp>
 #include <boost/itl/type_traits/is_map.hpp>

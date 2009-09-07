@@ -5,8 +5,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_functors_H_JOFA_080315__
-#define __itl_functors_H_JOFA_080315__
+#ifndef BOOST_ITL_FUNCTORS_HPP_JOFA_080315
+#define BOOST_ITL_FUNCTORS_HPP_JOFA_080315
 
 #include <functional>
 #include <boost/itl/type_traits/neutron.hpp>

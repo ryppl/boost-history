@@ -33,8 +33,8 @@ class itl::string_list
     Can be useful for string split and join.
     Also simple text-formating can be done. 
 --------------------------------------------------------------------*/
-#ifndef __itl_string_list_H_JOFA_990603__
-#define __itl_string_list_H_JOFA_990603__
+#ifndef BOOST_ITL_STRING_LIST_HPP_JOFA_990603
+#define BOOST_ITL_STRING_LIST_HPP_JOFA_990603
 
 #include <string>    
 #include <list>    

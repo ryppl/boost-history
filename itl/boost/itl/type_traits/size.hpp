@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_size_JOFA_080911_H__
-#define __itl_type_traits_size_JOFA_080911_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_SIZE_HPP_JOFA_080911
+#define BOOST_ITL_TYPE_TRAITS_SIZE_HPP_JOFA_080911
 
 // I DO NOT #include boost/itl/itl_<date_time_adapter>.hpp here, because it
 // HAS TO be included by client code prior to this location.

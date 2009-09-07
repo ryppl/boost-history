@@ -7,6 +7,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
+#include <boost/config/warning_disable.hpp>
+
 namespace boost{namespace itl
 {
 

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_is_combinable_JOFA_090115_H__
-#define __itl_is_combinable_JOFA_090115_H__
+#ifndef BOOST_ITL_IS_COMBINABLE_HPP_JOFA_090115
+#define BOOST_ITL_IS_COMBINABLE_HPP_JOFA_090115
 
 #include <boost/mpl/bool.hpp> 
 #include <boost/mpl/if.hpp> 
@@ -25,7 +25,7 @@ struct is_overloadable
     typedef is_overloadable<Type> type;
     BOOST_STATIC_CONSTANT(bool, value = 
         (is_same<Type, typename Type::overloadable_type>::value)
-		);
+        );
 };
 
 
@@ -37,7 +37,7 @@ struct is_codomain_equal
     BOOST_STATIC_CONSTANT(bool, value =
         (is_same<typename LeftT::codomain_type, 
                  typename RightT::codomain_type>::value)
-		);
+        );
 };
 
 //NOTE: Equality of compare order implies the equality of the domain_types
@@ -48,7 +48,7 @@ struct is_domain_compare_equal
     BOOST_STATIC_CONSTANT(bool, value =
         (is_same<typename LeftT::domain_compare, 
                  typename RightT::domain_compare>::value)
-		);
+        );
 };
 
 template<class LeftT, class RightT>
@@ -58,7 +58,7 @@ struct is_codomain_type_equal
     BOOST_STATIC_CONSTANT(bool, value =
         (mpl::and_<is_domain_compare_equal<LeftT, RightT>, 
                   is_codomain_equal<LeftT, RightT> >::value)
-		);
+        );
 };
 
 
@@ -73,7 +73,7 @@ struct is_concept_compatible
             mpl::and_<IsConcept<LeftT>, IsConcept<RightT> >
           , is_codomain_type_equal<LeftT, RightT>
         >::value)
-		);
+        );
 };
 
 template<template<class>class LeftConcept, 
@@ -88,7 +88,7 @@ struct is_concept_combinable
             mpl::and_<LeftConcept<LeftT>, RightConcept<RightT> >
           , is_domain_compare_equal<LeftT, RightT>
         >::value)
-		);
+        );
 };
 
 template<class LeftT, class RightT>
@@ -101,7 +101,7 @@ struct is_intra_combinable
             is_concept_compatible<is_interval_set, LeftT, RightT>
           , is_concept_compatible<is_interval_map, LeftT, RightT>
         >::value)
-		);
+        );
 };
 
 //------------------------------------------------------------------------------
@@ -118,7 +118,7 @@ struct is_cross_combinable
             is_concept_combinable<is_interval_set, is_interval_map, LeftT, RightT>
           , is_concept_combinable<is_interval_map, is_interval_set, LeftT, RightT>
         >::value)
-		);
+        );
 };
 
 template<class LeftT, class RightT>
@@ -128,7 +128,7 @@ struct is_inter_combinable
     BOOST_STATIC_CONSTANT(bool, value =
         (mpl::or_<is_intra_combinable<LeftT,RightT>, 
                  is_cross_combinable<LeftT,RightT> >::value)
-		);
+        );
 };
 
 //------------------------------------------------------------------------------
@@ -207,7 +207,7 @@ struct is_intra_derivative
           , mpl::and_<is_interval_map<Type>, 
                       is_interval_map_derivative<Type, AssociateT> >
         >::value)
-		);
+        );
 };
 
 template<class Type, class AssociateT>
@@ -220,7 +220,7 @@ struct is_cross_derivative
             is_interval_map<Type>
           , is_interval_set_derivative<Type, AssociateT>
         >::value)
-		);
+        );
 };
 
 template<class Type, class AssociateT>
@@ -233,7 +233,7 @@ struct is_inter_derivative
             is_intra_derivative<Type, AssociateT> 
           , is_cross_derivative<Type, AssociateT>
         >::value)
-		);
+        );
 };
 
 //------------------------------------------------------------------------------
@@ -254,7 +254,7 @@ struct is_interval_set_right_combinable
               , is_concept_compatible<is_interval_set, GuideT, CompanionT>
             >
         >::value)
-		);
+        );
 };
 
 template<class GuideT, class CompanionT>
@@ -271,7 +271,7 @@ struct is_interval_map_right_intra_combinable
               , is_concept_compatible<is_interval_map, GuideT, CompanionT>
             >
         >::value)
-		);
+        );
 };
 
 template<class GuideT, class CompanionT>
@@ -288,7 +288,7 @@ struct is_interval_map_right_cross_combinable
               , is_concept_combinable<is_interval_map, is_interval_set, GuideT, CompanionT>
             >
         >::value)
-		);
+        );
 };
 
 template<class GuideT, class CompanionT>
@@ -301,7 +301,7 @@ struct is_interval_map_right_inter_combinable
             is_interval_map_right_intra_combinable<GuideT, CompanionT> 
           , is_interval_map_right_cross_combinable<GuideT, CompanionT> 
         >::value)
-		);
+        );
 };
 
 
@@ -315,7 +315,7 @@ struct is_right_intra_combinable
             is_interval_set_right_combinable<GuideT, CompanionT> 
           , is_interval_map_right_intra_combinable<GuideT, CompanionT> 
         >::value)
-		);
+        );
 };
 
 template<class GuideT, class CompanionT>
@@ -328,7 +328,7 @@ struct is_right_inter_combinable
             is_interval_set_right_combinable<GuideT, CompanionT> 
           , is_interval_map_right_inter_combinable<GuideT, CompanionT> 
         >::value)
-		);
+        );
 };
 
 template<class GuideT, class IntervalSetT>
@@ -338,7 +338,7 @@ struct combines_right_to_interval_set
     BOOST_STATIC_CONSTANT(bool, value = 
         (is_concept_combinable<is_interval_container, is_interval_set, 
                                GuideT, IntervalSetT>::value)
-		);
+        );
 };
 
 template<class GuideT, class IntervalMapT>
@@ -356,7 +356,7 @@ struct combines_right_to_interval_container
     BOOST_STATIC_CONSTANT(bool, value = 
         (mpl::or_<combines_right_to_interval_set<GuideT, IntervalContainerT>,
                  combines_right_to_interval_map<GuideT, IntervalContainerT> >::value)
-		);
+        );
 };
 
 
@@ -402,7 +402,7 @@ template<class GuideT, class CompanionT> struct is_interval_set_companion
             combines_right_to_interval_set<GuideT,CompanionT>
           , is_interval_set_derivative<GuideT,CompanionT>
         >::value)
-		);
+        );
 };
 
 
@@ -419,7 +419,7 @@ template<class GuideT, class CompanionT> struct is_interval_map_companion
             combines_right_to_interval_map<GuideT,CompanionT>
           , is_interval_map_derivative<GuideT,CompanionT>
         >::value)
-		);
+        );
 };
 
 
@@ -431,13 +431,13 @@ struct is_coarser_interval_set_companion
 {
     typedef is_coarser_interval_set_companion<GuideT, CompanionT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-		(mpl::and_
-		<
+        (mpl::and_
+        <
            is_interval_set_companion<GuideT, CompanionT>
          , mpl::bool_<(  segmentational_fineness<GuideT>::value 
                        > segmentational_fineness<CompanionT>::value)>
-		>::value)
-		);
+        >::value)
+        );
 };
 
 template<class GuideT, class CompanionT> 
@@ -445,13 +445,13 @@ struct is_coarser_interval_map_companion
 {
     typedef is_coarser_interval_map_companion<GuideT, CompanionT> type;
     BOOST_STATIC_CONSTANT(bool, value =
-		(mpl::and_
-		<
+        (mpl::and_
+        <
            is_interval_map_companion<GuideT, CompanionT>
          , mpl::bool_<(  segmentational_fineness<GuideT>::value 
                        > segmentational_fineness<CompanionT>::value)>
-		>::value)
-		);
+        >::value)
+        );
 };
 
 //------------------------------------------------------------------------------
@@ -485,7 +485,7 @@ struct is_binary_intra_combinable
         (mpl::or_<is_binary_interval_set_combinable<GuideT, CompanionT>,
                  is_binary_interval_map_combinable<GuideT, CompanionT> 
                 >::value)
-		);
+        );
 };
 
 template<class GuideT, class CompanionT>
@@ -498,7 +498,7 @@ struct is_binary_cross_combinable
             , mpl::or_<  is_coarser_interval_map_companion<GuideT, CompanionT>
                        ,         is_interval_set_companion<GuideT, CompanionT> > 
         >::value)
-		);
+        );
 };
 
 template<class GuideT, class CompanionT>
@@ -513,7 +513,7 @@ struct is_binary_inter_combinable
           , mpl::and_<is_interval_set<GuideT>, 
                       is_binary_intra_combinable<GuideT, CompanionT> >
         >::value)
-		);
+        );
 };
 
 

@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_order_h_JOFA_071129__
-#define __itl_order_h_JOFA_071129__
+#ifndef BOOST_ITL_ORDER_HPP_JOFA_071129
+#define BOOST_ITL_ORDER_HPP_JOFA_071129
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/validate/laws/law.hpp>
@@ -206,5 +206,5 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
-#endif // __itl_order_h_JOFA_071129__
+#endif // BOOST_ITL_ORDER_HPP_JOFA_071129
 

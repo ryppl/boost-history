@@ -13,8 +13,8 @@ Function-templates for discrete Datatypes like int, unsigned or
     any class that provides a ++ operator c.f. iterators
 -----------------------------------------------------------------------------*/
 
-#ifndef __itl_TO_STRING_JOFA_000712_H__
-#define __itl_TO_STRING_JOFA_000712_H__
+#ifndef BOOST_ITL_TO_STRING_HPP_JOFA_000712
+#define BOOST_ITL_TO_STRING_HPP_JOFA_000712
 
 #include <stdio.h>
 #include <string>
@@ -29,11 +29,11 @@ struct to_string
 {
     /** Converts all values of types to std::string that implement an operator << */
     static const std::string apply(const Type& value)
-	{
-		std::stringstream repr;
-		repr << value;
-		return repr.str();
-	}
+    {
+        std::stringstream repr;
+        repr << value;
+        return repr.str();
+    }
 };
 
 }} // namespace boost itl

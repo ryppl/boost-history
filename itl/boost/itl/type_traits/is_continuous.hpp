@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_is_continuous_JOFA_080910_H__
-#define __itl_type_traits_is_continuous_JOFA_080910_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_IS_CONTINUOUS_HPP_JOFA_080910
+#define BOOST_ITL_TYPE_TRAITS_IS_CONTINUOUS_HPP_JOFA_080910
 
 #include <string>
 #include <boost/config.hpp>

@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_law_violations_h_JOFA_070411__
-#define __itl_law_violations_h_JOFA_070411__
+#ifndef BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
+#define BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
 
 #include <string>
 #include <boost/itl/set.hpp>
@@ -172,5 +172,5 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
-#endif //__itl_law_violations_h_JOFA_070411__
+#endif //BOOST_ITL_LAW_VIOLATIONS_HPP_JOFA_070411
 

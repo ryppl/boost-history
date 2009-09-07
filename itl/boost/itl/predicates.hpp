@@ -7,8 +7,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_predicates_H_JOFA_990224__
-#define __itl_predicates_H_JOFA_990224__
+#ifndef BOOST_ITL_PREDICATES_HPP_JOFA_990224
+#define BOOST_ITL_PREDICATES_HPP_JOFA_990224
 
 #include <functional>
 #include <boost/itl/type_traits/type_to_string.hpp>

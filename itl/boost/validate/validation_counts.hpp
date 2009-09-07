@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_validation_counts_hpp_JOFA_090713__
-#define __itl_validation_counts_hpp_JOFA_090713__
+#ifndef BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713
+#define BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713
 
 
 namespace boost{namespace itl
@@ -42,4 +42,4 @@ bool operator == (const validation_counts& left, const validation_counts& right)
 
 }} // namespace itl boost
 
-#endif // __itl_validation_counts_hpp_JOFA_090713__
+#endif // BOOST_ITL_VALIDATION_COUNTS_HPP_JOFA_090713

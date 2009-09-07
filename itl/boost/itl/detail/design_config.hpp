@@ -12,8 +12,8 @@ template template parameters or
 template type parameter
 by setting defines in this file.
 +-----------------------------------------------------------------------------*/
-#ifndef  __itl_design_config_hpp_JOFA_090214__
-#define  __itl_design_config_hpp_JOFA_090214__
+#ifndef  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
+#define  BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
 
 
 //------------------------------------------------------------------------------
@@ -78,6 +78,6 @@ by setting defines in this file.
 
 //------------------------------------------------------------------------------
 
-#endif // __itl_design_config_hpp_JOFA_090214__
+#endif // BOOST_ITL_DESIGN_CONFIG_HPP_JOFA_090214
 
 

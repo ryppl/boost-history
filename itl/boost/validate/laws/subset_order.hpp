@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_subset_ordering_hpp_JOFA_090202__
-#define __itl_subset_ordering_hpp_JOFA_090202__
+#ifndef BOOST_ITL_SUBSET_ORDERING_HPP_JOFA_090202
+#define BOOST_ITL_SUBSET_ORDERING_HPP_JOFA_090202
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/interval_morphism.hpp>
@@ -216,5 +216,5 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
-#endif // __itl_subset_ordering_hpp_JOFA_090202__
+#endif // BOOST_ITL_SUBSET_ORDERING_HPP_JOFA_090202
 

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_neutron_JOFA_080912_H__
-#define __itl_type_traits_neutron_JOFA_080912_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_NEUTRON_HPP_JOFA_080912
+#define BOOST_ITL_TYPE_TRAITS_NEUTRON_HPP_JOFA_080912
 
 #include <boost/itl/type_traits/type_to_string.hpp>
 

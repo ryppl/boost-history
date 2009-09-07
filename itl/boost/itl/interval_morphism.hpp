@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_interval_morphism_H_JOFA_080315__
-#define __itl_interval_morphism_H_JOFA_080315__
+#ifndef BOOST_ITL_INTERVAL_MORPHISM_HPP_JOFA_080315
+#define BOOST_ITL_INTERVAL_MORPHISM_HPP_JOFA_080315
 
 #include <boost/itl/detail/notate.hpp>
 namespace boost{namespace itl

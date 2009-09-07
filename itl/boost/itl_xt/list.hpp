@@ -32,8 +32,8 @@ class itl::list
     a general list class that extends stl-lists
     for concepts InplaceAddable and InplaceSubtractable
 --------------------------------------------------------------------*/
-#ifndef __itl_list_h_JOFA_070519__
-#define __itl_list_h_JOFA_070519__
+#ifndef BOOST_ITL_LIST_HPP_JOFA_070519
+#define BOOST_ITL_LIST_HPP_JOFA_070519
 
 #include <string>
 #include <list>
@@ -446,5 +446,5 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
-#endif // __itl_list_h_JOFA_070519__
+#endif // BOOST_ITL_LIST_HPP_JOFA_070519
 

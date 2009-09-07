@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_succ_pred_JOFA_080913_H__
-#define __itl_type_traits_succ_pred_JOFA_080913_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_SUCC_PRED_HPP_JOFA_080913
+#define BOOST_ITL_TYPE_TRAITS_SUCC_PRED_HPP_JOFA_080913
 
 namespace boost{ namespace itl
 {

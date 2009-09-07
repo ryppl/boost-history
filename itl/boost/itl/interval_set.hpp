@@ -6,8 +6,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_interval_set_hpp_JOFA_990223__
-#define __itl_interval_set_hpp_JOFA_990223__
+#ifndef BOOST_ITL_INTERVAL_SET_HPP_JOFA_990223
+#define BOOST_ITL_INTERVAL_SET_HPP_JOFA_990223
 
 #include <boost/assert.hpp>
 #include <boost/itl/interval_base_set.hpp>

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_is_element_container_JOFA_090830_H__
-#define __itl_type_traits_is_element_container_JOFA_090830_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_IS_ELEMENT_CONTAINER_HPP_JOFA_090830
+#define BOOST_ITL_TYPE_TRAITS_IS_ELEMENT_CONTAINER_HPP_JOFA_090830
 
 #include <boost/mpl/and.hpp> 
 #include <boost/mpl/or.hpp> 
@@ -22,7 +22,7 @@ namespace boost{ namespace itl
         typedef is_element_container<Type> type;
         BOOST_STATIC_CONSTANT(bool, value = 
             (mpl::and_<is_set<Type>, mpl::not_<is_interval_container<Type> > >::value)
-			);
+            );
     };
 
     template<class Type> 
@@ -31,7 +31,7 @@ namespace boost{ namespace itl
         typedef is_element_map<Type> type;
         BOOST_STATIC_CONSTANT(bool, value = 
             (mpl::and_<is_map<Type>, mpl::not_<is_interval_container<Type> > >::value)
-			);
+            );
     };
 
 

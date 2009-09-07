@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_functions_JOFA_090803_H__
-#define __itl_functions_JOFA_090803_H__
+#ifndef BOOST_ITL_FUNCTIONS_HPP_JOFA_090803
+#define BOOST_ITL_FUNCTIONS_HPP_JOFA_090803
 
 #include <boost/utility/enable_if.hpp>
 #include <boost/itl/type_traits/is_element_container.hpp>

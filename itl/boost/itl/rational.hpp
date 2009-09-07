@@ -10,8 +10,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 itl_rational provides adapter code for boost::rational.
 ------------------------------------------------------------------------------*/
 
-#ifndef __itl_rational_JOFA_080913_H__
-#define __itl_rational_JOFA_080913_H__
+#ifndef BOOST_ITL_RATIONAL_HPP_JOFA_080913
+#define BOOST_ITL_RATIONAL_HPP_JOFA_080913
 
 #if defined(_MSC_VER)
 #pragma warning( disable : 4800 ) //warning C4800: 'unsigned int' : forcing value to bool 'true' or 'false' (performance warning)

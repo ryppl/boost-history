@@ -7,8 +7,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_VALUE_SIZE_JOFA_081004_H__
-#define __itl_VALUE_SIZE_JOFA_081004_H__
+#ifndef BOOST_ITL_VALUE_SIZE_HPP_JOFA_081004
+#define BOOST_ITL_VALUE_SIZE_HPP_JOFA_081004
 
 namespace boost{ namespace itl
 {    

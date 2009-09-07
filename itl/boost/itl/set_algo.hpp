@@ -7,8 +7,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_set_algo_H_JOFA_990225__
-#define __itl_set_algo_H_JOFA_990225__
+#ifndef BOOST_ITL_SET_ALGO_HPP_JOFA_990225
+#define BOOST_ITL_SET_ALGO_HPP_JOFA_990225
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/predicates.hpp>

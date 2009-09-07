@@ -25,8 +25,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_string_map_JOFA_021215_H__
-#define __itl_string_map_JOFA_021215_H__
+#ifndef BOOST_ITL_STRING_MAP_HPP_JOFA_021215
+#define BOOST_ITL_STRING_MAP_HPP_JOFA_021215
 
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/map.hpp>
@@ -55,7 +55,7 @@ namespace boost{namespace itl
     };
 }} // namespace boost itl
 
-#endif // __itl_string_map_JOFA_021215_H__
+#endif // BOOST_ITL_STRING_MAP_HPP_JOFA_021215
 
 
 

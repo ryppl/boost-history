@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_induced_relation_hpp_JOFA_090204__
-#define __itl_induced_relation_hpp_JOFA_090204__
+#ifndef BOOST_ITL_INDUCED_RELATION_HPP_JOFA_090204
+#define BOOST_ITL_INDUCED_RELATION_HPP_JOFA_090204
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/validate/laws/law.hpp>
@@ -88,5 +88,5 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
-#endif // __itl_induced_relation_hpp_JOFA_090204__
+#endif // BOOST_ITL_INDUCED_RELATION_HPP_JOFA_090204
 

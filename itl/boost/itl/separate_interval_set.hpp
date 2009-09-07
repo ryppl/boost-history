@@ -5,8 +5,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_separate_interval_set_h_JOFA_080608__
-#define __itl_separate_interval_set_h_JOFA_080608__
+#ifndef BOOST_ITL_SEPARATE_INTERVAL_SET_HPP_JOFA_080608
+#define BOOST_ITL_SEPARATE_INTERVAL_SET_HPP_JOFA_080608
 
 #include <boost/assert.hpp>
 #include <boost/itl/interval_base_set.hpp>

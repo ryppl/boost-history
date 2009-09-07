@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_test_type_lists_JOFA_080916_H__
-#define __itl_test_type_lists_JOFA_080916_H__
+#ifndef BOOST_ITL_TEST_TYPE_LISTS_HPP_JOFA_080916
+#define BOOST_ITL_TEST_TYPE_LISTS_HPP_JOFA_080916
 
 #include <boost/mpl/list.hpp>
 

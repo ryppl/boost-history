@@ -7,8 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_monoid_hpp_JOFA_070411__
-#define __itl_monoid_hpp_JOFA_070411__
+#ifndef BOOST_ITL_MONOID_HPP_JOFA_070411
+#define BOOST_ITL_MONOID_HPP_JOFA_070411
 
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/functors.hpp>
@@ -379,5 +379,5 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
-#endif // __itl_monoid_hpp_JOFA_070411__
+#endif // BOOST_ITL_MONOID_HPP_JOFA_070411
 

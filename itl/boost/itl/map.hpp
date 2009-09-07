@@ -5,8 +5,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_map_h_JOFA_070519__
-#define __itl_map_h_JOFA_070519__
+#ifndef BOOST_ITL_MAP_HPP_JOFA_070519
+#define BOOST_ITL_MAP_HPP_JOFA_070519
 
 #include <string>
 #include <boost/itl/detail/notate.hpp>
@@ -1114,5 +1114,5 @@ struct type_to_string<itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,
 
 }} // namespace itl boost
 
-#endif // __itl_map_h_JOFA_070519__
+#endif // BOOST_ITL_MAP_HPP_JOFA_070519
 

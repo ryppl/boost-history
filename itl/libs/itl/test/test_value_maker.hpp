@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_test_value_maker_JOFA_080916_H__
-#define __itl_test_value_maker_JOFA_080916_H__
+#ifndef BOOST_ITL_TEST_VALUE_MAKER_HPP_JOFA_080916
+#define BOOST_ITL_TEST_VALUE_MAKER_HPP_JOFA_080916
 
 #include <boost/itl/type_traits/neutron.hpp>
 

@@ -6,8 +6,8 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_split_interval_map_h_JOFA_000706__
-#define __itl_split_interval_map_h_JOFA_000706__
+#ifndef BOOST_ITL_SPLIT_INTERVAL_MAP_HPP_JOFA_000706
+#define BOOST_ITL_SPLIT_INTERVAL_MAP_HPP_JOFA_000706
 
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/interval_map.hpp>

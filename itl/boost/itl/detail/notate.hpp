@@ -8,10 +8,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 /*-----------------------------------------------------------------------------
-    Macro definitions for useful and abstract notations e.g. iteration headers
+    Macro definitions for some useful notations e.g. iteration headers
 -----------------------------------------------------------------------------*/
-#ifndef  __itl_notate_hpp_JOFA_990119__
-#define  __itl_notate_hpp_JOFA_990119__
+#ifndef  BOOST_ITL_NOTATE_HPP_JOFA_990119
+#define  BOOST_ITL_NOTATE_HPP_JOFA_990119
 
 
 // Iterations over stl or stl-compatible containers:
@@ -30,6 +30,6 @@ namespace boost{namespace itl
 }} // namespace itl boost
 
 
-#endif // __itl_notate_hpp_JOFA_990119__
+#endif // BOOST_ITL_NOTATE_HPP_JOFA_990119
 
 

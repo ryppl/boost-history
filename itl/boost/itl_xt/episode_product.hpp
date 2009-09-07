@@ -27,8 +27,8 @@ FOR ANY DAMAGES OR OTHER LIABILITY, WHETHER IN CONTRACT, TORT OR OTHERWISE,
 ARISING FROM, OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER
 DEALINGS IN THE SOFTWARE.
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_episode_product_hpp_JOFA_011005_H__
-#define __itl_episode_product_hpp_JOFA_011005_H__
+#ifndef BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
+#define BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
 
 #include <boost/itl/map.hpp>
 #include <boost/itl_xt/episode_set.hpp>
@@ -292,6 +292,6 @@ inline bool operator == (const episode_product<TimeT,TypeDomain>& lhs,
 
 }} // namespace itl boost
 
-#endif // __itl_episode_product_hpp_JOFA_011005_H__
+#endif // BOOST_ITL_EPISODE_PRODUCT_HPP_HPP_JOFA_011005
 
 

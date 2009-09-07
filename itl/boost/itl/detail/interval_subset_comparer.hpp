@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_interval_subset_comparer_JOFA_090827_H__
-#define __itl_interval_subset_comparer_JOFA_090827_H__
+#ifndef BOOST_ITL_INTERVAL_SUBSET_COMPARER_HPP_JOFA_090827
+#define BOOST_ITL_INTERVAL_SUBSET_COMPARER_HPP_JOFA_090827
 
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/detail/notate.hpp>

@@ -12,8 +12,8 @@ It implements incrementation (++) decrementation (--) and a neutral element
 w.r.t. addition (neutron()).
 ------------------------------------------------------------------------------*/
 
-#ifndef __itl_ptime_JOFA_080416_H__
-#define __itl_ptime_JOFA_080416_H__
+#ifndef BOOST_ITL_PTIME_HPP_JOFA_080416
+#define BOOST_ITL_PTIME_HPP_JOFA_080416
 
 #include <stdio.h>
 #include <string>

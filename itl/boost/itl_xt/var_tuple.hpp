@@ -152,23 +152,23 @@ namespace boost{namespace itl
     }
 
 
-	//==============================================================================
-	//= Representation
-	//==============================================================================
+    //==============================================================================
+    //= Representation
+    //==============================================================================
 
-	template<class CharType, class CharTraits, int varCountV>
-	std::basic_ostream<CharType, CharTraits>& operator <<
-	  (std::basic_ostream<CharType, CharTraits> &stream, var_tuple<varCountV> const& tuple)
-	{
+    template<class CharType, class CharTraits, int varCountV>
+    std::basic_ostream<CharType, CharTraits>& operator <<
+      (std::basic_ostream<CharType, CharTraits> &stream, var_tuple<varCountV> const& tuple)
+    {
         stream << "(";
         for(int idx = 0; idx < varCountV-1; idx++)
             stream << tuple[idx] << ",";
 
         if(varCountV==0) 
-			return stream << ")";
+            return stream << ")";
         else 
-			return stream << tuple[varCountV-1] << ")";
-	}
+            return stream << tuple[varCountV-1] << ")";
+    }
 
 
 

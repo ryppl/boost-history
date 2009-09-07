@@ -5,8 +5,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_TYPE_TO_STRING_JOFA_080416_H__
-#define __itl_TYPE_TO_STRING_JOFA_080416_H__
+#ifndef BOOST_ITL_TYPE_TO_STRING_HPP_JOFA_080416
+#define BOOST_ITL_TYPE_TO_STRING_HPP_JOFA_080416
 
 #include <stdio.h>
 #include <string>

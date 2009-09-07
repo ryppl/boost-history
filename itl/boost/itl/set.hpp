@@ -5,8 +5,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_set_h_JOFA_070519__
-#define __itl_set_h_JOFA_070519__
+#ifndef BOOST_ITL_SET_HPP_JOFA_070519
+#define BOOST_ITL_SET_HPP_JOFA_070519
 
 #include <string>
 #include <set>
@@ -690,5 +690,5 @@ struct type_to_string<itl::set<Type> >
 
 }} // namespace itl boost
 
-#endif // __itl_set_h_JOFA_070519__
+#endif // BOOST_ITL_SET_HPP_JOFA_070519
 

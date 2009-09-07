@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_is_map_JOFA_081107_H__
-#define __itl_type_traits_is_map_JOFA_081107_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_IS_MAP_HPP_JOFA_081107
+#define BOOST_ITL_TYPE_TRAITS_IS_MAP_HPP_JOFA_081107
 
 #include <boost/config.hpp>
 

@@ -5,8 +5,8 @@ Copyright (c) 2008-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#ifndef __itl_type_traits_has_inverse_JOFA_090205_H__
-#define __itl_type_traits_has_inverse_JOFA_090205_H__
+#ifndef BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
+#define BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
 
 #include <boost/type_traits/is_signed.hpp>
 
@@ -21,6 +21,6 @@ namespace boost{ namespace itl
 
 }} // namespace boost itl
 
-#endif // __itl_type_traits_has_inverse_JOFA_090205_H__
+#endif // BOOST_ITL_TYPE_TRAITS_HAS_INVERSE_HPP_JOFA_090205
 
 

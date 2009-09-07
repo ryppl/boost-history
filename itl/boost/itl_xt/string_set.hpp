@@ -28,8 +28,8 @@ DEALINGS IN THE SOFTWARE.
 /*---------------------------------------------------------------------------------
 set of strings
 ---------------------------------------------------------------------------------*/
-#ifndef  __itl_string_set_H_JOFA_990318__
-#define  __itl_string_set_H_JOFA_990318__
+#ifndef  BOOST_ITL_STRING_SET_HPP_JOFA_990318
+#define  BOOST_ITL_STRING_SET_HPP_JOFA_990318
 
 #include <string>
 #include <string.h>
