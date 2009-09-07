@@ -112,7 +112,7 @@ namespace boost{namespace itl
 
         LawViolationsI& operator += (const LawViolationsI& rhs) 
         { 
-            const_FORALL(typename ViolationSet, vio_, 
+            ITL_const_FORALL(typename ViolationSet, vio_, 
                 dynamic_cast<const LawViolations<LawT>*>(rhs.getLawViolations())->_violations)
                 insert(*vio_);
 

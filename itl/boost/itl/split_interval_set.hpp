@@ -151,10 +151,10 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::add_(const value
 
     std::pair<iterator,bool> insertion = this->_set.insert(addend);
 
-    if(!insertion.WAS_SUCCESSFUL)
+    if(!insertion.second)
     {
         iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion.ITERATOR;
+                 last_  = insertion.first;
         //BOOST_ASSERT(next(last_) == this->_set.upper_bound(inter_val));
 
         iterator it_ = first_;

@@ -86,7 +86,7 @@ typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>,
 operator += (ObjectT& object, const OperandT& operand)
 {
     typename ObjectT::iterator prior_ = object.end();
-    const_FORALL(typename OperandT, elem_, operand) 
+    ITL_const_FORALL(typename OperandT, elem_, operand) 
         prior_ = object.add(prior_, *elem_); 
 
     return object; 
@@ -256,7 +256,7 @@ typename boost::enable_if<is_concept_equivalent<is_interval_map, ObjectT, Operan
                           ObjectT>::type& 
 operator -=(ObjectT& object, const OperandT& operand)
 {
-    const_FORALL(typename OperandT, elem_, operand) 
+    ITL_const_FORALL(typename OperandT, elem_, operand) 
         object.subtract(*elem_); 
 
     return object; 
@@ -303,7 +303,7 @@ typename boost::enable_if<is_intra_combinable<ObjectT, OperandT>,
 insert(ObjectT& object, const OperandT& operand)
 {
     typename ObjectT::iterator prior_ = object.end();
-    const_FORALL(typename OperandT, elem_, operand) 
+    ITL_const_FORALL(typename OperandT, elem_, operand) 
         object.insert(*elem_); 
 
     return object; 

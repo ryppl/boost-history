@@ -67,11 +67,11 @@ int prefix_set::compareStrings(int& comSize, const char* s1, const char* s2)
 void prefix_set::insert(const std::string& val)
 {
     pair<iterator, bool> insertion = m_.insert(val);
-    if(!insertion.WAS_SUCCESSFUL)
+    if(!insertion.second)
     {
-        if(val.size() < (*insertion.ITERATOR).size())
+        if(val.size() < (*insertion.first).size())
         {
-            m_.erase(insertion.ITERATOR);
+            m_.erase(insertion.first);
             insert(val);
         }
     }

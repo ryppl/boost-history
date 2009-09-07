@@ -266,8 +266,8 @@ inline itl::set<DomainT,Compare,Alloc>&
 set<DomainT,Compare,Alloc>::flip(const element_type& operand)
 {
     std::pair<iterator,bool> insertion = insert(operand);
-    if(!insertion.WAS_SUCCESSFUL)
-        erase(insertion.ITERATOR);
+    if(!insertion.second)
+        erase(insertion.first);
 
     return *this;
 } 

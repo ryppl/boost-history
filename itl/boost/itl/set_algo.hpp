@@ -195,8 +195,8 @@ namespace boost{namespace itl
             while(x2_ != x2.end()) 
             {
                 std::pair<typename SetType::iterator,bool> insertion = result.insert(*x2_++);
-                if(!insertion.WAS_SUCCESSFUL)
-                    result.erase(insertion.ITERATOR);
+                if(!insertion.second)
+                    result.erase(insertion.first);
             }
         }
 

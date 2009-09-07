@@ -108,7 +108,7 @@ public:
         const_iterator epiSet_ = find(type);
         if(epiSet_ == this->end()) 
             return NULL;
-        else return *((*epiSet_).CONT_VALUE.begin());
+        else return *((*epiSet_).second.begin());
     }
 
     EpisodePTD getLast(typename TypeDomain::DomainET type)const
@@ -116,7 +116,7 @@ public:
         const_iterator epiSet_ = find(type);
         if(epiSet_ == this->end())
             return NULL;
-        else return *((*epiSet_).CONT_VALUE.rbegin());
+        else return *((*epiSet_).second.rbegin());
     }
 
     EpisodeSetTD* getEpisodeSetPtr(typename TypeDomain::DomainET type)
@@ -124,7 +124,7 @@ public:
         iterator epiSet_ = find(type);
         if(epiSet_ == this->end()) 
             return NULL;
-        else return &((*epiSet_).CONT_VALUE);
+        else return &((*epiSet_).second);
     }
     
     int size(typename TypeDomain::DomainET type)const
@@ -132,7 +132,7 @@ public:
         const_iterator epiSet_ = find(type);
         if(epiSet_ == this->end()) 
             return 0;
-        else return (*epiSet_).CONT_VALUE.size();
+        else return (*epiSet_).second.size();
     }
         
     bool insert(EpisodePTD pEpisode)
@@ -140,18 +140,18 @@ public:
         EpisodeSetTD sglSet;
         sglSet.insert(pEpisode);
         typename TypeDomain::DomainET type = pEpisode->type();
-        return base_type::insert(value_type(type,sglSet)).WAS_SUCCESSFUL;
+        return base_type::insert(value_type(type,sglSet)).second;
     }
 
     void leftAlignedEpisodes(episode_product& syncProd, const TimeT& start)
     {
-        const_FORALL_THIS(elem_)
+        ITL_const_FORALL_THIS(elem_)
         {
-            TypeDomain type = (*elem_).KEY_VALUE;
-            EpisodeSetTD& epiSet = (*elem_).KEY_VALUE;
+            TypeDomain type = (*elem_).first;
+            EpisodeSetTD& epiSet = (*elem_).first;
             
             EpisodeSetTD syncSet;
-            const_FORALL(typename EpisodeSetTD, epi_, epiSet)
+            ITL_const_FORALL(typename EpisodeSetTD, epi_, epiSet)
             {
                 if((*epi_)->interval().first()==start)
                     syncSet.insert(*epi_);
@@ -170,13 +170,13 @@ public:
             return std::string("");
         else
         {
-            std::string str( TypeDomain::as_string((*it).KEY_VALUE) );
-            str += ("{"+((*it).CONT_VALUE).as_string()+"}");
+            std::string str( TypeDomain::as_string((*it).first) );
+            str += ("{"+((*it).second).as_string()+"}");
             it++;
             
             while(it != this->end()) {
-                str += ", "; str += TypeDomain::as_string((*it).KEY_VALUE);
-                str += ("{"+((*it).CONT_VALUE).as_string()+"}");
+                str += ", "; str += TypeDomain::as_string((*it).first);
+                str += ("{"+((*it).second).as_string()+"}");
                 it++;
             }
             return str;
@@ -221,7 +221,7 @@ public:
     {
         const_iterator epiSet_ = find(type);
         if(epiSet_==end()) return NULL;
-        else return *((*epiSet_).CONT_VALUE.begin());
+        else return *((*epiSet_).second.begin());
     }
 
     int size()const { return BaseTD::size(); }
@@ -230,7 +230,7 @@ public:
     {
         const_iterator epiSet_ = find(type);
         if(epiSet_==end()) return 0;
-        else return (*epiSet_).CONT_VALUE.size();
+        else return (*epiSet_).second.size();
     }
     
     
@@ -240,7 +240,7 @@ public:
         EpisodeSetTD sglSet;
         sglSet.insert(pEpisode);
         TypeDomain::DomainET type = pEpisode->type();
-        return BaseTD::insert(value_type(type,sglSet)).WAS_SUCCESSFUL;
+        return BaseTD::insert(value_type(type,sglSet)).second;
     }
 
     std::string as_string()const
@@ -251,13 +251,13 @@ public:
         if(it==end()) return std::string("");
         else
         {
-            std::string str( TypeDomain::as_string((*it).KEY_VALUE) );
-            str += ("{"+((*it).CONT_VALUE).as_string()+"}");
+            std::string str( TypeDomain::as_string((*it).first) );
+            str += ("{"+((*it).second).as_string()+"}");
             it++;
             
             while(it != end()) {
-                str += ", "; str += TypeDomain::as_string((*it).KEY_VALUE);
-                str += ("{"+((*it).CONT_VALUE).as_string()+"}");
+                str += ", "; str += TypeDomain::as_string((*it).first);
+                str += ("{"+((*it).second).as_string()+"}");
                 it++;
             }
             return str;
@@ -278,9 +278,9 @@ inline bool operator == (const episode_product<TimeT,TypeDomain>& lhs,
 
     while(lhs_ != lhs.end())
     {
-        if(!((*lhs_).KEY_VALUE == (*rhs_).KEY_VALUE))
+        if(!((*lhs_).first == (*rhs_).first))
             return false;
-        else if (!((*lhs_).CONT_VALUE == (*rhs_).CONT_VALUE))
+        else if (!((*lhs_).second == (*rhs_).second))
             return false;
 
         lhs_++; rhs_++;

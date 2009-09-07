@@ -110,7 +110,7 @@ template <class MapTV>
 void MapGentorT<MapTV>::last(MapTV& x)const
 {
     x.clear();
-    const_FORALL(typename SampleTypeTD, it, m_sample) 
+    ITL_const_FORALL(typename SampleTypeTD, it, m_sample) 
         x += *it;
 }
 
@@ -122,13 +122,13 @@ void MapGentorT<MapTV>::last_permuted(MapTV& x)const
     SampleTypeTD perm;
 
     NumberGentorT<int> intGentor;
-    const_FORALL(typename SampleTypeTD, it, m_sample)
+    ITL_const_FORALL(typename SampleTypeTD, it, m_sample)
     {
         if( 0==intGentor(2) ) perm.push_back(*it);
         else perm.push_front(*it);
     }
 
-    const_FORALL(typename SampleTypeTD, pit, perm) 
+    ITL_const_FORALL(typename SampleTypeTD, pit, perm) 
         x += *pit;
 }
 
@@ -145,7 +145,7 @@ void MapGentorT<MapTV>::lastSample_permuted(SampleTypeTD& sam)
     NumberGentorT<unsigned> intGentor;
     x.clear();
     int coin = intGentor.some(2); // gives 0 or 1
-    const_FORALL(typename SampleTypeTD, it, m_sample)
+    ITL_const_FORALL(typename SampleTypeTD, it, m_sample)
     {
         if( 0==intGentor.some(2) ) sam.push_back(*it);
         else sam.push_front(*it);

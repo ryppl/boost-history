@@ -27,7 +27,7 @@ typename IntervalContainerT::size_type continuous_cardinality(const IntervalCont
 
     size_type size = neutron<size_type>::value();
     size_type interval_size;
-    const_FORALL(typename IntervalContainerT, it, object)
+    ITL_const_FORALL(typename IntervalContainerT, it, object)
     {
         interval_size = continuous_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
         if(interval_size == std::numeric_limits<size_type>::infinity())
@@ -45,7 +45,7 @@ typename IntervalContainerT::size_type discrete_cardinality(const IntervalContai
     typedef typename IntervalContainerT::interval_type interval_type;
 
     size_type size = neutron<size_type>::value();
-    const_FORALL(typename IntervalContainerT, it, object)
+    ITL_const_FORALL(typename IntervalContainerT, it, object)
         size += discrete_interval<interval_type>::cardinality(IntervalContainerT::key_value(it));
     return size;
 }

@@ -98,7 +98,7 @@ namespace boost{namespace itl
     void string_set<Compare>::selectSet(string_set& selectees, StringSelectorFPD selector)const
     {
         selectees.clear();
-        const_FORALL_THIS(it)
+        ITL_const_FORALL_THIS(it)
             selectees.insert(((*it).*selector)());
     }
 }} // namespace boost itl

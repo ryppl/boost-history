@@ -731,7 +731,7 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 {
     typedef interval_base_set<SubType,DomainT,Compare,Interval,Alloc> IntervalSetT;
     stream << "{";
-    const_FORALL(typename IntervalSetT, it_, object)
+    ITL_const_FORALL(typename IntervalSetT, it_, object)
         stream << (*it_);
 
     return stream << "}";

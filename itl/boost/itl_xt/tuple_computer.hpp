@@ -251,8 +251,8 @@ namespace boost{namespace itl
     template <int VarCount, class CounterT>
     void tuple_computer_base<VarCount, CounterT>::addDomain(tuple_set_type& domain)const
     {
-        const_FORALL_THIS(tupel_)
-            domain.insert((*tupel_).KEY_VALUE);
+        ITL_const_FORALL_THIS(tupel_)
+            domain.insert((*tupel_).first);
     }
 
 
@@ -261,8 +261,8 @@ namespace boost{namespace itl
     {
         std::pair<typename ImplMapTD::iterator,bool> insertion = m_map.insert(val);
 
-        if(!insertion.WAS_SUCCESSFUL)
-            (*insertion.ITERATOR).CONT_VALUE += val.CONT_VALUE;
+        if(!insertion.second)
+            (*insertion.first).second += val.second;
     }
 
 
@@ -307,7 +307,7 @@ namespace boost{namespace itl
 
         void alignFor(const tuple_set_type& domain)
         {
-            const_FORALL(typename tuple_set_type, it_, domain)
+            ITL_const_FORALL(typename tuple_set_type, it_, domain)
                 this->insert(*it_, CounteeT());
         }
 
@@ -317,7 +317,7 @@ namespace boost{namespace itl
     void amount_tuple_computer<VarCount, CounterT>::load(const tuple_computer_interface<VarCount>& srcI)
     {
         const amount_tuple_computer& src = dynamic_cast<const amount_tuple_computer&>(srcI);
-        const_FORALL(typename amount_tuple_computer, it_, src)
+        ITL_const_FORALL(typename amount_tuple_computer, it_, src)
             this->insert(*it_);
     }
 
@@ -356,7 +356,7 @@ namespace boost{namespace itl
 
         void alignFor(const tuple_set_type& domain)
         {
-            const_FORALL(typename tuple_set_type, it_, domain)
+            ITL_const_FORALL(typename tuple_set_type, it_, domain)
                 insert(*it_, counter_type());
         }
 
@@ -366,7 +366,7 @@ namespace boost{namespace itl
     void date_tuple_computer<VarCount,TimeT,CounteeT>::load(const tuple_computer_interface<VarCount>& srcI)
     {
         const date_tuple_computer& src = dynamic_cast<const date_tuple_computer&>(srcI);
-        const_FORALL(typename date_tuple_computer, it_, src)
+        ITL_const_FORALL(typename date_tuple_computer, it_, src)
             insert(*it_);
     }
 
@@ -415,7 +415,7 @@ namespace boost{namespace itl
 
         void alignFor(const tuple_set_type& domain)
         {
-            const_FORALL(typename tuple_set_type, it_, domain)
+            ITL_const_FORALL(typename tuple_set_type, it_, domain)
                 insert(*it_, counter_type());
         }
     };
@@ -425,7 +425,7 @@ namespace boost{namespace itl
     void interval_tuple_computer<VarCount,TimeT,CounteeT>::load(const tuple_computer_interface<VarCount>& srcI)
     {
         const interval_tuple_computer& src = dynamic_cast<const interval_tuple_computer&>(srcI);
-        const_FORALL(typename interval_tuple_computer, it_, src)
+        ITL_const_FORALL(typename interval_tuple_computer, it_, src)
             insert(*it_);
     }
 
@@ -433,12 +433,12 @@ namespace boost{namespace itl
     void interval_tuple_computer<VarCount,TimeT,CounteeT>::insertDateMap(const var_tuple_type tup, const DateMapTD& date)
     {
         counter_type itvCounter;
-        const_FORALL(typename DateMapTD, date_, date)
+        ITL_const_FORALL(typename DateMapTD, date_, date)
         {
             itvCounter.insert(
                 counter_type::value_type(
-                    counter_type::interval_type((*date_).KEY_VALUE, (*date_).KEY_VALUE), 
-                    (*date_).CONT_VALUE
+                    counter_type::interval_type((*date_).first, (*date_).first), 
+                    (*date_).second
                     )
                 );
         }
@@ -457,12 +457,12 @@ namespace boost{namespace itl
         typedef interval_base_map<SubType, ItvDomTV, CodomTV> ItvMapTD;
 
         itvMap.clear();
-        const_FORALL(typename DateMapTD, date_, dateMap)
+        ITL_const_FORALL(typename DateMapTD, date_, dateMap)
         {
             itvMap.insert(
                 ItvMapTD::value_type(
-                    ItvMapTD::interval_type((*date_).KEY_VALUE, (*date_).KEY_VALUE), 
-                    (*date_).CONT_VALUE
+                    ItvMapTD::interval_type((*date_).first, (*date_).first), 
+                    (*date_).second
                     )
                 );
         }
@@ -487,7 +487,7 @@ namespace boost{namespace itl
 
         ItvMapTD* aux = itvMap.cons();
         //JODO OPTI: optimize using the ordering: if intervalls are beyond borders we can terminate
-        const_FORALL(typename DiscItvSetTD, itv_, grid)
+        ITL_const_FORALL(typename DiscItvSetTD, itv_, grid)
         {
             itvMap.intersect(*aux, *itv_);
             gridSums.insert(ItvMapTD::value_type(*itv_, (*aux).volume()));

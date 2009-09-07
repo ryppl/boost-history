@@ -76,7 +76,7 @@ namespace boost{namespace itl
             if(count_ == m_Omissions.end())
                 return 0;
             else
-                return (*count_).CONT_VALUE;
+                return (*count_).second;
         }
 
     protected:

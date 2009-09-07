@@ -93,7 +93,7 @@ namespace boost{namespace itl
     template <typename VarTupleT>
     bool itl::var_tuple_order<VarTupleT>::operator() (const VarTupleT& x1, const VarTupleT& x2)const
     {
-        FORALL_VEC(permIdx, m_Permutation)
+        ITL_FORALL_VEC(permIdx, m_Permutation)
         {
             int idx = m_Permutation[permIdx];
 
@@ -125,7 +125,7 @@ namespace boost{namespace itl
     template <typename VarTupleT>
     VarEnumTD itl::var_tuple_order<VarTupleT>::indexOfFirstDifference(const VarTupleT& x1, const VarTupleT& x2)const
     {
-        FORALL_VEC(permIdx, m_Permutation)
+        ITL_FORALL_VEC(permIdx, m_Permutation)
         {
             int idx = m_Permutation[permIdx];
 

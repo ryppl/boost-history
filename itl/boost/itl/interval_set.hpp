@@ -129,7 +129,7 @@ public:
         this->clear();
         // Has to be implemented via add. there might be touching borders to be joined
         iterator prior_ = this->_set.end();
-        const_FORALL(typename base_set_type, it_, src) 
+        ITL_const_FORALL(typename base_set_type, it_, src) 
             prior_ = this->add(prior_, *it_);
     }
 
@@ -229,13 +229,13 @@ void interval_set<DomainT,Compare,Interval,Alloc>::add_(const value_type& addend
 
     std::pair<iterator,bool> insertion = this->_set.insert(addend);
 
-    if(insertion.WAS_SUCCESSFUL)
-        handle_neighbours(insertion.ITERATOR);
+    if(insertion.second)
+        handle_neighbours(insertion.first);
     else
     {
         iterator first_ = this->_set.lower_bound(addend),
-                 last_  = insertion.ITERATOR,
-                 end_   = insertion.ITERATOR; ++end_;
+                 last_  = insertion.first,
+                 end_   = insertion.first; ++end_;
         //BOOST_ASSERT(end_ == this->_map.upper_bound(inter_val));
         iterator second_= first_; ++second_;
 

@@ -99,7 +99,7 @@ template <class SeqTV>
 void SeqGentorT<SeqTV>::last(SeqTV& x)const
 {
     x.clear();
-    const_FORALL(typename SampleTypeTD, it, m_sample) x.insert(*it);
+    ITL_const_FORALL(typename SampleTypeTD, it, m_sample) x.insert(*it);
 }
 
 template <class SeqTV>
@@ -110,13 +110,13 @@ void SeqGentorT<SeqTV>::last_permuted(SeqTV& x)const
     SampleTypeTD perm;
 
     NumberGentorT<int> intGentor;
-    const_FORALL(typename SampleTypeTD, it, m_sample)
+    ITL_const_FORALL(typename SampleTypeTD, it, m_sample)
     {
         if( 0==intGentor(2) ) perm.push_back(*it);
         else perm.push_front(*it);
     }
 
-    const_FORALL(typename SampleTypeTD, pit, perm) x.insert(*pit);
+    ITL_const_FORALL(typename SampleTypeTD, pit, perm) x.insert(*pit);
 }
 
 
@@ -132,7 +132,7 @@ void SeqGentorT<SeqTV>::lastSample_permuted(SampleTypeTD& sam)
     NumberGentorT<unsigned> intGentor;
     x.clear();
     int coin = intGentor.some(2); // gives 0 or 1
-    const_FORALL(typename SampleTypeTD, it, m_sample)
+    ITL_const_FORALL(typename SampleTypeTD, it, m_sample)
     {
         if( 0==intGentor.some(2) ) sam.push_back(*it);
         else sam.push_front(*it);

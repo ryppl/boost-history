@@ -16,7 +16,7 @@ namespace boost{namespace itl
         template <typename ElementContainerT, typename IntervalContainerT>
         void atomize(ElementContainerT& result, const IntervalContainerT& src)
         {
-            const_FORALL(typename IntervalContainerT, itv_, src)
+            ITL_const_FORALL(typename IntervalContainerT, itv_, src)
             {
                 const typename IntervalContainerT::key_type& itv   = IntervalContainerT::key_value(itv_);
                 typename IntervalContainerT::codomain_type   coval = IntervalContainerT::codomain_value(itv_);
@@ -31,7 +31,7 @@ namespace boost{namespace itl
         template <typename IntervalContainerT, typename ElementContainerT>
         void cluster(IntervalContainerT& result, const ElementContainerT& src)
         {
-            const_FORALL(typename ElementContainerT, element_, src)
+            ITL_const_FORALL(typename ElementContainerT, element_, src)
             {
                 const typename ElementContainerT::key_type&  key  = ElementContainerT::key_value(element_);
                 const typename ElementContainerT::data_type& data = ElementContainerT::data_value(element_);
@@ -64,7 +64,7 @@ namespace boost{namespace itl
             void operator()(JointType& joint, SplitType& split)
             {
                 split.join();
-                FORALL(typename SplitType, split_, split)
+                ITL_FORALL(typename SplitType, split_, split)
                     joint.insert(*split_);
             }
         };
@@ -75,7 +75,7 @@ namespace boost{namespace itl
             void operator()(AbsorberType& absorber, EnricherType& enricher)
             {
                 enricher.absorb_neutrons();
-                FORALL(typename EnricherType, enricher_, enricher)
+                ITL_FORALL(typename EnricherType, enricher_, enricher)
                     absorber.insert(*enricher_);
             }
         };

@@ -49,7 +49,7 @@ string diff_desc::afxReport(const string& file)const
 
 void string_sheet::fprint(FILE* file, const char* sep)const
 {
-    const_FORALL_THIS(row_)
+    ITL_const_FORALL_THIS(row_)
     {
         const string_list& row = (*row_);
         fprintf(file, "%s\n", row.join(sep).c_str());

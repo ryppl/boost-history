@@ -209,7 +209,7 @@ public:
     {
         const_iterator it = find(key); 
         return it==end() ? neutron<codomain_type>::value()
-                         : it->CONT_VALUE;
+                         : it->second;
     }
 
     //==========================================================================
@@ -244,7 +244,7 @@ public:
 
     std::pair<iterator,bool> insert(const value_type& value_pair)
     {
-        if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == codomain_combine::neutron()) 
+        if(Traits::absorbs_neutrons && value_pair.second == codomain_combine::neutron()) 
             return std::pair<iterator,bool>(end(),true);
         else
             return base_type::insert(value_pair);
@@ -252,7 +252,7 @@ public:
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
-    { (*this)[key_value_pair.KEY_VALUE] = key_value_pair.CONT_VALUE; return *this; }
+    { (*this)[key_value_pair.first] = key_value_pair.second; return *this; }
 
     /** erase \c key_value_pair from the map.
         Erase only if, the exact value content \c val is stored for the given key. */
@@ -357,8 +357,8 @@ public:
     void domain(set_type& domain_set)const
     {
         typename set_type::iterator prior_ = domain_set.end();
-        const_FORALL_THIS(it_)
-            prior_ = domain_set.insert(prior_, it_->KEY_VALUE);
+        ITL_const_FORALL_THIS(it_)
+            prior_ = domain_set.insert(prior_, it_->first);
     }
 
 private:
@@ -382,27 +382,27 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::add(const value_type& val)
 {
-    if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
+    if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return *this;
 
     std::pair<iterator, bool> insertion;
     if(Traits::is_total)
     {
         CodomainT added_val = Combiner::neutron();
-        Combiner()(added_val, val.CONT_VALUE);
-        insertion = insert(value_type(val.KEY_VALUE, added_val));
+        Combiner()(added_val, val.second);
+        insertion = insert(value_type(val.first, added_val));
     }
     else // Existential case
         insertion = insert(val);
 
-    if( insertion.WAS_SUCCESSFUL )
+    if( insertion.second )
         return *this;
     else
     {
-        iterator it = insertion.ITERATOR;
-        Combiner()((*it).CONT_VALUE, val.CONT_VALUE);
+        iterator it = insertion.first;
+        Combiner()((*it).second, val.second);
 
-        if(Traits::absorbs_neutrons && (*it).CONT_VALUE == Combiner::neutron())
+        if(Traits::absorbs_neutrons && (*it).second == Combiner::neutron())
             erase(it);
 
         return *this;
@@ -416,12 +416,12 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::add(iterator prior_, const value_type& val)
 {
-    if(Traits::absorbs_neutrons && val.CONT_VALUE == Combiner::neutron())
+    if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return prior_;
 
-    iterator inserted_ = insert(prior_, value_type(val.KEY_VALUE, Combiner::neutron()));
-    Combiner()(inserted_->CONT_VALUE, val.CONT_VALUE);
-    if(Traits::absorbs_neutrons && inserted_->CONT_VALUE == Combiner::neutron())
+    iterator inserted_ = insert(prior_, value_type(val.first, Combiner::neutron()));
+    Combiner()(inserted_->second, val.second);
+    if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
     {
         erase(inserted_);
         return prior_;
@@ -439,11 +439,11 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
 {
-    iterator it_ = find(val.KEY_VALUE);
+    iterator it_ = find(val.first);
     if(it_ != end())
     {
-        Combiner()((*it_).CONT_VALUE, val.CONT_VALUE);
-        if(Traits::absorbs_neutrons && (*it_).CONT_VALUE == codomain_combine::neutron())
+        Combiner()((*it_).second, val.second);
+        if(Traits::absorbs_neutrons && (*it_).second == codomain_combine::neutron())
             erase(it_);
     }
     return *this;
@@ -459,12 +459,12 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::size_type
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::erase(const value_type& value_pair)
 {
-    if(Traits::absorbs_neutrons && value_pair.CONT_VALUE == codomain_combine::neutron())
+    if(Traits::absorbs_neutrons && value_pair.second == codomain_combine::neutron())
         return 0; // neutrons are never contained 'substantially' 
                   // only 'virually'.
 
-    iterator it_ = find(value_pair.KEY_VALUE);
-    if(it_ != end() && value_pair.CONT_VALUE == it_->CONT_VALUE)
+    iterator it_ = find(value_pair.first);
+    if(it_ != end() && value_pair.second == it_->second)
     {
         erase(it_);
         return 1;
@@ -489,7 +489,7 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     }
     else
     {
-        const_iterator it_ = find(sectant.KEY_VALUE);
+        const_iterator it_ = find(sectant.first);
         if(it_ != end())
         {
             section.add(*it_);
@@ -539,7 +539,7 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     const_iterator sec_ = common_lwb_;
     while(sec_ != common_upb_)
     {
-        const_iterator it_ = find(sec_->KEY_VALUE);
+        const_iterator it_ = find(sec_->first);
         if(it_ != end())
         {
             section.add(*it_);
@@ -583,11 +583,11 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 std::string map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::as_string()const
 { 
     std::string repr;
-    const_FORALL_THIS(it) {
+    ITL_const_FORALL_THIS(it) {
         std::string elem("(");
-        elem += to_string<DomainT>::apply((*it).KEY_VALUE);
+        elem += to_string<DomainT>::apply((*it).first);
         elem += "->";
-        elem += to_string<CodomainT>::apply((*it).CONT_VALUE);
+        elem += to_string<CodomainT>::apply((*it).second);
         elem += ")";
 
         repr += elem;
@@ -632,7 +632,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 {
     typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> map_type;
 
-    const_FORALL(typename map_type, elem_, addend) 
+    ITL_const_FORALL(typename map_type, elem_, addend) 
         object.insert(*elem_); 
 
     return object; 
@@ -646,7 +646,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 {
     typedef map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> map_type;
 
-    const_FORALL(typename map_type, elem_, erasure) 
+    ITL_const_FORALL(typename map_type, elem_, erasure) 
         object.erase(*elem_); 
 
     return object; 
@@ -660,7 +660,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
 {
     typedef set<DomainT,Compare,Alloc> operand_type;
 
-    const_FORALL(typename operand_type, elem_, erasure) 
+    ITL_const_FORALL(typename operand_type, elem_, erasure) 
         object.erase(*elem_); 
 
     return object; 
@@ -834,7 +834,7 @@ operator -= (      itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,All
              const itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>& operand)
 { 
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
-    const_FORALL(typename ObjectT, it_, operand)
+    ITL_const_FORALL(typename ObjectT, it_, operand)
         object.subtract(*it_);
 
     return object; 
@@ -1051,8 +1051,8 @@ std::basic_ostream<CharType, CharTraits>& operator <<
 {
     typedef itl::map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc> ObjectT;
     stream << "{";
-    const_FORALL(typename ObjectT, it, object)
-        stream << "(" << it->KEY_VALUE << "->" << it->CONT_VALUE << ")";
+    ITL_const_FORALL(typename ObjectT, it, object)
+        stream << "(" << it->first << "->" << it->second << ")";
 
     return stream << "}";
 }

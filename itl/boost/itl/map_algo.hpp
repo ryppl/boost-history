@@ -34,10 +34,10 @@ bool contained_in(const MapType& sub, const MapType& super)
     typename MapType::const_iterator sub_ = sub.begin(), super_;
     while(sub_ != sub.end())
     {
-        super_ = super.find((*sub_).KEY_VALUE);
+        super_ = super.find((*sub_).first);
         if(super_ == super.end()) 
             return false;
-        else if(!(sub_->CONT_VALUE == super_->CONT_VALUE))
+        else if(!(sub_->second == super_->second))
             return false;
         sub_++;
     }
@@ -122,26 +122,26 @@ void flip(MapType& result, const MapType& x2)
         cur_x2_ = x2_;
         std::pair<typename MapType::iterator,bool> insertion 
             = result.insert(*x2_++);
-        if(!insertion.WAS_SUCCESSFUL)
+        if(!insertion.second)
         {
-            //result.erase(insertion.ITERATOR);
+            //result.erase(insertion.first);
             if(is_set<typename MapType::codomain_type>::value)
             {
-                typename MapType::iterator res_ = insertion.ITERATOR;
-                typename MapType::codomain_type common_value = res_->CONT_VALUE;
-                typename MapType::key_type key_value = res_->KEY_VALUE;
-                typename MapType::inverse_codomain_intersect()(common_value, cur_x2_->CONT_VALUE);
+                typename MapType::iterator res_ = insertion.first;
+                typename MapType::codomain_type common_value = res_->second;
+                typename MapType::key_type key_value = res_->first;
+                typename MapType::inverse_codomain_intersect()(common_value, cur_x2_->second);
                 result.subtract(*res_);
                 result.add(typename MapType::value_type(key_value, common_value));
             }
             else
-                result.subtract(*insertion.ITERATOR);
+                result.subtract(*insertion.first);
         }
     }
 
     if(is_total<MapType>::value && !absorbs_neutrons<MapType>::value)
-        FORALL(typename MapType, it_, result)
-            it_->CONT_VALUE = neutron<typename MapType::codomain_type>::value();
+        ITL_FORALL(typename MapType, it_, result)
+            it_->second = neutron<typename MapType::codomain_type>::value();
 }
 
 
@@ -150,7 +150,7 @@ template<class MapType>
 typename MapType::const_iterator next_proton(typename MapType::const_iterator& iter_, const MapType& object)
 {
     while(   iter_ != object.end() 
-          && iter_->CONT_VALUE == neutron<typename MapType::codomain_type>::value())
+          && iter_->second == neutron<typename MapType::codomain_type>::value())
         ++iter_;
 
     return iter_;
@@ -172,7 +172,7 @@ bool lexicographical_protonic_equal(const MapType& left, const MapType& right)
 
     while(left_ != left.end() && right_ != right.end())
     {
-        if(!(left_->KEY_VALUE == right_->KEY_VALUE && left_->CONT_VALUE == right_->CONT_VALUE))
+        if(!(left_->first == right_->first && left_->second == right_->second))
             return false;
 
         ++left_;

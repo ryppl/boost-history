@@ -89,13 +89,13 @@ namespace boost{namespace itl
             int valid_count = 1;
             double avg_evaluation_time = 0.0;
             long   instance_count      = 0;
-            FORALL(ValidationCounterT, it, _frequencies)
+            ITL_FORALL(ValidationCounterT, it, _frequencies)
             {
-                long law_validation_count = it->CONT_VALUE.count();
+                long law_validation_count = it->second.count();
                 double avg_law_evaluation_time = 
-                    it->CONT_VALUE.time()/(law_validation_count);
+                    it->second.time()/(law_validation_count);
                 printf("%3d %-58s%9ld%7.0lf\n", 
-                    valid_count, it->KEY_VALUE.c_str(), law_validation_count, avg_law_evaluation_time);
+                    valid_count, it->first.c_str(), law_validation_count, avg_law_evaluation_time);
 
                 avg_evaluation_time += avg_law_evaluation_time;
                 instance_count      += law_validation_count;
@@ -109,16 +109,16 @@ namespace boost{namespace itl
                     avg_evaluation_time_per_law, " ", instance_count, avg_evaluation_time_per_law);
 
             int violation_count = 1;
-            FORALL(ViolationMapT, it, _violations)
+            ITL_FORALL(ViolationMapT, it, _violations)
             {
-                printf("%3d %-66s%8d\n", violation_count, it->KEY_VALUE.c_str(), it->CONT_VALUE.getViolationsCount());
+                printf("%3d %-66s%8d\n", violation_count, it->first.c_str(), it->second.getViolationsCount());
                 violation_count++;
             }
             if(!_violations.empty())
                 std::cout << "------------------------------------------------------------------------------" << std::endl;
-            FORALL(ViolationMapT, it, _violations)
+            ITL_FORALL(ViolationMapT, it, _violations)
             {
-                PolyLawViolations violas = it->CONT_VALUE;
+                PolyLawViolations violas = it->second;
                 violas.reportFirst();
             }
             if(!_violations.empty())
@@ -129,9 +129,9 @@ namespace boost{namespace itl
         {
             FILE* fp = fopen(filename.c_str(), "w");
             int valid_count = 1;
-            FORALL(ValidationCounterT, it, _frequencies)
+            ITL_FORALL(ValidationCounterT, it, _frequencies)
             {
-                fprintf(fp, "%3d %-66s\n", valid_count, it->KEY_VALUE.c_str());
+                fprintf(fp, "%3d %-66s\n", valid_count, it->first.c_str());
                 valid_count++;
             }
         }
