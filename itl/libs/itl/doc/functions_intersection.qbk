@@ -92,7 +92,7 @@ The next table contains complexity characteristics for member function `add_inte
 The overload tables below are giving admissable
 type combinations for the intersection `operator &=`.
 As for the overload patterns of /subtraction/
-intersectons are possible within Sets and Maps
+intersections are possible within Sets and Maps
 but also for Maps combined with /key objects/
 which are /key elements, intervals/ and /Sets of keys/.
 

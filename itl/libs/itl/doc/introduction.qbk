@@ -23,26 +23,31 @@ an interval is simple. They represent all the elements between their
 lower and upper bound and thus a set. But unlike sets, intervals
 usually can not be added to a single new interval.
 If you want to add intervals to a collection of
-intervals that does still represent a set,
-you arrive at the idea of interval_sets that the *itl* provides. 
+intervals that does still represent a /set/,
+you arrive at the idea of /interval_sets/ provided by this library. 
 
 Interval containers of the *itl* have been developed initially at 
 [@http://www.cortex-software.de/desktopdefault.aspx Cortex Software GmbH]
 to solve problems related to date and time interval
 computations in the context of a Hospital Information System.
 Time intervals with associated values like ['amount of invoice]
-or ['set of therapies] had to be maipulated in statistics,
+or ['set of therapies] had to be manipulated in statistics,
 billing programs and therapy scheduling programs. 
 So the *itl* emerged out of those industrial use cases.
 It extracts generic code that helps to solve common
 problems from the date and time problem domain and can be
 beneficial in other fields as well.
 
-From those use cases, specifically the computations for
-statistics, also stems the quite useful idea of ['aggregating
-associated] values, when ['intervals overlap]. This idea is
-fundamental for the way *itl's* interval_maps are
-designed.
+One of the most advantageous aspects of interval containers is
+their very compact representation of sets and maps. Working with
+sets and maps /of elements/ can be very inefficient, if in a given
+problem domain, elements are typically occurring in contiguous
+chunks. 
+Besides a compact representation of associative containers, that
+can reduce the cost of space and time drastically, the itl
+comes with a universal mechanism of aggregation, that allows
+to combine associated values in meaningful ways when intervals
+overlap on insertion.
 
 
 [section Definition and Basic Example]
@@ -50,8 +55,8 @@ designed.
 The [*Interval Template Library (ITL)] provides __itvs__ and two kinds of 
 interval containers: __itv_sets__ and __itv_maps__.
 
-* An __itv_bset__ implements a [*set] as a set of intervals.
-* An __itv_bmap__ implements a [*map] as a map of interval value pairs.
+* An __itv_bset__ is a *set* that is implemented as a set of intervals.
+* An __itv_bmap__ is a *map* that is implemented as a map of interval value pairs.
 
 [h4 Two Aspects]
 
@@ -112,7 +117,7 @@ __itv_map__. This operation propagation is called ['*aggregate on overlap*].
   
 [h4 Aggregate on Overlap]
 
-This is a first motivating example of a very small party, demonstrationg the 
+This is a first motivating example of a very small party, demonstrating the 
 ['*aggregate on overlap*] principle ['*(aggrovering)*] on __itv_maps__:
 
 In the example Mary enters the party first. She attends during the 
@@ -178,7 +183,7 @@ section.
 
 When we add intervals or interval value pairs to interval containers,
 the intervals can be added in different ways: Intervals can be
-joined or splitted or kept separate. The different interval combining
+joined or split or kept separate. The different interval combining
 styles are shown by example in the tables below.
 
 [table Interval container's ways to combine intervals 
@@ -247,7 +252,7 @@ for an additional demo.
 
 __Itv_set__ and __itv_map__ are always 
 in a ['*minimal representation*]. This is useful in many cases, where the 
-points of insertion or intersecton of intervals are not relevant. So in most 
+points of insertion or intersection of intervals are not relevant. So in most 
 instances __itv_set__ and 
 __itv_map__ will be the first choice 
 for an interval container.
@@ -258,7 +263,7 @@ __Spl_itv_set__ and __spl_itv_map__ on the contrary
 have an ['*insertion memory*]. They do accumulate interval borders both 
 from additions and intersections. This is specifically useful, if we want
 to enrich an interval container with certain time grids, like e.g. months 
-or calendar weeks or both. See example [link boost_itl.examples.month_and_week_grid timegrids for months and weeks].
+or calendar weeks or both. See example [link boost_itl.examples.month_and_week_grid time grids for months and weeks].
 
 [h4 Separating interval containers]
 

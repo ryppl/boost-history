@@ -18,7 +18,7 @@ In preparation to the
 [link boost_itl.function_reference next section], 
 that describes the *itl's* polymorphic functions in
 more detail together with ['*complexity characteristics*], 
-this section summarizes some general informations on
+this section summarizes some general information on
 implementation and performance.
 
 [h5 STL based implementation]

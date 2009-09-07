@@ -74,7 +74,7 @@ iteration related.
 [[Practical][interval_sets(maps) can be used as sets(maps) 
              of elements(element value pairs)             ]
                                                            [Segmentation information is available. 
-                                                            See e.g. [link boost_itl.examples.month_and_week_grid Timegrids for months and weeks]]]
+                                                            See e.g. [link boost_itl.examples.month_and_week_grid Time grids for months and weeks]]]
 [[]         [no iteration over elements]                   [iteration over intervals]]
 ]
 

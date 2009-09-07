@@ -35,10 +35,10 @@
 	                 [Using /aggregate on overlap/ the height of the party's tallest guests is computed.  
 	                  Associated values are aggregated via a maximum functor, that can 
 	                  be chosen as template parameter of an interval_map class template.]]
-	[[advanced][[link boost_itl.examples.month_and_week_grid Timegrids for months and weeks]]
+	[[advanced][[link boost_itl.examples.month_and_week_grid Time grids for months and weeks]]
 	                            [__spl_itv_set__]
 								             [Shows how the ['*border preserving*]
-                                              __spl_itv_set__ can be used to create time partitionigs where different
+                                              __spl_itv_set__ can be used to create time partitions where different
                                               periodic time intervals overlay each other.]]
 	[[advanced][[link boost_itl.examples.man_power Man power]]      
 		[__itv_set__,\n__itv_map__]
@@ -48,7 +48,7 @@
 	     available man-power of a company in a given time interval.]]
 	[[advanced][[link boost_itl.examples.user_groups User groups]][__itv_map__]
 		[Example [*user_groups] shows how interval_maps can be unified or 
-         intersected to calculate desired informations.]]
+         intersected to calculate desired information.]]
 ]
 
 [endsect]
@@ -95,7 +95,7 @@ be used, if desired.
 
 We are introducing __itv_maps__ using an 
 ['interval map ['*of sets of strings*]],
-because of it's didactical advantages. The party example is
+because of it's didactic advantages. The party example is
 used to give an immediate and depictive access to the basic ideas of
 interval maps and /aggregate on overlap/.
 For real world applications, an interval_map of sets is

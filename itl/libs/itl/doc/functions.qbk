@@ -137,8 +137,8 @@ infix operators e.g. `T operator + (P, Q)` for two interval container types
 `P` and `Q`. If both `P` and `Q` are candidates for the result
 type `T`, one of them must be chosen by the compiler.
 We choose the type that is segmentational finer as
-result type `T`. This way we do not loose the ['*segment informations*]
-that are stored in the ['*finer*] one of the container types `P` and `Q`.
+result type `T`. This way we do not loose the ['*segment information*]
+that is stored in the ['*finer*] one of the container types `P` and `Q`.
 
 ``
 // overload tables for
