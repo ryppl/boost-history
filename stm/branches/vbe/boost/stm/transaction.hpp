@@ -120,18 +120,18 @@ namespace boost { namespace stm {
 #endif
 
 class transaction;
-    struct TransactionsStack {
-        typedef std::stack<transaction*> cont_type;
-        cont_type stack_;
-        TransactionsStack() {
-            // the stack at least one element (0) so we can always call to top, i.e. current transaction is 0
-            stack_.push(0);
-        }
-        void push(transaction* ptr) {stack_.push(ptr);}
-        void pop() {stack_.pop();}
-        std::size_t size() {return stack_.size();}
-        transaction* top() {return stack_.top();}
-    };
+struct TransactionsStack {
+    typedef std::stack<transaction*> cont_type;
+    cont_type stack_;
+    TransactionsStack() {
+        // the stack at least one element (0) so we can always call to top, i.e. current transaction is 0
+        stack_.push(0);
+    }
+    void push(transaction* ptr) {stack_.push(ptr);}
+    void pop() {stack_.pop();}
+    std::size_t size() {return stack_.size();}
+    transaction* top() {return stack_.top();}
+};
 
 ///////////////////////////////////////////////////////////////////////////////
 // transaction Class
@@ -218,9 +218,9 @@ public:
         WriteContainer writeMem;
         bloom_filter wbloom;
         bloom_filter bloom;
-        TxType txType;
+        TxType txType; // 2 bits
 
-        int abort;
+        int abort; // bool 1 bit
     };
 
 
@@ -2005,9 +2005,9 @@ private:
 
 
    // transaction specific data
-   int hasMutex_;
+   int hasMutex_; // bool - 1 bit
    mutable size_t priority_;
-   transaction_state state_;
+   transaction_state state_; // 2bits
    size_t reads_;
    mutable size_t startTime_;
 
@@ -2258,13 +2258,16 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 // rand()+1 check is necessarily complex so smart compilers can't
 // optimize the if away
 //---------------------------------------------------------------------------
-//#define use_atomic(T) if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
-//#define try_atomic(T) if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
-//#define atomic(T)     if (0 != rand()+1) for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
 
+#ifdef BOOST_STM_COMPILER_DONT_DESTROY_FOR_VARIABLES
+#define use_atomic(T) if (0==rnd()+1) {} else for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
+#define try_atomic(T) if (0==rnd()+1) {} else for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
+#define atomic(T)     if (0==rnd()+1) {} else for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
+#else
 #define use_atomic(T) for (boost::stm::transaction T; !T.committed() && T.restart(); T.end())
 #define try_atomic(T) for (boost::stm::transaction T; !T.committed() && T.restart(); T.no_throw_end()) try
 #define atomic(T)     for (boost::stm::transaction T; !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); T.no_throw_end()) try
+#endif
 
 
 #define catch_before_retry(E) catch (boost::stm::aborted_tx &E)

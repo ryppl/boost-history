@@ -398,7 +398,7 @@ inline void transaction::unlock_all_mutexes_but_this(size_t threadId)
       if (i->first == threadId) continue;
       unlock(i->second);
    }
-#endif   
+#endif
 }
 
 //--------------------------------------------------------------------------
@@ -442,7 +442,7 @@ inline void transaction::unlock_all_mutexes()
       unlock(i->second);
    }
 #endif
-   hasMutex_ = 0;  
+   hasMutex_ = 0;
 }
 
 //--------------------------------------------------------------------------
@@ -459,7 +459,7 @@ inline void transaction::unlock_all_mutexes()
 inline transaction::transaction() :
    threadId_(THREAD_ID),
 #if USE_SINGLE_THREAD_CONTEXT_MAP
-////////////////////////////////////////   
+////////////////////////////////////////
    context_(*tss_context_map_.find(threadId_)->second),
 
 #ifdef BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS
@@ -475,7 +475,7 @@ inline transaction::transaction() :
 #else
    forcedToAbortRef_(false),
 #endif
-#else   
+#else
    write_list_ref_(&context_.tx_.writeMem),
    bloomRef_(&context_.tx_.bloom),
    wbloomRef_(&context_.tx_.wbloom),
@@ -487,8 +487,8 @@ inline transaction::transaction() :
 #else
    forcedToAbortRef_(false),
 #endif
-#endif   
-#endif   
+#endif
+#endif
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
    mutexRef_(threadMutexes_.find(threadId_)->second),
 
@@ -505,11 +505,11 @@ inline transaction::transaction() :
 #endif
 #endif
    transactionsRef_(transactions(threadId_)),
-   
-   
-////////////////////////////////////////   
+
+
+////////////////////////////////////////
 #else
-////////////////////////////////////////   
+////////////////////////////////////////
 #ifndef DISABLE_READ_SETS
    readListRef_(*threadReadLists_.find(threadId_)->second),
 #endif
@@ -544,7 +544,7 @@ inline transaction::transaction() :
 
    transactionsRef_(transactions(threadId_)),
 
-////////////////////////////////////////   
+////////////////////////////////////////
 #endif
 
    hasMutex_(0), priority_(0),
@@ -1666,7 +1666,7 @@ inline void transaction::validating_direct_commit()
 
       tx_type_ref() = eNormalTx;
 #if PERFORMING_LATM
-      get_tx_conflicting_locks().clear(); 
+      get_tx_conflicting_locks().clear();
       /* BACKTRACE
 #2  0x00459309 in std::set<__pthread_mutex_t**, std::less<__pthread_mutex_t**>,
 std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
@@ -1853,9 +1853,7 @@ inline void transaction::directAbortWriteList()
       if (using_move_semantics()) i->first->move_state(i->second);
       else i->first->copy_state(i->second);
       i->first->transaction_thread(kInvalidThread);
-      i->first->get_transaction()=0;
 
-      //delete i->second;
       cache_release(i->second);
    }
 
@@ -1869,7 +1867,6 @@ inline void transaction::directAbortTransactionDeletedMemory() throw()
    j != deletedMemoryList().end(); ++j)
    {
       (*j)->transaction_thread(kInvalidThread);
-      (*j)->get_transaction()=0; 
    }
 
    deletedMemoryList().clear();
@@ -1979,7 +1976,6 @@ inline void transaction::deferredCommitTransactionNewMemory()
    for (MemoryContainerList::iterator i = newMemoryList().begin(); i != newMemoryList().end(); ++i)
    {
       (*i)->transaction_thread(kInvalidThread);
-      (*i)->get_transaction()=0;
       (*i)->new_memory(0);
    }
 
@@ -2001,7 +1997,6 @@ inline void transaction::directCommitWriteState()
       // on it.
       //-----------------------------------------------------------------------
       i->first->transaction_thread(kInvalidThread);
-      i->first->get_transaction()=0;
       i->first->new_memory(0);
 
       //-----------------------------------------------------------------------
@@ -2037,7 +2032,6 @@ inline void transaction::deferredCommitWriteState()
       else i->first->copy_state(i->second);
 
       i->first->transaction_thread(kInvalidThread);
-      i->first->get_transaction()=0;
       i->first->new_memory(0);
 
 #if PERFORMING_VALIDATION
@@ -2120,7 +2114,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
    if (writes() > 3) allow_stall = false;
 
    //--------------------------------------------------------------------------
-   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause 
+   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause
    // Sebastian's account code to break ... we need to investigate why and fix it.
    //
    // Until such time, stalling txes for increased concurrency MUST be disabled.
@@ -2129,7 +2123,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
    allow_stall = false;
 
    //--------------------------------------------------------------------------
-   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause 
+   // FOR THE TIME BEING, DO NOT ALLOW STALLS AT ALL! Stalls somehow cause
    // Sebastian's account code to break ... we need to investigate why and fix it.
    //
    // Until such time, stalling txes for increased concurrency MUST be disabled.

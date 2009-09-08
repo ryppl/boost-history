@@ -52,7 +52,7 @@
 namespace boost { namespace stm {
 
 //-----------------------------------------------------------------------------
-// forward declarations    
+// forward declarations
 //-----------------------------------------------------------------------------
 
 template <class T> void cache_deallocate(T*);
@@ -179,10 +179,9 @@ typedef aborted_transaction_exception aborted_tx;
 
 //-----------------------------------------------------------------------------
 // this is the base class of all the transactional objects.
-// it tracks:   
+// it tracks:
 //      transactionThread_: the thread identifier holding the write acces to this transactional object
-//      transaction_: the pointer to the transaction
-//      version: the version when performing validation   
+//      version: the version when performing validation
 //      newMemory_: states whether this object is a new object
 // transactional objets must specialize the pure virtual functions
 //      copy_state(base_transaction_object const * const rhs)
@@ -200,7 +199,6 @@ public:
 
    base_transaction_object() : transactionThread_(kInvalidThread),
       newMemory_(0)
-      , transaction_(0)
 #if PERFORMING_VALIDATION
       ,version_(0)
 #endif
@@ -210,7 +208,6 @@ public:
     base_transaction_object(const base_transaction_object &t)
         : transactionThread_(kInvalidThread)
         , newMemory_(0)
-        , transaction_(t)
 #if PERFORMING_VALIDATION
         , version_(0)
 #endif
@@ -239,9 +236,6 @@ public:
 
    void new_memory(size_t rhs) const { newMemory_ = rhs; }
    size_t const & new_memory() const { return newMemory_; }
-
-   transaction*& get_transaction() const {return transaction_;}
-   //transaction* get_transaction() const {return transaction_;}
 
 #if PERFORMING_VALIDATION
    size_t version_;
@@ -296,9 +290,6 @@ private:
    mutable size_t transactionThread_;
 
    mutable size_t newMemory_;
-public:
-   mutable transaction* transaction_;
-private:
 #if USE_STM_MEMORY_MANAGER
    static Mutex transactionObjectMutex_;
    static MemoryPool<base_transaction_object> memory_;
@@ -457,7 +448,6 @@ public:
 
     transactional_object & operator=(transactional_object const & r)  // =default never throws
     {
-        this->transaction_=r.transaction_;
         value = r.value;
         return *this;
     }
