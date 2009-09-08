@@ -43,7 +43,7 @@ where /n/ `= iterative_size()`.
 [[`void T::swap(T& src)`]         [Swaps the content containers `*this` and `src` in constant time. ] ]
 ]
 
-In addition we have overloads of constructors and assingnment operators
+In addition we have overloads of constructors and assignment operators
 for itl container types.
 ``
 // overload tables for constructors

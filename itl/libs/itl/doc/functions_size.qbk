@@ -34,7 +34,7 @@ The next table gives a short definition for the different size functions.
 [[['*Size*]]                                      [Types] [Description]                                        ]
 [[`size_t T::interval_count()const`]            [__S __M] [The number of intervals of an interval container.]                         ]
 [[`size_t T::iterative_size()const`]    [__S __M __s __m] [The number of objects in an itl container that can be iterated over.]      ]
-[[`difference_type T::length()const`]       [__i __S __M] [The length of an interval or the sum of lenghts of
+[[`difference_type T::length()const`]       [__i __S __M] [The length of an interval or the sum of lengths of
                                                           an interval container's intervals, that's `domain_type` has a `difference_type`.]     ]
 [[`size_type T::cardinality()const`][__i __S __M __s __m] [The number of elements of an interval or a container.
                                                            For continuous data types cardinality can be /infinite/.]                ]

@@ -69,7 +69,7 @@ elements of interval containers are clustered into intervals:
 it's ['*segmentation*].
 
 So these equality and compare operations can be applied within
-interval container types. The admissable type combinations are summarized
+interval container types. The admissible type combinations are summarized
 in the next overload table.
 
 ``
@@ -91,7 +91,7 @@ m  |   1                S2 | 1  1  1
 For element containers lexicographical equality and
 sequential element equality are identical.
 
-The *complexity* of sequential element comarison functions
+The *complexity* of sequential element comparison functions
 is ['*linear*] in the `iterative_size` of the larger
 container.
 
@@ -99,7 +99,7 @@ container.
 
 [section Protonic Equality][/ Equivalences and Orderings]
 
-['*Protonic Equality*] is an equality predicate that is availabe
+['*Protonic Equality*] is an equality predicate that is available
 for __itl_maps__ and __itv_maps__. It yields true, if
 two maps are sequential element equal except for value
 pairs whose associated values are neutral elements.

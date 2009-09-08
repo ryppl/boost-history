@@ -36,7 +36,7 @@ template, because an interval is considered to be a set as well.
 [[=std::set=]   [`std::set`]     [`<_Key,  _Compare,        _Alloc>`]]
 ]
 
-Templates and template parameters, given in the preceeding table are 
+Templates and template parameters, given in the preceding table are 
 described in detail below.
 __Itv_bsets__ represent three
 class templates __itv_set__, __sep_itv_set__ and __spl_itv_set__
@@ -68,7 +68,7 @@ the itl and compares them to =std::map=.
 ]
 
 
-Templates and template parameters, given in the preceeding table are 
+Templates and template parameters, given in the preceding table are 
 described in detail below.
 __Itv_bmaps__ represent two
 class templates __itv_map__ and __spl_itv_map__
@@ -113,10 +113,10 @@ std::map     <D, C     Cp,           Av>
 
 The choice of parameters and their positions follow the std::containers
 as close a possible, so that usage of interval sets and maps does only
-require minimal additional knowlege.
+require minimal additional knowledge.
 
 Additional knowledge is required when instantiating a comparison parameter
-`Compare` or an allocation parameter `Alloc`. In contrast to std::contianers
+`Compare` or an allocation parameter `Alloc`. In contrast to std::containers
 these have to be instantiated as templates, like e.g.
 ``
 interval_set<string, german_compare>      sections; // 2nd parameter is a template
@@ -138,7 +138,7 @@ be grouped with respect to those requirements.
 [[Interval type]       [`interval_sets/maps`][`template`]  [`Interval`] [`Interval<DomainT,Compare>`]  [`...` the `Interval` parameter has to use the same element type and order. ] ]
 [[Codomain aggregation][`Maps`]              [`typename`]  [`CodomainT`][]                             [For the type `CodomainT` of associated values `...`]]
 [[]                    []                    [`template`]  [`Combine`]  [`Combine<CodomainT>`]         [`...` there is a binary functor `Combine<CodomainT>()` to combine them ] ]
-[[]                    []                    []            []           [`Inverse<Combine<CodomainT>>`][`...` and implicity an `Inverse` functor to inversely combine them.  ] ]
+[[]                    []                    []            []           [`Inverse<Combine<CodomainT>>`][`...` and implicitly an `Inverse` functor to inversely combine them.  ] ]
 [[]                    []                    [`template`]  [`Section`]  [`Section<CodomainT>`]         [Intersection is propagated to CodomainT values via functor `Section<CodomainT>()`] ]
 [[Memory allocation]   [`Sets, Maps`]        [`template`]  [`Alloc`]    [`Alloc<`/various/`>`]         [An allocator can be chosen for memory allocation.]]
 ]
@@ -297,7 +297,7 @@ for that purpose. Using the default
 on type `CodomainT` 
 metafunction [classref boost::itl::inverse inverse] 
 will infer [classref boost::itl::inplace_minus inplace_minus]
-as inverse functor, that requries `operator -=` on type `CodomainT`.
+as inverse functor, that requires `operator -=` on type `CodomainT`.
 
 In the itl's design we make the assumption,
 in particular for the default setting of parameters
@@ -350,7 +350,7 @@ inv:= template<class Combiner>class inverse
 ``
 
 we can summarize the associated types as follows. 
-Again two additional colums for easy comparison with stl
+Again two additional columns for easy comparison with stl
 sets and maps are provided. 
 
 [table Itl Associated types

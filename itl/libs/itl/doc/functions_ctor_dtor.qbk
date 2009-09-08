@@ -30,9 +30,9 @@ Find the functions description and some simple properties below.
 [[`domain_type T::lower()const`]       [__i __S __M][`x.lower()` returns the lower bound of an interval or interval container `x`.]  ]
 [[`domain_type T::upper()const`]       [__i __S __M][`x.upper()` returns the upper bound of an interval or interval container `x`.]         ]
 [[`domain_type T::first()const`]       [__i __S __M][`x.first()` returns the first element of an interval or interval container `x`. 
-                                                     `T::first()` ist defined for a non continuous `domain_type` only.] ]
+                                                     `T::first()` is defined for a non continuous `domain_type` only.] ]
 [[`domain_type T::last()const`]        [__i __S __M][`x.last()` returns the last element of an interval or interval container `x`. 
-                                                     `T::last()` ist defined for a non continuous `domain_type` only.] ]                                                                                                     
+                                                     `T::last()` is defined for a non continuous `domain_type` only.] ]                                                                                                     
 ]
 
 ``

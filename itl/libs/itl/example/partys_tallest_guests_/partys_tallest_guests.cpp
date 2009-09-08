@@ -45,7 +45,7 @@ using namespace boost::itl;
 typedef interval_map<ptime, int, partial_absorber, less, inplace_max> 
     PartyHeightHistoryT;
 
-// Using a split_interval_map we preserve interval splittings that occured via insertion.
+// Using a split_interval_map we preserve interval splittings that occurred via insertion.
 typedef split_interval_map<ptime, int, partial_absorber, less, inplace_max> 
     PartyHeightSplitHistoryT;
 

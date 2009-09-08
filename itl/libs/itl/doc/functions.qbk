@@ -11,7 +11,7 @@
 
 Section [link boost_itl.interface.function_synopsis Function Synopsis] 
 above gave an overview of the polymorphic functions of the itl.
-This is what you will need to find the desired possibilites to combine itl 
+This is what you will need to find the desired possibilities to combine itl 
 functions and objects most of the time.
 The functions and overloads that you intuitively expect
 should be provided, so you won't need to refer to the documentation very often.
@@ -19,8 +19,8 @@ should be provided, so you won't need to refer to the documentation very often.
 If you are interested 
 
 * in the ['*specific design of the function overloads*],
-* in ['*complexity charactersistics*] for certain overloads 
-* or if the complier ['*refuses to resolve*] specific function application you want to use,
+* in ['*complexity characteristics*] for certain overloads 
+* or if the compiler ['*refuses to resolve*] specific function application you want to use,
 
 refer to this section that describes the polymorphic function families of the itl
 in detail.
@@ -42,7 +42,7 @@ in the doxygen generated
 Many of the *itl's* functions are overloaded for
 elements, segments, element and interval containers.
 But not all type combinations are provided. Also
-the admissable type combinations are different for
+the admissible type combinations are different for
 different functions and operations.
 To concisely represent the overloads that can be
 used we use synoptical tables that contain 
@@ -68,16 +68,16 @@ The first argument type `T` is displayed as row headers
 of the tables. 
 The second argument type `P` is displayed as column headers
 of the tables. 
-If a combination of `T` and `P` is admissable the related 
+If a combination of `T` and `P` is admissible the related 
 cell of the table is non empty.
 It displays the result type of the operation. In this example
 the result type is always equal to the first argument.
 
-The possible types that can be instaniated for `T` and `P`
+The possible types that can be instantiated for `T` and `P`
 are element, interval and container types abbreviated by
 placeholders that are defined 
 [link boost_itl.interface.function_synopsis here]
-and can be summerized as
+and can be summarized as
 
 __s : element set, __S : interval sets, __e : elements, __i : intervals\n
 __m:element map,   __M:interval maps,   __b:element-value pairs, __p:interval-value pairs
@@ -237,9 +237,9 @@ m  |   m   m            M  |     M M   M
 
 For `Sets`, the ['*key types*] defined for maps
 are identical with the set types themselves.
-So the distiction between the function groups
+So the distinction between the function groups
 ['*selection by key*] and ['*generalized intersection*]
-fall thogether in the well known ['*set intersection*].
+fall together in the well known ['*set intersection*].
 
 [endsect][/ Key Types]
 

@@ -157,7 +157,7 @@ intervals.
 
 In the example `partys_height_average.cpp` we compute yet another aggregation:
 The average height of guests. This is done by defining a `class counted_sum` 
-that sums up heights and counts the numer of guests
+that sums up heights and counts the number of guests
 via an `operator +=`.
 
 Based on the `operator +=` we can aggregate counted sums on addition
@@ -181,15 +181,15 @@ In many real world applications only addition is needed and user
 defined classes will work fine, if they only implement 
 `operator +=`. Only if any of the `operator`s `-=` or `-`
 is called on the interval_map, the user defined class has to
-implement it's own `operator -=` to provide the subractive
-aggreagtion on overlap.
+implement it's own `operator -=` to provide the subtractive
+aggregation on overlap.
 
 [endsect]
 
 
 [section:partys_tallest_guests Party's tallest guests]
 
-Defining `operator +=` (and `-=`) is proably the most important
+Defining `operator +=` (and `-=`) is probably the most important
 method to implement arbitrary kinds of user defined aggregations.
 An alternative way to choose a desired aggregation is to
 instantiate an interval_map class template with an 
@@ -251,16 +251,16 @@ holidays, sickness times and vacations.
 Example [*user groups] shows the availability of set operations
 on __itv_maps__. 
 
-In the example there is a user group `med_users` of a hospial staff
+In the example there is a user group `med_users` of a hospital staff
 that has the authorisation to handle medical data of patients.
-User group `admin_users` has access to aministrative data like
-health inshurance and financial data.
+User group `admin_users` has access to administrative data like
+health insurance and financial data.
 
 The membership for each user in one of the user groups has a time
 interval of validity. The group membership begins and ends.
 
 * Using a union operation `+` we can have an overview over the unified
-  user groups and the memebership dates of employees.
+  user groups and the membership dates of employees.
 
 * Computing an intersection `&` shows who is member of both med_users 
   and admin_users at what times.

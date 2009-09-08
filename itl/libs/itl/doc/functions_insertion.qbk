@@ -115,7 +115,7 @@ m   | m
 M   |   M      
 ``
 
-[table Time Complexity for memberfunction `set`
+[table Time Complexity for member function `set`
 [[`T& set(T&, const P&)`] [domain_mapping_type] [interval_mapping_type] ]
 [[itl::map]               [__Olgn__]            [ ]                     ]
 [[interval_maps]          []                    [__a_Olgn__]            ]

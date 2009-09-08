@@ -17,7 +17,7 @@
 ]
 
 [table
-[[['*Streaming, conversion*]]                         [Desctription]  ]
+[[['*Streaming, conversion*]]                         [Description]  ]
 [[`std::basic_ostream operator << (basic_ostream&, const T&)`] 
                                 [Serializes the argument of type T to an output stream]   ]
 [[`std::string T::as_string()`] [Returns a string representation of the object of type `T`]]

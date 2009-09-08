@@ -21,7 +21,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #define ITL_FORALL_THIS(iter) for(iterator iter=begin(); (iter)!=end(); (iter)++)
 #define ITL_const_FORALL_THIS(iter) for(const_iterator iter=this->begin(); (iter)!=this->end(); (iter)++)
 
-// Plain old array iteration (assuming memberfunction VecT::size()!)
+// Plain old array iteration (assuming member function VecT::size()!)
 #define ITL_FORALL_VEC(idx, vec) for(int idx=0; idx<vec.size(); idx++)
 
 namespace boost{namespace itl

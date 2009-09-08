@@ -43,10 +43,10 @@ pair<const_iterator,const_iterator> T::equal_range(const key_value& key)const
 ``
 ]                                                                                                           
     [Returns a range `[first, past)` of iterators to all elements of the container
-     that compare neighter less than nor greater than `key_value key`.
+     that compare neither less than nor greater than `key_value key`.
      For element containers __itl_set__ and __itl_map__, `equal_range` 
      contains at most one iterator pointing the element equal to `key`,
-     if it exitsts.
+     if it exists.
      
      For interval containers `equal_range` contains iterators to all
      intervals that overlap interval `key`.

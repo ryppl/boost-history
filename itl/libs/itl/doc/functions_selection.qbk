@@ -18,7 +18,7 @@
 [[`codomain_type operator() (const domain_type&)const`]  [ ]        [__Olgn__] [ ]         [__Olgn__] [`is_total<T>::value`] ]
 ]
 
-* All time *complexities* are ['*logarithmic*] in the containers `iteravive_size()`.
+* All time *complexities* are ['*logarithmic*] in the containers `iterative_size()`.
 * `operator()` is available for total maps only.
 
 

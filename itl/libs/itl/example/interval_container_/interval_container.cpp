@@ -10,7 +10,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 +-----------------------------------------------------------------------------*/
 /** Example interval_container.cpp \file interval_container.cpp
 
-    Sample file interval_container.cpp demontrates basic charactersistics of 
+    Sample file interval_container.cpp demontrates basic characteristics of 
     interval container objects.
 
     Simple interactive shells for the manipulation of interval containers can be found
@@ -60,7 +60,7 @@ void interval_container_basics()
 
     // A split interval set of type split_interval_set preserves all interval
     // borders. On insertion of overlapping intervals the intervals in the
-    // set are split up at the interval boreders of the inserted interval.
+    // set are split up at the interval borders of the inserted interval.
     split_interval_set<Time> splitTimes;
     splitTimes += night_and_day;
     splitTimes += day_and_night; //overlapping in 'day' [07:00, 20:00)

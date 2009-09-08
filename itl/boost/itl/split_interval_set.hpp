@@ -319,7 +319,7 @@ inline void split_interval_set<DomainT,Compare,Interval,Alloc>::subtract_(const 
 /** Equality on discrete interval sets. Discrete interval sets are equal, if
     their elements are equal and their fragmentation is equal.
     NOTE: This is not inline with the mathematical view.
-    We have a distiction between 'element equality' and 'lexicographical 
+    We have a distinction between 'element equality' and 'lexicographical 
     equality'.    */
 template <typename DomainT, ITL_COMPARE Compare, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline bool operator == (const split_interval_set<DomainT,Compare,Interval,Alloc>& lhs,

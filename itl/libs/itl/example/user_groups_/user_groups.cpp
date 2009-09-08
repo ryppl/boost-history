@@ -13,16 +13,16 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     Example user_groups.cpp shows the availability of set operations
     on interval maps. 
 
-    In the example there is a user group 'med_users' of a hospial staff
+    In the example there is a user group 'med_users' of a hosptial staff
     that has the authorisation to handle medical data of patients.
-    User group 'admin_users' has access to aministrative data like
-    health inshurance and invoice data.
+    User group 'admin_users' has access to administrative data like
+    health insurance and invoice data.
 
     The membership for each user in one of the user groups has a time
     interval of validity. The group membership begins and ends.
 
     Using a union operation '+' we can have an overview over both
-    user groups and the memebership dates of employees.
+    user groups and the membership dates of employees.
 
     Computing an intersection '&' shows the super users. The persons
     that are members of both med_users and admin_users and the times

@@ -53,7 +53,7 @@ a /set union/ semantics is often attached `operators |=` and `|`.
 
 [section Member functions][/ Addition]
 
-The admissable combinations of types for memberfunction 
+The admissible combinations of types for member function 
 `T& T::add(const P&)` can be summarized in the 
 ['*overload table*] below:
 
@@ -85,7 +85,7 @@ The next table contains complexity characteristics for `add`.
 [section Inplace operators]
 
 The possible overloads of inplace `T& operator += (T&, const P&)`
-are given by two tables, that show admissable combinations of types.
+are given by two tables, that show admissible combinations of types.
 Row types show instantiations of argument type `T`. Columns types
 show show instantiations of argument type `P`. If a combination
 of argument types is possible, the related table cell contains
@@ -110,10 +110,10 @@ s  | s   s              S  | S S     S
 m  |   m   m            M  |     M M   M    
 ``
 
-For the definition of admissable overloads
+For the definition of admissible overloads
 we separate /element containers/ from /interval containers/.
 Within each group all combinations of types are supported 
-for an operation, that are inline with the *itl's* 
+for an operation, that are in line with the *itl's* 
 design and the sets of laws, that establish the *itl's*
 [link boost_itl.semantics semantics].
 
@@ -143,7 +143,7 @@ the combination of
 domain elements (__e) or element value pairs (__b)
 is faster than a combination of intervals (__i) or
 interval value pairs (__p) which in turn is faster than
-the combinatin of element or interval containers.
+the combination of element or interval containers.
 The next table shows /time complexities/ of addition for
 *itl's* element containers.
 
@@ -188,7 +188,7 @@ loglinear for interval containers.
 
 [section Infix operators]
 
-The admissable type combinations for infix `operator +`
+The admissible type combinations for infix `operator +`
 are defined by the overload tables below. 
 
 ``

@@ -110,7 +110,7 @@ are of ['*loglinear*] time: __Omlgn__.
 If both containers have same iterative_sizes so that /m = n/
 we have the worst case ( __Onlgn__ ).
 There is an alternative implementation that has a ['*linear*]
-complextity of __Onpm__. 
+complexity of __Onpm__. 
 The loglinear implementation has been chosen,
 because it can be faster, if the container argument is
 small. In this case the loglinear implementation approaches

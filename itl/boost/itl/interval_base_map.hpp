@@ -266,7 +266,7 @@ public:
     size_type size()const { return cardinality(); }
 
     /** The length of the interval container which is the sum of 
-        interval lenghts */
+        interval lengths */
     difference_type length()const;
 
     /** Number of intervals which is also the size of the 
@@ -1154,7 +1154,7 @@ interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Inter
         if(    it_->first.touches(next_->first)
             && it_->second == next_->second      )
         {
-            iterator fst_mem = it_;  // hold the fist member
+            iterator fst_mem = it_;  // hold the first member
             
             // Go on while touching members are found
             it_++; next_++;

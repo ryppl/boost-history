@@ -51,7 +51,7 @@ erase | e i b p
   M   |     M M    
 ``
 
-The next table contains complexity characteristics for memberfunction `erase`.
+The next table contains complexity characteristics for member function `erase`.
 
 [table Time Complexity for member function erase on itl containers
 [[`T& T::erase(const P&)`] [__ch_dom_t__][__ch_itv_t__][__ch_dom_mp_t__][__ch_itv_mp_t__]]
@@ -149,8 +149,8 @@ So we erase
 ]
 
 Erasing by a single iterator need only ['*amortized constant time*].
-Erasing via a range of iterators `[fist, past)` is of ['*linear time*]
-in the number `k` of iterators in range `[fist, past)`.
+Erasing via a range of iterators `[first, past)` is of ['*linear time*]
+in the number `k` of iterators in range `[first, past)`.
 
 [endsect][/ Erasure by Iterators]
 

@@ -56,7 +56,7 @@ interval_set<date> weekends(const interval<date>& scope)
     return weekends;
 }
 
-// The avalable working time for the employees of a company is calculated
+// The available working time for the employees of a company is calculated
 // for a period of 3 months accounting for weekends and holidays.
 //    The available daily working time for the employees is calculated
 // using interval_sets and interval_maps demonstrating a number of
@@ -76,14 +76,14 @@ void man_power()
     // Subtract the weekends
     worktime -= weekends(scope);
     // Subtract holidays
-    worktime -= from_string("2008-10-03"); //german reunification ;)
+    worktime -= from_string("2008-10-03"); //German reunification ;)
 
     // company holidays (fictitious ;)
     worktime -= interval<date>::closed(from_string("2008-08-18"), 
                                        from_string("2008-08-22"));
 
     //-------------------------------------------------------------------------
-    // (2) Now we calculate the individual worktimes for some employees
+    // (2) Now we calculate the individual work times for some employees
     //-------------------------------------------------------------------------
     // In the company works Claudia. 
     // This is the map of her regular working times:
@@ -106,7 +106,7 @@ void man_power()
     interval_set<date> claudias_absence_times(claudias_seminar);
     claudias_absence_times += claudias_vacation;
 
-    // All the absencetimes have to subtracted from the map of her working times
+    // All the absence times have to subtracted from the map of her working times
     claudias_working_hours -= claudias_absence_times;
 
     //-------------------------------------------------------------------------
@@ -127,7 +127,7 @@ void man_power()
     interval_set<date> bodos_absence_times(bodos_flu);
     bodos_absence_times += bodos_vacation;
 
-    // All the absencetimes have to be subtracted from the map of his working times
+    // All the absence times have to be subtracted from the map of his working times
     bodos_working_hours -= bodos_absence_times;
 
     //-------------------------------------------------------------------------

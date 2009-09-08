@@ -13,7 +13,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 
     In partys_height_average.cpp we compute yet another aggregation:
     The average height of guests. This is done by defining a class
-    counted_sum that sums up heights and counts the numer of guests
+    counted_sum that sums up heights and counts the number of guests
     via an operator +=.
     
     Based on the operator += we can aggregate counted sums on addition

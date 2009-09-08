@@ -37,7 +37,7 @@ are given in the table above.
 [section Member functions][/ Symmetric difference]
 
 /Symmetric difference/ is implemented on interval containers
-by the memberfunction `T& T::flip(const P& operand)`.
+by the member function `T& T::flip(const P& operand)`.
 
 ``
 y.flip(x)
@@ -48,7 +48,7 @@ if it is contained in `x`. Elements of
 `x` not contained in `y` are added.
 [/ paratract, surtract, symetract, topple, symmetric_subtract]
 
-The admissable combinations of types for memberfunction 
+The admissible combinations of types for member function 
 `T& T::flip(const P&)` can be summarized in the 
 ['*overload table*] below:
 
@@ -80,7 +80,7 @@ The next table contains complexity characteristics for member functions `flip`.
 
 [section Inplace operators][/ Symmetric Difference]
 
-The overload tables below are giving admissable
+The overload tables below are giving admissible
 type combinations for `operator ^=`
 that implements ['*symmetric difference*].
 

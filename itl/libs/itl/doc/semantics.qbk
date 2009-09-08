@@ -60,7 +60,7 @@ the container.
 
 The induced equivalence of `operator <` is 
 lexicographical equality 
-which is implementd as `operator ==`. 
+which is implemented as `operator ==`. 
 ``
 //equivalence induced by strict weak ordering <
 !(a<b) && !(b<a) implies a == b;
@@ -69,7 +69,7 @@ Again this
 follows the semantics of the *stl*.
 Lexicographical equality is stronger than the equality
 of elements. Two containers that contain the same elements
-can be lexicographically unqueal, if their elements are
+can be lexicographically unequal, if their elements are
 differently sorted. Lexicographical comparison belongs to 
 the __bi_iterative__ aspect. Of all the different sequences that are valid 
 for unordered sets and maps, one such sequence is
@@ -78,7 +78,7 @@ this selection a unique iteration is possible.
 
 [h4 Subset Ordering and Element Equality]
 
-On the __conceptual__ aspect only membeship of elements
+On the __conceptual__ aspect only membership of elements
 matters, not their sequence. So there are functions
 `contained_in` and `element_equal` that implement
 the subset relation and the equality on elements.
@@ -115,7 +115,7 @@ The induced equivalence is the equality of elements that
 is implemented via function `is_element_equal`.
 ``
 //equivalence induced by the partial ordering contained_in on itl::container a,b
-a.contained_in(b) && b.conainted_in(a) implies is_element_equal(a, b);
+a.contained_in(b) && b.contained_in(a) implies is_element_equal(a, b);
 ``
 
 [endsect][/ Orderings and Equivalences]
@@ -291,7 +291,7 @@ obey the same laws that are valid for sets. Yet
 the semantics of the *itl's* maps may be a different one, because
 of it's aggregating facilities, where the aggregating combiner
 operations are passed to combine the map's associated values.
-It turnes out, that the aggregation on overlap principle
+It turns out, that the aggregation on overlap principle
 induces semantical properties to itl maps in such a way,
 that the set of equations that are valid will depend on
 the semantics of the type `CodomainT` of the map's associated
@@ -326,7 +326,7 @@ of itl::Maps,
 * ['*Maps of Sets*] that will be called ['*Collectors*]  and
 * ['*Maps of Numbers*] which will be called ['*Quantifiers*]
 
-both of which seem to have many interesting usecases for practical
+both of which seem to have many interesting use cases for practical
 applications. The semantics associated with the term /Numbers/ 
 is a 
 [@http://en.wikipedia.org/wiki/Monoid commutative monoid] 
@@ -385,7 +385,7 @@ s == {(1,1),(1,2),(1,3),   //representing 1->{1,2,3}
 ``
 
 The equivalence of `m` and `s` is only violated if an 
-empty set occures in `m` by subtraction of a value pair:
+empty set occurres in `m` by subtraction of a value pair:
 ``
 m -= (2,1); 
 m == {(1->{1,2,3}), (2->{})}; //aggregated on collision of key value 2
@@ -681,7 +681,7 @@ only element equality is required.
 For `operator &` the associativity is broken for all maps
 that are partial absorbers. For total absorbers associativity
 is valid for element equality. All maps having the neutron enricher
-Trait are associative wrt. lexicigraphical equality `==`.
+Trait are associative wrt. lexicographical equality `==`.
 ``                               
 Associativity                      &
    absorbs_neutrons && !is_total   false

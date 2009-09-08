@@ -206,7 +206,7 @@ public:
     /** An interval set's size is it's cardinality */
     size_type size()const { return cardinality(); }
 
-    /** The length of the interval container which is the sum of interval lenghts */
+    /** The length of the interval container which is the sum of interval lengths */
     difference_type length()const;
 
     /** Number of intervals which is also the size of the iteration over the object */
@@ -636,7 +636,7 @@ interval_base_set<SubType,DomainT,Compare,Interval,Alloc>::join()
     {
         if( (*it_).touches(*next_) )
         {
-            iterator fst_mem = it_;  // hold the fist member
+            iterator fst_mem = it_;  // hold the first member
             
             // Go on while touching members are found
             it_++; next_++;

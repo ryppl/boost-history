@@ -45,7 +45,7 @@ using namespace boost::itl;
     We call it AmountTupelComputer or AmountCube.
 
     A TupelComputer counts on insert. That is, it applies the += operation on 
-    associated values whenever the memberfunction 'insert' is called and an 
+    associated values whenever the member function 'insert' is called and an 
     appropriate tupel is in the cube.
 
     An AmountTupelComputer counts frequencies of tupels if the inserted associated 

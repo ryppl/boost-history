@@ -23,8 +23,8 @@ implementation and performance.
 
 [h5 STL based implementation]
 
-The *implementation* of the *itl's* conainers is based on 
-[*std::set] and [*std::map]. So the underlying datastructure of
+The *implementation* of the *itl's* containers is based on 
+[*std::set] and [*std::map]. So the underlying data structure of
 interval containers is a red black tree of intervals or
 interval value pairs. 
 The element containers __itl_set__ and __itl_map__ are wrapper
@@ -32,7 +32,7 @@ classes of `std::set` and `std::map`.
 Interval containers are then using __itl_sets__ of intervals
 or __itl_maps__ of interval value pairs as implementing
 containers.
-So all the ['*complexity characteristics*] of itl conainers
+So all the ['*complexity characteristics*] of itl containers
 are based on and limited by the ['*red-black tree implementation*]
 of the underlying std::AssociativeContainers.
 
@@ -40,8 +40,8 @@ of the underlying std::AssociativeContainers.
 [section Iterative size]
 
 Throughout the documentation on complexity, 
-big /O/ expressions like __On__ or __Omlgn__ refere to container sizes
-/n/ and /m/. In this documentaion these sizes ['*do not*] refer 
+big /O/ expressions like __On__ or __Omlgn__ refer to container sizes
+/n/ and /m/. In this documentation these sizes ['*do not*] denote 
 to the familiar `size` function that returns
 the ['*number of elements*] of a container. Because for an interval container
 ``
@@ -52,8 +52,8 @@ mono.interval_count() == 1; // true, only one interval
 ``
 
 it's size and the number of contained intervals is usually different.
-To refer uniformely to a /size/ that matters for iteration, which is
-the decisive kind of size concering algorithmic behavior there is a function
+To refer uniformly to a /size/ that matters for iteration, which is
+the decisive kind of size concerning algorithmic behavior there is a function
 ``
 bool T::iterative_size()const; // Number of entities that can be iterated over.
 ``
@@ -105,7 +105,7 @@ gives the time complexities for the overloaded
 The instance types of `T` are given as column headers.
 Instances of type parameter `P` are denoted in
 the second column.
-The third column containes the specific kind of complexity statement. 
+The third column contains the specific kind of complexity statement. 
 If column three is empty ['*worst case*] complexity is given
 in the related row. 
 
@@ -154,7 +154,7 @@ For the addition of ['*interval containers*] complexity is __Omlgnpm__.
 So for the ['*worst case*], where the container sizes /n/ and /m/ 
 are equal and both containers cover the same ranges, 
 the complexity of container addition is ['*loglinear*].
-For other cases, that occur frequently in realworld applications
+For other cases, that occur frequently in real world applications
 performance can be much better.
 If the added container `operand` is much smaller than 
 `object` and the intervals in `operand` are relatively

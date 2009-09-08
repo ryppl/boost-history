@@ -11,7 +11,7 @@
 [section Naming]
 
 The *itl* is about sets and maps and a useful
-implementation of sets and maps usings intervals.
+implementation of sets and maps using intervals.
 In the documentation of the *itl* the different
 set and map types are grouped in various ways.
 In order to distinguish those groups we use
@@ -25,7 +25,7 @@ most of the time we do not not talk about the
 concepts themselves but the set of types
 that implement those concepts in the *itl*.
 The main groups ['*itl containers*] can be
-devided in are summarized in the next table:
+divided in are summarized in the next table:
 
 [table
 [[]                  []                                             []           ]
@@ -163,7 +163,7 @@ in the sections on the
 [link boost_itl.semantics.sets semantics of itl Sets] and 
 [link boost_itl.semantics.maps Maps].
 These semantical differences are mainly based on the implementation
-of the pivotal memberfunctions `add` and `subtract` for elements 
+of the pivotal member functions `add` and `subtract` for elements 
 and intervals that again serve for implementing 
 `operator +=` and `operator -=`.
 [endsect][/ Abstract Sets and Maps]
@@ -217,7 +217,7 @@ it does:
 [table
 [[]         [`add<Combine<CodomainT> >((k,x))`] [`subtract<inverse<Combine<CodomainT> >::type>((k,x))`]]
 [[Instance] [`add<inplace_plus<int> >((k,x))`]  [`subtract<inplace_minus<int> >((k,x))`]]
-[[Inversion][adds `x` on overlap. This inverts a preceeding `subtract` of `x` on `k`][subtracts `x` on overlap. This inverts a preceeding `add` of `x` on `k`]]
+[[Inversion][adds `x` on overlap. This inverts a preceding `subtract` of `x` on `k`][subtracts `x` on overlap. This inverts a preceding `add` of `x` on `k`]]
 ]
 
 
@@ -236,8 +236,8 @@ are not in the public interface of __itv_bmaps__, because
 the `Combine` functor is intended to be an invariant 
 of __itv_bmap_s__
 template instance to avoid, that clients
-spoil the aggregation by accidently calling 
-variing aggregation functors.
+spoil the aggregation by accidentally calling 
+varying aggregation functors.
 But you could instantiate an __itv_map__ to have 
 `insert/erase` semantics this way:
 ``
@@ -269,7 +269,7 @@ But rest assured `itl::Maps` won't contaminate your software.
 In the itl we call ['*neutral elements*] `neutrons` and all values
 that [*are not] `neutrons` we call `protons`.
 
-In the pseudo code snipplets below `0` will be used to denote
+In the pseudo code snippets below `0` will be used to denote
 `neutrons`, which can be 
 different objects like `const double 0.0`, empty sets, empty strings, 
 null-vectors etc. dependent of the instance type for parameter `CodomainT`.
@@ -345,7 +345,7 @@ four values.
 Map traits are a late extension to the *itl*. Interval maps have
 been used for a couple of years  
 in a variety of applications at Cortex Software GmbH
-with an implementaion that resembled the default trait.
+with an implementation that resembled the default trait.
 Only the deeper analysis of the itl's ['*aggregating Map's
 concept*] in the course of preparation of the library for boost 
 led to the introduction of map Traits.
@@ -353,7 +353,7 @@ led to the introduction of map Traits.
 [h5 Add-Subtract Antinomy in Aggregating Maps]
 
 Constitutional for the absorber/enricher propery is a little
-antinomie.
+antinomy.
 
 We can insert value pairs to the map by ['*adding*] them to the map
 via operations `add, +=` or `+`:
@@ -458,7 +458,7 @@ but it can be made for an __penricher__ map:
 (k,0) key k carries 0          : Pair (k,v) has     been dealt with resulting in v=0
 ]
 
-Sometimes this subtle distiction is needed. Then a __penricher__
+Sometimes this subtle distinction is needed. Then a __penricher__
 is the right choice. Also, If we want to give two `itl::Maps`
 a common set of keys in order to, say, iterate synchronously
 over both maps, we need /enrichers/. 

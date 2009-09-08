@@ -53,7 +53,7 @@ are given in the table above.
 
 [section Member functions][/ Intersection]
 
-The admissable combinations of types for memberfunction 
+The admissible combinations of types for member function 
 `void T::add_intersection(T&, const P&)` can be summarized in the 
 ['*overload table*] below. 
 Compared to other overload tables, placements of function arguments are
@@ -89,7 +89,7 @@ The next table contains complexity characteristics for member function `add_inte
 
 [section Inplace operators][/ Intersection]
 
-The overload tables below are giving admissable
+The overload tables below are giving admissible
 type combinations for the intersection `operator &=`.
 As for the overload patterns of /subtraction/
 intersections are possible within Sets and Maps
@@ -194,7 +194,7 @@ and a second part defining the
 ['*selection by key object] functionality.
 
 ``
-// (Generealized) intersection
+// (Generalized) intersection
 &  | e b s m            &  | e  i  b  p  S1 S2 S3 M1 M3
 ---+--------            ---+---------------------------
 e  |     s              e  |             S1 S2 S3      

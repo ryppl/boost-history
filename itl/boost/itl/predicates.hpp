@@ -126,7 +126,7 @@ namespace boost{namespace itl
     struct super_sub_set : public relation<Type,Type>
     {
         /// Apply the superset relation.
-        /** <tt>containes(super, sub)</tt> is true if <tt>super</tt> containes 
+        /** <tt>contains(super, sub)</tt> is true if <tt>super</tt> containes 
             <tt>sub</tt> */
         bool operator()(const Type& super, const Type& sub)const
         {

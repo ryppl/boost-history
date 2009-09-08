@@ -47,7 +47,7 @@ are given in the table above.
 
 [section Member functions][/ Subtraction]
 
-The admissable combinations of types for memberfunction 
+The admissible combinations of types for member function 
 `T& T::add(const P&)` can be summarized in the 
 ['*overload table*] below:
 
@@ -145,7 +145,7 @@ m = x.iterative_size(); //if P is a container type
 
 [section Infix operators][/-Subtraction]
 
-The admissable overloads for the infix 
+The admissible overloads for the infix 
 /subtraction/ `operator -` 
 which is a non commutative 
 operation 
