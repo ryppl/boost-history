@@ -24,6 +24,11 @@ namespace boost { namespace fusion { namespace detail
 
         template<typename Self, typename U>
         struct result<Self(U)>
+#ifdef BOOST_NO_RVALUE_REFERENCES
+        {
+            typedef U type;
+        };
+#else
           : mpl::if_<
                 mpl::and_<
                     is_convertible<
@@ -37,6 +42,7 @@ namespace boost { namespace fusion { namespace detail
               , U
             >
         {};
+#endif
 
         template<typename OtherF, typename OtherNewValue>
         replace_if_helper(

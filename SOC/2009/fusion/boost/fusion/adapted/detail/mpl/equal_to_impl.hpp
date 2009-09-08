@@ -9,7 +9,6 @@
 #define BOOST_FUSION_ADAPTED_DETAIL_MPL_EQUAL_TO_IMPL_HPP
 
 #include <boost/fusion/adapted/detail/mpl/get_mpl_it.hpp>
-
 #include <boost/type_traits/is_same.hpp>
 
 namespace boost { namespace fusion { namespace extension

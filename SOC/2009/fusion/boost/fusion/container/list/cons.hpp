@@ -32,6 +32,8 @@
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/container/list/detail/cons/cons_fwd.hpp>
 #include <boost/fusion/container/list/detail/cons/at_impl.hpp>
@@ -54,13 +56,14 @@ namespace boost { namespace fusion
     struct nil
       : sequence_base<nil>
     {
+        typedef void_ car_type;
+        typedef void_ cdr_type;
+
         typedef mpl::int_<0> size;
         typedef cons_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
         typedef mpl::false_ is_view;
         typedef forward_traversal_tag category;
-        typedef void_ car_type;
-        typedef void_ cdr_type;
 
         nil()
         {}
@@ -101,15 +104,17 @@ namespace boost { namespace fusion
     };
 
     template <typename Car, typename Cdr = nil>
-    struct cons : sequence_base<cons<Car, Cdr> >
+    struct cons
+      : sequence_base<cons<Car, Cdr> >
     {
+        typedef Car car_type;
+        typedef Cdr cdr_type;
+
         typedef mpl::int_<Cdr::size::value+1> size;
         typedef cons_tag fusion_tag;
         typedef fusion_sequence_tag tag; 
         typedef mpl::false_ is_view;
         typedef forward_traversal_tag category;
-        typedef Car car_type;
-        typedef Cdr cdr_type;
 
         cons()
           : car()
@@ -138,18 +143,63 @@ namespace boost { namespace fusion
           , cdr(detail::assign_by_deref(),fusion::next(it))
         {}
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+#   ifdef BOOST_NO_RVALUE_REFERENCES
         explicit
         cons(typename call_traits<Car>::param_type car)
           : car(car)
         {}
-#else
+
+        cons(typename call_traits<Car>::param_type car,Cdr const& cdr)
+          : car(car)
+          , cdr(cdr)
+        {}
+#   else
         template<typename OtherCar>
         explicit
         cons(OtherCar&& car)
           : car(std::forward<OtherCar>(car))
         {}
+
+        template<typename OtherCar,typename OtherCdr>
+        cons(BOOST_FUSION_R_ELSE_CLREF(OtherCar) car,
+             BOOST_FUSION_R_ELSE_CLREF(OtherCdr) cdr)
+          : car(BOOST_FUSION_FORWARD(OtherCar,car))
+          , cdr(BOOST_FUSION_FORWARD(OtherCdr,cdr))
+        {}
+#   endif
+#else
+#   ifdef BOOST_NO_RVALUE_REFERENCES
+        template<typename... CdrArgs>
+        explicit
+        cons(typename call_traits<Car>::param_type car,
+             CdrArgs... const& cdr_args)
+          : car(car)
+          , cdr(cdr_args)
+        {}
+#   else
+        template<typename... CdrArgs>
+        explicit
+        cons(Car&& car,CdrArgs&&... cdr_args)
+          : car(std::forward<Car>(car))
+          , cdr(std::forward<CdrArgs>(cdr_args)...)
+        {}
+#   endif
 #endif
+
+        template<typename Seq>
+        cons(
+            BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+            typename disable_if<
+                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Seq), car_type>
+            >::type* =0)
+          : car(fusion::front(BOOST_FUSION_FORWARD(Seq,seq)))
+          , cdr(detail::assign_by_deref(),
+                  fusion::next(fusion::begin(BOOST_FUSION_FORWARD(Seq,seq))))
+        {
+            BOOST_FUSION_MPL_ASSERT_NOT((
+                    mpl::equal_to<size,result_of::size<Seq> >));
+        }
 
 #define BOOST_FUSION_CONS_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
@@ -165,20 +215,6 @@ namespace boost { namespace fusion
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_CONS_ASSIGN_CTOR,_);
 
 #undef BOOST_FUSION_CONS_ASSIGN_CTOR
-
-#ifdef BOOST_NO_RVALUE_REFERENCES
-        cons(typename call_traits<Car>::param_type car,Cdr const& cdr)
-          : car(car)
-          , cdr(cdr)
-        {}
-#else
-        template<typename OtherCar,typename OtherCdr>
-        cons(BOOST_FUSION_R_ELSE_CLREF(OtherCar) car,
-             BOOST_FUSION_R_ELSE_CLREF(OtherCdr) cdr)
-          : car(BOOST_FUSION_FORWARD(OtherCar,car))
-          , cdr(BOOST_FUSION_FORWARD(OtherCdr,cdr))
-        {}
-#endif
 
         template<typename Seq>
         cons&

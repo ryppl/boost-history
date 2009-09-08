@@ -29,9 +29,12 @@
 #include <boost/preprocessor/repetition/enum_params.hpp>
 #include <boost/preprocessor/repetition/enum_binary_params.hpp>
 #include <boost/mpl/int.hpp>
+#include <boost/mpl/bool.hpp>
+#include <boost/mpl/and.hpp>
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
+#include <boost/type_traits/is_convertible.hpp>
 #include <boost/utility/enable_if.hpp>
 
 #include <utility>
@@ -42,6 +45,14 @@ namespace boost { namespace fusion
 
     namespace detail
     {
+        template<typename From, typename... Elements>
+        struct is_convertible_to_head;
+
+        template<typename From, typename Head, typename... Rest>
+        struct is_convertible_to_head<From, Head, Rest...>
+          : is_convertible<From, Head>
+        {};
+
         template<int Index,typename... Elements>
         struct vector_impl;
 
@@ -316,14 +327,22 @@ namespace boost { namespace fusion
 #undef BOOST_FUSION_VECTOR_ASSIGN_CTOR
 
         template<typename Seq>
-        vector(
-            typename enable_if_c<
-                sizeof...(Elements)!=1
-              , BOOST_FUSION_R_ELSE_CLREF(Seq)
-            >::type seq)
+        vector(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+            typename disable_if<
+                mpl::and_<
+                    mpl::bool_<sizeof...(Elements)==1>
+                  , detail::is_convertible_to_head<
+                        BOOST_FUSION_R_ELSE_CLREF(Seq)
+                      , Elements...
+                    >
+                >
+            >::type* =0)
           : base_type(detail::assign_by_deref(),
                  fusion::begin(BOOST_FUSION_FORWARD(Seq,seq)))
-        {}
+        {
+            BOOST_FUSION_STATIC_ASSERT((
+                sizeof...(Elements)==result_of::size<Seq>::value));
+        }
 
         template<typename Seq>
         vector&

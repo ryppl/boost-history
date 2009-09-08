@@ -14,11 +14,12 @@
 #include <boost/fusion/sequence/intrinsic/size.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
-#include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/type_traits/add_const.hpp>
 #endif
+
+#include <boost/fusion/algorithm/iteration/detail/fold.hpp>
 
 namespace boost { namespace fusion
 {

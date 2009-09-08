@@ -10,10 +10,11 @@
 #define BOOST_FUSION_ALGORITHM_TRANSFORMATION_REPLACE_IF_HPP
 
 #include <boost/fusion/view/transform_view/transform_view.hpp>
-#include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
 #include <boost/fusion/support/deduce.hpp>
 #include <boost/fusion/support/internal/ref.hpp>
 #include <boost/fusion/support/internal/assert.hpp>
+
+#include <boost/fusion/algorithm/transformation/detail/replace_if.hpp>
 
 namespace boost { namespace fusion
 {

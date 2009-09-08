@@ -12,6 +12,7 @@
 #       include <boost/fusion/sequence/intrinsic/size.hpp>
 #       include <boost/fusion/sequence/intrinsic/empty.hpp>
 #   endif
+#   include <boost/fusion/sequence/intrinsic/front.hpp>
 #   include <boost/fusion/sequence/intrinsic/begin.hpp>
 #   include <boost/fusion/iterator/deref.hpp>
 #   include <boost/fusion/iterator/next.hpp>
@@ -37,9 +38,9 @@
 #   ifdef BOOST_FUSION_ENABLE_STATIC_ASSERTS
 #       include <boost/mpl/equal_to.hpp>
 #   endif
-
+#   include <boost/type_traits/is_convertible.hpp>
 #   include <boost/type_traits/add_const.hpp>
-//#   include <boost/utility/enable_if.hpp>
+#   include <boost/utility/enable_if.hpp>
 
 #   include <boost/fusion/container/vector/detail/at_impl.hpp>
 #   include <boost/fusion/container/vector/detail/value_at_impl.hpp>
@@ -140,15 +141,25 @@ namespace boost { namespace fusion
 #   undef BOOST_FUSION_VECTOR_CTOR
 
 #   if BOOST_FUSION_N
+#       if BOOST_FUSION_N==1
+        template<class Seq>
+        explicit
+        vector1(BOOST_FUSION_R_ELSE_LREF(Seq) seq,
+                typename disable_if<
+                    is_convertible<BOOST_FUSION_R_ELSE_LREF(Seq), T0>
+                >::type* =0)
+          : m0(fusion::front(seq))
+        {
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<Seq>::value==1));
+        }
+#       endif
+
 #       define BOOST_FUSION_MEMBER_INIT(Z, N, _)\
         BOOST_PP_CAT(m,N)(\
             BOOST_FUSION_FORWARD(BOOST_PP_CAT(A,N), BOOST_PP_CAT(_,N)))
 
 #       ifndef BOOST_NO_RVALUE_REFERENCES
         VARIADIC_TEMPLATE_A(BOOST_FUSION_N)
-#       endif
-#       if (BOOST_FUSION_N == 1)
-        explicit
 #       endif
         BOOST_PP_CAT(vector, BOOST_FUSION_N)(
 #       ifdef BOOST_NO_RVALUE_REFERENCES

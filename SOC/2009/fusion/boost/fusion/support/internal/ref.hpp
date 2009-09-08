@@ -128,19 +128,25 @@ namespace boost { namespace fusion { namespace detail
         typedef T& type;
     };
 
+#ifndef BOOST_NO_RVALUE_REFERENCES
+    template <typename T>
+    struct add_lref<T&&>
+    {
+        typedef T&& type;
+    };
+#endif
+
     template <typename T>
     struct identity
-    {
-        typedef typename
-#ifdef BOOST_FUSION_NO_PROPAGATE_VOLATILE
-            remove_const<
+      :
+ #ifdef BOOST_FUSION_NO_PROPAGATE_VOLATILE
+        remove_const<
 #else
-            remove_cv<
+        remove_cv<
 #endif
-                typename remove_reference<T>::type
-            >::type
-        type;
-    };
+            typename remove_reference<T>::type
+        >
+    {};
 
     template <typename TestType,typename Type>
     struct forward_as

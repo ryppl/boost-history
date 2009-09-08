@@ -23,6 +23,8 @@
 #ifdef BOOST_NO_RVALUE_REFERENCES
 #   include <boost/call_traits.hpp>
 #endif
+#include <boost/type_traits/is_convertible.hpp>
+#include <boost/utility/enable_if.hpp>
 
 #include <boost/fusion/view/single_view/detail/single_view_fwd.hpp>
 #include <boost/fusion/view/single_view/detail/single_view_iterator.hpp>
@@ -51,10 +53,6 @@ namespace boost { namespace fusion
         typedef mpl::true_ is_view;
         typedef mpl::int_<1> size;
 
-        single_view()
-          : val()
-        {}
-
 #define BOOST_FUSION_SINGLE_VIEW_CTOR(COMBINATION,_)\
         single_view(single_view COMBINATION view)\
           : val(BOOST_FUSION_FORWARD(single_view COMBINATION,view).val)\
@@ -64,18 +62,41 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_SINGLE_VIEW_CTOR
 
-#ifdef BOOST_NO_RVALUE_REFERENCES
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+        single_view()
+          : val()
+        {}
+
+#   ifdef BOOST_NO_RVALUE_REFERENCES
         explicit
         single_view(typename call_traits<T>::param_type val)
           : val(val)
         {}
-#else
-        template<typename OtherT>
+#   else
+        template<typename Arg>
         explicit
-        single_view(OtherT&& val)
-          : val(std::forward<OtherT>(val))
+        single_view(Arg&& val);
+          : val(std::forward<Arg>(val))
+        {}
+#   endif
+#else
+        template<typename... Args>
+        explicit
+        single_view(BOOST_FUSION_R_ELSE_CLREF(Args)... args)
+          : val(BOOST_FUSION_FORWARD(Args,args)...)
         {}
 #endif
+
+        template<typename Seq>
+        single_view(
+            BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+            typename disable_if<
+                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Seq), value_type>
+            >::type* =0)
+          : val(fusion::front(BOOST_FUSION_FORWARD(Seq,seq)))
+        {
+            BOOST_FUSION_STATIC_ASSERT((result_of::size<Seq>::value==1));
+        }
 
 #define BOOST_FUSION_SINGLE_VIEW_ASSIGN_CTOR(COMBINATION,_)\
         template<typename SeqRef>\
@@ -116,19 +137,25 @@ namespace boost { namespace fusion
         value_type val;
     };
 
-    template <typename T>
-    inline single_view<
-        typename traits::deduce<BOOST_FUSION_R_ELSE_CLREF(T)>::type
-    >
-    make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) v)
+    namespace result_of
     {
-        typedef
-            single_view<
-                typename traits::deduce<BOOST_FUSION_R_ELSE_CLREF(T)>::type
-            >
-        view;
+        template<typename T>
+        struct make_single_view
+        {
+            typedef
+                single_view<
+                    typename traits::deduce<BOOST_FUSION_R_ELSE_CLREF(T)>::type
+                >
+            type;
+        };
+    };
 
-        return view(BOOST_FUSION_FORWARD(T,v));
+    template <typename T>
+    inline typename result_of::make_single_view<T>::type
+    make_single_view(BOOST_FUSION_R_ELSE_CLREF(T) val)
+    {
+        return typename result_of::make_single_view<T>::type(
+                BOOST_FUSION_FORWARD(T,val));
     }
 }}
 

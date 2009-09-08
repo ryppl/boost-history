@@ -9,7 +9,6 @@
 #define BOOST_FUSION_ADAPTED_DETAIL_MPL_DISTANCE_IMPL_HPP
 
 #include <boost/fusion/adapted/detail/mpl/get_mpl_it.hpp>
-
 #include <boost/mpl/distance.hpp>
 
 namespace boost { namespace fusion { namespace extension

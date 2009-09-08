@@ -19,9 +19,88 @@
 
 namespace fusion=boost::fusion;
 
+struct dummy
+{
+    int i;
+
+    dummy()
+      : i(0)
+    {}
+
+    template<typename T>
+    dummy(T const& t)
+      : i(t.i)
+    {}
+
+    template<typename T,typename T2>
+    dummy(T,T2)
+      : i(0)
+    {}
+};
+
+struct dummy2
+{
+    int i;
+
+    dummy2()
+      : i(0)
+    {}
+
+    template<class T>
+    dummy2(T const& t)
+      : i(t.i)
+    {}
+};
+
+void assign_test()
+{
+    using namespace fusion;
+
+    dummy d;
+
+    {
+        fusion::pair<int,std::string> a("test");
+    }
+
+    {
+        vector<int> vec(0);
+        vector<int> vec2(vec);
+        vector<int> vec3(sequence_assign(vec));
+        vector<long> vec4(vec);
+    }
+
+    {
+        vector<dummy> vec(d);
+        vector<dummy> vec2(vec);
+        vector<dummy> vec3(sequence_assign(vec));
+        //vector<dummy2> vec4(vec);
+        vector<dummy2> vec5(sequence_assign(vec));
+    }
+
+    {
+        vector<int,dummy> vec(0,d);
+        vector<int,dummy> vec2(vec);
+        vector<int,dummy> vec3(sequence_assign(vec));
+        vector<int,dummy2> vec4(vec);
+        vector<int,dummy2> vec5(sequence_assign(vec));
+        vector<long,dummy2> vec6(vec);
+    }
+
+    {
+        single_view<int> view(0);
+        single_view<int> view2(view);
+        single_view<int> view3(sequence_assign(view));
+        single_view<long> view4(view);
+    }
+
+    map<pair<int,int> > m(make_pair<int>(0));
+}
+
 #if defined(BOOST_NO_RVALUE_REFERENCES) || defined(BOOST_NO_VARIADIC_TEMPLATES)
 int main()
-{}
+{
+    assign_test();
+}
 #else
 #include <type_traits>
 #include <utility>
@@ -125,8 +204,13 @@ struct identity_int
     }
 };
 
+struct C
+{};
+
 int main()
 {
+    assign_test();
+
     {
         using namespace fusion;
 
