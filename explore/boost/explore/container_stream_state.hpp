@@ -59,22 +59,25 @@ namespace boost { namespace explore
     struct container_common_stream_state
     {
         container_common_stream_state(const std::ios_base* stream)
-            : m_level(0), m_depth(0), m_rows(1), m_itemwidth(1)
+            : m_level(0), m_depth(0), m_rows(1), m_itemwidth(1), m_quotestrings(false)
         {
         }
 
         void set_level(size_t l) { m_level = l; }
         void level_up() { ++m_level; }
         void level_down() { --m_level; }
+        size_t level() const { return m_level; }
 
-        size_t get_level() const { return m_level; }
         std::size_t depth() const { return m_depth; }
 
         std::size_t rows() const { return at(m_rows); }
-        std::size_t itemwidth() const { return at(m_itemwidth); }
-
         void set_rows(std::size_t rows) { at(m_rows) = rows; }
+
+        std::size_t itemwidth() const { return at(m_itemwidth); }
         void set_itemwidth(std::size_t iw) { at(m_itemwidth) = iw; }
+
+        bool quote_strings() const { return m_quotestrings; }
+        void set_quote_strings(bool qs) { m_quotestrings = qs; }
 
    private:
         friend struct detail::depth_guard;
@@ -86,16 +89,15 @@ namespace boost { namespace explore
         const T& at(const std::vector<T>& c) const
         {
             // return the highest item if it does not exist at the given index
-            return detail::value_at(c, get_level());
+            return detail::value_at(c, level());
         }
 
         // write
         template<typename T>
         T& at(std::vector<T>& c)
         {
-            size_t level = get_level();
-            assert(depth() <= level);
-            return detail::value_at(c, get_level());
+            assert(depth() <= level());
+            return detail::value_at(c, level());
         }
 
         std::size_t m_level;
@@ -103,6 +105,8 @@ namespace boost { namespace explore
 
         size_cont_typ m_rows;
         size_cont_typ m_itemwidth;
+
+        bool m_quotestrings;
     };
 
     // A simple collection of additional stream state
@@ -159,9 +163,9 @@ namespace boost { namespace explore
             return get_stream_state<container_common_stream_state>(*m_stream);
         }
 
-        size_t get_level() const
+        size_t level() const
         {
-            return common()->get_level();
+            return common()->level();
         }
 
         str_cont_typ m_separator;
@@ -185,16 +189,15 @@ namespace boost { namespace explore
         const T& at(const std::vector<T>& c) const
         {
             // return the highest item if it does not exist at the given index
-            return detail::value_at(c, get_level());
+            return detail::value_at(c, level());
         }
 
         // write
         template<typename T>
         T& at(std::vector<T>& c)
         {
-            size_t level = get_level();
-            assert(common()->depth() <= level);
-            return detail::value_at(c, get_level());
+            assert(common()->depth() <= level());
+            return detail::value_at(c, level());
         }
     };
 }}

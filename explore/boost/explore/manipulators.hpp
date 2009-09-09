@@ -28,7 +28,7 @@ namespace boost { namespace explore
         struct depth_guard
         {
             depth_guard(container_common_stream_state* state)
-            : m_state(state), m_prev_level(state->get_level())
+            : m_state(state), m_prev_level(state->level())
             {
                 ++m_state->m_depth;
             }
@@ -76,6 +76,13 @@ namespace boost { namespace explore
         
         template<typename Elem, typename Tr>
         std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<std::size_t>& manip)
+        {   
+            (*manip.pfun)(ostr, manip.arg);
+            return ostr;
+        }
+        
+        template<typename Elem, typename Tr>
+        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<bool>& manip)
         {   
             (*manip.pfun)(ostr, manip.arg);
             return ostr;
@@ -170,9 +177,13 @@ namespace boost { namespace explore
         {
             explore::get_stream_state<container_common_stream_state>(ostr)->set_itemwidth(sz);
         }
+
+        void quotestringsFn(std::ios_base& ostr, bool qs)
+        {
+            explore::get_stream_state<container_common_stream_state>(ostr)->set_quote_strings(qs);
+        }
     }
     
-    // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> separator(const Elem* sep)
     {
@@ -185,7 +196,6 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_stream_state<Elem> >(ostr)->separator();
     }
     
-    // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> start(const Elem* s)
     {
@@ -198,7 +208,6 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_stream_state<Elem> >(ostr)->start();
     }
     
-    // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> end(const Elem* e)
     {
@@ -211,7 +220,6 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_stream_state<Elem> >(ostr)->end();
     }
     
-    // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_separator(const Elem* sep)
     {
@@ -224,7 +232,6 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_separator();
     }
     
-    // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_start(const Elem* start)
     {
@@ -237,7 +244,6 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_start();
     }
     
-    // manipulator
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_end(const Elem* end)
     {
@@ -250,7 +256,6 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_end();
     }
     
-    // manipulator
     detail::manipfunc<std::size_t> level(std::size_t l)
     {
         return detail::manipfunc<std::size_t>(&detail::levelFn, l);
@@ -259,10 +264,9 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr>
     std::size_t get_level(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->get_level();
+        return explore::get_stream_state<container_common_stream_state>(ostr)->level();
     }
 
-    // manipulator
     detail::manipfunc<std::size_t> rows(std::size_t sz)
     {
         return detail::manipfunc<std::size_t>(detail::setrowsFn, sz);
@@ -271,10 +275,9 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr>
     std::size_t get_rows(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->get_level();
+        return explore::get_stream_state<container_common_stream_state>(ostr)->get_rows();
     }    
     
-    // manipulator
     detail::manipfunc<std::size_t> item_width(std::size_t sz)
     {
         return detail::manipfunc<std::size_t>(detail::setitemwidthFn, sz);
@@ -283,10 +286,25 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr>
     std::size_t get_item_width(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->get_level();
-    }    
+        return explore::get_stream_state<container_common_stream_state>(ostr)->itemwidth();
+    }
      
-    // manipulator
+    detail::manipfunc<bool> quote_strings()
+    {
+        return detail::manipfunc<bool>(detail::quotestringsFn, true);
+    }
+    
+    detail::manipfunc<bool> no_quote_strings()
+    {
+        return detail::manipfunc<bool>(detail::quotestringsFn, false);
+    }
+    
+    template<typename Elem, typename Tr>
+    bool get_quote_strings(std::basic_ostream<Elem, Tr>& ostr)
+    {
+        return explore::get_stream_state<container_common_stream_state>(ostr)->quote_strings();
+    }
+     
     template<typename Elem, typename Tr>
     std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
     {
@@ -349,8 +367,6 @@ namespace boost { namespace explore
         return detail::begin_end_manipulator<detail::assoc_tag,const Elem*>(start, end);
     }
     
-    
-    // manipulator
     namespace detail
     {
         template<typename Tag, typename T>

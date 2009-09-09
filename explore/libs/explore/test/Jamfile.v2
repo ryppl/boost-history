@@ -39,5 +39,6 @@ project
   [ run multi_dim_test.cpp ]
 
   [ run columnated.cpp ]
+  [ run quote_strings.cpp ]
  ;
 }
