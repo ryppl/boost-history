@@ -42,7 +42,7 @@ main()
 
     {
         // test conversion
-        list<int, std::string> l(sequence_assign(make_vector(123, "harru")));
+        list<int, std::string> l(make_vector(123, "harru"));
         BOOST_TEST(l == make_vector(123, "harru"));
         l = (make_vector(235, "hola")); // test assign
         BOOST_TEST(l == make_vector(235, "hola"));

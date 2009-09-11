@@ -71,7 +71,7 @@ main()
 
     {
         vector1<int> t1(123L); // try conversion from long to int
-        vector1<double> t2(sequence_assign(t1)); // try copy
+        vector1<double> t2(t1); // try copy
         (void)t2;
     }
 
@@ -97,7 +97,7 @@ main()
 
     {
         vector2<int, int> t1(123, 456);
-        vector2<double, float> t2(sequence_assign(t1));
+        vector2<double, float> t2(t1);
         (void)t2;
     }
 
@@ -209,7 +209,7 @@ main()
     {
         // testing copy and assign from a view
         vector0<> empty;
-        vector2<int, long> v(sequence_assign(push_back(push_back(empty, 123), 456)));
+        vector2<int, long> v(push_back(push_back(empty, 123), 456));
         cout << v << endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);
@@ -222,7 +222,7 @@ main()
     {
         // testing copy and assign from a vector_c
         boost::mpl::vector_c<int, 123, 456> vec_c;
-        vector2<int, long> v(sequence_assign(vec_c));
+        vector2<int, long> v(vec_c);
         std::cout << v << std::endl;
         BOOST_TEST(at_c<0>(v) == 123);
         BOOST_TEST(at_c<1>(v) == 456);

@@ -94,14 +94,14 @@ main()
     {
         // conversion from ns::point to vector
         ns::point p = {5, 3};
-        vector<int, short> v(sequence_assign(p));
+        vector<int, short> v(p);
         v = p;
     }
 
     {
         // conversion from ns::point to list
         ns::point p = {5, 3};
-        list<int, short> l(sequence_assign(p));
+        list<int, short> l(p);
         l = p;
     }
 

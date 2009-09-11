@@ -39,7 +39,7 @@ namespace test_detail
 boost::fusion::FUSION_SEQUENCE<double, double, double, double>
 foo(int i)
 {
-   return sequence_assign(boost::fusion::FUSION_MAKE(i, i+1, i+2, i+3));
+   return boost::fusion::FUSION_MAKE(i, i+1, i+2, i+3);
 }
 
 void test_mpl()
@@ -81,7 +81,7 @@ test()
     // between elements testing tie
 
     FUSION_SEQUENCE<char, BB*, BB, DD> t;
-    FUSION_SEQUENCE<int, AA*, CC, CC> a(sequence_assign(t));
+    FUSION_SEQUENCE<int, AA*, CC, CC> a(t);
     a = t;
 
     int i; char c; double d;

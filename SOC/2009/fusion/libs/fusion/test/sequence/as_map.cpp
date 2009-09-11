@@ -49,7 +49,7 @@ main()
           , pair<double, std::string> >
         map_type;
 
-        map_type m(sequence_assign(make_vector(make_pair<int>('X'), make_pair<double>("Men"))));
+        map_type m(make_vector(make_pair<int>('X'), make_pair<double>("Men")));
         BOOST_TEST(as_vector(m) == make_vector(make_pair<int>('X'), make_pair<double>("Men")));
         m = (make_vector(make_pair<int>('X'), make_pair<double>("Men"))); // test assign
         BOOST_TEST(as_vector(m) == make_vector(make_pair<int>('X'), make_pair<double>("Men")));

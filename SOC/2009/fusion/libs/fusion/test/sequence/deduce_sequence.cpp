@@ -27,7 +27,7 @@ struct test_seq_ctor
     typename deduce_sequence<Args>::type fsq_args;
 
     test_seq_ctor(Args const& args)
-      : fsq_args(sequence_assign(args))
+      : fsq_args(args)
     {}
 };
 

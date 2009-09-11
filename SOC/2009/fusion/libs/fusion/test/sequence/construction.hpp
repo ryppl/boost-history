@@ -58,7 +58,7 @@ test()
     FUSION_SEQUENCE<> empty0;
 
 #ifndef TR1_TUPLE_TEST
-    FUSION_SEQUENCE<> empty1(sequence_assign(empty));
+    FUSION_SEQUENCE<> empty1(empty);
 #endif
 
     FUSION_SEQUENCE<int> t1;
@@ -70,7 +70,7 @@ test()
     FUSION_SEQUENCE<foo> t3(foo(12));
     BOOST_TEST(FUSION_AT<0>(t3) == foo(12));
 
-    FUSION_SEQUENCE<double> t4(sequence_assign(t2));
+    FUSION_SEQUENCE<double> t4(t2);
     BOOST_TEST(FUSION_AT<0>(t4) > 5.4 && FUSION_AT<0>(t4) < 5.6);
 
     FUSION_SEQUENCE<int, float> t5;
@@ -85,7 +85,7 @@ test()
     BOOST_TEST(FUSION_AT<0>(t7) == 12);
     BOOST_TEST(FUSION_AT<1>(t7) > 5.4f && FUSION_AT<1>(t7) < 5.6f);
 
-    FUSION_SEQUENCE<long, double> t8(sequence_assign(t6));
+    FUSION_SEQUENCE<long, double> t8(t6);
     BOOST_TEST(FUSION_AT<0>(t8) == 12);
     BOOST_TEST(FUSION_AT<1>(t8) > 5.4f && FUSION_AT<1>(t8) < 5.6f);
 

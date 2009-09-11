@@ -37,7 +37,7 @@ test()
     double d = 2.7;
     A a;
     FUSION_SEQUENCE<int, double&, const A&, int> t(1, d, a, 2);
-    const FUSION_SEQUENCE<int, double&, const A, int> ct(sequence_assign(t));
+    const FUSION_SEQUENCE<int, double&, const A, int> ct(t);
 
     int i  = FUSION_AT<0>(t);
     int i2 = FUSION_AT<3>(t);

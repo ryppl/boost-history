@@ -73,13 +73,13 @@ main()
 
     {
         // conversion from boost tuple to vector
-        vector<int, std::string> v(sequence_assign(boost::tuples::make_tuple(123, "Hola!!!")));
+        vector<int, std::string> v(boost::tuples::make_tuple(123, "Hola!!!"));
         v = boost::tuples::make_tuple(123, "Hola!!!");
     }
 
     {
         // conversion from boost tuple to list
-        list<int, std::string> l(sequence_assign(boost::tuples::make_tuple(123, "Hola!!!")));
+        list<int, std::string> l(boost::tuples::make_tuple(123, "Hola!!!"));
         l = boost::tuples::make_tuple(123, "Hola!!!");
     }
 

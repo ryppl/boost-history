@@ -77,13 +77,13 @@ main()
 
     {
         // conversion from pair to vector
-        vector<int, std::string> v(sequence_assign(std::make_pair(123, "Hola!!!")));
+        vector<int, std::string> v(std::make_pair(123, "Hola!!!"));
         v = std::make_pair(123, "Hola!!!");
     }
 
     {
         // conversion from pair to list
-        list<int, std::string> l(sequence_assign(std::make_pair(123, "Hola!!!")));
+        list<int, std::string> l(std::make_pair(123, "Hola!!!"));
         l = std::make_pair(123, "Hola!!!");
     }
 

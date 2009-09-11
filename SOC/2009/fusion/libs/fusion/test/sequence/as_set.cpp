@@ -52,7 +52,7 @@ main()
 
     {
         // test conversion
-        set<int, std::string> s(sequence_assign(make_vector(123, "harru")));
+        set<int, std::string> s(make_vector(123, "harru"));
         BOOST_TEST(as_vector(s) == make_vector(123, "harru"));
         s = (make_vector(235, "hola")); // test assign
         BOOST_TEST(as_vector(s) == make_vector(235, "hola"));
