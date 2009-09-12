@@ -1,0 +1,17 @@
+# Variadic template tests.  These should all
+# be compiled with the compiler described here:
+#
+#   http://www.osl.iu.edu/~dgregor/cpp/variadic-templates.html
+#
+# AND with the gcc patch (if it hasn't been applied yet)
+# described here:
+#
+#    http://gcc.gnu.org/ml/gcc-patches/2009-08/msg01217.html
+#
+project
+  :
+  : default-build debug
+  ;
+unit-test tuple_non_recur.package_range_c.unit-test
+  : tuple_non_recur.package_range_c.cpp
+  ;
