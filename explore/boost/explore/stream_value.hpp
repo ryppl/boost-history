@@ -13,6 +13,7 @@
 #include "container_stream_state.hpp"
 
 #include <ostream>
+#include <sstream>
 
 // should be the last #include
 #include <boost/type_traits/detail/bool_trait_def.hpp>
@@ -75,6 +76,24 @@ namespace boost { namespace explore
         {
             explicit value(const T& value, bool quotestrings) : value_holder<T, is_string<T>::value>(value, quotestrings) {}
         };
+
+        template<typename Elem, typename Tr>
+        struct rdbuf_guard
+        {
+            explicit rdbuf_guard(std::basic_ostream<Elem, Tr>& ostr)
+                : m_ostr(ostr), m_prev(ostr.rdbuf())
+            {
+            }
+
+            ~rdbuf_guard()
+            {
+                m_ostr.rdbuf(m_prev);
+            }
+
+        private:
+            std::basic_ostream<Elem, Tr>& m_ostr;
+            std::basic_streambuf<Elem, Tr>* m_prev;
+        };
     }
 
     struct stream_normal_value
@@ -82,9 +101,17 @@ namespace boost { namespace explore
         template<typename Elem, typename Tr, typename T>
         void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
         {
-            const bool qs = common_state->quote_strings();
+            std::basic_stringstream<Elem, Tr> sstream;
+
+            { // redirect output to a string stream so we can correctly set width()
+                detail::rdbuf_guard<Elem, Tr> guard(ostr);
+                ostr.rdbuf(sstream.rdbuf());
+                ostr << detail::value<T>(val, common_state->quote_strings());
+            }
+
+            // now width will correctly apply to the entire value
             ostr.width(common_state->itemwidth());
-            ostr << detail::value<T>(val, qs);
+            ostr << sstream.str();
         }
     };
 
@@ -95,8 +122,9 @@ namespace boost { namespace explore
         void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
         {
             const bool qs = common_state->quote_strings();
-            ostr << state->assoc_item_start()     << detail::value<typename T::first_type>(val.first, qs)
-                 << state->assoc_item_separator() << detail::value<typename T::second_type>(val.second, qs)
+            ostr << state->assoc_item_start()
+                    << detail::value<typename T::first_type>(val.first, qs) << state->assoc_item_separator()
+                    << detail::value<typename T::second_type>(val.second, qs)
                  << state->assoc_item_end();
         }
     };
