@@ -11,8 +11,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/08/30 04:12:38 $
-// $Revision: 1.3 $
+// $Date: 2009/09/02 16:17:55 $
+// $Revision: 1.5 $
 
 #include <boost/mpl/begin_end_fwd.hpp>
 #include <boost/mpl/list/aux_/iterator.hpp>
@@ -26,7 +26,7 @@ struct begin_impl< aux::list_tag >
 {
     template< typename List > struct apply
     {
-        typedef l_iter<typename List::pkg_type> type;
+        typedef l_iter<typename List::type> type;
     };
 };
 

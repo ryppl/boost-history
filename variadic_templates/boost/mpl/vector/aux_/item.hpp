@@ -11,8 +11,8 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/03/27 20:36:14 $
-// $Revision: 1.3 $
+// $Date: 2009/09/07 04:00:08 $
+// $Revision: 1.5 $
 
 #include <boost/mpl/long.hpp>
 #include <boost/mpl/void.hpp>
@@ -89,8 +89,8 @@ template
     , typename Base
     >
 struct v_item_fold
-    : v_item<T,Base,1>
 {
+    typedef v_item<T,Base,1> type;
 };
 
 // "erasure" item

@@ -27,7 +27,7 @@ struct list0
 #endif
     typedef aux::list_tag tag;
     typedef list0 type;
-    typedef list0 pkg_type;
+//    typedef type end_type;
     
     typedef long_<0> size;
 };

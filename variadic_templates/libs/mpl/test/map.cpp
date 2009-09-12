@@ -40,7 +40,7 @@ MPL_TEST_CASE()
 
     MPL_ASSERT_RELATION( size<m>::type::value, ==, 1 );
     MPL_ASSERT_NOT(( empty<m> ));
-    MPL_ASSERT(( is_same< clear<m>::type,map<> > ));
+    MPL_ASSERT(( is_same< clear<m>::type,map0 > ));
     
     MPL_ASSERT(( is_same< at<m,int>::type,unsigned > ));
     MPL_ASSERT(( is_same< at<m,char>::type,void_ > ));
@@ -64,7 +64,7 @@ MPL_TEST_CASE()
 
     MPL_ASSERT_RELATION( size<m2>::type::value, ==, 2 );
     MPL_ASSERT_NOT(( empty<m2>::type ));
-    MPL_ASSERT(( is_same< clear<m2>::type,map<> > ));
+    MPL_ASSERT(( is_same< clear<m2>::type,map0 > ));
     MPL_ASSERT(( is_same< at<m2,int>::type,unsigned > ));
     MPL_ASSERT(( is_same< at<m2,char>::type,long > ));
 
@@ -125,12 +125,12 @@ MPL_TEST_CASE()
 
 MPL_TEST_CASE()
 {
-    typedef map<> m;
+    typedef map0 m;
     
     MPL_ASSERT_RELATION( size<m>::type::value, ==, 0 );
     MPL_ASSERT(( empty<m>::type ));
 
-    MPL_ASSERT(( is_same< clear<m>::type,map<> > ));
+    MPL_ASSERT(( is_same< clear<m>::type,map0 > ));
     MPL_ASSERT(( is_same< at<m,char>::type,void_ > ));
 
     MPL_ASSERT_NOT(( has_key<m,char>::type ));
@@ -192,5 +192,18 @@ MPL_TEST_CASE()
     > mymap;
     
     test<mymap>();
-    test<mymap::type>();
+//!@nv-mpl_diff:
+//!  WHAT:
+//!    removed:
+//!    test<mymap::type>();
+//!  WHY:
+//!    The only mention of map<T1,T2,...TN>::type on:
+//!
+//!      http://www.boost.org/doc/libs/1_40_0/libs/mpl/doc/refmanual/map.html
+//!
+//!    only mentions an equality with mapN<T1,T2,...,TN> (i.e. numbered maps).
+//!    Since there are no numbered maps in variadic mpl, that mention is not
+//!    relevant; hence, that test is unneeded.
+//!    
+
 }

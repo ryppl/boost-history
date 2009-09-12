@@ -16,8 +16,7 @@
 
 #include <boost/mpl/aux_/value_wknd.hpp>
 #include <boost/mpl/set/set0.hpp>
-#include <boost/mpl/foldr_pkg.hpp>
-#include <boost/mpl/quote.hpp>
+#include <boost/mpl/foldr_pack.hpp>
 
 namespace boost
 {
@@ -29,9 +28,9 @@ namespace mpl
   >
   struct
 set
-  : foldr_pkg
+  : foldr_pack
     < set0
-    , s_item<arg<1>,arg<2> >
+    , s_item_fold
     , Values...
     >::type
 //!

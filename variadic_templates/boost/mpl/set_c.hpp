@@ -13,10 +13,11 @@ namespace mpl
   >
   struct
 set_c
-  : set<integral_c<Integral,Args>...>
+  : set
+    < integral_c<Integral,Args>...
+    >
 {
     typedef Integral value_type;
-    typedef set_c type;
 };
 
 }//exit mpl namespace

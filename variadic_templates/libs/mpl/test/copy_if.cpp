@@ -9,10 +9,11 @@
 // See http://www.boost.org/libs/mpl for documentation.
 
 // $Id$
-// $Date: 2009/08/23 20:20:38 $
-// $Revision: 1.5 $
+// $Date: 2009/09/10 21:59:42 $
+// $Revision: 1.10 $
 
 #include <boost/mpl/copy_if.hpp>
+#include <boost/mpl/list.hpp>
 #include <boost/mpl/list_c.hpp>
 #include <boost/mpl/front_inserter.hpp>
 #include <boost/mpl/less.hpp>
@@ -30,26 +31,49 @@ MPL_TEST_CASE()
     typedef copy_if<
           numbers
         , less<_,int_<5> >
-        , mpl::front_inserter< list_c<int> >
+        , mpl::front_inserter
+          < list<> 
+          >
         >::type result;
 
     MPL_ASSERT_RELATION(size<result>::value, ==, 5);
-//    MPL_ASSERT(( is_same<void,begin<answer>::type> ));
- //   MPL_ASSERT(( is_same<void,begin<result>::type> ));
     MPL_ASSERT(( equal<result,answer> ));
+
 }
 
 
 MPL_TEST_CASE()
 {
-    typedef list<int,float,long,float,char,long,double,double>::type types;
-    typedef list<float,float,double,double>::type float_types;
-    typedef reverse_copy_if<
-          types
-        , is_float<_>
-        , mpl::front_inserter< list<> >
-        >::type result;
+        typedef 
+      list
+      < int
+      , float
+      , long
+      , float
+      , char
+      , long
+      , double
+      , double
+      >::type 
+    types;
+        typedef 
+      list
+      < float
+      , float
+      , double
+      , double
+      >::type 
+    answer;
+        typedef 
+      reverse_copy_if
+      < types
+      , is_float<_>
+      , mpl::front_inserter
+        < list<> 
+        >
+      >::type 
+    result;
 
     MPL_ASSERT_RELATION(mpl::size<result>::value, ==, 4);
-    MPL_ASSERT(( equal<result,float_types> ));
+    MPL_ASSERT(( equal<result,answer> ));
 }

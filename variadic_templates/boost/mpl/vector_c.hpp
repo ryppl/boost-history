@@ -9,14 +9,15 @@ namespace mpl
 {
   template
   < typename Integral
-  , Integral... Args
+  , Integral... Values
   >
   struct
 vector_c
-  : vector<integral_c<Integral,Args>...>
+  : vector
+    < integral_c<Integral,Values>...
+    >
 {
     typedef Integral value_type;
-    typedef vector_c type;
 };
 
 }//exit mpl namespace

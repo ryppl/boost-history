@@ -1,0 +1,6 @@
+project boost
+    : requirements 
+      <include>.
+    : usage-requirements 
+      <include>.
+    ;

@@ -34,6 +34,7 @@
  compile find.cpp ;
  compile find_if.cpp ;
  compile fold.cpp ;
+ compile foldr_pack.cpp ;
  run for_each.cpp ;
 
  compile front.cpp ;
@@ -46,6 +47,7 @@
  compile insert.cpp ;
  compile insert_range.cpp ;
  run int.cpp ;
+ compile int.cpp : : int.compile ;
  run integral_c.cpp : : : <toolset>vacpp:<cxxflags>-qchars=signed ;
  compile is_placeholder.cpp ;
  compile is_sequence.cpp ;

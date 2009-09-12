@@ -7,7 +7,7 @@
 //!  indirectly #includes vector_fwd.hpp.
 //!
 #include <boost/mpl/vector/vector0.hpp>
-#include <boost/mpl/foldr_pkg.hpp>
+#include <boost/mpl/foldr_pack.hpp>
 
 namespace boost
 {
@@ -19,9 +19,9 @@ namespace mpl
   >
   struct
 vector
-  : foldr_pkg
+  : foldr_pack
     < vector0
-    , v_item_fold<arg<1>,arg<2> >
+    , v_item_fold
     , Values...
     >::type
 //!
@@ -36,7 +36,7 @@ vector
 //!  WHAT:
 //!    1) Instead of adding items from the tail, items are added from
 //!       head.
-//!    2) foldr_pkg is used instead of recursive call of vector.
+//!    2) foldr_pack is used instead of recursive call of vector.
 //!  WHY:
 //!    1) The variadic template compiler doesn't allow parameter
 //!       packs to be followed by anything else (designated here as the
