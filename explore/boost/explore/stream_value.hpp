@@ -1,7 +1,7 @@
 //
 // stream_value.hpp - streaming function objects for different value types
 //
-// Copyright (C) 2007, Jeffrey Faust
+// Copyright (C) 2007-2009, Jeffrey Faust
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -121,11 +121,21 @@ namespace boost { namespace explore
         template<typename Elem, typename Tr, typename T>
         void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
         {
-            const bool qs = common_state->quote_strings();
-            ostr << state->assoc_item_start()
-                    << detail::value<typename T::first_type>(val.first, qs) << state->assoc_item_separator()
-                    << detail::value<typename T::second_type>(val.second, qs)
-                 << state->assoc_item_end();
+            std::basic_stringstream<Elem, Tr> sstream;
+
+            { // redirect output to a string stream so we can correctly set width()
+                detail::rdbuf_guard<Elem, Tr> guard(ostr);
+                ostr.rdbuf(sstream.rdbuf());
+                const bool qs = common_state->quote_strings();
+                ostr << state->assoc_item_start()
+                        << detail::value<typename T::first_type>(val.first, qs) << state->assoc_item_separator()
+                        << detail::value<typename T::second_type>(val.second, qs)
+                     << state->assoc_item_end();
+            }
+
+            // now width will correctly apply to the entire value
+            ostr.width(common_state->itemwidth());
+            ostr << sstream.str();
         }
     };
 }}

@@ -1,7 +1,7 @@
 //
 // pair.hpp - container streaming.
 //
-// Copyright (C) 2007, Jeffrey Faust
+// Copyright (C) 2007-2009, Jeffrey Faust
 // Copyright (C) 2009, Jared McIntyre
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -20,11 +20,23 @@ namespace std
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::pair<T1, T2>& p)
     {
         using namespace boost::explore;
+
         container_common_stream_state* common_state = get_stream_state<container_common_stream_state>(ostr);
-        detail::depth_guard guard(common_state);
-        common_state->set_level(common_state->depth()-1);
         container_stream_state<Elem>* state = get_stream_state<container_stream_state<Elem> >(ostr);
-        return ostr << state->start() << p.first << state->separator() << p.second << state->end();
+
+        // set the level based on the current recursive depth
+        detail::increment_depth guard(common_state);
+
+        basic_stringstream<Elem, Tr> sstream;
+
+        { // redirect output to a string stream so we can correctly set width()
+            detail::rdbuf_guard<Elem, Tr> guard(ostr);
+            ostr.rdbuf(sstream.rdbuf());
+            ostr << state->start() << p.first << state->separator() << p.second << state->end();
+        }
+
+        ostr.width(common_state->itemwidth());
+        return ostr << sstream.str();
     }
 }
 

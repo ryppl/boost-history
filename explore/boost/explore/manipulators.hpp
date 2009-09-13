@@ -1,7 +1,7 @@
 //
 // stream_container.hpp - container streaming.
 //
-// Copyright (C) 2007, Jeffrey Faust
+// Copyright (C) 2007-2009, Jeffrey Faust
 // Copyright (C) 2008-2009, Jared McIntyre
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -25,15 +25,15 @@ namespace boost { namespace explore
 {
     namespace detail
     {
-        struct depth_guard
+        struct increment_depth
         {
-            depth_guard(container_common_stream_state* state)
-            : m_state(state), m_prev_level(state->level())
+            increment_depth(container_common_stream_state* state)
+            : m_state(state)
             {
-                ++m_state->m_depth;
+                m_prev_level = m_state->set_level(m_state->m_depth++);
             }
             
-            ~depth_guard()
+            ~increment_depth()
             {
                 --m_state->m_depth;
                 m_state->set_level(m_prev_level);

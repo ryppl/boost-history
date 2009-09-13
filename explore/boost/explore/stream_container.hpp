@@ -1,7 +1,7 @@
 //
 // stream_container.hpp - container streaming.
 //
-// Copyright (C) 2007, Jeffrey Faust
+// Copyright (C) 2007-2009, Jeffrey Faust
 // Copyright (C) 2009, Jared McIntyre
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -25,8 +25,9 @@ namespace boost { namespace explore
         // grab the extra data embedded in the stream object.
         container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
         container_common_stream_state* common_state = explore::get_stream_state<container_common_stream_state>(ostr);
-        detail::depth_guard guard(common_state);
-        common_state->set_level(common_state->depth()-1);
+
+        // set the level based on the current recursive depth
+        detail::increment_depth guard(common_state);
 
         // starting delimiter
         ostr << state->start();

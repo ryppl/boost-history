@@ -1,7 +1,7 @@
 //
 // container_stream_state.hpp - stream state for containers
 //
-// Copyright (C) 2007, Jeffrey Faust
+// Copyright (C) 2007-2009, Jeffrey Faust
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
@@ -32,7 +32,7 @@ namespace boost { namespace explore
         BOOST_EXPLORE_INIT_STRING(assoc_item_start, "")
         BOOST_EXPLORE_INIT_STRING(assoc_item_end, "")
 
-        struct depth_guard;
+        struct increment_depth;
 
         // read
         template<typename T>
@@ -63,7 +63,13 @@ namespace boost { namespace explore
         {
         }
 
-        void set_level(size_t l) { m_level = l; }
+        size_t set_level(size_t l)
+        {
+            size_t prev = m_level;
+            m_level = l;
+            return prev;
+        }
+
         void level_up() { ++m_level; }
         void level_down() { --m_level; }
         size_t level() const { return m_level; }
@@ -80,7 +86,7 @@ namespace boost { namespace explore
         void set_quote_strings(bool qs) { m_quotestrings = qs; }
 
    private:
-        friend struct detail::depth_guard;
+        friend struct detail::increment_depth;
 
         typedef std::vector<std::size_t, std::allocator<std::size_t> > size_cont_typ;
 

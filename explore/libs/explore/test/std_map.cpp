@@ -1,10 +1,11 @@
 // Boost.Explore library
-
-// Copyright Jared McIntyre 2007. Use, modification and
-// distribution is subject to the Boost Software License, Version
-// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
+//
+// Copyright (C) 2007, Jared McIntyre
+// Copyright (C) 2009, Jeffrey Faust
+//
+// Use, modification and distribution is subject to the Boost Software License, Version
+// 1.0. (See accompanying file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
 // For more information, see http://www.boost.org
 
 #define BOOST_TEST_MODULE PrintLib
@@ -106,4 +107,18 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( vector_in_map_stream_test, C, test_types )
 
     str_out << boost::explore::make_iterator_range(mivi.begin(), ++(++mivi.begin()));
     BOOST_CHECK_EQUAL(output(str_out), "[1:[1, 2, 3], 2:[1, 2, 3]]");
+}
+
+BOOST_AUTO_TEST_CASE_TEMPLATE( map_with_item_width, C, test_types )
+{
+    using namespace boost::explore;
+
+    typename test_traits<C>::stream_type str_out;
+
+    std::map<int, int> mii;
+    mii[12] = 34;
+    mii[56] = 78;
+    str_out << item_width(10) << separator(str_to<C>("")) << mii;
+
+    BOOST_CHECK_EQUAL(output(str_out), "[     12:34     56:78]");
 }
