@@ -122,7 +122,7 @@ public:
 		clear();
 	}
 
-	size_type BOOST_MEMORY_CALL element_size() const
+	size_type BOOST_MEMORY_CALL alloc_size() const
 	{
 		return m_cbChunk - ChunkHeaderSize;
 	}
@@ -191,13 +191,13 @@ public:
 		++chunkHeader_(p)->nUsed;
 		m_freelist.pop_front();
 		
-		BOOST_MEMORY_DBG_FILL(p, element_size());
+		BOOST_MEMORY_DBG_FILL(p, alloc_size());
 		return p;
 	}
 
 	__forceinline void* BOOST_MEMORY_CALL allocate(size_t cb)
 	{
-		BOOST_MEMORY_ASSERT(cb <= element_size());
+		BOOST_MEMORY_ASSERT(cb <= alloc_size());
 		return allocate();
 	}
 
@@ -206,7 +206,7 @@ public:
 		MemBlock* const blk = chunkHeader_(p);
 
 		BOOST_MEMORY_ASSERT(blk->nUsed > 0 && blk->nUsed <= m_nChunkPerBlock);
-		BOOST_MEMORY_DBG_FILL(p, element_size());
+		BOOST_MEMORY_DBG_FILL(p, alloc_size());
 
 		m_freelist.push_back((FreeChunk*)p); // NOTE: we don't use push_front! why?
 		if (--blk->nUsed == 0 && blk != m_lastBlock)
@@ -215,7 +215,7 @@ public:
 
 	__forceinline void BOOST_MEMORY_CALL deallocate(void* const p, size_t cb)
 	{
-		BOOST_MEMORY_ASSERT(cb == element_size());
+		BOOST_MEMORY_ASSERT(cb == alloc_size());
 		deallocate(p);
 	}
 };

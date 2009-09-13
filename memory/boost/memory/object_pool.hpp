@@ -43,7 +43,7 @@ public:
 	typedef typename PoolT::alloc_type alloc_type;
 	typedef typename PoolT::size_type size_type;
 	
-	using PoolT::element_size;
+	using PoolT::alloc_size;
 	using PoolT::get_alloc;
 	
 protected:
