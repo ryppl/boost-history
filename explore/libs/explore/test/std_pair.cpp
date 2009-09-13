@@ -62,5 +62,5 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( pair_with_item_width, C, test_types )
     pair<int,int> pi(3, 33);
 
     str_out << item_width(10) << pi;
-    BOOST_CHECK_EQUAL(output(str_out), "   [3, 33]");
+    BOOST_CHECK_EQUAL(output(str_out), "[         3,         33]");
 }

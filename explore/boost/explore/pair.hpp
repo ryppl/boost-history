@@ -17,26 +17,19 @@
 namespace std
 {
     template<typename Elem, typename Tr, typename T1, typename T2>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const std::pair<T1, T2>& p)
+    basic_ostream<Elem, Tr>& operator<<(basic_ostream<Elem, Tr>& ostr, const pair<T1, T2>& p)
     {
         using namespace boost::explore;
 
-        container_common_stream_state* common_state = get_stream_state<container_common_stream_state>(ostr);
         container_stream_state<Elem>* state = get_stream_state<container_stream_state<Elem> >(ostr);
-
-        // set the level based on the current recursive depth
+        container_common_stream_state* common_state = get_stream_state<container_common_stream_state>(ostr);
         detail::increment_depth guard(common_state);
-
-        basic_stringstream<Elem, Tr> sstream;
-
-        { // redirect output to a string stream so we can correctly set width()
-            detail::rdbuf_guard<Elem, Tr> guard(ostr);
-            ostr.rdbuf(sstream.rdbuf());
-            ostr << state->start() << p.first << state->separator() << p.second << state->end();
-        }
-
-        ostr.width(common_state->itemwidth());
-        return ostr << sstream.str();
+        ostr << state->start();
+        stream_normal_value()(ostr, p.first, state, common_state);
+        ostr << state->separator();
+        stream_normal_value()(ostr, p.second, state, common_state);
+        ostr << state->end();
+        return ostr;
     }
 }
 
