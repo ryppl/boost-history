@@ -31,9 +31,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( strings_in_map, C, test_types )
 
     reset(str_out);
 
-    str_out << quote_strings() << mis;
+    str_out << quote_strings << mis;
     BOOST_CHECK_EQUAL(output(str_out), "[1:\"first\", 2:\"second\"]");
-    str_out << no_quote_strings() << mis;
+    str_out << no_quote_strings << mis;
     BOOST_CHECK_EQUAL(output(str_out), "[1:\"first\", 2:\"second\"][1:first, 2:second]");
 }
 
@@ -47,7 +47,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( strings_with_item_width, C, test_types )
     std::vector<string_type> vs;
     vs.push_back(str_to<C>("1234"));
     vs.push_back(str_to<C>("5678"));
-    str_out << quote_strings() << item_width(7) << vs;
+    str_out << quote_strings << item_width(7) << vs;
 
     BOOST_CHECK_EQUAL(output(str_out), "[ \"1234\",  \"5678\"]");
 }

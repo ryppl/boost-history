@@ -177,11 +177,6 @@ namespace boost { namespace explore
         {
             explore::get_stream_state<container_common_stream_state>(ostr)->set_itemwidth(sz);
         }
-
-        void quotestringsFn(std::ios_base& ostr, bool qs)
-        {
-            explore::get_stream_state<container_common_stream_state>(ostr)->set_quote_strings(qs);
-        }
     }
     
     template<typename Elem>
@@ -288,17 +283,19 @@ namespace boost { namespace explore
     {
         return explore::get_stream_state<container_common_stream_state>(ostr)->itemwidth();
     }
-     
-    detail::manipfunc<bool> quote_strings()
-    {
-        return detail::manipfunc<bool>(detail::quotestringsFn, true);
-    }
-    
-    detail::manipfunc<bool> no_quote_strings()
-    {
-        return detail::manipfunc<bool>(detail::quotestringsFn, false);
-    }
-    
+
+    std::ios_base& quote_strings(std::ios_base& ios)
+	{
+        get_stream_state<container_common_stream_state>(ios)->set_quote_strings(true);
+	    return ios;
+	}
+
+    std::ios_base& no_quote_strings(std::ios_base& ios)
+	{
+        get_stream_state<container_common_stream_state>(ios)->set_quote_strings(false);
+	    return ios;
+	}
+
     template<typename Elem, typename Tr>
     bool get_quote_strings(std::basic_ostream<Elem, Tr>& ostr)
     {
