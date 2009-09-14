@@ -32,6 +32,7 @@ namespace boost { namespace fusion { namespace extension
                         Seq
                       , typename seq::transform_type
                     >::type
+                  , typename seq::is_associative
                 >
             type;
 
@@ -60,6 +61,7 @@ namespace boost { namespace fusion { namespace extension
                         Seq
                       , typename seq::transform_type
                     >::type
+                  , typename seq::is_associative
                 >
             type;
 

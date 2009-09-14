@@ -25,6 +25,7 @@
 #include <boost/fusion/view/detail/strictest_traversal.hpp>
 #include <boost/fusion/view/detail/view_storage.hpp>
 
+#include <boost/mpl/if.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/inherit.hpp>
 #include <boost/mpl/identity.hpp>
@@ -42,9 +43,12 @@
 #include <boost/fusion/view/transform_view/detail/begin_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/end_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/deref_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/deref_data_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/next_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/prior_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/value_of_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/value_of_data_impl.hpp>
+#include <boost/fusion/view/transform_view/detail/key_of_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/advance_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/distance_impl.hpp>
 #include <boost/fusion/view/transform_view/detail/equal_to_impl.hpp>
@@ -59,7 +63,7 @@ namespace boost { namespace fusion
     //TODO IsAssociative
 
     // Binary Version
-    template <typename Seq1, typename Seq2, typename F, typename IsAssociative>
+    template<typename Seq1, typename Seq2, typename F, typename IsAssociative>
     struct transform_view
       : sequence_base<transform_view<Seq1, Seq2, F,IsAssociative> >
     {
@@ -70,6 +74,7 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((
             mpl::equal_to<result_of::size<Seq1>,result_of::size<Seq2> >));
 
+        typedef IsAssociative is_associative;
         typedef detail::view_storage<Seq1> storage1_type;
         typedef typename storage1_type::type seq1_type;
         typedef detail::view_storage<Seq2> storage2_type;
@@ -90,7 +95,7 @@ namespace boost { namespace fusion
         typedef mpl::true_ is_view;
         typedef typename
             mpl::eval_if<
-                IsAssociative
+                is_associative
               , mpl::inherit2<strictest_traversal,associative_sequence_tag>
               , mpl::identity<strictest_traversal>
             >::type
@@ -148,14 +153,25 @@ namespace boost { namespace fusion
         BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
         BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
+        typedef IsAssociative is_associative;
         typedef detail::view_storage<Seq> storage_type;
         typedef typename storage_type::type seq_type;
-        typedef typename traits::category_of<seq_type>::type seq_category;
+        typedef typename
+            mpl::eval_if<
+                traits::is_random_access<seq_type>
+              , mpl::identity<random_access_traversal_tag>
+              , mpl::if_<
+                    traits::is_bidirectional<seq_type>
+                  , bidirectional_traversal_tag
+                  , forward_traversal_tag
+                >
+            >::type
+        seq_category;
         typedef F transform_type;
 
         typedef typename
             mpl::eval_if<
-                IsAssociative
+                is_associative
               , mpl::inherit2<seq_category,associative_sequence_tag>
               , mpl::identity<seq_category>
             >::type

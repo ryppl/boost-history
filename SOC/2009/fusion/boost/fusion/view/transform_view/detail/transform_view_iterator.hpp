@@ -18,15 +18,33 @@ namespace boost { namespace fusion
     // Unary Version
     struct transform_view_iterator_tag;
 
-    template <typename It, typename FRef>
+    template <typename It, typename FRef, typename IsAssociative>
     struct transform_view_iterator
-      : iterator_base<transform_view_iterator<It, FRef> >
+      : iterator_base<transform_view_iterator<It, FRef, IsAssociative> >
     {
         typedef FRef transform_type;
         typedef It it_type;
+        typedef typename
+            mpl::eval_if<
+                traits::is_random_access<it_type>
+              , mpl::identity<random_access_traversal_tag>
+              , mpl::if_<
+                    traits::is_bidirectional<it_type>
+                  , bidirectional_traversal_tag
+                  , forward_traversal_tag
+                >
+            >::type
+        it_category;
+        typedef IsAssociative is_associative;
 
         typedef transform_view_iterator_tag fusion_tag;
-        typedef typename traits::category_of<it_type>::type category;
+        typedef typename
+            mpl::eval_if<
+                is_associative
+              , mpl::inherit2<it_category,associative_sequence_tag>
+              , mpl::identity<it_category>
+            >::type
+        category;
 
         template<typename OtherIt>
         transform_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
@@ -59,16 +77,32 @@ namespace boost { namespace fusion
     // Binary Version
     struct transform_view_iterator2_tag;
 
-    template <typename It1, typename It2, typename FRef>
+    template <typename It1, typename It2, typename FRef, typename IsAssociative>
     struct transform_view_iterator2
-      : iterator_base<transform_view_iterator2<It1, It2, FRef> >
+      : iterator_base<transform_view_iterator2<It1, It2, FRef, IsAssociative> >
     {
         typedef It1 it1_type;
         typedef It2 it2_type;
         typedef FRef transform_type;
+        typedef typename
+            detail::strictest_traversal<
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
+                fusion::vector2<it1_type, it2_type>
+#else
+                fusion::vector<it1_type, it2_type>
+#endif
+            >::type
+        strictest_traversal;
+        typedef IsAssociative is_associative;
 
         typedef transform_view_iterator2_tag fusion_tag;
-        typedef typename traits::category_of<it1_type>::type category;
+        typedef typename
+            mpl::eval_if<
+                IsAssociative
+              , mpl::inherit2<strictest_traversal,associative_sequence_tag>
+              , mpl::identity<strictest_traversal>
+            >::type
+        category;
 
         template<typename OtherIt>
         transform_view_iterator2(

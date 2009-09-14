@@ -22,7 +22,12 @@ namespace boost { namespace fusion
 
     namespace result_of
     {
-        template <typename Seq1, typename Seq2, typename F = void_>
+        template<
+            typename Seq1
+          , typename Seq2
+          , typename F=mpl::false_
+          , typename IsAssociative=mpl::false_
+        >
         struct transform
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq1>));
@@ -31,22 +36,64 @@ namespace boost { namespace fusion
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq2>));
 
             typedef
-                transform_view<Seq1, Seq2, typename traits::deduce<F>::type>
+                transform_view<
+                    Seq1
+                  , Seq2
+                  , typename traits::deduce<F>::type
+                  , IsAssociative
+                >
             type;
         };
 
         template <typename Seq, typename F>
-#ifdef BOOST_NO_PARTIAL_SPECIALIZATION_IMPLICIT_DEFAULT_ARGS
-        struct transform<Seq, F, void_>
-#else
-        struct transform<Seq, F>
-#endif
+        struct transform<Seq, F, mpl::false_, mpl::false_>
         {
             BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
             BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
 
-            typedef transform_view<Seq, typename traits::deduce<F>::type> type;
+            typedef
+                transform_view<
+                    Seq
+                  , typename traits::deduce<F>::type
+                  , mpl::false_
+                >
+            type;
         };
+
+        template <typename Seq, typename F>
+        struct transform<Seq, F, mpl::true_, mpl::false_>
+        {
+            BOOST_FUSION_MPL_ASSERT((traits::is_sequence<Seq>));
+            BOOST_FUSION_MPL_ASSERT((traits::is_forward<Seq>));
+
+            typedef
+                transform_view<
+                    Seq
+                  , typename traits::deduce<F>::type
+                  , mpl::true_
+                >
+            type;
+        };
+    }
+
+    //TODO boost config macro for default arguments for function templates
+
+    template <typename IsAssociative,typename Seq, typename F>
+    inline typename
+        result_of::transform<
+            BOOST_FUSION_R_ELSE_CLREF(Seq)
+          , BOOST_FUSION_R_ELSE_CLREF(F)
+          , IsAssociative
+        >::type
+    transform(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,
+            BOOST_FUSION_R_ELSE_CLREF(F) f)
+    {
+        return typename
+            result_of::transform<
+                BOOST_FUSION_R_ELSE_CLREF(Seq)
+              , BOOST_FUSION_R_ELSE_CLREF(F)
+              , IsAssociative
+            >::type(BOOST_FUSION_FORWARD(Seq,seq), BOOST_FUSION_FORWARD(F,f));
     }
 
     template <typename Seq, typename F>
@@ -66,6 +113,21 @@ namespace boost { namespace fusion
     }
 
 #ifdef BOOST_NO_RVALUE_REFERENCES
+    template <typename IsAssociative,typename Seq, typename F>
+    inline typename result_of::transform<Seq&, F const&>::type
+    transform(Seq& seq, F const& f)
+    {
+#ifdef BOOST_MSVC
+#   pragma warning(push)
+#   pragma warning(disable: 4180)
+#endif
+        return typename
+            result_of::transform<Seq&, F const&,IsAssociative>::type(seq, f);
+#ifdef BOOST_MSVC
+#   pragma warning(pop)
+#endif
+    }
+
     template <typename Seq, typename F>
     inline typename result_of::transform<Seq&, F const&>::type
     transform(Seq& seq, F const& f)
@@ -82,6 +144,29 @@ namespace boost { namespace fusion
 #endif
 
 #define BOOST_FUSION_TRANSFORM_BINARY(SEQ1_CV_REF_MODIFIER,SEQ2_CV_REF_MODIFIER)\
+    template <typename IsAssociative,typename Seq1, typename Seq2, typename F>\
+    inline typename\
+        result_of::transform<\
+            Seq1 SEQ1_CV_REF_MODIFIER\
+          , Seq2 SEQ2_CV_REF_MODIFIER\
+          , BOOST_FUSION_R_ELSE_CLREF(F)\
+          , IsAssociative\
+        >::type\
+    transform(Seq1 SEQ1_CV_REF_MODIFIER seq1\
+          , Seq2 SEQ2_CV_REF_MODIFIER seq2\
+          , BOOST_FUSION_R_ELSE_CLREF(F) f)\
+    {\
+        return typename\
+            result_of::transform<\
+                Seq1 SEQ1_CV_REF_MODIFIER\
+              , Seq2 SEQ2_CV_REF_MODIFIER\
+              , BOOST_FUSION_R_ELSE_CLREF(F)\
+              , IsAssociative\
+            >::type(BOOST_FUSION_FORWARD(Seq1 SEQ1_CV_REF_MODIFIER,seq1)\
+                  , BOOST_FUSION_FORWARD(Seq2 SEQ2_CV_REF_MODIFIER,seq2)\
+                  , BOOST_FUSION_FORWARD(F,f));\
+    }\
+    \
     template <typename Seq1, typename Seq2, typename F>\
     inline typename\
         result_of::transform<\

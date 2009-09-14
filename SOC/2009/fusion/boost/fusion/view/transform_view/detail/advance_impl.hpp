@@ -29,6 +29,7 @@ namespace boost { namespace fusion { namespace extension
                 transform_view_iterator<
                     typename result_of::advance<typename it::it_type, N>::type
                   , typename it::transform_type
+                  , typename it::is_associative
                 >
             type;
 
@@ -54,6 +55,7 @@ namespace boost { namespace fusion { namespace extension
                     typename result_of::advance<typename it::it1_type, N>::type
                   , typename result_of::advance<typename it::it2_type, N>::type
                   , typename it::transform_type
+                  , typename it::is_associative
                 >
             type;
 

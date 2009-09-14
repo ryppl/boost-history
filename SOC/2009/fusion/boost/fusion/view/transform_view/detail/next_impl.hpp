@@ -30,6 +30,7 @@ namespace boost { namespace fusion { namespace extension
                         typename it::it_type
                     >::type
                   , typename it::transform_type
+                  , typename it::is_associative
                 >
             type;
 
@@ -59,6 +60,7 @@ namespace boost { namespace fusion { namespace extension
                         typename it::it2_type
                     >::type
                   , typename it::transform_type
+                  , typename it::is_associative
                 >
             type;
 

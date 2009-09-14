@@ -17,10 +17,10 @@ namespace boost { namespace fusion
     struct transform_view2_tag;
 
     template<
-        typename A
-      , typename B
-      , typename C = mpl::false_
-      , typename D = mpl::false_
+        typename Seq1
+      , typename Seq2
+      , typename F=mpl::false_
+      , typename IsAssociative=mpl::false_
     >
     struct transform_view;
 }}
