@@ -9,9 +9,10 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
 
-Interval Template Library (Boost.Itl)
+Interval Template Library (Boost.Itl) 3.1.0 Review Version 
+==========================================================
 PLUS 
-Itl_xt    Extended by generalized crosstables (cubes) AND
+Itl_xt    Extended by generalized cross tables (cubes) AND
 validate  A law based test automaton (LaBatea).
 
 Abstract:
@@ -21,7 +22,7 @@ The Interval Template Library (Itl) provides intervals
 and two kinds of interval containers: Interval_sets and 
 interval_maps. Interval_sets and maps can be used just
 as the sets or maps of elements. Yet they are much more 
-space and time efficient when the elements occure in 
+space and time efficient when the elements occur in 
 contiguous chunks. This is obviously the case in many 
 problem domains, particularly in fields that deal with 
 problems related to date and time.
@@ -39,30 +40,45 @@ feature is called aggregate on overlap.
 Itl_xt's cubes and the law based test automaton (LaBatea)
 are not yet proposed and prepared as Boost libraries.
 But LaBatea has been used in the development of the
-itl as test automaton and for checkeing sematical 
+itl as test automaton and for checking sematical 
 concepts.
 
 
-Portability:
-============
+Release Notes:
+==============
 
-* The Itl compiles with gcc-3.4.4, gcc-4.3.0 and msvc-9.0
+* Boost.Itl 3.1.0 (Review Version)
+------------------------------
++ Tested Compilers: 
+  Itl: gcc-3.4.4, gcc-4.1.0, gcc-4.3.2, msvc-8.0, msvc-9.0.
+  Validate (LaBatea): gcc-4.3.2, msvc-8.0, msvc-9.0.
+  LaBatea does not compile with gcc-4.1.0 or below.
++ Improved efficiency of algorithms.
++ Documentation of complexity guarantees.
++ Completion of quickbook documentation.
++ LaBatea now measures time per test.
 
-* Valitate (LaBatea) ONLY compiles with msvc! Prefer msvc-9.0
-  for efficiency reasons. 
+* Boost.Itl 3.0.0 (Preview 4)
+------------------------------
++ Tested Compilers: gcc-3.4.4, gcc-4.3.0 and msvc-9.0.
++ Interoperability between interval containers,
+  segments and elements.
++ Full operator support for addition, subtraction,
+  intersection and symmetric difference.
++ Boost.Quickbook documentation.
 
 Content:
 ========
 
-=== Boost.Itl =================================================================
-itl.html                html-documentation refering to 
+=== Itl =======================================================================						
+itl.html                html-documentation referring to 
                         libs/itl/doc/html/index.html
 doc/html/images         Images for the html docs. You may delete this, if you 
                         integrate itl_plus into an existing boost installation.
 
 boost/itl               Interval containers, operators, algorithms
 boost/itl/type_traits   Metafunctions for types
-boost/itl/detail        Implemetations details
+boost/itl/detail        Implementation details
 
 libs/itl/example        Example programs
 libs/itl/test           Test suite
