@@ -11,6 +11,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <string>
 #include <boost/itl/detail/notate.hpp>
 #include <boost/itl/detail/design_config.hpp>
+#include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/is_map.hpp>
 #include <boost/itl/type_traits/has_inverse.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
@@ -121,18 +122,35 @@ public:
     //==========================================================================
     //= Construct, copy, destruct
     //==========================================================================
-    map(){}
+    map()
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<CodomainT>));
+        BOOST_CONCEPT_ASSERT((EqualComparableConcept<CodomainT>));
+    }
+
     map(const key_compare& comp): base_type(comp){}
 
     template <class InputIterator>
-    map(InputIterator first, InputIterator past): base_type(first,past) {}
+    map(InputIterator first, InputIterator past): base_type(first,past){} 
 
     template <class InputIterator>
-    map(InputIterator first, InputIterator past, const key_compare& comp): base_type(first,past,comp) {}
+    map(InputIterator first, InputIterator past, const key_compare& comp): base_type(first,past,comp) 
+    {}
 
-    map(const map& src): base_type::map(src){}
+    map(const map& src): base_type::map(src)
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<CodomainT>));
+        BOOST_CONCEPT_ASSERT((EqualComparableConcept<CodomainT>));
+    }
 
-    explicit map(const element_type& key_value_pair): base_type::map(){ insert(key_value_pair); }
+    explicit map(const element_type& key_value_pair): base_type::map()
+    { 
+        insert(key_value_pair); 
+    }
 
     map& operator=(const map& src) { base_type::operator=(src); return *this; } 
     void swap(map& src) { base_type::swap(src); }

@@ -18,6 +18,8 @@ namespace boost{ namespace itl
 
     template<> inline float  unon<float>::value()  { return 1.0; }
     template<> inline double unon<double>::value() { return 1.0; }
+    template<> inline long double unon<long double>::value() 
+                                                   { return 1.0; }
     
     // Smallest 'visible' string that is greater than the empty string.
     template <>    

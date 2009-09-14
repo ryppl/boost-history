@@ -20,11 +20,19 @@ namespace boost{ namespace itl
         typedef is_continuous<float> type;
         BOOST_STATIC_CONSTANT(bool, value = true);
     };
+
     template<> struct is_continuous<double>
     {
         typedef is_continuous<double> type;
         BOOST_STATIC_CONSTANT(bool, value = true);
     };
+
+    template<> struct is_continuous<long double>
+    {
+        typedef is_continuous<long double> type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
+
     template<> struct is_continuous<std::string>
     {
         typedef is_continuous<std::string> type;

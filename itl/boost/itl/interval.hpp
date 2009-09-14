@@ -15,6 +15,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <string>
 #include <boost/assert.hpp> 
 #include <boost/static_assert.hpp> 
+#include <boost/concept_check.hpp> 
 #include <boost/next_prior.hpp> 
 #include <boost/call_traits.hpp> 
 #include <boost/mpl/bool.hpp> 
@@ -30,8 +31,6 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
 #include <boost/itl/type_traits/value_size.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 
-#define BOUND_VALUE first
-#define BOUND_TYPES second
 
 namespace boost{namespace itl
 {
@@ -97,17 +96,29 @@ public:
     //==========================================================================
     /** Default constructor; yields an empty interval <tt>[1,0]</tt> */
     interval() : _lwb(unon<DomainT>::value()), _upb(neutron<DomainT>::value()), 
-                 _boundtype(itl::closed_bounded) {}
+                 _boundtype(itl::closed_bounded) 
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+    }
 
     //NOTE: Compiler generated copy constructor is used
 
     /** Constructor for a closed singleton interval <tt>[val,val]</tt> */
     explicit interval(const DomainT& val) : 
-        _lwb(val), _upb(val), _boundtype(itl::closed_bounded) {}
+        _lwb(val), _upb(val), _boundtype(itl::closed_bounded)
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+    }
 
     /** Interval from <tt>low</tt> to <tt>up</tt> with bounds <tt>bounds</tt> */
     interval(const DomainT& low, const DomainT& up, itl::bound_type bounds = itl::closed_bounded) : 
-        _lwb(low), _upb(up), _boundtype(bounds) {}
+        _lwb(low), _upb(up), _boundtype(bounds)
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+    }
 
     /** Closed interval <tt>[low,up]</tt> */
     static interval closed(const DomainT& low, const DomainT& up)
@@ -387,8 +398,8 @@ private:
 
     bound_type succession_bounds()const;
 
-    void set_lwb(const BoundT& lw) { _lwb=lw.BOUND_VALUE; set_lwb_type(lw.BOUND_TYPES); }
-    void set_upb(const BoundT& up) { _upb=up.BOUND_VALUE; set_upb_type(up.BOUND_TYPES); }
+    void set_lwb(const BoundT& lw) { _lwb=lw.first; set_lwb_type(lw.second); }
+    void set_upb(const BoundT& up) { _upb=up.first; set_upb_type(up.second); }
 
     BoundT lwb_min(const interval& x2)const;
     BoundT lwb_max(const interval& x2)const;
@@ -883,14 +894,14 @@ const std::string interval<DomainT,Compare>::as_string()const
 template <class DomainT, ITL_COMPARE Compare>
 inline DomainT interval<DomainT,Compare>::first()const
 {
-    BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
+    BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
     return is_left(closed_bounded) ? _lwb : succ(_lwb); 
 }
 
 template <class DomainT, ITL_COMPARE Compare>
 inline DomainT interval<DomainT,Compare>::last()const
 { 
-    BOOST_ASSERT((!itl::is_continuous<DomainT>::value));
+    BOOST_STATIC_ASSERT((!itl::is_continuous<DomainT>::value));
     return is_right(closed_bounded) ? _upb : pred(_upb); 
 }
 

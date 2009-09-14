@@ -337,6 +337,7 @@ void interval_map_distinct_4_bicremental_continuous_types()
 
     BOOST_CHECK_EQUAL( is_1_3_5.cardinality(),      s3 );
     BOOST_CHECK_EQUAL( is_1_3_5.size(),             s3 );
+    is_1_3_5.length();
     BOOST_CHECK_EQUAL( is_1_3_5.length(),           d0 );
     BOOST_CHECK_EQUAL( is_1_3_5.interval_count(),   3 );
     BOOST_CHECK_EQUAL( is_1_3_5.iterative_size(),   3 );

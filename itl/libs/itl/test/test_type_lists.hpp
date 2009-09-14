@@ -26,7 +26,7 @@ typedef boost::posix_time::ptime boost_posix_time_ptime;
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
     ,short, int, long
-    ,float, double
+    ,float, double, long double
     ,boost::rational<int>
     ,boost_posix_time_ptime
 //    ,boost::gregorian::date
@@ -47,7 +47,7 @@ typedef ::boost::mpl::list<
 > debug_types;
 
 typedef ::boost::mpl::list<
-    float, double
+    float, double, long double
     ,boost::rational<int>
 > bicremental_continuous_types;
 
@@ -80,7 +80,7 @@ typedef short                    discrete_type_4;
 typedef unsigned int             discrete_type_5;
 
 typedef ::boost::mpl::list<
-    float, double
+    float, double, long double
     ,boost::rational<int>
     ,std::string
 > continuous_types;
@@ -93,7 +93,7 @@ typedef std::string          continuous_type_4;
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
     ,short, int, long
-    ,float, double
+    ,float, double, long double
     ,boost::rational<int>
     ,std::string
     ,boost_posix_time_ptime

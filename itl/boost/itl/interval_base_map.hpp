@@ -164,10 +164,22 @@ public:
     //= Construct, copy, destruct
     //==========================================================================
     /** Default constructor for the empty object */
-    interval_base_map(){}
+    interval_base_map()
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<CodomainT>));
+        BOOST_CONCEPT_ASSERT((EqualComparableConcept<CodomainT>));
+    }
 
     /** Copy constructor */
-    interval_base_map(const interval_base_map& src): _map(src._map) {}
+    interval_base_map(const interval_base_map& src): _map(src._map)
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<CodomainT>));
+        BOOST_CONCEPT_ASSERT((EqualComparableConcept<CodomainT>));
+    }
 
     /** Assignment operator */
     interval_base_map& operator = (const interval_base_map& src) 

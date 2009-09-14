@@ -10,6 +10,7 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 
 #include <string>
 #include <set>
+#include <boost/itl/detail/concept_check.hpp>
 #include <boost/itl/type_traits/to_string.hpp>
 #include <boost/itl/type_traits/is_set.hpp>
 #include <boost/itl/type_traits/is_interval_container.hpp>
@@ -74,21 +75,33 @@ public:
     //==========================================================================
     //= Construct, copy, destruct
     //==========================================================================
-    set(){}
+    set()
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+    }
+
     explicit set(const domain_compare& comp): 
-        std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
+    std::set<DomainT, domain_compare, Alloc<DomainT> >(comp){}
 
     template <class InputIterator>
     set(InputIterator first, InputIterator past): 
-        std::set<InputIterator>(first,past) {}
+    std::set<InputIterator>(first,past){}
 
     template <class InputIterator>
     set(InputIterator first, InputIterator past, const key_compare& comp): 
-        std::set<InputIterator>(first, past, comp) {}
+    std::set<InputIterator>(first, past, comp){}
 
-    set(const set& src): base_type::set(src){}
+    set(const set& src): base_type::set(src)
+    {
+        BOOST_CONCEPT_ASSERT((DefaultConstructibleConcept<DomainT>));
+        BOOST_CONCEPT_ASSERT((LessThanComparableConcept<DomainT>));
+    }
 
-    explicit set(const element_type& key): base_type::set(){ insert(key); }
+    explicit set(const element_type& key): base_type::set()
+    { 
+        insert(key); 
+    }
 
     set& operator=(const set& src) { base_type::operator=(src); return *this; } 
     void swap(set& src) { base_type::swap(src); }
