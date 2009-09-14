@@ -20,6 +20,14 @@
 
 typedef boost::mpl::list<char, wchar_t> test_types;
 
+// a few tests have trouble with no intrinsic wchar_t.  These troubles are not
+// related to our libraries, but cause compilation or tests to fail.
+#if defined(BOOST_NO_INTRINSIC_WCHAR_T)
+typedef boost::mpl::list<char> safe_test_types;
+#else
+typedef test_types safe_test_types;
+#endif
+
 template<typename C>
 struct test_traits;
 

@@ -1,11 +1,11 @@
 // Boost.Explore library
-
-// Copyright Jared McIntyre 2007. Use, modification and
-// distribution is subject to the Boost Software License, Version
-// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
-// For more information, see http://www.boost.org
+//
+// Copyright (C) 2007, Jared McIntyre
+// Copyright (C) 2009, Jeffrey Faust
+//
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
@@ -94,7 +94,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_map_custom_format_stream_test, C, test_type
     BOOST_CHECK_EQUAL(output(str_out), "<=\\1**first//#\\2**second//=>");
 }
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( get_sticky_values_test, C, test_types )
+// safe_test_types: boost test tools have trouble with no intrinsic wchar_t
+BOOST_AUTO_TEST_CASE_TEMPLATE( get_sticky_values_test, C, safe_test_types )
 {
     using namespace boost::explore;
     typename test_traits<C>::stream_type str_out;
@@ -108,8 +109,7 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( get_sticky_values_test, C, test_types )
     BOOST_CHECK_EQUAL( get_assoc_item_end(str_out).c_str(),       str_to<C>("") );
     
     str_out << basic_stream_format;
-    
-    
+
     BOOST_CHECK_EQUAL( get_start(str_out).c_str(),     str_to<C>("<=") );
     BOOST_CHECK_EQUAL( get_separator(str_out).c_str(), str_to<C>("#") );
     BOOST_CHECK_EQUAL( get_end(str_out).c_str(),       str_to<C>("=>") );

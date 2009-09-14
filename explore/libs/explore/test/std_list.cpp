@@ -1,11 +1,11 @@
 // Boost.Explore library
-
-// Copyright Jared McIntyre 2007. Use, modification and
-// distribution is subject to the Boost Software License, Version
-// 1.0. (See accompanying file LICENSE_1_0.txt or copy at
-// http://www.boost.org/LICENSE_1_0.txt)
-
-// For more information, see http://www.boost.org
+//
+// Copyright (C) 2007, Jared McIntyre
+// Copyright (C) 2009, Jeffrey Faust
+//
+// Distributed under the Boost Software License, Version 1.0. (See accompanying
+// file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+//
 
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
@@ -14,7 +14,8 @@
 #include <boost/explore/iterator_range.hpp>
 #include "boost_explore_test_tools.hpp"
 
-BOOST_AUTO_TEST_CASE_TEMPLATE( basic_list_stream_test, C, test_types )
+// safe_test_types: trouble streaming complex to wchar_t stream with no intrinsic wchar_t
+BOOST_AUTO_TEST_CASE_TEMPLATE( basic_list_stream_test, C, safe_test_types )
 {
     typename test_traits<C>::stream_type str_out;
 
