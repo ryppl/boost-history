@@ -11,7 +11,8 @@ import org.eclipse.jface.text.rules.IToken;
 public class MainTargetRuleRule extends WordRuleBase {
     public static final String[] targets = new String[] { "exe", "lib",
             "alias", "project", "boost-build", "install", "stage",
-            "use-project", "rc", "obj", "h", "cpp", "slices" };
+            "use-project", "rc", "obj", "h", "cpp", "slices", "bundle", "make",
+            "notfile", "test-suite" };
 
     public MainTargetRuleRule(final IToken token) {
         super(targets, token);

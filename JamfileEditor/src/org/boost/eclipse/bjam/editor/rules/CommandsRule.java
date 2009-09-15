@@ -11,7 +11,7 @@ import org.eclipse.jface.text.rules.IToken;
 public class CommandsRule extends WordRuleBase {
     static private final String[] targets = new String[] { "import", "using",
             "build-project", "explicit", "requirements", "usage-requirements",
-            "build-dir", };
+            "build-dir" };
 
     public CommandsRule(final IToken token) {
         super(targets, token);
