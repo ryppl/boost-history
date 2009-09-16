@@ -85,6 +85,24 @@ namespace boost { namespace explore
         bool quote_strings() const { return m_quotestrings; }
         void set_quote_strings(bool qs) { m_quotestrings = qs; }
 
+        void swap(container_common_stream_state& other)
+        {
+            std::swap(m_level, other.m_level);
+            std::swap(m_depth, other.m_depth);
+            std::swap(m_rows, other.m_rows);
+            std::swap(m_itemwidth, other.m_itemwidth);
+            std::swap(m_quotestrings, other.m_quotestrings);
+        }
+
+        bool operator==(const container_common_stream_state& other) const
+        {
+            return other.m_level == m_level &&
+                   other.m_depth == m_depth &&
+                   other.m_rows == m_rows &&
+                   other.m_itemwidth == m_itemwidth &&
+                   other.m_quotestrings == m_quotestrings;
+        }
+
    private:
         friend struct detail::increment_depth;
 
@@ -157,6 +175,28 @@ namespace boost { namespace explore
         void set_assoc_item_separator(const str_typ& str) { at(m_assoc_item_separator) = str; }
         void set_assoc_item_start(const str_typ& str) { at(m_assoc_item_start) = str; }
         void set_assoc_item_end(const str_typ& str) { at(m_assoc_item_end) = str; }
+
+        void swap(container_stream_state<Elem>& other)
+        {
+            assert(m_stream == other.m_stream);
+            m_separator.swap(other.m_separator);
+            m_start.swap(other.m_start);
+            m_end.swap(other.m_end);
+            m_assoc_item_separator.swap(other.m_assoc_item_separator);
+            m_assoc_item_start.swap(other.m_assoc_item_start);
+            m_assoc_item_end.swap(other.m_assoc_item_end);
+        }
+
+        bool operator==(const container_stream_state<Elem>& other) const
+        {
+            assert(m_stream == other.m_stream);
+            return m_separator == other.m_separator &&
+                   m_start == other.m_start &&
+                   m_end == other.m_end &&
+                   m_assoc_item_separator == other.m_assoc_item_separator &&
+                   m_assoc_item_start == other.m_assoc_item_start &&
+                   m_assoc_item_end == other.m_assoc_item_end;
+        }
 
     private:
         container_common_stream_state* common()
