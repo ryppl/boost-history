@@ -2,7 +2,7 @@
 #include <iostream>
 #include <boost/cgi/cgi.hpp>
 #include <boost/cgi/utility.hpp>
-#include <google/template.h>
+#include <ctemplate/template.h>
 #include "TracebackServer.hpp"
 #include <cmath>
 
@@ -23,16 +23,21 @@ int cgi_handler(request& req, response& resp)
     */
     
     // Load the HTML template and strip all whitespace...
-    google::Template* tmpl = google::Template::GetTemplate("../templates/default_view.html", google::STRIP_WHITESPACE);
-    // Since this is a really basic template, this is all we need to load. We can expand it into a string.
+    ctemplate::Template* tmpl
+      = ctemplate::Template::GetTemplate(
+          "../templates/default_view.html", ctemplate::STRIP_WHITESPACE);
+    // Since this is a really basic template, this is all we need to load.
+    // We can expand it into a string.
     std::string output;
     tmpl->Expand(&output, NULL);
     resp<< header("X-Custom-Header: some value")
         << content_type("text/html")
         << output;
 
-    if (req[form]["badger"] == "bait!")    throw std::runtime_error("AOUHFAEOUHAEOUHAEOUHOUH!!!!!!");
-    else if (has_key(req[form], "spam"))   return 33;
+    if (req[form]["badger"] == "bait!")
+      throw std::runtime_error("AOUHFAEOUHAEOUHAEOUHOUH!!!!!!");
+    else if (has_key(req[form], "spam"))
+      return -1;
     return 0;
 }
 

@@ -21,7 +21,8 @@ namespace cgi {
      if(ec)
      {
        boost::system::system_error err(ec);
-       boost::throw_exception(err);
+       //boost::throw_exception(err);
+       throw err;
      }
    }
 

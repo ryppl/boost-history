@@ -143,26 +143,10 @@ namespace cgi {
      boost::system::error_code
        default_init(implementation_type& impl, boost::system::error_code& ec)
      {
+       // I've never got the default initialisation working on Windows...
 #if ! defined(BOOST_WINDOWS)
-       //assign(impl.acceptor_, , 0, ec);
        return acceptor_service_.assign(impl.acceptor_, boost::asio::ip::tcp::v4()
                                       , 0, ec);
-#else
-//#      error "Windows isn't supported at the moment"
-       HANDLE hListen = INVALID_HANDLE_VALUE;
-       boost::asio::detail::socket_type sock;
-       struct sockaddr sa;
-       int sa_len = sizeof(sa);
-#if NO_WSAACCEPT
-//       sock = accept((boost::asio::detail::socket_type)hListen, &sa, &sa_len);
-//       if (sock == INVALID_SOCKET)
-//         return cgi::error::invalid_socket;
-#else
-//#error BOOST_WINDOWS
-       //sock = WSAAccept((unsigned int)hListen, &sa, &sa_len, NULL, (DWORD)NULL);
-       if (sock == INVALID_SOCKET)
-         return ::cgi::error::invalid_socket;
-#endif
 #endif
        return ec;
      }
@@ -320,26 +304,30 @@ namespace cgi {
      is_cgi(implementation_type& impl)
      {
        boost::system::error_code ec;
-//#if ! defined(BOOST_WINDOWS)
-       socklen_t len
-         = static_cast<socklen_t>(local_endpoint(impl,ec).capacity());
-       int ret = getpeername(native(impl), local_endpoint(impl,ec).data(), &len);
-       int err = errno;
-       return ( ret != 0 && errno == ENOTCONN ) ? false : true;
-//#else
-//       return false;
-//#endif
+       socklen_t len (
+         static_cast<socklen_t>(local_endpoint(impl,ec).capacity()) );
+       int check (
+         getpeername(native(impl), local_endpoint(impl,ec).data(), &len) );
+         
+       /// The FastCGI check works differently on Windows and UNIX.
+#if defined(BOOST_WINDOWS)
+       return ( check == SOCKET_ERROR &&
+                WSAGetLastError() == WSAENOTCONN ) ? false : true;
+#else
+       return ( check == -1 && 
+                errno == ENOTCONN ) ? false : true;
+#endif
      }
 
    public:
      template<typename CommonGatewayRequest, typename Handler>
-     void check_for_waiting_request(implementation_type& impl
+     int check_for_waiting_request(implementation_type& impl
                                    , CommonGatewayRequest& request
                                    , Handler handler)
      {
        // We can't call accept on an open request (close it first).
        if (request.is_open())
-         return handler(error::accepting_on_an_open_request);
+         return handler(fcgi::error::accepting_on_an_open_request);
 
        // If the client is open, make sure the request is clean.
        // ie. don't leak data from one request to another!
@@ -353,8 +341,9 @@ namespace cgi {
          return handler(boost::system::error_code());
 
        // ...otherwise accept a new connection (asynchronously).
-       return acceptor_service_.async_accept(impl.acceptor_,
+       acceptor_service_.async_accept(impl.acceptor_,
          request.client().connection()->next_layer(), 0, handler);
+       return 0;
      }
 
    public:

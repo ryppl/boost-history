@@ -122,16 +122,12 @@ namespace cgi {
     ::cgi::common::io_service& io_service_;
   };
 
-  typedef basic_connection<tags::async_stdio> async_stdio_connection;
-
-
-  //  template<typename ProtocolService = detail::async_cgi_service>
-  //struct async_stdio_connection
-  //{
-  //  typedef basic_connection<tags::async_cgi, ProtocolService>    type;
-  //};
-
  } // namespace common
+
+  namespace connections {
+    typedef common::basic_connection<common::tags::async_stdio> async_stdio;
+  } // namespace connections
+
 } // namespace cgi
 
 #endif // CGI_ASYNC_STDIO_HPP_INCLUDED__

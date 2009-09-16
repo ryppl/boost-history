@@ -10,16 +10,18 @@ namespace cgi {
    // anything you will have unspecified behaviour.
    enum parse_options
    {
-       parse_none        = 0
-     , parse_env         = 1
-     , parse_get_only    = 2
-     , parse_get         = parse_get_only | parse_env
-     , parse_post_only   = 4
-     , parse_post        = parse_post_only | parse_env
-     , parse_form        = parse_env | parse_get | parse_post
-     , parse_cookie_only = 8
-     , parse_cookie      = parse_cookie_only | parse_env
-     , parse_all         = parse_env | parse_form | parse_cookie
+       parse_none         = 0
+     , parse_env          = 1
+     , parse_get_only     = 2
+     , parse_get          = parse_get_only | parse_env
+     , parse_post_only    = 4
+     , parse_post         = parse_post_only | parse_env
+     , parse_form         = parse_env | parse_get | parse_post
+     , parse_cookie_only  = 8
+     , parse_cookie       = parse_cookie_only | parse_env
+     , parse_cookies_only = 8
+     , parse_cookies      = parse_cookies_only | parse_env
+     , parse_all          = parse_env | parse_form | parse_cookie
    };
 
  } // namespace common

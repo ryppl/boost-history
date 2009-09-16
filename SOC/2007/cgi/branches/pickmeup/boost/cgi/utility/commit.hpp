@@ -3,18 +3,31 @@
 #define BOOST_CGI_COMMIT_HPP_INCLUDED_
 
 #include <map>
+#include <boost/system/error_code.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/common/return.hpp"
+#include "boost/cgi/detail/throw_error.hpp"
 
 namespace cgi {
  namespace common {
 
     /// Send a response to a reqest and close off the request.
     template<typename Request, typename Response>
-    int commit(Request& req, Response& resp, int program_status)
+    int commit(Request& req, Response& resp, int program_status = 0)
     {
-      resp.send(req.client());
-      return req.close(resp.status(), program_status);
+      boost::system::error_code ec;
+      int ret (commit(req, resp, program_status, ec));
+      detail::throw_error(ec);
+      return ret;
+    }
+
+    /// Send a response to a reqest and close off the request.
+    template<typename Request, typename Response>
+    int commit(Request& req, Response& resp, int program_status
+              , boost::system::error_code& ec)
+    {
+      resp.send(req.client(), ec);
+      return ec ? -1 : req.close(resp.status(), program_status, ec);
     }
 
  } // namespace common

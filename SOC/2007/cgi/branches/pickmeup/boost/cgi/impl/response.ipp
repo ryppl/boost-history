@@ -69,7 +69,7 @@ namespace cgi {
   template<typename T> BOOST_CGI_INLINE
   basic_response<T>::basic_response(http::status_code sc)
     : buffer_(new common::streambuf())
-    , ostream_(buffer_.get())
+    , ostream_(buffer_.get(), std::ios::out | std::ios::binary)
     , http_status_(sc)
     , headers_terminated_(false)
     , charset_("ISO-8859-1")
@@ -84,8 +84,9 @@ namespace cgi {
   template<typename T> BOOST_CGI_INLINE
   basic_response<T>::basic_response(common::streambuf* buf,
       http::status_code sc)
-    : ostream_(buf)
+    : ostream_(buf, std::ios::out | std::ios::binary)
     , http_status_(sc)
+    , headers_terminated_(false)
     , charset_("ISO-8859-1")
   {
   }

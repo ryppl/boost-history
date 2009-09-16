@@ -21,11 +21,8 @@
 #include "boost/cgi/fcgi.hpp"
 #include "boost/cgi/utility/commit.hpp"
 
-using namespace std;
+//using namespace std;
 using namespace boost::fcgi;
-
-// This is a file to put internal logging info into
-#define LOG_FILE "/var/www/log/fcgi_echo.txt"
 
 // The styling information for the page, just to make things look nicer.
 static const char* gCSS_text =
@@ -42,14 +39,16 @@ static const char* gCSS_text =
     "{ position: relative; float: left; width: 65%; left: 1%;"
      " border-left: 1px solid; padding: 0 5px 0 5px;"
      " overflow: auto; white-space: pre; }"
+".clear"
+    "{ clear: both; }"
 ;
 
 //
 // This function writes the title and map contents to the ostream in an
 // HTML-encoded format (to make them easier on the eye).
 //
-template<typename OStreamT, typename MapT>
-void format_map(OStreamT& os, MapT& m, const std::string& title)
+template<typename OStream, typename Request, typename Map>
+void format_map(OStream& os, Request& req, Map& m, const std::string& title)
 {
   os<< "<div class=\"var_map\">"
          "<div class=\"var_map_title\">"
@@ -59,7 +58,7 @@ void format_map(OStreamT& os, MapT& m, const std::string& title)
   if (m.empty())
     os<< "<div class=\"var_pair\">EMPTY</div>";
   else
-    for (typename MapT::const_iterator i = m.begin(); i != m.end(); ++i)
+    for (typename Map::const_iterator i = m.begin(); i != m.end(); ++i)
     {
       os<< "<div class=\"var_pair\">"
              "<div class=\"var_name\">"
@@ -67,10 +66,11 @@ void format_map(OStreamT& os, MapT& m, const std::string& title)
         <<   "</div>"
              "<div class=\"var_value\">"
         <<       i->second
+             << (req.is_file(i->first) ? " (file)" : "")
         <<   "</div>"
            "</div>";
     }
-  os<< "</div>";
+  os<< "<div class=\"clear\"></div></div>";
 }
 
 std::size_t process_id()
@@ -117,7 +117,7 @@ int handle_request(Request& req)
          "<body>"
            "Request ID = " << req.id() << "<br />"
            "Process ID = " << process_id() << "<br />"
-           "<form method=post>" // enctype=\"multipart/form-data\">"
+           "<form method=post enctype=\"multipart/form-data\">"
              "<input type=text name=name value='"
       <<         req.post["name"] << "' />"
              "<br />"
@@ -134,26 +134,21 @@ int handle_request(Request& req)
   // Use the function defined above to show some of the request data.
   // (this function isn't part of the library)
   //
-  format_map(resp, req.env, "Environment Variables");
-  format_map(resp, req.get, "GET Variables");
-  format_map(resp, req.post, "POST Variables");
-  format_map(resp, req.cookies, "Cookie Variables");
+  format_map(resp, req, req.env, "Environment Variables");
+  format_map(resp, req, req.get, "GET Variables");
+  format_map(resp, req, req.post, "POST Variables");
+  format_map(resp, req, req.cookies, "Cookie Variables");
 
-  // Print the complete buffer containing the POST data and the FastCGI params.
+  // Print the buffer containing the POST data and the FastCGI params.
   resp<< "<pre>";
-  BOOST_FOREACH(char& ch, req.post_buffer())
-  {
-    resp<< ch;
-  }
-  //    << req.get_buffer()
+  resp<< std::string(req.post_buffer().begin(), req.post_buffer().end());
   resp<< "</pre>";
 
   //
   // Response headers can be added at any time before send/flushing it:
   //
   resp<< "Response content-length == "
-      << resp.content_length() // the content-length (returns std::size_t)
-      ;//<< content_length(resp); // a content-length header
+      << resp.content_length(); // the content-length (returns std::size_t)
 
   // This function finishes up:
   return commit(req, resp, 0);
@@ -178,10 +173,10 @@ try {
   
   using boost::asio::ip::tcp;
 
-  //tcp::endpoint endpoint(tcp::v4(), 8009);
   // Make an `acceptor` for accepting requests through.
-  acceptor a(s, 8009);    // The acceptor is for accepting requests.
-  cerr<< "Listening" << endl;
+  acceptor a(s, 8009);    // Accept requests on port 8009.
+  //cerr<< "Listening" << endl;
+  //cerr<< "is_cgi ? " << a.is_cgi() << endl;
 
   //
   // After the initial setup, we can enter a loop to handle one request at a
@@ -199,8 +194,7 @@ try {
     for (;;)
     {
       a.accept(req);
-      cerr<< "is_cgi ? " << a.is_cgi() << endl;
-      cerr<< "Accepted" << endl;
+      //cerr<< "Accepted" << endl;
       ret = handle_request(req);
       if (ret)
         break;
@@ -217,14 +211,14 @@ try {
 
 }catch(boost::system::system_error const& se){
   // This is the type of error thrown by the library.
-  cerr<< "[fcgi] System error: " << se.what() << endl;
+  //cerr<< "[fcgi] System error: " << se.what() << endl;
   return 1313;
-}catch(exception const& e){
+}catch(std::exception const& e){
   // Catch any other exceptions
-  cerr<< "[fcgi] Exception: " << e.what() << endl;
+  //cerr<< "[fcgi] Exception: " << e.what() << endl;
   return 666;
 }catch(...){
-  cerr<< "[fcgi] Uncaught exception!" << endl;
+  //cerr<< "[fcgi] Uncaught exception!" << endl;
   return 667;
 }
 }

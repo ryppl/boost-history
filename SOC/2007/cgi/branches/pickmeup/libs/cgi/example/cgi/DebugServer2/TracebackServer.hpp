@@ -6,7 +6,7 @@
 #undef min
 #undef max
 #include <boost/chrono/process_times.hpp>
-#include <google/template.h>
+#include <ctemplate/template.h>
 //#include <boost/chrono/chrono.hpp>
 
 /// A server which catches some runtime errors in your app.
@@ -23,20 +23,21 @@
  */
 class TracebackServer
 {
-    typedef boost::cgi::request request_type;
-    typedef boost::cgi::response response_type;
-    typedef boost::function<int (request_type&, response_type&)> callback_type;
+    typedef boost::cgi::request               request_type;
+    typedef boost::cgi::response              response_type;
+    typedef boost::function<
+      int (request_type&, response_type&)>    callback_type;
     //typedef Timer<boost::chrono::high_resolution_clock> timer_type;
-    typedef boost::chrono::process_timer timer_type;
-    typedef google::Template template_type;
-    typedef google::TemplateDictionary dictionary_type;
+    typedef boost::chrono::process_timer      timer_type;
+    typedef ctemplate::Template               template_type;
+    typedef ctemplate::TemplateDictionary     dictionary_type;
 
     timer_type timer_;
     template_type* template_;
     boost::chrono::process_times stop_times_;
 public: // member variables
     bool show_times;
-public:
+public: // functions
     TracebackServer(void);
     ~TracebackServer(void);
 

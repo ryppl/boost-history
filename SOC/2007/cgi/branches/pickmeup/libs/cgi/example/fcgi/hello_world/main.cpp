@@ -29,6 +29,7 @@ int handle_request(Request& req, Response& resp)
 {
   // This is a minimal response. The content_type(...) may go before or after
   // the response text.
+  req.load(parse_env);
   resp<< content_type("text/plain")
       << "Hello there, universe.";
 
@@ -63,12 +64,13 @@ int main()
   try
   {
     service s;        // This becomes useful with async operations.
-    acceptor a(s, (unsigned short)8008);    // The acceptor is for accepting requests
+    acceptor a(s, 8008);    // The acceptor is for accepting requests
 
     for (;;)
     {
-      request req(s);   // Our request (reusing this when possible saves expensive 
-					    // construction/destruction of the request's memory).
+      // Reusing a request object when possible saves repeated
+		  // construction/destruction of the request's memory.
+      request req(s);
     
       for (;;) // Handle requests until something goes wrong
               // (an exception will be thrown).

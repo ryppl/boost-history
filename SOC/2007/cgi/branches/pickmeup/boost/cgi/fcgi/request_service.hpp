@@ -52,7 +52,8 @@ namespace cgi {
       >::request_type                           request_type;
 
       implementation_type()
-        : client_()
+        : id_(0)
+        , client_()
         , stdin_parsed_(false)
         , http_status_(::cgi::common::http::no_content)
         , request_status_(common::unloaded)
@@ -63,19 +64,19 @@ namespace cgi {
 
       protocol_service_type* service_;
 
+      boost::uint16_t id_;
+
       client_type client_;
 
       bool stdin_parsed_;
       ::cgi::common::http::status_code http_status_;
       common::request_status request_status_;
-      fcgi::spec_detail::role_t request_role_;
+      fcgi::spec_detail::role_types request_role_;
       std::size_t characters_left_;
 
       bool all_done_;
 
-     /************** New stuff *****************/
       header_buffer_type header_buf_;
-      boost::uint16_t id_;
       typedef detail::form_parser form_parser_type;
 
       boost::scoped_ptr<form_parser_type> fp_;
@@ -93,8 +94,9 @@ namespace cgi {
      };
 
     typedef fcgi_request_service                           self_type;
-    typedef ::cgi::fcgi::fcgi_request_service              full_type;
+    typedef fcgi_request_service                           full_type;
     typedef self_type::implementation_type::protocol_type  protocol_type;
+    typedef self_type::implementation_type::string_type    string_type;
     typedef self_type::implementation_type::request_type   request_type;
 
     template<typename Service>
@@ -180,11 +182,7 @@ namespace cgi {
     boost::system::error_code
     load(implementation_type& impl, common::parse_options opts
           , boost::system::error_code& ec);
-/*
-    boost::system::error_code
-    load(implementation_type& impl, common::parse_options parse_opts
-          , boost::system::error_code& ec);
-*/
+
     // **FIXME**
     template<typename Handler>
     void async_load(implementation_type& impl, bool parse_stdin, Handler handler);
@@ -248,22 +246,22 @@ namespace cgi {
     // **FIXME**    
     boost::system::error_code
       process_begin_request(implementation_type& impl, boost::uint16_t id
-                           , const unsigned char* buf, boost::uint16_t
+                           , const unsigned char* buf, boost::uint32_t
                            , boost::system::error_code& ec);
 
     boost::system::error_code
       process_abort_request(implementation_type& impl, boost::uint16_t id
-                           , const unsigned char* buf, boost::uint16_t
+                           , const unsigned char* buf, boost::uint32_t
                            , boost::system::error_code& ec);
 
     boost::system::error_code
       process_params(implementation_type& impl, boost::uint16_t id
-                    , const unsigned char* buf, boost::uint16_t len
+                    , const unsigned char* buf, boost::uint32_t len
                     , boost::system::error_code& ec);
 
     boost::system::error_code
       process_stdin(implementation_type& impl, boost::uint16_t id
-                   , const unsigned char* buf, boost::uint16_t len
+                   , const unsigned char* buf, boost::uint32_t len
                    , boost::system::error_code& ec);
 
     /// Parse the current header
@@ -278,7 +276,7 @@ namespace cgi {
     typedef boost::system::error_code
       ( full_type::* proc_func_t)
       (implementation_type& impl, boost::uint16_t, const unsigned char*
-      , boost::uint16_t, boost::system::error_code&);
+      , boost::uint32_t, boost::system::error_code&);
 
     static const proc_func_t proc_funcs[];
   

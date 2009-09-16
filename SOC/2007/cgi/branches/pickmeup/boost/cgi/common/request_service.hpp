@@ -14,9 +14,9 @@
 #include <boost/utility/enable_if.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/import/io_service.hpp"
-#include "boost/cgi/detail/protocol_traits.hpp"
-#include "boost/cgi/common/basic_protocol_service_fwd.hpp"
 #include "boost/cgi/detail/service_base.hpp"
+#include "boost/cgi/detail/protocol_traits.hpp"
+#include "boost/cgi/fwd/basic_protocol_service_fwd.hpp"
 
 namespace cgi {
  namespace common {
@@ -43,12 +43,6 @@ namespace cgi {
       service_impl_type::implementation_type          implementation_type;
     typedef Protocol                                  protocol_type;
     typedef common::basic_protocol_service<Protocol>  protocol_service_type;
-
-    /// The unique service identifier
-    //static boost::asio::io_service::id id;
-    //explicit request_service()
-    //{
-    //}
 
     request_service(::cgi::common::io_service& ios)
       : detail::service_base<request_service<Protocol> >(ios)
@@ -123,7 +117,6 @@ namespace cgi {
     {
       return service_impl_.read_some(impl, buf, ec);
     }
-*/
     std::string
       GET(impl_type& impl, const std::string& name
          , boost::system::error_code& ec)
@@ -145,6 +138,7 @@ namespace cgi {
       return service_impl_.cookie(impl, name, ec);
     }
 
+*/
     /*
     std::string
       header(impl_type& impl, const std::string& name

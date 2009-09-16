@@ -59,7 +59,7 @@ void TracebackServer::bomb_out(std::string const& error, response_type& response
 {
     stop_timer();
     response_type resp2;
-    template_ = google::Template::GetTemplate(TBS_TEMPLATE__DEBUG_VIEW, google::STRIP_WHITESPACE);
+    template_ = ctemplate::Template::GetTemplate(TBS_TEMPLATE__DEBUG_VIEW, ctemplate::STRIP_WHITESPACE);
     dictionary_type dict("debug_view");
     dict.SetValue("ERROR", error);
     expand_map(dict, request[boost::cgi::env], "Environment Data");

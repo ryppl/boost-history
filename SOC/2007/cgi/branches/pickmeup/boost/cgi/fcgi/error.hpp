@@ -24,8 +24,8 @@ enum fcgi_errors
 {
   bad_header_type = 1,
 
-  /// A packet arrived for a request id that doesn't exist and the packet
-  // wasn't a BEGIN_REQUEST record.
+  /// A packet arrived for a request id that doesn't exist and the 
+  /// packet wasn't a BEGIN_REQUEST record.
   bad_request_id,
 
   /// When trying to write a packet, the client::write_some() call didn't
@@ -62,8 +62,15 @@ enum fcgi_errors
   // **FIXME**
   bad_read,
 
+  // **FIXME**
+  bad_write,
+
   // A client wasn't able to open.
   client_not_open,
+  
+  // Multiplexing connections are not yet supported.
+  // (I have no access to a server that supports it)
+  multiplexing_not_supported,
   
   // An empty FastCGI packet was read (eg. STDIN or GET_PARAM data has been read).
   //empty_packet_read,
@@ -90,6 +97,8 @@ public:
              "multiplexed). This isn't handled for now. **FIXME**";
     case accepting_on_an_open_request:
       return "You called async_accept before closing a request.";
+    case multiplexing_not_supported:
+      return "Multiplexing connections are not yet supported.";
     //case empty_packet_read:
     //  return "An empty FastCGI packet was read (eg. STDIN or GET_PARAM data has been read).";
     default:

@@ -210,14 +210,13 @@ namespace cgi {
     std::set<int> deletable_request_ids_;
   };
 
-  // probably deletable typedef (leaving it here to keep an open mind)
-  typedef basic_connection<tags::shareable_tcp_socket> shareable_tcp_connection;
-
-  namespace connection {
-    typedef basic_connection<tags::shareable_tcp_socket> shareable_tcp;
-  } // namespace connection
-
  } // namespace common
+
+  namespace connections {
+    typedef common::basic_connection<
+      common::tags::shareable_tcp_socket> shareable_tcp;
+  } // namespace connections
+
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"

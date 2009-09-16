@@ -17,8 +17,10 @@
 ////////////////////////////////////////////////////////////////
 #include <boost/asio/buffer.hpp>
 #include <boost/system/error_code.hpp>
+#include <boost/algorithm/string/find.hpp>
 ////////////////////////////////////////////////////////////////
 #include "boost/cgi/common/map.hpp"
+#include "boost/cgi/common/form_part.hpp"
 #include "boost/cgi/common/parse_options.hpp"
 #include "boost/cgi/detail/extract_params.hpp"
 #include "boost/cgi/detail/save_environment.hpp"
@@ -49,7 +51,8 @@ namespace cgi {
     {
       typedef char                              char_type; // **FIXME**
       typedef std::basic_string<char_type>      string_type;
-      typedef std::vector<char_type>            buffer_type;
+      typedef string_type                       buffer_type;
+      //typedef std::vector<char_type>            buffer_type;
       typedef boost::asio::const_buffers_1      const_buffers_type;
       typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
  
@@ -79,6 +82,8 @@ namespace cgi {
       bool get_parsed_;
       /// Whether the environment has been parsed yet.
       bool env_parsed_;
+
+      std::vector<common::form_part> form_parts_;
 
       mutable_buffers_type prepare(std::size_t size)
       {
@@ -124,6 +129,23 @@ namespace cgi {
       return impl.client_.read_some(buf,ec);
     }
 
+    /// Check if a given POST variable represents a file upload.
+    template<typename ImplType>
+    bool is_file(ImplType& impl
+                , typename ImplType::string_type const& key)
+    {
+       typedef std::vector<common::form_part>::const_iterator
+          iter_t;
+
+       for(iter_t iter (impl.form_parts_.begin())
+          , end (impl.form_parts_.end()); iter != end; ++iter)
+       {
+          if (iter->name == key.c_str() && !iter->filename.empty())
+             return true;
+       }
+       return false;
+    }
+
     /// Synchronously read/parse the request meta-data
     template<typename ImplType>
     boost::system::error_code
@@ -137,26 +159,30 @@ namespace cgi {
       }
 
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
-      // This will throw if the content-length isn't a valid number (which shouldn't ever happen).
-      impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
+      // This will throw if the content-length isn't a valid number 
+      // (which shouldn't ever happen).
+      impl.characters_left_
+         = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
       impl.client_.bytes_left() = impl.characters_left_;
 
-      std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
+      std::string const& request_method
+         = env_vars(impl.vars_)["REQUEST_METHOD"];
 
       if ((request_method == "GET" || request_method == "HEAD")
-          && (parse_opts & common::parse_get))
+          && (parse_opts & common::parse_get_only))
       {
         parse_get_vars(impl, ec);
       }
       else
-      if (request_method == "POST" && parse_opts & common::parse_post)
+      if (request_method == "POST"
+          && parse_opts & common::parse_post_only)
       {
         parse_post_vars(impl, ec);
       }
 
       if (ec) return ec;
 
-      if (parse_opts & common::parse_cookie)
+      if (parse_opts & common::parse_cookies_only)
       {
         if (!parse_cookie_vars(impl, ec)) // returns an error_code
           return ec;

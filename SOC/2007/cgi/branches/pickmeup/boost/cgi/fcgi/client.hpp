@@ -44,20 +44,20 @@ namespace cgi {
 
   /// A client that uses a TCP socket that owned by it.
   template<typename Protocol>
-  class basic_client<common::shareable_tcp_connection, Protocol>
+  class basic_client<connections::shareable_tcp, Protocol>
   {
   public:
     typedef ::cgi::common::io_service         io_service_type;
     typedef ::cgi::common::map                map_type;
     typedef Protocol                          protocol_type;
-    typedef common::shareable_tcp_connection  connection_type;
+    typedef connections::shareable_tcp        connection_type;
     typedef typename connection_type::pointer connection_ptr;
     typedef boost::array<
         unsigned char
       , fcgi::spec::header_length::value
     >                                         header_buffer_type;
     typedef boost::asio::mutable_buffers_1    mutable_buffers_type;
-    typedef fcgi::spec_detail::role_t         role_type;
+    typedef fcgi::spec_detail::role_types     role_type;
 
     /// Construct
     basic_client()
@@ -72,8 +72,6 @@ namespace cgi {
       : request_id_(-1)
       , status_(none_)
       , keep_connection_(false)
-      //, io_service_(ios)
-      //, connection_(new connection_type::pointer(ios))
     {
     }
 
@@ -96,7 +94,6 @@ namespace cgi {
       construct(RequestImpl& req, boost::system::error_code& ec)
     {
       status_ = constructed;
-
       return ec;
     }
 
@@ -155,8 +152,6 @@ namespace cgi {
       return ec;
     }
 
-    //io_service_type& io_service() { return io_service_; }
-
     /// Associate a connection with this client
     /**
      * Note: the connection must have been created using the new operator
@@ -197,16 +192,44 @@ namespace cgi {
       for(; iter != end; ++iter)
       {
         boost::asio::const_buffer buffer(*iter);
-        int new_buf_size( boost::asio::buffer_size(buffer) );
+        std::size_t new_buf_size( boost::asio::buffer_size(*iter) );
+        std::cerr<< "-" << new_buf_size << "-";
         // only write a maximum of 65535 bytes
-        if (total_buffer_size + new_buf_size
+        if (total_buffer_size + new_buf_size 
              > fcgi::spec::max_packet_size::value)
-          break;
-        total_buffer_size += new_buf_size;
-        bufs.push_back(*iter);
+        {
+          if (new_buf_size > fcgi::spec::max_packet_size::value)
+          {
+            std::cerr<< "Buffer too big." << std::endl;
+            total_buffer_size = 65000;
+            bufs.push_back(boost::asio::buffer(*iter, 65000));
+            break;
+            /*
+            std::size_t bytes_left(new_buf_size);
+            std::size_t bufsz(0);
+            while (bytes_left > 0)
+            {
+              if (bytes_left > fcgi::spec::max_packet_size::value)
+                bufsz = fcgi::spec::max_packet_size::value;
+              else
+                bufsz = bytes_left;
+              bufs.push_back(boost::asio::const_buffer(buffer, bufsz));
+              bytes_left -= bufsz;
+            }
+            */
+          }
+          else
+            break;
+        }
+        else
+        {
+          total_buffer_size += new_buf_size;
+          bufs.push_back(*iter);
+        }
       }
-      std::cerr<< "Size of write buffer := " << total_buffer_size << std::endl;
-      //detail::make_header(out_header_, buf
+      //std::cerr<< '\n';
+      spec::stdout_header header(request_id_, total_buffer_size);
+      bufs[0] = header.data();
       out_header_[0] = static_cast<unsigned char>(1);
       out_header_[1] = static_cast<unsigned char>(6);
       out_header_[2] = static_cast<unsigned char>(request_id_ >> 8) & 0xff;
@@ -215,11 +238,24 @@ namespace cgi {
       out_header_[5] = static_cast<unsigned char>(total_buffer_size) & 0xff;
       out_header_[6] = static_cast<unsigned char>(0);
       out_header_[7] = 0;
+      
+      bool empty = bufs.empty();
+      std::size_t size = bufs.size();
+      typedef std::vector<boost::asio::const_buffer>::const_iterator
+        iter_t;
+      for (iter_t iter(bufs.begin()), end(bufs.end()); iter != end; ++iter)
+      {
+        size = boost::asio::buffer_size(*iter);
+        std::string str (
+            boost::asio::buffer_cast<const char*>(*iter)
+          , boost::asio::buffer_size(*iter) );
+      }
 
       std::size_t bytes_transferred
         = boost::asio::write(*connection_, bufs, boost::asio::transfer_all(), ec);
 
-      if (0 != (total_buffer_size + fcgi::spec::header_length::value
+      //std::cerr<< "Transferred " << bytes_transferred << " bytes (total: " << total_buffer_size << ")." << std::endl;
+      if (!ec && 0 != (total_buffer_size + fcgi::spec::header_length::value
           - bytes_transferred))
         ec = ::cgi::error::couldnt_write_complete_packet;
 
@@ -244,9 +280,7 @@ namespace cgi {
     std::size_t
     read_some(const MutableBufferSequence& buf, boost::system::error_code& ec)
     {
-      std::size_t bytes_read(0);
-
-      return bytes_read;
+      return connection_->read_some(buf, ec);
     }
 
     /// Asynchronously write some data to the client.
@@ -281,8 +315,6 @@ namespace cgi {
       return keep_connection_;
     }
 
-    //int id() { return request_id_; }
-
     std::size_t& bytes_left()
     {
       return bytes_left_;
@@ -297,41 +329,23 @@ namespace cgi {
     friend class fcgi_request_service;
     boost::uint16_t request_id_;
     client_status status_;
-    std::size_t bytes_left_;
-    //request_impl_type* current_request_;
-    
-    /// A marker to say if the final STDIN (and/or DATA) packets have been
-    // read. Note: having data on the connection doesn't imply it's for
-    // this request; we can save time by knowing when to not even try.
-    //bool closed_;
-
+    std::size_t bytes_left_;    
     connection_ptr   connection_;
 
-    //fcgi::spec_detail::Header hdr_;
     /// Buffer used to check the header of each packet.
     header_buffer_type out_header_;
 
     bool keep_connection_;
     role_type role_;
 
-  public:
-
-    //template<typename Request>
-    //Request& lookup_request(boost::uint16_t id)
-    //{
-
-
-            //*/
   };
-
-//#include "boost/cgi/fcgi/client_fwd.hpp"
 
  } // namespace common
 
 namespace fcgi {
     typedef
       common::basic_client<
-        common::shareable_tcp_connection, ::cgi::common::fcgi_
+        connections::shareable_tcp, ::cgi::common::fcgi_
       >
     client;
 } // namespace fcgi

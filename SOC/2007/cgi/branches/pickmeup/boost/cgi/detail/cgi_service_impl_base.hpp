@@ -107,7 +107,8 @@ namespace cgi {
      */
     bool is_open(implementation_type& impl)
     {
-      return impl.status() >= common::accepted && impl.status() <= common::aborted;
+      return impl.status() >= common::accepted 
+          && impl.status() <= common::aborted;
     }
 
     /// Return the connection associated with the request
@@ -116,6 +117,8 @@ namespace cgi {
     {
       return impl.client_;
     }
+
+    void clear(implementation_type& impl) { }
 
     int request_id(implementation_type& impl) { return 1; }
 
@@ -128,7 +131,7 @@ namespace cgi {
       return status;
     }
 
-    /// Synchronously read/parse the request meta-data
+    /// Synchronously read/parse the request data
     boost::system::error_code&
     load(implementation_type& impl, common::parse_options parse_opts
         , boost::system::error_code& ec)
@@ -140,10 +143,12 @@ namespace cgi {
       }
 
       std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
-      impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
-      impl.client_.bytes_left() = impl.characters_left_;
-
-      std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
+      impl.characters_left_
+         = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
+      impl.client_.bytes_left()
+         = impl.characters_left_;
+      std::string const& request_method
+         = env_vars(impl.vars_)["REQUEST_METHOD"];
 
       if ((request_method == "GET" || request_method == "HEAD")
           && parse_opts > common::parse_env
@@ -152,7 +157,8 @@ namespace cgi {
         parse_get_vars(impl, ec);
       }
       else
-      if (request_method == "POST" && (parse_opts & common::parse_post_only))
+      if (request_method == "POST"
+          && (parse_opts & common::parse_post_only))
       {
         parse_post_vars(impl, ec);
       }
@@ -170,20 +176,6 @@ namespace cgi {
       return ec;
     }
 
-    /// Synchronously read/parse the request meta-data
-    /**
-     * @param parse_stdin if true then STDIN data is also read/parsed
-     */
-    boost::system::error_code&
-      load(implementation_type& impl, bool parse_stdin
-          , boost::system::error_code& ec)
-    {
-      return load(impl, parse_stdin
-                          ? common::parse_all
-                          : (common::parse_env | common::parse_cookie)
-                 , ec);
-    }
-  
     role_type
     get_role(implementation_type& impl)
     {
@@ -191,13 +183,15 @@ namespace cgi {
     }
 
     /// Set the http status (this does nothing for aCGI)
-    void set_status(implementation_type& impl, common::http::status_code&)
+    void set_status(
+       implementation_type& impl, common::http::status_code&)
     {
       // **FIXME**
     }
 
     /// Set the request status
-    void set_status(implementation_type& impl, common::request_status status)
+    void set_status(
+       implementation_type& impl, common::request_status status)
     {
       impl.status() = status;
     }
@@ -214,7 +208,7 @@ namespace cgi {
     boost::system::error_code
     read_env_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
-      // Only do this once.
+      // Only call this once.
       if (!impl.env_parsed_)
         detail::save_environment(env_vars(impl.vars_));
       impl.env_parsed_ = true;
@@ -226,23 +220,34 @@ namespace cgi {
     boost::system::error_code
     parse_post_vars(RequestImpl& impl, boost::system::error_code& ec)
     {
-      // Make sure this function hasn't already been called
-      //BOOST_ASSERT (!impl.stdin_parsed());
+      // **FIXME** use callback_functor<> in form_parser instead.
+      std::size_t& bytes_left (impl.client_.bytes_left_);
+      std::size_t bytes_read (0);
+      do {
+         bytes_read = read_some(impl, ec);
+         bytes_left -= bytes_read;
+      } while (!ec && bytes_left);
 
-      ;
+      if (!impl.fp_)
+        // Construct a form_parser instance.
+        impl.fp_.reset(new implementation_type::form_parser_type());
 
-      impl.fp_.reset
-      (
-        new typename implementation_type::form_parser_type
-                ( impl.post_buffer_
-                , post_vars(impl.vars_)
-                , env_vars(impl.vars_)["CONTENT_TYPE"]
-                , callback_functor<self_type>(impl, this)
+      // Create a context for this request.      
+      implementation_type::form_parser_type::context
+          context
+              = { env_vars(impl.vars_)["CONTENT_TYPE"]
+                , impl.post_buffer_
+                , impl.form_parts_
                 , impl.client_.bytes_left_
+                , post_vars(impl.vars_)
+                , callback_functor<self_type>(impl, this)
                 , impl.stdin_parsed_
-                )
-      );
-      impl.fp_->parse(ec);
+                , env_vars(impl.vars_)["REMOTE_ADDR"]
+                };
+
+      // Parse the current request.
+      impl.fp_->parse(context, ec);
+      
       return ec;
     }
   };

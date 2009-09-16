@@ -21,7 +21,7 @@
 //
 #include <boost/cgi/acgi.hpp>
 #include <boost/cgi/utility.hpp>
-#include <google/template.h>
+#include <ctemplate/template.h>
 #include <boost/throw_exception.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/filesystem.hpp>
@@ -41,10 +41,10 @@ namespace fs = boost::filesystem;
 // The types we use. Only here because this is an example.
 
 // Uses cTemplate, from Google. It's simple and powerful.
-typedef google::Template stencil_type;
+typedef ctemplate::Template stencil_type;
 // You will usually load a template and then populate variables in it
 // using a TemplateDictionary.
-typedef google::TemplateDictionary dictionary_type;
+typedef ctemplate::TemplateDictionary dictionary_type;
 // The acgi and fcgi parts of the CGI library use a `service` class to 
 // manage asynchronous dispatching (eg. async I/O). If you're not interested
 // in async I/O, you can just use the plain cgi stuff (which is the same as
@@ -74,7 +74,7 @@ stencil_type* get_stencil(std::string const& filename)
 {
   if (!fs::exists(filename))
     throw std::runtime_error(std::string("Template file not found: '") + fs::path(filename).string() + "'");
-  return google::Template::GetTemplate(filename, google::STRIP_WHITESPACE);
+  return ctemplate::Template::GetTemplate(filename, ctemplate::STRIP_WHITESPACE);
 }
 
 // Show the data in the passed map, updating the passed dictionary.

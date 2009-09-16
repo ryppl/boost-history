@@ -2,9 +2,9 @@
 <VisualStudioProject
 	ProjectType="Visual C++"
 	Version="9.00"
-	Name="acgi_ctemplate_cookie_game"
-	ProjectGUID="{AC2E336C-7C32-468C-9847-470436CF668F}"
-	RootNamespace="acgi_ctemplate_cookie_game"
+	Name="cgi_file_browser"
+	ProjectGUID="{FFF275FA-323A-4699-9D04-A5C9BDD6048B}"
+	RootNamespace="cgi_echo"
 	Keyword="Win32Proj"
 	TargetFrameworkVersion="196613"
 	>
@@ -41,6 +41,7 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				Optimization="0"
+				AdditionalIncludeDirectories=""
 				PreprocessorDefinitions="_SCL_SECURE_NO_WARNINGS"
 				MinimalRebuild="true"
 				BasicRuntimeChecks="3"
@@ -60,12 +61,11 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="libboost_system-vc90-mt-gd-1_38.lib&#x0D;&#x0A;libctemplate-debug.lib"
+				AdditionalOptions="libboost_system-vc90-mt-gd-1_38.lib"
 				LinkIncremental="2"
+				AdditionalLibraryDirectories="C:\Boost\lib"
 				GenerateDebugInformation="true"
 				SubSystem="1"
-				OptimizeReferences="2"
-				EnableCOMDATFolding="2"
 				TargetMachine="1"
 			/>
 			<Tool
@@ -88,7 +88,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\style.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\style.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\main.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\style.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\index.html&quot; &quot;c:\code\c++\boost.cgi\templates\index.html&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;"
 			/>
 		</Configuration>
 		<Configuration
@@ -136,7 +136,6 @@
 			/>
 			<Tool
 				Name="VCLinkerTool"
-				AdditionalOptions="libctemplate.lib&#x0D;&#x0A;libboost_system-vc90-mt-1_38.lib"
 				LinkIncremental="1"
 				GenerateDebugInformation="true"
 				SubSystem="1"
@@ -164,7 +163,7 @@
 			/>
 			<Tool
 				Name="VCPostBuildEventTool"
-				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\style.css&quot; &quot;c:\code\c++\boost.cgi\htdocs\css\style.css&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\main.js&quot; &quot;c:\code\c++\boost.cgi\htdocs\js\main.js&quot;&#x0D;&#x0A;copy &quot;$(SolutionDir)\..\..\..\..\example\acgi\cookie_game2\index.html&quot; &quot;c:\code\c++\boost.cgi\templates\index.html&quot;&#x0D;&#x0A;"
+				CommandLine="copy &quot;$(TargetPath)&quot; &quot;c:\code\c++\boost.cgi\cgi-bin\$(TargetName)&quot;"
 			/>
 		</Configuration>
 	</Configurations>
@@ -177,7 +176,7 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
-				RelativePath="..\..\..\..\..\example\acgi\cookie_game2\main.cpp"
+				RelativePath="..\..\..\..\..\example\cgi\echo\main.cpp"
 				>
 			</File>
 		</Filter>
@@ -193,18 +192,6 @@
 			UniqueIdentifier="{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}"
 			>
 		</Filter>
-		<File
-			RelativePath="..\..\..\..\..\example\acgi\cookie_game2\index.html"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\..\example\acgi\cookie_game2\main.js"
-			>
-		</File>
-		<File
-			RelativePath="..\..\..\..\..\example\acgi\cookie_game2\style.css"
-			>
-		</File>
 	</Files>
 	<Globals>
 	</Globals>

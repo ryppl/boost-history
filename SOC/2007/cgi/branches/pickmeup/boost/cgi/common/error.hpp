@@ -55,7 +55,17 @@ enum cgi_errors
   eof,
   
   // The first multipart form boundary was not found.
-  multipart_form_boundary_not_found
+  multipart_form_boundary_not_found,
+  
+  // The first multipart form boundary was not found.
+  multipart_meta_data_not_terminated,
+  
+  // Expected a boundary marker for a multipart form, but did not find it.
+  no_boundary_marker,
+  
+  // The content length of the file upload is larger than maximum allowed
+  // by the BOOST_CGI_POST_MAX macro.
+  max_post_exceeded
 };
 
   namespace detail {
@@ -70,17 +80,25 @@ public:
     switch(e)
     {
     case client_closed:
-      return "Attempting to read from or write to a client that has been closed.";
+      return "Attempting to read from or write to a client that has been"
+             " closed.";
     case accepting_on_an_open_request:
-      return "`async_accept` called with an open request (ie. it should be closed first).";
+      return "`async_accept` called with an open request (ie. it should be"
+             " closed first).";
     case multipart_form_boundary_not_found:
       return "The first multipart form boundary was not found.";
+    case no_boundary_marker:
+      return "Expected a boundary marker for a multipart form, but did not"
+             " find it.";
     case invalid_form_type:
       return "The CONTENT_TYPE for form data wasn't recognised.";
     case eof:
       return "End of File.";
     case duplicate_request:
       return "FastCGI: new request received with a duplicate id.";
+    case max_post_exceeded:
+      return "The content length of the file upload is larger than maximum"
+             " allowed by the BOOST_CGI_POST_MAX macro.";
     default:
       return "(CGI) BOOM!!!";
     }

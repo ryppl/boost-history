@@ -95,17 +95,13 @@ namespace cgi {
   private:
     next_layer_type sock_;
   };
-
-  namespace connection {
-
-    typedef basic_connection<tags::tcp_socket> tcp;
-
-  } // namespace connection
-
-  // Deprecated
-  typedef basic_connection<tags::tcp_socket> tcp_connection;
-
+  
  } // namespace common
+
+  namespace connections {
+    typedef common::basic_connection<common::tags::tcp_socket> tcp;
+  } // namespace connections
+
 } // namespace cgi
 
 #include "boost/cgi/detail/pop_options.hpp"

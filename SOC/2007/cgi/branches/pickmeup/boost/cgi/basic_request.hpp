@@ -38,6 +38,11 @@
 #include "boost/cgi/detail/throw_error.hpp"
 #include "boost/cgi/detail/protocol_traits.hpp"
 
+#ifndef BOOST_CGI_POST_MAX
+    /// Restrict POST data to less than 7MB per request.
+#   define BOOST_CGI_POST_MAX 6663322
+#endif // BOOST_CGI_POST_MAX
+
 namespace cgi {
  namespace common {
 
@@ -110,15 +115,22 @@ namespace cgi {
       
       void set(map_type& data) { impl = &data; }
       
-      iterator begin() { BOOST_ASSERT(impl); return impl->begin(); }
-      iterator end() { BOOST_ASSERT(impl); return impl->end(); }
-      const_iterator begin() const { BOOST_ASSERT(impl); return impl->begin(); }
-      const_iterator end() const { BOOST_ASSERT(impl); return impl->end(); }
-      
-      reverse_iterator rbegin() { BOOST_ASSERT(impl); return impl->rbegin(); }
-      reverse_iterator rend() { BOOST_ASSERT(impl); return impl->rend(); }
-      const_reverse_iterator rbegin() const { BOOST_ASSERT(impl); return impl->rbegin(); }
-      const_reverse_iterator rend() const { BOOST_ASSERT(impl); return impl->rend(); }
+      iterator begin() {
+         BOOST_ASSERT(impl); return impl->begin(); }
+      iterator end() {
+         BOOST_ASSERT(impl); return impl->end(); }
+      const_iterator begin() const {
+         BOOST_ASSERT(impl); return impl->begin(); }
+      const_iterator end() const {
+         BOOST_ASSERT(impl); return impl->end(); }
+      reverse_iterator rbegin() {
+         BOOST_ASSERT(impl); return impl->rbegin(); }
+      reverse_iterator rend() {
+         BOOST_ASSERT(impl); return impl->rend(); }
+      const_reverse_iterator rbegin() const {
+         BOOST_ASSERT(impl); return impl->rbegin(); }
+      const_reverse_iterator rend() const {
+         BOOST_ASSERT(impl); return impl->rend(); }
 
       bool empty() { BOOST_ASSERT(impl); return impl->empty(); }
       
@@ -126,7 +138,10 @@ namespace cgi {
       
       size_type size() const { BOOST_ASSERT(impl); return impl->size(); }
       
-      size_type count(const key_type& key) { BOOST_ASSERT(impl); return impl->count(key); }
+      size_type count(const key_type& key) {
+         BOOST_ASSERT(impl);
+         return impl->count(key);
+      }
       
       template<typename T>
       T as(key_type const& key) {
@@ -141,6 +156,7 @@ namespace cgi {
       }
       
       operator map_type&() { BOOST_ASSERT(impl); return *impl; }
+      bool operator!() const { return !impl; }
 
     private:      
       map_type* impl;
@@ -167,7 +183,6 @@ namespace cgi {
       : detail::basic_sync_io_object<service_type>()
     {
       if (opts > parse_none) load(opts, ec);
-      construct();
     }
 
     // Throws
@@ -178,7 +193,6 @@ namespace cgi {
     {
       set_protocol_service(s);
       if (opts > parse_none) load(opts, base_env);
-      construct();
     }
 
     // Won't throw
@@ -190,7 +204,6 @@ namespace cgi {
     {
       set_protocol_service(s);
       if (opts > parse_none) load(opts, ec, base_env);
-      construct();
     }
 
     /// Make a new mutiplexed request from an existing connection.
@@ -202,7 +215,6 @@ namespace cgi {
       boost::system::error_code ec;
       this->service.begin_request_helper(this->implementation
                                         , impl.header_buf_, ec);
-      construct();
       detail::throw_error(ec);
     }
 
@@ -226,6 +238,9 @@ namespace cgi {
     void construct()
     {
       this->env.set(env_vars(this->implementation.vars_));
+      // By default, set the form map to the environment.
+      //if (!this->form)
+      //  this->form.set(env_vars(this->implementation.vars_));
       this->post.set(post_vars(this->implementation.vars_));
       this->get.set(get_vars(this->implementation.vars_));
       this->cookies.set(cookie_vars(this->implementation.vars_));
@@ -241,7 +256,21 @@ namespace cgi {
       this->service.set_service(this->implementation, ps);
     }
 
-    /// Return `true` if the request is still open (ie. not aborted or closed)
+    /// The id of this request.
+    /**
+     * This is 1 for CGI/aCGI requests, but may be != 1 for FastCGI
+     * requests.
+     *
+     * Note that for FastCGI requests, the id's are assigned on a
+     * *per-connection* policy, so in one application you may have 
+     * several requests with the same id.
+     */
+    int id()
+    {
+      return this->service.request_id(this->implementation);
+    }
+
+    /// Check if the request is still open (ie. not aborted or closed)
     bool is_open()
     {
       return this->service.is_open(this->implementation);
@@ -249,9 +278,9 @@ namespace cgi {
 
     /// Synchronously read/parse the request meta-data
     /**
-     * Note: 'loading' including reading/parsing STDIN if parse_stdin == true
+     * Note: 'loading' including reading/parsing STDIN if
+     * parse_stdin == true
      */
-    // Throwing semantics
     void load(parse_options parse_opts = parse_env, char** base_env = NULL)
     {
       boost::system::error_code ec;
@@ -264,17 +293,31 @@ namespace cgi {
       load(parse_options parse_opts, boost::system::error_code& ec
           , char** base_environment = NULL, bool is_command_line = true)
     {
-      this->service.load(this->implementation, parse_opts, ec);
-      if (base_environment)
-        this->service.load_environment(this->implementation, base_environment
-                                      , is_command_line);
-      if (parse_opts > parse_env && parse_opts & parse_form)
+      construct();
+      // Parse just the environment first, then check the user
+      // isn't trying to upload more data than we want to let them.
+      // Define `BOOST_CGI_POST_MAX` to set the maximum content-length
+      // allowed.
+      if (parse_opts & parse_env)
       {
-        common::name rm(request_method().c_str());
-        form.set(
-          (rm == "GET" || rm == "HEAD") ? get :
-              rm == "POST" ? post : env
-        );
+        //this->service.load(this->implementation, parse_env, ec);
+        //if (content_length() >= BOOST_CGI_POST_MAX)
+        //  ec = common::error::max_post_exceeded;
+        this->service.load(this->implementation, parse_opts, ec);
+        // Load the environment passed by the user.
+        if (base_environment)
+          this->service.load_environment(
+              this->implementation, base_environment
+            , is_command_line);
+
+        if (parse_opts > parse_env && parse_opts & parse_form)
+        {
+          common::name rm(request_method().c_str());
+          form.set(
+            (rm == "GET" || rm == "HEAD") ? get :
+                rm == "POST" ? post : env
+          );
+        }
       }
       return ec;
     }
@@ -289,8 +332,8 @@ namespace cgi {
     /// Get the buffer containing the POST data.
     /**
      * **FIXME**
-     * This actually returns the whole buffer on FastCGI at the moment, which
-     * contains the params too.
+     * This actually returns the whole buffer on FastCGI at the moment, 
+     * which contains the params too.
      */
     buffer_type& post_buffer()
     {
@@ -300,7 +343,8 @@ namespace cgi {
     // **FIXME**
     /// Asynchronously read/parse the request meta-data
     /**
-     * Note: 'loading' including reading/parsing STDIN if parse_stdin == true
+     * Note: 'loading' including reading/parsing STDIN if
+     * parse_stdin == true
      */
     //template<typename Handler>
     //void async_load(Handler handler, bool parse_stdin = false)
@@ -309,28 +353,28 @@ namespace cgi {
     //                          , handler);
     //}
 
-    /// Notify the server the request has finished being handled
+    /// Notify the server the request has been handled.
     /**
-     * In certain situations (such as a Proactor client using the async read
-     * functions) it will be necessary to call end, rather than just returning
-     * from the sub_main function.
+     * In certain situations (such as a Proactor client using the async
+     * read functions) it will be necessary to call end, rather than 
+     * just returning from the sub_main function.
      *
-     * @param program_status This value is returned to the server indicating the
-     * state of the request after it was finished handling. It is
-     * implementation defined how the server deals with this, and it may have
-     * no effect on the http status code returned to the client (eg. 200 OK).
+     * @param program_status This value is returned to the server
+     * indicating the state of the request after it was finished 
+     * handling. It is implementation defined how the server deals with
+     * this, and it may have no effect on the http status code returned
+     * to the client (eg. 200 OK).
      *
      * @returns The value of program_status
      */
     int close(common::http::status_code http_status = http::ok
              , int program_status = 0)
     {
-      //BOOST_ASSERT( request_status_ != ended );
-
-      //this->service.set_status(this->implementation, http_status);
       boost::system::error_code ec;
       this->service.close(this->implementation, http_status,
           program_status, ec);
+      // Clear the request data so the object can be reused.
+      clear();
       detail::throw_error(ec);
       return program_status;
     }
@@ -343,7 +387,7 @@ namespace cgi {
                                 , program_status, ec);
     }
 
-    /// Reject the request with a standard '500 Internal Server Error' error
+    /// Reject the request with a '500 Internal Server Error' error.
     int reject()
     {
       this->service.set_status(this->implementation, aborted);
@@ -351,10 +395,38 @@ namespace cgi {
                                 , http::internal_server_error);
     }
 
-    /// Abort a request
+    /// Abort a request.
     void abort()
     {
       this->service.set_status(this->implementation, aborted);
+    }
+
+    /// Check if a POST variable references a file upload.
+    /**
+     * File uploads, which originate from a form POSTed using the
+     * multipart/form-data encoding type are saved to disk.
+     *
+     * Only the filename is stored in the POST map for the request.
+     * If you expect a field to be a file upload, check if it is using
+     * this function.
+     */
+    bool is_file(common::name const& key)
+    {
+      return this->service.is_file(this->implementation, key.c_str());
+    }
+
+    /// Check if a POST variable references a file upload.
+    /**
+     * File uploads, which originate from a form POSTed using the
+     * multipart/form-data encoding type are saved to disk.
+     *
+     * Only the filename is stored in the POST map for the request.
+     * If you expect a field to be a file upload, check if it is using
+     * this function.
+     */
+    bool is_file(string_type const& key)
+    {
+      return this->service.is_file(this->implementation, key);
     }
 
     /// Clear the data for the request, for reusing this object.
@@ -424,7 +496,7 @@ namespace cgi {
 
     // [helper-functions for the basic CGI 1.1 meta-variables.
     string_type& auth_type()
-    { return env_("AUTH_TYPE"); }
+    { return env["AUTH_TYPE"]; }
 
     /// Get the content length as a long.
     /**
@@ -433,72 +505,72 @@ namespace cgi {
      */
     long content_length()
     { 
-      string_type& cl(env_("CONTENT_LENGTH"));
+      string_type& cl(env["CONTENT_LENGTH"]);
       return boost::lexical_cast<long>(cl.empty() ? "0" : cl); 
     }
 
     string_type& content_type()
-    { return env_("CONTENT_TYPE"); }
+    { return env["CONTENT_TYPE"]; }
 
     string_type& gateway_interface()
-    { return env_("GATEWAY_INTERFACE"); }
+    { return env["GATEWAY_INTERFACE"]; }
 
     common::path_info path_info()
-    { return env_("PATH_INFO"); }
+    { return env["PATH_INFO"]; }
 
     string_type& path_translated()
-    { return env_("PATH_TRANSLATED"); }
+    { return env["PATH_TRANSLATED"]; }
 
     string_type& query_string()
-    { return env_("QUERY_STRING"); }
+    { return env["QUERY_STRING"]; }
 
     string_type& remote_addr()
-    { return env_("REMOTE_ADDR"); }
+    { return env["REMOTE_ADDR"]; }
 
     string_type& remote_host()
-    { return env_("REMOTE_HOST"); }
+    { return env["REMOTE_HOST"]; }
 
     string_type& remote_ident()
-    { return env_("REMOTE_IDENT"); }
+    { return env["REMOTE_IDENT"]; }
 
     string_type& remote_user()
-    { return env_("REMOTE_USER"); }
+    { return env["REMOTE_USER"]; }
 
     string_type& method()
-    { return env_("REQUEST_METHOD"); }
+    { return env["REQUEST_METHOD"]; }
 
     string_type& request_method()
-    { return env_("REQUEST_METHOD"); }
+    { return env["REQUEST_METHOD"]; }
 
     string_type& url()
-    { return env_("REQUEST_URL"); }
+    { return env["REQUEST_URL"]; }
 
     string_type& request_url()
-    { return env_("REQUEST_URL"); }
+    { return env["REQUEST_URL"]; }
 
     string_type& script_name()
-    { return env_("SCRIPT_NAME"); }
+    { return env["SCRIPT_NAME"]; }
 
     string_type& script_url()
-    { return env_("SCRIPT_URL"); }
+    { return env["SCRIPT_URL"]; }
 
     string_type& script_uri()
-    { return env_("SCRIPT_URI"); }
+    { return env["SCRIPT_URI"]; }
 
     string_type& server_name()
-    { return env_("SERVER_NAME"); }
+    { return env["SERVER_NAME"]; }
 
     string_type& server_port()
-    { return env_("SERVER_PORT"); }
+    { return env["SERVER_PORT"]; }
 
     string_type& server_protocol()
-    { return env_("SERVER_PROTOCOL"); }
+    { return env["SERVER_PROTOCOL"]; }
 
     string_type& server_software()
-    { return env_("SERVER_SOFTWARE"); }
+    { return env["SERVER_SOFTWARE"]; }
 
     string_type& referer()
-    { return env_("HTTP_REFERER"); }
+    { return env["HTTP_REFERER"]; }
     // -- end helper-functions]
 
     /// Get the charset from the CONTENT_TYPE header
@@ -534,9 +606,19 @@ namespace cgi {
     ////////////////////////////////////////////////////////////
     // Note on operator[]
     // ------------------
+    //
+    // ** DEPRECATED **
+    // These operator overloads are deprecated.
+    // Use member variables instead, eg. 
+    // ``
+    // request req;
+    // req.get["whatever"]
+    // req.env["request_method"]
+    // ``
+    // ** DEPRECATED **
+    // 
     // It is overloaded on different enum types to allow
-    // compile-time (I hope) retrieval of different data
-    // maps.
+    // compile-time retrieval of different data maps.
     //
 
     // The first three overloads are for directly looking into the 
@@ -611,25 +693,6 @@ namespace cgi {
         return env_vars(this->implementation.vars_);
     }
     ////////////////////////////////////////////////////////////
-
-    /// The id of this request.
-    /**
-     * This is 1 for CGI/aCGI requests, but may be != 1 for FastCGI requests.
-     * Note that for FastCGI requests, the id's are assigned on a
-     * *per-connection* policy, so in one application you may have several
-     * requests with the same id.
-     */
-    int id()
-    {
-      return this->service.request_id(this->implementation);
-    }
-
-  private:
-    // Internal shortcut for named env-var functions (eg. script_name() above).
-    string_type& env_(const char* name)
-    {
-      return env_vars(this->implementation.vars_)[name];
-    }
   };
 
  } // namespace common

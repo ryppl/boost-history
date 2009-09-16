@@ -180,20 +180,22 @@ void print_formatted_data(Response& resp, MapT& data)
 {
     resp<< "<div class=\"cookies\">";
     if (data.empty())
-        resp<< "<span class='value'>None found</span>";
-    else {
-        resp<< "<ul class=\"nvpair\">";
-        for(typename MapT::const_iterator iter=data.begin(), end = data.end(); iter != end; ++iter)
-        {
-            resp<< "<li class=\"name\">"
-                <<     iter->first
-                << "</li>"
-                   "<li class=\"value\">"
-                <<     iter->second
-                << "</li>";
-        }
-        resp<< "</ul>"
-               "<div class=\"clear\"></div>";
+        resp<< "<span class=\"value\">None found</span>";
+    else
+    {
+      resp<< "<ul class=\"nvpair\">";
+      for(typename MapT::const_iterator iter=data.begin(), end = data.end();
+          iter != end; ++iter)
+      {
+        resp<< "<li class=\"name\">"
+            <<     iter->first
+            << "</li>"
+               "<li class=\"value\">"
+            <<     iter->second
+            << "</li>";
+      }
+      resp<< "</ul>"
+             "<div class=\"clear\"></div>";
     }
     resp<< "</div>";
 }
@@ -209,7 +211,7 @@ int main()
   response resp;
   resp<< content_type("text/plain");
 
-  if (has_key(req.form, "reset") && req.form["reset"] == "true")
+  if (req.form.count("reset") && req.form["reset"] == "true")
   {
     resp<< cookie("name")
         << redirect(req, req.script_name()); // redirect them.
@@ -217,14 +219,14 @@ int main()
     return 0;
   }
 
-  if (has_key(req.form, "name"))
+  if (req.form.count("name"))
   {
-    if (has_key(req.form, "del"))
+    if (req.form.count("del"))
       resp<< cookie(req.form["name"]);
     else
       resp<< cookie(req.form["name"], req.form["value"]);
     resp<< redirect(req, req.script_name());
-    return_(resp, req, http::ok);
+    return commit(req, resp);
   }
 
   resp<< content_type("text/html")
@@ -240,32 +242,43 @@ int main()
          "<body>";
 
   // First, see if they have a cookie set
-  if (has_key(req.cookies, "name"))
+  if (req.cookies.count("name"))
       resp<< "<h1>Hello again " << req.cookies["name"] << "</h1>"
           << "<p><a href='?reset=true'><input type='submit' value='Reset' /></a></p>";
   else
     resp<< "<h1>Hello there.</h1>";
 
-  resp<< "<p>You can add cookies using the form below. If you add a cookie value for 'name', it will show up above.</p>"
-         "<p>Here is list of the cookies you currently have:</p>";
+  resp<< "<p>"
+            "You can add cookies using the form below. If you add a cookie "
+            "value for 'name', it will show up above."
+         "</p>"
+          "<p>Here is list of the cookies you currently have:</p>";
   
   print_formatted_data(resp, req.cookies);
   
-  resp<< "<form method='get' action='" << req.script_name() << "' id='getform'>"
+  resp<< "<form method=get action='" << req.script_name() << "' id=getform>"
            "<label for='name' class='name'>Name:</label>"
-           "<input id='name' name='name' class='value' type='text' value='" << req.form["name"] << "'>""</input>"
+           "<input id='name' name='name' class='value' type='text' value='" 
+              << req.form["name"] << "'>"
+           "</input>"
            "<label for='value' class='name'>Value:</label>"
-           "<input id='value' name='value' class='value' type='text' value='" << req.form["value"] << "'>""</input>"
+           "<input id='value' name='value' class='value' type='text' value='"
+              << req.form["value"] << "'>"
+           "</input>"
            "<label for='del' class='name'>Delete this cookie?</label>"
            "<input id='del' name='del' class='value' type='checkbox'></input>"
            "<div class='clear'></div>"
            "<input type='submit'></input>"
          "</form>"
-         "<input type='submit' onclick='switch_method(\"getform\"); switch_value(this); return false;' value='Switch to POST'></input>"
+         "<input type='submit' "
+             "onclick='switch_method(\"getform\"); "
+                      "switch_value(this); return false;' "
+                      "value='Switch to POST'>"
+         "</input>"
          "</body>"
          "</html>";
 
-  return_(resp, req, http::ok);
+  return commit(req, resp);
 }
 //]
 

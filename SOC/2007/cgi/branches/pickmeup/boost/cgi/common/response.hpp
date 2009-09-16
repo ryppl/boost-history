@@ -167,29 +167,6 @@ namespace cgi {
 
     /// Get the headers
     std::vector<string_type>& headers();
-    
-    //friend std::basic_ostream<char_type>& operator<<(std::basic_ostream<char_type>&, self_type& resp);
-    /*
-    friend self_type& operator<<(self_type& self, basic_cookie<char_type> const&);
-    friend self_type& operator<<(self_type& self, basic_header<char_type> const&);
-    friend self_type& operator<<(self_type& self, basic_response<char_type> const&);
-    friend self_type& operator<<(self_type& self, http::status_code);
-    */
-    
-    /*
-    template<typename T>
-    std::basic_ostream<string_type>& operator<<(T& t)
-    {
-      ostream_<< t;
-      return ostream_;
-    }
-    
-    template<typename T>
-    self_type& operator<<(const T& t) {
-      ostream_<< t;
-      return *this;
-    }
-    */
 
   protected:
     // Vector of all the headers, each followed by a CRLF

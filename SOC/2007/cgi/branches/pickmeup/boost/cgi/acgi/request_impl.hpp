@@ -20,12 +20,12 @@ namespace cgi {
  namespace acgi {
 
   class request_impl
-    : public detail::cgi_request_impl_base<common::async_stdio_connection>
+    : public detail::cgi_request_impl_base<connections::async_stdio>
   {
   public:
     typedef ::cgi::acgi::service                 protocol_service_type;
     typedef protocol_service_type::protocol_type protocol_type;
-    typedef common::async_stdio_connection       connection_type;
+    typedef connections::async_stdio             connection_type;
     typedef
       ::cgi::common::basic_client<
         connection_type, common::tags::acgi

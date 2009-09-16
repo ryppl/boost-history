@@ -7,28 +7,34 @@
 //
 ////////////////////////////////////////////////////////////////
 //
-//[cgi_file_browser
+//[fcgi_file_browser
 //
 // This example is a simple browser-based file browser.
 //
 ///////////////////////////////////////////////////////////
-#include <istream>
 #include <fstream>
 #include <boost/filesystem.hpp>
-#include <boost/shared_array.hpp>
 #include <boost/algorithm/string/find.hpp>
-#include <boost/algorithm/string/case_conv.hpp>
 ///////////////////////////////////////////////////////////
-#include "boost/cgi/cgi.hpp"
+#include "boost/cgi/fcgi.hpp"
 #include "boost/cgi/utility/commit.hpp"
 
 using std::cerr;
 using std::endl;
 using std::ifstream;
-using namespace boost::cgi;
+using namespace boost::fcgi;
 namespace fs = boost::filesystem;
 namespace algo = boost::algorithm;
 
+
+std::size_t process_id()
+{
+#if defined(BOOST_WINDOWS)
+  return _getpid();
+#else
+  return getpid();
+#endif
+}
 
 /// Get the MIME type of the file. 
 /**
@@ -153,6 +159,7 @@ void show_file(Response& resp, Client& client, fs::path const& file)
       std::string mime_type (get_mime_type(file));
       if (!mime_type.empty())
       {
+        cerr<< "MIME-type: " << mime_type << endl;
         std::string ctype (content_type(mime_type).content + "\r\n\r\n");
         //write(client, boost::asio::buffer(ctype));
         /// Open the file and read it as binary data.
@@ -161,20 +168,23 @@ void show_file(Response& resp, Client& client, fs::path const& file)
         {
           resp<< content_type(mime_type);
           //resp.flush(client);
-          boost::uintmax_t bufsize = 500;
+          boost::uintmax_t bufsize = 100;
           boost::uintmax_t read_bytes;
-          char buf[500];
+          char buf[100];
           ifs.seekg(0, std::ios::beg);
           while (!ifs.eof() && size > 0)
           {
             ifs.read(buf, size < bufsize ? size : bufsize);
             read_bytes = ifs.gcount();
             size -= read_bytes;
+            //if (resp.content_length() + read_bytes >= 65000)
+            //  resp.flush(client);
             resp.write(buf, read_bytes);
             //write(client, boost::asio::buffer(buf, read_bytes));
             //resp.flush(client);
           }
-          //resp.send(client);
+          resp.send(client);
+          cerr<< "Content-length: " << resp.content_length() << endl;
         }
       }
       else
@@ -249,7 +259,8 @@ int handle_request(Request& req)
   if (req.get.count("file"))
   {
     show_file(resp, req.client(), req.get["file"]);
-    //return req.close(http::ok, 0);
+    req.close(resp.status(), 0);
+    return 0; //commit(req, resp);
   }
   else
   if (req.get.count("dir"))
@@ -263,7 +274,7 @@ int handle_request(Request& req)
     // You can also stream text to a response. 
     // All of this just prints out the form 
     resp<< "<html>"
-           "<head><title>CGI File Browser Example</title><head>"
+           "<head><title>FastCGI File Browser Example</title><head>"
            "<body>";
 
     show_paths(resp, req.get["dir"], req.get["recurse"] == "1");
@@ -274,16 +285,38 @@ int handle_request(Request& req)
     resp<< content_type("text/plain")
         << "No path specified.\n";
 
-  resp<< header("CGI-client", "fcgi_file_browser");
-  return commit(req, resp, 0);
+  //resp<< header("FastCGI-client", "fcgi_file_browser");
+  return commit(req, resp);
 }
 
 int main()
 {
 try {
 
-  request req;
-  return handle_request(req);
+  // Make a `service` (more about this in other examples).
+  service s;
+  
+  using boost::asio::ip::tcp;
+
+  // Accept requests on port 8001. You should configure your HTTP
+  // server to try to connect on this port.
+  acceptor a(s, 8001);    
+
+  int ret(0);
+  for (;;)
+  {
+    request req(s);
+
+    for (;;)
+    {
+      a.accept(req);
+      if (0 != handle_request(req))
+        break;
+      req.clear();
+    }
+  }
+  
+  return ret;
 
 }catch(boost::system::system_error const& se){
   // This is the type of error thrown by the library.

@@ -13,6 +13,7 @@
 #include <boost/system/error_code.hpp>
 #include <boost/fusion/include/vector.hpp>
 ////////////////////////////////////////////////////////////////
+#include "boost/cgi/fcgi/error.hpp"
 #include "boost/cgi/fcgi/client.hpp"
 #include "boost/cgi/fcgi/request_service.hpp"
 #include "boost/cgi/common/map.hpp"
@@ -108,6 +109,7 @@ namespace cgi {
       common::cookie_vars(impl.vars_).clear();
       common::env_vars(impl.vars_).clear();
       impl.stdin_parsed_ = false;
+      impl.get_parsed_ = false;
       impl.http_status_ = common::http::no_content;
       impl.request_status_ = common::null;
       impl.request_role_ = spec_detail::ANY;
@@ -127,109 +129,64 @@ namespace cgi {
      *    packet for this request arrives from the server.
      *
      */
-/*    
-    /// Synchronously read/parse the request meta-data
-    BOOST_CGI_INLINE boost::system::error_code
-    fcgi_request_service::load(
-        implementation_type& impl, common::parse_options parse_opts
-      , boost::system::error_code& ec)
-    {
-      if (parse_opts & common::parse_env)
-      {
-        if (!read_env_vars(impl, ec)) // returns an error_code
-          return ec;
-      }
-
-      std::string const& cl = env_vars(impl.vars_)["CONTENT_LENGTH"];
-      impl.characters_left_ = cl.empty() ? 0 : boost::lexical_cast<std::size_t>(cl);
-      impl.client_.bytes_left() = impl.characters_left_;
-
-      std::string const& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
-
-      if (request_method == "GET" && parse_opts & common::parse_get)
-      {
-        parse_get_vars(impl, ec);
-      }
-      else
-      if (request_method == "POST" && parse_opts & common::parse_post)
-      {
-        parse_post_vars(impl, ec);
-      }
-
-      if (ec) return ec;
-
-      if (parse_opts & common::parse_cookie)
-      {
-        if (!parse_cookie_vars(impl, ec)) // returns an error_code
-          return ec;
-      }
-
-      set_status(impl, common::loaded);
-
-      return ec;
-    }
-/*/
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::load(
         implementation_type& impl, common::parse_options opts
       , boost::system::error_code& ec)
     {
-      //int header_len( get_length_of_header(impl, ec) );
-      BOOST_ASSERT(!ec && "Can't load request due to previous errors.");
+      BOOST_ASSERT(!ec &&
+        "Can't load request due to previous errors.");
 
       impl.client_.construct(impl, ec);
       // Bomb out if the client isn't open here.
       if (!impl.client_.connection_->is_open())
           return error::client_not_open;
 
-      for(;;)
+      while(!ec)
       {
         if (read_header(impl, ec))
           break;
-        int id(fcgi::spec::get_request_id(impl.header_buf_));
-        if (id == fcgi::spec::null_request_id::value)
+        int id(spec::get_request_id(impl.header_buf_));
+        if (id == spec::null_request_id::value)
           handle_admin_request(impl);
         else
-        if (fcgi::spec::get_type(impl.header_buf_) 
-            == fcgi::spec::begin_request::value)
+        if (impl.id_ && impl.id_ != id)
+        {
+          // The library doesn't support multiplexed connections yet,
+          // mainly because I've never had access to a server that
+          // supports it.
+          //
+          // If you have one, can I use it?
+          ec = error::multiplexing_not_supported;
+        }
+        else
+        if (spec::get_type(impl.header_buf_) 
+            == spec::begin_request::value)
         {
           impl.id_ = id;
           impl.client_.request_id_ = id;
-          if (read_header(impl, ec))
+          if (!read_header(impl, ec))
+          {
+            spec::begin_request packet(impl.header_buf_);
+            impl.request_role_ = packet.role();
+            impl.client_.keep_connection_
+              = packet.flags() & spec::keep_connection;
             break;
-          impl.request_role_ = fcgi::spec::begin_request::get_role(impl.header_buf_);
-          //std::cerr<< "[hw] New request role: " << impl.request_role_
-          //    << " (" << fcgi::spec::role_type::to_string(impl.header_buf_) << ")"
-          //    << std::endl;
-          impl.client_.keep_connection_
-            = fcgi::spec::begin_request::get_flags(impl.header_buf_)
-              & fcgi::spec::keep_connection;
-          //std::cerr<< "keep connection := " << impl.client_.keep_connection_ << std::endl;
-          break;
+          }
         }else
           handle_other_request_header(impl);
       }
-
-      read_env_vars(impl, ec);
-
-      if (opts & common::parse_post_only)
-      {
-        while(!ec 
-          && impl.client_.status() < common::stdin_read
-          && impl.request_status_ != common::loaded)
-        {
-          parse_packet(impl, ec);
-        }
-      }
-      if (ec == error::eof) {
-        ec = boost::system::error_code();
-        return ec;
-      }
-      //else
-      //if (ec == error::empty_packet_read)
-      //  return ec;
       
-      const std::string& request_method = env_vars(impl.vars_)["REQUEST_METHOD"];
+      if (//impl.request_status_ < common::env_read &&
+          opts & common::parse_env)
+      {
+        read_env_vars(impl, ec);
+        //impl.request_status_ = common::env_read;
+      }
+
+      string_type const&
+        request_method (env_vars(impl.vars_)["REQUEST_METHOD"]);
+        
       if (request_method == "GET")
       {
         if (parse_get_vars(impl, ec))
@@ -243,7 +200,25 @@ namespace cgi {
         if (parse_post_vars(impl, ec))
 	      return ec;
       }
-      parse_cookie_vars(impl, ec);
+      if (opts & common::parse_cookies_only)
+        parse_cookie_vars(impl, ec);
+        
+      if (opts & common::parse_post_only)
+      {
+        while(!ec 
+          && impl.client_.status() < common::stdin_read
+          && impl.request_status_ != common::loaded)
+        {
+          parse_packet(impl, ec);
+        }
+      }
+      if (ec == error::eof) {
+        ec = boost::system::error_code();
+        return ec;
+      }
+      else if (ec) return ec;
+      
+      bool check = impl.client_.is_open();
 
       return ec;
     }
@@ -278,25 +253,29 @@ namespace cgi {
         implementation_type& impl
       , boost::system::error_code& ec)
     {
-      // Make sure this function hasn't already been called
-      //BOOST_ASSERT( impl.post_vars().empty() );
-	  
-      //#     error "Not implemented"
-      // **FIXME** should use form_parser, when it's ready.
-      // Only works with url-encoded forms (ie. not with multipart forms)
+      if (!impl.fp_)
+        // Construct a form_parser instance.
+        impl.fp_.reset(new implementation_type::form_parser_type());
 
-      impl.fp_.reset
-      (
-        new implementation_type::form_parser_type
-                ( impl.post_buffer_
-                , post_vars(impl.vars_)
-                , env_vars(impl.vars_)["CONTENT_TYPE"]
-                , callback_functor<self_type>(impl, this)
+      impl.client_.bytes_left_
+         = boost::lexical_cast<std::size_t>(
+             env_vars(impl.vars_)["CONTENT_LENGTH"]);
+      
+      // Create a context for this request.      
+      implementation_type::form_parser_type::context
+          context
+              = { env_vars(impl.vars_)["CONTENT_TYPE"]
+                , impl.post_buffer_
+                , impl.form_parts_
                 , impl.client_.bytes_left_
+                , post_vars(impl.vars_)
+                , callback_functor<self_type>(impl, this)
                 , impl.stdin_parsed_
-                )
-      );
-      impl.fp_->parse(ec);
+                , env_vars(impl.vars_)["REMOTE_ADDR"]
+                };
+
+      // Parse the current request.
+      impl.fp_->parse(context, ec);
 
       return ec;
     }
@@ -326,7 +305,7 @@ namespace cgi {
       }
 
       //if (read_header(ec))
-        return -1;
+        return 0;
 
       //boost::tribool state = parse_header(impl);
       //std::size_t bytes_read;//( connection_->read_some(buf, ec) );
@@ -355,7 +334,8 @@ namespace cgi {
           ec = error::bad_header_type;
         else // => (state == boost::indeterminate)
         {
-          std::size_t remaining(fcgi::spec::get_length(impl.header_buf_));
+          std::size_t remaining(
+            fcgi::spec::get_length(impl.header_buf_));
 
           if (remaining)
           {
@@ -425,7 +405,7 @@ namespace cgi {
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::process_abort_request(
         implementation_type& impl, boost::uint16_t id
-      , const unsigned char* buf, boost::uint16_t
+      , const unsigned char* buf, boost::uint32_t
       , boost::system::error_code& ec)
     {
       if (id == fcgi::spec::get_request_id(impl.header_buf_))
@@ -457,22 +437,20 @@ namespace cgi {
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::process_params(
         implementation_type& impl, boost::uint16_t id
-      , const unsigned char* buf, boost::uint16_t len
+      , const unsigned char* buf, boost::uint32_t len
       , boost::system::error_code& ec)
     {
       if (0 == len)
       { // This is the final param record.
         
         impl.client_.status(common::params_read);
-
-        //std::cerr<< "[hw] Final PARAM record found." << std::endl;
         return ec;
       }
 
       while(len)
       {
         boost::uint32_t   name_len, data_len;
-        std::string name, data;
+        string_type name, data;
         if (*buf >> 7 == 0)
         {
             name_len = *(buf++);
@@ -507,10 +485,6 @@ namespace cgi {
         buf += (name_len + data_len);
         len -= (name_len + data_len);
 
-        //std::cerr<< "[hw] name := " << name << std::endl;
-        //std::cerr<< "[hw] data := " << data << std::endl;
-
-        // **FIXME**
         env_vars(impl.vars_)[name.c_str()] = data;
       }
 
@@ -521,20 +495,14 @@ namespace cgi {
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::process_stdin(
         implementation_type& impl, boost::uint16_t id
-      , const unsigned char* buf, boost::uint16_t len
+      , const unsigned char* buf, boost::uint32_t len
       , boost::system::error_code& ec)
     {
       if (0 == len)
       {
-        impl.client_.status_ = common::stdin_read;
-
-        // **FIXME**
-        //std::cerr<< "[hw] Final STDIN record found." << std::endl;
+        impl.client_.status(common::stdin_read);
         return ec;
       }
-
-      // **FIXME**
-      //std::cerr<< "[hw] Found some STDIN stuff." << std::endl;
       return ec;
     }
 
@@ -558,13 +526,13 @@ namespace cgi {
           impl.client_.status(common::stdin_read);
           return true;
         } else
-          return boost::indeterminate; //0 == fcgi::spec::get_length(impl.header_buf_) ? true : boost::indeterminate;
+          return boost::indeterminate;
       case PARAMS:
         if (0 == fcgi::spec::get_length(impl.header_buf_)) {
           impl.client_.status(common::params_read);
           return true;
         } else
-          return boost::indeterminate; //0 == fcgi::spec::get_length(impl.header_buf_) ? true : boost::indeterminate;
+          return boost::indeterminate;
       case ABORT_REQUEST:
         return false;
       case UNKNOWN_TYPE:
@@ -577,36 +545,34 @@ namespace cgi {
     fcgi_request_service::parse_packet(
         implementation_type& impl, boost::system::error_code& ec)
     {
-      //current_request_ = &req;
-
       if (this->read_header(impl, ec))
         return ec;
 
       boost::tribool state = this->parse_header(impl);
 
       if (state)
-      { // the header has been handled and all is ok; continue.
-        return ec;
-      }else
+      { 
+        // the header has been handled and all is ok.
+        // **NOOP**
+      } else
       if (!state)
       { // The header is confusing; something's wrong. Abort.
-        return error::bad_header_type;
+        ec = error::bad_header_type;
       }
-      // else route (ie. state == boost::indeterminate)
-
-      std::size_t remaining(fcgi::spec::get_length(impl.header_buf_));
-      if (remaining)
+      else
       {
-        implementation_type::mutable_buffers_type buf
-          = impl.prepare(remaining);
+        std::size_t remaining(fcgi::spec::get_length(impl.header_buf_));
+        if (remaining)
+        {
+          implementation_type::mutable_buffers_type buf
+            = impl.prepare(remaining);
 
-        if (this->read_body(impl, buf, ec))
-          return ec;
+          if (this->read_body(impl, buf, ec))
+            return ec;
 
-        this->parse_body(impl, buf, ec);
-      } 
-      //else
-      //  ec = error::empty_packet_read;
+          this->parse_body(impl, buf, ec);
+        }
+      }
       return ec;
     }
 
@@ -618,7 +584,8 @@ namespace cgi {
       , boost::system::error_code& ec)
     {
       std::size_t bytes_read
-        = read(*impl.client_.connection_, buf, boost::asio::transfer_all(), ec);
+        = read(*impl.client_.connection_, buf
+              , boost::asio::transfer_all(), ec);
 
       BOOST_ASSERT(bytes_read == fcgi::spec::get_length(impl.header_buf_)
                    && "Couldn't read all of the record body.");
@@ -654,12 +621,12 @@ namespace cgi {
        if (read_header(impl, ec))
          return ec;
         
-       impl.request_role_
-         = fcgi::spec::begin_request::get_role(impl.header_buf_);
-       impl.client_.role_ = impl.request_role_;
+       spec::begin_request packet(impl.header_buf_);
+       impl.request_role_ = packet.role();
+       impl.client_.role_ = packet.role();
        impl.client_.keep_connection_
-         = fcgi::spec::begin_request::get_flags(impl.header_buf_)
-           & fcgi::spec::keep_connection;
+         = packet.flags() & spec::keep_connection;
+
        impl.client_.status_ = common::constructed;
        
        return ec;
@@ -707,7 +674,7 @@ namespace cgi {
     BOOST_CGI_INLINE boost::system::error_code
     fcgi_request_service::process_begin_request(
         implementation_type& impl, boost::uint16_t id
-      , const unsigned char* buf, boost::uint16_t
+      , const unsigned char* buf, boost::uint32_t
       , boost::system::error_code& ec)
     {
       if (impl.client_.request_id_ == 0) // ie. hasn't been set yet.

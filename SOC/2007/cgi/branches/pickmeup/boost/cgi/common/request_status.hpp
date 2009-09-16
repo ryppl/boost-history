@@ -17,6 +17,7 @@ namespace cgi {
      , unloaded
      , activated
      , accepted = activated
+     , env_read
      , loaded
      , ok = loaded
      , aborted
