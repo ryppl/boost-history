@@ -60,11 +60,11 @@ Sometimes you need to output your code differently for nested containers. To do 
    {
        using namespace explore;
    
-       // level 0
+       ostr << level(0);
        ostr << start("") << explore::end("") << separator("\n");
    
-       // level 1
-       ostr << start("|", 1) << explore::end("|", 1) << separator(" ", 1);
+       ostr << level(1);
+       ostr << start("|") << explore::end("|") << separator(" ");
    
        return ostr;
    }

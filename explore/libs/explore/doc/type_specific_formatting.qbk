@@ -1,0 +1,44 @@
+[/
+ / Copyright (c) 2009 Jeffrey Faust
+ / Copyright (c) 2009 Jared McIntyre
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:type_specific_formatting Type Specific Formatting]
+
+It is possible to define a custom format that is always be used when streaming a specific container type. To do so, you need to use the custom() manipulator.  For example:
+
+   ostream& operator<<(ostream& ostr, const user_vector& u)
+   {
+      return ostr << explore::custom() << explore::delimiters("/", "::", "/") << u.m_vec.m_data;
+   }
+
+The desire here is to use the delimiters "/" for begin/end and "::" for the separator whenever an instance of user_vector is streamed, independent of what depth the container is streamed at.  The "custom" manipulator allows this to work.  Without it you will receive a debug assertion.  With this new overload, the code:
+
+   user_vector v;
+   std::cout << v;
+
+prints
+
+   /1::2::3/
+
+This nested example is more interesting. Even though we set the manipulators on the stream, the type's formatting is still used:
+
+   std::vector<user_vector> v;
+   v.push_back(user_vector());
+   v.push_back(user_vector());
+
+   std::cout << explore::delimiters("{\n   ", "\n   ", "\n}") << v;
+
+prints
+
+   {
+      /1::2::3/
+      /1::2::3/
+   }
+
+So the same delimiters are always used for the custom container, even when that container is nested in another.
+
+[endsect]

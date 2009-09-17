@@ -31,6 +31,8 @@
 <dl>
 <dt><span class="section"><a href="tutorial/custom_delimeters.html"> Custom Delimiters</a></span></dt>
 <dt><span class="section"><a href="tutorial/custom_containers.html"> Custom Containers</a></span></dt>
+<dt><span class="section"><a href="tutorial/type_specific_formatting.html"> Type
+      Specific Formatting</a></span></dt>
 </dl>
 </div>
 <a name="boost_explore.tutorial.basic_container_printing"></a><h4>
@@ -44,14 +46,22 @@
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">explore</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">explore</span><span class="special">;</span>
 </pre>
+<p>
+      However, this will pull in definitions of all the containers that Explore supports.
+      To include only the definitions required for a specific container include each
+      type's header file instead of <code class="computeroutput"><span class="string">"explore.hpp"</span></code>.
+    </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">explore</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">explore</span><span class="special">/</span><span class="identifier">boost_array</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+</pre>
 <a name="boost_explore.tutorial.printing_of_contained_items"></a><h4>
-<a name="id554053"></a>
+<a name="id554157"></a>
       <a class="link" href="tutorial.html#boost_explore.tutorial.printing_of_contained_items">Printing
       of Contained Items</a>
     </h4>
 <p>
-      Basic printing of containers requires the inclusing of explore.hpp. Once included,
-      containers can be be streamed in a formated manner.
+      Once you have included the proper header files, containers can be be streamed
+      in a formated manner.
     </p>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
@@ -85,13 +95,15 @@
 <pre class="programlisting"><span class="special">[[</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">],</span> <span class="special">[</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">]]</span>
 </pre>
 <a name="boost_explore.tutorial.c_style_arrays"></a><h4>
-<a name="id554477"></a>
+<a name="id554580"></a>
       <a class="link" href="tutorial.html#boost_explore.tutorial.c_style_arrays">C Style Arrays</a>
     </h4>
 <p>
       C style arrays have a standard streaming format, however, when you include
-      explore.hpp, you override this default streaming format with the explore streaming
-      format and all the abilities of it.
+      any explore header, including <code class="computeroutput"><span class="string">"explore.hpp"</span></code>
+      and <code class="computeroutput"><span class="string">"boost/explore/c_array.hpp"</span></code>,
+      you override this default streaming format with the explore streaming format
+      and all the abilities of it.
     </p>
 <pre class="programlisting"><span class="keyword">int</span> <span class="identifier">arr</span><span class="special">[</span><span class="number">3</span><span class="special">]</span> <span class="special">=</span> <span class="special">{</span><span class="number">1</span><span class="special">,</span><span class="number">2</span><span class="special">,</span><span class="number">3</span><span class="special">};</span>
 <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">arr</span><span class="special">;</span>
@@ -102,7 +114,7 @@
 <pre class="programlisting"><span class="special">[</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">]</span>
 </pre>
 <a name="boost_explore.tutorial.associative_containers"></a><h4>
-<a name="id554627"></a>
+<a name="id554746"></a>
       <a class="link" href="tutorial.html#boost_explore.tutorial.associative_containers">Associative Containers</a>
     </h4>
 <p>
@@ -143,7 +155,7 @@
       can be handled as associative containers.
     </p>
 <a name="boost_explore.tutorial.lexical_cast"></a><h4>
-<a name="id555048"></a>
+<a name="id555167"></a>
       <a class="link" href="tutorial.html#boost_explore.tutorial.lexical_cast">lexical_cast</a>
     </h4>
 <p>
@@ -155,10 +167,10 @@
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span> <span class="identifier">outVal</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span><span class="identifier">vi</span><span class="special">)</span> <span class="special">);</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lexical_cast</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">string</span><span class="special">&gt;(</span><span class="identifier">vi</span><span class="special">);</span>
 </pre>
 <p>
-      outVal equals
+      prints
     </p>
 <pre class="programlisting"><span class="special">[</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">]</span>
 </pre>

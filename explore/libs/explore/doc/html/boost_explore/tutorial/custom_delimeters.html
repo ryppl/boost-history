@@ -31,7 +31,7 @@
         streaming process through the use of several new stream manipulators.
       </p>
 <div class="table">
-<a name="id555307"></a><p class="title"><b>Table 1. Explore Stream Manipulators</b></p>
+<a name="id555417"></a><p class="title"><b>Table 1. Explore Stream Manipulators</b></p>
 <div class="table-contents"><table class="table" summary="Explore Stream Manipulators">
 <colgroup>
 <col>
@@ -223,7 +223,7 @@
 <pre class="programlisting"><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.manipulator_helper_functions"></a><h5>
-<a name="id555793"></a>
+<a name="id555903"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.manipulator_helper_functions">Manipulator
         Helper Functions</a>
       </h5>
@@ -232,7 +232,7 @@
         one call.
       </p>
 <div class="table">
-<a name="id555811"></a><p class="title"><b>Table 2. Explore Stream Manipulator Helpers</b></p>
+<a name="id555921"></a><p class="title"><b>Table 2. Explore Stream Manipulator Helpers</b></p>
 <div class="table-contents"><table class="table" summary="Explore Stream Manipulator Helpers">
 <colgroup>
 <col>
@@ -311,7 +311,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">begin_end</span><span class="special">(</span><span class="string">"&lt;"</span><span class="special">,</span> <span class="string">"&gt;"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span><span class="special">;</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.delimeters_by_level"></a><h5>
-<a name="id556001"></a>
+<a name="id556111"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.delimeters_by_level">Delimeters
         by Level</a>
       </h5>
@@ -325,11 +325,11 @@
 <span class="special">{</span>
     <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">explore</span><span class="special">;</span>
 
-    <span class="comment">// level 0
-</span>    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">""</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="string">""</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">"\n"</span><span class="special">);</span>
+    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">level</span><span class="special">(</span><span class="number">0</span><span class="special">);</span>
+    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">""</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="string">""</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">"\n"</span><span class="special">);</span>
 
-    <span class="comment">// level 1
-</span>    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">"|"</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="string">"|"</span><span class="special">,</span> <span class="number">1</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">" "</span><span class="special">,</span> <span class="number">1</span><span class="special">);</span>
+    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">level</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+    <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">"|"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">end</span><span class="special">(</span><span class="string">"|"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">" "</span><span class="special">);</span>
 
     <span class="keyword">return</span> <span class="identifier">ostr</span><span class="special">;</span>
 <span class="special">}</span>
@@ -369,7 +369,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.item_width"></a><h5>
-<a name="id556907"></a>
+<a name="id557034"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.item_width">Item
         Width</a>
       </h5>
@@ -377,7 +377,7 @@
         TODO: finish this section
       </p>
 <a name="boost_explore.tutorial.custom_delimeters.retrieving_manipulator_values"></a><h5>
-<a name="id556931"></a>
+<a name="id557058"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.retrieving_manipulator_values">Retrieving
         Manipulator Values</a>
       </h5>

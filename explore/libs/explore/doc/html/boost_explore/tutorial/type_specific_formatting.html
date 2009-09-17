@@ -1,0 +1,91 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Type Specific Formatting</title>
+<link rel="stylesheet" href="../../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Boost.explore">
+<link rel="up" href="../tutorial.html" title="Tutorial">
+<link rel="prev" href="custom_containers.html" title="Custom Containers">
+<link rel="next" href="../dependencies_platforms.html" title="Dependencies and Platforms">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="custom_containers.html"><img src="../../../../../../doc/html/images/%20prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/%20up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/%20home.png" alt="Home"></a><a accesskey="n" href="../dependencies_platforms.html"><img src="../../../../../../doc/html/images/%20next.png" alt="Next"></a>
+</div>
+<div class="section" title="Type Specific Formatting">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_explore.tutorial.type_specific_formatting"></a><a class="link" href="type_specific_formatting.html" title="Type Specific Formatting"> Type
+      Specific Formatting</a>
+</h3></div></div></div>
+<p>
+        It is possible to define a custom format that is always be used when streaming
+        a specific container type. To do so, you need to use the custom() manipulator.
+        For example:
+      </p>
+<pre class="programlisting"><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">ostr</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">user_vector</span><span class="special">&amp;</span> <span class="identifier">u</span><span class="special">)</span>
+<span class="special">{</span>
+   <span class="keyword">return</span> <span class="identifier">ostr</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">custom</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">delimiters</span><span class="special">(</span><span class="string">"/"</span><span class="special">,</span> <span class="string">"::"</span><span class="special">,</span> <span class="string">"/"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">u</span><span class="special">.</span><span class="identifier">m_vec</span><span class="special">.</span><span class="identifier">m_data</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The desire here is to use the delimiters "/" for begin/end and
+        "::" for the separator whenever an instance of user_vector is streamed,
+        independent of what depth the container is streamed at. The "custom"
+        manipulator allows this to work. Without it you will receive a debug assertion.
+        With this new overload, the code:
+      </p>
+<pre class="programlisting"><span class="identifier">user_vector</span> <span class="identifier">v</span><span class="special">;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span><span class="special">;</span>
+</pre>
+<p>
+        prints
+      </p>
+<pre class="programlisting"><span class="special">/</span><span class="number">1</span><span class="special">::</span><span class="number">2</span><span class="special">::</span><span class="number">3</span><span class="special">/</span>
+</pre>
+<p>
+        This nested example is more interesting. Even though we set the manipulators
+        on the stream, the type's formatting is still used:
+      </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="identifier">user_vector</span><span class="special">&gt;</span> <span class="identifier">v</span><span class="special">;</span>
+<span class="identifier">v</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">user_vector</span><span class="special">());</span>
+<span class="identifier">v</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="identifier">user_vector</span><span class="special">());</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">delimiters</span><span class="special">(</span><span class="string">"{\n   "</span><span class="special">,</span> <span class="string">"\n   "</span><span class="special">,</span> <span class="string">"\n}"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">v</span><span class="special">;</span>
+</pre>
+<p>
+        prints
+      </p>
+<pre class="programlisting"><span class="special">{</span>
+   <span class="special">/</span><span class="number">1</span><span class="special">::</span><span class="number">2</span><span class="special">::</span><span class="number">3</span><span class="special">/</span>
+   <span class="special">/</span><span class="number">1</span><span class="special">::</span><span class="number">2</span><span class="special">::</span><span class="number">3</span><span class="special">/</span>
+<span class="special">}</span>
+</pre>
+<p>
+        So the same delimiters are always used for the custom container, even when
+        that container is nested in another.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jeff Garland, 2008-2009 Jared McIntyre<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="custom_containers.html"><img src="../../../../../../doc/html/images/%20prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/%20up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/%20home.png" alt="Home"></a><a accesskey="n" href="../dependencies_platforms.html"><img src="../../../../../../doc/html/images/%20next.png" alt="Next"></a>
+</div>
+</body>
+</html>

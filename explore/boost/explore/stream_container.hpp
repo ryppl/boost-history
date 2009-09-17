@@ -68,13 +68,13 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr, typename T, std::size_t size>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
     {
-        return stream_container(ostr, &a[0], &a[size]);
+        return boost::explore::stream_container(ostr, &a[0], &a[size]);
     }
     
     template<typename Elem, typename Tr, std::size_t size>
     std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const Elem* s)
     {
-        return stream_container(ostr, &s[0], &s[strlen(s)]);
+        return boost::explore::stream_container(ostr, &s[0], &s[strlen(s)]);
     }
 #   endif
 }}

@@ -48,7 +48,7 @@ The following are some simple usage examples:
    std::vector<std::vector<int> > vvi;
    vvi.push_back(vi);
    vvi.push_back(vi);
-   std::cout << vvi;                  // prints [[1, 2, 3], [1, 2, 3]]
+   std::cout << vvi;                 // prints [[1, 2, 3], [1, 2, 3]]
    
    // associative containers 
    std::map<std::string, int> si_map;
@@ -72,7 +72,7 @@ The [link boost_explore.tutorial tutorial] shows more details on using explore.
 
 While explore is powerful and flexible, it is not infinitely flexible.  
 The reasons for this are discussed in the [link boost_explore.design design] 
-section.For very complex output custom methods or a template output system should 
+section. For very complex output custom methods or a template output system should 
 be considered.
 
 [heading Supported Containers]

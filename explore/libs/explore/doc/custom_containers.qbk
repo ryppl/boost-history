@@ -9,6 +9,8 @@
 
 You can use explore with your custom containers, or third party containers. However, explore needs a little help in understanding these classes.
 
+[heading Standard Container]
+
 The following is a very simple class that contains a 1, 2, and 3 along with the begin and end functions to access the iterators for the container.
 
    class user_vector
@@ -21,17 +23,26 @@ The following is a very simple class that contains a 1, 2, and 3 along with the 
           m_vec.push_back(3);
       }
 
-      friend std::ostream& operator<<(std::ostream& ostr, const user_vector& u);
-
+      std::vector<int>::iterator begin()
+      {
+          return m_vec.begin();
+      }
+      
+      std::vector<int>::iterator end()
+      {
+          return m_vec.end();
+      }
+      
    private:
       std::vector<int> m_vec;
    };
 
 To allow the user_vector to stream properly, you must create an operator<< overload that for the user_vector class that wrapps a call to the explore::stream_container helper function. The stream_container helper iterates through a range outputting the proper delimeters along with the values in the range. So, the operator<< passes into stream_container the result of the begin and end functions, and allows stream_container to process the contents for it.
 
-   std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
+   template<typename Elem, typename Tr>
+   std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const user_vector& u)
    {
-      return explore::stream_container(ostr, u.m_vec.begin(), u.m_vec.end());
+      return explore::stream_container(ostr, u.begin(), u.end());
    }
 
 With our new overloaded operator<<, the following code
@@ -43,44 +54,15 @@ prints
 
    [1, 2, 3]
    
+[heading Associative Container]
+   
 If the container had been an associative container of pairs, then the operator<< code would have looked like this:
 
-   std::ostream& operator<<(std::ostream& ostr, const user_vector& u)
+   template<typename Elem, typename Tr>
+   std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const user_vector& u)
    {
       return explore::stream_container(ostr, u.begin(), u.end(), explore::stream_associative_value());
    }
-
-If the custom container has a stream operator that defines manipulators that should always be in effect for that container, then it becomes necessary to use the custom() manipulator.  For example:
-
-   ostream& operator<<(ostream& ostr, const user_vector& u)
-   {
-      return ostr << explore::custom() << explore::delimiters("/", "::", "/") << u.m_vec.m_data;
-   }
-
-The desire here is to use the delimiters "/" for begin/end and "::" for the separator, independent of what depth the container is streamed at.  The "custom" manipulator allows this to work.  If this is not specified, you will receive a debug assertion.  With this new overload, the code:
-
-   user_vector v;
-   std::cout << v;
-
-prints
-
-   /1::2::3/
-
-But more interestingly:
-
-   std::vector<user_vector> v;
-   v.push_back(user_vector());
-   v.push_back(user_vector());
-
-   std::cout << explore::delimiters("{\n   ", "\n   ", "\n}") << v;
-
-prints
-
-   {
-      /1::2::3/
-      /1::2::3/
-   }
-
-So the same delimiters are always used for the custom container, even when that container is nested in another.
-
+   
+The critical difference is the addition of the third parameter `explore::stream_associative_value()`.
 [endsect]

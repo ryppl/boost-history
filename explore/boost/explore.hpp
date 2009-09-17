@@ -8,9 +8,7 @@
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 
-#include <boost/explore/stream_container.hpp>
 #include <boost/explore/iterator_range.hpp>
-
 #include <boost/explore/vector.hpp>
 #include <boost/explore/list.hpp>
 #include <boost/explore/deque.hpp>

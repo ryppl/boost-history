@@ -10,7 +10,8 @@
 #define BOOST_TEST_MODULE PrintLib
 #include <boost/test/unit_test.hpp>
 #include <vector>
-#include <boost/explore.hpp>
+#include <boost/explore/c_array.hpp>
+#include <boost/explore/vector.hpp>
 #include "boost_explore_test_tools.hpp"
 
 BOOST_AUTO_TEST_CASE_TEMPLATE( basic_c_array_stream_test, C, test_types )
