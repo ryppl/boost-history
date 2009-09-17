@@ -6,9 +6,6 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_END_IMPL_HPP
-#define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_END_IMPL_HPP
-
 #include <boost/fusion/iterator/basic_iterator.hpp>
 
 namespace boost { namespace fusion { namespace extension
@@ -17,17 +14,21 @@ namespace boost { namespace fusion { namespace extension
     struct end_impl;
 
     template <>
-    struct end_impl<boost_tuple_tag>
+    struct end_impl<BOOST_FUSION_ADAPTED_TUPLE_TAG>
     {
         template <typename Seq>
         struct apply
         {
             typedef
                 basic_iterator<
-                    boost_tuple_iterator_tag
+                    BOOST_FUSION_ADAPTED_TUPLE_ITERATOR_TAG
                   , random_access_traversal_tag
                   , typename detail::add_lref<Seq>::type
+#ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
+                  , BOOST_FUSION_ADAPTED_TUPLE_NAMESPACE(size)<
+#else
                   , tuples::length<
+#endif
                         typename detail::identity<Seq>::type
                     >::value
                 >
@@ -42,4 +43,3 @@ namespace boost { namespace fusion { namespace extension
     };
 }}}
 
-#endif

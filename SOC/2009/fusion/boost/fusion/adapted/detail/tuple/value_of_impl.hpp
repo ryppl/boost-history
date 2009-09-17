@@ -5,16 +5,13 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_VALUE_OF_IMPL_HPP
-#define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_VALUE_OF_IMPL_HPP
-
 namespace boost { namespace fusion { namespace extension
 {
     template <typename>
     struct value_of_impl;
 
     template <>
-    struct value_of_impl<boost_tuple_iterator_tag>
+    struct value_of_impl<BOOST_FUSION_ADAPTED_TUPLE_ITERATOR_TAG>
     {
         template <typename It>
         struct apply
@@ -22,7 +19,7 @@ namespace boost { namespace fusion { namespace extension
             typedef typename detail::remove_reference<It>::type it;
 
             typedef typename
-                tuples::element<
+                BOOST_FUSION_ADAPTED_TUPLE_NAMESPACE(element)<
                     it::index::value
                   , typename detail::remove_reference<
                         typename it::seq_type
@@ -32,5 +29,3 @@ namespace boost { namespace fusion { namespace extension
         };
     };
 }}}
-
-#endif

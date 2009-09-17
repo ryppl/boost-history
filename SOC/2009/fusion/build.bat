@@ -22,7 +22,7 @@ if "%1" == "gcc4" (
             call :gcc3
         ) else (
             if "%1" == "" (
-                call :gcc4
+                call :vc9
             ) else (
                 echo Unknown toolset '%1'
                 goto :eof

@@ -5,8 +5,8 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_DEREF_IMPL_HPP
-#define BOOST_FUSION_ADAPTED_DETAIL_BOOST_TUPLE_DEREF_IMPL_HPP
+#ifndef BOOST_FUSION_ADAPTED_DETAIL_TUPLE_DEREF_IMPL_HPP
+#define BOOST_FUSION_ADAPTED_DETAIL_TUPLE_DEREF_IMPL_HPP
 
 namespace boost { namespace fusion { namespace extension
 {
@@ -14,7 +14,7 @@ namespace boost { namespace fusion { namespace extension
     struct deref_impl;
 
     template <>
-    struct deref_impl<boost_tuple_iterator_tag>
+    struct deref_impl<BOOST_FUSION_ADAPTED_TUPLE_ITERATOR_TAG>
     {
         template <typename It>
         struct apply
@@ -24,7 +24,7 @@ namespace boost { namespace fusion { namespace extension
             typedef typename
                 detail::forward_as<
                     typename it::seq_type
-                  , typename tuples::element<
+                  , typename BOOST_FUSION_ADAPTED_TUPLE_NAMESPACE(element)<
                         it::index::value
                       , typename detail::remove_reference<
                             typename it::seq_type
@@ -36,7 +36,17 @@ namespace boost { namespace fusion { namespace extension
             static type
             call(It it_)
             {
-                return get<it::index::value>(*it_.seq);
+                return
+#ifdef BOOST_FUSION_ADAPTED_STD_TUPLE
+#   ifdef BOOST_NO_0X_HDR_TUPLE
+                    std::tr1::get<it::index::value>(
+#   else
+                    std::get<it::index::value>(
+#   endif
+#else
+                    tuples::get<it::index::value>(
+#endif
+                        *it_.seq);
             }
         };
     };
