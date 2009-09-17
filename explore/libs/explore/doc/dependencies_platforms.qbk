@@ -1,0 +1,28 @@
+[/
+ / Copyright (c) 2007 Jeff Garland (jeff at crystalclearsoftware.com)
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:dependencies_platforms Dependencies and Platforms]
+
+[h2 Dependencies]
+
+The following libraries must be available in order to use Boost.explore
+
+* mpl - various meta programming tools
+* utility - for enable_if
+* foreach 
+* range - for range iterator 
+* parameter (tbd in future for parameter based interface)
+
+[h2 Supported Platforms]
+
+The following platforms and compilers have been tested: 
+
+ * g++-4.0 Linux
+ * vc7.1, 8.0 WinXp
+ * darwin-4.0.1 MacOS X 10.5 (PPC and Intel)
+
+[endsect]

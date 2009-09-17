@@ -3,8 +3,8 @@
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
 <title>Custom Delimiters</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
-<link rel="start" href="../../index.html" title="Boost.explore">
+<meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
+<link rel="home" href="../../index.html" title="Boost.explore">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="../tutorial.html" title="Tutorial">
 <link rel="next" href="custom_containers.html" title="Custom Containers">
@@ -14,15 +14,15 @@
 <td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
 <td align="center"><a href="../../../../../../index.html">Home</a></td>
 <td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
-<td align="center"><a href="http://www.boost.org/people/people.htm">People</a></td>
-<td align="center"><a href="http://www.boost.org/more/faq.htm">FAQ</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
 <td align="center"><a href="../../../../../../more/index.htm">More</a></td>
 </tr></table>
 <hr>
 <div class="spirit-nav">
 <a accesskey="p" href="../tutorial.html"><img src="../../../../../../doc/html/images/%20prev.png" alt="Prev"></a><a accesskey="u" href="../tutorial.html"><img src="../../../../../../doc/html/images/%20up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/%20home.png" alt="Home"></a><a accesskey="n" href="custom_containers.html"><img src="../../../../../../doc/html/images/%20next.png" alt="Next"></a>
 </div>
-<div class="section" lang="en">
+<div class="section" title="Custom Delimiters">
 <div class="titlepage"><div><div><h3 class="title">
 <a name="boost_explore.tutorial.custom_delimeters"></a><a class="link" href="custom_delimeters.html" title="Custom Delimiters"> Custom Delimiters</a>
 </h3></div></div></div>
@@ -31,7 +31,7 @@
         streaming process through the use of several new stream manipulators.
       </p>
 <div class="table">
-<a name="id533665"></a><p class="title"><b>Table 1. Explore Stream Manipulators</b></p>
+<a name="id555307"></a><p class="title"><b>Table 1. Explore Stream Manipulators</b></p>
 <div class="table-contents"><table class="table" summary="Explore Stream Manipulators">
 <colgroup>
 <col>
@@ -110,7 +110,7 @@
 <tr>
 <td>
             <p>
-              assoc_start(char*)
+              assoc_item_start(char*)
             </p>
             </td>
 <td>
@@ -120,14 +120,14 @@
             </td>
 <td>
             <p>
-              Changes the string output at the front of an association.
+              Changes the string output at the front of an association item.
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              assoc_end(char*)
+              assoc_item_end(char*)
             </p>
             </td>
 <td>
@@ -137,14 +137,14 @@
             </td>
 <td>
             <p>
-              Changes the string output at the end of an association.
+              Changes the string output at the end of an association item.
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              assoc_seperator(char*)
+              assoc_item_seperator(char*)
             </p>
             </td>
 <td>
@@ -154,19 +154,64 @@
             </td>
 <td>
             <p>
-              Changes the string output in between elements of an association.
+              Changes the string output in between elements of an association item.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              rows(size_t)
+            </p>
+            </td>
+<td>
+            <p>
+              ???
+            </p>
+            </td>
+<td>
+            <p>
+              ???
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              item_wdth(size_t)
+            </p>
+            </td>
+<td>
+            <p>
+              ???
+            </p>
+            </td>
+<td>
+            <p>
+              ???
             </p>
             </td>
 </tr>
 </tbody>
 </table></div>
 </div>
-<br class="table-break"><p>
+<br class="table-break"><div class="important" title="Important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          There are both char* and wchar_t* versions of all string manipulator functions.
+          However, you can only use char manipulators with ostreams and wchar_t manipulators
+          with wostreams. Using the wrong type with the wrong stream will cause a
+          compile error.
+        </p></td></tr>
+</table></div>
+<p>
         For example, to change the beginning and end output of a container to be
         the greater and less than symbols, you would do the following.
       </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
 <span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
 <span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
 <span class="identifier">vvi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
@@ -175,11 +220,98 @@
 <p>
         prints
       </p>
-<pre class="programlisting">
-<span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span>
+<pre class="programlisting"><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span>
+</pre>
+<a name="boost_explore.tutorial.custom_delimeters.manipulator_helper_functions"></a><h5>
+<a name="id555793"></a>
+        <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.manipulator_helper_functions">Manipulator
+        Helper Functions</a>
+      </h5>
+<p>
+        There are several helper functions that will set multiple manipulators with
+        one call.
+      </p>
+<div class="table">
+<a name="id555811"></a><p class="title"><b>Table 2. Explore Stream Manipulator Helpers</b></p>
+<div class="table-contents"><table class="table" summary="Explore Stream Manipulator Helpers">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Manipulator
+            </p>
+            </th>
+<th>
+            <p>
+              Description
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              begin_end(char* begin, char* end)
+            </p>
+            </td>
+<td>
+            <p>
+              Changes the string output of the beginning and end of a container.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              delimeters(char* begin, char* separator, char* end)
+            </p>
+            </td>
+<td>
+            <p>
+              Changes the string output of the beginning, eseparator, and end of
+              a container.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              assoc_item_begin_end(char* begin, char* end)
+            </p>
+            </td>
+<td>
+            <p>
+              Changes the string output of the beginning and end of an association
+              item.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              assoc_item_delimeters(char* begin, char* separator, char* end)
+            </p>
+            </td>
+<td>
+            <p>
+              Changes the string output of the beginning, eseparator, and end of
+              an association item.
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+        The previous code could have been written
+      </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">begin_end</span><span class="special">(</span><span class="string">"&lt;"</span><span class="special">,</span> <span class="string">"&gt;"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span><span class="special">;</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.delimeters_by_level"></a><h5>
-<a name="id534097"></a>
+<a name="id556001"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.delimeters_by_level">Delimeters
         by Level</a>
       </h5>
@@ -189,8 +321,7 @@
         for different levels. The following formatter prints all child containers
         on a new line, and those child containers have custom delimeters.
       </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">format_2d</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">ostr</span><span class="special">)</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">format_2d</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">ostr</span><span class="special">)</span>
 <span class="special">{</span>
     <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">explore</span><span class="special">;</span>
 
@@ -207,8 +338,7 @@
         The following example uses the above formatter against a vector containing
         a vector of int.
       </p>
-<pre class="programlisting">
-<span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">2</span><span class="special">);</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">3</span><span class="special">);</span>
@@ -221,15 +351,43 @@
 <p>
         This prints
       </p>
-<pre class="programlisting">
-<span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
+<pre class="programlisting"><span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
 <span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
 <span class="special">|</span><span class="number">1</span> <span class="number">2</span> <span class="number">3</span><span class="special">|</span>
 </pre>
+<p>
+        TODO: HTML list output example:
+      </p>
+<pre class="programlisting"><span class="comment">// manipulator
+</span><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Elem</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Tr</span><span class="special">&gt;</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">Elem</span><span class="special">,</span> <span class="identifier">Tr</span><span class="special">&gt;&amp;</span> <span class="identifier">format_html_list</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">basic_ostream</span><span class="special">&lt;</span><span class="identifier">Elem</span><span class="special">,</span> <span class="identifier">Tr</span><span class="special">&gt;&amp;</span> <span class="identifier">ostr</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">ostr</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">start</span><span class="special">(</span><span class="string">"&lt;ul&gt;\n   &lt;li&gt;"</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">separator</span><span class="special">(</span><span class="string">"\n   &lt;li&gt;"</span><span class="special">)</span>
+    <span class="special">&lt;&lt;</span> <span class="identifier">end</span><span class="special">(</span><span class="string">"\n&lt;/ul&gt;"</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<a name="boost_explore.tutorial.custom_delimeters.item_width"></a><h5>
+<a name="id556907"></a>
+        <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.item_width">Item
+        Width</a>
+      </h5>
+<p>
+        TODO: finish this section
+      </p>
+<a name="boost_explore.tutorial.custom_delimeters.retrieving_manipulator_values"></a><h5>
+<a name="id556931"></a>
+        <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.retrieving_manipulator_values">Retrieving
+        Manipulator Values</a>
+      </h5>
+<p>
+        TODO: finish this section
+      </p>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
-<td align="right"><div class="copyright-footer">Copyright © 2007 Jeff Garland, 2008 Jared McIntyre<p>
+<td align="right"><div class="copyright-footer">Copyright © 2007 Jeff Garland, 2008-2009 Jared McIntyre<p>
         Distributed under the Boost Software License, Version 1.0. (See accompanying
         file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
       </p>

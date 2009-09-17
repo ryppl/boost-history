@@ -7,7 +7,7 @@
 
 [library Boost.explore
     [quickbook 1.4]
-    [copyright 2007 Jeff Garland, 2008 Jared McIntyre]
+    [copyright 2007 Jeff Garland, 2008-2009 Jared McIntyre]
     [purpose Library to output Collections]
     [license
         Distributed under the Boost Software License, Version 1.0.
@@ -88,7 +88,6 @@ be considered.
 * std::vector
 * boost::array
 * boost::range
-* boost::tuple
 
 [link boost_explore.tutorial.custom_containers Custom containers] can also be made to work with explore.
 

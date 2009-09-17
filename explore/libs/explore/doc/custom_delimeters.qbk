@@ -9,9 +9,6 @@
 
 Explore provides the ability to change the strings used in the container streaming process through the use of several new stream manipulators.
 
-TODO: deal with wchar_t
-TODO: deal with sticky value getters (get_start)
-
 [table Explore Stream Manipulators
     [[Manipulator]                 [Default][Description]]
     [[start(char*)]                ['\[']   [Changes the string output at the beginning of a container.]]
@@ -20,9 +17,12 @@ TODO: deal with sticky value getters (get_start)
     [[assoc_item_start(char*)]     ['']     [Changes the string output at the front of an association item.]]
     [[assoc_item_end(char*)]       ['']     [Changes the string output at the end of an association item.]]
     [[assoc_item_seperator(char*)] [':']    [Changes the string output in between elements of an association item.]]
-    [[rows]                        [???]    [???]]
-    [[item_wdth]                   [???]    [???]]
+    [[rows(size_t)]                [???]    [???]]
+    [[item_wdth(size_t)]           [???]    [???]]
 ]
+
+[important There are both char* and wchar_t* versions of all string manipulator functions. However, you can only use char manipulators with ostreams and
+wchar_t manipulators with wostreams. Using the wrong type with the wrong stream will cause a compile error.]
 
 For example, to change the beginning and end output of a container to be the greater and less than symbols, you would do the following.
 
@@ -35,6 +35,22 @@ For example, to change the beginning and end output of a container to be the gre
 prints
 
    <1, 2, 3>
+   
+[heading Manipulator Helper Functions]
+
+There are several helper functions that will set multiple manipulators with one call.
+
+[table Explore Stream Manipulator Helpers
+    [[Manipulator]                                                    [Description]]
+    [[begin_end(char* begin, char* end)]                              [Changes the string output of the beginning and end of a container.]]
+    [[delimeters(char* begin, char* separator, char* end)]            [Changes the string output of the beginning, eseparator, and end of a container.]]
+    [[assoc_item_begin_end(char* begin, char* end)]                   [Changes the string output of the beginning and end of an association item.]]
+    [[assoc_item_delimeters(char* begin, char* separator, char* end)] [Changes the string output of the beginning, eseparator, and end of an association item.]]
+]
+
+The previous code could have been written
+
+   std::cout << explore::begin_end("<", ">") << vi;
 
 [heading Delimeters by Level]
 
@@ -82,5 +98,13 @@ TODO: HTML list output example:
         << separator("\n   <li>")
         << end("\n</ul>");
     }
+    
+[heading Item Width]
+
+TODO: finish this section
+
+[heading Retrieving Manipulator Values]
+
+TODO: finish this section
 
 [endsect]
