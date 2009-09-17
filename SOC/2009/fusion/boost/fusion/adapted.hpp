@@ -13,9 +13,9 @@
 #include <boost/fusion/adapted/boost_array.hpp>
 #include <boost/fusion/adapted/boost_tuple.hpp>
 #include <boost/fusion/adapted/mpl.hpp>
-//TODO!!!
-//#include <boost/fusion/adapted/std_array.hpp>
+#include <boost/fusion/adapted/std_array.hpp>
 #include <boost/fusion/adapted/std_pair.hpp>
+#include <boost/fusion/adapted/std_tuple.hpp>
 #include <boost/fusion/adapted/struct.hpp>
 
 #endif

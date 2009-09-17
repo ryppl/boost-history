@@ -5,10 +5,9 @@
     file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 ==============================================================================*/
 
-#ifndef BOOST_FUSION_ADAPTED_ARRAY_HPP
-#define BOOST_FUSION_ADAPTED_ARRAY_HPP
+#ifndef BOOST_FUSION_INCLUDE_STD_TUPLE_HPP
+#define BOOST_FUSION_INCLUDE_STD_TUPLE_HPP
 
-#include <boost/fusion/adapted/boost_array.hpp>
-#include <boost/fusion/adapted/std_array.hpp>
+#include <boost/fusion/adapted/std_tuple.hpp>
 
 #endif
