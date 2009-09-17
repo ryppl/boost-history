@@ -866,17 +866,18 @@ inline void boost::stm::transaction::invalidating_deferred_end_transaction()
    {
       lock_inflight_access();
       transactionsInFlight_.erase(this);
-      unlock_inflight_access();
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
       {
+         unlock_inflight_access();
          state_ = e_hand_off;
          bookkeeping_.inc_handoffs();
       }
       else
 #endif
       {
+         unlock_inflight_access();
          tx_type(eNormalTx);
 #if PERFORMING_LATM
          get_tx_conflicting_locks().clear();
