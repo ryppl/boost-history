@@ -98,7 +98,7 @@ namespace boost { namespace stm {
    typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
 
-#if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+#if defined(BOOST_STM_USE_MEMCOPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
    template <std::size_t size>
    struct monotonic_storage {
        char storage_[size];
@@ -210,7 +210,7 @@ public:
     #ifdef USE_SINGLE_THREAD_CONTEXT_MAP
     struct tx_context
     {
-        #if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+        #if defined(BOOST_STM_USE_MEMCOPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
         monotonic_storage<6*1000*1000> mstorage_;
         #endif
         MemoryContainerList newMem;
@@ -763,7 +763,6 @@ public:
 
       T *newNode = new T;
       newNode->transaction_thread(threadId_);
-      newNode->get_transaction()=this;
       newNode->new_memory(1);
       newMemoryList().push_back(newNode);
 
@@ -788,7 +787,6 @@ public:
       }
       T *newNode = new T();
       newNode->transaction_thread(threadId_);
-      newNode->get_transaction()=this;
       newNode->new_memory(1);
       newMemoryList().push_back(newNode);
 
@@ -812,7 +810,6 @@ public:
       }
       T *newNode = new T(rhs);
       newNode->transaction_thread(threadId_);
-      newNode->get_transaction()=this;
       newNode->new_memory(1);
       newMemoryList().push_back(newNode);
 
@@ -834,9 +831,7 @@ public:
    template <typename T>
    T* as_new(T *newNode)
    {
-      //std::auto_ptr<T> newNode(ptr);
       newNode->transaction_thread(threadId_);
-      newNode->get_transaction()=this;
       newNode->new_memory(1);
       newMemoryList().push_back(newNode);
 
@@ -1076,8 +1071,7 @@ private:
       }
 
       in.transaction_thread(threadId_);
-      in.get_transaction()=this;
-      writeList().insert(tx_pair((base_transaction_object*)&in, cache_new_copy(in)));
+      writeList().insert(tx_pair((base_transaction_object*)&in, in.clone()));
 #if USE_BLOOM_FILTER
       bloom().insert((size_t)&in);
 #endif
@@ -1111,7 +1105,6 @@ private:
       else
       {
          in.transaction_thread(threadId_);
-         in.get_transaction()=this;
          unlock(&transactionMutex_);
          // is this really necessary? in the deferred case it is, but in direct it
          // doesn't actually save any time for anything
@@ -1221,9 +1214,8 @@ private:
          wbloom().set_bv2(bloom().h2());
          //sm_wbv().set_bit((size_t)&in % sm_wbv().size());
 #endif
-         base_transaction_object* returnValue = cache_new_copy(in);
+         base_transaction_object* returnValue = in.clone();
          returnValue->transaction_thread(threadId_);
-         returnValue->get_transaction()=this;
          writeList().insert(tx_pair((base_transaction_object*)&in, returnValue));
 #ifndef USE_BLOOM_FILTER
          unlock_tx();
@@ -2024,7 +2016,7 @@ public:
 
 };
 
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
+#ifdef BOOST_STM_USE_MEMCOPY
 template <class T> T* cache_allocate() {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
     return  reinterpret_cast<T*>(T::retrieve_mem(sizeof(T)));
@@ -2050,7 +2042,6 @@ struct cache_deallocate {
     static void apply(T* ptr) {
         if (ptr) {
         #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-            //ptr->return_this_mem();
             base_transaction_object::return_mem(ptr,sizeof(T));
         #elif defined(BOOST_STM_CACHE_USE_MALLOC)
             free(ptr);
@@ -2085,7 +2076,6 @@ template <class T>
 inline void cache_deallocate(T* ptr) {
     if (ptr) {
     #if defined(BOOST_STM_CACHE_USE_MEMORY_MANAGER)
-        //ptr->return_this_mem();
         base_transaction_object::return_mem(ptr,sizeof(T));
     #elif defined(BOOST_STM_CACHE_USE_MALLOC)
         free(ptr);
@@ -2110,11 +2100,9 @@ struct cache_new_copy_constructor {
     static inline T* apply(const T& val) {
         T* p = cache_allocate<T>();
         if (p==0) {
-            //std::cout << __LINE__ << " malloc ERROR" << std::endl;
             throw std::bad_alloc();
         }
         boost::stm::cache_restore(&val, p);
-        //std::uninitialized_copy(&val,(&val)+1, p);
         return p;
     }
 };
@@ -2146,15 +2134,13 @@ inline T* cache_new_copy_constructor(const T& val) {
         throw std::bad_alloc();
     }
     cache_restore(&val, p);
-    //std::uninitialized_copy(&val,(&val)+1, p);
     return p;
 }
 #endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#endif // BOOST_STM_USE_UNASIGNED_COPY
+#endif // BOOST_STM_USE_MEMCOPY
 
 inline void cache_release(base_transaction_object* ptr) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
-    //cache_deallocate(ptr);
+#ifdef BOOST_STM_USE_MEMCOPY
     ptr->cache_deallocate();
 #else
     delete ptr;
@@ -2163,7 +2149,7 @@ inline void cache_release(base_transaction_object* ptr) {
 
 template <class T>
 inline T* cache_new_copy(const T& val) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
+#ifdef BOOST_STM_USE_MEMCOPY
     return cache_new_copy_constructor(val);
 #else
     return new T(val);
@@ -2171,11 +2157,11 @@ inline T* cache_new_copy(const T& val) {
 }
 
 template <class T> void cache_restore(const T* const ori, T* target);
-// When BOOST_STM_USE_UNASIGNED_COPY is defined
+// When BOOST_STM_USE_MEMCOPY is defined
 // this function must be specialized for objects that are non transactional by deleting the object, e.g.
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
+#ifdef BOOST_STM_USE_MEMCOPY
 namespace partial_specialization_workaround {
 template <class T> struct cache_restore;
 
@@ -2183,7 +2169,7 @@ template <class T> struct cache_restore;
 template <class T>
 struct cache_restore {
     static inline void apply(const T* const ori, T* target) {
-        std::uninitialized_copy(ori,ori+1, target);
+        memcpy(target, ori, sizeof(T));
     }
 };
 
@@ -2198,7 +2184,7 @@ struct cache_restore<transactional_object<std::vector<T> > > {
 #endif
 
 template <class T> void cache_restore(const T* const ori, T* target) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
+#ifdef BOOST_STM_USE_MEMCOPY
     partial_specialization_workaround::cache_restore<T>::apply(ori, target);
 #else
     *target=*ori;
@@ -2206,15 +2192,15 @@ template <class T> void cache_restore(const T* const ori, T* target) {
 }
 
 #else
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
+#ifdef BOOST_STM_USE_MEMCOPY
 template <class T> void cache_restore(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
     *target=*ori;
 }
 #endif
 
 template <class T> void cache_restore(const T* const ori, T* target) {
-#ifdef BOOST_STM_USE_UNASIGNED_COPY
-    std::uninitialized_copy(ori,ori+1, target);
+#ifdef BOOST_STM_USE_MEMCOPY
+    memcpy(target, ori, sizeof(T));
 #else
     *target=*ori;
 #endif

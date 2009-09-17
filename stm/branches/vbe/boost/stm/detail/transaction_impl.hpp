@@ -796,7 +796,7 @@ inline void transaction::end()
       invalidating_deferred_end_transaction();
 #endif
    }
-#if defined(BOOST_STM_USE_UNASIGNED_COPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
+#if defined(BOOST_STM_USE_MEMCOPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
     context_.mstorage_.reset();
 #endif
 }

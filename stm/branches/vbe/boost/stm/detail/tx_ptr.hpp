@@ -17,6 +17,7 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <assert.h>
+#include <map>
 #include <boost/stm/transaction.hpp>
 
 //-----------------------------------------------------------------------------
@@ -172,7 +173,8 @@ public:
     template<class Y>
     explicit tx_ptr(Y * ptr) : ptr_(new transactional_object<Y>(ptr)) {}
 
-    explicit tx_ptr(transactional_object<T>* ptr) : ptr_(ptr) {}
+    template<class Y>
+    explicit tx_ptr(transactional_object<Y>* ptr) : ptr_(ptr) {}
 
     tx_ptr(tx_obj<T>& r) : ptr_(r->obj_) {}
 
@@ -303,12 +305,13 @@ class rd_ptr {
     typedef rd_ptr<T> this_type;
 public:
     mutable transactional_object<T>* ptr_;
+    mutable transaction* tx_;
 
-    inline rd_ptr(transaction &t, tx_ptr<T> tx_obj) :
+    inline rd_ptr(transaction &t, tx_ptr<T> tx_obj) : tx_(&t),
         ptr_(&t.insert_and_return_read_memory(*tx_obj.ptr_))
     {}
 
-    inline rd_ptr(transaction &t, tx_obj<T> const& tx_obj) :
+    inline rd_ptr(transaction &t, tx_obj<T> const& tx_obj) : tx_(&t),
         ptr_(&t.insert_and_return_read_memory(tx_obj.obj_))
     {}
 
@@ -327,6 +330,10 @@ public:
     }
 
     const T* get() const {
+        if (tx_->forced_to_abort()) {
+            tx_->lock_and_abort();
+            throw aborted_transaction_exception("aborting transaction");
+        }
         return &ptr_->value;
     }
 
@@ -666,6 +673,78 @@ private:
    mutable transaction &t_;
    mutable T &tx_obj_;
 };
+
+/////////
+//-----------------------------------------------------------------------------
+// A rd_ptr<T> ("read pointer") points to an object that the current
+// transaction has opened for read only access.
+// You can only call a const method through a read pointer.
+// A rd_ptr<T> is constructed from an tx_ptr<T> through an explicit constructor.
+// Once a rd_ptr<T> has been constructed, an tx_ptr<T> can be opened for
+// reading simply by assignment (operator=()) into the constructed rd_ptr<T>.
+// It is not safe to derreference a rd_ptr<T> after having assigned the same
+// tx_ptr<T> to a wr_ptr<T>. If this is the case the readen value do not match
+// the writen one. If it is possible to write on the same transaction use
+// upgrd_ptr instead which is safe.
+//-----------------------------------------------------------------------------
+
+class non_transactional_vars_cache {
+    typedef std::map<void*, base_transaction_object*> map_type;
+    static std::map<void*, base_transaction_object*> map_;
+public:
+    template <typename T>
+    static transactional_reference_cache<T>* get(T* ptr) {
+        map_type::iterator it = map_.find(ptr);
+        transactional_reference_cache<T>* res=0;
+        if (it == map_.end()) {
+            res= new transactional_reference_cache<T>(ptr);
+            map_.insert(std::make_pair(ptr, res));
+        } else {
+            res=static_cast<transactional_reference_cache<T>*>(it->second);
+        }
+        return res;
+    }
+};
+
+template <typename T>
+class non_tx_rd_ptr {
+    typedef non_tx_rd_ptr<T> this_type;
+public:
+    mutable transactional_reference_cache<T>* ptr_;
+    mutable transaction* tx_;
+
+    inline non_tx_rd_ptr(transaction &t, T* ptr) : tx_(&t),
+        ptr_(&t.insert_and_return_read_memory(non_transactional_vars_cache::get(ptr)))
+    {}
+
+    inline non_tx_rd_ptr(transaction &t, T& obj) : tx_(&t),
+        ptr_(&t.insert_and_return_read_memory(non_transactional_vars_cache::get(&obj)))
+    {}
+
+
+
+    const T* get() const {
+        if (tx_->forced_to_abort()) {
+            tx_->lock_and_abort();
+            throw aborted_transaction_exception("aborting transaction");
+        }
+        return ptr_->get();
+    }
+
+    inline const T & operator*() const { return *get(); }
+    inline const T* operator->() const { return get(); }
+
+
+    typedef transactional_reference_cache<T>* this_type::*unspecified_bool_type;
+
+    operator unspecified_bool_type() const
+    {
+        return ptr_ == 0? 0: &this_type::ptr_;
+    }
+
+};
+
+/////////
 
 
 }}

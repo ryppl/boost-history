@@ -19,7 +19,7 @@
 //#define PERFORMING_VALIDATION 1
 #define PERFORMING_LATM 1
 #define PERFORMING_COMPOSITION 1
-#define USE_STM_MEMORY_MANAGER 1
+//#define USE_STM_MEMORY_MANAGER 1
 #define BUILD_MOVE_SEMANTICS 0
 #define USING_TRANSACTION_SPECIFIC_LATM 1
 #define USE_BLOOM_FILTER 1
@@ -31,12 +31,12 @@
 #define BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS 1
 
 // BOOST_STM_CM_STATIC_CONF: configuration manager is static
-//#define BOOST_STM_CM_STATIC_CONF 1
+#define BOOST_STM_CM_STATIC_CONF 1
 // BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM: configuration manager is ExceptAndBackOffOnAbortNoticeCM
-//#define BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM 1
+#define BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM 1
 
-// BOOST_STM_USE_UNASIGNED_COPY: STM uses uninitialized_copy insted of the copy constructor
-#define BOOST_STM_USE_UNASIGNED_COPY 1
+// BOOST_STM_USE_MEMCOPY: STM uses memcpy insted of the copy constructor
+#define BOOST_STM_USE_MEMCOPY 1
 
 //// The cache using uninitialized_copy can use the following memeory manager 
 ////BOOST_STM_CACHE_USE_MALLOC: uses malloc/free
