@@ -11,25 +11,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
-/*****************************************************************************\
- *
- * Copyright Notices/Identification of Licensor(s) of
- * Original Software in the File
- *
- * Copyright 2000-2006 The Board of Trustees of the University of Colorado
- * Contact: Technology Transfer Office,
- * University of Colorado at Boulder;
- * https://www.cu.edu/techtransfer/
- *
- * All rights reserved by the foregoing, respectively.
- *
- * This is licensed software.  The software license agreement with
- * the University of Colorado specifies the terms and conditions
- * for use and redistribution.
- *
-\*****************************************************************************/
-
 #include <boost/stm/transaction.hpp>
 #include <boost/stm/contention_manager.hpp>
 #include <iostream>
@@ -159,6 +140,42 @@ void transaction::initialize()
 void transaction::initialize_thread()
 {
    lock_general_access();
+
+   //--------------------------------------------------------------------------
+   // WARNING: before you think lock_all_mutexes() does not make sense, make
+   //          sure you read the following example, which will certainly change
+   //          your mind about what you think you know ...
+   //
+   //          end_transaction() must lock all mutexes() in addition to the
+   //          important general access mutex, which serializes commits.
+   //
+   //          In order to make end_transaction as efficient as possible, we
+   //          must release general_access() before we release the specific
+   //          threaded mutexes. Unfortunately, because of this, a thread can 
+   //          can enter this function and add a new thread (and mutex) to the
+   //          mutex list. Then end_transaction() can finish its execution and
+   //          unlock all mutexes. The problem is that between end_transaction
+   //          and this function, any number of operations can be performed.
+   //          One of those operations may lock the mutex of the new thread,
+   //          which may then be unlocked by end_transaction. If that happens, 
+   //          all kinds of inconsistencies could occur ...
+   //
+   //          In order to fix this, we could change the unlock order of 
+   //          end_transaction() so it unlocks all mutexes before releasing the
+   //          the general mutex. The problem with that is end_transaction is
+   //          a high serialization point and the general mutex is the most
+   //          contended upon lock. As such, it is not wise to prolong its
+   //          release. Instead, we can change this method, so it locks all the
+   //          thread's mutexes. This ensures that this method cannot be entered
+   //          until end_transaction() completes, guaranteeing that
+   //          end_transaction() cannot unlock mutexes it doesn't own.
+   //
+   //          Questions? Contact Justin Gottschlich or Vicente Botet.
+   //
+   //          DO NOT REMOVE LOCK_ALL_MUTEXES / UNLOCK_ALL_MUTEXES!!
+   //
+   //--------------------------------------------------------------------------
+   lock_all_mutexes();
 
    size_t threadId = THREAD_ID;
 
@@ -313,6 +330,46 @@ void transaction::initialize_thread()
    
 #endif
 
+   //--------------------------------------------------------------------------
+   // WARNING: before you think unlock_all_mutexes() does not make sense, make
+   //          sure you read the following example, which will certainly change
+   //          your mind about what you think you know ...
+   //
+   //          end_transaction() must lock all mutexes() in addition to the
+   //          important general access mutex, which serializes commits.
+   //
+   //          In order to make end_transaction as efficient as possible, we
+   //          must release general_access() before we release the specific
+   //          threaded mutexes. Unfortunately, because of this, a thread can 
+   //          can enter this function and add a new thread (and mutex) to the
+   //          mutex list. Then end_transaction() can finish its execution and
+   //          unlock all mutexes. The problem is that between end_transaction
+   //          and this function, any number of operations can be performed.
+   //          One of those operations may lock the mutex of the new thread,
+   //          which may then be unlocked by end_transaction. If that happens, 
+   //          all kinds of inconsistencies could occur ...
+   //
+   //          In order to fix this, we could change the unlock order of 
+   //          end_transaction() so it unlocks all mutexes before releasing the
+   //          the general mutex. The problem with that is end_transaction is
+   //          a high serialization point and the general mutex is the most
+   //          contended upon lock. As such, it is not wise to prolong its
+   //          release. Instead, we can change this method, so it locks all the
+   //          thread's mutexes. This ensures that this method cannot be entered
+   //          until end_transaction() completes, guaranteeing that
+   //          end_transaction() cannot unlock mutexes it doesn't own.
+   //
+   //          Questions? Contact Justin Gottschlich or Vicente Botet.
+   //
+   //          DO NOT REMOVE LOCK_ALL_MUTEXES / UNLOCK_ALL_MUTEXES!!
+   //
+   //--------------------------------------------------------------------------
+   // this will unlock the mutex of the thread that was just added, but it
+   // doesn't matter because that mutex will already be unlocked
+   //--------------------------------------------------------------------------
+   unlock_all_mutexes();
+   //--------------------------------------------------------------------------
+
    unlock_general_access();
 }
 
@@ -418,7 +475,6 @@ void transaction::terminate_thread()
    }
 #endif
       
-
    unlock_inflight_access();
    unlock_general_access();
 }
