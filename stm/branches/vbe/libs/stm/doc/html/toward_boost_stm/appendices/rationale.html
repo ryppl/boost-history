@@ -1,0 +1,1204 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Appendix B: Rationale</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="changes.html" title="Appendix A: History">
+<link rel="next" href="implementation.html" title="Appendix C: Implementation Notes">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="changes.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.appendices.rationale"></a><a class="link" href="rationale.html" title="Appendix B: Rationale"> Appendix B: Rationale</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts">TM-Specific
+        Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.optimistic_concurrency">Optimistic
+          concurrency</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.aci_transactions">ACI
+          transactions</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.stm_synchronization_types">STM
+          Synchronization Types</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.updating_policies">Updating
+          policies</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.conflict_detection">Conflict
+          Detection</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_checking_policies">Consistency
+          checking policies</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_versus_updating_policies_composition">Consistency
+          versus Updating policies composition</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_granularity">Memory
+          Granularity</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_rollback_capability">Memory
+          Rollback Capability</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.composable_transactions">Composable
+          transactions</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management">Contention
+          management</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o">Unrecoverable
+          transactions to manage with I/O</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction">Lock-aware
+          transaction</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts">C++
+        and Library-Specific Concepts</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.native_language_compatibility">Native
+          Language Compatibility</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.memory_management">Memory
+          Management</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.raii">RAII</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety">Exception
+          Safety</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.move_semantics">Move
+          semantics</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.parametric_polymorphism_and_subtype_polymorphism">Parametric
+          Polymorphism and Subtype Polymorphism</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks">Language-like
+          atomic transaction macro blocks</a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.comparaison_with_other_stm_systems">Comparaison
+        with other STM systems</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts" title="TM-Specific Concepts">TM-Specific
+        Concepts</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.optimistic_concurrency">Optimistic
+          concurrency</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.aci_transactions">ACI
+          transactions</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.stm_synchronization_types">STM
+          Synchronization Types</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.updating_policies">Updating
+          policies</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.conflict_detection">Conflict
+          Detection</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_checking_policies">Consistency
+          checking policies</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_versus_updating_policies_composition">Consistency
+          versus Updating policies composition</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_granularity">Memory
+          Granularity</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_rollback_capability">Memory
+          Rollback Capability</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.composable_transactions">Composable
+          transactions</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management">Contention
+          management</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o">Unrecoverable
+          transactions to manage with I/O</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction">Lock-aware
+          transaction</a></span></dt>
+</dl></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.optimistic_concurrency"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.optimistic_concurrency" title="Optimistic concurrency">Optimistic
+          concurrency</a>
+</h5></div></div></div></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.aci_transactions"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.aci_transactions" title="ACI transactions">ACI
+          transactions</a>
+</h5></div></div></div>
+<p>
+            Transactional memory was founded on the database ACID principle (atomic,
+            consistent, isolated and durable), except without the D [24].
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              Transactions are atomic; the operations all commit or none of them
+              do.
+            </li>
+<li>
+              Transactions are consistent; transactions must begin and end in legal
+              memory states.
+            </li>
+<li>
+              Transactions are isolated; memory changes made within a transaction
+              are invisible until committed.
+            </li>
+</ul></div>
+<p>
+            The below example gives a basic introduction into TBoost.STM's transactional
+            framework and demonstrates TBoost.STM's ACI conformance.
+          </p>
+<pre class="programlisting"><span class="identifier">native_trans</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">global_int</span><span class="special">;</span>
+<span class="keyword">int</span> <span class="identifier">increment_global</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">global_int</span><span class="special">)++;</span>
+        <span class="identifier">val</span> <span class="special">=</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">read</span><span class="special">(</span><span class="identifier">global_int</span><span class="special">);</span>
+    <span class="special">}</span> <span class="identifier">end_atom</span>
+    <span class="keyword">return</span> <span class="identifier">val</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+            In the above example, (A) both the t.write() and t.read() operations
+            function atomically or neither operations are performed. In addition,
+            (C) the transaction begins and ends in legal memory states, meaning global
+            int is guaranteed to be read correctly, preventing thread data races
+            from causing inconsistent results. Lastly, (I) the intermediate state
+            of the incremented global int is isolated until the transaction commits.
+            These three attributes fulfill TBoost.STM's conformance to the ACI principles.
+            The above example also gives a basic introduction into TBoost.STM's transactional
+            framework.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.stm_synchronization_types"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.stm_synchronization_types" title="STM Synchronization Types">STM
+          Synchronization Types</a>
+</h5></div></div></div>
+<p>
+            There are two ways STM systems synchronize memory:
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              using non-blocking mechanisms (lock-free) or
+            </li>
+<li>
+              using lock-based (or blocking) mechanisms.
+            </li>
+</ol></div>
+<p>
+            Non-blocking STM systems use atomic primitives, such as, compare-and-swap
+            (CAS) or load-linked and store-conditional (LL-SC), that do not lock
+            the STM system to perform their transactional operations. Lock-based
+            STM systems use locks, such as mutual exclusion locks, which lock the
+            STM system to perform some portion of their transactional operations.
+          </p>
+<p>
+            TBoost.STM is a lock-based STM system. At its core, TBoost.STM uses one
+            lock per thread to implement transactional reads and writes. This allows
+            multiple transactions to simultaneously read and write without blocking
+            other transactions' progress. When a transaction is committing, a global
+            locking strategy is used to temporarily block forward progress on all
+            transactions except the committing one. Once the committing transaction
+            completes, other transactions are allowed to resume their work. TBoost.STM's
+            lockbased strategy allows it to gain the performance benefits of a nonblocking
+            system, such that when transactions are not committing, the transactions
+            do not block each other and are guaranteed to make forward progress.
+            Yet TBoost.STM maintains the benefits of a lockbased system, enabling
+            it to perform commit-time invalidation, its primary consistency model
+            mechanism.
+          </p>
+<p>
+            Recent research shows lock-based STM systems outperform non-blocking
+            systems. Our own research shows that through TBoost.STM's design, scaling
+            concerns and other lock-based specific problems, such as deadlocking
+            and priority inversion, can be overcome with specific contention management
+            and conflict detection policies.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.updating_policies"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.updating_policies" title="Updating policies">Updating
+          policies</a>
+</h5></div></div></div>
+<p>
+            In any STM system, an updating protocol must be used to perform transactional
+            commits for writes. Updating policies determine how a transaction commits
+            its memory updates to global memory. Two general ways exist to perform
+            updating:
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              direct updating, which copies the original global memory state off
+              to the side and then writes directly to global memory, and
+            </li>
+<li>
+              deferred updating, which copies the original global memory off to the
+              side and the writes to the local copy.
+            </li>
+</ol></div>
+<p>
+            When a transaction of a direct updating system commits its changes, no
+            changes to global memory are made as the STM system has written directly
+            to global memory. When a transaction of a deferred updating system commits
+            its changes, it writes the local changes to global memory. When a direct
+            updating system aborts, it uses the original copy of memory to update
+            global memory, restoring it to its original state. When a deferred updating
+            system aborts, no changes to global memory are made as the STM system
+            has not written anything to global memory. One of TBoost.STM's novel
+            features is its implementation of both direct and deferred updating.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.conflict_detection"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.conflict_detection" title="Conflict Detection">Conflict
+          Detection</a>
+</h5></div></div></div>
+<p>
+            Conflict detection is the process of identifying when two or more transactions
+            conflict. Conflicts can exist when a transaction writes to memory that
+            another transaction then reads or writes (write after write, write after
+            read), or when a transaction reads memory that is then used in another
+            transaction's write (read after write). Unlimited readers, on the other
+            hand, can read the same piece of memory without any conflict (read after
+            read).
+          </p>
+<div class="table">
+<a name="id4886511"></a><p class="title"><b>Table 1.1. Comparaison with other STM systems</b></p>
+<div class="table-contents"><table class="table" summary="Comparaison with other STM systems">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Features</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>after write</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>after read</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>write</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>YES</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>YES</strong></span>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>read</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>YES</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>NO</strong></span>
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+            Before determining how to handle a conflict, STM systems must determine
+            when they will detect conflicts. There are two primary ways to detect
+            conflicts:
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              Early conflict detection attempts to identify conflicts as soon as
+              a transaction reads or writes to memory.
+            </li>
+<li>
+              Late conflict detection attempts to identify conflicts some time after
+              the initial read or write.
+            </li>
+</ul></div>
+<p>
+            For direct updating, TBoost.STM implements a run-time configurable early
+            and late conflict detection mechanism. For deferred updating, TBoost.STM
+            only implements late conflict detection. The decision to have TBoost.STM
+            only support late conflict detection for deferred updating was made after
+            identifying numerous lost optimizations using early conflict detection
+            with deferred updating.
+          </p>
+<p>
+            Future work may lead to the implementation of early conflict detection
+            for deferred updating simply for symmetry.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_checking_policies"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_checking_policies" title="Consistency checking policies">Consistency
+          checking policies</a>
+</h5></div></div></div>
+<p>
+            An STM system can identify a conflict in two principal ways: through
+            validation or invalidation.
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              Validation is the process a transaction performs on its own read and
+              write set to check itself for consistency.
+            </li>
+<li>
+              Invalidation is the process a transaction performs on other transaction's
+              read and write sets to check them for consistency.
+            </li>
+</ul></div>
+<p>
+            Validation strategies usually have the the transaction abort itself if
+            an inconsistency is found. Invalidation strategies usually do just the
+            opposite, aborting the other transactions if an inconsistency is found.
+            In addition, STM systems can use contention managers to determine how
+            best to behave when inconsistent transactions are identified.
+          </p>
+<p>
+            TBoost.STM currently implements consistency checking only through invalidation.
+            One of the next goals of TBoost.STM is to build run-time configuration
+            of consistency checking for both invalidation and validation, as it is
+            believed that both may be necessary for varying problems. This aside,
+            TBoost.STM is unique in that it is the first STM system to implement
+            commit-time invalidation. While other systems, such as RSTM, have implemented
+            invalidation, no other system implements commit-time invalidation.
+          </p>
+<p>
+            We believe TBoost.STM is the first commit-time invalidating system due
+            to commit-time invalidation being seemingly only possible in lock-based
+            STM systems and as lock-based STM systems are relatively new, other lock-based
+            systems not being far enough along to implement it yet. The two key differences
+            we focus on in this work between invalidation and validation are;
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              invalidation can save many wasted operations by early notification
+              of doomed transactions, whereas validation cannot and
+            </li>
+<li>
+              invalidation can detect true priority inversion, whereas validation
+              cannot
+            </li>
+</ol></div>
+<p>
+            (other significant differences exist, but are not discussed here).
+          </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              Fully validating systems must iterate through all transactional operations
+              and determine consistency only at commit-time. Thus, each transaction
+              must fully execute its transactional operations. A substantial amount
+              of work can be saved by an invalidating system which can flag doomed
+              transactions early, as shown in table 1. Table 1 details 4, 8 and 12
+              threaded runs for red-black trees, linked lists and hash tables in
+              TBoost.STM. While the percentage of operational savings decreases for
+              each benchmark as the structure size increases, the actual operational
+              savings improves. For example, if a linked list is inserting at the
+              end of a 1600 node list and receives an early termination notification
+              saving 50% of its operations, the savings gained is an 800 node iteration
+              and insert. Likewise, performing a 90% operations savings in a linked
+              list insert operation of size 100, saves only a 90 node iteration and
+              insert.
+            </li></ul></div>
+<p>
+            Furthermore, not shown in the tables here, due to space limitations,
+            is that abort percentages grow for each benchmark as the data structure
+            size increases. Thus, the number of aborts increases, resulting in an
+            even high amount of abort savings per benchmark. The increasing number
+            of aborts as the data structure grows is quite intuitive as longer running
+            transactions are more likely to incur collisions, especially while operating
+            on the same data structure.
+          </p>
+<div class="itemizedlist"><ul type="disc"><li>
+              Priority inversion occurs in TM when a lower priority transaction causes
+              a higher priority transaction to abort. Furthermore, priority inversion
+              can be guaranteed to only abort true priority inverted transactions
+              in an invalidating system. However, validating systems can also build
+              priority inversion schemes, they simply must suffer penalties of potentially
+              aborting transactions unnecessarily. The following section gives concrete
+              examples of handling priority inversion in both validating and invalidating
+              models.
+            </li></ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_versus_updating_policies_composition"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.consistency_versus_updating_policies_composition" title="Consistency versus Updating policies composition">Consistency
+          versus Updating policies composition</a>
+</h5></div></div></div>
+<p>
+            While TBoost.STM benchmarks show that, deferred updating in our system
+            usually outperforms direct updating, this is not always the case. In
+            particular, direct updating eventually outperforms deferred updating
+            in TBoost.STM as the data structure size grows. With this in mind, we
+            believe that direct updating is useful for specific algorithms with highly
+            innate parallelism (such as hash tables). Likewise, we believe validation
+            may outperform invalidation for high thread counted uses. From these
+            conclusions, we believe final STM systems may be required to implement
+            direct updating, deferred updating, validation and invalidation, all
+            of which should be configurable at run-time and compile-time. By doing
+            this, each problem which demands a different four-way configuration can
+            be handled appropriately. Rather than attempting to build a single implementation
+            which solves all problems universally, the end resulting STM system will
+            handle each specific problem with the most appropriate configuration.
+          </p>
+<div class="table">
+<a name="id4886906"></a><p class="title"><b>Table 1.2. Consistency versus Updating policies composition</b></p>
+<div class="table-contents"><table class="table" summary="Consistency versus Updating policies composition">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Features</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Direct</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Deferred</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>Validation</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>YES</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>YES</strong></span>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>Invalidation</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Not Yet Implemented</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>YES</strong></span>
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_granularity"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_granularity" title="Memory Granularity">Memory
+          Granularity</a>
+</h5></div></div></div>
+<p>
+            STM systems must use a memory granularity size of either word or object
+            for transactions. Word memory granularity allows transactions to read
+            and write at the machine's architectural word size. Type memory granularity
+            allows transactions to read and write at the type level, usually controlled
+            by implementation of a transactional object cache. Object memory granularity
+            allows transactions to read and write at the object level, usually controlled
+            by implementation of a transactional object base class using subtype
+            polymorphism. TBoost.STM implements the latter, performing reads and
+            writes at the object level.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_rollback_capability"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.memory_rollback_capability" title="Memory Rollback Capability">Memory
+          Rollback Capability</a>
+</h5></div></div></div>
+<p>
+            STM systems must implement memory rollback capabilities for aborted transactions.
+            Memory rollbacking restores the original state of memory in the event
+            a transaction aborts. There are three rollbacking aspects any STM system
+            must handle when implemented in an unmanaged language;
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              updates to global,
+            </li>
+<li>
+              allocated memory and
+            </li>
+<li>
+              deallocated memory.
+            </li>
+</ul></div>
+<p>
+            TBoost.STM handles rollbacking to global memory internally for both direct
+            and deferred updating, requiring no programmer-based code. However, allocated
+            and deallocated memory rollbacking require programmer-specific interfaces
+            to be used. These interfaces handle C++ memory operations in their native
+            capacity - new and delete - as well as their transactional memory capacity,
+            ensuring no memory is leaked nor deleted prematurely.
+          </p>
+<p>
+            Examples of this are presented in the following section.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.composable_transactions"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.composable_transactions" title="Composable transactions">Composable
+          transactions</a>
+</h5></div></div></div>
+<p>
+            Composition is the process of taking separate transactions and adding
+            them together to compose a larger single transaction. Composition is
+            a very important aspect of transactions as, unlike locks, transactions
+            can compose. Without a composable TM system, nested transactions each
+            act independently committing their state as they complete. This is highly
+            problematic if an outer transaction then aborts, as there may be no way
+            to rollback the state of a nested (and already committed) transaction.
+            Therefore, implementation of composable transactions is paramount to
+            any TM system which hopes to build large transactions.
+          </p>
+<p>
+            TBoost.STM implements composition via subsumption and is a closed nested
+            system. Composition via subsumption merges all nested transactional memory
+            of a single thread into the outer most active transaction of that same
+            thread. The outer transaction subsumes all the inner transactions' changes.
+            Once the outer transaction completes, all the transactional memory from
+            the nested transactions and their parent either commit or abort. TBoost.STM's
+            closed nesting system enables each nested transaction visibility into
+            its parent's transactional memory and vice versa, but does not allow
+            other transactions to see this intermediate state.
+          </p>
+<p>
+            Future versions of TBoost.STM will implement closed nested transactions.
+          </p>
+</div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management" title="Contention management">Contention
+          management</a>
+</h5></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o" title="Unrecoverable transactions to manage with I/O">Unrecoverable
+          transactions to manage with I/O</a>
+</h5></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction" title="Lock-aware transaction">Lock-aware
+          transaction</a>
+</h5></div></div></div></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts" title="C++ and Library-Specific Concepts">C++
+        and Library-Specific Concepts</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.native_language_compatibility">Native
+          Language Compatibility</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.memory_management">Memory
+          Management</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.raii">RAII</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety">Exception
+          Safety</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.move_semantics">Move
+          semantics</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.parametric_polymorphism_and_subtype_polymorphism">Parametric
+          Polymorphism and Subtype Polymorphism</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks">Language-like
+          atomic transaction macro blocks</a></span></dt>
+</dl></div>
+<p>
+          This section briefly discusses some of the C++ and library-specific concepts
+          of TBoost.STM.
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.native_language_compatibility"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.native_language_compatibility" title="Native Language Compatibility">Native
+          Language Compatibility</a>
+</h5></div></div></div>
+<p>
+            Native Language Compatibility. Some existing STM systems require specific
+            language extensions or compiler support for their proposed system to
+            work. Other systems instead violate native language pragmatics by reducing
+            or removing type-safety altogether. Yet other system's transactional
+            functionality is significantly reliant on the preprocessor.
+          </p>
+<p>
+            TBoost.STM is built with native language compatibility as a top priority
+            - as such, it does not require language extensions or violate natural
+            language semantics. Native language compatibility is a foremost concern
+            due to C++0x set to specifically resist language extensions [29]. While
+            in other languages, such as Java, STM systems which require language
+            extensions may be practical, within C++ this same approach seems unrealistic.
+            Thus, there is a very practical need for a native language ready STM
+            solution for C++.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.memory_management"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.memory_management" title="Memory Management">Memory
+          Management</a>
+</h5></div></div></div>
+<p>
+            For unmanaged languages like C++, STM designers can build memory managers
+            to control heap-based memory allocation and deallocation. While building
+            a memory manager is not necessary for STM systems, performance optimizations
+            can be achieved through such implementations. In particular, a key memory
+            observation for STM systems is that numerous allocations and deallocations
+            happen within transactions, irrespective of the memory design decisions.
+            As such, TBoost.STM provides a builtin templatized user-configurable
+            memory manager which generally yields 20% performance improvement over
+            direct calls to the default C++'s new and delete.
+          </p>
+<p>
+            As understood by most C++ experts, native new and delete operators in
+            C++ are multi-threaded safe, using mutex locks to guarantee memory is
+            retrieved and released in a safe manner for multiple contending threads.
+            Improving the performance of direct calls to C++'s new and delete in
+            a single-threaded application is relatively easy as a buffered free store
+            can be created which requires no locking mechanism, thus naturally increasing
+            performance. This same task is not quite as easy in a multi-threaded
+            environment. TBoost.STM improves the native performance of C++'s operator
+            new and delete by first implementing buffered allocations which naturally
+            perform faster than single allocations. Secondly, performance gains are
+            made by not relinquishing ownership of deallocated memory, making second-time
+            memory allocations faster than first-time allocations. These two aspects
+            enable TBoost.STM's memory manager to perform faster than C++'s native
+            new and delete operations.
+          </p>
+<p>
+            TBoost.STM also must lock around memory allocations and deallocations,
+            just as native C++ new and delete must, however, it can build a more
+            problem-specific implementation that would hinder a generalized C++ new
+            and delete if implemented on a global scale. The techniques used in TBoost.STM
+            are similar to those discussed in Bulka and Mayhew's, Efficient C++,
+            Chapter 7, Multi-threaded Memory Pooling. In C++ semantics, the performance
+            gains within TBoost.STM's memory manager can be thought of as the differences
+            between using an std::vector's push_back() iteratively compared to using
+            an std::vector's push_back() iteratively after calling reserve(), and
+            then continuing to reuse the allocated space to avoid performance penalties
+            of reallocations.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.raii"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.raii" title="RAII">RAII</a>
+</h5></div></div></div>
+<p>
+            An STM system needs a transaction interface to identify where transactions
+            begin, end and which operations are performed within the transaction.
+            TBoost.STM achieves this by implementing transactions as objects using
+            the Resource Acquisition Is Initialization (RAII) principle.
+          </p>
+<p>
+            RAII is a common concept in C++ when dealing with resources that need
+            to be both obtained and released, like opening and closing a file. RAII
+            uses the concept that if a resource is obtained it must be released even
+            if the programmer fails to do so. RAII's behavior is implemented per
+            class, usually requiring the destructor of the class to guarantee any
+            resources gathered in the lifetime of the object be released. A primary
+            benefit of RAII is its natively correct behavior in the event of exceptions.
+            If an exception occurs causing an RAII class instance to destruct, due
+            to stack unwinding, the deterministic destruction of the object is invoked.
+            The destructor then releases any resources previously collected. This
+            guarantees any object implementing RAII semantics will always release
+            resources it controls, irrespective of program flow (normal or abnormal).
+          </p>
+<p>
+            The TBoost.STM's transaction class is based on the RAII concept for two
+            primary reasons. First, C++ programmers implicitly understand stack based
+            (automatic) objects and their native RAII semantics. In fact, all of
+            C++'s Standard Template Library (STL) containers are implemented using
+            the RAII philosophy. Second, exceptions in C++ are not required to be
+            handled by the programmer as they are in other languages, like Java.
+            Using RAII for transactions ensures proper and guaranteed termination
+            of transactions regardless of program flow, a very important attribute
+            for correct transactional behavior.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety" title="Exception Safety">Exception
+          Safety</a>
+</h5></div></div></div>
+<p>
+            TBoost.STM fulfills Abrahams' basic exception safety guarantee for deferred
+            updating, but cannot supply any exception safety guarantee for direct
+            updating. The basic guarantee for exception safety states that if an
+            exception is thrown, the operation may have side-effects but is in a
+            consistent state. The basic guarantee is less strict than the strong
+            guarantee which specifies if an exception is thrown there are no side-effects.
+            The highest level of exception safety, above the strong guarantee, is
+            the nothrow guarantee which disallows exceptions from being thrown entirely.
+          </p>
+<p>
+            Within deferred updating, TBoost.STM can only afford to implement the
+            basic guarantee because if memory is partially committed and then a user
+            exception is thrown, no original state exists for the already committed
+            memory. Therefore, already committed memory in a deferred updating system,
+            must stay committed since no reverted original state can be used to revert
+            the changes. To implement such a system would result in a substantial
+            performance degradation to the overall system, effectively doubling memory
+            size and copy operations. Due to these costs, a double-copy implementation
+            is not performed and the basic guarantee for deferred updating is deemed
+            acceptable.
+          </p>
+<p>
+            Within direct updating, memory updates are done immediately on global
+            memory, so transactions naturally achieve strong exception safety guarantees
+            for commits. Aborts within direct updating, however, invoke copy constructors
+            for restoration of the original global memory state. These copy constructors
+            can throw exceptions which then can lead to a partially restored global
+            state for aborted exceptions that are short-circuited by user-defined
+            copy constructor exceptions. As such, no exception safety guarantee can
+            be made for direct updating when used in C++, a downfall of the updating
+            policy.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.move_semantics"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.move_semantics" title="Move semantics">Move
+          semantics</a>
+</h5></div></div></div>
+<p>
+            We solve the problem of commit-time and abort-time exceptions by using
+            move semantics in place of copy semantics. The idea of moving is new
+            to C++ and will be available in the next version of the standard.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.parametric_polymorphism_and_subtype_polymorphism"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.parametric_polymorphism_and_subtype_polymorphism" title="Parametric Polymorphism and Subtype Polymorphism">Parametric
+          Polymorphism and Subtype Polymorphism</a>
+</h5></div></div></div>
+<p>
+            Type abstraction in C++ to create general purpose code can be achieved
+            in numerous ways. Some of these ways, such as the use of C++ template
+            classes and template functions (parametric polymorphism), as well as
+            inheritance (subtype polymorphism), are considered practical and robust
+            ways to build general purpose functionality while still ensuring a certain
+            degree of type-safety is maintained. C++ templates, also known as parametric
+            polymorphism, exhibit the same type-safety as if the general purpose
+            code was written specifically for the templated instantiated type. Inheritance,
+            on the other hand, reduces type-safety to some degree, but gains run-time
+            flexibility unachievable with C++ templates alone. Other mechanisms also
+            exist to create general purpose code, such as void pointers or preprocessor
+            macros, but are considered unsafe and error-prone [8] and thusly, not
+            used in TBoost.STM.
+          </p>
+<p>
+            TBoost.STM uses both parametric and subtype polymorphism throughout its
+            internal implementation and exposed interfaces. In cases where strict
+            type-safety can be achieved, C++ templates are used. In other cases where
+            exact type-safety cannot be achieved without reducing TBoost.STM's functionality,
+            inheritance is used. All of these factors considered, TBoost.STM is a
+            research library that requires type-safety to be a foremost concern,
+            as its usage would hampered if type-safety was relaxed in areas where
+            it could have been retained. As such, C++ templates are used due to their
+            retention of full type information, in cases where inheritance would
+            have also sufficed with a slight loss of type-safety.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks" title="Language-like atomic transaction macro blocks">Language-like
+          atomic transaction macro blocks</a>
+</h5></div></div></div>
+<p>
+            Transactions allow an unlimited number of threads to execute their optimistic
+            critical sections. Transactions can perform their writes off to the side,
+            ensuring global memory is preserved until the transaction's atomic operations
+            are complete. To ensure conflicting transactions are identified and prevented,
+            transactions perform correctness verification immediately before committing.
+            The consistency checking performed by transactions ensures that transactions
+            that write to or read from the same memory are restricted in their concurrent
+            execution. The code below demonstrates three different implementations
+            for transactions from a library-based approach where x is shared memory
+            that must be synchronized.
+          </p>
+<p>
+            transaction with begin()/end():
+          </p>
+<pre class="programlisting"><span class="identifier">begin_transaction</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+<span class="identifier">tx_write</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
+<span class="identifier">end_transaction</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+</pre>
+<p>
+            transaction with automatic object:
+          </p>
+<pre class="programlisting"><span class="special">{</span> 
+    <span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+            language transaction:
+          </p>
+<pre class="programlisting"><span class="identifier">atomic</span> <span class="special">{</span> <span class="identifier">x</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span> <span class="special">}</span> 
+</pre>
+<p>
+            Inspection of the above code reveals that begin_transaction() and end_transaction()
+            are susceptible to the problem when a thrown exception can interfere
+            with correct interface calls. As such, the begin_transaction() and end_transaction()
+            approach can be immediately discarded from further consideration. The
+            two remaining approaches, similar to the prior locking implementations,
+            use automatic objects and a language-like approach. An initial observable
+            difference between the two approaches is that the language approach has
+            a smaller programmatic footprint than the automatic object approach.
+            Furthermore, the automatic object approach introduces more programmatic
+            complexity for transactional retry mechanics and composed transactional
+            behaviors.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.pitfalls_in_transactional_execution_of_automatic_objects"></a><h6>
+<a name="id4887981"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.pitfalls_in_transactional_execution_of_automatic_objects">Pitfalls
+            in Transactional Execution of Automatic Objects</a>
+          </h6>
+<p>
+            Transactions use optimistic critical sections which generally require
+            transactions be retried if they do not commit. As such, transactions
+            are usually implemented as loops which re-execute until they commit.
+            The code below illustrates the client code necessary to implement a basic
+            retry behavior for automatic objects and language-like transactions.
+          </p>
+<p>
+            automatic object transaction with retry:
+          </p>
+<pre class="programlisting"><span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span> <span class="special">!</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">committed</span><span class="special">();</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span> <span class="special">{</span>
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(...)</span> <span class="special">{}</span>
+<span class="special">}</span>
+</pre>
+<p>
+            language-like transaction with retry:
+          </p>
+<pre class="programlisting"><span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span> 
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span> 
+<span class="special">}</span> <span class="identifier">end_atom</span>
+</pre>
+<p>
+            To complicate matters, some transactions must not implement a retry.
+            Failed subtransactions often require the entire transaction be re-executed
+            from the beginning. While the methods used to perform transactional retries
+            vary between TM implementations, TBoost.STM uses an exception-based approach
+            for all transactional interfaces. These TBoost.STM interfaces throw exceptions
+            if transactions are found to be inconsistent. Therefore, parent transactions
+            should use retry mechanics while their child transactions should not.
+            The code above shows the differences between an automatic object and
+            language-like implementation for parent and child transactions.
+          </p>
+<p>
+            automatic object:
+          </p>
+<pre class="programlisting"><span class="comment">// parent tx with automatic object:
+</span><span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span> <span class="special">!</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">committed</span><span class="special">();</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span> <span class="special">{</span>
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">-=</span> <span class="identifier">val</span><span class="special">;</span>
+        <span class="identifier">foo</span><span class="special">();</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(...)</span> <span class="special">{}</span>
+<span class="special">}</span>
+
+<span class="comment">// child tx with automatic object.
+</span><span class="keyword">void</span> <span class="identifier">foo</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span>
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+            language-like transaction:
+          </p>
+<pre class="programlisting"><span class="comment">// parent tx with language-like transaction.
+</span><span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">-=</span> <span class="identifier">val</span><span class="special">;</span>
+    <span class="identifier">foo</span><span class="special">();</span>
+<span class="special">}</span> <span class="identifier">end_atom</span>
+
+<span class="comment">// child tx with language-like transaction.
+</span><span class="keyword">void</span> <span class="identifier">foo</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span> 
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span> 
+    <span class="special">}</span> <span class="identifier">end_atom</span>
+<span class="special">}</span>
+</pre>
+<p>
+            The retry mechanics' syntactic overhead for automatic objects is nearly
+            double that of the language-like semantics. The complexity of the additional
+            retry code is significant and exhibits a number of locations where programmer-induced
+            errors could be made. The key benefit of the language-like atomic syntax
+            is that its structure is identical for parent and nested transactions
+            and it behaves correctly when any transaction is used as a parent or
+            child (details to follow).
+          </p>
+<p>
+            While the automatic object syntax could also be created to be identical
+            for parent and nested transactions, the impact of creating such identical
+            behavior would result in an increase in the child transaction's code
+            size by 266% for single instruction transactions. The resulting increased
+            code size and complexity would increase the likelihood for programmer-induced
+            errors. For these reasons, a number of TM researchers have been in favor
+            of direct language integration of TM instead of API-only approaches.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.disadvantages_of_language_based_transactional_integration"></a><h6>
+<a name="id4888889"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.disadvantages_of_language_based_transactional_integration">Disadvantages
+            of Language Based Transactional Integration</a>
+          </h6>
+<p>
+            Unfortunately, there are a number of disadvantages to direct language-based
+            support for transactions. To begin, transactional memory is still in
+            the early stages of research investigation. A number of open TM questions
+            should be answered before transactions are integrated directly into high-level
+            languages. Some of the open questions for transactions are regarding
+            validation and invalidation consistency checking, fairness and priority-based
+            transactions, open and closed nesting, exception behavior within transactions,
+            lock-based and non-blocking solutions, and hardware-software transactional
+            communication. Furthermore, some TM problems, such as contention management
+            strategy selection, seem more naturally placed within libraries than
+            languages due to their continually evolving and workload-specific nature.
+          </p>
+<p>
+            In light of this, direct integration of TM into a programming language
+            today may lead to errors that are irreversible. These errors may have
+            long-term consequences for the language. Language based integrations
+            are also slow to emerge, even in languages that are quick to evolve,
+            such as Java. A language-based approach to TM may take several years
+            before it is available. Yet, the emergence of multi-core hardware is
+            rushing programmers to develop multithreaded applications today. Without
+            wide TM availability, the primary parallel programming construct used
+            today is locks. Parallel programming research experts unanimously agree
+            that finegrained locking alone leads to notoriously complex software
+            to implement and maintain.
+          </p>
+<p>
+            The culmination of the above points illustrate the need for an extensible,
+            simplified, parallel programming model today. Our language-like approach
+            provides such a solution for C++ that neither library-based automatic
+            objects nor language-based parallel abstractions alone can provide.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.rationale.comparaison_with_other_stm_systems"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.comparaison_with_other_stm_systems" title="Comparaison with other STM systems">Comparaison
+        with other STM systems</a>
+</h4></div></div></div>
+<div class="table">
+<a name="id4888980"></a><p class="title"><b>Table 1.3. Comparaison
+        with other STM systems</b></p>
+<div class="table-contents"><table class="table" summary="Comparaison
+        with other STM systems">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                <span class="bold"><strong>Features</strong></span>
+              </p>
+              </th>
+<th>
+              <p>
+                <span class="bold"><strong>TBoost.STM</strong></span>
+              </p>
+              </th>
+<th>
+              <p>
+                <span class="bold"><strong>TL2</strong></span>
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Lock-free</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>NO</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Lock-based</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>NO</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Validation</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>??</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Invalidation</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>NO</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Direct-Updating</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Deferred-Updating</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Word memory granulatity</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>NO</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <span class="bold"><strong>Object memory granulatity</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>NO</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>YES</strong></span>
+              </p>
+              </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break">
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="changes.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,564 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Tutorial</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../users_guide.html" title="Users'Guide">
+<link rel="prev" href="getting_started.html" title="Getting Started">
+<link rel="next" href="ext_references.html" title="References">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ext_references.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.users_guide.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial"> Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction">A
+        Simple Transaction</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_composable_transaction">A
+        Composable Transaction</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction">A
+        Dynamically Prioritized, Composed Transaction</a></span></dt>
+</dl></div>
+<p>
+        A number of example transactions are presented in this section using the
+        TBoost.STM library. The first example illustrates how to write a transactional
+        linked list insert operation. The second example demonstrates composition,
+        combining a transactional insert operation with a transactional remove operation
+        which compose into a larger, single move transaction. Next, a minor but important
+        detail regarding memory addresses within the transactional workspace is given.
+        Finally, an example of how to handle priority inversion for validating and
+        invalidating consistency schemes using TBoost.STM's extensible contention
+        manager and compositional framework is provided. The final example demonstrates
+        a number of important aspects of TBoost.STM's implementation, such as, differing
+        priority inversion mechanics for different consistency models, transactional
+        attribute enrichment via composition and threaded memory sharing amongst
+        transactions.
+      </p>
+<p>
+        While most of the examples are intuitive and a complete understanding of
+        the TBoost.STM API is not needed for a high-level understanding of its functionality,
+        a complete description of all interfaces used below can found in referenced
+        section.
+      </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction" title="A Simple Transaction">A
+        Simple Transaction</a>
+</h4></div></div></div>
+<p>
+          In this example, we build a linked list insert transactional operation
+          using TBoost.STM. The example is shown in three segments: the client code
+          which inserts 100 items into the list, the insert operation which client
+          code calls, the internal insert operation which the exposed insert operation
+          calls.
+        </p>
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts"></a><h6>
+<a name="id4849752"></a>
+          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts">Client
+          Invoked Inserts</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
+<span class="special">...</span>
+<span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>     <span class="special">{</span>
+        <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          After inspecting the above client invoked insert code it is apparent that
+          the code itself shows no deep signs of being transactional. The two exceptions
+          are the declaration of the list using a tx_ptr smart pointer and the fact
+          that the insertion of te 100 elements is atomic. This is our desired behavior.
+          As far as the client side programmer is concerned, there is no additional
+          code needed to perform a transactional linked list insert over a non-transactional
+          linked list insert. Obviously, this simplistic behavior eases the introduction
+          of TM solutions into algorithms of new and legacy systems.
+        </p>
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration"></a><h6>
+<a name="id4803994"></a>
+          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration">Linked
+          list declaration</a>
+        </h6>
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction"></a><h6>
+<a name="id4804016"></a>
+          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction">Insert
+          retry transaction</a>
+        </h6>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="identifier">_</span><span class="special">;</span> <span class="special">!</span><span class="identifier">_</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">_</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="identifier">_</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
+        <span class="keyword">try</span> <span class="special">{</span>
+            <span class="comment">// ... see below
+</span>        <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_transaction_exception</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The exposed insert code performs two key operations: (1) it retries the
+          transaction until it succeeds (commits) and (2) it catches aborted transaction
+          exceptions. The retry code is perhaps the largest visible section of code
+          overhead for the transactional linked list insert operation. While there
+          are other C++ mechanisms to retry transactions, like gotos or macro-based
+          approaches, we believe a simple loop is currently the best solution for
+          TM retry behavior in C++. Others before us have implemented differing solutions
+          that have smaller code footprints, but violate large-scale design concerns,
+          break compositionality potential and hide or impose large language penalties.
+          As such, we currently accept the loop overhead as a small inconvenience
+          and avoid breaking language semantics.
+        </p>
+<p>
+          The aborted_transaction_exception allows TBoost.STM to be exception neutral
+          while also gaining performance benefits of early notification of doomed
+          transactions. The above example demonstrates this behavior in practice
+          with its absorption of aborted transactions and only aborted transactions.
+        </p>
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific"></a><h6>
+<a name="id4804548"></a>
+          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific">Insert
+          specific</a>
+        </h6>
+<pre class="programlisting"><span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">);</span>
+<span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
+<span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">==</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+    <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">break</span><span class="special">;</span>
+    <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">;</span>
+    <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="keyword">if</span> <span class="special">(!</span><span class="identifier">curr</span> <span class="special">||</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">))</span> <span class="special">{</span>
+    <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">prev</span><span class="special">)-&gt;</span><span class="identifier">next_</span> <span class="special">=</span>
+        <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The above example illustrates the simplicity of TBoost.STM transactions
+          and their interfaces. The transactional implementation is nearly identical
+          to a non-transactional implementation with the exception of some annotations.
+          The templatized functions within the transaction class ensure type-safety
+          is maintained without any necessary type-casts. Due to exact type correctness,
+          as demonstrated in the calls to make_wr_ptr(), daisy-chained method invocation
+          can be performed allowing streamlined usage. These aspects help make TBoost.STM
+          transactions small and easy to understand.
+        </p>
+<p>
+          One minor, but vital, detail is in way new objects are created on a transactional
+          context. Rather than hide this difference, it is intentionally exposed
+          here to draw out the memory access differences required for writes to new
+          and existing memory. We explain this difference in detail later in this
+          section.
+        </p>
+<p>
+          In order to simplify the retry mechanism a macro is provided so the user
+          can just write
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">);</span>
+        <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
+        <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">==</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+            <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">break</span><span class="special">;</span>
+            <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">;</span>
+            <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">curr</span> <span class="special">||</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">))</span> <span class="special">{</span>
+            <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">prev</span><span class="special">)-&gt;</span><span class="identifier">next_</span> <span class="special">=</span>
+                <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.tutorial.a_composable_transaction"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_composable_transaction" title="A Composable Transaction">A
+        Composable Transaction</a>
+</h4></div></div></div>
+<p>
+          The below example builds upon the previous example by adding a remove operation.
+          We combine the insert and remove operations and build a transactional move
+          operation that compose into a single transaction. Composition is a key
+          aspect for TM systems. TBoost.STM's ability to compose transactions from
+          pre-existing transactions is fundamental to its design.
+        </p>
+<p>
+          In the following example, the first section shows client code invoking
+          the move operation. Next, the internal remove operation is shown, demonstrating
+          its transactional independence. Last, the external move operation is explained,
+          combining the internal insert and remove linked list operations resulting
+          in a composed, single transaction.
+        </p>
+<p>
+          Client Invoked Inserts / Moves.
+        </p>
+<pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
+<span class="special">...</span>
+<span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">j</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">j</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">j</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">move</span><span class="special">(</span><span class="identifier">j</span><span class="special">,</span> <span class="special">-</span><span class="identifier">j</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The client invoked inserts and moves are fairly straight forward. The insert
+          operations are performed first then the original items are moved to a new
+          location by inverting their value. Again, from a client programming perspective,
+          there is no hint that this code is transactional, which is our intended
+          goal.
+        </p>
+<p>
+          Remove
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">remove</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// find the node whose val matches the request
+</span>        <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">head_</span><span class="special">);</span>
+        <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
+        <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// if we find the node, disconnect it and end the search
+</span>            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">==</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+                <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">prev</span><span class="special">)-&gt;</span><span class="identifier">next_</span><span class="special">=</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+                <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">curr</span><span class="special">);</span>
+                <span class="keyword">break</span><span class="special">;</span>
+            <span class="special">}</span> <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+                <span class="comment">// this means the search failed
+</span>                <span class="keyword">break</span><span class="special">;</span>
+            <span class="special">}</span>
+            <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">;</span>
+            <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          As was the case with the insert(), the above remove() method is almost
+          identical to how a normal linked list remove operation would be implemented,
+          with the exception of the atomic guard and a few TBoost.STM API calls.
+          Again, this is ideal, as it leads to intuitive transactional programming,
+          requiring only a minor learning curve for the algorithms developer.
+        </p>
+<p>
+          Composed External Move
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">move</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">v1</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">v2</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">use_atomic</span> <span class="special">{</span>
+        <span class="identifier">remove</span><span class="special">(</span><span class="identifier">v1</span><span class="special">);</span>
+        <span class="identifier">insert</span><span class="special">(</span><span class="identifier">v2</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The move() implementation do not requires any overhead required in non-transactional
+          implementations, other than using the atomic guard. The remainder of the
+          code
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction" title="A Dynamically Prioritized, Composed Transaction">A
+        Dynamically Prioritized, Composed Transaction</a>
+</h4></div></div></div>
+<p>
+          The following subsection discusses how priority inversion is handled within
+          TBoost.STM using dynamic priority assignment. Two solutions are presented
+          for the different consistency models, one for validation and one for invalidation.
+          Following the two examples which detail how to override contention management
+          interfaces, a dynamically prioritized transaction is presented, demonstrating
+          how transactions interact with the prior implementations. Priority inversion
+          in transactional memory occurs when a lower priority transaction causes
+          a higher priority transaction to abort. With STM lock-based (and non-blocking)
+          systems, priority inversion does not happen on the same scale as that of
+          direct lock-based solutions. The different cases of priority inversion
+          between direct locking solutions and TM solutions are due to TM's natural
+          avoidance of critical sections. However, priority inversion in TM can easily
+          occur if, for example, a long running transaction is continually preempted
+          by shorter running transactions which always commit before the longer transaction.
+        </p>
+<p>
+          In order to prevent such priority inversion scenarios, two extensible contention
+          manager (CM) virtual methods are provided to allow client-side implementations
+          a way to handle different scenarios based on the consistency model currently
+          in use. The first interface, abort_before_commit(), allows a user-defined
+          contention manager mechanism to abort a transaction before it commits.
+          Although TBoost.STM does not yet implement validation, once it becomes
+          available, client-side validating algorithms which want to avoid priority
+          inversion will need to override abort_before_commit() to iterate over in-flight
+          transactions and abort the current in-process transaction if another in-flight
+          transaction exists of higher priority. All in-flight transactions can be
+          accessed by a call to in_flight_transactions() which returns the set of
+          active transactions. As such, one could build an overridden abort_before_commit()
+          which always caused lower priority committing transactions to abort in
+          the event a higher priority transaction is currently in-flight. One possible
+          implementation is shown below. For code simplicity, the following code
+          has removed some static class accessors and namespaces.
+        </p>
+<p>
+          Priority Inversion for Validating Consistency.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">priority_cm</span> <span class="special">:</span>
+<span class="keyword">public</span> <span class="identifier">core</span><span class="special">::</span><span class="identifier">base_contention_manager</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="comment">// method invoked prior tx commit
+</span>    <span class="keyword">bool</span> <span class="identifier">abort_before_commit</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">in_flight_transaction_container</span><span class="special">::</span><span class="identifier">const_iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">in_flight_transactions</span><span class="special">().</span><span class="identifier">begin</span><span class="special">();</span>
+        <span class="keyword">for</span> <span class="special">(;</span> <span class="identifier">in_flight_transactions</span><span class="special">().</span><span class="identifier">end</span><span class="special">()</span> <span class="special">!=</span> <span class="identifier">i</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">priority</span><span class="special">()</span> <span class="special">&lt;</span> <span class="special">(*</span><span class="identifier">i</span><span class="special">)-&gt;</span><span class="identifier">priority</span><span class="special">()){</span>
+                <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+            <span class="special">}</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="keyword">false</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          While the above approach is necessary for a validating system, it is largely
+          a poor way to perform priority inversion checking. Firstly, it has the
+          side-effect of causing unnecessary aborts for transactions which do not
+          necessarily conflict, but simply have differing priority levels. Secondly,
+          it is slow in that all transactions must be walked through each time a
+          transaction commits. However, as an ad hoc solution for a validating system,
+          the above priority inversion mechanism may be as close to correct as is
+          possible. This solution is useful for validation, but should never be used
+          for invalidation. Instead a second and more natural approach for invalidating
+          systems to prevent priority inversion is to override the permission_to_abort()
+          interface. The permission_to_abort() interface can only be used when TBoost.STM
+          is performing invalidation.
+        </p>
+<p>
+          The permission_to_abort() interface is called from TBoost.STM's end_transaction()
+          method when a committing transaction has found a second transaction it
+          needs to abort for consistency. As such, the method takes two parameters,
+          an lhs (lefthand side), the committing transaction, and an rhs (right-hand
+          side), the transaction requested to be aborted. If permission is granted
+          to abort the second transaction, the method returns true and the second
+          transaction is aborted. If permission is not granted to abort the second
+          transaction, the method returns false and upon returning the committing
+          transaction aborts itself. All consistency checking for
+        </p>
+<p>
+          deferred updating is performed prior to any updating operation and thus
+          memory is still in a completely legal uncommitted state until all consistency
+          is performed. For direct updating aborts, the system simply follows its
+          normal semantics of aborting the transaction by restoring global memory
+          to its original state. Similar to the prior example, overriding the permission_to_abort()
+          method can be done in such a manner which prevents lower priority transaction
+          from aborting a higher priority transaction as shown below:
+        </p>
+<p>
+          Priority Inversion for Invalidating Consistency.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">priority_cm</span> <span class="special">:</span>
+<span class="keyword">public</span> <span class="identifier">core</span><span class="special">::</span><span class="identifier">base_contention_manager</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="comment">// method invoked before lhs transaction
+</span>    <span class="comment">// aborts rhs transaction
+</span>    <span class="keyword">bool</span> <span class="identifier">permission_to_abort</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">lhs</span><span class="special">,</span>
+            <span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">lhs</span><span class="special">.</span><span class="identifier">priority</span><span class="special">()</span> <span class="special">&gt;=</span> <span class="identifier">rhs</span><span class="special">.</span><span class="identifier">priority</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+          With priority inversion preventable for both validating and invalidating
+          consistency modes, transactions now need some mechanism to control their
+          priority. TBoost.STM allows for such control through the raise_priority()
+          interface. By iteratively calling raise_priority(), preempted transactions
+          can raise their priority at each preemption ensuring their eventual commit.
+          The raise_priority() interface is implemented using a size_t type. Additionally,
+          TBoost.STM supplies a set_priority() interface taking a size_t parameter
+          allowing client code to set the priority directly.
+        </p>
+<p>
+          In order for raise_priority() to function correctly, the affected transaction
+          must not be destroyed upon transactional abort. If the prioritized transaction
+          is destroyed at each transactional abort, raise_priority() will only raise
+          the transaction's priority by one each time. In order to demonstrate how
+          raise_priority() can be used in practice, we use a wrapper transaction
+          around the internal_insert()'s transaction. However, in this case the wrapper
+          transaction is not destroyed upon successive iterations. The restart_transaction()
+          interface must be called for transactions that are not destroyed after
+          being aborted. This necessary step clears the state from the previously
+          failed transactional run. As shown in the below code, the restart_transaction()
+          is only called when an aborted exception is caught. This is because end_transaction()
+          throws an exception when the transaction is aborted. Following this implementation
+          paradigm, handling aborted transactions is relatively straightforward as
+          all aborted transactions follow the same exception-based path.
+        </p>
+<p>
+          The below example combines all of these aspects together into a dynamically
+          prioritized composed transaction. The composition is slightly different
+          than what has been shown previously - instead of using composition for
+          wrapping two methods into a larger transaction, we use composition to override
+          the internal transaction's implementation to improve the richness of its
+          behavior, a relatively novel concept for composition.
+        </p>
+<p>
+          Dynamically Prioritized Composed Transaction.
+        </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">node</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">bool</span> <span class="identifier">success</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="identifier">transaction_state</span> <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">e_no_state</span><span class="special">;</span>
+    <span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="keyword">for</span> <span class="special">(;</span> <span class="identifier">s</span> <span class="special">!=</span> <span class="identifier">e_committed</span><span class="special">;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">raise_priority</span><span class="special">())</span> <span class="special">{</span>
+        <span class="keyword">try</span> <span class="special">{</span>
+            <span class="identifier">internal_insert</span><span class="special">(</span><span class="identifier">node</span><span class="special">,</span> <span class="identifier">success</span><span class="special">);</span>
+            <span class="identifier">s</span> <span class="special">=</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">end_transaction</span><span class="special">();</span>
+        <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_transaction_exception</span><span class="special">&amp;)</span> <span class="special">{</span> 
+            <span class="identifier">t</span><span class="special">.</span><span class="identifier">restart_transaction</span><span class="special">();</span> 
+        <span class="special">}</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">success</span><span class="special">)</span> <span class="keyword">return</span> <span class="keyword">false</span><span class="special">;</span> <span class="comment">// on list
+</span>    <span class="special">}</span>
+    <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The above example demonstrates a number of important concepts with TBoost.STM's
+          extensible contention manager and its implementation of composition. First,
+          it shows how to avoid priority inversion, using dynamically prioritize
+          transactions, in conjunction with a prioritized overridden contention manager
+          for both validation and invalidation consistency schemes. Second, it demonstrates
+          how transactions which are aborted but not destroyed can be restarted with
+          the aborted transaction catch clause. Third, the example explains how ordinary
+          transactions can be enriched by layering composed transactions on top of
+          them without changing the underlying original code. Lastly, it reveals
+          some of TBoost.STM's internal priority processing which requires a additional
+          amount of explanation, as follows.
+        </p>
+<p>
+          TBoost.STM's Internal Write-Write Abort Process.
+        </p>
+<p>
+          As the above priority assigned transaction demonstrates, the outer transaction
+          has increasing priority while the inner transaction, the one within internal_insert(),
+          does not. Yet, the inner transaction is not aborted due to the outer transaction's
+          priority. This is handled internally via TBoost.STM's abort process by
+          two fundamental ideas.
+        </p>
+<div class="orderedlist"><ol type="1">
+<li>
+            As previously explained, all transactions of the same thread share transactional
+            memory, this allows the outer transaction to be seen as using the same
+            memory as the inner transaction. Thus, when the inner transaction is
+            flagged to be aborted, the outer transaction must also be flagged to
+            be aborted as well, since it would have the same memory conflicts. However,
+            when checking the outer transaction's priority, the contention manager's
+            priority method would see the outer transaction as having higher priority
+            than the committing transaction if it had already been aborted once and
+            the committing transaction had not. The priority analysis of the outer
+            transaction compared to the committing transaction would thereby force
+            the committing transaction to abort instead of the outer transaction.
+          </li>
+<li>
+            TBoost.STM's abort mechanism does not abort any transactions until it
+            has walked all transactions, passing all the permission_to_abort() checks.
+            Therefore, even if the inner transaction is flagged to be aborted, since
+            all transactions must be successfully walked in order to abort any transaction,
+            the outer transaction's priority will cause the committing transaction
+            to abort, thereby saving the inner transaction from being affected. An
+            example of this, taken directly from TBoost.STM's implementation, is
+            shown below (some code has been removed or shorted to simplify the example):
+          </li>
+</ol></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">abort_conflicting_writes_on_write_set</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">trans_list</span> <span class="identifier">aborted</span><span class="special">;</span>
+    <span class="comment">// iterate through all tx's written memory
+</span>    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">write_set</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">writes</span><span class="special">().</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">writes</span><span class="special">().</span><span class="identifier">end</span><span class="special">()</span> <span class="special">!=</span> <span class="identifier">i</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="comment">// iterate through inflight transactions
+</span>        <span class="keyword">for</span> <span class="special">(</span><span class="identifier">trans</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">j</span> <span class="special">=</span> <span class="identifier">inflight_</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">inflight_</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">!=</span> <span class="identifier">j</span><span class="special">;</span> <span class="special">++</span><span class="identifier">j</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">transaction</span> <span class="special">*</span><span class="identifier">t</span> <span class="special">=</span> <span class="special">(</span><span class="identifier">transaction</span><span class="special">*)*</span><span class="identifier">j</span><span class="special">;</span>
+            <span class="comment">// if writing to this write_set, store it
+</span>            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">t</span><span class="special">-&gt;</span><span class="identifier">writes</span><span class="special">().</span><span class="identifier">end</span><span class="special">()</span> <span class="special">!=</span> <span class="identifier">t</span><span class="special">-&gt;</span><span class="identifier">writes</span><span class="special">().</span><span class="identifier">find</span><span class="special">(</span><span class="identifier">i</span><span class="special">-&gt;</span><span class="identifier">first</span><span class="special">))</span> <span class="special">{</span>
+                <span class="keyword">if</span> <span class="special">(</span><span class="identifier">cm_</span><span class="special">-&gt;</span><span class="identifier">permission_to_abort</span><span class="special">(*</span><span class="keyword">this</span><span class="special">,</span> <span class="special">*</span><span class="identifier">t</span><span class="special">))</span>
+                    <span class="identifier">aborted</span><span class="special">.</span><span class="identifier">push_front</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+                <span class="keyword">else</span>
+                    <span class="keyword">throw</span> <span class="identifier">aborted_transaction_exception</span><span class="special">(</span><span class="string">""</span><span class="special">);</span>
+            <span class="special">}</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+    <span class="comment">// ok, forced to aborts are allowed, do them
+</span>    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">trans_list</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">k</span> <span class="special">=</span> <span class="identifier">aborted</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">aborted</span><span class="special">.</span><span class="identifier">end</span><span class="special">()</span> <span class="special">!=</span> <span class="identifier">k</span><span class="special">;</span> <span class="special">++</span><span class="identifier">k</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">(*</span><span class="identifier">k</span><span class="special">)-&gt;</span><span class="identifier">forced_to_abort</span><span class="special">()</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Priority Inversion Allowed.
+        </p>
+<p>
+          From the above code examples, one may question why the default behavior
+          implemented within TBoost.STM does not automatically integrate priority
+          into transactions, as it could be integrated within restart_transaction().
+          First, each problem is different and integrating priority only into restart_transaction()
+          would not cover all cases (e.g., when the outer transaction was terminated).
+          Second, building an automatic priority inversion handling scheme would
+          eliminate some of the natural optimizations granted from different updating
+          policies. For example, deferred updating allows multiple writers of the
+          same memory to execute simultaneously. This behavior enables deferred updating
+          the ability to process the fastest completing transactions first. If a
+          priority system was integrated directly into TBoost.STM, this optimization
+          would be lost. In addition, direct updating optimizes writes by writing
+          directly to global memory. As such, direct updating suffers greater penalties
+          for aborted transactions due to required restoration of global memory.
+          In this case, more transactional aborts would occur if TBoost.STM built-in
+          a default priority inversion handler. Considering these factors, as well
+          as many others, TBoost.STM does not build transactional priority into its
+          system. Instead, we leave this implementation up to client-side implementors,
+          as they will have a better understanding of their problem domain and be
+          able to more correctly implement the right contention manager for their
+          specific needs.
+        </p>
+<p>
+          The Future of Parallel Programming.
+        </p>
+<p>
+          An important distinction regarding priority within transactions versus
+          priority within more classical synchronization mechanisms, like locks,
+          is that same functional units can be executed simultaneously by different
+          threads yielding different priorities. For example, two threads can be
+          executing the above insert transaction, one thread which has just begun
+          its first run will have a priority of 0, while a second transaction which
+          has attempted to run the insert operation 99 times previously, would have
+          a priority of 99. The important distinction here is that classical critical
+          section synchronization mechanisms can have only a single priority per
+          functional unit (e.g., insert, remove, lookup operation) due to the innate
+          limitations of single thread critical section execution. With transactions,
+          this limitation is removed and new concepts of priority begin to emerge.
+          Priority inversion can then extend beyond its traditional meaning and extend
+          into a new category which incorporates differing priority within the same
+          functional unit. These new concepts may reshape the way classical parallel
+          problems are thought of in the future, especially in relation to transactional
+          memory.
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="ext_references.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

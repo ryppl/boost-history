@@ -1,0 +1,80 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="../overview.html" title="Overview">
+<link rel="next" href="../users_guide.html" title="Users'Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.overview.intro"></a><a class="link" href="intro.html" title="Introduction"> Introduction</a>
+</h3></div></div></div>
+<p>
+        Research in parallel programming has recently seen a flurry of attention.
+        Among the active research is a push for high-level languages to offer native
+        support for parallel programming primitives. The next version of C++ will
+        incorporate library support for threads, while numerous researchers are exploring
+        ways to extend C++ to support transactional memory (TM).
+      </p>
+<p>
+        A strength of C++ is its support for automatic objects. Rather than requiring
+        that parallel primitives be added directly to the language, automatic objects
+        in C++ can be used to implement much of their necessary infrastructure. The
+        automatic object approach is natural from a language perspective, provides
+        full algorithmic control to the end programmer, and demonstrates C++'s linguistic
+        elegance. The disadvantage of this approach is its added programmatic overhead.
+        Using only automatic objects, certain programming errors, such as accidental
+        scope removal and incorrectly programmed transactional retry behavior, can
+        arise.
+      </p>
+<p>
+        In light of this, there are unique trade-offs between language based and
+        library-based parallel primitives. Language-based solutions minimize syntactic
+        clutter which reduce programmer related errors, but are seemingly irreversible
+        and, if incorrect, can have crippling effects upon the language. Library-based
+        solutions increase programmer control and flexibility, but place substantial
+        pressure on the programmer to avoid minute programming errors. A good compromise
+        is a solution that behaves like a language extension, but is implemented
+        within a library. By implementing parallel primitives within a library that
+        uses language-like interfaces, programmer pressure is reduced, implementation
+        updates are seamless, and full programmer control is achieved through library
+        extensibility.
+      </p>
+<p>
+        TBoost.STM present such a language-like solution for C++ using generic library
+        coupled with a deliberate use of the preprocessor. The culmination of these
+        components facilitate a simple, yet powerful, parallel programming interface
+        in C++.
+      </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

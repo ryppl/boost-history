@@ -1,0 +1,132 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>References</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../users_guide.html" title="Users'Guide">
+<link rel="prev" href="tutorial.html" title="Tutorial">
+<link rel="next" href="glosary.html" title="Glossary">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="glosary.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.users_guide.ext_references"></a><a class="link" href="ext_references.html" title="References"> References</a>
+</h3></div></div></div>
+<p>
+        For details on the underlying software architecture of TBoost.STM, including
+        explanations of its API, please refer to our summary paper.
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/tboostSTM/pubs/lcsd07-dracostm.pdf" target="_top"><span class="bold"><strong>DracoSTM: A Practical C++ Approach to Software Transactional
+        Memory</strong></span></a></span></dt>
+<dd><p>
+            Justin E. Gottschlich and Daniel A. Connors - <span class="emphasis"><em>Proceedings of
+            the ACM SIGPLAN Symposium on Library-Centric Software Design (LCSD),
+            October 2007</em></span>
+          </p></dd>
+</dl>
+</div>
+<p>
+        TBoost.STM uses a novel method of consistency checking called invalidation.
+        Invalidation can assist in both high performance and strict contention management
+        control. For more information on how invalidation can improve overall system
+        performance and ensure true user-defined contention management policies,
+        see our below research papers.
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/tboostSTM/pubs/podc08_full_paper.pdf" target="_top"><span class="bold"><strong>A Consistency Checking Optimization Algorithm for Memory-Intensive
+        Transactions</strong></span></a></span></dt>
+<dd><p>
+            Justin E. Gottschlich, Daniel A. Connors and Jeremy G. Siek - <span class="emphasis"><em>Proceedings
+            of the ACM SIGACT-SIGOPS Symposium on Principles of Distributed Computing
+            (PODC) (brief announcement), August 2008</em></span>
+          </p></dd>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/tboostSTM/pubs/epham08-stm.pdf" target="_top"><span class="bold"><strong>Extending Contention Managers for User-Defined Priority Based
+        Transactions</strong></span></a></span></dt>
+<dd><p>
+            Justin E. Gottschlich and Daniel A. Connors - <span class="emphasis"><em>Proceedings of
+            the ACM Workshop on Exploiting Parallelism with Transactional Memory
+            and other Hardware Assisted Methods (EPHAM), April 2008</em></span>
+          </p></dd>
+</dl>
+</div>
+<p>
+        TBoost.STM supports transaction-lock interaction. This support allows existing
+        lock-based parallel code to interact safely with transactions. In addition,
+        we provide three types of transaction-lock interaction with varying degrees
+        of performance. Please see our research paper for more details.
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/tboostSTM/pubs/latm.pdf" target="_top"><span class="bold"><strong>Lock-Aware Transactional Memory and Composable Locks</strong></span></a></span></dt>
+<dd><p>
+            Justin E. Gottschlich, Daniel A. Connors and Jeremy G. Siek -
+          </p></dd>
+</dl>
+</div>
+<p>
+        TBoost.STM uses the last C++ features to provide a friendly and efficient
+        interface. See the following papers to see how.
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/pubs/boostcon.inter.2009.pdf" target="_top"><span class="bold"><strong>Toward Simplified Parallel Support in C++</strong></span></a></span></dt>
+<dd><p>
+            Justin E. Gottschlich, Jeremy G. Siek, Paul J. Rogers, and Manish Vachharajani
+            - <span class="emphasis"><em>BoostCon'09, the Third Boost Libraries Conference, May 2009</em></span>
+          </p></dd>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/tboostSTM/pubs/icooolps08-exception.pdf" target="_top"><span class="bold"><strong>C++ Move Semantics for Exception Safety and Optimization in Software
+        Transactional Memory Libraries</strong></span></a></span></dt>
+<dd><p>
+            Justin E. Gottschlich, Jeremy G. Siek and Daniel A. Connors - <span class="emphasis"><em>International
+            Workshop on Implementation, Compilation, Optimization of Object-Oriented
+            Languages, Programs and Systems (ICOOOLPS), July 2008</em></span>
+          </p></dd>
+</dl>
+</div>
+<p>
+        Check for the last updates.
+      </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"> <a href="http://eces.colorado.edu/~gottschl/tboostSTM/pubs.html" target="_top"><span class="bold"><strong>TBoost.STM (or Related) Peer-Reviewed Publications</strong></span></a></span></dt>
+<dd><p>
+          </p></dd>
+</dl>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="tutorial.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="glosary.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

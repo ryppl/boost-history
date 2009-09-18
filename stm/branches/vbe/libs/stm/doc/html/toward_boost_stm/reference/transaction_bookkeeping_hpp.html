@@ -1,0 +1,120 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Header &lt;boost/stm/transaction_bookkeeping.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="language_like_hpp.html" title="Header &lt;boost/stm/language_like.hpp&gt;">
+<link rel="next" href="../examples.html" title="Examples">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="language_like_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../examples.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.transaction_bookkeeping_hpp"></a><a class="link" href="transaction_bookkeeping_hpp.html" title="Header &lt;boost/stm/transaction_bookkeeping.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transaction_bookkeeping</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="transaction_bookkeeping_hpp.html#toward_boost_stm.reference.transaction_bookkeeping_hpp.class__transaction_bookkeeping_">Class
+        <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">transaction_bookkeeping</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.transaction_bookkeeping_hpp.class__transaction_bookkeeping_"></a><a class="link" href="transaction_bookkeeping_hpp.html#toward_boost_stm.reference.transaction_bookkeeping_hpp.class__transaction_bookkeeping_" title="Class transaction_bookkeeping">Class
+        <code class="computeroutput"><span class="identifier">transaction_bookkeeping</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">transaction_bookkeeping</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+   <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">uint32</span><span class="special">,</span> <span class="identifier">uint32</span><span class="special">&gt;</span> <span class="identifier">thread_commit_map</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">ThreadIdAndCommitId</span><span class="special">,</span> <span class="identifier">uint32</span><span class="special">&gt;</span> <span class="identifier">CommitHistory</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="identifier">ThreadIdAndCommitId</span><span class="special">,</span> <span class="identifier">uint32</span><span class="special">&gt;</span> <span class="identifier">AbortHistory</span><span class="special">;</span>
+
+   <span class="identifier">transaction_bookkeeping</span><span class="special">();</span>
+
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">lockConvoyMs</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">commitTimeMs</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">readAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">writeAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abortPermDenied</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="identifier">totalAborts</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">commits</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">handOffs</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">newMemoryAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">newMemoryCommits</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">deletedMemoryAborts</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">deletedMemoryCommits</span><span class="special">();</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">readChangedToWrite</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">readStayedAsRead</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">void</span> <span class="identifier">inc_read_aborts</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">inc_write_aborts</span><span class="special">();</span>
+
+   <span class="keyword">void</span> <span class="identifier">inc_thread_commits</span><span class="special">(</span><span class="identifier">uint32</span> <span class="identifier">threadId</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_thread_aborts</span><span class="special">(</span><span class="identifier">uint32</span> <span class="identifier">threadId</span><span class="special">);</span>
+
+   <span class="identifier">thread_commit_map</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">threadedCommits</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">thread_commit_map</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">threadedAborts</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">void</span> <span class="identifier">inc_lock_convoy_ms</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_commit_time_ms</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_commits</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">inc_abort_perm_denied</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">threadId</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_handoffs</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">inc_new_mem_aborts_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_new_mem_commits_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_del_mem_aborts_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">inc_del_mem_commits_by</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">incrementReadChangedToWrite</span><span class="special">();</span>
+   <span class="keyword">void</span> <span class="identifier">incrementReadStayedAsRead</span><span class="special">();</span>
+
+   <span class="identifier">CommitHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getCommitReadSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">CommitHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getCommitWriteSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">AbortHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getAbortReadSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">AbortHistory</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">getAbortWriteSetList</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfReadSetWhenAborting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfWriteSetWhenAborting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfReadSetWhenCommitting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+   <span class="keyword">void</span> <span class="identifier">pushBackSizeOfWriteSetWhenCommitting</span><span class="special">(</span><span class="identifier">uint32</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">size</span><span class="special">);</span>
+
+   <span class="keyword">bool</span> <span class="identifier">isLoggingAbortAndCommitSize</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">void</span> <span class="identifier">setIsLoggingAbortAndCommitSize</span><span class="special">(</span><span class="keyword">bool</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">);</span>
+
+   <span class="keyword">friend</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">&lt;&lt;(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">out</span><span class="special">,</span> <span class="identifier">transaction_bookkeeping</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">that</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="language_like_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../examples.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

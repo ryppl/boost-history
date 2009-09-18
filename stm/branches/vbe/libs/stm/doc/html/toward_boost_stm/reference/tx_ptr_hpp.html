@@ -1,0 +1,359 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Header &lt;boost/stm/tx_ptr.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="transaction_object_hpp.html" title="Header &lt;boost/stm/transaction_object.hpp&gt;">
+<link rel="next" href="base_contention_manager_hpp.html" title="Header &lt;boost/stm/base_contention_manager.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="transaction_object_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="base_contention_manager_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp"></a><a class="link" href="tx_ptr_hpp.html" title="Header &lt;boost/stm/tx_ptr.hpp&gt;"> Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">tx_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__tx_obj___">Template
+        Class <code class="computeroutput"><span class="identifier">tx_obj</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__tx_ptr___">Template
+        Class <code class="computeroutput"><span class="identifier">tx_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__rd_ptr___">Template
+        Class <code class="computeroutput"><span class="identifier">rd_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__upgrd_ptr___">Template
+        Class <code class="computeroutput"><span class="identifier">upgrd_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__wr_ptr___">Template
+        Class <code class="computeroutput"><span class="identifier">wr_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__read_ptr___">Template
+        Class <code class="computeroutput"><span class="identifier">read_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__write_ptr___">Template
+        Class <code class="computeroutput"><span class="identifier">write_ptr</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">tx_obj</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">U</span><span class="special">&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">b</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">tx_ptr</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">==(</span><span class="keyword">const</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!=(</span><span class="keyword">const</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;&amp;</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">inline</span> <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">a</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&amp;</span> <span class="identifier">b</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">tx_static_cast</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">tx_dynamic_cast</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">rd_ptr</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_rd_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_rd_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_rd_ptr</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_rd_ptr</span><span class="special">(</span><span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">upgrd_ptr</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">wr_ptr</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx</span><span class="special">,</span> <span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">read_ptr</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">write_ptr</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__tx_obj___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__tx_obj___" title="Template Class tx_obj&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">tx_obj</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          tx_obj is a kind of smart pointer to a wrapped transactional_object T providing
+          builting operators
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">tx_obj</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">tx_obj</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="identifier">ctypename</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_obj</span><span class="special">(</span><span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">&gt;</span> <span class="identifier">tx_obj</span><span class="special">(</span><span class="identifier">T1</span> <span class="identifier">p1</span><span class="special">);</span>
+
+    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">();</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">();</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">tx_obj</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">--();</span>
+    <span class="identifier">T</span> <span class="keyword">operator</span><span class="special">--(</span><span class="keyword">int</span><span class="special">);</span>
+
+    <span class="identifier">tx_obj</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">++();</span>
+    <span class="identifier">T</span> <span class="keyword">operator</span><span class="special">++(</span><span class="keyword">int</span><span class="special">);</span>
+
+    <span class="identifier">tx_obj</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">T</span> <span class="keyword">operator</span><span class="special">+(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__tx_ptr___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__tx_ptr___" title="Template Class tx_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">tx_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          a tx_ptr&lt;T&gt; is an smart pointer to a transactional_object&lt;T&gt;
+          (which contains an instance of T). Reference fields in linked structures
+          should always be tx_ptrs. The result of derreferencing it will be the pointer
+          to the T instance When this pointer is derreference on a transaction the
+          transactional_object&lt;T&gt; is set a written and the transaction specific
+          storage will be used. Otherwise the shared storage is used.
+        </p>
+<p>
+          Used to initialize a rd_ptr&lt;T&gt;, wr_ptr&lt;T&gt;, or upgrd_ptr&lt;T&gt;.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">tx_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">this_type</span><span class="special">;</span>
+
+    <span class="identifier">tx_ptr</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">explicit</span> <span class="identifier">tx_ptr</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">tx_ptr</span><span class="special">(</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="identifier">tx_ptr</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_ptr</span><span class="special">(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_ptr</span><span class="special">(</span><span class="identifier">rd_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_ptr</span><span class="special">(</span><span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_ptr</span><span class="special">(</span><span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_ptr</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;*</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">tx_ptr</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">this_type</span><span class="special">::*</span><span class="identifier">unspecified_bool_type</span><span class="special">;</span>
+
+    <span class="keyword">operator</span> <span class="identifier">unspecified_bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">tx_ptr</span> <span class="special">&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__rd_ptr___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__rd_ptr___" title="Template Class rd_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">rd_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          A rd_ptr&lt;T&gt; ("read pointer") points to an object that the
+          current transaction has opened for read only access. You can only call
+          a const method through a read pointer.
+        </p>
+<p>
+          A rd_ptr&lt;T&gt; is constructed from an tx_ptr&lt;T&gt; through an explicit
+          constructor. Once a rd_ptr&lt;T&gt; has been constructed, an tx_ptr&lt;T&gt;
+          can be opened for reading simply by assignment (operator=()) into the constructed
+          rd_ptr&lt;T&gt;.
+        </p>
+<p>
+          It is not safe to derreference a rd_ptr&lt;T&gt; after having assigned
+          the same tx_ptr&lt;T&gt; to a wr_ptr&lt;T&gt;. If this is the case the
+          readen value do not match the writen one. If it is possible to write on
+          the same transaction use upgrd_ptr instead which is safe.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">rd_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">rd_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+    <span class="identifier">rd_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">rd_ptr</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="identifier">rd_ptr</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">inline</span> <span class="keyword">const</span> <span class="identifier">T</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">inline</span> <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">operator</span> <span class="identifier">unspecified_bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__upgrd_ptr___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__upgrd_ptr___" title="Template Class upgrd_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">upgrd_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          A upgrd_ptr&lt;T&gt; ("upgradable pointer") points to an object
+          that the current transaction has opened for read only access.
+        </p>
+<p>
+          You can only call const method of the wrapped type through a upgradable
+          pointer.
+        </p>
+<p>
+          A upgrd_ptr&lt;T&gt; is constructed from an tx_ptr&lt;T&gt; through a constructor
+          having also the transaction as parameter. Once a rd_ptr&lt;T&gt; has been
+          constructed, an tx_ptr&lt;T&gt; can be opened for reading simply by assignment
+          (operator=()) into the constructed rd_ptr&lt;T&gt;.
+        </p>
+<p>
+          It is safe to derreference a rd_ptr&lt;T&gt; after having assigned the
+          same tx_ptr&lt;T&gt; to a wr_ptr&lt;T&gt;.
+        </p>
+<p>
+          A upgrd_ptr&lt;T&gt; can be upgraded to a wr_ptr&lt;T&gt; through a constructor.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">upgrd_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">inline</span> <span class="identifier">upgrd_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span>
+    <span class="identifier">upgrd_ptr</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span>  <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">inline</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">inline</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">operator</span> <span class="identifier">unspecified_bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">write_ptr</span><span class="special">();</span>
+
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__wr_ptr___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__wr_ptr___" title="Template Class wr_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">wr_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<p>
+          A wr_ptr&lt;T&gt; ("write pointer") points to a shared object
+          that the current transaction has opened for writing.
+        </p>
+<p>
+          A wr_ptr&lt;T&gt; is initialized explicitly from an tx_ptr&lt;T&gt;.
+        </p>
+<p>
+          A wr_ptr&lt;T&gt; can also be explicitly constructed from a upgrd_ptr&lt;T&gt;
+          as an upgrade-to-writable operation.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">wr_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+
+    <span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+
+    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">();</span>
+
+    <span class="keyword">inline</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+    <span class="keyword">inline</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+
+    <span class="keyword">operator</span> <span class="identifier">unspecified_bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__read_ptr___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__read_ptr___" title="Template Class read_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">read_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">read_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="keyword">inline</span> <span class="identifier">read_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">tx_obj</span><span class="special">);</span>
+   <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+
+   <span class="keyword">inline</span> <span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">trans</span><span class="special">();</span>
+   <span class="identifier">T</span><span class="special">*</span> <span class="identifier">write_ptr</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.tx_ptr_hpp.template_class__write_ptr___"></a><a class="link" href="tx_ptr_hpp.html#toward_boost_stm.reference.tx_ptr_hpp.template_class__write_ptr___" title="Template Class write_ptr&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">write_ptr</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">write_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="keyword">inline</span> <span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">T</span> <span class="special">&amp;</span> <span class="identifier">tx_obj</span><span class="special">);</span>
+
+   <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+   <span class="keyword">inline</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="transaction_object_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="base_contention_manager_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

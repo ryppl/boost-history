@@ -1,0 +1,230 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Getting Started</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../users_guide.html" title="Users'Guide">
+<link rel="prev" href="../users_guide.html" title="Users'Guide">
+<link rel="next" href="tutorial.html" title="Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../users_guide.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.users_guide.getting_started"></a><a class="link" href="getting_started.html" title="Getting Started"> Getting
+      Started</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="getting_started.html#toward_boost_stm.users_guide.getting_started.install">
+        Installing STM</a></span></dt>
+<dt><span class="section"><a href="getting_started.html#toward_boost_stm.users_guide.getting_started.hello_world__">Hello
+        World! </a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.getting_started.install"></a><a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install" title="Installing STM">
+        Installing STM</a>
+</h4></div></div></div>
+<p>
+          TBoost.STM is currently in an alpha release stage. This means our STM library
+          is downloadable, but is undergoing some fundamental changes. Furthermore,
+          our alpha release of TBoost.STM may exhibit some stability issues. While
+          our internal tests have shown TBoost.STM to be fairly stable, your usage
+          may vary.
+        </p>
+<p>
+          TBoost.STM's current alpha download is mainly intended for other researchers
+          who are curious about TBoost.STM's implementation and transactional memory.
+          While we encourage non-TM experts to download the library and explore writing
+          parallel code within its framework, we want such users know the system
+          is in its early stages. As such, your usage of TBoost.STM may reveal some
+          weaknesses or stability issues. Until we are into a fully released version,
+          these issues are to be expected. However, please let us know if you encounter
+          any problems using our library and we will do our best to resolve such
+          issues immediately.
+        </p>
+<p>
+          Thank you for considering TBoost.STM and we hope you enjoy exploring transactional
+          memory!
+        </p>
+<a name="toward_boost_stm.users_guide.getting_started.install.getting_boost_stm"></a><h6>
+<a name="id4849074"></a>
+          <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.getting_boost_stm">Getting
+          Boost.STM</a>
+        </h6>
+<p>
+          Visit our Toward Boost.Stm <a href="http://eces.colorado.edu/~gottschl/tboostSTM/index.html" target="_top">home
+          page</a> be aware of the last news.
+        </p>
+<p>
+          You can get the last stable release of from the <a href="http://eces.colorado.edu/~gottschl/tboostSTM/downloads.html" target="_top">Download
+          page</a>.
+        </p>
+<p>
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/stm" target="_top">Boost
+          Sandbox</a>.
+        </p>
+<a name="toward_boost_stm.users_guide.getting_started.install.building_boost_stm"></a><h6>
+<a name="id4849128"></a>
+          <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.building_boost_stm">Building
+          Boost.STM</a>
+        </h6>
+<p>
+          Boost.STM is not a header only library. You need to compile it before use.
+        </p>
+<pre class="programlisting"><span class="identifier">cd</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">build</span>
+<span class="identifier">bjam</span>
+</pre>
+<a name="toward_boost_stm.users_guide.getting_started.install.requirements"></a><h6>
+<a name="id4849192"></a>
+          <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.requirements">Requirements</a>
+        </h6>
+<p>
+          The POSIX threads (pthreads) library is needed to use TBoost.STM. Pthreads
+          is part of the standard deployment for almost all Unix / Linux flavors,
+          however, it is not standard in Windows. If you are doing Windows development
+          you can find the POSIX threads library at the below link: <a href="http://sourceware.org/pthreads-win32/" target="_top">POSIX
+          threads (pthreads) for Windows</a>
+        </p>
+<p>
+          In order to be more portable <span class="bold"><strong>Boost.STM</strong></span>
+          is migrating to Boost. You should use either Boost version 1.39.x or the
+          version in SVN trunk (even if Boost version 1.35.x should works also).
+          In particular, <span class="bold"><strong>Boost.STM</strong></span> will depends
+          on:
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.boost.org/libs/dynamic_bitset" target="_top"><span class="bold"><strong>Boost.DynamicBitset</strong></span></a></span></dt>
+<dd><p>
+              dynamic_bitsets
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/thread" target="_top"><span class="bold"><strong>Boost.Thread</strong></span></a> from Anthony Williams</span></dt>
+<dd><p>
+              threads and synchronization primitives
+            </p></dd>
+</dl>
+</div>
+<p>
+          In addition Boost.Stm will uses the following libraries on the Boost Sandbox
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Synchro" target="_top"><span class="bold"><strong>Boost.Chrono</strong></span></a> from Vicente J. Botet Escriba</span></dt>
+<dd><p>
+              Standard Chrono library
+            </p></dd>
+<dt><span class="term"><a href="https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Synchro" target="_top"><span class="bold"><strong>Boost.Synchro</strong></span></a> from Vicente J. Botet Escriba</span></dt>
+<dd><p>
+              Exception based timed locks synchronization primitives &amp; Language-like
+              Synchronized Block
+            </p></dd>
+</dl>
+</div>
+<a name="toward_boost_stm.users_guide.getting_started.install.exceptions_safety"></a><h6>
+<a name="id4849352"></a>
+          <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.exceptions_safety">Exceptions
+          safety</a>
+        </h6>
+<p>
+          All functions in the library are exception-neutral and provide strong guarantee
+          of exception safety as long as the underlying parameters provide it.
+        </p>
+<a name="toward_boost_stm.users_guide.getting_started.install.thread_safety"></a><h6>
+<a name="id4849378"></a>
+          <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.thread_safety">Thread
+          safety</a>
+        </h6>
+<p>
+          All functions in the library are thread-unsafe except when noted explicitly.
+        </p>
+<a name="toward_boost_stm.users_guide.getting_started.install.tested_compilers"></a><h6>
+<a name="id4849405"></a>
+          <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.tested_compilers">Tested
+          compilers</a>
+        </h6>
+<p>
+          Currently, <span class="bold"><strong>Boost.STM</strong></span> has been tested in
+          the following compilers/platforms:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Visual Studio 6 - Windows
+          </li>
+<li>
+            GCC 3.4.4 - Cygwin
+          </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please send any questions, comments and bug reports to boost &lt;at&gt;
+            lists &lt;dot&gt; boost &lt;dot&gt; org
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.getting_started.hello_world__"></a><a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.hello_world__" title="Hello World!">Hello
+        World! </a>
+</h4></div></div></div>
+<p>
+          The below example gives a basic introduction into TBoost.STM's transactional
+          framework and demonstrates TBoost.STM's ACI conformance.
+        </p>
+<pre class="programlisting"><span class="identifier">tx_obj</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">counter</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">increment</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">val</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">(*</span><span class="identifier">counter</span><span class="special">)++;</span>
+        <span class="identifier">val</span> <span class="special">=</span> <span class="special">*</span><span class="identifier">counter</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">val</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          In the above example, (A) both the write on global_int and the read operations
+          function atomically or neither operations are performed. In addition, (C)
+          the transaction begins and ends in legal memory states, meaning global
+          int is guaranteed to be read correctly, preventing thread data races from
+          causing inconsistent results. Lastly, (I) the intermediate state of the
+          incremented global int is isolated until the transaction commits. These
+          three attributes fulfill TBoost.STM's conformance to the ACI principles.
+          The above example also gives a basic introduction into TBoost.STM's transactional
+          framework.
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../users_guide.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

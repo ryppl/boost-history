@@ -1,0 +1,257 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Appendix E: Future plans</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="appendix_f__tickets.html" title="Appendix F: Tickets">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="appendix_f__tickets.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.appendices.todo"></a><a class="link" href="todo.html" title="Appendix E: Future plans"> Appendix E: Future
+      plans</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review">Tasks
+        to do before review</a></span></dt>
+<dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases">For
+        later releases</a></span></dt>
+<dd><dl><dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed">More
+          recherch needed</a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review"></a><a class="link" href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review" title="Tasks to do before review">Tasks
+        to do before review</a>
+</h4></div></div></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.interface"></a><h6>
+<a name="id4889912"></a>
+          <a class="link" href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.interface">Interface</a>
+        </h6>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>DONE</strong></span> Adding transactional smart pointers.
+          </li>
+<li>
+            Allows to have non transactional_object participating on transactions
+            (separate the information related to a transactional object from the
+            object itself and add two pointers to transactional_object_cache one
+            to the object itself and the other to the transactional_object.
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Managing Movable and non CopyConstructible
+            types.
+          </li>
+</ul></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.boostifying_stm"></a><h6>
+<a name="id4889967"></a>
+          <a class="link" href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.boostifying_stm">Boostifying
+          STM</a>
+        </h6>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>DONE</strong></span> set boost directory architecture
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> name files in lowercase
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Add a config file with all the
+            configuration macros
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Add a stm file at the boost level
+            including all the STM interfaces
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Replace bit_vector by std::bitset
+            or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Replace Sleep by boost::this_thread::sleep
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Replace pthread_mutex by boost::mutex
+          </li>
+<li>
+            Replace THREAD_ID by boost::thread_id
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Provide a unique array/tuple locker
+            (Boost.Synchro)
+          </li>
+<li>
+            Replace var_auto_lock by boost::synchro::unique_array_locker
+          </li>
+<li>
+            Replace auto_lock by boost::synchro::unique_locker and redefine use_lock
+            macros
+          </li>
+<li>
+            use lock_guard when lock/unlock
+          </li>
+<li>
+            Adapt the pool to Boost.Pool
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Provide a thread specific shared
+            pointer (Boost.Interthreads)
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Provide a transparent initialization
+            (Boost.Interthreads)
+          </li>
+<li>
+            Replace thread specific access using the thread id by boost:interthreads::thread_specific_shared_ptr
+          </li>
+<li>
+            Replace the initialization to the library Boost.Interthreads (decorations
+            and decorators)
+          </li>
+<li>
+            Replace draco_move by boost::move and its emulation
+          </li>
+<li>
+            Replace vector_set and vector map by the respectives Boost.Container
+            flat_set and flat_map
+          </li>
+<li>
+            Replace blom_filter by the Boost.BlomFilter blom_filter
+          </li>
+</ul></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.implementation"></a><h6>
+<a name="id4890145"></a>
+          <a class="link" href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.implementation">Implementation</a>
+        </h6>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>DONE</strong></span> Separate the data that is global,
+            thread specific but shared to other threads using a lock, thread local
+            or specific to a transaction.
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Define access to these data using
+            functions
+          </li>
+<li>
+            Separate the interface from the implementation
+          </li>
+<li>
+            Group all the cache containers (Read,Write,Delete,New) in only one cache
+            in order to improve the lookup performance when using smart pointers.
+          </li>
+</ul></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.tests"></a><h6>
+<a name="id4890204"></a>
+          <a class="link" href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.tests">Tests</a>
+        </h6>
+<div class="itemizedlist"><ul type="disc"><li>
+            Add unit tests
+          </li></ul></div>
+<a name="toward_boost_stm.appendices.todo.tasks_to_do_before_review.documentation"></a><h6>
+<a name="id4890235"></a>
+          <a class="link" href="todo.html#toward_boost_stm.appendices.todo.tasks_to_do_before_review.documentation">Documentation</a>
+        </h6>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<span class="bold"><strong>DONE</strong></span> Create the empty files and set
+            the doc generation environement
+          </li>
+<li>
+            Write the Motivation section
+          </li>
+<li>
+            Write the Getting started section
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Write the Installation section
+          </li>
+<li>
+            Write the Tutorial section
+          </li>
+<li>
+            Write the Example section
+          </li>
+<li>
+            Write the Reference section
+          </li>
+<li>
+<span class="bold"><strong>DONE</strong></span> Write the Bibliography section
+          </li>
+<li>
+            Write the Glossary section
+          </li>
+<li>
+            Write the Rationale section
+          </li>
+<li>
+            Write the Implementation notes section
+          </li>
+<li>
+            Write the Acknowledgements section
+          </li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.appendices.todo.for_later_releases"></a><a class="link" href="todo.html#toward_boost_stm.appendices.todo.for_later_releases" title="For later releases">For
+        later releases</a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed">More
+          recherch needed</a></span></dt></dl></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Integrate with STM test benchmarks as STAMP or STMBench7.
+          </li>
+<li>
+            Add close nested transactions.
+          </li>
+<li>
+            Allows configuration at compile-time and run-time.
+          </li>
+</ul></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed"></a><a class="link" href="todo.html#toward_boost_stm.appendices.todo.for_later_releases.more_recherch_needed" title="More recherch needed">More
+          recherch needed</a>
+</h5></div></div></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+              Mixing STM updating policies.
+            </li>
+<li>
+              Mixing STM consistency checking.
+            </li>
+</ul></div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="appendix_f__tickets.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

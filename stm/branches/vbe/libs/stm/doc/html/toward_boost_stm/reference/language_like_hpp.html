@@ -1,0 +1,210 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Header &lt;boost/stm/language_like.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="base_contention_manager_hpp.html" title="Header &lt;boost/stm/base_contention_manager.hpp&gt;">
+<link rel="next" href="transaction_bookkeeping_hpp.html" title="Header &lt;boost/stm/transaction_bookkeeping.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="base_contention_manager_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transaction_bookkeeping_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp"></a><a class="link" href="language_like_hpp.html" title="Header &lt;boost/stm/language_like.hpp&gt;"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">language_like</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__atomic_">Macro
+        <code class="computeroutput"><span class="identifier">atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__try_atomic_">Macro
+        <code class="computeroutput"><span class="identifier">try_atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__use_atomic_">Macro
+        <code class="computeroutput"><span class="identifier">use_atomic</span></code></a></span></dt>
+<dt><span class="section"><a href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__catch_before_retry_">Macro
+        <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a></span></dt>
+<dt><span class="section"><a href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__before_retry_">Macro
+        <code class="computeroutput"><span class="identifier">before_retry</span></code></a></span></dt>
+<dt><span class="section"><a href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__end_atom_">Macro
+        <code class="computeroutput"><span class="identifier">end_atom</span></code></a></span></dt>
+</dl></div>
+<p>
+        The complexity behind the <code class="computeroutput"><span class="identifier">atomic</span></code>
+        macro is needed to guarantee two fundamental goals.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          First, transactions must start and end correctly. Second, transactions
+          must change their retry behavior based on whether they are a child or parent
+          transaction to ensure proper closed nesting, flattened transaction behavior
+          is performed.
+        </li></ul></div>
+<p>
+        The <code class="computeroutput"><span class="identifier">atomic</span></code> preprocessor behaves
+        as follows. When the transactional for loop is entered, a transaction automatic
+        object is constructed which initializes the transaction and puts it in-flight.
+        The for loop conditional ensures the following conditions:
+      </p>
+<div class="orderedlist"><ol type="1">
+<li>
+          the transaction is uncommitted,
+        </li>
+<li>
+          the transaction has the opportunity to throw an exception if necessary,
+          and
+        </li>
+<li>
+          the transaction is in-flight.
+        </li>
+</ol></div>
+<p>
+        Once a transaction commits, the check on (1) <code class="computeroutput"><span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span></code> ensures the transaction is not executed
+        again. If the transaction has been aborted but is a child transaction, the
+        transaction must be restarted at the parent level. The call to (2) <code class="computeroutput"><span class="identifier">T</span><span class="special">.</span><span class="identifier">check_throw_before_restart</span><span class="special">()</span></code> allows an aborted child transaction to
+        throw an exception upward (before it is restarted) so the entire transaction
+        can be restarted from the parent. The <code class="computeroutput"><span class="identifier">check_throw_before_restart</span><span class="special">()</span></code> API checks the current run-time state of
+        the thread to determine if another transaction is active above it. This behavior
+        allows transactions to be used at any nesting level while dynamically ensuring
+        the correct retry behavior. Finally, the call to <code class="computeroutput"><span class="identifier">restart_if_not_inflight</span><span class="special">()</span></code> ensures the transaction is correctly restarted
+        after each subsequent abort.
+      </p>
+<p>
+        Once all of the transactional operations within the for loop are executed,
+        a call to no_throw_end() is made which ends the transaction. The <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
+        terminates the transaction by either committing or aborting it. Note, however,
+        that <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code>
+        does not throw an exception if the transaction is aborted, whereas the prior
+        TBoost.STM's API end() does. This non-throwing behavior deviates from the
+        prior TBoost.STM implementation of automatic objects when end() was invoked
+        within the try / catch body. Furthermore, due to <code class="computeroutput"><span class="identifier">no_throw_end</span><span class="special">()</span></code> not throwing an exception if the transaction
+        is aborted, some cases may arise where <code class="computeroutput"><span class="identifier">catch_before_retry</span></code>
+        or <code class="computeroutput"><span class="identifier">before_retry</span></code> operations
+        are not invoked when a transaction is aborted. This is a current limitation
+        of the system and is overcome by inserting a manual end() operation as the
+        last operation in the atomic block. The explicit end() ensures any operations
+        within the before_retry block are executed if the transaction is aborted.
+      </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">try_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">catch_before_retry</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span>
+<span class="preprocessor">#define</span> <span class="identifier">before_retry</span>
+<span class="preprocessor">#define</span> <span class="identifier">end_atom</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp.macro__atomic_"></a><a class="link" href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__atomic_" title="Macro atomic">Macro
+        <code class="computeroutput"><span class="identifier">atomic</span></code></a>
+</h4></div></div></div>
+<p>
+          Use atomic transaction T for optimistic critical section. Supports single-depth
+          and multiple-depth (nested) transactions. Performs automatic retry when
+          T is a parent transaction, throws exception when T is a child transaction.
+          This automatic switch enables correctly behaved nested and non-nested transactions
+        </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
+        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">check_throw_before_restart</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart_if_not_inflight</span><span class="special">();</span> <span class="special">\</span>
+        <span class="identifier">T</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
+    <span class="keyword">try</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp.macro__try_atomic_"></a><a class="link" href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__try_atomic_" title="Macro try_atomic">Macro
+        <code class="computeroutput"><span class="identifier">try_atomic</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">try_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
+        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="special">\</span>
+        <span class="identifier">T</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
+    <span class="keyword">try</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp.macro__use_atomic_"></a><a class="link" href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__use_atomic_" title="Macro use_atomic">Macro
+        <code class="computeroutput"><span class="identifier">use_atomic</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">T</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">T</span><span class="special">;</span> <span class="special">\</span>
+        <span class="special">!</span><span class="identifier">T</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">T</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="special">\</span>
+        <span class="identifier">T</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp.macro__catch_before_retry_"></a><a class="link" href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__catch_before_retry_" title="Macro catch_before_retry">Macro
+        <code class="computeroutput"><span class="identifier">catch_before_retry</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">catch_before_retry</span><span class="special">(</span><span class="identifier">E</span><span class="special">)</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;</span><span class="identifier">E</span><span class="special">)</span>
+</pre>
+<p>
+          Catches exception when transaction is aborted. This, before_retry, or end_atom
+          must follow an atomic block. Once all operations within the catch_before_retry
+          block are executed, control is returned to the local atomic where the transaction
+          is retried (if it is the parent) or the atomic block is exited by exception
+          (if it is a child).
+        </p>
+<p>
+          To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
+          or <code class="computeroutput"><span class="identifier">atomic</span></code>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp.macro__before_retry_"></a><a class="link" href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__before_retry_" title="Macro before_retry">Macro
+        <code class="computeroutput"><span class="identifier">before_retry</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">before_retry</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span>
+</pre>
+<p>
+          Same as catch_before_retry(E) except the exception is discarded.
+        </p>
+<p>
+          To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
+          or <code class="computeroutput"><span class="identifier">atomic</span></code>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.language_like_hpp.macro__end_atom_"></a><a class="link" href="language_like_hpp.html#toward_boost_stm.reference.language_like_hpp.macro__end_atom_" title="Macro end_atom">Macro
+        <code class="computeroutput"><span class="identifier">end_atom</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">end_atom</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span> <span class="special">{}</span>
+</pre>
+<p>
+          Same as before_retry except the exception is discarded and {} are automated.
+        </p>
+<p>
+          To be used pairwise with <code class="computeroutput"><span class="identifier">try_atomic</span></code>
+          or <code class="computeroutput"><span class="identifier">atomic</span></code>.
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="base_contention_manager_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transaction_bookkeeping_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
