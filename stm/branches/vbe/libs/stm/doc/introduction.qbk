@@ -9,6 +9,44 @@
 [section:intro Introduction]
 
 
+Research in parallel programming has recently seen a flurry of attention.
+Among the active research is a push for high-level languages
+to offer native support for parallel programming primitives. The next version of C++ will incorporate library support
+for threads, while numerous researchers are exploring ways to
+extend C++ to support transactional memory (TM).
+
+A strength of C++ is its support for automatic objects.
+Rather than requiring that parallel primitives be added directly to
+the language, automatic objects in C++ can be
+used to implement much of their necessary infrastructure.
+The automatic object approach is natural from a language perspective,
+provides full algorithmic control to the end programmer, and
+demonstrates C++'s linguistic elegance. The disadvantage of this
+approach is its added programmatic overhead. Using only automatic
+objects, certain programming errors, such as accidental scope
+removal and incorrectly programmed transactional retry behavior,
+can arise. 
+
+In light of this, there are unique trade-offs between language based
+and library-based parallel primitives. Language-based solutions
+minimize syntactic clutter which reduce programmer related
+errors, but are seemingly irreversible and, if incorrect, can
+have crippling effects upon the language. Library-based solutions
+increase programmer control and flexibility, but place substantial
+pressure on the programmer to avoid minute programming errors.
+A good compromise is a solution that behaves like a language extension,
+but is implemented within a library. By implementing parallel
+primitives within a library that uses language-like interfaces,
+programmer pressure is reduced, implementation updates are seamless,
+and full programmer control is achieved through library extensibility.
+
+
+
+__Boost_STM__ present such a language-like solution for C++
+using generic library coupled with a deliberate use of the
+preprocessor. The culmination of these components facilitate a
+simple, yet powerful, parallel programming interface in C++.
+
 
 
 [endsect]

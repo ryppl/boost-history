@@ -1,0 +1,89 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:transaction_object_hpp Header `<boost/stm/transaction_object.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        class base_transaction_object;
+        template <class Derived> class transaction_object;
+        template <typename T> class native_trans; 
+    }}
+
+[section Abstract Class `base_transaction_object`]
+
+    class base_transaction_object
+    {
+    public:
+
+       base_transaction_object();
+       virtual ~base_transaction_object() {};
+
+       virtual void copy_state(base_transaction_object const * const rhs) = 0;
+       virtual void move_state(base_transaction_object * rhs) = 0;
+
+       void transaction_thread(thread_id rhs) const;
+       thread_id transaction_thread() const;
+
+       void new_memory(bool rhs)
+       bool new_memory() const;
+
+    #if BOOST_STM_PERFORMING_VALIDATION
+       void version(std::size_t rhs);
+       std::size_t version() const;
+    #endif
+
+    };
+
+[endsect]
+
+[section Template Class `transaction_object<>`]
+
+    template <class Derived>
+    class transaction_object : public base_transaction_object {
+    public:
+
+       virtual void copy_state(base_transaction_object const * const rhs);
+       virtual void move_state(base_transaction_object * rhs);
+    };
+
+[endsect]
+
+[section Template Class `native_trans<>`]
+
+    template <typename T> class native_trans : public transaction_object< native_trans<T> > {
+    public:
+       native_trans(){}
+       native_trans(T const &rhs);
+       native_trans(native_trans const &rhs);
+       native_trans(native_trans &&rhs);
+       native_trans& operator=(native_trans &&rhs);
+
+       native_trans& operator=(T const &rhs);
+
+       native_trans& operator--();
+       native_trans operator--(int);
+       native_trans& operator++();
+       native_trans operator++(int);
+       native_trans& operator+=(T const &rhs);
+       native_trans operator+(native_trans const &rhs);
+
+       operator T() const;
+       T& value();
+       T const & value() const;
+    };
+
+[endsect]
+[section Class `base_transaction`]
+
+[endsect]
+[endsect]
+
+

@@ -1,0 +1,279 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich.
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[/==========================================================================================]
+[section:tx_ptr_hpp Header `<boost/stm/tx_ptr.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+
+        template <typename T> class tx_obj;
+        template <typename T, typename U>
+        bool operator==(const tx_obj<T>& lhs, const tx_obj<U>& rhs);
+        template <typename T, typename U>
+        bool operator==(const T& lhs, const tx_obj<U>& rhs);
+        template <typename T, typename U>
+        bool operator==(const tx_obj<T>& lhs, const U& rhs);
+        template <typename T, typename U>
+        bool operator!=(const tx_obj<T>& lhs, const tx_obj<U>& rhs);
+        template <typename T, typename U>
+        bool operator!=(const tx_obj<T>& lhs, const tx_obj<U>& rhs);
+        template<class T> inline void swap(tx_obj<T> & a, tx_obj<T> & b);
+
+        template <typename T> class tx_ptr;
+        template <typename T, typename U>
+        bool operator==(const tx_ptr<T>& lhs, const tx_ptr<U>& rhs);
+        template <typename T, typename U>
+        bool operator!=(const tx_ptr<T>& lhs, const tx_ptr<U>& rhs);
+        template<class T> inline void swap(tx_ptr<T> & a, tx_ptr<T> & b);
+
+        template <typename T>
+        void delete_ptr(tx_ptr<T> ptr);
+        template <typename T>
+        void delete_ptr(transaction& tx, tx_ptr<T> ptr);
+
+        template <typename T, typename U>
+        static tx_ptr<T> tx_static_cast(tx_ptr<U> ptr);
+        template <typename T, typename U>
+        static tx_ptr<T>* tx_dynamic_cast(tx_ptr<U> ptr);
+
+        template <typename T> class rd_ptr;
+        template <typename T>
+        rd_ptr<T> make_rd_ptr(transaction& tx, tx_ptr<T> ptr);
+        template <typename T>
+        rd_ptr<T> make_rd_ptr(transaction& tx, tx_obj<T> const & ref);
+
+        template <typename T>
+        rd_ptr<T> make_rd_ptr(tx_ptr<T> ptr);
+        template <typename T>
+        rd_ptr<T> make_rd_ptr(tx_obj<T> const & ref);
+        template <typename T>
+        void delete_ptr(rd_ptr<T> ptr);
+        template <typename T>
+        void delete_ptr(transaction& tx, rd_ptr<T> ptr);
+
+        template <typename T> class upgrd_ptr;
+        template <typename T>
+        void delete_ptr(upgrd_ptr<T> const& ptr);
+        template <typename T>
+        void delete_ptr(transaction& tx, upgrd_ptr<T> const& ptr);
+
+        template <typename T> class wr_ptr;
+        template <typename T>
+        wr_ptr<T> make_wr_ptr(transaction& tx, tx_ptr<T>& ptr);
+        template <typename T>
+        wr_ptr<T> make_wr_ptr(tx_ptr<T>& ptr);
+        template <typename T>
+        void delete_ptr(wr_ptr<T> ptr);
+        template <typename T>
+        void delete_ptr(transaction& tx, wr_ptr<T> const& ptr);
+
+        template <typename T> class read_ptr;
+        template <typename T> class write_ptr;
+    }}
+
+[section Template Class `tx_obj<>`]
+
+tx_obj is a kind of smart pointer to a wrapped transactional_object T providing builting operators
+
+    template <typename T> class tx_obj {
+    public:
+        tx_obj();
+        template<ctypename Y> tx_obj(tx_obj<Y> const& r);
+
+        template <typename T1> tx_obj(T1 p1);
+
+        T* operator->();
+        const T* operator->() const;
+        T& operator*();
+        const T& operator*() const;
+        T* get();
+        const T* get() const;
+        T& ref();
+        const T& ref() const;
+
+        tx_obj& operator--();
+        T operator--(int);
+
+        tx_obj& operator++();
+        T operator++(int);
+
+        tx_obj& operator+=(T const &rhs);
+        T operator+(T const &rhs) const;
+    };
+
+[endsect]
+
+[section Template Class `tx_ptr<>`]
+
+a tx_ptr<T> is an smart pointer to a transactional_object<T> (which contains an instance of T).
+Reference fields in linked structures should always be tx_ptrs.
+The result of derreferencing it will be the pointer to the T instance
+When this pointer is derreference on a transaction the transactional_object<T> is set a written and
+the transaction specific storage will be used. Otherwise the shared storage is used.
+
+Used to initialize a rd_ptr<T>, wr_ptr<T>, or upgrd_ptr<T>.
+
+    template <typename T>
+    class tx_ptr {
+    public:
+        typedef tx_ptr<T> this_type;
+
+        tx_ptr();
+        template<class Y> explicit tx_ptr(Y * ptr);
+        explicit tx_ptr(transactional_object<T>* ptr);
+        tx_ptr(const tx_obj<T>& r);
+
+        template<class Y> tx_ptr(tx_ptr<Y> const& r);
+        template<class Y> tx_ptr(rd_ptr<Y> const & r);
+        template<class Y> tx_ptr(wr_ptr<Y> const & r);
+        template<class Y> tx_ptr(upgrd_ptr<Y> const & r);
+
+        template<class Y> tx_ptr& operator=(transactional_object<Y>* ptr);
+        template<class Y> tx_ptr & operator=(tx_ptr<Y> const & r);
+
+        T* operator->() const;
+        T& operator*() const;
+        T* get() const;
+
+        typedef transactional_object<T>* this_type::*unspecified_bool_type;
+
+        operator unspecified_bool_type() const;
+        void swap(tx_ptr & other);
+    };
+
+[endsect]
+
+[section Template Class `rd_ptr<>`]
+
+A rd_ptr<T> ("read pointer") points to an object that the current transaction has opened for read only access.
+You can only call a const method through a read pointer.
+
+A rd_ptr<T> is constructed from an tx_ptr<T> through an explicit constructor.
+Once a rd_ptr<T> has been constructed, an tx_ptr<T> can be opened for
+reading simply by assignment (operator=()) into the constructed rd_ptr<T>.
+
+It is not safe to derreference a rd_ptr<T> after having assigned the same
+tx_ptr<T> to a wr_ptr<T>. If this is the case the readen value do not match
+the writen one. If it is possible to write on the same transaction use
+upgrd_ptr instead which is safe.
+
+    template <typename T>
+    class rd_ptr {
+    public:
+        rd_ptr(transaction &t, tx_ptr<T> tx_obj);
+        rd_ptr(transaction &t, tx_obj<T> const& tx_obj);
+
+        template<class Y> rd_ptr & operator=(tx_ptr<Y> r);
+
+        template<class Y> rd_ptr& operator=(tx_obj<Y> const & r);
+
+        const T* get() const;
+
+        inline const T & operator*() const;
+        inline const T* operator->() const;
+
+        operator unspecified_bool_type() const;
+
+    };
+
+[endsect]
+
+[section Template Class `upgrd_ptr<>`]
+
+A upgrd_ptr<T> ("upgradable pointer") points to an object that the current transaction has opened for read only access.
+
+You can only call const method of the wrapped type through a upgradable pointer.
+
+A upgrd_ptr<T> is constructed from an tx_ptr<T> through a constructor
+having also the transaction as parameter. Once a rd_ptr<T> has been constructed, an tx_ptr<T> can be opened for
+reading simply by assignment (operator=()) into the constructed rd_ptr<T>.
+
+It is safe to derreference a rd_ptr<T> after having assigned the same
+tx_ptr<T> to a wr_ptr<T>.
+
+A upgrd_ptr<T> can be upgraded to a wr_ptr<T> through a constructor.
+
+    template <typename T>
+    class upgrd_ptr {
+    public:
+
+        inline upgrd_ptr(transaction &t, tx_ptr<T> tx_obj);
+        template<class Y>
+        upgrd_ptr & operator=(tx_ptr<Y> const&  r);
+
+        const T* get() const;
+
+        inline T const & operator*() const;
+        inline T const * operator->() const;
+
+        operator unspecified_bool_type() const;
+
+        void write_ptr(transactional_object<T>* ptr);
+        T* write_ptr();
+
+    };
+
+
+[endsect]
+
+[section Template Class `wr_ptr<>`]
+
+A wr_ptr<T> ("write pointer") points to a shared object that the current transaction has opened for writing.
+
+A wr_ptr<T> is initialized explicitly from an tx_ptr<T>.
+
+A wr_ptr<T> can also be explicitly constructed from a upgrd_ptr<T> as an upgrade-to-writable operation.
+
+
+    template <typename T>
+    class wr_ptr {
+    public:
+        wr_ptr(transaction &t, tx_ptr<T> tx_obj);
+
+        wr_ptr(transaction &t, upgrd_ptr<T> tx_obj);
+
+        T* get();
+
+        inline T& operator*();
+        inline T* operator->();
+
+        operator unspecified_bool_type() const;
+    };
+
+[endsect]
+
+[section Template Class `read_ptr<>`]
+
+    template <typename T> class read_ptr {
+    public:
+       inline read_ptr(transaction &t, T const &tx_obj);
+       const T* get() const;
+       inline T const & operator*() const;
+       inline T const * operator->() const;
+
+       inline transaction &trans();
+       T* write_ptr();
+    };
+
+[endsect]
+[section Template Class `write_ptr<>`]
+
+    template <typename T> class write_ptr {
+    public:
+       inline write_ptr(transaction &t, T & tx_obj);
+
+       T* get() const;
+       inline T& operator*();
+       inline T* operator->();
+
+
+[endsect]
+[endsect]
+
+

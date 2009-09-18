@@ -28,49 +28,80 @@
 [section:todo  Appendix E: Future plans]
 [/=====================================]
 
-[heading Tasks to do before review]
+[section Tasks to do before review]
 
-[section Boostifying STM]
+[heading Interface]
 
-[heading Porting to Boost]
+* [*DONE] Adding transactional smart pointers.
+* Allows to have non transactional_object participating on transactions (separate the information related to a transactional object from the object itself and add two pointers to transactional_object_cache one to the object itself and the other to the transactional_object.
+* [*DONE] Managing Movable and non CopyConstructible types.
+
+[heading Boostifying STM]
+
 * [*DONE] set boost directory architecture
 * [*DONE] name files in lowercase
-* [*DONE] Replace bit_vector by std::bitset or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
 * [*DONE] Add a config file with all the configuration macros
 * [*DONE] Add a stm file at the boost level including all the STM interfaces
+* [*DONE] Replace bit_vector by std::bitset or boost::dynamic_bitset (BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET)
 * [*DONE] Replace Sleep by boost::this_thread::sleep
 * [*DONE] Replace pthread_mutex by boost::mutex
 * Replace THREAD_ID by boost::thread_id
+* [*DONE] Provide a unique array/tuple locker (Boost.Synchro)
+* Replace var_auto_lock by boost::synchro::unique_array_locker
 * Replace auto_lock by boost::synchro::unique_locker and redefine use_lock macros 
-* Redifine var_auto_lock
-* Add an scoped guard for transaction::lock/unlock
 * use lock_guard when lock/unlock
+* Adapt the pool to Boost.Pool
+* [*DONE] Provide a thread specific shared pointer (Boost.Interthreads)
+* [*DONE] Provide a transparent initialization (Boost.Interthreads)
+* Replace thread specific access using the thread id by boost:interthreads::thread_specific_shared_ptr
+* Replace the initialization to the library Boost.Interthreads (decorations and decorators)
+* Replace draco_move by boost::move and its emulation
+* Replace vector_set and vector map by the respectives Boost.Container flat_set and flat_map
+* Replace blom_filter by the Boost.BlomFilter blom_filter
 
-[heading Restructure the data]
-* Separate the data that is global, thread local or specific to a transaction.
+[heading Implementation]
+
+* [*DONE] Separate the data that is global, thread specific but shared to other threads using a lock, thread local or specific to a transaction.
+* [*DONE] Define access to these data using functions
 * Separate the interface from the implementation
-* Define access to these data using functions
+* Group all the cache containers (Read,Write,Delete,New) in only one cache in order to improve the lookup performance when using smart pointers.
 
 [heading Tests]
+
 * Add unit tests
 
 [heading Documentation]
+
 * [*DONE] Create the empty files and set the doc generation environement
 * Write the Motivation section
 * Write the Getting started section
+* [*DONE] Write the Installation section
 * Write the Tutorial section
 * Write the Example section
 * Write the Reference section
+* [*DONE] Write the Bibliography section
+* Write the Glossary section
+* Write the Rationale section
+* Write the Implementation notes section
+* Write the Acknowledgements section
 
-[heading Other tasks]
-* Implement a generic blom_filter
-* Replace the user class transactional_object by an internal transactional_object_cache  
-
-[endsect]
-
-[heading For later releases]
 
 [endsect]
 
+[section For later releases]
+
+* Integrate with STM test benchmarks as STAMP or STMBench7.
+* Add close nested transactions.
+* Allows configuration at compile-time and run-time.
+
+[section More recherch needed]
+
+* Mixing STM updating policies.
+* Mixing STM consistency checking.
+
+[endsect]
+[endsect]
+
+[endsect]
 [endsect]
 

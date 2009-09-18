@@ -1,0 +1,46 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:data_types_hpp Header `<boost/stm/data_types.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        enum transaction_type;
+        enum latm_type;
+        enum transaction_state;
+        typedef thread_id_t;
+    }}
+
+[section Enum `transaction_type`]
+
+[endsect]
+[section Enum `latm_type`]
+
+[endsect]
+[section Enum `transaction_state`]
+
+    enum transaction_state
+    {
+       e_no_state = -1, // no state is -1
+       e_aborted,      // ensure aborted = 0
+       e_committed,    // committed is positive
+       e_hand_off,      // so is handoff in case bool conversion
+       e_in_flight
+    };
+
+[endsect]
+[section Typedef `thread_id_t`]
+
+[endsect]
+[endsect]
+
+
+
+

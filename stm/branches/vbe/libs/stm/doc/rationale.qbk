@@ -8,6 +8,374 @@
 
 [section:rationale Appendix B: Rationale]
 
-TBC
+[section TM-Specific Concepts]
+
+[section Optimistic concurrency]
+[endsect]
+
+[section ACI transactions]
+
+Transactional memory was founded on the database ACID principle (atomic, consistent, isolated and durable), except without the
+D [24]. 
+
+* Transactions are atomic; the operations all commit or none of them do. 
+* Transactions are consistent; transactions must begin and end in legal memory states. 
+* Transactions are isolated; memory changes made within a transaction are invisible until committed.
+
+The below example gives a basic introduction into __Boost_STM_s__ transactional framework and demonstrates __Boost_STM_s__ ACI conformance.
+
+    native_trans<int> global_int;
+    int increment_global() {
+        atomic(t) {
+            t.write(global_int)++;
+            val = t.read(global_int);
+        } end_atom
+        return val;
+    }
+    
+In the above example, (A) both the t.write() and t.read() operations function atomically or neither operations are performed.
+In addition, (C) the transaction begins and ends in legal memory states, meaning global int is guaranteed to be read correctly, preventing thread data races from causing inconsistent results. Lastly, (I) the intermediate state of the incremented global int is isolated until the transaction commits. These three attributes fulfill __Boost_STM_s__
+conformance to the ACI principles. The above example also gives a basic introduction into __Boost_STM_s__ transactional
+framework.
+
+[endsect]
+
+[section STM Synchronization Types]
+
+There are two ways STM systems synchronize memory: 
+
+# using non-blocking mechanisms (lock-free) or 
+# using lock-based (or blocking) mechanisms. 
+
+Non-blocking STM systems use atomic primitives, such as, compare-and-swap (CAS) or load-linked and store-conditional (LL-SC), that do not lock the STM system to perform their transactional operations. Lock-based STM systems use locks, such as mutual exclusion locks, which lock the STM system to perform some portion of their transactional operations.
+
+__Boost_STM__ is a lock-based STM system. At its core, __Boost_STM__ uses one lock per thread to implement transactional reads and writes. This allows multiple transactions to simultaneously read and write without blocking other transactions' progress. When a transaction is committing, a global locking strategy is used to temporarily block forward progress on all transactions except the committing one. Once the committing transaction completes, other transactions are allowed to resume their work. __Boost_STM_s__ lockbased strategy allows it to gain the performance benefits of a nonblocking system, such that when transactions are not committing, the transactions do not block each other and are guaranteed to make forward progress. Yet __Boost_STM__ maintains the benefits of a lockbased system, enabling it to perform commit-time invalidation, its primary consistency model mechanism.
+
+Recent research shows lock-based STM systems outperform non-blocking systems. Our own research shows that through
+__Boost_STM_s__ design, scaling concerns and other lock-based specific problems, such as deadlocking and priority inversion, can be overcome with specific contention management and conflict detection policies. 
+
+[endsect]
+
+[section Updating policies]
+
+In any STM system, an updating protocol must be used to perform transactional commits for writes. Updating policies determine how a transaction commits its memory updates to global memory. Two general ways exist to perform updating: 
+
+# direct updating, which copies the original global memory state off to the side and then writes directly to global memory, and 
+# deferred updating, which copies the original global memory off to the side and the writes to the local copy. 
+
+When a transaction of a direct updating system commits its changes, no changes to global memory are made as the STM system has written directly to global memory. When a transaction of a deferred updating system commits its changes, it writes the local changes to global memory. When a direct updating system aborts, it uses the original copy of memory to update global memory, restoring it to its original state. When a deferred updating system aborts, no changes to global memory are made as the STM system has not written anything to global memory. One of __Boost_STM_s__ novel features is its implementation of both direct and deferred updating.
+
+[endsect]
+
+[section Conflict Detection]
+
+Conflict detection is the process of identifying when two or more transactions conflict. Conflicts can exist when a transaction writes to memory that another transaction then reads or writes (write after write, write after read), or when a transaction reads memory that is then used in another transaction's write (read after write). Unlimited readers, on the other hand, can read the same piece of memory without any conflict (read after read). 
+
+[table Comparaison with other STM systems
+    [
+        [[*Features]]       [[*after write]]   [[*after read]]
+    ]
+    [
+        [[*write]]       [[*YES]]   [[*YES]]
+    ]
+    [
+        [[*read]]     [[*YES]]   [[*NO]]
+    ]
+]
+
+
+Before determining how to handle a conflict, STM systems must determine when they will detect conflicts. There are two primary ways to detect conflicts: 
+
+* Early conflict detection attempts to identify conflicts as soon as a transaction reads or writes to memory.
+* Late conflict detection attempts to identify conflicts some time after the initial read or write.
+
+For direct updating, __Boost_STM__ implements a run-time configurable early and late conflict detection mechanism. For deferred updating, __Boost_STM__ only implements late conflict detection. The decision to have __Boost_STM__ only support late conflict detection for deferred updating was made after identifying numerous lost optimizations using early conflict detection with deferred updating. 
+
+Future work may lead to the implementation of early conflict detection for deferred updating simply for symmetry.
+
+[endsect]
+
+[section Consistency checking policies]
+
+An STM system can identify a conflict in two principal ways: through validation or invalidation. 
+
+* Validation is the process a transaction performs on its own read and write set to check itself for consistency. 
+* Invalidation is the process a transaction performs on other transaction's read and write sets to check them for consistency.
+
+Validation strategies usually have the the transaction abort itself if an inconsistency is found. Invalidation strategies usually do just the opposite, aborting the other transactions if an inconsistency is found. In addition, STM systems can use contention managers to determine how best to behave when inconsistent transactions are identified.
+
+__Boost_STM__ currently implements consistency checking only through invalidation. One of the next goals of __Boost_STM__ is to build run-time configuration of consistency checking for both invalidation and validation, as it is believed that both may be necessary for varying problems. This aside, __Boost_STM__ is unique in that it is the first STM system to implement commit-time invalidation. While other systems, such as __RSTM__, have implemented invalidation, no other system implements commit-time invalidation.
+
+We believe __Boost_STM__ is the first commit-time invalidating system due to commit-time invalidation being seemingly only possible in lock-based STM systems and as lock-based STM systems are relatively new, other lock-based systems not being far enough along to implement it yet. The two key differences we focus on in this work between invalidation and validation are; 
+
+# invalidation can save many wasted operations by early notification of doomed transactions, whereas validation cannot and 
+# invalidation can detect true priority inversion, whereas validation cannot 
+
+(other significant differences exist, but are not discussed here).
+
+* Fully validating systems must iterate through all transactional operations and determine consistency only at commit-time. Thus, each transaction must fully execute its transactional operations. A substantial amount of work can be saved by an invalidating system which can flag doomed transactions early, as shown in table 1. Table 1 details 4, 8 and 12 threaded runs for red-black trees, linked lists and hash tables in __Boost_STM__. While the percentage of operational savings decreases for each benchmark as the structure size increases, the actual operational savings improves. For example, if a linked list is inserting at the end of a 1600 node list and receives an early termination notification saving 50% of its operations, the savings gained is an 800 node iteration and insert. Likewise, performing a 90% operations savings in a linked list insert operation of size 100, saves only a 90 node iteration and insert. 
+
+Furthermore, not shown in the tables here, due to space limitations, is that abort percentages grow for each benchmark as the data structure size increases. Thus, the number of aborts increases, resulting in an even high amount of abort savings per benchmark. The increasing number of aborts as the data structure grows is quite intuitive as longer running transactions are more likely to incur collisions, especially while operating on the same data structure.
+
+* Priority inversion occurs in TM when a lower priority transaction causes a higher priority transaction to abort. Furthermore, priority inversion can be guaranteed to only abort true priority inverted transactions in an invalidating system. However, validating systems can also build priority inversion schemes, they simply must suffer penalties of potentially aborting transactions unnecessarily. The following section gives concrete examples of handling priority inversion in both validating and invalidating models.
+
+
+[endsect]
+
+[section Consistency versus Updating policies composition]
+
+While __Boost_STM__ benchmarks show that, deferred updating in our system usually outperforms direct updating, this is not always the case. In particular, direct updating eventually outperforms deferred updating in __Boost_STM__ as the data structure size grows. With this in mind, we believe that direct updating is useful for specific algorithms with highly innate parallelism (such as hash tables). Likewise, we believe validation may outperform invalidation for high thread counted uses. From these conclusions, we believe final STM systems may be required to implement direct updating,  deferred updating, validation and invalidation, all of which should be configurable at run-time and compile-time. By doing this, each problem which demands a different four-way configuration can be handled appropriately. Rather than attempting to build a single implementation which solves all problems universally, the end resulting STM system will handle each specific problem with the most appropriate configuration.
+
+[table Consistency versus Updating policies composition
+    [
+        [[*Features]]       [[*Direct]]   [[*Deferred]]
+    ]
+    [
+        [[*Validation]]       [[*YES]]   [[*YES]]
+    ]
+    [
+        [[*Invalidation]]     [[*Not Yet Implemented]]   [[*YES]]
+    ]
+]
+
+[endsect]
+
+
+[section Memory Granularity]
+
+STM systems must use a memory granularity size of either word or object for transactions. Word memory granularity allows transactions to read and write at the machine's architectural word size. Type memory granularity allows transactions to read and write at the type level, usually controlled by implementation of a transactional object cache. Object memory granularity allows transactions to read and write at the object level, usually controlled by implementation of a transactional object base class using subtype polymorphism. __Boost_STM__ implements the latter, performing reads and writes at the object level.
+
+[endsect]
+
+[section Memory Rollback Capability]
+
+STM systems must implement memory rollback capabilities for aborted transactions. Memory rollbacking restores the original state of memory in the event a transaction aborts. There are three rollbacking aspects any STM system must handle when implemented in an unmanaged language; 
+
+* updates to global, 
+* allocated memory and 
+* deallocated memory. 
+
+__Boost_STM__ handles rollbacking to global memory internally for both direct and deferred updating, requiring no programmer-based code. However, allocated and deallocated memory rollbacking require programmer-specific interfaces to be used. These interfaces handle C++ memory operations in their native capacity - new and delete - as well as their transactional memory capacity, ensuring no memory is leaked nor deleted prematurely. 
+
+Examples of this are presented in the following section.
+
+[endsect]
+
+[section Composable transactions]
+
+Composition is the process of taking separate transactions and adding them together to compose a larger single transaction. Composition is a very important aspect of transactions as, unlike locks, transactions can compose. Without a composable TM system, nested transactions each act independently committing their state as they complete. This is highly problematic if an outer transaction then aborts, as there may be no way to rollback the state of a nested (and already committed) transaction. Therefore, implementation of composable transactions is paramount to any TM system which hopes to build large transactions. 
+
+__Boost_STM__ implements composition via subsumption and is a closed nested system. Composition via subsumption merges all nested transactional memory of a single thread into the outer most active transaction of that same thread. The outer transaction subsumes all the inner transactions' changes. Once the outer transaction completes, all the transactional memory from the nested transactions and their parent either commit or abort. __Boost_STM_s__ closed nesting system enables each nested transaction visibility into its parent's transactional memory and vice versa, but does not allow other transactions to see this intermediate state.
+
+Future versions of __Boost_STM__ will implement closed nested transactions.
+
+[endsect]
+
+[section Contention management]
+
+[endsect]
+[section Unrecoverable transactions to manage with I/O]
+
+[endsect]
+[section Lock-aware transaction]
+
+[endsect]
+
+[endsect]
+
+[section C++ and Library-Specific Concepts]
+
+This section briefly discusses some of the C++ and library-specific
+concepts of __Boost_STM__.
+
+[section Native Language Compatibility]
+
+Native Language Compatibility. Some existing STM systems require specific language extensions or compiler support for their proposed system to work. Other systems instead violate native language pragmatics by reducing or removing type-safety altogether. Yet other system's transactional functionality is significantly reliant on the preprocessor.
+
+__Boost_STM__ is built with native language compatibility as a top priority - as such, it does not require language extensions or violate natural language semantics. Native language compatibility is a foremost concern due to C++0x set to specifically resist language extensions [29]. While in other languages, such as Java, STM systems which require language extensions may be practical, within C++ this same approach seems unrealistic. Thus, there is a very practical need for a native language ready STM solution for C++.
+
+[endsect]
+
+[section Memory Management]
+
+For unmanaged languages like C++, STM designers can build memory managers to control heap-based memory allocation and deallocation. While building a memory manager is not necessary for STM systems, performance optimizations can be achieved through such implementations. In particular, a key memory observation for STM systems is that numerous allocations and deallocations happen within transactions, irrespective of the memory design decisions. As such, __Boost_STM__ provides a builtin templatized user-configurable memory manager which generally yields 20% performance improvement over direct calls to the default C++'s new and delete.
+
+As understood by most C++ experts, native new and delete operators in C++ are multi-threaded safe, using mutex locks to guarantee memory is retrieved and released in a safe manner for multiple contending threads. Improving the performance of direct calls to C++'s new and delete in a single-threaded application is relatively easy as a buffered free store can be created which requires no locking mechanism, thus naturally increasing performance. This same task is not quite as easy in a multi-threaded environment. __Boost_STM__ improves the native performance of C++'s operator new and delete by first implementing buffered allocations which naturally perform faster than single allocations. Secondly, performance gains are made by not relinquishing ownership of deallocated memory, making second-time memory allocations faster than first-time allocations. These two aspects enable __Boost_STM_s__ memory manager to perform faster than C++'s native new and delete operations.
+
+__Boost_STM__ also must lock around memory allocations and deallocations, just as native C++ new and delete must, however, it can build a more problem-specific implementation that would hinder a generalized C++ new and delete if implemented on a global scale. The techniques used in __Boost_STM__ are similar to those discussed in Bulka and Mayhew's, Efficient C++, Chapter 7, Multi-threaded Memory Pooling. In C++ semantics, the performance gains within __Boost_STM_s__ memory manager can be thought of as the differences between using an std::vector's push_back() iteratively compared to using an std::vector's push_back() iteratively after calling reserve(), and then continuing to reuse the allocated space to avoid performance penalties of reallocations.
+
+[endsect]
+
+
+[section RAII]
+
+An STM system needs a transaction interface to identify where transactions begin, end and which operations are performed within the transaction. __Boost_STM__ achieves this by implementing transactions as objects using the Resource Acquisition Is Initialization (RAII) principle.
+
+RAII is a common concept in C++ when dealing with resources that need to be both obtained and released, like opening and closing a file. RAII uses the concept that if a resource is obtained it must be released even if the programmer fails to do so. RAII's behavior is implemented per class, usually requiring the destructor of the class to guarantee any resources gathered in the lifetime of the object be released. A primary benefit of RAII is its natively correct behavior in the event of exceptions. If an exception occurs causing an RAII class instance to destruct, due to stack unwinding, the deterministic destruction of the object is invoked. The destructor then releases any resources previously collected. This guarantees any object implementing RAII semantics will always release resources it controls, irrespective of program flow (normal or abnormal).
+
+The __Boost_STM_s__ transaction class is based on the RAII concept for two primary reasons. First, C++ programmers implicitly understand stack based (automatic) objects and their native RAII semantics. In fact, all of C++'s Standard Template Library (STL) containers are implemented using the RAII philosophy. Second, exceptions in C++ are not required to be handled by the programmer as they are in other languages, like Java. Using RAII for transactions ensures proper and guaranteed termination of transactions regardless of program flow, a very important attribute for correct transactional behavior.
+
+[endsect]
+
+[section Exception Safety]
+
+__Boost_STM__ fulfills Abrahams' basic exception safety guarantee for deferred updating, but cannot supply any exception safety guarantee for direct updating. The basic guarantee for exception safety states that if an exception is thrown, the operation may have side-effects but is in a consistent state. The basic guarantee is less strict than the strong guarantee which specifies if an exception is thrown there are no side-effects. The highest level of exception safety, above the strong guarantee, is the nothrow guarantee which disallows exceptions from being thrown entirely.
+
+Within deferred updating, __Boost_STM__ can only afford to implement the basic guarantee because if memory is partially committed and then a user exception is thrown, no original state exists for the already committed memory. Therefore, already committed memory in a deferred updating system, must stay committed since no reverted original state can be used to revert the changes. To implement such a system would result in a substantial performance degradation to the overall system, effectively doubling memory size and copy operations. Due to these costs, a double-copy implementation is not performed and the basic guarantee for deferred updating is deemed acceptable.
+
+Within direct updating, memory updates are done immediately on global memory, so transactions naturally achieve strong exception safety guarantees for commits. Aborts within direct updating, however, invoke copy constructors for restoration of the original global memory state. These copy constructors can throw exceptions which then can lead to a partially restored global state for aborted exceptions that are short-circuited by user-defined copy constructor exceptions. As such, no exception safety guarantee can be made for direct updating when used in C++, a downfall of the updating policy.
+
+[endsect]
+
+[section Move semantics]
+
+We solve the problem of commit-time and abort-time exceptions by using
+move semantics in place of copy semantics. The idea of moving is new to C++
+and will be available in the next version of the standard.
+
+[endsect]
+
+[section Parametric Polymorphism and Subtype Polymorphism]
+
+Type
+abstraction in C++ to create general purpose code can be achieved in numerous ways. Some of these ways, such as the use of C++ template classes and template functions (parametric polymorphism), as well as inheritance (subtype polymorphism), are considered practical and robust ways to build general purpose functionality while still ensuring a certain degree of type-safety is maintained. C++ templates, also known as parametric polymorphism, exhibit the same type-safety as if the general purpose code was written specifically for the templated instantiated type. Inheritance, on the other hand, reduces type-safety to some degree, but gains run-time flexibility unachievable with C++ templates alone. Other mechanisms also exist to create general purpose code, such as void pointers or preprocessor macros, but are considered unsafe and error-prone [8] and thusly, not used in __Boost_STM__.
+
+__Boost_STM__ uses both parametric and subtype polymorphism throughout its internal implementation and exposed interfaces. In cases where strict type-safety can be achieved, C++ templates are used. In other cases where exact type-safety cannot be achieved without reducing __Boost_STM_s__ functionality, inheritance is used. All of these factors considered, __Boost_STM__ is a research library that requires type-safety to be a foremost concern, as its usage would hampered if type-safety was relaxed in areas where it could have been retained. As such, C++ templates are used due to their retention of full type information, in cases where inheritance would have also sufficed with a slight loss of type-safety.
+
+
+[endsect]
+
+[section Language-like atomic transaction macro blocks]
+
+Transactions allow an unlimited number of threads to execute their optimistic critical sections. Transactions can perform their writes off to the side, ensuring global memory is preserved until the transaction's atomic operations are complete. To ensure conflicting transactions are identified and prevented, transactions perform correctness verification immediately before committing. The consistency checking performed by transactions ensures that transactions that write to or read from the same memory are restricted in their concurrent execution. The code below demonstrates three different implementations for transactions from a library-based approach where x is shared memory that must be synchronized.
+
+transaction with begin()/end():
+
+    begin_transaction(t);
+    tx_write(t, x) = val;
+    end_transaction(t);
+
+
+transaction with automatic object:
+
+    { 
+        transaction t;
+        t.write(x) = val;
+        t.end();
+    }
+
+language transaction:
+
+    atomic { x = val; } 
+
+Inspection of the above code reveals that begin_transaction() and end_transaction() are susceptible to the problem when a thrown exception can interfere with correct interface calls. As such, the begin_transaction() and end_transaction() approach can be immediately discarded from further consideration. The two remaining approaches, similar to the prior locking implementations, use automatic objects and a language-like approach. An initial observable difference between the two approaches is that the language approach has a smaller programmatic footprint than the automatic object approach. Furthermore, the automatic object approach introduces more programmatic complexity for transactional retry mechanics and composed transactional behaviors.
+
+[heading Pitfalls in Transactional Execution of Automatic Objects]
+
+Transactions use optimistic critical sections which generally require transactions be retried if they do not commit. As such, transactions are usually implemented as loops which re-execute until they commit. The code below illustrates the client code necessary to implement a basic retry behavior for automatic objects and language-like transactions.
+
+automatic object transaction with retry:
+
+    for (transaction t; !t.committed(); t.restart()) {
+        try {
+            t.write(x) = val;
+            t.end();
+        } catch (...) {}
+    }
+
+language-like transaction with retry:
+
+    atomic(t) { 
+        t.write(x) = val; 
+    } end_atom
+
+To complicate matters, some transactions must not implement a retry. Failed subtransactions often require the entire transaction be re-executed from the beginning. While the methods used to perform transactional retries vary between TM implementations, __Boost_STM__ uses an exception-based approach for all transactional interfaces. These __Boost_STM__ interfaces throw exceptions if transactions are found to be inconsistent. Therefore, parent transactions should use retry mechanics while their child transactions should not. The code above shows the differences between an automatic object and language-like implementation for parent and child transactions.
+
+automatic object:
+
+    // parent tx with automatic object:
+    for (transaction t; !t.committed(); t.restart()) {
+        try {
+            t.write(x) -= val;
+            foo();
+            t.end();
+        } catch (...) {}
+    }
+
+    // child tx with automatic object.
+    void foo(int val) {
+        transaction t;
+        t.write(y) += val;
+        t.end();
+    }
+
+language-like transaction:
+
+    // parent tx with language-like transaction.
+    atomic(t) {
+        t.write(x) -= val;
+        foo();
+    } end_atom
+
+    // child tx with language-like transaction.
+    void foo(int val) {
+        atomic(t) { 
+            t.write(y) += val; 
+        } end_atom
+    }
+
+The retry mechanics' syntactic overhead for automatic objects is nearly double that of the language-like semantics. The complexity of the additional retry code is significant and exhibits a number of locations where programmer-induced errors could be made. The key benefit of the language-like atomic syntax is that its structure is identical for parent and nested transactions and it behaves correctly when any transaction is used as a parent or child (details to follow).
+
+While the automatic object syntax could also be created to be identical for parent and nested transactions, the impact of creating such identical behavior would result in an increase in the child transaction's code size by 266% for single instruction transactions. The resulting increased code size and complexity would increase the likelihood for programmer-induced errors. For these reasons, a number of TM researchers have been in favor of direct language integration of TM instead of API-only approaches.
+
+[heading Disadvantages of Language Based Transactional Integration]
+
+Unfortunately, there are a number of disadvantages to direct language-based support for transactions. To begin, transactional memory is still in the early stages of research investigation. A number of open TM questions should be answered before transactions are integrated directly into high-level languages. Some of the open questions for transactions are regarding validation and invalidation consistency checking, fairness and priority-based transactions, open and closed nesting, exception behavior within transactions, lock-based and non-blocking solutions, and hardware-software transactional communication. Furthermore, some TM problems, such as contention management strategy selection, seem more naturally placed within libraries than languages due to their continually evolving and workload-specific nature.
+
+In light of this, direct integration of TM into a programming language today may lead to errors that are irreversible. These errors may have long-term consequences for the language. Language based integrations are also slow to emerge, even in languages that are quick to evolve, such as Java. A language-based approach to TM may take several years before it is available. Yet, the emergence of multi-core hardware is rushing programmers to develop multithreaded applications today. Without wide TM availability, the primary parallel programming construct used today is locks. Parallel programming research experts unanimously agree that finegrained locking alone leads to notoriously complex software to implement and maintain.
+
+The culmination of the above points illustrate the need for an extensible, simplified, parallel programming model today. Our language-like approach provides such a solution for C++ that neither library-based automatic objects nor language-based parallel abstractions alone can provide.
+
+[endsect]
+
+[endsect]
+
+
+[section Comparaison with other STM systems]
+
+[table Comparaison with other STM systems
+    [
+        [[*Features]]       [[*__Boost_STM__]]   [[*TL2]]
+    ]
+    [
+        [[*Lock-free]]       [[*NO]]   [[*YES]]
+    ]
+    [
+        [[*Lock-based]]     [[*YES]]   [[*NO]]
+    ]
+    [
+        [[*Validation]]     [[*YES]]   [[*??]]
+    ]
+    [
+        [[*Invalidation]]     [[*YES]]   [[*NO]]
+    ]
+    [
+        [[*Direct-Updating]]     [[*YES]]   [[*YES]]
+    ]
+    [
+        [[*Deferred-Updating]]     [[*YES]]   [[*YES]]
+    ]
+    [
+        [[*Word memory granulatity]]     [[*NO]]   [[*YES]]
+    ]
+    [
+        [[*Object memory granulatity]]     [[*NO]]   [[*YES]]
+    ]
+]
+
+
+
+
+[endsect]
 
 [endsect]

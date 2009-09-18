@@ -1,0 +1,87 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[/==========================================================================================]
+[section:transaction_bookkeeping_hpp Header `<boost/stm/transaction_bookkeeping.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        class transaction_bookkeeping
+    }}
+
+
+[section Class `transaction_bookkeeping`]
+
+    class transaction_bookkeeping
+    {
+    public:
+
+       typedef std::map<uint32, uint32> thread_commit_map;
+       typedef std::map<ThreadIdAndCommitId, uint32> CommitHistory;
+       typedef std::map<ThreadIdAndCommitId, uint32> AbortHistory;
+
+       transaction_bookkeeping();
+
+       uint32 const & lockConvoyMs();
+       uint32 const & commitTimeMs();
+       uint32 const & readAborts();
+       uint32 const & writeAborts();
+       uint32 const & abortPermDenied();
+       uint32 const totalAborts() const;
+       uint32 const & commits() const;
+       uint32 const & handOffs() const;
+       uint32 const & newMemoryAborts();
+       uint32 const & newMemoryCommits();
+       uint32 const & deletedMemoryAborts();
+       uint32 const & deletedMemoryCommits();
+       uint32 const & readChangedToWrite() const;
+       uint32 const & readStayedAsRead() const;
+
+       void inc_read_aborts();
+       void inc_write_aborts();
+
+       void inc_thread_commits(uint32 threadId);
+       void inc_thread_aborts(uint32 threadId);
+
+       thread_commit_map const & threadedCommits() const;
+       thread_commit_map const & threadedAborts() const;
+
+       void inc_lock_convoy_ms(uint32 const &rhs);
+       void inc_commit_time_ms(uint32 const &rhs);
+       void inc_commits();
+       void inc_abort_perm_denied(uint32 const &threadId);
+       void inc_handoffs();
+       void inc_new_mem_aborts_by(uint32 const &rhs);
+       void inc_new_mem_commits_by(uint32 const &rhs);
+       void inc_del_mem_aborts_by(uint32 const &rhs);
+       void inc_del_mem_commits_by(uint32 const &rhs);
+       void incrementReadChangedToWrite();
+       void incrementReadStayedAsRead();
+
+       CommitHistory const& getCommitReadSetList() const;
+       CommitHistory const& getCommitWriteSetList() const;
+       AbortHistory const& getAbortReadSetList() const;
+       AbortHistory const& getAbortWriteSetList() const;
+
+       void pushBackSizeOfReadSetWhenAborting(uint32 const &size);
+
+       void pushBackSizeOfWriteSetWhenAborting(uint32 const &size);
+
+       void pushBackSizeOfReadSetWhenCommitting(uint32 const &size);
+       void pushBackSizeOfWriteSetWhenCommitting(uint32 const &size);
+
+       bool isLoggingAbortAndCommitSize() const;
+       void setIsLoggingAbortAndCommitSize(bool const &in);
+
+       friend std::ostream& operator<<(std::ostream& out, transaction_bookkeeping const &that);
+    };
+   
+[endsect]
+[endsect]
+
+

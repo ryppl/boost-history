@@ -23,6 +23,18 @@ Boost.STM is a C++ lock-based software transactional memory (STM) library. Our a
 
 [*Boost.STM] provides:
 
+* Optimistic concurrency
+* ACI transactions
+    * Atomic: all or nothing
+    * Consistent: only legal memory states
+    * Isolated: other txes cannot see until committed
+* Language-like atomic transaction macro blocks
+* Open-nested composable transactions
+* Direct/deffered updating policies
+* Validation/invalidation consistency checking policies
+* Lock-aware transaction
+* Contention management: Mechanism for transaction forward progress
+* Unrecoverable transaction to manage with I/O
 
 
 [/====================================]
@@ -44,7 +56,7 @@ This documentation makes use of the following naming and formatting conventions.
 
 Finally, you can mentally add the following to any code fragments in this document:
 
-    // Include all the stm header files
+    // Include all of InterThreads
     #include <boost/stm.hpp>
 
     // Create a namespace aliases

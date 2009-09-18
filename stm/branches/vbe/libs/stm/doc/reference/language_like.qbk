@@ -1,0 +1,139 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich.
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[/==========================================================================================]
+[section:language_like_hpp Header `<boost/stm/language_like.hpp>`]
+[/==========================================================================================]
+
+The complexity behind the `atomic` macro is needed to guarantee two
+fundamental goals. 
+
+*First, transactions must start and end correctly.
+Second, transactions must change their retry behavior based on
+whether they are a child or parent transaction to ensure proper
+closed nesting, flattened transaction behavior is performed.
+
+The `atomic` preprocessor behaves as follows. When the transactional for loop is entered,
+a transaction automatic object is constructed which initializes
+the transaction and puts it in-flight. The for loop conditional
+ensures the following conditions: 
+
+# the transaction is uncommitted, 
+# the transaction has the opportunity to throw an exception if necessary, and 
+# the transaction is in-flight. 
+
+Once a transaction commits, the check on (1) `!T.committed()` ensures
+the transaction is not executed again. If the transaction has been
+aborted but is a child transaction, the transaction must be restarted
+at the parent level. The call to (2) `T.check_throw_before_restart()`
+allows an aborted child transaction to throw an exception upward
+(before it is restarted) so the entire transaction can be restarted from
+the parent. The `check_throw_before_restart()` API checks
+the current run-time state of the thread to determine if another
+transaction is active above it. This behavior allows transactions to
+be used at any nesting level while dynamically ensuring the correct
+retry behavior. Finally, the call to `restart_if_not_inflight()`
+ensures the transaction is correctly restarted after each subsequent
+abort.
+
+Once all of the transactional operations within the for loop are
+executed, a call to no_throw_end() is made which ends the transaction.
+The `no_throw_end()` terminates the transaction by either
+committing or aborting it. Note, however, that `no_throw_end()`
+does not throw an exception if the transaction is aborted, whereas
+the prior __Boost_STM_s__ API end() does. This non-throwing behavior
+deviates from the prior __Boost_STM__ implementation of automatic
+objects when end() was invoked within the try / catch
+body. Furthermore, due to `no_throw_end()` not throwing an exception
+if the transaction is aborted, some cases may arise where
+`catch_before_retry` or `before_retry` operations are not invoked
+when a transaction is aborted. This is a current limitation of
+the system and is overcome by inserting a manual end() operation
+as the last operation in the atomic block. The explicit end() 
+ensures any operations within the before_retry block are
+executed if the transaction is aborted.
+
+
+
+    #define atomic(T)
+    #define try_atomic(T)
+    #define use_atomic(T)
+    #define catch_before_retry(E)
+    #define before_retry
+    #define end_atom
+
+
+[section Macro `atomic`]
+
+Use atomic transaction T for optimistic critical section. Supports single-depth and multiple-depth (nested)
+transactions. Performs automatic retry when T is a parent transaction, throws exception when T is a
+child transaction. This automatic switch enables correctly behaved nested and non-nested transactions
+
+    #define atomic(T) \
+        for (transaction T; \
+            !T.committed() && T.check_throw_before_restart() && T.restart_if_not_inflight(); \
+            T.no_throw_end())
+        try
+
+
+
+[endsect]
+
+[section Macro `try_atomic`]
+
+    #define try_atomic(T) \
+        for (transaction T; \
+            !T.committed() && T.restart(); \
+            T.no_throw_end())
+        try
+
+[endsect]
+
+[section Macro `use_atomic`]
+
+    #define use_atomic(T) \
+        for (transaction T; \
+            !T.committed() && T.restart(); \
+            T.end())
+
+
+
+[endsect]
+[section Macro `catch_before_retry`]
+
+    #define catch_before_retry(E) catch (aborted_tx &E)
+
+Catches exception when transaction is aborted. This, before_retry, or end_atom must follow an
+atomic block. Once all operations within the catch_before_retry block are executed, control is
+returned to the local atomic where the transaction is retried (if it is the parent) or the atomic block
+is exited by exception (if it is a child).
+
+To be used pairwise with `try_atomic` or `atomic`.
+
+[endsect]
+[section Macro `before_retry`]
+
+    #define before_retry catch (aborted_tx &)
+
+Same as catch_before_retry(E) except the exception is discarded.
+
+To be used pairwise with `try_atomic` or `atomic`.
+
+[endsect]
+[section Macro `end_atom`]
+
+    #define end_atom catch (aborted_tx &) {}
+
+Same as before_retry except the exception is discarded and {} are automated.
+
+To be used pairwise with `try_atomic` or `atomic`.
+
+[endsect]
+[endsect]
+
+

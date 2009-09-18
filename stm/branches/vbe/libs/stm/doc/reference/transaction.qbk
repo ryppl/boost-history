@@ -1,0 +1,502 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich.
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[/==========================================================================================]
+[section:transaction_hpp Header `<boost/stm/transaction.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        class transaction;
+    }}
+
+
+[section Class `transaction`]
+
+__Boost_STM__ defines transactions as stackbased
+objects using RAII. In addition to the static interfaces for
+direct and deferred updating described earlier in this section, the
+following interfaces are necessary for performing transactions.
+
+    class transaction {
+    public:
+        // initialization
+        static void initialize();
+        static void initialize_thread();
+        static void terminate_thread();
+
+        // contention manager
+        static void contention_manager(base_contention_manager *rhs);
+        static base_contention_manager* get_contention_manager();
+
+        static bool enable_dynamic_priority_assignment();
+        static bool disable_dynamic_priority_assignment();
+        static bool doing_dynamic_priority_assignment();
+
+        // bookeeping
+        static void enableLoggingOfAbortAndCommitSetSize();
+        static void disableLoggingOfAbortAndCommitSetSize();
+        static const transaction_bookkeeping & bookkeeping();
+
+        // conflict detection
+        static bool early_conflict_detection();
+        static bool late_conflict_detection();
+        static bool do_early_conflict_detection();
+        static bool do_late_conflict_detection();
+
+        // consistency checking
+        static std::string consistency_checking_string();
+        static bool validating();
+        static bool invalidating();
+
+        // updating
+        static bool direct_updating()
+        static bool deferred_updating();
+        static bool do_direct_updating();
+        static bool do_deferred_updating();
+        static std::string update_policy_string();
+
+        // Lock Aware Transactional Memory support methods
+        static latm_type const latm_protection();
+        static std::string const latm_protection_str();
+        static void do_full_lock_protection();
+        static void do_tm_lock_protection();
+        static void do_tx_lock_protection();
+        static bool doing_full_lock_protection();
+        static bool doing_tm_lock_protection();
+        static bool doing_tx_lock_protection();
+
+        //in flight transactions
+        static InflightTxes const & in_flight_transactions();
+
+        // transaction
+        transaction();
+        ~transaction();
+
+        bool committed() const;
+        bool aborted() const;
+        bool in_flight() const;
+
+        void begin();
+        bool restart();
+        bool restart_if_not_inflight();
+        void end();
+        void no_throw_end();
+        void force_to_abort();
+        void unforce_to_abort();
+
+        std::size_t const &priority() const;
+        void set_priority(std::size_t const &rhs) const;
+        void raise_priority();
+
+        void make_irrevocable();
+        void make_isolated();
+        bool irrevocable() const;
+        bool isolated() const;
+
+        thread_id_t const & thread_id() const;
+
+
+        template <typename T> T& find_original(T& in);
+
+        template <typename T> T const & read(T const & in);
+        template <typename T> T const * read_ptr(T const * in);
+        template <typename T> T const & r(T const & in);
+
+        template <typename T> T& write(T& in);
+        template <typename T> T* write_ptr(T* in);
+        template <typename T> T& w(T& in);
+
+        template <typename T> T* get_written(T const & in);
+
+        template <typename T> void delete_memory(T &in)
+        template <typename T> T* new_memory();
+        template <typename T> T* new_memory_copy(T const &rhs);
+
+    };
+
+[section Static Function `initialize()`]
+
+        static void initialize();
+
+This method must called before any transaction objects are constructed. The initialize method initializes the overall transaction locking framework.
+
+[endsect]
+[section Static Function `initialize_thread()`]
+
+        static void initialize_thread();
+
+This method must be called for each thread before any transactions are constructed. This method initializes the thread's read and write sets, new and deleted memory sets, mutex locks and thread-based flags.
+
+
+[endsect]
+[section Static Function `terminate_thread()`]
+
+        static void terminate_thread();
+
+This method should be called before destroying a thread. While it is not needed, it will keep transaction operations functioning optimally by reducing static overhead within the transaction class that is no longer needed once a thread's lifetime has ended.
+
+
+[endsect]
+[section Static Function `contention_manager`]
+
+        static void contention_manager(base_contention_manager *rhs);
+
+Sets __Boost_STM__'s contention manager to point to the passed in contention manager. When a new CM is passed in to __Boost_STM__, it deletes the previously pointed to CM and points to the new one. Client code is responsible for constructing new CMs that are passed to this method, but __Boost_STM__ then takes ownership of these CMs.
+
+[endsect]
+[section Static Function `get_contention_manager`]
+
+        static base_contention_manager* get_contention_manager();
+
+Returns a pointer to the current CM used by __Boost_STM__. This method is mostly used for validation purposes after setting a CM to a user-specified implementation.
+
+[endsect]
+[section Static Function `enable_dynamic_priority_assignment`]
+
+        static bool enable_dynamic_priority_assignment();
+
+
+[endsect]
+[section Static Function `disable_dynamic_priority_assignment`]
+
+        static bool disable_dynamic_priority_assignment();
+
+[endsect]
+[section Static Function `doing_dynamic_priority_assignment`]
+
+        static bool doing_dynamic_priority_assignment();
+
+[endsect]
+[section Static Function `enableLoggingOfAbortAndCommitSetSize`]
+
+        static void enableLoggingOfAbortAndCommitSetSize();
+
+[endsect]
+[section Static Function `disableLoggingOfAbortAndCommitSetSize`]
+
+        static void disableLoggingOfAbortAndCommitSetSize();
+
+[endsect]
+[section Static Function `transaction_bookkeeping`]
+
+        static const transaction_bookkeeping & bookkeeping();
+
+[endsect]
+[section Static Function `early_conflict_detection`]
+
+        static bool early_conflict_detection();
+
+Returns true if direct updating is active and early conflict detection, otherwise returns false.
+
+[endsect]
+[section Static Function `late_conflict_detection`]
+
+        static bool late_conflict_detection();
+
+Returns true if deferred updating is active or if direct updating and late conflict detection are active, otherwise returns false.
+
+[endsect]
+[section Static Function `do_early_conflict_detection`]
+
+        static bool do_early_conflict_detection();
+
+Attempts to switch to early conflict detection. Returns false if in-flight transactions are found or if deferred updating is active. Otherwise returns true and enables early conflict detection.
+
+[endsect]
+[section Static Function `do_late_conflict_detection`]
+
+Attempts to switch to late conflict detection. Returns false if in-flight transactions are found, otherwise returns true and enables late conflict detection.
+
+        static bool do_late_conflict_detection();
+
+[endsect]
+[section Static Function `consistency_checking_string`]
+
+        static std::string consistency_checking_string();
+
+[endsect]
+[section Static Function `validating`]
+
+        static bool validating();
+
+[endsect]
+[section Static Function `invalidating`]
+
+        static bool invalidating();
+
+
+[endsect]
+[section Static Function `direct_updating`]
+
+        static bool direct_updating()
+
+Returns true if direct updating is active, otherwise returns false.
+
+[endsect]
+
+[section Static Function `deferred_updating`]
+
+        static bool deferred_updating();
+
+Returns true if deferred updating is active, otherwise returns false
+
+[endsect]
+[section Static Function `do_direct_updating`]
+
+        static bool do_direct_updating();
+
+Attempts to switch to direct updating. Returns false if inflight transactions are found and __Boost_STM__ is unable to switch updating models. Otherwise, returns true and enables direct updating.
+
+[endsect]
+[section Static Function `do_deferred_updating`]
+
+        static bool do_deferred_updating();
+
+Attempts to switch to deferred updating. Returns false if inflight transactions are found and __Boost_STM__ is unable to switch updating models. Otherwise, returns true and enables deferred updating.
+
+[endsect]
+[section Static Function `update_policy_string`]
+
+        static std::string update_policy_string();
+
+
+[endsect]
+[section Static Function `latm_protection`]
+
+        static latm_type const latm_protection();
+
+[endsect]
+[section Static Function `latm_protection_str`]
+
+        static std::string const latm_protection_str();
+
+[endsect]
+[section Static Function `do_full_lock_protection`]
+
+        static void do_full_lock_protection();
+
+[endsect]
+[section Static Function `do_tm_lock_protection`]
+
+        static void do_tm_lock_protection();
+
+[endsect]
+[section Static Function `do_tx_lock_protection`]
+
+        static void do_tx_lock_protection();
+
+[endsect]
+[section Static Function `doing_tx_lock_protection`]
+
+        static bool doing_tx_lock_protection();
+
+[endsect]
+[section Static Function `doing_full_lock_protection`]
+
+        static bool doing_full_lock_protection();
+
+[endsect]
+[section Static Function `doing_tm_lock_protection`]
+
+        static bool doing_tm_lock_protection();
+
+[endsect]
+[section Static Function `in_flight_transactions`]
+
+        static InflightTxes const & in_flight_transactions();
+
+
+[endsect]
+[section Constructor `transaction()`]
+
+        transaction();
+
+Default ctor for a transaction immediately puts the transaction in-flight. In addition, the ctor points referenced members to a number of thread-specific sets which it does by referencing the thread id.
+
+[endsect]
+[section Destructor `~transaction()`]
+
+        ~transaction();
+
+The transaction dtor releases the thread-specific transaction lock if it is obtained. The dtor then immediately returns if the transaction was not in-flight, or if the transaction was in-flight,  it forces the transaction to abort which performs a number of clean-up operations.
+
+[endsect]
+[section Member Function `committed`]
+
+States if the state of the transaction is e_committed or e_hand_off
+
+        bool committed() const;
+
+
+[endsect]
+[section Member Function `aborted`]
+
+States if the state of the transaction is e_aborted
+
+        bool aborted() const;
+
+
+[endsect]
+[section Member Function `in_flight`]
+
+States if the state of the transaction is e_in_flight
+
+        bool in_flight() const;
+
+[endsect]
+[section Member Function `begin`]
+
+        void begin();
+
+
+[endsect]
+[section Member Function `restart`]
+
+        bool restart();
+
+This method is similar to the transaction ctor as it signals the start of a transaction and attempts to put it in-flight. A fundamental difference between restart_transaction() and the transaction ctor is that if the transaction is already in-flight, begin_transaction() aborts the transaction and restarts it. This behavior is important for composed transactions where the outer transaction is never destructed, due to continually excepting inner transactions which also prevent the outer transaction from reaching its call to end_transaction(). This is shown concretely in the composable transaction example
+
+[endsect]
+[section Member Function `restart_if_not_inflight`]
+
+        bool restart_if_not_inflight();
+
+[endsect]
+[section Member Function `end`]
+
+        void end();
+
+This method signals that the transaction should try to commit. The return value stored in a transaction_state enumeration is either 1) e_hand_off, meaning the transaction was nested and has handed off its state to the parent transaction or 2) e_committed, meaning the transaction was committed and global memory has been updated. If a transaction is aborted, an aborted_transaction_exception is thrown. A call to end_transaction() will never return an enumerated state which signals the transaction was aborted. Instead, if a transaction is found to be aborted at a call to end_transaction(), an aborted transaction exception is thrown. This behavior enables all aborted transactions to be handled in a similar fashion, resulting in an aborted transaction exception.
+
+[endsect]
+[section Member Function `no_throw_end`]
+
+        void no_throw_end();
+
+Do the same as end() by caching every exception.
+
+[endsect]
+[section Member Function `force_to_abort`]
+
+    void force_to_abort();
+
+[endsect]
+[section Member Function `unforce_to_abort`]
+
+        void unforce_to_abort();
+
+[endsect]
+[section Member Function `priority`]
+
+        std::size_t const &priority() const;
+
+[endsect]
+[section Member Function `set_priority`]
+
+        void set_priority(std::size_t const &rhs) const;
+
+[endsect]
+[section Member Function `raise_priority`]
+
+        void raise_priority();
+
+[endsect]
+[section Member Function `make_irrevocable`]
+
+        void make_irrevocable();
+
+[endsect]
+[section Member Function `make_isolated`]
+
+        void make_isolated();
+
+[endsect]
+[section Member Function `irrevocable`]
+
+        bool irrevocable() const;
+
+[endsect]
+[section Member Function `isolated`]
+
+        bool isolated() const;
+
+[endsect]
+[section Member Function `thread_id`]
+
+        thread_id_t const & thread_id() const;
+
+[endsect]
+[section Template Member Function `find_original<>`]
+
+        template <typename T> T& find_original(T& in);
+
+This method searches the transaction's write list for the original piece of memory referred to by the transactional memory passed in. If the memory passed in is the original global memory it is simply returned. Otherwise, the copied memory passed in, is used to find the original global memory stored in the transaction's write set and then the original memory is returned. While new memory constructed within a transaction can be passed into find_original(), it is not necessary as it always will return a reference to itself. However, to reduce the complexity of client-side code, it may be preferred to build a single method for both new and existing memory address lookup.
+
+[endsect]
+[section Template  Function `read<>`]
+
+        template <typename T> T const & read(T const & in);
+        template <typename T> T const & r(T const & in);
+
+
+The read method is used when a transaction is attempting to read a piece of memory that is shared between threads (i.e. global heap space). The input argument is a reference to a derived base_transaction_object instance, the return value reference is the correct base_transaction_object to read based on the current state of the transaction and the currently employed updating policy.
+[endsect]
+
+[section Template  Function `read_ptr<>`]
+
+        template <typename T> T const * read_ptr(T const * in);
+
+Identical to the read() interface, except the input parameter is a base_transaction_object pointer as is the return parameter
+
+[endsect]
+[section Template  Function `write<>`]
+
+        template <typename T> T& write(T& in);
+        template <typename T> T& w(T& in);
+
+The templatized write method is used when a transaction is attempting to write to a piece of memory that is shared between threads (i.e. global heap space). The input argument is a reference to a derived base_transaction_object instance, the return value reference is the correct base_transaction_object to write to based on the current state of the transaction and the currently employed updating policy.
+
+[endsect]
+
+[section Template  Function `write_ptr<>`]
+
+    template <typename T> T* write_ptr(T* in);
+
+Identical to the write() interface, except the input is a base_transaction_object pointer as is the return parameter.
+
+[endsect]
+
+[section Template  Function `get_written<>`]
+
+    template <typename T> T* get_written(T const & in);
+
+[endsect]
+[section Template  Function `delete_memory<>`]
+
+        template <typename T> void delete_memory(T &in)
+
+This method places the input parameter into a garbage set which is emptied (deleted) once the transaction commits.
+
+[endsect]
+[section Template  Function `new_memory<>`]
+
+        template <typename T> T* new_memory();
+
+This method constructs new memory of a derived base_transaction_object type and returns a pointer to the newly allocated memory. While the input template parameter is not used, C++ does not allow functions to differ only by return type. Since different template function instantiations would be constructed here, one per derived base_transaction_object type used within the transaction, a compiler error would be generated for differing return types if an input parameter was not supplied. To overcome this, a void* could be used as the return value, but that would incur client-side casting on the return value, a costly side-effect. To overcome the limitations of C++, while still ensuring strong type-safety, an input parameter which is never referenced is required.
+
+[endsect]
+[section Template  Function `new_memory_copy<>`]
+
+        template <typename T> T* new_memory_copy(T const &rhs);
+
+This method behaves similarly to the new_memory() interface except that it makes an exact replica of the input parameter. The return value is a pointer to the newly allocated, replicated object.
+
+[endsect]
+
+[endsect]
+[endsect]

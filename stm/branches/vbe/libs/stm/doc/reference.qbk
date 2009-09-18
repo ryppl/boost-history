@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -8,7 +8,22 @@
 
 [section Reference]
 
+The following section presents the major design components identified in the background section and discusses how they are implemented within the __Boost_STM__ library.
 
+[/include reference/stm.qbk]
+[/include reference/rt_configuration.qbk]
+[include reference/data_types.qbk]
+[include reference/exceptions.qbk]
+[/include reference/synchro.qbk]
+[include reference/transaction.qbk]
+[include reference/transaction_object.qbk]
+[include reference/smart_pointers.qbk]
+[include reference/base_contention_manager.qbk]
+[include reference/language_like.qbk]
+[/include reference/contention_manager/default_contention_manager.qbk]
+[/include reference/contention_manager/NoExceptionOnAbortNoticeOnReadWritesCM.qbk]
+[/include reference/contention_manager/ExceptAndBackOffOnAbortNoticeCM.qbk]
+[include reference/transaction_bookkeeping.qbk]
 
 [endsect]
 

@@ -6,13 +6,69 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
+
 [section:ext_references References]
+
+For details on the underlying software architecture of __Boost_STM__, including explanations of its API, please refer to our summary paper. 
+
 [variablelist
+
 [
-    [ [*Toward Simplified Parallel Support in C++]]
-    [Justin E. Gottschlich & Paul J. Rogers, 2009 - Not yet published]
+    [ [@http://eces.colorado.edu/~gottschl/tboostSTM/pubs/lcsd07-dracostm.pdf [*DracoSTM: A Practical C++ Approach to Software Transactional Memory]]]
+    [Justin E. Gottschlich and Daniel A. Connors - 
+    ['Proceedings of the ACM SIGPLAN Symposium on Library-Centric Software Design (LCSD), October 2007]     ]
 ]
-  
 ]
 
+TBoost.STM uses a novel method of consistency checking called invalidation. Invalidation can assist in both high performance and strict contention management control. For more information on how invalidation can improve overall system performance and ensure true user-defined contention management policies, see our below research papers. 
+
+[variablelist
+[
+    [ [@http://eces.colorado.edu/~gottschl/tboostSTM/pubs/podc08_full_paper.pdf [*A Consistency Checking Optimization Algorithm for Memory-Intensive Transactions]]]
+    [Justin E. Gottschlich, Daniel A. Connors and Jeremy G. Siek - 
+    ['Proceedings of the ACM SIGACT-SIGOPS Symposium on Principles of Distributed Computing (PODC) (brief announcement), August 2008] ]    ]
+
+[
+    [ [@http://eces.colorado.edu/~gottschl/tboostSTM/pubs/epham08-stm.pdf [*Extending Contention Managers for User-Defined Priority Based Transactions]]]
+    [Justin E. Gottschlich and Daniel A. Connors - 
+    ['Proceedings of the ACM Workshop on Exploiting Parallelism with Transactional Memory and other Hardware Assisted Methods (EPHAM), April 2008] ]
+]
+]
+
+__Boost_STM__ supports transaction-lock interaction. This support allows existing lock-based parallel code to interact safely with transactions. In addition, we provide three types of transaction-lock interaction with varying degrees of performance. Please see our research paper for more details.
+
+[variablelist
+[
+    [ [@http://eces.colorado.edu/~gottschl/tboostSTM/pubs/latm.pdf [*Lock-Aware Transactional Memory and Composable Locks]]]
+    [Justin E. Gottschlich, Daniel A. Connors and Jeremy G. Siek - 
+     ]
+]
+
+
+]
+
+__Boost_STM__ uses the last C++ features to provide a friendly and efficient interface. See the following papers to see how. 
+
+[variablelist
+[
+    [ [@http://eces.colorado.edu/~gottschl/pubs/boostcon.inter.2009.pdf [*Toward Simplified Parallel Support in C++]]]
+    [Justin E. Gottschlich, Jeremy G. Siek, Paul J. Rogers, and Manish Vachharajani - 
+    ['BoostCon'09, the Third Boost Libraries Conference, May 2009] ]
+]
+
+[
+    [ [@http://eces.colorado.edu/~gottschl/tboostSTM/pubs/icooolps08-exception.pdf [*C++ Move Semantics for Exception Safety and Optimization in Software Transactional Memory Libraries]]]
+    [Justin E. Gottschlich, Jeremy G. Siek and Daniel A. Connors - 
+    ['International Workshop on Implementation, Compilation, Optimization of Object-Oriented Languages, Programs and Systems (ICOOOLPS), July 2008]]
+]
+]
+
+Check for the last updates.
+
+[variablelist
+[
+    [ [@http://eces.colorado.edu/~gottschl/tboostSTM/pubs.html [*TBoost.STM (or Related) Peer-Reviewed Publications]]]
+    []
+]
+]
 [endsect]
