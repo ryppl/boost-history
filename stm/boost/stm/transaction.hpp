@@ -1132,8 +1132,8 @@ private:
    // additional "if" to slow down performance. however, as it will be
    // releasing its own mutex, it must reset hasMutex_
    //--------------------------------------------------------------------------
-   void lock_all_mutexes();
-   void unlock_all_mutexes();
+   static void lock_all_mutexes();
+   static void unlock_all_mutexes();
 
 
 #ifndef DISABLE_READ_SETS
