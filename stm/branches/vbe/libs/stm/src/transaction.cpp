@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -63,7 +63,7 @@ bool transaction::initialized_ = false;
 // second param = sleepIncrease factor (initialSleepTime * factor)
 // third param = # of increases before resetting
 ///////////////////////////////////////////////////////////////////////////////
-#if defined(BOOST_STM_CM_STATIC_CONF) 
+#if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
    //boost::stm::contention_manager_type boost::stm::transaction::cm_(0, 0, 0);
    int boost::stm::except_and_back_off_on_abort_notice_cm::sleepTime_=0;
@@ -73,8 +73,8 @@ bool transaction::initialized_ = false;
    int boost::stm::except_and_back_off_on_abort_notice_cm::kMaxSleepTime_=0;
 #endif
 
-#else   
-base_contention_manager *transaction::cm_ = 
+#else
+base_contention_manager *transaction::cm_ =
     new ExceptAndBackOffOnAbortNoticeCM(0, 0, 0);
 //    new DefaultContentionManager();
 //    new NoExceptionOnAbortNoticeOnReadWritesCM();
@@ -124,7 +124,7 @@ transaction::tss_context_map_type transaction::tss_context_map_;
 ///////////////////////////////////////////////////////////////////////////////
 // static initialization method - must be called before the transaction
 // class is used because it initializes our transactionMutex_ which is used
-// to guarantee a consistent state of the static 
+// to guarantee a consistent state of the static
 // transactionsInFlight_<transaction* > is correct.
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::initialize()
@@ -158,23 +158,24 @@ void transaction::initialize_thread()
    //--------------------------------------------------------------------------
    // WARNING: before you think lock_all_mutexes() does not make sense, make
    //          sure you read the following example, which will certainly change
-   //          your mind about what you think you know ...
+   //          your mind about what you think you know ... (bug found by Arthur
+   //          Athrun)
    //
    //          end_transaction() must lock all mutexes() in addition to the
    //          important general access mutex, which serializes commits.
    //
    //          In order to make end_transaction as efficient as possible, we
    //          must release general_access() before we release the specific
-   //          threaded mutexes. Unfortunately, because of this, a thread can 
+   //          threaded mutexes. Unfortunately, because of this, a thread can
    //          can enter this function and add a new thread (and mutex) to the
    //          mutex list. Then end_transaction() can finish its execution and
    //          unlock all mutexes. The problem is that between end_transaction
    //          and this function, any number of operations can be performed.
    //          One of those operations may lock the mutex of the new thread,
-   //          which may then be unlocked by end_transaction. If that happens, 
+   //          which may then be unlocked by end_transaction. If that happens,
    //          all kinds of inconsistencies could occur ...
    //
-   //          In order to fix this, we could change the unlock order of 
+   //          In order to fix this, we could change the unlock order of
    //          end_transaction() so it unlocks all mutexes before releasing the
    //          the general mutex. The problem with that is end_transaction is
    //          a high serialization point and the general mutex is the most
@@ -189,12 +190,12 @@ void transaction::initialize_thread()
    //          DO NOT REMOVE LOCK_ALL_MUTEXES / UNLOCK_ALL_MUTEXES!!
    //
    //--------------------------------------------------------------------------
-   lock_all_mutexes();
-    
+   lock_all_mutexes_but_this(THREAD_ID);
+
    size_t threadId = THREAD_ID;
 
 #ifndef USE_SINGLE_THREAD_CONTEXT_MAP
-/////////////////////////////////    
+/////////////////////////////////
    ThreadWriteContainer::iterator writeIter = threadWriteLists_.find(threadId);
    ThreadReadContainer::iterator readIter = threadReadLists_.find(threadId);
    ThreadBloomFilterList::iterator bloomIter = threadBloomFilterLists_.find(threadId);
@@ -203,9 +204,9 @@ void transaction::initialize_thread()
    ThreadMemoryContainerList::iterator newMemIter = threadNewMemoryLists_.find(threadId);
    ThreadMemoryContainerList::iterator deletedMemIter = threadDeletedMemoryLists_.find(threadId);
    ThreadTxTypeContainer::iterator txTypeIter = threadTxTypeLists_.find(threadId);
-   ThreadBoolContainer::iterator abortIter = threadForcedToAbortLists_.find(threadId);  
+   ThreadBoolContainer::iterator abortIter = threadForcedToAbortLists_.find(threadId);
    ThreadMutexContainer::iterator mutexIter = threadMutexes_.find(threadId);
-    
+
 #if PERFORMING_LATM
 #if USING_TRANSACTION_SPECIFIC_LATM
    ThreadMutexSetContainer::iterator conflictingMutexIter = threadConflictingMutexes_.find(threadId);
@@ -232,7 +233,7 @@ void transaction::initialize_thread()
    {
       threadTransactionsStack_[threadId] = new TransactionsStack;
    }
-   
+
    ThreadBoolContainer::iterator blockedIter = threadBlockedLists_.find(threadId);
 
    if (threadWriteLists_.end() == writeIter)
@@ -282,26 +283,26 @@ void transaction::initialize_thread()
    {
       Mutex *mutex = new Mutex;
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-#if WIN32      
+#if WIN32
       *mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif       
+#endif
       pthread_mutex_init(mutex, 0);
 #endif
       threadMutexes_.insert(thread_mutex_pair(threadId, mutex));
       mutexIter = threadMutexes_.find(threadId);
    }
-   
+
    if (threadBlockedLists_.end() == blockedIter)
    {
       threadBlockedLists_.insert(thread_bool_pair(threadId, new int(0)));
    }
-   
-//////////////////////////////////////   
+
+//////////////////////////////////////
 #else
-//////////////////////////////////////   
+//////////////////////////////////////
 #ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
-//////////////////////////////////////   
-   
+//////////////////////////////////////
+
    ThreadMutexContainer::iterator mutexIter = threadMutexes_.find(threadId);
    ThreadBoolContainer::iterator blockedIter = threadBlockedLists_.find(threadId);
 #if PERFORMING_LATM
@@ -336,15 +337,15 @@ void transaction::initialize_thread()
    {
       Mutex *mutex = new Mutex;
 #ifndef BOOST_STM_USE_BOOST_MUTEX
-#if WIN32      
+#if WIN32
       *mutex = PTHREAD_MUTEX_INITIALIZER;
-#endif       
+#endif
       pthread_mutex_init(mutex, 0);
 #endif
       threadMutexes_.insert(thread_mutex_pair(threadId, mutex));
       mutexIter = threadMutexes_.find(threadId);
    }
-   
+
    if (threadBlockedLists_.end() == blockedIter)
    {
       threadBlockedLists_.insert(thread_bool_pair(threadId, new int(0)));
@@ -357,10 +358,10 @@ void transaction::initialize_thread()
       memIter = tss_context_map_.find(threadId);
       memIter->second->txType = eNormalTx;
    }
-   
-//////////////////////////////////////   
-#else   
-//////////////////////////////////////   
+
+//////////////////////////////////////
+#else
+//////////////////////////////////////
    tss_context_map_type::iterator memIter = tss_context_map_.find(threadId);
    if (tss_context_map_.end() == memIter)
    {
@@ -370,27 +371,28 @@ void transaction::initialize_thread()
    }
 #endif
 #endif
-   
+
    //--------------------------------------------------------------------------
    // WARNING: before you think unlock_all_mutexes() does not make sense, make
    //          sure you read the following example, which will certainly change
-   //          your mind about what you think you know ...
+   //          your mind about what you think you know ... (bug found by Arthur
+   //          Athrun)
    //
    //          end_transaction() must lock all mutexes() in addition to the
    //          important general access mutex, which serializes commits.
    //
    //          In order to make end_transaction as efficient as possible, we
    //          must release general_access() before we release the specific
-   //          threaded mutexes. Unfortunately, because of this, a thread can 
+   //          threaded mutexes. Unfortunately, because of this, a thread can
    //          can enter this function and add a new thread (and mutex) to the
    //          mutex list. Then end_transaction() can finish its execution and
    //          unlock all mutexes. The problem is that between end_transaction
    //          and this function, any number of operations can be performed.
    //          One of those operations may lock the mutex of the new thread,
-   //          which may then be unlocked by end_transaction. If that happens, 
+   //          which may then be unlocked by end_transaction. If that happens,
    //          all kinds of inconsistencies could occur ...
    //
-   //          In order to fix this, we could change the unlock order of 
+   //          In order to fix this, we could change the unlock order of
    //          end_transaction() so it unlocks all mutexes before releasing the
    //          the general mutex. The problem with that is end_transaction is
    //          a high serialization point and the general mutex is the most
@@ -408,7 +410,7 @@ void transaction::initialize_thread()
    // this will unlock the mutex of the thread that was just added, but it
    // doesn't matter because that mutex will already be unlocked
    //--------------------------------------------------------------------------
-   unlock_all_mutexes();
+   unlock_all_mutexes_but_this(THREAD_ID);;
 
    //--------------------------------------------------------------------------
 
@@ -454,16 +456,16 @@ void transaction::terminate_thread()
    threadForcedToAbortLists_.erase(abortIter);
 
    ThreadMutexContainer::iterator mutexIter = threadMutexes_.find(threadId);
-#ifndef BOOST_STM_USE_BOOST_MUTEX   
+#ifndef BOOST_STM_USE_BOOST_MUTEX
    pthread_mutex_destroy(mutexIter->second);
-#endif   
+#endif
    delete mutexIter->second;
    threadMutexes_.erase(mutexIter);
 
 #ifndef MAP_THREAD_MUTEX_CONTAINER
    {
    // realign all in-flight transactions so they are accessing the correct mutex
-   for (InflightTxes::iterator i = transactionsInFlight_.begin(); 
+   for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
       transaction* t = *i;
@@ -493,7 +495,7 @@ void transaction::terminate_thread()
    threadCurrentlyLockedLocks_.erase(currentlyLockedLocksIter);
 #endif
 
-   
+
 #else
    tss_context_map_type::iterator memIter = tss_context_map_.find(threadId);
    delete memIter->second;
@@ -506,7 +508,7 @@ void transaction::terminate_thread()
 #ifndef MAP_THREAD_BOOL_CONTAINER
    {
    // realign all in-flight transactions so they are accessing the correct mutex
-   for (InflightTxes::iterator i = transactionsInFlight_.begin(); 
+   for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
       transaction* t = *i;
@@ -516,7 +518,7 @@ void transaction::terminate_thread()
    }
    }
 #endif
-      
+
 
    unlock_inflight_access();
    unlock_general_access();
