@@ -175,7 +175,7 @@ void transaction::initialize_thread()
    //          DO NOT REMOVE LOCK_ALL_MUTEXES / UNLOCK_ALL_MUTEXES!!
    //
    //--------------------------------------------------------------------------
-   lock_all_mutexes();
+   lock_all_mutexes_but_this(THREAD_ID);
 
    size_t threadId = THREAD_ID;
 
@@ -364,10 +364,7 @@ void transaction::initialize_thread()
    //          DO NOT REMOVE LOCK_ALL_MUTEXES / UNLOCK_ALL_MUTEXES!!
    //
    //--------------------------------------------------------------------------
-   // this will unlock the mutex of the thread that was just added, but it
-   // doesn't matter because that mutex will already be unlocked
-   //--------------------------------------------------------------------------
-   unlock_all_mutexes();
+   unlock_all_mutexes_but_this(THREAD_ID);
    //--------------------------------------------------------------------------
 
    unlock_general_access();
