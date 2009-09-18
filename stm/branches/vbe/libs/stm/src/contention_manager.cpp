@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -73,7 +73,7 @@ void DefaultContentionManager::abort_on_new(boost::stm::transaction const &const
 
 ////////////////////////////////////////////////////////////////////////////
 bool DefaultContentionManager::allow_lock_to_abort_tx
-(int const & lockWaitTime, int const &lockAborted, bool txTryingToAbortIsIrrevocable, 
+(int const & lockWaitTime, int const &lockAborted, bool txTryingToAbortIsIrrevocable,
  boost::stm::transaction const &rhs)
 {
    if (txTryingToAbortIsIrrevocable) return true;

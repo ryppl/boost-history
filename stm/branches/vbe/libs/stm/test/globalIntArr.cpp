@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 //---------------------------------------------------------------------------
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -60,7 +60,7 @@ int outArr[kMaxGlobalIntSize];
 //-------------------------------------------
 void sum_arr(int out[])
 {
-  transaction t; 
+  transaction t;
 
   for (;; t.raise_priority())
   {
@@ -74,7 +74,7 @@ void sum_arr(int out[])
       t.end();
       return;
     }
-    catch (aborted_transaction_exception&) 
+    catch (aborted_transaction_exception&)
     { t.restart(); }
   }
 }
@@ -88,9 +88,9 @@ int set_int(int v)
   transaction t;
   t.set_priority(10 + (rand() % 90));
 
-  for (;; t.raise_priority()) 
+  for (;; t.raise_priority())
   {
-    try 
+    try
     {
       int ret = t.read(global_int).value();
       t.write(global_int).value() = v;
@@ -218,7 +218,7 @@ void TestGlobalIntArrayWithMultipleThreads()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;

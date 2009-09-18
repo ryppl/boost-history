@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -35,8 +35,8 @@
 // LatmDefTxImlp.h
 //
 // This file contains method implementations for transaction.hpp (specifically for
-// enabling lock aware transactions). The main purpose of this file is to reduce 
-// the complexity of the transaction class by separating its implementation into 
+// enabling lock aware transactions). The main purpose of this file is to reduce
+// the complexity of the transaction class by separating its implementation into
 // a secondary .h file.
 //
 // Do NOT place these methods in a .cc/.cpp/.cxx file. These methods must be
@@ -74,7 +74,7 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
    std::list<transaction *> txList;
    std::set<size_t> txThreadId;
 
-   for (InflightTxes::iterator i = transactionsInFlight_.begin(); 
+   for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
       transaction *t = (transaction*)*i;
@@ -85,7 +85,7 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
       // if this mutex has a conflict with an inflight tx
       if (t->get_tx_conflicting_locks().find(mutex) != t->get_tx_conflicting_locks().end())
       {
-         if (txIsIrrevocable || (!t->irrevocable() && 
+         if (txIsIrrevocable || (!t->irrevocable() &&
             cm_allow_lock_to_abort_tx(lockWaitTime, lockAborted, txIsIrrevocable, *t)))
          {
             txList.push_back(t);
@@ -94,7 +94,7 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
       }
    }
 
-   if (!txList.empty()) 
+   if (!txList.empty())
    {
 #if LOGGING_BLOCKS
       logFile_ << "----------------------\nbefore locked mutex: " << mutex << endl << endl;
@@ -110,21 +110,21 @@ inline bool transaction::def_do_core_tx_conflicting_lock_pthread_lock_mutex
          txThreadId.insert(t->threadId_);
       }
 
-      try { 
+      try {
          latmLockedLocksAndThreadIdsMap_.insert
-         (std::make_pair<Mutex*, ThreadIdSet>(mutex, txThreadId)); 
+         (std::make_pair<Mutex*, ThreadIdSet>(mutex, txThreadId));
       }
-      catch (...) 
-      { 
-         for (std::set<size_t>::iterator it = txThreadId.begin(); 
-         txThreadId.end() != it; ++it) 
+      catch (...)
+      {
+         for (std::set<size_t>::iterator it = txThreadId.begin();
+         txThreadId.end() != it; ++it)
          {
             if (0 == thread_id_occurance_in_locked_locks_map(*it))
             {
                blocked(*it) = false;
             }
          }
-         throw; 
+         throw;
       }
 
 #if LOGGING_BLOCKS
@@ -192,8 +192,8 @@ inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
 
       lock(&latmMutex_);
 
-      try 
-      { 
+      try
+      {
          //--------------------------------------------------------------------
          // if we are able to do the core lock work, break
          //--------------------------------------------------------------------
@@ -221,7 +221,7 @@ inline int transaction::def_tx_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
    unlock(&latmMutex_);
 
-   // note: we do not release the transactionsInFlightMutex - this will prevents 
+   // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
    return 0;
 }
@@ -251,12 +251,12 @@ inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       t->commit_deferred_update_tx();
    }
 
-   try 
-   { 
+   try
+   {
       //-----------------------------------------------------------------------
       // if !core done, since trylock, we cannot stall & retry - just exit
       //-----------------------------------------------------------------------
-      if (!def_do_core_tx_conflicting_lock_pthread_lock_mutex(mutex, 0, 0, txIsIrrevocable)) 
+      if (!def_do_core_tx_conflicting_lock_pthread_lock_mutex(mutex, 0, 0, txIsIrrevocable))
       {
          unlock(mutex);
          unlock(&latmMutex_);
@@ -273,7 +273,7 @@ inline int transaction::def_tx_conflicting_lock_pthread_trylock_mutex(Mutex *mut
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
    unlock(&latmMutex_);
 
-   // note: we do not release the transactionsInFlightMutex - this will prevents 
+   // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
    return 0;
 }

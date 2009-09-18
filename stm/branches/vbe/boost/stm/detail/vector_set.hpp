@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -53,7 +53,7 @@ public:
    //-----------------------------------------------------------------------
    typename vector_set<T>::iterator find(T const &t)
    {
-      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i) 
+      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i)
       {
          if (t == i) return i;
       }
@@ -65,9 +65,9 @@ public:
    //-----------------------------------------------------------------------
    typename vector_set<T>::iterator insert(first_t const &rhs)
    {
-      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i) 
+      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i)
       {
-         if (rhs == *i) 
+         if (rhs == *i)
          {
             return i;
          }
@@ -81,9 +81,9 @@ public:
    //-----------------------------------------------------------------------
    void erase(vector_set<T>::first_t const &rhs)
    {
-      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i) 
+      for (typename vector_set<T>::iterator i = elements_.begin(); i != elements_.end(); ++i)
       {
-         if (rhs == *i) 
+         if (rhs == *i)
          {
             elements_.erase(i); return;
          }

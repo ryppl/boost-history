@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -43,10 +43,10 @@ namespace boost { namespace stm {
 class bloom_filter
 {
 public:
-    bloom_filter() 
+    bloom_filter()
 #ifdef BOOST_STM_BLOOM_FILTER_USE_DYNAMIC_BITSET
         :   bit_vector1_(def_bit_vector_size)
-        ,   bit_vector2_(def_bit_vector_size) 
+        ,   bit_vector2_(def_bit_vector_size)
 #else
 #endif
     {}
@@ -99,7 +99,7 @@ private:
    boost::dynamic_bitset<> bit_vector2_;
 #else
    bit_vector bit_vector1_;
-   bit_vector bit_vector2_;         
+   bit_vector bit_vector2_;
 #endif
 };
 

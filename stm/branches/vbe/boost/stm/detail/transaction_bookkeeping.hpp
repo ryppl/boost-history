@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -52,10 +52,10 @@ public:
    uint32 threadId_;
    uint32 commitId_;
 
-   bool operator==(ThreadIdAndCommitId const &rhs) const 
+   bool operator==(ThreadIdAndCommitId const &rhs) const
    { return threadId_ == rhs.threadId_ && commitId_ == rhs.commitId_; }
-   
-   bool operator<(ThreadIdAndCommitId const &rhs) const 
+
+   bool operator<(ThreadIdAndCommitId const &rhs) const
    {
       if (threadId_ < rhs.threadId_) return true;
       if (threadId_ == rhs.threadId_)
@@ -75,8 +75,8 @@ public:
    typedef std::map<ThreadIdAndCommitId, uint32> CommitHistory;
    typedef std::map<ThreadIdAndCommitId, uint32> AbortHistory;
 
-   transaction_bookkeeping() : aborts_(0), writeAborts_(0), readAborts_(0), 
-      abortPermDenied_(0), commits_(0), handOffs_(0), newMemoryCommits_(0), 
+   transaction_bookkeeping() : aborts_(0), writeAborts_(0), readAborts_(0),
+      abortPermDenied_(0), commits_(0), handOffs_(0), newMemoryCommits_(0),
       newMemoryAborts_(0), deletedMemoryCommits_(0), deletedMemoryAborts_(0),
       readStayedAsRead_(0), readChangedToWrite_(0), commitTimeMs_(0), lockConvoyMs_(0)
    {
@@ -101,7 +101,7 @@ public:
    void inc_read_aborts() { ++readAborts_; }
    void inc_write_aborts() { ++writeAborts_; }
 
-   void inc_thread_commits(uint32 threadId) 
+   void inc_thread_commits(uint32 threadId)
    {
 #if 0
       std::map<uint32, uint32>::iterator i = threadedCommits_.find(threadId);
@@ -111,7 +111,7 @@ public:
 #endif
    }
 
-   void inc_thread_aborts(uint32 threadId) 
+   void inc_thread_aborts(uint32 threadId)
    {
 #if 0
       std::map<uint32, uint32>::iterator i = threadedAborts_.find(threadId);
@@ -147,8 +147,8 @@ public:
    AbortHistory const& getAbortReadSetList() const { return abortedReadSetSize_; }
    AbortHistory const& getAbortWriteSetList() const { return abortedWriteSetSize_; }
 
-   void pushBackSizeOfReadSetWhenAborting(uint32 const &size) 
-   { 
+   void pushBackSizeOfReadSetWhenAborting(uint32 const &size)
+   {
       //lock(&abortTrackingMutex_);
 
       ThreadIdAndCommitId tcId(THREAD_ID, ++aborts_);
@@ -162,22 +162,22 @@ public:
          abortedWriteSetSize_.erase(ThreadIdAndCommitId(THREAD_ID, aborts_-1));
       }
 
-      abortedReadSetSize_[tcId] = size; 
+      abortedReadSetSize_[tcId] = size;
       waitingForCommitReadFromThread[THREAD_ID] = true;
       //unlock(&abortTrackingMutex_);
    }
 
-   void pushBackSizeOfWriteSetWhenAborting(uint32 const &size) 
-   { 
+   void pushBackSizeOfWriteSetWhenAborting(uint32 const &size)
+   {
       //lock(&abortTrackingMutex_);
       ThreadIdAndCommitId tcId(THREAD_ID, aborts_);
-      abortedWriteSetSize_[tcId] = size; 
+      abortedWriteSetSize_[tcId] = size;
       waitingForCommitWriteFromThread[THREAD_ID] = true;
       //unlock(&abortTrackingMutex_);
    }
 
-   void pushBackSizeOfReadSetWhenCommitting(uint32 const &size) 
-   { 
+   void pushBackSizeOfReadSetWhenCommitting(uint32 const &size)
+   {
       //lock(&abortTrackingMutex_);
       ThreadIdAndCommitId tcId(THREAD_ID, aborts_);
 
@@ -190,8 +190,8 @@ public:
       //unlock(&abortTrackingMutex_);
    }
 
-   void pushBackSizeOfWriteSetWhenCommitting(uint32 const &size) 
-   { 
+   void pushBackSizeOfWriteSetWhenCommitting(uint32 const &size)
+   {
       //lock(&abortTrackingMutex_);
       ThreadIdAndCommitId tcId(THREAD_ID, aborts_);
 
@@ -214,16 +214,16 @@ public:
 
       out << "########################################" << endl;
       //out << "total_aborts=" << that.totalAborts() << endl;
-       
 
-      for (thread_commit_map::const_iterator i = that.threadedCommits().begin(); 
+
+      for (thread_commit_map::const_iterator i = that.threadedCommits().begin();
          i != that.threadedCommits().end(); ++i)
       {
          out << " thread [" << i->first << "]:  commits: " << i->second << "  aborts: ";
 
          bool found = false;
 
-         for (thread_commit_map::const_iterator j = that.threadedAborts().begin(); 
+         for (thread_commit_map::const_iterator j = that.threadedAborts().begin();
             j != that.threadedAborts().end(); ++j)
          {
             if (j->first == i->first)

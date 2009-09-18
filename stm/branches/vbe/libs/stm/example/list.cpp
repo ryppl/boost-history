@@ -48,9 +48,9 @@ public:
     typedef tx_ptr<list_node<T> > node_type;
     tx_ptr<list_node<T> > head_;
     tx_ptr<std::size_t> size_;
-    list() 
-    : head_(BOOST_STM_NEW_1(transactional_object<list_node<T> >())) 
-    , size_(BOOST_STM_NEW_1(transactional_object<std::size_t>(0))) 
+    list()
+    : head_(BOOST_STM_NEW_1(transactional_object<list_node<T> >()))
+    , size_(BOOST_STM_NEW_1(transactional_object<std::size_t>(0)))
     { }
 
     ~list() { }
@@ -78,12 +78,12 @@ public:
                 else if (curr->value_ > val) break;
                 prev = curr;
                 curr = curr->next_;
-            }        
+            }
             if (!curr || (curr->value_ > val)) {
                 wr_ptr<list_node<T> > insert_point(_,prev);
                 insert_point->next_=BOOST_STM_NEW(_,transactional_object<list_node<T> >(val, curr));
                 ++(*size_);
-                
+
             }
         }
    }
@@ -117,7 +117,7 @@ public:
                     wr_ptr<list_node<T> > mod_point(_,prev);
                     mod_point->next_=curr->next_;
                     // delete curr...
-                    delete_ptr(_,curr);                   
+                    delete_ptr(_,curr);
                     --(*size_);
                     break;
                 } else if (curr->value_ > val) {
@@ -129,7 +129,7 @@ public:
             }
         }
     }
-    
+
 };
 }
 //--------------------------------------------------------------------------
@@ -143,7 +143,7 @@ void create() {
         l=BOOST_STM_NEW(_,transactional_object<test::list<int> >());
         cerr << "create" << endl;
         cerr << l->size() << endl;
-    } catch (...) {  
+    } catch (...) {
         cerr << "aborted" << endl;
     }
     cerr << l->size() << endl;
@@ -186,10 +186,10 @@ int test1() {
     //thread  th3(insert2);
     //thread  th4(insert3);
 
-    th1.join(); 
-    //th2.join(); 
-    //th3.join(); 
-    //th4.join(); 
+    th1.join();
+    //th2.join();
+    //th3.join();
+    //th4.join();
     #endif
     bool fails=true;
     fails= !check_size(1);
@@ -203,10 +203,10 @@ int main() {
     transaction::initialize();
     thread_initializer thi;
     srand(time(0));
-    
+
     int res=0;
     res+=test1();
-    
+
     return res;
-    
+
 }

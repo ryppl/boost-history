@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -73,7 +73,7 @@ public:
    typedef T type;
 
     ////////////////////////////////////////////////////////////////////////////
-   RedBlackNode(T const &in) : value_(in), color_(nRedBlackTree::eRed), 
+   RedBlackNode(T const &in) : value_(in), color_(nRedBlackTree::eRed),
       parent_(&sentinel), left_(&sentinel), right_(&sentinel) {}
 
    ////////////////////////////////////////////////////////////////////////////
@@ -83,14 +83,14 @@ public:
    T const & const_value(boost::stm::transaction &t) const
    { return t.read(*const_cast<RedBlackNode<T>*>(this)).value_; }
 
-   T & value(boost::stm::transaction &t) 
+   T & value(boost::stm::transaction &t)
    { return t.write(*const_cast<RedBlackNode<T>*>(this)).value_; }
    T & value() { return value_; }
    T const & value() const { return value_; }
 
-   nRedBlackTree::NodeColor & color(boost::stm::transaction &t) 
+   nRedBlackTree::NodeColor & color(boost::stm::transaction &t)
    { return t.write(*const_cast<RedBlackNode<T>*>(this)).color_; }
-   nRedBlackTree::NodeColor const & read_color(boost::stm::transaction &t) 
+   nRedBlackTree::NodeColor const & read_color(boost::stm::transaction &t)
    { return t.read(*const_cast<RedBlackNode<T>*>(this)).color_; }
 
    nRedBlackTree::NodeColor & color() { return color_; }
@@ -101,7 +101,7 @@ public:
    RedBlackNode<T> const * read_right(boost::stm::transaction &t) const
    { return t.read(*const_cast<RedBlackNode<T>*>(this)).right_; }
 
-   RedBlackNode<T>*& right(boost::stm::transaction &t) 
+   RedBlackNode<T>*& right(boost::stm::transaction &t)
    { return t.write(*const_cast<RedBlackNode<T>*>(this)).right_; }
    RedBlackNode<T>*& right(boost::stm::transaction &t) const
    { return t.write(*const_cast<RedBlackNode<T>*>(this)).right_; }
@@ -125,7 +125,7 @@ public:
    RedBlackNode<T>* read_parent(boost::stm::transaction &t)
    { return t.read(*const_cast<RedBlackNode<T>*>(this)).parent_; }
 
-   RedBlackNode<T>*& parent(boost::stm::transaction &t) 
+   RedBlackNode<T>*& parent(boost::stm::transaction &t)
    { return t.write(*const_cast<RedBlackNode<T>*>(this)).parent_; }
    RedBlackNode<T>*& parent(boost::stm::transaction &t) const
    { return t.write(*const_cast<RedBlackNode<T>*>(this)).parent_; }
@@ -146,7 +146,7 @@ public:
 private:
 
    nRedBlackTree::NodeColor color_;
-   
+
    T value_;
 
    mutable RedBlackNode<T> *left_;
@@ -164,7 +164,7 @@ class RedBlackTree
 {
 public:
 
-   RedBlackTree() : root(new RedBlackNode<T>(T())) 
+   RedBlackTree() : root(new RedBlackNode<T>(T()))
    { root->color() = nRedBlackTree::eBlack; RedBlackNode<T>::initializeSentinel(); }
 
    //--------------------------------------------------------------------------
@@ -212,7 +212,7 @@ private:
    void internal_remove_help(RedBlackNode<T> *x, boost::stm::transaction &t);
    RedBlackNode<T>* get_successor(RedBlackNode<T> *x, boost::stm::transaction &t) const;
 
-   void internal_print(int const &i, std::string const &outputStr, 
+   void internal_print(int const &i, std::string const &outputStr,
       RedBlackNode<T> *cur, std::ofstream &o);
    RedBlackNode<T>* binary_insert(RedBlackNode<T> const &newEntry, boost::stm::transaction &t);
    void left_rotate(RedBlackNode<T> *node, boost::stm::transaction &t);
@@ -246,7 +246,7 @@ inline void RedBlackTree<T>::right_rotate(RedBlackNode<T> *y, boost::stm::transa
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-inline void RedBlackTree<T>::left_rotate(RedBlackNode<T> *x, boost::stm::transaction &t) 
+inline void RedBlackTree<T>::left_rotate(RedBlackNode<T> *x, boost::stm::transaction &t)
 {
    RedBlackNode<T> &writeX = t.write(*x);
 
@@ -277,10 +277,10 @@ inline bool RedBlackTree<T>::internal_lookup(T const &v, T* found, boost::stm::t
    RedBlackNode<T> *y = root;
    RedBlackNode<T> *x = root->read_left(t);
 
-   while (x != &RedBlackNode<T>::sentinel) 
+   while (x != &RedBlackNode<T>::sentinel)
    {
       if (NULL == x) throw boost::stm::aborted_transaction_exception("aborting transaction");
-      if (x->value() == v) 
+      if (x->value() == v)
       {
          found = &x->value();
          t.end();
@@ -296,7 +296,7 @@ inline bool RedBlackTree<T>::internal_lookup(T const &v, T* found, boost::stm::t
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-inline RedBlackNode<T>* RedBlackTree<T>::binary_insert(RedBlackNode<T> const &newEntry, 
+inline RedBlackNode<T>* RedBlackTree<T>::binary_insert(RedBlackNode<T> const &newEntry,
       boost::stm::transaction &t)
 {
    //--------------------------------------------------------------------------
@@ -307,10 +307,10 @@ inline RedBlackNode<T>* RedBlackTree<T>::binary_insert(RedBlackNode<T> const &ne
 
    T const &val = newEntry.value();
 
-   while (x != &RedBlackNode<T>::sentinel) 
+   while (x != &RedBlackNode<T>::sentinel)
    {
       if (NULL == x) throw boost::stm::aborted_transaction_exception("aborting transaction");
-      if (x->value() == val) 
+      if (x->value() == val)
       {
          t.lock_and_abort();
          return NULL;
@@ -337,9 +337,9 @@ template <typename T>
 bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::stm::transaction &t)
 {
    using namespace nRedBlackTree;
-   
+
    //--------------------------------------------------------------------------
-   // try to do a binary insert of this element. if the element already exists, 
+   // try to do a binary insert of this element. if the element already exists,
    // return null and end the transactions since we don't allow duplicates
    //--------------------------------------------------------------------------
    RedBlackNode<T> *x = binary_insert(newEntry, t);
@@ -357,7 +357,7 @@ bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::s
       // if my parent() is on the left() side of the tree
       //-----------------------------------------------------------------------
       RedBlackNode<T> *xParentParentLeft = xParentParent->read_left(t);
-      if (xParent == xParentParentLeft) 
+      if (xParent == xParentParentLeft)
       {
          // then my uncle is to the right() side
          RedBlackNode<T> *y = xParentParent->read_right(t);
@@ -367,7 +367,7 @@ bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::s
          // change my parent()'s and my uncle's color to black and
          // make my grandparent() red, then move me to my grandparent()
          //--------------------------------------------------------------------
-         if (eRed == y->color()) 
+         if (eRed == y->color())
          {
             xParent->color(t) = eBlack;
             y->color(t) = eBlack;
@@ -375,13 +375,13 @@ bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::s
             x = xParentParent;
          }
          //--------------------------------------------------------------------
-         // otherwise, set me to my parent() and left()-rotate. then set my 
-         // parent()'s color to black, my grandparent()'s color to red and 
+         // otherwise, set me to my parent() and left()-rotate. then set my
+         // parent()'s color to black, my grandparent()'s color to red and
          // right() rotate my grandparent()
          //--------------------------------------------------------------------
-         else 
+         else
          {
-            if (x == xParent->read_right(t)) 
+            if (x == xParent->read_right(t))
             {
                // set x up one level
                x = xParent;
@@ -393,13 +393,13 @@ bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::s
             writeObj.color() = eBlack;
             writeObj.parent()->color(t) = eRed;
             right_rotate(writeObj.parent(), t);
-         } 
-      } 
+         }
+      }
 
       //-----------------------------------------------------------------------
       // the same as the above if, except right() and left() are exchanged
       //-----------------------------------------------------------------------
-      else 
+      else
       {
          RedBlackNode<T> *y = xParentParentLeft; // saves a tx read by setting to xParParLeft
 
@@ -409,10 +409,10 @@ bool RedBlackTree<T>::internal_insert(RedBlackNode<T> const & newEntry, boost::s
             y->color(t) = eBlack;
             xParentParent->color(t) = eRed;
             x = xParentParent;
-         } 
-         else 
+         }
+         else
          {
-            if (x == xParent->read_left(t)) 
+            if (x == xParent->read_left(t))
             {
                // set x up one level
                x = xParent;
@@ -449,7 +449,7 @@ void RedBlackTree<T>::internal_remove_help(RedBlackNode<T> *x, boost::stm::trans
    RedBlackNode<T> *y = NULL;
    RedBlackNode<T> *xParent = NULL;
 
-   while ( eBlack == x->read_color(t) && root->read_left(t) != x) 
+   while ( eBlack == x->read_color(t) && root->read_left(t) != x)
    {
       xParent = x->read_parent(t);
 
@@ -458,27 +458,27 @@ void RedBlackTree<T>::internal_remove_help(RedBlackNode<T> *x, boost::stm::trans
       {
          y = xParent->read_right(t);
 
-         if (eRed == y->read_color(t)) 
+         if (eRed == y->read_color(t))
          {
             y->color(t) = eBlack;
             xParent->color(t) = eRed;
             left_rotate(xParent, t);
             //-----------------------------------------------------------------
-            // I think we have to read_parent instead of xParent since 
+            // I think we have to read_parent instead of xParent since
             // right_rotate could have changed xParent
             //-----------------------------------------------------------------
             y = x->read_parent(t)->read_right(t);
          }
 
-         if (eBlack == y->read_right(t)->read_color(t) && 
-             eBlack == y->read_left(t)->read_color(t)) 
+         if (eBlack == y->read_right(t)->read_color(t) &&
+             eBlack == y->read_left(t)->read_color(t))
          {
             y->color(t) = eRed;
             x = xParent;
-         } 
-         else 
+         }
+         else
          {
-            if (eBlack == y->read_right(t)->read_color(t)) 
+            if (eBlack == y->read_right(t)->read_color(t))
             {
                y->read_left(t)->color(t) = eBlack;
                y->color(t) = eRed;
@@ -491,33 +491,33 @@ void RedBlackTree<T>::internal_remove_help(RedBlackNode<T> *x, boost::stm::trans
             y->read_right(t)->color(t) = eBlack;
             left_rotate(xParent, t);
             break;
-         }         
-      } 
-      else 
-      { 
+         }
+      }
+      else
+      {
          y = xParentLeft;
 
-         if (eRed == y->read_color(t)) 
+         if (eRed == y->read_color(t))
          {
             y->color(t)= eBlack;
             xParent->color(t) = eRed;
             right_rotate(xParent, t);
             //-----------------------------------------------------------------
-            // I think we have to read_parent instead of xParent since 
+            // I think we have to read_parent instead of xParent since
             // right_rotate could have changed xParent
             //-----------------------------------------------------------------
             y = x->read_parent(t)->read_left(t);
          }
 
-         if (eBlack == y->read_left(t)->read_color(t) && 
-             eBlack == y->read_right(t)->read_color(t)) 
+         if (eBlack == y->read_left(t)->read_color(t) &&
+             eBlack == y->read_right(t)->read_color(t))
          {
             y->color(t) = eRed;
             x = xParent;
-         } 
-         else 
+         }
+         else
          {
-            if (eBlack == y->read_left(t)->read_color(t)) 
+            if (eBlack == y->read_left(t)->read_color(t))
             {
                y->read_right(t)->color(t) = eBlack;
                y->color(t) = eRed;
@@ -543,7 +543,7 @@ RedBlackNode<T>* RedBlackTree<T>::get_successor(RedBlackNode<T> *x, boost::stm::
 {
    RedBlackNode<T> *y = x->read_right(t);
 
-   if (&RedBlackNode<T>::sentinel != y) 
+   if (&RedBlackNode<T>::sentinel != y)
    {
       RedBlackNode<T> *prevY = y;
 
@@ -554,11 +554,11 @@ RedBlackNode<T>* RedBlackTree<T>::get_successor(RedBlackNode<T> *x, boost::stm::
 
       return prevY;
    }
-   else 
+   else
    {
       y = x->read_parent(t);
-   
-      while (x == y->read_right(t)) 
+
+      while (x == y->read_right(t))
       {
          x = y;
          y = y->read_parent(t);
@@ -667,12 +667,12 @@ bool RedBlackTree<T>::internal_remove(RedBlackNode<T> const &inNode, boost::stm:
    //--------------------------------------------------------------------------
    if (z->value() != inNode.value()) return false;
 
-   RedBlackNode<T> *y = (z->read_left(t) == &RedBlackNode<T>::sentinel 
+   RedBlackNode<T> *y = (z->read_left(t) == &RedBlackNode<T>::sentinel
       || z->read_right(t) == &RedBlackNode<T>::sentinel) ? z : get_successor(z, t);
 
    RedBlackNode<T> *yLeft = y->read_left(t);
 
-   RedBlackNode<T> *x = (yLeft == &RedBlackNode<T>::sentinel) 
+   RedBlackNode<T> *x = (yLeft == &RedBlackNode<T>::sentinel)
       ? y->read_right(t) : yLeft;
 
    RedBlackNode<T> *yParent = y->read_parent(t);
@@ -683,7 +683,7 @@ bool RedBlackTree<T>::internal_remove(RedBlackNode<T> const &inNode, boost::stm:
 
    RedBlackNode<T> &writeY = t.write(*y);
 
-   if (y != z) 
+   if (y != z)
    {
       RedBlackNode<T> const *readZ = &t.read(*z);
       RedBlackNode<T> const *zLeft = readZ->left();
@@ -696,23 +696,23 @@ bool RedBlackTree<T>::internal_remove(RedBlackNode<T> const &inNode, boost::stm:
 
       zLeft->parent(t) = y;
       zRight->parent(t) = y;
-      
-      if (z == zParent->read_left(t)) zParent->left(t) = y; 
+
+      if (z == zParent->read_left(t)) zParent->left(t) = y;
       else zParent->right(t) = y;
 
-      if (eBlack == writeY.color()) 
+      if (eBlack == writeY.color())
       {
          writeY.color() = readZ->color();
          internal_remove_help(x, t);
-      } 
+      }
       else
       {
-         writeY.color() = readZ->color(); 
+         writeY.color() = readZ->color();
       }
 
       t.delete_memory(*z);
    }
-   else 
+   else
    {
       if (eBlack == writeY.color()) internal_remove_help(x, t);
       t.delete_memory(*y);
@@ -766,16 +766,16 @@ void RedBlackTree<T>::print(std::ofstream &o)
 
 ///////////////////////////////////////////////////////////////////////////////
 template <typename T>
-void RedBlackTree<T>::internal_print(int const &i, std::string const &outputStr, 
+void RedBlackTree<T>::internal_print(int const &i, std::string const &outputStr,
    RedBlackNode<T> *cur, std::ofstream &o)
 {
    using namespace std;
    using namespace nRedBlackTree;
 
    if (&RedBlackNode<T>::sentinel == cur) return;
-   else 
+   else
    {
-      o << "[ " << outputStr << " - " << colorStrings[cur->color()] << i 
+      o << "[ " << outputStr << " - " << colorStrings[cur->color()] << i
         << " ]: " << cur->value() << endl;
    }
 

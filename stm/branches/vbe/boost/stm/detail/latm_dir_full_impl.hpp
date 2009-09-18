@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -35,8 +35,8 @@
 // TransactionLockAwareImpl.h
 //
 // This file contains method implementations for transaction.hpp (specifically for
-// enabling lock aware transactions). The main purpose of this file is to reduce 
-// the complexity of the transaction class by separating its implementation into 
+// enabling lock aware transactions). The main purpose of this file is to reduce
+// the complexity of the transaction class by separating its implementation into
 // a secondary .h file.
 //
 // Do NOT place these methods in a .cc/.cpp/.cxx file. These methods must be
@@ -75,23 +75,23 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
    // if the lock-aware tm lock set is empty, lock the in-flight trans mutex
    // so we can abort all the in-flight transactions
    //--------------------------------------------------------------------------
-   if (latmLockedLocks_.empty()) 
+   if (latmLockedLocks_.empty())
    {
       lock_general_access();
       lock_inflight_access();
 
       std::list<transaction*> txList;
-      for (InflightTxes::iterator i = transactionsInFlight_.begin(); 
+      for (InflightTxes::iterator i = transactionsInFlight_.begin();
          i != transactionsInFlight_.end(); ++i)
       {
          transaction *t = (transaction*)*i;
 
-         if (!t->irrevocable() && 
+         if (!t->irrevocable() &&
             cm_allow_lock_to_abort_tx(lockWaitTime, lockAborted, false, *t))
          {
             txList.push_back(t);
          }
-         else 
+         else
          {
             unlock_general_access();
             unlock_inflight_access();
@@ -113,18 +113,18 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
       unlock_inflight_access();
 
       //-----------------------------------------------------------------------
-      // now we must stall until all in-flight transactions are gone, otherwise 
+      // now we must stall until all in-flight transactions are gone, otherwise
       // global memory may still be in an inconsistent state
       //-----------------------------------------------------------------------
       while (!transactionsInFlight_.empty()) { SLEEP(10); }
    }
 
    try { latmLockedLocks_.insert(mutex); }
-   catch (...) 
-   { 
+   catch (...)
+   {
       unlock_general_access();
-      unlock_inflight_access(); 
-      throw; 
+      unlock_inflight_access();
+      throw;
    }
 
    return true;
@@ -162,12 +162,12 @@ inline int transaction::dir_full_pthread_lock_mutex(Mutex *mutex)
 
       lock(&latmMutex_);
 
-      try 
-      { 
+      try
+      {
          //--------------------------------------------------------------------
          // if we are able to do the core lock work, break
          //--------------------------------------------------------------------
-         if (dir_do_core_full_pthread_lock_mutex(mutex, waitTime, aborted)) break; 
+         if (dir_do_core_full_pthread_lock_mutex(mutex, waitTime, aborted)) break;
       }
       catch (...)
       {
@@ -219,12 +219,12 @@ inline int transaction::dir_full_pthread_trylock_mutex(Mutex *mutex)
 
    lock(&latmMutex_);
 
-   try 
-   { 
+   try
+   {
       //-----------------------------------------------------------------------
       // if !core done, since trylock, we cannot stall & retry - just exit
       //-----------------------------------------------------------------------
-      if (!dir_do_core_full_pthread_lock_mutex(mutex, 0, 0)) 
+      if (!dir_do_core_full_pthread_lock_mutex(mutex, 0, 0))
       {
          unlock(mutex);
          unlock(&latmMutex_);
@@ -240,7 +240,7 @@ inline int transaction::dir_full_pthread_trylock_mutex(Mutex *mutex)
 
    latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
    unlock(&latmMutex_);
-   // note: we do not release the transactionsInFlightMutex - this will prevents 
+   // note: we do not release the transactionsInFlightMutex - this will prevents
    // new transactions from starting until this lock is released
    return 0;
 }

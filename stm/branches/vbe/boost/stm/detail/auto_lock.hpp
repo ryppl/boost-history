@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -38,7 +38,7 @@ namespace boost { namespace stm {
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-class timer_lock_exception : public std::exception 
+class timer_lock_exception : public std::exception
 {
 public:
    timer_lock_exception(char const * const what) : what_(what) {}
@@ -158,7 +158,7 @@ private:
    {
       lock(global_lock());
 
-      for (ThreadedLockIter i = threaded_locks().begin(); 
+      for (ThreadedLockIter i = threaded_locks().begin();
       i != threaded_locks().end(); ++i)
       {
          if (i->first == THREAD_ID && i->second == rhs)
@@ -176,7 +176,7 @@ private:
    {
       lock(global_lock());
 
-      for (ThreadedLockIter i = threaded_locks().begin(); 
+      for (ThreadedLockIter i = threaded_locks().begin();
       i != threaded_locks().end(); ++i)
       {
          if (i->first == THREAD_ID && i->second == rhs)
@@ -195,7 +195,7 @@ private:
       static Mutex globalLock = PTHREAD_MUTEX_INITIALIZER;
 #else
       static Mutex globalLock;
-#endif       
+#endif
       return &globalLock;
    }
 
@@ -220,7 +220,7 @@ private:
 #define catch_lock_timeout(E) } catch (std::timer_lock_exception &E)
 #define lock_timeout } catch (std::timer_lock_exception &E)
 
-} // core namespace 
+} // core namespace
 }
 
 

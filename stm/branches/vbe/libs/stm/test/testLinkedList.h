@@ -150,7 +150,7 @@ public:
          try { return internal_insert(val, t); }
          catch (aborted_transaction_exception&) {
    //cout << "aborted_transaction_exception " << endl;
-             
+
              }
       }
    }

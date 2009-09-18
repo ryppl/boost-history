@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -319,7 +319,7 @@ static void TestNested2()
       //t.force_to_abort();
       --t.w(x);
    }
-   before_retry 
+   before_retry
    {
       cout << "TestNested2 caught exception" << endl;
    }
@@ -333,8 +333,8 @@ static void TestNested()
    {
       ++t.w(x);
       TestNested2();
-   } 
-   before_retry 
+   }
+   before_retry
    {
       cout << "TestNested caught exception" << endl;
    }
@@ -450,7 +450,7 @@ void TestLinkedListWithUsingLocks()
 
    //--------------------------------------------------------------------------
    // Reset barrier variables before creating any threads. Otherwise, it is
-   // possible for the first thread 
+   // possible for the first thread
    //--------------------------------------------------------------------------
    threadsFinished.value() = 0;
    threadsStarted.value() = 0;
@@ -501,7 +501,7 @@ void TestLinkedListWithUsingLocks()
    cout << " TX_SEC: " << transaction::bookkeeping().commits() / (totalAverageRunTime * runVector.size()) << endl;
    cout << transaction::bookkeeping() << endl;
 
-   if ((kInsertSameValues && totalInserts != kMaxInserts) || 
+   if ((kInsertSameValues && totalInserts != kMaxInserts) ||
       (!kInsertSameValues && totalInserts != kMaxInserts * kMaxThreads))
    {
       std::cout << std::endl << std::endl << "###########################################################";

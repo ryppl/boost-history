@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -68,10 +68,10 @@ public:
       // (3) perform bitwise AND, this'll return 1 if the bits_ array has
       //     a 1 in the specific bit location
       // (4) shift it back to the first bit location so we return a 0 or 1
-      //---------------------------------------------------------------------      
-      return ( bits_[(rhs >> chunk_shift)] & (1 << rhs & chunk_shift_bits) ) 
+      //---------------------------------------------------------------------
+      return ( bits_[(rhs >> chunk_shift)] & (1 << rhs & chunk_shift_bits) )
          >> rhs % chunk_bits;
-      //return ( bits_[rhs / chunk_bits] & (1 << rhs % chunk_bits) ) 
+      //return ( bits_[rhs / chunk_bits] & (1 << rhs % chunk_bits) )
       //   >> rhs % chunk_bits;
    }
 
@@ -92,23 +92,23 @@ public:
 
    //------------------------------------------------------------------------
    //------------------------------------------------------------------------
-   void set(size_t rhs) 
+   void set(size_t rhs)
    {
-      bits_[(rhs >> chunk_shift)] |= 1 << (rhs & chunk_shift_bits); 
+      bits_[(rhs >> chunk_shift)] |= 1 << (rhs & chunk_shift_bits);
    }
 
    //------------------------------------------------------------------------
    //------------------------------------------------------------------------
-   void reset(size_t rhs) 
-   { 
-      bits_[(rhs >> chunk_shift)] &= 0 << (rhs & chunk_shift_bits); 
+   void reset(size_t rhs)
+   {
+      bits_[(rhs >> chunk_shift)] &= 0 << (rhs & chunk_shift_bits);
    }
 
    //------------------------------------------------------------------------
    //------------------------------------------------------------------------
    bool test(size_t rhs)
    {
-      return ( bits_[(rhs >> chunk_shift)] & (1 << (rhs & chunk_shift_bits)) ) > 0 ? true : false; 
+      return ( bits_[(rhs >> chunk_shift)] & (1 << (rhs & chunk_shift_bits)) ) > 0 ? true : false;
    }
 
    //------------------------------------------------------------------------

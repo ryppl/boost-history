@@ -538,7 +538,7 @@ public:
     transactional_reference_cache(T* ptr)
         : base_transaction_object()
         , value_(ptr), ptr_(0) {}
-            
+
     ~transactional_reference_cache() {
         delete ptr_;
     }
@@ -546,7 +546,7 @@ public:
         if(ptr_!=0) return ptr_;
         else return value_;
     }
-    
+
     virtual base_transaction_object* clone() const {
         transactional_reference_cache tmp = cache_new_copy(*this);
         if (tmp.value!=0) {

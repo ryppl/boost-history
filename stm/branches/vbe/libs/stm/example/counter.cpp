@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -26,14 +26,14 @@ stm::tx_obj<int> counter2(0);
 
 void inc() {
     thread_initializer thi;
-    
+
     use_atomic(_) {
         ++counter;
     }
 }
 void decr() {
     thread_initializer thi;
-    
+
     use_atomic(_) {
         --counter;
     }
@@ -74,17 +74,17 @@ bool test_const(stm::tx_obj<int> const& c) {
 
 int test_counter() {
     //counter=make_tx_ptr<int>(0);
-    
+
     thread  th1(inc);
     thread  th2(decr);
     thread  th3(inc);
     thread  th4(inc);
 
-    th1.join(); 
-    th2.join(); 
-    th3.join(); 
-    th4.join(); 
-    
+    th1.join();
+    th2.join();
+    th3.join();
+    th4.join();
+
     bool fails=!check(2);
     fails = fails || !assign();
     fails = fails || !test_const(counter);
@@ -97,9 +97,9 @@ int main() {
     transaction::initialize();
     thread_initializer thi;
     srand(time(0));
-    
+
     test_counter();
-    
+
     return 0;
-    
+
 }

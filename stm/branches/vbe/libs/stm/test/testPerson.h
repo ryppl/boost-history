@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -21,7 +21,7 @@
 void TestPerson();
 
 template <typename T>
-class named_array : 
+class named_array :
 public boost::stm::transaction_object < named_array<T> >
 {
 public:
@@ -32,7 +32,7 @@ public:
       return str;
    }
 
-   named_array() : name_(0), array_(0), size_(0) 
+   named_array() : name_(0), array_(0), size_(0)
    {
       set_name("temp");
       resize(kMaxArrSize);
@@ -43,17 +43,17 @@ public:
    char const * const name() const { return name_; }
    T* array() { return array_; }
 
-   named_array& operator=(T &rhs) 
-   { 
-      array_[0] = rhs; 
-      return *this; 
+   named_array& operator=(T &rhs)
+   {
+      array_[0] = rhs;
+      return *this;
    }
 
    bool operator==(T &rhs) { return array_[0] == rhs; }
 
-   bool operator==(named_array const &rhs) 
-   { 
-      return this->array_[0] == rhs.array_[0]; 
+   bool operator==(named_array const &rhs)
+   {
+      return this->array_[0] == rhs.array_[0];
    }
 
    bool operator>(named_array const &rhs) { return this->array_[0] > rhs.array_[0]; }
@@ -132,12 +132,12 @@ public:
 
    size_t size() const { return size_; }
    void resize(size_t newSize)
-   { 
-      delete [] array_; 
+   {
+      delete [] array_;
       array_ = new T[newSize];
       size_ = newSize;
    }
-   
+
 private:
    char* name_;
    T* array_;

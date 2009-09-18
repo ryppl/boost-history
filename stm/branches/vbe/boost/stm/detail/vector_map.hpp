@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -55,7 +55,7 @@ public:
    //-----------------------------------------------------------------------
    typename vector_map<T,U>::iterator find(first_t const &t)
    {
-      for (typename vector_map<T,U>::iterator i = pairs_.begin(); i != pairs_.end(); ++i) 
+      for (typename vector_map<T,U>::iterator i = pairs_.begin(); i != pairs_.end(); ++i)
       {
          if (t == i->first) return i;
       }
@@ -69,9 +69,9 @@ public:
    {
       T const &f = wp.first;
 
-      for (typename vector_map<T,U>::iterator i = pairs_.begin(); i != pairs_.end(); ++i) 
+      for (typename vector_map<T,U>::iterator i = pairs_.begin(); i != pairs_.end(); ++i)
       {
-         if (f == i->first) 
+         if (f == i->first)
          {
             i->second = wp.second;
             return i;

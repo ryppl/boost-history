@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -60,7 +60,7 @@ public:
       bool succeeded1 = true, succeeded2 = true;
       transaction_state state = e_no_state;
 
-      do 
+      do
       {
          try
          {
@@ -71,7 +71,7 @@ public:
          }
          catch (aborted_transaction_exception&) {}
 
-         if (!succeeded1 || !succeeded2) 
+         if (!succeeded1 || !succeeded2)
          {
             return false; // auto abort of t
          }

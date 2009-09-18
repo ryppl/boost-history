@@ -1,10 +1,10 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
@@ -68,7 +68,7 @@ public:
       return *this;
    }
 
-   list_node(list_node &&rhs) : next_(rhs.next_), value_(boost::stm::draco_move(rhs.value_)) 
+   list_node(list_node &&rhs) : next_(rhs.next_), value_(boost::stm::draco_move(rhs.value_))
    { rhs.next_ = 0; }
 
    list_node& operator=(list_node&& rhs)
@@ -93,11 +93,11 @@ class LinkedList
 public:
 
    LinkedList()
-   { 
-#ifndef BOOST_STM_USE_BOOST_MUTEX       
+   {
+#ifndef BOOST_STM_USE_BOOST_MUTEX
       pthread_mutex_init (&list_lock_, NULL);
-#endif       
-      head_.value() = T(); 
+#endif
+      head_.value() = T();
    }
 
    ~LinkedList() { quick_clear(); }
@@ -112,7 +112,7 @@ public:
       bool succeeded1 = true, succeeded2 = true;
       transaction_state state = e_no_state;
 
-      do 
+      do
       {
          try
          {
@@ -123,7 +123,7 @@ public:
          }
          catch (boost::stm::aborted_transaction_exception&) {}
 
-         if (!succeeded1 || !succeeded2) 
+         if (!succeeded1 || !succeeded2)
          {
             return false; // auto abort of t
          }
@@ -170,7 +170,7 @@ public:
          }
 
          return internal_lookup(val, t);
-      } 
+      }
       catch_before_retry(except) {}
    }
 
@@ -189,9 +189,9 @@ public:
             list_node<T> *cur = headP->next();
             T val = rhs.value();
 
-            while (true) 
+            while (true)
             {
-               if (cur->value() == val) 
+               if (cur->value() == val)
                {
                   return false;
                }
@@ -240,7 +240,7 @@ public:
 
       LATM::list_node<T> *cur = &head_;
 
-      for (; ; cur = cur->next() ) 
+      for (; ; cur = cur->next() )
       {
          if (cur->value() == val)
          {
@@ -345,7 +345,7 @@ private:
          list_node<T> const *cur = t.read_ptr(headP->next());
          T val = rhs.value();
 
-         while (true) 
+         while (true)
          {
             if (cur->value() == val) return false;
             else if (cur->value() > val || !cur->next()) break;
@@ -392,7 +392,7 @@ private:
    {
       list_node<T> *cur = &t.read(head_);
 
-      for (; true ; cur = t.read(*cur).next() ) 
+      for (; true ; cur = t.read(*cur).next() )
       {
          list_node<T> *trueCur = &t.read(*cur);
 
@@ -449,7 +449,7 @@ private:
          list_node<T> const *cur = t.read_ptr(headP->next());
          T val = rhs.value();
 
-         while (true) 
+         while (true)
          {
             if (cur->value() == val) return false;
             else if (cur->value() > val || !cur->next()) break;
@@ -498,7 +498,7 @@ private:
 
       list_node<T> const *prev = &t.read(head_);
 
-      for (list_node<T> const *cur = prev; cur != NULL; 
+      for (list_node<T> const *cur = prev; cur != NULL;
            prev = cur, cur = t.read(*cur).next())
       {
          if (cur->value() == rhs.value())

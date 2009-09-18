@@ -1,17 +1,17 @@
 //////////////////////////////////////////////////////////////////////////////
 //
-// (C) Copyright Justin E. Gottchlich 2009. 
-// (C) Copyright Vicente J. Botet Escriba 2009. 
+// (C) Copyright Justin E. Gottchlich 2009.
+// (C) Copyright Vicente J. Botet Escriba 2009.
 // Distributed under the Boost
-// Software License, Version 1.0. 
-// (See accompanying file LICENSE_1_0.txt or 
+// Software License, Version 1.0.
+// (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
 // See http://www.boost.org/libs/synchro for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
+/* The DRACO Research Group (rogue.colorado.edu/draco) */
 /*****************************************************************************\
  *
  * Copyright Notices/Identification of Licensor(s) of
@@ -35,8 +35,8 @@
 // TransactionLockAwareImpl.h
 //
 // This file contains method implementations for transaction.hpp (specifically for
-// enabling lock aware transactions). The main purpose of this file is to reduce 
-// the complexity of the transaction class by separating its implementation into 
+// enabling lock aware transactions). The main purpose of this file is to reduce
+// the complexity of the transaction class by separating its implementation into
 // a secondary .h file.
 //
 // Do NOT place these methods in a .cc/.cpp/.cxx file. These methods must be
@@ -67,7 +67,7 @@ namespace boost { namespace stm {
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::wait_until_all_locks_are_released(bool keepLatmLocked)
 {
-   while (true) 
+   while (true)
    {
       lock_latm_access();
       if (latmLockedLocks_.empty()) break;
@@ -172,7 +172,7 @@ inline bool boost::stm::transaction::mutex_is_on_obtained_tx_list(Mutex *mutex)
          return true;
       }
    }
-#endif   
+#endif
    return false;
 }
 
@@ -185,7 +185,7 @@ inline bool boost::stm::transaction::mutex_is_on_obtained_tx_list(Mutex *mutex)
 inline void boost::stm::transaction::unblock_conflicting_threads(Mutex *mutex)
 {
    // if the mutex is on the latm locks map, we can't unblock yet
-   if (latmLockedLocksAndThreadIdsMap_.find(mutex) != latmLockedLocksAndThreadIdsMap_.end()) 
+   if (latmLockedLocksAndThreadIdsMap_.find(mutex) != latmLockedLocksAndThreadIdsMap_.end())
    {
 #if LOGGING_BLOCKS
       logFile_ << "\ncannot unlock <" << mutex << ">, in latmLockedLocksAndThreadIdsMap_" << endl << endl;
@@ -213,7 +213,7 @@ inline void boost::stm::transaction::unblock_threads_if_locks_are_empty()
    // if the size is 0, unblock everybody
    if (latmLockedLocksOfThreadMap_.empty())
    {
-      for (ThreadMutexSetContainer::iterator it = threadObtainedLocks_.begin(); 
+      for (ThreadMutexSetContainer::iterator it = threadObtainedLocks_.begin();
       it != threadObtainedLocks_.end(); ++it)
       {
          if (!it->second->empty()) return;
@@ -273,7 +273,7 @@ inline std::string const boost::stm::transaction::latm_protection_str()
 
    switch (eLatmType_)
    {
-   case eFullLatmProtection: 
+   case eFullLatmProtection:
       return "full_protect";
    case eTmConflictingLockLatmProtection:
       return "tm_protect";
@@ -295,8 +295,8 @@ inline void boost::stm::transaction::tm_lock_conflict(Mutex *inLock)
    //-------------------------------------------------------------------------
    // insert can throw an exception
    //-------------------------------------------------------------------------
-   try { tmConflictingLocks_.insert(inLock); } 
-   catch (...) 
+   try { tmConflictingLocks_.insert(inLock); }
+   catch (...)
    {
       unlock(&latmMutex_);
       throw;
@@ -317,7 +317,7 @@ inline void boost::stm::transaction::clear_tm_conflicting_locks()
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::must_be_in_tm_conflicting_lock_set(Mutex *inLock)
 {
-   if (tmConflictingLocks_.find(inLock) == tmConflictingLocks_.end()) 
+   if (tmConflictingLocks_.find(inLock) == tmConflictingLocks_.end())
    {
       throw "lock not in tx conflict lock set, use add_tm_conflicting_lock";
    }
@@ -327,7 +327,7 @@ inline void boost::stm::transaction::must_be_in_tm_conflicting_lock_set(Mutex *i
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::must_be_in_conflicting_lock_set(Mutex *inLock)
 {
-   if (get_tx_conflicting_locks().find(inLock) == get_tx_conflicting_locks().end()) 
+   if (get_tx_conflicting_locks().find(inLock) == get_tx_conflicting_locks().end())
    {
       throw "lock not in tx conflict lock set, use add_tx_conflicting_lock";
    }
@@ -350,7 +350,7 @@ inline void boost::stm::transaction::add_tx_conflicting_lock(Mutex *inLock)
       see_if_tx_must_block_due_to_tx_latm();
    }
 
-   if (blocked()) 
+   if (blocked())
    {
       lock_and_abort();
       throw aborted_transaction_exception("aborting transaction");
@@ -367,8 +367,8 @@ inline void boost::stm::transaction::clear_tx_conflicting_locks()
 }
 
 //----------------------------------------------------------------------------
-// 
-// Exposed client interfaces that act as forwarding calls to the real 
+//
+// Exposed client interfaces that act as forwarding calls to the real
 // implementation based on the specific type of lock-aware transactions
 // the client chose
 //
@@ -379,7 +379,7 @@ inline int boost::stm::transaction::pthread_lock(Mutex *mutex)
 
    switch (eLatmType_)
    {
-   case eFullLatmProtection: 
+   case eFullLatmProtection:
       if (direct_updating()) return dir_full_pthread_lock_mutex(mutex);
       else return def_full_pthread_lock_mutex(mutex);
    case eTmConflictingLockLatmProtection:
@@ -401,7 +401,7 @@ inline int boost::stm::transaction::pthread_trylock(Mutex *mutex)
 
    switch (eLatmType_)
    {
-   case eFullLatmProtection: 
+   case eFullLatmProtection:
       if (direct_updating()) return dir_full_pthread_trylock_mutex(mutex);
       else return def_full_pthread_trylock_mutex(mutex);
    case eTmConflictingLockLatmProtection:
@@ -423,7 +423,7 @@ inline int boost::stm::transaction::pthread_unlock(Mutex *mutex)
 
    switch (eLatmType_)
    {
-   case eFullLatmProtection: 
+   case eFullLatmProtection:
       if (direct_updating()) return dir_full_pthread_unlock_mutex(mutex);
       return def_full_pthread_unlock_mutex(mutex);
    case eTmConflictingLockLatmProtection:
@@ -456,9 +456,9 @@ inline int boost::stm::transaction::pthread_unlock(Mutex *mutex)
 inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
 {
    //--------------------------------------------------------------------------
-   // iterate through all currently locked locks 
+   // iterate through all currently locked locks
    //--------------------------------------------------------------------------
-   for (MutexThreadSetMap::iterator iter = latmLockedLocksAndThreadIdsMap_.begin(); 
+   for (MutexThreadSetMap::iterator iter = latmLockedLocksAndThreadIdsMap_.begin();
    latmLockedLocksAndThreadIdsMap_.end() != iter; ++iter)
    {
       //-----------------------------------------------------------------------
@@ -479,7 +479,7 @@ inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
       // if it is locked by our thread, it is ok ... otherwise it is not
       MutexThreadMap::iterator l = latmLockedLocksOfThreadMap_.find(*k);
 
-      if (l != latmLockedLocksOfThreadMap_.end() && 
+      if (l != latmLockedLocksOfThreadMap_.end() &&
          THREAD_ID != l->second)
       {
          MutexThreadSetMap::iterator locksAndThreadsIter = latmLockedLocksAndThreadIdsMap_.find(*k);
@@ -490,7 +490,7 @@ inline void boost::stm::transaction::see_if_tx_must_block_due_to_tx_latm()
             s.insert(THREAD_ID);
 
             latmLockedLocksAndThreadIdsMap_.insert
-            (std::make_pair<Mutex*, ThreadIdSet>(*k, s)); 
+            (std::make_pair<Mutex*, ThreadIdSet>(*k, s));
          }
          else
          {
@@ -513,7 +513,7 @@ thread_id_occurance_in_locked_locks_map(size_t threadId)
 {
    int count = 0;
 
-   for (MutexThreadSetMap::iterator iter = latmLockedLocksAndThreadIdsMap_.begin(); 
+   for (MutexThreadSetMap::iterator iter = latmLockedLocksAndThreadIdsMap_.begin();
       latmLockedLocksAndThreadIdsMap_.end() != iter; ++iter)
    {
       if (iter->second.find(threadId) != iter->second.end()) ++count;
@@ -530,7 +530,7 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
 {
    if (!hasTxInFlightMutex) lock_inflight_access();
 
-   for (InflightTxes::iterator i = transactionsInFlight_.begin(); 
+   for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
    {
       transaction *t = (transaction*)*i;
