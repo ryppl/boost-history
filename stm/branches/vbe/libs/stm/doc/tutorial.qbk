@@ -12,7 +12,7 @@
 
 A number of example transactions are presented in this section using the __Boost_STM__ library. The first example illustrates how to write a transactional linked list insert operation. The second example demonstrates composition, combining a transactional insert operation with a transactional remove operation which compose into a larger, single move transaction. Next, a minor but important detail regarding memory addresses within the transactional workspace is given. Finally, an example of how to handle priority inversion for validating and invalidating consistency schemes using __Boost_STM_s__ extensible contention manager and compositional framework is provided. The final example demonstrates a number of important aspects of __Boost_STM_s__ implementation, such as, differing priority inversion mechanics for different consistency models, transactional attribute enrichment via composition and threaded memory sharing amongst transactions.
 
-While most of the examples are intuitive and a complete understanding of the __Boost_STM__ API is not needed for a high-level understanding of its functionality, a complete description of all interfaces used below can found in  referenced section.
+While most of the examples are intuitive and a complete understanding of the __Boost_STM__ API is not needed for a high-level understanding of its functionality, a complete description of all interfaces used below can be found in the referenced section.
 
 
 
@@ -24,15 +24,29 @@ In this example, we build a linked list insert transactional operation using __B
 
     tx_ptr<linked_list<int> > llist;
     ...
-    atomic(_) {
-        for (int i = 0; i < 100; ++i)     {
+    for (int i = 0; i < 100; ++i) {
+        use_atomic(_) {
             llist->insert(i);
         }
     }
 
-After inspecting the above client invoked insert code it is apparent that the code itself shows no deep signs of being transactional. The two exceptions are the declaration of the list using a tx_ptr smart pointer and the fact that the insertion of te 100 elements is atomic. This is our desired behavior. As far as the client side programmer is concerned, there is no additional code needed to perform a transactional linked list insert over a non-transactional linked list insert. Obviously, this simplistic behavior eases the introduction of TM solutions into algorithms of new and legacy systems.
+After inspecting the above client invoked insert code it is apparent that the code itself shows no deep signs of being transactional. The two exceptions are the declaration of the list using a tx_ptr smart pointer and the fact that the insertion of the 100 elements is atomic. This is our desired behavior. As far as the client side programmer is concerned, there is no additional code needed to perform a transactional linked list insert over a non-transactional linked list insert. Obviously, this simplistic behavior eases the introduction of TM solutions into algorithms of new and legacy systems.
 
 [heading Linked list declaration]
+
+A clasical linked list use a list node chained following the memer next_. On a transactional context we nedd to state that the pointer to the next node is a transactional one. This is reached using the smart pointer tx_ptr<>
+
+    template <typename T>
+    struct list_node {
+        tx_ptr<list_node<T> > next_;
+    }
+
+    template <typename T>
+    class linked_list {
+    // ...
+    private:
+        tx_ptr<list_node<T> > head_;
+    };
 
 [heading Insert retry transaction]
 
@@ -64,12 +78,17 @@ The aborted_transaction_exception allows __Boost_STM__ to be exception neutral w
 
 The above example illustrates the simplicity of __Boost_STM__ transactions and their interfaces. The transactional implementation is nearly identical to a non-transactional implementation with the exception of some annotations. The templatized functions within the transaction class ensure type-safety is maintained without any necessary type-casts. Due to exact type correctness, as demonstrated in the calls to make_wr_ptr(), daisy-chained method invocation can be performed allowing streamlined usage. These aspects help make __Boost_STM__ transactions small and easy to understand.
 
-One minor, but vital, detail is in way new objects are created on a transactional context. Rather than hide this difference, it is intentionally exposed here to draw out the memory access differences required for writes to new and existing memory. We explain this difference in detail later in this section.
+upgrd_ptr is a read only smart pointer that can be upgraded to a read/write smart pointer.
+Once the smart pointer is constructed (associating it to the current transaction), the user can access any member as if it was non transactional.
 
-In order to simplify the retry mechanism a macro is provided so the user can just write
+make_wr_ptr is a read/write smart pointer factory. The returned wr_ptr<> allows to modify the pointee object.
+
+One minor, but vital, detail is in the way new objects are created on a transactional context. Rather than hide this difference, it is intentionally exposed here to draw out the memory access differences required for writes to new and existing memory. We explain this difference in detail later in this section.
+
+In order to simplify the retry mechanism the macro __use_atomic__ is provided so the user can just write
 
     void insert(T const &val) {
-        atomic(_) {
+        use_atomic(_) {
             upgrd_ptr<list_node<T> > prev(_, head_);
             upgrd_ptr<list_node<T> > curr(_, head_->next_);
             while (curr) {
@@ -85,6 +104,24 @@ In order to simplify the retry mechanism a macro is provided so the user can jus
         }
     }
 
+We could also write the following, but this is less efficient as tx_ptr is a smart pointer that associated the pointer to the current transaction for writting. The use of the smart pointer upgrd_ptr and the smart pointer factory function make_wr_ptr allows to make the difference kind of access.
+
+    void insert(T const &val) {
+        use_atomic(_) {
+            tx_ptr<list_node<T> > prev(head_);
+            tx_ptr<list_node<T> > curr(head_->next_);
+            while (curr) {
+                if (curr->value_ == val) return;
+                else if (curr->value_ > val) break;
+                prev = curr;
+                curr = curr->next_;
+            }
+            if (!curr || (curr->value_ > val)) {
+                prev->next_ =
+                    BOOST_STM_NEW(_,transactional_object<list_node<T> >(val, curr));
+            }
+        }
+    }
 
 [endsect]
 
@@ -165,7 +202,7 @@ Composed External Move
 
 The move() implementation do not requires any overhead
 required in non-transactional implementations, other than using the atomic guard.
-The remainder of the code
+The remainder of the code is preserved.
 
 [endsect]
 
@@ -451,6 +488,14 @@ extend into a new category which incorporates differing priority
 within the same functional unit. These new concepts may reshape
 the way classical parallel problems are thought of in the future,
 especially in relation to transactional memory.
+
+[endsect]
+
+[section Polymorphic]
+
+[endsect]
+
+[section Lock aware]
 
 [endsect]
 

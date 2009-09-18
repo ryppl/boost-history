@@ -32,7 +32,7 @@ The below example gives a basic introduction into __Boost_STM_s__  transactional
         return val;
     }
     
-In the above example, (A) both the write on global_int and the read operations function atomically or neither operations are performed. In addition, (C) the transaction begins and ends in legal memory
+In the above example, (A) both the write on counter and the read operations function atomically or neither operations are performed. In addition, (C) the transaction begins and ends in legal memory
 states, meaning global int is guaranteed to be read correctly, preventing thread data races from causing inconsistent results. Lastly, (I) the intermediate state of the incremented global int is isolated until the transaction commits. These three attributes fulfill __Boost_STM_s__ conformance to the ACI principles. The above example also gives a basic introduction into __Boost_STM_s__ transactional framework.
 
 [endsect]

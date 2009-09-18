@@ -28,6 +28,7 @@
 [def __Boost_STM__  TBoost.STM]
 [def __RSTM__  RSTM]
 [def __TL2__  TL2]
+[def __use_atomic__  `use_atomic`]
 
 
 [/

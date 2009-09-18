@@ -33,6 +33,9 @@
         Composable Transaction</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction">A
         Dynamically Prioritized, Composed Transaction</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic">Polymorphic</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.lock_aware">Lock
+        aware</a></span></dt>
 </dl></div>
 <p>
         A number of example transactions are presented in this section using the
@@ -52,7 +55,7 @@
 <p>
         While most of the examples are intuitive and a complete understanding of
         the TBoost.STM API is not needed for a high-level understanding of its functionality,
-        a complete description of all interfaces used below can found in referenced
+        a complete description of all interfaces used below can be found in the referenced
         section.
       </p>
 <div class="section" lang="en">
@@ -68,14 +71,14 @@
           calls.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts"></a><h6>
-<a name="id4849752"></a>
+<a name="id4803999"></a>
           <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts">Client
           Invoked Inserts</a>
         </h6>
 <pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
 <span class="special">...</span>
-<span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
-    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>     <span class="special">{</span>
+<span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
         <span class="identifier">llist</span><span class="special">-&gt;</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
     <span class="special">}</span>
 <span class="special">}</span>
@@ -84,19 +87,36 @@
           After inspecting the above client invoked insert code it is apparent that
           the code itself shows no deep signs of being transactional. The two exceptions
           are the declaration of the list using a tx_ptr smart pointer and the fact
-          that the insertion of te 100 elements is atomic. This is our desired behavior.
+          that the insertion of the 100 elements is atomic. This is our desired behavior.
           As far as the client side programmer is concerned, there is no additional
           code needed to perform a transactional linked list insert over a non-transactional
           linked list insert. Obviously, this simplistic behavior eases the introduction
           of TM solutions into algorithms of new and legacy systems.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration"></a><h6>
-<a name="id4803994"></a>
+<a name="id4804232"></a>
           <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration">Linked
           list declaration</a>
         </h6>
+<p>
+          A clasical linked list use a list node chained following the memer next_.
+          On a transactional context we nedd to state that the pointer to the next
+          node is a transactional one. This is reached using the smart pointer tx_ptr&lt;&gt;
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">list_node</span> <span class="special">{</span>
+    <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">next_</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">linked_list</span> <span class="special">{</span>
+<span class="comment">// ...
+</span><span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">head_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction"></a><h6>
-<a name="id4804016"></a>
+<a name="id4804476"></a>
           <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction">Insert
           retry transaction</a>
         </h6>
@@ -127,7 +147,7 @@
           with its absorption of aborted transactions and only aborted transactions.
         </p>
 <a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific"></a><h6>
-<a name="id4804548"></a>
+<a name="id4804764"></a>
           <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific">Insert
           specific</a>
         </h6>
@@ -155,18 +175,28 @@
           transactions small and easy to understand.
         </p>
 <p>
-          One minor, but vital, detail is in way new objects are created on a transactional
-          context. Rather than hide this difference, it is intentionally exposed
-          here to draw out the memory access differences required for writes to new
-          and existing memory. We explain this difference in detail later in this
-          section.
+          upgrd_ptr is a read only smart pointer that can be upgraded to a read/write
+          smart pointer. Once the smart pointer is constructed (associating it to
+          the current transaction), the user can access any member as if it was non
+          transactional.
         </p>
 <p>
-          In order to simplify the retry mechanism a macro is provided so the user
-          can just write
+          make_wr_ptr is a read/write smart pointer factory. The returned wr_ptr&lt;&gt;
+          allows to modify the pointee object.
+        </p>
+<p>
+          One minor, but vital, detail is in the way new objects are created on a
+          transactional context. Rather than hide this difference, it is intentionally
+          exposed here to draw out the memory access differences required for writes
+          to new and existing memory. We explain this difference in detail later
+          in this section.
+        </p>
+<p>
+          In order to simplify the retry mechanism the macro <code class="computeroutput"><span class="identifier">use_atomic</span></code>
+          is provided so the user can just write
         </p>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
         <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">);</span>
         <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
         <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
@@ -177,6 +207,29 @@
         <span class="special">}</span>
         <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">curr</span> <span class="special">||</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">))</span> <span class="special">{</span>
             <span class="identifier">make_wr_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">prev</span><span class="special">)-&gt;</span><span class="identifier">next_</span> <span class="special">=</span>
+                <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+          We could also write the following, but this is less efficient as tx_ptr
+          is a smart pointer that associated the pointer to the current transaction
+          for writting. The use of the smart pointer upgrd_ptr and the smart pointer
+          factory function make_wr_ptr allows to make the difference kind of access.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">use_atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">head_</span><span class="special">);</span>
+        <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">head_</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
+        <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">==</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+            <span class="keyword">else</span> <span class="keyword">if</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">)</span> <span class="keyword">break</span><span class="special">;</span>
+            <span class="identifier">prev</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">;</span>
+            <span class="identifier">curr</span> <span class="special">=</span> <span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">;</span>
+        <span class="special">}</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">curr</span> <span class="special">||</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">-&gt;</span><span class="identifier">value_</span> <span class="special">&gt;</span> <span class="identifier">val</span><span class="special">))</span> <span class="special">{</span>
+            <span class="identifier">prev</span><span class="special">-&gt;</span><span class="identifier">next_</span> <span class="special">=</span>
                 <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;(</span><span class="identifier">val</span><span class="special">,</span> <span class="identifier">curr</span><span class="special">));</span>
         <span class="special">}</span>
     <span class="special">}</span>
@@ -267,7 +320,7 @@
 <p>
           The move() implementation do not requires any overhead required in non-transactional
           implementations, other than using the atomic guard. The remainder of the
-          code
+          code is preserved.
         </p>
 </div>
 <div class="section" lang="en">
@@ -547,6 +600,13 @@
           memory.
         </p>
 </div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.tutorial.polymorphic"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic" title="Polymorphic">Polymorphic</a>
+</h4></div></div></div></div>
+<div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.users_guide.tutorial.lock_aware"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.lock_aware" title="Lock aware">Lock
+        aware</a>
+</h4></div></div></div></div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>

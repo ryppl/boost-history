@@ -70,20 +70,39 @@
 
 * Add unit tests
 
+[heading Benchmarks]
+
+* Add some specific benchmarks.
+
 [heading Documentation]
 
 * [*DONE] Create the empty files and set the doc generation environement
-* Write the Motivation section
-* Write the Getting started section
-* [*DONE] Write the Installation section
-* Write the Tutorial section
-* Write the Example section
+* [*DONE] Write the Motivation section
+* Write the User'Guide section
+    * [*DONE] Write the Getting started section
+        * [*DONE] Write the Installation started section
+        * [*DONE] Write the Hello World example
+    * [*DONE] Write the Installation section
+    * Write the Tutorial section
+        * Write the Preamble/Initialization section
+        * [*DONE] Write the Simple transaction section
+        * [*DONE] Write the Composable transaction section
+        * [*DONE] Write the A Dynamically Prioritized, Composed Transaction section
+        * Write the Lock aware section
+        * Write the Lock aware section
+        
+    * [*DONE] Write the References section
+    * Write the Glossary section
+* Write the Examples section
 * Write the Reference section
-* [*DONE] Write the Bibliography section
-* Write the Glossary section
-* Write the Rationale section
-* Write the Implementation notes section
-* Write the Acknowledgements section
+* Write the Appendix section
+    * Write the History section
+    * Write the Rationale section
+    * Write the Implementation notes section
+    * Write the Acknowledgements section
+    * Write the Tests section
+    * Write the Tickets section
+    * [*DONE] Write the Future plans section
 
 
 [endsect]

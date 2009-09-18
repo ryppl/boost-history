@@ -43,12 +43,12 @@
       institutions with many open questions about its behavior.
     </p>
 <p>
-      Boost.STM is a C++ lock-based software transactional memory (STM) library.
+      TBoost.STM is a C++ lock-based software transactional memory (STM) library.
       Our approach to STM is to use only native language semantics while implementing
       the least intrusive, most type-safe object oriented solution possible.
     </p>
 <p>
-      <span class="bold"><strong>Boost.STM</strong></span> provides:
+      <span class="bold"><strong>TBoost.STM</strong></span> provides:
     </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -58,7 +58,7 @@
         ACI transactions
         <div class="itemizedlist"><ul type="circle">
 <li>
-            Atomic: all or nothing
+            Atomic: all operations execute or none do
           </li>
 <li>
             Consistent: only legal memory states
@@ -72,26 +72,28 @@
         Language-like atomic transaction macro blocks
       </li>
 <li>
-        Open-nested composable transactions
+        Closed, flattened composable transactions
       </li>
 <li>
-        Direct/deffered updating policies
+        Direct and deferred updating run-time policies
       </li>
 <li>
-        Validation/invalidation consistency checking policies
+        Validation and invalidation conflict detection policies
       </li>
 <li>
-        Lock-aware transaction
+        Lock-aware transactions
       </li>
 <li>
-        Contention management: Mechanism for transaction forward progress
+        Programmable contention management, enabling programmers to specify forward
+        progress mechanisms
       </li>
 <li>
-        Unrecoverable transaction to manage with I/O
+        Isolated and irrevocable transactions for transactions that must commit (i.e.,
+        I/O transactions)
       </li>
 </ul></div>
 <a name="toward_boost_stm.overview.how_to_use_this_documentation"></a><h4>
-<a name="id4810523"></a>
+<a name="id4810525"></a>
       <a class="link" href="overview.html#toward_boost_stm.overview.how_to_use_this_documentation">How
       to Use This Documentation</a>
     </h4>

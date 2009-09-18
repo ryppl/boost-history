@@ -61,7 +61,7 @@
           memory!
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.getting_boost_stm"></a><h6>
-<a name="id4849074"></a>
+<a name="id4849300"></a>
           <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.getting_boost_stm">Getting
           Boost.STM</a>
         </h6>
@@ -78,18 +78,19 @@
           Sandbox</a>.
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.building_boost_stm"></a><h6>
-<a name="id4849128"></a>
+<a name="id4849354"></a>
           <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.building_boost_stm">Building
           Boost.STM</a>
         </h6>
 <p>
-          Boost.STM is not a header only library. You need to compile it before use.
+          TBoost.STM is not a header only library. You need to compile it before
+          use.
         </p>
 <pre class="programlisting"><span class="identifier">cd</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">build</span>
 <span class="identifier">bjam</span>
 </pre>
 <a name="toward_boost_stm.users_guide.getting_started.install.requirements"></a><h6>
-<a name="id4849192"></a>
+<a name="id4849418"></a>
           <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.requirements">Requirements</a>
         </h6>
 <p>
@@ -100,44 +101,67 @@
           threads (pthreads) for Windows</a>
         </p>
 <p>
-          In order to be more portable <span class="bold"><strong>Boost.STM</strong></span>
-          is migrating to Boost. You should use either Boost version 1.39.x or the
-          version in SVN trunk (even if Boost version 1.35.x should works also).
-          In particular, <span class="bold"><strong>Boost.STM</strong></span> will depends
+          In order to be more portable TBoost.STM is migrating to Boost. You should
+          use either Boost version 1.39.x or the version in SVN trunk (even if Boost
+          version 1.35.x should works also). In particular, TBoost.STM will depends
           on:
         </p>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
-<dt><span class="term"><a href="http://www.boost.org/libs/dynamic_bitset" target="_top"><span class="bold"><strong>Boost.DynamicBitset</strong></span></a></span></dt>
+<dt><span class="term"><a href="http://www.boost.org/libs/dynamic_bitset" target="_top"><span class="bold"><strong>Boost.DynamicBitset</strong></span></a> from Jeremy Siek and
+          Chuck Allison</span></dt>
 <dd><p>
-              dynamic_bitsets
+              dynamic_bitsets (replacement of the current bit_vector)
             </p></dd>
 <dt><span class="term"><a href="http://www.boost.org/libs/thread" target="_top"><span class="bold"><strong>Boost.Thread</strong></span></a> from Anthony Williams</span></dt>
 <dd><p>
-              threads and synchronization primitives
+              threads and synchronization primitives (making the lib portable to
+              other platforms)
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/pool" target="_top"><span class="bold"><strong>Boost.Pool</strong></span></a> from Stephen Cleary</span></dt>
+<dd><p>
+              Memory pool management (replacement of the current memory_pool)
             </p></dd>
 </dl>
 </div>
 <p>
-          In addition Boost.Stm will uses the following libraries on the Boost Sandbox
+          In addition TBoost.STM will uses the following libraries on the Boost Sandbox
         </p>
 <div class="variablelist">
 <p class="title"><b></b></p>
 <dl>
-<dt><span class="term"><a href="https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Synchro" target="_top"><span class="bold"><strong>Boost.Chrono</strong></span></a> from Vicente J. Botet Escriba</span></dt>
+<dt><span class="term"><a href="http://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.BloomFilters" target="_top"><span class="bold"><strong>Boost.BloomFilters</strong></span></a> from Dean Michael Berris</span></dt>
 <dd><p>
-              Standard Chrono library
+              bloom_filters (replacement of the current bloom_filter)
             </p></dd>
-<dt><span class="term"><a href="https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Synchro" target="_top"><span class="bold"><strong>Boost.Synchro</strong></span></a> from Vicente J. Botet Escriba</span></dt>
+<dt><span class="term"><a href="http://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Chrono" target="_top"><span class="bold"><strong>Boost.Chrono</strong></span></a> from Beman Dawes</span></dt>
+<dd><p>
+              Standard Chrono library (making the lib portable to other platforms)
+            </p></dd>
+<dt><span class="term"><a href="http://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Containers" target="_top"><span class="bold"><strong>Boost.Containers</strong></span></a> from Ion Gaztanaga</span></dt>
+<dd><p>
+              flat containers (replacement of the current vector_map and vector_set)
+            </p></dd>
+<dt><span class="term"><a href="http://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.InterThreads" target="_top"><span class="bold"><strong>Boost.InterThreads</strong></span></a> from Vicente J. Botet
+          Escriba</span></dt>
+<dd><p>
+              Thread specific shared pointer (replacement of the current maps having
+              thread_id as domain)
+            </p></dd>
+<dt><span class="term"><a href="http://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Move" target="_top"><span class="bold"><strong>Boost.Move</strong></span></a> from Ion Gaztanaga</span></dt>
+<dd><p>
+              Move semantics (replacement of the current Draco_move)
+            </p></dd>
+<dt><span class="term"><a href="http://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.Synchro" target="_top"><span class="bold"><strong>Boost.Synchro</strong></span></a> from Vicente J. Botet Escriba</span></dt>
 <dd><p>
               Exception based timed locks synchronization primitives &amp; Language-like
-              Synchronized Block
+              Synchronized Block (making the lib portable to other platforms)
             </p></dd>
 </dl>
 </div>
 <a name="toward_boost_stm.users_guide.getting_started.install.exceptions_safety"></a><h6>
-<a name="id4849352"></a>
+<a name="id4849670"></a>
           <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.exceptions_safety">Exceptions
           safety</a>
         </h6>
@@ -146,7 +170,7 @@
           of exception safety as long as the underlying parameters provide it.
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.thread_safety"></a><h6>
-<a name="id4849378"></a>
+<a name="id4849696"></a>
           <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.thread_safety">Thread
           safety</a>
         </h6>
@@ -154,7 +178,7 @@
           All functions in the library are thread-unsafe except when noted explicitly.
         </p>
 <a name="toward_boost_stm.users_guide.getting_started.install.tested_compilers"></a><h6>
-<a name="id4849405"></a>
+<a name="id4849723"></a>
           <a class="link" href="getting_started.html#toward_boost_stm.users_guide.getting_started.install.tested_compilers">Tested
           compilers</a>
         </h6>
@@ -202,7 +226,7 @@
 <span class="special">}</span>
 </pre>
 <p>
-          In the above example, (A) both the write on global_int and the read operations
+          In the above example, (A) both the write on counter and the read operations
           function atomically or neither operations are performed. In addition, (C)
           the transaction begins and ends in legal memory states, meaning global
           int is guaranteed to be read correctly, preventing thread data races from

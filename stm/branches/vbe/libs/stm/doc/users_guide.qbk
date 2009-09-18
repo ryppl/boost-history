@@ -23,17 +23,21 @@
 
 [variablelist
 
-[[in fligh transaction] [.]]
-[[latm] [lock aware transaction memory]]
+[[ACI] [Atomic, Consistent and Isolated]]
+[[LATM] [lock aware transaction memory]]
+[[LiT] [Lock in transaction]]
+[[LoT] [Lock out of transaction]]
 [[STM] [Software Transaction Memory]]
+[[TX] [Transaction]]
+[[TM] [Transaction Memory]]
+
+[[in fligh transaction] [.]]
 [[Conflict Detection] [.]]
 [[abort] [.]]
 [[commit] [.]]
 [[Consistency Checking] [.]]
 [[Direct Updating] [.]]
 [[Deferred Updating] [.]]
-[[LiT] [.]]
-[[LoT] [.]]
 [[Irrevocable transaction] [.]]
 [[Isolated transaction] [.]]
 [[Full-Lock protection] [.]]

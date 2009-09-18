@@ -18,23 +18,23 @@ Transactional memory (TM) is a new parallel programming mechanism that reduces t
 
 Transactional memory is an active research interest for many academic and industry institutions with many open questions about its behavior.
 
-Boost.STM is a C++ lock-based software transactional memory (STM) library. Our approach to STM is to use only native language semantics while implementing the least intrusive, most type-safe object oriented solution possible.
+__Boost_STM__ is a C++ lock-based software transactional memory (STM) library. Our approach to STM is to use only native language semantics while implementing the least intrusive, most type-safe object oriented solution possible.
 
 
-[*Boost.STM] provides:
+[*__Boost_STM__] provides:
 
-* Optimistic concurrency
-* ACI transactions
-    * Atomic: all or nothing
-    * Consistent: only legal memory states
-    * Isolated: other txes cannot see until committed
-* Language-like atomic transaction macro blocks
-* Open-nested composable transactions
-* Direct/deffered updating policies
-* Validation/invalidation consistency checking policies
-* Lock-aware transaction
-* Contention management: Mechanism for transaction forward progress
-* Unrecoverable transaction to manage with I/O
+* Optimistic concurrency 
+* ACI transactions 
+    * Atomic: all operations execute or none do 
+    * Consistent: only legal memory states 
+    * Isolated: other txes cannot see until committed 
+* Language-like atomic transaction macro blocks 
+* Closed, flattened composable transactions 
+* Direct and deferred updating run-time policies 
+* Validation and invalidation conflict detection policies 
+* Lock-aware transactions
+* Programmable contention management, enabling programmers to specify forward progress mechanisms 
+* Isolated and irrevocable transactions for transactions that must commit (i.e., I/O transactions) 
 
 
 [/====================================]

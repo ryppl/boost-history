@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -14,37 +14,191 @@
     namespace boost { namespace stm {
         class base_transaction_object;
         template <class Derived> class transaction_object;
-        template <typename T> class native_trans; 
+        template <typename T> class native_trans;
+        template <class T> class transactional_object;
+
+        template <typename T>
+        static transactional_object<T>* tx_up_cast(T* ptr);
+
+        template <typename T, typename U>
+        static transactional_object<T>* tx_static_cast(transactional_object<U>* ptr);
+
+        template <typename T, typename U>
+        static transactional_object<T>* tx_dynamic_cast(transactional_object<U>* ptr);
     }}
 
 [section Abstract Class `base_transaction_object`]
+
+This is the base class of all the transactional objects. It tracks:
+
+* `transactionThread_`: the thread identifier holding the write acces to this transactional object
+* `transaction_`: the pointer to the transaction
+* `version_`: the version when performing validation
+* `newMemory_`: states whether this object is a new object
+
+Transactional objets must specialize the pure virtual functions
+* `copy_state(base_transaction_object const * const rhs)`
+* `move_state(base_transaction_object * rhs)` if `BUILD_MOVE_SEMANTICS`
+* `cache_deallocate()` if `BOOST_STM_USE_UNASIGNED_COPY`
+
+`copy_state` is used to copy the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used.
+
+`move_state` is used to move the backup/working copy to the shared transactional object when the roolback/commit is done direct/defered policy is used.
+
+`cache_deallocate` is used to release the backup/working copy when the transaction ends if direct/defered policy is used.
+
+When USE_STM_MEMORY_MANAGER is defined this class provides two functions (`retrieve_mem` and `return_mem`) and  to manage a pool of memory.
+
 
     class base_transaction_object
     {
     public:
 
-       base_transaction_object();
-       virtual ~base_transaction_object() {};
+        base_transaction_object();
+        virtual ~base_transaction_object() {};
 
-       virtual void copy_state(base_transaction_object const * const rhs) = 0;
-       virtual void move_state(base_transaction_object * rhs) = 0;
+        virtual void copy_state(base_transaction_object const * const rhs) = 0;
+        virtual void move_state(base_transaction_object * rhs) = 0;
 
-       void transaction_thread(thread_id rhs) const;
-       thread_id transaction_thread() const;
+        void transaction_thread(thread_id rhs) const;
+        thread_id transaction_thread() const;
 
-       void new_memory(bool rhs)
-       bool new_memory() const;
+        void new_memory(bool rhs)
+        bool new_memory() const;
 
     #if BOOST_STM_PERFORMING_VALIDATION
-       void version(std::size_t rhs);
-       std::size_t version() const;
+        void version(std::size_t rhs);
+        std::size_t version() const;
     #endif
 
-    };
+    #if BOOST_STM_USE_MEMORY_MANAGER
+        static void return_mem(void *mem, size_t size);
+        static void* retrieve_mem(size_t size);
+        static void alloc_size(size_t size);
+    #endif
+    
+    #ifdef BOOST_STM_USE_UNASIGNED_COPY
+        virtual void cache_deallocate()=0;
+    #endif
+    
+};
+
+[section Constructor `base_transaction_object()`]
+
+       base_transaction_object();
+
+Default constructor (ctor) with no parameters allows derived
+base_transaction_objects to implicitly construct the
+base_transaction_object base class for easier integration.
+
+[endsect]
+
+[section Virtual Destructor `~base_transaction_object()`]
+
+       virtual ~base_transaction_object() {};
+
+Virtual destructor (dtor) ensures correct destructors are called
+in the inheritance hierarchy for delete operations invoked on
+base_transaction_object pointers, which occur in numerous
+places throughout the internal transaction code.
+
+[endsect]
+
+[section Virtual function `copy_state()`]
+
+       virtual void copy_state(base_transaction_object const * const rhs) = 0;
+
+
+The `copy_state()`
+method is called each time global memory is updated, for either
+direct or deferred updating policies. With this in mind, it is
+vital that the this object be set to the exact state of the input
+parameter.
+
+Derived classes usually 
+simply override this method and perform an `operator=()`
+function call for the specific derived type. 
+
+[endsect]
+
+
+[section Virtual function `move_state()`]
+
+       virtual void move_state(base_transaction_object * rhs) = 0;
+
+The move_state() method is internally called at deferred updating commit time and at direct updating abort time and invokes the user-defined derived transaction class's move assignment (e.g. operator=(type &&)).
+
+[endsect]
+
+[section Static function `retrieve_mem()`]
+
+        static void* retrieve_mem(size_t size);
+
+Static interface into __Boost_STM_s__ memory management system
+for retrieving memory. The supplied parameter is the requested
+block size, the return parameter is a void* to the allocated
+block. Usually access to this interface is done by overloading
+operator new in the derived base_transaction_object
+class. Void pointers are the natural and preferred manner to handle
+memory allocations and deallocations and are therefore safe
+in this context.
+
+[endsect]
+
+
+[section Static function `return_mem()`]
+
+        static void return_mem(void *mem, size_t size);
+
+Static interface into __Boost_STM_s__ memory management system
+for returning memory. The first parameter points to the memory
+block being returned, the second parameter specifies its size.
+Usually access to this interface is done by overloading operator
+delete in the derived transaction object class. Void pointers are
+the natural and preferred manner to handle memory allocations
+and deallocations and are therefore safe in this context.
+[endsect]
+
+[section Static function `alloc_size()`]
+
+        static void alloc_size(size_t size);
+
+Static interface into __Boost_STM_s__ memory management system
+which allows the user to specify the allocation chunk size for
+the memory manager. The input parameter specifies the number
+of transactional objects that should be allocated at startup and
+with each subsequent buffer increase. If no size is specified, the
+allocation chunk size uses __Boost_STM_s__ default value, currently
+8192. The alloc_size() interface can be reconfigured at runtime
+and is used upon the next buffer increase.
+
+[endsect]
+
+[section Virtual function `cache_deallocate()`]
+
+        virtual void cache_deallocate()=0;
+
+[endsect]
+
 
 [endsect]
 
 [section Template Class `transaction_object<>`]
+
+To further simplify the usage of __Boost_STM__, an intermediate
+template class was built which is meant to sit between the
+base_transaction_object and the user-defined transaction
+objects. The purpose of this intermediate class is to reduce the
+code overhead needed for user-defined transaction objects. To do
+this, the curiously recurring template pattern developed by James
+Coplien was used.
+
+With the templatized transaction_object, client-side transaction
+objects need only to derive from it and pass their class type as
+its template parameter. At compile-time the transaction_object
+generates the necessary code to override copy_state() and implement
+operator new and operator delete using __Boost_STM_s__ memory
+manager for all user-defined types derived from it.
 
     template <class Derived>
     class transaction_object : public base_transaction_object {
@@ -54,6 +208,27 @@
        virtual void move_state(base_transaction_object * rhs);
     };
 
+[section Virtual function `copy_state()`]
+
+       virtual void copy_state(base_transaction_object const * const rhs);
+
+The copy_state() method call to the free function cache_restore which do a unitialized_copy by default.
+
+[endsect]
+
+[section Virtual function `move_state()`]
+
+       virtual void move_state(base_transaction_object * rhs);
+
+The move_state() method call to the free function cache_restore which do a unitialized_copy by default.
+
+[endsect]
+
+[section Virtual function `cache_deallocate()`]
+
+        virtual void cache_deallocate()=0;
+
+[endsect]
 [endsect]
 
 [section Template Class `native_trans<>`]
@@ -81,9 +256,80 @@
     };
 
 [endsect]
-[section Class `base_transaction`]
+
+[section Template Class `transactional_object<>`]
+
+Transactional object wrapper. A `transactional_object<T>` is a base_transaction_object wrapping an instance of type T. Provides the definition of the virtual functions
+
+* forward constructors to the wrapped type
+* `copy_state`: relaying on the cache_restore<T> generic function
+* `move_state` and
+* `cache_deallocate`: relaying on the cache_restore<T> generic function
+
+Defines in addition the functions `new` and `delete` when `BOOST_STM_USE_MEMORY_MANAGER` is defined
+
+If a class D inherits from B we have that `transactional_object<D>` dont inherits from `transactional_object<B>`, but
+we can static/dynamic cast them robustly.
+
+Evidently the `std::static_cast`/`std::dynamic_cast` do not works. We need to define the specific cast
+
+    transactional_object<D>* d=...;
+    transactional_object<B>* b=tx_static_cast<B>(d);
+
+    transactional_object<B>* b=...;
+    transactional_object<D>* d=tx_dynamic_cast<B>(b);
+
+Synopsis
+
+    template <typename T>
+    class transactional_object : public base_transaction_object {
+    public:
+        T value;
+
+        transactional_object();
+        transactional_object(const T*ptr);
+        transactional_object(transactional_object<T> const & r);
+        template <typename T1>
+        transactional_object(T1 const &p1);
+
+        template <typename T1, typename T2>
+        transactional_object(T1 const &p1, T2 const &p2);
+
+        transactional_object & operator=(transactional_object const & r);
+
+        virtual void copy_state(base_transaction_object const * const rhs);
+
+    #ifdef BOOST_STM_USE_UNASIGNED_COPY
+        virtual void cache_deallocate();
+    #endif
+
+    #if BOST_STM_USE_MEMORY_MANAGER
+       void* operator new(size_t size) throw ();
+       void operator delete(void* mem);
+    #endif
+
+    };
+
+[section Virtual function `copy_state()`]
+
+       virtual void copy_state(base_transaction_object const * const rhs);
 
 [endsect]
+
+[section Virtual function `move_state()`]
+
+       virtual void move_state(base_transaction_object * rhs);
+
+[endsect]
+
+[section Virtual function `cache_deallocate()`]
+
+        virtual void cache_deallocate()=0;
+
+[endsect]
+
+[endsect]
+
 [endsect]
 
 
