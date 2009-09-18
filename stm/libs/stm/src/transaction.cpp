@@ -144,7 +144,8 @@ void transaction::initialize_thread()
    //--------------------------------------------------------------------------
    // WARNING: before you think lock_all_mutexes() does not make sense, make
    //          sure you read the following example, which will certainly change
-   //          your mind about what you think you know ...
+   //          your mind about what you think you know ... (bug found by Arthur
+   //          Athrun)
    //
    //          end_transaction() must lock all mutexes() in addition to the
    //          important general access mutex, which serializes commits.
@@ -333,7 +334,8 @@ void transaction::initialize_thread()
    //--------------------------------------------------------------------------
    // WARNING: before you think unlock_all_mutexes() does not make sense, make
    //          sure you read the following example, which will certainly change
-   //          your mind about what you think you know ...
+   //          your mind about what you think you know ... (bug found by Arthur
+   //          Athrun)
    //
    //          end_transaction() must lock all mutexes() in addition to the
    //          important general access mutex, which serializes commits.
