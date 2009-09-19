@@ -300,7 +300,8 @@ transports among remote channels.</small></big></li>
 <hr style="width: 100%; height: 2px;">
 <h3><a class="mozTocH3" name="mozTocId587884"></a>2. Build</h3>
 Channel is continuously being developed and tested in linux
-(ubuntu8.04/g++4.2.4 - ubuntu9.04/g++4.3.3) and Windows (Visual C++ 2005 -
+(ubuntu8.04/g++4.2.4 - ubuntu9.04/g++4.3.3) and Windows (Visual C++
+2005 -
 Visual C++ 2008). The
 implementation is solely based on standard boost facilities plus
 Boost.Asio and
@@ -667,9 +668,84 @@ Named_In with global/remote scope (global subscriptions) and A's set
 of&nbsp; Named_Out with global/remote scope (global
 publications) </li>
   <li>newly created names/ids are automatically
-propogated to connected channels. So peers in channel A can communicate
+propogated to connected channels in the following manner, so that peers
+in channel A can communicate
 with peers in channel B transparently the same way as with the local
-peers. </li>
+peers:</li>
+  <ul>
+    <li>if a new local (MEMBER_LOCAL) Named_Out with id "N" is added
+(name "N" is published) with global/remote scope in channel A, channel
+A will send publication_info_msg containing "N" to all connected
+channels. If channel B receives this message, it will check its name
+space. If there is local (MEMBER_LOCAL) Named_In with id matching "N"
+(using the above discussed id matching algorithms defined with
+id_trait) and global/remote scope, the following will happen at channel
+A and B:</li>
+    <ul>
+      <li>at channel B: <br>
+      </li>
+      <ul>
+        <li>a remote (MEMBER_REMOTE) Named_Out with id "N" and&nbsp;
+SCOPE_LOCAL will be added at channel B which will forward messages from
+channel A to local peers</li>
+        <li>a subscription_info_msg with id "N" will be sent to channel
+A.</li>
+      </ul>
+      <li>at channel A:</li>
+      <ul>
+        <li>after receiving subscription_info_msg with "N" from channel
+B, a remote (MEMBER_REMOTE) Named_In with id "N" and SCOPE_LOCAL will
+be added at channel A, which will forward messages from local Named_Ins
+with id "N"</li>
+      </ul>
+    </ul>
+    <li>if a new local (MEMBER_LOCAL) Named_In with id "N" is added
+(name "N" is subscribed) with global/remote scope in channel A, channel
+A will send subscription_info_msg containing "N" to all connected
+channels. If channel B receives this message, it will check its name
+space. If there is local (MEMBER_LOCAL) Named_Out with id matching "N"
+(using the above discussed id matching algorithms defined with
+id_trait) and global/remote
+scope, the following will happen at channel A and B:</li>
+    <ul>
+      <li>at channel B: <br>
+      </li>
+      <ul>
+        <li>a remote (MEMBER_REMOTE) Named_In with id "N" and&nbsp;
+SCOPE_LOCAL will be added at channel B which will forward messages from
+local peers to channel A<br>
+        </li>
+        <li>a publication_info_msg with id "N" will be sent to channel
+A.</li>
+      </ul>
+      <li>at channel A:</li>
+      <ul>
+        <li>after receiving publication_info_msg with "N" from channel
+B, a remote (MEMBER_REMOTE) Named_Out with id "N" and SCOPE_LOCAL will
+be added at channel A, which will forward messages from channel B to
+local Named_Ins
+with id "N"</li>
+      </ul>
+    </ul>
+  </ul>
+  <li>Please note that channel A will not automatically propogate the
+names/ids it receive from channel B to channel C (suppose that channel
+A connects to channel B and to channel C, and there is no connection
+between channel B and C). If peers in channel B need to send messages
+to peers
+in channel C, there are two choices:</li>
+  <ul>
+    <li>a peer (thread/process) in channel A subscribe to all channel
+B's names/ids with global/remote scope, and re-publish them so that
+channel C can get them; and the peer has the code to receive messages
+from Named_Ins with these names and immediately send messages on
+Named_Outs with the same name (forwarding from channel B to channel C),
+smiliar to what chat server has done in sample <a
+ href="design.html#mozTocId836556">3.7 distributed chat thru a
+central server</a></li>
+    <li>or channel B connect to channel C directly.<br>
+    </li>
+  </ul>
 </ul>
 Filter, translator can be specified at connections among channels to
 control name space merge:<br>
