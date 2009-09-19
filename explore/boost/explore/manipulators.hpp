@@ -166,13 +166,13 @@ namespace boost { namespace explore
             explore::get_stream_state<container_common_stream_state>(ostr)->set_level(l);
         }
 
-        // function ptr object for setrows
-        void setrowsFn(std::ios_base& ostr, std::size_t sz)
+        // function ptr object for cols
+        void setcolsFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_common_stream_state>(ostr)->set_rows(sz);
+            explore::get_stream_state<container_common_stream_state>(ostr)->set_cols(sz);
         }
         
-        // function ptr object for setrows
+        // function ptr object for item_width
         void setitemwidthFn(std::ios_base& ostr, std::size_t sz)
         {
             explore::get_stream_state<container_common_stream_state>(ostr)->set_itemwidth(sz);
@@ -262,15 +262,15 @@ namespace boost { namespace explore
         return explore::get_stream_state<container_common_stream_state>(ostr)->level();
     }
 
-    detail::manipfunc<std::size_t> rows(std::size_t sz)
+    detail::manipfunc<std::size_t> cols(std::size_t sz)
     {
-        return detail::manipfunc<std::size_t>(detail::setrowsFn, sz);
+        return detail::manipfunc<std::size_t>(detail::setcolsFn, sz);
     }
     
     template<typename Elem, typename Tr>
-    std::size_t get_rows(std::basic_ostream<Elem, Tr>& ostr)
+    std::size_t get_cols(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->get_rows();
+        return explore::get_stream_state<container_common_stream_state>(ostr)->get_cols();
     }    
     
     detail::manipfunc<std::size_t> item_width(std::size_t sz)

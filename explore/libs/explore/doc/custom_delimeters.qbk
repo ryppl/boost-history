@@ -17,8 +17,8 @@ Explore provides the ability to change the strings used in the container streami
     [[assoc_item_start(char*)]     ['']     [Changes the string output at the front of an association item.]]
     [[assoc_item_end(char*)]       ['']     [Changes the string output at the end of an association item.]]
     [[assoc_item_seperator(char*)] [':']    [Changes the string output in between elements of an association item.]]
-    [[rows(size_t)]                [???]    [???]]
-    [[item_wdth(size_t)]           [???]    [???]]
+    [[cols(size_t)]                [all]    [Defines how many values will print on each line]]
+    [[item_width(size_t)]          [0]      [Defines each contained item's width, similar to std::setw]]
 ]
 
 [important There are both char* and wchar_t* versions of all string manipulator functions. However, you can only use char manipulators with ostreams and

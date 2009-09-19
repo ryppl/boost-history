@@ -32,9 +32,9 @@ namespace boost { namespace explore
         // starting delimiter
         ostr << state->start();
 
-        std::size_t rows = common_state->rows();
+        std::size_t cols = common_state->cols();
 
-        std::size_t cur_row = 0;
+        std::size_t cur_col = 0;
         while( first != last )
         {
             // value
@@ -45,10 +45,10 @@ namespace boost { namespace explore
                 // separation delimiter
                 ostr << state->separator();
 
-                if( rows && ++cur_row == rows )
+                if( cols && ++cur_col == cols )
                 {
                     ostr << '\n';
-                    cur_row = 0;
+                    cur_col = 0;
                 }
             }
         }

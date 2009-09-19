@@ -59,7 +59,7 @@ namespace boost { namespace explore
     struct container_common_stream_state
     {
         container_common_stream_state(const std::ios_base* stream)
-            : m_level(0), m_depth(0), m_rows(1), m_itemwidth(1), m_quotestrings(false)
+            : m_level(0), m_depth(0), m_cols(1), m_itemwidth(1), m_quotestrings(false)
         {
         }
 
@@ -76,8 +76,8 @@ namespace boost { namespace explore
 
         std::size_t depth() const { return m_depth; }
 
-        std::size_t rows() const { return at(m_rows); }
-        void set_rows(std::size_t rows) { at(m_rows) = rows; }
+        std::size_t cols() const { return at(m_cols); }
+        void set_cols(std::size_t cols) { at(m_cols) = cols; }
 
         std::size_t itemwidth() const { return at(m_itemwidth); }
         void set_itemwidth(std::size_t iw) { at(m_itemwidth) = iw; }
@@ -89,7 +89,7 @@ namespace boost { namespace explore
         {
             std::swap(m_level, other.m_level);
             std::swap(m_depth, other.m_depth);
-            std::swap(m_rows, other.m_rows);
+            std::swap(m_cols, other.m_cols);
             std::swap(m_itemwidth, other.m_itemwidth);
             std::swap(m_quotestrings, other.m_quotestrings);
         }
@@ -98,7 +98,7 @@ namespace boost { namespace explore
         {
             return other.m_level == m_level &&
                    other.m_depth == m_depth &&
-                   other.m_rows == m_rows &&
+                   other.m_cols == m_cols &&
                    other.m_itemwidth == m_itemwidth &&
                    other.m_quotestrings == m_quotestrings;
         }
@@ -127,7 +127,7 @@ namespace boost { namespace explore
         std::size_t m_level;
         std::size_t m_depth;
 
-        size_cont_typ m_rows;
+        size_cont_typ m_cols;
         size_cont_typ m_itemwidth;
 
         bool m_quotestrings;
