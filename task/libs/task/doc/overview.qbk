@@ -76,11 +76,7 @@ Used namespaces are:
 	void main()
 	{
 		// create a thread-pool
-		boost::task::static_pool<
-			boost::task::unbounded_channel<
-				boost::task::fifo
-			>
-		> pool( boost::task::poolsize( 5) );
+		boost::task::static_pool< boost::task::unbounded_twolock_fifo > > pool( boost::task::poolsize( 5) );
 
 		// execute tasks in thread-pool
 		// move tasks ownership to executor

@@ -9,26 +9,30 @@
 
 #include <boost/task/as_sub_task.hpp>
 #include <boost/task/async.hpp>
-#include <boost/task/bounded_channel.hpp>
+#include <boost/task/bounded_twolock_fifo.hpp>
+#include <boost/task/bounded_onelock_fifo.hpp>
+#include <boost/task/bounded_onelock_prio_queue.hpp>
+#include <boost/task/bounded_onelock_smart_queue.hpp>
 #include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/exceptions.hpp>
-#include <boost/task/fifo.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
+#include <boost/task/local_rr_ums.hpp>
 #include <boost/task/meta.hpp>
 #include <boost/task/new_thread.hpp>
 #include <boost/task/own_thread.hpp>
 #include <boost/task/poolsize.hpp>
-#include <boost/task/priority.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/semaphore.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/static_pool.hpp>
-#include <boost/task/smart.hpp>
 #include <boost/task/task.hpp>
 #include <boost/task/unbounded_buffer.hpp>
-#include <boost/task/unbounded_channel.hpp>
+#include <boost/task/unbounded_twolock_fifo.hpp>
+#include <boost/task/unbounded_onelock_fifo.hpp>
+#include <boost/task/unbounded_onelock_prio_queue.hpp>
+#include <boost/task/unbounded_onelock_smart_queue.hpp>
 #include <boost/task/utility.hpp>
 #include <boost/task/watermark.hpp>
 

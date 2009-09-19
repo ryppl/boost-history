@@ -10,7 +10,7 @@
 #include <boost/thread.hpp>
 #include <boost/thread/thread_time.hpp>
 
-#include <boost/task/detail/interrupter.hpp>
+#include <boost/task/context.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/exceptions.hpp>
 
@@ -19,32 +19,28 @@
 namespace boost { namespace task
 {
 
-class context;
-
 template< typename R >
 class handle
 {
 private:
-	friend class context;
-
-	shared_future< R >		fut_;
-	detail::interrupter		intr_;
-
-	handle(
-		shared_future< R > fut,
-		detail::interrupter const& intr)
-	:
-	fut_( fut),
-	intr_( intr)
-	{}
+	shared_future< R >	fut_;
+	context				ctx_;
 
 public:
 	handle()
-	: fut_(), intr_()
+	: fut_(), ctx_()
+	{}
+
+	handle(
+		shared_future< R > fut,
+		context const& ctx)
+	:
+	fut_( fut),
+	ctx_( ctx)
 	{}
 
 	void interrupt()
-	{ intr_.interrupt(); }
+	{ ctx_.interrupt(); }
 
 	void interrupt_and_wait()
 	{
@@ -66,7 +62,7 @@ public:
 	}
 
 	bool interruption_requested()
-	{ return intr_.interruption_requested(); }
+	{ return ctx_.interruption_requested(); }
 
 	R get()
 	{
@@ -132,7 +128,7 @@ public:
 	void swap( handle< R > & other)
 	{
 		fut_.swap( other.fut_);
-// 		intr_.swap( other.intr_);
+ 		ctx_.swap( other.ctx_);
 	}
 };
 

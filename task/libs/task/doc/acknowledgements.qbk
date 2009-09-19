@@ -8,7 +8,7 @@
 
 [section:acknowledgements Appendix B: Acknowledgments]
 
-I'd like to thank Vicente J. Botet Escriba for his comments and contributions (this_task::delay, this_task::yield) as well Anthony Williams and Braddock Gaskill for their future libraries.
+I'd like to thank Vicente J. Botet Escriba for his comments and contributions (this_task::reschedule_until, this_task::delay, this_task::yield) as well Anthony Williams and Braddock Gaskill for their future libraries.
 
 
 [endsect]

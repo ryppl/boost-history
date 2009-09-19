@@ -25,14 +25,14 @@ inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return BOOST_INTERLOCKED_INCREMENT( reinterpret_cast< long volatile * >( object) );
+	return BOOST_INTERLOCKED_INCREMENT( reinterpret_cast< long volatile * >( object) ) - 1;
 }
 
 inline
 uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return BOOST_INTERLOCKED_DECREMENT( reinterpret_cast< long volatile * >( object) );
+	return BOOST_INTERLOCKED_DECREMENT( reinterpret_cast< long volatile * >( object) ) + 1;
 }
 } } }
 

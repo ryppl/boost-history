@@ -27,8 +27,8 @@ struct own_thread
 	{
 		shared_future< R > f( t.get_future() );
 		context ctx;
-		handle< R > h( ctx.get_handle( f) );
-		callable ca( ctx.get_callable( boost::move( t) ) );
+		handle< R > h( f, ctx);
+		callable ca( boost::move( t), ctx);
 		ca();
 		return h;
 	}

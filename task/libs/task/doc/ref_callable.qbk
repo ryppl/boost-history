@@ -16,15 +16,18 @@
 	public:
 		callable();
 
+		template< typename R >
+		callable( task< R > t, context const& ctx);
+
 		void operator()();
 
 		bool empty() const;
 
 		void clear();
 
-		void reset();
-
 		void reset( shared_ptr< thread > const& thrd);
+
+		void swap( callable &);
 	};
 ``
 
@@ -35,6 +38,17 @@
 
 [variablelist
 [[Effects:] [constructs an empty callable]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Constructor `callable( task< R >, context const&)`]
+
+	template< typename R >
+	callable( task< R > t, context const& ctx)
+
+[variablelist
+[[Effects:] [constructs an callable associated with an task and a specific context]]
 [[Throws:] [Nothing]]
 ]
 
@@ -69,22 +83,22 @@
 ]
 
 
-[heading Member function `reset()`]
-
-	void reset()
-
-[variablelist
-[[Effects:] [clears internal thrread-context]]
-[[Throws:] [Nothing]]
-]
-
-
-[heading Member function `reset( shared_ptr< thread> const& thrd)`]
+[heading Member function `reset( shared_ptr< thread> const&)`]
 
 	void reset( shared_ptr< thread > const& thrd)
 
 [variablelist
 [[Effects:] [sets internal thread-context]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `swap( callable &)`]
+
+	void swap( callable & ca)
+
+[variablelist
+[[Effects:] [swaps content of both callable instances]]
 [[Throws:] [Nothing]]
 ]
 

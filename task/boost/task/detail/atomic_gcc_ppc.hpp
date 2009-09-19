@@ -51,7 +51,7 @@ uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 		: "memory", "cc"
 	);
 
-	return ++r;
+	return r;
 }
 
 inline
@@ -73,7 +73,7 @@ uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 		: "memory", "cc"
 	);
 
-	return --r;
+	return r;
 }
 } } }
 

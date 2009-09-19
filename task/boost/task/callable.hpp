@@ -11,8 +11,8 @@
 #include <boost/shared_ptr.hpp>
 #include <boost/thread.hpp>
 
+#include <boost/task/context.hpp>
 #include <boost/task/detail/config.hpp>
-#include <boost/task/detail/interrupter.hpp>
 #include <boost/task/task.hpp>
 
 #include <boost/config/abi_prefix.hpp>
@@ -25,18 +25,13 @@
 namespace boost { namespace task
 {
 
-class context;
-
 class BOOST_TASK_DECL callable
 {
 private:
-	friend class context;
-
 	struct impl
 	{
 		virtual ~impl() {}
 		virtual void run() = 0;
-		virtual void reset() = 0;
 		virtual void reset( shared_ptr< thread > const&) = 0;
 	};
 
@@ -44,45 +39,40 @@ private:
 	class impl_wrapper : public impl
 	{
 	private:
-		task< R >			t_;
-		detail::interrupter	intr_;
+		task< R >	t_;
+		context		ctx_;
 
 	public:
 		impl_wrapper(
 			task< R > t,
-			detail::interrupter const& intr)
-		: t_( boost::move( t) ), intr_( intr)
+			context const& ctx)
+		: t_( boost::move( t) ), ctx_( ctx)
 		{}
 
 		void run()
 		{ t_(); }
 
-		void reset()
-		{ intr_.reset(); }
-
 		void reset( shared_ptr< thread > const& thrd)
-		{ intr_.reset( thrd); }
+		{ ctx_.reset( thrd); }
 	};
 
 	shared_ptr< impl >	impl_;
 
+public:
+	callable();
+
 	template< typename R >
 	callable(
 		task< R > t,
-		detail::interrupter const& intr)
-	: impl_( new impl_wrapper<  R >( boost::move( t), intr) )
+		context const& ctx)
+	: impl_( new impl_wrapper<  R >( boost::move( t), ctx) )
 	{}
-
-public:
-	callable();
 
 	void operator()();
 
 	bool empty() const;
 
 	void clear();
-
-	void reset();
 
 	void reset( shared_ptr< thread > const&);
 
@@ -100,7 +90,7 @@ public:
 	{ ca_.reset( thrd); }
 
 	~context_guard()
-	{ ca_.reset(); }
+	{ ca_.clear(); }
 };
 
 }}

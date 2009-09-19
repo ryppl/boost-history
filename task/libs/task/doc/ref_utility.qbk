@@ -6,6 +6,24 @@
 ]
 
 
+[section:reschedule_until Non-member function `reschedule_until()`]
+
+``
+	#include <boost/task/utility.hpp>
+
+	template< typename Pred >
+	void reschedule_until( Pred const&)
+``
+
+[variablelist
+[[Effects:] [reschedules current task until passed callable predicate becomes ready]]
+[[Throws:] [`boost::thread_interrupted`,`boost::system::system_error`]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
+]
+
+[endsect]
+
+
 [section:get_pool Non-member function `get_pool()`]
 
 ``
@@ -50,22 +68,61 @@
 ``
 
 [variablelist
-[[Effects:] [returns the thread-id of the worker-thread]]
+[[Effects:] [returns returns the thread-id of the worker-thread]]
 [[Throws:] [nothing]]
 [[Note:] [this function resides in namespace `boost::this_task`]]
 ]
 
+[endsect]
 
-[section:worker_id Non-member function `block()`]
+
+[section:delay Non-member function `delay()`]
 
 ``
 	#include <boost/task/utility.hpp>
 
-	bool block()
+	void delay( system_time abs_time)
+
+	template< typename Duration >
+	void delay( Duration const& rel_time)
 ``
 
 [variablelist
-[[Effects:] [blocks current context of execution and returns true if threadpool was shutdown]]
+[[Effects:] [delays the execution of the current task so that the worker-thread can process another task in the meantime]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
+]
+
+[endsect]
+
+
+[section:yield Non-member function `yield()`]
+
+``
+	#include <boost/task/utility.hpp>
+
+	void yield()
+``
+
+[variablelist
+[[Effects:] [yields the current task so that the worker-threadcan process another task in the meantime]]
+[[Throws:] [nothing]]
+[[Note:] [this function resides in namespace `boost::this_task`]]
+]
+
+[endsect]
+
+
+[section:interrupt Non-member function `interrupt()`]
+
+``
+	#include <boost/task/utility.hpp>
+
+	void interrupt()
+``
+
+[variablelist
+[[Effects:] [task can request interruption for itself]]
 [[Throws:] [nothing]]
 [[Note:] [this function resides in namespace `boost::this_task`]]
 ]

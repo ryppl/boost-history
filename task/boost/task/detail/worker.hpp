@@ -8,8 +8,6 @@
 #define BOOST_TASK_DETAIL_WORKER_H
 
 #include <cstddef>
-#include <list>
-#include <set>
 #include <utility>
 
 #include <boost/assert.hpp>
@@ -23,7 +21,6 @@
 #include <boost/task/detail/config.hpp>
 #include <boost/task/detail/fiber.hpp>
 #include <boost/task/detail/guard.hpp>
-#include <boost/task/detail/interrupter.hpp>
 #include <boost/task/detail/wsq.hpp>
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
@@ -113,7 +110,6 @@ private:
 	void execute_( callable & ca)
 	{
 		BOOST_ASSERT( ! ca.empty() );
-		guard grd( pool_.active_worker_);
 		{
 			context_guard lk( ca, thrd_);
 			ca();
@@ -125,10 +121,10 @@ private:
 	bool take_global_callable_(
 			callable & ca,
 			posix_time::time_duration const& asleep)
-	{ return pool_.channel_.take( ca, asleep); }
+	{ return pool_.queue_.take( ca, asleep); }
 
 	bool try_take_global_callable_( callable & ca)
-	{ return pool_.channel_.try_take( ca); }
+	{ return pool_.queue_.try_take( ca); }
 
 	bool try_take_local_callable_( callable & ca)
 	{ return wsq_.try_take( ca); }
@@ -207,15 +203,46 @@ private:
 
 	void run_()
 	{	
-		BOOST_ASSERT( fib_->running() );
 		while ( ! shutdown_() )
-			process_( true);
-		BOOST_ASSERT( fib_->running() );
+		{
+			try_blocked_fibers_();
+			callable ca;
+			if ( try_take_local_callable_( ca) || 
+				 try_steal_other_callable_( ca) ||
+				 try_take_global_callable_( ca) )
+			{
+				execute_( ca);
+				scns_ = 0;
+			}
+			else
+			{
+				guard grd( pool_.idle_worker_);
+				++scns_;
+				if ( scns_ >= max_scns_)
+				{
+					if ( pool_.size_() > pool_.idle_worker_)
+					{
+						if ( take_global_callable_( ca, asleep_) )
+							execute_( ca);
+					}
+					else if ( ! ums_.has_blocked() )
+					{
+						try
+						{ this_thread::sleep( asleep_); }
+						catch ( thread_interrupted const&)
+						{ return; }
+					}
+					scns_ = 0;
+				}
+				else
+					this_thread::yield();
+			}
+		}
 	}
 
 	bool shutdown_()
 	{
-		if ( shutdown__() && pool_.channel_.empty() && ! ums_.has_blocked() )
+		if ( shutdown__() && pool_.queue_.empty() && ! ums_.has_blocked() )
 			return true;
 		else if ( shutdown_now__() )
 			return true;

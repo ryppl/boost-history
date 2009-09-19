@@ -13,6 +13,7 @@
 #include <boost/thread.hpp>
 #include <boost/thread/detail/move.hpp>
 
+#include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/future.hpp>
 #include <boost/task/handle.hpp>
@@ -66,13 +67,13 @@ public:
 	handle< R > operator()( task< R > t)
 	{
 		shared_future< R > f( t.get_future() );
-		context ctx;
-		handle< R > h( ctx.get_handle( f) );
-		callable ca( ctx.get_callable( boost::move( t) ) );
+		context ctx1, ctx2;
+		handle< R > h( f, ctx1);
+		callable ca( boost::move( t), ctx2);
 		shared_ptr< thread > thrd(
 			new thread( wrapper( ca) ),
 			detail::joiner() );
-		ca.reset( thrd);
+		ctx1.reset( thrd);
 
 		return h;
 	}

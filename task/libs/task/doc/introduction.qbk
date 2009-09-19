@@ -129,11 +129,7 @@ to prevent the overhead of thread creation and destruction of threads for each t
 	void main()
 	{
 		// create a thread-pool with five worker-threads
-		boost::task::static_pool<
-			boost::task::unbounded_channel<
-				boost::task::fifo
-			>
-		> pool( boost::task::poolsize( 5) );
+		boost::task::static_pool< boost::task::unbounded_onelock_fifo > pool( boost::task::poolsize( 5) );
 
 		// execute task in a thread-pool
 		// move task ownership to executor

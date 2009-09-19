@@ -16,7 +16,6 @@
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
-#include <boost/thread/barrier.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/task.hpp>

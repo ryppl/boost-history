@@ -17,7 +17,7 @@
 namespace pt = boost::posix_time;
 namespace tsk = boost::task;
 
-typedef tsk::static_pool< tsk::unbounded_channel< tsk::fifo > > pool_type;
+typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
 
 inline
 int fibonacci_fn( int n)
@@ -50,8 +50,6 @@ int main( int argc, char *argv[])
 			tsk::make_task( long_running_fn),
 			pool);
 		std::cout << "poolsize == " << pool.size() << std::endl;
-		std::cout << "idle threads == " << pool.idle() << std::endl;
-		std::cout << "active threads == " << pool.active() << std::endl;
 		tsk::handle< int > h(
 			tsk::async(
 				tsk::make_task( fibonacci_fn, 10),

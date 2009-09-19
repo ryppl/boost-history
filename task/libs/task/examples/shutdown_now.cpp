@@ -40,9 +40,7 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 1) );
+		tsk::static_pool< tsk::unbounded_onelock_fifo > pool( tsk::poolsize( 1) );
 
 		tsk::task< int > t( fibonacci_fn, 10);
 				

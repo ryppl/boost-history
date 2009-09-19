@@ -13,10 +13,8 @@ __static_pool__ supports move semantics.
 
 
 ``
-        boost::task::_static_pool<               // pool type
-                boost::task::unbounded_channel<  // queuing policy (unbounded_channel, bounded_channel)
-                       boost::task::fifo        // scheduling policy (fifo, priority, smart)
-                >
+        boost::task::_static_pool<					 // pool type
+                boost::task::unbounded_twolock_fifo  // queue where application threads enqueue tasks
         > pool(
                 boost::task::poolsize( 6),                         // pool with 6 pre-forked worker-threads
                 boost::posix_time::posix_time::milliseconds( 50),  // time to sleep if no work-item available
@@ -27,17 +25,10 @@ __static_pool__ supports move semantics.
 The first argument of the constructor specifies how many __worker_threads__ the pool will contain. The second
 and third argument are used by the [link_work_stealing __work_stealing__] algorithm.
 
-[note If __bounded_channel__ is used as queuing policy the constructor has two additional arguments . ]
+[note If __bounded_queue__ is used as queuing policy the constructor has two additional arguments . ]
 
 __static_pool__ provides functionality to check the status of the pool - __fn_closed__ returns true when the pool was
-shutdown and __fn_active__ as well as __fn_idle__ returning how many __worker_threads__ are active (executing a task) or idle.
-The size of the pool can be accessed over __fn_size__.
-
-For informational pruposes __fn_empty__ and __fn_pending__ can be used in order to know if the global task-queue is empty or
-how many tasks are waiting for execution. With __fn_clear__ all tasks are removed from the global-queue.
-
-[note __fn_pending__ does not count tasks in the local-queues of the __worker_threads__.]
-
+shutdown and __fn_size__returns the number of __worker_threads__.
 
 [endsect]
 

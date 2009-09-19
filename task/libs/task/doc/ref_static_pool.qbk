@@ -52,18 +52,13 @@
 		~static_pool();
 
 		std::size_t size();
-		std::size_t active();
-		std::size_t idle();
 
 		void shutdown();
 		void shutdown_now();
 
-		void interrupt_all_worker();
-
 		bool closed();
-		void clear();
-		bool empty();
-		std::size_t pending();
+
+		void interrupt_all_worker();
 
 		const std::size_t upper_bound();
 		void upper_bound( high_watermark const& hwm);
@@ -93,7 +88,7 @@
 ]
 
 
-[heading Constructor (unbounded channel)]
+[heading Constructor (unbounded queue)]
 
 	explicit static_pool(
 		<<unspec-type>>,
@@ -104,11 +99,11 @@
 [[Preconditions:] [operating system provides functionality for processor binding]]
 [[Effects:] [constructs a pool - for each processor a worker-thread is created and bound to one processor - global-queue can queue an unlimited number of tasks]]
 [[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
-[[Notes:] [constructor has to be called if a unbounded-channel is used and `bind_to_processors()` must be set as first argument]]
+[[Notes:] [constructor has to be called if a unbounded-queue is used and `bind_to_processors()` must be set as first argument]]
 ]
 
 
-[heading Constructor (unbounded channel/poolsize)]
+[heading Constructor (unbounded queue/poolsize)]
 
 	explicit static_pool(
 		poolsize const& psize,
@@ -118,11 +113,11 @@
 [variablelist
 [[Effects:] [constructs a pool containing psize worker-threads - global-queue can queue an unlimited number of tasks]]
 [[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`]]
-[[Notes:] [constructor has to be called if a unbounded-channel is used]]
+[[Notes:] [constructor has to be called if a unbounded-queue is used]]
 ]
 
 
-[heading Constructor (bounded channel)]
+[heading Constructor (bounded queue)]
 
 	explicit static_pool(
 		<<unspec-type>>,
@@ -135,11 +130,11 @@
 [[Preconditions:] [operating system provides functionality for processor binding]]
 [[Effects:] [constructs a pool - for each processor a worker-thread is created and bound to one processor - global-queue can only queue a limited number of tasks]]
 [[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
-[[Notes:] [constructor has to be called if a bounded-channel is used and `bind_to_processors()` must be set as first argument]]
+[[Notes:] [constructor has to be called if a bounded-queue is used and `bind_to_processors()` must be set as first argument]]
 ]
 
 
-[heading Constructor (bounded channel/poolsize)]
+[heading Constructor (bounded queue/poolsize)]
 
 	explicit static_pool(
 		poolsize const& psize,
@@ -151,7 +146,7 @@
 [variablelist
 [[Effects:] [constructs a pool containing psize worker-threads - global-queue can only queue a limited number of tasks]]
 [[Throws:] [`boost::thread_resource_error`, `boost::task::invalid_scanns`, `boost::task::invalid_timeduration`, `boost::task::invalid_watermark`]]
-[[Notes:] [constructor has to be called if a bounded-channel is used]]
+[[Notes:] [constructor has to be called if a bounded-queue is used]]
 ]
 
 
@@ -205,33 +200,12 @@
 ]
 
 
-[heading Member function `active()`]
-
-	std::size_t active()
-
-[variablelist
-[[Effects:] [returns how many worker-threads are active (executing an task)]]
-[[Throws:] [`boost::task::pool_moved`]]
-]
-
-
-[heading Member function `idle()`]
-
-	std::size_t idle()
-
-[variablelist
-[[Effects:] [returns how many worker-threads are idle (not executing an task).]]
-[[Throws:] [`boost::task::pool_moved`]]
-[[Notes:] [the value is the difference of `size()` and `active()`]]
-]
-
-
 [heading Member function `shutdown()`]
 
 	void shutdown()
 
 [variablelist
-[[Effects:] [deactivates the channel and joins all worker-threads - the pool is closed]]
+[[Effects:] [deactivates the queue and joins all worker-threads - the pool is closed]]
 [[Throws:] [`boost::thread_interrupted`, `boost::system::system_error`, `boost::task::pool_moved`]]
 [[Notes:] [all pending tasks are processed]]
 ]
@@ -242,7 +216,7 @@
 	void shutdown_now()
 
 [variablelist
-[[Effects:] [deactivates the channel, send interruption request to all worker-threads and joins them - the pool is closed]]
+[[Effects:] [deactivates the queue, send interruption request to all worker-threads and joins them - the pool is closed]]
 [[Throws:] [`boost::thread_interrupted`, `boost::system::system_error`, `boost::task::pool_moved`]]
 [[Notes:] [pending tasks are not processed but returned]]
 ]
@@ -268,45 +242,15 @@
 ]
 
 
-[heading Member function `clear()`]
-
-	void clear()
-
-[variablelist
-[[Effects:] [removes all pending tasks from the channel]]
-[[Throws:] [`boost::task::pool_moved`]]
-]
-
-
-[heading Member function `empty()`]
-
-	bool empty()
-
-[variablelist
-[[Effects:] [queries if the channel is empty]]
-[[Throws:] [`boost::task::pool_moved`]]
-]
-
-
-[heading Member function `pending()`]
-
-	std::size_t pending()
-
-[variablelist
-[[Effects:] [queries how many tasks are pending (still unprocessed) in the global-queue (channel)]]
-[[Throws:] [`boost::task::pool_moved`]]
-]
-
-
 [heading Member function `upper_bound()`]
 
 	std::size_t upper_bound()
 
 [variablelist
-[[Preconditions:] [channel is of type bounded-channel]]
-[[Effects:] [returns the upper bound of the bounded-channel]]
+[[Preconditions:] [queue is of type bounded-queue]]
+[[Effects:] [returns the upper bound of the bounded-queue]]
 [[Throws:] [`boost::task::pool_moved`]]
-[[Notes:] [can only be used if a bounded-channel is used]]
+[[Notes:] [can only be used if a bounded-queue is used]]
 ]
 
 
@@ -315,11 +259,11 @@
 	void upper_bound( high_watermark const& hwm)
 
 [variablelist
-[[Preconditions:] [channel is of type bounded-channel]]
-[[Effects:] [sets the upper bound of the bounded-channel]]
+[[Preconditions:] [queue is of type bounded-queue]]
+[[Effects:] [sets the upper bound of the bounded-queue]]
 [[Postconditions:] [`this->upper_bound() == hwm`]]
 [[Throws:] [`boost::task::invalid_watermark`, `boost::task::pool_moved`]]
-[[Notes:] [can only be used if a bounded-channel is used]]
+[[Notes:] [can only be used if a bounded-queue is used]]
 ]
 
 
@@ -328,10 +272,10 @@
 	std::size_t lower_bound();
 
 [variablelist
-[[Preconditions:] [channel is of type bounded-channel]]
-[[Effects:] [returns the lower bound of the bounded-channel]]
+[[Preconditions:] [queue is of type bounded-queue]]
+[[Effects:] [returns the lower bound of the bounded-queue]]
 [[Throws:] [`boost::task::pool_moved`]]
-[[Notes:] [can only be used if a bounded-channel is used]]
+[[Notes:] [can only be used if a bounded-queue is used]]
 ]
 
 
@@ -340,11 +284,11 @@
 	void lower_bound( low_watermark const& lwm)
 
 [variablelist
-[[Preconditions:] [channel is of type bounded-channel]]
-[[Effects:] [sets the lower bound of the bounded-channel]]
+[[Preconditions:] [queue is of type bounded-queue]]
+[[Effects:] [sets the lower bound of the bounded-queue]]
 [[Postconditions:] [`this->lower_bound() == lwm`]]
 [[Throws:] [`boost::task::invalid_watermark`, `boost::task::pool_moved`]]
-[[Notes:] [can only be used if a bounded-channel is used]]
+[[Notes:] [can only be used if a bounded-queue is used]]
 ]
 
 

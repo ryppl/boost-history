@@ -49,13 +49,9 @@ int main( int argc, char *argv[])
 	try
 	{
 		tsk::static_pool<
-			tsk::unbounded_channel<
-				tsk::smart<
+			tsk::unbounded_onelock_smart_queue<
 					int,
-					std::less< int >,
-					tsk::replace_oldest,
-					tsk::take_oldest
-				>
+					std::less< int >
 			>
 		> pool( tsk::poolsize( 1) );
 

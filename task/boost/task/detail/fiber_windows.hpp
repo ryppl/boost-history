@@ -147,6 +147,7 @@ public:
 
 	void switch_to( sptr_t & to)
 	{
+		BOOST_ASSERT( to);
 		BOOST_ASSERT( running_() );
 		if ( to->uninitialized_() ) to->init_();
 		switch_to_( * to);
@@ -155,8 +156,8 @@ public:
 
 	void run()
 	{
-		BOOST_ASSERT( uninitialized_() || ready_() );
-		if ( uninitialized_() ) init_();
+		BOOST_ASSERT( uninitialized_() );
+		init_();
 		BOOST_ASSERT( ready_() );
 		state_ = st_running;
 		run_();
@@ -165,7 +166,7 @@ public:
 
 	void exit()
 	{
-		BOOST_ASSERT( running_() || ready_() ) ;
+		BOOST_ASSERT( running_() ) ;
 		state_ = st_exited;
 		exit_();
 		BOOST_ASSERT(!"should never be reached");

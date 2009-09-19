@@ -21,7 +21,7 @@ lock-free pushes and pops from the ['private end] (accessed by the __worker_thre
 from the ['public end] (accessed by the other __worker_threads__). Synchronization is necessary when the queue is sufficiently small
 that private and public operations could conflict.
 
-The pool contains one global-queue (__bounded_channel__ or __unbounded_channel__) protected by a global-lock and each __worker_thread__
+The pool contains one global-queue (__bounded_queue__ or __unbounded_queue__) protected by a global-lock and each __worker_thread__
 has its own private local worker-queue. If work is enqueued by a __worker_thread__ the __task__ is stored in the worker queue. If the
 work is enqueued by a application thread it goes into the global queue. When __worker_threads__ are looking for work, they have
 following search order:

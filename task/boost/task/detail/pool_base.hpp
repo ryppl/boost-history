@@ -39,7 +39,7 @@ namespace boost { namespace task {
 namespace detail
 {
 
-template< typename Channel, typename UMS >
+template< typename Queue, typename UMS >
 class pool_base
 {
 private:
@@ -48,15 +48,14 @@ private:
 	template< typename T, typename X, typename Z >
 	friend class worker_object;
 
-	typedef Channel					channel;
-	typedef typename channel::item	channel_item;
+	typedef Queue							queue_type;
+	typedef typename queue_type::value_type	value_type;
 
 	UMS						ums_;	
 	worker_group			wg_;
 	shared_mutex			mtx_wg_;
 	volatile uint32_t		state_;
-	channel			 		channel_;
-	volatile uint32_t		active_worker_;
+	queue_type			 	queue_;
 	volatile uint32_t		idle_worker_;
 
 	void worker_entry_()
@@ -118,12 +117,6 @@ private:
 	}
 # endif
 
-	std::size_t active_() const
-	{ return active_worker_; }
-
-	std::size_t idle_() const
-	{ return size_() - active_(); }
-
 	std::size_t size_() const
 	{ return wg_.size(); }
 
@@ -131,7 +124,7 @@ private:
 	{ return state_ > 0; }
 
 	bool close_()
-	{ return atomic_fetch_add( & state_, 1) > 1; }
+	{ return atomic_fetch_add( & state_, 1) > 0; }
 
 public:
 	explicit pool_base(
@@ -144,13 +137,11 @@ public:
 	wg_(),
 	mtx_wg_(),
 	state_( 0),
-	channel_(),
-	active_worker_( 0),
+	queue_(),
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
-		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
 			create_worker_( psize, asleep, max_scns, stack_size);
@@ -167,15 +158,13 @@ public:
 	wg_(),
 	mtx_wg_(),
 	state_( 0),
-	channel_(
+	queue_(
 		hwm,
 		lwm),
-	active_worker_( 0),
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
-		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
 			create_worker_( psize, asleep, max_scns, stack_size);
@@ -190,15 +179,13 @@ public:
 	wg_(),
 	mtx_wg_(),
 	state_( 0),
-	channel_(),
-	active_worker_( 0),
+	queue_(),
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
 		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
-		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
 			create_worker_( psize, asleep, max_scns, stack_size, i);
@@ -214,17 +201,15 @@ public:
 	wg_(),
 	mtx_wg_(),
 	state_( 0),
-	channel_(
+	queue_(
 		hwm,
 		lwm),
-	active_worker_( 0),
 	idle_worker_( 0)
 	{
 		if ( asleep.is_special() || asleep.is_negative() )
 			throw invalid_timeduration();
 		poolsize psize( thread::hardware_concurrency() );
 		BOOST_ASSERT( psize > 0);
-		channel_.activate();
 		lock_guard< shared_mutex > lk( mtx_wg_);
 		for ( std::size_t i( 0); i < psize; ++i)
 			create_worker_( psize, asleep, max_scns, stack_size, i);
@@ -233,18 +218,6 @@ public:
 
 	~pool_base()
 	{ shutdown(); }
-
-	std::size_t active()
-	{
-		shared_lock< shared_mutex > lk( mtx_wg_);
-		return active_();
-	}
-
-	std::size_t idle()
-	{
-		shared_lock< shared_mutex > lk( mtx_wg_);
-		return idle_();
-	}
 
 	void interrupt_all_worker()
 	{
@@ -258,7 +231,7 @@ public:
 	{
 		if ( closed_() || close_() ) return;
 
-		channel_.deactivate();
+		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
 		wg_.signal_shutdown_all();
 		wg_.join_all();
@@ -268,7 +241,7 @@ public:
 	{
 		if ( closed_() || close_() ) return;
 
-		channel_.deactivate_now();
+		queue_.deactivate();
 		shared_lock< shared_mutex > lk( mtx_wg_);
 		wg_.signal_shutdown_now_all();
 		wg_.interrupt_all();
@@ -284,26 +257,17 @@ public:
 	bool closed()
 	{ return closed_(); }
 
-	void clear()
-	{ channel_.clear(); }
-
-	bool empty()
-	{ return channel_.empty(); }
-
-	std::size_t pending()
-	{ return channel_.size(); }
-
 	std::size_t upper_bound()
-	{ return channel_.upper_bound(); }
+	{ return queue_.upper_bound(); }
 
 	void upper_bound( high_watermark const& hwm)
-	{ channel_.upper_bound( hwm); }
+	{ queue_.upper_bound( hwm); }
 
 	std::size_t lower_bound()
-	{ return channel_.lower_bound(); }
+	{ return queue_.lower_bound(); }
 
 	void lower_bound( low_watermark const lwm)
-	{ channel_.lower_bound( lwm); }
+	{ queue_.lower_bound( lwm); }
 
 	template< typename R >
 	handle< R > submit( task< R > t)
@@ -313,9 +277,8 @@ public:
 
 		shared_future< R > f( t.get_future() );
 		context ctx;
-		handle< R > h( ctx.get_handle( f) );
-		channel_.put(
-				ctx.get_callable( boost::move( t) ) );
+		handle< R > h( f, ctx);
+		queue_.put( callable( boost::move( t), ctx) );
 		return h;
 	}
 
@@ -327,10 +290,10 @@ public:
 
 		shared_future< R > f( t.get_future() );
 		context ctx;
-		handle< R > h( ctx.get_handle( f) );
-		channel_.put(
-				channel_item(
-					ctx.get_callable( boost::move( t) ),
+		handle< R > h( f, ctx);
+		queue_.put(
+				value_type(
+					callable( boost::move( t), ctx),
 					attr) );
 		return h;
 	}

@@ -35,7 +35,6 @@ exe interrupt : interrupt.cpp ;
 exe no_deadlock_pool : no_deadlock_pool.cpp ;
 exe no_deadlock_pool2 : no_deadlock_pool2.cpp ;
 exe no_deadlock_pool3 : no_deadlock_pool3.cpp ;
-exe pending : pending.cpp ;
 exe priority : priority.cpp ;
 exe semaphore_thread : semaphore_thread.cpp ;
 exe semaphore_pool : semaphore_pool.cpp ;

@@ -33,11 +33,7 @@ No futher tasks can be submitted.
 		return k1;
 	}
 
-	typedef boost::task::static_pool<
-		boost::task::unbounded_channel<
-			boost::task::fifo
-		>
-	> pool_type;
+	typedef boost::task::static_pool< boost::task::unbounded_onelock_fifo > pool_type;
 
 	void main()
 	{
@@ -88,11 +84,7 @@ The function __fn_shutdown_now__ closes the pool, interrupts and then joins all 
 		return k1;
 	}
 
-	typedef boost::task::static_pool<
-		boost::task::unbounded_channel<
-			boost::task::fifo
-		>
-	> pool_type;
+	typedef boost::task::static_pool< boost::task::unbounded_twolock_fifo > pool_type;
 
 	void main()
 	{

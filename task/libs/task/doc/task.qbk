@@ -251,11 +251,7 @@ speed matters (enabling strategies for fast execution of unordered __work_items_
 	void main()
 	{
 		// create thread-pool with five worker-threads
-		boost::task::static_pool<
-			boost::task::unbounded_channel<
-				boost::task::fifo
-			>
-		> pool( boost::task::poolsize( 5) );
+		boost::task::static_pool< boost::task::unbounded_twolock_fifo > pool( boost::task::poolsize( 5) );
 
 		// create task computing fibonacci-number for 10
 		boost::task::task< long > t(

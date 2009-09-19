@@ -12,6 +12,7 @@
 #include <boost/function.hpp>
 #include <boost/thread/detail/move.hpp>
 
+#include <boost/task/callable.hpp>
 #include <boost/task/context.hpp>
 #include <boost/task/detail/worker.hpp>
 #include <boost/task/future.hpp>
@@ -43,8 +44,8 @@ struct as_sub_task
 					w,
 					wcb) );
 			context ctx;
-			handle< R > h( ctx.get_handle( f) );
-			w->put( ctx.get_callable( boost::move( t) ) );
+			handle< R > h( f, ctx);
+			w->put( callable( boost::move( t), ctx) );
 			return h;
 		}
 		else

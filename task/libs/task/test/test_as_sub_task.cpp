@@ -16,7 +16,6 @@
 #include <boost/ref.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/thread.hpp>
-#include <boost/thread/barrier.hpp>
 #include <boost/utility.hpp>
 
 #include <boost/task.hpp>
@@ -54,7 +53,7 @@ public:
 	void test_case_2()
 	{
 		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
+			tsk::unbounded_onelock_fifo
 		> pool( tsk::poolsize( 1) );
 		tsk::handle< bool > h(
 			tsk::async(

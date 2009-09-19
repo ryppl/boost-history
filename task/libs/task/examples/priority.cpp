@@ -29,9 +29,7 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::priority< int > >
-		> pool( tsk::poolsize( 1) );
+		tsk::static_pool< tsk::unbounded_onelock_prio_queue< int > > pool( tsk::poolsize( 1) );
 
 		tsk::task< void > t1( long_running_fn);
 		tsk::task< void > t2( print_fn, "a text.\n");

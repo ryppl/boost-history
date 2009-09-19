@@ -33,14 +33,14 @@ inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return __sync_add_and_fetch( object, 1);
+	return __sync_fetch_and_add( object, 1);
 }
 
 inline
 uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return __sync_add_and_fetch( object, -1);
+	return __sync_fetch_and_add( object, -1);
 }
 } } }
 

@@ -54,11 +54,7 @@ until the forked __sub_tasks__ have completed. In the meantime the __worker_thre
 
 	void main()
 	{
-		boost::task::static_pool<
-			boost::task::unbounded_channel<
-				boost::task::fifo
-			>
-		> pool( boost::task::poolsize( 5) );
+		boost::task::static_pool< boost::task::unbounded_twolock_fifo > pool( boost::task::poolsize( 5) );
 
 		// compute fibonacci-number 10
 		// for numbers < 5 do inline calculation

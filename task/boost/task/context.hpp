@@ -8,36 +8,67 @@
 #define BOOST_TASK_CONTEXT_H
 
 #include <boost/shared_ptr.hpp>
-#include <boost/thread/detail/move.hpp>
+#include <boost/thread.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/locks.hpp>
+#include <boost/thread/mutex.hpp>
+#include <boost/thread/thread_time.hpp>
+#include <boost/utility.hpp>
 
-#include <boost/task/callable.hpp>
-#include <boost/task/detail/interrupter.hpp>
-#include <boost/task/future.hpp>
-#include <boost/task/handle.hpp>
-#include <boost/task/task.hpp>
+#include <boost/task/detail/config.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
+# if defined(BOOST_MSVC)
+# pragma warning(push)
+# pragma warning(disable:4251 4275)
+# endif
+
 namespace boost { namespace task
 {
-
-class context
+class BOOST_TASK_DECL context
 {
 private:
-	detail::interrupter	intr_;
+	class impl : private noncopyable
+	{
+	private:
+		bool					requested_;
+		mutex					mtx_;
+		shared_ptr< thread >	thrd_;
+
+		void reset_( shared_ptr< thread > const& thrd);
+
+		void interrupt_();
+
+	public:
+		impl();
+
+		void reset( shared_ptr< thread > const& thrd);
+
+		void interrupt();
+
+		bool interruption_requested();
+	};
+
+	shared_ptr< impl >	impl_;
 
 public:
-	template< typename R >
-	callable get_callable( task< R > t)
-	{ return callable( boost::move( t), intr_); }
+	context();
 
-	template< typename R >
-	handle< R > get_handle( shared_future< R > f)
-	{ return handle< R >( f, intr_); }
+	void reset( shared_ptr< thread > const& thrd);
+
+	void interrupt();
+
+	bool interruption_requested();
+
+	void swap( context & other);
 };
-
 }}
+
+# if defined(BOOST_MSVC)
+# pragma warning(pop)
+# endif
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_CONTEXT_H
+#endif // BOOST_TASK_DETAIL_context_H

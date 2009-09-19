@@ -80,33 +80,17 @@ private:
 	{ return state_ == st_exited; }
 
 	void exit_()
-	{
-		if ( ::swapcontext( & callee_, & caller_) == -1)
-			throw system::system_error(
-				system::error_code(
-					errno,
-					system::system_category) );
-	}
+	{ BOOST_ASSERT( ::swapcontext( & callee_, & caller_) != -1); }
 
 	void switch_to_( fiber & to)
 	{
 		std::swap( caller_, to.caller_);
 		std::swap( state_, to.state_);
-		if ( ::swapcontext( & callee_, & to.callee_) == -1)
-			throw system::system_error(
-				system::error_code(
-					errno,
-					system::system_category) );
+		BOOST_ASSERT( ::swapcontext( & callee_, & to.callee_) != -1);
 	}
 
 	void run_()
-	{
-		if ( ::swapcontext( & caller_, & callee_) == -1)
-			throw system::system_error(
-				system::error_code(
-					errno,
-					system::system_category) );
-	}
+	{ BOOST_ASSERT( ::swapcontext( & caller_, & callee_) != -1); }
 
 	void init_()
 	{

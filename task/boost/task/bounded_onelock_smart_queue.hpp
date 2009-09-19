@@ -4,21 +4,26 @@
 //    (See accompanying file LICENSE_1_0.txt or copy at
 //          http://www.boost.org/LICENSE_1_0.txt)
 
-#ifndef BOOST_TASK_BOUNDED_CHANNEL_H
-#define BOOST_TASK_BOUNDED_CHANNEL_H
+#ifndef BOOST_TASK_BOUNDED_ONELOCK_SMART_QUEUE_H
+#define BOOST_TASK_BOUNDED_ONELOCK_SMART_QUEUE_H
 
+#include <algorithm>
 #include <cstddef>
-#include <vector>
 
 #include <boost/assert.hpp>
 #include <boost/bind.hpp>
 #include <boost/foreach.hpp>
-#include <boost/function.hpp>
+#include <boost/multi_index_container.hpp>
+#include <boost/multi_index/member.hpp>
+#include <boost/multi_index/ordered_index.hpp>
 #include <boost/thread/condition.hpp>
 #include <boost/thread/locks.hpp>
 #include <boost/thread/shared_mutex.hpp>
 
 #include <boost/task/callable.hpp>
+#include <boost/task/detail/atomic.hpp>
+#include <boost/task/detail/meta.hpp>
+#include <boost/task/detail/smart.hpp>
 #include <boost/task/exceptions.hpp>
 #include <boost/task/watermark.hpp>
 
@@ -26,83 +31,68 @@
 
 namespace boost { namespace task
 {
-template< typename SchedulingPolicy >
-class bounded_channel
+template<
+	typename Attr,
+	typename Comp,
+	typename Enq = detail::replace_oldest,
+	typename Deq = detail::take_oldest
+>
+class bounded_onelock_smart_queue
 {
 public:
-	typedef SchedulingPolicy					scheduler_type;
-	typedef typename scheduler_type::impl::item	item;
+	typedef detail::has_attribute	attribute_tag_type;
+	typedef Attr					attribute_type;
 
-private:
-	typedef typename scheduler_type::impl	queue;
-
-	enum channel_state
+	struct value_type
 	{
-		channel_active,
-		channel_deactive,
-		channel_deactive_now
+		callable		ca;
+		attribute_type	attr;
+
+		value_type(
+			callable const& ca_,
+			attribute_type const& attr_)
+		: ca( ca_), attr( attr_)
+		{ BOOST_ASSERT( ! ca.empty() ); }
+
+		void swap( value_type & other)
+		{
+			ca.swap( other.ca);
+			std::swap( attr, other.attr);
+		}
 	};
 
-	channel_state	state_;
-	queue			queue_;
-	shared_mutex	mtx_;
-	condition		not_empty_cond_;
-	condition		not_full_cond_;
-	std::size_t		hwm_;
-	std::size_t		lwm_;
+private:
+	typedef multi_index::multi_index_container<
+		value_type,
+		multi_index::indexed_by<
+			multi_index::ordered_non_unique<
+				multi_index::member<
+					value_type,
+					Attr,
+					& value_type::attr
+				>,
+				Comp
+			>
+		>
+	>															queue_type;
+	typedef typename queue_type::template nth_index< 0 >::type	queue_index;
+
+	volatile uint32_t	state_;
+	queue_type			queue_;
+	queue_index	&		idx_;
+	shared_mutex		mtx_;
+	condition			not_empty_cond_;
+	condition			not_full_cond_;
+	Enq					enq_op_;
+	Deq					deq_op_;
+	std::size_t			hwm_;
+	std::size_t			lwm_;
 
 	bool active_() const
-	{ return state_ == channel_active; }
-
-	bool deactive_() const
-	{ return state_ == channel_deactive; }
-
-	bool deactive_now_() const
-	{ return state_ == channel_deactive_now; }
-
-	void activate_()
-	{ state_ = channel_active; }
-
-	void clear_()
-	{
-		BOOST_ASSERT( ! active_() );
-		queue_.clear();
-		BOOST_ASSERT( empty_() );
-	}
+	{ return 0 == state_; }
 
 	void deactivate_()
-	{
-		if ( active_() )
-		{
-			state_ = channel_deactive;
-			not_empty_cond_.notify_all();
-		}
-
-		BOOST_ASSERT( deactive_() );
-	}
-
-	void deactivate_now_()
-	{
-		if ( active_() )
-		{
-			state_ = channel_deactive_now;
-			not_empty_cond_.notify_all();
-		}
-
-		BOOST_ASSERT( deactive_now_() );
-	}
-
-	const std::vector< callable > drain_()
-	{
-		BOOST_ASSERT( deactive_now_() );
-		std::vector< callable > unprocessed;
-		unprocessed.reserve( queue_.size() );
-		BOOST_FOREACH( callable ca, queue_)
-		{ unprocessed.push_back( ca); }
-		clear_();
-		BOOST_ASSERT( empty_() );
-		return unprocessed;
-	}
+	{ detail::atomic_fetch_add( & state_, 1); }
 
 	bool empty_() const
 	{ return queue_.empty(); }
@@ -132,7 +122,7 @@ private:
 	}
 
 	void put_(
-		item const& itm,
+		value_type const& va,
 		unique_lock< shared_mutex > & lk)
 	{
 		if ( full_() )
@@ -140,18 +130,18 @@ private:
 			not_full_cond_.wait(
 				lk,
 				bind(
-					& bounded_channel::producers_activate_,
+					& bounded_onelock_smart_queue::producers_activate_,
 					this) );
 		}
 		if ( ! active_() )
-			throw task_rejected("channel is not active");
-		queue_.push( itm);
+			throw task_rejected("queue is not active");
+		enq_op_( idx_, va);
 		not_empty_cond_.notify_one();
 	}
 
 	template< typename Duration >
 	void put_(
-		item const& itm,
+		value_type const& va,
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
@@ -161,13 +151,13 @@ private:
 				lk,
 				rel_time,
 				bind(
-					& bounded_channel::producers_activate_,
+					& bounded_onelock_smart_queue::producers_activate_,
 					this) ) )
 				throw task_rejected("timed out");
 		}
 		if ( ! active_() )
-			throw task_rejected("channel is not active");
-		queue_.push( itm);
+			throw task_rejected("queue is not active");
+		enq_op_( idx_, va);
 		not_empty_cond_.notify_one();
 	}
 
@@ -175,24 +165,25 @@ private:
 		callable & ca,
 		unique_lock< shared_mutex > & lk)
 	{
-		if ( deactive_now_() || ( deactive_() && empty_() ) )
+		bool empty = empty_();
+		if ( ! active_() && empty)
 			return false;
-		if ( empty_() )
+		if ( empty)
 		{
 			try
 			{
 				not_empty_cond_.wait(
 					lk,
 					bind(
-						& bounded_channel::consumers_activate_,
+						& bounded_onelock_smart_queue::consumers_activate_,
 						this) );
 			}
 			catch ( thread_interrupted const&)
 			{ return false; }
 		}
-		if ( deactive_now_() || ( deactive_() && empty_() ) )
+		if ( ! active_() && empty_() )
 			return false;
-		queue_.pop( ca);
+		deq_op_( idx_, ca);
 		if ( size_() <= lwm_)
 		{
 			if ( lwm_ == hwm_)
@@ -211,9 +202,10 @@ private:
 		Duration const& rel_time,
 		unique_lock< shared_mutex > & lk)
 	{
-		if ( deactive_now_() || ( deactive_() && empty_() ) )
+		bool empty = empty_();
+		if ( ! active_() && empty)
 			return false;
-		if ( empty_() )
+		if ( empty)
 		{
 			try
 			{
@@ -221,16 +213,16 @@ private:
 					lk,
 					rel_time,
 					bind(
-						& bounded_channel::consumers_activate_,
+						& bounded_onelock_smart_queue::consumers_activate_,
 						this) ) )
 					return false;
 			}
 			catch ( thread_interrupted const&)
 			{ return false; }
 		}
-		if ( deactive_now_() || ( deactive_() && empty_() ) )
+		if ( ! active_() && empty_() )
 			return false;
-		queue_.pop( ca);
+		deq_op_( idx_, ca);
 		if ( size_() <= lwm_)
 		{
 			if ( lwm_ == hwm_)
@@ -245,9 +237,9 @@ private:
 
 	bool try_take_( callable & ca)
 	{
-		if ( deactive_now_() || empty_() )
+		if ( empty_() )
 			return false;
-		queue_.pop( ca);
+		deq_op_( idx_, ca);
 		bool valid = ! ca.empty();
 		if ( valid && size_() <= lwm_)
 		{
@@ -268,15 +260,18 @@ private:
 	{ return ! active_() || ! empty_(); }
 
 public:
-	bounded_channel(
+	bounded_onelock_smart_queue(
 		high_watermark const& hwm,
 		low_watermark const& lwm)
 	:
-	state_( channel_active),
+	state_( 0),
 	queue_(),
+	idx_( queue_.get< 0 >() ),
 	mtx_(),
 	not_empty_cond_(),
 	not_full_cond_(),
+	enq_op_(),
+	deq_op_(),
 	hwm_( hwm),
 	lwm_( lwm)
 	{
@@ -284,100 +279,52 @@ public:
 			throw invalid_watermark("low watermark must be less than or equal to high watermark");
 	}
 
-	bool active()
-	{
-		lock_guard< shared_mutex > lk( mtx_);
-		return active_();
-	}
-
-	void activate()
-	{
-		lock_guard< shared_mutex > lk( mtx_);
-		activate_();
-	}
-
-	void clear()
-	{
-		lock_guard< shared_mutex > lk( mtx_);
-		clear_();
-	}
-
-	bool deactive()
-	{ return ! active(); }
-
 	void deactivate()
-	{
-		lock_guard< shared_mutex > lk( mtx_);
-		deactivate_();
-	}
-
-	void deactivate_now()
-	{
-		lock_guard< shared_mutex > lk( mtx_);
-		deactivate_now_();
-	}
-
-	const std::vector< callable > drain()
-	{
-		lock_guard< shared_mutex > lk( mtx_);
-		return drain_();
-	}
+	{ deactivate_(); }
 
 	bool empty()
-	{ 
-		lock_guard< shared_mutex > lk( mtx_);
-		return empty_();
-	}
-
-	bool full()
 	{
-		lock_guard< shared_mutex > lk( mtx_);
-		return full_();
+		shared_lock< shared_mutex > lk( mtx_);
+		return empty_();
 	}
 
 	std::size_t upper_bound()
 	{
-		lock_guard< shared_mutex > lk( mtx_);
+		shared_lock< shared_mutex > lk( mtx_);
 		return hwm_;
 	}
 
 	void upper_bound( std::size_t hwm)
 	{
-		lock_guard< shared_mutex > lk( mtx_);
+		unique_lock< shared_mutex > lk( mtx_);
 		upper_bound_( hwm);
 	}
 
 	std::size_t lower_bound()
 	{
-		lock_guard< shared_mutex > lk( mtx_);
+		shared_lock< shared_mutex > lk( mtx_);
 		return lwm_;
 	}
 
 	void lower_bound( std::size_t lwm)
 	{
-		lock_guard< shared_mutex > lk( mtx_);
+		unique_lock< shared_mutex > lk( mtx_);
 		lower_bound_( lwm);
 	}
 
-	std::size_t size()
-	{ 
-		lock_guard< shared_mutex > lk( mtx_);
-		return size_();
-	}
-
-	void put( item const& itm)
+	void put( value_type const& va)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		put_( itm, lk);
+		put_( va, lk);
 	}
 
 	template< typename Duration >
 	void put(
-		item const& itm,
+		value_type const& va,
 		Duration const& rel_time)
 	{
 		unique_lock< shared_mutex > lk( mtx_);
-		put_( itm, rel_time, lk);
+		put_( va, rel_time, lk);
 	}
 
 	bool take( callable & ca)
@@ -397,7 +344,7 @@ public:
 
 	bool try_take( callable & ca)
 	{
-		lock_guard< shared_mutex > lk( mtx_);
+		unique_lock< shared_mutex > lk( mtx_);
 		return try_take_( ca);
 	}
 };
@@ -405,4 +352,4 @@ public:
 
 #include <boost/config/abi_suffix.hpp>
 
-#endif // BOOST_TASK_BOUNDED_CHANNEL_H
+#endif // BOOST_TASK_BOUNDED_ONELOCK_SMART_QUEUE_H

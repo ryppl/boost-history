@@ -14,6 +14,7 @@
 	class handle
 	{
 		handle();
+		handle( shared_future< R >, context const&);
 
 		void interrupt();
 		void interrupt_and_wait();
@@ -52,12 +53,22 @@
 	friend unsigned int waitfor_any( handle< T1 > & t1, handle< T2 > & t2, handle< T3 > & t3, handle< T4 > & t4, handle< T5 > & t5);
 ``
 
-[heading Constructor]
+[heading Constructor `handle()`]
 
 	handle()
 
 [variablelist
 [[Effects:] [constructs an empty (invalid) handle]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Constructor `handle( shared_future< R >, context const&)`]
+
+	handle( shared_future< R >, context const&);
+
+[variablelist
+[[Effects:] [constructs an handle associated with anfuture and an context]]
 [[Throws:] [Nothing]]
 ]
 

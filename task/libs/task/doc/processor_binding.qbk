@@ -13,7 +13,7 @@ be given to constructor instead __pool_size__ so that a __worker_thread__ is cre
 
 ``
 	typedef boost::task::static_pool<
-		boost::task::unbounded_channel< boost::tp::fifo >
+		boost::task::unbounded_queue< boost::tp::fifo >
 	> pool_type;
 
 	// constructs thread-pool with worker-threads as
@@ -21,7 +21,7 @@ be given to constructor instead __pool_size__ so that a __worker_thread__ is cre
 	pool_type pool( pool_type::bind_to_processors() );
 ``
 
-The constructor takes additional arguments for the [link_work_stealing work-stealing algorithm] and [link_channel high-] and [link_channel low-watermark] too.
+The constructor takes additional arguments for the [link_work_stealing work-stealing algorithm] and [link_queue high-] and [link_queue low-watermark] too.
 
 [note __boost_task__ does provide this feature only for Windows, Linux, AIX, HP-UX, Solaris and FreeBSD.]
 

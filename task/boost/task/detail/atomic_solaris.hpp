@@ -29,14 +29,14 @@ inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return ::atomic_inc_32_nv( object);
+	return ::atomic_inc_32( object);
 }
 
 inline
 uint32_t atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
-	return ::atomic_dec_32_nv( object);
+	return ::atomic_dec_32( object);
 }
 } } }
 

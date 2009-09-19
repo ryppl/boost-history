@@ -35,10 +35,8 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::priority< int > >
-		> pool( tsk::poolsize( 3) );
-		
+		tsk::static_pool< tsk::unbounded_onelock_prio_queue< int > > pool( tsk::poolsize( 3) ); 
+
 		tsk::task< int > t1( fibonacci_fn, 10);
 		tsk::task< int > t2( fibonacci_fn, 10);
 		tsk::task< int > t3( fibonacci_fn, 10);

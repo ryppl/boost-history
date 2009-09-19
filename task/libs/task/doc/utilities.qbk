@@ -12,6 +12,13 @@ __boost_task__ provides some free-functions which can be used inside a __task__ 
 runs in a __thread_pool__).
 
 
+[heading reschedule_until]
+
+In the function `boost::this_task::reschedule_until( Pred const&)` allows to synchronize the task with other asynchronous events
+without blocking the __worker_threads__ (bool Pred::operator()() must not block). The current task will be rescheduled until the
+passed predicate becomes true.
+
+
 [heading get_pool]
 
 The pool in which the current code (__task__) is executed can be accessed via __fn_get_pool__. If hte code is not executed by a
@@ -26,6 +33,22 @@ In order to check if the current code is executed in a __thread_pool__ __fn_runs
 [heading worker_id]
 
 __fn_worker_id__ returns the __thread_id__ of the __worker_thread__ executing the current __task__.
+
+
+[heading delay]
+
+The execution of a __task__ can be delayed for a time-duration or until a specific time-point with __fn_delay__.
+
+
+[heading yield]
+
+If a __task__ detects that it would bould block it can yield itself with __fn_yield__ so that the __worker_thread__ can execute
+another __task__ in the meantime.
+
+
+[heading interrupt]
+
+A __task__ can interrupt itself via __fn_tt_interrupt__.
 
 
 [endsect]

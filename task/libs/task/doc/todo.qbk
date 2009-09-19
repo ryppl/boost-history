@@ -10,9 +10,7 @@
 
 [heading Optimizations]
  
-* finer-grained locking for bounded_channel and unbounded_channel using two-lock-queue
-
-* lock-free-queue with fifo ordering as channel
+* lock-free-queue with fifo ordering as queue
 
 
 [heading Dynamic thread-pool]

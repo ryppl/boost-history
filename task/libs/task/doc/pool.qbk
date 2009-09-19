@@ -12,7 +12,7 @@ Instead of creating a new thread and quickly throwing it away after the task is 
 creation and destruction can be avoided by running the __work_items__ on a __thread_pool__ (reusing an existing
 __worker_thread__ instead).
 
-A __thread_pool__ maintains a queue (or queues) of __work_items__ to be done, and a pool of __worker_threads__ which execute __work_items__ from the queue(s).
+A __thread_pool__ maintains a global queue of __work_items__ to be processed, and a pool of __worker_threads__ which execute __work_items__ from the global queue.
 
 __boost_task__ provides __fn_async__ with support of executing an __task__ in __thread_pool__:
 
@@ -27,11 +27,7 @@ __boost_task__ provides __fn_async__ with support of executing an __task__ in __
 		// five worker-threads
 		// FIFO schduling of queued tasks
 		// and unlimited size of internal queue
-		boost::task::static_pool<
-			boost::task::unbounded_channel<
-				boost::task::fifo
-			>
-		> pool( boost::task::poolsize( 5) );
+		boost::task::static_pool< boost::task::unbounded_twolock_fifo > pool( boost::task::poolsize( 5) );
 
 		// create task
 		boost::task::task< std::string > t( echo, "Hello World!");
@@ -55,8 +51,7 @@ tasks[footnote see [@http://www.ddj.com/go-parallel/article/showArticle.jhtml?ar
 
 
 [include static_pool.qbk]
-[include channel.qbk]
-[include scheduler.qbk]
+[include queue.qbk]
 [include shutdown.qbk]
 [include processor_binding.qbk]
 [include work_stealing.qbk]

@@ -18,9 +18,7 @@ int main( int argc, char *argv[])
 {
 	try
 	{
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( tsk::poolsize( 1) );
+		tsk::static_pool< tsk::unbounded_twolock_fifo > pool( tsk::poolsize( 1) );
 
 		int n = 5;	
 		tsk::unbounded_buffer< std::string > buf_ping, buf_pong;

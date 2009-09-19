@@ -26,10 +26,6 @@ callable::clear()
 { impl_.reset(); }
 
 void
-callable::reset()
-{ impl_->reset(); }
-
-void
 callable::reset( shared_ptr< thread > const& thrd)
 { impl_->reset( thrd); }
 

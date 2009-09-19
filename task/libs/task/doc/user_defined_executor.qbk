@@ -15,64 +15,14 @@ The policy class has to provide `handle< R > operator()( task< R > t)` which imp
 
 * create an context (link between handle and task)
 
-* create an handle< R > via context and shared_future< R >
+* create an handle< R > passing shared_future< R > and context
 
-* create a callable via context an the moved task< R >
+* create a callable apply task< R > (move) and context to the ctor 
 
 * pass the callable to the executor
 
 * return the handle
 
-In the sample code below the task is executed in a fiber (__boost_fiber__).
-
-
-``
-	class new_fiber
-	{
-	private:
-		fiber::scheduler	&	sched_;
-
-	public:
-		new_fiber( fiber::scheduler & sched)
-		: sched_( sched)
-		{}
-
-		template< typename R >
-		handle< R > operator()( task< R > t)
-		{
-			// get shared_future< R > from task< R >
-			shared_future< R > f( t.get_future() );
-
-			// create an context
-			context ctx;
-
-			// create an handle< R > out of the context and the future
-			handle< R > h( ctx.get_handle( f) );
-
-			// create an callable containing the moved task< R >
-			callable ca( ctx.get_callable( boost::move( t) ) );
-
-			// apply the callable to the executor == fiber-scheduler
-			sched_.submit( ca);
-
-			// return the handle
-			return h;
-		}
-	};
-
-
-	void main()
-	{
-		boost::fiber::scheduler sched;
-
-		boost::task::handle< long > h1(
-			boost::task::async(
-				boost::make_task( ... ),
-				sched);
-
-		sched.run();
-	}
-``
 
 [endsect] 
  

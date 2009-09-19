@@ -14,33 +14,65 @@
 	class context
 	{
 	public:
-		template< typename R >
-		callable get_callable( task< R > t);
+		context();
 
-		template< typename R >
-		handle< R > get_handle( shared_future< R > f);
+		void reset( shared_ptr< thread > const& thrd);
+
+		void interrupt();
+
+		bool interruption_requested();
+
+		void swap( context & other);
 	};
 ``
 
 
-[heading Templated member function `get_callable( task< R > t)`]
+[heading Constructor `callable()`]
 
-	template< typename R >
-	callable get_callable( task< R > t);
+	callable()
 
 [variablelist
-[[Effects:] [returns a callable containing the moved task< R >]]
+[[Effects:] [creates an context object]
 [[Throws:] [Nothing]]
 ]
 
 
-[heading Templated member function `get_handle( shared_future< R > f)`]
+[heading Member function `reset( shared_ptr< thread> const&)`]
 
-	template< typename R >
-	handle< R > get_handle( shared_future< R > f);
+	void reset( shared_ptr< thread > const& thrd)
 
 [variablelist
-[[Effects:] [returns a handle associated to the moved task< R >]]
+[[Effects:] [sets internal thread-context]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `interrupt()`]
+
+	void interrupt()
+
+[variablelist
+[[Effects:] [request interruption of associated task]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `interruption_requested()`]
+
+	bool interruption_requested()
+
+[variablelist
+[[Effects:] [retuns true if interruption of associated task is requested]]
+[[Throws:] [Nothing]]
+]
+
+
+[heading Member function `swap( context &)`]
+
+	void swap( context & ctx)
+
+[variablelist
+[[Effects:] [swaps content of both context instances]]
 [[Throws:] [Nothing]]
 ]
 

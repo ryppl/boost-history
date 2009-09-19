@@ -30,13 +30,16 @@
 
 namespace boost { namespace task
 {
-template< typename Channel, typename UMS = local_rr_ums >
+template< typename Queue, typename UMS = local_rr_ums >
 class static_pool
 {
 public:
-	typedef Channel		channel;
+	typedef Queue	queue_type;
+	typedef UMS		ums_type;
 
 private:
+	typedef detail::pool_base< queue_type, ums_type >	base_type;
+
 	template< typename T, typename X, typename Z >
 	friend class detail::worker_object;
 
@@ -44,7 +47,7 @@ private:
 	struct tag_bind_to_processors {};
 # endif
 	
-	shared_ptr< detail::pool_base< Channel, UMS > >		pool_;
+	shared_ptr< base_type >		pool_;
 
 	static_pool( static_pool &);
 	static_pool & operator=( static_pool &);
@@ -59,7 +62,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel, UMS >( psize, asleep, max_scns, stack_size) )
+	: pool_( new base_type( psize, asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
@@ -69,7 +72,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel, UMS >( psize, hwm, lwm, asleep, max_scns, stack_size) )
+	: pool_( new base_type( psize, hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 # if defined(BOOST_HAS_PROCESSOR_BINDINGS)
@@ -78,7 +81,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 10),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel, UMS >( asleep, max_scns, stack_size) )
+	: pool_( new base_type( asleep, max_scns, stack_size) )
 	{}
 
 	explicit static_pool(
@@ -88,7 +91,7 @@ public:
 		posix_time::time_duration const& asleep = posix_time::microseconds( 100),
 		scanns const& max_scns = scanns( 20),
 		stacksize const& stack_size = stacksize( 64000) )
-	: pool_( new detail::pool_base< Channel, UMS >( hwm, lwm, asleep, max_scns, stack_size) )
+	: pool_( new base_type( hwm, lwm, asleep, max_scns, stack_size) )
 	{}
 
 	static tag_bind_to_processors bind_to_processors()
@@ -131,20 +134,6 @@ public:
 	}
 # endif
 
-	std::size_t active()
-	{
-		if ( ! pool_)
-			throw pool_moved();
-		return pool_->active();
-	}
-
-	std::size_t idle()
-	{
-		if ( ! pool_)
-			throw pool_moved();
-		return pool_->idle();
-	}
-
 	void interrupt_all_worker()
 	{
 		if ( ! pool_)
@@ -178,27 +167,6 @@ public:
 		if ( ! pool_)
 			throw pool_moved();
 		return pool_->closed();
-	}
-
-	void clear()
-	{
-		if ( ! pool_)
-			throw pool_moved();
-		pool_->clear();
-	}
-
-	bool empty()
-	{
-		if ( ! pool_)
-			throw pool_moved();
-		return pool_->empty();
-	}
-
-	std::size_t pending()
-	{
-		if ( ! pool_)
-			throw pool_moved();
-		return pool_->pending();
 	}
 
 	std::size_t upper_bound()
@@ -245,7 +213,7 @@ public:
 		return pool_->submit( boost::move( t), attr);
 	}
 
-	typedef typename shared_ptr< detail::pool_base< Channel, UMS > >::unspecified_bool_type	unspecified_bool_type;
+	typedef typename shared_ptr< base_type >::unspecified_bool_type	unspecified_bool_type;
 
 	operator unspecified_bool_type() const // throw()
 	{ return pool_; }
@@ -258,18 +226,18 @@ public:
 };
 }
 
-template< typename Channel, typename UMS >
-void swap( task::static_pool< Channel, UMS > & l, task::static_pool< Channel, UMS > & r)
+template< typename Queue, typename UMS >
+void swap( task::static_pool< Queue, UMS > & l, task::static_pool< Queue, UMS > & r)
 { return l.swap( r); }
 
 # if defined(BOOST_HAS_RVALUE_REFS)
-template< typename Channel, typename UMS >
-task::static_pool< Channel, UMS > && move( task::static_pool< Channel, UMS > && t)
+template< typename Queue, typename UMS >
+task::static_pool< Queue, UMS > && move( task::static_pool< Queue, UMS > && t)
 { return t; }
 # else
-template< typename Channel, typename UMS >
-task::static_pool< Channel, UMS >  move( boost::detail::thread_move_t< task::static_pool< Channel, UMS > > t)
-{ return task::static_pool< Channel, UMS >( t); }
+template< typename Queue, typename UMS >
+task::static_pool< Queue, UMS >  move( boost::detail::thread_move_t< task::static_pool< Queue, UMS > > t)
+{ return task::static_pool< Queue, UMS >( t); }
 # endif
 
 }
