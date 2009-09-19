@@ -2052,12 +2052,6 @@ struct cache_deallocate {
         }
     }
 };
-template <class T>
-struct cache_deallocate<transactional_object<std::vector<T> > > {
-    static void apply(transactional_object<std::vector<T> >* ptr) {
-        delete ptr;
-    }
-};
 
 }
 
@@ -2066,11 +2060,6 @@ template <class T> void cache_deallocate(T*ptr) {
 }
 
 #else //!BOOST_STM_NO_PARTIAL_SPECIALIZATION
-
-template <class T>
-inline void cache_deallocate(transactional_object<std::vector<T> >* ptr) {
-    delete ptr;
-}
 
 template <class T>
 inline void cache_deallocate(T* ptr) {
@@ -2086,57 +2075,6 @@ inline void cache_deallocate(T* ptr) {
     }
 }
 #endif //BOOST_STM_NO_PARTIAL_SPECIALIZATION
-
-// this function must be specialized for objects that are non transactional,
-// by calling to new of the copy constructor
-
-#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
-namespace partial_specialization_workaround {
-template <class T>
-struct cache_new_copy_constructor;
-
-template <class T>
-struct cache_new_copy_constructor {
-    static inline T* apply(const T& val) {
-        T* p = cache_allocate<T>();
-        if (p==0) {
-            throw std::bad_alloc();
-        }
-        boost::stm::cache_restore(&val, p);
-        return p;
-    }
-};
-
-template <class T, class A>
-struct cache_new_copy_constructor<transactional_object<std::vector<T,A> > > {
-    static inline transactional_object<std::vector<T,A> >* apply(const transactional_object<std::vector<T,A> >& val) {
-        return new transactional_object<std::vector<T,A> >(val);
-    }
-};
-} // partial_specialization_workaround
-
-template <class T>
-inline T* cache_new_copy_constructor(const T& val) {
-    return partial_specialization_workaround::cache_new_copy_constructor<T>::apply(val);
-}
-#else //BOOST_STM_NO_PARTIAL_SPECIALIZATION
-
-template <class T>
-inline transactional_object<std::vector<T> >* cache_new_copy_constructor(const transactional_object<std::vector<T> >& val) {
-    return new transactional_object<std::vector<T> >(val);
-}
-
-template <class T>
-inline T* cache_new_copy_constructor(const T& val) {
-    T* p = cache_allocate<T>();
-    if (p==0) {
-        //std::cout << __LINE__ << " malloc ERROR" << std::endl;
-        throw std::bad_alloc();
-    }
-    cache_restore(&val, p);
-    return p;
-}
-#endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
 #endif // BOOST_STM_USE_MEMCOPY
 
 inline void cache_release(base_transaction_object* ptr) {
@@ -2147,58 +2085,82 @@ inline void cache_release(base_transaction_object* ptr) {
 #endif
 }
 
-template <class T>
-inline T* cache_new_copy(const T& val) {
 #ifdef BOOST_STM_USE_MEMCOPY
-    return cache_new_copy_constructor(val);
-#else
-    return new T(val);
-#endif
-}
+#ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
+namespace partial_specialization_workaround {
+template <class T>
+struct cache_clone;
 
-template <class T> void cache_restore(const T* const ori, T* target);
+template <class T>
+struct cache_clone {
+    static inline T* apply(const T& val) {
+        T* p = cache_allocate<T>();
+        if (p==0) {
+            throw std::bad_alloc();
+        }
+        boost::stm::cache_copy(&val, p);
+        return p;
+    }
+};
+
+} // partial_specialization_workaround
+
+template <class T>
+inline T* cache_clone(const T& val) {
+    return partial_specialization_workaround::cache_clone<T>::apply(val);
+}
+#else //BOOST_STM_NO_PARTIAL_SPECIALIZATION
+
+template <class T>
+inline T* cache_clone(const T& val) {
+    T* p = cache_allocate<T>();
+    if (p==0) {
+        //std::cout << __LINE__ << " malloc ERROR" << std::endl;
+        throw std::bad_alloc();
+    }
+    cache_copy(&val, p);
+    return p;
+}
+#endif // BOOST_STM_NO_PARTIAL_SPECIALIZATION
+#else
+template <class T>
+inline T* cache_clone(const T& val) {
+    return new T(val);
+}
+#endif
+
+
+template <class T> void cache_copy(const T* const ori, T* target);
 // When BOOST_STM_USE_MEMCOPY is defined
 // this function must be specialized for objects that are non transactional by deleting the object, e.g.
 
 #ifdef BOOST_STM_NO_PARTIAL_SPECIALIZATION
 #ifdef BOOST_STM_USE_MEMCOPY
 namespace partial_specialization_workaround {
-template <class T> struct cache_restore;
+template <class T> struct cache_copy;
 
 
 template <class T>
-struct cache_restore {
+struct cache_copy {
     static inline void apply(const T* const ori, T* target) {
         memcpy(target, ori, sizeof(T));
-    }
-};
-
-template <class T>
-struct cache_restore<transactional_object<std::vector<T> > > {
-    static inline void apply(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
-        *target=*ori;
     }
 };
 
 } // partial_specialization_workaround
 #endif
 
-template <class T> void cache_restore(const T* const ori, T* target) {
+template <class T> void cache_copy(const T* const ori, T* target) {
 #ifdef BOOST_STM_USE_MEMCOPY
-    partial_specialization_workaround::cache_restore<T>::apply(ori, target);
+    partial_specialization_workaround::cache_copy<T>::apply(ori, target);
 #else
     *target=*ori;
 #endif
 }
 
 #else
-#ifdef BOOST_STM_USE_MEMCOPY
-template <class T> void cache_restore(const transactional_object<std::vector<T> >* const ori, transactional_object<std::vector<T> >* target) {
-    *target=*ori;
-}
-#endif
 
-template <class T> void cache_restore(const T* const ori, T* target) {
+template <class T> void cache_copy(const T* const ori, T* target) {
 #ifdef BOOST_STM_USE_MEMCOPY
     memcpy(target, ori, sizeof(T));
 #else

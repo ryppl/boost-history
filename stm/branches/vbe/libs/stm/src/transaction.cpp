@@ -12,12 +12,17 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/stm/transaction.hpp>
+#include <boost/stm/non_tx_smart_ptr.hpp>
 #include <boost/stm/contention_manager.hpp>
 #include <iostream>
 
 using namespace std;
 //using namespace boost::stm;
 namespace boost { namespace stm {
+namespace non_tx {
+    std::map<void*, base_transaction_object*> detail::cache_map::map_;
+    
+}
 
 ///////////////////////////////////////////////////////////////////////////////
 // Static initialization

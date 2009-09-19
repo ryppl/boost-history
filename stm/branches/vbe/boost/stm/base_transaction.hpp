@@ -55,9 +55,17 @@ namespace boost { namespace stm {
 // forward declarations
 //-----------------------------------------------------------------------------
 
+class base_transaction_object;
+    
+template <class T> T* cache_clone(const T& val);
+template <class T> void cache_copy(const T* const ori, T* target);
+void cache_release(base_transaction_object* ptr);
+
+template <class T> inline T* cache_clone_constructor(const T&);
+    
+template <class T> T* cache_allocate();
 template <class T> void cache_deallocate(T*);
-template <class T> void cache_restore(const T* const ori, T* target);
-template <class T> inline T* cache_new_copy_constructor(const T&);
+
 class transaction;
 
 #ifndef BOOST_STM_USE_BOOST_MUTEX
@@ -301,9 +309,9 @@ private:
 //-----------------------------------------------------------------------------
 // transaction object mixin
 // Provides the definition of the virtual functions
-//      copy_state: relaying on the cache_restore<T> generic function
+//      copy_state: relaying on the cache_copy<T> generic function
 //      move_state and
-//      cache_deallocate: relaying on the cache_restore<T> generic function
+//      cache_deallocate: relaying on the cache_copy<T> generic function
 // Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
 
 // The parameter Base=base_transaction_object allows to mic transaction_object and polymorphism
@@ -318,13 +326,13 @@ public:
 
     //--------------------------------------------------------------------------
     virtual base_transaction_object* clone() const {
-        return cache_new_copy(*this);
+        return cache_clone(*this);
     }
 
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
-        boost::stm::cache_restore(static_cast<Derived const * const>(rhs), static_cast<Derived *>(this));
+        boost::stm::cache_copy(static_cast<Derived const * const>(rhs), static_cast<Derived *>(this));
    }
 
 #if BUILD_MOVE_SEMANTICS
@@ -408,193 +416,6 @@ public:
 
 private:
    T value_;
-};
-
-
-//-----------------------------------------------------------------------------
-// transactional object wrapper
-// A transactional_object<T> is a base_transaction_object wrapping an instance of type T
-// Provides the definition of the virtual functions
-//      forward constructors to the wrapped type
-//      copy_state: relaying on the cache_restore<T> generic function
-//      move_state and
-//      cache_deallocate: relaying on the cache_restore<T> generic function
-// Defines in addition the functions new and delete when USE_STM_MEMORY_MANAGER is defined
-//
-// If a class D inherits from B we have that transactional_object<D> dont inherits from transactional_object<B>, but
-// we can static/dynamic cast them robustly.
-// Evidently the std::static_cast/std::dynamic_cast do not works. We need to define the specific cast
-//
-// transactional_object<D>* d=...;
-// transactional_object<B>* b=tx_static_cast<B>(d);
-//
-// transactional_object<B>* b=...;
-// transactional_object<D>* d=tx_dynamic_cast<B>(b);
-//
-//-----------------------------------------------------------------------------
-
-template <typename T>
-class transactional_object : public base_transaction_object {
-public:
-    T value;
-
-    transactional_object() {}
-    transactional_object(const T*ptr)
-        : base_transaction_object()
-        , value(*ptr) {}
-
-    transactional_object(transactional_object<T> const & r)
-        : base_transaction_object(r)
-        , value(r.value) {}
-
-    template <typename T1>
-    transactional_object(T1 const &p1)
-        : base_transaction_object()
-        , value(p1) {}
-
-    template <typename T1, typename T2>
-    transactional_object(T1 const &p1, T2 const &p2)
-        : base_transaction_object()
-        , value(p1,p2) {}
-
-    transactional_object & operator=(transactional_object const & r)  // =default never throws
-    {
-        value = r.value;
-        return *this;
-    }
-
-    virtual base_transaction_object* clone() const {
-        return cache_new_copy(*this);
-    }
-
-    virtual void copy_state(base_transaction_object const * const rhs) {
-        cache_restore(static_cast<transactional_object<T> const * const>(rhs),
-                      //static_cast<transactional_object<T> *>(this));
-                      this);
-    }
-
-#ifdef BOOST_STM_USE_MEMCOPY
-    virtual void cache_deallocate() {
-        boost::stm::cache_deallocate(this);
-    }
-#endif
-
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
-   {
-      return retrieve_mem(size);
-   }
-
-   void operator delete(void* mem)
-   {
-      return_mem(mem, sizeof(transactional_object<T>));
-   }
-#endif
-
-};
-
-//-----------------------------------------------------------------------------
-// gets the transactional_object<T> pointer wrapping the T pointer
-//-----------------------------------------------------------------------------
-template <typename T>
-static transactional_object<T>* tx_up_cast(T* ptr) {
-    return reinterpret_cast<transactional_object<T>*>(reinterpret_cast<char*>(ptr)-offsetof(transactional_object<T>, value));
-}
-
-//-----------------------------------------------------------------------------
-// static_cast two transactional_object's
-//-----------------------------------------------------------------------------
-template <typename T, typename U>
-static transactional_object<T>* tx_static_cast(transactional_object<U>* ptr) {
-    return tx_up_cast(static_cast<T*>(&ptr->value));
-}
-
-//-----------------------------------------------------------------------------
-// dynamic_cast two transactional_object's
-//-----------------------------------------------------------------------------
-template <typename T, typename U>
-static transactional_object<T>* tx_dynamic_cast(transactional_object<U>* ptr) {
-    T* p = dynamic_cast<T*>(&ptr->value);
-    if (p==0) return 0;
-    return tx_up_cast(p);
-}
-
-//-----------------------------------------------------------------------------
-// This class defines the transactional cache of a non transactional variable.
-// There is a map from the address of the variable of type T to an instance of this class
-//
-//-----------------------------------------------------------------------------
-
-template <typename T>
-class transactional_reference_cache : public base_transaction_object {
-public:
-    T* const value_;
-    mutable T* ptr_;
-
-    transactional_reference_cache(T& ref)
-        : base_transaction_object()
-        , value_(&ref), ptr_(0) {}
-
-    transactional_reference_cache(T* ptr)
-        : base_transaction_object()
-        , value_(ptr), ptr_(0) {}
-
-    ~transactional_reference_cache() {
-        delete ptr_;
-    }
-    T* get() const {
-        if(ptr_!=0) return ptr_;
-        else return value_;
-    }
-
-    virtual base_transaction_object* clone() const {
-        transactional_reference_cache tmp = cache_new_copy(*this);
-        if (tmp.value!=0) {
-            tmp.ptr_ = new T(*value_);
-        }
-        return tmp;
-    }
-
-    virtual void copy_state(base_transaction_object const * const rhs) {
-        if (value_==0) return;
-        *value_= *(static_cast<transactional_reference_cache<T> const * const>(rhs)->ptr_);
-        delete ptr_;
-        ptr_=0;
-    }
-
-#ifdef BOOST_STM_USE_MEMCOPY
-    virtual void cache_deallocate() {
-        delete ptr_;
-        ptr_=0;
-        boost::stm::cache_deallocate(this);
-    }
-#endif
-
-#if USE_STM_MEMORY_MANAGER
-   void* operator new(size_t size) throw ()
-   {
-      return retrieve_mem(size);
-   }
-
-   void operator delete(void* mem)
-   {
-      return_mem(mem, sizeof(transactional_object<T>));
-   }
-#endif
-
-private:
-    transactional_reference_cache(transactional_reference_cache<T> const & r)
-        : base_transaction_object(r)
-        , value_(r.value_), ptr_(r.ptr_) {}
-
-
-    transactional_reference_cache & operator=(transactional_reference_cache const & r)
-    {
-        value_ = r.value_;
-        ptr_ = r.ptr_;
-        return *this;
-    }
-
 };
 
 //-----------------------------------------------------------------------------

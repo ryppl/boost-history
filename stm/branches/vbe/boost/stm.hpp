@@ -38,6 +38,8 @@
 #include <boost/stm/transaction.hpp>
 #include <boost/stm/contention_manager.hpp>
 #include <boost/stm/detail/tx_ptr.hpp>
+#include <boost/stm/tx_smart_ptr.hpp>
+#include <boost/stm/non_tx_smart_ptr.hpp>
 
 ///////////////////////////////////////////////////////////////////////////////
 #endif // TRANSACTION_H
