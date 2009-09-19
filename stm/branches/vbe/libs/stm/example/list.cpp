@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -139,22 +139,22 @@ tx_ptr<test::list<int> > l;
 void create() {
     //l=boost::stm::make_tx_ptr<test::list<int> >();
     atomic(_) {
-        cerr << "create" << endl;
+        cerr << __LINE__ << " create" << endl;
         l=BOOST_STM_NEW(_,transactional_object<test::list<int> >());
-        cerr << "create" << endl;
+        cerr << __LINE__ << " create" << endl;
         cerr << l->size() << endl;
     } catch (...) {
         cerr << "aborted" << endl;
     }
-    cerr << l->size() << endl;
+    //cerr << l->size() << endl;
 }
 void insert1() {
-    thread_initializer thi;
+    //thread_initializer thi;
     atomic(_) {
-        cerr << "try" << endl;
+        cerr << __LINE__ << " try" << endl;
         make_wr_ptr(_,l)->insert(1);
     } catch(...) {
-        cerr << "aborted" << endl;
+        cerr << __LINE__ << " aborted" << endl;
     }
 }
 void insert2() {
@@ -173,14 +173,17 @@ void insert3() {
 bool check_size(std::size_t val) {
     int res;
     use_atomic(_) {
-        cerr << "size" <<make_rd_ptr(_,l)->size()<< endl;
+        //cerr << "size" <<make_rd_ptr(_,l)->size()<< endl;
         res = make_rd_ptr(_,l)->size()==val;
     }
     return res;
 }
 int test1() {
     create();
-    #if 1
+    insert1();
+    bool fails=true;
+    fails= !check_size(1);
+    #if 0
     thread  th1(insert1);
     //thread  th2(insert2);
     //thread  th3(insert2);
@@ -190,11 +193,13 @@ int test1() {
     //th2.join();
     //th3.join();
     //th4.join();
-    #endif
     bool fails=true;
     fails= !check_size(1);
     //boost::stm::delete_ptr(l);
-    return fails;
+    return 0;
+    #else
+    return true;
+    #endif
 }
 
 int main() {
@@ -202,7 +207,7 @@ int main() {
     transaction::do_deferred_updating();
     transaction::initialize();
     thread_initializer thi;
-    srand(time(0));
+    //srand(time(0));
 
     int res=0;
     res+=test1();

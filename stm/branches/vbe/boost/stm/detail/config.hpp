@@ -7,7 +7,7 @@
 // (See accompanying file LICENSE_1_0.txt or
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/stm for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -36,7 +36,7 @@
 #define BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM 1
 
 // BOOST_STM_USE_MEMCOPY: STM uses memcpy insted of the copy constructor
-//#define BOOST_STM_USE_MEMCOPY 1
+#define BOOST_STM_USE_MEMCOPY 1
 
 //// The cache using uninitialized_copy can use the following memeory manager
 ////BOOST_STM_CACHE_USE_MALLOC: uses malloc/free
