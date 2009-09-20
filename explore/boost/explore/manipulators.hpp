@@ -255,12 +255,6 @@ namespace boost { namespace explore
     {
         return detail::manipfunc<std::size_t>(&detail::levelFn, l);
     }
-    
-    template<typename Elem, typename Tr>
-    std::size_t get_level(std::basic_ostream<Elem, Tr>& ostr)
-    {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->level();
-    }
 
     detail::manipfunc<std::size_t> cols(std::size_t sz)
     {

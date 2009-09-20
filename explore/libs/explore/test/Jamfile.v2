@@ -28,6 +28,7 @@ project
   [ run std_map.cpp   ]
   [ run std_set.cpp   ]
   [ run std_pair.cpp   ]
+  [ run std_stream.cpp ]
 
   [ run boost_array.cpp   ]
   [ run boost_tuple.cpp ]

@@ -32,14 +32,33 @@ namespace boost { namespace explore
             return index;
         }
 
-        // deletion callback for extra state
+        // callback for extra state events
         template<typename T>
-        void delete_extra_state(std::ios_base::event e, std::ios_base& stream, int arg)
+        void extra_state_callback(std::ios_base::event e, std::ios_base& stream, int arg)
         {
-            if( std::ios_base::erase_event == e && arg == get_stream_state_index<T>() )
+            if( arg == get_stream_state_index<T>() )
             {
-                delete get_stream_state<T>(stream);
-                stream.pword(arg) = 0;
+                switch( e )
+                {
+                case std::ios_base::erase_event:
+                    delete get_stream_state<T>(stream);
+                    stream.pword(arg) = 0;
+                    break;
+                case std::ios_base::copyfmt_event:
+                {
+                    // format has been copied.  Make an actual copy instead of using the same
+                    // pointer.  Prevents deleting memory twice.
+                    T* state = get_stream_state<T>(stream);
+
+                    // first set to 0 in case allocation fails.  Although copyfmt will have failed,
+                    // we at least won't crash when we won't delete the same memory twice
+                    stream.pword(arg) = 0;
+                    stream.pword(arg) = new T(*state);
+                    break;
+                }
+                case std::ios_base::imbue_event:
+                    break;
+                }
             }
         }
     }
@@ -61,7 +80,7 @@ namespace boost { namespace explore
             // both creating a new T and registering the callback allocate memory.  Use
             // auto_ptr to satisfy the strong exception guarantee.
             std::auto_ptr<T> pt(new T(&stream));
-            stream.register_callback(detail::delete_extra_state<T>, index);
+            stream.register_callback(detail::extra_state_callback<T>, index);
             state = pt.release();
         }
         return state;
