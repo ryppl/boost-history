@@ -72,9 +72,10 @@ bool assign() {
     }
     bool res=true;
     use_atomic(_) {
-        //read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
-        //read_ptr<tx_int_ptr> tx_counter2_ptr_ptr(_, counter2_ptr);
-        //res = (tx_counter2_ptr_ptr==tx_counter2_ptr_ptr) ;
+        //res = (counter2_ptr==counter_ptr) ;
+        read_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
+        read_ptr<tx_int_ptr> tx_counter2_ptr_ptr(_, counter2_ptr);
+        //res = (*tx_counter2_ptr_ptr==*tx_counter_ptr_ptr) ;
         //res= (_.read(counter_ptr)==_.read(counter2_ptr));
     }
     return res;
@@ -97,35 +98,22 @@ bool test_const(tx_int_const_ptr& const  ptr) {
 int test_counter() {
     use_atomic(_) {
         write_ptr<tx_int_ptr> tx_counter_ptr_ptr(_, counter_ptr);
-        _.throw_if_forced_to_abort_on_new();
-        //tx_int* tmp=_.as_new(new tx_int());
-        //tx_int* tmp=&counter;
-        *tx_counter_ptr_ptr=_.as_new(new tx_int());
-        //*tx_counter_ptr_ptr=&counter;
-        std::cout << __LINE__ <<" " << __FILE__ << std::endl;
-        
-        //(_.write(counter_ptr)).ptr_=_.as_new(new tx_int());
+        *tx_counter_ptr_ptr=BOOST_STM_NEW(_, tx_int());
     }
-        std::cout << __LINE__ <<" " << __FILE__ << std::endl;
     thread  th1(inc);
     thread  th2(decr);
-#if 0
     thread  th3(inc);
     thread  th4(inc);
-#endif
 
     th1.join();
     th2.join();
-#if 0
     th3.join();
     th4.join();
-#endif
-        std::cout << __LINE__ <<" " << __FILE__ << std::endl;
-    bool fails=false;
-        std::cout << __LINE__ <<" " << __FILE__ << std::endl;
-    fails=fails || check(0);
-    //fails = fails || !assign();
-    //fails = fails || !test_const(counter);
+    
+    int fails=0;
+    fails += check(1);
+    fails += !assign();
+    //fails += !test_const(counter);
     return fails;
 }
 

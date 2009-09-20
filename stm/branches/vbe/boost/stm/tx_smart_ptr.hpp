@@ -47,11 +47,11 @@ public:
 
     //
     template<class Y>
-    tx_obj(tx_obj<Y> const& r) : obj_(r.ref()) {} // throws only if obj_ contructor throws
+    tx_obj(tx_obj<Y> const& r) : obj_(r.ref()) {} 
 
     template <typename T1>
     tx_obj(T1 p1) : obj_(p1) {}
-
+    ~tx_obj() {}
     #if 0
     bool operator==(const tx_obj<T>& rhs) const {
         return this->ref()==rhs.ref();

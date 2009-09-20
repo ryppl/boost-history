@@ -26,19 +26,14 @@ public:
     typedef transaction_object_ptr<TO> this_type;
     typedef transaction_object<transaction_object_ptr<TO> > base_type;
     transaction_object_ptr() :  base_type(), ptr_(0) {
-        std::cout << "transaction_object_ptr "<< __LINE__ <<" " << __FILE__ << " "<< int(this) << std::endl;
     }
     transaction_object_ptr(const transaction_object_ptr & rhs) :  base_type(rhs),  ptr_(rhs.ptr_) {
-        std::cout << "transaction_object_ptr "<< __LINE__ <<" " << __FILE__ << " "<< int(this) <<" "<< int(&rhs) << std::endl;
     }
     transaction_object_ptr(transaction_object_ptr & rhs) :  base_type(rhs), ptr_(rhs.rhs) {
-        std::cout << "transaction_object_ptr "<< __LINE__ <<" " << __FILE__ << " "<< int(this) <<" "<< int(&rhs) << std::endl;
     }
     transaction_object_ptr(TO* ptr) :  base_type(), ptr_(ptr) {
-        std::cout << "transaction_object_ptr "<<__LINE__ <<" " << __FILE__ << " "<< int(this) << std::endl;
     }
     ~transaction_object_ptr() {
-        std::cout << "transaction_object_ptr "<<__LINE__ <<" " << __FILE__ << " "<< int(this) << std::endl;
     }    
     this_type& operator=(TO* rhs) {
         ptr_=rhs;
@@ -51,7 +46,7 @@ public:
     }
 
     inline TO& operator*() const { return *get(); }
-    //inline TO* operator->() const { return get(); }
+    inline TO* operator->() const { return get(); }
     
     };
 
