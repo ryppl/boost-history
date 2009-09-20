@@ -40,6 +40,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_columnate_stream_test, C, test_types )
         vi.push_back(i);
     }
 
+    BOOST_CHECK_EQUAL(get_cols(str_out), 0);
+
     str_out << cols(3) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
 
     BOOST_CHECK_EQUAL(output(str_out),
@@ -51,6 +53,8 @@ BOOST_AUTO_TEST_CASE_TEMPLATE( basic_columnate_stream_test, C, test_types )
     reset(str_out);
 
     str_out << cols(3) << item_width(5) << start(str_to<C>("")) << boost::explore::end(str_to<C>("")) << vi;
+
+    BOOST_CHECK_EQUAL(get_cols(str_out), 3);
 
     BOOST_CHECK_EQUAL(output(str_out),
         "    0,     1,     2, \n"
