@@ -23,6 +23,9 @@
 namespace boost { namespace stm {
 
 template <typename T>
+class write_ptr;
+
+template <typename T>
 class read_ptr
 {
 public:
@@ -92,6 +95,7 @@ private:
    mutable transaction &t_;
    mutable T *tx_ptr_;
    mutable bool written_;
+    template <typename X> friend  class write_ptr;
 };
 
 //-----------------------------------------------------------------------------
@@ -105,6 +109,22 @@ public:
       t_(t), tx_obj_(t_.write(tx_obj))
    {}
 
+   inline write_ptr(transaction &t, T* ptr) :
+      t_(t), tx_obj_(t_.write_ptr(ptr))
+   {}
+
+   inline write_ptr(transaction &t, read_ptr<T> & tx_obj) :
+      t_(t), tx_obj_(*t_.write_ptr(tx_obj.tx_ptr_))
+   {}
+
+    write_ptr& operator=(T const* ptr) {
+        tx_obj_=*t_.write_ptr(ptr);
+        return *this;
+    }
+    write_ptr& operator=(read_ptr<T> & tx_obj) {
+        tx_obj_=*t_.write_ptr(tx_obj.tx_ptr_);
+        return *this;
+    }
    inline T& operator*()
    {
       if (t_.forced_to_abort())

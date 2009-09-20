@@ -192,7 +192,7 @@ public:
 #endif
    {}
 
-#if 0
+#if 1
     base_transaction_object(const base_transaction_object &t)
         : transactionThread_(kInvalidThread)
         , newMemory_(0)
@@ -306,7 +306,8 @@ public:
 
     //--------------------------------------------------------------------------
     virtual base_transaction_object* clone() const {
-        return cache_clone(*this);
+        Derived* tmp = cache_clone(*static_cast<Derived const*>(this));
+        return tmp;
     }
 
    //--------------------------------------------------------------------------
@@ -354,6 +355,7 @@ public:
    native_trans() : value_(T()) {}
    native_trans(T const &rhs) : value_(rhs) {}
    native_trans(native_trans const &rhs) : value_(rhs.value_) {}
+   ~native_trans() {}
 
    native_trans& operator=(T const &rhs) { value_ = rhs; return *this; }
 

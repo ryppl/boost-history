@@ -85,9 +85,10 @@ int test_counter() {
     th3.join();
     th4.join();
 
-    bool fails=!check(2);
-    fails = fails || !assign();
-    fails = fails || !test_const(counter);
+    int fails=0;
+    fails += !check(2);
+    fails += !assign();
+    fails += !test_const(counter);
     return fails;
 }
 

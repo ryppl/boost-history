@@ -15,10 +15,8 @@
 #include <boost/foreach.hpp>
 #include <boost/thread.hpp>
 #include <boost/shared_ptr.hpp>
-//#include <string>
 #include <vector>
 #include <list>
-//#include <iostream>
 #include <stdlib.h>
 #define foreach BOOST_FOREACH
 
@@ -66,6 +64,7 @@ struct bank{
         }
     }
 };
+
 
 struct teller {
     teller(bank* b)
@@ -297,7 +296,7 @@ int main() {
 
     int res=0;
     res+=test_account();
-    res+=test_vector_int();
+    //res+=test_vector_int();
 
     return res;
 

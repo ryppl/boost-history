@@ -45,8 +45,9 @@ project
     test-suite "tests"
         :
           #[ run stm.cpp testatom.cpp pointer_test.cpp  smart.cpp  globalIntArr.cpp testHashMapAndLinkedListsWithLocks.cpp irrevocableInt.cpp testHashMapWithLocks.cpp isolatedComposedIntLockInTx.cpp   testInt.cpp isolatedComposedIntLockInTx2.cpp  testLL_latm.cpp isolatedInt.cpp testLinkedList.cpp isolatedIntLockInTx.cpp testLinkedListWithLocks.cpp litExample.cpp testPerson.cpp lotExample.cpp testRBTree.cpp  transferFun.cpp nestedTxs.cpp txLinearLock.cpp testHT_latm.cpp usingLockTx.cpp testHashMap.cpp ]
-          [ run ../example/bank.cpp ]
+          #[ run ../example/bank.cpp ]
           #[ run ../example/list.cpp ]
           [ run ../example/counter.cpp ]
+          [ run ../example/counter_ptr.cpp ]
           [ run ../example/non_tx_counter.cpp ]
     ;

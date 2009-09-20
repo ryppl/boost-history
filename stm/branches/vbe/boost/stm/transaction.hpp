@@ -2094,7 +2094,6 @@ template <class T>
 inline T* cache_clone(const T& val) {
     T* p = cache_allocate<T>();
     if (p==0) {
-        //std::cout << __LINE__ << " malloc ERROR" << std::endl;
         throw std::bad_alloc();
     }
     cache_copy(&val, p);
@@ -2104,7 +2103,8 @@ inline T* cache_clone(const T& val) {
 #else
 template <class T>
 inline T* cache_clone(const T& val) {
-    return new T(val);
+    T* tmp=new T(val);
+    return tmp;
 }
 #endif
 

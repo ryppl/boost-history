@@ -1901,7 +1901,6 @@ inline void transaction::doIntervalDeletions()
       {
          for (MemoryContainerList::iterator j = i->second.begin(); j != i->second.end(); ++j)
          {
-            //std::cout << __LINE__ << " delete @" << int(*j) << std::endl;
             delete *j;
          }
          deletionBuffer_.erase(i);
@@ -2018,10 +2017,7 @@ inline void transaction::deferredCommitWriteState()
 #if PERFORMING_VALIDATION
       i->first->version_++;
 #endif
-
-      //delete i->second;
       cache_release(i->second);
-
    }
 
    writeList().clear();

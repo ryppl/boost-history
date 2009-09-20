@@ -152,9 +152,9 @@ public:
 // A rd_ptr<T> ("read pointer") points to an object that the current
 // transaction has opened for read only access.
 // You can only call a const method through a read pointer.
-// A rd_ptr<T> is constructed from an tx_ptr<T> through an explicit constructor.
-// Once a rd_ptr<T> has been constructed, an tx_ptr<T> can be opened for
-// reading simply by assignment (operator=()) into the constructed rd_ptr<T>.
+// A rd_ptr<T> is constructed from an T pointer or reference.
+// Once a rd_ptr<T> has been constructed, an cache is opened for
+// reading.
 // It is not safe to derreference a rd_ptr<T> after having assigned the same
 // tx_ptr<T> to a wr_ptr<T>. If this is the case the readen value do not match
 // the writen one. If it is possible to write on the same transaction use
