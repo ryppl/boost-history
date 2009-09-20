@@ -37,7 +37,7 @@ namespace impl
 {
     ////////////////////////////////////////////////////////////////////////////
     // percentage_effective_sample_size
-    template<typename Sample,typename Discriminator>
+    template<typename T,typename I>
     class percentage_effective_sample_size_impl
       : public accumulator_base
     {
@@ -49,13 +49,13 @@ namespace impl
         template<typename Args>
         void operator()(const Args& args)
         {
-            Sample iacvf = integrated_acvf<Discriminator>(args[accumulator]);
-            if(iacvf>0.0){
+            T iacvf = integrated_acvf<I>(args[accumulator]);
+            if(iacvf>static_cast<T>(0)){
 
-                typedef boost::numeric::converter<result_type,Sample> Sample2res;
-                Sample acv0_val = acv0<Discriminator>(args[accumulator]);
-                Sample tmp = 100.0*acv0_val/iacvf;
-                val = Sample2res::convert(tmp);
+                typedef boost::numeric::converter<result_type,T> T2res;
+                T acv0_val = acv0<I>(args[accumulator]);
+                T tmp = static_cast<T>(100)*acv0_val/iacvf;
+                val = T2res::convert(tmp);
             }else{
                 val = 0;
             }
@@ -76,14 +76,14 @@ namespace impl
 
 namespace tag
 {
-    template <typename Discriminator = default_delay_discriminator>
+    template <typename I = default_delay_discriminator>
     struct percentage_effective_sample_size
-      : depends_on<acv0<Discriminator>, integrated_acvf<Discriminator> >
+      : depends_on<acv0<I>, integrated_acvf<I> >
     {
         /// INTERNAL ONLY
       typedef
         accumulators::impl::percentage_effective_sample_size_impl<
-            mpl::_1,Discriminator> impl;
+            mpl::_1,I> impl;
 
     };
 }
@@ -101,12 +101,12 @@ namespace extract
 //    const percentage_effective_sample_size = {};
 
   // see acvf about default_delay_discriminator
-  template<typename Discriminator,typename AccumulatorSet>
+  template<typename I,typename AccumulatorSet>
   typename mpl::apply<
-    AccumulatorSet,tag::percentage_effective_sample_size<Discriminator>
+    AccumulatorSet,tag::percentage_effective_sample_size<I>
     >::type::result_type
   percentage_effective_sample_size(AccumulatorSet const& acc){
-    typedef tag::percentage_effective_sample_size<Discriminator> the_tag;
+    typedef tag::percentage_effective_sample_size<I> the_tag;
     return extract_result<the_tag>(acc);
   }
 

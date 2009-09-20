@@ -35,6 +35,7 @@ http://www.boostpro.com/vault/index.php?directory=Math%20-%20Numerics
 
 [ History ]
 
+2009/09 :   Cosmetic changes
 2009/07 :   Cosmetic changes
 2008/04 :   First version
 

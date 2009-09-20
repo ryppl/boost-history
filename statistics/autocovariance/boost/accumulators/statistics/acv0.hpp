@@ -37,19 +37,19 @@ namespace impl
 {
     ////////////////////////////////////////////////////////////////////////////
     // acv0_impl
-    template<typename Sample,typename Discriminator>
+    template<typename T,typename I>
     class acv0_impl
       : public accumulator_base
     {
     public:
-        typedef Sample result_type;
+        typedef T result_type;
         acv0_impl(dont_care)
         {}
 
         template<typename Args>
         void operator()(Args const &args)
         {
-            val = (*begin(acvf<Discriminator>(args[accumulator])));
+            val = (*begin(acvf<I>(args[accumulator])));
         }
 
 
@@ -58,7 +58,7 @@ namespace impl
             return val;
         }
     private:
-        Sample val;
+        T val;
     };
 
 } // namespace impl
@@ -68,14 +68,14 @@ namespace impl
 
 namespace tag
 {
-    template <typename Discriminator = default_delay_discriminator>
+    template <typename I = default_delay_discriminator>
     struct acv0
-      : depends_on<acvf<Discriminator> >
+      : depends_on<acvf<I> >
     {
         /// INTERNAL ONLY
       typedef
         accumulators::impl::acv0_impl<
-            mpl::_1,Discriminator> impl;
+            mpl::_1,I> impl;
 
     };
 }
@@ -90,12 +90,12 @@ namespace extract
 {
 
 
-  template<typename Discriminator,typename AccumulatorSet>
+  template<typename I,typename AccumulatorSet>
   typename mpl::apply<
-    AccumulatorSet,tag::acv0<Discriminator>
+    AccumulatorSet,tag::acv0<I>
     >::type::result_type
   acv0(AccumulatorSet const& acc){
-    typedef tag::acv0<Discriminator> the_tag;
+    typedef tag::acv0<I> the_tag;
     return extract_result<the_tag>(acc);
   }
 

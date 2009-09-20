@@ -40,24 +40,26 @@ namespace impl
 {
     ////////////////////////////////////////////////////////////////////////////
     // acvf_impl (Autocovariance function)
-    template<typename Sample,typename Discriminator>
+    //
+    template<typename T,typename I>
     class acvf_impl
       : public accumulator_base
     {
-	   typedef std::vector<Sample>	               acvs_type;
-       typedef delay_impl<Sample,Discriminator>    delay_type;
-	   typedef typename delay_type::result_type    input_type;
+	   typedef std::vector<T>                       acvs_type;
+       typedef delay_impl<T,I>                      delay_type;
+	   typedef typename delay_type::result_type     input_type;
     public:
-       typedef boost::iterator_range<
-            typename acvs_type::const_iterator
-            > result_type;
+        typedef I discriminator_type;
 
+        typedef boost::iterator_range<
+            typename acvs_type::const_iterator
+        > result_type;
 
         template<typename Args>
         acvf_impl(Args const &args)
         :acvs(
-            args[tag::delay<Discriminator>::cache_size|delay(args).size()],
-            (Sample)(0.0)
+            args[tag::delay<I>::cache_size|delay(args).size()],
+            static_cast<T>(0)
         )
         {
         }
@@ -66,9 +68,11 @@ namespace impl
         :acvs(that.acvs){}
 
         acvf_impl& operator=(const acvf_impl& that){
-            if(&that!=this){acvs = that.acvs;} return *this;
+            if(&that!=this){
+                acvs = that.acvs;
+            } 
+            return *this;
         }
-
 
         template<typename Args>
         void operator ()(Args const &args)
@@ -82,20 +86,17 @@ namespace impl
           in_iter_type i = begin(in);
           in_iter_type e = end(in);
 
-          Sample x0 = (*i);
+          T x0 = (*i);
           std::size_t n = count(args);
           std::size_t k = 0;
-          //TODO replace by
-          //for_each(make_zip_iterator(
-          //  make_tuple(begin(in),acvs.begin())),...,local_class(...))
 		  while((k<in_sz) && (n>1+k)){
 		      BOOST_ASSERT(i<e);
-              Sample xk = (*i);
-              Sample div = (Sample) ((n-1)-k);
-              Sample sum_prod = acvs[k] * div;
-              Sample mean_val = mean(args);
+              T xk = (*i);
+              T div = (T) ((n-1)-k);
+              T sum_prod = acvs[k] * div;
+              T mean_val = mean(args);
               sum_prod += (xk - mean_val) * (x0 - mean_val);
-              div = (Sample)(n-k);
+              div = (T)(n-k);
               acvs[k] = sum_prod / div;
               ++i;
               ++k;
@@ -120,12 +121,12 @@ namespace impl
 
 namespace tag
 {
-    template <typename Discriminator = default_delay_discriminator>
+    template <typename I = default_delay_discriminator>
     struct acvf
-      : depends_on<count,mean,delay<Discriminator> >
+      : depends_on<count, mean, delay<I> >
     {
         /// INTERNAL ONLY
-      typedef accumulators::impl::acvf_impl<mpl::_1,Discriminator> impl;
+      typedef accumulators::impl::acvf_impl<mpl::_1,I> impl;
 
     };
 }
@@ -143,11 +144,11 @@ namespace extract
 //  //struct my_other_delay {};
 //  //extractor<tag::delay<my_other_delay> > other_delay={};
 
-  template<typename Discriminator,typename AccumulatorSet>
+  template<typename I,typename AccumulatorSet>
   typename
-    mpl::apply<AccumulatorSet,tag::acvf<Discriminator> >::type::result_type
+    mpl::apply<AccumulatorSet,tag::acvf<I> >::type::result_type
   acvf(AccumulatorSet const& acc){
-    typedef tag::acvf<Discriminator> the_tag;
+    typedef tag::acvf<I> the_tag;
     return extract_result<the_tag>(acc);
   }//typical call://acvf<default_delay_discriminator>(acc)
 

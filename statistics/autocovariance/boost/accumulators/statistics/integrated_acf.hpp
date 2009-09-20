@@ -39,27 +39,33 @@ namespace impl
 {
     ////////////////////////////////////////////////////////////////////////////
     // integrated_acf_impl
-    template<typename Sample,typename Discriminator>
+    template<typename T,typename I>
     class integrated_acf_impl
       : public accumulator_base
     {
     public:
-        typedef Sample                              result_type;
+        typedef T                              result_type;
 
-        integrated_acf_impl(dont_care):val((Sample)(0.0)){}
+        integrated_acf_impl(dont_care):val(static_cast<T>(0)){}
 
         template<typename Args>
         void operator ()(Args const &args)
         {
-          Sample iacvf = integrated_acvf<Discriminator>(args[accumulator]);
-          Sample acv0_val = acv0<Discriminator>(args[accumulator]);
-          if(acv0_val>0.0){val=iacvf/acv0_val;}else{val = 0.0;}
+            T iacvf = integrated_acvf<I>(args[accumulator]);
+            T acv0_val = acv0<I>(args[accumulator]);
+            if(acv0_val>static_cast<T>(0)){
+                val = iacvf/acv0_val;
+            }else{
+                val = static_cast<T>(0);
+            }
 		}
 
-        result_type result(dont_care) const{return val;}
+        result_type result(dont_care) const{ 
+            return val;
+        }
 
     private:
-	   Sample  val;
+	   T  val;
 
     };
 
@@ -72,13 +78,13 @@ namespace impl
 namespace tag
 {
 
-    template <typename Discriminator = default_delay_discriminator>
+    template <typename I = default_delay_discriminator>
     struct integrated_acf
-      : depends_on<acv0<Discriminator>,integrated_acvf<Discriminator> >
+      : depends_on<acv0<I>,integrated_acvf<I> >
     {
         /// INTERNAL ONLY
       typedef
-        accumulators::impl::integrated_acf_impl<mpl::_1,Discriminator> impl;
+        accumulators::impl::integrated_acf_impl<mpl::_1,I> impl;
 
     };
 }
@@ -92,11 +98,11 @@ namespace tag
 namespace extract
 {
 
-  template<typename Discriminator,typename AccumulatorSet>
+  template<typename I,typename AccumulatorSet>
   typename mpl::apply<
-    AccumulatorSet,tag::integrated_acf<Discriminator> >::type::result_type
+    AccumulatorSet,tag::integrated_acf<I> >::type::result_type
   integrated_acf(AccumulatorSet const& acc){
-    typedef tag::integrated_acf<Discriminator> the_tag;
+    typedef tag::integrated_acf<I> the_tag;
     return extract_result<the_tag>(acc);
   }
 

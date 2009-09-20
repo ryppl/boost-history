@@ -37,10 +37,10 @@ namespace statistics{
 
     template<
         typename RealType,
-        typename Discriminator = default_delay_discriminator
+        typename I = default_delay_discriminator
     >
     class acvf_analysis{
-        typedef Discriminator discr_t;
+        typedef I discr_t;
         public:
         typedef RealType    value_type;
 

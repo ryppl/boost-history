@@ -38,12 +38,12 @@ namespace impl
 {
     ////////////////////////////////////////////////////////////////////////////
     // standard_error_iid
-    template<typename Sample,typename Discriminator>
+    template<typename T,typename I>
     class standard_error_iid_impl
       : public accumulator_base
     {
     public:
-        typedef Sample result_type;
+        typedef T result_type;
 
         standard_error_iid_impl(dont_care)
         {}
@@ -51,10 +51,10 @@ namespace impl
         template<typename Args>
         void operator()(Args const &args)
         {
-            Sample acv0_val = acv0<Discriminator>(args[accumulator]);
-            Sample n = (Sample)(count(args));
-            val = 0.0;
-            if((acv0_val>0.0) && (n>0.0)){val = sqrt(acv0_val/n);}
+            T acv0_val = acv0<I>(args[accumulator]);
+            T n = (T)(count(args));
+            val = static_cast<T>(0);
+            if((acv0_val>static_cast<T>(0)) && (n>static_cast<T>(0))){val = sqrt(acv0_val/n);}
         }
 
 
@@ -63,7 +63,7 @@ namespace impl
             return val;
         }
     private:
-        Sample val;
+        T val;
     };
 
 } // namespace impl
@@ -73,14 +73,14 @@ namespace impl
 
 namespace tag
 {
-    template <typename Discriminator = default_delay_discriminator>
+    template <typename I = default_delay_discriminator>
     struct standard_error_iid
-      : depends_on<count,acv0<Discriminator> >
+      : depends_on<count,acv0<I> >
     {
         /// INTERNAL ONLY
       typedef
         accumulators::impl::standard_error_iid_impl<
-            mpl::_1,Discriminator> impl;
+            mpl::_1,I> impl;
 
     };
 }
@@ -98,12 +98,12 @@ namespace extract
 //    const standard_error_iid = {};
 
   // see acvf about default_delay_discriminator
-  template<typename Discriminator,typename AccumulatorSet>
+  template<typename I,typename AccumulatorSet>
   typename mpl::apply<
-    AccumulatorSet,tag::standard_error_iid<Discriminator>
+    AccumulatorSet,tag::standard_error_iid<I>
     >::type::result_type
   standard_error_iid(AccumulatorSet const& acc){
-    typedef tag::standard_error_iid<Discriminator> the_tag;
+    typedef tag::standard_error_iid<I> the_tag;
     return extract_result<the_tag>(acc);
   }
 

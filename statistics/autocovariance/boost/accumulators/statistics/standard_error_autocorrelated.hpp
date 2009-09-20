@@ -38,12 +38,12 @@ namespace impl
 {
     ////////////////////////////////////////////////////////////////////////////
     // standard_error_autocorrelated
-    template<typename Sample,typename Discriminator>
+    template<typename T,typename I>
     class standard_error_autocorrelated_impl
       : public accumulator_base
     {
     public:
-        typedef Sample result_type;
+        typedef T result_type;
 
         standard_error_autocorrelated_impl(dont_care)
         {}
@@ -51,10 +51,10 @@ namespace impl
         template<typename Args>
         void operator()(Args const &args)
         {
-            Sample iacv = integrated_acvf<Discriminator>(args[accumulator]);
-            Sample n = (Sample)(count(args));
-            val = 0.0;
-            if((iacv>0.0) && (n>0.0)){val = sqrt(iacv/n);}//also = sqrt(acv0/ess)
+            T iacv = integrated_acvf<I>(args[accumulator]);
+            T n = (T)(count(args));
+            val = static_cast<T>(0);
+            if((iacv>static_cast<T>(0)) && (n>static_cast<T>(0))){val = sqrt(iacv/n);}//also = sqrt(acv0/ess)
         }
 
         result_type result(dont_care) const
@@ -62,7 +62,7 @@ namespace impl
             return val;
         }
     private:
-        Sample val;
+        T val;
     };
 
 } // namespace impl
@@ -72,14 +72,14 @@ namespace impl
 
 namespace tag
 {
-    template <typename Discriminator = default_delay_discriminator>
+    template <typename I = default_delay_discriminator>
     struct standard_error_autocorrelated
-      : depends_on<count,integrated_acvf<Discriminator> >
+      : depends_on<count,integrated_acvf<I> >
     {
         /// INTERNAL ONLY
       typedef
         accumulators::impl::standard_error_autocorrelated_impl<
-            mpl::_1,Discriminator> impl;
+            mpl::_1,I> impl;
 
     };
 }
@@ -97,12 +97,12 @@ namespace extract
 //    const standard_error_autocorrelated = {};
 
   // see acvf about default_delay_discriminator
-  template<typename Discriminator,typename AccumulatorSet>
+  template<typename I,typename AccumulatorSet>
   typename mpl::apply<
-    AccumulatorSet,tag::standard_error_autocorrelated<Discriminator>
+    AccumulatorSet,tag::standard_error_autocorrelated<I>
     >::type::result_type
   standard_error_autocorrelated(AccumulatorSet const& acc){
-    typedef tag::standard_error_autocorrelated<Discriminator> the_tag;
+    typedef tag::standard_error_autocorrelated<I> the_tag;
     return extract_result<the_tag>(acc);
   }
 

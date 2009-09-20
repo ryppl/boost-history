@@ -42,7 +42,7 @@ namespace boost { namespace accumulators{
             }
             result_type operator()(argument_type delay)const{
                 typedef typename range_iterator<const R>::type iterator_type;
-                result_type res = 0.0;
+                result_type res = static_cast<result_type>(0);
                 size_t h = delay;
                 if(coeffs.size()>0){
                     std::size_t q = coeffs.size()-1;//MA(q)
