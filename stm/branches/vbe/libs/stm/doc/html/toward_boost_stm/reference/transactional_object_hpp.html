@@ -1,0 +1,177 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Header &lt;boost/stm/transactional_object.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="base_transaction_hpp.html" title="Header &lt;boost/stm/base_transaction.hpp&gt;">
+<link rel="next" href="tx_ptr_hpp.html" title="Header &lt;boost/stm/tx_ptr.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="base_transaction_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tx_ptr_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.transactional_object_hpp"></a><a class="link" href="transactional_object_hpp.html" title="Header &lt;boost/stm/transactional_object.hpp&gt;">
+      Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">transactional_object</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___">Template
+        Class <code class="computeroutput"><span class="identifier">transactional_object</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__copy_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__move_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__cache_deallocate___">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">transactional_object</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">tx_up_cast</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">tx_static_cast</span><span class="special">(</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">U</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">tx_dynamic_cast</span><span class="special">(</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">U</span><span class="special">&gt;*</span> <span class="identifier">ptr</span><span class="special">);</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___"></a><a class="link" href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___" title="Template Class transactional_object&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">transactional_object</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__copy_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__move_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__cache_deallocate___">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+          Transactional object wrapper. A <code class="computeroutput"><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> is a base_transaction_object wrapping
+          an instance of type T. Provides the definition of the virtual functions
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            forward constructors to the wrapped type
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">copy_state</span></code>: relaying
+            on the cache_copy&lt;T&gt; generic function
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">move_state</span></code> and
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">cache_deallocate</span></code>: relaying
+            on the cache_copy&lt;T&gt; generic function
+          </li>
+</ul></div>
+<p>
+          Defines in addition the functions <code class="computeroutput"><span class="keyword">new</span></code>
+          and <code class="computeroutput"><span class="keyword">delete</span></code> when <code class="computeroutput"><span class="identifier">BOOST_STM_USE_MEMORY_MANAGER</span></code> is defined
+        </p>
+<p>
+          If a class D inherits from B we have that <code class="computeroutput"><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;</span></code> dont inherits from <code class="computeroutput"><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span></code>, but we can static/dynamic cast them
+          robustly.
+        </p>
+<p>
+          Evidently the <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="keyword">static_cast</span></code>/<code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="keyword">dynamic_cast</span></code>
+          do not works. We need to define the specific cast
+        </p>
+<pre class="programlisting"><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;*</span> <span class="identifier">d</span><span class="special">=...;</span>
+<span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;*</span> <span class="identifier">b</span><span class="special">=</span><span class="identifier">tx_static_cast</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">d</span><span class="special">);</span>
+
+<span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;*</span> <span class="identifier">b</span><span class="special">=...;</span>
+<span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">&gt;*</span> <span class="identifier">d</span><span class="special">=</span><span class="identifier">tx_dynamic_cast</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">b</span><span class="special">);</span>
+</pre>
+<p>
+          Synopsis
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">transactional_object</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_transaction_object</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">T</span> <span class="identifier">value</span><span class="special">;</span>
+
+    <span class="identifier">transactional_object</span><span class="special">();</span>
+    <span class="identifier">transactional_object</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span><span class="identifier">ptr</span><span class="special">);</span>
+    <span class="identifier">transactional_object</span><span class="special">(</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">&gt;</span>
+    <span class="identifier">transactional_object</span><span class="special">(</span><span class="identifier">T1</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">p1</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T1</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">T2</span><span class="special">&gt;</span>
+    <span class="identifier">transactional_object</span><span class="special">(</span><span class="identifier">T1</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">p1</span><span class="special">,</span> <span class="identifier">T2</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">p2</span><span class="special">);</span>
+
+    <span class="identifier">transactional_object</span> <span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">transactional_object</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">r</span><span class="special">);</span>
+
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_STM_USE_UNASIGNED_COPY</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">();</span>
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">BOST_STM_USE_MEMORY_MANAGER</span>
+   <span class="keyword">void</span><span class="special">*</span> <span class="keyword">operator</span> <span class="keyword">new</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">)</span> <span class="keyword">throw</span> <span class="special">();</span>
+   <span class="keyword">void</span> <span class="keyword">operator</span> <span class="keyword">delete</span><span class="special">(</span><span class="keyword">void</span><span class="special">*</span> <span class="identifier">mem</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__copy_state___"></a><a class="link" href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__copy_state___" title="Virtual function copy_state()">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__move_state___"></a><a class="link" href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__move_state___" title="Virtual function move_state()">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__cache_deallocate___"></a><a class="link" href="transactional_object_hpp.html#toward_boost_stm.reference.transactional_object_hpp.template_class__transactional_object___.virtual_function__cache_deallocate___" title="Virtual function cache_deallocate()">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="base_transaction_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tx_ptr_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

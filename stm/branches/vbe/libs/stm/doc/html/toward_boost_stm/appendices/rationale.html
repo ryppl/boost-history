@@ -52,10 +52,10 @@
           transactions</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management">Contention
           management</a></span></dt>
-<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o">Unrecoverable
-          transactions to manage with I/O</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction">Lock-aware
           transaction</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o">Unrecoverable
+          transactions to manage with I/O</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts">C++
         and Library-Specific Concepts</a></span></dt>
@@ -65,14 +65,16 @@
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.memory_management">Memory
           Management</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.raii">RAII</a></span></dt>
-<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety">Exception
-          Safety</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.mixin_versus_wrapper_helpers">Mixin
+          versus wrapper helpers</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement">Why
+          TBoost.STM's cache uses now memcpy instead of copy-constructor and assignement</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.move_semantics">Move
           semantics</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.parametric_polymorphism_and_subtype_polymorphism">Parametric
           Polymorphism and Subtype Polymorphism</a></span></dt>
-<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks">Language-like
-          atomic transaction macro blocks</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks">Language-like
+          macro blocks</a></span></dt>
 </dl></dd>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.comparaison_with_other_stm_systems">Comparaison
         with other STM systems</a></span></dt>
@@ -105,10 +107,10 @@
           transactions</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management">Contention
           management</a></span></dt>
-<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o">Unrecoverable
-          transactions to manage with I/O</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction">Lock-aware
           transaction</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o">Unrecoverable
+          transactions to manage with I/O</a></span></dt>
 </dl></div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.optimistic_concurrency"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.optimistic_concurrency" title="Optimistic concurrency">Optimistic
@@ -121,7 +123,9 @@
 </h5></div></div></div>
 <p>
             Transactional memory was founded on the database ACID principle (atomic,
-            consistent, isolated and durable), except without the D [24].
+            consistent, isolated and durable), except without the D (durability)
+            because unlike database transactions, TM transactions are not saved to
+            permanent storage (e.g., hard drives).
           </p>
 <div class="itemizedlist"><ul type="disc">
 <li>
@@ -256,7 +260,7 @@
             read).
           </p>
 <div class="table">
-<a name="id4887533"></a><p class="title"><b>Table 1.1. Comparaison with other STM systems</b></p>
+<a name="id4898495"></a><p class="title"><b>Table 1.1. Comparaison with other STM systems</b></p>
 <div class="table-contents"><table class="table" summary="Comparaison with other STM systems">
 <colgroup>
 <col>
@@ -459,7 +463,7 @@
             handle each specific problem with the most appropriate configuration.
           </p>
 <div class="table">
-<a name="id4887918"></a><p class="title"><b>Table 1.2. Consistency versus Updating policies composition</b></p>
+<a name="id4898890"></a><p class="title"><b>Table 1.2. Consistency versus Updating policies composition</b></p>
 <div class="table-contents"><table class="table" summary="Consistency versus Updating policies composition">
 <colgroup>
 <col>
@@ -605,17 +609,990 @@
             Future versions of TBoost.STM will implement closed nested transactions.
           </p>
 </div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management" title="Contention management">Contention
           management</a>
-</h5></div></div></div></div>
+</h5></div></div></div>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.priority_based_tasks"></a><h6>
+<a name="id4899210"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.priority_based_tasks">Priority-Based
+            Tasks</a>
+          </h6>
+<p>
+            Real-time systems or systems that have strict requirements for task behavior,
+            such as deadline-drive systems, usually guarantee such behavior through
+            priority scheduling. While significant prior TM contention management
+            (CM) research has been done, its attention has been primarily focused
+            on preventing starvation through fairness. In many systems preventing
+            starvation may be sufficient, yet some systems (e.g. deadline-driven
+            or real-time systems) require stronger behavioral guarantees. In these
+            cases, user-defined priority-based transactions are necessary.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.approach"></a><h6>
+<a name="id4899248"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.approach">Approach</a>
+          </h6>
+<p>
+            This work extends the prior TM contention management research by concretely
+            implementing user-defined contention managers as determined consequential.
+            We approach this by first presenting a brief background of TM aspects
+            important to understanding the complexities of contention management.
+            Next, we review and expand upon prior contention management work. We
+            then show how consistency models play a significant role in the correctness
+            and capability of priority-based transactional scheduling. We then build
+            user-defined priority-based transactions with TBoost.STM, demonstrating
+            how contention management frameworks work with different consistency
+            checking models. Last, we present our experimental results.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.attacking__amp__victim_transactions"></a><h6>
+<a name="id4899301"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.attacking__amp__victim_transactions">Attacking
+            &amp; Victim Transactions</a>
+          </h6>
+<p>
+            We refer to transactions which can identify a memory conflict in another
+            in-flight transaction as attacking transactions. Transactions which are
+            targeted by attacking transactions are referred to as victim transactions.
+            The attacking and victim transaction terms help simplify the invalidation
+            process. An example of attacking and victim transactions is as follows.
+            Consider transaction Tv, a victim transaction and transaction Ta, an
+            attacking transaction. Tv writes to memory location L0. Ta then tries
+            to write to L0. If our STM system only allows single-writers, both Ta
+            and Tv cannot write to L0 at the same time. As Ta is the second transaction
+            attempting to write to L0, the single-writer semantics require it to
+            deal with the conflict located at L0. Handling this conflict makes Ta
+            the attacking transaction as it decides if Tv is aborted. Tv is the victim
+            transaction since Ta may abort it.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.user_defined_priority_based_transactions"></a><h6>
+<a name="id4899349"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.user_defined_priority_based_transactions">User-Defined
+            Priority-Based Transactions</a>
+          </h6>
+<p>
+            Validation and invalidation
+          </p>
+<p>
+            consistency checking are both practical solutions to transactional memory
+            for different classes of problems. When inflight transactions are low
+            and memory usage is high, invalidation may be preferred. When transactional
+            traffic is high and transactions are small, validation may be preferred.
+            Neither type of consistency checking seems to perform universally better
+            than the other. Though certain classes of problems perform better under
+            different consistency checking models, the ramifications of these consistency
+            checking schemes performing within strict user-defined priority-based
+            transactional systems is unclear from prior research. Our work clarifies
+            the advantages and disadvantages of validation and invalidation in user-defined
+            priority-based transactional environments.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.extensible_polymorphic_contention_management_interface"></a><h6>
+<a name="id4899399"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.contention_management.extensible_polymorphic_contention_management_interface">Extensible
+            Polymorphic Contention Management Interface</a>
+          </h6>
+<p>
+            Due to the innumerable possibilities of consistency checking model combinations,
+            for the remainder of this work, we narrow our scope of consistency checking
+            to commit-time validation and committime invalidation. We do this for
+            a number of reasons. First, validation and invalidation are near opposites
+            and commit-time consistency checking is straight forward in that it is
+            only performed once per transaction. Due to this, we can see the two
+            primary views of consistency checking in an understandable fashion. Second,
+            early TM systems tended toward validation while newer TM systems tend
+            toward invalidation. This makes considering both viewpoints practical.
+            Third, both validation and invalidation perform well under different
+            circumstances. By considering both types, we can help extend their current
+            understanding to user-defined priority-based systems as well. Finally,
+            TBoost.STM supports both commit-time validation and commit-time invalidation.
+          </p>
+<p>
+            TBoost.STM extensible contention manager supports two types of management:
+            abort behavior management and conflict resolution management. The abort
+            behavior interfaces are somewhat novel compared to prior work, in that
+            they allow TBoost.STM's contention manager to decide how the system should
+            behave when a transaction must abort. These interfaces, shown in bellow,
+            were added as it was determined that not all aborted transactions should
+            behave in the same manner. For example, some transactions which have
+            extremely large read and write sets, should perhaps sleep for some period
+            of time before running again. Other transactions which have already high
+            priorities, should perhaps receive larger priority boosts.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">base_contention_manager</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_new</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_delete</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_read</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">abort_on_write</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">in</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="comment">// conflict interfaces removed
+</span><span class="special">};</span>
+</pre>
+<p>
+            The interfaces shown above do not manage any memory contention, instead
+            they only handle how required aborts behave.
+          </p>
+<p>
+            The second type of TBoost.STM contention management interfaces is shown
+            in below.
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">base_contention_manager</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="comment">// abort interfaces removed
+</span>    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">abort_before_commit</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">permission_to_abort</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">lhs</span><span class="special">,</span> <span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+            These interfaces implement true management of memory conflicts. The two
+            interfaces shown: abort_before_commit() and permission_to_abort() enable
+            two fundamentally different types of consistency checking. abort_before_commit()
+            is called when TBoost.STM is performing validating consistency checking,
+            while permission_to_abort() is called when TBoost.STM is performing invalidating
+            consistency checking. Both APIs are called internally at different points
+            in the transaction's commit phase.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction" title="Lock-aware transaction">Lock-aware
+          transaction</a>
+</h5></div></div></div>
+<p>
+            Transactional memory (TM) has garnered significant interest as an alternative
+            to existing concurrency methods due to its simplified programming model,
+            natural composition characteristics and native support of optimistic
+            concurrency. Yet, mutual exclusion locks are ubiquitous in existing parallel
+            software due to their fast execution, inherent property for irreversible
+            operations and long-standing underlying support in modern instruction
+            set architectures (ISAs). For transactions to become practical, lock-based
+            and TM-based concurrency methods must be unified into a single model.
+          </p>
+<p>
+            TBoost.STM presents a lock-aware transactional memory (LATM) solution
+            with a deliberate library-based approach. Our LATM system supports locks
+            inside of transactions (LiT) and locks outside of transactions (LoT)
+            while preserving the original programmer-intended locking structure.
+            Our solution provides three policies with varying degrees of performance
+            and required programming. The most basic LATM policy enables transactionlock
+            correctness without any programming overhead, while improved performance
+            can be achieved by programmer-specified conflicts between locks and transactions.
+            The differences in LATM policy performance are presented through a number
+            of experimental benchmarks on .
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.introduction"></a><h6>
+<a name="id4900106"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.introduction">Introduction</a>
+          </h6>
+<p>
+            Yet, for all of the benefits of transactional programming, its native
+            inoperability with mutual exclusion locks is a major obstacle to its
+            adoption as a practical solution. Mutual exclusion (implemented through
+            locks) is arguably the most predominant form of thread synchronization
+            used in parallel software, yet its native incompatibility with transactions
+            places a considerable restriction on the practical use of TM in real-world
+            software.
+          </p>
+<p>
+            A TM system that is cooperative with locks can extend the lifetime and
+            improve the behavior of previously generated parallel programs. TBoost.STM
+            C++ library is a lock-aware transactional memory (LATM) system supporting
+            the simultaneous execution of transactions and locks. Of critical importance
+            is that the extended TBoost.STM LATM system naturally supports lock-based
+            composition for locks placed inside of transactions (LiT), a characteristic
+            previously unavailable in locks. The LATM policies present in TBoost.STM
+            are implemented with software library limitations as a central concern.
+            While novel operating system (OS)-level and language-based transaction-lock
+            cooperative models have been previously found, these implementations
+            use constructs not available in library-based STM systems. While useful,
+            the previously identified OS-level and language-based solutions do not
+            address the critical need for a transaction-lock unified model expressed
+            entirely within the limitations of a software library. In languages that
+            are unlikely to be extended, such as C++, and development environments
+            bound to specific constraints, such as a particular compiler or OS, library
+            based solutions are paramount as they present practical solutions within
+            industry-based constraints. Our approach presents a novel library-based
+            LATM solution aimed at addressing these concerns. TBoost.STM makes the
+            following contributions:
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              Extension of the TBoost.STM library for support of locks outside of
+              transactions (LoT) and locks inside of transactions (LiT).
+            </li>
+<li>
+              Proof that an LATM LiT system naturally enables lock composition. Analytical
+              examples are examined that show LiT composable locks demonstrating
+              atomicity, isolation and consistency as well as deadlock avoidance.
+            </li>
+<li>
+              Introduction of three novel LATM policies: full lock protection, TM-lock
+              protection, and TX-lock protection. Each LATM policy provides different
+              programming / performance trade offs. Experimental results are provided
+              which highlight the performance and programming differences of the
+              three LATM policies.
+            </li>
+</ol></div>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.background"></a><h6>
+<a name="id4900206"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.background">Background</a>
+          </h6>
+<p>
+            Transaction-lock interaction does not natively exhibit shared memory
+            consistency and correctness due to differences in underlying critical
+            section semantics. Strongly and weakly isolated transactional memory
+            systems are susceptible to incorrect execution when used with pessimistic
+            critical sections.
+          </p>
+<p>
+            Mutual exclusion locks use pessimistic critical section semantics; execution
+            of a lock-controlled critical section is limited to one thread and guarantees
+            the executing thread has mutually exclusive (isolated) access to the
+            critical section code region. Transactions use optimistic critical section
+            semantics; transaction controlled critical sections support unlimited
+            concurrent thread execution. Shared memory conflicts arising from simultaneous
+            transaction execution are handled by the TM system during the commit
+            phase of the transaction. Optimistic critical sections and pessimistic
+            critical sections are natively inoperable due to their contradictive
+            semantics as demonstrated in the below example:
+          </p>
+<p>
+            Lock and transaction violation (code).
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">x</span><span class="special">;</span>
+<span class="number">2</span>
+<span class="number">3</span>   <span class="keyword">int</span> <span class="identifier">lock_dec</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">4</span>       <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">5</span>       <span class="keyword">int</span> <span class="identifier">val</span> <span class="special">=</span> <span class="special">--</span><span class="identifier">x</span><span class="special">;</span>
+<span class="number">6</span>       <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">7</span>       <span class="keyword">return</span> <span class="identifier">val</span><span class="special">;</span>
+<span class="number">8</span>       <span class="special">}</span>
+<span class="number">9</span>
+<span class="number">10</span>  <span class="keyword">void</span> <span class="identifier">tx_inc</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">11</span>      <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">12</span>      <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">13</span>          <span class="special">++</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">);</span>
+<span class="number">14</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">15</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span> <span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">16</span>  <span class="special">}</span>
+</pre>
+<p>
+            Without an intervening system, thread T1 executing lock_dec() and thread
+            T2 executing tx_inc() are not guaranteed to operate consistently, as
+            they would if each function were run in a lock-only or transaction-only
+            system, respectively. The following example demonstrates how the correctness
+            of the above code is violated from a deferred update and direct update
+            standpoint.
+          </p>
+<p>
+            Deferred Update Lock/Transaction Violation. A deferred update TM system
+            stores transactional writes off to the side, updating global memory once
+            the transaction commits. A deferred update system can exhibit an inconsistency
+            in the above code in the following way. Given: x = 0, thread T1 executes
+            lock_dec() and thread T2 executes tx_inc(). T2 executes line 10 - the
+            first half of line 13 (storing a transactional value for x = 0, but not
+            performing the increment). T1 executes lines 3-5 (global x = -1). T2
+            executes the remainder of line 13 and line 14 (++x on its stored reference
+            of 0, setting its local x = 1) and then commits. T1 executes lines 6-7.
+            The resulting global state of x = 1 is incorrect; x = 0 is correct as
+            one thread has incremented it and one thread has decremented it.
+          </p>
+<p>
+            Direct Update Lock/Transaction Violation. A direct update TM system stores
+            transactional writes directly in global memory, storing an original backup
+            copy off to the side in the event the transaction must be unwound. In
+            a direct update system, threads T1 and T2 can exhibit inconsistencies
+            using the code shown above in a variety of ways; T1 executes line 3 -
+            the first half of line 5 (decrementing x, but not setting val). T2 executes
+            lines 10-13 (incrementing the global x and creating a restore point of
+            x = -1). T1 executes the remainder of line 5 (val = 0). T2 executes line
+            14, but is required to abort, restoring x to -1. T1 completes and returns
+            val = 0 which is incorrect. T2 never committed its x = 0 and has not
+            successfully committed, therefore, x has never correctly been set to
+            0.
+          </p>
+<p>
+            Overcoming Transaction-Lock Inoperability
+          </p>
+<p>
+            In order for transactions and locks to cooperate, transactions must adhere
+            to a single mutual exclusion rule: Mutual exclusion semantics require
+            that instructions within a mutex guarded critical section be limited
+            to &lt;=1 simultaneous thread of execution.
+          </p>
+<p>
+            Our LATM implementation adheres to this rule and is discussed in two
+            high-level views:
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              locks outside of transactions (LoT) and
+            </li>
+<li>
+              locks inside of transactions (LiT).
+            </li>
+</ol></div>
+<p>
+            TBoost.STM supports lock-aware transactions by supplying a pass-through
+            interface that is used in place of prior locking calls.
+          </p>
+<p>
+            The TBoost.STM locking API is used to perform the additional transaction-lock
+            communication before or after the pthreads interface is called. In all
+            cases, the TBoost.STM pass-through interface results in at least one
+            corresponding call to the appropriated interface to lock, try to lock
+            or unlock the mutual exclusion lock. Further details are provided in
+            later sections.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.locks_outside_of_transactions__lot_"></a><h6>
+<a name="id4900772"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.locks_outside_of_transactions__lot_">Locks
+            Outside of Transactions (LoT)</a>
+          </h6>
+<p>
+            Locks outside of transactions (LoT) are scenarios where a pessimistic
+            critical section of a lock is executed in a thread T1 while an optimistic
+            critical section of a transaction is executed in a thread T2, simultaneously.
+            Thread T1's lock-based pessimistic critical section is entirely outside
+            of thread T2's transaction, thus the term locks outside of transactions
+            or LoT. Figure 5 sets up a running LoT example, used throughout this
+            section, by constructing six functions which are simultaneously executed
+            by six threads. Three of the functions in the below example, tx1(), tx2()
+            and tx3(), are transaction-based, while the other three functions, lock1(),
+            lock2() and lock3(), are lock-based. The functions tx1(), tx2() and lock3()
+            do not have any memory conflict with any other transaction-based or lock-based
+            function and should therefore be able to run concurrently with any of
+            the other functions. However, certain LoT policies inhibit the execution
+            of these nonconflicting functions; details of such inhibited behavior
+            is explained in the following subsections. The below example is used
+            throughout this section to illustrate the differences in the LoT policies.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">arr1</span><span class="special">[</span><span class="number">99</span><span class="special">],</span> <span class="identifier">arr2</span><span class="special">[</span><span class="number">99</span><span class="special">];</span>
+<span class="number">2</span>
+<span class="number">3</span>   <span class="keyword">void</span> <span class="identifier">tx1</span><span class="special">()</span> <span class="special">{</span> <span class="comment">/* no conflict */</span> <span class="special">}</span>
+<span class="number">4</span>   <span class="keyword">void</span> <span class="identifier">tx2</span><span class="special">()</span> <span class="special">{</span> <span class="comment">/* no conflict */</span> <span class="special">}</span>
+<span class="number">5</span>   <span class="keyword">void</span> <span class="identifier">tx3</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">6</span>       <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">7</span>       <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">8</span>           <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">99</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>
+<span class="number">9</span>           <span class="special">{</span>
+<span class="number">10</span>              <span class="special">++</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">arr1</span><span class="special">[</span><span class="identifier">i</span><span class="special">]).</span><span class="identifier">value</span><span class="special">();</span>
+<span class="number">11</span>              <span class="special">++</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">arr2</span><span class="special">[</span><span class="identifier">i</span><span class="special">]).</span><span class="identifier">value</span><span class="special">();</span>
+<span class="number">12</span>          <span class="special">}</span>
+<span class="number">13</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">14</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">15</span>  <span class="special">}</span>
+<span class="number">16</span>
+<span class="number">17</span>  <span class="keyword">int</span> <span class="identifier">lock1</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">18</span>      <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="keyword">int</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="number">19</span>      <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">99</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">arr1</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+<span class="number">20</span>      <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
+<span class="number">21</span>  <span class="special">}</span>
+<span class="number">22</span>  <span class="keyword">int</span> <span class="identifier">lock2</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">23</span>      <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span> <span class="keyword">int</span> <span class="identifier">sum</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="number">24</span>      <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">99</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="identifier">sum</span> <span class="special">+=</span> <span class="identifier">arr2</span><span class="special">[</span><span class="identifier">i</span><span class="special">];</span>
+<span class="number">25</span>      <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span> <span class="keyword">return</span> <span class="identifier">sum</span><span class="special">;</span>
+<span class="number">26</span>  <span class="special">}</span>
+<span class="number">27</span>  <span class="keyword">int</span> <span class="identifier">lock3</span><span class="special">()</span> <span class="special">{</span> <span class="comment">/* no conflict */</span> <span class="special">}</span>
+</pre>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lot_full_lock_protection"></a><h6>
+<a name="id4901914"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lot_full_lock_protection">LoT
+            Full Lock Protection</a>
+          </h6>
+<p>
+            The most basic implementation of transaction-lock cooperation, what we
+            call full lock protection, is to enforce all transactions to commit or
+            abort before a lock's critical section is executed. All locks outside
+            of transactions are protected from transactions violating their critical
+            section execution by disallowing transactions to run in conjunction with
+            locks. Transactions are stalled until all LoT critical sections are complete
+            and their corresponding locks are released.
+          </p>
+<p>
+            An example of full lock protection is shown in Figure 6 using the previously
+            described six threaded model. Full lock protection has no programmer
+            requirements; no new code is required, aside from alteration of existing
+            locking code to use the LATM passthrough interfaces. Additionally, an
+            understanding of how the locks behave within the system to enable transaction-lock
+            cooperation is also not needed. However, full lock protection suffers
+            some performance penalties. As seen in Figure 6, T1 ?? T3 are blocked
+            for the entire duration of the critical sections obtained in T4 ?? T6,
+            since full lock protection prevents any transactions from running while
+            LoTs are obtained. Although T3 does conflict with T4 ?? T5, T6's critical
+            section does not interfere with any of the transactions and should therefore
+            not prevent any transactions from running concurrently; TM-lock protection,
+            the next level of lock protection, is able to avoid such unnecessary
+            stalling.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lot_tm_lock_protection"></a><h6>
+<a name="id4901994"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lot_tm_lock_protection">LoT
+            TM-Lock Protection</a>
+          </h6>
+<p>
+            TM-lock protection is slightly more complex than full lock protection,
+            yet it can yield better overall system performance. TMlock protection
+            works in the following way: locks which can conflict with transactions
+            are identified by the programmer at startup. Once a conflicting LoT is
+            acquired, all in-flight transactions are either committed or aborted.
+            Transactions are then blocked until the conflicting lock-based critical
+            sections are completed and released. Locks that do not conflict with
+            transactions do not cause any transactions to stall.
+          </p>
+<p>
+            The identification of locks that can conflict with transactions requires
+            the programmer to (1) write new code and (2) have a basic understanding
+            of the software system. Due to this, the requirements of TM-lock protection
+            are greater on the end programmer. The trade-off for higher programmer
+            requirements is greater overall system performance.
+          </p>
+<p>
+            TM-lock protection addresses the problem of transactions unnecessarily
+            stalled when T6 is executing. When using TM-lock protection, the end
+            programmer must explicitly express which locks can conflict with the
+            TM system. In this example, locks L1 and L2 from threads T4 and T5 conflict
+            with tx3 in thread T3. The end programmer would explicitly label these
+            locks as conflicting in the following way:
+          </p>
+<pre class="programlisting"><span class="number">1</span> <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">do_tm_conflicting_lock_protection</span><span class="special">();</span>
+<span class="number">2</span> <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">add_tm_conflicting_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">3</span> <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">add_tm_conflicting_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+</pre>
+<p>
+            As shown in the six threaded example, TM-lock protection shortens the
+            overall TM run-time by allowing T1 ?? T3 to restart their transactions
+            as soon as L2's critical section is completed. Yet, there still exists
+            unnecessary stalls in threads T1 and T2 as their associated transactions
+            do not conflict with any of the lock-based critical sections of T4 ??T6.
+            The remaining unnecessary stalls are resolved by using TX-lock protection,
+            the third lock protection policy.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lot_tx_lock_protection"></a><h6>
+<a name="id4902177"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lot_tx_lock_protection">LoT
+            TX-Lock Protection</a>
+          </h6>
+<p>
+            TX-lock protection enables maximum performance throughput by identifying
+            only true conflicts as they exist per transaction. TXlock protection
+            is similar to TM-lock protection except rather than requiring conflicting
+            locks be identified at a general TM-level, conflicting locks are identified
+            at a transaction-level. While this level of protection yields the highest
+            level of performance, it also requires the greatest level of familiarity
+            of the locks within the system and the most hand-crafted code.
+          </p>
+<p>
+            An example of TX-lock protection is in Figure 8. By using TX-lock protection
+            and explicitly identifying conflicting locks per transaction, the system
+            only stalls for true conflicts, increasing overall system performance.
+            The code required for correct TX-lock protection in the prior six threaded
+            example is shown below by extending the original tx3() implementation:
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="keyword">void</span> <span class="identifier">tx3</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">2</span>       <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">3</span>       <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">4</span>           <span class="comment">// identify conflicting locks
+</span><span class="number">5</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">6</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">7</span>           <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">99</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span>
+<span class="number">8</span>           <span class="special">{</span>
+<span class="number">9</span>               <span class="special">++</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">arr1</span><span class="special">[</span><span class="identifier">i</span><span class="special">]).</span><span class="identifier">value</span><span class="special">();</span>
+<span class="number">10</span>              <span class="special">++</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">arr2</span><span class="special">[</span><span class="identifier">i</span><span class="special">]).</span><span class="identifier">value</span><span class="special">();</span>
+<span class="number">11</span>          <span class="special">}</span>
+<span class="number">12</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">13</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">14</span>  <span class="special">}</span>
+</pre>
+<p>
+            Using TX-lock protection, threads T1 and T2 are no longer stalled when
+            threads T4 and T5 lock their associated locks, L1 and L2. In fact, only
+            thread T3 (the only true conflict) is stalled while the critical sections
+            created by L1 and L2 are executing, resulting in the highest transaction-lock
+            cooperative performance while still adhering to the rule.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.locks_inside_of_transactions__lit_"></a><h6>
+<a name="id4902702"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.locks_inside_of_transactions__lit_">Locks
+            Inside of Transactions (LiT)</a>
+          </h6>
+<p>
+            Locks inside of transactions (LiT) are scenarios where a lock-based pessimistic
+            critical section is executed partially or completely inside a transaction.
+            Only two of the three possible LiT scenarios are supported by our work:
+            (1) pessimistic critical sections are encapsulated entirely within a
+            transaction or (2) pessimistic critical sections start inside a transaction
+            but end after the transaction has terminated.We do not support LiT scenarios
+            where pessimistic critical sections start before a transaction begins,
+            having the front-end of the transaction encapsulated by the pessimistic
+            critical section. The reason to disallow such behavior is to avoid deadlocks.
+          </p>
+<p>
+            Consider the following scenario. Thread T1 has an in-flight irrevocable
+            transaction Tx1 and thread T2, after obtaining lock L2, starts a transaction
+            Tx2. Tx2 is not allowed to make forward progress until it is made irrevocable
+            (details to follow). Tx1 is already in-flight and irrevocable. Since
+            two irrevocable transactions cannot run simultaneously as they are not
+            guaranteed to be devoid of conflicts with one another, Tx2 must stall
+            until Tx1 completes. If irrevocable transaction Tx1 requires lock L2
+            to complete its work the system will deadlock. Tx1 cannot make forward
+            progress due to its dependency upon L2 (currently held by Tx2) and Tx2
+            cannot make forward progress as it requires Tx1 to complete before it
+            can run. As such, LiT scenarios where locks encapsulate the front-end
+            of a transaction are disallowed; our implementation immediately throws
+            an exception when this behavior is detected.
+          </p>
+<p>
+            Irrevocable and Isolated Transactions
+          </p>
+<p>
+            The LiT algorithms use the same policies as the LoT algorithms: full
+            lock protection, TM-lock protection and TX-lock protection. Locks inside
+            of transactions have the same characteristics as normal mutual exclusion
+            locks, and Lemma 1 must be followed in order to ensure correctness. Since
+            the LiT algorithms use locks acquired inside of transactions and these
+            locks are not guaranteed to have failure atomicity as transactions do,
+            the containing transactions must become irrevocable (see Lemma 2). Irrevocable
+            transactions, characterized by T(irrevocable) = true, are transactions
+            that cannot be aborted. The concept of irrevocable (or inevitable) transactions
+            is not new; Welc et al. and Spear et al. have shown these types of transactions
+            to be of significant importance as well as having a variety of practical
+            uses [17, 19]. We extend the prior work of Welc et al. and Spear et al.
+            by using irrevocable transactions to enable pessimistic critical sections
+            within transactions, as well as to create composable locks within transactions.
+            In addition to irrevocable transactions, the LiT full lock protection
+            and TM-lock protection require a new type of transaction, one that we
+            term as an isolated transaction. Isolated transactions, characterized
+            by T(isolated) = true, are transactions that cannot be aborted and require
+            that no other type of transaction run along side it simultaneously. Isolated
+            transactions can be viewed as a superset of irrevocable transactions;
+            isolated transactions have the properties of irrevocable transactions
+            and must be run in isolation. To demonstrate how the LiT algorithms work,
+            consider the six threaded example shown in Figure 12.
+          </p>
+<p>
+            3 LiT Transaction Threads, 3 Locking Threads.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">g1</span><span class="special">,</span> <span class="identifier">g2</span><span class="special">,</span> <span class="identifier">g3</span><span class="special">,</span> <span class="identifier">g4</span><span class="special">;</span>
+<span class="number">2</span>
+<span class="number">3</span>   <span class="keyword">void</span> <span class="identifier">tx1</span><span class="special">()</span> <span class="special">{</span> <span class="comment">/* no conflict */</span> <span class="special">}</span>
+<span class="number">4</span>   <span class="keyword">void</span> <span class="identifier">tx2</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">5</span>       <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">add_tm_conflicting_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">6</span>       <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">7</span>       <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">8</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">9</span>           <span class="identifier">inc2</span><span class="special">();</span>
+<span class="number">10</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">11</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">12</span>  <span class="special">}</span>
+<span class="number">13</span>  <span class="keyword">void</span> <span class="identifier">tx3</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">14</span>      <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">add_tm_conflicting_lock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">);</span>
+<span class="number">15</span>      <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">16</span>      <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">17</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">);</span>
+<span class="number">18</span>          <span class="identifier">inc3</span><span class="special">();</span>
+<span class="number">19</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">20</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">21</span>  <span class="special">}</span>
+<span class="number">22</span>
+<span class="number">23</span>  <span class="keyword">void</span> <span class="identifier">inc2</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">24</span>      <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span> <span class="special">++</span><span class="identifier">g2</span><span class="special">.</span><span class="identifier">value</span><span class="special">();</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">25</span>  <span class="special">}</span>
+<span class="number">26</span>  <span class="keyword">void</span> <span class="identifier">inc3</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">27</span>      <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">);</span> <span class="special">++</span><span class="identifier">g3</span><span class="special">.</span><span class="identifier">value</span><span class="special">();</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">);</span>
+<span class="number">28</span>  <span class="special">}</span>
+<span class="number">29</span>  <span class="keyword">void</span> <span class="identifier">inc4</span><span class="special">()</span> <span class="special">{</span> <span class="comment">/* no conflict */</span> <span class="special">}</span>
+</pre>
+<p>
+            In Figure 12 thread T1 executes tx1(), T2 executes tx2(), T3 executes
+            tx3(), T4 executes inc2(), T5 executes inc3() and T6 executes inc4().
+            Threads T1 (tx1()) and T6 (inc4()) do not conflict with any other thread,
+            yet their execution can be inhibited by other threads based on the LiT
+            policy employed. Thread T2 has a true conflict with thread T4 (both threads
+            call inc2()) and thread T3 has a true conflict with thread T5 (both threads
+            call inc3()). A staggered start time is used in the coming diagrams:
+            T1 starts, followed by T2, T3, T4, T5 and finally T6.We label the LiT
+            threads based on the locks they acquire: tx1 acquires lock L1, thread
+            tx2 acquires lock L2 and thread tx3 acquires lock L3. The same taxonomy
+            is used for locking threads: thread lockL2 acquires lock L2, thread lockL3
+            acquires lock L3 and thread lockL4 acquires lock L4.
+          </p>
+<p>
+            In Figure 12, both add_tm_conflicting_lock() and add_tx_conflicting_lock()
+            are present. If the system is using TM-lock protection only the add_tm_conflicting_lock()
+            is necessary, whereas if the system is using TX-lock protection only
+            the add_tx_conflicting_lock() is necessary. If neither TMlock or TX-lock
+            protection is in use, neither call is needed. These interfaces are supplied
+            for the completeness of the example.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_full_lock_protection"></a><h6>
+<a name="id4903745"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_full_lock_protection">LiT
+            Full-Lock Protection</a>
+          </h6>
+<p>
+            Figure 13 demonstrates how the six threads interact using the full lock
+            protection policy, as well as showing policy conflicts in comparison
+            to true conflicts. The LiT full lock protection algorithm requires that
+            any transaction that has a lock inside of it be run as an isolated transaction.
+            Prior to a lock inside the transaction being obtained, all other in-flight
+            transactions are aborted or committed and all currently held locks must
+            execute through release. Future attempts to obtain locks outside of the
+            isolated transaction are prevented until the transaction commits. This
+            behavior is required as the system must assume (1) all external locks
+            can conflict with the isolated transaction, so no external locks can
+            be obtained; and (2) all external transactions can conflict with the
+            LiT transaction, and therefore no external transactions can execute.
+          </p>
+<p>
+            For Figure 13, once tx2 begins, tx1 is stalled as tx2 must run as an
+            isolated transaction. Due to tx2's isolation, tx3 is also stalled. Both
+            lockL2 and lockL3 are also stalled because full lock protection disallows
+            transactions from running while LoT locks are obtained; as tx2 is an
+            isolated transaction, the threads attempting to lock L2 and L3 are stalled
+            until tx2 completes. When tx2 completes, tx3 is started as it has stalled
+            for the longest amount of time. The thread executing lockL4 is stalled
+            until tx3 completes. When tx3 completes, tx1, lockL2, lockL3 and lockL4
+            are all allowed to resume.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_tm_lock_protection"></a><h6>
+<a name="id4903818"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_tm_lock_protection">LiT
+            TM-Lock Protection</a>
+          </h6>
+<p>
+            Like full lock protection, LiT TM-lock protection runs transactions encapsulating
+            locks in isolation. However, LiT TM-lock protection also requires the
+            end programmer to identify locks obtained within any transaction prior
+            to transaction execution (just as LoT TM-lock protection). Unlike LiT
+            full lock protection, TM-lock protection allows non-conflicting LoT locks
+            to execute along side LiT locks, increasing overall system throughput.
+          </p>
+<p>
+            As shown in Figure 14 TM-lock protection reduces the overall policy-induced
+            conflicting time to a range closer to the true conflicting time. Since
+            tx2 and tx3 are true conflicts with lockL2 and lockL3, lockL2 and lockL3
+            must stall while tx2 and tx3 are executing. However, lockL4 does not
+            conflict with either tx2 or tx3 and as such, should not be stalled while
+            the LiT transactions are inflight. TM-lock protection correctly identifies
+            this conflict as false, allowing lockL4's execution to be unimpeded by
+            tx2 and tx3's execution.
+          </p>
+<p>
+            Three problems still exist in the LiT example: (1) tx1 is stalled by
+            tx2 and tx3, (2) lockL2 is stalled by tx3 and (3) lockL3 is stalled by
+            tx2. Ideally, none of these stalls should occur as none represent true
+            conflicts. All three false conflicts are avoided by using the following
+            LiT protection policy, LiT TX-lock protection.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_tx_lock_protection"></a><h6>
+<a name="id4903880"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_tx_lock_protection">LiT
+            TX-Lock Protection</a>
+          </h6>
+<p>
+            Like LoT TX-lock protection, the Lit TX-lock protection algorithm allows
+            for the highest throughput of both transactions and locks while requiring
+            the highest level of programmer involvement and system understanding.
+            Unlike both prior LiT algorithms, TX-lock protection allows LiT transactions
+            to run as irrevocable transactions, rather than isolated transactions.
+            This optimization can increase overall system throughput substantially
+            if other revocable transactions can be run along side the LiT transaction.
+          </p>
+<p>
+            With LiT TX-lock protection, the programmer specifies locking conflicts
+            for each transaction. In Figure 12's case, the programmer would specify
+            that tx2 conflicts with L2 and tx3 conflicts with L3. By specifying true
+            transactional conflicts with locks, the TM system can relax the requirement
+            of running LiT transactions in isolation and instead run them as irrevocable.
+            While no two irrevocable transactions can be run simultaneously, as they
+            may conflict with each other (resulting in a violation of their irrevocable
+            characteristic), other non-irrevocable transactions can be run along
+            side them, improving overall system throughput.
+          </p>
+<p>
+            The run-time result of using LiT TX-lock protection is shown in Figure
+            15. Transaction tx1 is able to run without being stalled as it has no
+            conflicts with other transactions or locks. Transaction tx2 is run as
+            an irrevocable transaction, rather than as an isolated transaction, allowing
+            tx1 to run along side it. Irrevocable transaction tx3 is prevented from
+            starting as irrevocable transaction tx2 is already in-flight. Likewise,
+            lockL2 cannot lock L2 since tx2 conflicts with L2 and allowing lockL2
+            to proceed would require tx2 to abort. Since tx2 is irrevocable (e.g.
+            unabortable), lockL2 is stalled. However, lockL3 and lockL4 start immediately,
+            since neither conflict with any in-flight transaction. When tx2 completes,
+            both tx3 and lockL2 can try to proceed. Transaction tx3 is stalled by
+            lockL3, but lockL2 executes immediately as its conflict with tx2 has
+            passed. When lockL3 completes tx3 begins and runs through to completion.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lock_composition"></a><h6>
+<a name="id4903970"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lock_composition">Lock
+            Composition</a>
+          </h6>
+<p>
+            Any TM system that supports locks inside of transactions must ensure
+            the pessimistic critical sections of the locks inside of transactions
+            are not violated. This is achieved by making the containing transactions
+            either isolated or irrevocable once the lock inside the transaction is
+            obtained. Lemma 2 proves the necessity of the irrevocability characteristic
+            for LiT transactions.
+          </p>
+<p>
+            Locks Inside of Transactions Lemma 2. Any lock L obtained during an in-flight
+            transaction Tif requires Tif be immediately and permanently promoted
+            to an irrevocable transaction, characterized by Tif (irrevocable) = true,
+            which cannot be aborted.
+          </p>
+<p>
+            Proof. (Contradiction) Given: threads T1 and T2 execute inc() and get()
+            from Figure 19, respectively and variables x = 0, y = 0. ++x and ++y
+            operations within inc() are unguarded direct access variable operations
+            that perform no transactional undo or redo logging operation; these operations
+            are irreversible (e.g. normal pessimistic critical section operations).
+            The atomic property of any transaction T requires all memory operations
+            of T are committed or none are committed.
+          </p>
+<p>
+            Execution: T1 starts transaction Tx1 (Tx1(irrevocable) = false) and completely
+            executes lines 3-7, setting x = 1. T2 executes 13- 14, obtains lock L1,
+            released by Tx1 and flags Tx1 to abort due to its identified lock conflict.
+            T2 reads x = 1 and y = 0, unlocks L1 and returns. Tx1 tries to lock L1,
+            but instead is required to abort, causing the atomic transactional property
+            of Tx1 to be violated since ++x has been performed and will not be undone
+            when Tx1 is aborted.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="keyword">int</span> <span class="identifier">x</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">y</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="number">2</span>
+<span class="number">3</span>   <span class="keyword">void</span> <span class="identifier">inc</span><span class="special">()</span> <span class="special">{</span>
+<span class="number">4</span>       <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">5</span>       <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">6</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_conflicting_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">7</span>           <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="special">++</span><span class="identifier">x</span><span class="special">;</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">8</span>           <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="special">++</span><span class="identifier">y</span><span class="special">;</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">9</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">10</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">11</span>  <span class="special">}</span>
+<span class="number">12</span>
+<span class="number">13</span>  <span class="keyword">void</span> <span class="identifier">get</span><span class="special">(</span><span class="keyword">int</span> <span class="special">&amp;</span><span class="identifier">retX</span><span class="special">,</span> <span class="keyword">int</span> <span class="special">&amp;</span><span class="identifier">retY</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">14</span>      <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">15</span>      <span class="identifier">retX</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">;</span> <span class="identifier">retY</span> <span class="special">=</span> <span class="identifier">y</span><span class="special">;</span>
+<span class="number">16</span>      <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">17</span>  <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">19.</span> <span class="identifier">Violating</span> <span class="identifier">LiT</span> <span class="identifier">Lemma</span> <span class="number">2.</span>
+</pre>
+<p>
+            Referring again to Figure 19, now consider the correct execution (following
+            Lemma 2) of threads T1 and T2 of inc() and get(), respectively, with
+            variables x = 0, y = 0. T1 starts transaction Tx1 and executes lines
+            3-7, setting x = 1 and Tx1(irrevocable) = true. T2 executes 13-14, but
+            fails to obtain lock L1 even though it is released by Tx1. T2 fails to
+            obtain lock L1 because in order to do so would require Tx1 be aborted
+            as it has flagged itself as conflicting with lock L1 via t.add_conflicting_lock(L1).
+            Yet, Tx1 cannot be aborted since Tx1(irrevocable) = true. T2 stalls until
+            Tx1 completes, setting x = 1, y = 1. T2 then executes, obtaining the
+            necessary locks and returning x = 1 and y = 1 the atomically correct
+            values for x and y (equivalent values) given transaction Tx1.
+          </p>
+<p>
+            By incorporating both Lemma 1 and 2, locks inside of transactions naturally
+            compose and emit database ACI characteristics; atomic, consistent and
+            isolated. They are atomic (all operations commit): once a lock is obtained
+            inside a transaction, the transaction becomes irrevocable. This ensures
+            that all operations will commit, irrespective of how many locks are obtained
+            within the LiT transaction. They are consistent: no conflicting locks
+            or transactions can run along side the irrevocable LiT transaction, ensuring
+            memory correctness. They are isolated: conflicting locks or transactions
+            are disallowed from running in conjunction with an LiT transaction, preventing
+            its state from being visible before it commits. Even when a lock is released
+            inside an LiT transaction, other threads remain unable to obtain the
+            lock until the transaction commits.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.criticality_of_lit_lock_composition"></a><h6>
+<a name="id4904675"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.criticality_of_lit_lock_composition">Criticality
+            of LiT Lock Composition</a>
+          </h6>
+<p>
+            The composable nature of LiT locks is critical to the incremental adoption
+            of transactions into pre-existing, lock-based parallel software. To understand
+            this, consider a multi-threaded linked list implemented using mutual
+            exclusion locks. The linked list software is mature, thoroughly tested
+            and contains lookup(), insert() and remove() methods. A software designer
+            wishes to extend the linked list's behavior to include a move() operation.
+            The move() operation behaves in the following way: if element A exists
+            in the list and element B does not exist in the list, element A is removed
+            from the list and element B is inserted into the list.With LiT lock composition,
+            the move() operation could be implemented entirely from the previously
+            built locking implementation. Figure 20 demonstrates how this is achieved
+            within the TBoost.STM LATM extension.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="keyword">bool</span> <span class="identifier">move</span><span class="special">(</span><span class="identifier">node</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">A</span><span class="special">,</span> <span class="identifier">node</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">B</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">2</span>       <span class="comment">// compose locking operations: lookup(), remove()
+</span><span class="number">3</span>       <span class="comment">// &amp; insert() in an irrevocable &amp; indivisible tx
+</span><span class="number">4</span>       <span class="comment">// to make a new transaction-based move() method
+</span><span class="number">5</span>       <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">6</span>       <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">7</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">list_lock_</span><span class="special">);</span>
+<span class="number">8</span>           <span class="comment">// lookup() uses lock list_lock_
+</span><span class="number">9</span>           <span class="keyword">if</span> <span class="special">(</span><span class="identifier">lookup</span><span class="special">(</span><span class="identifier">A</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">lookup</span><span class="special">(</span><span class="identifier">B</span><span class="special">))</span> <span class="special">{</span>
+<span class="number">10</span>              <span class="identifier">remove</span><span class="special">(</span><span class="identifier">A</span><span class="special">);</span> <span class="comment">// uses lock list_lock_
+</span><span class="number">11</span>              <span class="identifier">insert</span><span class="special">(</span><span class="identifier">B</span><span class="special">);</span> <span class="comment">// uses lock list_lock_
+</span><span class="number">12</span>          <span class="special">}</span>
+<span class="number">13</span>          <span class="keyword">else</span> <span class="keyword">return</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="number">14</span>
+<span class="number">15</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">return</span> <span class="keyword">true</span><span class="special">;</span>
+<span class="number">16</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">17</span>  <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">20.</span> <span class="identifier">Move</span> <span class="identifier">Implemented</span> <span class="identifier">with</span> <span class="identifier">LiT</span> <span class="identifier">Lock</span> <span class="identifier">Composition</span><span class="special">.</span>
+</pre>
+<p>
+            The move() method in Figure 20 is viewed by other threads as an indivisible
+            operation whose intermediate state is isolated from other threads, even
+            though it contains four disjoint pessimistic critical section invocations
+            (e.g. two lookups, a remove and an insert). Even when list<span class="underline">lock</span>
+            is released intermittently during the transaction execution, other threads
+            are prevented from obtaining it until the transaction commits. This behavior
+            ensures each pessimistic critical section within the transaction is prevented
+            from being viewed independently. Once the transaction commits other threads
+            can obtain list<span class="underline">lock</span> and view the
+            cumulative affects of the move() operation.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.understanding_lit_lock_composition"></a><h6>
+<a name="id4905286"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.understanding_lit_lock_composition">Understanding
+            LiT Lock Composition</a>
+          </h6>
+<p>
+            Figure 21 shows a transfer function implemented using LiT lock composition.
+            This example was chosen because the code sample is small enough to be
+            presented in full (not possible with the prior linked list move() example).
+            Figure 21 uses LiT TX-lock protection and contains two locks inside of
+            the same transaction that are subsumed by the transaction. The transaction
+            composes the two separate lock-based critical sections into an atomically
+            viewed and isolated operation.
+          </p>
+<p>
+            Consider threads T1 executing lit_transfer(1), T2 executing get1() and
+            T3 executing get2() with x1 = 0 and x2 = 0 in the time line shown in
+            Figure 22. The dotted vertical lines in the conflicting lock time in
+            Figure 22 demonstrate when T1's transaction tx1 obtains and releases
+            locks L1 and L2 with regard to T2 and T3. Thread T1 starts transaction
+            tx1 and adds L1 and L2 to tx1's conflicting lock list. Next, tx1 locks
+            L2 and becomes irrevocable (Lemma 2). Thread T2 then attempts to lock
+            L1, however, since L1 conflicts with tx1 and tx1 is irrevocable, thread
+            T2 is disallowed from aborting tx1 and is therefore prevented from obtaining
+            L1, stalling instead. After tx1 sets x2 = ??1 and unlocks L2, thread
+            T3 tries to lock L1, however, it is disallowed because L1 is on tx1's
+            conflicting lock list and tx1 is irrevocable. Thus, thread T3 is stalled.
+            Transaction tx1 then locks L1, sets x1 = 1 and unlocks
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="keyword">int</span> <span class="identifier">x1</span> <span class="special">=</span> <span class="number">0</span><span class="special">,</span> <span class="identifier">x2</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+<span class="number">2</span>
+<span class="number">3</span>   <span class="keyword">void</span> <span class="identifier">lit_transfer</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">transfer</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">4</span>       <span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;;</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span>
+<span class="number">5</span>       <span class="keyword">try</span> <span class="special">{</span>
+<span class="number">6</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">7</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">8</span>
+<span class="number">9</span>           <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span> <span class="identifier">x2</span> <span class="special">-=</span> <span class="identifier">transfer</span><span class="special">;</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">10</span>          <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="identifier">x1</span> <span class="special">+=</span> <span class="identifier">transfer</span><span class="special">;</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">11</span>
+<span class="number">12</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="keyword">break</span><span class="special">;</span>
+<span class="number">13</span>      <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">aborted_tx</span><span class="special">&amp;)</span> <span class="special">{}</span>
+<span class="number">14</span>  <span class="special">}</span>
+<span class="number">15</span>
+<span class="number">16</span>  <span class="keyword">void</span> <span class="identifier">get1and2</span><span class="special">(</span><span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">val1</span><span class="special">,</span> <span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">val2</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">17</span>      <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">18</span>      <span class="identifier">val1</span> <span class="special">=</span> <span class="identifier">x1</span><span class="special">;</span> <span class="identifier">val2</span> <span class="special">=</span> <span class="identifier">x2</span><span class="special">;</span>
+<span class="number">19</span>      <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">20</span>  <span class="special">}</span>
+<span class="number">21</span>  <span class="keyword">void</span> <span class="identifier">get1</span><span class="special">(</span><span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">22</span>      <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span> <span class="identifier">val</span> <span class="special">=</span> <span class="identifier">x1</span><span class="special">;</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">23</span>  <span class="special">}</span>
+<span class="number">24</span>  <span class="keyword">void</span> <span class="identifier">get2</span><span class="special">(</span><span class="keyword">int</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">25</span>      <span class="identifier">lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span> <span class="identifier">val</span> <span class="special">=</span> <span class="identifier">x2</span><span class="special">;</span> <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">26</span>  <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">21.</span> <span class="identifier">LiT</span> <span class="identifier">Transaction</span> <span class="keyword">and</span> <span class="identifier">Two</span> <span class="identifier">Locking</span> <span class="identifier">Getters</span><span class="special">.</span>
+</pre>
+<p>
+            L1. When tx1 commits, threads T2 and T3 are unstalled and read x1 = 1
+            and x2 = ??1, respectively, the correct atomic values for the lit_transfer(1)
+            operation with lock composition.
+          </p>
+<p>
+            Figure 22. Composed LiT Example using TX-Lock Protection.
+          </p>
+<p>
+            In the above scenario, both T2 and T3 tried to acquire the unlocked locks
+            L1 and L2 but failed due to tx1's irrevocability even though the locks
+            themselves were available. The characteristic of disallowing lock acquisition
+            even when locks are available is a primary attribute of LiT transactions.
+            This characteristic is not present in systems which use locks alone,
+            and is a key attribute to enabling lock composition. As demonstrated
+            earlier with LoT transactions, a lock and a transaction conflicting with
+            the same lock cannot both execute simultaneously. LiT transactions use
+            this same behavior and extend it to favor transactions over locks once
+            a lock is obtained inside of a transaction, making it irrevocable. By
+            restricting access of locks to in-flight LiT transactions which have
+            acquired (and then released) them, the system ensures any remaining behavior
+            not yet performed by the transaction will occur prior to other threads
+            obtaining such released locks. This ensures
+          </p>
+<p>
+            all the pessimistic critical sections within an LiT transaction are executed
+            in isolation and consistently without memory interference from outside
+            locking threads. Note that this was the case when T3 tried to acquire
+            lock L2 even after transaction tx1 had completed its operations on its
+            shared memory x2.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_lock_identification"></a><h6>
+<a name="id4906362"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction.lit_lock_identification">LiT
+            Lock Identification</a>
+          </h6>
+<p>
+            LiT TX-lock protection requires that all transaction conflicting locks,
+            those locks used directly inside of transactions, be identified prior
+            to any lock being obtained within the transaction; failure to do so can
+            lead to deadlocks. A simple example of how adding conflicting locks as
+            they are obtained inside of transactions can lead to deadlocks can be
+            derived from Figure 21. If lit_transfer() is executed without adding
+            conflicting locks (e.g. no calls to add_conflicting_lock()), the following
+            deadlock is possible. Thread T1 executes lines 3-5, skips lines 6-7 (the
+            conflict calls) and executes line 9 locking L2 and adding it to its conflicting
+            lock list. Thread T2 then executes lines 16 and part of line 17 of get1and2(),
+            locking L1.Without the transactional code identifying L1 as a conflict,
+            the TM system would not disallow T2 from locking L1. The system is now
+            deadlocked. T2 cannot proceed with locking L2 as L2 has been added to
+            T1 conflicting lock list, yet T1 cannot proceed as lock L1 is held by
+            T2.
+          </p>
+<p>
+            These deadlocks scenarios are overcome by requiring the LiT TM-lock or
+            TX-lock protection to list all conflicting locks prior to obtaining any
+            locks within transactions. Attempting to use locks inside of transactions
+            without first identifying them as conflicts causes TBoost.STM to throw
+            an exception informing the programmer of the missed conflicting lock
+            and how to correct the error. Recycling the same scenario as above with
+            conflicting locks identified at the start of the transaction avoids deadlocks.
+            For example, thread T1 adds locks L1 and L2 to its conflicting lock list.
+            It then executes lines 3-8 and part of line 9, locking L2 (but not unlocking
+            it). Thread T2 executes lines 16 and part of 17, trying to lock L1, and
+            sees T1's transaction as conflicting. Thread T2 tries to abort T1's transaction,
+            but is disallowed as the transaction is irrevocable (see Lemma 2). T2
+            is therefore stalled prior to obtaining lock L1. T1 continues and executes
+            the remainder of line 9-12, obtaining and releasing lock L1 and finally
+            committing. Once T1's transaction has committed, T2 is allowed to resume
+            and runs to completion.
+          </p>
+</div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
 <a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.unrecoverable_transactions_to_manage_with_i_o" title="Unrecoverable transactions to manage with I/O">Unrecoverable
           transactions to manage with I/O</a>
-</h5></div></div></div></div>
-<div class="section" lang="en"><div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.tm_specific_concepts.lock_aware_transaction" title="Lock-aware transaction">Lock-aware
-          transaction</a>
 </h5></div></div></div></div>
 </div>
 <div class="section" lang="en">
@@ -629,14 +1606,16 @@
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.memory_management">Memory
           Management</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.raii">RAII</a></span></dt>
-<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety">Exception
-          Safety</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.mixin_versus_wrapper_helpers">Mixin
+          versus wrapper helpers</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement">Why
+          TBoost.STM's cache uses now memcpy instead of copy-constructor and assignement</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.move_semantics">Move
           semantics</a></span></dt>
 <dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.parametric_polymorphism_and_subtype_polymorphism">Parametric
           Polymorphism and Subtype Polymorphism</a></span></dt>
-<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks">Language-like
-          atomic transaction macro blocks</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks">Language-like
+          macro blocks</a></span></dt>
 </dl></div>
 <p>
           This section briefly discusses some of the C++ and library-specific concepts
@@ -658,11 +1637,11 @@
             TBoost.STM is built with native language compatibility as a top priority
             - as such, it does not require language extensions or violate natural
             language semantics. Native language compatibility is a foremost concern
-            due to C++0x set to specifically resist language extensions [29]. While
-            in other languages, such as Java, STM systems which require language
-            extensions may be practical, within C++ this same approach seems unrealistic.
-            Thus, there is a very practical need for a native language ready STM
-            solution for C++.
+            due to C++0x set to specifically resist language extensions. While in
+            other languages, such as Java, STM systems which require language extensions
+            may be practical, within C++ this same approach seems unrealistic. Thus,
+            there is a very practical need for a native language ready STM solution
+            for C++.
           </p>
 </div>
 <div class="section" lang="en">
@@ -749,41 +1728,352 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.exception_safety" title="Exception Safety">Exception
-          Safety</a>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.mixin_versus_wrapper_helpers"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.mixin_versus_wrapper_helpers" title="Mixin versus wrapper helpers">Mixin
+          versus wrapper helpers</a>
 </h5></div></div></div>
 <p>
-            TBoost.STM fulfills Abrahams' basic exception safety guarantee for deferred
-            updating, but cannot supply any exception safety guarantee for direct
-            updating. The basic guarantee for exception safety states that if an
-            exception is thrown, the operation may have side-effects but is in a
-            consistent state. The basic guarantee is less strict than the strong
-            guarantee which specifies if an exception is thrown there are no side-effects.
-            The highest level of exception safety, above the strong guarantee, is
-            the nothrow guarantee which disallows exceptions from being thrown entirely.
+            TBoost.STM's provides some helper classes to make transactional objects.
+            The user should use each one on a per case, taking in account the advantages
+            and liabilities of each one.
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              mixin; transaction_object
+            </li>
+<li>
+              intrinsic wrapper: transactional_object
+            </li>
+<li>
+              extrinsic wrapper: transactional_reference_cache
+            </li>
+</ol></div>
+<p>
+            Next follows the features the user should question
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              Allows to use an existing class, for example std::pair class. Does
+              the helper class allows the smart pointers to return an reference to
+              an existing class?
+              <div class="itemizedlist"><ul type="disc">
+<li>
+                  mixin: There is no mean
+                </li>
+<li>
+                  intrinsic: the associated smart pointers to a transactional_object&lt;std::pair&gt;
+                  returns a std::pair reference
+                </li>
+<li>
+                  extrinsic: This is exacly the role of the extrinsec approach
+                </li>
+</ul></div>
+</li>
+<li>
+              Allows to use an existing instance variable, for example a variable
+              of type std::pair class. Does the helper class allows the smart pointers
+              to return an reference to an existing class?
+              <div class="itemizedlist"><ul type="disc">
+<li>
+                  mixin: There is no mean
+                </li>
+<li>
+                  intrinsic: There is no mean
+                </li>
+<li>
+                  extrinsic: This is exacly the role of the extrinsec approach
+                </li>
+</ul></div>
+</li>
+<li>
+              Works for class hierarchies. if D isa B, then helper&lt;D&gt; is a
+              helper&lt;B&gt;
+              <div class="itemizedlist"><ul type="disc">
+<li>
+                  mixin: This is exactly the role of the extrinsec approach since
+                  we have added the base parameter (class B: mixin&lt;B&gt;{} class
+                  D: mixin&lt;D,B&gt;{}).
+                </li>
+<li>
+                  intrinsic: Not directly, we need to use some form of cast. clas
+                  D:B{}. intrinsic&lt;B&gt;* ptr=new intrinsic&lt;D&gt;(); ????
+                </li>
+<li>
+                  extrinsic: N/A because the helper is hidden
+                </li>
+</ul></div>
+</li>
+<li>
+              Allows to avoid the forwarding problem for base classes
+              <div class="itemizedlist"><ul type="disc">
+<li>
+                  mixin: As the user defines its own class he can define the exact
+                  constructors avoiding the problem added the base parameter
+                </li>
+<li>
+                  intrinsic: the wrapper must define generic constructors having
+                  the forwarding problem.
+                </li>
+<li>
+                  extrinsic: N/A because the helper is hidden
+                </li>
+</ul></div>
+</li>
+<li>
+              Allows to avoid the forwarding problem for derived classes
+              <div class="itemizedlist"><ul type="disc">
+<li>
+                  mixin: As the inheritance of the base class is done using the helper
+                  the base mixin must define generic constructors having the forwarding
+                  problem.
+                </li>
+<li>
+                  intrinsic: the wrapper must define generic constructors having
+                  the forwarding problem.
+                </li>
+<li>
+                  extrinsic: N/A because the helper is hidden
+                </li>
+</ul></div>
+</li>
+<li>
+              Performs optimally.
+              <div class="itemizedlist"><ul type="disc">
+<li>
+                  mixin: optimal, only one allocation/copy
+                </li>
+<li>
+                  intrinsic: optimal, only one allocation/copy
+                </li>
+<li>
+                  extrinsic: instead of a single allocation/copy we need two, so
+                  no optimal
+                </li>
+</ul></div>
+</li>
+</ol></div>
+<p>
+            The following table is a compilation of the preceding analysis:
+          </p>
+<div class="table">
+<a name="id4906890"></a><p class="title"><b>Table 1.3. Comparaison with other STM systems</b></p>
+<div class="table-contents"><table class="table" summary="Comparaison with other STM systems">
+<colgroup><col></colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>feature</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Mixin</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Intrinsic Wrapper</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Extrinsic Wrapper</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>existing class</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  [No
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  *Yes
+                </p>
+                </td>
+<td class="auto-generated"> </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  *Yes
+                </p>
+                </td>
+<td class="auto-generated"> </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><pre class="programlisting"><span class="special">[</span>
+    <span class="special">[[*</span><span class="identifier">existing</span> <span class="identifier">variable</span><span class="special">]]</span>                                  <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>      <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>                  <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>
+<span class="special">]</span>
+<span class="special">[</span>
+    <span class="special">[[*</span><span class="identifier">existing</span> <span class="keyword">class</span> <span class="identifier">hierarchy</span><span class="special">]]</span>                           <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>      <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>                  <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>
+<span class="special">]</span>
+<span class="special">[</span>
+    <span class="special">[[*</span><span class="identifier">avoid</span> <span class="identifier">the</span> <span class="identifier">forwarding</span> <span class="identifier">problem</span> <span class="keyword">for</span> <span class="identifier">base</span> <span class="identifier">classes</span><span class="special">]]</span>      <span class="special">[[</span><span class="identifier">Yes</span><span class="special">]]</span>     <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>                  <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>
+<span class="special">]</span>
+<span class="special">[</span>
+    <span class="special">[[*</span><span class="identifier">avoid</span> <span class="identifier">the</span> <span class="identifier">forwarding</span> <span class="identifier">problem</span> <span class="keyword">for</span> <span class="identifier">derived</span> <span class="identifier">classes</span><span class="special">]]</span>   <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>      <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>                  <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>
+<span class="special">]</span>
+<span class="special">[</span>
+    <span class="special">[[*</span><span class="identifier">Works</span> <span class="keyword">for</span> <span class="keyword">class</span> <span class="identifier">hierarchies</span><span class="special">]]</span>                        <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>    <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>                  <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>
+<span class="special">]</span>
+<span class="special">[</span>
+    <span class="special">[[*</span><span class="identifier">Performs</span> <span class="identifier">optimaly</span><span class="special">]]</span>                                  <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>    <span class="special">[[*</span><span class="identifier">Yes</span><span class="special">]]</span>                <span class="special">[[</span><span class="identifier">No</span><span class="special">]]</span>
+<span class="special">]</span>
+</pre>
+<p>
+            [ [<span class="bold"><strong>existing variable</strong></span>] [[No]] [[No]]
+            [<span class="bold"><strong>Yes</strong></span>] ] [ [<span class="bold"><strong>existing
+            class hierarchy</strong></span>] [[No]] [[No]] [<span class="bold"><strong>Yes</strong></span>]
+            ] [ [<span class="bold"><strong>avoid the forwarding problem for base classes</strong></span>]
+            [[Yes]] [[No]] [<span class="bold"><strong>Yes</strong></span>] ] [ [<span class="bold"><strong>avoid the forwarding problem for derived classes</strong></span>]
+            [[No]] [[No]] [<span class="bold"><strong>Yes</strong></span>] ] [ [<span class="bold"><strong>Works
+            for class hierarchies</strong></span>] [<span class="bold"><strong>Yes</strong></span>]
+            [[No]] [<span class="bold"><strong>Yes</strong></span>] ] [ [<span class="bold"><strong>Performs
+            optimaly</strong></span>] [<span class="bold"><strong>Yes</strong></span>] [<span class="bold"><strong>Yes</strong></span>] [[No]] ] ]
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement" title="Why TBoost.STM's cache uses now memcpy instead of copy-constructor and assignement">Why
+          TBoost.STM's cache uses now memcpy instead of copy-constructor and assignement</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.domain">Domain</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.exception_safety">Exception
+            Safety</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.performances">Performances</a></span></dt>
+</dl></div>
+<p>
+            Until version 0.3 TBoost.STM's used the copy-constructor to clone a new
+            object which will be used directly by the derreed update policy and as
+            a backup by the direct update policy. This has some drawbacks:
+          </p>
+<div class="orderedlist"><ol type="1">
+<li>
+              Domain: Transactional object are limited to CopyConstructible objects
+            </li>
+<li>
+              Exception safety: As the user copy-constructor and assignement can
+              throw exceptions
+            </li>
+<li>
+              Performances: Whole copy, either copy-constructor and assignement,
+              of transactional objects could be expensive
+            </li>
+</ol></div>
+<p>
+            The following sections explain deeply this issues.
+          </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.domain"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.domain" title="Domain">Domain</a>
+</h6></div></div></div>
+<p>
+              It seems a hard limitation to force a STM user to make all its classes
+              CopyConstructible and Assignable.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.exception_safety"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.exception_safety" title="Exception Safety">Exception
+            Safety</a>
+</h6></div></div></div>
+<p>
+              With copy-constructor and assignement TBoost.STM fulfills Abrahams'
+              basic exception safety guarantee for deferred updating, but cannot
+              supply any exception safety guarantee for direct updating. The basic
+              guarantee for exception safety states that if an exception is thrown,
+              the operation may have side-effects but is in a consistent state. The
+              basic guarantee is less strict than the strong guarantee which specifies
+              if an exception is thrown there are no side-effects. The highest level
+              of exception safety, above the strong guarantee, is the nothrow guarantee
+              which disallows exceptions from being thrown entirely.
+            </p>
+<p>
+              Within deferred updating, TBoost.STM can only afford to implement the
+              basic guarantee because if memory is partially committed and then a
+              user exception is thrown, no original state exists for the already
+              committed memory. Therefore, already committed memory in a deferred
+              updating system, must stay committed since no reverted original state
+              can be used to revert the changes. To implement such a system would
+              result in a substantial performance degradation to the overall system,
+              effectively doubling memory size and copy operations. Due to these
+              costs, a double-copy implementation is not performed and the basic
+              guarantee for deferred updating is deemed acceptable.
+            </p>
+<p>
+              Within direct updating, memory updates are done immediately on global
+              memory, so transactions naturally achieve strong exception safety guarantees
+              for commits. Aborts within direct updating, however, invoke copy constructors
+              for restoration of the original global memory state. These copy constructors
+              can throw exceptions which then can lead to a partially restored global
+              state for aborted exceptions that are short-circuited by user-defined
+              copy constructor exceptions. As such, no exception safety guarantee
+              can be made for direct updating when used in C++, a downfall of the
+              updating policy.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.performances"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.why___boost_stm_s___cache_uses_now_memcpy_instead_of_copy_constructor_and_assignement.performances" title="Performances">Performances</a>
+</h6></div></div></div>
+<p>
+              Another problem with the copy is that we will need to copy the whole
+              logical object when what we need is just the phisical part, e.g. if
+              copy is used to clone the transactional object, each time we modify
+              a linked list, we will copy the entire list, even if only one node
+              is modified.
+            </p>
+<p>
+              A pure transactional object is a transactional object that do not points
+              to any non transactional object. For example, a transactional object
+              including a std::string, is not a pure transactional object, because
+              std::string has a pointer to a dynamically allocated memory which is
+              not a transactional object. For these non pure transactional objects
+              a copy will be needed. One way to limit this is to place every non
+              pure transactional object on a separated class and add a pointer to
+              it. So for example instead of doing
+            </p>
+<p>
+              class X { std::string str; // ... other fields
+            </p>
+<p>
+              };
+            </p>
+<p>
+              which will make X non pure TO, we can do
+            </p>
+<p>
+              class X { tx_ptr&lt;std::string&gt; str_ptr; <span class="emphasis"><em>/ owned pointer
+              which is cloned when making a copy but not by the STM system. /</em></span>
+              ... other fields
+            </p>
+<p>
+              };
+            </p>
+<p>
+              In this way X will be a pure TO poining to a non pure TO.
+            </p>
+</div>
+<p>
+            If memcpy is not portable we can consider specializing the clone and
+            copy_state virtual functions.
           </p>
 <p>
-            Within deferred updating, TBoost.STM can only afford to implement the
-            basic guarantee because if memory is partially committed and then a user
-            exception is thrown, no original state exists for the already committed
-            memory. Therefore, already committed memory in a deferred updating system,
-            must stay committed since no reverted original state can be used to revert
-            the changes. To implement such a system would result in a substantial
-            performance degradation to the overall system, effectively doubling memory
-            size and copy operations. Due to these costs, a double-copy implementation
-            is not performed and the basic guarantee for deferred updating is deemed
-            acceptable.
-          </p>
-<p>
-            Within direct updating, memory updates are done immediately on global
-            memory, so transactions naturally achieve strong exception safety guarantees
-            for commits. Aborts within direct updating, however, invoke copy constructors
-            for restoration of the original global memory state. These copy constructors
-            can throw exceptions which then can lead to a partially restored global
-            state for aborted exceptions that are short-circuited by user-defined
-            copy constructor exceptions. As such, no exception safety guarantee can
-            be made for direct updating when used in C++, a downfall of the updating
-            policy.
+            The user must state explicitly the TO that are not pure by overloading
+            the cache<span class="underline">clone, cache</span> ... . We
+            can also define a trait.
           </p>
 </div>
 <div class="section" lang="en">
@@ -792,9 +2082,10 @@
           semantics</a>
 </h5></div></div></div>
 <p>
-            We solve the problem of commit-time and abort-time exceptions by using
-            move semantics in place of copy semantics. The idea of moving is new
-            to C++ and will be available in the next version of the standard.
+            When copying is needed we solve the problem of commit-time and abort-time
+            exceptions by using move semantics in place of copy semantics when the
+            class provided it. The idea of moving is new to C++ and will be available
+            in the next version of the standard.
           </p>
 </div>
 <div class="section" lang="en">
@@ -814,8 +2105,8 @@
             on the other hand, reduces type-safety to some degree, but gains run-time
             flexibility unachievable with C++ templates alone. Other mechanisms also
             exist to create general purpose code, such as void pointers or preprocessor
-            macros, but are considered unsafe and error-prone [8] and thusly, not
-            used in TBoost.STM.
+            macros, but are considered unsafe and error-prone and thusly, not used
+            in TBoost.STM.
           </p>
 <p>
             TBoost.STM uses both parametric and subtype polymorphism throughout its
@@ -832,9 +2123,242 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h5 class="title">
-<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks" title="Language-like atomic transaction macro blocks">Language-like
-          atomic transaction macro blocks</a>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks"></a><a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks" title="Language-like macro blocks">Language-like
+          macro blocks</a>
 </h5></div></div></div>
+<p>
+            The synchronization primitives supported in TBoost.STM's programming
+            model are mutual exclusion locks, timed locks and transactions. Mutual
+            exclusion locks have architectural support in all modern instruction
+            set architectures and are widely considered the most common synchronization
+            primitive [11]. Transactions, a parallel programming abstraction by Herlihy
+            and Moss [10], are currently implemented in software with potential hardware
+            support in the near future [4].
+          </p>
+<div class="table">
+<a name="id4908020"></a><p class="title"><b>Table 1.4. Comparaison with other STM systems</b></p>
+<div class="table-contents"><table class="table" summary="Comparaison with other STM systems">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong>Keyword</strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong>Behavior</strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>use_lock(L)</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Acquires lock L and executes critical section.
+                  Supports single operations without {} scope construction such as,
+                  use_lock(L) foo()</strong></span>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>use_timed_lock(MS, L)</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Acquires timed lock L and executes a critical
+                  section based on MS millisecond timer. If the timer expires without
+                  obtaining lock L, an exception is thrown. This extension allows
+                  the exception to escape the parallel construct scope. Supports
+                  single operations without {} scope construction such as, use_timed_lock(1,
+                  L) foo()</strong></span>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>try_timed_lock(MS, L)</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Same as use_timed_lock(L), but exceptions
+                  are caught locally. Requires catch_lock_timeout(L) or lock_timeout</strong></span>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>catch_lock_timeout(E)</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Catches timed lock exception E thrown from
+                  try_timed_lock(L). Required to follow all try_timed_lock(L), unless
+                  followed by lock_timeout</strong></span>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <span class="bold"><strong>lock_timeout</strong></span>
+                </p>
+                </td>
+<td>
+                <p>
+                  <span class="bold"><strong>Catches and discards failed timer exception
+                  thrown from try_timed_lock(L). Required to follow all try_timed_lock(L),
+                  unless followed by catch_lock_timeout(E)</strong></span>
+                </p>
+                </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><p>
+            Table 1. TBoost.STM Mutual Exclusion Locking Parallel Constructs.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.library_based_lock_implementations"></a><h6>
+<a name="id4908228"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.library_based_lock_implementations">Library-based
+            Lock Implementations</a>
+          </h6>
+<p>
+            Mutual exclusion locks, or just locks, ensure a programmerspecified set
+            of operations are limited to one thread of execution [7, 11]. Lock-guarded
+            operations, also known as pessimistic critical sections, require that
+            all threads obtain a single-ownership flag before executing the guarded
+            operations. If N threads simultaneously attempt to execute the same pessimistic
+            critical section, one thread is allowed forward progress while the remaining
+            N ?? 1 threads are stalled. An example of three distinct types of locking
+            is shown in Figure 1.
+          </p>
+<pre class="programlisting"><span class="number">1</span> <span class="comment">// mutual exclusion with lock()/unlock().
+</span><span class="number">2</span> <span class="identifier">pthread_mutex_lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+<span class="number">3</span> <span class="keyword">int</span> <span class="identifier">ret</span> <span class="special">=</span> <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">4</span> <span class="identifier">pthread_mutex_unlock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+<span class="number">5</span> <span class="keyword">return</span> <span class="identifier">ret</span><span class="special">;</span>
+</pre>
+<p>
+            or
+          </p>
+<pre class="programlisting"><span class="number">1</span> <span class="comment">// mutual exclusion with automatic objects.
+</span><span class="number">2</span> <span class="special">{</span>
+<span class="number">3</span> <span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">pthread_mutex_t</span><span class="special">&gt;</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+<span class="number">4</span> <span class="keyword">return</span> <span class="identifier">foo</span><span class="special">();</span> <span class="comment">// lock released
+</span><span class="number">5</span> <span class="special">}</span>
+</pre>
+<p>
+            or
+          </p>
+<pre class="programlisting"><span class="number">1</span> <span class="comment">// language-like mutual exclusion.
+</span><span class="number">2</span> <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">foo</span><span class="special">();</span> <span class="comment">// lock released
+</span>
+<span class="identifier">Figure</span> <span class="number">1.</span> <span class="identifier">Library</span><span class="special">-</span><span class="identifier">based</span> <span class="identifier">Lock</span> <span class="identifier">Implementations</span><span class="special">.</span>
+</pre>
+<p>
+            In Figure 1, the automatic object and language-like mutual exclusion
+            interfaces are safer than the pthread_mutex_lock() and pthread_mutex_unlock()
+            interfaces. If an exception is thrown from foo() after pthread_mutex_lock()
+            is called, its corresponding pthread_mutex_unlock() will not be called
+            causing the application to deadlock. Both the automatic object and language-like
+            implementations avoid deadlock in the event of an exception thrown from
+            foo(). However, these implementations have notable differences in programmatic
+            scoping and programmer error.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.pitfalls_in_scoping_of_automatic_object_locks"></a><h6>
+<a name="id4908625"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.pitfalls_in_scoping_of_automatic_object_locks">Pitfalls
+            in Scoping of Automatic Object Locks</a>
+          </h6>
+<p>
+            A closer examination of the automatic object and language-like approaches
+            to locking reveal differences in potential programmerinduced error. Figure
+            2 demonstrates a sequential locking order example, a common solution
+            to complex fine-grained locking implementations, in which locks must
+            be obtained in a specific sequential order to avoid deadlocking. If the
+            scope ({}) operators are removed from Figure 2 the behavior of both the
+            scoped_locks and the use_locks are changed. In the case of the scoped_locks,
+            the automatic objects will no longer be terminated after operation_C()
+            and they will thereby retain any locks acquired upon construction until
+            the next immediate scope is terminated. In the case of the use_locks,
+            the locks remain locked only for operation_A() and are then released.
+            Both locking structures are changed to behave incorrectly when the scope
+            operators ({}) are removed, but we believe programmers are less likely
+            to accidentally remove the scope from the use_lock idiom than the scoped_lock.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="comment">// mutual exclusion with automatic objects.
+</span><span class="number">2</span>   <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">pthread_mutex_t</span><span class="special">&gt;</span> <span class="identifier">lock1</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+<span class="number">4</span>       <span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">pthread_mutex_t</span><span class="special">&gt;</span> <span class="identifier">lock2</span><span class="special">(</span><span class="identifier">L2</span><span class="special">);</span>
+<span class="number">5</span>       <span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">pthread_mutex_t</span><span class="special">&gt;</span> <span class="identifier">lock3</span><span class="special">(</span><span class="identifier">L3</span><span class="special">);</span>
+<span class="number">6</span>       <span class="identifier">operation_A</span><span class="special">();</span>
+<span class="number">7</span>       <span class="identifier">operation_B</span><span class="special">();</span>
+<span class="number">8</span>       <span class="identifier">operation_C</span><span class="special">();</span>
+<span class="number">9</span>   <span class="special">}</span>
+</pre>
+<p>
+            or 1 // language-like mutual exclusion. 2 use_lock(L1) use_lock(L2) use_lock(L3)
+            3 { 4 operation_A(); 5 operation_B(); 6 operation_C(); 7 }
+          </p>
+<pre class="programlisting"><span class="identifier">Figure</span> <span class="number">2.</span> <span class="identifier">A</span> <span class="identifier">Required</span> <span class="identifier">Sequential</span> <span class="identifier">Locking</span> <span class="identifier">Order</span><span class="special">.</span>
+</pre>
+<p>
+            The reason why programmers are less likely to accidentally remove the
+            scope from use_lock as opposed to scoped_lock is because the programming
+            structure of use_lock is native to C++ in many ways. For example, the
+            code structure shown below is found throughout C, C++ and Java:
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="identifier">grammatical</span><span class="special">-</span><span class="identifier">phrase</span>
+<span class="number">2</span>   <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">operations</span> <span class="special">...</span>
+<span class="number">4</span>   <span class="special">}</span>
+</pre>
+<p>
+            A number of control structures, specifically in C++, follow this format,
+            such as, if statements, for loops, switches, classes, structs and so
+            forth. While the use_lock structure follows this common practice, scoped
+            automatic objects (e.g., scoped_locks) do not. Because scoped_locks unavoidably
+            deviate from the above common code structure, due to their automatic
+            object basis, their scope is more likely to be accidentally removed by
+            novice programmers as unnecessary.
+          </p>
+<p>
+            The side-effect of accidental scope removal for automatic objects is
+            that resources obtained by these objects are not released until the following
+            scope closure is reached. In some cases, such as file closing, it may
+            be acceptable for automatic objects to delay the release of resources.
+            However, in other cases, such as the case with locks, it is unacceptable
+            for automatic objects to delay the release of resources. In particular,
+            if locks are not released when the programmer intended, the resulting
+            behavior can temporarily or permanently stall all other threads from
+            making forward progress. If threads are temporarily suspended from forward
+            progress, program performance is degraded, yet if threads are permanently
+            suspended from making forward progress, the program results in a deadlock.
+            Both cases are unacceptable for locks because locks are used as a tool
+            to optimize program performance and in both cases the delayed release
+            of locks results in unoptimized performance.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.library_based_transaction_implementations"></a><h6>
+<a name="id4909080"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.library_based_transaction_implementations">Library-based
+            Transaction Implementations</a>
+          </h6>
 <p>
             Transactions allow an unlimited number of threads to execute their optimistic
             critical sections. Transactions can perform their writes off to the side,
@@ -847,26 +2371,29 @@
             for transactions from a library-based approach where x is shared memory
             that must be synchronized.
           </p>
-<p>
-            transaction with begin()/end():
-          </p>
 <pre class="programlisting"><span class="identifier">begin_transaction</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
 <span class="identifier">tx_write</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
 <span class="identifier">end_transaction</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+
+<span class="identifier">transaction</span> <span class="identifier">with</span> <span class="identifier">begin</span><span class="special">()/</span><span class="identifier">end</span><span class="special">():</span>
 </pre>
 <p>
-            transaction with automatic object:
+            or
           </p>
-<pre class="programlisting"><span class="special">{</span> 
+<pre class="programlisting"><span class="special">{</span>
     <span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span>
     <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
     <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
 <span class="special">}</span>
+
+<span class="identifier">transaction</span> <span class="identifier">with</span> <span class="identifier">automatic</span> <span class="identifier">object</span><span class="special">:</span>
 </pre>
 <p>
-            language transaction:
+            or
           </p>
-<pre class="programlisting"><span class="identifier">atomic</span> <span class="special">{</span> <span class="identifier">x</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span> <span class="special">}</span> 
+<pre class="programlisting"><span class="identifier">atomic</span> <span class="special">{</span> <span class="identifier">x</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span> <span class="special">}</span>
+
+<span class="identifier">language</span> <span class="identifier">transaction</span><span class="special">:</span>
 </pre>
 <p>
             Inspection of the above code reveals that begin_transaction() and end_transaction()
@@ -881,9 +2408,9 @@
             complexity for transactional retry mechanics and composed transactional
             behaviors.
           </p>
-<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.pitfalls_in_transactional_execution_of_automatic_objects"></a><h6>
-<a name="id4888966"></a>
-            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.pitfalls_in_transactional_execution_of_automatic_objects">Pitfalls
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.pitfalls_in_transactional_execution_of_automatic_objects"></a><h6>
+<a name="id4909452"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.pitfalls_in_transactional_execution_of_automatic_objects">Pitfalls
             in Transactional Execution of Automatic Objects</a>
           </h6>
 <p>
@@ -893,22 +2420,23 @@
             The code below illustrates the client code necessary to implement a basic
             retry behavior for automatic objects and language-like transactions.
           </p>
-<p>
-            automatic object transaction with retry:
-          </p>
 <pre class="programlisting"><span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span> <span class="special">!</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">committed</span><span class="special">();</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span> <span class="special">{</span>
     <span class="keyword">try</span> <span class="special">{</span>
         <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
         <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
     <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(...)</span> <span class="special">{}</span>
 <span class="special">}</span>
+
+<span class="identifier">automatic</span> <span class="identifier">object</span> <span class="identifier">transaction</span> <span class="identifier">with</span> <span class="identifier">retry</span>
 </pre>
 <p>
-            language-like transaction with retry:
+            and
           </p>
-<pre class="programlisting"><span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span> 
-    <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span> 
+<pre class="programlisting"><span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">=</span> <span class="identifier">val</span><span class="special">;</span>
 <span class="special">}</span> <span class="identifier">end_atom</span>
+
+<span class="identifier">language</span><span class="special">-</span><span class="identifier">like</span> <span class="identifier">transaction</span> <span class="identifier">with</span> <span class="identifier">retry</span>
 </pre>
 <p>
             To complicate matters, some transactions must not implement a retry.
@@ -920,9 +2448,6 @@
             should use retry mechanics while their child transactions should not.
             The code above shows the differences between an automatic object and
             language-like implementation for parent and child transactions.
-          </p>
-<p>
-            automatic object:
           </p>
 <pre class="programlisting"><span class="comment">// parent tx with automatic object:
 </span><span class="keyword">for</span> <span class="special">(</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span> <span class="special">!</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">committed</span><span class="special">();</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">())</span> <span class="special">{</span>
@@ -939,9 +2464,11 @@
     <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span>
     <span class="identifier">t</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span>
 <span class="special">}</span>
+
+<span class="identifier">automatic</span> <span class="identifier">object</span><span class="special">:</span>
 </pre>
 <p>
-            language-like transaction:
+            and
           </p>
 <pre class="programlisting"><span class="comment">// parent tx with language-like transaction.
 </span><span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
@@ -951,10 +2478,12 @@
 
 <span class="comment">// child tx with language-like transaction.
 </span><span class="keyword">void</span> <span class="identifier">foo</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
-    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span> 
-        <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span> 
+    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span>
     <span class="special">}</span> <span class="identifier">end_atom</span>
 <span class="special">}</span>
+
+<span class="identifier">language</span><span class="special">-</span><span class="identifier">like</span> <span class="identifier">transaction</span><span class="special">:</span>
 </pre>
 <p>
             The retry mechanics' syntactic overhead for automatic objects is nearly
@@ -974,9 +2503,9 @@
             errors. For these reasons, a number of TM researchers have been in favor
             of direct language integration of TM instead of API-only approaches.
           </p>
-<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.disadvantages_of_language_based_transactional_integration"></a><h6>
-<a name="id4889874"></a>
-            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_atomic_transaction_macro_blocks.disadvantages_of_language_based_transactional_integration">Disadvantages
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.disadvantages_of_language_based_transactional_integration"></a><h6>
+<a name="id4910450"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.disadvantages_of_language_based_transactional_integration">Disadvantages
             of Language Based Transactional Integration</a>
           </h6>
 <p>
@@ -1011,6 +2540,260 @@
             provides such a solution for C++ that neither library-based automatic
             objects nor language-based parallel abstractions alone can provide.
           </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.parallel_constructs_for_mutually_exclusive_locks"></a><h6>
+<a name="id4910527"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.parallel_constructs_for_mutually_exclusive_locks">Parallel
+            Constructs for Mutually Exclusive Locks</a>
+          </h6>
+<p>
+            In this section we describe the behavior, and give examples, of the TBoost.STM
+            language-like parallel constructs for mutually exclusive locks. The TBoost.STM
+            mutual exclusion locking constructs are shown in Table 1. Each of these
+            constructs allow any type of nesting, ordering and intermixing. Examples
+            of the TBoost.STM locking constructs are shown in Figure 9.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="comment">// single-line sequential locking
+</span><span class="number">2</span>   <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">)</span> <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">)</span> <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">)</span> <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">1</span>   <span class="comment">// multi-line sequential locking
+</span><span class="number">2</span>   <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">)</span> <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">)</span> <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">3</span>   <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">4</span>   <span class="special">}</span>
+<span class="number">1</span>   <span class="comment">// multi-line sequential single 100 ms timed lock
+</span><span class="number">2</span>   <span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span>
+<span class="number">3</span>   <span class="identifier">try_timed_lock</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L1</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">4</span>       <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L2</span><span class="special">)</span> <span class="identifier">use_lock</span><span class="special">(</span><span class="identifier">L3</span><span class="special">)</span>
+<span class="number">5</span>       <span class="special">{</span>
+<span class="number">6</span>           <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">7</span>           <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="number">8</span>       <span class="special">}</span>
+<span class="number">9</span>   <span class="special">}</span> <span class="identifier">lock_timeout</span> <span class="special">{</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">9.</span> <span class="identifier">Mutual</span> <span class="identifier">Exclusion</span> <span class="identifier">Locks</span> <span class="identifier">with</span> TBoost.STM<span class="special">.</span>
+</pre>
+<p>
+            As demonstrated in Figure 9, a number of locking models can be implemented
+            using a mixture of the use_lock(L), use_timed_lock(MS, L) and try_timed_lock(MS,
+            L) parallel constructs. Each locking interface addresses a unique requirement
+            in client code.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.exception_based_timed_locks"></a><h6>
+<a name="id4911030"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.exception_based_timed_locks">Exception-based
+            Timed Locks</a>
+          </h6>
+<p>
+            A notable feature of our TBoost.STM language-like extensions is the use
+            of exceptions in conjunction with timed locks. It is our belief that
+            timed locks are used primarily for polling models and generally require
+            two distinct paths of execution. One path of execution is taken when
+            the lock is obtained before the timeout. The other path of execution
+            is taken when the lock is not obtained before the timeout. In light of
+            this, exceptions thrown when timed locks are not acquired can facilitate
+            a distinction between successful lock acquisition and failed lock acquisition.
+            Client code can become excessively unoptimized or complex if timed sequential
+            locking is necessary and non-throwing automatic objects are used. An
+            example of such unoptimized timed locking is demonstrated in Figure 10.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="comment">// unoptimized timed locking
+</span><span class="number">2</span>   <span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">timed_lock</span> <span class="identifier">tl1</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L1</span><span class="special">);</span>
+<span class="number">4</span>       <span class="identifier">timed_lock</span> <span class="identifier">tl2</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L2</span><span class="special">);</span>
+<span class="number">5</span>       <span class="identifier">timed_lock</span> <span class="identifier">tl3</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L3</span><span class="special">);</span>
+<span class="number">6</span>
+<span class="number">7</span>       <span class="keyword">if</span> <span class="special">(</span><span class="identifier">tl1</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">tl2</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">&amp;&amp;</span>
+<span class="number">8</span>           <span class="identifier">tl3</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">())</span> <span class="special">{</span>
+<span class="number">9</span>           <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">10</span>          <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="number">11</span>      <span class="special">}</span>
+<span class="number">12</span>      <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span>
+<span class="number">13</span>  <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">10.</span> <span class="identifier">Unoptimized</span> <span class="identifier">Timed</span> <span class="identifier">Locking</span> <span class="identifier">with</span> <span class="identifier">Automatic</span> <span class="identifier">Objects</span><span class="special">.</span>
+</pre>
+<p>
+            Figure 10 illustrates how non-throwing automatic objects can hamper performance
+            if incorrectly implemented and demonstrates an unoptimized implementation
+            of timed locks. Delaying lock acquisition checks until after all timed
+            locks are constructed can result in an a substantial performance degradation
+            if neither L1 nor L2 are acquired. This performance degradation is caused
+            by performing additional unnecessary work after failing to acquire lock
+            L1 and L2.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="comment">// optimized timed locking
+</span><span class="number">2</span>   <span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">timed_lock</span> <span class="identifier">tl1</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L1</span><span class="special">);</span>
+<span class="number">4</span>       <span class="keyword">if</span> <span class="special">(</span><span class="identifier">tl1</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">())</span> <span class="special">{</span>
+<span class="number">5</span>           <span class="identifier">timed_lock</span> <span class="identifier">tl2</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L2</span><span class="special">);</span>
+<span class="number">6</span>           <span class="keyword">if</span> <span class="special">(</span><span class="identifier">tl2</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">())</span> <span class="special">{</span>
+<span class="number">7</span>               <span class="identifier">timed_lock</span> <span class="identifier">tl3</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L3</span><span class="special">);</span>
+<span class="number">8</span>               <span class="keyword">if</span> <span class="special">(</span><span class="identifier">tl3</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">())</span> <span class="special">{</span>
+<span class="number">9</span>                   <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">10</span>                  <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="number">11</span>              <span class="special">}</span>
+<span class="number">12</span>              <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span>
+<span class="number">13</span>          <span class="special">}</span>
+<span class="number">14</span>          <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span>
+<span class="number">15</span>      <span class="special">}</span>
+<span class="number">16</span>      <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span>
+<span class="number">17</span>  <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">11.</span> <span class="identifier">Optimized</span> <span class="identifier">Timed</span> <span class="identifier">Locking</span> <span class="identifier">with</span> <span class="identifier">Automatic</span> <span class="identifier">Objects</span><span class="special">.</span>
+</pre>
+<p>
+            In order to optimize Figure 10's timed locks, a complex level of if nesting
+            is needed as shown in Figure 11. Figure 11 demonstrates an optimized
+            level of timed locking, but drastically increases the complexity of the
+            software structure. Figure 11 introduces a high level of software complexity
+            as a trade-off for performance. Intermixing the TBoost.STM try_timed_lock(MS,
+            L) and use_timed_lock(MS, L) constructs builds a software structure that
+            is simpler than either Figure 10 or 11 while achieving the same level
+            of performance found in Figure 11. An example of try_timed_lock(MS, L)
+            and use_timed_lock(MS, L) is shown in Figure 12.
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="comment">// multi-line sequential all 100 ms timed lock
+</span><span class="number">2</span>   <span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span>
+<span class="number">3</span>       <span class="identifier">try_timed_lock</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L1</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">4</span>           <span class="identifier">use_timed_lock</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L2</span><span class="special">)</span>
+<span class="number">5</span>           <span class="identifier">use_timed_lock</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">L3</span><span class="special">)</span>
+<span class="number">6</span>           <span class="special">{</span>
+<span class="number">7</span>               <span class="identifier">foo</span><span class="special">();</span>
+<span class="number">8</span>               <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="number">9</span>           <span class="special">}</span>
+<span class="number">10</span>      <span class="special">}</span> <span class="identifier">lock_timeout</span> <span class="special">{</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">12.</span> <span class="identifier">Optimized</span> <span class="identifier">Timed</span> <span class="identifier">Locking</span> <span class="identifier">with</span> TBoost.STM<span class="special">.</span>
+</pre>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.parallel_constructs_for_transactional_memory"></a><h6>
+<a name="id4912318"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.parallel_constructs_for_transactional_memory">Parallel
+            Constructs for Transactional Memory</a>
+          </h6>
+<p>
+            In this section we describe the behavior, and give examples, of the TBoost.STM
+            language-like parallel constructs for transactional memory. The TBoost.STM
+            transaction-based parallel constructs are shown in Table 2. These transactional
+            constructs enable open-ended transactional nesting behaviors that are
+            important to composition. Examples of the TBoost.STM transactions are
+            shown in Figure 13. Figure 13 demonstrates how transactions are used
+            in various ways. In some cases transactions are single operations, such
+            as in the inc_x() case. At other times transactions consist of
+          </p>
+<pre class="programlisting"><span class="number">1</span>   <span class="keyword">void</span> <span class="identifier">inc_x</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">val</span><span class="special">)</span>
+<span class="number">2</span>   <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">x</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span> <span class="special">}</span> <span class="identifier">end_atom</span>
+<span class="number">4</span>   <span class="special">}</span>
+<span class="number">1</span>   <span class="keyword">void</span> <span class="identifier">inc_y_and_z</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">val</span><span class="special">)</span>
+<span class="number">2</span>   <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">4</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span>
+<span class="number">5</span>           <span class="identifier">t</span><span class="special">.</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">z</span><span class="special">)</span> <span class="special">+=</span> <span class="identifier">val</span><span class="special">;</span>
+<span class="number">6</span>       <span class="special">}</span> <span class="identifier">end_atom</span>
+<span class="number">7</span>   <span class="special">}</span>
+<span class="number">1</span>   <span class="keyword">void</span> <span class="identifier">transfer_x_to_y_z</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">val</span><span class="special">)</span>
+<span class="number">2</span>   <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+<span class="number">4</span>           <span class="identifier">inc_x</span><span class="special">(-</span><span class="identifier">val</span><span class="special">);</span>
+<span class="number">5</span>           <span class="identifier">inc_y_and_z</span><span class="special">(</span><span class="identifier">val</span> <span class="special">/</span> <span class="number">2</span><span class="special">);</span>
+<span class="number">6</span>       <span class="special">}</span> <span class="identifier">end_atom</span>
+<span class="number">7</span>   <span class="special">}</span>
+
+<span class="identifier">Figure</span> <span class="number">13.</span> <span class="identifier">Transactions</span> <span class="identifier">with</span> TBoost.STM<span class="special">.</span>
+</pre>
+<p>
+            multiple operations, such as inc_y_and_z(). More cases exist when transactions
+            are made up of other transactions, such as transfer_x_to_y_z(). The last
+            case, often referred to as composition, is an important characteristic
+            of transactions that most (if not all) other synchronization primitives
+            do not exhibit (more on this later).
+          </p>
+<p>
+            In the simple case, when no transactional nesting occurs, the transactional
+            retry behavior happens locally. For example, if two threads try to concurrently
+            execute the inc_x() function of Figure 13, only one thread will succeed
+            since both threads cannot simultaneously access and change the same shared
+            memory location. The failing thread will have to retry its transaction.
+            Since inc_x() is a single-level transaction, the failing thread can retry
+            the transaction locally (i.e., restarting at the top of the atomic structure
+            inside inc_x()).
+          </p>
+<p>
+            Non-trivial cases exist when transactions may be nested and retrying
+            a transaction locally will cause an infinite loop. These cases use composed
+            transactions and (generally) require that a failed transaction be retried
+            from the parent transaction 1. An example of a composed transaction that,
+            if aborted, would require the transaction to be retried from the parent
+            is transfer_x_to_y_z(). This transaction must be retried from the parent,
+            rather than by either of its child transactions individually, (int_x()
+            and inc_y_and_z()) because the values within the shared memory x, y,
+            and z could have been altered by another interleaved transaction.
+          </p>
+<p>
+            TBoost.STM handles the shifting of transactional retry mechanics from
+            child to parent dynamically and automatically. As demonstrated in Section
+            3.2, the atomic macro makes numerous calls into the currently active
+            transaction to determine whether its failed commit should result in a
+            local retry or a thrown aborted_transaction exception. The correct path
+            of execution for the transactional retry is based on the run-time state.
+            For example, if int_x() has failed, but it is the only transaction currently
+            being executed by a thread, then it should be retried locally. However,
+            if int_x() has failed, but it is being executed from within transfer_x_to_y_z()
+            then transfer_x_to_y_z() should be re-executed. The re-execution of a
+            parent transaction is enabled by a child transaction identifying the
+            correct behavior and then throwing an exception upward.
+          </p>
+<a name="toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.transaction_nesting"></a><h6>
+<a name="id4912962"></a>
+            <a class="link" href="rationale.html#toward_boost_stm.appendices.rationale.c___and_library_specific_concepts.language_like_macro_blocks.transaction_nesting">Transaction
+            Nesting</a>
+          </h6>
+<p>
+            While the retry behavior of nested transactions is important, the composed
+            behavior of independently designed transactions is even more important.
+            Transactional composition [8, 15] is the cornerstone of transactional
+            memory. In short, TM allows independently designed transactions to be
+            placed together under the umbrella of a single transaction. This single
+            transaction then behaves in an atomic, consistent and isolated fashion.
+            Furthermore, the single transaction that is composed of many individual
+            transactions is seen as a single indivisible operation to other transactions.
+          </p>
+<p>
+            As such, an important aspect of transaction nesting is the construction
+            of a transaction without the need to specify it is nested. A similar
+            line of thinking is the construction of a function which is then used
+            inside of another function and so forth. In C++ these nested functions
+            are not created in any special way that describes their use in a given
+            nested structure. Transactions, therefore, should be programmatically
+            constructed in a similar way.
+          </p>
+<p>
+            To the best of our knowledge, TBoost.STM is the first C++ STM library
+            to implement transactions under a single keyword (atomic) which behaves
+            correctly for both nested and non-nested transactions. While other correct
+            implementations exist at the languagelevel [24] and compiler-level [18],
+            no other library-based solution allows the programmer the practical freedom
+            to implement transactions under a single keyword for transactions at
+            any nesting level.
+          </p>
+<p>
+            A more realistic example of the importance of nested and nonnested transactions
+            and a universal keyword for both, is shown in Figure 14. Here we implement
+            some basic list operations that are useful when used independently and
+            when used in an cooperative, nested fashion.
+          </p>
+<p>
+            Figure 14 demonstrates how transactions are composed using TBoost.STM.
+            The goal of the code shown in Figure 14 is to transfer all of the elements
+            from list l to list j that do not already exist in list j. The entire
+            operation is done atomically using four core transactional operations,
+            insert, remove, transfer, and complete_transfer. The additional transactional
+            operation, priority_transfer, is added to demonstrate how client code
+            can wrap a composed transaction and alter its underlying performance
+            in relation to other transactions by modifying the transaction's priority.
+            Wrapping transactions with priority is useful in cases where the original
+            transaction was written in a priority-neutral manner, but now must be
+            used in an explicitly prioritized system. More details of prioritized
+            transactions can be found in [6, 20].
+          </p>
 </div>
 </div>
 <div class="section" lang="en">
@@ -1019,7 +2802,7 @@
         with other STM systems</a>
 </h4></div></div></div>
 <div class="table">
-<a name="id4889966"></a><p class="title"><b>Table 1.3. Comparaison
+<a name="id4913083"></a><p class="title"><b>Table 1.5. Comparaison
         with other STM systems</b></p>
 <div class="table-contents"><table class="table" summary="Comparaison
         with other STM systems">

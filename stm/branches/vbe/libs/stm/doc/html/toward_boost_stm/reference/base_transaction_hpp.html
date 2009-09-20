@@ -1,0 +1,542 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Header &lt;boost/stm/base_transaction.hpp&gt;</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="transaction_hpp.html" title="Header &lt;boost/stm/transaction.hpp&gt;">
+<link rel="next" href="transactional_object_hpp.html" title="Header &lt;boost/stm/transactional_object.hpp&gt;">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="TowardBoostSTM" width="277" height="86" src="../../../image/Toward_Boost_STM.jpg"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="transaction_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transactional_object_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp"></a><a class="link" href="base_transaction_hpp.html" title="Header &lt;boost/stm/base_transaction.hpp&gt;"> Header
+      <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">stm</span><span class="special">/</span><span class="identifier">base_transaction</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_">Abstract
+        Class <code class="computeroutput"><span class="identifier">base_transaction_object</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___">Constructor
+          <code class="computeroutput"><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___">Virtual
+          Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___">Static
+          function <code class="computeroutput"><span class="identifier">retrieve_mem</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__return_mem___">Static
+          function <code class="computeroutput"><span class="identifier">return_mem</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___">Static
+          function <code class="computeroutput"><span class="identifier">alloc_size</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_clone_____">Template
+        Function <code class="computeroutput"><span class="identifier">cache_clone</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_copy_____">Template
+        Function <code class="computeroutput"><span class="identifier">cache_copy</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.function__cache_release_____">Function
+        <code class="computeroutput"><span class="identifier">cache_release</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_allocate_____">Template
+        Function <code class="computeroutput"><span class="identifier">cache_allocate</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_deallocate_____">Template
+        Function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">&lt;&gt;()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___">Template
+        Class <code class="computeroutput"><span class="identifier">transaction_object</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__clone___">Virtual
+          function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__copy_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__move_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__native_trans___">Template
+        Class <code class="computeroutput"><span class="identifier">native_trans</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">base_transaction_object</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_clone</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">cache_copy</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">ori</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">cache_release</span><span class="special">(</span><span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_allocate</span><span class="special">();</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">(</span><span class="identifier">T</span><span class="special">*);</span>
+
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Derived</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">transaction_object</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">native_trans</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_" title="Abstract Class base_transaction_object">Abstract
+        Class <code class="computeroutput"><span class="identifier">base_transaction_object</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___">Constructor
+          <code class="computeroutput"><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___">Virtual
+          Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___">Static
+          function <code class="computeroutput"><span class="identifier">retrieve_mem</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__return_mem___">Static
+          function <code class="computeroutput"><span class="identifier">return_mem</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___">Static
+          function <code class="computeroutput"><span class="identifier">alloc_size</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+          This is the base class of all the transactional objects. It tracks:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">transactionThread_</span></code>: the
+            thread identifier holding the write acces to this transactional object
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">transaction_</span></code>: the pointer
+            to the transaction
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">version_</span></code>: the version
+            when performing validation
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">newMemory_</span></code>: states whether
+            this object is a new object
+          </li>
+</ul></div>
+<p>
+          Transactional objets must specialize the pure virtual functions
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span>
+            <span class="special">*</span> <span class="keyword">const</span>
+            <span class="identifier">rhs</span><span class="special">)</span></code></li>
+<li>
+<code class="computeroutput"><span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span>
+            <span class="identifier">rhs</span><span class="special">)</span></code>
+            if <code class="computeroutput"><span class="identifier">BUILD_MOVE_SEMANTICS</span></code>
+</li>
+<li>
+<code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code>
+            if <code class="computeroutput"><span class="identifier">BOOST_STM_USE_UNASIGNED_COPY</span></code>
+</li>
+</ul></div>
+<p>
+          <code class="computeroutput"><span class="identifier">copy_state</span></code> is used to copy
+          the backup/working copy to the shared transactional object when the roolback/commit
+          is done direct/defered policy is used.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">move_state</span></code> is used to move
+          the backup/working copy to the shared transactional object when the roolback/commit
+          is done direct/defered policy is used.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">cache_deallocate</span></code> is used
+          to release the backup/working copy when the transaction ends if direct/defered
+          policy is used.
+        </p>
+<p>
+          When USE_STM_MEMORY_MANAGER is defined this class provides two functions
+          (<code class="computeroutput"><span class="identifier">retrieve_mem</span></code> and <code class="computeroutput"><span class="identifier">return_mem</span></code>) and to manage a pool of memory.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">base_transaction_object</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="identifier">base_transaction_object</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span> <span class="special">{};</span>
+
+    <span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">transaction_thread</span><span class="special">(</span><span class="identifier">thread_id</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">thread_id</span> <span class="identifier">transaction_thread</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">new_memory</span><span class="special">(</span><span class="keyword">bool</span> <span class="identifier">rhs</span><span class="special">)</span>
+    <span class="keyword">bool</span> <span class="identifier">new_memory</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">BOOST_STM_PERFORMING_VALIDATION</span>
+    <span class="keyword">void</span> <span class="identifier">version</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">version</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#if</span> <span class="identifier">BOOST_STM_USE_MEMORY_MANAGER</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">return_mem</span><span class="special">(</span><span class="keyword">void</span> <span class="special">*</span><span class="identifier">mem</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">retrieve_mem</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">alloc_size</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_STM_USE_UNASIGNED_COPY</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.constructor__base_transaction_object___" title="Constructor base_transaction_object()">Constructor
+          <code class="computeroutput"><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="identifier">base_transaction_object</span><span class="special">();</span>
+</pre>
+<p>
+            Default constructor (ctor) with no parameters allows derived base_transaction_objects
+            to implicitly construct the base_transaction_object base class for easier
+            integration.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_destructor___base_transaction_object___" title="Virtual Destructor ~base_transaction_object()">Virtual
+          Destructor <code class="computeroutput"><span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">base_transaction_object</span><span class="special">()</span> <span class="special">{};</span>
+</pre>
+<p>
+            Virtual destructor (dtor) ensures correct destructors are called in the
+            inheritance hierarchy for delete operations invoked on base_transaction_object
+            pointers, which occur in numerous places throughout the internal transaction
+            code.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__copy_state___" title="Virtual function copy_state()">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+            The <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code>
+            method is called each time global memory is updated, for either direct
+            or deferred updating policies. With this in mind, it is vital that the
+            this object be set to the exact state of the input parameter.
+          </p>
+<p>
+            Derived classes usually simply override this method and perform an <code class="computeroutput"><span class="keyword">operator</span><span class="special">=()</span></code>
+            function call for the specific derived type.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__move_state___" title="Virtual function move_state()">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+</pre>
+<p>
+            The move_state() method is internally called at deferred updating commit
+            time and at direct updating abort time and invokes the user-defined derived
+            transaction class's move assignment (e.g. operator=(type &amp;&amp;)).
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__retrieve_mem___" title="Static function retrieve_mem()">Static
+          function <code class="computeroutput"><span class="identifier">retrieve_mem</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span><span class="special">*</span> <span class="identifier">retrieve_mem</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+            Static interface into TBoost.STM's memory management system for retrieving
+            memory. The supplied parameter is the requested block size, the return
+            parameter is a void* to the allocated block. Usually access to this interface
+            is done by overloading operator new in the derived base_transaction_object
+            class. Void pointers are the natural and preferred manner to handle memory
+            allocations and deallocations and are therefore safe in this context.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__return_mem___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__return_mem___" title="Static function return_mem()">Static
+          function <code class="computeroutput"><span class="identifier">return_mem</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">return_mem</span><span class="special">(</span><span class="keyword">void</span> <span class="special">*</span><span class="identifier">mem</span><span class="special">,</span> <span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+            Static interface into TBoost.STM's memory management system for returning
+            memory. The first parameter points to the memory block being returned,
+            the second parameter specifies its size. Usually access to this interface
+            is done by overloading operator delete in the derived transaction object
+            class. Void pointers are the natural and preferred manner to handle memory
+            allocations and deallocations and are therefore safe in this context.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.static_function__alloc_size___" title="Static function alloc_size()">Static
+          function <code class="computeroutput"><span class="identifier">alloc_size</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">alloc_size</span><span class="special">(</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">);</span>
+</pre>
+<p>
+            Static interface into TBoost.STM's memory management system which allows
+            the user to specify the allocation chunk size for the memory manager.
+            The input parameter specifies the number of transactional objects that
+            should be allocated at startup and with each subsequent buffer increase.
+            If no size is specified, the allocation chunk size uses TBoost.STM's
+            default value, currently 8192. The alloc_size() interface can be reconfigured
+            at runtime and is used upon the next buffer increase.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.abstract_class__base_transaction_object_.virtual_function__cache_deallocate___" title="Virtual function cache_deallocate()">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_function__cache_clone_____"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_clone_____" title="Template Function cache_clone&lt;&gt;()">Template
+        Function <code class="computeroutput"><span class="identifier">cache_clone</span><span class="special">&lt;&gt;()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_clone</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+</pre>
+<p>
+          Makes a new copy of the parameter. Allocates an object of type T using
+          the <code class="computeroutput"><span class="identifier">cache_allocate</span></code> function
+          and copy from the given parameter <code class="computeroutput"><span class="identifier">val</span></code>
+          using the free function <code class="computeroutput"><span class="identifier">cache_copy</span></code>.
+        </p>
+<p>
+          The user can overload this function, as TBoost.STM uses ADL to access it.
+        </p>
+<p>
+          When <code class="computeroutput"><span class="identifier">BOOST_STM_NO_PARTIAL_SPECIALIZATION</span></code>
+          is defined, i.e. on compilers not supporting partial template specialization,
+          the function calls to <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_clone</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">val</span><span class="special">)</span></code>. So the user will need to overload the
+          class <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_clone</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> defining the function
+        </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">val</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_function__cache_copy_____"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_copy_____" title="Template Function cache_copy&lt;&gt;()">Template
+        Function <code class="computeroutput"><span class="identifier">cache_copy</span><span class="special">&lt;&gt;()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">cache_copy</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">source</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">);</span>
+</pre>
+<p>
+          Copy from souce to target using memcpy by default.
+        </p>
+<p>
+          The user can overload this function, as TBoost.STM uses ADL to access it.
+        </p>
+<p>
+          When <code class="computeroutput"><span class="identifier">BOOST_STM_NO_PARTIAL_SPECIALIZATION</span></code>
+          is defined, i.e. on compilers not supporting partial template specialization,
+          the function calls to <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_copy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;::</span><span class="identifier">apply</span><span class="special">(</span><span class="identifier">source</span><span class="special">,</span> <span class="identifier">target</span><span class="special">)</span></code>. So the user will need to overload the
+          class <code class="computeroutput"><span class="identifier">partial_specialization_workaround</span><span class="special">::</span><span class="identifier">cache_copy</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code> defining the function
+        </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">apply</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">source</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.function__cache_release_____"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.function__cache_release_____" title="Function cache_release&lt;&gt;()">Function
+        <code class="computeroutput"><span class="identifier">cache_release</span><span class="special">&lt;&gt;()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">cache_release</span><span class="special">(</span><span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">)</span> <span class="special">{</span>
+</pre>
+<p>
+          Release the given base_transaction_object by calling to the virtual function
+          <code class="computeroutput"><span class="identifier">cache_dealocate</span></code>.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_function__cache_allocate_____"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_allocate_____" title="Template Function cache_allocate&lt;&gt;()">Template
+        Function <code class="computeroutput"><span class="identifier">cache_allocate</span><span class="special">&lt;&gt;()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="identifier">cache_allocate</span><span class="special">();</span>
+</pre>
+<p>
+          Allocates an instance of calls T. Depending on whether BOOST_STM_CACHE_USE_MEMORY_MANAGER,
+          BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER
+          are defined this function will use the static pool of the class T, malloc
+          or the thread specific monotonic allocator.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_function__cache_deallocate_____"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_function__cache_deallocate_____" title="Template Function cache_deallocate&lt;&gt;()">Template
+        Function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">&lt;&gt;()</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span><span class="identifier">ptr</span><span class="special">)</span> <span class="special">{</span>
+</pre>
+<p>
+          Deallocates an instance of calls T. Depending on whether BOOST_STM_CACHE_USE_MEMORY_MANAGER,
+          BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER
+          are defined this function will use the static pool of the class T, free
+          or the no-op.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___" title="Template Class transaction_object&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">transaction_object</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__clone___">Virtual
+          function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__copy_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__move_state___">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a></span></dt>
+<dt><span class="section"><a href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a></span></dt>
+</dl></div>
+<p>
+          To further simplify the usage of TBoost.STM, an intermediate template class
+          was built which is meant to sit between the base_transaction_object and
+          the user-defined transaction objects. The purpose of this intermediate
+          class is to reduce the code overhead needed for user-defined transaction
+          objects. To do this, the curiously recurring template pattern developed
+          by James Coplien was used.
+        </p>
+<p>
+          With the templatized transaction_object, client-side transaction objects
+          need only to derive from it and pass their class type as its template parameter.
+          At compile-time the transaction_object generates the necessary code to
+          override copy_state() and implement operator new and operator delete using
+          TBoost.STM's memory manager for all user-defined types derived from it.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Derived</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">transaction_object</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_transaction_object</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__clone___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__clone___" title="Virtual function clone()">Virtual
+          function <code class="computeroutput"><span class="identifier">clone</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+            The clone() method calls to the free function cache_new_copy which allocates
+            enough memory for the new object and then do a memcpy by default.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__copy_state___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__copy_state___" title="Virtual function copy_state()">Virtual
+          function <code class="computeroutput"><span class="identifier">copy_state</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+            The copy_state() method call to the free function cache_copy which do
+            a memcpy by default.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__move_state___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__move_state___" title="Virtual function move_state()">Virtual
+          function <code class="computeroutput"><span class="identifier">move_state</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">move_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="special">*</span> <span class="identifier">rhs</span><span class="special">);</span>
+</pre>
+<p>
+            The move_state() method call to the free function cache_copy which do
+            a memcpy by default.
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__transaction_object___.virtual_function__cache_deallocate___" title="Virtual function cache_deallocate()">Virtual
+          function <code class="computeroutput"><span class="identifier">cache_deallocate</span><span class="special">()</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">cache_deallocate</span><span class="special">();</span>
+</pre>
+<p>
+            The cache_deallocate() method call to the free function cache_deallocate
+            which do a memcpy by default.
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.base_transaction_hpp.template_class__native_trans___"></a><a class="link" href="base_transaction_hpp.html#toward_boost_stm.reference.base_transaction_hpp.template_class__native_trans___" title="Template Class native_trans&lt;&gt;">Template
+        Class <code class="computeroutput"><span class="identifier">native_trans</span><span class="special">&lt;&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">native_trans</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span> <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+   <span class="identifier">native_trans</span><span class="special">(){}</span>
+   <span class="identifier">native_trans</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">(</span><span class="identifier">native_trans</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">(</span><span class="identifier">native_trans</span> <span class="special">&amp;&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">native_trans</span> <span class="special">&amp;&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">--();</span>
+   <span class="identifier">native_trans</span> <span class="keyword">operator</span><span class="special">--(</span><span class="keyword">int</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">++();</span>
+   <span class="identifier">native_trans</span> <span class="keyword">operator</span><span class="special">++(</span><span class="keyword">int</span><span class="special">);</span>
+   <span class="identifier">native_trans</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">+=(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+   <span class="identifier">native_trans</span> <span class="keyword">operator</span><span class="special">+(</span><span class="identifier">native_trans</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">);</span>
+
+   <span class="keyword">operator</span> <span class="identifier">T</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+   <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">value</span><span class="special">();</span>
+   <span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">value</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Justin E. Gottchlich<br>Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="transaction_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transactional_object_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

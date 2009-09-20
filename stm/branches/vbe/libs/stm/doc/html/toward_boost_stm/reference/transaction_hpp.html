@@ -7,7 +7,7 @@
 <link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
 <link rel="up" href="../reference.html" title="Reference">
 <link rel="prev" href="exceptions_hpp.html" title="Header &lt;boost/stm/exceptions.hpp&gt;">
-<link rel="next" href="transaction_object_hpp.html" title="Header &lt;boost/stm/transaction_object.hpp&gt;">
+<link rel="next" href="base_transaction_hpp.html" title="Header &lt;boost/stm/base_transaction.hpp&gt;">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -20,7 +20,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="exceptions_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transaction_object_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="exceptions_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="base_transaction_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
@@ -154,9 +154,12 @@
 <dt><span class="section"><a href="transaction_hpp.html#toward_boost_stm.reference.transaction_hpp.class__transaction_.template__function__new_memory_copy___">Template
           Function <code class="computeroutput"><span class="identifier">new_memory_copy</span><span class="special">&lt;&gt;</span></code></a></span></dt>
 </dl></dd>
+<dt><span class="section"><a href="transaction_hpp.html#toward_boost_stm.reference.transaction_hpp.struct__thread_initializer_">Struct
+        <code class="computeroutput"><span class="identifier">thread_initializer</span></code></a></span></dt>
 </dl></div>
 <pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">stm</span> <span class="special">{</span>
     <span class="keyword">class</span> <span class="identifier">transaction</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">thread_initializer</span><span class="special">;</span>
 <span class="special">}}</span>
 </pre>
 <div class="section" lang="en">
@@ -1048,6 +1051,24 @@
           </p>
 </div>
 </div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_stm.reference.transaction_hpp.struct__thread_initializer_"></a><a class="link" href="transaction_hpp.html#toward_boost_stm.reference.transaction_hpp.struct__thread_initializer_" title="Struct thread_initializer">Struct
+        <code class="computeroutput"><span class="identifier">thread_initializer</span></code></a>
+</h4></div></div></div>
+<p>
+          Scoped thread initializer calling transaction::initialize_thread() in the
+          constructor and transaction::terminate_thread() in the destructor.
+        </p>
+<p>
+          Declare an object of this class on each thread participating on a transaction.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">thread_initializer</span> <span class="special">{</span>
+    <span class="identifier">thread_initializer</span><span class="special">();</span>
+    <span class="special">~</span><span class="identifier">thread_initializer</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
 <td align="left"></td>
@@ -1059,7 +1080,7 @@
 </tr></table>
 <hr>
 <div class="spirit-nav">
-<a accesskey="p" href="exceptions_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="transaction_object_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+<a accesskey="p" href="exceptions_hpp.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="base_transaction_hpp.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
 </div>
 </body>
 </html>

@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
@@ -25,24 +25,26 @@
 
 [[ACI] [Atomic, Consistent and Isolated]]
 [[LATM] [lock aware transaction memory]]
-[[LiT] [Lock in transaction]]
-[[LoT] [Lock out of transaction]]
+[[LiT] [Lock inside Transactions]]
+[[LoT] [Lock outside Transactions]]
 [[STM] [Software Transaction Memory]]
-[[TX] [Transaction]]
 [[TM] [Transaction Memory]]
+[[TX] [Transaction]]
 
-[[in fligh transaction] [.]]
-[[Conflict Detection] [.]]
 [[abort] [.]]
+[[Conflict Detection] [.]]
 [[commit] [.]]
 [[Consistency Checking] [.]]
-[[Direct Updating] [.]]
 [[Deferred Updating] [.]]
+[[Direct Updating] [.]]
+[[Full-Lock protection] [.]]
+[[In fligh transaction] [.]]
 [[Irrevocable transaction] [.]]
 [[Isolated transaction] [.]]
-[[Full-Lock protection] [.]]
 [[TM-Lock protection] [.]]
 [[TX-Lock protection] [.]]
+
+
 [[commit] [.]]
 [[commit] [.]]
 [[commit] [.]]

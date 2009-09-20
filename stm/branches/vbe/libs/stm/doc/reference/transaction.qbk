@@ -12,15 +12,13 @@
 
     namespace boost { namespace stm {
         class transaction;
+        struct thread_initializer;
     }}
 
 
 [section Class `transaction`]
 
-__Boost_STM__ defines transactions as stackbased
-objects using RAII. In addition to the static interfaces for
-direct and deferred updating described earlier in this section, the
-following interfaces are necessary for performing transactions.
+__Boost_STM__ defines transactions as stackbased objects using RAII. In addition to the static interfaces for direct and deferred updating described earlier in this section, the following interfaces are necessary for performing transactions.
 
     class transaction {
     public:
@@ -499,4 +497,18 @@ This method behaves similarly to the new_memory() interface except that it makes
 [endsect]
 
 [endsect]
+
+[section Struct `thread_initializer`]
+
+Scoped thread initializer calling transaction::initialize_thread() in the constructor and transaction::terminate_thread() in the destructor.
+
+Declare an object of this class on each thread participating on a transaction.
+
+    struct thread_initializer {
+        thread_initializer();
+        ~thread_initializer();
+    };
+
+[endsect]
+
 [endsect]

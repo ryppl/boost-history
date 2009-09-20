@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
@@ -14,27 +14,28 @@
 [heading Description]
 [/==================]
 
+Toward An Industrial Strength C++ Software Transactional Memory Library.
+
 Transactional memory (TM) is a new parallel programming mechanism that reduces the complexity of parallel programming. TM reduces parallel programming complexity by abstracting away the necessary synchronization mechanisms from the parallel code, allowing the programmer to write parallel applications without worry of deadlocks, livelocks or race conditions.
 
 Transactional memory is an active research interest for many academic and industry institutions with many open questions about its behavior.
 
 __Boost_STM__ is a C++ lock-based software transactional memory (STM) library. Our approach to STM is to use only native language semantics while implementing the least intrusive, most type-safe object oriented solution possible.
 
-
 [*__Boost_STM__] provides:
 
-* Optimistic concurrency 
-* ACI transactions 
-    * Atomic: all operations execute or none do 
-    * Consistent: only legal memory states 
-    * Isolated: other txes cannot see until committed 
-* Language-like atomic transaction macro blocks 
-* Closed, flattened composable transactions 
-* Direct and deferred updating run-time policies 
-* Validation and invalidation conflict detection policies 
+* Optimistic concurrency
+* ACI transactions
+    * Atomic: all operations execute or none do
+    * Consistent: only legal memory states
+    * Isolated: other txes cannot see until committed
+* Language-like atomic transaction macro blocks
+* Closed, flattened composable transactions
+* Direct and deferred updating run-time policies
+* Validation and invalidation conflict detection policies
 * Lock-aware transactions
-* Programmable contention management, enabling programmers to specify forward progress mechanisms 
-* Isolated and irrevocable transactions for transactions that must commit (i.e., I/O transactions) 
+* Programmable contention management, enabling programmers to specify forward progress mechanisms
+* Isolated and irrevocable transactions for transactions that must commit (i.e., I/O transactions)
 
 
 [/====================================]
@@ -45,11 +46,9 @@ This documentation makes use of the following naming and formatting conventions.
 
 * Code is in `fixed width font` and is syntax-highlighted.
 * Replaceable text that you will need to supply is in [~italics].
-* If a name refers to a free function, it is specified like this:
-  `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
-* If a name refers to a class template, it is specified like this:   `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
-* If a name refers to a function-like macro, it is specified like this: `MACRO()`;
-  that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
+* If a name refers to a free function, it is specified like this: `free_function()`; that is, it is in code font and its name is followed by `()`   to indicate that it is a free function.
+* If a name refers to a class template, it is specified like this: `class_template<>`; that is, it is in code font and its name is followed by `<>`   to indicate that it is a class template.
+* If a name refers to a function-like macro, it is specified like this: `MACRO()`; that is, it is uppercase in code font and its name is followed by `()` to   indicate that it is a function-like macro. Object-like macros appear without the   trailing `()`.
 * Names that refer to /concepts/ in the generic programming sense are   specified in CamelCase.
 
 [note In addition, notes such as this one specify non-essential information that provides additional background or rationale.]

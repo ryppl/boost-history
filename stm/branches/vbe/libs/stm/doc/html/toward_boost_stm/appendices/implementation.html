@@ -28,19 +28,103 @@
       C: Implementation Notes</a>
 </h3></div></div></div>
 <div class="toc"><dl>
-<dt><span class="section"><a href="implementation.html#toward_boost_stm.appendices.implementation.why_there_is_a__if__0____rand___1_____else___preceding_the_for_on_the_atomi_macros_">Why
-        there is a <code class="computeroutput"><span class="keyword">if</span> <span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">rand</span><span class="special">()+</span><span class="number">1</span><span class="special">)</span>
-        <span class="special">{}</span> <span class="keyword">else</span></code>
-        preceding the for on the atomi macros?</a></span></dt>
+<dt><span class="section"><a href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks">Language-like
+        macro blocks</a></span></dt>
 <dt><span class="section"><a href="implementation.html#toward_boost_stm.appendices.implementation.cache">Cache</a></span></dt>
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.appendices.implementation.why_there_is_a__if__0____rand___1_____else___preceding_the_for_on_the_atomi_macros_"></a><a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.why_there_is_a__if__0____rand___1_____else___preceding_the_for_on_the_atomi_macros_" title="Why there is a if (0 == rand()+1) {} else preceding the for on the atomi macros?">Why
-        there is a <code class="computeroutput"><span class="keyword">if</span> <span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">rand</span><span class="special">()+</span><span class="number">1</span><span class="special">)</span>
-        <span class="special">{}</span> <span class="keyword">else</span></code>
-        preceding the for on the atomi macros?</a>
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks"></a><a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks" title="Language-like macro blocks">Language-like
+        macro blocks</a>
 </h4></div></div></div>
+<p>
+          Our language-like lock and transaction parallel constructs are implemented
+          in TBoost.STM as automatic objects wrapped inside of preprocessor macros.
+          Automatic objects are common in C++ and are helpful in ensuring correct
+          lock and transaction behavior as they create deterministic termination
+          points [5, 22]. These deterministic termination points are invoked when
+          the scope containing the automatic object is exited, guaranteeing locks
+          are released and transactions are terminated even in the event of uncaught
+          exceptions. The preprocessor macros used for the locking and transaction
+          constructs are shown in Figures 6 and 8, respectively.
+        </p>
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.locking_macros"></a><h6>
+<a name="id4913501"></a>
+          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.locking_macros">Locking
+          Macros</a>
+        </h6>
+<p>
+          The lock macros use an unoptimized if statement to ensure the variables
+          inside their local for loop are terminated for nonstandard conforming C++
+          compilers (more details to follow). Once the for loop is entered an auto_lock
+          is constructed. Upon construction of the auto_lock, acquisition of the
+          supplied lock is attempted if it has not already been acquired by the locking
+          thread. For the use_lock macro, a blocking lock acquisition call is made
+          which blocks forward progress until the lock is obtained. For the use_timed_lock
+          and try_timed_lock calls, a non-blocking lock acquisition call is made
+          which returns control to the calling thread via exception after MS milliseconds
+          if the lock was not successfully obtained.
+        </p>
+<p>
+          The post_step() call within the lock macros releases any locks the auto_lock
+          had acquired. The for loop conditional, done_post_step(), returns false
+          until post_step() has been executed. This ensures the lock macro for loops
+          are executed once and only once.
+        </p>
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.transaction_macros"></a><h6>
+<a name="id4913550"></a>
+          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.transaction_macros">Transaction
+          Macros</a>
+        </h6>
+<p>
+          The preprocessor atomic macro for transactions is slightly more complex
+          than the preprocessor locking macros. The additional complexity behind
+          the atomic macro is needed to guarantee two fundamental goals. First, transactions
+          must start and end correctly. Second, transactions must change their retry
+          behavior based on whether they are a child or parent transaction to ensure
+          proper closed nesting, flattened transaction behavior is performed.
+        </p>
+<p>
+          The atomic preprocessor behaves as follows. Like the lock macros, the atomic
+          macro begins with an unoptimized if statement (details to follow). When
+          the transactional for loop is entered, a transaction automatic object is
+          constructed which initializes the transaction and puts it in-flight. The
+          for loop conditional ensures the following conditions: (1) the transaction
+          is uncommitted, (2) the transaction has the opportunity to throw an exception
+          if necessary, and (3) the transaction is in-flight. Once a transaction
+          commits, the check on (1) !T.committed() ensures the transaction is not
+          executed again. If the transaction has been aborted but is a child transaction,
+          the transaction must be restarted at the parent level. The call to (2)
+          T.check_throw_before_restart() allows an aborted child transaction to throw
+          an exception upward (before it is restarted) so the entire transaction
+          can be restarted from the parent. The check_throw_before_restart() API
+          checks the current run-time state of the thread to determine if another
+          transaction is active above it. This behavior allows transactions to be
+          used at any nesting level while dynamically ensuring the correct retry
+          behavior. Finally, the call to restart_if_not_inflight() ensures the transaction
+          is correctly restarted after each subsequent abort.
+        </p>
+<p>
+          Once all of the transactional operations within the for loop are executed,
+          a call to no_throw_end() is made which ends the transaction. The no_throw_end()
+          terminates the transaction by either committing or aborting it. Note, however,
+          that no_throw_end() does not throw an exception if the transaction is aborted,
+          whereas the prior TBoost.STM API end() does. This non-throwing behavior
+          deviates from the prior TBoost.STM implementation of automatic objects
+          when end() was invoked within the try / catch body. Furthermore, due to
+          no_throw_end() not throwing an exception if the transaction is aborted,
+          some cases may arise where catch_before_retry or before_retry operations
+          are not invoked when a transaction is aborted. This is a current limitation
+          of the system and is overcome by inserting a manual end() operation as
+          the last operation in the atomic block. The explicit end() (Figure 14)
+          ensures any operations within the before_retry block are executed if the
+          transaction is aborted.
+        </p>
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.correcting_non_compliant_compilers"></a><h6>
+<a name="id4913656"></a>
+          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.correcting_non_compliant_compilers">Correcting
+          Non-Compliant Compilers</a>
+        </h6>
 <p>
           The <code class="computeroutput"><span class="keyword">if</span> <span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">rand</span><span class="special">()+</span><span class="number">1</span><span class="special">)</span>
           <span class="special">{}</span> <span class="keyword">else</span></code>
@@ -70,11 +154,11 @@
 <a name="toward_boost_stm.appendices.implementation.cache"></a><a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.cache" title="Cache">Cache</a>
 </h4></div></div></div>
 <a name="toward_boost_stm.appendices.implementation.cache.dispersed"></a><h6>
-<a name="id4890531"></a>
+<a name="id4913785"></a>
           <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.cache.dispersed">Dispersed</a>
         </h6>
 <a name="toward_boost_stm.appendices.implementation.cache.compact"></a><h6>
-<a name="id4890552"></a>
+<a name="id4913806"></a>
           <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.cache.compact">Compact</a>
         </h6>
 </div>

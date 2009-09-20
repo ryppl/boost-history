@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
@@ -13,9 +13,9 @@
 
 __Boost_STM__ is currently in an alpha release stage. This means our STM library is downloadable, but is undergoing some fundamental changes. Furthermore, our alpha release of TBoost.STM may exhibit some stability issues. While our internal tests have shown TBoost.STM to be fairly stable, your usage may vary.
 
-__Boost_STM_s__ current alpha download is mainly intended for other researchers who are curious about TBoost.STM's implementation and transactional memory. While we encourage non-TM experts to download the library and explore writing parallel code within its framework, we want such users know the system is in its early stages. As such, your usage of TBoost.STM may reveal some weaknesses or stability issues. Until we are into a fully released version, these issues are to be expected. However, please let us know if you encounter any problems using our library and we will do our best to resolve such issues immediately. 
+__Boost_STM_s__ current alpha download is mainly intended for other researchers who are curious about TBoost.STM's implementation and transactional memory. While we encourage non-TM experts to download the library and explore writing parallel code within its framework, we want such users know the system is in its early stages. As such, your usage of TBoost.STM may reveal some weaknesses or stability issues. Until we are into a fully released version, these issues are to be expected. However, please let us know if you encounter any problems using our library and we will do our best to resolve such issues immediately.
 
-Thank you for considering __Boost_STM__ and we hope you enjoy exploring transactional memory! 
+Thank you for considering __Boost_STM__ and we hope you enjoy exploring transactional memory!
 
 [/=================================]
 [heading Getting Boost.STM]
@@ -45,7 +45,7 @@ __Boost_STM__ is not a header only library. You need to compile it before use.
 [/=========================]
 
 
-The POSIX threads (pthreads) library is needed to use __Boost_STM__. Pthreads is part of the standard deployment for almost all Unix / Linux flavors, however, it is not standard in Windows. If you are doing Windows development you can find the POSIX threads library at the below link: 
+The POSIX threads (pthreads) library is needed to use __Boost_STM__. Pthreads is part of the standard deployment for almost all Unix / Linux flavors, however, it is not standard in Windows. If you are doing Windows development you can find the POSIX threads library at the below link:
 [@http://sourceware.org/pthreads-win32/ POSIX threads (pthreads) for Windows]
 
 
@@ -66,7 +66,7 @@ In order to be more portable __Boost_STM__ is migrating to Boost. You should use
 ]
 ]
 
-In addition __Boost_STM__ will uses the following libraries on the Boost Sandbox 
+In addition __Boost_STM__ will uses the following libraries on the Boost Sandbox
 
 [variablelist
 [

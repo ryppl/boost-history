@@ -1,7 +1,7 @@
 #  Boost.LUID library documentation Jamfile  ---------------------------------
 #
-#  Copyright Justin E. Gottchlich 2009. 
-#  Copyright Vicente J. Botet Escriba 2009. 
+#  Copyright Justin E. Gottchlich 2009.
+#  Copyright Vicente J. Botet Escriba 2009.
 #  Use, modification and
 #  distribution is subject to the Boost Software License, Version
 #  1.0. (See accompanying file LICENSE_1_0.txt or copy at
@@ -49,6 +49,10 @@ boostbook standalone
         <xsl:param>boost.libraries=../../../../libs/libraries.htm
         # Use the main Boost stylesheet:
         <xsl:param>html.stylesheet=../../../../doc/html/boostbook.css
+
+        # TowardBoost.STM:
+        <xsl:param>boost.image.src=../image/Toward_Boost_STM.jpg
+        <xsl:param>boost.image.alt="\"TowardBoostSTM\""
 
         # PDF Options:
         # TOC Generation: this is needed for FOP-0.9 and later:

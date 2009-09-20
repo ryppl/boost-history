@@ -45,12 +45,16 @@
         The complexity behind the <code class="computeroutput"><span class="identifier">atomic</span></code>
         macro is needed to guarantee two fundamental goals.
       </p>
-<div class="itemizedlist"><ul type="disc"><li>
-          First, transactions must start and end correctly. Second, transactions
-          must change their retry behavior based on whether they are a child or parent
-          transaction to ensure proper closed nesting, flattened transaction behavior
-          is performed.
-        </li></ul></div>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          First, transactions must start and end correctly.
+        </li>
+<li>
+          Second, transactions must change their retry behavior based on whether
+          they are a child or parent transaction to ensure proper closed nesting,
+          flattened transaction behavior is performed.
+        </li>
+</ul></div>
 <p>
         The <code class="computeroutput"><span class="identifier">atomic</span></code> preprocessor behaves
         as follows. When the transactional for loop is entered, a transaction automatic

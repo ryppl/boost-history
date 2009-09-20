@@ -1,6 +1,6 @@
 [/
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
   Distributed under the Boost Software License, Version 1.0.
   (See accompanying file LICENSE_1_0.txt or copy at
@@ -48,7 +48,7 @@
 * Replace THREAD_ID by boost::thread_id
 * [*DONE] Provide a unique array/tuple locker (Boost.Synchro)
 * Replace var_auto_lock by boost::synchro::unique_array_locker
-* Replace auto_lock by boost::synchro::unique_locker and redefine use_lock macros 
+* Replace auto_lock by boost::synchro::unique_locker and redefine use_lock macros
 * use lock_guard when lock/unlock
 * Adapt the pool to Boost.Pool
 * [*DONE] Provide a thread specific shared pointer (Boost.Interthreads)
@@ -90,7 +90,7 @@
         * [*DONE] Write the A Dynamically Prioritized, Composed Transaction section
         * Write the Lock aware section
         * Write the Lock aware section
-        
+
     * [*DONE] Write the References section
     * Write the Glossary section
 * Write the Examples section

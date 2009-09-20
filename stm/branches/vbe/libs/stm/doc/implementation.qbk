@@ -1,5 +1,5 @@
 [/
-  (C) Copyright 2009 Justin E. Gottchlich. 
+  (C) Copyright 2009 Justin E. Gottchlich.
   (C) Copyright 2009 Vicente J. Botet Escriba
  /
  / Distributed under the Boost Software License, Version 1.0. (See accompanying
@@ -8,31 +8,33 @@
 
 [section:implementation Appendix C: Implementation Notes]
 
-[section Why there is a `if (0 == rand()+1) {} else`  preceding the for on the atomi macros?]
+[section Language-like macro blocks]
 
-The `if (0 == rand()+1) {} else` expression in the preprocessor atomic macros is used
-to prevent for loop errors in non-standard conforming C++ compilers.
-In these non-compliant compilers, automatic objects constructed
-as index variables for the for loop are leaked out beyond
-the scope of the for loop, incorrectly extending the liveness of
-these variables. In order to correct this behavior, the for loops that
-are not encapsulated within trys are wrapped within if statements.
-The if statements and for loops naturally nest without delineated
-scope (e.g., f, g) allowing programmers to execute single or multiple
-operations based on their preference.
+Our language-like lock and transaction parallel constructs are implemented in __Boost_STM__ as automatic objects wrapped inside of preprocessor macros. Automatic objects are common in C++ and are helpful in ensuring correct lock and transaction behavior as they create deterministic termination points [5, 22]. These deterministic termination points are invoked when the scope containing the automatic object is exited, guaranteeing locks are released and transactions are terminated even in the event of uncaught exceptions. The preprocessor macros used for the locking and transaction constructs are shown in Figures 6 and 8, respectively.
 
-(0 == rand()+1) always returns false and cannot be
-optimized away by an optimizing compiler. By using an always
-false non-optimizable function inside an if statement, a variable
-scope is generated that guarantees automatic objects which are
-placed within these scopes are properly destroyed once the scope
-is exited. These scopes properly terminate variables which would
-otherwise be leaked in non-compliant for loop C++ compilers. The
-proper termination of automatic auto_locks and transactions
-is necessary to release acquired locks, terminate transactions and
-release transactional memory.
+[heading Locking Macros]
+
+The lock macros use an unoptimized if statement to ensure the variables inside their local for loop are terminated for nonstandard conforming C++ compilers (more details to follow). Once the for loop is entered an auto_lock is constructed. Upon construction of the auto_lock, acquisition of the supplied lock is attempted if it has not already been acquired by the locking thread. For the use_lock macro, a blocking lock acquisition call is made which blocks forward progress until the lock is obtained. For the use_timed_lock and try_timed_lock calls, a non-blocking lock acquisition call is made which returns control to the calling thread via exception after MS milliseconds if the lock was not successfully obtained.
+
+The post_step() call within the lock macros releases any locks the auto_lock had acquired. The for loop conditional, done_post_step(), returns false until post_step() has been executed. This ensures the lock macro for loops are executed once and only once.
+
+[heading Transaction Macros]
+
+The preprocessor atomic macro for transactions is slightly more complex than the preprocessor locking macros. The additional complexity behind the atomic macro is needed to guarantee two fundamental goals. First, transactions must start and end correctly. Second, transactions must change their retry behavior based on whether they are a child or parent transaction to ensure proper closed nesting, flattened transaction behavior is performed.
+
+The atomic preprocessor behaves as follows. Like the lock macros, the atomic macro begins with an unoptimized if statement (details to follow). When the transactional for loop is entered, a transaction automatic object is constructed which initializes the transaction and puts it in-flight. The for loop conditional ensures the following conditions: (1) the transaction is uncommitted, (2) the transaction has the opportunity to throw an exception if necessary, and (3) the transaction is in-flight. Once a transaction commits, the check on (1) !T.committed() ensures the transaction is not executed again. If the transaction has been aborted but is a child transaction, the transaction must be restarted at the parent level. The call to (2) T.check_throw_before_restart() allows an aborted child transaction to throw an exception upward (before it is restarted) so the entire transaction can be restarted from the parent. The check_throw_before_restart() API checks the current run-time state of the thread to determine if another transaction is active above it. This behavior allows transactions to be used at any nesting level while dynamically ensuring the correct retry behavior. Finally, the call to restart_if_not_inflight() ensures the transaction is correctly restarted after each subsequent abort.
+
+Once all of the transactional operations within the for loop are executed, a call to no_throw_end() is made which ends the transaction. The no_throw_end() terminates the transaction by either committing or aborting it. Note, however, that no_throw_end() does not throw an exception if the transaction is aborted, whereas the prior __Boost_STM__ API end() does. This non-throwing behavior deviates from the prior __Boost_STM__ implementation of automatic objects when end() was invoked within the try / catch body. Furthermore, due to no_throw_end() not throwing an exception if the transaction is aborted, some cases may arise where catch_before_retry or before_retry operations are not invoked when a transaction is aborted. This is a current limitation of the system and is overcome by inserting a manual end() operation as the last operation in the atomic block. The explicit end() (Figure 14) ensures any operations within the before_retry block are executed if the transaction is aborted.
+
+
+[heading Correcting Non-Compliant Compilers]
+
+The `if (0 == rand()+1) {} else` expression in the preprocessor atomic macros is used to prevent for loop errors in non-standard conforming C++ compilers. In these non-compliant compilers, automatic objects constructed as index variables for the for loop are leaked out beyond the scope of the for loop, incorrectly extending the liveness of these variables. In order to correct this behavior, the for loops that are not encapsulated within trys are wrapped within if statements. The if statements and for loops naturally nest without delineated scope (e.g., f, g) allowing programmers to execute single or multiple operations based on their preference.
+
+(0 == rand()+1) always returns false and cannot be optimized away by an optimizing compiler. By using an always false non-optimizable function inside an if statement, a variable scope is generated that guarantees automatic objects which are placed within these scopes are properly destroyed once the scope is exited. These scopes properly terminate variables which would otherwise be leaked in non-compliant for loop C++ compilers. The proper termination of automatic auto_locks and transactions is necessary to release acquired locks, terminate transactions and release transactional memory.
 
 [endsect]
+
 
 [section Cache]
 
