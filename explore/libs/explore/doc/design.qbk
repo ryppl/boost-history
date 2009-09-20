@@ -1,0 +1,26 @@
+[/
+ / Copyright (c) 2007 Jeff Garland (jeff at crystalclearsoftware.com)
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+[section:design Design Notes]
+
+[h2 Rationale]
+
+The Boost.Explore library is intended primarily as a debugging tool although 
+in some cases it may prove sufficiently capable to provide output good 
+enough for other applications.
+
+* [*Ease of use.] The interfaces to the library should be as simple 
+as possible reflecting good defaults while allowing more sophisticated 
+options with a small amount of customization. 
+* [*Support user defined types.] Since collections can support user 
+defined types Boost.Explore should be capable of printing containers 
+with thoes types.
+* [*Portability.] The library should work with a variety of compilers 
+and platforms.
+
+
+[endsect]

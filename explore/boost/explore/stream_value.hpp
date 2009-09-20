@@ -1,11 +1,13 @@
 //
-// stream_value.hpp - streaming function objects for different value types
+// stream_value.hpp - Used internally.  Streaming function objects for
+//                    different value types
 //
 // Copyright (C) 2007-2009, Jeffrey Faust
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+// See http://www.boost.org/libs/explore for library home page.
 
 #ifndef BOOST_EXPLORE_STREAM_VALUE_H
 #define BOOST_EXPLORE_STREAM_VALUE_H
@@ -34,9 +36,14 @@ namespace boost { namespace explore
         template<typename T>
         struct value_holder_base
         {
-            explicit value_holder_base(const T& t, bool quotestrings) : m_value(t), m_quotestrings(quotestrings) {}
+            explicit value_holder_base(const T& t, bool quote_strings)
+                : m_value(t),
+                  m_quote_strings(quote_strings)
+            {
+            }
+
             const T& m_value;
-            bool m_quotestrings;
+            bool m_quote_strings;
         };
 
         template<typename T, int S>
@@ -45,10 +52,15 @@ namespace boost { namespace explore
         template<typename T>
         struct value_holder<T, boost::false_type::value> : public value_holder_base<T>
         {
-            explicit value_holder(const T& value, bool quotestrings) : value_holder_base<T>(value, quotestrings) {}
+            explicit value_holder(const T& value, bool quote_strings)
+                : value_holder_base<T>(value, quote_strings)
+            {
+            }
 
             template<typename Elem, typename Tr>
-            friend std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const value_holder_base<T>& v)
+            friend std::basic_ostream<Elem, Tr>& operator<<(
+                std::basic_ostream<Elem, Tr>& ostr,
+                const value_holder_base<T>& v)
             {
                 return ostr << v.m_value;
             }
@@ -57,12 +69,17 @@ namespace boost { namespace explore
         template<typename T>
         struct value_holder<T, boost::true_type::value> : public value_holder_base<T>
         {
-            explicit value_holder(const T& value, bool quotestrings) : value_holder_base<T>(value, quotestrings) {}
+            explicit value_holder(const T& value, bool quote_strings)
+                : value_holder_base<T>(value, quote_strings)
+            {
+            }
 
             template<typename Elem, typename Tr>
-            friend std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const value_holder_base<T>& v)
+            friend std::basic_ostream<Elem, Tr>& operator<<(
+                std::basic_ostream<Elem, Tr>& ostr,
+                const value_holder_base<T>& v)
             {
-                if( v.m_quotestrings )
+                if( v.m_quote_strings )
                 {
                     return ostr << "\"" << v.m_value << "\"";
                 }
@@ -74,7 +91,10 @@ namespace boost { namespace explore
         template<typename T>
         struct value : public value_holder<T, is_string<T>::value>
         {
-            explicit value(const T& value, bool quotestrings) : value_holder<T, is_string<T>::value>(value, quotestrings) {}
+            explicit value(const T& value, bool quote_strings)
+                : value_holder<T, is_string<T>::value>(value, quote_strings)
+            {
+            }
         };
 
         template<typename Elem, typename Tr>
@@ -99,7 +119,11 @@ namespace boost { namespace explore
     struct stream_normal_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
+        void operator()(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const T& val,
+            container_stream_state<Elem>* state,
+            container_common_stream_state* common_state)
         {
             std::basic_stringstream<Elem, Tr> sstream;
 
@@ -110,7 +134,7 @@ namespace boost { namespace explore
             }
 
             // now width will correctly apply to the entire value
-            ostr.width(common_state->itemwidth());
+            ostr.width(common_state->item_width());
             ostr << sstream.str();
         }
     };
@@ -119,7 +143,11 @@ namespace boost { namespace explore
     struct stream_associative_value
     {
         template<typename Elem, typename Tr, typename T>
-        void operator()(std::basic_ostream<Elem, Tr>& ostr, const T& val, container_stream_state<Elem>* state, container_common_stream_state* common_state)
+        void operator()(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const T& val,
+            container_stream_state<Elem>* state,
+            container_common_stream_state* common_state)
         {
             std::basic_stringstream<Elem, Tr> sstream;
 
@@ -128,13 +156,14 @@ namespace boost { namespace explore
                 ostr.rdbuf(sstream.rdbuf());
                 const bool qs = common_state->quote_strings();
                 ostr << state->assoc_item_start()
-                        << detail::value<typename T::first_type>(val.first, qs) << state->assoc_item_separator()
-                        << detail::value<typename T::second_type>(val.second, qs)
+                     << detail::value<typename T::first_type>(val.first, qs)
+                     << state->assoc_item_separator()
+                     << detail::value<typename T::second_type>(val.second, qs)
                      << state->assoc_item_end();
             }
 
             // now width will correctly apply to the entire value
-            ostr.width(common_state->itemwidth());
+            ostr.width(common_state->item_width());
             ostr << sstream.str();
         }
     };

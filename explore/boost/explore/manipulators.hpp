@@ -1,5 +1,5 @@
 //
-// stream_container.hpp - container streaming.
+// manipulators.hpp - stream manipulators for modifying how containers stream
 //
 // Copyright (C) 2007-2009, Jeffrey Faust
 // Copyright (C) 2008-2009, Jared McIntyre
@@ -7,6 +7,7 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+// See http://www.boost.org/libs/explore for library home page.
 
 #ifndef MANIPULATOR_INCLUDED
 #define MANIPULATOR_INCLUDED
@@ -44,8 +45,8 @@ namespace boost { namespace explore
             size_t m_prev_level;
         };
         
-        // manipulator function wrapper for 1 char/wchar_t argument.  When streamed, will run manipulator
-        // function with argument.
+        // manipulator function wrapper for 1 char/wchar_t argument.  When
+        // streamed, will run manipulator function with argument.
         template<typename T>
         struct manipfunc
         {
@@ -60,7 +61,9 @@ namespace boost { namespace explore
 
         // stream manipfunc
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const manipfunc<T>& manip)
         {
             typedef typename boost::remove_const< 
                         typename boost::remove_reference<
@@ -75,14 +78,18 @@ namespace boost { namespace explore
         }
         
         template<typename Elem, typename Tr>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<std::size_t>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const manipfunc<std::size_t>& manip)
         {   
             (*manip.pfun)(ostr, manip.arg);
             return ostr;
         }
         
         template<typename Elem, typename Tr>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const manipfunc<bool>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const manipfunc<bool>& manip)
         {   
             (*manip.pfun)(ostr, manip.arg);
             return ostr;
@@ -107,9 +114,13 @@ namespace boost { namespace explore
         };
 
         template<typename Elem, typename Tr>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const handle_custom_stream& cs)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const handle_custom_stream& cs)
         {
-            container_common_stream_state* state = explore::get_stream_state<container_common_stream_state>(ostr);
+            container_common_stream_state* state =
+                explore::get_stream_state<container_common_stream_state>(ostr);
+
             cs.m_state = state;
             if( state->depth() > 0 ) // only needed if nested
             {
@@ -123,59 +134,68 @@ namespace boost { namespace explore
         template<typename Elem>
         void separatorFn(std::ios_base& ostr, const Elem* sep)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_separator(sep);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)
+                ->set_separator(sep);
         }
         
         // function ptr for start manipulator
         template<typename Elem>
         void startFn(std::ios_base& ostr, const Elem* start)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_start(start);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)
+                ->set_start(start);
         }
         
         // function ptr for end manipulator
         template<typename Elem>
         void endFn(std::ios_base& ostr, const Elem* end)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_end(end);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)
+                ->set_end(end);
         }
         
         // function ptr for associative separator manipulator
         template<typename Elem>
         void assoc_item_separatorFn(std::ios_base& ostr, const Elem* sep)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_item_separator(sep);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)
+                ->set_assoc_item_separator(sep);
         }
         
         // function ptr for associative start manipulator
         template<typename Elem>
         void assoc_item_startFn(std::ios_base& ostr, const Elem* start)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_item_start(start);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)
+                ->set_assoc_item_start(start);
         }
         
         // function ptr for associative end manipulator
         template<typename Elem>
         void assoc_item_endFn(std::ios_base& ostr, const Elem* end)
         {
-            explore::get_stream_state<container_stream_state<Elem> >(ostr)->set_assoc_item_end(end);
+            explore::get_stream_state<container_stream_state<Elem> >(ostr)
+                ->set_assoc_item_end(end);
         }
 
         void levelFn(std::ios_base& ostr, std::size_t l)
         {
-            explore::get_stream_state<container_common_stream_state>(ostr)->set_level(l);
+            explore::get_stream_state<container_common_stream_state>(ostr)
+                ->set_level(l);
         }
 
         // function ptr object for cols
         void setcolsFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_common_stream_state>(ostr)->set_cols(sz);
+            explore::get_stream_state<container_common_stream_state>(ostr)
+                ->set_cols(sz);
         }
         
         // function ptr object for item_width
         void setitemwidthFn(std::ios_base& ostr, std::size_t sz)
         {
-            explore::get_stream_state<container_common_stream_state>(ostr)->set_itemwidth(sz);
+            explore::get_stream_state<container_common_stream_state>(ostr)
+                ->set_item_width(sz);
         }
     }
     
@@ -186,9 +206,11 @@ namespace boost { namespace explore
     }
     
     template<typename Elem, typename Tr>
-    const std::basic_string<Elem>& get_separator(std::basic_ostream<Elem, Tr>& ostr)
+    const std::basic_string<Elem>& get_separator(
+        std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->separator();
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)
+            ->separator();
     }
     
     template<typename Elem>
@@ -198,9 +220,11 @@ namespace boost { namespace explore
     }
     
     template<typename Elem, typename Tr>
-    const std::basic_string<Elem>& get_start(std::basic_ostream<Elem, Tr>& ostr)
+    const std::basic_string<Elem>& get_start(
+        std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->start();
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)
+            ->start();
     }
     
     template<typename Elem>
@@ -212,31 +236,38 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr>
     const std::basic_string<Elem>& get_end(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->end();
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)
+            ->end();
     }
     
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_separator(const Elem* sep)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_item_separatorFn, sep);
+        return detail::manipfunc<const Elem*>(
+            &detail::assoc_item_separatorFn, sep);
     }
     
     template<typename Elem, typename Tr>
-    const std::basic_string<Elem>& get_assoc_item_separator(std::basic_ostream<Elem, Tr>& ostr)
+    const std::basic_string<Elem>& get_assoc_item_separator(
+        std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_separator();
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)
+            ->assoc_item_separator();
     }
     
     template<typename Elem>
     detail::manipfunc<const Elem*> assoc_item_start(const Elem* start)
     {
-        return detail::manipfunc<const Elem*>(&detail::assoc_item_startFn, start);
+        return detail::manipfunc<const Elem*>(
+            &detail::assoc_item_startFn, start);
     }
     
     template<typename Elem, typename Tr>
-    const std::basic_string<Elem>& get_assoc_item_start(std::basic_ostream<Elem, Tr>& ostr)
+    const std::basic_string<Elem>& get_assoc_item_start(
+        std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_start();
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)
+            ->assoc_item_start();
     }
     
     template<typename Elem>
@@ -246,9 +277,11 @@ namespace boost { namespace explore
     }
     
     template<typename Elem, typename Tr>
-    const std::basic_string<Elem>& get_assoc_item_end(std::basic_ostream<Elem, Tr>& ostr)
+    const std::basic_string<Elem>& get_assoc_item_end(
+        std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_stream_state<Elem> >(ostr)->assoc_item_end();
+        return explore::get_stream_state<container_stream_state<Elem> >(ostr)
+            ->assoc_item_end();
     }
     
     detail::manipfunc<std::size_t> level(std::size_t l)
@@ -264,7 +297,8 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr>
     std::size_t get_cols(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->get_cols();
+        return explore::get_stream_state<container_common_stream_state>(ostr)
+            ->cols();
     }    
     
     detail::manipfunc<std::size_t> item_width(std::size_t sz)
@@ -275,31 +309,37 @@ namespace boost { namespace explore
     template<typename Elem, typename Tr>
     std::size_t get_item_width(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->itemwidth();
+        return explore::get_stream_state<container_common_stream_state>(ostr)
+            ->item_width();
     }
 
     std::ios_base& quote_strings(std::ios_base& ios)
 	{
-        get_stream_state<container_common_stream_state>(ios)->set_quote_strings(true);
+        get_stream_state<container_common_stream_state>(ios)
+            ->set_quote_strings(true);
 	    return ios;
 	}
 
     std::ios_base& no_quote_strings(std::ios_base& ios)
 	{
-        get_stream_state<container_common_stream_state>(ios)->set_quote_strings(false);
+        get_stream_state<container_common_stream_state>(ios)
+            ->set_quote_strings(false);
 	    return ios;
 	}
 
     template<typename Elem, typename Tr>
     bool get_quote_strings(std::basic_ostream<Elem, Tr>& ostr)
     {
-        return explore::get_stream_state<container_common_stream_state>(ostr)->quote_strings();
+        return explore::get_stream_state<container_common_stream_state>(ostr)
+            ->quote_strings();
     }
      
     template<typename Elem, typename Tr>
-    std::basic_ostream<Elem, Tr>& format_normal(std::basic_ostream<Elem, Tr>& ostr)
+    std::basic_ostream<Elem, Tr>& format_normal(
+        std::basic_ostream<Elem, Tr>& ostr)
     {
-        get_stream_state<container_stream_state<Elem> >(ostr)->template init<Elem>();
+        get_stream_state<container_stream_state<Elem> >(ostr)
+            ->template init<Elem>();
         return ostr;
     }
 
@@ -328,7 +368,9 @@ namespace boost { namespace explore
         
         
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<standard_tag,T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const begin_end_manipulator<standard_tag,T>& manip)
         {
             startFn(ostr, manip.startVal_);
             endFn(ostr, manip.endVal_);
@@ -336,7 +378,9 @@ namespace boost { namespace explore
         }
         
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const begin_end_manipulator<assoc_tag,T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const begin_end_manipulator<assoc_tag,T>& manip)
         {
             assoc_item_startFn(ostr, manip.startVal_);
             assoc_item_endFn(ostr, manip.endVal_);
@@ -345,17 +389,21 @@ namespace boost { namespace explore
     }
     
     template<typename Elem>
-    detail::begin_end_manipulator<detail::standard_tag,const Elem*> begin_end(const Elem* start, const Elem* end)
+    detail::begin_end_manipulator<detail::standard_tag,const Elem*> begin_end(
+        const Elem* start, const Elem* end)
     {
         // todo: just use delimiters function and fetch seperator?
-        return detail::begin_end_manipulator<detail::standard_tag,const Elem*>(start, end);
+        return detail::begin_end_manipulator<detail::standard_tag,const Elem*>(
+            start, end);
     }
     
     template<typename Elem>
-    detail::begin_end_manipulator<detail::assoc_tag,const Elem*> assoc_item_begin_end(const Elem* start, const Elem* end)
+    detail::begin_end_manipulator<detail::assoc_tag,const Elem*>
+        assoc_item_begin_end(const Elem* start, const Elem* end)
     {
         // todo: just use delimiters function and fetch seperator?
-        return detail::begin_end_manipulator<detail::assoc_tag,const Elem*>(start, end);
+        return detail::begin_end_manipulator<detail::assoc_tag,const Elem*>(
+            start, end);
     }
     
     namespace detail
@@ -374,7 +422,9 @@ namespace boost { namespace explore
         };
 
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<standard_tag,T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const delimiters_manipulator<standard_tag,T>& manip)
         {
             startFn(ostr, manip.startVal_);
             separatorFn(ostr, manip.seperatorVal_);
@@ -383,7 +433,9 @@ namespace boost { namespace explore
         }
         
         template<typename Elem, typename Tr, typename T>
-        std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const delimiters_manipulator<assoc_tag,T>& manip)
+        std::basic_ostream<Elem, Tr>& operator<<(
+            std::basic_ostream<Elem, Tr>& ostr,
+            const delimiters_manipulator<assoc_tag,T>& manip)
         {
             assoc_item_startFn(ostr, manip.startVal_);
             assoc_item_separatorFn(ostr, manip.seperatorVal_);
@@ -393,15 +445,24 @@ namespace boost { namespace explore
     }
     
     template<typename Elem>
-    detail::delimiters_manipulator<detail::standard_tag,const Elem*> delimiters(const Elem* start, const Elem* seperator, const Elem* end)
+    detail::delimiters_manipulator<detail::standard_tag,const Elem*> delimiters(
+            const Elem* start,
+            const Elem* seperator,
+            const Elem* end)
     {
-        return detail::delimiters_manipulator<detail::standard_tag,const Elem*>(start, seperator, end);
+        return detail::delimiters_manipulator<
+            detail::standard_tag, const Elem*>(start, seperator, end);
     }
     
     template<typename Elem>
-    detail::delimiters_manipulator<detail::assoc_tag,const Elem*> assoc_item_delimiters(const Elem* start, const Elem* seperator, const Elem* end)
+    detail::delimiters_manipulator<detail::assoc_tag,const Elem*>
+        assoc_item_delimiters(
+        const Elem* start,
+        const Elem* seperator,
+        const Elem* end)
     {
-        return detail::delimiters_manipulator<detail::assoc_tag,const Elem*>(start, seperator, end);
+        return detail::delimiters_manipulator<
+            detail::assoc_tag,const Elem*>(start, seperator, end);
     }
 }}
 

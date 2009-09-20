@@ -11,13 +11,13 @@
 [heading Basic Container Printing]
 
 
-All of the explore library can be used by simply including the `"explore.hpp"` 
+All of the Boost.Explore library can be used by simply including the `"explore.hpp"` 
 header file.
 
   ``''''''``#include <boost/explore.hpp>
   ``''''''``using namespace boost::explore;
 
-However, this will pull in definitions of all the containers that Explore supports. To include only the definitions required for a
+However, this will pull in definitions of all the containers that Boost.Explore supports. To include only the definitions required for a
 specific container include each type's header file instead of `"explore.hpp"`.
 
   ``''''''``#include <boost/explore/vector.hpp>
@@ -54,7 +54,7 @@ prints
 
 [heading C Style Arrays]
 
-C style arrays have a standard streaming format, however, when you include any explore header, including `"explore.hpp"` and 
+C style arrays have a standard streaming format, however, when you include any Boost.Explore header, including `"explore.hpp"` and 
 `"boost/explore/c_array.hpp"`, you override this default streaming format with the explore streaming format and all the abilities of it.
 
    int arr[3] = {1,2,3};
@@ -78,12 +78,12 @@ would print this way
 
    [[1, first], [2, second], [3, third]]
 
-But this format doesn't describe the associative nature of the elements well. So, explore uses special delimeters for the associations within 
+But this format doesn't describe the associative nature of the elements well. So, Boost.Explore uses special delimeters for the associations within 
 associative containers, and the above code prints in a clearer format.
 
    [1:first, 2:second, 3:third]
 
-Currently, the only containers that explore recognizes as associative are:
+Currently, the only containers that Boost.Explore recognizes as associative are:
 
 * std::map
 * std::multimap
@@ -92,8 +92,8 @@ Currently, the only containers that explore recognizes as associative are:
 
 [heading lexical_cast]
 
-Because explore works with streaming operators, boost::lexical_cast will work with the explore library to allow you to create strings with the 
-printed output of explore for cases when you don't want to use streaming directly.
+Because Boost.Explore works with streaming operators, boost::lexical_cast will work with the explore library to allow you to create strings with the 
+printed output of Explore for cases when you don't want to use streaming directly.
 
    std::vector<int> vi;
    vi.push_back(1);

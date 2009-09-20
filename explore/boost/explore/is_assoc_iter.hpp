@@ -1,13 +1,14 @@
 //
-// is_assoc_iter.hpp - meta function to see if an iterator is for an associative
-//                     container, which we assume is true if value_type is a pair.
+// is_assoc_iter.hpp - meta function to see if an iterator is for an
+//                     associative container, which we assume is true if
+//                     value_type is a pair.
 //
 // Copyright (c) 2007 Danny Havenith
 //
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-//
+// See http://www.boost.org/libs/explore for library home page.
 
 #ifndef STREAM_IS_ASSOC_ITER_INCLUDED
 #define STREAM_IS_ASSOC_ITER_INCLUDED
@@ -28,11 +29,11 @@ namespace boost { namespace explore
             char member[100];
         };
 
-        // crude SFINAE-and-sizeof. uses the fact that a pointer to a value type
-        // is probably different from than that of false_type. Cleaning this up would take
-        // some more LOC.
+        // crude SFINAE-and-sizeof. uses the fact that a pointer to a value
+        // type is probably different from than that of false_type. Cleaning
+        // this up would take some more LOC.
         template< typename T>
-        typename T::value_type* has_value_func( const T &);
+        typename T::value_type* has_value_func(const T &);
 
         false_type has_value_func(...);
 
@@ -58,11 +59,13 @@ namespace boost { namespace explore
             boost::mpl::or_<
                 boost::is_same<
                     iterator_t,
-                    typename std::map<typename boost::remove_const<F>::type, S >::iterator
+                    typename std::map<
+                        typename boost::remove_const<F>::type, S >::iterator
                 >,
                 boost::is_same<
                     iterator_t,
-                    typename std::multimap<typename boost::remove_const<F>::type, S >::iterator
+                    typename std::multimap<
+                        typename boost::remove_const<F>::type, S >::iterator
                 > >
         {};
 

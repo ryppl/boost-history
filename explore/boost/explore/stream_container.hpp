@@ -1,5 +1,5 @@
 //
-// stream_container.hpp - container streaming.
+// stream_container.hpp - common code container streaming 
 //
 // Copyright (C) 2007-2009, Jeffrey Faust
 // Copyright (C) 2009, Jared McIntyre
@@ -7,6 +7,7 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+// See http://www.boost.org/libs/explore for library home page.
 
 #ifndef STREAM_CONTAINER_INCLUDED
 #define STREAM_CONTAINER_INCLUDED
@@ -20,11 +21,15 @@
 namespace boost { namespace explore
 {
     template<typename Elem, typename Tr, typename FwdIter, typename F>
-    std::basic_ostream<Elem, Tr>& stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last, F f)
+    std::basic_ostream<Elem, Tr>& stream_container(
+        std::basic_ostream<Elem, Tr>& ostr,
+        FwdIter first, FwdIter last, F f)
     {
         // grab the extra data embedded in the stream object.
-        container_stream_state<Elem>* state = explore::get_stream_state<container_stream_state<Elem> >(ostr);
-        container_common_stream_state* common_state = explore::get_stream_state<container_common_stream_state>(ostr);
+        container_stream_state<Elem>* state =
+            explore::get_stream_state<container_stream_state<Elem> >(ostr);
+        container_common_stream_state* common_state =
+            explore::get_stream_state<container_common_stream_state>(ostr);
 
         // set the level based on the current recursive depth
         detail::increment_depth guard(common_state);
@@ -58,7 +63,9 @@ namespace boost { namespace explore
     }
 
     template<typename Elem, typename Tr, typename FwdIter>
-    std::basic_ostream<Elem, Tr>& stream_container(std::basic_ostream<Elem, Tr>& ostr, FwdIter first, FwdIter last)
+    std::basic_ostream<Elem, Tr>& stream_container(
+        std::basic_ostream<Elem, Tr>& ostr,
+        FwdIter first, FwdIter last)
     {
         // redirect with "normal" streaming.
         return stream_container(ostr, first, last, stream_normal_value());
@@ -66,13 +73,17 @@ namespace boost { namespace explore
     
 #   if !BOOST_WORKAROUND(BOOST_MSVC, <= 1300)
     template<typename Elem, typename Tr, typename T, std::size_t size>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, T (&a)[size])
+    std::basic_ostream<Elem, Tr>& operator<<(
+        std::basic_ostream<Elem, Tr>& ostr,
+        T (&a)[size])
     {
         return boost::explore::stream_container(ostr, &a[0], &a[size]);
     }
     
     template<typename Elem, typename Tr, std::size_t size>
-    std::basic_ostream<Elem, Tr>& operator<<(std::basic_ostream<Elem, Tr>& ostr, const Elem* s)
+    std::basic_ostream<Elem, Tr>& operator<<(
+        std::basic_ostream<Elem, Tr>& ostr,
+        const Elem* s)
     {
         return boost::explore::stream_container(ostr, &s[0], &s[strlen(s)]);
     }

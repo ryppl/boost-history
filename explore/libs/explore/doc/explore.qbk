@@ -5,7 +5,7 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[library Boost.explore
+[library Boost.Explore
     [quickbook 1.4]
     [copyright 2007 Jeff Garland, 2008-2009 Jared McIntyre]
     [purpose Library to output Collections]
@@ -25,12 +25,12 @@
 
 [/=============================================================================]
 
-Boost.explore is a cross-platform C++ library for printing of containers.  
+Boost.Explore is a cross-platform C++ library for printing of containers.  
 
 
 [heading Getting Started]
 
-Boost.explore is a library that provides for the output of data from containers
+Boost.Explore is a library that provides for the output of data from containers
 or ranges.  
 
 The following are some simple usage examples:
@@ -68,9 +68,9 @@ The following are some simple usage examples:
    sa2[1] = "two";
    std::cout << sa2;                 // prints [one, two] 
    
-The [link boost_explore.tutorial tutorial] shows more details on using explore.
+The [link boost_explore.tutorial tutorial] shows more details on using Boost.Explore.
 
-While explore is powerful and flexible, it is not infinitely flexible.  
+While Boost.Explore is powerful and flexible, it is not infinitely flexible.  
 The reasons for this are discussed in the [link boost_explore.design design] 
 section. For very complex output custom methods or a template output system should 
 be considered.
@@ -89,7 +89,7 @@ be considered.
 * boost::array
 * boost::range
 
-[link boost_explore.tutorial.custom_containers Custom containers] can also be made to work with explore.
+[link boost_explore.tutorial.custom_containers Custom containers] can also be made to work with Boost.Explore.
 
 [heading Acknowledgements]
 

@@ -9,7 +9,7 @@
 
 [h2 Dependencies]
 
-The following libraries must be available in order to use Boost.explore
+The following libraries must be available in order to use Boost.Explore
 
 * mpl - various meta programming tools
 * utility - for enable_if

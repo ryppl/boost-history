@@ -6,6 +6,7 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
+// See http://www.boost.org/libs/explore for library home page.
 
 #ifndef BOOST_EXPLORE_CONTAINER_STREAM_STATE_H
 #define BOOST_EXPLORE_CONTAINER_STREAM_STATE_H
@@ -19,7 +20,7 @@
 #define BOOST_EXPLORE_INIT_STRING(name, str)                             \
 template<typename charType> std::basic_string<charType> init_##name();   \
 template<> std::basic_string<char> init_##name<char>() { return (str); } \
-template<> std::basic_string<wchar_t> init_##name<wchar_t>() { return L##str; }
+template<> std::basic_string<wchar_t> init_##name<wchar_t>() {return L##str;}
 
 namespace boost { namespace explore
 {
@@ -39,7 +40,7 @@ namespace boost { namespace explore
         const T& value_at(const std::vector<T>& c, size_t level)
         {
             // return the highest item if it does not exist at the given index
-            return c[std::min(level, c.size() - 1)];
+            return c[(std::min)(level, c.size() - 1)];
         }
 
         // write
@@ -55,11 +56,12 @@ namespace boost { namespace explore
         }
     }
 
-    // state not dependent on character type
+    // Additional stream state for containers, independent of char type
     struct container_common_stream_state
     {
         container_common_stream_state(const std::ios_base* stream)
-            : m_level(0), m_depth(0), m_cols(1), m_itemwidth(1), m_quotestrings(false)
+            : m_level(0), m_depth(0), m_cols(1), m_item_width(1),
+              m_quote_strings(false)
         {
         }
 
@@ -70,28 +72,63 @@ namespace boost { namespace explore
             return prev;
         }
 
-        void level_up() { ++m_level; }
-        void level_down() { --m_level; }
-        size_t level() const { return m_level; }
+        void level_up()
+        {
+            ++m_level;
+        }
 
-        std::size_t depth() const { return m_depth; }
+        void level_down()
+        {
+            --m_level;
+        }
 
-        std::size_t cols() const { return at(m_cols); }
-        void set_cols(std::size_t cols) { at(m_cols) = cols; }
+        size_t level() const
+        {
+            return m_level;
+        }
 
-        std::size_t itemwidth() const { return at(m_itemwidth); }
-        void set_itemwidth(std::size_t iw) { at(m_itemwidth) = iw; }
+        std::size_t depth() const
+        {
+            return m_depth;
+        }
 
-        bool quote_strings() const { return m_quotestrings; }
-        void set_quote_strings(bool qs) { m_quotestrings = qs; }
+        std::size_t cols() const
+        { 
+            return at(m_cols);
+        }
+
+        void set_cols(std::size_t cols)
+        {
+            at(m_cols) = cols;
+        }
+
+        std::size_t item_width() const
+        {
+            return at(m_item_width);
+        }
+
+        void set_item_width(std::size_t iw)
+        {
+            at(m_item_width) = iw;
+        }
+
+        bool quote_strings() const
+        {
+            return m_quote_strings;
+        }
+
+        void set_quote_strings(bool qs)
+        {
+            m_quote_strings = qs;
+        }
 
         void swap(container_common_stream_state& other)
         {
             std::swap(m_level, other.m_level);
             std::swap(m_depth, other.m_depth);
             std::swap(m_cols, other.m_cols);
-            std::swap(m_itemwidth, other.m_itemwidth);
-            std::swap(m_quotestrings, other.m_quotestrings);
+            std::swap(m_item_width, other.m_item_width);
+            std::swap(m_quote_strings, other.m_quote_strings);
         }
 
         bool operator==(const container_common_stream_state& other) const
@@ -99,14 +136,14 @@ namespace boost { namespace explore
             return other.m_level == m_level &&
                    other.m_depth == m_depth &&
                    other.m_cols == m_cols &&
-                   other.m_itemwidth == m_itemwidth &&
-                   other.m_quotestrings == m_quotestrings;
+                   other.m_item_width == m_item_width &&
+                   other.m_quote_strings == m_quote_strings;
         }
 
    private:
         friend struct detail::increment_depth;
 
-        typedef std::vector<std::size_t, std::allocator<std::size_t> > size_cont_typ;
+        typedef std::vector<std::size_t> size_cont_typ;
 
         // read
         template<typename T>
@@ -128,12 +165,12 @@ namespace boost { namespace explore
         std::size_t m_depth;
 
         size_cont_typ m_cols;
-        size_cont_typ m_itemwidth;
+        size_cont_typ m_item_width;
 
-        bool m_quotestrings;
+        bool m_quote_strings;
     };
 
-    // A simple collection of additional stream state
+    // Additional stream state for containers, dependent on char type
     template<typename Elem>
     struct container_stream_state
     {
@@ -155,26 +192,73 @@ namespace boost { namespace explore
             init(m_separator, detail::init_separator<El>());
             init(m_start, detail::init_start<El>());
             init(m_end, detail::init_end<El>());
-            init(m_assoc_item_separator, detail::init_assoc_item_separator<El>());
+            init(m_assoc_item_separator,
+                 detail::init_assoc_item_separator<El>());
             init(m_assoc_item_start, detail::init_assoc_item_start<El>());
             init(m_assoc_item_end, detail::init_assoc_item_end<El>());
         }
 
         // read
-        const str_typ& separator() const { return at(m_separator); }
-        const str_typ& start(std::size_t index = 0) const { return at(m_start); }
-        const str_typ& end() const { return at(m_end); }
-        const str_typ& assoc_item_separator() const { return at(m_assoc_item_separator); }
-        const str_typ& assoc_item_start() const { return at(m_assoc_item_start); }
-        const str_typ& assoc_item_end() const { return at(m_assoc_item_end); }
+        const str_typ& separator() const
+        {
+            return at(m_separator);
+        }
+
+        const str_typ& start(std::size_t index = 0) const
+        {
+            return at(m_start);
+        }
+
+        const str_typ& end() const
+        {
+            return at(m_end);
+        }
+
+        const str_typ& assoc_item_separator() const
+        {
+            return at(m_assoc_item_separator);
+        }
+
+        const str_typ& assoc_item_start() const
+        {
+            return at(m_assoc_item_start);
+        }
+
+        const str_typ& assoc_item_end() const
+        {
+            return at(m_assoc_item_end);
+        }
 
         // write
-        void set_separator(const str_typ& str) { at(m_separator) = str; }
-        void set_start(const str_typ& str) { at(m_start) = str; }
-        void set_end(const str_typ& str) { at(m_end) = str; }
-        void set_assoc_item_separator(const str_typ& str) { at(m_assoc_item_separator) = str; }
-        void set_assoc_item_start(const str_typ& str) { at(m_assoc_item_start) = str; }
-        void set_assoc_item_end(const str_typ& str) { at(m_assoc_item_end) = str; }
+        void set_separator(const str_typ& str)
+        {
+            at(m_separator) = str;
+        }
+
+        void set_start(const str_typ& str)
+        {
+            at(m_start) = str;
+        }
+
+        void set_end(const str_typ& str)
+        {
+            at(m_end) = str;
+        }
+
+        void set_assoc_item_separator(const str_typ& str)
+        {
+            at(m_assoc_item_separator) = str;
+        }
+
+        void set_assoc_item_start(const str_typ& str)
+        {
+            at(m_assoc_item_start) = str;
+        }
+
+        void set_assoc_item_end(const str_typ& str)
+        {
+            at(m_assoc_item_end) = str;
+        }
 
         void swap(container_stream_state<Elem>& other)
         {
@@ -199,6 +283,7 @@ namespace boost { namespace explore
         }
 
     private:
+        // access associated common (non-char type dependent) state
         container_common_stream_state* common()
         {
             return get_stream_state<container_common_stream_state>(*m_stream);
@@ -213,15 +298,6 @@ namespace boost { namespace explore
         {
             return common()->level();
         }
-
-        str_cont_typ m_separator;
-        str_cont_typ m_start;
-        str_cont_typ m_end;
-        str_cont_typ m_assoc_item_separator;
-        str_cont_typ m_assoc_item_start;
-        str_cont_typ m_assoc_item_end;
-
-        std::ios_base* m_stream;
 
         template<typename T>
         void init(str_cont_typ& c, const T& val)
@@ -245,6 +321,15 @@ namespace boost { namespace explore
             assert(common()->depth() <= level());
             return detail::value_at(c, level());
         }
+
+        str_cont_typ m_separator;
+        str_cont_typ m_start;
+        str_cont_typ m_end;
+        str_cont_typ m_assoc_item_separator;
+        str_cont_typ m_assoc_item_start;
+        str_cont_typ m_assoc_item_end;
+
+        std::ios_base* m_stream;
     };
 }}
 

@@ -7,9 +7,9 @@
 
 [section:custom_delimeters Custom Delimiters]
 
-Explore provides the ability to change the strings used in the container streaming process through the use of several new stream manipulators.
+Boost.Explore provides the ability to change the strings used in the container streaming process through the use of several new stream manipulators.
 
-[table Explore Stream Manipulators
+[table Boost.Explore Stream Manipulators
     [[Manipulator]                 [Default][Description]]
     [[start(char*)]                ['\[']   [Changes the string output at the beginning of a container.]]
     [[end(char*)]                  ['\]']   [Changes the string output at the end of a container.]]
@@ -40,7 +40,7 @@ prints
 
 There are several helper functions that will set multiple manipulators with one call.
 
-[table Explore Stream Manipulator Helpers
+[table Boost.Explore Stream Manipulator Helpers
     [[Manipulator]                                                    [Description]]
     [[begin_end(char* begin, char* end)]                              [Changes the string output of the beginning and end of a container.]]
     [[delimeters(char* begin, char* separator, char* end)]            [Changes the string output of the beginning, eseparator, and end of a container.]]

@@ -7,7 +7,7 @@
 
 [section:custom_containers Custom Containers]
 
-You can use explore with your custom containers, or third party containers. However, explore needs a little help in understanding these classes.
+You can use Boost.Explore with your custom containers, or third party containers. However, it needs a little help in understanding these classes.
 
 [heading Standard Container]
 

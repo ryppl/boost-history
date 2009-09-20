@@ -6,9 +6,10 @@
 // Distributed under the Boost Software License, Version 1.0. (See accompanying
 // file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// state_saver works like the boost I/O boost stream state saver, but on container
-// state values.
+// state_saver works like the boost I/O boost stream state saver, but on
+// container state values.
 //
+// See http://www.boost.org/libs/explore for library home page.
 
 #ifndef BOOST_EXPLORE_STATE_SAVER_H
 #define BOOST_EXPLORE_STATE_SAVER_H
@@ -24,10 +25,11 @@ namespace boost
         {
         public:
             explicit state_saver(std::ios_base& ostr)
-                : m_state(get_stream_state<container_stream_state<Elem> >(ostr)),
-                  m_save_state(*m_state),
-                  m_common_state(get_stream_state<container_common_stream_state>(ostr)),
-                  m_save_common_state(*m_common_state), m_restored(false)
+             : m_state(get_stream_state<container_stream_state<Elem> >(ostr)),
+               m_save_state(*m_state),
+               m_common_state(
+                    get_stream_state<container_common_stream_state>(ostr)),
+               m_save_common_state(*m_common_state), m_restored(false)
             {
             }
 
