@@ -476,12 +476,12 @@ namespace boost { namespace polygon{
       Point pt;
       Point other_pt; // 1, 0 or -1
       int count; //dxdydTheta
-      inline vertex_half_edge() {}
+      inline vertex_half_edge() : pt(), other_pt(), count() {}
       inline vertex_half_edge(const Point& point, const Point& other_point, int countIn) : pt(point), other_pt(other_point), count(countIn) {}
       inline vertex_half_edge(const vertex_half_edge& vertex) : pt(vertex.pt), other_pt(vertex.other_pt), count(vertex.count) {}
       inline vertex_half_edge& operator=(const vertex_half_edge& vertex){ 
         pt = vertex.pt; other_pt = vertex.other_pt; count = vertex.count; return *this; }
-      inline vertex_half_edge(const std::pair<Point, Point>& vertex) {}
+      inline vertex_half_edge(const std::pair<Point, Point>& vertex) : pt(), other_pt(), count() {}
       inline vertex_half_edge& operator=(const std::pair<Point, Point>& vertex){ return *this; }
       inline bool operator==(const vertex_half_edge& vertex) const {
         return pt == vertex.pt && other_pt == vertex.other_pt && count == vertex.count; }

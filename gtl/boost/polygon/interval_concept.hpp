@@ -154,21 +154,22 @@ namespace boost { namespace polygon{
   typename enable_if< typename is_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
   ) { return (high(interval) + low(interval))/2; }
 
+
+  struct y_i_low : gtl_yes {};
+
   // set the low coordinate to v
   template <typename interval_type>
-  void
+  typename enable_if<typename gtl_and<y_i_low, typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type, void>::type 
   low(interval_type& interval,
-      typename interval_traits<interval_type>::coordinate_type v,
-      typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
-      ) { set(interval, LOW, v); }
+      typename interval_traits<interval_type>::coordinate_type v) { set(interval, LOW, v); }
   
+  struct y_i_high : gtl_yes {};
+
   // set the high coordinate to v
   template <typename interval_type>
-  void
+  typename enable_if<typename gtl_and<y_i_high, typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type, void>::type 
   high(interval_type& interval,
-      typename interval_traits<interval_type>::coordinate_type v,
-       typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
-       ) { set(interval, HIGH, v); }
+      typename interval_traits<interval_type>::coordinate_type v) { set(interval, HIGH, v); }
   
   // get the magnitude of the interval
   template <typename interval_type>

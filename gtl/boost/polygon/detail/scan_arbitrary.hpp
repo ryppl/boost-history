@@ -39,11 +39,11 @@ namespace boost { namespace polygon{
     std::vector<std::pair<half_edge, int> > event_edges_;
     std::set<Point> intersection_queue_;
   public:
-    inline line_intersection() : vertical_data_(), edge_scanline_(), x_((std::numeric_limits<Unit>::max)()), just_before_(0), segment_id_(0) {
+    inline line_intersection() : vertical_data_(), edge_scanline_(), x_((std::numeric_limits<Unit>::max)()), just_before_(0), segment_id_(0), event_edges_(), intersection_queue_() {
       less_half_edge lessElm(&x_, &just_before_);
       edge_scanline_ = edge_scanline(lessElm);
     }
-    inline line_intersection(const line_intersection& that) : vertical_data_(), edge_scanline_(), x_(), just_before_(), segment_id_() { (*this) = that; }
+    inline line_intersection(const line_intersection& that) : vertical_data_(), edge_scanline_(), x_(), just_before_(), segment_id_(), event_edges_(), intersection_queue_() { (*this) = that; }
     inline line_intersection& operator=(const line_intersection& that) {
       x_ = that.x_;
       just_before_ = that.just_before_;

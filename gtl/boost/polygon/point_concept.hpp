@@ -263,8 +263,14 @@ namespace boost { namespace polygon{
     return point;
   }
 
+  struct y_pt_move : gtl_yes {};
+
   template <typename point_type>
-  point_type &
+  typename enable_if< 
+    typename gtl_and< y_pt_move, 
+                      typename is_mutable_point_concept<
+      typename geometry_concept<point_type>::type>::type>::type, 
+    point_type>::type &
   move(point_type& point, orientation_2d orient,
        typename point_traits<point_type>::coordinate_type displacement,
        typename enable_if<typename is_mutable_point_concept<typename geometry_concept<point_type>::type>::type>::type * = 0
