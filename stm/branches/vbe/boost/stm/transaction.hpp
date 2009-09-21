@@ -15,24 +15,28 @@
 #define BOOST_STM_TRANSACTION__HPP
 
 //-----------------------------------------------------------------------------
+#include <assert.h>
+#include <pthread.h>
+//-----------------------------------------------------------------------------
+#include <iostream>
+#include <list>
+#include <map>
+#include <memory>
+#include <set>
+#include <string>
+#include <vector>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
+//-----------------------------------------------------------------------------
+#include <boost/stm/base_transaction.hpp>
+//-----------------------------------------------------------------------------
 #include <boost/stm/detail/datatypes.hpp>
 #include <boost/stm/detail/transaction_bookkeeping.hpp>
-#include <boost/stm/base_transaction.hpp>
 #include <boost/stm/detail/bloom_filter.hpp>
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
-#include <assert.h>
-#include <string>
-#include <iostream>
-#include <list>
-#include <set>
-#include <map>
-#include <vector>
-#include <memory>
-#include <pthread.h>
-#include <stack>
+#include <boost/stm/detail/monotonic_storage.hpp>
+#include <boost/stm/detail/transactions_stack.hpp>
 
 #if BUILD_MOVE_SEMANTICS
 #include <type_traits>
@@ -49,68 +53,46 @@
 //-----------------------------------------------------------------------------
 namespace boost { namespace stm {
 
+#if BUILD_MOVE_SEMANTICS
+bool const kDracoMoveSemanticsCompiled = true;
+#else
+bool const kDracoMoveSemanticsCompiled = false;
+#endif
 
+//-----------------------------------------------------------------------------
+// boolean which is used to invoke "begin_transaction()" upon transaction
+// object construction (so two lines of code aren't needed to make a
+// transaction start, in case the client wants to start the transaction
+// immediately).
+//-----------------------------------------------------------------------------
+bool const begin_transaction = true;
+    
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
-   typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
+typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
 #endif
 #endif
 
-   enum LatmType
-   {
-      kMinLatmType = 0,
-      eFullLatmProtection = kMinLatmType,
-      eTmConflictingLockLatmProtection,
-      eTxConflictingLockLatmProtection,
-      kMaxLatmType
-   };
-
-   enum TxType
-   {
-      kMinIrrevocableType = 0,
-      eNormalTx = kMinIrrevocableType,
-      eIrrevocableTx,
-      eIrrevocableAndIsolatedTx,
-      kMaxIrrevocableType
-   };
-
-   typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
-
-
-#if defined(BOOST_STM_USE_MEMCOPY) && defined(BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER)
-   template <std::size_t size>
-   struct monotonic_storage {
-       char storage_[size];
-       char* ptr_;
-    public:
-        monotonic_storage() : ptr_(&storage_[0]) {}
-        template <typename T>
-        char* allocate() {
-            union aligned_storage {
-                char val[sizeof(T)] ;
-                int alignement;
-            };
-            char* ptr= ptr_;
-            ptr_+= sizeof(aligned_storage);
-            return ptr;
-        }
-        void reset() {ptr_=&storage_[0];}
-   };
-#endif
-
-class transaction;
-struct TransactionsStack {
-    typedef std::stack<transaction*> cont_type;
-    cont_type stack_;
-    TransactionsStack() {
-        // the stack at least one element (0) so we can always call to top, i.e. current transaction is 0
-        stack_.push(0);
-    }
-    void push(transaction* ptr) {stack_.push(ptr);}
-    void pop() {stack_.pop();}
-    std::size_t size() {return stack_.size();}
-    transaction* top() {return stack_.top();}
+enum latm_type
+{
+    kMinLatmType = 0,
+    eFullLatmProtection = kMinLatmType,
+    eTmConflictingLockLatmProtection,
+    eTxConflictingLockLatmProtection,
+    kMaxLatmType
 };
+typedef latm_type LatmType;
+enum transaction_type
+{
+    kMinIrrevocableType = 0,
+    eNormalTx = kMinIrrevocableType,
+    eIrrevocableTx,
+    eIrrevocableAndIsolatedTx,
+    kMaxIrrevocableType
+};
+typedef transaction_type TxType;
+
+typedef std::pair<base_transaction_object*, base_transaction_object*> tx_pair;
 
 ///////////////////////////////////////////////////////////////////////////////
 // transaction Class

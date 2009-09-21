@@ -18,6 +18,37 @@
 
 namespace boost { namespace stm {
 
+    
+    //-----------------------------------------------------------------------------
+class DefaultContentionManager : public base_contention_manager
+{
+public:
+   //--------------------------------------------------------------------------
+   void abort_on_new(transaction const &t);
+   void abort_on_delete(transaction const &t,
+      base_transaction_object const &in);
+
+   void abort_on_read(transaction const &t,
+      base_transaction_object const &in);
+   void abort_on_write(transaction &t,
+      base_transaction_object const &in);
+
+   virtual bool abort_before_commit(transaction const &t)
+   {
+      return false;
+   }
+
+   virtual bool permission_to_abort
+      (transaction const &lhs, transaction const &rhs)
+   { return true; }
+
+   virtual bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
+      bool txIsIrrevocable, transaction const &rhs);
+
+   virtual void perform_isolated_tx_wait_priority_promotion(transaction &);
+   virtual void perform_irrevocable_tx_wait_priority_promotion(transaction &);
+};
+
 ////////////////////////////////////////////////////////////////////////////
 //
 // this class does nothing on abort notices for writes and reads

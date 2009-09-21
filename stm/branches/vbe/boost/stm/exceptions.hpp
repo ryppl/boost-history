@@ -11,28 +11,37 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_BASE_TRANSACTION_H
-#define BOOST_STM_BASE_TRANSACTION_H
+#ifndef BOOST_STM_EXCEPTIONS__HPP
+#define BOOST_STM_EXCEPTIONS__HPP
 
 //-----------------------------------------------------------------------------
-#include <stdarg.h>
-#include <pthread.h>
 //-----------------------------------------------------------------------------
-#include <list>
+#include <exception>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
-#include <boost/stm/base_contention_manager.hpp>
-#include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
-#include <boost/stm/datatypes.hpp>
-#include <boost/stm/exceptions.hpp>
-#include <boost/stm/move.hpp>
-#include <boost/stm/synchro.hpp>
-#include <boost/stm/transaction_object.hpp>
 
+namespace boost { namespace stm {
+
+class aborted_transaction_exception_no_unlocks {};
+    
 //-----------------------------------------------------------------------------
-#endif // BOOST_STM_BASE_TRANSACTION_H
+//-----------------------------------------------------------------------------
+class aborted_transaction_exception : public std::exception
+{
+public:
+   aborted_transaction_exception(char const * const what) : what_(what) {}
+
+   //virtual char const * what() const { return what_; }
+
+private:
+   char const * const what_;
+};
+
+typedef aborted_transaction_exception aborted_tx;
+
+}}
+
+#endif // BOOST_STM_EXCEPTIONS__HPP
 
 

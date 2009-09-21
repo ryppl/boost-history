@@ -11,8 +11,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_BASE_TRANSACTION_H
-#define BOOST_STM_BASE_TRANSACTION_H
+#ifndef BOOST_STM_CACHE_FCT__HPP
+#define BOOST_STM_CACHE_FCT__HPP
 
 //-----------------------------------------------------------------------------
 #include <stdarg.h>
@@ -23,16 +23,33 @@
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
-#include <boost/stm/base_contention_manager.hpp>
-#include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
-#include <boost/stm/datatypes.hpp>
-#include <boost/stm/exceptions.hpp>
-#include <boost/stm/move.hpp>
-#include <boost/stm/synchro.hpp>
-#include <boost/stm/transaction_object.hpp>
+//#include <boost/stm/exceptions.hpp>
+//-----------------------------------------------------------------------------
+//#include <boost/stm/detail/memory_pool.hpp>
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-#endif // BOOST_STM_BASE_TRANSACTION_H
+namespace boost { namespace stm {
+
+//-----------------------------------------------------------------------------
+// forward declarations
+//-----------------------------------------------------------------------------
+
+class base_transaction_object;
+
+template <class T> T* cache_clone(const T& val);
+template <class T> void cache_copy(const T* const ori, T* target);
+void cache_release(base_transaction_object* ptr);
+
+template <class T> inline T* cache_clone_constructor(const T&);
+
+template <class T> T* cache_allocate();
+template <class T> void cache_deallocate(T*);
+
+class transaction;
+
+} // namespace core
+}
+#endif // BOOST_STM_CACHE_FCT__HPP
 
 

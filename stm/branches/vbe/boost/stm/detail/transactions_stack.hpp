@@ -11,28 +11,39 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_BASE_TRANSACTION_H
-#define BOOST_STM_BASE_TRANSACTION_H
+#ifndef BOOST_STM_TRANSACTIONS_STACK__HPP
+#define BOOST_STM_TRANSACTIONS_STACK__HPP
+
+#include <stack>
+namespace boost { namespace stm {
 
 //-----------------------------------------------------------------------------
-#include <stdarg.h>
-#include <pthread.h>
 //-----------------------------------------------------------------------------
-#include <list>
+class transaction;
+
+namespace detail {
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
-#include <boost/stm/detail/config.hpp>
-//-----------------------------------------------------------------------------
-#include <boost/stm/base_contention_manager.hpp>
-#include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
-#include <boost/stm/datatypes.hpp>
-#include <boost/stm/exceptions.hpp>
-#include <boost/stm/move.hpp>
-#include <boost/stm/synchro.hpp>
-#include <boost/stm/transaction_object.hpp>
+struct transactions_stack {
+    typedef std::stack<transaction*> cont_type;
+    cont_type stack_;
+    transactions_stack() {
+        // the stack at least one element (0) so we can always call to top, i.e. current transaction is 0
+        stack_.push(0);
+    }
+    void push(transaction* ptr) {stack_.push(ptr);}
+    void pop() {stack_.pop();}
+    std::size_t size() {return stack_.size();}
+    transaction* top() {return stack_.top();}
+};
+
+}
+
+typedef detail::transactions_stack TransactionsStack;
+
+}}
 
 //-----------------------------------------------------------------------------
-#endif // BOOST_STM_BASE_TRANSACTION_H
+#endif // BOOST_STM_TRANSACTION_STACK__HPP
 
 

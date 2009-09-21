@@ -11,28 +11,31 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_BASE_TRANSACTION_H
-#define BOOST_STM_BASE_TRANSACTION_H
+#ifndef BOOST_STM_MOVE__HPP
+#define BOOST_STM_MOVE__HPP
 
 //-----------------------------------------------------------------------------
-#include <stdarg.h>
-#include <pthread.h>
 //-----------------------------------------------------------------------------
-#include <list>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
-#include <boost/stm/base_contention_manager.hpp>
-#include <boost/stm/base_transaction_object.hpp>
-#include <boost/stm/cache_fct.hpp>
-#include <boost/stm/datatypes.hpp>
-#include <boost/stm/exceptions.hpp>
-#include <boost/stm/move.hpp>
-#include <boost/stm/synchro.hpp>
-#include <boost/stm/transaction_object.hpp>
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
 
 //-----------------------------------------------------------------------------
-#endif // BOOST_STM_BASE_TRANSACTION_H
+namespace boost { namespace stm {
+
+#if BUILD_MOVE_SEMANTICS
+template <class T>
+inline typename std::remove_reference<T>::type&& draco_move(T &&t)
+{
+   return t;
+}
+#endif
+
+} // namespace core
+}
+#endif // BOOST_STM_DATATYPES__HPP
 
 
