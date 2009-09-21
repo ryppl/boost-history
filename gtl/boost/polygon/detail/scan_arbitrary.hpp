@@ -210,7 +210,7 @@ namespace boost { namespace polygon{
 
     template <typename iT>
     static inline void segment_edge(std::vector<std::pair<half_edge, int> >& output_segments,
-                                    const half_edge& he, segment_id id, iT begin, iT end) {
+                                    const half_edge& , segment_id id, iT begin, iT end) {
       iT current = begin;
       iT next = begin;
       ++next;
@@ -750,13 +750,14 @@ namespace boost { namespace polygon{
       return true;
     }
 
-    static void print(const std::pair<half_edge, segment_id>& segment) {
+    //static void print(const std::pair<half_edge, segment_id>& segment) {
       //std::cout << segment.first.first << " " << segment.first.second << ": " << segment.second << "; ";
-    }
+    //}
     static void print(const std::vector<std::pair<half_edge, segment_id> >& vec) {
-      //for(std::size_t i = 0; i < vec.size(); ++ i) {
+      for(std::size_t i = 0; i < vec.size(); ++ i) {
       //  print(vec[i]);
-      //} std::cout << std::endl;
+      } 
+      //std::cout << std::endl;
     }
 
     template <typename stream_type>
@@ -916,6 +917,9 @@ namespace boost { namespace polygon{
       high_precision y = (high_precision)((std::numeric_limits<Unit>::min)());
       bool first_iteration = true;
       //we want to return from inside the loop when we hit end or new x
+#ifdef BOOST_POLYGON_MSVC      
+#pragma warning( disable: 4127 )
+#endif
       while(true) {
         if(begin == end || (!first_iteration && (high_precision)(((*begin).first.first.get(VERTICAL)) != y || 
                                                                  (*begin).first.first.get(HORIZONTAL) != x_))) {
@@ -1016,6 +1020,10 @@ namespace boost { namespace polygon{
           ++begin;
         }
       }
+#ifdef BOOST_POLYGON_MSVC      
+#pragma warning( default: 4127 )
+#endif
+
     }
 
     inline void erase_end_events(typename end_point_queue::iterator epqi) {
@@ -1454,7 +1462,7 @@ namespace boost { namespace polygon{
   protected:
     template <typename polygon_type>
     void insert(const polygon_type& polygon_object, const property_type& property_value, bool is_hole, 
-                polygon_concept tag) {
+                polygon_concept ) {
       bool first_iteration = true;
       bool second_iteration = true;
       Point first_point;
@@ -1477,7 +1485,7 @@ namespace boost { namespace polygon{
           }
         } else {
           if(previous_point != current_point) {
-            create_vertex(pmd, previous_previous_point, previous_point, current_point, winding_dir,
+            create_vertex(pmd, previous_point, current_point, winding_dir,
                           is_hole, property_value);
             previous_previous_point = previous_point;
             previous_point = current_point;
@@ -1487,13 +1495,13 @@ namespace boost { namespace polygon{
       current_point = first_point;
       if(!first_iteration && !second_iteration) {
         if(previous_point != current_point) {
-          create_vertex(pmd, previous_previous_point, previous_point, current_point, winding_dir,
+          create_vertex(pmd, previous_point, current_point, winding_dir,
                         is_hole, property_value);
           previous_previous_point = previous_point;
           previous_point = current_point;
         }
         current_point = second_point;
-        create_vertex(pmd, previous_previous_point, previous_point, current_point, winding_dir,
+        create_vertex(pmd, previous_point, current_point, winding_dir,
                       is_hole, property_value);
         previous_previous_point = previous_point;
         previous_point = current_point;
@@ -1513,7 +1521,7 @@ namespace boost { namespace polygon{
 
     template <typename rectangle_type>
     void insert(const rectangle_type& rectangle_object, const property_type& property_value, bool is_hole, 
-                rectangle_concept tag) {
+                rectangle_concept ) {
       polygon_90_data<Unit> poly;
       assign(poly, rectangle_object);
       insert(poly, property_value, is_hole, polygon_concept());
@@ -1522,7 +1530,6 @@ namespace boost { namespace polygon{
   public: //change to private when done testing
 
     static inline void create_vertex(property_merge_data& pmd, 
-                                     const Point& previous_point, 
                                      const Point& current_point, 
                                      const Point& next_point, 
                                      direction_1d winding,
@@ -2399,6 +2406,9 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
         elem.second = 1;
         if(edge.second < edge.first) elem.second *= -1;
         if(is_vertical(edge)) elem.second *= -1;
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
         if(op_type == 0) { //OR
           if(!left.empty() && right.empty()) {
             result.insert_clean(elem);
@@ -2426,6 +2436,9 @@ pts.push_back(Point(12344171, 6695983 )); pts.push_back(Point(12287208, 6672388 
               result.insert_clean(elem);
             }
           } 
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
           if(right.size() == 1) {
             if((*(right.begin())) == 0) {
               elem.second *= -1;

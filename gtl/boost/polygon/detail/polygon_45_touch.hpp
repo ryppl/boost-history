@@ -128,7 +128,7 @@ namespace boost { namespace polygon{
     struct touch_45_output_functor {
       template <typename cT>
       void operator()(cT& output, const CountTouch& count1, const CountTouch& count2, 
-                      const Point& pt, int rise, direction_1d end) {
+                      const Point& pt, int , direction_1d ) {
         Unit& x = output.first.first;
         std::map<Unit, std::set<int> >& y_prop_map = output.first.second;
         if(pt.x() != x) process_previous_x(output);

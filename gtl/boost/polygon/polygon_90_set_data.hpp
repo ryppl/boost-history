@@ -132,7 +132,7 @@ namespace boost { namespace polygon{
     }
 
     template <typename geometry_type>
-    inline void insert(const geometry_type& geometry_object, bool is_hole = false, orientation_2d orient = HORIZONTAL) {
+    inline void insert(const geometry_type& geometry_object, bool is_hole = false, orientation_2d = HORIZONTAL) {
       iterator_geometry_to_set<typename geometry_concept<geometry_type>::type, geometry_type>
         begin_input(geometry_object, LOW, orient_, is_hole), end_input(geometry_object, HIGH, orient_, is_hole);
       insert(begin_input, end_input, orient_);
@@ -506,7 +506,7 @@ namespace boost { namespace polygon{
   private:
     //functions
     template <typename output_container>
-    void get_dispatch(output_container& output, rectangle_concept tag) const {
+    void get_dispatch(output_container& output, rectangle_concept ) const {
       clean();
       form_rectangles(output, data_.begin(), data_.end(), orient_, rectangle_concept());
     }

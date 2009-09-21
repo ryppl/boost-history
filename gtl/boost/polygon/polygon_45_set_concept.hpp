@@ -197,7 +197,7 @@ namespace boost { namespace polygon{
                        polygon_set_type>::type &
   bloat(polygon_set_type& polygon_set, 
         typename coordinate_traits<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>::unsigned_area_type bloating) {
-    return resize(polygon_set, bloating);
+    return resize(polygon_set, static_cast<typename polygon_45_set_traits<polygon_set_type>::coordinate_type>(bloating));
   }
 
   template <typename polygon_set_type>

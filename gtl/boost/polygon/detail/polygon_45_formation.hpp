@@ -394,20 +394,36 @@ namespace boost { namespace polygon{
     class Vertex45CountT {
     public:
       typedef ct count_type;
-      inline Vertex45CountT() : counts() { counts[0] = counts[1] = counts[2] = counts[3] = 0; }
+      inline Vertex45CountT() 
+#ifndef BOOST_POLYGON_MSVC  
+        : counts() 
+#endif
+      { counts[0] = counts[1] = counts[2] = counts[3] = 0; }
       //inline Vertex45CountT(ct count) { counts[0] = counts[1] = counts[2] = counts[3] = count; }
       inline Vertex45CountT(const ct& count1, const ct& count2, const ct& count3, 
-                           const ct& count4) : counts() { 
+                           const ct& count4)
+#ifndef BOOST_POLYGON_MSVC  
+        : counts() 
+#endif                           
+      { 
         counts[0] = count1; 
         counts[1] = count2; 
         counts[2] = count3;
         counts[3] = count4; 
       }
-      inline Vertex45CountT(const Vertex45& vertex) : counts() { 
+      inline Vertex45CountT(const Vertex45& vertex)
+#ifndef BOOST_POLYGON_MSVC  
+        : counts() 
+#endif                           
+      { 
         counts[0] = counts[1] = counts[2] = counts[3] = 0;
         (*this) += vertex;
       }
-      inline Vertex45CountT(const Vertex45CountT& count) : counts() { 
+      inline Vertex45CountT(const Vertex45CountT& count)
+#ifndef BOOST_POLYGON_MSVC  
+        : counts() 
+#endif                           
+      { 
         (*this) = count;
       }
       inline bool operator==(const Vertex45CountT& count) const { 
@@ -612,7 +628,7 @@ namespace boost { namespace polygon{
                   //std::cout << "case2: " << i << " " << j << std::endl;
                   //std::cout << "creating active tail pair\n";
                   std::pair<ActiveTail45*, ActiveTail45*> tailPair = 
-                    ActiveTail45::createActiveTail45sAsPair(point, true, 0, fractureHoles_);
+                    ActiveTail45::createActiveTail45sAsPair(point, true, 0, fractureHoles_ != 0);
                   //tailPair.first->print();
                   //tailPair.second->print();
                   if(j == 3) {
@@ -730,7 +746,7 @@ namespace boost { namespace polygon{
                 ActiveTail45* holep = 0;
                 if(counts[3] == 0) holep = tails[3];
                 std::pair<ActiveTail45*, ActiveTail45*> tailPair = 
-                  ActiveTail45::createActiveTail45sAsPair(point, false, holep, fractureHoles_);
+                  ActiveTail45::createActiveTail45sAsPair(point, false, holep, fractureHoles_ != 0);
                 if(j == 3) {
                   returnValue = tailPair.first;
                   returnCount = -1;

@@ -253,9 +253,9 @@ public:
   // in the caller code for easier isotropic access by orientation value
   inline void get_directions(direction_2d& horizontal_dir,
                              direction_2d& vertical_dir) const {
-    bool bit2 = atr_ & 4;
-    bool bit1 = atr_ & 2;
-    bool bit0 = atr_ & 1;      
+    bool bit2 = (atr_ & 4) != 0;
+    bool bit1 = (atr_ & 2) != 0;
+    bool bit0 = (atr_ & 1) != 0;      
     vertical_dir = direction_2d((direction_2d_enum)(((int)(!bit2) << 1) + !bit1));
     horizontal_dir = direction_2d((direction_2d_enum)(((int)(bit2) << 1) + !bit0));
   }
@@ -265,12 +265,12 @@ public:
   inline void get_directions(direction_3d& horizontal_dir,
                              direction_3d& vertical_dir,
                              direction_3d& proximal_dir) const {
-    bool bit5 = atr_ & 32;
-    bool bit4 = atr_ & 16;
-    bool bit3 = atr_ & 8;
-    bool bit2 = atr_ & 4;
-    bool bit1 = atr_ & 2;
-    bool bit0 = atr_ & 1;      
+    bool bit5 = (atr_ & 32) != 0;
+    bool bit4 = (atr_ & 16) != 0;
+    bool bit3 = (atr_ & 8) != 0;
+    bool bit2 = (atr_ & 4) != 0;
+    bool bit1 = (atr_ & 2) != 0;
+    bool bit0 = (atr_ & 1) != 0;   
     proximal_dir = direction_3d((direction_2d_enum)((((int)(!bit4 & !bit5)) << 2) +
                                                     ((int)(bit5) << 1) + 
                                                     !bit3));
@@ -339,17 +339,29 @@ private:
 template <typename scale_factor_type>
 class anisotropic_scale_factor {
 public:
-  inline anisotropic_scale_factor() : scale_() {
+  inline anisotropic_scale_factor()
+#ifndef BOOST_POLYGON_MSVC
+    : scale_() 
+#endif
+  {
     scale_[0] = 1;
     scale_[1] = 1;
     scale_[2] = 1;
   } 
-  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale) : scale_() {
+  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale)
+#ifndef BOOST_POLYGON_MSVC
+    : scale_() 
+#endif 
+  {
     scale_[0] = xscale;
     scale_[1] = yscale;
     scale_[2] = 1;
   } 
-  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale, scale_factor_type zscale) : scale_() {
+  inline anisotropic_scale_factor(scale_factor_type xscale, scale_factor_type yscale, scale_factor_type zscale) 
+#ifndef BOOST_POLYGON_MSVC
+    : scale_() 
+#endif   
+  {
     scale_[0] = xscale;
     scale_[1] = yscale;
     scale_[2] = zscale;

@@ -108,18 +108,18 @@ namespace boost { namespace polygon{
   }
 
   inline axis_transformation& axis_transformation::operator+=(const axis_transformation& a){
-    bool abit5 = a.atr_ & 32;
-    bool abit4 = a.atr_ & 16;
-    bool abit3 = a.atr_ & 8;
-    bool abit2 = a.atr_ & 4;
-    bool abit1 = a.atr_ & 2;
-    bool abit0 = a.atr_ & 1;      
-    bool bit5 = atr_ & 32;
-    bool bit4 = atr_ & 16;
-    bool bit3 = atr_ & 8;
-    bool bit2 = atr_ & 4;
-    bool bit1 = atr_ & 2;
-    bool bit0 = atr_ & 1;      
+    bool abit5 = (a.atr_ & 32) != 0;
+    bool abit4 = (a.atr_ & 16) != 0;
+    bool abit3 = (a.atr_ & 8) != 0;
+    bool abit2 = (a.atr_ & 4) != 0;
+    bool abit1 = (a.atr_ & 2) != 0;
+    bool abit0 = (a.atr_ & 1) != 0;      
+    bool bit5 = (atr_ & 32) != 0;
+    bool bit4 = (atr_ & 16) != 0;
+    bool bit3 = (atr_ & 8) != 0;
+    bool bit2 = (atr_ & 4) != 0;
+    bool bit1 = (atr_ & 2) != 0;
+    bool bit0 = (atr_ & 1) != 0;      
     int indexes[2][3] = {
       {
         ((int)((bit5 & bit2) | (bit4 & !bit2)) << 1) +
@@ -169,12 +169,12 @@ namespace boost { namespace polygon{
   // populate_axis_array writes the three INDIVIDUAL_AXIS values that the
   // ATR enum value of 'this' represent into axis_array
   inline void axis_transformation::populate_axis_array(INDIVIDUAL_AXIS axis_array[]) const {
-    bool bit5 = atr_ & 32;
-    bool bit4 = atr_ & 16;
-    bool bit3 = atr_ & 8;
-    bool bit2 = atr_ & 4;
-    bool bit1 = atr_ & 2;
-    bool bit0 = atr_ & 1;      
+    bool bit5 = (atr_ & 32) != 0;
+    bool bit4 = (atr_ & 16) != 0;
+    bool bit3 = (atr_ & 8) != 0;
+    bool bit2 = (atr_ & 4) != 0;
+    bool bit1 = (atr_ & 2) != 0;
+    bool bit0 = (atr_ & 1) != 0;      
     axis_array[2] = 
       (INDIVIDUAL_AXIS)((((int)(!bit4 & !bit5)) << 2) +
                         ((int)(bit5) << 1) + 
@@ -221,11 +221,11 @@ namespace boost { namespace polygon{
   // write_back_axis_array converts an array of three INDIVIDUAL_AXIS values
   // to the ATR enum value and sets 'this' to that value
   inline void axis_transformation::write_back_axis_array(const INDIVIDUAL_AXIS this_array[]) {
-    int bit5 = (bool)((int)this_array[2] & 2);
-    int bit4 = !((bool)((int)this_array[2] & 4) | (bool)((int)this_array[2] & 2));
-    int bit3 = (bool)((int)this_array[2] & 1);
+    int bit5 = ((int)this_array[2] & 2) != 0;
+    int bit4 = !((((int)this_array[2] & 4) != 0) | (((int)this_array[2] & 2) != 0));
+    int bit3 = ((int)this_array[2] & 1) != 0;
     //bit 2 is the tricky bit
-    int bit2 = (!(bit5 | bit4) & (bool)((int)this_array[0] & 2)) | //swap xy
+    int bit2 = ((!(bit5 | bit4)) & (((int)this_array[0] & 2) != 0)) | //swap xy
       (bit5 & (((int)this_array[0] & 4) >> 2)) | //z->y x->z
       (bit4 & (((int)this_array[1] & 4) >> 2));  //z->x y->z
     int bit1 = ((int)this_array[1] & 1);
@@ -242,7 +242,7 @@ namespace boost { namespace polygon{
   inline axis_transformation& 
   axis_transformation::set_directions(const direction_2d& horizontalDir,
                                       const direction_2d& verticalDir){
-    int bit2 = bool(static_cast<orientation_2d>(horizontalDir).to_int());
+    int bit2 = (static_cast<orientation_2d>(horizontalDir).to_int()) != 0;
     int bit1 = !(verticalDir.to_int() & 1);
     int bit0 = !(horizontalDir.to_int() & 1);
     atr_ = ATR((bit2 << 2) + (bit1 << 1) + bit0);
@@ -257,11 +257,11 @@ namespace boost { namespace polygon{
     int this_array[3] = {horizontalDir.to_int(),
                          verticalDir.to_int(),
                          proximalDir.to_int()};
-    int bit5 = (bool)(this_array[2] & 2);
-    int bit4 = !((bool)(this_array[2] & 4) | (bool)(this_array[2] & 2));
-    int bit3 = !(bool)(this_array[2] & 1);
+    int bit5 = (this_array[2] & 2) != 0;
+    int bit4 = !(((this_array[2] & 4) != 0) | ((this_array[2] & 2) != 0));
+    int bit3 = !((this_array[2] & 1) != 0);
     //bit 2 is the tricky bit
-    int bit2 = (!(bit5 | bit4) & (bool)(this_array[0] & 2)) | //swap xy
+    int bit2 = (!(bit5 | bit4) & ((this_array[0] & 2) != 0 )) | //swap xy
       (bit5 & ((this_array[0] & 4) >> 2)) | //z->y x->z
       (bit4 & ((this_array[1] & 4) >> 2));  //z->x y->z
     int bit1 = !(this_array[1] & 1);
@@ -276,36 +276,36 @@ namespace boost { namespace polygon{
   
   template <typename coordinate_type_2>
   inline void axis_transformation::transform(coordinate_type_2& x, coordinate_type_2& y) const {
-    int bit2 = (bool)(atr_ & 4);
-    int bit1 = (bool)(atr_ & 2);
-    int bit0 = (bool)(atr_ & 1);
+    int bit2 = (atr_ & 4) != 0;
+    int bit1 = (atr_ & 2) != 0;
+    int bit0 = (atr_ & 1) != 0;
     x *= -((bit0 << 1) - 1);
     y *= -((bit1 << 1) - 1);    
-    predicated_swap(bit2,x,y);
+    predicated_swap(bit2 != 0,x,y);
   }
   
   template <typename coordinate_type_2>
   inline void axis_transformation::transform(coordinate_type_2& x, coordinate_type_2& y, coordinate_type_2& z) const {
-    int bit5 = (bool)(atr_ & 32);
-    int bit4 = (bool)(atr_ & 16);
-    int bit3 = (bool)(atr_ & 8);
-    int bit2 = (bool)(atr_ & 4);
-    int bit1 = (bool)(atr_ & 2);
-    int bit0 = (bool)(atr_ & 1);
+    int bit5 = (atr_ & 32) != 0;
+    int bit4 = (atr_ & 16) != 0;
+    int bit3 = (atr_ & 8) != 0;
+    int bit2 = (atr_ & 4) != 0;
+    int bit1 = (atr_ & 2) != 0;
+    int bit0 = (atr_ & 1) != 0;
     x *= -((bit0 << 1) - 1);
     y *= -((bit1 << 1) - 1);    
     z *= -((bit3 << 1) - 1);
-    predicated_swap(bit2, x, y);
-    predicated_swap(bit5, y, z);
-    predicated_swap(bit4, x, z);
+    predicated_swap(bit2 != 0, x, y);
+    predicated_swap(bit5 != 0, y, z);
+    predicated_swap(bit4 != 0, x, z);
   }
   
   inline axis_transformation& axis_transformation::invert_2d() {
-    int bit2 = (bool)(atr_ & 4);
-    int bit1 = (bool)(atr_ & 2);
-    int bit0 = (bool)(atr_ & 1);
+    int bit2 = ((atr_ & 4) != 0);
+    int bit1 = ((atr_ & 2) != 0);
+    int bit0 = ((atr_ & 1) != 0);
     //swap bit 0 and bit 1 if bit2 is 1
-    predicated_swap(bit2, bit0, bit1);
+    predicated_swap(bit2 != 0, bit0, bit1);
     bit1 = bit1 << 1;
     atr_ = (ATR)(atr_ & (32+16+8+4)); //mask away bit0 and bit1
     atr_ = (ATR)(atr_ | bit0 | bit1);
@@ -318,16 +318,16 @@ namespace boost { namespace polygon{
   }
   
   inline axis_transformation& axis_transformation::invert() {
-    int bit5 = (bool)(atr_ & 32);
-    int bit4 = (bool)(atr_ & 16);    
-    int bit3 = (bool)(atr_ & 8);
-    int bit2 = (bool)(atr_ & 4);
-    int bit1 = (bool)(atr_ & 2);
-    int bit0 = (bool)(atr_ & 1);
-    predicated_swap(bit2, bit4, bit5);
-    predicated_swap(bit4, bit0, bit3);
-    predicated_swap(bit5, bit1, bit3);
-    predicated_swap(bit2, bit0, bit1);
+    int bit5 = ((atr_ & 32) != 0);
+    int bit4 = ((atr_ & 16) != 0);    
+    int bit3 = ((atr_ & 8) != 0);
+    int bit2 = ((atr_ & 4) != 0);
+    int bit1 = ((atr_ & 2) != 0);
+    int bit0 = ((atr_ & 1) != 0);
+    predicated_swap(bit2 != 0, bit4, bit5);
+    predicated_swap(bit4 != 0, bit0, bit3);
+    predicated_swap(bit5 != 0, bit1, bit3);
+    predicated_swap(bit2 != 0, bit0, bit1);
     atr_ = (ATR)((bit5 << 5) + 
                  (bit4 << 4) + 
                  (bit3 << 3) + 

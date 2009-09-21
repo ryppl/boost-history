@@ -240,7 +240,7 @@ namespace rectangle_formation {
 
   template <typename output_container, typename iterator_type, typename rectangle_concept>
   void form_rectangles(output_container& output, iterator_type begin, iterator_type end,
-                       orientation_2d orient, rectangle_concept tag) {
+                       orientation_2d orient, rectangle_concept ) {
     typedef typename output_container::value_type rectangle_type;
     typedef typename get_coordinate_type_for_rectangles<rectangle_type, typename geometry_concept<rectangle_type>::type>::type Unit;
     rectangle_data<Unit> model;

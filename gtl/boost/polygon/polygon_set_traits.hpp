@@ -26,9 +26,9 @@ namespace boost { namespace polygon{
       return get_iterator_type<T>::end(polygon_set);
     }
 
-    static inline bool clean(const T& polygon_set) { return false; }
+    static inline bool clean(const T& ) { return false; }
 
-    static inline bool sorted(const T& polygon_set) { return false; }
+    static inline bool sorted(const T& ) { return false; }
   };
 
   template <typename T>

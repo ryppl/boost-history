@@ -13,11 +13,23 @@ namespace boost { namespace polygon{
   class interval_data {
   public:
     typedef T coordinate_type;
-    inline interval_data():coords_(){} 
-    inline interval_data(coordinate_type low, coordinate_type high):coords_() {
+    inline interval_data()
+#ifndef BOOST_POLYGON_MSVC 
+      :coords_() 
+#endif 
+    {} 
+    inline interval_data(coordinate_type low, coordinate_type high)
+#ifndef BOOST_POLYGON_MSVC 
+      :coords_() 
+#endif 
+    {
       coords_[LOW] = low; coords_[HIGH] = high; 
     }
-    inline interval_data(const interval_data& that):coords_() {
+    inline interval_data(const interval_data& that)
+#ifndef BOOST_POLYGON_MSVC 
+      :coords_() 
+#endif 
+    {
       (*this) = that; 
     }
     inline interval_data& operator=(const interval_data& that) {

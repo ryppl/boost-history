@@ -30,7 +30,7 @@ namespace boost { namespace polygon{
     }
   
     // Get the winding direction of the polygon
-    static inline winding_direction winding(const T& t) {
+    static inline winding_direction winding(const T&) {
       return unknown_winding;
     }
   };
@@ -66,7 +66,7 @@ namespace boost { namespace polygon{
     }
   
     // Get the winding direction of the polygon
-    static inline winding_direction winding(const T& t) {
+    static inline winding_direction winding(const T&) {
       return unknown_winding;
     }
   };
@@ -698,7 +698,7 @@ namespace boost { namespace polygon{
   }
 
   template <typename Unit>
-  Unit abs(Unit value) { return value < 0 ? -value : value; }
+  Unit local_abs(Unit value) { return value < 0 ? -value : value; }
 
   template <typename Unit>
   void snap_point_vector_to_45(std::vector<point_data<Unit> >& pts) {
@@ -719,22 +719,22 @@ namespace boost { namespace polygon{
       Unit deltax = x(pt2) - x(pt1);
       Unit deltay = y(pt2) - y(pt1);
       if(deltax && deltay &&
-         abs(deltax) != abs(deltay)) {
+         local_abs(deltax) != local_abs(deltay)) {
         //adjust the middle point
         Unit ndx = x(pt3) - x(pt2);
         Unit ndy = y(pt3) - y(pt2);
         if(ndx && ndy) {
-          Unit diff = abs(abs(deltax) - abs(deltay));
+          Unit diff = local_abs(local_abs(deltax) - local_abs(deltay));
           Unit halfdiff = diff/2;
           if((deltax > 0 && deltay > 0) ||
              (deltax < 0 && deltay < 0)) {
             //previous edge is rising slope
-            if(abs(deltax + halfdiff + (diff % 2)) ==
-               abs(deltay - halfdiff)) {
+            if(local_abs(deltax + halfdiff + (diff % 2)) ==
+               local_abs(deltay - halfdiff)) {
               x(pt2, x(pt2) + halfdiff + (diff % 2));
               y(pt2, y(pt2) - halfdiff);
-            } else if(abs(deltax - halfdiff - (diff % 2)) ==
-                      abs(deltay + halfdiff)) {
+            } else if(local_abs(deltax - halfdiff - (diff % 2)) ==
+                      local_abs(deltay + halfdiff)) {
               x(pt2, x(pt2) - halfdiff - (diff % 2));
               y(pt2, y(pt2) + halfdiff);
             } else{
@@ -742,12 +742,12 @@ namespace boost { namespace polygon{
             }
           } else {
             //previous edge is falling slope
-            if(abs(deltax + halfdiff + (diff % 2)) ==
-               abs(deltay + halfdiff)) {
+            if(local_abs(deltax + halfdiff + (diff % 2)) ==
+               local_abs(deltay + halfdiff)) {
               x(pt2, x(pt2) + halfdiff + (diff % 2));
               y(pt2, y(pt2) + halfdiff);
-            } else if(abs(deltax - halfdiff - (diff % 2)) ==
-                      abs(deltay - halfdiff)) {
+            } else if(local_abs(deltax - halfdiff - (diff % 2)) ==
+                      local_abs(deltay - halfdiff)) {
               x(pt2, x(pt2) - halfdiff - (diff % 2));
               y(pt2, y(pt2) - halfdiff);
             } else {
@@ -764,13 +764,13 @@ namespace boost { namespace polygon{
         } else if(ndx) {
           //next edge is horizontal
           //find the x value for pt1 that would make the abs(deltax) == abs(deltay)
-          Unit newDeltaX = abs(deltay);
+          Unit newDeltaX = local_abs(deltay);
           if(deltax < 0) newDeltaX *= -1;
           x(pt2, x(pt1) + newDeltaX);
         } else { //ndy
           //next edge is vertical
           //find the y value for pt1 that would make the abs(deltax) == abs(deltay)
-          Unit newDeltaY = abs(deltax);
+          Unit newDeltaY = local_abs(deltax);
           if(deltay < 0) newDeltaY *= -1;
           y(pt2, y(pt1) + newDeltaY);
         }
@@ -992,7 +992,7 @@ namespace boost { namespace polygon{
       Unit deltax = x(pt) - x(prevPt);
       Unit deltay = y(pt) - y(prevPt);
       if(deltax && deltay &&
-         abs(deltax) != abs(deltay))
+         local_abs(deltax) != local_abs(deltay))
         return false;
       prevPt = pt;
       ++itr;
@@ -1000,7 +1000,7 @@ namespace boost { namespace polygon{
     Unit deltax = x(firstPt) - x(prevPt);
     Unit deltay = y(firstPt) - y(prevPt);
     if(deltax && deltay &&
-       abs(deltax) != abs(deltay))
+       local_abs(deltax) != local_abs(deltay))
       return false;
     return true;
   }
@@ -1119,7 +1119,7 @@ namespace boost { namespace polygon{
     //odd count implies boundary condition
     if(counts[0] % 2 || counts[1] % 2) return consider_touch;
     //an odd number of edges to the left implies interior pt
-    return counts[0] % 4; 
+    return counts[0] % 4 != 0; 
   }
 
   //TODO: refactor to expose as user APIs
@@ -1279,7 +1279,7 @@ namespace boost { namespace polygon{
       }
       he.first = he.second;
     } 
-    return above % 2; //if the point is above an odd number of edges is must be inside polygon
+    return above % 2 != 0; //if the point is above an odd number of edges is must be inside polygon
   }
 
   template <typename T1, typename T2>

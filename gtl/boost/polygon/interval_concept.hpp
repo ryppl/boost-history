@@ -242,10 +242,11 @@ namespace boost { namespace polygon{
        typename interval_difference_type<interval_type>::type displacement,
        typename enable_if<typename is_mutable_interval_concept<typename geometry_concept<interval_type>::type>::type>::type * = 0
        ) {
-    typedef typename coordinate_traits<typename interval_traits<interval_type>::coordinate_type>::coordinate_difference Unit;
+    typedef typename interval_traits<interval_type>::coordinate_type ctype;
+    typedef typename coordinate_traits<ctype>::coordinate_difference Unit;
     Unit len = delta(interval);
-    low(interval, (Unit)low(interval) + displacement);
-    high(interval, (Unit)low(interval) + len);
+    low(interval, static_cast<ctype>(static_cast<Unit>(low(interval)) + displacement));
+    high(interval, static_cast<ctype>(static_cast<Unit>(low(interval)) + len));
     return interval;
   }
   

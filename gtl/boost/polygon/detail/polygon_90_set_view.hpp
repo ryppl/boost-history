@@ -50,7 +50,7 @@ namespace boost { namespace polygon{
   struct compute_90_set_value<value_type, polygon_90_set_data<lcoord>, polygon_90_set_data<rcoord>, op_type> {
     static
     void value(value_type& output_, const polygon_90_set_data<lcoord>& lvalue_,
-               const polygon_90_set_data<rcoord>& rvalue_, orientation_2d orient_) {
+               const polygon_90_set_data<rcoord>& rvalue_, orientation_2d) {
       lvalue_.sort();
       rvalue_.sort();
       output_.applyBooleanBinaryOp(lvalue_.begin(), lvalue_.end(),
@@ -98,6 +98,7 @@ namespace boost { namespace polygon{
     op_type op_;
     mutable value_type output_;
     mutable bool evaluated_;
+    polygon_90_set_view& operator=(const polygon_90_set_view&);
   public:
     polygon_90_set_view(const ltype& lvalue,
                      const rtype& rvalue,

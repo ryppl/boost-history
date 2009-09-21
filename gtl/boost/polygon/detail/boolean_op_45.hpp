@@ -16,10 +16,22 @@ namespace boost { namespace polygon{
 
     class Count2 {
     public:
-      inline Count2() : counts() { counts[0] = counts[1] = 0; }
+      inline Count2() 
+#ifndef BOOST_POLYGON_MSVC  
+      : counts() 
+#endif
+      { counts[0] = counts[1] = 0; }
       //inline Count2(int count) { counts[0] = counts[1] = count; }
-      inline Count2(int count1, int count2) : counts() { counts[0] = count1; counts[1] = count2; }
-      inline Count2(const Count2& count) : counts() { counts[0] = count.counts[0]; counts[1] = count.counts[1]; }
+      inline Count2(int count1, int count2) 
+#ifndef BOOST_POLYGON_MSVC  
+      : counts() 
+#endif
+      { counts[0] = count1; counts[1] = count2; }
+      inline Count2(const Count2& count) 
+#ifndef BOOST_POLYGON_MSVC  
+      : counts() 
+#endif
+      { counts[0] = count.counts[0]; counts[1] = count.counts[1]; }
       inline bool operator==(const Count2& count) const { return counts[0] == count.counts[0] && counts[1] == count.counts[1]; }
       inline bool operator!=(const Count2& count) const { return !((*this) == count); }
       inline Count2& operator=(int count) { counts[0] = counts[1] = count; return *this; }
@@ -357,6 +369,9 @@ namespace boost { namespace polygon{
     }
     template <int op>
     static bool applyLogic(Count2 count) {
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op == 0) { //apply or
         return count[0] > 0 || count[1] > 0;
       } else if(op == 1) { //apply and
@@ -367,6 +382,9 @@ namespace boost { namespace polygon{
         return (count[0] > 0) ^ (count[1] > 0);
       } else
         return false;
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
     }
 
     template <int op>
@@ -386,14 +404,20 @@ namespace boost { namespace polygon{
 
     template <int op>
     static bool applyLogic(Count1 count) {
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op == 0) { //apply or
         return count.count_ > 0;
       } else if(op == 1) { //apply and
         return count.count_ > 1;
       } else if(op == 3) { //apply xor
-        return count.count_ % 2;
+        return (count.count_ % 2) != 0;
       } else
         return false;
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
     }
 
     template <int op>
@@ -766,9 +790,9 @@ namespace boost { namespace polygon{
         //std::cout << "0, ";
         Unit y1 = iter1->evalAtX(x_);
         Unit y2 = iter2->evalAtX(x_);
-        LongUnit delta = (LongUnit)abs((LongUnit)y1 - (LongUnit)y2);
-        if(delta + x_ <= (std::numeric_limits<Unit>::max)())
-          crossQueue_.insert(crossQueue_.end(), Point(x_ + delta, y1));
+        LongUnit delta = local_abs(LongUnit(y1) - LongUnit(y2));
+        if(delta + static_cast<LongUnit>(x_) <= (std::numeric_limits<Unit>::max)())
+          crossQueue_.insert(crossQueue_.end(), Point(x_ + static_cast<Unit>(delta), y1));
         //std::cout <<  Point(x_ + delta, y1);
       }
 
@@ -794,14 +818,14 @@ namespace boost { namespace polygon{
             LongUnit halfDelta2 = (LongUnit)((((LongUnit)y1) - y2)/2); 
             //note that halfDelta2 has been truncated
             if(halfDelta2 + x_ <= UnitMax && halfDelta2 + y2 <= UnitMax) {
-              crossQueue_.insert(crossQueue_.end(), Point(x_+halfDelta2, y2+halfDelta2));
-              crossQueue_.insert(crossQueue_.end(), Point(x_+halfDelta2, y2+halfDelta2+1));
+              crossQueue_.insert(crossQueue_.end(), Point(x_+static_cast<Unit>(halfDelta2), y2+static_cast<Unit>(halfDelta2)));
+              crossQueue_.insert(crossQueue_.end(), Point(x_+static_cast<Unit>(halfDelta2), y2+static_cast<Unit>(halfDelta2)+1));
             }
           }
         } else {
           LongUnit halfDelta = (LongUnit)((((LongUnit)y1) - y2)/2); 
           if(halfDelta + x_ <= UnitMax && halfDelta + y2 <= UnitMax)
-            crossQueue_.insert(crossQueue_.end(), Point(x_+halfDelta, y2+halfDelta));
+            crossQueue_.insert(crossQueue_.end(), Point(x_+static_cast<Unit>(halfDelta), y2+static_cast<Unit>(halfDelta)));
           //std::cout << Point(x_+halfDelta, y2+halfDelta);
         }
       }

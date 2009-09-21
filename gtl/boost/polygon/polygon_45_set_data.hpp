@@ -18,7 +18,7 @@ namespace boost { namespace polygon{
   enum CornerOption { INTERSECTION = 0, ORTHOGONAL = 1, UNFILLED = 2 };
 
   template <typename ltype, typename rtype, int op_type>
-  struct polygon_45_set_view;
+  class polygon_45_set_view;
   
   struct polygon_45_set_concept {};
 
@@ -131,16 +131,20 @@ namespace boost { namespace polygon{
             itr != polygon_set.end(); ++itr) {
           Vertex45Compact vertex_45(point_data<Unit>((*itr).first, (*itr).second.first), 2, (*itr).second.second);
           vertex_45.count[1] = (*itr).second.second;
-          insert_clean(vertex_45);
+          if(is_hole) vertex_45.count[1] *= - 1;
+          insert_clean(vertex_45, is_hole);
         }
       } else {
         for(typename polygon_90_set_data<coordinate_type_2>::iterator_type itr = polygon_set.begin();
             itr != polygon_set.end(); ++itr) {
           Vertex45Compact vertex_45(point_data<Unit>((*itr).second.first, (*itr).first), 2, (*itr).second.second);
           vertex_45.count[1] = (*itr).second.second;
-          insert_clean(vertex_45);
+          if(is_hole) vertex_45.count[1] *= - 1;
+          insert_clean(vertex_45, is_hole);
         }
       }
+      dirty_ = true;
+      unsorted_ = true;
     }
 
     template <typename output_container>
@@ -361,7 +365,7 @@ namespace boost { namespace polygon{
       get_fracture(output, false, tag);
     }
     template <typename output_container, typename concept_type>
-    void get_fracture(output_container& container, bool fracture_holes, concept_type tag) const {
+    void get_fracture(output_container& container, bool fracture_holes, concept_type ) const {
       clean();
       typename polygon_45_formation<Unit>::Polygon45Formation pf(fracture_holes);
       //std::cout << "FORMING POLYGONS\n";
@@ -369,30 +373,17 @@ namespace boost { namespace polygon{
     }
 
     template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, undefined_concept tag) {
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, undefined_concept) {
       insert(geometry_object.begin(), geometry_object.end(), is_hole);
     }
     template <typename geometry_type>
     void insert_dispatch(const geometry_type& geometry_object, bool is_hole, rectangle_concept tag); 
     template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_concept tag) {
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_concept ) {
       insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
     }
     template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_with_holes_concept tag) {
-      insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
-      for(typename polygon_with_holes_traits<geometry_type>::iterator_holes_type itr =
-            begin_holes(geometry_object); itr != end_holes(geometry_object);
-          ++itr) {
-        insert_vertex_sequence(begin_points(*itr), end_points(*itr), winding(*itr), !is_hole);
-      }
-    }
-    template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_45_concept tag) {
-      insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
-    }
-    template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_45_with_holes_concept tag) {
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_with_holes_concept ) {
       insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
       for(typename polygon_with_holes_traits<geometry_type>::iterator_holes_type itr =
             begin_holes(geometry_object); itr != end_holes(geometry_object);
@@ -401,13 +392,26 @@ namespace boost { namespace polygon{
       }
     }
     template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_45_set_concept tag) {
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_45_concept ) {
+      insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
+    }
+    template <typename geometry_type>
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_45_with_holes_concept ) {
+      insert_vertex_sequence(begin_points(geometry_object), end_points(geometry_object), winding(geometry_object), is_hole);
+      for(typename polygon_with_holes_traits<geometry_type>::iterator_holes_type itr =
+            begin_holes(geometry_object); itr != end_holes(geometry_object);
+          ++itr) {
+        insert_vertex_sequence(begin_points(*itr), end_points(*itr), winding(*itr), !is_hole);
+      }
+    }
+    template <typename geometry_type>
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_45_set_concept ) {
       polygon_45_set_data ps;
       assign(ps, geometry_object);
       insert(ps, is_hole);
     }
     template <typename geometry_type>
-    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_set_concept tag) {
+    void insert_dispatch(const geometry_type& geometry_object, bool is_hole, polygon_90_set_concept ) {
       std::list<polygon_90_data<coordinate_type> > pl;
       assign(pl, geometry_object);
       insert(pl.begin(), pl.end(), is_hole);
@@ -443,14 +447,14 @@ namespace boost { namespace polygon{
     typedef polygon_45_set_concept type;
   };
  
-  template <typename iT>
-  void scale_up_vertex_45_compact_range(iT beginr, iT endr, unsigned int factor) {
+  template <typename iT, typename T>
+  void scale_up_vertex_45_compact_range(iT beginr, iT endr, T factor) {
     for( ; beginr != endr; ++beginr) {
       scale_up((*beginr).pt, factor);
     }
   }
-  template <typename iT>
-  void scale_down_vertex_45_compact_range_blindly(iT beginr, iT endr, unsigned int factor) {
+  template <typename iT, typename T>
+  void scale_down_vertex_45_compact_range_blindly(iT beginr, iT endr, T factor) {
     for( ; beginr != endr; ++beginr) {
       scale_down((*beginr).pt, factor);
     }
@@ -578,7 +582,8 @@ namespace boost { namespace polygon{
         itr != polygon_set.end(); ++itr) {
       const typename polygon_45_set_data<coord_type>::Vertex45Compact& v = *itr;
       typename polygon_45_set_data<Unit>::Vertex45Compact v2;
-      assign(v2.pt, v.pt);
+      v2.pt.x(static_cast<Unit>(v.pt.x()));
+      v2.pt.y(static_cast<Unit>(v.pt.y()));
       v2.count = typename polygon_45_formation<Unit>::Vertex45Count(v.count[0], v.count[1], v.count[2], v.count[3]);
       data_.push_back(v2);
     }
@@ -588,7 +593,8 @@ namespace boost { namespace polygon{
         itr != tmp.end(); ++itr) {
       const typename polygon_45_set_data<coord_type>::Vertex45Compact& v = *itr;
       typename polygon_45_set_data<Unit>::Vertex45Compact v2;
-      assign(v2.pt, v.pt);
+      v2.pt.x(static_cast<Unit>(v.pt.x()));
+      v2.pt.y(static_cast<Unit>(v.pt.y()));
       v2.count = typename polygon_45_formation<Unit>::Vertex45Count(v.count[0], v.count[1], v.count[2], v.count[3]);
       error_data_.push_back(v2);
     }
@@ -618,7 +624,7 @@ namespace boost { namespace polygon{
   template <typename Unit>
   template <typename geometry_type>
   inline void polygon_45_set_data<Unit>::insert_dispatch(const geometry_type& geometry_object, 
-                                                         bool is_hole, rectangle_concept tag) {
+                                                         bool is_hole, rectangle_concept ) {
     dirty_ = true;
     unsorted_ = true;
     insert_rectangle_into_vector_45(data_, geometry_object, is_hole);
@@ -1084,7 +1090,7 @@ namespace boost { namespace polygon{
                                                          coordinate_type resizing, 
                                                          RoundingOption rounding,
                                                          CornerOption corner,
-                                                         bool hole, polygon_45_concept tag) {
+                                                         bool hole, polygon_45_concept ) {
     direction_1d wdir = winding(poly);
     int multiplier = wdir == LOW ? -1 : 1;
     if(hole) resizing *= -1; 
@@ -1138,7 +1144,7 @@ namespace boost { namespace polygon{
                                                          coordinate_type resizing, 
                                                          RoundingOption rounding,
                                                          CornerOption corner, 
-                                                         bool hole, polygon_45_with_holes_concept tag) {
+                                                         bool hole, polygon_45_with_holes_concept ) {
     insert_with_resize_dispatch(poly, resizing, rounding, corner, hole, polygon_45_concept());
     for(typename polygon_with_holes_traits<geometry_type>::iterator_holes_type itr =
           begin_holes(poly); itr != end_holes(poly);
@@ -1488,7 +1494,7 @@ namespace boost { namespace polygon{
           continue;
         }
       }
-      if(abs(x(pt2)) % 2) { //y % 2 should also be odd
+      if(local_abs(x(pt2)) % 2) { //y % 2 should also be odd
         //is corner concave or convex?
         Point pts[] = {pt1, pt2, pt3};
         double ar = point_sequence_area<Point*, double>(pts, pts+3);
@@ -1538,6 +1544,9 @@ namespace boost { namespace polygon{
       }
       l90sd.sort();
       r90sd.sort();
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op == 0) {
         output.applyBooleanBinaryOp(l90sd.begin(), l90sd.end(),
                                     r90sd.begin(), r90sd.end(), boolean_op::BinaryCount<boolean_op::BinaryOr>()); 
@@ -1551,6 +1560,9 @@ namespace boost { namespace polygon{
         output.applyBooleanBinaryOp(l90sd.begin(), l90sd.end(),
                                     r90sd.begin(), r90sd.end(), boolean_op::BinaryCount<boolean_op::BinaryXor>()); 
       }
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
       result.data_.clear();
       result.insert(output);
       result.is_manhattan_ = true;
@@ -1615,7 +1627,8 @@ namespace boost { namespace polygon{
             for(std::size_t i = 0 ; i < error_data_out.size(); ++i) {
               const Vertex45Compact2& vi = error_data_out[i];
               Vertex45Compact ci;
-              ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+              ci.pt.x(static_cast<Unit>(x(vi.pt)));
+              ci.pt.y(static_cast<Unit>(y(vi.pt)));
               ci.count = typename polygon_45_formation<Unit>::Vertex45Count
               ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
               result.error_data_.push_back(ci);
@@ -1630,7 +1643,8 @@ namespace boost { namespace polygon{
           for(std::size_t i = 0 ; i < result_data.size(); ++i) {
             const Vertex45Compact2& vi = result_data[i];
             Vertex45Compact ci;
-            ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+            ci.pt.x(static_cast<Unit>(x(vi.pt)));
+            ci.pt.y(static_cast<Unit>(y(vi.pt)));
             ci.count = typename polygon_45_formation<Unit>::Vertex45Count
               ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
             result.data_.push_back(ci);
@@ -1657,6 +1671,9 @@ namespace boost { namespace polygon{
         l90sd.insert(std::make_pair((*itr).pt.x(), std::make_pair((*itr).pt.y(), (*itr).count[3])), false, VERTICAL);
       }
       l90sd.sort();
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op == 0) {
         l90sd.clean();
       } else if (op == 1) {
@@ -1664,6 +1681,9 @@ namespace boost { namespace polygon{
       } else if (op == 3) {
         l90sd.self_xor();
       }
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
       result.data_.clear();
       result.insert(l90sd);
       result.is_manhattan_ = true;
@@ -1685,7 +1705,8 @@ namespace boost { namespace polygon{
           for(std::size_t i = 0 ; i < data_.size(); ++i) {
             const Vertex45Compact& vi = data_[i];
             Vertex45Compact2 ci; 
-            ci.pt = point_data<Unit2>(x(vi.pt), y(vi.pt));
+            ci.pt.x(static_cast<Unit>(x(vi.pt)));
+            ci.pt.y(static_cast<Unit>(y(vi.pt)));
             ci.count = typename polygon_45_formation<Unit2>::Vertex45Count
               ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
             lvalue_data.push_back(ci);
@@ -1716,7 +1737,8 @@ namespace boost { namespace polygon{
             for(std::size_t i = 0 ; i < error_data_out.size(); ++i) {
               const Vertex45Compact2& vi = error_data_out[i];
               Vertex45Compact ci;
-              ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+              ci.pt.x(static_cast<Unit>(x(vi.pt)));
+              ci.pt.y(static_cast<Unit>(y(vi.pt)));
               ci.count = typename polygon_45_formation<Unit>::Vertex45Count
               ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
               result.error_data_.push_back(ci);
@@ -1731,7 +1753,8 @@ namespace boost { namespace polygon{
           for(std::size_t i = 0 ; i < result_data.size(); ++i) {
             const Vertex45Compact2& vi = result_data[i];
             Vertex45Compact ci;
-            ci.pt = (point_data<Unit2>(x(vi.pt), y(vi.pt)));
+            ci.pt.x(static_cast<Unit>(x(vi.pt)));
+            ci.pt.y(static_cast<Unit>(y(vi.pt)));
             ci.count = typename polygon_45_formation<Unit>::Vertex45Count
               ( vi.count[0], vi.count[1], vi.count[2], vi.count[3]);
             result.data_.push_back(ci);

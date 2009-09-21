@@ -28,7 +28,7 @@
 
 #include <boost/config.hpp> 
 #ifdef BOOST_MSVC
-#define BOOST_POLYGON_WIN32
+#define BOOST_POLYGON_MSVC
 #endif
 #ifdef BOOST_INTEL
 #define BOOST_POLYGON_ICC
@@ -47,7 +47,7 @@ typedef unsigned long long polygon_ulong_long_type;
 #else
 
 #ifdef WIN32
-#define BOOST_POLYGON_WIN32
+#define BOOST_POLYGON_MSVC
 #endif
 #ifdef __ICC
 #define BOOST_POLYGON_ICC

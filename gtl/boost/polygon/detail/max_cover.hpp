@@ -96,10 +96,10 @@ namespace boost { namespace polygon{
         bool iresult = intersect(rectIvl, nodeIvl, false);
         bool tresult = !node->tracedPath(rectIvl);
         //std::cout << (itr != node->end()) << " " << iresult << " " << tresult << std::endl;
-        Rectangle nextRect = Rectangle(rectIvl, rectIvl);
+        Rectangle nextRect1 = Rectangle(rectIvl, rectIvl);
         Unit low = rect.get(orient.get_perpendicular()).low();
         Unit high = node->rect.get(orient.get_perpendicular()).high();
-        nextRect.set(orient.get_perpendicular(), Interval(low, high));
+        nextRect1.set(orient.get_perpendicular(), Interval(low, high));
         if(iresult && tresult) {
           node->addPath(rectIvl);
           bool writeOut = true;
@@ -110,13 +110,13 @@ namespace boost { namespace polygon{
             if(contains(nodeIvl3, rectIvl, true)) writeOut = false;
             //std::cout << "child " << (*itr2)->rect << std::endl;
           }
-          Rectangle nextRect = Rectangle(rectIvl, rectIvl);
-          Unit low = rect.get(orient.get_perpendicular()).low();
-          Unit high = node->rect.get(orient.get_perpendicular()).high();
-          nextRect.set(orient.get_perpendicular(), Interval(low, high));
+          Rectangle nextRect2 = Rectangle(rectIvl, rectIvl);
+          Unit low2 = rect.get(orient.get_perpendicular()).low();
+          Unit high2 = node->rect.get(orient.get_perpendicular()).high();
+          nextRect2.set(orient.get_perpendicular(), Interval(low2, high2));
           if(writeOut) {
             //std::cout << "write out " << nextRect << std::endl;
-            outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(nextRect));
+            outputContainer.push_back(copy_construct<typename cT::value_type, Rectangle>(nextRect2));
           } else {
             //std::cout << "supress " << nextRect << std::endl;
           }
@@ -124,7 +124,7 @@ namespace boost { namespace polygon{
         if(itr != node->end() && iresult && tresult) {
           //std::cout << "recurse into child\n";
           stack.push_back(stack_element(node, rect, itr));
-          rect = nextRect;
+          rect = nextRect1;
           node = *itr;
           itr = node->begin();
         } else {

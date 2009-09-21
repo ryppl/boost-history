@@ -98,7 +98,7 @@ namespace boost { namespace polygon{
     }
 
     template <typename polygon_type>
-    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_concept tag) {
+    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_concept ) {
       bool first_iteration = true;
       point_type first_point;
       point_type previous_point;
@@ -148,16 +148,16 @@ namespace boost { namespace polygon{
     }
 
     template <typename polygon_type>
-    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_45_concept tag) {
+    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_45_concept ) {
       insert(polygon_object, is_hole, polygon_concept()); }
 
     template <typename polygon_type>
-    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_90_concept tag) {
+    inline void insert(const polygon_type& polygon_object, bool is_hole, polygon_90_concept ) {
       insert(polygon_object, is_hole, polygon_concept()); }
 
     template <typename polygon_with_holes_type>
     inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, 
-                       polygon_with_holes_concept tag) {
+                       polygon_with_holes_concept ) {
       insert(polygon_with_holes_object, is_hole, polygon_concept());
       for(typename polygon_with_holes_traits<polygon_with_holes_type>::iterator_holes_type itr = 
             begin_holes(polygon_with_holes_object);
@@ -168,16 +168,16 @@ namespace boost { namespace polygon{
 
     template <typename polygon_with_holes_type>
     inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, 
-                       polygon_45_with_holes_concept tag) {
+                       polygon_45_with_holes_concept ) {
       insert(polygon_with_holes_object, is_hole, polygon_with_holes_concept()); }
 
     template <typename polygon_with_holes_type>
     inline void insert(const polygon_with_holes_type& polygon_with_holes_object, bool is_hole, 
-                       polygon_90_with_holes_concept tag) {
+                       polygon_90_with_holes_concept ) {
       insert(polygon_with_holes_object, is_hole, polygon_with_holes_concept()); }
 
     template <typename rectangle_type>
-    inline void insert(const rectangle_type& rectangle_object, bool is_hole, rectangle_concept tag) {
+    inline void insert(const rectangle_type& rectangle_object, bool is_hole, rectangle_concept ) {
       polygon_90_data<coordinate_type> poly;
       assign(poly, rectangle_object);
       insert(poly, is_hole, polygon_concept());
@@ -441,7 +441,7 @@ namespace boost { namespace polygon{
       get_fracture(output, false, tag);
     }
     template <typename output_container, typename concept_type>
-    void get_fracture(output_container& container, bool fracture_holes, concept_type tag) const {
+    void get_fracture(output_container& container, bool fracture_holes, concept_type ) const {
       clean();
       polygon_arbitrary_formation<coordinate_type> pf(fracture_holes);
       typedef typename polygon_arbitrary_formation<coordinate_type>::vertex_half_edge vertex_half_edge;

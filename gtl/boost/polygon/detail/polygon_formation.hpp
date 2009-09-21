@@ -1719,7 +1719,7 @@ namespace polygon_formation {
   //public API to access polygon formation algorithm
   template <typename output_container, typename iterator_type, typename concept_type>
   unsigned int get_polygons(output_container& container, iterator_type begin, iterator_type end,
-                    orientation_2d orient, bool fracture_holes, concept_type tag) {
+                    orientation_2d orient, bool fracture_holes, concept_type ) {
     typedef typename output_container::value_type polygon_type;
     typedef typename iterator_type::value_type::first_type coordinate_type;
     polygon_type poly;

@@ -16,11 +16,23 @@ namespace boost { namespace polygon{
   class point_data {
   public:
     typedef T coordinate_type;
-    inline point_data():coords_(){} 
-    inline point_data(coordinate_type x, coordinate_type y):coords_() {
+    inline point_data()
+#ifndef BOOST_POLYGON_MSVC
+      :coords_()  
+#endif
+    {} 
+    inline point_data(coordinate_type x, coordinate_type y)
+#ifndef BOOST_POLYGON_MSVC
+      :coords_()  
+#endif
+    {
       coords_[HORIZONTAL] = x; coords_[VERTICAL] = y; 
     }
-    inline point_data(const point_data& that):coords_() { (*this) = that; }
+    inline point_data(const point_data& that)
+#ifndef BOOST_POLYGON_MSVC
+      :coords_() 
+#endif
+    { (*this) = that; }
     inline point_data& operator=(const point_data& that) {
       coords_[0] = that.coords_[0]; coords_[1] = that.coords_[1]; return *this; 
     }

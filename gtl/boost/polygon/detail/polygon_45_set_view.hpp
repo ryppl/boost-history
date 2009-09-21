@@ -38,6 +38,9 @@ namespace boost { namespace polygon{
       value_type rinput_;
       rinput_.set(polygon_45_set_traits<rtype>::begin(rvalue_),
                   polygon_45_set_traits<rtype>::end(rvalue_));
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op_type == 0)
         output_ |= rinput_;
       else if(op_type == 1)
@@ -46,6 +49,9 @@ namespace boost { namespace polygon{
         output_ ^= rinput_;
       else
         output_ -= rinput_;
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
     }
   };
 
@@ -55,6 +61,9 @@ namespace boost { namespace polygon{
     void value(value_type& output_, const ltype& lvalue_, const polygon_45_set_data<rcoord>& rvalue_) {
       output_.set(polygon_45_set_traits<ltype>::begin(lvalue_),
                   polygon_45_set_traits<ltype>::end(lvalue_));
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op_type == 0)
         output_ |= rvalue_;
       else if(op_type == 1)
@@ -63,6 +72,9 @@ namespace boost { namespace polygon{
         output_ ^= rvalue_;
       else
         output_ -= rvalue_;
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
     }
   };
 
@@ -78,6 +90,8 @@ namespace boost { namespace polygon{
     const rtype& rvalue_;
     mutable value_type output_;
     mutable bool evaluated_;
+
+    polygon_45_set_view& operator=(const polygon_45_set_view&);
   public:
     polygon_45_set_view(const ltype& lvalue,
                         const rtype& rvalue ) :
@@ -138,6 +152,9 @@ namespace boost { namespace polygon{
                 polygon_45_set_traits<ltype>::end(lvalue_));
     rinput_.set(polygon_45_set_traits<rtype>::begin(rvalue_),
                 polygon_45_set_traits<rtype>::end(rvalue_));
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
     if(op_type == 0)
       output_ |= rinput_;
     else if(op_type == 1)
@@ -146,6 +163,9 @@ namespace boost { namespace polygon{
       output_ ^= rinput_;
     else
       output_ -= rinput_;
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
     polygon_45_set_mutable_traits<geometry_type_1>::set(lvalue_, output_.begin(), output_.end());
     return lvalue_;
   }

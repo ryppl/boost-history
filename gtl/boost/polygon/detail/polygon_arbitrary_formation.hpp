@@ -220,7 +220,7 @@ namespace boost { namespace polygon{
                                    elm1.second.get(VERTICAL) - elm1.first.get(VERTICAL),
                                    elm2.second.get(HORIZONTAL) - elm2.first.get(HORIZONTAL),
                                    elm2.second.get(VERTICAL) - elm2.first.get(VERTICAL));
-          return (*justBefore_) ^ result;
+          return ((*justBefore_) != 0) ^ result;
         }
         return false;
       }
@@ -533,7 +533,7 @@ namespace boost { namespace polygon{
                                    elm1.other_pt.get(VERTICAL) - elm1.pt.get(VERTICAL),
                                    elm2.other_pt.get(HORIZONTAL) - elm2.pt.get(HORIZONTAL),
                                    elm2.other_pt.get(VERTICAL) - elm2.pt.get(VERTICAL));
-          return (*justBefore_) ^ result;
+          return ((*justBefore_) != 0) ^ result;
         }
         return false;
       }
@@ -1150,7 +1150,7 @@ namespace boost { namespace polygon{
                   //std::cout << "case2: " << i << " " << j << std::endl;
                   //std::cout << "creating active tail pair\n";
                   std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
-                    active_tail_arbitrary::createActiveTailsAsPair(point, true, 0, fractureHoles_);
+                    active_tail_arbitrary::createActiveTailsAsPair(point, true, 0, fractureHoles_ != 0);
                   //tailPair.first->print();
                   //tailPair.second->print();
                   if(j == i_size_less_1 && incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
@@ -1296,7 +1296,7 @@ namespace boost { namespace polygon{
                   have_vertical_tail_from_below = false;
                 }
                 std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
-                  active_tail_arbitrary::createActiveTailsAsPair(point, false, holep, fractureHoles_);
+                  active_tail_arbitrary::createActiveTailsAsPair(point, false, holep, fractureHoles_ != 0);
                 if(j == i_size_less_1 && incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {
                   //std::cout << "vertical element " << point << std::endl;
                   returnValue = tailPair.first;
@@ -2090,7 +2090,7 @@ namespace boost { namespace polygon{
                   //std::cout << "case2: " << i << " " << j << std::endl;
                   //std::cout << "creating active tail pair\n";
                   std::pair<active_tail_arbitrary*, active_tail_arbitrary*> tailPair = 
-                    active_tail_arbitrary::createActiveTailsAsPair(point, true, 0, polygon_arbitrary_formation<Unit>::fractureHoles_);
+                    active_tail_arbitrary::createActiveTailsAsPair(point, true, 0, polygon_arbitrary_formation<Unit>::fractureHoles_ != 0);
                   //tailPair.first->print();
                   //tailPair.second->print();
                   if(j == i_size_less_1 && incoming_count[j].first.get(HORIZONTAL) == point.get(HORIZONTAL)) {

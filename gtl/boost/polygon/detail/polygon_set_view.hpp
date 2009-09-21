@@ -68,24 +68,23 @@ namespace boost { namespace polygon{
     static inline bool sort(const polygon_set_view<ltype, rtype, op_type>& polygon_set);
   };
 
-  template <typename value_type, typename geometry_type_1, typename geometry_type_2, int op_type>
-  void execute_boolean_op(value_type& output_, const geometry_type_1& lvalue_, const geometry_type_2& rvalue_,
-                          double coord) {
-    typedef geometry_type_1 ltype;
-    typedef geometry_type_2 rtype;
-    typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
-    value_type linput_;
-    value_type rinput_;
-    insert_into_view_arg(linput_, lvalue_);
-    insert_into_view_arg(rinput_, rvalue_);
-    arbitrary_boolean_op<coordinate_type> abo;
-    abo.execute(output_, linput_.begin(), linput_.end(),
-                rinput_.begin(), rinput_.end(), op_type);
-  }
+  //template <typename value_type, typename geometry_type_1, typename geometry_type_2, int op_type>
+  //void execute_boolean_op(value_type& output_, const geometry_type_1& lvalue_, const geometry_type_2& rvalue_,
+  //                        double coord) {
+  //  typedef geometry_type_1 ltype;
+  //  typedef geometry_type_2 rtype;
+  //  typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
+  //  value_type linput_;
+  //  value_type rinput_;
+  //  insert_into_view_arg(linput_, lvalue_);
+  //  insert_into_view_arg(rinput_, rvalue_);
+  //  arbitrary_boolean_op<coordinate_type> abo;
+  //  abo.execute(output_, linput_.begin(), linput_.end(),
+  //              rinput_.begin(), rinput_.end(), op_type);
+  //}
 
   template <typename value_type, typename geometry_type_1, typename geometry_type_2, int op_type>
-  void execute_boolean_op(value_type& output_, const geometry_type_1& lvalue_, const geometry_type_2& rvalue_,
-                          int coord) {
+  void execute_boolean_op(value_type& output_, const geometry_type_1& lvalue_, const geometry_type_2& rvalue_) {
     typedef geometry_type_1 ltype;
     typedef geometry_type_2 rtype;
     typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
@@ -96,12 +95,18 @@ namespace boost { namespace polygon{
     polygon_45_set_data<coordinate_type> l45, r45, o45;
     if(linput_.downcast(l45) && rinput_.downcast(r45)) {
       //the op codes are screwed up between 45 and arbitrary
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (disable: 4127)
+#endif
       if(op_type < 2)
         l45.template applyAdaptiveBoolean_<op_type>(o45, r45);
       else if(op_type == 2)
         l45.template applyAdaptiveBoolean_<3>(o45, r45);
       else
         l45.template applyAdaptiveBoolean_<2>(o45, r45);
+#ifdef BOOST_POLYGON_MSVC
+#pragma warning (default: 4127)
+#endif
       output_.insert(o45);
     } else {
       arbitrary_boolean_op<coordinate_type> abo;
@@ -122,6 +127,7 @@ namespace boost { namespace polygon{
     const rtype& rvalue_;
     mutable value_type output_;
     mutable bool evaluated_;
+    polygon_set_view& operator=(const polygon_set_view&);
   public:
     polygon_set_view(const ltype& lvalue,
                      const rtype& rvalue ) :
@@ -132,7 +138,7 @@ namespace boost { namespace polygon{
     const value_type& value() const {
       if(!evaluated_) {
         evaluated_ = true;
-        execute_boolean_op<value_type, ltype, rtype, op_type>(output_, lvalue_, rvalue_, coordinate_type());
+        execute_boolean_op<value_type, ltype, rtype, op_type>(output_, lvalue_, rvalue_);
       }
       return output_;
     }
@@ -160,11 +166,11 @@ namespace boost { namespace polygon{
   }
   template <typename ltype, typename rtype, int op_type>
   bool polygon_set_traits<polygon_set_view<ltype, rtype, op_type> >::
-  clean(const polygon_set_view<ltype, rtype, op_type>& polygon_set) { 
+  clean(const polygon_set_view<ltype, rtype, op_type>& ) { 
     return true; }
   template <typename ltype, typename rtype, int op_type>
   bool polygon_set_traits<polygon_set_view<ltype, rtype, op_type> >::
-  sort(const polygon_set_view<ltype, rtype, op_type>& polygon_set) { 
+  sort(const polygon_set_view<ltype, rtype, op_type>& ) { 
     return true; }
 
   template <typename value_type, typename arg_type>
@@ -182,7 +188,7 @@ namespace boost { namespace polygon{
     typedef typename polygon_set_traits<ltype>::coordinate_type coordinate_type;
     typedef polygon_set_data<coordinate_type> value_type;
     value_type output_;
-    execute_boolean_op<value_type, geometry_type_1, geometry_type_2, op_type>(output_, lvalue_, rvalue_, coordinate_type());
+    execute_boolean_op<value_type, geometry_type_1, geometry_type_2, op_type>(output_, lvalue_, rvalue_);
     polygon_set_mutable_traits<geometry_type_1>::set(lvalue_, output_.begin(), output_.end());
     return lvalue_;
   }

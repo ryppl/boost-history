@@ -15,7 +15,11 @@ namespace boost { namespace polygon{
     inline point_3d_data():coords_(){} 
     inline point_3d_data(coordinate_type x, coordinate_type y):coords_() {
       coords_[HORIZONTAL] = x; coords_[VERTICAL] = y; coords_[PROXIMAL] = 0; }
-    inline point_3d_data(coordinate_type x, coordinate_type y, coordinate_type z):coords_() {
+    inline point_3d_data(coordinate_type x, coordinate_type y, coordinate_type z)
+#ifndef BOOST_POLYGON_MSVC
+      :coords_()
+#endif
+    {
       coords_[HORIZONTAL] = x; coords_[VERTICAL] = y; coords_[PROXIMAL] = z; }
     inline point_3d_data(const point_3d_data& that):coords_() { (*this) = that; }
     inline point_3d_data& operator=(const point_3d_data& that) {

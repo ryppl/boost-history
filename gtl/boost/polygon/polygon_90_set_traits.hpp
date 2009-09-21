@@ -147,11 +147,11 @@ namespace boost { namespace polygon{
       return indirection_type::end(polygon_set);
     }
 
-    static inline orientation_2d orient(const T& polygon_set) { return HORIZONTAL; }
+    static inline orientation_2d orient(const T&) { return HORIZONTAL; }
 
-    static inline bool clean(const T& polygon_set) { return false; }
+    static inline bool clean(const T&) { return false; }
 
-    static inline bool sorted(const T& polygon_set) { return false; }
+    static inline bool sorted(const T&) { return false; }
   };
 
   template <typename T>
@@ -251,7 +251,7 @@ namespace boost { namespace polygon{
   //get dispatch functions
   template <typename output_container_type, typename pst>
   void get_90_dispatch(output_container_type& output, const pst& ps,
-                       orientation_2d orient, rectangle_concept tag) {
+                       orientation_2d orient, rectangle_concept ) {
     form_rectangles(output, ps.begin(), ps.end(), orient, rectangle_concept());
   }
 

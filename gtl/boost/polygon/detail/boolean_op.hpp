@@ -85,12 +85,24 @@ namespace boolean_op {
   template <class T>
   class BinaryCount {
   public:
-    inline BinaryCount() : counts_() { counts_[0] = counts_[1] = 0; }
+    inline BinaryCount() 
+#ifndef BOOST_POLYGON_MSVC  
+      : counts_() 
+#endif
+    { counts_[0] = counts_[1] = 0; }
     // constructs from two integers
-    inline BinaryCount(int countL, int countR) : counts_() { counts_[0] = countL, counts_[1] = countR; }
+    inline BinaryCount(int countL, int countR) 
+#ifndef BOOST_POLYGON_MSVC  
+      : counts_() 
+#endif
+    { counts_[0] = countL, counts_[1] = countR; }
     inline BinaryCount& operator=(int count) { counts_[0] = count, counts_[1] = count; return *this; }
     inline BinaryCount& operator=(const BinaryCount& that); 
-    inline BinaryCount(const BinaryCount& that) : counts_() { *this = that; }
+    inline BinaryCount(const BinaryCount& that)
+#ifndef BOOST_POLYGON_MSVC
+      : counts_() 
+#endif
+    { *this = that; }
     inline bool operator==(const BinaryCount& that) const;
     inline bool operator!=(const BinaryCount& that) const { return !((*this) == that);}
     inline BinaryCount& operator+=(const BinaryCount& that);
