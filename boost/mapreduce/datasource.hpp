@@ -21,6 +21,8 @@ namespace mapreduce {
 
 namespace datasource {
 
+namespace detail {
+
 template<typename Key, typename Value>
 class file_handler
 {
@@ -151,9 +153,11 @@ file_handler<
     return true;
 }
 
+}   // namespace detail
+
 template<
     typename MapTask,
-    typename FileHandler = file_handler<
+    typename FileHandler = detail::file_handler<
         typename MapTask::key_type,
         typename MapTask::value_type> >
 class directory_iterator : boost::noncopyable
