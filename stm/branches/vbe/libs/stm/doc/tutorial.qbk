@@ -433,7 +433,7 @@ Let declare a pointer to B
 
 How the user can defien a transactional class D inheriting from a transactional class B
 
-[heading Using the mixin transaction_object<>]
+[heading:mixin Using the mixin transaction_object<>]
 
 Let B the base class
 
@@ -457,7 +457,7 @@ How can we assign a pointer to D?
     write_ptr<B*> tx_ptr_b_ptr(_,ptr_b);
     *ptr_b = BOOST_STM_NEW(_, D())
 
-[heading Using the mixin transaction_object<>]
+[heading::wrapper Using the wrapper transactional_object<>]
 
 [endsect]
 

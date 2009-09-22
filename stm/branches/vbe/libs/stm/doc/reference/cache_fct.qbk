@@ -1,0 +1,86 @@
+[/
+  (C) Copyright 2009 Justin E. Gottchlich.
+  (C) Copyright 2009 Vicente J. Botet Escriba
+ /
+ / Distributed under the Boost Software License, Version 1.0. (See accompanying
+ / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
+ /]
+
+
+[/==========================================================================================]
+[section:cache_fct_hpp Header `<boost/stm/cache_fct.hpp>`]
+[/==========================================================================================]
+
+    namespace boost { namespace stm {
+        template <class T> T* cache_clone(const T& val);
+        template <class T> void cache_copy(const T* const ori, T* target);
+        void cache_release(base_transaction_object* ptr);
+
+        template <class T> T* cache_allocate();
+        template <class T> void cache_deallocate(T*);
+
+    }}
+
+
+[section Template Function `cache_clone<>()`]
+
+    template <class T>
+    T* cache_clone(const T& val);
+
+Makes a new copy of the parameter. Allocates an object of type T using the `cache_allocate` function and copy from the given parameter `val` using the free function `cache_copy`.
+
+The user can overload this function, as __Boost_STM__ uses ADL to access it.
+
+When `BOOST_STM_NO_PARTIAL_SPECIALIZATION` is defined, i.e. on compilers not supporting partial template specialization, the function calls to `partial_specialization_workaround::cache_clone<T>::apply(val)`. So the user will need to overload the class `partial_specialization_workaround::cache_clone<T>` defining the function
+
+    static T* apply(const T& val);
+
+[endsect]
+
+
+[section Template Function `cache_copy<>()`]
+
+    template <class T>
+    void cache_copy(const T* const source, T* target);
+
+Copy from souce to target using memcpy by default.
+
+The user can overload this function, as __Boost_STM__ uses ADL to access it.
+
+When `BOOST_STM_NO_PARTIAL_SPECIALIZATION` is defined, i.e. on compilers not supporting partial template specialization, the function calls to `partial_specialization_workaround::cache_copy<T>::apply(source, target)`. So the user will need to overload the class `partial_specialization_workaround::cache_copy<T>` defining the function
+
+    static T* apply(const T* const source, T* target);
+
+[endsect]
+
+[section Function `cache_release<>()`]
+
+    void cache_release(base_transaction_object* ptr) {
+
+Release the given base_transaction_object by calling to the virtual function `cache_dealocate`.
+
+[endsect]
+
+
+[section Template Function `cache_allocate<>()`]
+
+    template <class T>
+    T* cache_allocate();
+
+Allocates an instance of calls T. Depending on whether BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER are defined this function will use the static pool of the class T, malloc or the thread specific monotonic allocator.
+
+[endsect]
+
+[section Template Function `cache_deallocate<>()`]
+
+    template <class T>
+    void cache_deallocate(T*ptr) {
+
+Deallocates an instance of calls T. Depending on whether BOOST_STM_CACHE_USE_MEMORY_MANAGER, BOOST_STM_CACHE_USE_MALLOC or BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER are defined this function will use the static pool of the class T, free or the no-op.
+
+[endsect]
+
+
+[endsect]
+
+
