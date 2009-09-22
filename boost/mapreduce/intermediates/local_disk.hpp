@@ -123,9 +123,9 @@ class reduce_file_output
 template<
     typename MapTask,
     typename ReduceTask,
+    typename PartitionFn=mapreduce::hash_partitioner,
     typename SortFn=mapreduce::detail::file_sorter,
-    typename MergeFn=mapreduce::detail::file_merger,
-    typename PartitionFn=mapreduce::hash_partitioner>
+    typename MergeFn=mapreduce::detail::file_merger>
 class local_disk : boost::noncopyable
 {
   private:
