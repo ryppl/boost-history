@@ -12,12 +12,10 @@ int main()
 
   response resp;
 
-  if (!req[cookies]["uuid"].empty())
+  if (req.cookies.count("uuid"))
   { // The cookie has been set correctly!
     boost::system::error_code ec;
-    std::string fwd (req[form]["fwd"]);
-    resp<< location(fwd);
-  //  resp<< location(req.form("fwd"));
+    resp<< location(req.form["fwd"]);
   }else
   {
     resp
@@ -31,14 +29,12 @@ int main()
          "<p>You have cookies disabled. They are required for logging in.</p>"
 				 "<a href='http://www.google.com/search?q=enabling cookies'>Google it</a>"
 				 " if you're stuck, or return to "
-         "<a href='" << req[env_data]["referrer"] << "'>where you came from</a>"
+         "<a href='" << req.env["referrer"] << "'>where you came from</a>"
        "</center>"
        "</body>"
        "</html>";
   }
 
-  resp.send(req.client());
-
-  return req.close(http::ok);
+  return commit(req, resp);
 }
 

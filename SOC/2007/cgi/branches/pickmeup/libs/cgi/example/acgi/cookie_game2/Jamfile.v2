@@ -8,13 +8,14 @@ project boost/cgi/example/acgi/cookie_game2 ;
 
 import os ;
 
+lib ctemplate ;
 #lib ctemplate : : <name>ctemplate <search>C:/Packages/ctemplate/lib ;
 
 exe acgi_cookie_game2
   :
     main.cpp
   :
-    <library>/user-config/ctemplate
+    <library>ctemplate
   :
     <linkflags>-lctemplate
   ;

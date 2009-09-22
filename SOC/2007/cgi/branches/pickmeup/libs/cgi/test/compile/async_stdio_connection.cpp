@@ -3,7 +3,7 @@
 int main()
 {
   cgi::common::io_service ios;
-  cgi::common::async_stdio_connection conn(ios);
+  cgi::common::connections::async_stdio conn(ios);
 
   return 0;
 }

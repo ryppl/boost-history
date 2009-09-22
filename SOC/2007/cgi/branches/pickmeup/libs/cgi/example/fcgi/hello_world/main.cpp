@@ -17,7 +17,6 @@
 #include <boost/asio.hpp>
 #include <boost/system/system_error.hpp>
 #include <boost/cgi/fcgi.hpp>
-#include <boost/cgi/utility/commit.hpp>
 
 using namespace std;
 using namespace boost::fcgi;
@@ -64,7 +63,16 @@ int main()
   try
   {
     service s;        // This becomes useful with async operations.
-    acceptor a(s, 8008);    // The acceptor is for accepting requests
+#if defined (BOOST_WINDOWS)
+    // On Windows, set up an external server to listen on port 8008.
+    // You will need to set your HTTP server to use port 8008.
+    acceptor a(s, 8008);
+#else
+    // On Linux, you can do the above, or just accept on the default
+    // socket. This means setup of your HTTP server is simpler and
+    // FastCGI processes can be started automatically by your server.
+    acceptor a(s);
+#endif // defined (BOOST_WINDOWS)
 
     for (;;)
     {

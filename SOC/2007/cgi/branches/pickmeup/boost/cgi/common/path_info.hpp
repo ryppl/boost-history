@@ -11,8 +11,6 @@
 namespace cgi {
  namespace common {
 
-   namespace algo = boost::algorithm;
-
    struct path_info
    {
      typedef std::string                  value_type;
@@ -22,16 +20,19 @@ namespace cgi {
 
      template<typename S, typename P, typename A>
      path_info(basic_request<S,P,A> & request)
-       : value(algo::trim_copy_if(request["path_info"],
-    		   algo::is_any_of("/")))
+       : value(boost::algorithm::trim_copy_if(request.env["path_info"],
+    		   boost::algorithm::is_any_of("/")))
      {
-    	 algo::split(parts, value, algo::is_any_of("/"));
+    	 boost::algorithm::split(
+           parts, value, boost::algorithm::is_any_of("/"));
      }
 
      path_info(value_type const& str)
-       : value(algo::trim_copy_if(str, algo::is_any_of("/")))
+       : value(boost::algorithm::trim_copy_if(
+                 str, boost::algorithm::is_any_of("/")))
      {
-    	 algo::split(parts, value, algo::is_any_of("/"));
+    	 boost::algorithm::split(
+           parts, value, boost::algorithm::is_any_of("/"));
      }
      
      value_type& operator[](int i) { return parts[i]; }

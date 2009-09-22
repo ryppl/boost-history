@@ -3,7 +3,7 @@
 int main()
 {
   cgi::common::io_service ios;
-  cgi::common::connection::tcp conn(ios);
+  cgi::common::connections::tcp conn(ios);
 
   return 0;
 }

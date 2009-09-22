@@ -20,7 +20,6 @@
 #include <vector>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/acgi.hpp"
-#include "boost/cgi/utility/has_key.hpp"
 
 using namespace std;
 using namespace boost::acgi;
@@ -109,7 +108,7 @@ int main()
         resp<< "You're only allowed to upload 1k of data.\n"
             << "Content-length: " << req.content_length();
         // Exit the application here.
-        return_(resp, req, 0);
+        commit(req, resp);
       }
       
       // If execution reaches here we can parse all other
@@ -122,7 +121,7 @@ int main()
             << "Error " << ec.value() << ": " << ec.message() << "<p />"
                "--Original message follows--"
                "<p />";
-        resp.send(req.client());
+        return commit(req, resp);
       }
 
       resp<< content_type("text/html") <<
@@ -143,11 +142,11 @@ int main()
                "Process ID = " << process_id() << "<br />"
                "<form method=POST enctype='application/x-www-form-urlencoded'>"
                  "<input type=text name=name value='"
-          <<         (has_key(req.post,"name") ? req.post["name"] : "")
+          <<         (req.post.count("name") ? req.post["name"] : "")
           <<      "' />"
                  "<br />"
                  "<input type=text name=hello value='"
-          <<         (has_key(req.post,"hello") ? req.post["hello"] : "")
+          <<         (req.post.count("hello") ? req.post["hello"] : "")
           <<      "' />"
                  "<br />"
                  "<input type=file name=user_file />"
@@ -161,7 +160,7 @@ int main()
       format_map(resp, req.post, "POST Variables");
       format_map(resp, req.cookies, "Cookie Variables");
 
-      if (req["request_method"] == "GET")
+      if (req.request_method() == "GET")
       {
         resp<<   "<pre>";
         BOOST_FOREACH(char& ch, req.post_buffer())
@@ -173,7 +172,7 @@ int main()
                "</html>";
       }
 
-      return_(resp, req, 0); // All ok.
+      return commit(req, resp); // All ok.
 
     }
     catch(boost::system::system_error& ec)
@@ -182,14 +181,14 @@ int main()
       resp<< content_type("text/plain") << "Error " << ec.code() << ": "
           << ec.what()
           << http::internal_server_error; // note the status_code
-      return_(resp, req, 1);
+      return commit(req, resp, 1);
     }
     catch(std::exception* e)
     {
       response resp;
       resp<< content_type("text/plain") << "Error: " << e->what()
           << http::internal_server_error;
-      return_(resp, req, 2);
+      return commit(req, resp, 2);
     }
 
     // The request object will be destroyed before the next exception handlers

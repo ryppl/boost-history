@@ -194,9 +194,9 @@ namespace cgi {
       }
       else
       if (request_method == "POST" 
-          && opts > common::parse_env
           && opts & common::parse_post_only)
       {
+      std::cerr<< "Parsing post vars now.\n";
         if (parse_post_vars(impl, ec))
 	      return ec;
       }
@@ -218,7 +218,7 @@ namespace cgi {
       }
       else if (ec) return ec;
       
-      bool check = impl.client_.is_open();
+      //bool check = impl.client_.is_open();
 
       return ec;
     }

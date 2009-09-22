@@ -321,7 +321,7 @@ namespace cgi {
      */
 
     struct max_packet_size
-      : boost::mpl::int_<65535>
+      : boost::mpl::int_<65535u>
     {};
 
     struct header_length
@@ -499,7 +499,7 @@ namespace cgi {
       static std::string to_string(Array& a)
       {
         using namespace spec_detail;
-        switch(begin_request::get_role(a))
+        switch(begin_request::role(a))
         {
         case RESPONDER:
           return "RESPONDER";

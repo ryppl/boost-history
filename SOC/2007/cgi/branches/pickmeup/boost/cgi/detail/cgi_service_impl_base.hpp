@@ -230,10 +230,10 @@ namespace cgi {
 
       if (!impl.fp_)
         // Construct a form_parser instance.
-        impl.fp_.reset(new implementation_type::form_parser_type());
+        impl.fp_.reset(new typename implementation_type::form_parser_type());
 
       // Create a context for this request.      
-      implementation_type::form_parser_type::context
+      typename implementation_type::form_parser_type::context
           context
               = { env_vars(impl.vars_)["CONTENT_TYPE"]
                 , impl.post_buffer_

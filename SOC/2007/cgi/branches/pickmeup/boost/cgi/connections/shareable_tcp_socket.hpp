@@ -107,7 +107,7 @@ namespace cgi {
     void wait()
     {
       scoped_lock_type lock(mutex_);
-      if (locked_ = false)
+      if (locked_ == false)
         return;
       condition_.wait(lock);
     }

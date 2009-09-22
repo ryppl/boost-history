@@ -69,11 +69,16 @@ namespace cgi {
   template<typename T> BOOST_CGI_INLINE
   basic_response<T>::basic_response(http::status_code sc)
     : buffer_(new common::streambuf())
+#if defined (BOOST_WINDOWS)
     , ostream_(buffer_.get(), std::ios::out | std::ios::binary)
+#else
+    , ostream_(buffer_.get())
+#endif // defined (BOOST_WINDOWS)
     , http_status_(sc)
     , headers_terminated_(false)
     , charset_("ISO-8859-1")
   {
+    //ostream_.openmode = 
   }
 
   /// Construct with a particular buffer
@@ -84,11 +89,16 @@ namespace cgi {
   template<typename T> BOOST_CGI_INLINE
   basic_response<T>::basic_response(common::streambuf* buf,
       http::status_code sc)
-    : ostream_(buf, std::ios::out | std::ios::binary)
+#if defined (BOOST_WINDOWS)
+    : ostream_(buf, std::ios::out | std::ios::binary) 
+#else
+    : ostream_(buf)
+#endif // defined (BOOST_WINDOWS)
     , http_status_(sc)
     , headers_terminated_(false)
     , charset_("ISO-8859-1")
   {
+    //ostream_.openmode = std::ios::out | std::ios::binary;
   }
 
   template<typename T> BOOST_CGI_INLINE

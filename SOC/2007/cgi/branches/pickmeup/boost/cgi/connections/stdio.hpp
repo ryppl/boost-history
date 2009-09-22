@@ -11,7 +11,7 @@
 
 #include <cstdio>
 #include <string>
-#include <io.h>
+//#include <io.h>
 #include <fcntl.h>
 ///////////////////////////////////////////////////////////
 #include <boost/system/error_code.hpp>

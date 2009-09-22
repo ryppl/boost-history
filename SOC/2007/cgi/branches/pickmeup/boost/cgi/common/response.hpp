@@ -169,11 +169,9 @@ namespace cgi {
     std::vector<string_type>& headers();
 
   protected:
-    // Vector of all the headers, each followed by a CRLF
+   // Vector of all the headers, each followed by a CRLF
     std::vector<string_type> headers_;
     
-    string_type charset_;
-
     // The buffer is a shared_ptr, so you can keep it cached elsewhere.
     boost::shared_ptr<common::streambuf> buffer_;
 
@@ -184,7 +182,9 @@ namespace cgi {
     // True if no more headers can be appended.
     bool headers_terminated_;
 
-  private:
+    string_type charset_;
+
+ private:
     // Send the response headers and mark that they've been sent.
     template<typename ConstBufferSequence>
     void prepare_headers(ConstBufferSequence& headers);

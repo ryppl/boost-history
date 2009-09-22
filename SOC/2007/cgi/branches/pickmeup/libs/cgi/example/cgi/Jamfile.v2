@@ -7,7 +7,8 @@
 # By default, just build the examples
 build-project hello_world ;
 build-project echo ;
-build-project tracing_server ;
+build-project file_browser ;
+#build-project tracing_server ;
 
 # If the user explicitly passes "install" on the command line, build the
 # CGI examples and copy them to $(cgi-bin)
@@ -15,7 +16,8 @@ install install
   :
     hello_world
     echo
-    tracing_server 
+    file_browser
+    #tracing_server 
   :
     <location>$(cgi-bin)
   ;

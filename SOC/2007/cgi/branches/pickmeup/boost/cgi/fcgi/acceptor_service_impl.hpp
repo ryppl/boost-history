@@ -20,6 +20,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/system/error_code.hpp>
 ///////////////////////////////////////////////////////////
+#include "boost/cgi/fcgi/error.hpp"
 #include "boost/cgi/fcgi/request.hpp"
 #include "boost/cgi/import/io_service.hpp"
 #include "boost/cgi/detail/throw_error.hpp"
@@ -327,7 +328,7 @@ namespace cgi {
      {
        // We can't call accept on an open request (close it first).
        if (request.is_open())
-         return handler(fcgi::error::accepting_on_an_open_request);
+         return handler(error::accepting_on_an_open_request);
 
        // If the client is open, make sure the request is clean.
        // ie. don't leak data from one request to another!

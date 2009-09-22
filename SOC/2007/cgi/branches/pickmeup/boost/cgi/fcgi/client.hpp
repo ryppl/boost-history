@@ -196,9 +196,10 @@ namespace cgi {
         std::cerr<< "-" << new_buf_size << "-";
         // only write a maximum of 65535 bytes
         if (total_buffer_size + new_buf_size 
-             > fcgi::spec::max_packet_size::value)
+             > static_cast<std::size_t>(fcgi::spec::max_packet_size::value))
         {
-          if (new_buf_size > fcgi::spec::max_packet_size::value)
+          if (new_buf_size > static_cast<std::size_t>(
+                fcgi::spec::max_packet_size::value))
           {
             std::cerr<< "Buffer too big." << std::endl;
             total_buffer_size = 65000;
@@ -228,7 +229,7 @@ namespace cgi {
         }
       }
       //std::cerr<< '\n';
-      spec::stdout_header header(request_id_, total_buffer_size);
+      fcgi::spec::stdout_header header(request_id_, total_buffer_size);
       bufs[0] = header.data();
       out_header_[0] = static_cast<unsigned char>(1);
       out_header_[1] = static_cast<unsigned char>(6);
@@ -239,7 +240,7 @@ namespace cgi {
       out_header_[6] = static_cast<unsigned char>(0);
       out_header_[7] = 0;
       
-      bool empty = bufs.empty();
+      //bool empty = bufs.empty();
       std::size_t size = bufs.size();
       typedef std::vector<boost::asio::const_buffer>::const_iterator
         iter_t;

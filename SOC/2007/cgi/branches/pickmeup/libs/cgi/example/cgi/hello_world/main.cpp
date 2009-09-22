@@ -30,7 +30,7 @@ int main()
       << "Hello there, universe.";
 
   // Leave this function, after sending the response and closing the request.
-  return_(resp, req, 0); // Note the underscore: returns "0" to the OS.
+  return commit(req, resp);
 }
 //]
 

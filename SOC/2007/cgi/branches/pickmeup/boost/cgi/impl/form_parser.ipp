@@ -17,6 +17,7 @@
 
 #include <iostream> // **FIXME**
 #include <fstream>
+#include <boost/lexical_cast.hpp>
 #include <boost/algorithm/string/trim.hpp>
 #include <boost/random/mersenne_twister.hpp>
 
@@ -31,10 +32,12 @@ namespace cgi {
       
       BOOST_ASSERT(!ctx.content_type.empty());
 
+      std::cerr<< "Parsing " << ctx.content_type << " form.\n";
+
       if (ctx.content_type.find(
          "application/x-www-form-urlencoded") != string_type::npos)
         parse_url_encoded_form(ec);
-       else
+      else
       if (ctx.content_type.find(
          "multipart/form-data") != string_type::npos)
         parse_multipart_form(ec);
@@ -51,6 +54,8 @@ namespace cgi {
      buffer_type& str(context_->buffer);
      string_type result;
      string_type name;
+
+     std::cerr<< "Parsing data: " << str << '\n';
 
      if (str.size() == 0)
     	 return ec;
@@ -84,6 +89,7 @@ namespace cgi {
             break;
          case '&': // we now have the name/value pair, so save it
             // **FIXME** have to have .c_str() ?
+            std::cerr<< "Data: " << name << " =" << result << '\n';
             context_->data_map[name.c_str()] = result;
             result.clear();
             name.clear();

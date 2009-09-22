@@ -215,8 +215,7 @@ int main()
   {
     resp<< cookie("name")
         << redirect(req, req.script_name()); // redirect them.
-    resp.send(req.client());
-    return 0;
+    return commit(req, resp);
   }
 
   if (req.form.count("name"))

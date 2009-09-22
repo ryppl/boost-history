@@ -19,7 +19,6 @@
 #include <boost/program_options/environment_iterator.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/fcgi.hpp"
-#include "boost/cgi/utility/commit.hpp"
 
 //using namespace std;
 using namespace boost::fcgi;
@@ -117,7 +116,7 @@ int handle_request(Request& req)
          "<body>"
            "Request ID = " << req.id() << "<br />"
            "Process ID = " << process_id() << "<br />"
-           "<form method=post enctype=\"multipart/form-data\">"
+           "<form method=post>" // enctype=\"multipart/form-data\">"
              "<input type=text name=name value='"
       <<         req.post["name"] << "' />"
              "<br />"
@@ -168,15 +167,18 @@ int main()
 {
 try {
 
+  std::cerr<< "*** Ping! ***" << '\n';
   // Make a `service` (more about this in other examples).
   service s;
   
   using boost::asio::ip::tcp;
 
   // Make an `acceptor` for accepting requests through.
+#if defined (BOOST_WINDOWS)
   acceptor a(s, 8009);    // Accept requests on port 8009.
-  //cerr<< "Listening" << endl;
-  //cerr<< "is_cgi ? " << a.is_cgi() << endl;
+#else
+  acceptor a(s);
+#endif // defined (BOOST_WINDOWS)
 
   //
   // After the initial setup, we can enter a loop to handle one request at a

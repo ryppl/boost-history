@@ -3,7 +3,7 @@
 int main()
 {
   cgi::common::io_service ios;
-  cgi::common::connection::shareable_tcp conn(ios);
+  cgi::common::connections::shareable_tcp conn(ios);
 
   return 0;
 }

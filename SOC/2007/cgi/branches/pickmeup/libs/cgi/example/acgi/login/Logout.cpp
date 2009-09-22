@@ -14,9 +14,8 @@ int main()
 
   resp<< cookie("uuid");
   boost::system::error_code ec;
-  resp<< location(req[form]["fwd"]);
+  resp<< location(req.form["fwd"]);
 
-  resp.send(req.client());
-  return req.close(http::ok);
+  return commit(req, resp);
 }
 
