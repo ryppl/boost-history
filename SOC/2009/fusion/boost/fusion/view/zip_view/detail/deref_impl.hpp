@@ -77,8 +77,8 @@ namespace boost { namespace fusion
                 static type
                 call(It it)
                 {
-                    return type(sequence_assign(fusion::transform(
-                            it.iterators_, detail::poly_deref())));
+                    return type(fusion::transform(
+                            it.iterators_, detail::poly_deref()));
                 }
             };
         };

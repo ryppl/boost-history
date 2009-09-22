@@ -173,7 +173,7 @@ namespace boost { namespace fusion
         template<typename... CdrArgs>
         explicit
         cons(typename call_traits<Car>::param_type car,
-             CdrArgs... const& cdr_args)
+             CdrArgs const&... cdr_args)
           : car(car)
           , cdr(cdr_args)
         {}

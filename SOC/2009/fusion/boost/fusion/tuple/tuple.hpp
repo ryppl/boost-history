@@ -42,8 +42,7 @@ namespace boost { namespace fusion
         \
         template <typename A1, typename A2>\
         tuple(std::pair<A1, A2> COMBINATION pair)\
-          : base_type(sequence_assign(\
-                static_cast<std::pair<A1, A2> COMBINATION>(pair)))\
+          : base_type(static_cast<std::pair<A1, A2> COMBINATION>(pair))\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(TUPLE_CTOR,_)

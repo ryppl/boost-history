@@ -16,6 +16,9 @@
 #include <boost/preprocessor/empty.hpp>
 #if defined(BOOST_NO_VARIADIC_TEMPLATES) && defined(BOOST_NO_RVALUE_REFERENCES)
 #   include <boost/call_traits.hpp>
+#else
+#   include <boost/utility/enable_if.hpp>
+#   include <boost/type_traits/is_convertible.hpp>
 #endif
 
 namespace boost { namespace fusion
@@ -38,11 +41,11 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_PAIR_CTOR
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
         pair()
           : second()
         {}
 
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   ifdef BOOST_NO_RVALUE_REFERENCES
         pair(typename call_traits<second_type>::param_type second)
           : second(second)
@@ -54,9 +57,21 @@ namespace boost { namespace fusion
         {}
 #   endif
 #else
-        template<typename... Args>
-        pair(BOOST_FUSION_R_ELSE_CLREF(Args)... args)
-          : second(BOOST_FUSION_FORWARD(Args,args)...)
+        template<typename Arg>
+        pair(BOOST_FUSION_R_ELSE_CLREF(Arg) arg
+          , typename enable_if<
+                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),second_type>
+            >::type* =0)
+          : second(BOOST_FUSION_FORWARD(Arg,arg))
+        {}
+
+        template<typename Arg1, typename Arg2, typename... Args>
+        pair(BOOST_FUSION_R_ELSE_CLREF(Arg1) arg1
+          , BOOST_FUSION_R_ELSE_CLREF(Arg2) arg2
+          , BOOST_FUSION_R_ELSE_CLREF(Args)... args)
+          : second(BOOST_FUSION_FORWARD(Arg1,arg1),
+              BOOST_FUSION_FORWARD(Arg2,arg2),
+              BOOST_FUSION_FORWARD(Args,args)...)
         {}
 #endif
 

@@ -18,10 +18,10 @@
 namespace boost { namespace fusion { namespace extension
 {
     template <typename>
-    struct has_key;
+    struct has_key_impl;
 
     template <>
-    struct has_key<detail::filter_key_view_tag>
+    struct has_key_impl<detail::filter_key_view_tag>
     {
         template <typename Seq,typename Key>
         struct apply

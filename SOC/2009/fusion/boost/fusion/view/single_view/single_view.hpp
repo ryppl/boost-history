@@ -62,11 +62,11 @@ namespace boost { namespace fusion
 
 #undef BOOST_FUSION_SINGLE_VIEW_CTOR
 
-#ifdef BOOST_NO_VARIADIC_TEMPLATES
         single_view()
           : val()
         {}
 
+#ifdef BOOST_NO_VARIADIC_TEMPLATES
 #   ifdef BOOST_NO_RVALUE_REFERENCES
         explicit
         single_view(typename call_traits<T>::param_type val)
@@ -80,10 +80,21 @@ namespace boost { namespace fusion
         {}
 #   endif
 #else
-        template<typename... Args>
-        explicit
-        single_view(BOOST_FUSION_R_ELSE_CLREF(Args)... args)
-          : val(BOOST_FUSION_FORWARD(Args,args)...)
+        template<typename Arg>
+        single_view(BOOST_FUSION_R_ELSE_CLREF(Arg) arg
+          , typename enable_if<
+                is_convertible<BOOST_FUSION_R_ELSE_CLREF(Arg),value_type>
+            >::type* =0)
+          : val(BOOST_FUSION_FORWARD(Arg,arg))
+        {}
+
+        template<typename Arg1, typename Arg2, typename... Args>
+        single_view(BOOST_FUSION_R_ELSE_CLREF(Arg1) arg1
+          , BOOST_FUSION_R_ELSE_CLREF(Arg2) arg2
+          , BOOST_FUSION_R_ELSE_CLREF(Args)... args)
+          : val(BOOST_FUSION_FORWARD(Arg1,arg1),
+              BOOST_FUSION_FORWARD(Arg2,arg2),
+              BOOST_FUSION_FORWARD(Args,args)...)
         {}
 #endif
 

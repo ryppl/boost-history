@@ -79,8 +79,8 @@ namespace boost { namespace fusion
                 static type
                 call(Seq seq)
                 {
-                    return type(sequence_assign(fusion::transform(
-                            seq.seqs, detail::poly_at<N>())));
+                    return type(fusion::transform(
+                            seq.seqs, detail::poly_at<N>()));
                 }
             };
         };

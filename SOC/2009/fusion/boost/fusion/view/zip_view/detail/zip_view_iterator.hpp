@@ -31,15 +31,14 @@ namespace boost { namespace fusion {
 
         template<typename OtherIt>
         zip_view_iterator(BOOST_FUSION_R_ELSE_CLREF(OtherIt) it)
-          : iterators_(sequence_assign(
-                BOOST_FUSION_FORWARD(OtherIt,it).iterators_))
+          : iterators_(BOOST_FUSION_FORWARD(OtherIt,it).iterators_)
         {
             BOOST_FUSION_TAG_CHECK(OtherIt,zip_view_iterator_tag);
         }
 
         template<typename Seq>
         zip_view_iterator(BOOST_FUSION_R_ELSE_CLREF(Seq) seq,int)
-          : iterators_(sequence_assign(BOOST_FUSION_FORWARD(Seq,seq)))
+          : iterators_(BOOST_FUSION_FORWARD(Seq,seq))
         {}
 
         template<typename OtherIt>

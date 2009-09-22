@@ -167,8 +167,8 @@ namespace boost { namespace fusion
 #define BOOST_FUSION_ZIP_VIEW_CTOR(COMBINATION,_)\
         template<typename OtherSeqs>\
         zip_view(zip_view<OtherSeqs> COMBINATION view)\
-          : seqs(sequence_assign(BOOST_FUSION_FORWARD(\
-                zip_view<OtherSeqs> COMBINATION,view).seqs))\
+          : seqs(BOOST_FUSION_FORWARD(\
+                zip_view<OtherSeqs> COMBINATION,view).seqs)\
         {}
 
         BOOST_FUSION_ALL_CTOR_COMBINATIONS(BOOST_FUSION_ZIP_VIEW_CTOR,_)
@@ -178,8 +178,7 @@ namespace boost { namespace fusion
         template<typename OtherSeqs>
         explicit
         zip_view(BOOST_FUSION_R_ELSE_CLREF(OtherSeqs) seqs)
-          : seqs(fusion::sequence_assign(
-              BOOST_FUSION_FORWARD(OtherSeqs,seqs)))
+          : seqs(BOOST_FUSION_FORWARD(OtherSeqs,seqs))
         {}
 
         template<typename OtherView>
