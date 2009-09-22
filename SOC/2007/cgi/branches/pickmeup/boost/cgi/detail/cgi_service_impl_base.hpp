@@ -63,7 +63,8 @@ namespace cgi {
 
       client_type client_;
 
-      // The number of characters left to read (ie. "content_length - bytes_read")
+      // The number of characters left to read (ie. "content_length - 
+      // bytes_read")
       std::size_t characters_left_;
       
       boost::scoped_ptr<form_parser_type> fp_;

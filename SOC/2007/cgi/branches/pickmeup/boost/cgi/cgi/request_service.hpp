@@ -28,7 +28,6 @@ namespace cgi {
    : public cgi_service_impl_base<cgi_request_impl>
   {
   public:
-    typedef cgi_request_impl   impl_type;
     typedef common::tags::cgi  protocol_type;
 
     cgi_request_service()

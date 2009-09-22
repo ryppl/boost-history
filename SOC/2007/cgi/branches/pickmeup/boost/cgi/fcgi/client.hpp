@@ -28,6 +28,10 @@
 #include "boost/cgi/detail/protocol_traits.hpp"
 #include "boost/cgi/connections/shareable_tcp_socket.hpp"
 
+#undef min
+#undef max
+#include <algorithm>
+
 namespace cgi {
  namespace common {
 
@@ -64,6 +68,10 @@ namespace cgi {
       : request_id_(-1)
       , status_(none_)
       , keep_connection_(false)
+      , total_sent_bytes_(0)
+      , total_sent_packets_(0)
+      , header_()
+      , outbuf_()
     {
     }
 
@@ -72,6 +80,10 @@ namespace cgi {
       : request_id_(-1)
       , status_(none_)
       , keep_connection_(false)
+      , total_sent_bytes_(0)
+      , total_sent_packets_(0)
+      , header_()
+      , outbuf_()
     {
     }
 
@@ -114,37 +126,20 @@ namespace cgi {
     {
       if (status_ == closed_) return ec;
 
-      std::vector<boost::asio::const_buffer> bufs;
-
+      outbuf_.clear();
+      header_.reset(spec_detail::END_REQUEST, request_id_, 8);
       // Write an EndRequest packet to the server.
-      out_header_[0] = static_cast<unsigned char>(1); // FastCGI version
-      out_header_[1] = static_cast<unsigned char>(3); // END_REQUEST
-      out_header_[2] = static_cast<unsigned char>(request_id_ >> 8) & 0xff;
-      out_header_[3] = static_cast<unsigned char>(request_id_) & 0xff;
-      out_header_[4] = static_cast<unsigned char>(8 >> 8) & 0xff;
-      out_header_[5] = static_cast<unsigned char>(8) & 0xff;
-      out_header_[6] = static_cast<unsigned char>(0);
-      out_header_[7] = 0;
 
       //BOOST_ASSERT(role_ == fcgi::spec_detail::RESPONDER
       //             && "Only supports Responder role for now (**FIXME**)");
 
-      header_buffer_type end_request_body =
-      {{
-          static_cast<unsigned char>(app_status >> 24) & 0xff
-        , static_cast<unsigned char>(app_status >> 16) & 0xff
-        , static_cast<unsigned char>(app_status >>  8) & 0xff
-        , static_cast<unsigned char>(app_status >>  0) & 0xff
-        , static_cast<unsigned char>(fcgi::spec_detail::REQUEST_COMPLETE)
-        , static_cast<unsigned char>(0)
-        , static_cast<unsigned char>(0)
-        , static_cast<unsigned char>(0)
-      }};
+      fcgi::spec::end_request_body body(
+        app_status, fcgi::spec_detail::REQUEST_COMPLETE);
 
-      bufs.push_back(buffer(out_header_));
-      bufs.push_back(buffer(end_request_body));
+      outbuf_.push_back(header_.data());
+      outbuf_.push_back(body.data());
 
-      write(*connection_, bufs, boost::asio::transfer_all(), ec);
+      write(*connection_, outbuf_, boost::asio::transfer_all(), ec);
 
       if (!ec && !keep_connection_)
         connection_->close();
@@ -185,8 +180,8 @@ namespace cgi {
       typename ConstBufferSequence::const_iterator iter = buf.begin();
       typename ConstBufferSequence::const_iterator end  = buf.end(); 
 
-      std::vector<boost::asio::const_buffer> bufs;
-      bufs.push_back(boost::asio::buffer(out_header_));
+      outbuf_.clear();
+      outbuf_.push_back(boost::asio::buffer(header_.data()));
 
       int total_buffer_size(0);
       for(; iter != end; ++iter)
@@ -194,30 +189,22 @@ namespace cgi {
         boost::asio::const_buffer buffer(*iter);
         std::size_t new_buf_size( boost::asio::buffer_size(*iter) );
         std::cerr<< "-" << new_buf_size << "-";
-        // only write a maximum of 65535 bytes
+        // Only write a maximum of 65535 bytes.
         if (total_buffer_size + new_buf_size 
              > static_cast<std::size_t>(fcgi::spec::max_packet_size::value))
         {
-          if (new_buf_size > static_cast<std::size_t>(
-                fcgi::spec::max_packet_size::value))
+          // If the send buffer is empty, extract a chunk of the
+          // new buffer to send. If there is already some data
+          // ready to send, don't add any more data to the pack.
+          if (total_buffer_size == 0)
           {
-            std::cerr<< "Buffer too big." << std::endl;
-            total_buffer_size = 65000;
-            bufs.push_back(boost::asio::buffer(*iter, 65000));
+            total_buffer_size
+              = std::min<std::size_t>(new_buf_size,65500);
+            std::cerr<< "Oversized buffer: " << total_buffer_size
+                     << " / " << new_buf_size << " bytes sent\n";
+            outbuf_.push_back(
+              boost::asio::buffer(*iter, total_buffer_size));
             break;
-            /*
-            std::size_t bytes_left(new_buf_size);
-            std::size_t bufsz(0);
-            while (bytes_left > 0)
-            {
-              if (bytes_left > fcgi::spec::max_packet_size::value)
-                bufsz = fcgi::spec::max_packet_size::value;
-              else
-                bufsz = bytes_left;
-              bufs.push_back(boost::asio::const_buffer(buffer, bufsz));
-              bytes_left -= bufsz;
-            }
-            */
           }
           else
             break;
@@ -225,39 +212,29 @@ namespace cgi {
         else
         {
           total_buffer_size += new_buf_size;
-          bufs.push_back(*iter);
+          outbuf_.push_back(*iter);
         }
       }
-      //std::cerr<< '\n';
-      fcgi::spec::stdout_header header(request_id_, total_buffer_size);
-      bufs[0] = header.data();
-      out_header_[0] = static_cast<unsigned char>(1);
-      out_header_[1] = static_cast<unsigned char>(6);
-      out_header_[2] = static_cast<unsigned char>(request_id_ >> 8) & 0xff;
-      out_header_[3] = static_cast<unsigned char>(request_id_) & 0xff;
-      out_header_[4] = static_cast<unsigned char>(total_buffer_size >> 8) & 0xff;
-      out_header_[5] = static_cast<unsigned char>(total_buffer_size) & 0xff;
-      out_header_[6] = static_cast<unsigned char>(0);
-      out_header_[7] = 0;
+      header_.reset(spec_detail::STDOUT, request_id_, total_buffer_size);
       
-      //bool empty = bufs.empty();
-      std::size_t size = bufs.size();
-      typedef std::vector<boost::asio::const_buffer>::const_iterator
-        iter_t;
-      for (iter_t iter(bufs.begin()), end(bufs.end()); iter != end; ++iter)
-      {
-        size = boost::asio::buffer_size(*iter);
-        std::string str (
-            boost::asio::buffer_cast<const char*>(*iter)
-          , boost::asio::buffer_size(*iter) );
-      }
-
       std::size_t bytes_transferred
-        = boost::asio::write(*connection_, bufs, boost::asio::transfer_all(), ec);
+        = boost::asio::write(*connection_, outbuf_
+                            , boost::asio::transfer_all(), ec);
 
-      //std::cerr<< "Transferred " << bytes_transferred << " bytes (total: " << total_buffer_size << ")." << std::endl;
-      if (!ec && 0 != (total_buffer_size + fcgi::spec::header_length::value
-          - bytes_transferred))
+      std::cerr<< "Transferred " << bytes_transferred
+               << " / " << total_buffer_size << " bytes (running total: "
+               << total_sent_bytes_ << "; "
+               << total_sent_packets_ << " packets).\n";
+      if (ec)
+        std::cerr<< "Error " << ec << ": " << ec.message() << '\n';
+
+      total_sent_bytes_ += bytes_transferred;
+      total_sent_packets_ += 1;
+      // Now remove the protocol overhead from the caller, who
+      // doesn't care about them.
+      bytes_transferred -= fcgi::spec::header_length::value;
+      // Check everything was written ok.
+      if (!ec && bytes_transferred != total_buffer_size)
         ec = ::cgi::error::couldnt_write_complete_packet;
 
       return bytes_transferred;
@@ -332,9 +309,16 @@ namespace cgi {
     client_status status_;
     std::size_t bytes_left_;    
     connection_ptr   connection_;
+    
+    boost::uint64_t total_sent_bytes_;
+    boost::uint64_t total_sent_packets_;
 
     /// Buffer used to check the header of each packet.
-    header_buffer_type out_header_;
+    //header_buffer_type out_header_;
+    fcgi::spec::header header_;
+
+    /// Output buffer.
+    std::vector<boost::asio::const_buffer> outbuf_;
 
     bool keep_connection_;
     role_type role_;

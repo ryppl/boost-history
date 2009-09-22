@@ -17,7 +17,6 @@
 #include <boost/algorithm/string/find.hpp>
 ///////////////////////////////////////////////////////////
 #include "boost/cgi/fcgi.hpp"
-#include "boost/cgi/utility/commit.hpp"
 
 using std::cerr;
 using std::endl;
@@ -105,6 +104,9 @@ std::string get_mime_type(fs::path const& file)
   if (filetype == "avi")
     return "video/x-msvideo";
   else
+  if (filetype == "wmv")
+    return "video/x-ms-wmv";
+  else
   /// Rich media files.
   if (filetype == "pdf")
     return "application/pdf";
@@ -146,7 +148,8 @@ template<typename Response, typename Client>
 void show_file(Response& resp, Client& client, fs::path const& file)
 {
   if (!fs::exists(file))
-    resp<< "File not found.";
+    resp<< content_type("text/plain")
+        << "File not found.";
   else
   {
     boost::uintmax_t size (fs::file_size(file));
@@ -159,36 +162,40 @@ void show_file(Response& resp, Client& client, fs::path const& file)
       std::string mime_type (get_mime_type(file));
       if (!mime_type.empty())
       {
-        cerr<< "MIME-type: " << mime_type << endl;
+        cerr<< "MIME-type: " << mime_type << '\n';
+        cerr<< "File size: " << size << '\n';
         std::string ctype (content_type(mime_type).content + "\r\n\r\n");
-        //write(client, boost::asio::buffer(ctype));
+        write(client, boost::asio::buffer(clen));
+        write(client, boost::asio::buffer(ctype));
         /// Open the file and read it as binary data.
         ifstream ifs (file.string().c_str(), std::ios::binary);
         if (ifs.is_open())
         {
           resp<< content_type(mime_type);
           //resp.flush(client);
-          boost::uintmax_t bufsize = 100;
+          boost::uintmax_t bufsize = 1000;
           boost::uintmax_t read_bytes;
-          char buf[100];
+          char buf[1000];
           ifs.seekg(0, std::ios::beg);
           while (!ifs.eof() && size > 0)
           {
             ifs.read(buf, size < bufsize ? size : bufsize);
             read_bytes = ifs.gcount();
             size -= read_bytes;
+            cerr<< "Read " << read_bytes << " bytes from the file.\n";
             //if (resp.content_length() + read_bytes >= 65000)
             //  resp.flush(client);
-            resp.write(buf, read_bytes);
-            //write(client, boost::asio::buffer(buf, read_bytes));
+            //resp.write(buf, read_bytes);
+            write(client, boost::asio::buffer(buf, read_bytes));
             //resp.flush(client);
           }
-          resp.send(client);
-          cerr<< "Content-length: " << resp.content_length() << endl;
+          //resp.send(client);
+          //cerr<< "Content-length: " << resp.content_length() << '\n';
         }
       }
       else
-        resp<< "File type not allowed.";
+        resp<< content_type("text/plain")
+            << "File type not allowed.";
     }
   }
 }

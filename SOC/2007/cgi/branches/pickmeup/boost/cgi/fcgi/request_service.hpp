@@ -44,6 +44,8 @@ namespace cgi {
       typedef ::cgi::fcgi::client               client_type;
       typedef client_type::connection_type      connection_type;
       typedef client_type::header_buffer_type   header_buffer_type;
+      typedef spec_detail::Header               header_type;
+
       typedef detail::protocol_traits<
         protocol_type
       >::protocol_service_type                  protocol_service_type;
@@ -77,6 +79,7 @@ namespace cgi {
       bool all_done_;
 
       header_buffer_type header_buf_;
+      header_type header_;
       typedef detail::form_parser form_parser_type;
 
       boost::scoped_ptr<form_parser_type> fp_;
@@ -129,8 +132,7 @@ namespace cgi {
 
     void construct(implementation_type& impl)
     {
-      // **FIXME** move this to the client class
-      impl.client_.set_connection(//new implementation_type::connection_type(this->io_service()));
+      impl.client_.set_connection(
         implementation_type::connection_type::create(this->io_service())
       );
     }

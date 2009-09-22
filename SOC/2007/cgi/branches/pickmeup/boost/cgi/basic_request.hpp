@@ -20,6 +20,7 @@
 #include <boost/assert.hpp>
 #include <boost/shared_ptr.hpp>
 #include <boost/noncopyable.hpp>
+#include <boost/functional/hash.hpp>
 #include <boost/asio/io_service.hpp>
 #include <boost/system/error_code.hpp>
 #include <boost/asio/basic_io_object.hpp>
@@ -45,6 +46,15 @@
 
 namespace cgi {
  namespace common {
+
+   /// Get a hashed interpretation of the request.
+   /**
+    * You cannot consider this completely unique to each
+    * request, but it should be quite useful anyway.
+    * You can use this for logging or tracking, for example.
+    */
+   template<typename T, typename S>
+   std::size_t hash_value(basic_request<T,S> const& req);
 
   /// The basic_request class, primary entry point to the library
   /**
@@ -79,12 +89,12 @@ namespace cgi {
     basic_request<
         RequestService, ProtocolService
       , Allocator
-    >                                                    type;
+    >                                                    self_type;
     typedef ::cgi::common::map                           map_type;
     typedef RequestService                               service_type;
     typedef typename service_type::protocol_type         protocol_type;
     typedef ProtocolService                              protocol_service_type;
-    typedef boost::shared_ptr<type>                      pointer;
+    typedef boost::shared_ptr<self_type>                 pointer;
     typedef typename RequestService::implementation_type implementation_type;
     typedef typename implementation_type::char_type      char_type;
     typedef typename implementation_type::string_type    string_type;
@@ -151,6 +161,11 @@ namespace cgi {
       }
       
       mapped_type& operator[](key_type const& varname) {
+        BOOST_ASSERT(impl); 
+        return (*impl)[varname.c_str()];
+      }
+      
+      mapped_type const& operator[](key_type const& varname) const {
         BOOST_ASSERT(impl); 
         return (*impl)[varname.c_str()];
       }
@@ -248,7 +263,7 @@ namespace cgi {
 
     static pointer create(protocol_service_type& ps)
     {
-      return pointer(new type(ps));
+      return pointer(new self_type(ps));
     }
 
     void set_protocol_service(protocol_service_type& ps)
@@ -598,11 +613,27 @@ namespace cgi {
       return this->service.get_role(this->implementation);
     }
 
+    std::size_t hash()
+    {
+      return boost::hash<self_type>()(*this);
+    }
+
     void set_status(common::http::status_code const& status)
     {
       this->service.set_status(this->implementation, status);
     }
   };
+
+   template<typename T, typename S>
+   std::size_t hash_value(basic_request<T,S> const& req)
+   {
+     boost::hash<typename basic_request<T,S>::string_type> hasher;
+     return hasher(req.env["REMOTE_ADDR"] + ":"
+                 + req.env["REMOTE_PORT"] + ":"
+                 + req.env["HTTP_USER_AGENT"] + ":"
+                 + req.env["REQUEST_METHOD"] + ":"
+                 + req.env["REQUEST_URI"]);
+   }
 
  } // namespace common
 } // namespace cgi

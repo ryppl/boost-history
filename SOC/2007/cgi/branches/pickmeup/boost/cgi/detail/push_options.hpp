@@ -9,14 +9,13 @@
 
 //#ifdef _MSC_VER
 
-//#pragma warning (disable:)
 // You may want to remove these.
-#define _CRT_SECURE_NO_DEPRECATE 1
-#define _SCL_SECURE_NO_WARNINGS 1
-#define _CRT_SECURE_NO_WARNINGS 1
-//#pragma warning (disable:4996)
-
-//#endif
+#if defined (BOOST_WINDOWS)
+#   define _CRT_SECURE_NO_DEPRECATE 1
+#   define _SCL_SECURE_NO_WARNINGS 1
+#   define _CRT_SECURE_NO_WARNINGS 1
+#   define NOMINMAX
+#endif // defined (BOOST_WINDOWS)
 
 #if !defined(BOOST_CGI_INLINE)
 #  if defined(BOOST_CGI_BUILD_LIB)

@@ -95,7 +95,8 @@ namespace cgi {
       } impl;
       
     public:
-      typedef boost::asio::const_buffers_1 const_buffers_type;
+      typedef boost::asio::const_buffers_1   const_buffers_type;
+      typedef boost::asio::mutable_buffers_1 mutable_buffers_type;
 
       Header()
       {
@@ -108,6 +109,13 @@ namespace cgi {
         reset(t, id, len);
       }
       
+      mutable_buffers_type data()
+      {
+        return boost::asio::buffer(
+            static_cast<void*>(&impl)
+          , sizeof(impl));
+      }
+
       const_buffers_type data() const 
       {
         return boost::asio::buffer(
@@ -210,6 +218,8 @@ namespace cgi {
       } impl;
 
     public:
+      typedef boost::asio::const_buffers_1   const_buffers_type;
+
       EndRequestBody() {}
 
       EndRequestBody( boost::uint64_t appStatus
@@ -228,6 +238,13 @@ namespace cgi {
         impl.protocolStatus_ = ((unsigned char)procStatus);
 
         memset(impl.reserved_, 0, sizeof(impl.reserved_));
+      }
+      
+      const_buffers_type data() const 
+      {
+        return boost::asio::buffer(
+            static_cast<const void*>(&impl)
+          , sizeof(impl));
       }
     };
 
@@ -407,6 +424,9 @@ namespace cgi {
         }
       }
     };
+    
+    typedef spec_detail::Header header;
+    typedef spec_detail::EndRequestBody end_request_body;
 
     struct begin_request
       : boost::mpl::int_<1>
@@ -458,9 +478,54 @@ namespace cgi {
     struct stdout_header
       : spec_detail::Header
     {
+      explicit stdout_header()
+        : Header(spec_detail::STDOUT,0,0)
+      {
+      }
       explicit stdout_header(int request_id, int content_len)
         : Header(spec_detail::STDOUT, request_id, content_len)
       {
+      }
+      void reset(int request_id, int content_len)
+      {
+        spec_detail::Header::reset(
+            spec_detail::STDOUT
+          , request_id
+          , content_len);
+      }
+    };
+
+    struct end_request
+      : header
+      , end_request_body
+    {
+      explicit end_request
+      (
+          int request_id = 0
+        , boost::uint64_t app_status = 0
+        , spec_detail::status_types proc_status
+            = spec_detail::REQUEST_COMPLETE
+      )
+        : header(spec_detail::END_REQUEST, request_id
+                , sizeof(end_request_body))
+        , end_request_body(app_status, proc_status)
+      {
+      }
+      
+      void reset
+      (
+          int request_id
+        , boost::uint64_t app_status = 0
+        , spec_detail::status_types proc_status
+            = spec_detail::REQUEST_COMPLETE
+      )
+      {
+        header::reset(
+            spec_detail::END_REQUEST
+          , request_id
+          , sizeof(end_request_body));
+        end_request_body::reset(
+            app_status, proc_status);
       }
     };
 
