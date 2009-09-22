@@ -39,30 +39,30 @@ public:
    }
 #endif
    ////////////////////////////////////////////////////////////////////////////
-   inline static void abort_on_write(transaction &t,
+   static void abort_on_write(transaction &t,
       base_transaction_object const &in);
-   inline static void abort_on_read(transaction const &t,
+   static void abort_on_read(transaction const &t,
       base_transaction_object const &in);
-   inline static void abort_on_delete(transaction const &t,
+   static void abort_on_delete(transaction const &t,
       base_transaction_object const &in);
-   inline static void abort_on_new(transaction const &t);
+   static void abort_on_new(transaction const &t);
 
    ////////////////////////////////////////////////////////////////////////////
-   inline static void perform_isolated_tx_wait_priority_promotion(transaction &lhs);
+   static void perform_isolated_tx_wait_priority_promotion(transaction &lhs);
 
    ////////////////////////////////////////////////////////////////////////////
-   inline static void perform_irrevocable_tx_wait_priority_promotion(transaction &lhs);
-   inline static int lock_sleep_time() { return 10; }
+   static void perform_irrevocable_tx_wait_priority_promotion(transaction &lhs);
+   static int lock_sleep_time() { return 10; }
 
    //--------------------------------------------------------------------------
    // this code is only ever called if "validation" is on not "invalidation"
    // so don't worry about this code EVER stopping invalidation from committing
    //--------------------------------------------------------------------------
-   inline static bool abort_before_commit(transaction const &t);
+   static bool abort_before_commit(transaction const &t);
 
-   inline static bool permission_to_abort(transaction const &lhs, transaction const &rhs);
+   static bool permission_to_abort(transaction const &lhs, transaction const &rhs);
 
-   inline static bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
+   static bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
                                 bool txTryingToAbortIsIrrevocable, transaction const &rhs);
 
 //private:

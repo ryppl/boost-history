@@ -26,24 +26,46 @@
 #define PERFORMING_WRITE_BLOOM 1
 //#define ALWAYS_ALLOW_ABORT 1
 //#define LOGGING_BLOCKS 1
+
+///////////////////////////////////////////////////////////////////////////////
+// The cache an be structured in different ways. Define ony one of
+//      USE_SINGLE_THREAD_CONTEXT_MAP: use of a common tx_context as TSS
+//      BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP: use of common tss_context as TSS
+//      OTHER: each TSS data has its specific TSS
+
 #define USE_SINGLE_THREAD_CONTEXT_MAP 1
 //#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
+
+///////////////////////////////////////////////////////////////////////////////
+// When USE_SINGLE_THREAD_CONTEXT_MAP or BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP are defined you can want to store references to the TSS or not
+//      BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS if you want to add these references
+
 #define BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS 1
 
-// BOOST_STM_CM_STATIC_CONF: configuration manager is static
-#define BOOST_STM_CM_STATIC_CONF 1
-// BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM: configuration manager is ExceptAndBackOffOnAbortNoticeCM
-#define BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM 1
+///////////////////////////////////////////////////////////////////////////////
+// Define only one of 
+//      BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM
+//      BOOST_STM_CM_DYNAMIC_CONF when you want a polymorphic CM configured at run time
 
+//#define BOOST_STM_CM_STATIC_CONF 1
+//#define BOOST_STM_CM_DYNAMIC_CONF 1
+
+// Define only one of 
+//      BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm when configuration manager is except_and_back_off_on_abort_notice_cm
+
+#define BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm 1
+
+///////////////////////////////////////////////////////////////////////////////
 // BOOST_STM_USE_MEMCOPY: STM uses memcpy insted of the copy constructor
 #define BOOST_STM_USE_MEMCOPY 1
 
-//// The cache using uninitialized_copy can use the following memeory manager
-////BOOST_STM_CACHE_USE_MALLOC: uses malloc/free
-#define BOOST_STM_CACHE_USE_MALLOC  1
+//// The cache using memcpy can use the following memory managers
+//// BOOST_STM_CACHE_USE_MALLOC: uses malloc/free
 //// BOOST_STM_CACHE_USE_MEMORY_MANAGER: uses the class specific memory manager
-//#define BOOST_STM_CACHE_USE_MEMORY_MANAGER 1
 //// BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER: uses the monotonic storage memory manager
+
+#define BOOST_STM_CACHE_USE_MALLOC  1
+//#define BOOST_STM_CACHE_USE_MEMORY_MANAGER 1
 //#define BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER  1
 
 #ifdef USE_BLOOM_FILTER

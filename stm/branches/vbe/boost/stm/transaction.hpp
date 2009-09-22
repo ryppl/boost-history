@@ -29,9 +29,9 @@
 #include <boost/stm/detail/config.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/base_transaction.hpp>
+#include <boost/stm/transaction_bookkeeping.hpp>
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/datatypes.hpp>
-#include <boost/stm/detail/transaction_bookkeeping.hpp>
 #include <boost/stm/detail/bloom_filter.hpp>
 #include <boost/stm/detail/vector_map.hpp>
 #include <boost/stm/detail/vector_set.hpp>
@@ -43,8 +43,14 @@
 #endif
 
 #if defined(BOOST_STM_CM_STATIC_CONF)
-#if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
+#if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
 #include <boost/stm/except_and_back_off_on_abort_notice_cm.hpp>
+#else
+#include <boost/stm/contention_managers/default.hpp>
+#endif
+#else
+#if defined(BOOST_STM_CM_DYNAMIC_CONF)
+#include <boost/stm/contention_managers/polymorphic.hpp>
 #endif
 #endif
 
@@ -68,7 +74,7 @@ bool const kDracoMoveSemanticsCompiled = false;
 bool const begin_transaction = true;
     
 #if defined(BOOST_STM_CM_STATIC_CONF)
-#if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
+#if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
 typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
 #endif
 #endif
