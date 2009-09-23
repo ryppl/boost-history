@@ -4,7 +4,7 @@
 <title>Custom Delimiters</title>
 <link rel="stylesheet" href="../../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../../index.html" title="Boost.explore">
+<link rel="home" href="../../index.html" title="Boost.Explore">
 <link rel="up" href="../tutorial.html" title="Tutorial">
 <link rel="prev" href="../tutorial.html" title="Tutorial">
 <link rel="next" href="custom_containers.html" title="Custom Containers">
@@ -27,12 +27,12 @@
 <a name="boost_explore.tutorial.custom_delimeters"></a><a class="link" href="custom_delimeters.html" title="Custom Delimiters"> Custom Delimiters</a>
 </h3></div></div></div>
 <p>
-        Explore provides the ability to change the strings used in the container
+        Boost.Explore provides the ability to change the strings used in the container
         streaming process through the use of several new stream manipulators.
       </p>
 <div class="table">
-<a name="id555417"></a><p class="title"><b>Table 1. Explore Stream Manipulators</b></p>
-<div class="table-contents"><table class="table" summary="Explore Stream Manipulators">
+<a name="id555417"></a><p class="title"><b>Table 1. Boost.Explore Stream Manipulators</b></p>
+<div class="table-contents"><table class="table" summary="Boost.Explore Stream Manipulators">
 <colgroup>
 <col>
 <col>
@@ -161,34 +161,34 @@
 <tr>
 <td>
             <p>
-              rows(size_t)
+              cols(size_t)
             </p>
             </td>
 <td>
             <p>
-              ???
+              all
             </p>
             </td>
 <td>
             <p>
-              ???
+              Defines how many values will print on each line
             </p>
             </td>
 </tr>
 <tr>
 <td>
             <p>
-              item_wdth(size_t)
+              item_width(size_t)
             </p>
             </td>
 <td>
             <p>
-              ???
+              0
             </p>
             </td>
 <td>
             <p>
-              ???
+              Defines each contained item's width, similar to std::setw
             </p>
             </td>
 </tr>
@@ -223,7 +223,7 @@
 <pre class="programlisting"><span class="special">&lt;</span><span class="number">1</span><span class="special">,</span> <span class="number">2</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.manipulator_helper_functions"></a><h5>
-<a name="id555903"></a>
+<a name="id555907"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.manipulator_helper_functions">Manipulator
         Helper Functions</a>
       </h5>
@@ -232,8 +232,8 @@
         one call.
       </p>
 <div class="table">
-<a name="id555921"></a><p class="title"><b>Table 2. Explore Stream Manipulator Helpers</b></p>
-<div class="table-contents"><table class="table" summary="Explore Stream Manipulator Helpers">
+<a name="id555926"></a><p class="title"><b>Table 2. Boost.Explore Stream Manipulator Helpers</b></p>
+<div class="table-contents"><table class="table" summary="Boost.Explore Stream Manipulator Helpers">
 <colgroup>
 <col>
 <col>
@@ -311,7 +311,7 @@
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">explore</span><span class="special">::</span><span class="identifier">begin_end</span><span class="special">(</span><span class="string">"&lt;"</span><span class="special">,</span> <span class="string">"&gt;"</span><span class="special">)</span> <span class="special">&lt;&lt;</span> <span class="identifier">vi</span><span class="special">;</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.delimeters_by_level"></a><h5>
-<a name="id556111"></a>
+<a name="id556116"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.delimeters_by_level">Delimeters
         by Level</a>
       </h5>
@@ -369,7 +369,7 @@
 <span class="special">}</span>
 </pre>
 <a name="boost_explore.tutorial.custom_delimeters.item_width"></a><h5>
-<a name="id557034"></a>
+<a name="id557038"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.item_width">Item
         Width</a>
       </h5>
@@ -377,10 +377,139 @@
         TODO: finish this section
       </p>
 <a name="boost_explore.tutorial.custom_delimeters.retrieving_manipulator_values"></a><h5>
-<a name="id557058"></a>
+<a name="id557062"></a>
         <a class="link" href="custom_delimeters.html#boost_explore.tutorial.custom_delimeters.retrieving_manipulator_values">Retrieving
         Manipulator Values</a>
       </h5>
+<div class="table">
+<a name="id557076"></a><p class="title"><b>Table 3. Boost.Explore Stream Manipulator Getters</b></p>
+<div class="table-contents"><table class="table" summary="Boost.Explore Stream Manipulator Getters">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+            <p>
+              Function
+            </p>
+            </th>
+<th>
+            <p>
+              Functionality
+            </p>
+            </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+            <p>
+              string get_start(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves the string output at the beginning of a container.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              string get_end(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves the string output at the end of a container.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              string get_seperator(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves the string output in between elements.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              string get_assoc_item_start(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves the string output at the front of an association item.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              string get_assoc_item_end(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves the string output at the end of an association item.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              string get_assoc_item_seperator(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves the string output in between elements of an association item.
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              size_t get_cols(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves how many values will print on each line
+            </p>
+            </td>
+</tr>
+<tr>
+<td>
+            <p>
+              size_t get_item_width(const ostream&amp;)
+            </p>
+            </td>
+<td>
+            <p>
+              Retrieves each contained item's width, similar to std::setw
+            </p>
+            </td>
+</tr>
+</tbody>
+</table></div>
+</div>
+<br class="table-break"><div class="important" title="Important"><table border="0" summary="Important">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Important]" src="../../../../../../doc/html/images/important.png"></td>
+<th align="left">Important</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+          There are both ostream and wostream versions of all functions. String manipulator
+          functions will return a wstring instead of a string when passed a wostream.
+        </p></td></tr>
+</table></div>
 <p>
         TODO: finish this section
       </p>

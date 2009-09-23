@@ -105,6 +105,21 @@ TODO: finish this section
 
 [heading Retrieving Manipulator Values]
 
+[table Boost.Explore Stream Manipulator Getters
+    [[Function]                                        [Functionality]]
+    [[string get_start(const ostream&)]                [Retrieves the string output at the beginning of a container.]]
+    [[string get_end(const ostream&)]                  [Retrieves the string output at the end of a container.]]
+    [[string get_seperator(const ostream&)]            [Retrieves the string output in between elements.]]
+    [[string get_assoc_item_start(const ostream&)]     [Retrieves the string output at the front of an association item.]]
+    [[string get_assoc_item_end(const ostream&)]       [Retrieves the string output at the end of an association item.]]
+    [[string get_assoc_item_seperator(const ostream&)] [Retrieves the string output in between elements of an association item.]]
+    [[size_t get_cols(const ostream&)]                 [Retrieves how many values will print on each line]]
+    [[size_t get_item_width(const ostream&)]           [Retrieves each contained item's width, similar to std::setw]]
+]
+
+[important There are both ostream and wostream versions of all functions. String manipulator functions will return a wstring instead of a
+string when passed a wostream.]
+
 TODO: finish this section
 
 [endsect]

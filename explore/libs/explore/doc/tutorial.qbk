@@ -25,7 +25,7 @@ specific container include each type's header file instead of `"explore.hpp"`.
 
 [heading Printing of Contained Items]
 
-Once you have included the proper header files, containers can be be streamed in a formated manner.
+Once you have included the proper header files, containers can be streamed in a formated manner.
 
    std::vector<int> vi;
    vi.push_back(1);

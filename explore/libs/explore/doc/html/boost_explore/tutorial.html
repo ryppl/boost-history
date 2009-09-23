@@ -4,9 +4,9 @@
 <title>Tutorial</title>
 <link rel="stylesheet" href="../boostbook.css" type="text/css">
 <meta name="generator" content="DocBook XSL Stylesheets V1.75.2">
-<link rel="home" href="../index.html" title="Boost.explore">
-<link rel="up" href="../index.html" title="Boost.explore">
-<link rel="prev" href="../index.html" title="Boost.explore">
+<link rel="home" href="../index.html" title="Boost.Explore">
+<link rel="up" href="../index.html" title="Boost.Explore">
+<link rel="prev" href="../index.html" title="Boost.Explore">
 <link rel="next" href="tutorial/custom_delimeters.html" title="Custom Delimiters">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
@@ -41,15 +41,15 @@
       Printing</a>
     </h4>
 <p>
-      All of the explore library can be used by simply including the <code class="computeroutput"><span class="string">"explore.hpp"</span></code> header file.
+      All of the Boost.Explore library can be used by simply including the <code class="computeroutput"><span class="string">"explore.hpp"</span></code> header file.
     </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">explore</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="keyword">using</span> <span class="keyword">namespace</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">explore</span><span class="special">;</span>
 </pre>
 <p>
-      However, this will pull in definitions of all the containers that Explore supports.
-      To include only the definitions required for a specific container include each
-      type's header file instead of <code class="computeroutput"><span class="string">"explore.hpp"</span></code>.
+      However, this will pull in definitions of all the containers that Boost.Explore
+      supports. To include only the definitions required for a specific container
+      include each type's header file instead of <code class="computeroutput"><span class="string">"explore.hpp"</span></code>.
     </p>
 <pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">explore</span><span class="special">/</span><span class="identifier">vector</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
 <span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">explore</span><span class="special">/</span><span class="identifier">boost_array</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
@@ -60,7 +60,7 @@
       of Contained Items</a>
     </h4>
 <p>
-      Once you have included the proper header files, containers can be be streamed
+      Once you have included the proper header files, containers can be streamed
       in a formated manner.
     </p>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
@@ -100,7 +100,7 @@
     </h4>
 <p>
       C style arrays have a standard streaming format, however, when you include
-      any explore header, including <code class="computeroutput"><span class="string">"explore.hpp"</span></code>
+      any Boost.Explore header, including <code class="computeroutput"><span class="string">"explore.hpp"</span></code>
       and <code class="computeroutput"><span class="string">"boost/explore/c_array.hpp"</span></code>,
       you override this default streaming format with the explore streaming format
       and all the abilities of it.
@@ -134,13 +134,14 @@
 </pre>
 <p>
       But this format doesn't describe the associative nature of the elements well.
-      So, explore uses special delimeters for the associations within associative
+      So, Boost.Explore uses special delimeters for the associations within associative
       containers, and the above code prints in a clearer format.
     </p>
 <pre class="programlisting"><span class="special">[</span><span class="number">1</span><span class="special">:</span><span class="identifier">first</span><span class="special">,</span> <span class="number">2</span><span class="special">:</span><span class="identifier">second</span><span class="special">,</span> <span class="number">3</span><span class="special">:</span><span class="identifier">third</span><span class="special">]</span>
 </pre>
 <p>
-      Currently, the only containers that explore recognizes as associative are:
+      Currently, the only containers that Boost.Explore recognizes as associative
+      are:
     </p>
 <div class="itemizedlist"><ul class="itemizedlist" type="disc">
 <li class="listitem">
@@ -155,13 +156,13 @@
       can be handled as associative containers.
     </p>
 <a name="boost_explore.tutorial.lexical_cast"></a><h4>
-<a name="id555167"></a>
+<a name="id555168"></a>
       <a class="link" href="tutorial.html#boost_explore.tutorial.lexical_cast">lexical_cast</a>
     </h4>
 <p>
-      Because explore works with streaming operators, boost::lexical_cast will work
-      with the explore library to allow you to create strings with the printed output
-      of explore for cases when you don't want to use streaming directly.
+      Because Boost.Explore works with streaming operators, boost::lexical_cast will
+      work with the explore library to allow you to create strings with the printed
+      output of Explore for cases when you don't want to use streaming directly.
     </p>
 <pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">vector</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">vi</span><span class="special">;</span>
 <span class="identifier">vi</span><span class="special">.</span><span class="identifier">push_back</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
