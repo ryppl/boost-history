@@ -124,26 +124,36 @@ namespace cgi {
     boost::system::error_code
       close(boost::uint64_t app_status, boost::system::error_code& ec)
     {
-      if (status_ == closed_) return ec;
+      // We can safely ignore this next bit when the connection
+      // is already closed. This might happen when the client aborts
+      // the connection.
+      if (!ec && status_ != closed_ && connection_->is_open())
+      {
+        outbuf_.clear();
+        header_.reset(spec_detail::END_REQUEST, request_id_, 8);
 
-      outbuf_.clear();
-      header_.reset(spec_detail::END_REQUEST, request_id_, 8);
-      // Write an EndRequest packet to the server.
+        // Write an EndRequest packet to the server.
+        fcgi::spec::end_request_body body(
+          app_status, fcgi::spec_detail::REQUEST_COMPLETE);
 
-      //BOOST_ASSERT(role_ == fcgi::spec_detail::RESPONDER
-      //             && "Only supports Responder role for now (**FIXME**)");
+        outbuf_.push_back(header_.data());
+        outbuf_.push_back(body.data());
 
-      fcgi::spec::end_request_body body(
-        app_status, fcgi::spec_detail::REQUEST_COMPLETE);
+        write(*connection_, outbuf_, boost::asio::transfer_all(), ec);
 
-      outbuf_.push_back(header_.data());
-      outbuf_.push_back(body.data());
-
-      write(*connection_, outbuf_, boost::asio::transfer_all(), ec);
-
-      if (!ec && !keep_connection_)
-        connection_->close();
-
+        if (!ec && !keep_connection_)
+        {
+          connection_->close();
+        }
+      }
+      
+      if (ec && !keep_connection_)
+      {
+        // If there was an error writing to the client, we can ignore it
+        // unless the `keep_connection_` flag is set.
+        // The client has likely aborted the request if we reach here.
+        ec = boost::system::error_code();
+      }
       return ec;
     }
 
@@ -188,8 +198,6 @@ namespace cgi {
       {
         boost::asio::const_buffer buffer(*iter);
         std::size_t new_buf_size( boost::asio::buffer_size(*iter) );
-        std::cerr<< "-" << new_buf_size << "-";
-        // Only write a maximum of 65535 bytes.
         if (total_buffer_size + new_buf_size 
              > static_cast<std::size_t>(fcgi::spec::max_packet_size::value))
         {
@@ -200,8 +208,10 @@ namespace cgi {
           {
             total_buffer_size
               = std::min<std::size_t>(new_buf_size,65500);
+            /*
             std::cerr<< "Oversized buffer: " << total_buffer_size
                      << " / " << new_buf_size << " bytes sent\n";
+            */
             outbuf_.push_back(
               boost::asio::buffer(*iter, total_buffer_size));
             break;
@@ -221,13 +231,14 @@ namespace cgi {
         = boost::asio::write(*connection_, outbuf_
                             , boost::asio::transfer_all(), ec);
 
+      /*
       std::cerr<< "Transferred " << bytes_transferred
                << " / " << total_buffer_size << " bytes (running total: "
                << total_sent_bytes_ << "; "
                << total_sent_packets_ << " packets).\n";
       if (ec)
         std::cerr<< "Error " << ec << ": " << ec.message() << '\n';
-
+      */
       total_sent_bytes_ += bytes_transferred;
       total_sent_packets_ += 1;
       // Now remove the protocol overhead from the caller, who

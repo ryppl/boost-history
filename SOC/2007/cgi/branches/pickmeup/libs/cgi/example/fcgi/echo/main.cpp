@@ -150,18 +150,9 @@ int handle_request(Request& req)
   resp<< "Response content-length == "
       << resp.content_length(); // the content-length (returns std::size_t)
 
-  // This function finishes up:
-  return commit(req, resp, 0);
-  //
-  // It is equivalent to the below, where the third argument is represented by
-  // `program_status`:
-  //
-  // resp.send(req.client());
-  // req.close(resp.status(), program_status);
-  // return program_status;
-  //
-  // Note: in this case `program_status == 0`.
-  //
+  // This function finishes up. The optional third argument
+  // is the program status (default: 0).
+  return commit(req, resp);
 }
 
 int main()
@@ -197,7 +188,7 @@ try {
     for (;;)
     {
       a.accept(req);
-      //cerr<< "Accepted" << endl;
+      cerr<< "Accepted new request.\n";
       ret = handle_request(req);
       if (ret)
         break;
@@ -214,15 +205,15 @@ try {
 
 }catch(boost::system::system_error const& se){
   // This is the type of error thrown by the library.
-  //cerr<< "[fcgi] System error: " << se.what() << endl;
-  return 1313;
+  cerr<< "[fcgi] System error: " << se.what() << endl;
+  return -1;
 }catch(std::exception const& e){
   // Catch any other exceptions
-  //cerr<< "[fcgi] Exception: " << e.what() << endl;
-  return 666;
+  cerr<< "[fcgi] Exception: " << e.what() << endl;
+  return -2;
 }catch(...){
-  //cerr<< "[fcgi] Uncaught exception!" << endl;
-  return 667;
+  cerr<< "[fcgi] Uncaught exception!" << endl;
+  return -3;
 }
 }
 //]

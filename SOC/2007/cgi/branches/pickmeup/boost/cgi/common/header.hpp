@@ -52,6 +52,10 @@ namespace cgi {
        : content("Set-cookie: " + ck.to_string())
      {
      }
+     
+     operator string_type () {
+        return content + "\r\n";
+     }
 
      string_type content;
    };
@@ -113,13 +117,6 @@ namespace cgi {
      content_encoding(std::basic_string<CharT> const& str)
    {
      return basic_header<CharT>("Content-encoding", str);
-   }
-
-   template<typename CharT, typename T> basic_header<CharT>
-     content_length(const T& t)
-   {
-     return basic_header<CharT>("Content-length",
-              boost::lexical_cast<std::basic_string<CharT> >(t));
    }
 
    template<typename CharT> basic_header<CharT>

@@ -97,6 +97,9 @@ std::string get_mime_type(fs::path const& file)
   if (filetype == "ogg")
     return "audio/ogg";
   else
+  if (filetype == "flac")
+    return "audio/flac";
+  else
   if (filetype == "mp3")
     return "audio/mpeg";
   else
@@ -145,7 +148,9 @@ std::string get_mime_type(fs::path const& file)
 }
 
 template<typename Response, typename Client>
-void show_file(Response& resp, Client& client, fs::path const& file)
+boost::system::error_code& show_file(
+    Response& resp, Client& client, fs::path const& file
+  , boost::system::error_code& ec)
 {
   if (!fs::exists(file))
     resp<< content_type("text/plain")
@@ -154,7 +159,7 @@ void show_file(Response& resp, Client& client, fs::path const& file)
   {
     boost::uintmax_t size (fs::file_size(file));
     cerr<< "size: " << size << endl;
-    if (size > 200000000L) // Files must be < 200MB
+    if (size > 750000000L) // Files must be < 750MB (this is arbitrary).
       resp<< "File too large.";
     else
     {
@@ -162,42 +167,52 @@ void show_file(Response& resp, Client& client, fs::path const& file)
       std::string mime_type (get_mime_type(file));
       if (!mime_type.empty())
       {
+        // Write unbuffered (ie. not using a response). This makes sense
+        // for large files, which would take up too much memory to
+        // buffer.
+        // First, some debugging to the console.
         cerr<< "MIME-type: " << mime_type << '\n';
         cerr<< "File size: " << size << '\n';
-        std::string ctype (content_type(mime_type).content + "\r\n\r\n");
-        write(client, boost::asio::buffer(clen));
-        write(client, boost::asio::buffer(ctype));
         /// Open the file and read it as binary data.
         ifstream ifs (file.string().c_str(), std::ios::binary);
         if (ifs.is_open())
         {
-          resp<< content_type(mime_type);
-          //resp.flush(client);
-          boost::uintmax_t bufsize = 1000;
+          // Write out the response headers.
+          std::string ctype (content_type(mime_type));
+          std::string clen (content_length<char>(size));
+          clen += "\r\n";
+          write(client, boost::asio::buffer(ctype));
+          write(client, boost::asio::buffer(clen));
+          // Read then write up to 1MB at a time.
+          boost::uintmax_t bufsize = 1000000;
           boost::uintmax_t read_bytes;
-          char buf[1000];
+          char buf[1000000];
           ifs.seekg(0, std::ios::beg);
-          while (!ifs.eof() && size > 0)
+          while (!ifs.eof() && size > 0 && !ec)
           {
             ifs.read(buf, size < bufsize ? size : bufsize);
             read_bytes = ifs.gcount();
             size -= read_bytes;
-            cerr<< "Read " << read_bytes << " bytes from the file.\n";
-            //if (resp.content_length() + read_bytes >= 65000)
-            //  resp.flush(client);
-            //resp.write(buf, read_bytes);
-            write(client, boost::asio::buffer(buf, read_bytes));
-            //resp.flush(client);
+            //cerr<< "Read " << read_bytes << " bytes from the file.\n";
+            // Write unbuffered (ie. not using a response).
+            write(client, boost::asio::buffer(buf, read_bytes)
+                 , boost::asio::transfer_all(), ec);
           }
-          //resp.send(client);
-          //cerr<< "Content-length: " << resp.content_length() << '\n';
+        }
+        else
+        {
+          resp<< content_type("text/plain")
+              << "File cannot be opened. Please try again later.";
         }
       }
       else
+      {
         resp<< content_type("text/plain")
             << "File type not allowed.";
+      }
     }
   }
+  return ec;
 }
     
 template<typename Response>
@@ -229,12 +244,10 @@ void show_paths(Response& resp, fs::path const& parent, bool recursive = true)
       }
       else
       {
-        // display filename only.
+        // Display only the filename.
         resp<< "<li class=\"file\"><a href=\"?file="
             << iter->string() << "\">" << iter->path().filename()
             << "</a>";
-        //if (fs::is_regular_file(iter->status()))
-        //  resp<< " [" << fs::file_size(iter->path()) << " bytes]";
         resp<< "</li>\n";
       }
     }
@@ -265,9 +278,15 @@ int handle_request(Request& req)
 
   if (req.get.count("file"))
   {
-    show_file(resp, req.client(), req.get["file"]);
-    req.close(resp.status(), 0);
-    return 0; //commit(req, resp);
+    boost::system::error_code ec;
+    show_file(resp, req.client(), req.get["file"], ec);
+    if (ec)
+    {
+      cerr<< "Writing file finished unexpectedly!\n"
+             "  Error " << ec << ": " << ec.message() << '\n';
+      // Carry on processing other requests.
+      return req.close(http::request_timeout, -1, ec);
+    }
   }
   else
   if (req.get.count("dir"))
@@ -292,7 +311,7 @@ int handle_request(Request& req)
     resp<< content_type("text/plain")
         << "No path specified.\n";
 
-  //resp<< header("FastCGI-client", "fcgi_file_browser");
+  resp<< header("FastCGI-client", "fcgi_file_browser");
   return commit(req, resp);
 }
 
@@ -307,7 +326,7 @@ try {
 
   // Accept requests on port 8001. You should configure your HTTP
   // server to try to connect on this port.
-  acceptor a(s, 8001);    
+  acceptor a(s, 8001);
 
   int ret(0);
   for (;;)
@@ -317,7 +336,7 @@ try {
     for (;;)
     {
       a.accept(req);
-      if (0 != handle_request(req))
+      if (handle_request(req))
         break;
       req.clear();
     }
