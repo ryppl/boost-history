@@ -92,3 +92,4 @@ BOOST_AUTO_TEST_CASE(casual_test)
     inclusion_compare(eleset_a, eleset_c);
     BOOST_CHECK_EQUAL(inclusion_compare(eleset_a, eleset_c), inclusion::unrelated);
 }
+

@@ -23,10 +23,10 @@ namespace boost{ namespace itl
     
     // Smallest 'visible' string that is greater than the empty string.
     template <>    
-    inline std::string unon<std::string>::value(){ return std::string(" "); };
+    inline std::string unon<std::string>::value(){ return std::string(" "); }
 
     template <class Type> 
-    inline Type unon<Type>::value(){ return succ(neutron<Type>::value()); };
+    inline Type unon<Type>::value(){ return succ(neutron<Type>::value()); }
 
 }} // namespace boost itl
 

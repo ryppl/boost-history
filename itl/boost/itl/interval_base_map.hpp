@@ -340,8 +340,11 @@ private:
         This function is not public, because the `codomain_combine` shall be
         an invariant for all itl maps.*/
     template<class Combiner>
-    SubType& add(const segment_type& interval_value_pair) 
-    { that()->template add_<Combiner>(interval_value_pair); return *that(); }
+    SubType& _add(const segment_type& interval_value_pair) 
+    { 
+        that()->template add_<Combiner>(interval_value_pair); 
+        return *that(); 
+    }
 
 public:
     /** Addition of a key value pair to the map */
@@ -367,8 +370,11 @@ private:
         This function is not public, because the `codomain_combine` shall be
         an invariant for all itl maps.*/
     template<class Combiner>
-    void subtract(const segment_type& interval_value_pair)
-    { that()->template subtract_<Combiner>(interval_value_pair); }
+    SubType& _subtract(const segment_type& interval_value_pair)
+    { 
+        that()->template subtract_<Combiner>(interval_value_pair); 
+        return *that(); 
+    }
 
 public:
     /** Subtraction of a key value pair from the map */
@@ -955,7 +961,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                 if(!common_interval.empty())
                 {
                     section.that()->add(value_type(common_interval, it_->second));
-                    section.that()->template add<codomain_intersect>(value_type(common_interval, sectant.second)); 
+                    section.that()->template _add<codomain_intersect>(value_type(common_interval, sectant.second)); 
                 }
             }
         else
@@ -965,7 +971,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                 if(!common_interval.empty())
                 {
                     section.that()->add(value_type(common_interval, it_->second) );
-                    section.that()->template add<codomain_combine>(value_type(common_interval, sectant.second));
+                    section.that()->template _add<codomain_combine>(value_type(common_interval, sectant.second));
                 }
             }
 
@@ -1440,7 +1446,7 @@ min_assign
     typedef interval_base_map<SubType,DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Interval,Alloc> map_type;
     ITL_const_FORALL(typename map_type, elem_, operand) 
-        object.template add<inplace_min >(*elem_); 
+        object.template _add<inplace_min >(*elem_); 
 
     return object; 
 }
@@ -1465,7 +1471,7 @@ max_assign
     typedef interval_base_map<SubType,DomainT,CodomainT,
                               Traits,Compare,Combine,Section,Interval,Alloc>    map_type;
     ITL_const_FORALL(typename map_type, elem_, operand) 
-        object.template add<inplace_max>(*elem_); 
+        object.template _add<inplace_max>(*elem_); 
 
     return object; 
 }

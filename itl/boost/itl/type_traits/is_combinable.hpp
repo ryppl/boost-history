@@ -140,14 +140,14 @@ struct is_interval_set_derivative;
 template<class Type>
 struct is_interval_set_derivative<Type, typename Type::domain_type>
 { 
-    typedef is_interval_set_derivative<Type, typename Type::domain_type> type;
+    typedef is_interval_set_derivative type;
     BOOST_STATIC_CONSTANT(bool, value = (is_interval_container<Type>::value)); 
 };
 
 template<class Type>
 struct is_interval_set_derivative<Type, typename Type::interval_type>
 { 
-    typedef is_interval_set_derivative<Type, typename Type::interval_type> type;
+    typedef is_interval_set_derivative type;
     BOOST_STATIC_CONSTANT(bool, value = (is_interval_container<Type>::value)); 
 };
 
@@ -167,21 +167,21 @@ struct is_interval_map_derivative;
 template<class Type>
 struct is_interval_map_derivative<Type, typename Type::domain_mapping_type>
 {
-    typedef is_interval_map_derivative<Type, typename Type::domain_mapping_type> type;
+    typedef is_interval_map_derivative type;
     BOOST_STATIC_CONSTANT(bool, value = (is_interval_container<Type>::value));
 };
 
 template<class Type>
 struct is_interval_map_derivative<Type, typename Type::interval_mapping_type>
 {
-    typedef is_interval_map_derivative<Type, typename Type::interval_mapping_type> type;
+    typedef is_interval_map_derivative type;
     BOOST_STATIC_CONSTANT(bool, value = (is_interval_container<Type>::value));
 };
 
 template<class Type>
 struct is_interval_map_derivative<Type, typename Type::value_type>
 {
-    typedef is_interval_map_derivative<Type, typename Type::value_type> type;
+    typedef is_interval_map_derivative type;
     BOOST_STATIC_CONSTANT(bool, value = (is_interval_container<Type>::value));
 };
 

@@ -237,21 +237,26 @@ public:
         not exist in the map.    
         If \c value_pairs's key value exists in the map, it's data
         value is added to the data value already found in the map. */
-    map& add(const value_type& value_pair) { return add<codomain_combine>(value_pair); }
+    map& add(const value_type& value_pair) 
+    { 
+        return _add<codomain_combine>(value_pair); 
+    }
 
     /** \c add add \c value_pair into the map using \c prior as a hint to
         insert \c value_pair after the position \c prior is pointing to. */
     iterator add(iterator prior, const value_type& value_pair) 
-    { return add<codomain_combine>(prior, value_pair); }
+    { 
+        return _add<codomain_combine>(prior, value_pair); 
+    }
 
     /** If the \c value_pair's key value is in the map, it's data value is
         subtraced from the data value stored in the map. */
     map& subtract(const value_type& value_pair)
     {
         if(Traits::is_total && has_inverse<codomain_type>::value)
-            this->template add<inverse_codomain_combine>(value_pair); 
+            this->template _add<inverse_codomain_combine>(value_pair); 
         else 
-            this->template subtract<inverse_codomain_combine>(value_pair); 
+            this->template _subtract<inverse_codomain_combine>(value_pair); 
     
         return *this;
     }
@@ -270,7 +275,10 @@ public:
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     map& set(const element_type& key_value_pair)
-    { (*this)[key_value_pair.first] = key_value_pair.second; return *this; }
+    { 
+        (*this)[key_value_pair.first] = key_value_pair.second; 
+        return *this; 
+    }
 
     /** erase \c key_value_pair from the map.
         Erase only if, the exact value content \c val is stored for the given key. */
@@ -381,13 +389,13 @@ public:
 
 private:
     template<class Combiner>
-    map& add(const value_type& value_pair);
+    map& _add(const value_type& value_pair);
 
     template<class Combiner>
-    iterator add(iterator prior, const value_type& value_pair);
+    iterator _add(iterator prior, const value_type& value_pair);
 
     template<class Combiner>
-    map& subtract(const value_type& value_pair);
+    map& _subtract(const value_type& value_pair);
 };
 
 
@@ -398,7 +406,7 @@ private:
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
     template <class Combiner>
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
-    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::add(const value_type& val)
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_add(const value_type& val)
 {
     if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return *this;
@@ -432,7 +440,7 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
     template <class Combiner>
 typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-    ::add(iterator prior_, const value_type& val)
+    ::_add(iterator prior_, const value_type& val)
 {
     if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return prior_;
@@ -455,7 +463,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
 template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
     template <class Combiner>
 map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
-    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::subtract(const value_type& val)
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::_subtract(const value_type& val)
 {
     iterator it_ = find(val.first);
     if(it_ != end())
@@ -512,9 +520,9 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
         {
             section.add(*it_);
             if(is_set<codomain_type>::value)
-                section.template add<codomain_intersect>(sectant); 
+                section.template _add<codomain_intersect>(sectant); 
             else
-                section.template add<codomain_combine>(sectant);
+                section.template _add<codomain_combine>(sectant);
         }
     }
 }
@@ -562,9 +570,9 @@ void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
         {
             section.add(*it_);
             if(is_set<CodomainT>::value)
-                section.template add<codomain_intersect>(*sec_); 
+                section.template _add<codomain_intersect>(*sec_); 
             else
-                section.template add<codomain_combine>(*sec_);
+                section.template _add<codomain_combine>(*sec_);
         }
         ++sec_;
     }
