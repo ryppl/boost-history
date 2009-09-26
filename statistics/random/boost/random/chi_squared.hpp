@@ -46,7 +46,7 @@ namespace random{
             static nd_t nd(0,1);
             result_type z;
             result_type res = static_cast<T>(0);
-            for(unsigned i = 0; i<df(); i++){
+            for(unsigned i = 0; i<this->df(); i++){
                 z = nd(urng);
                 res += (z * z);
             }

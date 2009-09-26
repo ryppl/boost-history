@@ -29,7 +29,7 @@ http://www.boost.org/doc/libs/1_39_0/libs/random/index.html
 	chi_squared<T>				
     	students_t_distribution<T>         
 	location_scale<Z>               X = sigma Z + mu
-	categorical_distribution<U>     Samples indices by their probability
+	categorical_distribution<U>     Samples indices by their probability (deprecated)
 	ref_distribution<X&>            A reference wrapper
 	gen_to_random<X>                A generator that acts like a RandomDist
 
@@ -44,6 +44,8 @@ boost_1_39_0
 
 [ History ]
 
+Sept   25 2009  : location_scale : modified constructor and constrain Z to be 
+a class type because a reference would be redundant with ref_distribution).
 August 18 2009  : renamed multinomial_distribution to categorical_distribution
 July 2009       : Current version
 

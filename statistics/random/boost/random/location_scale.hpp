@@ -34,11 +34,11 @@ namespace random{
 
         location_scale_distribution(){}
         location_scale_distribution(
-            typename call_traits<Z>::param_type z,
             const result_type& mu,
-            const result_type& sigma
+            const result_type& sigma,
+            typename call_traits<Z>::param_type z
         )
-        :z_(z),mu_(mu),sigma_(sigma){}
+        :mu_(mu),sigma_(sigma),z_(z){}
 
         template<typename U>
         result_type operator()(U& urng){ return (this->impl(urng)); }
@@ -46,14 +46,14 @@ namespace random{
         template<typename U>
         result_type operator()(U& urng)const{ return (this->impl(urng)); }
 
-        const result_type& mu()const{ return mu_; }
-        const result_type& sigma()const{ return sigma_; }
-        const Z& z(){ return z_ ;}
+        const result_type& mu()const{ return this->mu_; }
+        const result_type& sigma()const{ return this->sigma_; }
+        const Z& z(){ return this->z_ ;}
 
         private:
-        typename call_traits<Z>::value_type z_;
         result_type mu_;
         result_type sigma_;
+        typename call_traits<Z>::value_type z_;
         template<typename U>
         result_type impl(U& urng){
             return (this->mu()) + (this->sigma()) * (this->z_)(urng);
