@@ -136,7 +136,7 @@ make_columns_iterator(
 }
 
 
-// [b,e) define the sequence from which the matrix view is created
+// [b,e) is the sequence from which the matrix view is created
 template<typename It,typename N>
 columns_iterator<It>
 make_end_columns_iterator(

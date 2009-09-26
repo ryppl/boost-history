@@ -94,7 +94,7 @@ class rows_iterator
         
         I b = (this->base()).base();
         I e = boost::next(b,this->step());
-        // This would be wrong because how step_count_down_iterator uses 
+        // This would be wrong because step_count_down_iterator uses a
         // modulo 1 base iterator as one-past the end.
         // I e = boost::next(this->base(),1).base(); 
 
@@ -125,7 +125,7 @@ make_rows_iterator(
 }
 
 
-// [b,e) define the sequence from which the matrix view is created
+// [b,e) is the sequence from which the matrix view is created
 template<typename It,typename N>
 rows_iterator<It>
 make_end_rows_iterator(
