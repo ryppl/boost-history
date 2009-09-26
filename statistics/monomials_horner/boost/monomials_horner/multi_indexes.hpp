@@ -15,7 +15,7 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/bind.hpp>
 #include <boost/assert.hpp>
-#include <boost/matrix_view/iterator/row_iterator.hpp>
+#include <boost/view/rows_iterator.hpp>
 #include <boost/monomials_horner/monomials_properties.hpp>
 
 namespace boost{
@@ -29,7 +29,8 @@ namespace monomials_horner{
     // {(2,0,0) (1,1,0) (1,0,1)} = {(1,0,0) (0,1,0) (0,0,1)} + (1,0,0)
     // {(0,2,0) (0,1,1)} = {(0,1,0) (0,0,1)} + (0,1,0) etc.
 
-    template<unsigned int N>
+    // N is the dimension of the multivariate monomial
+    template<unsigned N>
     class multi_indexes{
       public:
         typedef std::vector<unsigned>                   storage_type;
@@ -37,7 +38,8 @@ namespace monomials_horner{
         typedef typename storage_type::size_type        size_type;
         typedef storage_type::value_type                base_value_type;
 
-        typedef matrix_view::row_iterator<base_iter_type>  iter_type;
+//        typedef matrix_view::row_iterator<base_iter_type>  iter_type;
+        typedef view::detail::rows_iterator<base_iter_type>  iter_type;
         typedef std::vector<iter_type>                  iters_type;
         typedef typename iter_type::value_type          value_type;
         typedef iterator_range<iter_type>               iter_range_type;
@@ -70,8 +72,13 @@ namespace monomials_horner{
                 size_type sz_new
                     = properties::number_degree_less_than(degree,N);
                 storage.resize(sz_new*N);
-                iter_type write_b = matrix_view::make_row_iterator(
+//                iter_type write_b = matrix_view::make_row_iterator(
+//                    begin(storage),
+//                    N
+//                );
+                iter_type write_b = view::detail::make_rows_iterator(
                     begin(storage),
+                    end(storage),
                     N
                 );
                 std::advance(write_b,sz_old);
@@ -92,8 +99,13 @@ namespace monomials_horner{
                     end(read_bs_dists),
                     back_inserter(read_bs),
                     unary_op(
-                        matrix_view::make_row_iterator(
+//                        matrix_view::make_row_iterator(
+//                            begin(storage),
+//                            N
+//                        )
+                        view::detail::make_rows_iterator(
                             begin(storage),
+                            end(storage),
                             N
                         )
                     )
@@ -102,11 +114,22 @@ namespace monomials_horner{
                 while(i<n){
                     BOOST_ASSERT(size(read_bs_dists)==N);
                     BOOST_ASSERT(std::distance(
-                        matrix_view::make_row_iterator(
+//                        matrix_view::make_row_iterator(
+//                            begin(variables),
+//                            N
+//                        ),
+//                        matrix_view::make_end_row_iterator(
+//                                begin(variables),
+//                                end(variables),
+//                                N
+//                        )
+
+                        view::detail::make_rows_iterator(
                             begin(variables),
+                            end(variables),
                             N
                         ),
-                        matrix_view::make_end_row_iterator(
+                        view::detail::make_end_rows_iterator(
                                 begin(variables),
                                 end(variables),
                                 N
@@ -118,8 +141,13 @@ namespace monomials_horner{
                         make_zip_iterator(
                             make_tuple(
                                 begin(read_bs),
-                                matrix_view::make_row_iterator(
+//                                matrix_view::make_row_iterator(
+//                                    begin(variables),
+//                                    N
+//                                )
+                                view::detail::make_rows_iterator(
                                     begin(variables),
+                                    end(variables),
                                     N
                                 )
                             )
@@ -127,7 +155,12 @@ namespace monomials_horner{
                         make_zip_iterator(
                             make_tuple(
                                 end(read_bs),
-                                matrix_view::make_end_row_iterator(
+//                                matrix_view::make_end_row_iterator(
+//                                    begin(variables),
+//                                    end(variables),
+//                                    N
+//                                )
+                                view::detail::make_end_rows_iterator(
                                     begin(variables),
                                     end(variables),
                                     N
@@ -145,8 +178,13 @@ namespace monomials_horner{
                     back_inserter(read_bs_dists),
                     bind(
                         std::distance<iter_type>,
-                        matrix_view::make_row_iterator(
+//                        matrix_view::make_row_iterator(
+//                            begin(storage),
+//                            N
+//                        ),
+                        view::detail::make_rows_iterator(
                             begin(storage),
+                            end(storage),
                             N
                         ),
                         _1
@@ -157,7 +195,7 @@ namespace monomials_horner{
 
             size_type dist
                 = properties::number_degree_less_than(degree,N);
-            iter_type b(begin(storage),N);
+            iter_type b(begin(storage),end(storage),N);
             iter_type e = b;
             std::advance(e,dist);
             iter_range_type(b,e);

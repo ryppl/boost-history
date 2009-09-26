@@ -18,7 +18,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1 (Apple Inc. build 5490)
 [Dependencies]
 
 /boost_1_39_0/ 
-/sandbox/statistics/matrix_view/ 
+/sandbox/statistics/view/ 
 
 [ Overview  ]
 
@@ -35,6 +35,11 @@ a       multivariate power
 p       a bound on |a|
 b       coefficient
 x       range of size D
+
+[ History ]
+
+Sep 09  Refactored to account for the change from matrix::view::row_iterator
+ to view::detail::rows_iterator
 
 
 [ Output ]
