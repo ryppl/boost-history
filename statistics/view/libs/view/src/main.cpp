@@ -11,6 +11,8 @@
 #include <libs/view/example/columns_iterator.h>
 #include <libs/view/example/rows_iterator.h>
 
+#include <boost/view/step_iterator.hpp>
+
 int main(){
 
     example_step_iterator(std::cout);

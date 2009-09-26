@@ -19,9 +19,10 @@ namespace boost{
 namespace view{
 namespace detail{
 
-// *rows_iterator returns an iterator range whose elements are a column of a 
-// row-major matrix view of a sequence traversed by an iterator of type I. 
-// The step is the number of elements per row.
+// I is an iterator type to some sequence
+//
+// *rows_iterator returns a range representing a row in a 
+// row-major matrix view. Each row is of length step
 template< class I
         , class V = use_default
         , class C = use_default

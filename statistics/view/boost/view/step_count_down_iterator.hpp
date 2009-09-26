@@ -97,6 +97,7 @@ public:
 private:
     friend class iterator_core_access;
 
+    // TODO
     /// If the step if negative behaves like a reverse_iterator
     reference dereference() const
     {
