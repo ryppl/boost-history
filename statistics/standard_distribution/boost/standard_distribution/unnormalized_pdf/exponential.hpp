@@ -22,12 +22,12 @@ namespace math{
         const T& x
     ){
 
+        typedef std::string str_;
         BOOST_MATH_STD_USING // for ADL of std functions
-        // to keep width = 80 caracters
-        static const char* function = strcpy(
-            "boost::math::log_unnormalized_pdf(" ,
+        static const str_ function = 
+            str_("boost::math::log_unnormalized_pdf(")+ 
             "const exponential_distribution<%1%>&,%1%)"
-        );
+        ;
 
         T lambda = d.lambda();
         T result;

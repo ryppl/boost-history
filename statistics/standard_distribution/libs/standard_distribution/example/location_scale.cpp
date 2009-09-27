@@ -30,6 +30,7 @@
 #include <boost/standard_distribution/distributions/students_t.hpp>
 #include <boost/standard_distribution/transformation/location_scale.hpp>
 #include <boost/scalar_dist/algorithm/transform.hpp>
+#include <boost/scalar_dist/iterator/distribution_function.hpp>
 #include <boost/scalar_dist/meta/include.hpp>
 #include <boost/scalar_dist/fun_wrap/include.hpp>
 
@@ -95,14 +96,20 @@ void example_location_scale(std::ostream& out){
             format ffd = fd; ffd%"mls_stud"%deleg(mls_stud,x);
             out << ffl.str() << ' ' << ffd.str() << std::endl;
         }
-        {   // math::transform + fun_wrap
+        {   // make_distribution_function_iterator + fun_wrap
             vals_ range_log_pdf;
-            math::transform<math::fun_wrap::log_unnormalized_pdf_>(
-                mstud,
-                begin(range_x),
-                end(range_x),
+            
+            std::copy(
+                math::make_distribution_function_iterator<
+                    math::fun_wrap::log_unnormalized_pdf_
+                >(mstud,boost::begin(range_x)),
+                math::make_distribution_function_iterator<
+                    math::fun_wrap::log_unnormalized_pdf_
+                >(mstud,boost::end(range_x)),
                 std::back_inserter(range_log_pdf)
             );
+            
+            
         }
         {   // product_pdf + fun_wrap
             typedef math::product_pdf<mstud_,mls_stud_>    prod_dist_;
