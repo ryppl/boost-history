@@ -29,10 +29,10 @@ void example_random(std::ostream& os){
 
     os << "example_random -> " << std::endl;
 
-    // For each distribution, D, and the corresponding random engine returned by
-    // make_random_generator, this example outputs a series of kolmogorov-
+    // For each distribution, dist, and the corresponding random engine returned
+    // by make_random(dist), this example outputs a series of kolmogorov-
     // smirnov statistics. Convergence to zero is evidence that 
-    // the sample agrees wit the cdf of D
+    // the sample agrees wit the cdf of dist
 
     using namespace boost;
     using namespace statistics;
