@@ -21,9 +21,9 @@ namespace distribution_toolkit{
         meta::is_math_distribution<D>,
         meta::value<D>
     >::type
-    quantile(const D& dist,const typename meta::value<D>::type x)
+    quantile(const D& dist,const typename meta::value<D>::type p)
     {
-        return boost::math::quantile(dist,x);
+        return boost::math::quantile(dist,p);
     }
 
 
