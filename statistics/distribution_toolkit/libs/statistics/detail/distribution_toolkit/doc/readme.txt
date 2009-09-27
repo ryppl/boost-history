@@ -34,7 +34,7 @@ http://www.boost.org/doc/libs/1_35_0/libs/math/doc/sf_and_dist/html/index.html
     What for?
     - exp( sum{ log_pdf : i=1,...,n } ) is preferable to prod{ pdf : i=1,..,n }  
     - The normalizing constant is either unnecessary (Bayesian) or can be
-    cached
+    cached under iid.
 
 /concept
 /fun_wrap 
