@@ -1,11 +1,13 @@
 ///////////////////////////////////////////////////////////////////////////////
-// matrix_view::example::row_iterator.cpp                                    //  
+// view::example::row_iterator.cpp                                    //  
 //                                                                           //
 //  (C) Copyright 2009 Erwann Rogard                                         //
 //  Use, modification and distribution are subject to the                    //
 //  Boost Software License, Version 1.0. (See accompanying file              //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
+
+/*
 #include <vector>
 #include <list>
 #include <algorithm>
@@ -29,8 +31,8 @@ void example_row_iterator(std::ostream& out)
 
     {
         typedef range_iterator<vec_>::type          it_;
-        typedef matrix_view::row_iterator<it_>      row_it_;
-        typedef matrix_view::row_iterator<it_>      row_it_;
+        typedef view::row_iterator<it_>      row_it_;
+        typedef view::row_iterator<it_>      row_it_;
 
         vec_ vec;
         vec_ vecc;
@@ -43,7 +45,7 @@ void example_row_iterator(std::ostream& out)
         it_ base_e = boost::end(vec);
         row_it_ b(base_b,stride); 
         row_it_ i = b;
-        row_it_ e = matrix_view::make_end_row_iterator(
+        row_it_ e = view::make_end_row_iterator(
             base_b,base_e,stride
         );
         while(i<e){
@@ -62,8 +64,8 @@ void example_row_iterator(std::ostream& out)
 
     {
         typedef vec_::const_iterator                it_;
-        typedef matrix_view::row_iterator<it_> row_it_;
-        typedef matrix_view::row_iterator<it_> row_it_;
+        typedef view::row_iterator<it_> row_it_;
+        typedef view::row_iterator<it_> row_it_;
 
         vec_ vec,vec_a;
         { 
@@ -74,8 +76,9 @@ void example_row_iterator(std::ostream& out)
         it_ base_e = boost::end(vec);
         row_it_  b(base_b,stride);
         out << "std::distance(b,e) : ";
+        
         for(it_ base_i = base_b; base_i<base_e; base_i++){
-            row_it_ e = matrix_view::make_end_row_iterator(
+            row_it_ e = view::make_end_row_iterator(
                 base_b,base_i,stride
             );
             out << std::distance(b,e) << ' '; 
@@ -85,3 +88,5 @@ void example_row_iterator(std::ostream& out)
 
     out << "<-" << std::endl;
 }
+
+*/
