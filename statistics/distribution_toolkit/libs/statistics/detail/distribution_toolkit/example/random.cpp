@@ -60,7 +60,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            generate_n(sc,n_draws,urng,dist);
+            generate2_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -77,7 +77,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            generate_n(sc,n_draws,urng,dist);
+            generate2_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -94,7 +94,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            generate_n(sc,n_draws,urng,dist);
+            generate2_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -112,7 +112,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            generate_n(sc,n_draws,urng,dist);
+            generate2_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -129,7 +129,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            generate_n(sc,n_draws,urng,dist);
+            generate2_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -150,7 +150,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            generate_n(sc,n_draws,urng,dist);
+            generate2_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
