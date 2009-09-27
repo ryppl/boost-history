@@ -17,7 +17,8 @@ namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
 
-    // Represents the inverse pdf
+    // A pseudo distribution resulting from mapping the pdf of a distribution
+    // to its inverse
     template<typename D>
     class inverse_pdf : public
         meta::inherit_policy<

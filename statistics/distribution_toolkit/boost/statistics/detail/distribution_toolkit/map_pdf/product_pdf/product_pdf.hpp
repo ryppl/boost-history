@@ -17,9 +17,8 @@ namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
 
-    // Represents the product of the pdf of two distributions
-    //
-    // A = T or A = T& or A = T*. Likewise for B.
+    // A pseudo distribution resulting from product of the pdf of two
+    // distributions
     template<typename A,typename B>
     class product_pdf : public meta::inherit_policy<
         A,
