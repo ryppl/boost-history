@@ -66,7 +66,7 @@ namespace distribution_toolkit{
         }
 
         //template<typename N,typename D,typename U>
-        //void generate(N n, U& urng,const D& dist){
+        //void generate(N n, G& vg){
         //    BOOST_AUTO(vg,boost::make_random_generator(urng,dist));
         //    size_type i = 0;
         //    while(i<n){
