@@ -42,6 +42,16 @@ struct gmp_value_type
         mpf_set(m_value, other.m_value);
     }
 
+    void operator =( gmp_value_type const& other)
+    {
+        // Copy value if not self-assignment
+        if (this != &other)
+        {
+            mpf_set(m_value, other.m_value);
+        }
+    }
+
+
     ~gmp_value_type()
     {
         mpf_clear(m_value);

@@ -28,6 +28,7 @@ namespace boost { namespace numeric_adaptor {
 struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
 {
     cln_value_type()
+        : m_value(cln::cl_float(0.0, cln::float_format(256)))
     {}
 
     cln_value_type(double v)
@@ -37,8 +38,8 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
         m_value = cln::cl_float(v, cln::float_format(256));
     }
 
-    cln_value_type(cln::cl_F const& v):
-    m_value(v)
+    cln_value_type(cln::cl_F const& v)
+        : m_value(v)
     {}
 
     operator double() const
