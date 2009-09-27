@@ -42,6 +42,7 @@ void example_chi_squared(std::ostream& out){
     urng_ urng;
 
     check_ check;
+    /*
     check(
         mdist,
         make_random(mdist),
@@ -49,6 +50,8 @@ void example_chi_squared(std::ostream& out){
         n_ks,
         urng
     );
+    */
+
     
     out << check;
     out << "<-" << std::endl;

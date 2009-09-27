@@ -46,6 +46,7 @@ void example_location_scale_students_t(std::ostream& out){
     mdist_ mdist( mstud_( df ), mu , sigma);
     urng_ urng;
 
+/*
     check_ check;
     check(
         mdist,
@@ -56,6 +57,7 @@ void example_location_scale_students_t(std::ostream& out){
     );
     
     out << check;
+*/
     out << "<-" << std::endl;
 
 }

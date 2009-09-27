@@ -13,7 +13,7 @@
 #include <boost/random/variate_generator.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/scalar_dist/fun_wrap/include.hpp>
-#include <boost/scalar_dist/algorithm/transform.hpp>
+#include <boost/scalar_dist/iterator/distribution_function.hpp>
 #include <boost/dist_random/functional/make_random.hpp>
 
 namespace boost{
@@ -92,19 +92,27 @@ namespace boost{
     >::type
     generate_function_n(ItX b_x, ItF b_f, N n,const D& dist, U& urng){
         BOOST_CONCEPT_ASSERT((boost_concepts::IncrementableIterator<ItX>));
-        BOOST_CONCEPT_ASSERT((boost_concepts::WritableIterator<ItX>));
+        // TODO was there a reason std::back_inserter would not be allowed?
+        // BOOST_CONCEPT_ASSERT((boost_concepts::WritableIterator<ItF>));
         ItX e_x = generate_n(
             b_x,
             n,
             dist,
             urng
         );
-        boost::math::transform<F>(
-            dist,
-            b_x,
-            e_x,
+
+        std::copy(
+            math::make_distribution_function_iterator<F>(
+                dist,
+                b_x
+            ),
+            math::make_distribution_function_iterator<F>(
+                dist,
+                e_x
+            ),
             b_f
         );
+
         return e_x;
     }
 
