@@ -17,7 +17,7 @@ These are C++ classes that extend boost/math/distributions by providing
 
     - wrappers that decouple the function, such as pdf, from the distribution 
     to which it is applied.
-    - algorithms that iterate over inputs
+    - a distribution function iterator
     - mappings of distribution functionals (pdf->1/pdf) 
 
 [ Useful links ]
@@ -38,11 +38,15 @@ http://www.boost.org/doc/libs/1_35_0/libs/math/doc/sf_and_dist/html/index.html
     Decouples the function, such as pdf, from the distribution D:
         fun_wrap::cdf_<D>::instance
 
-[ algorithm ]
+[ iterator ]
 
-    Thanks to fun_wrap, we can parameterize algorithms as follows:
-        accumulate<fun_wrap::cdf_>(dist,b_x,e_x);
-        transform<fun_wrap::cdf_>(dist,b_x,e_x,b_f);
+    Thanks to the tools develepoped in fun_wrap, we may call, for example,
+    
+    std::copy(
+        make_distribution_function_iterator<math::pdf_>(dist,b),
+        make_distribution_function_iterator<math::pdf_>(dist,e),
+        std::back_inserter(vec_pdf)
+    );
 
 [ map_pdf ] 
 
@@ -83,5 +87,6 @@ boost_1_39_0
 
 [ History ]
 
-July 2009 : Current version
+Sep 16 2009 : deleted /algorithm and added /iterator
+July 2009   : First version
 

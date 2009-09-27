@@ -10,6 +10,7 @@
 #define BOOST_SCALAR_DIST_META_INCLUDE_HPP_ER_2009
 
 #include <boost/scalar_dist/meta/distribution_base.hpp>
+#include <boost/scalar_dist/meta/distribution_function_iterator.hpp>
 #include <boost/scalar_dist/meta/delegate.hpp>
 #include <boost/scalar_dist/meta/has_pdf.hpp>
 #include <boost/scalar_dist/meta/is_scalar_dist.hpp>

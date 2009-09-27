@@ -119,9 +119,9 @@ namespace math{
         typedef typename traits_::result_type res_;
 
         return std::transform(
-            b, //1
+            b,  //1
             e,
-            b1,//2
+            b1, //2
             i,
             bind<res_>(
                 G<res_>(),

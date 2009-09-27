@@ -12,6 +12,7 @@
 #include <boost/scalar_dist/unscope/include.hpp>
 #include <boost/scalar_dist/map_pdf/include.hpp>
 #include <boost/scalar_dist/algorithm/include.hpp>
+#include <boost/scalar_dist/iterator/include.hpp>
 #include <boost/scalar_dist/fun_wrap/include.hpp>
 #include <boost/scalar_dist/meta/include.hpp>
 
