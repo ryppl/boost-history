@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// matrix_view::algorithm::transform_column.hpp                              //
+// view::algorithm::transform_column.hpp                              //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_MATRIX_VIEW_ALGORITHM_TRANSFORM_COLUMN_HPP_ER_2009
-#define BOOST_MATRIX_VIEW_ALGORITHM_TRANSFORM_COLUMN_HPP_ER_2009
+#ifndef BOOST_VIEW_ALGORITHM_TRANSFORM_COLUMN_HPP_ER_2009
+#define BOOST_VIEW_ALGORITHM_TRANSFORM_COLUMN_HPP_ER_2009
 #include <iterator>
 #include <boost/utility.hpp>
 #include <boost/lambda/lambda.hpp>
@@ -14,7 +14,7 @@
 #include <boost/iterator/iterator_concepts.hpp>
 
 namespace boost{
-namespace matrix_view{
+namespace view{
 
     // Visits the subsequence defined by a stride and an offset, and transforms
     // it by f. 
@@ -75,7 +75,8 @@ namespace matrix_view{
     ){
         BOOST_CONCEPT_ASSERT((boost_concepts::IncrementableIterator<It>));
         BOOST_CONCEPT_ASSERT((boost_concepts::IncrementableIterator<ItO>));
-        BOOST_CONCEPT_ASSERT((boost_concepts::WritableIterator<It>));
+        // TODO allow Writable or back_inserter
+        // BOOST_CONCEPT_ASSERT((boost_concepts::WritableIterator<ItO>));
     
         typedef typename iterator_difference<It>::type diff_;
         diff_ d = std::distance( b, e );
@@ -106,7 +107,8 @@ namespace matrix_view{
     ){
         BOOST_CONCEPT_ASSERT((boost_concepts::IncrementableIterator<It>));
         BOOST_CONCEPT_ASSERT((boost_concepts::IncrementableIterator<ItO>));
-        BOOST_CONCEPT_ASSERT((boost_concepts::WritableIterator<It>));
+        // TODO allow std::back_inserter
+        // BOOST_CONCEPT_ASSERT((boost_concepts::WritableIterator<It>));
     
         typedef typename iterator_difference<It>::type diff_;
         i_o = boost::next( i_o, offset );
