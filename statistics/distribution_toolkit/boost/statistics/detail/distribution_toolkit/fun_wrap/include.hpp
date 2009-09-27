@@ -13,6 +13,5 @@
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/log_unnormalized_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/quantile.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fun_wrap/unnormalized_pdf.hpp>
 
 #endif
