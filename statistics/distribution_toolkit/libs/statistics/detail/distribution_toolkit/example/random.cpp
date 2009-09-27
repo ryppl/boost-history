@@ -18,10 +18,9 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/distributions/uniform/include.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/random/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/data/sample_cdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/data/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/unscope/os.hpp>
 
 #include <libs/statistics/detail/distribution_toolkit/example/random.h>
@@ -61,7 +60,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            sc.generate(n_draws,urng,dist);
+            generate_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -78,7 +77,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            sc.generate(n_draws,urng,dist);
+            generate_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -95,7 +94,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            sc.generate(n_draws,urng,dist);
+            generate_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -113,7 +112,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            sc.generate(n_draws,urng,dist);
+            generate_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -130,7 +129,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            sc.generate(n_draws,urng,dist);
+            generate_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;
@@ -151,7 +150,7 @@ void example_random(std::ostream& os){
         sc.clear();
         while(i<n_loops){
             sc.reserve(sc.size()+n_draws);
-            sc.generate(n_draws,urng,dist);
+            generate_n(sc,n_draws,urng,dist);
             os << sc << std::endl;
             ++i;
             n_draws *= n2;

@@ -21,8 +21,6 @@
 #include <boost/fusion/sequence/intrinsic/at_key.hpp>
 #include <boost/fusion/include/at_key.hpp>
 
-#include <boost/statistics/detail/distribution_toolkit/random/generator.hpp>
-
 namespace boost{
 namespace statistics{
 namespace detail{
@@ -58,25 +56,28 @@ namespace distribution_toolkit{
         template<typename N>
         void reserve(N n){ this->sample_.reserve(n); }
         void clear(){ this->sample_.clear(); }
-        template<typename X,typename D>
-        void operator()(const X& x,const D& dist){
+        template<typename X,typename T1>
+        void operator()(const X& x,const T1& cdf){
             map_ map(
                 fusion::make_pair<key1_>(x),
-                fusion::make_pair<key2_>(cdf(dist,x))
+                fusion::make_pair<key2_>(cdf)
             );
             this->sample_.push_back(map);
         }
 
-        template<typename N,typename D,typename U>
-        void generate(N n, U& urng,const D& dist){
-            BOOST_AUTO(vg,boost::make_random_generator(urng,dist));
-            size_type i = 0;
-            while(i<n){
-                (*this)(vg(),dist);
-                ++i;
-            };
-            
-        }
+        //template<typename N,typename D,typename U>
+        //void generate(N n, U& urng,const D& dist){
+        //    BOOST_AUTO(vg,boost::make_random_generator(urng,dist));
+        //    size_type i = 0;
+        //    while(i<n){
+        //        (*this)(vg(),dist);
+        //
+        //        cdf(dist,x)
+        //
+        //        ++i;
+        //    };
+        //    
+        //}
 
         // Access
         size_type size()const{ return boost::size(this->sample()); }
