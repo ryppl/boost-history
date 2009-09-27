@@ -7,10 +7,14 @@
 /////////////////////////////////////////////////////////////////////////////// 
 #include <iostream>
 #include <libs/statistics/empirical_cdf/example/proportion_less_than.h>
+#include <libs/statistics/empirical_cdf/example/cdf.h>
+
+#include <boost/statistics/empirical_cdf/iterator/include.hpp>
 
 int main(){
 
     example_algorithm_proportion_less_than(std::cout);
+    example_algorithm_cdf(std::cout);
 
     // See sandbox/dist_random for other examples.
 
