@@ -17,9 +17,10 @@ These are C++ classes that extend boost/math/distributions. However, it is not
 intrusive.  Instead, the distributions in boost::math are brought into the scope 
 of distribution_toolkit with forwarding functions.
 
-[ Useful links ]
+[ Related links ]
 
-http://www.boost.org/doc/libs/1_35_0/libs/math/doc/sf_and_dist/html/index.html
+http://www.boost.org/doc/libs/1_39_0/libs/math/doc/sf_and_dist/html/index.html
+http://www.boost.org/doc/libs/1_39_0/libs/random/index.html
 
 [ Directories ]
 
@@ -29,12 +30,14 @@ http://www.boost.org/doc/libs/1_35_0/libs/math/doc/sf_and_dist/html/index.html
     Provides extended functionality for distributions in boost::math or adds
     distributions not available under this scope, such as location_scale
 
-    For example   
+    For example,   
         log_unnormalized_pdf(dist,x)
     What for?
     - exp( sum{ log_pdf : i=1,...,n } ) is preferable to prod{ pdf : i=1,..,n }  
     - The normalizing constant is either unnecessary (Bayesian) or can be
     cached under iid.
+
+    make_random(dist) returns a model of RandomDistribution 
 
 /concept
 /fun_wrap 
@@ -56,7 +59,8 @@ http://www.boost.org/doc/libs/1_35_0/libs/math/doc/sf_and_dist/html/index.html
 /meta
 /random
     
-    Maps a distribution to a variate generator
+    Maps a distribution and a uniform random number generator to a variate 
+    generator
     
 /unscope
 
