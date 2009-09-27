@@ -84,7 +84,7 @@ void example_random(std::ostream& os){
             n_draws *= n2;
         }
     }
-    { // TODO ERROR : does not converge 
+    { 
         typedef math::gamma_distribution<val_>            dist_;
         const val_ shape = 1.0;
         dist_ dist( shape );
