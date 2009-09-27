@@ -28,6 +28,7 @@ namespace empirical_cdf{
     //
     // Requirements:
     // [b_x,e_x) is the empirical sample as originally drawn i.e. NOT SORTED
+    //
     template<typename D,typename It,typename ItO>
     ItO sequential_kolmogorov_smirnov_distance(
         const D& dist,
@@ -39,14 +40,20 @@ namespace empirical_cdf{
 
     // Implementation //
 
+    // for each b in {b_x+dx[0],b_x+dx[1],...,b_x+dx[n-1]}
+    // computes the distance to the empir cdf [b,e_x)
     template<typename D,typename It,typename ItO>
     ItO sequential_kolmogorov_smirnov_distance(
         const D& dist,
         It b_x,
         It e_x, 
+        It b_dx,
+        It e_dx,
         typename iterator_difference<It>::type k,
         ItO i_o
-    ){
+    )
+    {
+        typedef std::string                             str_;
         typedef typename iterator_difference<It>::type  diff_;
         typedef typename iterator_value<It>::type       val_;
         typedef std::vector<val_>                       vals_;
@@ -54,10 +61,10 @@ namespace empirical_cdf{
         if( b_x == e_x ){ return i_o; }
         diff_ diff = std::distance( b_x, e_x);
         if(diff % k != 0){ 
-            static const char* msg = strcpy(
-                "sequential_kolmogorov_smirnov_distance",
+            static const str_ msg = 
+                str_("sequential_kolmogorov_smirnov_distance") +
                 "diff = %1% not multiple of k = %2%."
-            );
+            ;
             format f(msg); f % diff % k;
             throw std::runtime_error(f.str());  
         }
@@ -70,11 +77,16 @@ namespace empirical_cdf{
             std::advance(i_x,delta);
             r_x.clear();
             std::copy(
-                b_x,i_x,std::back_inserter(r_x)
+                b_x,
+                i_x,
+                std::back_inserter(r_x)
             );
             std::sort(boost::begin(r_x),boost::end(r_x));
             it_val_ e_cdf = cdf_empirical_cdf_differences(
-                dist,boost::begin(r_x),boost::end(r_x),boost::begin(cdfs)
+                dist,
+                boost::begin(r_x),
+                boost::end(r_x),
+                boost::begin(cdfs)
             );
             *i_o = (
                 *(

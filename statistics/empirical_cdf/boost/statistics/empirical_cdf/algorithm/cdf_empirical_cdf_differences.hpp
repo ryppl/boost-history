@@ -12,21 +12,20 @@
 #include <string>
 #include <stdexcept>
 #include <algorithm>
-#include <boost/type_traits/function_traits.hpp>
-#include <boost/lambda/bind.hpp>
-#include <boost/lambda/lambda.hpp>
 #include <ext/algorithm>
-#include <boost/format.hpp>
 #include <boost/range.hpp>
-#include <boost/bind.hpp>
-#include <boost/function.hpp>
-#include <boost/numeric/conversion/converter.hpp>
-#include <boost/iterator/counting_iterator.hpp>
-#include <boost/iterator/transform_iterator.hpp>
+
 #include <boost/iterator/iterator_traits.hpp>
+
+#include <boost/typeof/typeof.hpp>
 #include <boost/scalar_dist/fun_wrap/cdf.hpp>
 #include <boost/scalar_dist/meta/bind_delegate.hpp>
 #include <boost/scalar_dist/algorithm/transform.hpp>
+
+#include <boost/lambda/bind.hpp>
+#include <boost/lambda/lambda.hpp>
+//#include <boost/lambda/detail/ret.hpp>
+#include <boost/statistics/empirical_cdf/algorithm/transform.hpp>
 
 namespace boost{
 namespace statistics{
@@ -65,33 +64,20 @@ namespace empirical_cdf{
         InIt e_cdf,  
         OutIt out
     ){
-        typedef typename iterator_value<InIt>::type value_t;
-        typedef typename iterator_difference<InIt>::type diff_t;
-        diff_t diff = std::distance(b_cdf,e_cdf);
-        value_t n = numeric::converter<value_t,diff_t>::convert(diff);
-        typedef numeric::converter<value_t,unsigned> conv_;
+        typedef typename iterator_value<InIt>::type val_;
 
-        return std::transform(
-            counting_iterator<unsigned>(0),
-            counting_iterator<unsigned>(diff),
+        BOOST_AUTO(
+            fun,
+            boost::lambda::ret<val_>(
+                boost::lambda::_2 - boost::lambda::_1
+            )            
+        );
+
+        return empirical_cdf::transform<val_>(
             b_cdf,
+            e_cdf,
             out,
-            // TODO lambda expression might be cleaner:
-            bind<value_t>( 
-                &fabs,
-                bind<value_t>(
-                    std::minus<value_t>(),
-                    bind<value_t>(
-                        std::divides<value_t>(),
-                        bind<value_t>(
-                            numeric::converter<value_t,unsigned>(),
-                            _1
-                        ),
-                        n
-                    ),
-                    _2
-                )
-            )
+            fun
         );
     }
 
