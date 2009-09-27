@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// matrix_view::example::transform_column.cpp                                //  
+// view::example::transform_column.cpp                                //  
 //                                                                           //
 //  (C) Copyright 2009 Erwann Rogard                                         //
 //  Use, modification and distribution are subject to the                    //
@@ -42,7 +42,7 @@ void example_transform_column(std::ostream& out)
         }
         for(unsigned j = 0; j<n_col; j++){
             column.clear();
-            matrix_view::copy_column<n_col>(
+            view::copy_column<n_col>(
                 boost::begin(vec),
                 boost::end(vec),
                 j,
