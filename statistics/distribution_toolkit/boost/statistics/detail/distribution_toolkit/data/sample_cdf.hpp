@@ -65,20 +65,6 @@ namespace distribution_toolkit{
             this->sample_.push_back(map);
         }
 
-        //template<typename N,typename D,typename U>
-        //void generate(N n, G& vg){
-        //    BOOST_AUTO(vg,boost::make_random_generator(urng,dist));
-        //    size_type i = 0;
-        //    while(i<n){
-        //        (*this)(vg(),dist);
-        //
-        //        cdf(dist,x)
-        //
-        //        ++i;
-        //    };
-        //    
-        //}
-
         // Access
         size_type size()const{ return boost::size(this->sample()); }
         const sample_type& sample()const{ return this->sample_; }

@@ -13,6 +13,8 @@
 
 namespace boost{
 
+        // Adds n elements randomly drawn from dist, together with their cdf 
+        // to the sample maintained in sc
         template<typename T,typename N,typename U,typename D>
         typename enable_if<
             statistics::detail::distribution_toolkit
@@ -23,7 +25,7 @@ namespace boost{
             statistics::detail::distribution_toolkit::sample_cdf<T>& sc,
             N n, 
             U& urng,
-            const D& dist
+            D dist
         ){
             return boost::generate_n(
                 sc,
