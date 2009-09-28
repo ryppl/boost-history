@@ -23,6 +23,9 @@ namespace random{
     // Samples from a location-scale distribution
     //
     // X = sigma Z + mu
+    //
+    // TODO Z shouldn't be allowed to be a ref because ref_distribution already
+    // exists
     template<typename Z>
     class location_scale_distribution{
         public:
