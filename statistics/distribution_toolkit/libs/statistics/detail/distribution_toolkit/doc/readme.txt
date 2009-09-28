@@ -17,6 +17,12 @@ These are C++ classes that extend boost/math/distributions. However, it is not
 intrusive.  Instead, the distributions in boost::math are brought into the scope 
 of distribution_toolkit with forwarding functions.
 
+[ Linux, Windows ]
+
+Please report your experience (good or bad) if are you using MSVC or gcc on 
+any platform other than Mac, from exectuting 
+libs/statistics/detail/distribution_toolkit/example
+
 [ Related links ]
 
 http://www.boost.org/doc/libs/1_39_0/libs/math/doc/sf_and_dist/html/index.html
@@ -71,9 +77,10 @@ http://www.boost.org/doc/libs/1_39_0/libs/random/index.html
     The rationale for this is to have a common interface for the distributions
     in distribution_toolkit, and others defined throughout boost::statistics
         
-[ Compiler ]
+[ Platform/Compiler ]
 
-gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
+Mac OS Leopard 10.5         gcc version 4.0.1
+
 
 [ Dependencies ]
 
