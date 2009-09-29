@@ -30,6 +30,13 @@ struct gmp_value_type
         mpf_set_d(m_value, v);
     }
 
+    gmp_value_type(char const* s)
+    {
+        mpf_init(m_value);
+        mpf_set_str(m_value, s, 10);
+    }
+
+
     gmp_value_type(mpf_t& v)
     {
         mpf_init(m_value);
@@ -129,6 +136,29 @@ struct gmp_value_type
         return r;
     }
 
+
+    template <typename Char, typename Traits>
+    friend inline std::basic_ostream<Char, Traits>& operator<<(
+            std::basic_ostream<Char, Traits>& os, gmp_value_type const& v)
+    {
+        mp_exp_t exponent;
+
+        char* s = mpf_get_str(NULL, &exponent, 10, 0, v.m_value);
+
+        if (exponent != 0)
+        {
+            os << "0." << s << "e" << exponent;
+        }
+        else
+        {
+            os << s;
+        }
+        free(s);
+        return os;
+    }
+
+
+
     mpf_t m_value;
 };
 
@@ -136,41 +166,47 @@ struct gmp_value_type
 } // namespace numeric_adaptor
 
 
-numeric_adaptor::gmp_value_type abs(numeric_adaptor::gmp_value_type const& v)
+inline numeric_adaptor::gmp_value_type abs(
+        numeric_adaptor::gmp_value_type const& v)
 {
     numeric_adaptor::gmp_value_type r;
     mpf_abs(r.m_value, v.m_value);
     return r;
 }
 
-numeric_adaptor::gmp_value_type sqrt(numeric_adaptor::gmp_value_type const& v)
+inline numeric_adaptor::gmp_value_type sqrt(
+        numeric_adaptor::gmp_value_type const& v)
 {
     numeric_adaptor::gmp_value_type r;
     mpf_sqrt(r.m_value, v.m_value);
     return r;
 }
 
-numeric_adaptor::gmp_value_type cos(numeric_adaptor::gmp_value_type const& v)
+inline numeric_adaptor::gmp_value_type cos(
+        numeric_adaptor::gmp_value_type const& v)
 {
     return numeric_adaptor::gmp_value_type(std::cos(v));
 }
 
-numeric_adaptor::gmp_value_type sin(numeric_adaptor::gmp_value_type const& v)
+inline numeric_adaptor::gmp_value_type sin(
+        numeric_adaptor::gmp_value_type const& v)
 {
     return numeric_adaptor::gmp_value_type(std::sin(v));
 }
 
-numeric_adaptor::gmp_value_type tan(numeric_adaptor::gmp_value_type const& v)
+inline numeric_adaptor::gmp_value_type tan(
+        numeric_adaptor::gmp_value_type const& v)
 {
     return numeric_adaptor::gmp_value_type(std::tan(v));
 }
 
-numeric_adaptor::gmp_value_type atan(numeric_adaptor::gmp_value_type const& v)
+inline numeric_adaptor::gmp_value_type atan(
+        numeric_adaptor::gmp_value_type const& v)
 {
     return numeric_adaptor::gmp_value_type(std::atan(v));
 }
 
-numeric_adaptor::gmp_value_type hypot(
+inline numeric_adaptor::gmp_value_type hypot(
     numeric_adaptor::gmp_value_type const& a,
     numeric_adaptor::gmp_value_type const& b)
 {

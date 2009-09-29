@@ -10,6 +10,9 @@
 #ifndef BOOST_NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
 #define BOOST_NUMERIC_ADAPTOR_CLN_VALUE_TYPE_HPP
 
+// CLN can be downloaded from http://www.ginac.de/CLN/
+
+#include <ostream>
 
 #include <cln/cln.h>
 #include <cln/float.h>
@@ -25,7 +28,7 @@ namespace boost { namespace numeric_adaptor {
     as being of type cl_F.
 
 */
-struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
+struct cln_value_type
 {
     cln_value_type()
         : m_value(cln::cl_float(0.0, cln::float_format(256)))
@@ -37,6 +40,14 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
         // classes cl_DF, cl_F, cl_R, cl_N and cl_number
         m_value = cln::cl_float(v, cln::float_format(256));
     }
+
+    cln_value_type(char const* s)
+        : m_value(cln::cl_float(0.0, cln::float_format(256)))
+    {
+        // Conversions from `const char *' are provided [...]
+        m_value = s;
+    }
+
 
     cln_value_type(cln::cl_F const& v)
         : m_value(v)
@@ -104,6 +115,20 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
         return cln_value_type(-v.m_value);
     }
 
+
+    template <typename Char, typename Traits>
+    friend inline std::basic_ostream<Char, Traits>& operator<<(
+            std::basic_ostream<Char, Traits>& os, cln_value_type const& v)
+    {
+        cln::cl_print_flags flags;
+        flags.default_float_format = cln::float_format_dfloat;
+        cln::print_float(os, flags, v.m_value);
+        return os;
+    }
+
+
+
+
     cln::cl_F m_value;
 };
 
@@ -111,37 +136,43 @@ struct cln_value_type //: public default_value_type<cln_policy, cln::cl_F>
 } // namespace numeric_adaptor
 
 
-numeric_adaptor::cln_value_type abs(numeric_adaptor::cln_value_type const& v)
+inline numeric_adaptor::cln_value_type abs(
+        numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::abs(v.m_value));
 }
 
-numeric_adaptor::cln_value_type sqrt(numeric_adaptor::cln_value_type const& v)
+inline numeric_adaptor::cln_value_type sqrt(
+        numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::sqrt(v.m_value));
 }
 
-numeric_adaptor::cln_value_type cos(numeric_adaptor::cln_value_type const& v)
+inline numeric_adaptor::cln_value_type cos(
+        numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::cos(v.m_value));
 }
 
-numeric_adaptor::cln_value_type sin(numeric_adaptor::cln_value_type const& v)
+inline numeric_adaptor::cln_value_type sin(
+        numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::sin(v.m_value));
 }
 
-numeric_adaptor::cln_value_type tan(numeric_adaptor::cln_value_type const& v)
+inline numeric_adaptor::cln_value_type tan(
+        numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::tan(v.m_value));
 }
 
-numeric_adaptor::cln_value_type atan(numeric_adaptor::cln_value_type const& v)
+inline numeric_adaptor::cln_value_type atan(
+        numeric_adaptor::cln_value_type const& v)
 {
     return numeric_adaptor::cln_value_type(cln::atan(v.m_value));
 }
 
-numeric_adaptor::cln_value_type hypot(
+inline numeric_adaptor::cln_value_type hypot(
     numeric_adaptor::cln_value_type const& a,
     numeric_adaptor::cln_value_type const& b)
 {
