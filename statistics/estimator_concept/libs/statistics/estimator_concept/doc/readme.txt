@@ -14,7 +14,7 @@ erwann.rogard@gmail.com
 [ Overview ]
 
 C++ tools for concept checking of statistical estimators. 
-See sandbox/statistics/goodness_of_fit for an application.  
+See sandbox/statistics/cross_validation for an application.  
 
 [ Compiler ]
 
