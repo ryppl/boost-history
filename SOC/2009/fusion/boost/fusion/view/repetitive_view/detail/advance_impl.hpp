@@ -67,7 +67,7 @@ namespace boost { namespace fusion
             static type
             call(It const& it)
             {
-                return fusion::advance<real_n>(fusion::begin(it.seq));
+                return fusion::advance<real_n>(fusion::begin(it.seq.get()));
             }
         };
     }
@@ -97,7 +97,7 @@ namespace boost { namespace fusion
                 static type
                 call(It it)
                 {
-                    return type(it.seq,gen::call(it));
+                    return type(it.seq.get(),gen::call(it));
                 }
             };
         };

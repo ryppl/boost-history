@@ -11,6 +11,7 @@
 #include <boost/fusion/sequence/intrinsic/end.hpp>
 #include <boost/fusion/iterator/prior.hpp>
 
+#include <boost/mpl/identity.hpp>
 #include <boost/mpl/bool.hpp>
 #include <boost/mpl/next.hpp>
 #include <boost/mpl/equal_to.hpp>
@@ -24,32 +25,32 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;
-            typedef typename
-                detail::remove_reference<typename it::seq_type>::seq_type
-            real_seq_type;
 
             typedef
                 repetitive_view_iterator<
                     typename it::seq_type
-                  , typename mpl::eval_if<
-                        typename it::index
-                      , result_of::prior<typename it::it>
-                      , result_of::end<real_seq_type>
+                  , typename result_of::prior<
+                        typename mpl::eval_if<
+                            typename it::index
+                          , mpl::identity<typename it::it_type>
+                          , result_of::end<typename it::seq_type>
+                        >::type
                     >::type
-                  , mpl::next<typename it::index>::value
+                  , mpl::next<typename it::index>::type::value
                 >
             type;
 
             static type
-            call_impl(It it, mpl::true_ /*need_end_it*/)
+            call_impl(It it, mpl::false_ /*need_end_it*/)
             {
-                return type(it.seq,fusion::end(it.seq.seq.get()));
+                return type(it.seq.get(),
+                        fusion::prior(fusion::end(it.seq.get())));
             }
 
             static type
-            call_impl(It it, mpl::false_ /*need_end_it*/)
+            call_impl(It it, mpl::true_ /*need_end_it*/)
             {
-                return type(it.seq,fusion::prior(it.it));
+                return type(it.seq.get(),fusion::prior(it.it));
             }
 
             static type

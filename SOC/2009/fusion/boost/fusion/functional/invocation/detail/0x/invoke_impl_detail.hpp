@@ -354,7 +354,7 @@ namespace boost { namespace fusion { namespace detail
                         f,
                         seq,
                         mpl::int_<NumArgsLeft-1>(),
-                        deref(advance_c<NumArgsLeft-1>(
+                        fusion::deref(fusion::advance_c<NumArgsLeft-1>(
                             fusion::begin(std::forward<Seq>(seq))
                         )),
                         std::forward<Args>(args)...);

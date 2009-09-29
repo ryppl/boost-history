@@ -40,7 +40,7 @@ namespace boost { namespace fusion
                 static type
                 call(Seq seq)
                 {
-                    return deref_data(find_key<Key>(
+                    return fusion::deref_data(fusion::find_key<Key>(
                         BOOST_FUSION_FORWARD(Seq,seq)));
                 }
             };

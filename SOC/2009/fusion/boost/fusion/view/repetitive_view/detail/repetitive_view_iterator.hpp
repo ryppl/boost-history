@@ -42,8 +42,15 @@ namespace boost { namespace fusion
             BOOST_FUSION_TAG_CHECK(OtherIt,repetitive_view_iterator_tag);
         }
 
-        repetitive_view_iterator(Seq seq, It const& it)
-          : seq(seq)
+        template<typename OtherSeq>
+        repetitive_view_iterator(
+#ifdef BOOST_NO_RVALUE_REFERENCES
+                typename detail::view_storage<Seq>::call_param seq,
+#else
+                OtherSeq&& other_seq,
+#endif
+                It const& it)
+          : seq(BOOST_FUSION_FORWARD(OtherSeq,other_seq))
           , it(it)
         {}
 
@@ -58,7 +65,7 @@ namespace boost { namespace fusion
             return *this;
         }
 
-        Seq seq;
+        detail::view_storage<Seq> seq;
         It it;
     };
 }}

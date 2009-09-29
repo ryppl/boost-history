@@ -25,18 +25,14 @@ namespace boost { namespace fusion { namespace extension
         {
             typedef typename
                 result_of::deref<
-                    typename result_of::prior<
-                        typename detail::remove_reference<
-                            It
-                        >::type::it_type
-                    >::type
+                    typename detail::remove_reference<It>::type::it_type
                 >::type
             type;
 
             static type
             call(It it)
             {
-                return fusion::deref(fusion::prior(it.first));
+                return fusion::deref(it.it);
             }
         };
     };

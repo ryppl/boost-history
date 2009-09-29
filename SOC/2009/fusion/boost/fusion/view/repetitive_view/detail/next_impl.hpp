@@ -26,13 +26,10 @@ namespace boost { namespace fusion { namespace extension
         struct apply
         {
             typedef typename detail::remove_reference<It>::type it;
-            typedef typename
-                detail::remove_reference<typename it::seq_type>::seq_type
-            real_seq_type;
             typedef
                 mpl::equal_to<
-                    mpl::next<typename it::index>
-                  , result_of::size<real_seq_type>
+                    typename mpl::next<typename it::index>::type
+                  , result_of::size<typename it::seq_type>
                 >
             need_begin_it;
 
@@ -41,23 +38,23 @@ namespace boost { namespace fusion { namespace extension
                     typename it::seq_type
                   , typename mpl::eval_if<
                         need_begin_it
-                      , result_of::begin<real_seq_type>
-                      , result_of::prior<typename it::it>
+                      , result_of::begin<typename it::seq_type>
+                      , result_of::next<typename it::it_type>
                     >::type
-                  , mpl::next<typename it::index>::value
+                  , mpl::next<typename it::index>::type::value
                 >
             type;
 
             static type
             call_impl(It it, mpl::true_ /*need_begin_it*/)
             {
-                return type(it.seq,fusion::begin(it.seq.seq.get()));
+                return type(it.seq.get(),fusion::begin(it.seq.seq.get()));
             }
 
             static type
             call_impl(It it, mpl::false_ /*need_begin_it*/)
             {
-                return type(it.seq,fusion::next(it.it));
+                return type(it.seq.get(),fusion::next(it.it));
             }
 
             static type

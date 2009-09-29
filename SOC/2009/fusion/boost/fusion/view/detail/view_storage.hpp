@@ -16,6 +16,8 @@
 #include <boost/type_traits/add_const.hpp>
 #include <boost/type_traits/remove_const.hpp>
 
+//TODO is_convertible assert
+
 namespace boost { namespace fusion { namespace detail
 {
     template<typename T>
@@ -37,6 +39,7 @@ namespace boost { namespace fusion { namespace detail
         }
 
     public:
+        typedef T arg_type;
         typedef typename
             mpl::if_<
                 traits::is_view<T>
