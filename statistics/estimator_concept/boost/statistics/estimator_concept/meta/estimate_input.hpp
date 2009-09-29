@@ -11,18 +11,20 @@
 #include <boost/tuple/tuple.hpp>
 #include <boost/mpl/eval_if.hpp>
 #include <boost/mpl/identity.hpp>
-#include <boost/binary_op/meta/is_tuple.hpp>
+//#include <boost/binary_op/meta/is_tuple.hpp>
 
 namespace boost{
 namespace statistics{
 namespace estimator_concept{
 
-template <typename T>
-struct estimate_input : mpl::eval_if<
-    binary_op::is_tuple<T>,         // T = (X,Y) 
-    boost::tuples::element<0,T>,    // X
-    mpl::identity<T>                
->{};
+// TODO remove
+
+//template <typename T>
+//struct estimate_input : mpl::eval_if<
+//    binary_op::is_tuple<T>,         // T = (X,Y) 
+//    boost::tuples::element<0,T>,    // X
+//    mpl::identity<T>                
+//>{};
 
 }// estimator_concept
 }// statistics
