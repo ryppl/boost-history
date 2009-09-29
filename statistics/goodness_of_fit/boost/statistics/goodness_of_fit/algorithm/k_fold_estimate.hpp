@@ -32,7 +32,6 @@ namespace goodness_of_fit{
         BOOST_CONCEPT_ASSERT(( 
             estimator_concept::TrainableEstimator<E,range_> 
         ));
-                
 
         C caller;
         while(kfd.j()<kfd.k()){
@@ -52,13 +51,60 @@ namespace goodness_of_fit{
                     t,
                     *i
                 );
+
                 ++i;
             }
             kfd.increment();
         }
     }
+
+
+    // D
+    struct k_fold_estimate_crtp : D{
+
+        template<typename I,typename T,typename E,typename It>
+        void operator()(
+            k_fold_data<T>& kfd,
+            E estimator,
+            It i, //Writes tests estimates
+        ){
+            typedef k_fold_data<T>         k_fold_;
+            typedef typename k_fold_::range_train_data_type range_; 
+            BOOST_CONCEPT_ASSERT(( 
+                estimator_concept::TrainableEstimator<E,range_> 
+            ));
+
+            while(kfd.j()<kfd.k()){
+                range_ range(
+                    boost::begin( kfd.train_data() ),
+                    boost::end( kfd.train_data() )
+                );
+
+                train(
+                    estimator,
+                    range
+                );
+                typedef const D& derived_;
+
+                derived_ d = static_cast<derived_>(*this);
+
+                BOOST_FOREACH(const T& t, kfd.test_data())
+                {
+    
+                    *i = statistics::estimate(
+                        e,
+                        d(t)
+                    );
+
+                    ++i;
+                }
+                kfd.increment();
+            }
+        }
+    };
     
 }// goodness_of_fit
+}// detail
 }// statistics
 }// boost
 

@@ -20,11 +20,14 @@
 #include <boost/circular_buffer.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 
-#include <boost/binary_op/meta/include.hpp>
+//#include <boost/binary_op/meta/include.hpp>
+#include <boost/statistics/detail.hpp>
 
 namespace boost{
 namespace statistics{
+namespace detail{// Added
 namespace goodness_of_fit{
+
 
         // k = 4
         // train     test
@@ -35,7 +38,8 @@ namespace goodness_of_fit{
         // [3][0][1] (2)    j = 2
         // [0][1][2] (3)    j = 3
 
-    // If regression, T == tuple
+    // Examples:
+    // If regression, T == tuple 
     // If marginal,   T == Y
     template<typename T>
     class k_fold_data{
@@ -59,16 +63,17 @@ namespace goodness_of_fit{
         typedef boost::circular_buffer<T>            train_data_type;
         typedef std::vector<T>                       test_data_type;
         typedef long int                             int_;
-        typedef boost::sub_range<const train_data_type>    range_train_data_type;
+        typedef boost::sub_range<const train_data_type>    
+                                                    range_train_data_type;
 
         k_fold_data();
         template<typename It>
-        k_fold_data(int_ k, It b_xy,It e_xy); 
+        k_fold_data(int_ k, It b,It e); 
         k_fold_data(const k_fold_data&); 
         k_fold_data& operator=(const k_fold_data&);
 
         template<typename It> 
-        void initialize(int_ k, It b_xy,It e_xy); // j = 0
+        void initialize(int_ k, It b,It e); // j = 0
         void initialize(); //restores state to j = 0
         void increment(); // ++j
 
@@ -104,9 +109,9 @@ namespace goodness_of_fit{
     
     template<typename T>
         template<typename It>
-    k_fold_data<T>::k_fold_data(int_ k, It b_xy,It e_xy)
+    k_fold_data<T>::k_fold_data(int_ k, It b,It e)
     {
-        this->initialize(k,b_xy,e_xy);
+        this->initialize(k,b,e);
     } 
     
     template<typename T>
@@ -127,32 +132,32 @@ namespace goodness_of_fit{
 
     template<typename T>
         template<typename It>
-    void k_fold_data<T>::initialize(int_ k,It b_xy,It e_xy)
+    void k_fold_data<T>::initialize(int_ k,It b,It e)
     {
         BOOST_ASSERT(k>1);
         typedef typename iterator_difference<It>::type  diff_;
         this->k_ = k;
         this->j_ = -1;
-        diff_ d = std::distance( b_xy, e_xy);
+        diff_ d = std::distance( b, e);
         if(d % this->k() != 0){
             static const str_ msg 
-                = str_("k_fold_estimate : distance(b_xy,e_xy)") 
+                = str_("k_fold_estimate : distance(b,e)") 
                     + "%1% not a multiple of k = %2%";
             throw std::runtime_error( ( format(msg) % d % k ).str() );    
         }
         this->n_ = d / this->k(); 
 
-        It i = boost::next( b_xy, this->n() * (k-1) ); 
+        It i = boost::next( b, this->n() * (k-1) ); 
         this->test_data_.clear();
         this->test_data_.reserve(this->n());
         std::copy(
             i,
-            e_xy,
+            e,
             std::back_inserter(this->test_data_)
         );
         this->train_data_.assign(
             this->n() * (k-1),
-            b_xy, 
+            b, 
             i
         );
         this->increment();
@@ -228,8 +233,8 @@ namespace goodness_of_fit{
         return this->k_;
     }
     
-
 }// goodness_of_fit
+}// detail
 }// statistics
 }// boost
 

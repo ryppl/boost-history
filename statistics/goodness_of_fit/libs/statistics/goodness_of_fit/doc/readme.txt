@@ -13,7 +13,17 @@ erwann.rogard@gmail.com
 
 [ Overview ]
 
-C++ tools for cross validation.  
+C++ tools for cross validation. 
+
+The data structure k_fold_data keeps a dataset partitioned between train and 
+test subset. The mf increment() changes the partition to the next of K 
+partitions. The implementation relies on a circular buffer. 
+
+The class k_fold_estimate automates the task of producing estimates for each
+element of the test sample of a client supplied estimator (e). A derived class
+takes care of extracting the argument, (a), of a test data point, t, that
+is passed to (e). For example, if (e) is a regression estimator, t = (x,y), so 
+a = x.
 
 [ Compiler ]
 
