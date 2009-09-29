@@ -16,19 +16,19 @@ namespace statistics{
 namespace estimator_concept{
 
     // E    : estimator type
-    // Rxy  : sequence of (X,Y) pairs
-    template <typename E,typename Rxy,typename B = mpl::empty_base>
+    // R    : sequence of training points
+    template <typename E,typename R,typename B = mpl::empty_base>
     class Trainable : B
     {        
         public:
         BOOST_CONCEPT_USAGE(Trainable)
         {
-            train( e, r_xy ); 
+            train( e, r ); 
         }
     
         private:
         E e;
-        Rxy r_xy;
+        R r;
     };
 
 }// estimator_concept
