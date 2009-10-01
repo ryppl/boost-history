@@ -5,12 +5,14 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_DETAIL_AREA_HPP_ER_2009
-#define BOOST_ARS_DETAIL_AREA_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_DETAIL_AREA_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_DETAIL_AREA_HPP_ER_2009
 #include <stdexcept>
 #include <boost/ars/detail/data.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
 // Area of the exponential tangent between two
@@ -81,7 +83,9 @@ T area_segment_safeguarded(
 }
 
 
-}//ars
-}//boost
+}// ars
+}// detail
+}// statistics
+}// boost
 
 #endif

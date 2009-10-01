@@ -5,12 +5,14 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_PARAMETER_HPP_ER_2009
-#define BOOST_ARS_PARAMETER_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_PARAMETER_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_PARAMETER_HPP_ER_2009
 #include <boost/math/tools/precision.hpp>
 #include <boost/ars/constant.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
 // These parameters are used as defaults, but they can be changed at
@@ -38,7 +40,9 @@ T parameter<T>::max_log = constant<T>::lmax_/static_cast<T>(max_data_count);
 template<typename T> std::size_t parameter<T>::reserve = 5;
 template<typename T> unsigned parameter<T>::n_max_reject = 1e2;
 
-}
-}
+}// ars
+}// detail
+}// statistics
+}// boost
 
 #endif

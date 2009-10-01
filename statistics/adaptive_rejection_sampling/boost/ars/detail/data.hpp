@@ -5,15 +5,18 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_DETAIL_DATA_HPP_ER_2009
-#define BOOST_ARS_DETAIL_DATA_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_DETAIL_DATA_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_DETAIL_DATA_HPP_ER_2009
 #include <boost/function.hpp>
 #include <boost/math/tools/precision.hpp>
 #include <boost/ars/constant.hpp>
 #include <boost/ars/point.hpp>
 #include <boost/ars/detail/tangent_intersection.hpp>
 #include <boost/ars/error.hpp>
+
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
 template<typename T>
@@ -79,7 +82,9 @@ struct pred_isinf{
 };
 
 
-}//ars
-}//boost
+}// ars
+}// detail
+}// statistics
+}// boost
 
 #endif

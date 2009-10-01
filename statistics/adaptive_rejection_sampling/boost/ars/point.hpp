@@ -5,12 +5,14 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_POINT_HPP_ER_2009
-#define BOOST_ARS_POINT_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_POINT_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_POINT_HPP_ER_2009
 #include <ostream>
 #include <boost/ars/constant.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
 // Given an unnormalized density f, this class is a representation for (x,y,dy), 
@@ -95,7 +97,9 @@ T linearly_interpolate(
     return a.y() + (x-a.x()) * slope;
 }
 
-}
-}
+}// ars
+}// detail
+}// statistics
+}// boost
 
-#endif // BOOST_ARS_POINT_HPP_ER_2009
+#endif // BOOST_STATISTICS_DETAIL_ARS_POINT_HPP_ER_2009

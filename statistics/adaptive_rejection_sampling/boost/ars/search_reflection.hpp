@@ -5,8 +5,8 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_SEARCH_REFLECTION_HPP_ER_2009
-#define BOOST_ARS_SEARCH_REFLECTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_SEARCH_REFLECTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_SEARCH_REFLECTION_HPP_ER_2009
 #include <string>
 #include <boost/format.hpp>
 #include <boost/function.hpp>
@@ -17,6 +17,8 @@
 #include <boost/ars/functional/standard_distribution.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
 // This function searches by reflection for initial starting points 
@@ -154,7 +156,9 @@ unsigned search_reflection_dist(
 }
 
 
-}//ars
-}//boost
+}// ars
+}// detail
+}// statistics
+}// boost
 
 #endif

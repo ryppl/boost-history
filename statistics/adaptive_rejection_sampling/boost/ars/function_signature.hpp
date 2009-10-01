@@ -5,11 +5,13 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_FUNCTION_SIGNATURE_HPP_ER_2009
-#define BOOST_ARS_FUNCTION_SIGNATURE_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_FUNCTION_SIGNATURE_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_FUNCTION_SIGNATURE_HPP_ER_2009
 #include <boost/mpl/identity.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
     // This is the function signature required by the ars sampler.
@@ -20,7 +22,10 @@ namespace ars{
     struct function_signature : mpl::identity<
         void(const T&,T&,T&)
     >{};
-}
-}
+
+}// ars
+}// detail
+}// statistics
+}// boost
 
 #endif

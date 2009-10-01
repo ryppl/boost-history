@@ -5,31 +5,16 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_FUNCTIONAL_STANDARD_DISTRIBUTION_HPP_ER_2009
-#define BOOST_ARS_FUNCTIONAL_STANDARD_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_FUNCTIONAL_STANDARD_DISTRIBUTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_FUNCTIONAL_STANDARD_DISTRIBUTION_HPP_ER_2009
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
+#include <boost/statistics/detail/distribution_toolkit/unscope/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/unscope/derivative_log_unnormalized_pdf.hpp>
 
 namespace boost{
-
-namespace math{
-
-    template<typename D>
-    typename D::value_type  
-    log_unnormalized_pdf( //Fwd Declare
-        const D& d,
-        const typename D::value_type& x
-    );
-
-    template<typename D>
-    typename D::value_type  
-    derivative_log_unnormalized_pdf( //Fwd Declare
-        const D& d,
-        const typename D::value_type& x
-    );
-
-}
-
+namespace statistics{
+namespace detail{
 namespace ars{
 namespace functional{
 
@@ -72,13 +57,16 @@ class standard_distribution {
         const value_type& x,
         value_type& log_pdf,
         value_type& dlog_pdf
-    ){
-        //math::log_unnormalized_pdf
-        log_pdf = log_unnormalized_pdf(
-            this->distribution(),x);
+    )const{
+        log_pdf = boost::log_unnormalized_pdf(
+            this->distribution(),
+            x
+        );
             
-        dlog_pdf = derivative_log_unnormalized_pdf(
-            this->distribution(),x);
+        dlog_pdf = boost::derivative_log_unnormalized_pdf(
+            this->distribution(),
+            x
+        );
     }
 
     typename call_traits<D>::const_reference distribution()const{
@@ -91,7 +79,10 @@ class standard_distribution {
 };
 
 }
-}
-}
+}// ars
+}// detail
+}// statistics
+}// boost
+
 #endif
 

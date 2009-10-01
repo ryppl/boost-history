@@ -11,8 +11,8 @@
 
 int main(){
 
-    example_standard_distribution(std::cout);
     example_search_reflection(std::cout);
+    example_standard_distribution(std::cout);
 
     return 0;
 

@@ -6,17 +6,18 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
 #include <boost/format.hpp>
-#include <boost/standard_distribution/distributions/normal.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/ars/search_reflection.hpp>
 #include <boost/ars/constant.hpp>
 
 void example_search_reflection(std::ostream& out){
     std::cout << "-> example_search_reflection" << std::endl;
     using namespace boost;
+    namespace st = boost::statistics::detail;
 
     typedef double value_t;
-    typedef ars::point<value_t> point_t;
-    typedef ars::constant<value_t> const_;
+    typedef st::ars::point<value_t> point_t;
+    typedef st::ars::constant<value_t> const_;
 
     struct local{
         static std::ostream& write(
@@ -53,7 +54,7 @@ void example_search_reflection(std::ostream& out){
         {
             x_0 = 100.0;
             x_1 = 100.01;
-            n = ars::search_reflection_dist(
+            n = st::ars::search_reflection_dist(
                 x_min,
                 x_max,
                 mdist,
@@ -70,7 +71,7 @@ void example_search_reflection(std::ostream& out){
         {
             x_0 = -100.01;
             x_1 = -100.00;
-            n = ars::search_reflection_dist(
+            n = st::ars::search_reflection_dist(
                 x_min,
                 x_max,
                 mdist,
@@ -87,7 +88,7 @@ void example_search_reflection(std::ostream& out){
         {
             x_0 = -0.02;
             x_1 = -0.01;
-            n = ars::search_reflection_dist(
+            n = st::ars::search_reflection_dist(
                 x_min,
                 x_max,
                 mdist,

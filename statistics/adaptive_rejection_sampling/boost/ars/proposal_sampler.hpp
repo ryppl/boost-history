@@ -5,8 +5,8 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_ARS_PROPOSAL_SAMPLER_HPP_ER_2009
-#define BOOST_ARS_PROPOSAL_SAMPLER_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_ARS_PROPOSAL_SAMPLER_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_ARS_PROPOSAL_SAMPLER_HPP_ER_2009
 #include <cmath>
 #include <vector>
 #include <iostream> //TODO needed?
@@ -45,6 +45,8 @@
 #include <boost/ars/detail/area.hpp>
 
 namespace boost{
+namespace statistics{
+namespace detail{
 namespace ars{
 
 // The job of this class is to maintain an approximation to the cumulative 
@@ -884,8 +886,10 @@ void proposal_sampler<T,Cont,Alloc>::insert(
 }
 
 
-}//ars
-}//boost
+}// ars
+}// detail
+}// statistics
+}// boost
 
 #endif
 
