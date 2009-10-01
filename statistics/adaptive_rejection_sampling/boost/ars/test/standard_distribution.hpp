@@ -29,7 +29,8 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/ref_distribution.hpp>
 
-#include <boost/ars/functional/standard_distribution.hpp>
+//#include <boost/ars/functional/standard_distribution.hpp>
+#include <boost/ars/function/adaptor.hpp>
 #include <boost/ars/constant.hpp>
 #include <boost/ars/proposal_sampler.hpp>
 #include <boost/ars/sampler.hpp>
@@ -71,7 +72,7 @@ void standard_distribution(
     typedef typename D::value_type                          val_;
     typedef std::vector<val_>                               vals_;
 
-    typedef ars::functional::standard_distribution<D>       fun_t;
+    typedef ars::function::adaptor<D>                       fun_t;
     typedef ars::proposal_sampler<val_,std::vector>         ps_;
     typedef ars::sampler<ps_>                               ars_;
     typedef random::ref_distribution<ars_&>                 ref_ars_;

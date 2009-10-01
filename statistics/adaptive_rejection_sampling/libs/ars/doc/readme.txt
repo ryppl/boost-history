@@ -26,6 +26,7 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 [ Dependencies ]
 
 boost_1_39_0
+/sandbox/statistics/distribution_toolkit
 
 
 [ History ]

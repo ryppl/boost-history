@@ -40,7 +40,7 @@
 #include <boost/ars/parameter.hpp>
 #include <boost/ars/error.hpp>
 #include <boost/ars/point.hpp>
-#include <boost/ars/function_signature.hpp>
+#include <boost/ars/function/signature.hpp>
 #include <boost/ars/detail/data.hpp>
 #include <boost/ars/detail/area.hpp>
 
@@ -79,8 +79,8 @@ class proposal_sampler{
     typedef uniform_real<T>                                     runif_t;
 
     public:
-    typedef typename ars::function_signature<T>::type function_signature;
-    typedef function<function_signature>                        delegate_type;
+    typedef typename ars::function::signature<T>::type          signature;
+    typedef boost::function<signature>                          delegate_type;
 
     typedef typename range_size<datas_t>::type                  size_type;
     typedef T                                                   result_type;
