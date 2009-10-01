@@ -10,8 +10,8 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_LOCATION_SCALE_LOG_UNNORMALIZED_PDF_HPP_ER_2009
 #include <boost/concept/assert.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/location_scale.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/log_unnormalized_pdf.hpp>
-
+#include <boost/statistics/detail/distribution_toolkit/concept/unary/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
 
 namespace boost{
 namespace statistics{

@@ -10,7 +10,7 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_LOCATION_SCALE_CDF_HPP_ER_2009
 #include <boost/concept/assert.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/location_scale.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/cdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/concept/unary/cdf.hpp>
 
 namespace boost{
 namespace statistics{
