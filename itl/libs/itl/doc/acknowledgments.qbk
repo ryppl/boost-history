@@ -26,6 +26,8 @@ at the BoostCon 2009 by Jeff Garland, David Jenkins, Tobias Loew,
 Barend Gehrels, Luke Simonson and Hartmut Kaiser. 
 Special thanks for reading and improving this documentation to
 Neal Becker and Ilya Bobir.
+Jeff Flinn did a great job fixing portability problems with 
+CodeWarrior 9.4. 
 
 
 [endsect]
