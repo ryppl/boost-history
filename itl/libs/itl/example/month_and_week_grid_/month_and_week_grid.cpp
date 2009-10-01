@@ -24,7 +24,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     In this example we provide an intersection of two split_interval_sets
     representing a month and week time grid. 
 
-    \include month_and_week_grid/month_and_week_grid.cpp
+    \include month_and_week_grid_/month_and_week_grid.cpp
 */
 //[example_month_and_week_grid
 #include <stdio.h>

@@ -137,7 +137,7 @@ private:
     void add_segment(const interval_type& inter_val, const CodomainT& co_val, 
                      iterator& it_);
 
-    void add_front(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
+    void add_front(const interval_type& inter_val, iterator& it_);
 
     template<class Combiner>
     void add_rear(const interval_type& inter_val, const CodomainT& co_val, iterator& it_);
@@ -184,7 +184,7 @@ inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,
         iterator it_ = first_;
         interval_type rest_interval = inter_val;
 
-        add_front         (rest_interval, co_val, it_);
+        add_front         (rest_interval, it_);
         add_main<Combiner>(rest_interval, co_val, it_, last_);
         add_rear<Combiner>(rest_interval, co_val, it_);
     }    
@@ -218,7 +218,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
                  --last_;
         interval_type rest_interval = inter_val;
 
-        add_front         (rest_interval, co_val, it_);
+        add_front         (rest_interval, it_);
         add_main<Combiner>(rest_interval, co_val, it_, last_);
         add_rear<Combiner>(rest_interval, co_val, it_);
 
@@ -229,7 +229,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
 
 template <typename DomainT, typename CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
 inline void split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
-    ::add_front(const interval_type& inter_val, const CodomainT& co_val, iterator& first_)
+    ::add_front(const interval_type& inter_val, iterator& first_)
 {
     // If the collision sequence has a left residual 'left_resid' it will
     // be split, to provide a standardized start of algorithms:

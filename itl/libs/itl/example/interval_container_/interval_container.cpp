@@ -16,7 +16,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     Simple interactive shells for the manipulation of interval containers can be found
     in the 'tests.sln' project.
 
-    \include interval_container/interval_container.cpp
+    \include interval_container_/interval_container.cpp
 */
 //[example_interval_container
 #include <stdio.h>

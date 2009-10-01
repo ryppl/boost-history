@@ -49,7 +49,8 @@ BOOST_AUTO_TEST_CASE(casual_test)
     spliss.add(I_D(1,3)).add(I_D(3,4)).add(I_D(4,6)).add(I_D(6,8));
     spliss.contains(I_D(2,5));
     BOOST_CHECK_EQUAL(spliss.contains(I_D(2,7)), true);
-
+    BOOST_CHECK_EQUAL(intersects(spliss, I_D(2,7)), true);
+    BOOST_CHECK_EQUAL(intersects(spliss, MK_v(2)), true);
     
     ItlMapT map_a(make_pair(1,1));
     ItlSetT set_a(1);

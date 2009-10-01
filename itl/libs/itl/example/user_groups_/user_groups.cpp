@@ -28,7 +28,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     that are members of both med_users and admin_users and the times
     of the joint memberships.
     
-    \include user_groups/user_groups.cpp
+    \include user_groups_/user_groups.cpp
 */
 //[example_user_groups
 #include <stdio.h>

@@ -21,7 +21,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     increases the content of all value pairs in the map by 1, if their interval
     part overlaps with interval<int>(2,6).
 
-    \include overlap_counter/overlap_counter.cpp
+    \include overlap_counter_/overlap_counter.cpp
 */
 //[example_overlap_counter
 #include <stdio.h>
@@ -55,23 +55,23 @@ void print_overlaps(const OverlapCounterT& counter)
 void overlap_counter()
 {
     OverlapCounterT overlap_counter;
-    interval<int> itv;
+    interval<int> inter_val;
 
-    itv = interval<int>::rightopen(4,8);
-    cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
-    overlap_counter += make_pair(interval<int>::rightopen(4,8), 1);
+    inter_val = interval<int>::rightopen(4,8);
+    cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
+    overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    itv = interval<int>::rightopen(6,9);
-    cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
-    overlap_counter += make_pair(interval<int>::rightopen(6,9), 1);
+    inter_val = interval<int>::rightopen(6,9);
+    cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
+    overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
 
-    itv = interval<int>::rightopen(1,9);
-    cout << "-- adding   " << itv.as_string() << " -----------------------------------------" << endl;
-    overlap_counter += make_pair(interval<int>::rightopen(1,9), 1);
+    inter_val = interval<int>::rightopen(1,9);
+    cout << "-- adding   " << inter_val << " -----------------------------------------" << endl;
+    overlap_counter += make_pair(inter_val, 1);
     print_overlaps(overlap_counter);
     cout << "-----------------------------------------------------------" << endl;
     

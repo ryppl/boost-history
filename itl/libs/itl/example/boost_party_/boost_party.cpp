@@ -43,7 +43,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     The <em>accumulative behavior</em> accumulates associated values on every overlap of
     an insertion for the associated values.
 
-    \include boost_party/boost_party.cpp
+    \include boost_party_/boost_party.cpp
 */
 //[example_boost_party
 #include <iostream>

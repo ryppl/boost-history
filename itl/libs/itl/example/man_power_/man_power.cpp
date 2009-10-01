@@ -19,7 +19,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     times (man-power) of a company's employees accounting for weekends,
     holidays, sickness times and vacations.
 
-    \include man_power/man_power.cpp
+    \include man_power_/man_power.cpp
 */
 //[example_man_power
 #include <stdio.h>

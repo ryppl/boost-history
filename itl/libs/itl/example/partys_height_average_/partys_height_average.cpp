@@ -19,7 +19,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     Based on the operator += we can aggregate counted sums on addition
     of interval value pairs into an interval_map.
 
-    \include partys_height_average/partys_height_average.cpp
+    \include partys_height_average_/partys_height_average.cpp
 */
 //[example_partys_height_average
 #include <iostream>

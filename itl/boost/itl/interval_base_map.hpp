@@ -769,7 +769,7 @@ protected:
         map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
         iterator inserted_ 
-            = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
+            = this->_map.base_insert(prior_, value_type(inter_val, Combiner::neutron()));
 
         if(inserted_->first == inter_val && inserted_->second == Combiner::neutron())
         {
@@ -789,12 +789,12 @@ protected:
 
         if(Traits::is_total)
         {
-            iterator inserted_ = this->_map.insert(prior_, value_type(inter_val, Combiner::neutron()));
+            iterator inserted_ = this->_map.base_insert(prior_, value_type(inter_val, Combiner::neutron()));
             Combiner()(inserted_->second, co_val);
             return inserted_;
         }
         else
-            return this->_map.insert(prior_, value_type(inter_val, co_val));
+            return this->_map.base_insert(prior_, value_type(inter_val, co_val));
     }
 
 protected:
@@ -1271,7 +1271,7 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
         {
             const_cast<interval_type&>(first_->first).right_subtract(minuend);
             if(!right_resid.empty())
-                this->_map.insert(first_, value_type(right_resid, first_->second));
+                this->_map.base_insert(first_, value_type(right_resid, first_->second));
         }
         else if(!right_resid.empty())
             const_cast<interval_type&>(first_->first).left_subtract(minuend);

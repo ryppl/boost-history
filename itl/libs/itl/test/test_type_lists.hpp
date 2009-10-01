@@ -25,7 +25,7 @@ typedef boost::posix_time::ptime boost_posix_time_ptime;
 
 typedef ::boost::mpl::list<
     unsigned short, unsigned int, unsigned long  
-    ,short, int, long
+    ,short, int, long, long long
     ,float, double, long double
     ,boost::rational<int>
     ,boost_posix_time_ptime
@@ -57,8 +57,9 @@ typedef boost::rational<int> bicremental_continuous_type_3;
 
 
 typedef ::boost::mpl::list<
-    unsigned short, unsigned int, unsigned long  
-    ,short, int, long
+    unsigned short, unsigned int
+    ,unsigned long, unsigned long long  
+    ,short, int, long, long long
 > integral_types;
 
 typedef int           integral_type_1;
@@ -67,7 +68,8 @@ typedef short         integral_type_3;
 typedef unsigned int  integral_type_4;
 
 typedef ::boost::mpl::list<
-    unsigned short, unsigned int, unsigned long  
+    unsigned short, unsigned int
+    ,unsigned long, unsigned long long  
     ,short, int, long
     ,boost_posix_time_ptime
 //    ,boost::gregorian::date
@@ -91,8 +93,9 @@ typedef boost::rational<int> continuous_type_3;
 typedef std::string          continuous_type_4;
 
 typedef ::boost::mpl::list<
-    unsigned short, unsigned int, unsigned long  
-    ,short, int, long
+    unsigned short, unsigned int
+    ,unsigned long, unsigned long long  
+    ,short, int, long, long long
     ,float, double, long double
     ,boost::rational<int>
     ,std::string

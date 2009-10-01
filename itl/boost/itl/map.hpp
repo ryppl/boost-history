@@ -170,7 +170,6 @@ public:
     using base_type::key_comp;
     using base_type::value_comp;
 
-    using base_type::insert;
     using base_type::erase;
     using base_type::find;
     using base_type::count;
@@ -271,6 +270,19 @@ public:
             return std::pair<iterator,bool>(end(),true);
         else
             return base_type::insert(value_pair);
+    }
+    
+    iterator insert(iterator prior, const value_type& value_pair)
+    {
+        if(Traits::absorbs_neutrons && value_pair.second == codomain_combine::neutron()) 
+            return prior;
+        else
+            return base_type::insert(prior, value_pair);
+    }
+
+    iterator base_insert(iterator prior, const value_type& value_pair)
+    {
+        return base_type::insert(prior, value_pair);
     }
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
@@ -445,7 +457,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
     if(Traits::absorbs_neutrons && val.second == Combiner::neutron())
         return prior_;
 
-    iterator inserted_ = insert(prior_, value_type(val.first, Combiner::neutron()));
+    iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
     Combiner()(inserted_->second, val.second);
     if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
     {

@@ -17,9 +17,10 @@
 [[`T& operator &=(T&, const P&)`]              [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
 [[`T  operator & (T, const P&)`\n`T  operator & (const P&, T)`] 
                                                [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
+[[`bool intersects(const T&, const P&)`]       [__i]  [__eiS][__eiS __bpM][__es]  [__bm]    ]
 ]
 
-Functions and operators that implement ['*intersection*] on *itl* objects
+Functions and operators that are related to ['*intersection*] on *itl* objects
 are given in the table above.
 
 
@@ -46,7 +47,6 @@ are given in the table above.
           defined as a generalized selection function on Maps.
          ]]
 ]
-
 
 [endsect][/ Synopsis Intersection]
 
@@ -224,6 +224,23 @@ m  | m   m              p  |
 ``
 
 [endsect][/ Inplace operator Intersection]
+
+[section Intersection tester]
+
+[table
+[[Tester]                                          [Desctription]]
+[[`bool intersects(const T& left, const P& right)`][Tests, if `left` and `right` intersect.]]
+]
+
+``
+// bool intersects(const T&, const P&)
+T\P | e b s m     T\P | e i b p S M    
+----+--------     ----+------------    
+ s  | 1   1        S  | 1 1     1       
+ m  | 1 1 1 1      M  | 1 1 1 1 1 1    
+``
+
+[endsect][/ Intersection tester]
 
 [endsect][/ Intersection]
 

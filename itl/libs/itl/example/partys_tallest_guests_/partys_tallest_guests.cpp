@@ -23,7 +23,7 @@ Copyright (c) 1999-2006: Cortex Software GmbH, Kantstrasse 57, Berlin
     that occur due to entering and leaving of guests are preserved in 
     the split_interval_map.
 
-    \include partys_tallest_guests/partys_tallest_guests.cpp
+    \include partys_tallest_guests_/partys_tallest_guests.cpp
 */
 //[example_partys_tallest_guests
 #include <iostream>

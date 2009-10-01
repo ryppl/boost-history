@@ -128,8 +128,8 @@ Distributed under the Boost Software License, Version 1.0.
                       [link itl_map_type *m*] [link interval_map_types *M*]]
 
 [def __biLConsCopyDest__ [link boost_itl.function_reference.construct__copy__destruct ['*Construct, copy, destruct*]]]
-[def __biLContainedness__  [link boost_itl.function_reference.containment ['*Containedness*]]]
-[def __biLcontainedness__  [link boost_itl.function_reference.containment ['*containedness*]]]
+[def __biLContainedness__  [link boost_itl.function_reference.containedness ['*Containedness*]]]
+[def __biLcontainedness__  [link boost_itl.function_reference.containedness ['*containedness*]]]
 [def __biLEquivsOrderings__   [link boost_itl.function_reference.equivalences_and_orderings ['*Equivalences and Orderings*]]]
 [def __biLSize__         [link boost_itl.function_reference.size ['*Size*]]]
 [def __biLRange__        [link boost_itl.function_reference.range ['*Range*]]]

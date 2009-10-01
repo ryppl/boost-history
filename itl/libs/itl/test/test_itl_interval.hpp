@@ -280,6 +280,9 @@ void interval_inplace_intersect_4_bicremental_types()
     interval<T> I0_3D = interval<T>::rightopen(v0,v3);
     section = I3_7D; section &= I0_3D;
     BOOST_CHECK_EQUAL( I0_3D.is_disjoint(I3_7D), true );
+    BOOST_CHECK_EQUAL( !I0_3D.intersects(I3_7D), true );
+    BOOST_CHECK_EQUAL( is_disjoint(I0_3D,I3_7D), true );
+    BOOST_CHECK_EQUAL( !intersects(I0_3D,I3_7D), true );
     BOOST_CHECK_EQUAL( section.empty(), true );
     BOOST_CHECK_EQUAL( section, interval<T>() );
 
@@ -307,6 +310,9 @@ void interval_inplace_intersect_4_bicremental_types()
     section = I3_7D; section &= I7_9I;
     BOOST_CHECK_EQUAL( I3_7D.exclusive_less(I7_9I), true );
     BOOST_CHECK_EQUAL( I3_7D.is_disjoint(I7_9I), true );
+    BOOST_CHECK_EQUAL( !I3_7D.intersects(I7_9I), true );
+    BOOST_CHECK_EQUAL( is_disjoint(I3_7D,I7_9I), true );
+    BOOST_CHECK_EQUAL( !intersects(I3_7D,I7_9I), true );
     BOOST_CHECK_EQUAL( section.empty(), true );
 }
 

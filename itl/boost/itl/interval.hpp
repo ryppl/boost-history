@@ -1059,6 +1059,22 @@ inline itl::interval<DomainT,Compare> operator & (itl::interval<DomainT,Compare>
     return left &= right;
 }
 
+/** Returns true if the intersection of \c left and \c right is not empty. */
+template <class DomainT, ITL_COMPARE Compare>
+inline bool intersects(const itl::interval<DomainT,Compare>& left, 
+                       const itl::interval<DomainT,Compare>& right)
+{
+    return left.intersects(right);
+}
+
+/** Returns true if \c left and \c right do not intersect. */
+template <class DomainT, ITL_COMPARE Compare>
+inline bool is_disjoint(const itl::interval<DomainT,Compare>& left, 
+                        const itl::interval<DomainT,Compare>& right)
+{
+    return left.is_disjoint(right);
+}
+
 //==============================================================================
 //= Representation
 //==============================================================================
