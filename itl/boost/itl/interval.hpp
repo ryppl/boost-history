@@ -44,7 +44,7 @@ enum BoundTypes {
     /// Left closed right open: <tt>[x,y)</tt>
     right_open               = 2,
     /// Both closed: <tt>[x,y]</tt>
-    closed_bounded           = 3,
+    closed_bounded           = 3
 } ;
 
 typedef unsigned char bound_type;
