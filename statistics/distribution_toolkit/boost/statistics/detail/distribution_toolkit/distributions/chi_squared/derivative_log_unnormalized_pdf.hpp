@@ -30,7 +30,7 @@ namespace distribution_toolkit{
         T error_result;
 
         static const char* function = 
-"boost::math::log_unnormalized_pdf(const chi_squared_distribution<%1%>&, %1%)";
+            "log_unnormalized_pdf(const chi_squared_distribution<%1%>&, %1%)";
 
         if(false == math::detail::check_df(
             function, degrees_of_freedom, &error_result, P()))

@@ -1,37 +1,40 @@
 //////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::fwd_math::variance.hpp                                 //
+// distribution_toolkit::distributions::concept::unary::function_ptr.hpp        //
 //                                                                              //
 //  (C) Copyright 2009 Erwann Rogard                                            //
 //  Use, modification and distribution are subject to the                       //
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_VARIANCE_HPP_ER_2009
-#define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_VARIANCE_HPP_ER_2009
-#include <boost/utility/enable_if.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/is_math_distribution.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
+#ifndef BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CONCEPT_UNARY_FUNCTION_PTR_HPP_ER_2009
+#define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CONCEPT_UNARY_FUNCTION_PTR_HPP_ER_2009
+#include <boost/concept_check.hpp>
+#include <boost/statistics/detail/distribution_toolkit/meta/pointer.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
-    
-    template<typename D>
-    typename lazy_enable_if<
-        meta::is_math_distribution<D>,
-        meta::value<D>
-    >::type
-    variance(const D& dist)
-    {
-        return boost::math::variance(dist);
-    }
+namespace concept{
 
+    template<typename D,template<typename> class F>
+    class FunctionPtr{
+        public:
 
+        typedef meta::pointer<D> meta_;
+        
+        BOOST_CONCEPT_USAGE(FunctionPtr){
+            ptr = meta_::template make<F>();
+        }
+
+        private:
+        typename meta_::type ptr;
+    };
+
+}// concept
 }// distribution_toolkit
-}// detail
 }// statistics
-}// boost 
-
+}// detail
+}// boost
 
 #endif

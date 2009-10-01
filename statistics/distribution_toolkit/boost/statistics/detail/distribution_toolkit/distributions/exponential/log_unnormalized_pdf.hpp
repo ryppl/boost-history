@@ -26,13 +26,13 @@ namespace distribution_toolkit{
 
         typedef std::string str_;
         BOOST_MATH_STD_USING // for ADL of std functions
-        static const str_ function = 
-            str_("boost::math::log_unnormalized_pdf(")+ 
-            "const exponential_distribution<%1%>&,%1%)"
-        ;
+        static const char* function = 
+            (str_("log_unnormalized_pdf(")+ 
+            "const exponential_distribution<%1%>&,%1%)").c_str();
 
         T lambda = d.lambda();
         T result;
+
         if(0 == boost::math::detail::verify_lambda(
             function, lambda, &result, P()))
             return result;

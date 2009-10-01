@@ -91,8 +91,9 @@ void example_random(std::ostream& os){
     }
     { 
         typedef math::gamma_distribution<val_>            dist_;
-        const val_ shape = 1.0;
-        dist_ dist( shape );
+        const val_ shape = 2.0;
+        const val_ scale = 3.0;
+        dist_ dist( shape, scale );
             
         os << dist << std::endl; 
         unsigned i = 0;

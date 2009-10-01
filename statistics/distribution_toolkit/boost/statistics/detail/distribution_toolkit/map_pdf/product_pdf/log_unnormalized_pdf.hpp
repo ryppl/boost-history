@@ -12,7 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/product_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/concept/unary/log_unnormalized_pdf.hpp>
 
 namespace boost{
 namespace statistics{
@@ -30,7 +30,7 @@ namespace distribution_toolkit{
             concept::LogUnnormalizedPdf<A>
         ));
         BOOST_CONCEPT_ASSERT((
-            concept::LogUnnormalizedPdf<A>
+            concept::LogUnnormalizedPdf<B>
         ));
 
         return

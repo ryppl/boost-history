@@ -23,13 +23,13 @@ namespace distribution_toolkit{
         const boost::math::exponential_distribution<T,P>& d,
         const T& x
     ){
-
+        typedef std::string str_;
         BOOST_MATH_STD_USING // for ADL of std functions
         // to keep width = 80 caracters
-        static const char* function = strcpy(
-            "boost::math::derivative_log_unnormalized_pdf(",
-            "const exponential_distribution<%1%>&,%1%)"
-        );
+        static const char* function = (
+            str_("derivative_log_unnormalized_pdf(")
+            +"const exponential_distribution<%1%>&,%1%)"
+        ).c_str();
 
         T lambda = d.lambda();
         T result;

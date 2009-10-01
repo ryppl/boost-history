@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::uniform::is_math_distribution.hpp //
+// distribution_toolkit::distributions::uniform::is_math_distribution.hpp   //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //

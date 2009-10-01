@@ -14,10 +14,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
-
-    template<typename T,typename D> 
-    T log_unnormalized_pdf(const D& d,const T& x);
-
 namespace fun_wrap{    
     
     template<typename D>

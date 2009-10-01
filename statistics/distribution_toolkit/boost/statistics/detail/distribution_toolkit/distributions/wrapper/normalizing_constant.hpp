@@ -10,7 +10,7 @@
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_WRAPPER_NORMALIZING_CONSTANT_HPP_ER_2009
 #include <boost/concept/assert.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/normalizing_constant.hpp>
+#include <boost/statistics/detail/distribution_toolkit/concept/unary/normalizing_constant.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/wrapper.hpp>
 
 namespace boost{

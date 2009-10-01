@@ -10,6 +10,7 @@
 #define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_MEAN_HPP_ER_2009
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_math_distribution.hpp>
+#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
 
 namespace boost{
 namespace statistics{

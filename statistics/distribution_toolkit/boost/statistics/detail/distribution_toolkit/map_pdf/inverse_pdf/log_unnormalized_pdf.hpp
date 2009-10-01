@@ -12,7 +12,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/inverse_pdf/inverse_pdf.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/concept/unary/log_unnormalized_pdf.hpp>
 
 namespace boost{
 namespace statistics{

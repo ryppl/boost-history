@@ -41,7 +41,10 @@ struct meta_distribution_function{
 };
 
 
-// TODO enable_if<has_pdf>
+// An iterator that transforms x to f(dist,x), f = F<D>::instance,
+// where F is defined in /fun_wrap
+//
+// TODO enable_if<is_pseudo_scalar_distribution>
 template<template<typename> class F,typename D,typename ItX>
 typename meta_distribution_function<D>::template apply<ItX>::type
 make_distribution_function(

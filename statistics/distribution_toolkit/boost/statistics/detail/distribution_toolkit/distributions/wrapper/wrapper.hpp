@@ -24,7 +24,7 @@ namespace distribution_toolkit{
 
     // Useful for serializing or as a reference wrapper (D = const E&)
     //
-    // BUG : See example::distribution_function
+    // BUG : See function_ptrs.cpp
     template<typename D>
     class wrapper : meta::inherit_policy<
         typename remove_cv<

@@ -1,12 +1,12 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::is_pseudo_scalar_distribution.hpp                    //
+// distribution_toolkit::meta::is_pseudo_scalar_distribution.hpp             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 ///////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_META_IS_PSEUDO_DISTRIBUTION_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_META_IS_PSEUDO_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_META_IS_PSEUDO_SCALAR_DISTRIBUTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_META_IS_PSEUDO_SCALAR_DISTRIBUTION_HPP_ER_2009
 #include <boost/statistics/detail/distribution_toolkit/meta/is_scalar_distribution.hpp>
 
 namespace boost{

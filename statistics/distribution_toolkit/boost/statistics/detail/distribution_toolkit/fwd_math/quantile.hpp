@@ -10,6 +10,7 @@
 #define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_QUANTILE_HPP_ER_2009
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_math_distribution.hpp>
+#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
 
 namespace boost{
 namespace statistics{
@@ -21,7 +22,7 @@ namespace distribution_toolkit{
         meta::is_math_distribution<D>,
         meta::value<D>
     >::type
-    quantile(const D& dist,const typename meta::value<D>::type p)
+    quantile(const D& dist,const typename meta::value<D>::type& p)
     {
         return boost::math::quantile(dist,p);
     }

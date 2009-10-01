@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distributions::normal::log_unnormalized_pdf.hpp                          //
+// distribution_toolkit::distributions::::normal::log_unnormalized_pdf.hpp  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -16,9 +16,6 @@ namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
-
-    // If only the unnormalized_pdf is required, this is supposed to
-    // be faster than log(pdf(D,x))
 
     template<typename T,typename P>
     T

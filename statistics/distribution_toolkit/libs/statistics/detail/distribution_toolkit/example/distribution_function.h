@@ -7,7 +7,7 @@
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
 #ifndef LIBS_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_EXAMPLE_DISTRIBUTION_FUNCTION_H_ER_2009
-#define LIBS_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_EXAMPLE_DISTRIBUTION_FUNCTION__H_ER_2009
+#define LIBS_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_EXAMPLE_DISTRIBUTION_FUNCTION_H_ER_2009
 #include <ostream>
 
 void example_distribution_function(std::ostream&);

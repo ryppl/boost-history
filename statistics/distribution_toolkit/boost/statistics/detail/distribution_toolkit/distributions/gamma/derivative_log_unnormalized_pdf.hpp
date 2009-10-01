@@ -26,7 +26,7 @@ inline T derivative_log_unnormalized_pdf(
    BOOST_MATH_STD_USING  // for ADL of std functions
 
    static const char* function
- = "boost::math::log_unnormalized_pdf(const gamma_distribution<%1%>&, %1%)";
+        = "log_unnormalized_pdf(const gamma_distribution<%1%>&, %1%)";
 
    T shape = dist.shape();
    T scale = dist.scale();

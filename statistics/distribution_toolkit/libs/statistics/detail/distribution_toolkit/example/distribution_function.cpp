@@ -23,18 +23,18 @@
 #include <boost/random/variate_generator.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/meta/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/iterator/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/fun_wrap/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/unscope/include.hpp>
 
 #include <libs/statistics/detail/distribution_toolkit/example/distribution_function.h>
 
 void example_distribution_function(std::ostream& out){
-        out << "-> example_math_location_scale->" << std::endl;
+        out << "-> example_math_location_scale" << std::endl;
 
         // Examples of location_scale + fun_wrap + map_pdf + iterator
 
@@ -46,8 +46,6 @@ void example_distribution_function(std::ostream& out){
 
         // Types
         typedef double                                          val_;
-        typedef std::vector<val_>                               vals_;
-        typedef std::string                                     str_;
         typedef boost::mt19937                                  urng_;
         typedef boost::normal_distribution<val_>                rnd_;
         typedef math::students_t_distribution<val_>             stud_;
@@ -61,10 +59,8 @@ void example_distribution_function(std::ostream& out){
         const unsigned n    = 1e1;
         const val_ x        = 2.132;
 
-
         // Initialization
         urng_ urng;
-        vals_ range_x;
         
         stud_ stud(df);
         ls_stud_ ls_stud(mu, sigma, stud);
@@ -79,40 +75,7 @@ void example_distribution_function(std::ostream& out){
         };
 
 
-        {   // fun_wrap
-            typedef tk::meta::delegate<stud_>               meta_deleg_;
-            typedef meta_deleg_::type                       deleg_;
-            deleg_ deleg 
-                = meta_deleg_::make<tk::fun_wrap::log_unnormalized_pdf_>();
-            BOOST_ASSERT(
-                float_::equal(
-                    deleg(stud,x),
-                    tk::log_unnormalized_pdf(stud,x)
-                )
-            );
-
-            // test wrapper
-            // BUG
-            {
-                typedef tk::wrapper<const stud_&>           cref_stud_;
-                cref_stud_ cref_stud(stud);
-            
-                typedef tk::meta::delegate<cref_stud_>      meta_deleg2_;
-                typedef meta_deleg2_::type                  deleg2_;
-                
-                // TODO compile error here:
-                //deleg2_ deleg2 
-                //    = meta_deleg2_::make<tk::fun_wrap::log_unnormalized_pdf_>();
-
-                BOOST_ASSERT(
-                    float_::equal(
-                        tk::log_unnormalized_pdf(cref_stud,x),
-                        tk::log_unnormalized_pdf(stud,x)
-                    )
-                );
-            }
-        }
-        {   // fun_wrap + location_scale_distribution
+        {   // Create a delegate for log_unnormalized_pdf
 
             typedef tk::meta::delegate<ls_stud_>               meta_deleg_;
             typedef meta_deleg_::type                           deleg_;
@@ -126,7 +89,9 @@ void example_distribution_function(std::ostream& out){
             );
         }
         {   // make_distribution_function_iterator + fun_wrap
-        // Arbitrary random sample
+            // Arbitrary random sample
+            typedef std::vector<val_>                               vals_;
+            vals_ range_x;
             std::generate_n(
                 back_inserter(range_x),
                 n,
@@ -143,7 +108,7 @@ void example_distribution_function(std::ostream& out){
                 std::back_inserter(range_log_pdf)
             );
         }
-        {   // product_pdf + fun_wrap
+        {   // product_pdf
             typedef tk::product_pdf<stud_,ls_stud_>     prod_dist_;
 
             typedef tk::meta::delegate<prod_dist_>      meta_deleg_;
@@ -157,41 +122,42 @@ void example_distribution_function(std::ostream& out){
 
             BOOST_ASSERT(
                 float_::equal(
-                    deleg(prod_dist,x),
+                    tk::log_unnormalized_pdf(prod_dist,x),
+                    tk::log_unnormalized_pdf(prod_dist2,x)
+                )
+            );
+            BOOST_ASSERT(
+                float_::equal(
+                    tk::log_unnormalized_pdf(prod_dist.first(),x)
+                     + tk::log_unnormalized_pdf(prod_dist.second(),x),
                     tk::log_unnormalized_pdf(prod_dist,x)
                 )
             );
 
         }
-        {   // inverse_pdf + fun_wrap
+        {   // inverse_pdf
             typedef tk::inverse_pdf<stud_>                   inv_dist_;
-            typedef tk::meta::delegate<inv_dist_>            meta_deleg_;
-            typedef meta_deleg_::type                        deleg_;
-            deleg_ deleg 
-                = meta_deleg_::make<tk::fun_wrap::log_unnormalized_pdf_>();
             inv_dist_ inv_dist(stud);
 
             BOOST_ASSERT(
                 float_::equal(
-                    deleg(inv_dist,x),
+                    -tk::log_unnormalized_pdf(inv_dist.distribution(),x),
                     tk::log_unnormalized_pdf(inv_dist,x)
                 )
             );
 
         }
         {   // ratio_pdf + fun_wrap
-            typedef tk::meta_ratio_pdf<stud_,ls_stud_>        mf_;
+            typedef tk::meta_ratio_pdf<stud_,ls_stud_>          mf_;
             typedef mf_::type                                   ratio_dist_;
 
             ratio_dist_ ratio_dist = mf_::make(stud,ls_stud);
-            typedef tk::meta::delegate<ratio_dist_>                 meta_deleg_;
-            typedef meta_deleg_::type                           deleg_;
-            deleg_ deleg 
-                = meta_deleg_::make<tk::fun_wrap::log_unnormalized_pdf_>();
-                
+
             BOOST_ASSERT(
                 float_::equal(
-                    deleg(ratio_dist,x),
+                    // + sign because inherits from inverse
+                    tk::log_unnormalized_pdf(ratio_dist.first(),x)
+                        + tk::log_unnormalized_pdf(ratio_dist.second(),x),
                     tk::log_unnormalized_pdf(ratio_dist,x)
                 )
             );
