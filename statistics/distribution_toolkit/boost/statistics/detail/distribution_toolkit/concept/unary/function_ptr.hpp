@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CONCEPT_UNARY_FUNCTION_PTR_HPP_ER_2009
-#define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CONCEPT_UNARY_FUNCTION_PTR_HPP_ER_2009
+#ifndef BOOST_COMMON_DISTRIBUTION_CONCEPT_UNARY_FUNCTION_PTR_HPP_ER_2009
+#define BOOST_COMMON_DISTRIBUTION_CONCEPT_UNARY_FUNCTION_PTR_HPP_ER_2009
 #include <boost/concept_check.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/pointer.hpp>
 
