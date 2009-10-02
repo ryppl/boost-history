@@ -13,8 +13,8 @@
 #include <boost/ars/constant.hpp>
 #include <boost/ars/point.hpp>
 #include <boost/ars/error.hpp>
-#include <boost/ars/function_signature.hpp>
-#include <boost/ars/functional/standard_distribution.hpp>
+#include <boost/ars/function/signature.hpp>
+#include <boost/ars/function/adaptor.hpp>
 
 namespace boost{
 namespace statistics{
@@ -30,7 +30,7 @@ unsigned
 search_reflection(
     const T& x_min,
     const T& x_max,
-    function<typename ars::function_signature<T>::type> delegate,
+    boost::function<typename ars::function::signature<T>::type> delegate,
     point<T>& p_0,
     point<T>& p_1,
     unsigned n_max
@@ -104,7 +104,7 @@ template<typename T>
 unsigned search_reflection(
     const T& x_min,
     const T& x_max,
-    function<typename ars::function_signature<T>::type> delegate,
+    boost::function<typename ars::function::signature<T>::type> delegate,
     const T& x_0,
     const T& x_1,
     point<T>& p_0,
@@ -138,8 +138,8 @@ unsigned search_reflection_dist(
     ars::point<T>& p_1,
     unsigned n_max
 ){
-    typedef ars::functional::standard_distribution<const D&> fnal_t;
-    typedef typename ars::function_signature<T>::type   signature;
+    typedef ars::function::adaptor<const D&> fnal_t;
+    typedef typename ars::function::signature<T>::type   signature;
     typedef boost::function<signature>                  delegate_t;
     fnal_t fnal(dist);
 

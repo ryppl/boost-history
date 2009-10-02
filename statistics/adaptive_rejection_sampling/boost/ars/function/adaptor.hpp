@@ -9,8 +9,11 @@
 #define BOOST_STATISTICS_DETAIL_ARS_FUNCTION_ADAPTOR_HPP_ER_2009
 #include <boost/type_traits.hpp>
 #include <boost/call_traits.hpp>
-#include <boost/statistics/detail/distribution_toolkit/unscope/log_unnormalized_pdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/unscope/derivative_log_unnormalized_pdf.hpp>
+
+//  Make sure to precede this file by
+// #include <boost/statistics/detail/distribution_toolkit/distributions/D.hpp>
+// #include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
+// if D is defined in boost::math
 
 namespace boost{
 namespace statistics{
@@ -50,12 +53,12 @@ class adaptor{
         value_type& log_pdf,
         value_type& dlog_pdf
     )const{
-        log_pdf = boost::log_unnormalized_pdf(
+        log_pdf = statistics::detail::log_unnormalized_pdf(
             this->distribution(),
             x
         );
             
-        dlog_pdf = boost::derivative_log_unnormalized_pdf(
+        dlog_pdf = statistics::detail::derivative_log_unnormalized_pdf(
             this->distribution(),
             x
         );

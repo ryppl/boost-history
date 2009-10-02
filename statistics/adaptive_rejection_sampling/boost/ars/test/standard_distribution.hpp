@@ -78,7 +78,7 @@ void standard_distribution(
     typedef random::ref_distribution<ars_&>                 ref_ars_;
     typedef variate_generator<U&,ref_ars_>                  vg_ars_;
 
-    typedef statistics::detail::distribution_toolkit::sample_cdf<val_> sc_;
+    typedef statistics::detail::distribution::toolkit::sample_cdf<val_> sc_;
 
     ars_ ars;
     ars.set_function(x_min, x_max, fun_t(mdist));

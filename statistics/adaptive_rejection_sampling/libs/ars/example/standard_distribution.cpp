@@ -8,6 +8,7 @@
 #include <iostream>
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 #include <boost/ars/test/gamma_distribution.hpp>
 #include <boost/ars/test/normal_distribution.hpp>
 #include <libs/ars/example/standard_distribution.h>
