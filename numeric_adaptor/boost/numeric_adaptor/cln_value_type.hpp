@@ -53,8 +53,9 @@ struct cln_value_type
     }
 
     cln_value_type(std::string const& s)
-        : cln_value_type(s.c_str())
+        : m_value(cln::cl_float(0.0, cln::float_format(256)))
     {
+        m_value = s.c_str();
     }
 
 
