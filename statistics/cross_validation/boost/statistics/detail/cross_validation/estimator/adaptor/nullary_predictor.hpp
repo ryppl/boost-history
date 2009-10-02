@@ -20,9 +20,9 @@ namespace cross_validation{
 namespace estimator{
 namespace adaptor{
 
-    // A is an accumulator_set in Boost.Accumulator
-    // Expression          
-    // a(x)              
+    // Adapts an accumulator to model Predictor
+    // See http://boost-sandbox.sourceforge.net/libs/accumulators/doc/html/accumulators/user_s_guide.html#accumulators.user_s_guide.the_accumulators_framework.concepts
+    // B->const_reference() must return an accumulator
     template<
         typename A,
         typename Tag,

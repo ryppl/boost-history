@@ -36,9 +36,10 @@ Mac OS Leopard 10.5         gcc version 4.0.1
 
 [ History ]
 
-September 2009  - goodness_of_fit superseded by cross_validation with a better
+September 2009  - Two packages below merged into cross_validation with a better
                 interface.
 August 2009     - Creation of goodness_of_fit
+                - Creating of estimator_concept
 
 [ TODO ]
 

@@ -21,6 +21,9 @@ namespace cross_validation{
 namespace estimator{
 namespace adaptor{
 
+    // Adapts a unary functor to model Predictor
+    //
+    // B->reference() must return an unary functor
     template<typename B>
     class unary_trainer : public B{
         public:
