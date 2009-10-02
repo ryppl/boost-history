@@ -15,10 +15,10 @@ namespace detail{
 namespace distribution_toolkit{
 namespace meta{
 
-    template<typename D>
-    struct policy{
-        typedef typename D::policy_type type;
-    };
+    //template<typename D>
+    //struct policy{
+    //    typedef typename D::policy_type type;
+    //};
     
 }// meta
 }// distribution_toolkit
