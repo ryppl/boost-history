@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::inherit_value.hpp                             //
+// distribution::common::meta::inherit_value.hpp                             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -11,8 +11,8 @@
 #include <boost/mpl/not.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/empty_base.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
+/*
 namespace boost{
 namespace statistics{
 namespace detail{
@@ -31,12 +31,10 @@ namespace meta{
         
     };
 
-
-
 }// meta
 }// distribution_toolkit
 }// detail
 }// statistics
 }// boost
-
+*/
 #endif

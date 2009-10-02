@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::inherit_policy.hpp                            //
+// distribution_toolkit::distribution::common::meta::inherit_policy.hpp       //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -11,14 +11,14 @@
 #include <boost/mpl/not.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/empty_base.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/policy.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
 namespace meta{
-
+/*
     template<typename D,typename B = mpl::empty_base>
     struct inherit_policy : B{
         BOOST_MPL_ASSERT((
@@ -28,9 +28,7 @@ namespace meta{
         ));
         typedef typename policy<D>::type policy_type;
     };
-
-
-
+*/
 }// meta
 }// distribution_toolkit
 }// detail
