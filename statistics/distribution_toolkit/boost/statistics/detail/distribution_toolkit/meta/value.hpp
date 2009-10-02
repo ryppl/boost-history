@@ -15,11 +15,11 @@ namespace detail{
 namespace distribution_toolkit{
 namespace meta{
 
-    // Type of y and x in y =  f(dist,x)
-    template<typename D>
-    struct value{
-        typedef typename D::value_type type;
-    };
+//    // Type of y and x in y =  f(dist,x)
+//    template<typename D>
+//    struct value{
+//        typedef typename D::value_type type;
+//    };
     
 }// meta
 }// distribution_toolkit
