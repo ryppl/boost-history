@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_GAMMA_IS_LOG_CONCAVE_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_GAMMA_IS_LOG_CONCAVE_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_GAMMA_IS_LOG_CONCAVE_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_GAMMA_IS_LOG_CONCAVE_HPP_ER_2009
 #include <cmath>
 #include <boost/math/distributions/gamma.hpp>
 #include <boost/math/policies/policy.hpp>
@@ -15,7 +15,6 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
 template <class T, class P>
 inline bool is_log_concave(
@@ -25,7 +24,6 @@ inline bool is_log_concave(
 }
 
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

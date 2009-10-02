@@ -15,7 +15,6 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
     template<typename T,typename P>
     T
@@ -43,7 +42,6 @@ namespace distribution_toolkit{
         return result;
     }
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

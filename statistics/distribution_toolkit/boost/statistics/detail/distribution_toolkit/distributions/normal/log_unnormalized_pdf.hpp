@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_NORMAL_LOG_UNNORMALIZED_PDF_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_NORMAL_LOG_UNNORMALIZED_PDF_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_NORMAL_LOG_UNNORMALIZED_PDF_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_NORMAL_LOG_UNNORMALIZED_PDF_HPP_ER_2009
 #include <boost/math/distributions/normal.hpp>
 #include <boost/numeric/conversion/converter.hpp>
 //#include <boost/math/policies/policy.hpp>//TODO
@@ -15,7 +15,6 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
     template<typename T,typename P>
     T
@@ -31,7 +30,6 @@ namespace distribution_toolkit{
         return - z * z / int2real_t::convert(2);
     }
     
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

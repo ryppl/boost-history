@@ -17,7 +17,11 @@
 #include <boost/statistics/detail/distribution_toolkit/distributions/gamma/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/normal/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
+
+// fwd_math must precede location_scale<Z> if Z is from boost::math
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
 
 #include <boost/statistics/detail/distribution_toolkit/random/include.hpp>
 #include <boost/statistics/detail/distribution_toolkit/data/include.hpp>
@@ -35,7 +39,7 @@ void example_random(std::ostream& os){
     // the sample agrees wit the cdf of dist
 
     using namespace boost;
-    using namespace statistics;
+    using namespace boost::statistics;
     namespace tk  = statistics::detail::distribution_toolkit;
     
     // Types 
@@ -163,7 +167,25 @@ void example_random(std::ostream& os){
             n_draws *= n2;
         }
     }
+    {
+        typedef math::students_t_distribution<val_>         d0_;
+        typedef tk::wrapper<d0_>                     dist_; 
+        const val_ df = 4.0;
+        d0_ d0( df );
+        dist_ dist(d0);
+            
+        os << dist << std::endl; 
+        unsigned i = 0;
+        unsigned n_draws = n1;
+        sc.clear();
+        while(i<n_loops){
+            sc.reserve(sc.size()+n_draws);
+            generate2_n(sc,n_draws,urng,dist);
+            os << sc << std::endl;
+            ++i;
+            n_draws *= n2;
+        }
+    }
 
     os << "<-" << std::endl;
-
 }

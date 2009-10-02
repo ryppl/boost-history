@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                     //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)                //
 //////////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CHI_SQUARED_DESCRIPTION_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CHI_SQUARED_DESCRIPTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_CHI_SQUARED_DESCRIPTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_CHI_SQUARED_DESCRIPTION_HPP_ER_2009
 #include <ostream>
 #include <boost/format.hpp>
 #include <boost/math/distributions/chi_squared.hpp>

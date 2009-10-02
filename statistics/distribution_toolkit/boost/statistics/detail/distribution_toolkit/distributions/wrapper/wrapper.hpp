@@ -6,14 +6,14 @@
 //  Boost Software License, Version 1.0. (See accompanying file                //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)           //
 /////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_WRAPPER_WRAPPER_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_WRAPPER_WRAPPER_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_WRAPPER_WRAPPER_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_WRAPPER_WRAPPER_HPP_ER_2009
 #include <boost/call_traits.hpp>
 #include <boost/type_traits.hpp>
 #include <boost/mpl/assert.hpp>
 #include <boost/mpl/not.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/inherit_policy.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 #include <boost/archive/text_oarchive.hpp>
 #include <boost/archive/text_iarchive.hpp>
 
@@ -26,7 +26,7 @@ namespace distribution_toolkit{
     //
     // BUG : See function_ptrs.cpp
     template<typename D>
-    class wrapper : meta::inherit_policy<
+    class wrapper : distribution::common::meta::inherit_policy<
         typename remove_cv<
             typename remove_reference<D>::type
         >::type 
@@ -37,9 +37,13 @@ namespace distribution_toolkit{
             typename remove_reference<D>::type
         >::type distribution_type;
 
-        typedef typename meta::value<distribution_type>::type value_type;
+        typedef typename 
+            distribution::common::meta::value<distribution_type>::type 
+                value_type;
         
+        wrapper(){}
         wrapper(typename call_traits<D>::param_type d):d_(d){}
+        wrapper(const wrapper& that):d_(that.d_){}
     
         typename call_traits<D>::const_reference 
         const_reference()const{ return this->d_; }

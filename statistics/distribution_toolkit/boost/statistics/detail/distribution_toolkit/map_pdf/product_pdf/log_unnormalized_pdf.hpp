@@ -11,35 +11,25 @@
 #include <boost/mpl/not.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/product_pdf/product_pdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/unary/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
-    template<typename A,typename B>
-    typename meta::value < product_pdf<A,B> >::type
+    template<typename A,typename B,typename T>
+    T
     log_unnormalized_pdf(
-        const product_pdf<A,B>& dist,
-        const typename meta::value< product_pdf<A,B> >::type& x
+        const distribution_toolkit::product_pdf<A,B>& dist,
+        const T& x
     ){
 
-        BOOST_CONCEPT_ASSERT((
-            concept::LogUnnormalizedPdf<A>
-        ));
-        BOOST_CONCEPT_ASSERT((
-            concept::LogUnnormalizedPdf<B>
-        ));
-
         return
-            log_unnormalized_pdf(dist.first(),x)
-                + log_unnormalized_pdf(dist.second(),x);
+            (statistics::detail::log_unnormalized_pdf(dist.first(),x)
+                + statistics::detail::log_unnormalized_pdf(dist.second(),x));
     }
 
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)           //
 /////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_WRAPPER_IS_PSEUDO_SCALAR_DISTRIBUTION_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_WRAPPER_IS_PSEUDO_SCALAR_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_WRAPPER_IS_PSEUDO_SCALAR_DISTRIBUTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_WRAPPER_IS_PSEUDO_SCALAR_DISTRIBUTION_HPP_ER_2009
 #include <boost/statistics/detail/distribution_toolkit/meta/is_pseudo_scalar_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/wrapper.hpp>
 
@@ -19,13 +19,8 @@ namespace meta{
 
   template<typename D>
   struct is_pseudo_scalar_distribution< wrapper<D> >
-  {
-  
-    typedef wrapper<D> w_;
-    typedef typename w_::distribution_type d_;
-    typedef typename is_pseudo_scalar_distribution<d_>::type type;
-  
-  };
+  :is_pseudo_scalar_distribution<typename wrapper<D>::distribution_type>
+  {};
 
 }// meta
 }// distribution_toolkit

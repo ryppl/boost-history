@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)           //
 /////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CHI_SQUARED_LOG_UNNORMALIZED_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CHI_SQUARED_LOG_UNNORMALIZED_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_CHI_SQUARED_LOG_UNNORMALIZED_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_CHI_SQUARED_LOG_UNNORMALIZED_HPP_ER_2009
 #include <boost/math/distributions/chi_squared.hpp>
 #include <boost/math/special_functions/log1p.hpp>
 #include <boost/numeric/conversion/converter.hpp>
@@ -16,7 +16,6 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
     template<typename T,typename P>
     T
@@ -50,7 +49,6 @@ namespace distribution_toolkit{
         return (degrees_of_freedom/two-one) * log(x) - x/two;
     }
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

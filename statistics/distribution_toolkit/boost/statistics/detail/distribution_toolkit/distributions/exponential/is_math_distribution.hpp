@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_EXPONENTIAL_IS_MATH_DISTRIBUTION_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_EXPONENTIAL_IS_MATH_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_EXPONENTIAL_IS_MATH_DISTRIBUTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_EXPONENTIAL_IS_MATH_DISTRIBUTION_HPP_ER_2009
 #include <boost/mpl/bool.hpp>
 #include <boost/math/distributions/exponential.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_math_distribution.hpp>

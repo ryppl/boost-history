@@ -6,29 +6,29 @@
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_QUANTILE_HPP_ER_2009
-#define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_QUANTILE_HPP_ER_2009
+#ifndef BOOST_COMMON_DISTRIBUTION_FWD_MATH_QUANTILE_HPP_ER_2009
+#define BOOST_COMMON_DISTRIBUTION_FWD_MATH_QUANTILE_HPP_ER_2009
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_math_distribution.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
     
     template<typename D>
     typename lazy_enable_if<
-        meta::is_math_distribution<D>,
-        meta::value<D>
+        distribution_toolkit::meta::is_math_distribution<D>,
+        distribution::common::meta::value<D>
     >::type
-    quantile(const D& dist,const typename meta::value<D>::type& p)
+    quantile(
+        const D& dist,
+        const typename distribution::common::meta::value<D>::type& p
+    )
     {
         return boost::math::quantile(dist,p);
     }
 
-
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost 

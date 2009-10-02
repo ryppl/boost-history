@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_GAMMA_LOG_UNNORMALIZED_PDF_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_GAMMA_LOG_UNNORMALIZED_PDF_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_GAMMA_LOG_UNNORMALIZED_PDF_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_GAMMA_LOG_UNNORMALIZED_PDF_HPP_ER_2009
 #include <cmath>
 #include <boost/math/distributions/gamma.hpp>
 #include <boost/math/policies/policy.hpp>
@@ -15,7 +15,6 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
 template <class T, class P>
 inline T log_unnormalized_pdf(
@@ -47,7 +46,6 @@ inline T log_unnormalized_pdf(
    return result;
 } // log_unnormalized_pdf
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

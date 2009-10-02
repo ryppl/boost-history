@@ -12,17 +12,13 @@
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/pdf.hpp>
 
 namespace boost{
-
-//namespace math{
-//    template<typename T,typename D> T pdf(const D& d,const T& x);
-//}
-
 namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
 namespace fun_wrap{
         
-    template<typename D> struct pdf_ : impl<D,pdf>{};
+    template<typename D> struct pdf_ 
+        : impl<D,statistics::detail::pdf>{};
 
 }// fun_wrap
 }// distribution_toolkit

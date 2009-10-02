@@ -12,8 +12,8 @@
 #include <boost/statistics/detail/distribution_toolkit/meta/delegate.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/distribution_base.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/pointer.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/policy.hpp>
+//#include <boost/statistics/detail/distribution_common/meta/policy.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/signature.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
+//#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 
 #endif

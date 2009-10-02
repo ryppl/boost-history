@@ -12,17 +12,12 @@
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 
 namespace boost{
-
-//namespace math{
-//    template<typename T,typename D> T cdf(const D& d,const T& x);
-//}
-
 namespace statistics{
 namespace detail{
 namespace distribution_toolkit{
 namespace fun_wrap{
     template<typename D> struct cdf_
-        : impl<D,cdf>{};
+        : impl<D,statistics::detail::cdf>{};
 }
 
 }

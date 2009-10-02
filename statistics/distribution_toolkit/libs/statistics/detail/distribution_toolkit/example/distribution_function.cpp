@@ -22,18 +22,19 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
 
-#include <boost/statistics/detail/distribution_toolkit/meta/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/map_pdf/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/iterator/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fun_wrap/include.hpp>
-#include <boost/statistics/detail/distribution_toolkit/unscope/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/meta/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/map_pdf/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/iterator/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/fun_wrap/include.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/unscope/include.hpp>
 
 #include <libs/statistics/detail/distribution_toolkit/example/distribution_function.h>
 
 void example_distribution_function(std::ostream& out){
+/*
         out << "-> example_math_location_scale" << std::endl;
 
         // Examples of location_scale + fun_wrap + map_pdf + iterator
@@ -41,6 +42,7 @@ void example_distribution_function(std::ostream& out){
         using namespace boost;
         using namespace math;
         using namespace statistics::detail;
+        namespace st = statistics::detail;
         namespace tk = distribution_toolkit;
         namespace tk_it = tk::iterator;
 
@@ -84,7 +86,7 @@ void example_distribution_function(std::ostream& out){
             BOOST_ASSERT(
                 float_::equal(
                     deleg(ls_stud,x),
-                    tk::log_unnormalized_pdf(ls_stud,x)
+                    st::log_unnormalized_pdf(ls_stud,x)
                 )
             );
         }
@@ -122,15 +124,15 @@ void example_distribution_function(std::ostream& out){
 
             BOOST_ASSERT(
                 float_::equal(
-                    tk::log_unnormalized_pdf(prod_dist,x),
-                    tk::log_unnormalized_pdf(prod_dist2,x)
+                    st::log_unnormalized_pdf(prod_dist,x),
+                    st::log_unnormalized_pdf(prod_dist2,x)
                 )
             );
             BOOST_ASSERT(
                 float_::equal(
-                    tk::log_unnormalized_pdf(prod_dist.first(),x)
-                     + tk::log_unnormalized_pdf(prod_dist.second(),x),
-                    tk::log_unnormalized_pdf(prod_dist,x)
+                    st::log_unnormalized_pdf(prod_dist.first(),x)
+                     + st::log_unnormalized_pdf(prod_dist.second(),x),
+                    st::log_unnormalized_pdf(prod_dist,x)
                 )
             );
 
@@ -141,8 +143,8 @@ void example_distribution_function(std::ostream& out){
 
             BOOST_ASSERT(
                 float_::equal(
-                    -tk::log_unnormalized_pdf(inv_dist.distribution(),x),
-                    tk::log_unnormalized_pdf(inv_dist,x)
+                    -log_unnormalized_pdf(inv_dist.distribution(),x),
+                    log_unnormalized_pdf(inv_dist,x)
                 )
             );
 
@@ -156,11 +158,12 @@ void example_distribution_function(std::ostream& out){
             BOOST_ASSERT(
                 float_::equal(
                     // + sign because inherits from inverse
-                    tk::log_unnormalized_pdf(ratio_dist.first(),x)
-                        + tk::log_unnormalized_pdf(ratio_dist.second(),x),
-                    tk::log_unnormalized_pdf(ratio_dist,x)
+                    log_unnormalized_pdf(ratio_dist.first(),x)
+                        + log_unnormalized_pdf(ratio_dist.second(),x),
+                    log_unnormalized_pdf(ratio_dist,x)
                 )
             );
         }
     out << "<-" << std::endl;
+*/
 }

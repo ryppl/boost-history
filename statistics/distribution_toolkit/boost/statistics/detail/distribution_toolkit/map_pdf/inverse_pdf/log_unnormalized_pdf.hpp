@@ -11,28 +11,26 @@
 #include <boost/mpl/not.hpp>
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/map_pdf/inverse_pdf/inverse_pdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-#include <boost/statistics/detail/distribution_toolkit/concept/unary/log_unnormalized_pdf.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
-    template<typename D>
-    typename meta::value< inverse_pdf<D> >::type
+    template<typename D,typename T>
+    T
     log_unnormalized_pdf(
-        const inverse_pdf<D>& dist,
-        const typename meta::value< inverse_pdf<D> >::type& x
+        const distribution_toolkit::inverse_pdf<D>& dist,
+        const T& x
     ){
-        BOOST_CONCEPT_ASSERT((
-            concept::LogUnnormalizedPdf<D>
-        ));
         return
-            ( -log_unnormalized_pdf(dist.distribution(),x) );
+            ( -statistics::detail::log_unnormalized_pdf(
+                dist.distribution(),
+                x
+            ) 
+        );
     }
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

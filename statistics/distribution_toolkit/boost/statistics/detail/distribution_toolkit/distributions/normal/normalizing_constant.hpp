@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                  //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)             //
 ///////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_NORMAL_NORMALIZING_CONSTANT_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_NORMAL_NORMALIZING_CONSTANT_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_NORMAL_NORMALIZING_CONSTANT_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_NORMAL_NORMALIZING_CONSTANT_HPP_ER_2009
 #include <cmath>
 #include <boost/math/constants/constants.hpp>
 #include <boost/math/distributions/normal.hpp>
@@ -15,7 +15,6 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
 
 template<typename T,typename P>
 T normalizing_constant(const boost::math::normal_distribution<T,P>& d){
@@ -24,7 +23,6 @@ T normalizing_constant(const boost::math::normal_distribution<T,P>& d){
     return sqrt(two * pi) * d.scale();
 }
 
-}// distribution_toolkit
 }// detail
 }// statistics
 }// boost

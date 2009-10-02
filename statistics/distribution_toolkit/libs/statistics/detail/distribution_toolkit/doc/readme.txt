@@ -94,6 +94,8 @@ See distributions/wrapper/wrapper.hpp
 
 [ History ]
 
+Oct 2   Transfered parts of /meta and /concept to newly created library
+        /distribution_common. Concept checks in libs/.../test
 Sep 23 2009 : Merged 
         sandbox/statistics/scalar_dist 
         sandbox/statistics/standard_distribution

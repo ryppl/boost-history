@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_META_SIGNATURE_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_META_SIGNATURE_HPP_ER_2009
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 
 namespace boost{
 namespace statistics{
@@ -19,7 +19,7 @@ namespace meta{
     // Signature for f(dist,x), f = pdf, cdf etc.
     template<typename D>
     struct signature{
-        typedef typename value<D>::type value_type;
+        typedef typename distribution::common::meta::value<D>::type value_type;
 
         typedef value_type type(
             const D&,

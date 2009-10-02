@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_LOCATION_SCALE_LOCATION_SCALE_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_LOCATION_SCALE_LOCATION_SCALE_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_LOCATION_SCALE_LOCATION_SCALE_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_LOCATION_SCALE_LOCATION_SCALE_HPP_ER_2009
 #include <vector>
 #include <algorithm>
 #include <iterator>
@@ -15,9 +15,9 @@
 #include <boost/utility.hpp>
 #include <boost/type_traits.hpp> // remove_reference etc.
 #include <boost/range.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/inherit_policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_scalar_distribution.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
 //#include <boost/math/policies/policy.hpp>
 
 namespace boost{
@@ -33,7 +33,8 @@ namespace distribution_toolkit{
     //
     // TODO: range and support
     template<typename Z>
-    class location_scale_distribution : public meta::inherit_policy<Z>{
+    class location_scale_distribution 
+        : public distribution::common::meta::inherit_policy<Z>{
         public:
 
         typedef Z distribution_type;
@@ -42,7 +43,9 @@ namespace distribution_toolkit{
             meta::is_scalar_distribution<Z>
         ));
 
-        typedef typename meta::value<distribution_type>::type value_type;
+        typedef typename distribution::common::meta::value<
+            distribution_type
+        >::type value_type;
 
         location_scale_distribution();
         location_scale_distribution(

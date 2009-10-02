@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file             //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)        //
 //////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_UNIFORM_IS_MATH_DISTRIBUTION_HPP_ER_2009
-#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_UNIFORM_IS_MATH_DISTRIBUTION_HPP_ER_2009
+#ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_UNIFORM_IS_MATH_DISTRIBUTION_HPP_ER_2009
+#define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_UNIFORM_IS_MATH_DISTRIBUTION_HPP_ER_2009
 #include <boost/mpl/bool.hpp>
 #include <boost/math/distributions/uniform.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_scalar_distribution.hpp>

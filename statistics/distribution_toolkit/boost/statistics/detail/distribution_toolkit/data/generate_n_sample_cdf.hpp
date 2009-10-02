@@ -11,7 +11,7 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_scalar_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/data/sample_cdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
+//#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 
 namespace boost{
 
@@ -35,7 +35,7 @@ namespace boost{
             T x, cdf;
             while(i<n){
                 x = vg();
-                cdf = statistics::detail::distribution_toolkit::cdf(dist,x);
+                cdf = statistics::detail::cdf(dist,x);
                 sc(x,cdf);
                 ++i;
             };

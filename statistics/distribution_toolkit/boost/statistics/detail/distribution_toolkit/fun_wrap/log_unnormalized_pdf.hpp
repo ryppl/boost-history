@@ -18,7 +18,7 @@ namespace fun_wrap{
     
     template<typename D>
     struct log_unnormalized_pdf_ 
-            : impl<D,log_unnormalized_pdf>{};
+            : impl<D,statistics::detail::log_unnormalized_pdf>{};
 
 }// fun_wrap
 }// distribution_toolkit

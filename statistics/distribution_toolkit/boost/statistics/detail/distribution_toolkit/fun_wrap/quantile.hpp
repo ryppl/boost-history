@@ -23,7 +23,7 @@ namespace fun_wrap{
 
         template<typename D> 
         struct quantile_ 
-            : impl<D,quantile>{};
+            : impl<D,statistics::detail::quantile>{};
     
 }// fun_wrap
 }// distribution_toolkit

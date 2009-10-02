@@ -6,13 +6,13 @@
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_INCLUDE_HPP_ER_2009
-#define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_FWD_MATH_INCLUDE_HPP_ER_2009
+#ifndef BOOST_COMMON_DISTRIBUTION_FWD_MATH_INCLUDE_HPP_ER_2009
+#define BOOST_COMMON_DISTRIBUTION_FWD_MATH_INCLUDE_HPP_ER_2009
 
-#include <boost/statistics/detail/distribution_toolkit/meta/fwd_math/cdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/fwd_math/pdf.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/fwd_math/quantile.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/fwd_math/mean.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/fwd_math/variance.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/pdf.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/quantile.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/mean.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/variance.hpp>
 
 #endif

@@ -8,8 +8,8 @@
 //////////////////////////////////////////////////////////////////////////////
 #ifndef BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_MAP_PDF_PRODUCT_PDF_PRODUCT_PDF_HPP_ER_2009
 #define BOOST_STATISTICS_DETAIL_DISTRIBUTION_TOOLKIT_MAP_PDF_PRODUCT_PDF_PRODUCT_PDF_HPP_ER_2009
-#include <boost/statistics/detail/distribution_toolkit/meta/inherit_policy.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/inherit_value.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit_policy.hpp>
+#include <boost/statistics/detail/distribution_common/meta/inherit_value.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_pseudo_scalar_distribution.hpp>
 
 namespace boost{
@@ -20,9 +20,9 @@ namespace distribution_toolkit{
     // A pseudo distribution resulting from product of the pdf of two
     // distributions
     template<typename A,typename B>
-    class product_pdf : public meta::inherit_policy<
+    class product_pdf : public distribution::common::meta::inherit_policy<
         A,
-        meta::inherit_value<A> 
+        distribution::common::meta::inherit_value<A> 
     >{
 
         public:
