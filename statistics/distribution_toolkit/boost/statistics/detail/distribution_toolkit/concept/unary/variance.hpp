@@ -1,16 +1,16 @@
 //////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::concept::unary::variance.hpp            //
+// distribution_toolkit::distributions::distribution::common::concept::unary::variance.hpp            //
 //                                                                              //
 //  (C) Copyright 2009 Erwann Rogard                                            //
 //  Use, modification and distribution are subject to the                       //
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CONCEPT_UNARY_VARIANCE_HPP_ER_2009
-#define BOOST_DISTRIBUTION_TOOLKIT_DISTRIBUTIONS_CONCEPT_UNARY_VARIANCE_HPP_ER_2009
+#ifndef BOOST_COMMON_DISTRIBUTION_CONCEPT_UNARY_VARIANCE_HPP_ER_2009
+#define BOOST_COMMON_DISTRIBUTION_CONCEPT_UNARY_VARIANCE_HPP_ER_2009
 #include <boost/concept_check.hpp>
-#include <boost/statistics/detail/distribution_toolkit/meta/value.hpp>
-
+#include <boost/statistics/detail/distribution_common/meta/value.hpp>
+/*
 namespace boost{
 namespace statistics{
 namespace detail{
@@ -33,7 +33,7 @@ namespace concept{
         }
 
         private:
-        typedef typename meta::value<D>::type value_;
+        typedef typename distribution::common::meta::value<D>::type value_;
         D dist;
         value_ val;
     };
@@ -43,5 +43,5 @@ namespace concept{
 }// statistics
 }// detail
 }// boost
-
+*/
 #endif
