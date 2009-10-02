@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::fun_wrap::cdf.hpp                                  //
+// distribution::toolkit::fun_wrap::cdf.hpp                                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -14,13 +14,16 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
 namespace fun_wrap{
+
     template<typename D> struct cdf_
         : impl<D,statistics::detail::cdf>{};
-}
 
-}
+}// fun_wrap
+}// toolkit
+}// distribution
 }// detail
 }// statistics
 }// boost

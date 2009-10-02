@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::example::random.h                                  //
+// distribution::toolkit::example::random.h                                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::wrapper::description.hpp                    //
+// distribution::toolkit::distributions::wrapper::description.hpp                    //
 //                                                                                  //
 //  (C) Copyright 2009 Erwann Rogard                                                //
 //  Use, modification and distribution are subject to the                           //
@@ -15,18 +15,22 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     template<typename D>
     std::string
-    description(const distribution_toolkit::wrapper<D>& w)
+    description(const distribution::toolkit::wrapper<D>& w)
     {
         static const char* msg = "wrapper(%1%)";
         format f(msg); f % description(w.const_reference());
         return f.str();
     }
     
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::test::function_ptrs.cpp                            //
+// distribution::toolkit::test::function_ptrs.cpp                            //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -23,7 +23,7 @@ void test_function_ptrs(std::ostream& os)
    using namespace boost;
    using namespace math;
    
-   namespace tk = boost::statistics::detail::distribution_toolkit;
+   namespace tk = boost::statistics::detail::distribution::toolkit;
    namespace tk_c = tk::concept; 
     {
         typedef math::chi_squared_distribution<T>           d_;

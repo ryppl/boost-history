@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::is_pseudo_scalar_distribution.hpp             //
+// distribution::toolkit::meta::is_pseudo_scalar_distribution.hpp             //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -12,7 +12,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
     // The mapping of a distribution's pdf is not a distribution, but for 
@@ -22,7 +24,9 @@ namespace meta{
         : is_scalar_distribution<D> {};
 
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

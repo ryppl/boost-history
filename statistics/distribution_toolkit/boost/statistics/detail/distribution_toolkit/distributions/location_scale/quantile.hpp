@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::location_scale::quantile.hpp    //
+// distribution::toolkit::distributions::location_scale::quantile.hpp    //
 //                                                                      //
 //  (C) Copyright 2009 Erwann Rogard                                    //
 //  Use, modification and distribution are subject to the               //
@@ -19,7 +19,7 @@ namespace detail{
     template<typename Z,typename T>
     T
     quantile(
-        const distribution_toolkit::location_scale_distribution<Z>& d,
+        const distribution::toolkit::location_scale_distribution<Z>& d,
         const T& x
     ){
         T z = (x-d.mu())/d.sigma();

@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::is_math_distribution.hpp                      //
+// distribution::toolkit::meta::is_math_distribution.hpp                      //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -12,7 +12,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
     template<typename D>
@@ -22,7 +24,9 @@ namespace meta{
 
 
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::wrapper::mean.hpp                      //
+// distribution::toolkit::distributions::wrapper::mean.hpp                      //
 //                                                                             //
 //  (C) Copyright 2009 Erwann Rogard                                           //
 //  Use, modification and distribution are subject to the                      //
@@ -18,10 +18,10 @@ namespace detail{
 
     template<typename D>
     typename distribution::common::meta::value< 
-        distribution_toolkit::wrapper<D> 
+        distribution::toolkit::wrapper<D> 
     >::type
     mean(
-        const distribution_toolkit::wrapper<D>& w
+        const distribution::toolkit::wrapper<D>& w
     ){
         return statistics::detail::mean(w.const_reference());
     }

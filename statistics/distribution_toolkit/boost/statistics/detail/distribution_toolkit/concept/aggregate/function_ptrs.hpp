@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::aggregate::function_ptrs.hpp            //
+// distribution::toolkit::distributions::aggregate::function_ptrs.hpp            //
 //                                                                              //
 //  (C) Copyright 2009 Erwann Rogard                                            //
 //  Use, modification and distribution are subject to the                       //
@@ -17,7 +17,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace concept{
 
     template<typename D>
@@ -30,7 +32,9 @@ namespace concept{
     };
 
 }// concept
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// statistics
 }// detail
 }// boost

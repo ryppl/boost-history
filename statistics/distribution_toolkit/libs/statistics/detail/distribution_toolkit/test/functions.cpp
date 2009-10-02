@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::test::functions.h                                  //
+// distribution::toolkit::test::functions.h                                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -63,7 +63,7 @@ void test_functions(std::ostream& os)
     namespace st        = boost::statistics::detail;
     namespace st_dc     = st::distribution::common;
     namespace st_dc_c   = st_dc::concept;
-    namespace st_tk     = st::distribution_toolkit;
+    namespace st_tk     = st::distribution::toolkit;
     namespace st_tk_c   = st_tk::concept;
 
     typedef st_dc::meta::wrapper_variable<T> x_;

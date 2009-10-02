@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::distribution_base.hpp                        //
+// distribution::toolkit::meta::distribution_base.hpp                        //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -13,7 +13,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
 
@@ -22,7 +24,9 @@ namespace meta{
     struct distribution_base : mpl::identity<D>{};
 
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

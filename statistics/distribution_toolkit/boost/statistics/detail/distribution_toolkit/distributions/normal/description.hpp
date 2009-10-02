@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::normal::description.hpp                     //
+// distribution::toolkit::distributions::normal::description.hpp                     //
 //                                                                                  //
 //  (C) Copyright 2009 Erwann Rogard                                                //
 //  Use, modification and distribution are subject to the                           //
@@ -15,7 +15,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     template<typename T,typename P>
     std::string
@@ -26,7 +28,9 @@ namespace distribution_toolkit{
         return f.str();
     }
     
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

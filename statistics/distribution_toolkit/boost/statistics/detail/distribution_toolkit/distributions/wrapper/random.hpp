@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::wrapper::random.hpp                    //
+// distribution::toolkit::distributions::wrapper::random.hpp                    //
 //                                                                             //
 //  (C) Copyright 2009 Erwann Rogard                                           //
 //  Use, modification and distribution are subject to the                      //
@@ -14,14 +14,16 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
     template<typename D>
     struct random< 
-        distribution_toolkit::wrapper<D> 
+        distribution::toolkit::wrapper<D> 
     >{
-        typedef distribution_toolkit::wrapper<D> w_;
+        typedef distribution::toolkit::wrapper<D> w_;
         typedef typename w_::distribution_type d_;
         typedef typename meta::random<d_>::type type;
         
@@ -33,7 +35,9 @@ namespace meta{
     };
     
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

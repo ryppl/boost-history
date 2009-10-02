@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::wrapper::quantile.hpp                  //
+// distribution::toolkit::distributions::wrapper::quantile.hpp                  //
 //                                                                             //
 //  (C) Copyright 2009 Erwann Rogard                                           //
 //  Use, modification and distribution are subject to the                      //
@@ -18,7 +18,7 @@ namespace detail{
 
     template<typename D,typename T>
     T quantile(
-        const distribution_toolkit::wrapper<D>& w,
+        const distribution::toolkit::wrapper<D>& w,
         const T& x
     ){
         return statistics::detail::quantile(w.const_reference(),x);

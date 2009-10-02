@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::fwd_math::quantile.hpp                                 //
+// distribution::toolkit::fwd_math::quantile.hpp                                 //
 //                                                                              //
 //  (C) Copyright 2009 Erwann Rogard                                            //
 //  Use, modification and distribution are subject to the                       //
@@ -18,7 +18,7 @@ namespace detail{
     
     template<typename D>
     typename lazy_enable_if<
-        distribution_toolkit::meta::is_math_distribution<D>,
+        distribution::toolkit::meta::is_math_distribution<D>,
         distribution::common::meta::value<D>
     >::type
     quantile(

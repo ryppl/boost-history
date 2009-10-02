@@ -13,7 +13,8 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
 namespace fun_wrap{
 
     template<typename D,typename meta::pointer<D>::type f>
@@ -27,7 +28,8 @@ namespace fun_wrap{
     impl<D,f>::instance = f;
     
 }// fun_wrap
-}// distribution_toolkit
+}// distribution
+}// toolkit
 }// detail
 }// statistics
 }// boost

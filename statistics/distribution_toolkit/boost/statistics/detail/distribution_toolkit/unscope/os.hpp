@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::unscope::os.hpp                                    //
+// distribution::toolkit::unscope::os.hpp                                    //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -16,14 +16,14 @@ namespace boost{
 
     template<typename D>
     typename boost::lazy_enable_if<
-        boost::statistics::detail::distribution_toolkit
+        statistics::detail::distribution::toolkit
             ::meta::is_pseudo_scalar_distribution<D>,
             mpl::identity<std::ostream&> 
     >::type
     operator<<(std::ostream& os,const D& dist){
         return (
             os << 
-                statistics::detail::distribution_toolkit::description(dist)
+                statistics::detail::distribution::toolkit::description(dist)
         );
     }
 

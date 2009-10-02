@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::normal::is_math_distribution.hpp    //
+// distribution::toolkit::distributions::normal::is_math_distribution.hpp    //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -15,7 +15,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
     template<typename T,typename P>
@@ -23,7 +25,9 @@ namespace meta{
         : mpl::bool_<true>{};
 
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

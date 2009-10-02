@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::unscope::derivative_log_unnormalized_pdf.hpp       //
+// distribution::toolkit::unscope::derivative_log_unnormalized_pdf.hpp       //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -18,7 +18,7 @@
 
     //template<typename D,typename T>
     //typename boost::lazy_enable_if<
-    //    distribution_toolkit::meta::is_pseudo_scalar_distribution<D>,
+    //    distribution::toolkit::meta::is_pseudo_scalar_distribution<D>,
     //    distribution::common::meta::value<D>
     //>::type
     //derivative_log_unnormalized_pdf(const D& d,const T& x){

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::data::sample_cdf.hpp                               //
+// distribution::toolkit::data::sample_cdf.hpp                               //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -24,7 +24,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     // This data structure is useful, for example, to compute the kolmogorov
     // smirnov statistic at different iterations during the sampling genera-
@@ -123,7 +125,9 @@ namespace distribution_toolkit{
     }
 
 
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

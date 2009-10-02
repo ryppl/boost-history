@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::map_pdf::product_pdf::product_pdf.hpp              //
+// distribution::toolkit::map_pdf::product_pdf::product_pdf.hpp              //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -15,7 +15,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     // A pseudo distribution resulting from product of the pdf of two
     // distributions
@@ -58,7 +60,9 @@ namespace distribution_toolkit{
         return product_pdf<A,B>(a,b); 
     }
 
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::random::generator.hpp                                  //
+// distribution::toolkit::random::generator.hpp                                  //
 //                                                                              //
 //  (C) Copyright 2009 Erwann Rogard                                            //
 //  Use, modification and distribution are subject to the                       //
@@ -16,14 +16,16 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace random{
 namespace meta{
 
     // U = V or U = V& allowed where V models UniformRandomNumberGenerator
     template<typename D,typename U>
     struct generator{
-        typedef distribution_toolkit::meta::random<D> meta_;
+        typedef distribution::toolkit::meta::random<D> meta_;
         typedef typename meta_::type r_;;
         typedef variate_generator<U,r_> type;
         static type make(U urng,const D& d){
@@ -36,19 +38,21 @@ namespace meta{
     };
 }// meta
 }// random
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 
 
     template<typename D,typename U>
     typename lazy_enable_if<
-        statistics::detail::distribution_toolkit
+        statistics::detail::distribution::toolkit
             ::meta::is_scalar_distribution<D>,
-        statistics::detail::distribution_toolkit::random::meta::generator<D,U&> 
+        statistics::detail::distribution::toolkit::random::meta::generator<D,U&> 
     >::type
     make_random_generator(U& urng,const D& dist){
-        typedef statistics::detail::distribution_toolkit::random
+        typedef statistics::detail::distribution::toolkit::random
             ::meta::generator<D,U&> meta_;
         return meta_::make(urng,dist);
     }

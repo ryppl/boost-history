@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::doc::readme                                        //
+// distribution::toolkit::doc::readme                                        //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -80,13 +80,6 @@ libboost_serialization-xgcc42-mt-1_39.a
     generator
     
 /unscope
-
-    bring some functions in scope boost::statistics::distribution_toolkit to
-    scope boost, but only (via enable_if) for those distributions that verify 
-    the predicate distribution_toolkit::meta::is_pseudo_scalar_distribution
-    
-    The rationale for this is to have a common interface for the distributions
-    in distribution_toolkit, and others defined throughout boost::statistics
         
 [ Bugs ]
 
@@ -95,7 +88,9 @@ See distributions/wrapper/wrapper.hpp
 [ History ]
 
 Oct 2   Transfered parts of /meta and /concept to newly created library
-        /distribution_common. Concept checks in libs/.../test
+        /distribution_common. Split the namepsace distribution_toolkit into
+        distribution::toolkit. Brought some function uder this namespace into
+        statistics::detail. Concept checks in libs/.../test
 Sep 23 2009 : Merged 
         sandbox/statistics/scalar_dist 
         sandbox/statistics/standard_distribution

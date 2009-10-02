@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::unscope::log_unnormalized_pdf.hpp                  //
+// distribution::toolkit::unscope::log_unnormalized_pdf.hpp                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -16,7 +16,7 @@
 
 //    template<typename D,typename T>
 //    typename boost::lazy_enable_if<
-//        boost::statistics::detail::distribution_toolkit::meta
+//        boost::statistics::detail::distribution::toolkit::meta
 //            ::is_pseudo_scalar_distribution<D>,
 //        boost::distribution::common::meta::value<D>
 //    >::type

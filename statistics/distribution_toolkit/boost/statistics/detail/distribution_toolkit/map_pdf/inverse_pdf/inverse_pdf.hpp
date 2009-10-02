@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::map_pdf::inverse_pdf::inverse_pdf.hp               //
+// distribution::toolkit::map_pdf::inverse_pdf::inverse_pdf.hp               //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -15,7 +15,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     // A pseudo distribution resulting from mapping the pdf of a distribution
     // to its inverse
@@ -53,7 +55,9 @@ namespace distribution_toolkit{
     make_inverse_pdf(const D& d){ return inverse_pdf<D>(d); }
 
 
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

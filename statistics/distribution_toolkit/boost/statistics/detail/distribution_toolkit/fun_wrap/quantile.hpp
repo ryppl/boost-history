@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::fun_wrap::quantile.hpp                             //
+// distribution::toolkit::fun_wrap::quantile.hpp                             //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -12,21 +12,19 @@
 #include <boost/statistics/detail/distribution_toolkit/fwd_math/quantile.hpp>
 
 namespace boost{
-
-//namespace math{
-//    template<typename T,typename D> T quantile(const D& d,const T& x);
-//}
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
 namespace fun_wrap{
 
         template<typename D> 
         struct quantile_ 
             : impl<D,statistics::detail::quantile>{};
-    
+
 }// fun_wrap
-}// distribution_toolkit
+}// distribution
+}// toolkit
 }// detail
 }// statistics
 }// boost

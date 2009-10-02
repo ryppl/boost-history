@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::wrapper::wrapper.hpp                   //
+// distribution::toolkit::distributions::wrapper::wrapper.hpp                   //
 //                                                                             //
 //  (C) Copyright 2009 Erwann Rogard                                           //
 //  Use, modification and distribution are subject to the                      //
@@ -20,7 +20,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     // Useful for serializing or as a reference wrapper (D = const E&)
     //
@@ -70,7 +72,9 @@ namespace distribution_toolkit{
         typename call_traits<D>::value_type d_;
     };
 
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

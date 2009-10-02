@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::map_pdf::inverse_pdf::log_unnomarlized_pdf.hp      //
+// distribution::toolkit::map_pdf::inverse_pdf::log_unnomarlized_pdf.hp      //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -20,7 +20,7 @@ namespace detail{
     template<typename D,typename T>
     T
     log_unnormalized_pdf(
-        const distribution_toolkit::inverse_pdf<D>& dist,
+        const distribution::toolkit::inverse_pdf<D>& dist,
         const T& x
     ){
         return

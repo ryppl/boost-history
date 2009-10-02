@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::map_pdf::product_pdf::is_pseudo_scalar_distribution.hpp //
+// distribution::toolkit::map_pdf::product_pdf::is_pseudo_scalar_distribution.hpp //
 //                                                                           //
 //  (C) Copyright 2009 Erwann Rogard                                         //
 //  Use, modification and distribution are subject to the                    //
@@ -16,7 +16,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
     template<typename A,typename B>
@@ -28,7 +30,9 @@ namespace meta{
     > {};
     
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

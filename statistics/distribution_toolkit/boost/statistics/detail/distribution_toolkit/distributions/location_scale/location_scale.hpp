@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::location_scale::location_scale.hpp  //
+// distribution::toolkit::distributions::location_scale::location_scale.hpp  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -23,7 +23,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     // Represents a location scale family
     //
@@ -114,7 +116,9 @@ namespace distribution_toolkit{
     location_scale_distribution<Z>::z()const{ return this->z_; }
 
 
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

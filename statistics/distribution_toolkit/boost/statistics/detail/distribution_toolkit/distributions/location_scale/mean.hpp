@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::location_scale::mean.hpp        //
+// distribution::toolkit::distributions::location_scale::mean.hpp        //
 //                                                                      //
 //  (C) Copyright 2009 Erwann Rogard                                    //
 //  Use, modification and distribution are subject to the               //
@@ -18,10 +18,10 @@ namespace detail{
 
     template<typename Z>
     typename distribution::common::meta::value<
-        distribution_toolkit::location_scale_distribution<Z>
+        distribution::toolkit::location_scale_distribution<Z>
     >::type
     mean(
-        const distribution_toolkit::location_scale_distribution<Z>& d
+        const distribution::toolkit::location_scale_distribution<Z>& d
     ){
         return d.mu() + statistics::detail::mean(d.z());
     }

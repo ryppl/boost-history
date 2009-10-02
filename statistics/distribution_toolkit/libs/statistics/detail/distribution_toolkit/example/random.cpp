@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::example::random.cpp                                //
+// distribution::toolkit::example::random.cpp                                //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -40,7 +40,7 @@ void example_random(std::ostream& os){
 
     using namespace boost;
     using namespace boost::statistics;
-    namespace tk  = statistics::detail::distribution_toolkit;
+    namespace tk  = statistics::detail::distribution::toolkit;
     
     // Types 
     typedef double                                          val_;

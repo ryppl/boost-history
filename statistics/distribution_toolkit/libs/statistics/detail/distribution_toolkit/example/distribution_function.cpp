@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::example::location_scale.cpp                        //
+// distribution::toolkit::example::location_scale.cpp                        //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -22,19 +22,19 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
 
-//#include <boost/statistics/detail/distribution_toolkit/meta/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/map_pdf/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/iterator/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/fun_wrap/include.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/unscope/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/meta/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/students_t/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/location_scale/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/map_pdf/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/wrapper/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/iterator/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fun_wrap/include.hpp>
+#include <boost/statistics/detail/distribution_toolkit/unscope/include.hpp>
 
 #include <libs/statistics/detail/distribution_toolkit/example/distribution_function.h>
 
 void example_distribution_function(std::ostream& out){
-/*
+
         out << "-> example_math_location_scale" << std::endl;
 
         // Examples of location_scale + fun_wrap + map_pdf + iterator
@@ -43,7 +43,7 @@ void example_distribution_function(std::ostream& out){
         using namespace math;
         using namespace statistics::detail;
         namespace st = statistics::detail;
-        namespace tk = distribution_toolkit;
+        namespace tk = distribution::toolkit;
         namespace tk_it = tk::iterator;
 
         // Types
@@ -165,5 +165,5 @@ void example_distribution_function(std::ostream& out){
             );
         }
     out << "<-" << std::endl;
-*/
+
 }

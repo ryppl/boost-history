@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::location_scale::description.hpp             //
+// distribution::toolkit::distributions::location_scale::description.hpp             //
 //                                                                                  //
 //  (C) Copyright 2009 Erwann Rogard                                                //
 //  Use, modification and distribution are subject to the                           //
@@ -15,13 +15,14 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 
     template<typename Z>
     std::string
     description(
-        const boost::statistics::detail::distribution_toolkit
-            ::location_scale_distribution<Z>& d
+        const location_scale_distribution<Z>& d
     )
     {
         const char* msg = "location_scale_distribution( %1% + %2% %3%)";
@@ -29,7 +30,9 @@ namespace distribution_toolkit{
         return f.str();
     }
 
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 }// boost

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::normal::derivative_log_unnormalized_pdf.hpp //
+// distribution::toolkit::distributions::normal::derivative_log_unnormalized_pdf.hpp //
 //                                                                                  //
 //  (C) Copyright 2009 Erwann Rogard                                                //
 //  Use, modification and distribution are subject to the                           //

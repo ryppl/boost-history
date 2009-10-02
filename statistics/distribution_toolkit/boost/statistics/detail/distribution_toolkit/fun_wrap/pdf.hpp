@@ -14,14 +14,16 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
 namespace fun_wrap{
         
     template<typename D> struct pdf_ 
         : impl<D,statistics::detail::pdf>{};
 
 }// fun_wrap
-}// distribution_toolkit
+}// distribution
+}// toolkit
 }// detail
 }// statistics
 }// boost

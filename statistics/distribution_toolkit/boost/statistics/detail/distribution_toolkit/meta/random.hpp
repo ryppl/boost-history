@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::meta::random.hpp                                    //
+// distribution::toolkit::meta::random.hpp                                    //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -13,7 +13,9 @@
 namespace boost{
 namespace statistics{
 namespace detail{
-namespace distribution_toolkit{
+namespace distribution{
+namespace toolkit{
+
 namespace meta{
 
     template<typename D>
@@ -24,19 +26,21 @@ namespace meta{
     // and provide static type make(const D& )
 
 }// meta
-}// distribution_toolkit
+}// distribution
+}// toolkit
+
 }// detail
 }// statistics
 
 
     template<typename D>
     typename lazy_enable_if<
-        statistics::detail::distribution_toolkit::meta::
+        statistics::detail::distribution::toolkit::meta::
             is_scalar_distribution<D>,
-        statistics::detail::distribution_toolkit::meta::random<D> 
+        statistics::detail::distribution::toolkit::meta::random<D> 
     >::type
     make_random(const D& d){
-        typedef statistics::detail::distribution_toolkit::meta::random<D> meta_;
+        typedef statistics::detail::distribution::toolkit::meta::random<D> meta_;
         return meta_::make(d);
     }
 

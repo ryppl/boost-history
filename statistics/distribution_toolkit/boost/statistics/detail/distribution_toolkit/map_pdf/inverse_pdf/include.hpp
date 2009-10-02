@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::map_pdf::inverse_pdf::include.hpp                  //
+// distribution::toolkit::map_pdf::inverse_pdf::include.hpp                  //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //

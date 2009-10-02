@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::location_scale::log_unnormalized_pdf.hpp //
+// distribution::toolkit::distributions::location_scale::log_unnormalized_pdf.hpp //
 //                                                                               //
 //  (C) Copyright 2009 Erwann Rogard                                             //
 //  Use, modification and distribution are subject to the                        //
@@ -19,10 +19,10 @@ namespace detail{
     template<typename Z,typename T>
     T
     log_unnormalized_pdf(
-        const distribution_toolkit::location_scale_distribution<Z>& d,
+        const distribution::toolkit::location_scale_distribution<Z>& d,
         const T& x
     ){
-        typedef distribution_toolkit::location_scale_distribution<Z> dist_;
+        typedef distribution::toolkit::location_scale_distribution<Z> dist_;
 
         T z = (x-d.mu())/d.sigma();
         T result = statistics::detail::log_unnormalized_pdf(d.z(),z); 

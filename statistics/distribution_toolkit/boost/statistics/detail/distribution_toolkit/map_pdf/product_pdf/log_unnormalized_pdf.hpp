@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::map_pdf::product_pdf::log_unnomralized_pdf.hpp     //
+// distribution::toolkit::map_pdf::product_pdf::log_unnomralized_pdf.hpp     //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -20,7 +20,7 @@ namespace detail{
     template<typename A,typename B,typename T>
     T
     log_unnormalized_pdf(
-        const distribution_toolkit::product_pdf<A,B>& dist,
+        const distribution::toolkit::product_pdf<A,B>& dist,
         const T& x
     ){
 

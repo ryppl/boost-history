@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::data::generate_n_sample_cdf.hpp                    //
+// distribution::toolkit::data::generate_n_sample_cdf.hpp                    //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -19,17 +19,17 @@ namespace boost{
         // to the sample maintained in sc
         template<typename T,typename N,typename G,typename D>
         typename enable_if<
-            statistics::detail::distribution_toolkit
+            statistics::detail::distribution::toolkit
                 ::meta::is_scalar_distribution<D>,
                 void
         >::type
         generate_n(
-            statistics::detail::distribution_toolkit::sample_cdf<T>& sc,
+            statistics::detail::distribution::toolkit::sample_cdf<T>& sc,
             N n, 
             G vg,
             D dist
         ){
-            typedef statistics::detail::distribution_toolkit::sample_cdf<T> sc_;
+            typedef statistics::detail::distribution::toolkit::sample_cdf<T> sc_;
             typedef typename sc_::size_type size_type;
             size_type i = 0;
             T x, cdf;

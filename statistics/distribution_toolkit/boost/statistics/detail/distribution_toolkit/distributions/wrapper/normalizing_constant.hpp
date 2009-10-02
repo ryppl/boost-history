@@ -1,5 +1,5 @@
 /////////////////////////////////////////////////////////////////////////////////
-// distribution_toolkit::distributions::wrapper::normalizing_constant.hpp      //
+// distribution::toolkit::distributions::wrapper::normalizing_constant.hpp      //
 //                                                                             //
 //  (C) Copyright 2009 Erwann Rogard                                           //
 //  Use, modification and distribution are subject to the                      //
@@ -18,10 +18,10 @@ namespace detail{
 
     template<typename D>
     typename distribution::common::meta::value< 
-        distribution_toolkit::wrapper<D> 
+        distribution::toolkit::wrapper<D> 
     >::type
     normalizing_constant(
-        const distribution_toolkit::wrapper<D>& w
+        const distribution::toolkit::wrapper<D>& w
     ){
         return statistics::detail::normalizing_constant(w.const_reference());
     }
