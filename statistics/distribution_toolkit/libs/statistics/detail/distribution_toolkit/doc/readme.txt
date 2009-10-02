@@ -12,14 +12,14 @@
 erwann.rogard@gmail.com
 
 Please report your experience (good or bad) if are you using MSVC or gcc on 
-any platform other than Mac, from exectuting the examples in
-libs/statistics/detail/distribution_toolkit/example
+any platform other than Mac, from exectuting libs/.../src/main.cpp
 
 [ Overview ]
 
-These are C++ classes that extend boost/math/distributions. However, it is not
-intrusive.  Instead, the distributions in boost::math are brought into the scope 
-of distribution_toolkit with forwarding functions.
+These are C++ classes that extend boost/math/distributions and also bridges it
+with boost/random. However, it is not intrusive: the distributions in 
+boost::math are brought into the scope of statistics::detail with forwarding 
+functions.
 
 [ Related links ]
 
