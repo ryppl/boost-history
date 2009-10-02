@@ -6,8 +6,8 @@
 //  Boost Software License, Version 1.0. (See accompanying file                 //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)            //
 //////////////////////////////////////////////////////////////////////////////////
-#ifndef BOOST_COMMON_DISTRIBUTION_FWD_MATH_MEAN_HPP_ER_2009
-#define BOOST_COMMON_DISTRIBUTION_FWD_MATH_MEAN_HPP_ER_2009
+#ifndef BOOST_DISTRIBUTION_TOOLKIT_FWD_MATH_MEAN_HPP_ER_2009
+#define BOOST_DISTRIBUTION_TOOLKIT_FWD_MATH_MEAN_HPP_ER_2009
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_math_distribution.hpp>
 #include <boost/statistics/detail/distribution_common/meta/value.hpp>

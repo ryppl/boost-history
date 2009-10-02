@@ -11,7 +11,10 @@
 #include <boost/utility/enable_if.hpp>
 #include <boost/statistics/detail/distribution_toolkit/meta/is_scalar_distribution.hpp>
 #include <boost/statistics/detail/distribution_toolkit/data/sample_cdf.hpp>
-//#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
+
+// if D is defined in boost::math, make sure to precede this file by
+// #include <boost/statistics/detail/distribution_toolkit/distributions/D.hpp>
+// #include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp>
 
 namespace boost{
 
