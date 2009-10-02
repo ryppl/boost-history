@@ -12,7 +12,11 @@
 
 // CLN can be downloaded from http://www.ginac.de/CLN/
 
+#define NUMERIC_ADAPTOR_INCLUDED
+
+
 #include <ostream>
+#include <string>
 
 #include <cln/cln.h>
 #include <cln/float.h>
@@ -46,6 +50,11 @@ struct cln_value_type
     {
         // Conversions from `const char *' are provided [...]
         m_value = s;
+    }
+
+    cln_value_type(std::string const& s)
+        : cln_value_type(s.c_str())
+    {
     }
 
 

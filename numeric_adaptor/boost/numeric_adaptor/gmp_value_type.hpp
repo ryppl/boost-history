@@ -11,6 +11,13 @@
 #define BOOST_NUMERIC_ADAPTOR_GMP_VALUE_TYPE_HPP
 
 
+#define NUMERIC_ADAPTOR_INCLUDED
+
+
+#include <cmath>
+#include <ostream>
+#include <string>
+
 #include <gmp.h>
 
 
@@ -34,6 +41,12 @@ struct gmp_value_type
     {
         mpf_init(m_value);
         mpf_set_str(m_value, s, 10);
+    }
+
+    gmp_value_type(std::string const& s)
+    {
+        mpf_init(m_value);
+        mpf_set_str(m_value, s.c_str(), 10);
     }
 
 
@@ -143,17 +156,21 @@ struct gmp_value_type
     {
         mp_exp_t exponent;
 
-        char* s = mpf_get_str(NULL, &exponent, 10, 0, v.m_value);
+        char s[256];
+        mpf_get_str(s, &exponent, 10, 0, v.m_value);
 
+        char* p = s;
+        if (*p == '-')
+        {
+            os << "-";
+            p++;
+        }
+
+        os << "0." << p;
         if (exponent != 0)
         {
-            os << "0." << s << "e" << exponent;
+             os << "e" << exponent;
         }
-        else
-        {
-            os << s;
-        }
-        free(s);
         return os;
     }
 

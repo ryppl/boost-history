@@ -11,6 +11,9 @@
 #define BOOST_NUMERIC_ADAPTOR_NUMERIC_ADAPTOR_HPP
 
 
+#define NUMERIC_ADAPTOR_INCLUDED
+
+
 #include <cmath>
 #include <boost/static_assert.hpp>
 #include <boost/math/special_functions/hypot.hpp>
