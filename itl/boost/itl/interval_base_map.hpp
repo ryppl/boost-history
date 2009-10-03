@@ -414,16 +414,16 @@ public:
     /** Insertion of an \c interval_value_pair into the map. */
     SubType& insert(const segment_type& interval_value_pair)
     { 
-		that()->insert_(interval_value_pair); 
-		return *that(); 
-	}
+        that()->insert_(interval_value_pair); 
+        return *that(); 
+    }
 
     /** Insertion of an \c interval_value_pair into the map. Iterator \c prior_. 
-	    serves as a hint to insert after the element \c prior point to. */
+        serves as a hint to insert after the element \c prior point to. */
     iterator insert(iterator prior_, const segment_type& interval_value_pair)
     { 
-		return that()->insert_(prior_, interval_value_pair);
-	}
+        return that()->insert_(prior_, interval_value_pair);
+    }
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
     SubType& set(const element_type& key_value_pair) 

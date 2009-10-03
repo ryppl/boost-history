@@ -39,18 +39,18 @@ BOOST_AUTO_TEST_CASE(casual_test)
     typedef interval_map<int,int>       IntervalMapT;
     typedef split_interval_map<int,int> SplitIntervalMapT;
     typedef interval_map<int,int>       IntervalMapT;
-	typedef vector<pair<interval<int>,int> > IntervalVecT;
+    typedef vector<pair<interval<int>,int> > IntervalVecT;
 
-	IntervalVecT ivec;
-	ivec.push_back(make_pair(interval<int>::rightopen(1,3),1));
-	ivec.push_back(make_pair(interval<int>::rightopen(2,4),1));
+    IntervalVecT ivec;
+    ivec.push_back(make_pair(interval<int>::rightopen(1,3),1));
+    ivec.push_back(make_pair(interval<int>::rightopen(2,4),1));
 
-	SplitIntervalMapT sim1, sim2;
-	sim1.insert(make_pair(interval<int>::rightopen(1,3),1));
-	sim1.insert(make_pair(interval<int>::rightopen(2,4),1));
+    SplitIntervalMapT sim1, sim2;
+    sim1.insert(make_pair(interval<int>::rightopen(1,3),1));
+    sim1.insert(make_pair(interval<int>::rightopen(2,4),1));
 
-	IntervalMapT jim1, jim2;
-	std::copy(ivec.begin(), ivec.end(), std::inserter(jim2, jim2.end()));
-	cout << jim2 << endl;
+    IntervalMapT jim1, jim2;
+    std::copy(ivec.begin(), ivec.end(), std::inserter(jim2, jim2.end()));
+    cout << jim2 << endl;
 }
 

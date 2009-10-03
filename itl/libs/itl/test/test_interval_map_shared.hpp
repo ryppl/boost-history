@@ -1207,30 +1207,30 @@ void interval_map_std_copy_via_inserter_4_bicremental_types()
 {
     typedef IntervalMap<T,U,Trt> IntervalMapT; //Nedded for the test value generator
 
-	// Check equality of copying using handcoded loop or std::copy via inserter.
-	typedef std::pair<interval<T>, U> SegmentT;
-	std::vector<SegmentT> seg_vec_a;
-	IntervalMapT std_copied_map;
+    // Check equality of copying using handcoded loop or std::copy via inserter.
+    typedef std::pair<interval<T>, U> SegmentT;
+    std::vector<SegmentT> seg_vec_a;
+    IntervalMapT std_copied_map;
 
-	// For an empty sequence
-	test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
+    // For an empty sequence
+    test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
 
-	// For an singleton sequence
-	seg_vec_a.push_back(IDv(0,1,1));
-	test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
+    // For an singleton sequence
+    seg_vec_a.push_back(IDv(0,1,1));
+    test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
 
-	// Two separate segments
-	seg_vec_a.push_back(IDv(3,5,1));
-	test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
+    // Two separate segments
+    seg_vec_a.push_back(IDv(3,5,1));
+    test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
 
-	// Touching case
-	seg_vec_a.push_back(IDv(5,7,1));
-	test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
+    // Touching case
+    seg_vec_a.push_back(IDv(5,7,1));
+    test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
 
-	// Overlapping case
-	seg_vec_a.push_back(IDv(6,9,1));
-	test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
-	
+    // Overlapping case
+    seg_vec_a.push_back(IDv(6,9,1));
+    test_interval_map_copy_via_inserter(seg_vec_a, std_copied_map);
+    
 }
 
 

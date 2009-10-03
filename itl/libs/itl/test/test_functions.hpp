@@ -31,10 +31,10 @@ template <class T, class U, class Trt,
           class SequenceT
 >
 void itl_map_copy(const SequenceT& segments, 
-				  IntervalMap<T,U,Trt>& destination)
+                  IntervalMap<T,U,Trt>& destination)
 {
-	ITL_const_FORALL(typename SequenceT, segment_, segments)
-		destination.insert(*segment_);
+    ITL_const_FORALL(typename SequenceT, segment_, segments)
+        destination.insert(*segment_);
 }
 
 
@@ -51,14 +51,14 @@ template <class T, class U, class Trt,
 >
 void test_interval_map_copy_via_inserter(const SequenceT& segments, IntervalMap<T,U,Trt>& std_copied_map)
 {
-	// The second parameter (std_copied_map) could be omitted and only held as a 
-	// local variable. I is there to help gcc-3.4.4 resolving the function template type.
-	typedef IntervalMap<T,U,Trt> IntervalMapT;
-	IntervalMapT looped_copied_map;
-	std_copied_map.clear();
-	itl_map_copy(segments, looped_copied_map);
-	std::copy(segments.begin(), segments.end(), std::inserter(std_copied_map, std_copied_map.end()));
-	BOOST_CHECK_EQUAL( looped_copied_map, std_copied_map );
+    // The second parameter (std_copied_map) could be omitted and only held as a 
+    // local variable. I is there to help gcc-3.4.4 resolving the function template type.
+    typedef IntervalMap<T,U,Trt> IntervalMapT;
+    IntervalMapT looped_copied_map;
+    std_copied_map.clear();
+    itl_map_copy(segments, looped_copied_map);
+    std::copy(segments.begin(), segments.end(), std::inserter(std_copied_map, std_copied_map.end()));
+    BOOST_CHECK_EQUAL( looped_copied_map, std_copied_map );
 }
 
 }} // namespace itl boost

@@ -632,18 +632,18 @@ inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,In
         return prior_;
 
     std::pair<iterator,bool> insertion 
-		= this->template map_insert<codomain_combine>(prior_, inter_val, co_val);
+        = this->template map_insert<codomain_combine>(prior_, inter_val, co_val);
 
     if(insertion.second)
-		return join_neighbours(insertion.first);
+        return join_neighbours(insertion.first);
     {
         // Detect the first and the end iterator of the collision sequence
-		std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
+        std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
         iterator it_    = overlap.first,
                  last_  = overlap.second;
-		         --last_;
+                 --last_;
         insert_range(inter_val, co_val, it_, last_);
-		return it_;
+        return it_;
     }
 }
 
