@@ -14,7 +14,7 @@ erwann.rogard@gmail.com
 [ Overview ]
 
 These are C++ classes that provide a set of concepts and traits as part of project to harmonize
-interfaces between different distribution packages, include distribution_toolkit.
+interfaces between different distribution packages, including distribution_toolkit.
 
 [ Platform/Compiler ]
 
