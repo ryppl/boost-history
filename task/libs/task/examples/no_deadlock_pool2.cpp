@@ -38,9 +38,7 @@ int main( int argc, char *argv[])
 	try
 	{
 		tsk::poolsize psize( boost::thread::hardware_concurrency() );
-		tsk::static_pool<
-			tsk::unbounded_channel< tsk::fifo >
-		> pool( psize);
+		tsk::static_pool< tsk::unbounded_twolock_fifo > pool( psize);
 
 		fprintf( stderr, "pool-size == %d\n", pool.size() );
 

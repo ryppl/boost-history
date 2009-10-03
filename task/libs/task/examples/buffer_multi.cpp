@@ -60,11 +60,15 @@ void submit(
 		tsk::unbounded_buffer< std::pair< int , int > > & recv,
 		int n)
 {
-	send.put( n);
+	for ( int i = 0; i <= n; ++i)
+		send.put( i);
+	send.deactivate();
 	boost::optional< std::pair< int , int > > r;
-	recv.take( r);
-	BOOST_ASSERT( r);
-	printf("fib(%d) == %d\n", r->first, r->second);
+	while ( recv.take( r) )
+	{
+		BOOST_ASSERT( r);
+		printf("fib(%d) == %d\n", r->first, r->second);
+	}
 }
 
 inline
@@ -73,10 +77,13 @@ void calculate(
 		tsk::unbounded_buffer< std::pair< int , int > > & send)
 {
 	boost::optional< int > n;
-	recv.take( n);
-	BOOST_ASSERT( n);
-	int r = parallel_fib( * n, 5);
-	send.put( std::make_pair( * n, r) );		
+	while ( recv.take( n) )
+	{
+		BOOST_ASSERT( n);
+		int r = parallel_fib( * n, 5);
+		send.put( std::make_pair( * n, r) );		
+	}
+	send.deactivate();
 }
 
 
@@ -91,30 +98,14 @@ int main( int argc, char *argv[])
 		
 		tsk::handle< void > h1(
 			tsk::async(
-				tsk::make_task( submit, buf1, buf2, 5),
-				tsk::new_thread() ) );
-		tsk::handle< void > h2(
-			tsk::async(
-				tsk::make_task( submit, buf1, buf2, 10),
-				tsk::new_thread() ) );
-		tsk::handle< void > h3(
-			tsk::async(
 				tsk::make_task( submit, buf1, buf2, 15),
 				tsk::new_thread() ) );
 
 		tsk::async(
 			tsk::make_task( calculate, buf1, buf2),
 			pool);
-		tsk::async(
-			tsk::make_task( calculate, buf1, buf2),
-			pool);
-		tsk::async(
-			tsk::make_task( calculate, buf1, buf2),
-			pool);
 
 		h1.get();
-		h2.get();
-		h3.get();
 
 		return EXIT_SUCCESS;
 	}

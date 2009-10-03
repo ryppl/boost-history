@@ -25,6 +25,9 @@
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/semaphore.hpp>
+#include <boost/task/spin_condition.hpp>
+#include <boost/task/spin_lock.hpp>
+#include <boost/task/spin_mutex.hpp>
 #include <boost/task/stacksize.hpp>
 #include <boost/task/static_pool.hpp>
 #include <boost/task/task.hpp>

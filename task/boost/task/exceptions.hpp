@@ -12,8 +12,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
+namespace boost {
+namespace task {
+
 class invalid_poolsize : public std::invalid_argument
 {
 public:
@@ -104,7 +105,16 @@ public:
 	: std::logic_error("pool moved")
 	{}
 };
-} }
+
+class lock_error : public std::logic_error
+{
+public:
+    lock_error()
+	: std::logic_error("lock invalid")
+	{}
+};
+
+}}
 
 #include <boost/config/abi_suffix.hpp>
 

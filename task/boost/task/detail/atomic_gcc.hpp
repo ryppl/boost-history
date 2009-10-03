@@ -17,6 +17,7 @@
 
 #include <boost/assert.hpp>
 #include <boost/cstdint.hpp>
+#include <boost/interprocess/detail/atomic.hpp>
 
 #include <boost/config/abi_prefix.hpp>
 
@@ -37,6 +38,18 @@ void atomic_exchange( uint32_t volatile * object, uint32_t desired)
 {
   // inline asm xchg for i386 || x86_64?
   * object = desired;
+}
+
+inline
+bool atomic_compare_exchange_strong( uint32_t volatile * object, uint32_t * expected, uint32_t desired)
+{
+	uint32_t prev = interprocess::detail::atomic_cas32( object, desired, * expected);
+	if ( prev != * expected)
+	{
+		* expected = prev;
+		return false;
+	}
+	return true;
 }
 
 inline

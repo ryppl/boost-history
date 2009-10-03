@@ -26,6 +26,18 @@ void atomic_exchange( uint32_t volatile * object, uint32_t desired)
 { * object = desired; }
 
 inline
+bool atomic_compare_exchange_strong( uint32_t volatile * object, uint32_t * expected, uint32_t desired)
+{
+	uint32_t prev = ::atomic_cas_32( object, * expected, desired);
+	if ( prev != * expected)
+	{
+		* expected = prev;
+		return false;
+	}
+	return true;
+}
+
+inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);

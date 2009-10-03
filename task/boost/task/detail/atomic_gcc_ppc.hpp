@@ -33,6 +33,32 @@ void atomic_exchange( uint32_t volatile * object, uint32_t desired)
 }
 
 inline
+bool atomic_compare_exchange_strong( uint32_t volatile * object, uint32_t * expected, uint32_t desired)
+{
+	uint32_t prev = * expected;
+
+	__asm__ __volatile__
+	(
+		"0:\n\t"
+		"lwarx  %0,0,%1\n\t"
+		"cmpw   %0,%3\n\t"
+		"bne-   1f\n\t"
+		"stwcx. %2,0,%1\n\t"
+		"bne-   0b\n\t"
+		"1:"
+		: "=&r"( * expected)
+		: "b" ( object), "r" ( desired), "r" ( * expected)
+		: "memory", "cc"
+	);
+	if ( prev != * expected)
+	{
+		* expected = prev;
+		return false;
+	}
+	return true;
+}
+
+inline
 uint32_t atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	int object_ = static_cast< int >( object);

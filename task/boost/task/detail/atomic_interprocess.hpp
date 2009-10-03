@@ -18,18 +18,30 @@ namespace boost { namespace task
 namespace detail
 {
 inline
-void atomic_exchange( volatile uint32_t * object, uint32_t desired)
+void atomic_exchange( uint32_t volatile * object, uint32_t desired)
 { interprocess::detail::atomic_write32( object, desired); }
 
 inline
-unsigned int atomic_fetch_add( volatile uint32_t * object, uint32_t operand)
+bool atomic_compare_exchange_strong( uint32_t volatile * object, uint32_t * expected, uint32_t desired)
+{
+	uint32_t prev = interprocess::detail::atomic_cas32( object, desired, * expected);
+	if ( prev != * expected)
+	{
+		* expected = prev;
+		return false;
+	}
+	return true;
+}
+
+inline
+unsigned int atomic_fetch_add( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
 	return interprocess::detail::atomic_inc32( object);
 }
 
 inline
-unsigned int atomic_fetch_sub( volatile uint32_t * object, uint32_t operand)
+unsigned int atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 {
 	BOOST_ASSERT( operand == 1);
 	return interprocess::detail::atomic_dec32( object);
