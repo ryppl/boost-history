@@ -116,6 +116,11 @@ public:
     /// const_iterator for iteration over intervals
     typedef typename ImplSetT::const_reverse_iterator const_reverse_iterator;
 
+	typedef typename ImplSetT::pointer                 pointer;
+    typedef typename ImplSetT::const_pointer           const_pointer;
+    typedef typename ImplSetT::reference               reference;
+    typedef typename ImplSetT::const_reference         const_reference;
+
     enum { fineness = 4 }; //SubType::fineness };
 
 public:
@@ -288,6 +293,14 @@ public:
     /** Insert an interval of elements \c inter_val to the set */
     SubType& insert(const segment_type& inter_val) 
     { return add(inter_val); }
+
+    /** Insert an interval of elements \c inter_val to the set. Iterator 
+		\c prior_ is a hint to the position \c inter_val can be 
+		inserted after. */
+    iterator insert(iterator prior_, const segment_type& inter_val) 
+    { return that()->add_(prior_, inter_val); }
+
+
 
     /** Erase an element \c key from the set */
     SubType& erase(const element_type& key) 

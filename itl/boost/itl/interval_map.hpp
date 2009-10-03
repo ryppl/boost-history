@@ -129,6 +129,7 @@ private:
     void subtract_(const value_type&);
 
     void insert_(const value_type& value);
+    iterator insert_(iterator prior_, const value_type& value);
     void erase_(const value_type& value);
 
 private:
@@ -616,6 +617,36 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     }
 }
 
+template <typename DomainT, typename CodomainT, class Traits,
+          ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
+inline typename interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>::iterator
+    interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
+    ::insert_(iterator prior_, const value_type& addend)
+{
+    interval_type inter_val = addend.first;
+    if(inter_val.empty()) 
+        return prior_;
+
+    const CodomainT& co_val = addend.second;
+    if(Traits::absorbs_neutrons && co_val==codomain_combine::neutron()) 
+        return prior_;
+
+    std::pair<iterator,bool> insertion 
+		= this->template map_insert<codomain_combine>(prior_, inter_val, co_val);
+
+    if(insertion.second)
+		return join_neighbours(insertion.first);
+    {
+        // Detect the first and the end iterator of the collision sequence
+		std::pair<iterator,iterator> overlap = this->_map.equal_range(inter_val);
+        iterator it_    = overlap.first,
+                 last_  = overlap.second;
+		         --last_;
+        insert_range(inter_val, co_val, it_, last_);
+		return it_;
+    }
+}
+
 
 template <typename DomainT, typename CodomainT, class Traits,
           ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, template<class,ITL_COMPARE>class Interval, ITL_ALLOC Alloc>
@@ -653,7 +684,7 @@ void interval_map<DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Allo
     if(!end_gap.empty())
     {
         inserted_ = this->_map.insert(prior_, value_type(end_gap, co_val));
-        join_neighbours(inserted_);
+        it_ = join_neighbours(inserted_);
     }
 }
 

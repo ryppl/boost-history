@@ -14,6 +14,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 // interval instance types
 #include "../test_type_lists.hpp"
 #include "../test_value_maker.hpp"
+#include "../test_functions.hpp"
 
 #include <boost/itl/separate_interval_set.hpp>
 #include <boost/itl/split_interval_set.hpp>
@@ -26,8 +27,8 @@ using namespace unit_test;
 using namespace boost::itl;
 
 // -----------------------------------------------------------------------------
-// test_interval_set_shared are tests that should give identical results for all
-// interval_sets: interval_set, separate_interval_set and split_interval_set.
+// test_interval_map_shared are tests that should give identical results for all
+// interval_maps: interval_map and split_interval_map.
 #include "../test_interval_map_shared.hpp"
 
 #define INTERVAL_MAP interval_map

@@ -13,6 +13,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 // interval instance types
 #include "../test_type_lists.hpp"
 #include "../test_value_maker.hpp"
+#include "../test_functions.hpp"
 
 #include <boost/itl/interval_map.hpp>
 #include <boost/itl/separate_interval_set.hpp>

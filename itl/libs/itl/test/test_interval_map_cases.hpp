@@ -71,5 +71,9 @@ BOOST_AUTO_TEST_CASE_TEMPLATE
 (test_itl_interval_map_inclusion_compare_4_bicremental_types, T, bicremental_types)
 {         interval_map_inclusion_compare_4_bicremental_types<T, int, partial_absorber, INTERVAL_MAP>();}
 
+BOOST_AUTO_TEST_CASE_TEMPLATE
+(test_itl_interval_map_std_copy_via_inserter_4_bicremental_types, T, bicremental_types)
+{         interval_map_std_copy_via_inserter_4_bicremental_types<T, int, partial_absorber, INTERVAL_MAP>();}
+
 #endif // BOOST_ITL_TEST_INTERVAL_MAP_CASES_HPP_JOFA_090701
 

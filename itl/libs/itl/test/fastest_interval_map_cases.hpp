@@ -71,6 +71,10 @@ BOOST_AUTO_TEST_CASE
 (fastest_itl_interval_map_inclusion_compare_4_bicremental_types)
 {            interval_map_inclusion_compare_4_bicremental_types<discrete_type_4, int, partial_absorber, INTERVAL_MAP>();}
 
+BOOST_AUTO_TEST_CASE
+(fastest_itl_interval_map_std_copy_via_inserter_4_bicremental_types)
+{            interval_map_std_copy_via_inserter_4_bicremental_types<bicremental_type_4, int, partial_absorber, INTERVAL_MAP>();}
+
 
 #endif // BOOST_ITL_FASTEST_INTERVAL_MAP_CASES_HPP_JOFA_090702
 
