@@ -11,12 +11,13 @@
 #include <libs/statistics/kernel/example/kernel_mono_rp.h>
 #include <libs/statistics/kernel/example/benchmark_scalar.h>
 
+
 int main(){
 
-    // example_scalar_rp(std::cout);
-    // example_scalar_nw(std::cout);
-    // example_kernel_mono_rp(std::cout);
-    example_benchmark_scalar(std::cout);
+    example_scalar_rp(std::cout);
+    example_scalar_nw(std::cout);
+    example_kernel_mono_rp(std::cout);
+    //example_benchmark_scalar(std::cout);
     
     return 0;
 }

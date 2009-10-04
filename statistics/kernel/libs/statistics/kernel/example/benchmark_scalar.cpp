@@ -5,6 +5,8 @@
 //  Software License, Version 1.0. (See accompanying file                    //
 //  LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)         //
 /////////////////////////////////////////////////////////////////////////////// 
+/*
+
 #include <cmath>
 #include <vector>
 #include <algorithm>
@@ -19,14 +21,9 @@
 #include <boost/math/tools/precision.hpp>
 
 // Order of the files matters!
-#include <boost/standard_distribution/distributions/normal.hpp>
-#include <boost/scalar_dist/fun_wrap/pdf.hpp>
-#include <boost/dist_random/distributions/normal.hpp>
-#include <boost/dist_random/random/generate_n.hpp>
+#include <boost/statistics/detail/distribution_toolkit/distributions/normal.hpp>
+#include <boost/statistics/detail/distribution_toolkit/fwd_math/cdf.hpp> // ?!
 
-//#include <boost/scalar_dist/fun_wrap/pdf.hpp>
-//#include <boost/scalar_dist/meta/delegate.hpp>
-//#include <boost/scalar_dist/algorithm/transform.hpp>
 
 #include <boost/binary_op/data/tuple_range.hpp>
 
@@ -268,7 +265,9 @@ void example_benchmark_scalar(std::ostream& out){
     // DO the same for rp
     
     out << "<-" << std::endl;
+
 }
+*/
 
 
 
