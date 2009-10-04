@@ -17,10 +17,10 @@ namespace boost{
 namespace statistics{
 namespace kernel{
    
-// Let E[Y|X=x] denote the conditional mean of Y given X = x
+// This visitor, f, updates a Nadaraya-Watson estimate of E[Y|X=x0] each
+// time f(x,y) is called. 
 //
-// This class is to be used to visit the training data, to obtain an estimator,
-// by the Nadaraya-Watson method, of E[Y|X=x]
+// K,X,A : See rp_visitor 
 template<
     typename K,
     typename X,
@@ -50,14 +50,17 @@ class nw_visitor{
     nw_visitor& operator=(const nw_visitor&);
         
     // Update
+    protected:
     template<typename X1,typename Y1> // Training data point
     result_type operator()(const X1& x1,const Y1& y1);
-        
+
+    public:
     // Access
     result_type unnormalized_estimate()const;
     result_type normalizing_constant()const;
     result_type estimate()const; 
 
+    
     const A& accumulator()const;
     const rp_visitor_type& rp_visitor()const;
         
@@ -133,7 +136,6 @@ const rp_visitor<K,X,A>&
 nw_visitor<K,X,A>::rp_visitor()const{
     return (this->rp_visitor_);
 }
-    
     
 }// kernel
 }// statistics

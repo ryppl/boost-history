@@ -18,10 +18,15 @@ namespace boost{
 namespace statistics{
 namespace kernel{
 
-// Let p(x) denote the density of X = x
+// This visitor, f, keeps a data point, x0, and each time f(x) is called, it 
+// updates an estimate of the density at x0, p(x0), by the Rosenblatt-Parzen 
+// method, using a given kernel k.
 //
-// This class is to be used to visit the training data, to obtain an estimator,
-// by the Rosenblatt-Parzen method, of p(x)
+// The estimate is the average of the kernel evaluations over the traversed 
+// dataset. That average is implemented by an accumulator of type A.
+//
+// X can be a reference which is only recommended if the x object is expensive 
+// to copy
 template<
     typename K,
     typename X,
