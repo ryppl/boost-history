@@ -10,6 +10,8 @@
 #define  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_ESTIMATOR_CONCEPT_TRAINER_HPP_ER_2009
 #include <boost/concept_check.hpp>
 #include <boost/mpl/empty_base.hpp>
+#include <boost/statistics/detail/cross_validation/estimator/meta/estimator.hpp> 
+#include <boost/statistics/detail/cross_validation/estimator/meta/training_dataset.hpp> 
 
 namespace boost{
 namespace statistics{
@@ -18,21 +20,21 @@ namespace cross_validation{
 namespace estimator{
 namespace concept{
 
-    // Type     Object
-    // E        estimator type
-    // R        range of training points
-    template <typename E,typename R,typename B = mpl::empty_base>
-    class Trainer : B
+    template <typename B = mpl::empty_base>
+    class Trainer : public B
     {        
+        typedef typename B::estimator_type          e_;
+        typedef typename B::training_dataset_type   d_;
+
         public:
         BOOST_CONCEPT_USAGE(Trainer)
         {
-            e.train( r ); 
+            e.train( d ); 
         }
     
         private:
-        E e;
-        R r;
+        e_ e;
+        d_ d;
     };
 
 }// concept

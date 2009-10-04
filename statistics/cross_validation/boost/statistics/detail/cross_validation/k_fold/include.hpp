@@ -11,6 +11,7 @@
 
 #include <boost/statistics/detail/cross_validation/k_fold/partition.hpp>
 #include <boost/statistics/detail/cross_validation/k_fold/train_predict.hpp>
+#include <boost/statistics/detail/cross_validation/k_fold/cross_validate.hpp>
 
 #endif
 

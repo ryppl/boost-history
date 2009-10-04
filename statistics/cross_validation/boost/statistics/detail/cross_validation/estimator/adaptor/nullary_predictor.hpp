@@ -21,6 +21,7 @@ namespace estimator{
 namespace adaptor{
 
     // Adapts an accumulator associated with a tag to model Predictor
+    //
     // See http://boost-sandbox.sourceforge.net/libs/accumulators/doc/html/accumulators/user_s_guide.html#accumulators.user_s_guide.the_accumulators_framework.concepts
     // B->const_reference() must return an accumulator
     template<

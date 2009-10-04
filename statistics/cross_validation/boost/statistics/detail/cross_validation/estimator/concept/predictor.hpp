@@ -9,7 +9,8 @@
 #ifndef  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_ESTIMATOR_CONCEPT_PREDICTOR_HPP_ER_2009
 #define  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_ESTIMATOR_CONCEPT_PREDICTOR_HPP_ER_2009
 #include <boost/concept_check.hpp>
-#include <boost/mpl/empty_base.hpp>
+#include <boost/statistics/detail/cross_validation/estimator/meta/estimator.hpp> 
+#include <boost/statistics/detail/cross_validation/estimator/meta/input_data.hpp> 
 
 namespace boost{
 namespace statistics{
@@ -18,22 +19,23 @@ namespace cross_validation{
 namespace estimator{
 namespace concept{
 
-    // Type     Object
-    // E        estimator
-    // T        test point 
-    template <typename E,typename T, typename B = mpl::empty_base>
-    class Predictor : B
+    template <typename B>
+    class Predictor : public B 
     {        
+        typedef typename B::estimator_type  e_;
+        typedef typename B::input_data_type i_;
+
         public:
         
         BOOST_CONCEPT_USAGE(Predictor)
         {
-            e.predict( t ); 
+            e.predict( i ); 
         }
     
     private:
-        E e;
-        T t;
+        e_ e;
+        i_ i;
+        
     };
 
 }// concept

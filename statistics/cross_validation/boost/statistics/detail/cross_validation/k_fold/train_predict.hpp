@@ -16,6 +16,9 @@
 #include <boost/foreach.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/iterator/iterator_concepts.hpp>
+#include <boost/statistics/detail/cross_validation/estimator/meta/input_data.hpp> 
+#include <boost/statistics/detail/cross_validation/estimator/meta/estimator.hpp> 
+#include <boost/statistics/detail/cross_validation/estimator/meta/training_dataset.hpp> 
 #include <boost/statistics/detail/cross_validation/estimator/concept/predictor.hpp> 
 #include <boost/statistics/detail/cross_validation/estimator/concept/trainer.hpp> 
 #include <boost/statistics/detail/cross_validation/k_fold/partition.hpp>
@@ -32,7 +35,7 @@ namespace k_fold{
     It train_predict(
         partition<U,Ft,Fi,Fo>& kfp,
         E estimator,
-        It out_iter
+        It i_p // predicted values
     )
     {
         typedef partition<U,Ft,Fi,Fo> part_;
@@ -40,10 +43,12 @@ namespace k_fold{
         typedef typename part_::meta_input_range::type      ir_;
         typedef typename range_value<ir_>::type             i_;
 
-        BOOST_CONCEPT_ASSERT(( estimator::concept::Trainer<E,tr_> ));
-        BOOST_CONCEPT_ASSERT(( 
-            cross_validation::estimator::concept::Predictor<E,i_> 
-        ));
+        typedef estimator::meta::estimator<E> m1_;
+        typedef estimator::meta::training_dataset<tr_,m1_> m2_;
+        typedef estimator::meta::input_data<i_, m2_> m3_;
+
+        BOOST_CONCEPT_ASSERT(( estimator::concept::Trainer<m3_> ));
+        BOOST_CONCEPT_ASSERT(( estimator::concept::Predictor<m3_> ));
 
         // std::back_inserter cannot work
         BOOST_CONCEPT_ASSERT((boost_concepts::IncrementableIterator<It>));
@@ -57,11 +62,11 @@ namespace k_fold{
         BOOST_FOREACH(ref_i_ i, kfp.input_range())
         {
     
-            *out_iter = estimator.predict(i);
-            ++out_iter;
+            *i_p = estimator.predict(i);
+            ++i_p;
         }
 
-        return out_iter;
+        return i_p;
     }
 
 }// k_fold

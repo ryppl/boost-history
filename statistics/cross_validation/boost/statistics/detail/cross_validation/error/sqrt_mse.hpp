@@ -48,7 +48,7 @@ namespace error{
         res = sqrt( res );
         return res;
     };
-    
+
 }// error
 }// cross_validation
 }// detail

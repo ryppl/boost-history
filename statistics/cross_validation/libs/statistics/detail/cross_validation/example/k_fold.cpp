@@ -121,25 +121,26 @@ void example_k_fold(std::ostream& os)
             kf_p.increment();
         }
     }
-    kf_p.initialize();
     os << std::endl;
 
-    vals_ est_vec_x(n);
-    vals_it_ est_vec_b = boost::begin(est_vec_x); 
-    vals_it_ est_vec_e; 
+    // Cross-Validation #1
+    vals_ preds(n);
+    vals_it_ preds_b = boost::begin(preds); 
+    vals_it_ preds_e; 
     BOOST_ASSERT(n / k > 1);
+    kf_p.initialize();
     while(kf_p.j()<kf_p.k()){
         acc_ acc;
         joined_ joined(acc);
-        est_vec_e = train_predict(
+        preds_e = train_predict(
             kf_p,
             joined,
-            est_vec_b
+            preds_b
         );
-        val_ tmp = *est_vec_b;
+        val_ tmp = *preds_b;
         BOOST_AUTO(
             r,
-            make_iterator_range(boost::next(est_vec_b),est_vec_e)
+            make_iterator_range(boost::next(preds_b),preds_e)
         );
         BOOST_FOREACH(const val_& v, r)
         {
@@ -147,24 +148,38 @@ void example_k_fold(std::ostream& os)
             // a.k.a. marginal estimator in statistical terminology.
             BOOST_ASSERT(tmp == v);
         }
+        
+        preds_b = preds_e;
+        kf_p.increment();
+    }
+
+    // Cross-Validation #2
+    {
+        vals_ output(n);
+        acc_ acc;
+        joined_ joined(acc);
+        cross_validate(
+            kf_p,
+            joined,
+            boost::begin(preds),
+            boost::begin(output)
+        );
 
         val_ sqrt_mse = cv::error::sqrt_mse(
-            est_vec_b,
-            est_vec_e,
-            boost::begin(kf_p.output_range())
+            boost::begin(preds),
+            boost::end(preds),
+            boost::begin(output)
         );
 
         val_ mae = cv::error::mean_abs_error(
-            est_vec_b,
-            est_vec_e,
-            boost::begin(kf_p.output_range())
+            boost::begin(preds),
+            boost::end(preds),
+            boost::begin(output)
         );
         
         os << "sqrt_mse = " << sqrt_mse << std::endl;
         os << "mae = " << mae << std::endl;
-        
-        est_vec_b = est_vec_e;
-        kf_p.increment();
+
     }
 
     os << "<-" << std::endl;
