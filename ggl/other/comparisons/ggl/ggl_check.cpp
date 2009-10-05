@@ -11,7 +11,7 @@
 //#define GGL_DEBUG_INTERSECTION
 // #define OUTPUT_POSTGIS
 // #define OUTPUT_SQLSERVER
-//#define OUTPUT_ORACLE
+//#define OUTPUT_ORACLE do not use this, does not work yet / is not yet checked in
 //#define OUTPUT_WKT
 
 
@@ -22,7 +22,9 @@
 #include <ggl/ggl.hpp>
 #include <ggl/geometries/geometries.hpp>
 
-#include <ggl/io/oracle/write_oracle.hpp>
+#if defined(OUTPUT_ORACLE)
+#  include <ggl/io/oracle/write_oracle.hpp>
+#endif
 
 
 
@@ -297,14 +299,14 @@ int main(int argc, char** argv)
         for (std::vector<POLY>::const_iterator it = polygons.begin(); it != polygons.end(); ++it)
         {
             POLY::ring_type ring;
-            //std::cout << ggl::as_wkt<POLY>(*it) << std::endl;
+            //std::cout << ggl::wkt<POLY>(*it) << std::endl;
             ggl::convex_hull(*it, std::back_inserter(ring));
             if (compare::HULL_AREA)
             {
                 area += fabs(ggl::area(ring));
                 /*POLY p;
                 p.outer() = ring;
-                std::cout << ggl::as_wkt<POLY>(p) << " ";
+                std::cout << ggl::wkt<POLY>(p) << " ";
                 std::cout << ggl::area(it->outer()) << " -> " << ggl::area(ring)  << std::endl;
                 */
             }
@@ -312,6 +314,29 @@ int main(int argc, char** argv)
         }
         compare::report_hull(t, polygons.size(), area);
     }
+
+
+    if (compare::MEASURE_INTERSECTS)
+    {
+        int n = 0;
+
+        boost::timer t;
+        for (int i = 0; i < 1; i++)
+        {
+            for (std::vector<POLY>::const_iterator it = polygons.begin();
+                it != polygons.end();
+                ++it)
+            {
+                if (ggl::intersects(*it))
+                {
+                    //std::cout << ggl::wkt<POLY>(*it) << std::endl;
+                    n++;
+                }
+            }
+        }
+        compare::report_intersects(t, polygons.size(), n);
+    }
+
 
     if (compare::MEASURE_OVERLAY)
     {

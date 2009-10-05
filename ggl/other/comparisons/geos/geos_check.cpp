@@ -212,6 +212,30 @@ int main(int argc, char** argv)
         }
 
 
+        if (compare::MEASURE_INTERSECTS)
+        {
+            int n = 0;
+
+            boost::timer t;
+            for (int i = 0; i < 1; i++)
+            {
+                for (std::vector<Geometry*>::const_iterator it = polygons.begin();
+                        it != polygons.end();
+                        ++it)
+                {
+                    Geometry* poly = *it;
+
+                    if (! poly->isValid())
+                    {
+                        n++;
+                    }
+                }
+            }
+            compare::report_intersects(t, polygons.size(), n);
+        }
+
+
+
         if (compare::MEASURE_OVERLAY)
         {
             bool first = true;

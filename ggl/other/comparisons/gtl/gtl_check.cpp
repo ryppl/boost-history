@@ -161,25 +161,28 @@ int main(int argc, char** argv)
         std::vector<INT_POLY> integer_polygons;
         std::vector<INT_POLY> integer_ellipses;
 
-        for (std::vector<POLY>::const_iterator it = polygons.begin();
-            it != polygons.end();
-            ++it)
+        if (compare::MEASURE_OVERLAY)
         {
-            INT_POLY ip;
-            convert_polygon(*it, ip);
-            integer_polygons.push_back(ip);
+            for (std::vector<POLY>::const_iterator it = polygons.begin();
+                it != polygons.end();
+                ++it)
+            {
+                INT_POLY ip;
+                convert_polygon(*it, ip);
+                integer_polygons.push_back(ip);
 
-            // To check if conversion is OK
-            //std::cout << boost::polygon::area(*it) << " " <<  (boost::polygon::area(ip) / GTL_INTEGER_FACTOR_SQR) << std::endl;
-        }
+                // To check if conversion is OK
+                //std::cout << boost::polygon::area(*it) << " " <<  (boost::polygon::area(ip) / GTL_INTEGER_FACTOR_SQR) << std::endl;
+            }
 
-        for (std::vector<POLY>::const_iterator it = ellipses.begin();
-            it != ellipses.end();
-            ++it)
-        {
-            INT_POLY ip;
-            convert_polygon(*it, ip);
-            integer_ellipses.push_back(ip);
+            for (std::vector<POLY>::const_iterator it = ellipses.begin();
+                it != ellipses.end();
+                ++it)
+            {
+                INT_POLY ip;
+                convert_polygon(*it, ip);
+                integer_ellipses.push_back(ip);
+            }
         }
 
 

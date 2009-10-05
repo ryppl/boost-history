@@ -310,6 +310,26 @@ int main(int argc, char** argv)
     }
     ***/
 
+    if (compare::MEASURE_INTERSECTS)
+    {
+        int n = 0;
+
+        boost::timer t;
+        for (int i = 0; i < 1; i++)
+        {
+            for (std::vector<POLY>::const_iterator it = polygons.begin();
+                it != polygons.end();
+                ++it)
+            {
+                if (! CGAL::is_simple_2(it->vertices_begin(), it->vertices_end(), K()))
+                {
+                    n++;
+                }
+            }
+        }
+        compare::report_intersects(t, polygons.size(), n);
+    }
+
 
     #ifndef SKIP_OVERLAY
     if (compare::MEASURE_OVERLAY)
@@ -320,33 +340,37 @@ int main(int argc, char** argv)
 
         for (int i = 0; i < compare::OVERLAY_COUNT; i++)
         {
-        int k = 0;
-        std::vector<POLY>::const_iterator eit = ellipses.begin();
-        for (std::vector<POLY>::iterator it = polygons.begin();
-            it != polygons.end() && eit != ellipses.end();
-            ++it, ++eit, ++k)
-        {
-            area1 += CGAL::to_double(it->area());
+            int k = 0;
+            std::vector<POLY>::const_iterator eit = ellipses.begin();
 
-            std::list<HOLEY_POLY> pv;
-            try
+            //std::vector<int>::const_iterator idit = ids.begin();
+
+            for (std::vector<POLY>::iterator it = polygons.begin();
+                it != polygons.end() && eit != ellipses.end();
+                ++it, ++eit, ++k) //, ++idit)
             {
-                CGAL::intersection(*it, *eit, std::back_inserter(pv));
-                double a = 0;
-                for (std::list<HOLEY_POLY>::const_iterator pit = pv.begin(); pit != pv.end(); ++pit)
+                area1 += CGAL::to_double(it->area());
+
+                std::list<HOLEY_POLY> pv;
+                try
                 {
-                    a += CGAL::to_double(pit->outer_boundary().area());
+                    //std::cout << " " << *idit;
+                    CGAL::intersection(*it, *eit, std::back_inserter(pv));
+                    double a = 0;
+                    for (std::list<HOLEY_POLY>::const_iterator pit = pv.begin(); pit != pv.end(); ++pit)
+                    {
+                        a += CGAL::to_double(pit->outer_boundary().area());
+                    }
+                    area2 += a;
                 }
-                area2 += a;
-            }
-            catch(std::exception const& e)
-            {
-            }
-            catch(...)
-            {
-            }
+                catch(std::exception const& e)
+                {
+                }
+                catch(...)
+                {
+                }
 
-        }
+            }
         }
         compare::report_overlay(t, polygons.size(), area1, area2);
     }

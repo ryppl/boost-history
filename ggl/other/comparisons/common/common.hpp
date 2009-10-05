@@ -128,16 +128,20 @@ namespace compare
 
 //#define OVERLAY_UNION
 
-    const int OVERLAY_ELLIPSE_COUNT = 101;
-    const double delta = boost::math::constants::pi<double>() * 2.0 / (compare::OVERLAY_ELLIPSE_COUNT - 1);
+
+    // For star-ellipse: use 1.1, 0.2, 101, 1001, 10001
+    // For normal ellipse: use 1.1, 1.1, 100, 1000, 10000
     const double OVERLAY_ELLIPSE_FACTOR1 = 1.1; // 1.1
     const double OVERLAY_ELLIPSE_FACTOR2 = 0.2; // 0.2
+    const int OVERLAY_ELLIPSE_COUNT = 101;
+
     const double CLIP_FACTOR = 0.9;
 
     const bool MEASURE_AREA = true;
     const bool MEASURE_CENTROID = true;
     const bool MEASURE_CLIP = true;
     const bool MEASURE_CONVEX_HULL = true;
+    const bool MEASURE_INTERSECTS = true;
     const bool MEASURE_OVERLAY = true;
     const bool MEASURE_SIMPLIFY = true;
     const bool MEASURE_TOUCH = false; // currently only for GEOS, not further worked out
@@ -149,6 +153,8 @@ namespace compare
     const bool OVERLAY_AREA = true;
     const bool SIMPLIFY_LENGTH = true;
 
+
+    const double delta = boost::math::constants::pi<double>() * 2.0 / (compare::OVERLAY_ELLIPSE_COUNT - 1);
 
 
     // Wait a while, after reading shapefiles/generating ellipses, etc
@@ -241,6 +247,14 @@ namespace compare
             //<< " " << count << " (" << count_boundary << ")"
         report_common(s, n, "TOUCH", count, count_box);
     }
+
+    inline void report_intersects(const boost::timer& t, int n, int count)
+    {
+        double s = t.elapsed();
+
+        report_common(s, n, "INTERSECTS", count, 0);
+    }
+
 
     inline void report_overlay(const boost::timer& t, int n, double area1, double area2)
     {
