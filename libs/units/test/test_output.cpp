@@ -25,6 +25,7 @@ Test unit and quantity printing
 #include <boost/units/make_scaled_unit.hpp>
 #include <boost/units/base_unit.hpp>
 #include <boost/units/make_system.hpp>
+#include <boost/units/absolute.hpp>
 #include <boost/units/physical_dimensions/length.hpp>
 #include <boost/units/physical_dimensions/time.hpp>
 #include <boost/units/physical_dimensions/velocity.hpp>
@@ -67,6 +68,19 @@ typedef boost::units::unit<boost::units::area_dimension, my_system> area;
 typedef boost::units::make_scaled_unit<area, boost::units::scale<10, boost::units::static_rational<3> > >::type scaled_area;
 
 typedef boost::units::make_scaled_unit<scaled_length, boost::units::scale<2, boost::units::static_rational<10> > >::type double_scaled_length;
+
+typedef boost::units::scaled_base_unit<meter_base_unit, boost::units::scale<100, boost::units::static_rational<1> > > scaled_length_base_unit;
+namespace boost {
+namespace units {
+template<>
+struct base_unit_info<scaled_length_base_unit> {
+    static const char* symbol() { return("scm"); }
+    static const char* name() { return("scaled_meter"); }
+};
+}
+}
+typedef boost::units::scaled_base_unit<scaled_length_base_unit, boost::units::scale<10, boost::units::static_rational<3> > > double_scaled_length_base_unit;
+typedef double_scaled_length_base_unit::unit_type double_scaled_length2;
 
 typedef boost::units::reduce_unit<boost::units::unit<boost::units::volume_dimension, my_system> >::type custom1;
 
@@ -118,10 +132,12 @@ BOOST_AUTO_TEST_CASE(test_output_unit_symbol) {
     BOOST_UNITS_TEST_OUTPUT(area(), "m^2");
     BOOST_UNITS_TEST_OUTPUT(scaled_area(), "k(m^2)");
     BOOST_UNITS_TEST_OUTPUT(double_scaled_length(), "Kikm");
+    BOOST_UNITS_TEST_OUTPUT(double_scaled_length2(), "kscm");
     BOOST_UNITS_TEST_OUTPUT(custom1(), "c1");
     BOOST_UNITS_TEST_OUTPUT(custom2(), "c2");
     BOOST_UNITS_TEST_OUTPUT(scaled_custom1(), "kc1");
     BOOST_UNITS_TEST_OUTPUT(scaled_custom2(), "kc2");
+    BOOST_UNITS_TEST_OUTPUT(boost::units::absolute<meter_base_unit::unit_type>(), "absolute m");
 #undef FORMATTERS
 }
 
@@ -137,11 +153,13 @@ BOOST_AUTO_TEST_CASE(test_output_unit_raw) {
     BOOST_UNITS_TEST_OUTPUT(area(), "m^2");
     BOOST_UNITS_TEST_OUTPUT(scaled_area(), "k(m^2)");
     BOOST_UNITS_TEST_OUTPUT(double_scaled_length(), "Kikm");
+    BOOST_UNITS_TEST_OUTPUT(double_scaled_length2(), "kscm");
     // when using raw format, we ignore the user defined overloads
     BOOST_UNITS_TEST_OUTPUT(custom1(), "m^3");
     BOOST_UNITS_TEST_OUTPUT(custom2(), "m s^-2");
     BOOST_UNITS_TEST_OUTPUT(scaled_custom1(), "k(m^3)");
     BOOST_UNITS_TEST_OUTPUT(scaled_custom2(), "k(m s^-2)");
+    BOOST_UNITS_TEST_OUTPUT(boost::units::absolute<meter_base_unit::unit_type>(), "absolute m");
 #undef FORMATTERS
 }
 
@@ -157,10 +175,12 @@ BOOST_AUTO_TEST_CASE(test_output_unit_name) {
     BOOST_UNITS_TEST_OUTPUT(area(), "meter^2");
     BOOST_UNITS_TEST_OUTPUT(scaled_area(), "kilo(meter^2)");
     BOOST_UNITS_TEST_OUTPUT(double_scaled_length(), "kibikilometer");
+    BOOST_UNITS_TEST_OUTPUT(double_scaled_length2(), "kiloscaled_meter");
     BOOST_UNITS_TEST_OUTPUT(custom1(), "custom1");
     BOOST_UNITS_TEST_OUTPUT(custom2(), "custom2");
     BOOST_UNITS_TEST_OUTPUT(scaled_custom1(), "kilocustom1");
     BOOST_UNITS_TEST_OUTPUT(scaled_custom2(), "kilocustom2");
+    BOOST_UNITS_TEST_OUTPUT(boost::units::absolute<meter_base_unit::unit_type>(), "absolute meter");
 #undef FORMATTERS
 }
 
@@ -177,10 +197,12 @@ BOOST_AUTO_TEST_CASE(test_output_quantity_symbol) {
     BOOST_UNITS_TEST_OUTPUT(1.5*area(), "1.5 m^2");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_area(), "1.5 k(m^2)");
     BOOST_UNITS_TEST_OUTPUT(1.5*double_scaled_length(), "1.5 Kikm");
+    BOOST_UNITS_TEST_OUTPUT(1.5*double_scaled_length2(), "1.5 kscm");
     BOOST_UNITS_TEST_OUTPUT(1.5*custom1(), "1.5 c1");
     BOOST_UNITS_TEST_OUTPUT(1.5*custom2(), "1.5 c2");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_custom1(), "1.5 kc1");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_custom2(), "1.5 kc2");
+    BOOST_UNITS_TEST_OUTPUT(1.5*boost::units::absolute<meter_base_unit::unit_type>(), "1.5 absolute m");
 #undef FORMATTERS
 }
 
@@ -196,11 +218,13 @@ BOOST_AUTO_TEST_CASE(test_output_quantity_raw) {
     BOOST_UNITS_TEST_OUTPUT(1.5*area(), "1.5 m^2");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_area(), "1.5 k(m^2)");
     BOOST_UNITS_TEST_OUTPUT(1.5*double_scaled_length(), "1.5 Kikm");
+    BOOST_UNITS_TEST_OUTPUT(1.5*double_scaled_length2(), "1.5 kscm");
     // when using raw format, we ignore the user defined overloads
     BOOST_UNITS_TEST_OUTPUT(1.5*custom1(), "1.5 m^3");
     BOOST_UNITS_TEST_OUTPUT(1.5*custom2(), "1.5 m s^-2");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_custom1(), "1.5 k(m^3)");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_custom2(), "1.5 k(m s^-2)");
+    BOOST_UNITS_TEST_OUTPUT(1.5*boost::units::absolute<meter_base_unit::unit_type>(), "1.5 absolute m");
 #undef FORMATTERS
 }
 
@@ -216,10 +240,12 @@ BOOST_AUTO_TEST_CASE(test_output_quantity_name) {
     BOOST_UNITS_TEST_OUTPUT(1.5*area(), "1.5 meter^2");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_area(), "1.5 kilo(meter^2)");
     BOOST_UNITS_TEST_OUTPUT(1.5*double_scaled_length(), "1.5 kibikilometer");
+    BOOST_UNITS_TEST_OUTPUT(1.5*double_scaled_length2(), "1.5 kiloscaled_meter");
     BOOST_UNITS_TEST_OUTPUT(1.5*custom1(), "1.5 custom1");
     BOOST_UNITS_TEST_OUTPUT(1.5*custom2(), "1.5 custom2");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_custom1(), "1.5 kilocustom1");
     BOOST_UNITS_TEST_OUTPUT(1.5*scaled_custom2(), "1.5 kilocustom2");
+    BOOST_UNITS_TEST_OUTPUT(1.5*boost::units::absolute<meter_base_unit::unit_type>(), "1.5 absolute meter");
 #undef FORMATTERS
 }
 
