@@ -1,0 +1,367 @@
+
+<html>
+
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+
+<title>Boost Random Number Library Parallel Generators</title>
+</head>
+
+<body bgcolor="#FFFFFF" text="#000000">
+
+<h1>Random Number Library Parallel Generators</h1>
+
+<ul>
+<li><a href="#intro">Introduction</a>
+<li><a href="#parallel-uniform-rng">Parallel Uniform Random Number Generator concept</a>
+<li><a href="#named">Named parameters</a>
+<li><a href="#seed">Parallel seeding functions</a>
+<li><a href="#lcg64">A 64-bit parallel linear congruential generator <code>lcg64</code></a>
+<li><a href="#well">The WELL generators </a>
+</ul>
+
+<h2><a name="intro">Introduction</a></h2>
+
+Stochastic simulations on parallel machines face an additional problem over
+simulations on a single CPU: we not only need one random number stream but
+uncorrelated random number streams for each CPU. Since massively parallel
+machines with 65536 CPUs exist, this can be a formidable challenge.
+<P>
+The <A HREF="http://sprng.cs.fsu.edu/">
+Scalable Parallel Pseuo Random Number Generators Library (SPRNG)</A> is a 
+C-library that was designed to solve this challenge. As explained in 
+detail in the <a href="http://sprng.cs.fsu.edu/Version1.0/paper/node7.html">
+SPRNG paper</a>, there are several methods of creating independent parallel
+random number streams, using parametrization of the generator, or cycle
+division techniques.
+<P>
+Since the method to create independent streams depends on the choice of
+generator, no generic seeding can be implemented, but the
+seeding mechanism is specific to the generator. However, a common interface
+is possible, and we follow the design of the SPRNG library
+by requiring the following two parameters next to a global seed
+<ul>
+<li><code>stream_number</code>: the number of the current stream</li>
+<li><code>total_streams</code>: the total number of streams required</li>
+</ul>
+
+Any parallel random number generator has to guarantee that generators created 
+with the same values of <code>total_streams</code>, <code>global_seed</code>
+but different values for <code>stream_number</code> produce independent
+non-overlapping sequences of random numbers. In a parallel application, typically
+the node number is chosen as <code>stream_number</code> and the total number
+of nodes as <code>total_streams</code>.
+
+
+
+<h2><a name="parallel-uniform-rng">Parallel Uniform Random Number Generator</a></h2>
+
+A parallel uniform random number generator is a UniformRandomNumberGenerator 
+that provides not one but many independent streams (sequences) of uniform random
+numbers. To enable a non-intrusive refinement of the
+<code>UniformRandomNumberGenerator</code> concept to a 
+<code>ParallelUniformRandomNumberGenerator</code>
+
+<p>
+In the following table, 
+<UL>
+<LI><code>X</code> denotes a model of the concept
+ParallelUniformRandomNumberGenerator.
+<LI> <code>v</code> is
+an object of type <code>X</code>.
+<LI> <code>num</code> and <code>total</code>
+are unsigned integral values saitsfying <code> num &lt; total</code>.
+<LI><code>first</code> and <code>last</code> 
+input iterators with a value type convertible to <code>unsigned int</code>. 
+<code>first</code> is required to be non-const.
+</UL>
+
+Furthermore, parallel uniform random number generators seeded 
+with the same values of <code>num</code>, <code>total</code> must produce independent
+non-overlapping sequences of random numbers, if all other arguments besides 
+<code>v</code> are equivalent, including where
+applicable, the
+values of the range [<code>first</code>,<code>last</code>).
+
+<p>
+
+<table border=1>
+<tr><th colspan=3 align=center><code>ParallelUniformRandomNumberGenerator</code>
+requirements</th></tr>
+<tr><td>Expression</td><td>Return&nbsp;type</td>
+<td>Note</td></tr>
+<tr><td><code>seed(v,num,total)</code></td><td><code>void</code></td>
+<td>default parallel seeding of <code>v</code></td></tr>
+<tr><td><code>seed(v,num,total,first,last)</code></td><td><code>void</code></td>
+<td>parallel seeding of <code>v</code> from two iterators. The semantics is
+identical to that of the seeding of a <code>UniformRandomNumberGenerator</code> from
+a pair of iterators, with the only distinction that for identical elements in the range
+[<code>first</code>,<code>last</code>) and identical values of <code>total</code>
+but different values of <code>num</code>, independent
+non-overlapping sequences of random numbers will be produced by the generator.
+</table>
+
+
+<h2><a name="named">Named parameter interface</a></h2>
+
+To simplify seeding of parallel random number generators, the generators
+provided in this library implement a named parameter interface:
+<P>
+
+<table border=1>
+<tr><th colspan=3 align=center><code>ParallelUniformRandomNumberGenerator</code>
+requirements</th></tr>
+<tr><td>Expression</td><td>Return&nbsp;type</td>
+<td>Note</td></tr>
+<tr><td><code>X::max_streams</code></td><td><code>int</code></td>
+<td>the maximum number of independent streams provided by X.</td></tr>
+<tr><td><code>X(<i>named parameters</i>)</code></td><td><code>X</code></td>
+<td>creates an object of type <code>X</code> with the named parameter arguments given in 
+the table below.</td></tr>
+<tr><td><code>v.seed(<i>optional named parameters</i>)</code></td><td><code>void</code></td>
+<td>seeds <code>v</code> with the named parameter arguments given in 
+the table below.</tr>
+<tr><td><code>v.seed(first,last,<i>optional named parameters</i>)</code></td><td><code>void</code></td>
+<td>seeds <code>v</code> with the range of values given by [<code>first</code>,<code>last</code>), and the named parameter arguments given in 
+the table below.</tr>
+</table>
+</P>
+using the following parameters:
+<P>
+<table border=1><a name="table1"/>
+<tr><th colspan=3 align=center>Named parameters for seeding of a
+<code>ParallelUniformRandomNumberGenerator</code></th></tr>
+<td>Parameter name</td><td>Default</td><td>Legal values</td></tr>
+</tr>
+<tr><td><code>total_streams</code></td><td>1</td>
+<td> 0 <= <code>total_streams</code> < <code>X::max_streams</code></td>
+</tr>
+<tr><td><code>stream_number</code></td><td>0</td>
+<td> 0 <= <code>stream_number</code> < <code>total_streams</code></td>
+</tr>
+<tr><td><code>global_seed</code></td><td>0</td>
+<td></td>
+</tr>
+</table>
+<P>
+Parallel uniform random number generators created 
+with the same values of <code>total_streams</code>, <code>global_seed</code>
+but different values for <code>stream_number</code> will produce independent
+non-overlapping sequences of random numbers.
+
+
+<p>
+
+
+
+<h3>Header <code>&lt;boost/random/parallel/keyword.hpp&gt;</code></h3>
+
+<pre>
+#include &lt;boost/parameter/keyword.hpp>
+
+namespace boost {  namespace random { namespace parallel {
+  
+  BOOST_PARAMETER_KEYWORD(tag,stream_number)
+  BOOST_PARAMETER_KEYWORD(tag,total_streams)
+  BOOST_PARAMETER_KEYWORD(tag,global_seed)
+  
+} } }
+</pre>
+
+defines the named parameters for seeding for parallel random
+number generators according to the above <a href="#table1">table</a>.
+
+<h2><a name="seed">Parallel seeding functions</a></h2>
+
+The headers   <code>&lt;boost/parallel/seed.hpp&gt;</code> and 
+ <code>&lt;boost/parallel/mpi.hpp&gt;</code> provide default implementations
+ of the parallel seeding functions required by  the 
+ <a href="#parallel-uniform-rng">
+ <code>ParallelUniformRandomNumberGenerator</code></a> concept, and additional
+ convencience functions.
+ 
+<h3>Header <code>&lt;boost/random/parallel/seed.hpp&gt;</code></h3>
+provides default implementations of the parallel seeding functions.
+<h4>Synopsis</h4>
+<pre>
+namespace boost { namespace random { namespace parallel {
+  
+  template &lt;class PRNG>
+  void seed(PRNG&amp; prng, unsigned int num, unsigned int total);
+  
+  template &lt;class PRNG, class Iterator>
+  void seed(PRNG&amp; prng, unsigned int num, unsigned int total, Iterator&amp; first, Iterator const&amp; last);
+
+  template &lt;class PRNG, class SeedType>
+  void seed(PRNG&amp; prng, unsigned int num, unsigned int total, SeedType const&amp; s);
+
+} } }
+</pre>
+
+<H4>Seeding functions</H4>
+<pre>
+template &lt;class PRNG>
+void seed(PRNG&amp; prng, unsigned int num, unsigned int total);
+</pre>
+provides a default implementation of the default parallel seeding function
+by asssuming a named parameter seeding interface. It is implemented as
+<code>prng.seed(stream_number=num, total_streams=total);</code>.
+
+<pre>
+template &lt;class PRNG, class Iterator>
+void seed(PRNG&amp; prng, unsigned int num, unsigned int total, Iterator&amp; first, Iterator const&amp; last);
+</pre>
+provides a default implementation of the parallel seeding from a pair iterators
+by asssuming a named parameter seeding interface. It is implemented as
+<code>prng.seed(first,last,stream_number=num, total_streams=total);</code>.
+
+<pre>
+template &lt;class PRNG, class SeedType>
+void seed(PRNG&amp; prng, unsigned int num, unsigned int total, SeedType const&amp; s);
+</pre>
+provides a convenience function for parallel seeding from a single global seed
+by asssuming a named parameter seeding interface. It is implemented as
+<code>prng.seed(global_seed=s, stream_number=num, total_streams=total);</code>.
+
+<h3>Header <code>&lt;boost/random/parallel/mpi.hpp&gt;</code></h3>
+provides convenience seeding functions for applications based on the candidate 
+Boost.MPI library. The <code>num</code>
+and <code>total</code> parameters are obtained from a 
+<code>boost::parallel::mpi::communicator</code>.
+MPI communicator.
+<H4>Synopsis</h4>
+<pre>
+namespace boost { namespace random { namespace parallel {
+  template &lt;class PRNG>
+  void seed(PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c)
+
+  template &lt;class PRNG, class SeedType>
+  void seed(PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c, SeedType const&amp; s)
+
+  template &lt;class PRNG, class Iterator>
+  void seed(PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c, Iterator&amp; first, Iterator const&amp; last)
+
+  template &lt;class PRNG, class SeedType>
+  void broadcast_seed( PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c, int root, SeedType s)
+
+} } }
+</pre>
+<H4>MPI seed functions</h4>
+<pre>
+template &lt;class PRNG>
+void seed(PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c)
+
+template &lt;class PRNG, class SeedType>
+void seed(PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c, SeedType const&amp; s)
+
+template &lt;class PRNG, class Iterator>
+void seed(PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c, Iterator&amp; first, Iterator const&amp; last)
+</pre>
+call the corresponding <code>seed</code> functions from the <code>&lt;boost/parallel/seed.hpp&gt;</code>,
+using the communicator rank <code>c.rank()</code> and size <code>c.size()</code>
+as <code>num</code> and <code>total</code> arguments.
+<pre>
+template &lt;class PRNG, class SeedType>
+void broadcast_seed( PRNG&amp; prng, boost::parallel::mpi::communicator const&amp; c, int root, SeedType s)
+</pre>
+broadcasts the global seed <code>s</code> from the root rank given by the <code>root</code> argument and then
+calls the seed function with the same arguments.
+
+<h2><a name="lcg64"/>64-bit linear congruential generator <code>lcg64</code></h2>
+
+<h3>Header <code>&lt;boost/random/parallel/lcg64.hpp&gt;</code></h3>
+
+<pre>
+namespace boost {
+namespace random {
+
+template&lt;uint64_t a, uint64_t val>
+class lcg64
+{
+  typedef uint64_t result_type;
+  static const bool has_fixed_range = true;
+  static const result_type min_value;
+  static const result_type max_value;
+  static const result_type max_streams = 146138719;
+  
+  lcg64(<i>optional named parameters</i>);
+  template&lt;class It> lcg64(It&amp; first, It last,<i>optional named parameters</i>);
+
+  void seed(<i>optional named parameters</i>);
+  template&lt;class It> void seed(It&amp; first, It last,<i>optional named parameters</i>);
+  result_type operator()();
+  static bool validation(result_type);
+};
+}
+
+typedef random::lcg64&lt; /* ... */> lcg64a;
+typedef random::lcg64&lt; /* ... */> lcg64b;
+typedef random::lcg64&lt; /* ... */> lcg64c;
+}
+</pre>
+
+<h3>Description</h3>
+
+This header provides a parallel 64-bit linear congruential generator template,
+and three well-tested choices of multipliers. As for other linear
+congruential generators, the recursion relation (n+1) := (a * x(n) + c) mod m
+is used. In this implementation, m=2<SUP>64</sup> and the multiplier <code>a</code>,
+which is given as template parameter is different for the three generators . The prime additive constant c is chosen depending
+on the stream number, thus giving independent sequences for each stream.
+
+<h2><a name="well"/>The WELL generators </h2>
+
+<h3>Header <code>&lt;boost/random/parallel/well.hpp&gt;</code></h3>
+
+<pre>
+namespace boost {
+namespace random {
+
+template&lt;class UIntType, int statesize, UIntType val, class F1, class F2
+       , class F3, class F4, class F5, class F6, class F7, class F8
+       , int p1,  int p2,  int p3, UIntType mask=statesize-1, class RNG=mt19937>
+class well
+{
+  typedef UIntType result_type;
+  static const bool has_fixed_range = true;
+  static const result_type min_value;
+  static const result_type max_value;
+ 
+  well(<i>optional named parameters</i>);
+  template&lt;class It> well(It&amp; first, It last,<i>optional named parameters</i>);
+
+  void seed(<i>optional named parameters</i>);
+  template&lt;class It> void seed(It&amp; first, It last,<i>optional named parameters</i>);
+  result_type operator()();
+  static bool validation(result_type);
+};
+typedef well&lt; /* ... */> well512a;
+typedef well&lt; /* ... */> well1024a;
+}
+}
+</pre>
+<h3>Description</h3>
+
+Instantiations of class template <code>well</code> model a pseudo-random number
+generator, whose algorithm is described in
+
+<blockquote>
+<a href="http://www.iro.umontreal.ca/~panneton/WELLRNG.html"> "Improved Long-Period Generators Based on Linear Recurrences Modulo 2" </a>, F. Panneton, P. L'Ecuyer and M. Matsumoto,
+submitted to ACM TOMS  
+
+</blockquote>
+
+Two well-tested and validated generators <code>well512a</code> and <code>well1024a</code> are provided as specializations. 
+<p>
+The parallel seeding is based on cycle division:
+<ul>
+<li>The single seed method calls a pseudo-random number generator (default: <code>mt19937</code>), which provides the random seeds for <code>total_streams</code> WELL generators.</li>
+<li>In the iterator method the state vector of all <code>total_streams</code> WELL generators is filled by a buffer.</li>
+</ul>  
+
+
+<hr>
+Matthias Troyer, 2006-07-06
+
+</body>
+</html>
