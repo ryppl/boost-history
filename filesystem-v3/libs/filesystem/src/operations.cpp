@@ -1550,10 +1550,10 @@ namespace
   {
     if ( (handle = ::opendir( dir )) == 0 )
       return error_code( errno, system_category );
-    target = string( "." ); // string was static but caused trouble
-                                 // when iteration called from dtor, after
-                                 // static had already been destroyed
-    std::size_t path_size;
+    target = string( "." );  // string was static but caused trouble
+                             // when iteration called from dtor, after
+                             // static had already been destroyed
+    std::size_t path_size (0);  // initialization quiets gcc warning (ticket #3509)
     error_code ec = path_max( path_size );
     if ( ec ) return ec;
     dirent de;

@@ -15,7 +15,6 @@
 *                                TODO List
 *
 *  Review all operations.cpp code for race conditions similar to #2925. Fix or document.
-*  Scoped enum workaround for file_type.
 *  Enable all BOOST_FILESYSTEM_NO_DEPRECATED code.
 *  Vista symlink_status support.
 *  rename and remove really need to be renamed. If users says "using namespace boost::filesystem"

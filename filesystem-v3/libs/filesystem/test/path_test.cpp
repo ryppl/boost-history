@@ -590,6 +590,28 @@ namespace
     BOOST_TEST( p1 == p3.string().c_str() );
     BOOST_TEST( p1.string() == p3 );
     BOOST_TEST( p1.string().c_str() == p3 );
+
+    if ( platform == "Windows" )
+    {
+      path p10 ("c:\\file");
+      path p11 ("c:/file");
+      // check each overload
+      BOOST_TEST( p10.string() == p11.string() );
+      BOOST_TEST( p10 == p11 );
+      BOOST_TEST( p10 == p11.string() );
+      BOOST_TEST( p10 == p11.string().c_str() );
+      BOOST_TEST( p10.string() == p11 );
+      BOOST_TEST( p10.string().c_str() == p11 );
+      BOOST_TEST( p10 == "c:\\file" );
+      BOOST_TEST( p10 == "c:/file" );
+      BOOST_TEST( p11 == "c:\\file" );
+      BOOST_TEST( p11 == "c:/file" );
+      BOOST_TEST( "c:\\file" == p10 );
+      BOOST_TEST( "c:/file" == p10 );
+      BOOST_TEST( "c:\\file" == p11 );
+      BOOST_TEST( "c:/file" == p11 );
+    }
+
   }
 
   //  query_and_decomposition_tests  -----------------------------------------//

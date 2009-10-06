@@ -90,7 +90,7 @@ namespace filesystem
 
   //  filesystem_error is not used because errors are sometimes thrown during 
   //  path construction when there isn't a complete path to include.
-  //  system_error is not used because most uses will be conversion errors, and
+  //  system_error is not used because most uses will be for conversion errors, and
   //  thus it is useful to include the source string causing the error. Since
   //  processing source string errors is by its nature type dependent, the
   //  exception class is templated on the string type.
@@ -314,8 +314,8 @@ namespace filesystem
     //  access to the internal representation string is efficient and often convenient,
     //  but may result in less than fully portable code.
 
-    const string_type &  native() const { return m_path; }
-    const value_type *   c_str() const  { return m_path.c_str(); }
+    const string_type &  native() const { return m_path; }          // Throws: nothing
+    const value_type *   c_str() const  { return m_path.c_str(); }  // Throws: nothing
 
 #   ifdef BOOST_WINDOWS_API
 
@@ -577,7 +577,7 @@ namespace filesystem
   }
   inline bool operator==( const path & lhs, const path & rhs ) { return lhs == rhs.c_str(); }
   inline bool operator==( const path & lhs, const path::string_type & rhs ) { return lhs == rhs.c_str(); }
-  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs; }
+  inline bool operator==( const path::string_type & lhs, const path & rhs ) { return rhs == lhs.c_str(); }
   inline bool operator==( const path::value_type * lhs, const path & rhs )  { return rhs == lhs; }
 # else   // BOOST_POSIX_API
   inline bool operator==( const path & lhs, const path & rhs ) { return lhs.native() == rhs.native(); }
@@ -586,7 +586,6 @@ namespace filesystem
   inline bool operator==( const path::string_type & lhs, const path & rhs ) { return lhs == rhs.native(); }
   inline bool operator==( const path::value_type * lhs, const path & rhs )  { return lhs == rhs.native(); }
 # endif
-
 
   inline bool operator!=( const path & lhs, const path & rhs ) { return !(lhs == rhs); }
 
