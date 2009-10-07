@@ -1441,23 +1441,19 @@ namespace boost
 //  <boost/filesystem/path_traits.hpp>, thus avoiding header circularity.
 //  test cases are in operations_unit_test.cpp
 
-  namespace path_traits
+namespace path_traits
+{
+  void dispatch( const directory_entry & de,
+#                ifdef BOOST_WINDOWS_API
+                   std::wstring & to,
+#                else   
+                   std::string & to,
+#                endif
+                 const codecvt_type &, system::error_code & ec )
   {
-# ifdef BOOST_WINDOWS_API
-
-    void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & )
-    {
-      to = de.path().native();
-    }
-
-# else
-
-    void dispatch( const directory_entry & de, std::string & to, const codecvt_type & )
-    {
-      to = de.path().native();
-    }
-
-# endif
+    to = de.path().native();
+    if ( &ec != &throws() ) ec.clear();
+  }
 
 }  // namespace path_traits
 } // namespace filesystem

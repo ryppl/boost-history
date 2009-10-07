@@ -26,6 +26,7 @@
 #include <iostream>
 #include <sstream>
 #include <string>
+#include <locale>
 
 namespace fs = boost::filesystem;
 using boost::filesystem::path;
@@ -554,6 +555,55 @@ namespace
     std::cout << "  locale testing complete" << std::endl;
   }
 
+  //  test_overloads  ------------------------------------------------------------------//
+
+  void test_overloads()
+  {
+    std::cout << "testing overloads..." << std::endl;
+    std::string s("hello");
+    const char a[] = "goodbye";
+    path p1( s );
+    path p2( s.c_str() );
+    path p3( a );
+    path p4( "foo" );
+
+    std::wstring ws(L"hello");
+    const wchar_t wa[] = L"goodbye";
+    path wp1( ws );
+    path wp2( ws.c_str() );
+    path wp3( wa );
+    path wp4( L"foo" );
+  }
+
+  //  test_error_handling  -------------------------------------------------------------//
+
+  void test_error_handling()
+  {
+    std::cout << "testing error handling..." << std::endl;
+
+    boost::system::error_code ec ( -1, fs::codecvt_error_category() );
+
+    BOOST_TEST( ec );
+    path p1( "foo", ec );
+    BOOST_TEST( !ec );
+
+# ifdef BOOST_WINDOWS_PATH
+
+    ec.assign( -1, fs::codecvt_error_category() );
+    BOOST_TEST( ec );
+    path p2( L"\u2780", ec ); // \u2780 is circled 1, white background == e2 9e 80 in UTF-8
+    BOOST_TEST( !ec );
+
+    ec.clear();
+    std::string s2 ( p2.string( ec ) );
+    BOOST_TEST( ec );
+    BOOST_TEST_EQ( ec, boost::system::error_code( std::codecvt_base::error,
+      fs::codecvt_error_category() ) );
+
+# endif
+
+  }
+
 # if 0
 
 //  //  test_locales  --------------------------------------------------------------------//
@@ -635,26 +685,6 @@ namespace
 
 # endif
 
-  //  test_overloads  ------------------------------------------------------------------//
-
-  void test_overloads()
-  {
-    std::cout << "testing overloads..." << std::endl;
-    std::string s("hello");
-    const char a[] = "goodbye";
-    path p1( s );
-    path p2( s.c_str() );
-    path p3( a );
-    path p4( "foo" );
-
-    std::wstring ws(L"hello");
-    const wchar_t wa[] = L"goodbye";
-    path wp1( ws );
-    path wp2( ws.c_str() );
-    path wp3( wa );
-    path wp4( L"foo" );
-  }
-
 }  // unnamed namespace
 
 //--------------------------------------------------------------------------------------//
@@ -678,6 +708,7 @@ int main( int, char*[] )
   test_decompositions();
   test_queries();
   test_imbue_locale();
+  test_error_handling();
 
 # if 0
 

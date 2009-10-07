@@ -1,4 +1,4 @@
-//  filesystem convert.cpp  ------------------------------------------------------------//
+//  filesystem path_traits.cpp  --------------------------------------------------------//
 
 //  Copyright Beman Dawes 2008, 2009
 
@@ -7,11 +7,22 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
-#include <boost/filesystem/detail/convert.hpp>
+// define BOOST_FILESYSTEM_SOURCE so that <boost/system/config.hpp> knows
+// the library is being built (possibly exporting rather than importing code)
+#define BOOST_FILESYSTEM_SOURCE 
+
+#include <boost/filesystem/path_traits.hpp>
 #include <boost/filesystem/config.hpp>
+#include <boost/system/system_error.hpp>
 #include <boost/scoped_array.hpp>
+#include <boost/throw_exception.hpp>
+#include <locale>   // for codecvt_base::result
 #include <cstring>  // for strlen
 #include <cwchar>   // for wcslen
+
+namespace pt = boost::filesystem::path_traits;
+namespace fs = boost::filesystem;
+namespace bs = boost::system;
 
 //--------------------------------------------------------------------------------------//
 //                                  configuration                                       //
@@ -42,7 +53,8 @@ namespace {
                    const char * from_end,
                    wchar_t * to, wchar_t * to_end,
                    std::wstring & target,
-                   const boost::filesystem::codecvt_type & cvt )
+                   const pt::codecvt_type & cvt,
+                   bs::error_code & ec )
   {
     //std::cout << std::hex
     //          << " from=" << std::size_t(from)
@@ -61,10 +73,14 @@ namespace {
            to, to_end, to_next )) != std::codecvt_base::ok )
     {
       //std::cout << " result is " << static_cast<int>(res) << std::endl;
-      assert( 0 && "append error handling not implemented yet" );
-      throw "append error handling not implemented yet";
+      if ( &ec == &boost::throws() )
+        boost::throw_exception( bs::system_error( res, fs::codecvt_error_category(),
+          "boost::filesystem::path codecvt to wstring" ) );
+      else
+        ec.assign( res, fs::codecvt_error_category() );
     }
     target.append( to, to_next ); 
+    if ( &ec != &boost::throws() ) ec.clear();
   }
 
 //--------------------------------------------------------------------------------------//
@@ -76,7 +92,8 @@ namespace {
                    const wchar_t * from_end,
                    char * to, char * to_end,
                    std::string & target,
-                   const boost::filesystem::codecvt_type & cvt )
+                   const pt::codecvt_type & cvt,
+                   bs::error_code & ec )
   {
     //std::cout << std::hex
     //          << " from=" << std::size_t(from)
@@ -95,15 +112,23 @@ namespace {
            to, to_end, to_next )) != std::codecvt_base::ok )
     {
       //std::cout << " result is " << static_cast<int>(res) << std::endl;
-      assert( 0 && "append error handling not implemented yet" );
-      throw "append error handling not implemented yet";
+      if ( &ec == &boost::throws() )
+        boost::throw_exception( bs::system_error( res, fs::codecvt_error_category(),
+          "boost::filesystem::path codecvt to string" ) );
+      else
+        ec.assign( res, fs::codecvt_error_category() );
     }
     target.append( to, to_next ); 
+    if ( &ec != &boost::throws() ) ec.clear();
   }
   
 }  // unnamed namespace
 
-namespace boost { namespace filesystem { namespace detail {
+//--------------------------------------------------------------------------------------//
+//                                   path_traits                                        //
+//--------------------------------------------------------------------------------------//
+
+namespace boost { namespace filesystem { namespace path_traits {
 
 //--------------------------------------------------------------------------------------//
 //                          convert const char * to wstring                             //
@@ -113,7 +138,8 @@ namespace boost { namespace filesystem { namespace detail {
   void convert( const char * from,
                 const char * from_end,    // 0 for null terminated MBCS
                 std::wstring & to,
-                const codecvt_type & cvt )
+                const codecvt_type & cvt,
+                bs::error_code & ec )
   {
     BOOST_ASSERT( from );
 
@@ -130,12 +156,12 @@ namespace boost { namespace filesystem { namespace detail {
     if ( buf_size > default_codecvt_buf_size )
     {
       boost::scoped_array< wchar_t > buf( new wchar_t [buf_size] );
-      convert_aux( from, from_end, buf.get(), buf.get()+buf_size, to, cvt );
+      convert_aux( from, from_end, buf.get(), buf.get()+buf_size, to, cvt, ec );
     }
     else
     {
       wchar_t buf[default_codecvt_buf_size];
-      convert_aux( from, from_end, buf, buf+default_codecvt_buf_size, to, cvt );
+      convert_aux( from, from_end, buf, buf+default_codecvt_buf_size, to, cvt, ec );
     }
   }
 
@@ -147,7 +173,8 @@ namespace boost { namespace filesystem { namespace detail {
   void convert( const wchar_t * from,
                 const wchar_t * from_end,  // 0 for null terminated MBCS
                 std::string & to,
-                const codecvt_type & cvt )
+                const codecvt_type & cvt,
+                bs::error_code & ec )
   {
     BOOST_ASSERT( from );
 
@@ -169,12 +196,12 @@ namespace boost { namespace filesystem { namespace detail {
     if ( buf_size > default_codecvt_buf_size )
     {
       boost::scoped_array< char > buf( new char [buf_size] );
-      convert_aux( from, from_end, buf.get(), buf.get()+buf_size, to, cvt );
+      convert_aux( from, from_end, buf.get(), buf.get()+buf_size, to, cvt, ec );
     }
     else
     {
       char buf[default_codecvt_buf_size];
-      convert_aux( from, from_end, buf, buf+default_codecvt_buf_size, to, cvt );
+      convert_aux( from, from_end, buf, buf+default_codecvt_buf_size, to, cvt, ec );
     }
   }
-}}} // namespace boost::filesystem::detail
+}}} // namespace boost::filesystem::path_traits

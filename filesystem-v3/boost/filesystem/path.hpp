@@ -85,45 +85,6 @@ namespace filesystem
 {
 
   //------------------------------------------------------------------------------------//
-  //                              class path_error                                      //
-  //------------------------------------------------------------------------------------//
-
-  //  filesystem_error is not used because errors are sometimes thrown during 
-  //  path construction when there isn't a complete path to include.
-  //  system_error is not used because most uses will be for conversion errors, and
-  //  thus it is useful to include the source string causing the error. Since
-  //  processing source string errors is by its nature type dependent, the
-  //  exception class is templated on the string type.
-  
-  //  path_error can be caught when further type distinctions aren't needed.
-
-  class path_error : public std::runtime_error
-  {
-  public:
-    path_error( const char * what_, boost::system::error_code ec_ )
-      : std::runtime_error( what_ ), m_ec( ec_ ) {}
-
-    boost::system::error_code  error_code() const throw() { return m_ec; }
-
-  private:
-    boost::system::error_code  m_ec;
-  };
-
-  template < class String >
-  class basic_path_error : public path_error
-  {
-  public:
-    basic_path_error( const char * what_, boost::system::error_code ec_,
-      const String & source_ )
-        : path_error( what_, ec_ ), m_source( source_ ) {}
-
-    const String & native() const { return m_source; }
-
-  private:
-    String m_source;
-  };
-
-  //------------------------------------------------------------------------------------//
   //                                                                                    //
   //                                    class path                                      //
   //                                                                                    //
@@ -228,6 +189,12 @@ namespace filesystem
       path_traits::dispatch( pathable, m_path, codecvt() );
     }
 
+    template <class PathSource>
+    path( PathSource const & pathable, system::error_code & ec )
+    {
+      path_traits::dispatch( pathable, m_path, codecvt(), ec );
+    }
+
     //  -----  assignments  -----
 
     path & operator=( const path & p )
@@ -319,7 +286,7 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string     native_string() const;
+    const std::string     native_string( system::error_code & ec = throws() ) const;
     const std::wstring &  native_wstring() const { return m_path; }
 
 #   else   // BOOST_POSIX_API
@@ -340,7 +307,7 @@ namespace filesystem
 
 #   ifdef BOOST_WINDOWS_API
 
-    const std::string    string() const; 
+    const std::string    string( system::error_code & ec = throws() ) const; 
     const std::wstring   wstring() const;
 
 #   else // BOOST_POSIX_API

@@ -7,43 +7,6 @@
 
 //  Library home page: http://www.boost.org/libs/filesystem
 
-/*
-   FAQ
-
-   Why are there no error_code & arguments?
-   ----------------------------------------
-
-   error_code & arguments add considerably to the surface area of the interface, yet
-   appear to be of limited usefulness. They have not been requested by users; the need
-   for filesystem error reporting via error_code seems limited to operational failures
-   rather than path failures.
-
-   error_code & arguments double the number of signatures, since for efficiency the
-   use of a default throws() argument is not desirable.
-
-   Errors in path conversions only occur if the source and target value types differ AND
-   the target encoding can't represent a character present in the source. The only
-   commonplace case is when directory iteration on Windows encounters a file name that
-   can't be represented in a char encoding.
-
-   Workarounds (such as pre-scanning for characters that can't be encoded) appear
-   resonable.
-
-   Why are there no const codecvt_type & arguments?
-   ------------------------------------------------
-
-   To hold down the size of the class path interface. Per function codecvt facets
-   just aren't needed very often in practice.
-
-   An RAII idiom can be used to ensure push/pop behavior as an alternative.
-
-   Note that codecvt() is passed to the path_traits::convert functions, since that
-   decouples the convert functions from class path.
-
-   const codecvt_type & can be added later, but once added, they can never be removed
-   since that would break user code.
-*/
-
 #ifndef BOOST_FILESYSTEM_PATH_TRAITS_HPP
 #define BOOST_FILESYSTEM_PATH_TRAITS_HPP
 
@@ -57,6 +20,17 @@
 #include <boost/config/abi_prefix.hpp> // must be the last #include
 
 namespace boost { namespace filesystem {
+
+  BOOST_FILESYSTEM_DECL const system::error_category& codecvt_error_category();
+  //  uses std::codecvt_base::result used for error codes:
+  //
+  //    ok:       Conversion successful.
+  //    partial:  Not all source characters converted; one or more additional source
+  //              characters are needed to produce the final target character, or the
+  //              size of the target intermediate buffer was too small to hold the result.
+  //    error:    A character in the source could not be converted to the target encoding.
+  //    noconv:   The source and target characters have the same type and encoding, so no
+  //              conversion was necessary.
 
   class directory_entry;
   
@@ -84,39 +58,40 @@ namespace path_traits {
   //  Pathable dispatch
 
   template <class Container, class U> inline
-  void dispatch( const Container & c, U & to, const codecvt_type & cvt )
+  void dispatch( const Container & c, U & to, const codecvt_type & cvt,
+                   system::error_code & ec = throws() )
   {
 //    std::cout << "dispatch() container\n";
     if ( c.size() )
-      convert( &*c.begin(), &*c.begin() + c.size(), to, cvt );
+      convert( &*c.begin(), &*c.begin() + c.size(), to, cvt, ec );
+    else if ( &ec != &throws() ) ec.clear();
   }
 
   template <class T, class U> inline
-  void dispatch( T * const & c_str, U & to, const codecvt_type & cvt )
+  void dispatch( T * const & c_str, U & to, const codecvt_type & cvt,
+                   system::error_code & ec = throws() )
   {
 //    std::cout << "dispatch() const T *\n";
     BOOST_ASSERT( c_str );
-    convert( c_str, to, cvt );
+    convert( c_str, to, cvt, ec );
   }
   
   template <typename T, size_t N, class U> inline
-  void dispatch( T (&array)[N], U & to, const codecvt_type & cvt ) // T, N, U deduced
+  void dispatch( T (&array)[N], U & to, const codecvt_type & cvt,
+                   system::error_code & ec = throws() ) // T, N, U deduced
   {
 //    std::cout << "dispatch() array, N=" << N << "\n"; 
-    convert( array, array + N - 1, to, cvt );
+    convert( array, array + N - 1, to, cvt, ec );
   }
 
-# ifdef BOOST_WINDOWS_API
-
   BOOST_FILESYSTEM_DECL
-  void dispatch( const directory_entry & de, std::wstring & to, const codecvt_type & );
-
-# else
-
-  BOOST_FILESYSTEM_DECL
-  void dispatch( const directory_entry & de, std::string & to, const codecvt_type & );
-
-# endif
+  void dispatch( const directory_entry & de,
+#                ifdef BOOST_WINDOWS_API
+                   std::wstring & to,
+#                else   
+                   std::string & to,
+#                endif
+                 const codecvt_type &, system::error_code & ec = throws() );
 
   // value types differ  ---------------------------------------------------------------//
   //
@@ -126,30 +101,34 @@ namespace path_traits {
   void convert( const char * from,
                 const char * from_end,    // 0 for null terminated MBCS
                 std::wstring & to,
-                const codecvt_type & cvt );
+                const codecvt_type & cvt,
+                system::error_code & ec = throws() );
 
   BOOST_FILESYSTEM_DECL
   void convert( const wchar_t * from,
                 const wchar_t * from_end,  // 0 for null terminated MBCS
                 std::string & to,
-                const codecvt_type & cvt );
+                const codecvt_type & cvt,
+                system::error_code & ec = throws() );
 
   inline 
   void convert( const char * from,
                 std::wstring & to,
-                const codecvt_type & cvt )
+                const codecvt_type & cvt,
+                system::error_code & ec = throws() )
   {
     BOOST_ASSERT( from );
-    convert( from, 0, to, cvt );
+    convert( from, 0, to, cvt, ec );
   }
 
   inline 
   void convert( const wchar_t * from,
                 std::string & to,
-                const codecvt_type & cvt )
+                const codecvt_type & cvt,
+                system::error_code & ec = throws() )
   {
     BOOST_ASSERT( from );
-    convert( from, 0, to, cvt );
+    convert( from, 0, to, cvt, ec );
   }
 
   // value types same  -----------------------------------------------------------------//
@@ -158,40 +137,42 @@ namespace path_traits {
 
   inline 
   void convert( const char * from, const char * from_end, std::string & to,
-    const codecvt_type & )
+    const codecvt_type &, system::error_code & ec = throws() )
   {
     BOOST_ASSERT( from );
     BOOST_ASSERT( from_end );
     to.append( from, from_end );
+    if ( &ec != &throws() ) ec.clear();
   }
 
   inline 
-  void convert( const char * from,
-                std::string & to,
-                const codecvt_type & )
+  void convert( const char * from, std::string & to, const codecvt_type &,
+                system::error_code & ec = throws() )
   {
     BOOST_ASSERT( from );
     to += from;
+    if ( &ec != &throws() ) ec.clear();
   }
 
   // wchar_t
 
   inline 
   void convert( const wchar_t * from, const wchar_t * from_end, std::wstring & to,
-    const codecvt_type & )
+    const codecvt_type &, system::error_code & ec = throws() )
   {
     BOOST_ASSERT( from );
     BOOST_ASSERT( from_end );
     to.append( from, from_end );
+    if ( &ec != &throws() ) ec.clear();
   }
 
   inline 
-  void convert( const wchar_t * from,
-                std::wstring & to,
-                const codecvt_type & )
+  void convert( const wchar_t * from, std::wstring & to, const codecvt_type &,
+                   system::error_code & ec = throws() )
   {
     BOOST_ASSERT( from );
     to += from;
+    if ( &ec != &throws() ) ec.clear();
   }
 
 }}} // namespace boost::filesystem::path_traits

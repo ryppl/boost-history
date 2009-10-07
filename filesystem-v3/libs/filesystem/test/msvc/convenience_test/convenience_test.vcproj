@@ -173,6 +173,10 @@
 			UniqueIdentifier="{4FC737F1-C7A5-4376-A066-2A32D752A2FF}"
 			>
 			<File
+				RelativePath="..\..\..\src\codecvt_error_category.cpp"
+				>
+			</File>
+			<File
 				RelativePath="..\..\convenience_test.cpp"
 				>
 			</File>
