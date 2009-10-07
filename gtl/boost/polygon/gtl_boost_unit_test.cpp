@@ -1708,11 +1708,27 @@ bool testpip() {
   pts.push_back(Point(-20, -20));
   pts.push_back(Point(0, 0));
   polygon_data<int> poly;
+  polygon_with_holes_data<int> poly2;
+  polygon_45_data<int> poly45;
+  polygon_45_with_holes_data<int> poly245;
+  polygon_90_data<int> poly90;
+  polygon_90_with_holes_data<int> poly290;
   poly.set(pts.begin(), pts.end());
+  poly2.set(pts.begin(), pts.end());
+  assign(poly45, Rectangle(0, 0, 100, 100));
+  assign(poly245, Rectangle(0, 0, 100, 100));
+  assign(poly90, Rectangle(0, 0, 100, 100));
+  assign(poly290, Rectangle(0, 0, 100, 100));
   for(unsigned int i = 0; i < pts.size(); ++i) {
     if(!contains(poly, pts[i], true)) return false;
     if(contains(poly, pts[i], false)) return false;
+    if(!contains(poly2, pts[i], true)) return false;
+    if(contains(poly2, pts[i], false)) return false;
   }
+  if(!contains(poly45, pts[0], true)) return false;
+  if(contains(poly245, pts[0], false)) return false;
+  if(!contains(poly90, pts[0], true)) return false;
+  if(contains(poly290, pts[0], false)) return false;
   Point pt(0, -10);
   if(contains(poly, pt)) return false;
   Point p2(0, 1);

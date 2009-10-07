@@ -79,6 +79,7 @@ namespace boost { namespace polygon{
   >::type > {
     typedef typename polygon_90_traits<T>::coordinate_type coordinate_type;
     typedef iterator_compact_to_points<typename polygon_90_traits<T>::compact_iterator_type, point_data<coordinate_type> > iterator_type;
+    typedef point_data<coordinate_type> point_type;
 
     // Get the begin iterator
     static inline iterator_type begin_points(const T& t) {
@@ -307,6 +308,15 @@ namespace boost { namespace polygon{
     typedef typename gtl_or<typename is_any_mutable_polygon_with_holes_type<T>::type,
                             typename is_any_mutable_polygon_without_holes_type<T>::type>::type type;
   };
+
+  template <typename T>
+  struct polygon_from_polygon_with_holes_type {};
+  template <>
+  struct polygon_from_polygon_with_holes_type<polygon_with_holes_concept> { typedef polygon_concept type; };
+  template <>
+  struct polygon_from_polygon_with_holes_type<polygon_45_with_holes_concept> { typedef polygon_45_concept type; };
+  template <>
+  struct polygon_from_polygon_with_holes_type<polygon_90_with_holes_concept> { typedef polygon_90_concept type; };
 
   template <>
   struct geometry_domain<polygon_45_concept> { typedef forty_five_domain type; };
@@ -1075,9 +1085,8 @@ namespace boost { namespace polygon{
 
   template <typename T, typename input_point_type>
   typename enable_if< 
-    typename gtl_and_3< typename is_polygon_with_holes_type<T>::type, 
-                        typename gtl_same_type<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
-                        typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type, 
+    typename gtl_and< typename is_polygon_90_type<T>::type, 
+                      typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type, 
     bool>::type
   contains(const T& polygon, const input_point_type& point, bool consider_touch = true) {
     typedef T polygon_type;
@@ -1232,6 +1241,80 @@ namespace boost { namespace polygon{
 
   template <typename T, typename input_point_type>
   typename enable_if< 
+    typename gtl_and< typename is_any_mutable_polygon_with_holes_type<T>::type, 
+                      typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type,
+    bool>::type
+  contains(const T& polygon, const input_point_type& point, bool consider_touch = true) {
+    typedef typename polygon_with_holes_traits<T>::iterator_holes_type holes_iterator;
+    bool isInside = contains( view_as< typename polygon_from_polygon_with_holes_type<
+                              typename geometry_concept<T>::type>::type>( polygon ), point, consider_touch );
+    if(!isInside) return false; //no need to check holes
+    holes_iterator itH = begin_holes( polygon );
+    while( itH != end_holes( polygon ) ) {
+      if(  contains( *itH, point, !consider_touch )  ) {
+	isInside = false;
+	break;
+      }
+      ++itH;
+    }
+    return isInside;
+  }
+
+  template <typename T, typename input_point_type>
+  typename enable_if< 
+    typename gtl_and_3< 
+      typename is_polygon_type<T>::type, 
+      typename gtl_different_type<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
+      typename gtl_same_type<typename geometry_concept<input_point_type>::type, point_concept>::type>::type,
+    bool>::type
+  contains(const T& polygon, const input_point_type& point, bool consider_touch = true) {
+    typedef typename point_traits<input_point_type>::coordinate_type Unit;
+    typedef point_data<Unit> Point;
+    typedef std::pair<Point, Point> half_edge;
+    typedef typename polygon_traits<T>::iterator_type iterator;
+    iterator itr = begin_points(polygon);
+    iterator itrEnd = end_points(polygon);
+    half_edge he;
+    if(itr == itrEnd) return false;
+    assign(he.first, *itr);
+    Point firstPt;
+    assign(firstPt, *itr);
+    ++itr;
+    if(itr == itrEnd) return false;
+    bool done = false;
+    int above = 0;
+    while(!done) {
+      Point currentPt;
+      if(itr == itrEnd) {
+        done = true;
+        currentPt = firstPt;
+      } else {
+        assign(currentPt, *itr);
+        ++itr;
+      }
+      if(currentPt == he.first) {
+        continue;
+      } else {
+        he.second = currentPt;
+        if(equivalence(point, currentPt)) return consider_touch;
+        Unit xmin = (std::min)(x(he.first), x(he.second));
+        Unit xmax = (std::max)(x(he.first), x(he.second));
+        if(x(point) >= xmin && x(point) < xmax) { //double counts if <= xmax
+          Point tmppt;
+          assign(tmppt, point);
+          int oabedge = edge_utils<Unit>::on_above_or_below(tmppt, he);
+          if(oabedge == 0) return consider_touch;
+          if(oabedge == 1) ++above;
+        }
+      }
+      he.first = he.second;
+    } 
+    return above % 2 != 0; //if the point is above an odd number of edges is must be inside polygon
+  }
+
+  /*
+  template <typename T, typename input_point_type>
+  typename enable_if< 
     typename gtl_and_3< 
       typename is_polygon_with_holes_type<T>::type, 
       typename gtl_different_type<typename geometry_domain<typename geometry_concept<T>::type>::type, manhattan_domain>::type, 
@@ -1281,6 +1364,7 @@ namespace boost { namespace polygon{
     } 
     return above % 2 != 0; //if the point is above an odd number of edges is must be inside polygon
   }
+  */
 
   template <typename T1, typename T2>
   typename enable_if<
@@ -1676,6 +1760,39 @@ namespace boost { namespace polygon{
     typedef polygon_90_with_holes_concept type;
   };
 
+  template <typename T>
+  struct view_of<polygon_concept, T> {
+    const T* t;
+    view_of(const T& obj) : t(&obj) {}
+    typedef typename polygon_traits<T>::coordinate_type coordinate_type;
+    typedef typename polygon_traits<T>::iterator_type iterator_type;
+    typedef typename polygon_traits<T>::point_type point_type;
+
+    /// Get the begin iterator
+    inline iterator_type begin() const {
+      return polygon_traits<T>::begin_points(*t);
+    }
+  
+    /// Get the end iterator
+    inline iterator_type end() const {
+      return polygon_traits<T>::end_points(*t);
+    }
+  
+    /// Get the number of sides of the polygon
+    inline std::size_t size() const {
+      return polygon_traits<T>::size(*t);
+    }
+  
+    /// Get the winding direction of the polygon
+    inline winding_direction winding() const {
+      return polygon_traits<T>::winding(*t);
+    }
+  };
+
+  template <typename T>
+  struct geometry_concept<view_of<polygon_concept, T> > {
+    typedef polygon_concept type;
+  };
 }
 }
 
