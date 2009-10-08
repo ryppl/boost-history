@@ -11,8 +11,8 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-#ifndef BOOST_STM_TRANSACTION_OBJECT_PTR__H
-#define BOOST_STM_TRANSACTION_OBJECT_PTR__H
+#ifndef BOOST_STM_TRANSACTION_OBJECT_PTR__HPP
+#define BOOST_STM_TRANSACTION_OBJECT_PTR__HPP
 
 
 #include <boost/stm/base_transaction.hpp>
@@ -25,34 +25,28 @@ public:
     TO* ptr_;
     typedef transaction_object_ptr<TO> this_type;
     typedef transaction_object<transaction_object_ptr<TO> > base_type;
-    transaction_object_ptr() :  base_type(), ptr_(0) {
-    }
-    transaction_object_ptr(const transaction_object_ptr & rhs) :  base_type(rhs),  ptr_(rhs.ptr_) {
-    }
-    transaction_object_ptr(transaction_object_ptr & rhs) :  base_type(rhs), ptr_(rhs.rhs) {
-    }
-    transaction_object_ptr(TO* ptr) :  base_type(), ptr_(ptr) {
-    }
-    ~transaction_object_ptr() {
-    }    
+    transaction_object_ptr() :  base_type(), ptr_(0) {}
+    transaction_object_ptr(const transaction_object_ptr & rhs) :  base_type(rhs),  ptr_(rhs.ptr_) {}
+    transaction_object_ptr(transaction_object_ptr & rhs) :  base_type(rhs), ptr_(rhs.rhs) {}
+    transaction_object_ptr(TO* ptr) :  base_type(), ptr_(ptr) {}
+    ~transaction_object_ptr() {}
+        
     this_type& operator=(TO* rhs) {
         ptr_=rhs;
         return *this;
     }
 
     TO* get() const {
-        std::cout << "get" << std::endl;
         return ptr_;
     }
-
     inline TO& operator*() const { return *get(); }
     inline TO* operator->() const { return get(); }
-    
+
     };
 
 
 } // namespace core
 }
-#endif // BASE_TRANSACTION_H
+#endif // BOOST_STM_TRANSACTION_OBJECT_PTR__HPP
 
 

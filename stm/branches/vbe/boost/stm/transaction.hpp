@@ -44,7 +44,7 @@
 
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
-#include <boost/stm/except_and_back_off_on_abort_notice_cm.hpp>
+#include <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
 #else
 #include <boost/stm/contention_managers/default.hpp>
 #endif
@@ -526,13 +526,13 @@ public:
       // an exception here because restarting the transactions will cause it to
       // infinitely fail
       //-----------------------------------------------------------------------
-      lock_inflight_access();
+      lock(inflight_lock());
       if (other_in_flight_same_thread_transactions())
       {
-         unlock_inflight_access();
+         unlock(inflight_lock());
          throw aborted_transaction_exception("closed nesting throw");
       }
-      unlock_inflight_access();
+      unlock(inflight_lock());
 
       return true;
    }
@@ -877,15 +877,6 @@ private:
    void lock_tx();
    void unlock_tx();
 
-   static void lock_latm_access();
-   static void unlock_latm_access();
-
-   static void lock_inflight_access();
-   static void unlock_inflight_access();
-
-   static void lock_general_access();
-   static void unlock_general_access();
-
    inline static PLOCK* latm_lock() { return &latmMutex_; }
    inline static PLOCK* general_lock() { return &transactionMutex_; }
    inline static PLOCK* inflight_lock() { return &transactionsInFlightMutex_; }
@@ -943,7 +934,6 @@ private:
 
          if (in.transaction_thread() != kInvalidThread)
          {
-            //lockThreadMutex(in.transaction_thread());
             //lock_guard2<Mutex> guard(mutex(in.transaction_thread()));
             Mutex& m=mutex(in.transaction_thread());
             stm::lock(m);
@@ -963,7 +953,6 @@ private:
 #endif
             unlock(&transactionMutex_);
             unlock_tx();
-            //unlockThreadMutex(in.transaction_thread());
             stm::unlock(m);
             //guard.unlock();
 
@@ -1255,8 +1244,6 @@ private:
    void invalidating_direct_commit();
 
    //--------------------------------------------------------------------------
-   void lockThreadMutex(size_t threadId);
-   void unlockThreadMutex(size_t threadId);
    static void lock_all_mutexes_but_this(size_t threadId);
    static void unlock_all_mutexes_but_this(size_t threadId);
 

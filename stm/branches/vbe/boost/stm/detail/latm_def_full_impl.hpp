@@ -58,8 +58,8 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
    //--------------------------------------------------------------------------
    if (latmLockedLocks_.empty())
    {
-      lock_general_access();
-      lock_inflight_access();
+      lock(general_lock());
+      lock(inflight_lock());
 
       std::list<transaction*> txList;
       for (InflightTxes::iterator i = transactionsInFlight_.begin();
@@ -74,8 +74,8 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
          }
          else
          {
-            unlock_general_access();
-            unlock_inflight_access();
+            unlock(general_lock());
+            unlock(inflight_lock());
             return false;
          }
       }
@@ -85,14 +85,14 @@ inline bool transaction::def_do_core_full_pthread_lock_mutex
          (*it)->force_to_abort();
       }
 
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
    }
 
    try { latmLockedLocks_.insert(mutex); }
    catch (...)
    {
-      unlock_inflight_access();
+      unlock(inflight_lock());
       throw;
    }
 
@@ -113,9 +113,9 @@ inline int transaction::def_full_pthread_lock_mutex(Mutex *mutex)
       t->add_to_obtained_locks(mutex);
 
       t->commit_deferred_update_tx();
-      lock_latm_access();
+      lock(latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
 
       // TBR if (hadLock) return 0;
       // TBR else return lock(mutex);
@@ -177,9 +177,9 @@ inline int transaction::def_full_pthread_trylock_mutex(Mutex *mutex)
       t->add_to_obtained_locks(mutex);
 
       t->commit_deferred_update_tx();
-      lock_latm_access();
+      lock(latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
 
       if (hadLock) return 0;
       else return trylock(mutex);
@@ -240,7 +240,7 @@ inline int transaction::def_full_pthread_unlock_mutex(Mutex *mutex)
 
    latmLockedLocks_.erase(mutex);
 
-   if (latmLockedLocks_.empty()) unlock_inflight_access();
+   if (latmLockedLocks_.empty()) unlock(inflight_lock());
 
    latmLockedLocksOfThreadMap_.erase(mutex);
    unlock(&latmMutex_);

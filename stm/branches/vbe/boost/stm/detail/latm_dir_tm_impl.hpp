@@ -66,8 +66,8 @@ inline bool transaction::dir_do_core_tm_conflicting_lock_pthread_lock_mutex
       //--------------------------------------------------------------------------
       if (latmLockedLocks_.empty())
       {
-         lock_general_access();
-         lock_inflight_access();
+         lock(general_lock());
+         lock(inflight_lock());
 
          std::list<transaction*> txList;
          for (InflightTxes::iterator i = transactionsInFlight_.begin();
@@ -82,8 +82,8 @@ inline bool transaction::dir_do_core_tm_conflicting_lock_pthread_lock_mutex
             }
             else
             {
-               unlock_general_access();
-               unlock_inflight_access();
+               unlock(general_lock());
+               unlock(inflight_lock());
                return false;
             }
          }
@@ -98,8 +98,8 @@ inline bool transaction::dir_do_core_tm_conflicting_lock_pthread_lock_mutex
          //-----------------------------------------------------------------------
           thread_conflicting_mutexes_set_all(true);
 
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
 
          //-----------------------------------------------------------------------
          // now we must stall until all in-flight transactions are gone, otherwise
@@ -123,9 +123,9 @@ inline int transaction::dir_tm_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
    {
       transaction::must_be_in_tm_conflicting_lock_set(mutex);
       t->make_isolated();
-      lock_latm_access();
+      lock(latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
       lock(mutex);
       return 0;
    }
@@ -181,9 +181,9 @@ inline int transaction::dir_tm_conflicting_lock_pthread_trylock_mutex(Mutex *mut
    {
       transaction::must_be_in_tm_conflicting_lock_set(mutex);
       t->make_isolated();
-      lock_latm_access();
+      lock(latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
       return trylock(mutex);
    }
 
@@ -251,11 +251,11 @@ inline int transaction::dir_tm_conflicting_lock_pthread_unlock_mutex(Mutex *mute
 
       if (latmLockedLocks_.empty())
       {
-         lock_general_access();
+         lock(general_lock());
 
           thread_conflicting_mutexes_set_all(false);
 
-         unlock_general_access();
+         unlock(general_lock());
       }
    }
 

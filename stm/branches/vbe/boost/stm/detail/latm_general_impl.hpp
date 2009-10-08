@@ -50,13 +50,13 @@ inline void boost::stm::transaction::wait_until_all_locks_are_released(bool keep
 {
    while (true)
    {
-      lock_latm_access();
+      lock(latm_lock());
       if (latmLockedLocks_.empty()) break;
-      unlock_latm_access();
+      unlock(latm_lock());
       SLEEP(10);
    }
 
-   if (!keepLatmLocked) unlock_latm_access();
+   if (!keepLatmLocked) unlock(latm_lock());
 }
 
 //----------------------------------------------------------------------------
@@ -342,9 +342,9 @@ inline void boost::stm::transaction::add_tx_conflicting_lock(Mutex *inLock)
 //----------------------------------------------------------------------------
 inline void boost::stm::transaction::clear_tx_conflicting_locks()
 {
-   lock_general_access();
+   lock(general_lock());
    get_tx_conflicting_locks().clear();
-   unlock_general_access();
+   unlock(general_lock());
 }
 
 //----------------------------------------------------------------------------
@@ -509,7 +509,7 @@ thread_id_occurance_in_locked_locks_map(size_t threadId)
 inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same_thread
 (bool hasTxInFlightMutex)
 {
-   if (!hasTxInFlightMutex) lock_inflight_access();
+   if (!hasTxInFlightMutex) lock(inflight_lock());
 
    for (InflightTxes::iterator i = transactionsInFlight_.begin();
       i != transactionsInFlight_.end(); ++i)
@@ -523,12 +523,12 @@ inline boost::stm::transaction* boost::stm::transaction::get_inflight_tx_of_same
       //--------------------------------------------------------------------
       if (t->thread_id() == THREAD_ID)
       {
-         if (!hasTxInFlightMutex) unlock_inflight_access();
+         if (!hasTxInFlightMutex) unlock(inflight_lock());
          return t;
       }
    }
 
-   if (!hasTxInFlightMutex) unlock_inflight_access();
+   if (!hasTxInFlightMutex) unlock(inflight_lock());
    return 0;
 }
 }}

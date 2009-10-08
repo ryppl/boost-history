@@ -58,8 +58,8 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
    //--------------------------------------------------------------------------
    if (latmLockedLocks_.empty())
    {
-      lock_general_access();
-      lock_inflight_access();
+      lock(general_lock());
+      lock(inflight_lock());
 
       std::list<transaction*> txList;
       for (InflightTxes::iterator i = transactionsInFlight_.begin();
@@ -74,8 +74,8 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
          }
          else
          {
-            unlock_general_access();
-            unlock_inflight_access();
+            unlock(general_lock());
+            unlock(inflight_lock());
             return false;
          }
       }
@@ -90,8 +90,8 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
       //-----------------------------------------------------------------------
       thread_conflicting_mutexes_set_all(true);
 
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
 
       //-----------------------------------------------------------------------
       // now we must stall until all in-flight transactions are gone, otherwise
@@ -103,8 +103,8 @@ inline bool transaction::dir_do_core_full_pthread_lock_mutex
    try { latmLockedLocks_.insert(mutex); }
    catch (...)
    {
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       throw;
    }
 
@@ -127,7 +127,7 @@ inline int transaction::dir_full_pthread_lock_mutex(Mutex *mutex)
       // this method locks LATM and keeps it locked upon returning if param true
       wait_until_all_locks_are_released(true);
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
 
       if (hadLock) return 0;
       else lock(mutex);
@@ -189,7 +189,7 @@ inline int transaction::dir_full_pthread_trylock_mutex(Mutex *mutex)
       // this method locks LATM and keeps it locked upon returning if param true
       wait_until_all_locks_are_released(true);
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
 
       if (hadLock) return 0;
       else return trylock(mutex);
@@ -252,11 +252,11 @@ inline int transaction::dir_full_pthread_unlock_mutex(Mutex *mutex)
 
    if (latmLockedLocks_.empty())
    {
-      lock_general_access();
+      lock(general_lock());
 
       thread_conflicting_mutexes_set_all(false);
 
-      unlock_general_access();
+      unlock(general_lock());
    }
 
    latmLockedLocksOfThreadMap_.erase(mutex);

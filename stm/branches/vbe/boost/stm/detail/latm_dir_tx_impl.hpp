@@ -51,8 +51,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
    // set. do not keep in-flight transactions blocked once the transactions have
    // been processed.
    //--------------------------------------------------------------------------
-   lock_general_access();
-   lock_inflight_access();
+   lock(general_lock());
+   lock(inflight_lock());
 
    std::list<transaction *> txList;
    std::set<size_t> txThreadId;
@@ -75,8 +75,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
          }
          else
          {
-            unlock_general_access();
-            unlock_inflight_access();
+            unlock(general_lock());
+            unlock(inflight_lock());
             return false;
          }
       }
@@ -112,8 +112,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
          throw;
       }
 
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
 
       //-----------------------------------------------------------------------
       // now wait until all the txs which conflict with this mutex are no longer
@@ -123,8 +123,8 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
       {
          bool conflictingTxInFlight = false;
 
-         lock_general_access();
-         lock_inflight_access();
+         lock(general_lock());
+         lock(inflight_lock());
 
          for (InflightTxes::iterator i = transactionsInFlight_.begin();
             i != transactionsInFlight_.end(); ++i)
@@ -137,16 +137,16 @@ inline bool transaction::dir_do_core_tx_conflicting_lock_pthread_lock_mutex
             }
          }
 
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
 
          if (conflictingTxInFlight) SLEEP(10);
          else return true;
       }
    }
 
-   unlock_general_access();
-   unlock_inflight_access();
+   unlock(general_lock());
+   unlock(inflight_lock());
 
    return true;
 }

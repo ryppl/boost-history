@@ -24,11 +24,11 @@
 
 #ifdef PERFORMING_LATM
 #include <boost/stm/transaction.hpp>
-#define LOCK(a) boost::stm::transaction::lock_(a)
-#define UNLOCK(a) boost::stm::transaction::unlock_(a)
+#define BOOST_STM_LOCK(a) boost::stm::transaction::lock_(a)
+#define BOOST_STM_UNLOCK(a) boost::stm::transaction::unlock_(a)
 #else
-#define LOCK(a) boost::stm::lock(a)
-#define UNLOCK(a) boost::stm::unlock(a)
+#define BOOST_STM_LOCK(a) boost::stm::lock(a)
+#define BOOST_STM_UNLOCK(a) boost::stm::unlock(a)
 #endif
 
 //---------------------------------------------------------------------------
@@ -59,23 +59,23 @@ public:
    typedef std::multimap<size_t const, Mutex*> ThreadedLockContainer;
    typedef ThreadedLockContainer::iterator ThreadedLockIter;
 
-   auto_lock(Mutex &mutex) : donePostStep_(false), hasLock_(false), lock_(0)
+   auto_lock(Mutex &mutex) : hasLock_(false), lock_(0)
    {
       do_auto_lock(&mutex);
    }
 
-   auto_lock(Mutex *mutex) : donePostStep_(false), hasLock_(false), lock_(0)
+   auto_lock(Mutex *mutex) : hasLock_(false), lock_(0)
    {
       do_auto_lock(mutex);
    }
 
 
-   auto_lock(size_t timeOut, Mutex &mutex) : donePostStep_(false), hasLock_(false), lock_(0)
+   auto_lock(size_t timeOut, Mutex &mutex) : hasLock_(false), lock_(0)
    {
       do_timed_auto_lock(timeOut, &mutex);
    }
 
-   auto_lock(size_t timeOut, Mutex *mutex) : donePostStep_(false), hasLock_(false), lock_(0)
+   auto_lock(size_t timeOut, Mutex *mutex) : hasLock_(false), lock_(0)
    {
       do_timed_auto_lock(timeOut, mutex);
    }
@@ -90,17 +90,6 @@ public:
    {
       static int VC6_fix = 0;
       return VC6_fix;
-   }
-
-   void post_step()
-   {
-      release_lock();
-      donePostStep_ = true;
-   }
-
-   bool done_post_step() const
-   {
-      return donePostStep_;
    }
 
 private:
@@ -138,7 +127,7 @@ private:
       lock_ = mutex;
       if (thread_has_lock(mutex)) return;
 
-      LOCK(mutex);
+      BOOST_STM_LOCK(mutex);
       hasLock_ = true;
 
       insert_into_threaded_lock_map(mutex);
@@ -149,7 +138,7 @@ private:
       if (hasLock_)
       {
          hasLock_ = false;
-         UNLOCK(lock_);
+         BOOST_STM_UNLOCK(lock_);
          remove_thread_has_lock(lock_);
       }
    }
@@ -208,15 +197,17 @@ private:
    //auto_lock(auto_lock const &);
    //auto_lock& operator=(auto_lock const &);
 
-   bool donePostStep_;
    bool hasLock_;
    Mutex *lock_;
 };
 
-#define use_lock(L) if (0 != rand()+1) for (boost::stm::auto_lock ___l(L); !___l.done_post_step(); ___l.post_step())
-#define use_timed_lock(T, L) if (0 != rand()+1) for (boost::stm::auto_lock ___l(T, L); !___l.done_post_step(); ___l.post_step())
+#define use_lock(L) if (bool __end=false); else \
+    for (boost::stm::auto_lock ___l(L); !__end; __end=true)
+#define use_timed_lock(T, L) if (bool __end=false); else \
+    for (boost::stm::auto_lock ___l(T, L); !__end; __end=false)
+#define try_timed_lock(T, L)  if (bool __end=false); else \
+    try { for (boost::stm::auto_lock ___l(T, L); !__end; __end=false)
 
-#define try_timed_lock(T, L) try { for (boost::stm::auto_lock ___l(T, L); !___l.done_post_step(); ___l.post_step())
 #define catch_lock_timeout(E) } catch (std::timer_lock_exception &E)
 #define lock_timeout } catch (std::timer_lock_exception &E)
 

@@ -107,9 +107,9 @@ inline int transaction::def_tm_conflicting_lock_pthread_lock_mutex(Mutex *mutex)
       bool hadLock = t->is_currently_locked_lock(mutex);
       t->add_to_currently_locked_locks(mutex);
 
-      lock_latm_access();
+      lock(latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
 
       // TBR if (hadLock) return 0;
       // TBR else return lock(mutex);
@@ -174,9 +174,9 @@ inline int transaction::def_tm_conflicting_lock_pthread_trylock_mutex(Mutex *mut
       bool hadLock = t->is_currently_locked_lock(mutex);
       t->add_to_currently_locked_locks(mutex);
 
-      lock_latm_access();
+      lock(latm_lock());
       latmLockedLocksOfThreadMap_[mutex] = THREAD_ID;
-      unlock_latm_access();
+      unlock(latm_lock());
 
       if (hadLock) return 0;
       else return trylock(mutex);
@@ -244,7 +244,7 @@ inline int transaction::def_tm_conflicting_lock_pthread_unlock_mutex(Mutex *mute
    {
       latmLockedLocks_.erase(mutex);
 
-      if (latmLockedLocks_.empty()) unlock_inflight_access();
+      if (latmLockedLocks_.empty()) unlock(inflight_lock());
    }
 
    latmLockedLocksOfThreadMap_.erase(mutex);

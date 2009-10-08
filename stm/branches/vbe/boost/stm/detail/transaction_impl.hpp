@@ -125,16 +125,16 @@ inline void transaction::make_irrevocable()
    //-----------------------------------------------------------------------
    while (true)
    {
-      lock_inflight_access();
+      lock(inflight_lock());
 
       if (!irrevocableTxInFlight())
       {
          tx_type(eIrrevocableTx);
-         unlock_inflight_access();
+         unlock(inflight_lock());
          return;
       }
 
-      unlock_inflight_access();
+      unlock(inflight_lock());
       SLEEP(10);
       cm_perform_irrevocable_tx_wait_priority_promotion(*this);
    }
@@ -160,20 +160,20 @@ inline void transaction::make_isolated()
          ("aborting tx in make_isolated");
       }
 
-      lock_general_access();
-      lock_inflight_access();
+      lock(general_lock());
+      lock(inflight_lock());
 
       if (!irrevocableTxInFlight() && canAbortAllInFlightTxs())
       {
          tx_type(eIrrevocableAndIsolatedTx);
          abortAllInFlightTxs();
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
          return;
       }
 
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       //SLEEP(10);
       cm_perform_isolated_tx_wait_priority_promotion(*this);
    }
@@ -238,12 +238,12 @@ inline void transaction::commit_deferred_update_tx()
    //--------------------------------------------------------------------------
    if (is_only_reading())
    {
-      unlock_general_access();
+      unlock(general_lock());
       unlock_tx();
    }
    else
    {
-      lock_inflight_access();
+      lock(inflight_lock());
 
       //-----------------------------------------------------------------------
       // commit writes, clear new and deletes
@@ -256,8 +256,8 @@ inline void transaction::commit_deferred_update_tx()
       deferredCommitTransactionDeletedMemory();
 
       unlock_tx();
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
    }
 
    //--------------------------------------------------------------------------
@@ -283,62 +283,6 @@ inline void transaction::unlock_tx()
 {
    unlock(mutex());
    hasMutex_ = 0;
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::lock_latm_access()
-{
-   lock(&latmMutex_);
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::unlock_latm_access()
-{
-   unlock(&latmMutex_);
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::lock_inflight_access()
-{
-   lock(&transactionsInFlightMutex_);
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::unlock_inflight_access()
-{
-   unlock(&transactionsInFlightMutex_);
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::lock_general_access()
-{
-   lock(&transactionMutex_);
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::unlock_general_access()
-{
-   unlock(&transactionMutex_);
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::lockThreadMutex(size_t threadId)
-{
-   lock(mutex(threadId));
-}
-
-//--------------------------------------------------------------------------
-//--------------------------------------------------------------------------
-inline void transaction::unlockThreadMutex(size_t threadId)
-{
-   unlock(mutex(threadId));
 }
 
 //--------------------------------------------------------------------------
@@ -632,12 +576,12 @@ inline bool transaction::restart()
    //-----------------------------------------------------------------------
 #if PERFORMING_COMPOSITION
 #ifdef USING_SHARED_FORCED_TO_ABORT
-   lock_inflight_access();
+   lock(inflight_lock());
    if (!otherInFlightTransactionsOfSameThreadNotIncludingThis(this))
    {
       unforce_to_abort();
    }
-   unlock_inflight_access();
+   unlock(inflight_lock());
 #else
    unforce_to_abort();
 #endif
@@ -707,23 +651,23 @@ inline void transaction::put_tx_inflight()
 #if PERFORMING_LATM
    while (true)
    {
-      lock_inflight_access();
+      lock(inflight_lock());
 
       if (can_go_inflight() && !isolatedTxInFlight())
       {
          transactionsInFlight_.insert(this);
          state_ = e_in_flight;
-         unlock_inflight_access();
+         unlock(inflight_lock());
          break;
       }
 
-      unlock_inflight_access();
+      unlock(inflight_lock());
       SLEEP(10);
    }
 #else
-   lock_inflight_access();
+   lock(inflight_lock());
    transactionsInFlight_.insert(this);
-   unlock_inflight_access();
+   unlock(inflight_lock());
    state_ = e_in_flight;
 #endif
 }
@@ -796,11 +740,11 @@ inline void transaction::lock_and_abort()
    {
       bool wasWriting = isWriting() ? true : false;
 
-      if (wasWriting) lock_general_access();
+      if (wasWriting) lock(general_lock());
       lock_tx();
       direct_abort();
       unlock_tx();
-      if (wasWriting) unlock_general_access();
+      if (wasWriting) unlock(general_lock());
    }
    else
    {
@@ -826,7 +770,7 @@ inline void transaction::invalidating_direct_end_transaction()
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
-   lock_general_access();
+   lock(general_lock());
    lock_tx();
 
    //--------------------------------------------------------------------------
@@ -843,28 +787,28 @@ inline void transaction::invalidating_direct_end_transaction()
       // so unlock it so we can reduce contention
       //-----------------------------------------------------------------------
       bool wasWriting = isWriting() ? true : false;
-      if (!wasWriting) unlock_general_access();
+      if (!wasWriting) unlock(general_lock());
       direct_abort();
       unlock_tx();
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
-      if (wasWriting) unlock_general_access();
+      if (wasWriting) unlock(general_lock());
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
    lock_all_mutexes_but_this(threadId_);
 
-   lock_inflight_access();
+   lock(inflight_lock());
    transactionsInFlight_.erase(this);
 
    if (other_in_flight_same_thread_transactions())
    {
       state_ = e_hand_off;
       unlock_all_mutexes();
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       bookkeeping_.inc_handoffs();
    }
    else
@@ -875,8 +819,8 @@ inline void transaction::invalidating_direct_end_transaction()
       if (e_committed == state_)
       {
          unlock_all_mutexes();
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
       }
    }
 }
@@ -906,20 +850,20 @@ inline void transaction::invalidating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (is_only_reading())
    {
-      lock_inflight_access();
+      lock(inflight_lock());
       transactionsInFlight_.erase(this);
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
       {
-      unlock_inflight_access();
+      unlock(inflight_lock());
          state_ = e_hand_off;
          bookkeeping_.inc_handoffs();
       }
       else
 #endif
       {
-      unlock_inflight_access();
+      unlock(inflight_lock());
          tx_type(eNormalTx);
 #if PERFORMING_LATM
          get_tx_conflicting_locks().clear();
@@ -943,7 +887,7 @@ inline void transaction::invalidating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (forced_to_abort())
    {
-      unlock_general_access();
+      unlock(general_lock());
       deferred_abort(true);
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
@@ -964,7 +908,7 @@ inline void transaction::invalidating_deferred_end_transaction()
       // transactionsInFlightMutex
       //-----------------------------------------------------------------------
       lock_all_mutexes();
-      lock_inflight_access();
+      lock(inflight_lock());
 
 #if PERFORMING_COMPOSITION
       if (other_in_flight_same_thread_transactions())
@@ -972,8 +916,8 @@ inline void transaction::invalidating_deferred_end_transaction()
          transactionsInFlight_.erase(this);
          state_ = e_hand_off;
          unlock_all_mutexes();
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
          bookkeeping_.inc_handoffs();
       }
       else
@@ -993,7 +937,7 @@ inline void transaction::invalidating_deferred_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::validating_direct_end_transaction()
 {
-   lock_general_access();
+   lock(general_lock());
    lock_tx();
 
    //--------------------------------------------------------------------------
@@ -1004,7 +948,7 @@ inline void transaction::validating_direct_end_transaction()
       abort();
       //bookkeeping_.inc_abort_perm_denied(threadId_);
       unlock_tx();
-      unlock_general_access();
+      unlock(general_lock());
       throw aborted_transaction_exception
       ("aborting commit due to CM priority");
    }
@@ -1023,28 +967,28 @@ inline void transaction::validating_direct_end_transaction()
       // so unlock it so we can reduce contention
       //-----------------------------------------------------------------------
       bool wasWriting = isWriting() ? true : false;
-      if (!wasWriting) unlock_general_access();
+      if (!wasWriting) unlock(general_lock());
       direct_abort();
       unlock_tx();
       //-----------------------------------------------------------------------
       // if this tx was writing, unlock the transaction mutex now
       //-----------------------------------------------------------------------
-      if (wasWriting) unlock_general_access();
+      if (wasWriting) unlock(general_lock());
       throw aborted_transaction_exception
       ("aborting committing transaction due to contention manager priority inversion");
    }
 
    lock_all_mutexes_but_this(threadId_);
 
-   lock_inflight_access();
+   lock(inflight_lock());
    transactionsInFlight_.erase(this);
 
    if (other_in_flight_same_thread_transactions())
    {
       state_ = e_hand_off;
       unlock_all_mutexes();
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       bookkeeping_.inc_handoffs();
    }
    else
@@ -1055,8 +999,8 @@ inline void transaction::validating_direct_end_transaction()
       if (e_committed == state_)
       {
          unlock_all_mutexes();
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
       }
    }
 }
@@ -1066,8 +1010,8 @@ inline void transaction::validating_direct_end_transaction()
 //-----------------------------------------------------------------------------
 inline void transaction::validating_deferred_end_transaction()
 {
-   lock_general_access();
-   lock_inflight_access();
+   lock(general_lock());
+   lock(inflight_lock());
    lock_tx();
 
    //--------------------------------------------------------------------------
@@ -1076,8 +1020,8 @@ inline void transaction::validating_deferred_end_transaction()
    if (cm_abort_before_commit(*this))
    {
       //bookkeeping_.inc_abort_perm_denied(threadId_);
-      unlock_inflight_access();
-      unlock_general_access();
+      unlock(inflight_lock());
+      unlock(general_lock());
       deferred_abort();
       unlock_tx();
       throw aborted_transaction_exception
@@ -1085,7 +1029,7 @@ inline void transaction::validating_deferred_end_transaction()
    }
 
    // unlock this - we only needed it to check abort_before_commit()
-   unlock_inflight_access();
+   unlock(inflight_lock());
 
    uint32 ms = clock();
 
@@ -1098,7 +1042,7 @@ inline void transaction::validating_deferred_end_transaction()
    //--------------------------------------------------------------------------
    if (forced_to_abort())
    {
-      unlock_general_access();
+      unlock(general_lock());
       deferred_abort();
       unlock_tx();
       throw aborted_transaction_exception
@@ -1114,7 +1058,7 @@ inline void transaction::validating_deferred_end_transaction()
       //--------------------------------------------------------------------------
       if (is_only_reading())
       {
-         lock_inflight_access();
+         lock(inflight_lock());
          transactionsInFlight_.erase(this);
 
          if (other_in_flight_same_thread_transactions())
@@ -1132,8 +1076,8 @@ inline void transaction::validating_deferred_end_transaction()
             state_ = e_committed;
          }
 
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
 
          bookkeeping_.inc_commits();
 #ifndef DISABLE_READ_SETS
@@ -1158,15 +1102,15 @@ inline void transaction::validating_deferred_end_transaction()
       //-----------------------------------------------------------------------
       lock_all_mutexes_but_this(threadId_);
 
-      lock_inflight_access();
+      lock(inflight_lock());
       transactionsInFlight_.erase(this);
 
       if (other_in_flight_same_thread_transactions())
       {
          state_ = e_hand_off;
          unlock_all_mutexes();
-         unlock_general_access();
-         unlock_inflight_access();
+         unlock(general_lock());
+         unlock(inflight_lock());
          bookkeeping_.inc_handoffs();
       }
       else
@@ -1180,8 +1124,8 @@ inline void transaction::validating_deferred_end_transaction()
          if (e_committed == state_)
          {
             unlock_tx();
-            unlock_general_access();
-            unlock_inflight_access();
+            unlock(general_lock());
+            unlock(inflight_lock());
          }
       }
    }
@@ -1300,7 +1244,7 @@ inline void transaction::direct_abort
 #endif
       if (!alreadyRemovedFromInFlight)
       {
-         lock_inflight_access();
+         lock(inflight_lock());
          // if I'm the last transaction of this thread, reset abort to false
          transactionsInFlight_.erase(this);
       }
@@ -1315,7 +1259,7 @@ inline void transaction::direct_abort
 #endif
       if (!alreadyRemovedFromInFlight)
       {
-         unlock_inflight_access();
+         unlock(inflight_lock());
       }
    }
    catch (...)
@@ -1350,7 +1294,7 @@ inline void transaction::deferred_abort
 
    if (alreadyRemovedFromInFlight)
    {
-      lock_inflight_access();
+      lock(inflight_lock());
       // if I'm the last transaction of this thread, reset abort to false
       transactionsInFlight_.erase(this);
 
@@ -1363,7 +1307,7 @@ inline void transaction::deferred_abort
       unforce_to_abort();
 #endif
 
-      unlock_inflight_access();
+      unlock(inflight_lock());
    }
    else unforce_to_abort();
 }
@@ -1411,8 +1355,8 @@ inline void transaction::invalidating_direct_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
 
       direct_abort();
       unlock_tx();
@@ -1425,8 +1369,8 @@ inline void transaction::invalidating_direct_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
 
       direct_abort();
       unlock_tx();
@@ -1487,8 +1431,8 @@ inline void transaction::invalidating_deferred_commit()
             ++stalling_;
             size_t local_clock = global_clock();
 
-            unlock_inflight_access();
-            unlock_general_access();
+            unlock(inflight_lock());
+            unlock(general_lock());
             unlock_all_mutexes();
 
             for (;;)
@@ -1505,8 +1449,8 @@ inline void transaction::invalidating_deferred_commit()
                   throw aborted_transaction_exception_no_unlocks();
                }
 
-               lock_general_access();
-               lock_inflight_access();
+               lock(general_lock());
+               lock(inflight_lock());
 
                // if our stalling on tx is gone, continue
                if (transactionsInFlight_.end() == transactionsInFlight_.find(stallingOn))
@@ -1518,8 +1462,8 @@ inline void transaction::invalidating_deferred_commit()
                   break;
                }
 
-               unlock_general_access();
-               unlock_inflight_access();
+               unlock(general_lock());
+               unlock(inflight_lock());
             }
 
             lock_all_mutexes();
@@ -1539,8 +1483,8 @@ inline void transaction::invalidating_deferred_commit()
       }
 
       transactionsInFlight_.erase(this);
-      unlock_inflight_access();
-      unlock_general_access();
+      unlock(inflight_lock());
+      unlock(general_lock());
 
       deferredCommitWriteState();
 
@@ -1587,8 +1531,8 @@ inline void transaction::invalidating_deferred_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       deferred_abort();
       unlock_tx();
 
@@ -1600,8 +1544,8 @@ inline void transaction::invalidating_deferred_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       deferred_abort();
       unlock_tx();
 
@@ -1672,8 +1616,8 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
 
       direct_abort();
       unlock_tx();
@@ -1686,8 +1630,8 @@ std::allocator<__pthread_mutex_t**> >::clear (this=0x0)
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
 
       direct_abort();
       unlock_tx();
@@ -1780,8 +1724,8 @@ inline void transaction::validating_deferred_commit()
    catch (aborted_transaction_exception&)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       deferred_abort();
       unlock_tx();
 
@@ -1793,8 +1737,8 @@ inline void transaction::validating_deferred_commit()
    catch (...)
    {
       unlock_all_mutexes_but_this(threadId_);
-      unlock_general_access();
-      unlock_inflight_access();
+      unlock(general_lock());
+      unlock(inflight_lock());
       deferred_abort();
       unlock_tx();
 

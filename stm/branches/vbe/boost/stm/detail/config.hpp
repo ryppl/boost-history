@@ -47,7 +47,7 @@
 //      BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM
 //      BOOST_STM_CM_DYNAMIC_CONF when you want a polymorphic CM configured at run time
 
-//#define BOOST_STM_CM_STATIC_CONF 1
+#define BOOST_STM_CM_STATIC_CONF 1
 //#define BOOST_STM_CM_DYNAMIC_CONF 1
 
 // Define only one of 
