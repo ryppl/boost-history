@@ -215,8 +215,8 @@ invert the effect of it's antetype. But for the default
 it does:
 
 [table
-[[]         [`add<Combine<CodomainT> >((k,x))`] [`subtract<inverse<Combine<CodomainT> >::type>((k,x))`]]
-[[Instance] [`add<inplace_plus<int> >((k,x))`]  [`subtract<inplace_minus<int> >((k,x))`]]
+[[]         [`_add<Combine<CodomainT> >((k,x))`] [`_subtract<inverse<Combine<CodomainT> >::type>((k,x))`]]
+[[Instance] [`_add<inplace_plus<int> >((k,x))`]  [`_subtract<inplace_minus<int> >((k,x))`]]
 [[Inversion][adds `x` on overlap. This inverts a preceding `subtract` of `x` on `k`][subtracts `x` on overlap. This inverts a preceding `add` of `x` on `k`]]
 ]
 
@@ -227,11 +227,11 @@ key value pairs as a special case:
 
 [table
 [[aggregating function][equivalent /classical/ function]]
-[[`add<inplace_identity<CodomainT> >(const value_type&)`]    [`insert(const value_type&)`]]
-[[`subtract<inplace_erasure<CodomainT> >(const value_type&)`][`erase(const value_type&)`]]
+[[`_add<inplace_identity<CodomainT> >(const value_type&)`]    [`insert(const value_type&)`]]
+[[`_subtract<inplace_erasure<CodomainT> >(const value_type&)`][`erase(const value_type&)`]]
 ]
 
-The aggregating member function templates `add` and `subtract`
+The aggregating member function templates `_add` and `_subtract`
 are not in the public interface of __itv_bmaps__, because
 the `Combine` functor is intended to be an invariant 
 of __itv_bmap_s__

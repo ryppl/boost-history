@@ -42,16 +42,22 @@ template <class SeqTV>
 class SeqGentorT: public RandomGentorAT<SeqTV>
 {
 public:
-    typedef typename SeqTV::value_type    ValueTypeTD;
-    typedef typename SeqTV::value_type    DomainTD;
+    typedef typename SeqTV::value_type  ValueTypeTD;
+    typedef typename SeqTV::value_type  DomainTD;
     typedef list<ValueTypeTD>           SampleTypeTD;
+
+    SeqGentorT(): p_domainGentor(NULL), m_unique(false){}
+    ~SeqGentorT(){ delete p_domainGentor; }
 
     virtual void some(SeqTV& x);
     void last(SeqTV& x)const;
     void last_permuted(SeqTV& x)const;
 
     void setDomainGentor(RandomGentorAT<DomainTD>* gentor)
-    { m_domainGentor = gentor; }
+    {
+		delete p_domainGentor;
+		p_domainGentor = gentor; 
+	}
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = interval<int>::rightopen(lwb,upb); }
@@ -61,11 +67,11 @@ public:
     void setUnique(bool truth) { m_unique = truth; }
 
 private:
-    RandomGentorAT<DomainTD>*    m_domainGentor;
-    interval<int>                m_sampleSizeRange;
-    SampleTypeTD                m_sample;
-    int                            m_sampleSize;
-    bool                        m_unique;
+    RandomGentorAT<DomainTD>* p_domainGentor;
+    interval<int>             m_sampleSizeRange;
+    SampleTypeTD              m_sample;
+    int                       m_sampleSize;
+    bool                      m_unique;
 };
 
 
@@ -80,7 +86,7 @@ void SeqGentorT<SeqTV>::some(SeqTV& x)
     for(int i=0; i<m_sampleSize; i++)
     {
         DomainTD key;
-        m_domainGentor->some(key);
+        p_domainGentor->some(key);
 
         if(m_unique)
         {

@@ -157,9 +157,6 @@ public:
     typedef typename ImplMapT::const_reference         const_reference;
     
 public:
-    inline static bool has_symmetric_difference() 
-    { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::is_total); }
-
     enum { is_itl_container = true };
     enum { fineness = 0 };
 
@@ -766,12 +763,8 @@ protected:
     template <class Combiner>
     std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
     {
-        if(Traits::is_total)
-        {
-            CodomainT added_val = Combiner::neutron();
-            Combiner()(added_val, co_val);
-            return this->_map.insert(value_type(inter_val, added_val));
-        }
+		if(Traits::is_total && has_inverse<codomain_type>::value && is_negative<Combiner>::value)
+            return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(value_type(inter_val, co_val));
     }
@@ -781,6 +774,24 @@ protected:
     std::pair<iterator, bool> 
         map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
+        iterator inserted_
+			= this->_map.insert(prior_, value_type(inter_val, co_val));
+
+        if(inserted_ == prior_)
+            return std::pair<iterator,bool>(inserted_, false);
+		else if(inserted_->first == inter_val)
+			return std::pair<iterator,bool>(inserted_, true);
+        else
+            return std::pair<iterator,bool>(inserted_, false);
+    }
+
+    template <class Combiner>
+    std::pair<iterator, bool> 
+        map_add(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
+    {
+		// Never try to insert a neutron into a neutron absorber here:
+		BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
+
         iterator inserted_ 
             = this->_map.base_insert(prior_, value_type(inter_val, Combiner::neutron()));
 
@@ -793,6 +804,7 @@ protected:
             return std::pair<iterator,bool>(inserted_, false);
     }
 
+
     template <class Combiner>
     iterator gap_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
@@ -800,14 +812,10 @@ protected:
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
-        if(Traits::is_total)
-        {
-            iterator inserted_ = this->_map.base_insert(prior_, value_type(inter_val, Combiner::neutron()));
-            Combiner()(inserted_->second, co_val);
-            return inserted_;
-        }
+		if(has_inverse<codomain_type>::value && is_negative<Combiner>::value)
+            return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
         else
-            return this->_map.base_insert(prior_, value_type(inter_val, co_val));
+            return this->_map.insert(prior_, value_type(inter_val, co_val));
     }
 
 protected:
@@ -921,7 +929,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     typedef IntervalMap<DomainT,CodomainT,
                         Traits,Compare,Combine,Section,Interval,Alloc> sectant_type;
 
-    if(Traits::is_total)
+	if(Traits::is_total)
     {
         intersection = *this;
         intersection += sectant;
@@ -950,7 +958,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                     const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                     ::segment_type& sectant)const
 {
-    if(Traits::is_total)
+	if(Traits::is_total)
     {
         section = *this;
         section.add(sectant);
@@ -1284,7 +1292,7 @@ inline SubType& interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combi
         {
             const_cast<interval_type&>(first_->first).right_subtract(minuend);
             if(!right_resid.empty())
-                this->_map.base_insert(first_, value_type(right_resid, first_->second));
+                this->_map.insert(first_, value_type(right_resid, first_->second));
         }
         else if(!right_resid.empty())
             const_cast<interval_type&>(first_->first).left_subtract(minuend);

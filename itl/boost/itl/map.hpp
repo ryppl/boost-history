@@ -181,10 +181,6 @@ public:
     using base_type::operator[];
 
 public:
-    inline static bool has_symmetric_difference() 
-    { return is_set<codomain_type>::value || (!is_set<codomain_type>::value && !traits::is_total); }
-
-public:
     //==========================================================================
     //= Containedness
     //==========================================================================
@@ -283,6 +279,11 @@ public:
     iterator base_insert(iterator prior, const value_type& value_pair)
     {
         return base_type::insert(prior, value_pair);
+    }
+
+	std::pair<iterator,bool> base_insert(const value_type& value_pair)
+    {
+        return base_type::insert(value_pair);
     }
 
     /** With <tt>key_value_pair = (k,v)</tt> set value \c v for key \c k */
@@ -424,7 +425,7 @@ map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>&
         return *this;
 
     std::pair<iterator, bool> insertion;
-    if(Traits::is_total)
+    if(Traits::is_total && has_inverse<codomain_type>::value)
     {
         CodomainT added_val = Combiner::neutron();
         Combiner()(added_val, val.second);
@@ -468,6 +469,29 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
         return inserted_;
 }
 
+/*JODO CONT
+template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
+    template <class Combiner>
+std::pair<typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator, bool>
+    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
+    ::add(iterator prior_, const domain_type& val, const codomain_type& co_val)
+{
+    if(Traits::absorbs_neutrons && co_val == Combiner::neutron())
+		return std::pair<iterator,bool>(prior_, false);
+
+    iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
+    if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
+    {
+        erase(inserted_);
+        return prior_;
+    }
+    else
+	{
+        Combiner()(inserted_->second, val.second);
+        return inserted_;
+	}
+}
+*/
 
 //==============================================================================
 //= Subtraction
@@ -520,7 +544,7 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::add_intersection(map& section, const value_type& sectant)const
 {
-    if(Traits::is_total)
+	if(Traits::is_total)
     {
         section = *this;
         section.add(sectant);

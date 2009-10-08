@@ -33,7 +33,7 @@ namespace boost{ namespace itl
     template<>
     inline std::string type_to_string<unsigned int>::apply() { return "int+"; }
     template<>
-    inline std::string type_to_string<double>::apply() { return "double"; }
+    inline std::string type_to_string<double>::apply() { return "dbl"; }
     template<>
     inline std::string type_to_string<std::string>::apply() { return "string"; }
 

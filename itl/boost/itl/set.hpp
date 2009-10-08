@@ -644,7 +644,9 @@ set<DomainT,Compare,Alloc>&
 { return object -= operand; }
 
 
-//---------------------------------------------------------------------------------
+//==============================================================================
+//= Streaming
+//==============================================================================
 template<class CharType, class CharTraits, 
     class DomainT, ITL_COMPARE Compare,    ITL_ALLOC Alloc>
 std::basic_ostream<CharType, CharTraits>& operator <<

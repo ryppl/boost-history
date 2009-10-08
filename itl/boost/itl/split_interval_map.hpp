@@ -206,7 +206,7 @@ inline typename split_interval_map<DomainT,CodomainT,Traits,Compare,Combine,Sect
         return prior_;
 
     std::pair<iterator,bool> insertion 
-        = this->template map_insert<Combiner>(prior_, inter_val, co_val);
+        = this->template map_add<Combiner>(prior_, inter_val, co_val);
 
     if(insertion.second)
         return insertion.first;

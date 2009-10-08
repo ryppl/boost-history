@@ -19,10 +19,10 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 namespace boost{namespace itl
 {
     
-    class ItlRelationsValidater : public itl_driver
+    class itl_relations_driver : public itl_driver
     {
     public:
-        ItlRelationsValidater() { setProfile(); }
+        itl_relations_driver() { setProfile(); }
 
 
         void setProfile()
@@ -67,25 +67,25 @@ namespace boost{namespace itl
             if(!_rootChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _rootChoice.inconsitencyMessage("ItlRelationsValidater::setProfile()") << std::endl;
+                std::cout << _rootChoice.inconsitencyMessage("itl_relations_driver::setProfile()") << std::endl;
             }
 
             if(!_domainChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _domainChoice.inconsitencyMessage("ItlRelationsValidater::setProfile()") << std::endl;
+                std::cout << _domainChoice.inconsitencyMessage("itl_relations_driver::setProfile()") << std::endl;
             }
 
             if(!_codomainChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _codomainChoice.inconsitencyMessage("ItlRelationsValidater::setProfile()") << std::endl;
+                std::cout << _codomainChoice.inconsitencyMessage("itl_relations_driver::setProfile()") << std::endl;
             }
 
             if(!_neutronizerChoice.is_consistent())
             {
                 setValid(false);
-                std::cout << _neutronizerChoice.inconsitencyMessage("ItlRelationsValidater::setProfile()") << std::endl;
+                std::cout << _neutronizerChoice.inconsitencyMessage("itl_relations_driver::setProfile()") << std::endl;
             }
 
         }

@@ -15,11 +15,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl/set.hpp>
 #include <boost/itl/map.hpp>
 #include <boost/itl/interval_morphism.hpp>
+#include <boost/validate/itl/functors.hpp>
 #include <boost/validate/laws/induced_relation.hpp>
 #include <boost/validate/laws/symmetric_difference.hpp>
 #include <boost/validate/laws/pushouts.hpp>
 #include <boost/validate/laws/set_laws.hpp>
 #include <boost/validate/laws/minor_set_laws.hpp>
+#include <boost/validate/laws/function_equality.hpp>
+
 //#include <boost/validate/laws/novial_tree.hpp>
 #include <boost/validate/laws/inversion_laws.hpp>
 #include <boost/validate/validater/law_validater.hpp>
@@ -52,6 +55,14 @@ void test_LawValidater()
     //    <itl::interval_map<int, int, partial_enricher > >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
+    //typedef InplaceSymmetricDifference
+    //    <itl::interval_map<int, int, partial_enricher > >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+
+    //typedef InplaceNaturalInversion
+    //    <itl::interval_map<int, int, partial_enricher>, inplace_plus, protonic_equal>  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+
     //typedef InplaceAssociativity
     //    <itl::split_interval_map<int, int, partial_enricher> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
@@ -81,14 +92,24 @@ void test_LawValidater()
     //    <interval_map<int, itl::set<int> >, interval_map<int, itl::set<int> > >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef AddendInclusion
-        <interval_set<int>, itl::interval<int> >  TestLawT;
-    LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef AddendInclusion
+    //    <interval_set<int>, itl::interval<int> >  TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
+
+	typedef FunctionEquality
+	<
+		itl::list<std::pair<itl::interval<int>,int> >, 
+		interval_map<int,int,total_absorber>,
+		base_addition, 
+		hint_addition
+	> TestLawT;
+	LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-    int test_count = 20000;
+    int test_count = 50000;
     ptime start, stop;
 
+	GentorProfileSgl::it()->set_std_profile(4,1);
     test_law.set_trials_count(test_count);
 
     std::cout << "Start\n";

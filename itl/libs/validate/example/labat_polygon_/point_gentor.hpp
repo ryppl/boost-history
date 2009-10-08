@@ -43,6 +43,13 @@ bool operator == (const point<DomainT>& left, const point<DomainT>& right)
     return left.x == right.x && left.y == right.y;
 }
 
+template<class CharType, class CharTraits, class DomainT>
+std::basic_ostream<CharType, CharTraits>& operator <<
+  (std::basic_ostream<CharType, CharTraits>& stream, const point<DomainT>& object)
+{
+    return stream << object.as_string();
+}
+
 template <class Type>
 struct type_to_string<itl::point<Type> >
 {

@@ -14,10 +14,14 @@ Copyright (c) 2007-2009: Joachim Faulhaber
 #include <boost/itl_xt/numbergentor.hpp>
 #include <boost/itl_xt/setgentor.hpp>
 #include <boost/itl_xt/mapgentor.hpp>
+#include <boost/itl_xt/seqgentor.hpp>
 #include <boost/itl_xt/itvgentor.hpp>
+#include <boost/itl_xt/map_segment_gentor.hpp>
 
+#ifdef LAW_BASED_TEST_BOOST_POLYGON
 #include <libs/validate/example/labat_polygon_/point_gentor.hpp>
 #include <libs/validate/example/labat_polygon_/polygon_gentor.hpp>
+#endif //LAW_BASED_TEST_BOOST_POLYGON
 
 #include <boost/itl/interval_set.hpp>
 #include <boost/itl/separate_interval_set.hpp>
@@ -59,6 +63,14 @@ namespace boost{namespace itl
         public polygon_set_gentor<itl::list<itl::list<PointT> > > {};
 #endif //LAW_BASED_TEST_BOOST_POLYGON
 
+    // ----- lists -------------------------------------------------------------
+    template <class DomainT, class CodomainT> 
+    class RandomGentor<std::pair<itl::interval<DomainT>, CodomainT> > :
+        public map_segment_gentor<DomainT,CodomainT> {};
+
+    template <class DomainT, class CodomainT> 
+	class RandomGentor<itl::list<std::pair<itl::interval<DomainT>, CodomainT> > > :
+        public SeqGentorT<itl::list<std::pair<itl::interval<DomainT>, CodomainT> > > {};
 
     // ----- sets --------------------------------------------------------------
     //template <class DomainT, template<class>class Set> 
@@ -98,7 +110,7 @@ namespace boost{namespace itl
         public MapGentorT<itl::map<DomainT,CodomainT,Neutronizer> > {};
 
 
-    // ----- interval_map<D,C,N> ----------------------------------------
+    // ----- interval_map<D,C,N> -----------------------------------------------
     template <class DomainT, class Neutronizer> 
     class RandomGentor<interval_map<DomainT,itl::set<int>,Neutronizer> > : 
         public MapGentorT<interval_map<DomainT,itl::set<int>,Neutronizer> > {};
@@ -239,6 +251,59 @@ namespace boost{namespace itl
     //--------------------------------------------------------------------------
 #endif // LAW_BASED_TEST_BOOST_POLYGON
 
+
+    //--------------------------------------------------------------------------
+    // lists
+    //--------------------------------------------------------------------------
+	template <> 
+    struct Calibrater<std::pair<itl::interval<int>, int>, RandomGentor>
+    {
+        static void apply(RandomGentor< std::pair<itl::interval<int>, int> >& gentor){}
+    };
+
+	template <> 
+    struct Calibrater<std::pair<itl::interval<double>, int>, RandomGentor>
+    {
+        static void apply(RandomGentor< std::pair<itl::interval<double>, int> >& gentor){}
+    };
+
+    template <> 
+    struct Calibrater<itl::list<std::pair<itl::interval<double>, int> >, RandomGentor>
+    {
+        static void apply(RandomGentor< itl::list<std::pair<itl::interval<double>, int> > >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+            map_segment_gentor<double,int>* segment_gentor  = new map_segment_gentor<double,int>;
+            NumberGentorT<int>* int_gentor = new NumberGentorT<int>;
+            int_gentor->setRange(GentorProfileSgl::it()->range_int());
+			segment_gentor->setCodomainGentor(int_gentor);
+            segment_gentor->set_range(GentorProfileSgl::it()->range_interval_double());
+            segment_gentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
+            segment_gentor->set_corange(GentorProfileSgl::it()->range_int()); // sets range of codomain_values
+            gentor.setDomainGentor(segment_gentor);
+        }
+    };
+
+    template <> 
+    struct Calibrater<itl::list<std::pair<itl::interval<int>, int> >, RandomGentor>
+    {
+        static void apply(RandomGentor< itl::list<std::pair<itl::interval<int>, int> > >& gentor) 
+        {
+            gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
+            map_segment_gentor<int,int>* segment_gentor  = new map_segment_gentor<int,int>;
+            NumberGentorT<int>* int_gentor = new NumberGentorT<int>;
+            int_gentor->setRange(GentorProfileSgl::it()->range_int());
+			segment_gentor->setCodomainGentor(int_gentor);
+            segment_gentor->set_range(GentorProfileSgl::it()->range_interval_int());
+            segment_gentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
+            segment_gentor->set_corange(GentorProfileSgl::it()->range_int()); // sets range of codomain_values
+            gentor.setDomainGentor(segment_gentor);
+        }
+    };
+
+    //--------------------------------------------------------------------------
+    // sets
+    //--------------------------------------------------------------------------
     template <> 
     struct Calibrater<itl::set<int>, RandomGentor>
     {
@@ -287,7 +352,7 @@ namespace boost{namespace itl
             ItvGentorT<double>* itvGentor = new ItvGentorT<double>;
             interval<double> valRange = GentorProfileSgl::it()->range_interval_double();
             itvGentor->setValueRange(valRange.lower(), valRange.upper());
-            itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength()); //JODO
+            itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             gentor.setDomainGentor(itvGentor);
         }
     };

@@ -50,7 +50,7 @@ public:
     typedef DomainGentorT*        DomainGentorPT;
 
     SetGentorT(): p_domainGentor(NULL) {}
-    ~SetGentorT() {}
+    ~SetGentorT() { delete p_domainGentor; }
 
     virtual void some(SetTV& x);
     void last(SetTV& x)const;
@@ -58,8 +58,7 @@ public:
 
     void setDomainGentor(RandomGentorAT<DomainTD>* gentor)
     { 
-        if(p_domainGentor)
-            delete p_domainGentor;
+        delete p_domainGentor;
         p_domainGentor = gentor; 
     }
 

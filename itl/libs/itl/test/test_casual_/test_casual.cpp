@@ -9,6 +9,7 @@ Copyright (c) 2008-2009: Joachim Faulhaber
 #include <string>
 #include <vector>
 #include <boost/mpl/list.hpp>
+#include <boost/itl/iterator.hpp>
 #include <boost/test/unit_test.hpp>
 #include <boost/test/test_case_template.hpp>
 
@@ -49,8 +50,9 @@ BOOST_AUTO_TEST_CASE(casual_test)
     sim1.insert(make_pair(interval<int>::rightopen(1,3),1));
     sim1.insert(make_pair(interval<int>::rightopen(2,4),1));
 
-    IntervalMapT jim1, jim2;
-    std::copy(ivec.begin(), ivec.end(), std::inserter(jim2, jim2.end()));
-    cout << jim2 << endl;
+    IntervalMapT jim1;
+	std::copy(ivec.begin(), ivec.end(), itl::adder(jim1, jim1.end()));
+	//std::copy(ivec.begin(), ivec.end(), std::inserter(jim2, jim2.end()));
+    cout << jim1 << endl;
 }
 

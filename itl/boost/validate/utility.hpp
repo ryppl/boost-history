@@ -7,7 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_VALIDATE_UTILITY_HPP_JOFA_090203
+#define BOOST_VALIDATE_UTILITY_HPP_JOFA_090203
 
 #include <iostream>
 #include <stdio.h>
@@ -33,3 +34,4 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
+#endif // BOOST_VALIDATE_UTILITY_HPP_JOFA_090203

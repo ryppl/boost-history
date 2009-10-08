@@ -19,16 +19,22 @@ template <class PolygonT>
 class polygon_gentor: public RandomGentorAT<PolygonT>
 {
 public:
-    typedef typename PolygonT::value_type  ValueTypeTD;
-    typedef typename PolygonT::value_type  DomainTD;
-    typedef list<ValueTypeTD>           SampleTypeTD;
+    typedef typename PolygonT::value_type ValueTypeTD;
+    typedef typename PolygonT::value_type DomainTD;
+    typedef list<ValueTypeTD>             SampleTypeTD;
+
+    polygon_gentor(): p_domainGentor(NULL) {}
+    ~polygon_gentor() { delete p_domainGentor; }
 
     virtual void some(PolygonT& x);
     void last(PolygonT& x)const;
     void last_permuted(PolygonT& x)const;
 
     void setDomainGentor(RandomGentorAT<DomainTD>* gentor)
-    { m_domainGentor = gentor; }
+    {
+		delete p_domainGentor;
+		p_domainGentor = gentor; 
+	}
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = interval<int>::rightopen(lwb,upb); }
@@ -38,7 +44,7 @@ public:
     void setUnique(bool truth) { m_unique = truth; }
 
 private:
-    RandomGentorAT<DomainTD>*   m_domainGentor;
+    RandomGentorAT<DomainTD>*   p_domainGentor;
     interval<int>               m_sampleSizeRange;
     SampleTypeTD                m_sample;
     int                         m_sampleSize;
@@ -59,12 +65,12 @@ void polygon_gentor<PolygonT>::some(PolygonT& x)
     if(m_sampleSize == 0)
         return;
 
-    m_domainGentor->some(first);
+    p_domainGentor->some(first);
     x.push_back(first);
 
     for(int i=1; i<m_sampleSize; i++)
     {
-        m_domainGentor->some(key);
+        p_domainGentor->some(key);
 
         if(m_unique)
         {
@@ -113,16 +119,22 @@ template <class PolygonSetT>
 class polygon_set_gentor: public RandomGentorAT<PolygonSetT>
 {
 public:
-    typedef typename PolygonSetT::value_type  ValueTypeTD;
-    typedef typename PolygonSetT::value_type  DomainTD;
-    typedef list<ValueTypeTD>           SampleTypeTD;
+    typedef typename PolygonSetT::value_type ValueTypeTD;
+    typedef typename PolygonSetT::value_type DomainTD;
+    typedef list<ValueTypeTD>                SampleTypeTD;
+
+    polygon_set_gentor(): p_domainGentor(NULL) {}
+    ~polygon_set_gentor() { delete p_domainGentor; }
 
     virtual void some(PolygonSetT& x);
     void last(PolygonSetT& x)const;
     void last_permuted(PolygonSetT& x)const;
 
     void setDomainGentor(RandomGentorAT<DomainTD>* gentor)
-    { m_domainGentor = gentor; }
+    {
+		delete p_domainGentor;
+		p_domainGentor = gentor; 
+	}
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = interval<int>::rightopen(lwb,upb); }
@@ -132,7 +144,7 @@ public:
     void setUnique(bool truth) { m_unique = truth; }
 
 private:
-    RandomGentorAT<DomainTD>*   m_domainGentor;
+    RandomGentorAT<DomainTD>*   p_domainGentor;
     interval<int>               m_sampleSizeRange;
     SampleTypeTD                m_sample;
     int                         m_sampleSize;
@@ -153,13 +165,13 @@ void polygon_set_gentor<PolygonSetT>::some(PolygonSetT& x)
     if(m_sampleSize == 0)
         return;
 
-    m_domainGentor->some(first);
+    p_domainGentor->some(first);
     x.push_back(first);
 
     for(int i=1; i<m_sampleSize; i++)
     {
         DomainTD key;
-        m_domainGentor->some(key);
+        p_domainGentor->some(key);
 
         if(m_unique)
         {
