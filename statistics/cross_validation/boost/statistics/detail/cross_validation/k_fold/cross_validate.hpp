@@ -27,10 +27,10 @@ namespace k_fold{
         partition<U,Ft,Fi,Fo>& kfp,
         E estimator,
         It  i_p,    // predicted values
-        It1 i_o     // output values
+        It1 i_o     // true values
     ){
         kfp.initialize();
-        while(kfp.j()<kfp.k()){
+        while(kfp.index()<kfp.n_folds()){
             i_p = train_predict(
                 kfp,
                 estimator,

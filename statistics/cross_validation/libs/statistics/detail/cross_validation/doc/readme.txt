@@ -36,15 +36,12 @@ Mac OS Leopard 10.5         gcc version 4.0.1
 
 [ History ]
 
+October 6 2009  Added a convenient data-type representing (x,y) and a generator
 September 2009  - Two packages below merged into cross_validation with a better
                 interface.
 August 2009     - Creation of goodness_of_fit
                 - Creating of estimator_concept
 
-[ TODO ]
-
-Currently, k_fold_data makes a copy of a dataset. Intrusive or range
-(pair of iterator) alternatives may need to be considered.
 
 [ Sources ]
 

@@ -9,6 +9,7 @@
 #ifndef  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_EXTRACTOR_META_ITERATOR_HPP_ER_2009
 #define  BOOST_STATISTICS_DETAIL_CROSS_VALIDATION_EXTRACTOR_META_ITERATOR_HPP_ER_2009
 #include <boost/concept/assert.hpp>
+#include <boost/utility/result_of.hpp>
 #include <boost/iterator/iterator_traits.hpp>
 #include <boost/iterator/transform_iterator.hpp>
 #include <boost/statistics/detail/cross_validation/extractor/concept.hpp>
@@ -23,8 +24,13 @@ namespace meta{
 
     template<typename F,typename It>
     struct iterator{
-        
-        typedef transform_iterator<F,It> type;
+
+        // Rationale: boost.user mailing list
+        // Subject: [transform_iterator]'s reference
+        // 10/05/2009
+        typedef typename iterator_reference<It>::type ref1_;
+        typedef typename result_of<F(ref1_)>::type ref2_;
+        typedef boost::transform_iterator<F,It,ref2_> type;
         
         typedef typename iterator_value<It>::type unit_;
         
@@ -34,7 +40,7 @@ namespace meta{
                 Concept<F,unit_>
             ));
         
-            return make_tranform_iterator(i,f);
+            return type(i,f);
         };
     };
     

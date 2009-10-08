@@ -16,10 +16,7 @@
 #include <boost/random/normal_distribution.hpp>
 #include <boost/random/variate_generator.hpp>
 
-//#include <boost/math/distributions/normal.hpp>
 #include <boost/math/tools/precision.hpp>
-
-//#include <boost/mpl/nested_type.hpp>
 
 #include <boost/accumulators/accumulators.hpp>
 #include <boost/accumulators/statistics/mean.hpp>
@@ -37,6 +34,9 @@ void example_k_fold(std::ostream& os)
     os << "-> example_k_fold :" << std::endl;
 
     // This example shows how to perform K train/predict cycles.
+    // The estimator is built upon a Boost.Accumulator for the mean.
+    // The input (x) equals the input (y), in this case, and has type double
+    
     using namespace boost;
     namespace stat = boost::statistics::detail;
     namespace cv = stat::cross_validation;
@@ -47,7 +47,6 @@ void example_k_fold(std::ostream& os)
     typedef mt19937                                 urng_;
     typedef double                                  val_;
     typedef std::vector<val_>                       vals_;
-    typedef range_iterator<const vals_>::type       const_vals_it_;
     typedef range_iterator<vals_>::type             vals_it_;
     typedef boost::normal_distribution<val_>        nd_;
     typedef boost::variate_generator<urng_&,nd_>    vg_;
@@ -59,6 +58,7 @@ void example_k_fold(std::ostream& os)
     >  stat_;
     typedef accumulators::accumulator_set<val_,stat_> acc_;
 
+    // Boost.Accumulators cannot be used directly. An adaptor is needed.
     typedef cv_es::adaptor::meta::nullary_predictor<acc_,tag_>      meta_p_;
     typedef cv_es::adaptor::joined<
         cv_es::adaptor::unary_trainer,
@@ -72,25 +72,25 @@ void example_k_fold(std::ostream& os)
     const unsigned k = 5e0;
     BOOST_ASSERT(n % k == 0);
 
-    vals_ vec_x;
-//    dist_ dist;
     nd_ nd;
     urng_ urng;
     vg_ vg(urng,nd);
 
+    vals_ vec_x;
     std::generate_n(
         std::back_inserter(vec_x), 
         n,
         vg
     );
-
-    kf_p_ kf_p(
+    
+    // vec_x is duplicated in kf_p, which is intenteded in this example. 
+    // example_k_fold in sandbox/kernel shows how to avoid duplication
+    
+    kf_p_ kf_p( 
         k,
         boost::begin(vec_x),
         boost::end(vec_x)
     );
-
-//    os << kf_p;
     
     struct float_{
             
@@ -110,7 +110,7 @@ void example_k_fold(std::ostream& os)
         }
     
         vals_it_ vec_x_it  = boost::begin( vec_x );
-        while(kf_p.j()<kf_p.k()){
+        while(kf_p.index()<kf_p.n_folds()){
             os << kf_p << std::endl;
             BOOST_FOREACH(const val_& t,kf_p.subset2())
             {
@@ -129,7 +129,7 @@ void example_k_fold(std::ostream& os)
     vals_it_ preds_e; 
     BOOST_ASSERT(n / k > 1);
     kf_p.initialize();
-    while(kf_p.j()<kf_p.k()){
+    while(kf_p.index()<kf_p.n_folds()){
         acc_ acc;
         joined_ joined(acc);
         preds_e = train_predict(

@@ -98,11 +98,20 @@ namespace k_fold{
         typename meta_input_range::type      input_range()const;
         typename meta_output_range::type     output_range()const;
 
+
+        static str_ description_header;
+
+        const int_& n_test()const{ return this->n(); }      
+        const int_& index()const{ return this->j(); }
+        const int_& n_folds()const{ return this->k(); }     
+
+        int_ n_training()const{ return this->n() * (this->k()-1); }
+
+        protected:
         const int_& n()const;      // size of test data
         const int_& j()const;      // index of current iteration
         const int_& k()const;      // number of iterations
 
-        //private:
         int_ k_;
         int_ j_;
         int_ n_;
@@ -112,12 +121,15 @@ namespace k_fold{
         Fi fi_;
         Fo fo_;
     };
+    template<typename U,typename Ft,typename Fi,typename Fo>
+    typename partition<U,Ft,Fi,Fo>::str_
+    partition<U,Ft,Fi,Fo>::description_header ="(n_test,n_index,n_folds)";
 
     template<typename U,typename Ft,typename Fi,typename Fo>
     std::ostream& operator<<(
         std::ostream& out,const partition<U,Ft,Fi,Fo>& that){
         format f("partition(%1%,%2%,%3%)");
-        f % that.n() % that.j() % that.k();
+        f % that.n_test() % that.index() % that.n_folds();
         return (out << f.str());
     }
 
