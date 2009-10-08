@@ -1,13 +1,15 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Appendix C: Implementation Notes</title>
+<title> Appendix
+      C: Implementation Notes</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
 <link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
 <link rel="up" href="../appendices.html" title="Appendices">
-<link rel="prev" href="rationale.html" title="Appendix B: Rationale">
-<link rel="next" href="acknowledgements.html" title="Appendix D: Acknowledgements">
+<link rel="prev" href="rationale.html" title=" Appendix B: Rationale">
+<link rel="next" href="acknowledgements.html" title=" Appendix
+      D: Acknowledgements">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -24,7 +26,8 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="toward_boost_stm.appendices.implementation"></a><a class="link" href="implementation.html" title="Appendix C: Implementation Notes"> Appendix
+<a name="toward_boost_stm.appendices.implementation"></a><a href="implementation.html" title=" Appendix
+      C: Implementation Notes"> Appendix
       C: Implementation Notes</a>
 </h3></div></div></div>
 <div class="toc"><dl>
@@ -34,7 +37,8 @@
 </dl></div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks"></a><a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks" title="Language-like macro blocks">Language-like
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks"></a><a href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks" title="Language-like
+        macro blocks">Language-like
         macro blocks</a>
 </h4></div></div></div>
 <p>
@@ -48,11 +52,11 @@
           exceptions. The preprocessor macros used for the locking and transaction
           constructs are shown in Figures 6 and 8, respectively.
         </p>
-<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.locking_macros"></a><h6>
-<a name="id4913883"></a>
-          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.locking_macros">Locking
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.locking_macros"></a><h5>
+<a name="id4874082"></a>
+          <a href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.locking_macros">Locking
           Macros</a>
-        </h6>
+        </h5>
 <p>
           The lock macros use an unoptimized if statement to ensure the variables
           inside their local for loop are terminated for nonstandard conforming C++
@@ -71,11 +75,11 @@
           until post_step() has been executed. This ensures the lock macro for loops
           are executed once and only once.
         </p>
-<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.transaction_macros"></a><h6>
-<a name="id4913947"></a>
-          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.transaction_macros">Transaction
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.transaction_macros"></a><h5>
+<a name="id4874131"></a>
+          <a href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.transaction_macros">Transaction
           Macros</a>
-        </h6>
+        </h5>
 <p>
           The preprocessor atomic macro for transactions is slightly more complex
           than the preprocessor locking macros. The additional complexity behind
@@ -120,11 +124,11 @@
           ensures any operations within the before_retry block are executed if the
           transaction is aborted.
         </p>
-<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.correcting_non_compliant_compilers"></a><h6>
-<a name="id4914053"></a>
-          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.correcting_non_compliant_compilers">Correcting
+<a name="toward_boost_stm.appendices.implementation.language_like_macro_blocks.correcting_non_compliant_compilers"></a><h5>
+<a name="id4874218"></a>
+          <a href="implementation.html#toward_boost_stm.appendices.implementation.language_like_macro_blocks.correcting_non_compliant_compilers">Correcting
           Non-Compliant Compilers</a>
-        </h6>
+        </h5>
 <p>
           The <code class="computeroutput"><span class="keyword">if</span> <span class="special">(</span><span class="number">0</span> <span class="special">==</span> <span class="identifier">rand</span><span class="special">()+</span><span class="number">1</span><span class="special">)</span>
           <span class="special">{}</span> <span class="keyword">else</span></code>
@@ -151,16 +155,16 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.appendices.implementation.cache"></a><a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.cache" title="Cache">Cache</a>
+<a name="toward_boost_stm.appendices.implementation.cache"></a><a href="implementation.html#toward_boost_stm.appendices.implementation.cache" title="Cache">Cache</a>
 </h4></div></div></div>
-<a name="toward_boost_stm.appendices.implementation.cache.dispersed"></a><h6>
-<a name="id4914181"></a>
-          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.cache.dispersed">Dispersed</a>
-        </h6>
-<a name="toward_boost_stm.appendices.implementation.cache.compact"></a><h6>
-<a name="id4914202"></a>
-          <a class="link" href="implementation.html#toward_boost_stm.appendices.implementation.cache.compact">Compact</a>
-        </h6>
+<a name="toward_boost_stm.appendices.implementation.cache.dispersed"></a><h5>
+<a name="id4874346"></a>
+          <a href="implementation.html#toward_boost_stm.appendices.implementation.cache.dispersed">Dispersed</a>
+        </h5>
+<a name="toward_boost_stm.appendices.implementation.cache.compact"></a><h5>
+<a name="id4874368"></a>
+          <a href="implementation.html#toward_boost_stm.appendices.implementation.cache.compact">Compact</a>
+        </h5>
 </div>
 </div>
 <table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>

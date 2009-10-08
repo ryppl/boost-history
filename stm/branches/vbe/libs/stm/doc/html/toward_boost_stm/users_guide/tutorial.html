@@ -1,13 +1,14 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Tutorial</title>
+<title> Tutorial</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
 <link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
-<link rel="up" href="../users_guide.html" title="Users'Guide">
-<link rel="prev" href="getting_started.html" title="Getting Started">
-<link rel="next" href="ext_references.html" title="References">
+<link rel="up" href="../users_guide.html" title=" Users'Guide">
+<link rel="prev" href="getting_started.html" title=" Getting
+      Started">
+<link rel="next" href="ext_references.html" title=" References">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -24,7 +25,7 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="toward_boost_stm.users_guide.tutorial"></a><a class="link" href="tutorial.html" title="Tutorial"> Tutorial</a>
+<a name="toward_boost_stm.users_guide.tutorial"></a><a href="tutorial.html" title=" Tutorial"> Tutorial</a>
 </h3></div></div></div>
 <div class="toc"><dl>
 <dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction">A
@@ -35,8 +36,8 @@
         Dynamically Prioritized, Composed Transaction</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.can_a_transactional_object_embeed_another_transactional_object_">Can
         a transactional object embeed another transactional object?</a></span></dt>
-<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion">Returning
-        values from a fucntion</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_function">Returning
+        values from a function</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects">Pointer
         to transactional objects</a></span></dt>
 <dt><span class="section"><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic">Polymorphic</a></span></dt>
@@ -68,7 +69,8 @@
       </p>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction" title="A Simple Transaction">A
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction" title="A
+        Simple Transaction">A
         Simple Transaction</a>
 </h4></div></div></div>
 <p>
@@ -78,11 +80,11 @@
           code calls, the internal insert operation which the exposed insert operation
           calls.
         </p>
-<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts"></a><h6>
-<a name="id4861141"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts">Client
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts"></a><h5>
+<a name="id4815470"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.client_invoked_inserts">Client
           Invoked Inserts</a>
-        </h6>
+        </h5>
 <pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">linked_list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">llist</span><span class="special">;</span>
 <span class="special">...</span>
 <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span> <span class="identifier">i</span> <span class="special">&lt;</span> <span class="number">100</span><span class="special">;</span> <span class="special">++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
@@ -101,11 +103,11 @@
           linked list insert. Obviously, this simplistic behavior eases the introduction
           of TM solutions into algorithms of new and legacy systems.
         </p>
-<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration"></a><h6>
-<a name="id4861371"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration">Linked
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration"></a><h5>
+<a name="id4815701"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.linked_list_declaration">Linked
           list declaration</a>
-        </h6>
+        </h5>
 <p>
           A clasical linked list use a list node chained following the memer next_.
           On a transactional context we nedd to state that the pointer to the next
@@ -123,11 +125,11 @@
     <span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">head_</span><span class="special">;</span>
 <span class="special">};</span>
 </pre>
-<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction"></a><h6>
-<a name="id4861593"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction">Insert
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction"></a><h5>
+<a name="id4815923"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_retry_transaction">Insert
           retry transaction</a>
-        </h6>
+        </h5>
 <pre class="programlisting"><span class="keyword">void</span> <span class="identifier">insert</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">val</span><span class="special">)</span> <span class="special">{</span>
     <span class="keyword">for</span> <span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="identifier">_</span><span class="special">;</span> <span class="special">!</span><span class="identifier">_</span><span class="special">.</span><span class="identifier">committed</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">_</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="identifier">_</span><span class="special">.</span><span class="identifier">no_throw_end</span><span class="special">())</span>
         <span class="keyword">try</span> <span class="special">{</span>
@@ -154,11 +156,11 @@
           transactions. The above example demonstrates this behavior in practice
           with its absorption of aborted transactions and only aborted transactions.
         </p>
-<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific"></a><h6>
-<a name="id4861843"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific">Insert
+<a name="toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific"></a><h5>
+<a name="id4816172"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_simple_transaction.insert_specific">Insert
           specific</a>
-        </h6>
+        </h5>
 <pre class="programlisting"><span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">prev</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">);</span>
 <span class="identifier">upgrd_ptr</span><span class="special">&lt;</span><span class="identifier">list_node</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">curr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">head_</span><span class="special">-&gt;</span><span class="identifier">next_</span><span class="special">);</span>
 <span class="keyword">while</span> <span class="special">(</span><span class="identifier">curr</span><span class="special">)</span> <span class="special">{</span>
@@ -246,7 +248,8 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.a_composable_transaction"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_composable_transaction" title="A Composable Transaction">A
+<a name="toward_boost_stm.users_guide.tutorial.a_composable_transaction"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_composable_transaction" title="A
+        Composable Transaction">A
         Composable Transaction</a>
 </h4></div></div></div>
 <p>
@@ -333,7 +336,8 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction" title="A Dynamically Prioritized, Composed Transaction">A
+<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction" title="A
+        Dynamically Prioritized, Composed Transaction">A
         Dynamically Prioritized, Composed Transaction</a>
 </h4></div></div></div>
 <p>
@@ -360,21 +364,20 @@
           contention manager mechanism to abort a transaction before it commits.
           Although TBoost.STM does not yet implement validation, once it becomes
           available, client-side validating algorithms which want to avoid priority
-          inversion will need to override abort_before_commit() to iterate over in-flight
-          transactions and abort the current in-process transaction if another in-flight
-          transaction exists of higher priority. All in-flight transactions can be
-          accessed by a call to in_flight_transactions() which returns the set of
-          active transactions. As such, one could build an overridden abort_before_commit()
-          which always caused lower priority committing transactions to abort in
-          the event a higher priority transaction is currently in-flight. One possible
-          implementation is shown below. For code simplicity, the following code
-          has removed some static class accessors and namespaces.
+          inversion will need to override <code class="computeroutput"><span class="identifier">abort_before_commit</span><span class="special">()</span></code> to iterate over in-flight transactions
+          and abort the current in-process transaction if another in-flight transaction
+          exists of higher priority. All in-flight transactions can be accessed by
+          a call to <code class="computeroutput"><span class="identifier">in_flight_transactions</span><span class="special">()</span></code> which returns the set of active transactions.
+          As such, one could build an overridden <code class="computeroutput"><span class="identifier">abort_before_commit</span><span class="special">()</span></code> which always caused lower priority committing
+          transactions to abort in the event a higher priority transaction is currently
+          in-flight. One possible implementation is shown below. For code simplicity,
+          the following code has removed some static class accessors and namespaces.
         </p>
 <p>
           Priority Inversion for Validating Consistency.
         </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">priority_cm</span> <span class="special">:</span>
-<span class="keyword">public</span> <span class="identifier">core</span><span class="special">::</span><span class="identifier">base_contention_manager</span> <span class="special">{</span>
+<span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_contention_manager</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="comment">// method invoked prior tx commit
 </span>    <span class="keyword">bool</span> <span class="identifier">abort_before_commit</span><span class="special">(</span><span class="identifier">transaction</span> <span class="keyword">const</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
@@ -398,12 +401,13 @@
           the above priority inversion mechanism may be as close to correct as is
           possible. This solution is useful for validation, but should never be used
           for invalidation. Instead a second and more natural approach for invalidating
-          systems to prevent priority inversion is to override the permission_to_abort()
-          interface. The permission_to_abort() interface can only be used when TBoost.STM
+          systems to prevent priority inversion is to override the <code class="computeroutput"><span class="identifier">permission_to_abort</span><span class="special">()</span></code>
+          interface. The <code class="computeroutput"><span class="identifier">permission_to_abort</span><span class="special">()</span></code> interface can only be used when TBoost.STM
           is performing invalidation.
         </p>
 <p>
-          The permission_to_abort() interface is called from TBoost.STM's end_transaction()
+          The <code class="computeroutput"><span class="identifier">permission_to_abort</span><span class="special">()</span></code> interface is called from TBoost.STM's
+          <code class="computeroutput"><span class="identifier">end_transaction</span><span class="special">()</span></code>
           method when a committing transaction has found a second transaction it
           needs to abort for consistency. As such, the method takes two parameters,
           an lhs (lefthand side), the committing transaction, and an rhs (right-hand
@@ -416,15 +420,15 @@
           a completely legal uncommitted state until all consistency is performed.
           For direct updating aborts, the system simply follows its normal semantics
           of aborting the transaction by restoring global memory to its original
-          state. Similar to the prior example, overriding the permission_to_abort()
-          method can be done in such a manner which prevents lower priority transaction
-          from aborting a higher priority transaction as shown below:
+          state. Similar to the prior example, overriding the <code class="computeroutput"><span class="identifier">permission_to_abort</span><span class="special">()</span></code> method can be done in such a manner which
+          prevents lower priority transaction from aborting a higher priority transaction
+          as shown below:
         </p>
 <p>
           Priority Inversion for Invalidating Consistency.
         </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">priority_cm</span> <span class="special">:</span>
-<span class="keyword">public</span> <span class="identifier">core</span><span class="special">::</span><span class="identifier">base_contention_manager</span> <span class="special">{</span>
+<span class="keyword">public</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">base_contention_manager</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
     <span class="comment">// method invoked before lhs transaction
 </span>    <span class="comment">// aborts rhs transaction
@@ -437,25 +441,25 @@
 <p>
           With priority inversion preventable for both validating and invalidating
           consistency modes, transactions now need some mechanism to control their
-          priority. TBoost.STM allows for such control through the raise_priority()
-          interface. By iteratively calling raise_priority(), preempted transactions
-          can raise their priority at each preemption ensuring their eventual commit.
-          The raise_priority() interface is implemented using a size_t type. Additionally,
-          TBoost.STM supplies a set_priority() interface taking a size_t parameter
-          allowing client code to set the priority directly.
+          priority. TBoost.STM allows for such control through the <code class="computeroutput"><span class="identifier">raise_priority</span><span class="special">()</span></code>
+          interface. By iteratively calling <code class="computeroutput"><span class="identifier">raise_priority</span><span class="special">()</span></code>, preempted transactions can raise their
+          priority at each preemption ensuring their eventual commit. The <code class="computeroutput"><span class="identifier">raise_priority</span><span class="special">()</span></code>
+          interface is implemented using a <code class="computeroutput"><span class="identifier">size_t</span></code>
+          type. Additionally, TBoost.STM supplies a <code class="computeroutput"><span class="identifier">set_priority</span><span class="special">()</span></code> interface taking a <code class="computeroutput"><span class="identifier">size_t</span></code>
+          parameter allowing client code to set the priority directly.
         </p>
 <p>
-          In order for raise_priority() to function correctly, the affected transaction
+          In order for <code class="computeroutput"><span class="identifier">raise_priority</span><span class="special">()</span></code> to function correctly, the affected transaction
           must not be destroyed upon transactional abort. If the prioritized transaction
-          is destroyed at each transactional abort, raise_priority() will only raise
-          the transaction's priority by one each time. In order to demonstrate how
-          raise_priority() can be used in practice, we use a wrapper transaction
-          around the internal_insert()'s transaction. However, in this case the wrapper
-          transaction is not destroyed upon successive iterations. The restart_transaction()
+          is destroyed at each transactional abort, <code class="computeroutput"><span class="identifier">raise_priority</span><span class="special">()</span></code> will only raise the transaction's priority
+          by one each time. In order to demonstrate how <code class="computeroutput"><span class="identifier">raise_priority</span><span class="special">()</span></code> can be used in practice, we use a wrapper
+          transaction around the <code class="computeroutput"><span class="identifier">internal_insert</span><span class="special">()</span></code>'s transaction. However, in this case
+          the wrapper transaction is not destroyed upon successive iterations. The
+          <code class="computeroutput"><span class="identifier">restart_transaction</span><span class="special">()</span></code>
           interface must be called for transactions that are not destroyed after
           being aborted. This necessary step clears the state from the previously
-          failed transactional run. As shown in the below code, the restart_transaction()
-          is only called when an aborted exception is caught. This is because end_transaction()
+          failed transactional run. As shown in the below code, the <code class="computeroutput"><span class="identifier">restart_transaction</span><span class="special">()</span></code>
+          is only called when an aborted exception is caught. This is because <code class="computeroutput"><span class="identifier">end_transaction</span><span class="special">()</span></code>
           throws an exception when the transaction is aborted. Following this implementation
           paradigm, handling aborted transactions is relatively straightforward as
           all aborted transactions follow the same exception-based path.
@@ -505,7 +509,7 @@
         </p>
 <p>
           As the above priority assigned transaction demonstrates, the outer transaction
-          has increasing priority while the inner transaction, the one within internal_insert(),
+          has increasing priority while the inner transaction, the one within <code class="computeroutput"><span class="identifier">internal_insert</span><span class="special">()</span></code>,
           does not. Yet, the inner transaction is not aborted due to the outer transaction's
           priority. This is handled internally via TBoost.STM's abort process by
           two fundamental ideas.
@@ -557,39 +561,38 @@
     <span class="special">}</span>
 <span class="special">}</span>
 </pre>
-<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.priority_inversion_allowed"></a><h6>
-<a name="id4866234"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.priority_inversion_allowed">Priority
+<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.priority_inversion_allowed"></a><h5>
+<a name="id4820854"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.priority_inversion_allowed">Priority
           Inversion Allowed</a>
-        </h6>
+        </h5>
 <p>
           From the above code examples, one may question why the default behavior
           implemented within TBoost.STM does not automatically integrate priority
-          into transactions, as it could be integrated within restart_transaction().
-          First, each problem is different and integrating priority only into restart_transaction()
-          would not cover all cases (e.g., when the outer transaction was terminated).
-          Second, building an automatic priority inversion handling scheme would
-          eliminate some of the natural optimizations granted from different updating
-          policies. For example, deferred updating allows multiple writers of the
-          same memory to execute simultaneously. This behavior enables deferred updating
-          the ability to process the fastest completing transactions first. If a
-          priority system was integrated directly into TBoost.STM, this optimization
-          would be lost. In addition, direct updating optimizes writes by writing
-          directly to global memory. As such, direct updating suffers greater penalties
-          for aborted transactions due to required restoration of global memory.
-          In this case, more transactional aborts would occur if TBoost.STM built-in
-          a default priority inversion handler. Considering these factors, as well
-          as many others, TBoost.STM does not build transactional priority into its
-          system. Instead, we leave this implementation up to client-side implementors,
-          as they will have a better understanding of their problem domain and be
-          able to more correctly implement the right contention manager for their
-          specific needs.
+          into transactions, as it could be integrated within <code class="computeroutput"><span class="identifier">restart_transaction</span><span class="special">()</span></code>. First, each problem is different and
+          integrating priority only into <code class="computeroutput"><span class="identifier">restart_transaction</span><span class="special">()</span></code> would not cover all cases (e.g., when
+          the outer transaction was terminated). Second, building an automatic priority
+          inversion handling scheme would eliminate some of the natural optimizations
+          granted from different updating policies. For example, deferred updating
+          allows multiple writers of the same memory to execute simultaneously. This
+          behavior enables deferred updating the ability to process the fastest completing
+          transactions first. If a priority system was integrated directly into TBoost.STM,
+          this optimization would be lost. In addition, direct updating optimizes
+          writes by writing directly to global memory. As such, direct updating suffers
+          greater penalties for aborted transactions due to required restoration
+          of global memory. In this case, more transactional aborts would occur if
+          TBoost.STM built-in a default priority inversion handler. Considering these
+          factors, as well as many others, TBoost.STM does not build transactional
+          priority into its system. Instead, we leave this implementation up to client-side
+          implementors, as they will have a better understanding of their problem
+          domain and be able to more correctly implement the right contention manager
+          for their specific needs.
         </p>
-<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.the_future_of_parallel_programming"></a><h6>
-<a name="id4866316"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.the_future_of_parallel_programming">The
+<a name="toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.the_future_of_parallel_programming"></a><h5>
+<a name="id4820956"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.a_dynamically_prioritized__composed_transaction.the_future_of_parallel_programming">The
           Future of Parallel Programming</a>
-        </h6>
+        </h5>
 <p>
           An important distinction regarding priority within transactions versus
           priority within more classical synchronization mechanisms, like locks,
@@ -612,26 +615,30 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.can_a_transactional_object_embeed_another_transactional_object_"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.can_a_transactional_object_embeed_another_transactional_object_" title="Can a transactional object embeed another transactional object?">Can
+<a name="toward_boost_stm.users_guide.tutorial.can_a_transactional_object_embeed_another_transactional_object_"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.can_a_transactional_object_embeed_another_transactional_object_" title="Can
+        a transactional object embeed another transactional object?">Can
         a transactional object embeed another transactional object?</a>
 </h4></div></div></div>
 <p>
-          Let me show what happens when we emmend transactional objects: class C
-          : public transaction_object&lt;C&gt; {...};
+          Let me show what happens when we embeed transactional objects:
         </p>
-<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">E</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">&gt;</span> <span class="special">{</span>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">C</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">&gt;</span> <span class="special">{...};</span>
+
+<span class="keyword">class</span> <span class="identifier">E</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">&gt;</span> <span class="special">{</span>
     <span class="identifier">C</span> <span class="identifier">c</span><span class="special">;</span>
     <span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
 <span class="special">};</span>
+
+<span class="identifier">E</span> <span class="identifier">e</span><span class="special">;</span>
 </pre>
 <p>
-          E e;
-        </p>
-<p>
-          When a thread T1 modifies e (and possibly the b part) on a transaction
-          another thread T2 can modify e.c on another transaction. When the two transactional
-          objects overlap the STM system is unable to detect this efficiently, having
-          as consequence an inconsistency.
+          Let be <code class="computeroutput"><span class="identifier">T1</span></code> a thread that
+          modifies <code class="computeroutput"><span class="identifier">e</span></code> (and possibly
+          the <code class="computeroutput"><span class="identifier">b</span></code> part) on a transaction
+          and <code class="computeroutput"><span class="identifier">T2</span></code> another thread modifying
+          <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code> on another transaction. When the two
+          transactional objects overlap the STM system is unable to detect this efficiently,
+          having as consequence an inconsistency.
         </p>
 <p>
           The following pseudo-code shows the
@@ -643,61 +650,138 @@
 <span class="number">4</span>   <span class="special">}</span>
 </pre>
 <p>
-          When T2 commits on (3) e.c will be modified, but T1 will modify the complete
-          E independent of the e.c modification doen by T2, overwriting the e.c with
-          its old value. T1 will be coherent, but not T2. If we want to allow such
-          a scheme, we have several possibilities
+          When <code class="computeroutput"><span class="identifier">T2</span></code> commits on (3)
+          <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code> will be modified, but <code class="computeroutput"><span class="identifier">T1</span></code> will modify the complete <code class="computeroutput"><span class="identifier">E</span></code> independent of the <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code> modification
+          done by <code class="computeroutput"><span class="identifier">T2</span></code>, overwriting
+          the <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code> with its old value. <code class="computeroutput"><span class="identifier">T1</span></code>
+          will be coherent, but not <code class="computeroutput"><span class="identifier">T2</span></code>.
+          If we want to allow such a scheme, we have several possibilities
         </p>
-<div class="itemizedlist"><ul type="disc">
-<li>
-            implicit: take care of overlaping transactional objects, so we can detect
-            when T1 commits that an overlaping TO e.c has been modified, so the transaction
-            on T1 is aborted and retried.
-          </li>
-<li>
-            explicit: the developper of T1 must notify the STM system that the transactional
-            object e constains a transactional object e.c
-          </li>
-<li>
-            declarative: the developper of E would declare that it contains an emmbeed
-            transactional object C at E::c, so the STM system will use this explicit
-            information when an E is accesses using the STM interface.
-          </li>
-</ul></div>
+<div class="itemizedlist"><ul type="disc"><li>
+<span class="bold"><strong>implicit</strong></span>: take care of overlaping transactional
+            objects, so we can detect when <code class="computeroutput"><span class="identifier">T1</span></code>
+            commits that an overlaping to <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code>
+            has been modified, so the transaction on <code class="computeroutput"><span class="identifier">T1</span></code>
+            is aborted and retried.
+          </li></ul></div>
+<pre class="programlisting">    <span class="identifier">T1</span>                  <span class="identifier">T2</span>
+<span class="number">1</span>   <span class="identifier">atomic</span> <span class="special">{</span>            <span class="identifier">atomic</span> <span class="special">{</span>
+<span class="number">2</span>       <span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">e</span><span class="special">).</span><span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>          <span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span><span class="special">)=</span><span class="identifier">A</span><span class="special">;</span>
+<span class="number">3</span>                       <span class="special">}</span>
+<span class="number">4</span>   <span class="special">}</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+<span class="bold"><strong>explicit</strong></span>: the developper of <code class="computeroutput"><span class="identifier">T1</span></code> must notify the STM system that
+            the transactional object <code class="computeroutput"><span class="identifier">e</span></code>
+            constains a transactional object <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code>.
+          </li></ul></div>
+<pre class="programlisting">    <span class="identifier">T1</span>                  <span class="identifier">T2</span>
+<span class="number">1</span>   <span class="identifier">atomic</span> <span class="special">{</span>            <span class="identifier">atomic</span> <span class="special">{</span>
+<span class="number">3</span>       <span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span><span class="special">);</span>           
+<span class="number">2</span>       <span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">e</span><span class="special">).</span><span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>         <span class="identifier">t</span><span class="special">.</span><span class="identifier">w</span><span class="special">(</span><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span><span class="special">)=</span><span class="identifier">A</span><span class="special">;</span>
+<span class="number">3</span>                       <span class="special">}</span>
+<span class="number">4</span>   <span class="special">}</span>
+</pre>
+<p>
+          Note that in this example there is only one embedeed transactional object
+          but in real examples the number can increase horizontaly, direct embeede
+          relation, and verticaly, embeeded transactional objects can embeed themselves
+          other transactional objects.
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+<span class="bold"><strong>declarative</strong></span>: the developper of E would
+            declare that it contains an emmbeed transactional object C at E::c, so
+            the STM system will use this explicit information when an E is accesses
+            using the STM interface.
+          </li></ul></div>
+<pre class="programlisting"><span class="identifier">BOOST_STM_EMBEEDS</span><span class="special">(</span><span class="identifier">E</span><span class="special">,</span> <span class="identifier">C</span><span class="special">,</span> <span class="identifier">E</span><span class="special">::</span><span class="identifier">c</span><span class="special">);</span>
+</pre>
 <p>
           The implicit approach is the more transparent for the user but it is also
-          the less efficient. It need to add a virtual function quering the size
-          of the class, and to modify the conflic detection algorithm (maybe the
-          write_list must be a write_set, ordered by the address)
+          the less efficient. It needs to add a virtual function quering the size
+          of the class, and to modify the conflic detection algorithm (the write_list
+          coukd be a write_set, ordered by the address). In addition it is incompatible
+          with the bloom filters optimization.
         </p>
 <p>
           The explit approach let the user with a lot of burden and risk of error
-          when access to an E is done on a transaction. This needs to add the size
-          and the algorithm which adds transactional object on the write_list (maybe
-          the write_list must be a write_interval_set, ordered by the address).
+          when access to an <code class="computeroutput"><span class="identifier">E</span></code> is
+          done on a transaction. This needs to add the size and the algorithm which
+          adds transactional object on the write_list (maybe the write_list must
+          be a write_interval_set, ordered by the address).
         </p>
 <p>
-          The declarative concentrate on a single place, so the user will be not
+          The declarative concentrate on a single place, so the user will not be
           too concerned, and this open possible optimizations.
         </p>
 <p>
-          Supose now that we are able to embeed transactional objects. and that the
-          T1 not only opens for writing e, but also e.c either on the same block
-          on on a block (or nested transaction). The STM will see both address to
-          be written, and even if there should be no risk of incoherence the object
-          e.c will be copied twice.
+          Supose now that we are able to embeed transactional objects and that the
+          <code class="computeroutput"><span class="identifier">T1</span></code> not only opens for writing
+          <code class="computeroutput"><span class="identifier">e</span></code>, but also <code class="computeroutput"><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span></code>
+          either on the same block or on a nested block (or nested transaction).
+          The STM will see both address to be written, and even if there should be
+          no risk of incoherence the object e.c will be copied twice.
+        </p>
+<p>
+          The implicit approach could check that there are not overlaping transactional
+          objects, as it contains the size of each transactional object.
+        </p>
+<p>
+          The explicit approach do not let us detect overlaping transactional objets
+          until we store the size of a transactional object, but this can not be
+          done if we use bloom filters.
+        </p>
+<p>
+          With the declarative approach, we can use
+        </p>
+<p>
+          If STM do not allows embeeded transactional objects, we force the user
+          to use constant pointers to trasactional objects
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">C</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">C</span><span class="special">&gt;</span> <span class="special">{...};</span>
+
+<span class="keyword">class</span> <span class="identifier">E</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">E</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="identifier">C</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">c</span><span class="special">;</span>
+    <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;*</span> <span class="keyword">const</span> <span class="identifier">i</span><span class="special">;</span>
+    <span class="identifier">E</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">c</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">C</span><span class="special">),</span> <span class="identifier">i</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">native_trans</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;)</span> <span class="special">{}</span>
+    <span class="special">~</span><span class="identifier">E</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">delete</span> <span class="identifier">c</span><span class="special">;</span> <span class="keyword">delete</span> <span class="identifier">i</span><span class="special">;</span> <span class="special">}</span>
+    
+<span class="special">};</span>
+
+<span class="identifier">E</span> <span class="identifier">e</span><span class="special">;</span>
+</pre>
+<p>
+          Having the main draback of managing the ownership of the heap allocated
+          transactional objects.
+        </p>
+<pre class="programlisting">    <span class="identifier">T1</span>                  <span class="identifier">T2</span>
+<span class="number">1</span>   <span class="identifier">atomic</span> <span class="special">{</span>            <span class="identifier">atomic</span> <span class="special">{</span>
+<span class="number">2</span>       <span class="special">*(</span><span class="identifier">e</span><span class="special">.</span><span class="identifier">i</span><span class="special">)=</span><span class="number">0</span><span class="special">;</span>              <span class="special">*(</span><span class="identifier">e</span><span class="special">.</span><span class="identifier">c</span><span class="special">)=</span><span class="identifier">A</span><span class="special">;</span>
+<span class="number">3</span>                       <span class="special">}</span>
+<span class="number">4</span>   <span class="special">}</span>
+</pre>
+<p>
+          The advantage of this design is that now both threads do not conflic as
+          the transactional object <code class="computeroutput"><span class="identifier">e</span></code>
+          is not really modified.
+        </p>
+<p>
+          We think that TBoost.STM needs to manage with embeeded transactional objects
+          in a transparent way, and let the user to use pointers when he/she consider
+          it more adapted to their problem solution.
         </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion" title="Returning values from a fucntion">Returning
-        values from a fucntion</a>
+<a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_function"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_function" title="Returning
+        values from a function">Returning
+        values from a function</a>
 </h4></div></div></div>
-<a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion.returning_from_outside_the_transaction_context"></a><h6>
-<a name="id4866697"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion.returning_from_outside_the_transaction_context">Returning
+<a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_outside_the_transaction_context"></a><h5>
+<a name="id4822561"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_outside_the_transaction_context">Returning
           from outside the transaction context</a>
-        </h6>
+        </h5>
 <p>
           The simgle way consists is using a local variable declared outside the
           transaction context.
@@ -710,11 +794,11 @@
     <span class="keyword">return</span> <span class="identifier">res</span><span class="special">;</span>
 <span class="special">}</span>
 </pre>
-<a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion.returning_from_inside"></a><h6>
-<a name="id4866874"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_fucntion.returning_from_inside">Returning
+<a name="toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_inside"></a><h5>
+<a name="id4822737"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.returning_values_from_a_function.returning_from_inside">Returning
           from inside</a>
-        </h6>
+        </h5>
 <p>
           The following attempt does not work as the transaction will not be commited.
         </p>
@@ -741,18 +825,19 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects" title="Pointer to transactional objects">Pointer
+<a name="toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects" title="Pointer
+        to transactional objects">Pointer
         to transactional objects</a>
 </h4></div></div></div>
 <p>
           Access to a pointer to a transaction object works, but this do not take
           care of modifications of the pointer itself.
         </p>
-<a name="toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects.using_the_mixin_transaction_object_lt__gt_"></a><h6>
-<a name="id4867276"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects.using_the_mixin_transaction_object_lt__gt_">Using
+<a name="toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects.using_the_mixin_transaction_object_lt__gt_"></a><h5>
+<a name="id4823140"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.pointer_to_transactional_objects.using_the_mixin_transaction_object_lt__gt_">Using
           the mixin transaction_object&lt;&gt;</a>
-        </h6>
+        </h5>
 <p>
           Let B the TO made using the mixin transaction_object.
         </p>
@@ -797,7 +882,7 @@
 <span class="special">};</span>
 </pre>
 <p>
-          Let declare a pointer to B
+          Let declare a pointer to <code class="computeroutput"><span class="identifier">B</span></code>
         </p>
 <pre class="programlisting"><span class="identifier">transaction_object_ptr</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="identifier">ptr_b</span><span class="special">;</span>
 
@@ -810,19 +895,19 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.polymorphic"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic" title="Polymorphic">Polymorphic</a>
+<a name="toward_boost_stm.users_guide.tutorial.polymorphic"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic" title="Polymorphic">Polymorphic</a>
 </h4></div></div></div>
 <p>
-          How the user can defien a transactional class D inheriting from a transactional
-          class B
+          How the user can defien a transactional class <code class="computeroutput"><span class="identifier">D</span></code>
+          inheriting from a transactional class <code class="computeroutput"><span class="identifier">B</span></code>
         </p>
-<a name="toward_boost_stm.users_guide.tutorial.polymorphic._mixin_using_the_mixin_transaction_object_lt__gt_"></a><h6>
-<a name="id4868388"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic._mixin_using_the_mixin_transaction_object_lt__gt_">:mixin
-          Using the mixin transaction_object&lt;&gt;</a>
-        </h6>
+<a name="toward_boost_stm.users_guide.tutorial.polymorphic.using_the_mixin_transaction_object_lt__gt_"></a><h5>
+<a name="id4824279"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic.using_the_mixin_transaction_object_lt__gt_">Using
+          the mixin transaction_object&lt;&gt;</a>
+        </h5>
 <p>
-          Let B the base class
+          Let <code class="computeroutput"><span class="identifier">B</span></code> the base class
         </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">B</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="special">{</span>
 <span class="keyword">public</span><span class="special">:</span>
@@ -830,41 +915,290 @@
 <span class="special">};</span>
 </pre>
 <p>
-          The derived class must declare D as follows:
+          The derived class must declare <code class="computeroutput"><span class="identifier">D</span></code>
+          as follows:
         </p>
 <pre class="programlisting"><span class="keyword">class</span> <span class="identifier">D</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">transaction_object</span><span class="special">&lt;</span><span class="identifier">D</span><span class="special">,</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="special">{</span>
     <span class="special">...</span>
 <span class="special">};</span>
 </pre>
 <p>
-          How a variable pointing to B must be declared. The fact that B is a transactional
-          object do not means that a pointer to it is one.
+          How a variable pointing to <code class="computeroutput"><span class="identifier">B</span></code>
+          must be declared. The fact that <code class="computeroutput"><span class="identifier">B</span></code>
+          is a transactional object do not means that a pointer to it is one.
         </p>
-<pre class="programlisting"><span class="identifier">pointer</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="identifier">ptr_b</span> <span class="special">=</span> <span class="number">0</span>
+<pre class="programlisting"><span class="identifier">transaction_object_ptr</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="identifier">ptr_b</span> <span class="special">=</span> <span class="number">0</span>
 </pre>
 <p>
-          How can we assign a pointer to D?
+          How can we assign a pointer to <code class="computeroutput"><span class="identifier">D</span></code>?
         </p>
 <pre class="programlisting"><span class="identifier">write_ptr</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">*&gt;</span> <span class="identifier">tx_ptr_b_ptr</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span><span class="identifier">ptr_b</span><span class="special">);</span>
-<span class="special">*</span><span class="identifier">ptr_b</span> <span class="special">=</span> <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">D</span><span class="special">())</span>
+<span class="special">*</span><span class="identifier">ptr_b</span> <span class="special">=</span> <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">D</span><span class="special">());</span>
 </pre>
-<a name="toward_boost_stm.users_guide.tutorial.polymorphic.__wrapper_using_the_wrapper_transactional_object_lt__gt_"></a><h6>
-<a name="id4868709"></a>
-          <a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic.__wrapper_using_the_wrapper_transactional_object_lt__gt_">::wrapper
-          Using the wrapper transactional_object&lt;&gt;</a>
-        </h6>
+<a name="toward_boost_stm.users_guide.tutorial.polymorphic.using_the_wrapper_transactional_object_lt__gt_"></a><h5>
+<a name="id4824643"></a>
+          <a href="tutorial.html#toward_boost_stm.users_guide.tutorial.polymorphic.using_the_wrapper_transactional_object_lt__gt_">Using
+          the wrapper transactional_object&lt;&gt;</a>
+        </h5>
+<p>
+          Wrapping does not works well with inheritance.
+        </p>
+<p>
+          Given a class D inheriting from B
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">B</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+
+<span class="keyword">class</span> <span class="identifier">D</span><span class="special">:</span> <span class="keyword">public</span> <span class="identifier">B</span> <span class="special">{</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+          The C++ type system do not ensures that transactional_object&lt;D&gt; inherits
+          from transactional_object&lt;B&gt;. That is,
+        </p>
+<pre class="programlisting"><span class="identifier">transaction_object_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">ptr_b</span> <span class="special">=</span> <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">D</span><span class="special">());</span>
+</pre>
+<p>
+          does not compile.
+        </p>
+<p>
+          TBoost.STM provides some cast functions that allows us to see a transactional_object&lt;D&gt;
+          as a transactional_object&lt;B&gt;
+        </p>
+<pre class="programlisting"><span class="identifier">transaction_object_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">ptr_b</span> <span class="special">=</span> <span class="identifier">tx_static_cast</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;(</span><span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">D</span><span class="special">()));</span>
+</pre>
+<p>
+          In addition TBoost.STM provides a smart pointer class tx_ptr
+        </p>
+<pre class="programlisting"><span class="identifier">tx_ptr</span><span class="special">&lt;</span><span class="identifier">B</span><span class="special">&gt;</span> <span class="identifier">ptr_b</span> <span class="special">=</span> <span class="identifier">BOOST_STM_NEW</span><span class="special">(</span><span class="identifier">_</span><span class="special">,</span> <span class="identifier">D</span><span class="special">());</span>
+</pre>
+<p>
+          We know that this is not perfect , but this is the better we can do.
+        </p>
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.can_non_transactional_objets_participate_in_a_transaction_"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.can_non_transactional_objets_participate_in_a_transaction_" title="Can non transactional objets participate in a transaction?">Can
+<a name="toward_boost_stm.users_guide.tutorial.can_non_transactional_objets_participate_in_a_transaction_"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.can_non_transactional_objets_participate_in_a_transaction_" title="Can
+        non transactional objets participate in a transaction?">Can
         non transactional objets participate in a transaction?</a>
 </h4></div></div></div>
 <p>
-          Non transactional objects are the objects that do not inherit from base_transaction_object.
+          Non transactional objects are the objects that do not inherit from <code class="computeroutput"><span class="identifier">base_transaction_object</span></code>. We need an object
+          inheriting from <code class="computeroutput"><span class="identifier">base_transaction_object</span></code>
+          to participate on a <code class="computeroutput"><span class="identifier">transaction</span></code>.
+          The best we can do is to associated a <code class="computeroutput"><span class="identifier">cache</span></code>
+          inheriting from <code class="computeroutput"><span class="identifier">base_transaction_object</span></code>
+          referencing the non transactional object. This association must be stablished
+          as far as a non transactional object is accesed. Smart pointers are useful
+          to implements this kind of access.
+        </p>
+<p>
+          Let me start with a simple and radical case. How can transactional and
+          non transactional share read/write access to an int?
+        </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">i</span><span class="special">;</span>
+
+<span class="keyword">void</span> <span class="identifier">tx</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">i</span><span class="special">=</span><span class="identifier">i</span><span class="special">+</span><span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">end_atom</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">non_trans</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">times</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>  
+    <span class="keyword">while</span> <span class="special">(</span><span class="identifier">i</span><span class="special">&lt;</span><span class="number">10</span><span class="special">)</span> <span class="special">{</span><span class="identifier">times</span><span class="special">++;</span> <span class="identifier">sleep</span><span class="special">(</span><span class="number">1</span><span class="special">);}</span>
+    <span class="keyword">return</span> <span class="identifier">times</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          We need a way to transaform the interger <code class="computeroutput"><span class="identifier">i</span></code>
+          on a transactional object, so we can use it on the transaction. The idea
+          is to have a transactional <code class="computeroutput"><span class="identifier">cache</span></code>
+          of the non transactional object which will be used by the STM system.
+        </p>
+<p>
+          We can define non transactional smart pointers which will retrieve the
+          non transactional object from this cache and then work with these smart
+          pointers as usual.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">tx</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">atomic</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">add_tx_conflicting_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+        <span class="identifier">non_tx</span><span class="special">::</span><span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">tx_i</span><span class="special">(</span><span class="identifier">i</span><span class="special">);</span>
+        <span class="special">*</span><span class="identifier">tx_i</span><span class="special">=*</span><span class="identifier">tx_i</span><span class="special">+</span><span class="number">1</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">end_atom</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">non_trans</span><span class="special">()</span> <span class="special">{</span>
+     <span class="identifier">transaction</span><span class="special">::</span><span class="identifier">scoped_lock</span><span class="special">(</span><span class="identifier">L1</span><span class="special">);</span>
+     <span class="keyword">int</span> <span class="identifier">times</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>  
+     <span class="keyword">while</span> <span class="special">(</span><span class="identifier">i</span><span class="special">&lt;</span><span class="number">10</span><span class="special">)</span> <span class="special">{</span><span class="identifier">times</span><span class="special">++;</span> <span class="identifier">sleep</span><span class="special">(</span><span class="number">1</span><span class="special">);}</span>
+     <span class="keyword">return</span> <span class="identifier">times</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The cache will inherit from <code class="computeroutput"><span class="identifier">base_transaction_object</span></code>
+          and contain a reference to the non transactional object.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">non_tx</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">cache</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">base_transaction_object</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">const</span> <span class="identifier">value_</span><span class="special">;</span>
+<span class="special">...</span>
+<span class="special">};</span>
+<span class="special">}}</span>
+</pre>
+<p>
+          <code class="computeroutput"><span class="identifier">value_</span></code> is a <code class="computeroutput"><span class="keyword">const</span></code> pointer to the non transactional object
+          and must be initialized at construction time.
+        </p>
+<pre class="programlisting"><span class="identifier">cache</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">ref</span><span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">base_transaction_object</span><span class="special">()</span>
+    <span class="special">,</span> <span class="identifier">value_</span><span class="special">(&amp;</span><span class="identifier">ref</span><span class="special">),</span> <span class="identifier">ptr_</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="special">{}</span>
+
+<span class="identifier">cache</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">base_transaction_object</span><span class="special">()</span>
+    <span class="special">,</span> <span class="identifier">value_</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">),</span> <span class="identifier">ptr_</span><span class="special">(</span><span class="number">0</span><span class="special">)</span> <span class="special">{}</span>
+</pre>
+<p>
+          We need an extra pointer to point to the transaction specific <code class="computeroutput"><span class="identifier">T</span></code>.
+        </p>
+<pre class="programlisting"><span class="keyword">mutable</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr_</span><span class="special">;</span>
+</pre>
+<p>
+          This pointer will be initialized on the first time the cache is written
+          on a transaction by the <code class="computeroutput"><span class="identifier">clone</span></code>
+          function
+        </p>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="identifier">base_transaction_object</span><span class="special">*</span> <span class="identifier">clone</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <span class="identifier">cache</span><span class="special">*</span> <span class="identifier">tmp</span> <span class="special">=</span> <span class="identifier">cache_clone</span><span class="special">(*</span><span class="keyword">this</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">tmp</span><span class="special">-&gt;</span><span class="identifier">value_</span><span class="special">!=</span><span class="number">0</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">tmp</span><span class="special">-&gt;</span><span class="identifier">ptr_</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">T</span><span class="special">(*</span><span class="identifier">value_</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">tmp</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          This pointer <code class="computeroutput"><span class="identifier">ptr_</span></code> will
+          be deleted either on the destructor,
+        </p>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">cache</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">delete</span> <span class="identifier">ptr_</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          or while doing the <code class="computeroutput"><span class="identifier">copy_state</span></code>
+          function
+        </p>
+<pre class="programlisting"><span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">copy_state</span><span class="special">(</span><span class="identifier">base_transaction_object</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span> <span class="identifier">rhs</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">value_</span><span class="special">==</span><span class="number">0</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+    <span class="special">*</span><span class="identifier">value_</span><span class="special">=</span> <span class="special">*(</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">const</span> <span class="special">*</span> <span class="keyword">const</span><span class="special">&gt;(</span><span class="identifier">rhs</span><span class="special">)-&gt;</span><span class="identifier">ptr_</span><span class="special">);</span>
+    <span class="keyword">delete</span> <span class="identifier">ptr_</span><span class="special">;</span>
+    <span class="identifier">ptr_</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Note that the <code class="computeroutput"><span class="identifier">copy_state</span></code>
+          function copy the <code class="computeroutput"><span class="identifier">value_</span></code>
+          field from the pointee <code class="computeroutput"><span class="identifier">ptr_</span></code>.
+        </p>
+<p>
+          In order to access the specific <code class="computeroutput"><span class="identifier">T</span></code>
+          on a transaction we need to use the get function
+        </p>
+<pre class="programlisting"><span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <span class="keyword">if</span><span class="special">(</span><span class="identifier">ptr_</span><span class="special">!=</span><span class="number">0</span><span class="special">)</span> <span class="keyword">return</span> <span class="identifier">ptr_</span><span class="special">;</span>
+    <span class="keyword">else</span> <span class="keyword">return</span> <span class="identifier">value_</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Next follows how the non transactional write smart pointer looks like
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">non_tx</span> <span class="special">{</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">wr_ptr</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">wr_ptr</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="identifier">this_type</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">mutable</span> <span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">tx_</span><span class="special">;</span>
+    <span class="keyword">mutable</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">ptr_</span><span class="special">;</span>
+
+    <span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">tx_</span><span class="special">(</span><span class="identifier">t</span><span class="special">),</span>
+        <span class="identifier">ptr_</span><span class="special">(</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">cache_map</span><span class="special">::</span><span class="identifier">get</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">)))</span>
+    <span class="special">{}</span>
+
+    <span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">transaction</span> <span class="special">&amp;</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">)</span> <span class="special">:</span> <span class="identifier">tx_</span><span class="special">(</span><span class="identifier">t</span><span class="special">),</span>
+        <span class="identifier">ptr_</span><span class="special">(</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">write_ptr</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">cache_map</span><span class="special">::</span><span class="identifier">get</span><span class="special">(&amp;</span><span class="identifier">obj</span><span class="special">)))</span>
+    <span class="special">{}</span>
+
+
+    <span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">tx_</span><span class="special">.</span><span class="identifier">forced_to_abort</span><span class="special">())</span> <span class="special">{</span>
+            <span class="identifier">tx_</span><span class="special">.</span><span class="identifier">lock_and_abort</span><span class="special">();</span>
+            <span class="keyword">throw</span> <span class="identifier">aborted_transaction_exception</span><span class="special">(</span><span class="string">"aborting transaction"</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">ptr_</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">();</span>
+    <span class="special">}</span>
+
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="special">*</span><span class="identifier">get</span><span class="special">();</span> <span class="special">}</span>
+    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">get</span><span class="special">();</span> <span class="special">}</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">this_type</span><span class="special">::*</span><span class="identifier">unspecified_bool_type</span><span class="special">;</span>
+
+    <span class="keyword">operator</span> <span class="identifier">unspecified_bool_type</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">ptr_</span> <span class="special">==</span> <span class="number">0</span><span class="special">?</span> <span class="number">0</span><span class="special">:</span> <span class="special">&amp;</span><span class="identifier">this_type</span><span class="special">::</span><span class="identifier">ptr_</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">cache_map</span></code> could be
+          defined as
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">non_tx</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
+<span class="keyword">class</span> <span class="identifier">cache_map</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">*,</span> <span class="identifier">base_transaction_object</span><span class="special">*&gt;</span> <span class="identifier">map_type</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">map</span><span class="special">&lt;</span><span class="keyword">void</span><span class="special">*,</span> <span class="identifier">base_transaction_object</span><span class="special">*&gt;</span> <span class="identifier">map_</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">map_type</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">it</span> <span class="special">=</span> <span class="identifier">map_</span><span class="special">.</span><span class="identifier">find</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">);</span>
+        <span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">res</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">it</span> <span class="special">==</span> <span class="identifier">map_</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span>
+            <span class="identifier">res</span><span class="special">=</span> <span class="keyword">new</span> <span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">ptr</span><span class="special">);</span>
+            <span class="identifier">map_</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">,</span> <span class="identifier">res</span><span class="special">));</span>
+        <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+            <span class="identifier">res</span><span class="special">=</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*&gt;(</span><span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">res</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">static</span> <span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">T</span> <span class="keyword">const</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">map_type</span><span class="special">::</span><span class="identifier">iterator</span> <span class="identifier">it</span> <span class="special">=</span> <span class="identifier">map_</span><span class="special">.</span><span class="identifier">find</span><span class="special">(</span><span class="keyword">const_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">*&gt;(</span><span class="identifier">ptr</span><span class="special">));</span>
+        <span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*</span> <span class="identifier">res</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">it</span> <span class="special">==</span> <span class="identifier">map_</span><span class="special">.</span><span class="identifier">end</span><span class="special">())</span> <span class="special">{</span>
+            <span class="identifier">res</span><span class="special">=</span> <span class="keyword">new</span> <span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="keyword">const_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">*&gt;(</span><span class="identifier">ptr</span><span class="special">));</span>
+            <span class="identifier">map_</span><span class="special">.</span><span class="identifier">insert</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">make_pair</span><span class="special">(</span><span class="keyword">const_cast</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">*&gt;(</span><span class="identifier">ptr</span><span class="special">),</span> <span class="identifier">res</span><span class="special">));</span>
+        <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+            <span class="identifier">res</span><span class="special">=</span><span class="keyword">static_cast</span><span class="special">&lt;</span><span class="identifier">cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;*&gt;(</span><span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="keyword">return</span> <span class="identifier">res</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+<span class="special">}}</span>
+</pre>
+<p>
+          We think that lock aware STM systems need to provide access to non transactional
+          objects, otherwise we don't see the interest of LATM systems.
         </p>
 </div>
 <div class="section" lang="en"><div class="titlepage"><div><div><h4 class="title">
-<a name="toward_boost_stm.users_guide.tutorial.lock_aware"></a><a class="link" href="tutorial.html#toward_boost_stm.users_guide.tutorial.lock_aware" title="Lock aware">Lock
+<a name="toward_boost_stm.users_guide.tutorial.lock_aware"></a><a href="tutorial.html#toward_boost_stm.users_guide.tutorial.lock_aware" title="Lock
+        aware">Lock
         aware</a>
 </h4></div></div></div></div>
 </div>

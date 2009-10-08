@@ -190,13 +190,12 @@ The move() implementation do not requires any overhead required in non-transacti
 The following subsection discusses how priority inversion is handled within __Boost_STM__ using dynamic priority assignment. Two solutions are presented for the different consistency models, one for validation and one for invalidation. Following the two examples which detail how to override contention management interfaces, a dynamically prioritized transaction is presented, demonstrating how transactions interact with the prior implementations. Priority inversion in transactional memory occurs when a lower priority transaction causes a higher priority transaction to abort. With STM lock-based (and non-blocking) systems, priority inversion does not happen on the same scale as that of direct lock-based solutions. The different cases of priority inversion between direct locking solutions and TM solutions are due to TM's natural avoidance of critical sections. However, priority inversion in TM can easily occur if, for example, a long running transaction is continually preempted by shorter running transactions which always commit before the longer transaction.
 
 
-In order to prevent such priority inversion scenarios, two extensible contention manager (CM) virtual methods are provided to allow client-side implementations a way to handle different scenarios based on the consistency model currently in use. The first interface, abort_before_commit(), allows a user-defined contention manager mechanism to abort a transaction before it commits. Although __Boost_STM__ does not yet implement validation, once it becomes available, client-side validating algorithms which want to avoid priority inversion will need to override abort_before_commit() to iterate over in-flight transactions and abort the current in-process transaction if another in-flight transaction exists of higher priority. All in-flight transactions can be accessed by a call to in_flight_transactions() which returns the set of active transactions. As such, one could build an overridden abort_before_commit() which always caused lower priority committing transactions to abort in the event a higher priority transaction is currently in-flight. One possible implementation is shown below. For code simplicity, the following code has removed some static class accessors and namespaces.
-
+In order to prevent such priority inversion scenarios, two extensible contention manager (CM) virtual methods are provided to allow client-side implementations a way to handle different scenarios based on the consistency model currently in use. The first interface, abort_before_commit(), allows a user-defined contention manager mechanism to abort a transaction before it commits. Although __Boost_STM__ does not yet implement validation, once it becomes available, client-side validating algorithms which want to avoid priority inversion will need to override `abort_before_commit()` to iterate over in-flight transactions and abort the current in-process transaction if another in-flight transaction exists of higher priority. All in-flight transactions can be accessed by a call to `in_flight_transactions()` which returns the set of active transactions. As such, one could build an overridden `abort_before_commit()` which always caused lower priority committing transactions to abort in the event a higher priority transaction is currently in-flight. One possible implementation is shown below. For code simplicity, the following code has removed some static class accessors and namespaces.
 
 Priority Inversion for Validating Consistency.
 
     class priority_cm :
-    public core::base_contention_manager {
+    public boost::stm::base_contention_manager {
     public:
         // method invoked prior tx commit
         bool abort_before_commit(transaction const &t) {
@@ -210,14 +209,14 @@ Priority Inversion for Validating Consistency.
         }
     };
 
-While the above approach is necessary for a validating system, it is largely a poor way to perform priority inversion checking. Firstly, it has the side-effect of causing unnecessary aborts for transactions which do not necessarily conflict, but simply have differing priority levels. Secondly, it is slow in that all transactions must be walked through each time a transaction commits. However, as an ad hoc solution for a validating system, the above priority inversion mechanism may be as close to correct as is possible. This solution is useful for validation, but should never be used for invalidation. Instead a second and more natural approach for invalidating systems to prevent priority inversion is to override the permission_to_abort() interface. The permission_to_abort() interface can only be used when __Boost_STM__ is performing invalidation.
+While the above approach is necessary for a validating system, it is largely a poor way to perform priority inversion checking. Firstly, it has the side-effect of causing unnecessary aborts for transactions which do not necessarily conflict, but simply have differing priority levels. Secondly, it is slow in that all transactions must be walked through each time a transaction commits. However, as an ad hoc solution for a validating system, the above priority inversion mechanism may be as close to correct as is possible. This solution is useful for validation, but should never be used for invalidation. Instead a second and more natural approach for invalidating systems to prevent priority inversion is to override the `permission_to_abort()` interface. The `permission_to_abort()` interface can only be used when __Boost_STM__ is performing invalidation.
 
-The permission_to_abort() interface is called from __Boost_STM_s__ end_transaction() method when a committing transaction has found a second transaction it needs to abort for consistency. As such, the method takes two parameters, an lhs (lefthand side), the committing transaction, and an rhs (right-hand side), the transaction requested to be aborted. If permission is granted to abort the second transaction, the method returns true and the second transaction is aborted. If permission is not granted to abort the second transaction, the method returns false and upon returning the committing transaction aborts itself. All consistency checking for deferred updating is performed prior to any updating operation and thus memory is still in a completely legal uncommitted state until all consistency is performed. For direct updating aborts, the system simply follows its normal semantics of aborting the transaction by restoring global memory to its original state. Similar to the prior example, overriding the permission_to_abort() method can be done in such a manner which prevents lower priority transaction from aborting a higher priority transaction as shown below:
+The `permission_to_abort()` interface is called from __Boost_STM_s__ `end_transaction()` method when a committing transaction has found a second transaction it needs to abort for consistency. As such, the method takes two parameters, an lhs (lefthand side), the committing transaction, and an rhs (right-hand side), the transaction requested to be aborted. If permission is granted to abort the second transaction, the method returns true and the second transaction is aborted. If permission is not granted to abort the second transaction, the method returns false and upon returning the committing transaction aborts itself. All consistency checking for deferred updating is performed prior to any updating operation and thus memory is still in a completely legal uncommitted state until all consistency is performed. For direct updating aborts, the system simply follows its normal semantics of aborting the transaction by restoring global memory to its original state. Similar to the prior example, overriding the `permission_to_abort()` method can be done in such a manner which prevents lower priority transaction from aborting a higher priority transaction as shown below:
 
 Priority Inversion for Invalidating Consistency.
 
     class priority_cm :
-    public core::base_contention_manager {
+    public boost::stm::base_contention_manager {
     public:
         // method invoked before lhs transaction
         // aborts rhs transaction
@@ -227,9 +226,9 @@ Priority Inversion for Invalidating Consistency.
         }
     };
 
-With priority inversion preventable for both validating and invalidating consistency modes, transactions now need some mechanism to control their priority. __Boost_STM__ allows for such control through the raise_priority() interface. By iteratively calling raise_priority(), preempted transactions can raise their priority at each preemption ensuring their eventual commit. The raise_priority() interface is implemented using a size_t type. Additionally, __Boost_STM__ supplies a set_priority() interface taking a size_t parameter allowing client code to set the priority directly.
+With priority inversion preventable for both validating and invalidating consistency modes, transactions now need some mechanism to control their priority. __Boost_STM__ allows for such control through the `raise_priority()` interface. By iteratively calling `raise_priority()`, preempted transactions can raise their priority at each preemption ensuring their eventual commit. The `raise_priority()` interface is implemented using a `size_t` type. Additionally, __Boost_STM__ supplies a `set_priority()` interface taking a `size_t` parameter allowing client code to set the priority directly.
 
-In order for raise_priority() to function correctly, the affected transaction must not be destroyed upon transactional abort. If the prioritized transaction is destroyed at each transactional abort, raise_priority() will only raise the transaction's priority by one each time. In order to demonstrate how raise_priority() can be used in practice, we use a wrapper transaction around the internal_insert()'s transaction. However, in this case the wrapper transaction is not destroyed upon successive iterations. The restart_transaction() interface must be called for transactions that are not destroyed after being aborted. This necessary step clears the state from the previously failed transactional run. As shown in the below code, the restart_transaction() is only called when an aborted exception is caught. This is because end_transaction() throws an exception when the transaction is aborted. Following this implementation paradigm, handling aborted transactions is relatively straightforward as all aborted transactions follow the same exception-based path.
+In order for `raise_priority()` to function correctly, the affected transaction must not be destroyed upon transactional abort. If the prioritized transaction is destroyed at each transactional abort, `raise_priority()` will only raise the transaction's priority by one each time. In order to demonstrate how `raise_priority()` can be used in practice, we use a wrapper transaction around the `internal_insert()`'s transaction. However, in this case the wrapper transaction is not destroyed upon successive iterations. The `restart_transaction()` interface must be called for transactions that are not destroyed after being aborted. This necessary step clears the state from the previously failed transactional run. As shown in the below code, the `restart_transaction()` is only called when an aborted exception is caught. This is because `end_transaction()` throws an exception when the transaction is aborted. Following this implementation paradigm, handling aborted transactions is relatively straightforward as all aborted transactions follow the same exception-based path.
 
 The below example combines all of these aspects together into a dynamically prioritized composed transaction. The composition is slightly different than what has been shown previously - instead of using composition for wrapping two methods into a larger transaction, we use composition to override the internal transaction's implementation to improve the richness of its behavior, a relatively novel concept for composition.
 
@@ -255,7 +254,7 @@ The above example demonstrates a number of important concepts with __Boost_STM_s
 
 __Boost_STM_s__ Internal Write-Write Abort Process.
 
-As the above priority assigned transaction demonstrates, the outer transaction has increasing priority while the inner transaction, the one within internal_insert(), does not. Yet, the inner transaction is not aborted due to the outer transaction's priority. This is handled internally via __Boost_STM_s__ abort process by two fundamental ideas.
+As the above priority assigned transaction demonstrates, the outer transaction has increasing priority while the inner transaction, the one within `internal_insert()`, does not. Yet, the inner transaction is not aborted due to the outer transaction's priority. This is handled internally via __Boost_STM_s__ abort process by two fundamental ideas.
 
 # As previously explained, all transactions of the same thread share transactional memory, this allows the outer transaction to be seen as using the same memory as the inner transaction. Thus, when the inner transaction is flagged to be aborted, the outer transaction must also be flagged to be aborted as well, since it would have the same memory conflicts. However, when checking the outer transaction's priority, the contention manager's priority method would see the outer transaction as having higher priority than the committing transaction if it had already been aborted once and the committing transaction had not. The priority analysis of the outer transaction compared to the committing transaction would thereby force the committing transaction to abort instead of the outer transaction.
 
@@ -285,7 +284,7 @@ As the above priority assigned transaction demonstrates, the outer transaction h
 
 [heading Priority Inversion Allowed]
 
-From the above code examples, one may question why the default behavior implemented within __Boost_STM__ does not automatically integrate priority into transactions, as it could be integrated within restart_transaction(). First, each problem is different and integrating priority only into restart_transaction() would not cover all cases (e.g., when the outer transaction was terminated). Second, building an automatic priority inversion handling scheme would eliminate some of the natural optimizations granted from different updating policies. For example, deferred updating allows multiple writers of the same memory to execute simultaneously. This behavior enables deferred updating the ability to process the fastest completing transactions first. If a priority system was integrated directly into __Boost_STM__, this optimization would be lost. In addition, direct updating optimizes writes by writing directly to global memory. As such, direct updating suffers greater penalties for aborted transactions due to required restoration of global memory. In this case, more transactional aborts would occur if __Boost_STM__ built-in a default priority inversion handler. Considering these factors, as well as many others, __Boost_STM__ does not build transactional priority into its system. Instead, we leave this implementation up to client-side implementors, as they will have a better understanding of their problem domain and be able to more correctly implement the right contention manager for their specific needs.
+From the above code examples, one may question why the default behavior implemented within __Boost_STM__ does not automatically integrate priority into transactions, as it could be integrated within `restart_transaction()`. First, each problem is different and integrating priority only into `restart_transaction()` would not cover all cases (e.g., when the outer transaction was terminated). Second, building an automatic priority inversion handling scheme would eliminate some of the natural optimizations granted from different updating policies. For example, deferred updating allows multiple writers of the same memory to execute simultaneously. This behavior enables deferred updating the ability to process the fastest completing transactions first. If a priority system was integrated directly into __Boost_STM__, this optimization would be lost. In addition, direct updating optimizes writes by writing directly to global memory. As such, direct updating suffers greater penalties for aborted transactions due to required restoration of global memory. In this case, more transactional aborts would occur if __Boost_STM__ built-in a default priority inversion handler. Considering these factors, as well as many others,  __Boost_STM__ does not build transactional priority into its system. Instead, we leave this implementation up to client-side implementors, as they will have a better understanding of their problem domain and be able to more correctly implement the right contention manager for their specific needs.
 
 [heading The Future of Parallel Programming]
 
@@ -295,7 +294,8 @@ An important distinction regarding priority within transactions versus priority 
 
 [section Can a transactional object embeed another transactional object?]
 
-Let me show what happens when we emmend transactional objects:
+Let me show what happens when we embeed transactional objects:
+
     class C : public transaction_object<C> {...};
 
     class E : public transaction_object<E> {
@@ -303,9 +303,9 @@ Let me show what happens when we emmend transactional objects:
         int i;
     };
 
-E e;
+    E e;
 
-When a thread T1 modifies e (and possibly the b part) on a transaction another thread T2 can modify e.c on another transaction. When the two transactional objects overlap the STM system is unable to detect this efficiently, having as consequence an inconsistency.
+Let be `T1` a thread  that modifies `e` (and possibly the `b` part) on a transaction and `T2` another thread modifying `e.c` on another transaction. When the two transactional objects overlap the STM system is unable to detect this efficiently, having as consequence an inconsistency.
 
 The following pseudo-code shows the
 
@@ -316,24 +316,74 @@ The following pseudo-code shows the
     4   }
 
 
-When T2 commits on (3) e.c will be modified, but T1 will modify the complete E independent of the e.c modification doen by T2, overwriting the e.c with its old value. T1 will be coherent, but not T2. If we want to allow such a scheme, we have several possibilities
+When `T2` commits on (3) `e.c` will be modified, but `T1` will modify the complete `E` independent of the `e.c` modification done by `T2`, overwriting the `e.c` with its old value. `T1` will be coherent, but not `T2`. If we want to allow such a scheme, we have several possibilities
 
-* implicit: take care of overlaping transactional objects, so we can detect when T1 commits that an overlaping TO e.c has been modified, so the transaction on T1 is aborted and retried.
-* explicit: the developper of T1 must notify the STM system that the transactional object e constains a transactional object e.c
-* declarative: the developper of E would declare that it contains an emmbeed transactional object C at E::c, so the STM system will use this explicit information when an E is accesses using the STM interface.
+* [*implicit]: take care of overlaping transactional objects, so we can detect when `T1` commits that an overlaping to `e.c` has been modified, so the transaction on `T1` is aborted and retried.
 
-The implicit approach is the more transparent for the user but it is also the less efficient. It need to add a virtual function quering the size of the class, and to modify the conflic detection algorithm (maybe the write_list must be a write_set, ordered by the address)
+        T1                  T2
+    1   atomic {            atomic {
+    2       t.w(e).i=0;          t.w(e.c)=A;
+    3                       }
+    4   }
 
-The explit approach let the user with a lot of burden and risk of error when access to an E is done on a transaction. This needs to add the size and the algorithm which adds transactional object on the write_list (maybe the write_list must be a write_interval_set, ordered by the address).
+* [*explicit]: the developper of `T1` must notify the STM system that the transactional object `e` constains a transactional object `e.c`.
 
-The declarative concentrate on a single place, so the user will be not too concerned, and this open possible optimizations.
+        T1                  T2
+    1   atomic {            atomic {
+    3       t.w(e.c);           
+    2       t.w(e).i=0;         t.w(e.c)=A;
+    3                       }
+    4   }
 
+Note that in this example there is only one embedeed transactional object but in real examples the number can increase horizontaly, direct embeede relation, and verticaly, embeeded transactional objects can embeed themselves other transactional objects.
 
-Supose now that we are able to embeed transactional objects. and that the T1 not only opens for writing e, but also e.c either on the same block on on a block (or nested transaction). The STM will see both address to be written, and even if there should be no risk of incoherence the object e.c will be copied twice.
+* [*declarative]: the developper of E would declare that it contains an emmbeed transactional object C at E::c, so the STM system will use this explicit information when an E is accesses using the STM interface.
+
+    BOOST_STM_EMBEEDS(E, C, E::c);
+    
+The implicit approach is the more transparent for the user but it is also the less efficient. It needs to add a virtual function quering the size of the class, and to modify the conflic detection algorithm (the write_list coukd be a write_set, ordered by the address). In addition it is incompatible with the bloom filters optimization.
+
+The explit approach let the user with a lot of burden and risk of error when access to an `E` is done on a transaction. This needs to add the size and the algorithm which adds transactional object on the write_list (maybe the write_list must be a write_interval_set, ordered by the address).
+
+The declarative concentrate on a single place, so the user will not be too concerned, and this open possible optimizations.
+
+Supose now that we are able to embeed transactional objects and that the `T1` not only opens for writing `e`, but also `e.c` either on the same block or on a nested block (or nested transaction). The STM will see both address to be written, and even if there should be no risk of incoherence the object e.c will be copied twice.
+
+The implicit approach could check that there are not overlaping transactional objects, as it contains the size of each transactional object.
+
+The explicit approach do not let us detect overlaping transactional objets until we store the size of a transactional object, but this can not be done if we use bloom filters.
+
+With the declarative approach, we can use 
+
+If STM do not allows embeeded transactional objects, we force the user to use constant pointers to trasactional objects
+
+    class C : public transaction_object<C> {...};
+
+    class E : public transaction_object<E> {
+        C* const c;
+        native_trans<int>* const i;
+        E() : c(new C), i(new native_trans<int>) {}
+        ~E() { delete c; delete i; }
+        
+    };
+
+    E e;
+
+Having the main draback of managing the ownership of the heap allocated transactional objects.
+
+        T1                  T2
+    1   atomic {            atomic {
+    2       *(e.i)=0;              *(e.c)=A;
+    3                       }
+    4   }
+
+The advantage of this design is that now both threads do not conflic as the transactional object `e` is not really modified.
+
+We think that __Boost_STM__ needs to manage with embeeded transactional objects in a transparent way, and let the user to use pointers when he/she consider it more adapted to their problem solution.
 
 [endsect]
 
-[section Returning values from a fucntion]
+[section Returning values from a function]
 
 [heading Returning from outside the transaction context]
 
@@ -416,7 +466,7 @@ How a variable pointing to B must be declared. The fact that B is a transactiona
         inline TO* operator->() const { return get(); }
     };
 
-Let declare a pointer to B
+Let declare a pointer to `B`
 
     transaction_object_ptr<B> ptr_b;
 
@@ -431,39 +481,240 @@ Let declare a pointer to B
 
 [section Polymorphic]
 
-How the user can defien a transactional class D inheriting from a transactional class B
+How the user can defien a transactional class `D` inheriting from a transactional class `B`
 
-[heading:mixin Using the mixin transaction_object<>]
+[heading Using the mixin transaction_object<>]
 
-Let B the base class
+Let `B` the base class
 
     class B : public transaction_object<B> {
     public:
         void virtaul fct();
     };
 
-The derived class must declare D as follows:
+The derived class must declare `D` as follows:
 
     class D : public transaction_object<D,B> {
         ...
     };
 
-How a variable pointing to B must be declared. The fact that B is a transactional object do not means that a pointer to it is one.
+How a variable pointing to `B` must be declared. The fact that `B` is a transactional object do not means that a pointer to it is one.
 
-    pointer<B> ptr_b = 0
+    transaction_object_ptr<B> ptr_b = 0
 
-How can we assign a pointer to D?
+How can we assign a pointer to `D`?
 
     write_ptr<B*> tx_ptr_b_ptr(_,ptr_b);
-    *ptr_b = BOOST_STM_NEW(_, D())
+    *ptr_b = BOOST_STM_NEW(_, D());
 
-[heading::wrapper Using the wrapper transactional_object<>]
+[heading Using the wrapper transactional_object<>]
+
+Wrapping does not works well with inheritance.
+
+Given a class D inheriting from B
+
+    class B {
+        ...
+    };
+
+    class D: public B {
+        ...
+    };
+
+The C++ type system do not ensures that transactional_object<D> inherits from transactional_object<B>. That is, 
+
+    transaction_object_ptr<transactional_object<B> > ptr_b = BOOST_STM_NEW(_, D());
+    
+does not compile.
+
+__Boost_STM__ provides some cast functions that allows us to see a transactional_object<D> as a transactional_object<B>
+
+    transaction_object_ptr<transactional_object<B> > ptr_b = tx_static_cast<B>(BOOST_STM_NEW(_, D()));
+
+In addition __Boost_STM__  provides a smart pointer class tx_ptr
+
+    tx_ptr<B> ptr_b = BOOST_STM_NEW(_, D());
+
+We know that this is not perfect , but this is the better we can do.
+
+
 
 [endsect]
 
 [section Can non transactional objets participate in a transaction?]
 
-Non transactional objects are the objects that do not inherit from base_transaction_object.
+Non transactional objects are the objects that do not inherit from `base_transaction_object`. We need an object inheriting from `base_transaction_object` to participate on a `transaction`. The best we can do is to associated a `cache` inheriting from `base_transaction_object` referencing the non transactional object. This association must be stablished as far as a non transactional object is accesed. Smart pointers are useful to implements this kind of access.
+
+Let me start with a simple and radical case. How can transactional and non transactional share read/write access to an int?
+
+    int i;
+
+    void tx() {
+        atomic(_) {
+            i=i+1;
+        } end_atom;
+    }
+
+    int non_trans() {
+        int times=0;  
+        while (i<10) {times++; sleep(1);}
+        return times;
+    }
+
+We need a way to transaform the interger `i` on a transactional object, so we can use it on the transaction. The idea is to have a transactional `cache` of the non transactional object which will be used by the STM system. 
+
+We can define non transactional smart pointers which will retrieve the non transactional object from this cache and then work with these smart pointers as usual.
+
+    void tx() {
+        atomic(t) {
+            t.add_tx_conflicting_lock(L1);
+            non_tx::wr_ptr<int> tx_i(i);
+            *tx_i=*tx_i+1;
+        } end_atom;
+    }
+
+    int non_trans() {
+         transaction::scoped_lock(L1);
+         int times=0;  
+         while (i<10) {times++; sleep(1);}
+         return times;
+    }
+
+The cache will inherit from `base_transaction_object` and contain a reference to the non transactional object.
+
+    namespace non_tx { namespace detail {
+
+    template <typename T>
+    class cache : public base_transaction_object {
+    public:
+        T* const value_;
+    ...
+    };
+    }}
+
+
+`value_` is  a `const` pointer to the non transactional object and must be initialized at construction time.
+
+    cache(T& ref)
+        : base_transaction_object()
+        , value_(&ref), ptr_(0) {}
+
+    cache(T* ptr)
+        : base_transaction_object()
+        , value_(ptr), ptr_(0) {}
+
+We need an extra pointer to point to the transaction specific `T`.
+
+    mutable T* ptr_;
+
+This pointer will be initialized on the first time the cache is written on a transaction by the `clone` function
+
+    virtual base_transaction_object* clone() const {
+        cache* tmp = cache_clone(*this);
+        if (tmp->value_!=0) {
+            tmp->ptr_ = new T(*value_);
+        }
+        return tmp;
+    }
+
+This pointer `ptr_` will be deleted either on the destructor, 
+
+    ~cache() {
+        delete ptr_;
+    }
+ 
+or while doing the `copy_state` function
+
+    virtual void copy_state(base_transaction_object const * const rhs) {
+        if (value_==0) return;
+        *value_= *(static_cast<cache<T> const * const>(rhs)->ptr_);
+        delete ptr_;
+        ptr_=0;
+    }
+
+Note that the `copy_state` function copy the `value_` field from the pointee `ptr_`.
+
+In order to access the specific `T` on a transaction we need to use the get function
+
+    T* get() const {
+        if(ptr_!=0) return ptr_;
+        else return value_;
+    }
+
+Next follows how the non transactional write smart pointer looks like
+
+    namespace non_tx {
+
+    template <typename T>
+    class wr_ptr {
+        typedef wr_ptr<T> this_type;
+    public:
+        mutable transaction& tx_;
+        mutable detail::cache<T>* ptr_;
+
+        wr_ptr(transaction &t, T* ptr) : tx_(t),
+            ptr_(t.write_ptr(detail::cache_map::get(ptr)))
+        {}
+
+        wr_ptr(transaction &t, T& obj) : tx_(t),
+            ptr_(t.write_ptr(detail::cache_map::get(&obj)))
+        {}
+
+
+        T* get() {
+            if (tx_.forced_to_abort()) {
+                tx_.lock_and_abort();
+                throw aborted_transaction_exception("aborting transaction");
+            }
+            return ptr_->get();
+        }
+
+        T& operator*() { return *get(); }
+        T* operator->() { return get(); }
+
+        typedef detail::cache<T>* this_type::*unspecified_bool_type;
+
+        operator unspecified_bool_type() const {
+            return ptr_ == 0? 0: &this_type::ptr_;
+        }
+    };
+    }
+
+The `cache_map` could be defined as
+
+    namespace non_tx { namespace detail {
+    class cache_map {
+        typedef std::map<void*, base_transaction_object*> map_type;
+        static std::map<void*, base_transaction_object*> map_;
+    public:
+        template <typename T>
+        static cache<T>* get(T* ptr) {
+            map_type::iterator it = map_.find(ptr);
+            cache<T>* res=0;
+            if (it == map_.end()) {
+                res= new cache<T>(ptr);
+                map_.insert(std::make_pair(ptr, res));
+            } else {
+                res=static_cast<cache<T>*>(it->second);
+            }
+            return res;
+        }
+        template <typename T>
+        static cache<T>* get(T const* ptr) {
+            map_type::iterator it = map_.find(const_cast<T*>(ptr));
+            cache<T>* res=0;
+            if (it == map_.end()) {
+                res= new cache<T>(const_cast<T*>(ptr));
+                map_.insert(std::make_pair(const_cast<T*>(ptr), res));
+            } else {
+                res=static_cast<cache<T>*>(it->second);
+            }
+            return res;
+        }
+    };
+    }}
+
+We think that lock aware STM systems need to provide access to non transactional objects, otherwise we don't see the interest of LATM systems. 
 
 [endsect]
 

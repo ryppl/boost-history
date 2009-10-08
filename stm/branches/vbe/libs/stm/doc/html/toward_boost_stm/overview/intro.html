@@ -1,13 +1,13 @@
 <html>
 <head>
 <meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
-<title>Introduction</title>
+<title> Introduction</title>
 <link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
-<meta name="generator" content="DocBook XSL Stylesheets V1.73.2">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
 <link rel="start" href="../../index.html" title="Chapter 1. Toward.Boost.STM">
-<link rel="up" href="../overview.html" title="Overview">
-<link rel="prev" href="../overview.html" title="Overview">
-<link rel="next" href="../users_guide.html" title="Users'Guide">
+<link rel="up" href="../overview.html" title=" Overview">
+<link rel="prev" href="../overview.html" title=" Overview">
+<link rel="next" href="../users_guide.html" title=" Users'Guide">
 </head>
 <body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
 <table cellpadding="2" width="100%"><tr>
@@ -24,13 +24,13 @@
 </div>
 <div class="section" lang="en">
 <div class="titlepage"><div><div><h3 class="title">
-<a name="toward_boost_stm.overview.intro"></a><a class="link" href="intro.html" title="Introduction"> Introduction</a>
+<a name="toward_boost_stm.overview.intro"></a><a href="intro.html" title=" Introduction"> Introduction</a>
 </h3></div></div></div>
-<a name="toward_boost_stm.overview.intro.transactional_memory"></a><h5>
-<a name="id4848945"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.transactional_memory">Transactional
+<a name="toward_boost_stm.overview.intro.transactional_memory"></a><h4>
+<a name="id4765111"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.transactional_memory">Transactional
         Memory</a>
-      </h5>
+      </h4>
 <p>
         Transactional memory is a modern type of concurrency control that uses transactions
         as its synchronization mechanism. A transaction is a finite sequence of operations
@@ -107,10 +107,10 @@
         remainder of this section presents TM from a viewpoint of (1) simplicity,
         (2) scalability and (3) modularity.
       </p>
-<a name="toward_boost_stm.overview.intro.simplicity"></a><h5>
-<a name="id4849486"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.simplicity">Simplicity</a>
-      </h5>
+<a name="toward_boost_stm.overview.intro.simplicity"></a><h4>
+<a name="id4765653"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.simplicity">Simplicity</a>
+      </h4>
 <p>
         Synchronization problems, such as deadlocks, livelocks and priority inversion
         are common in software systems using mutual exclusion. TM avoids many of
@@ -211,11 +211,11 @@
 <span class="number">6</span>   <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">mutexY</span><span class="special">);</span>
 <span class="number">7</span>   <span class="identifier">unlock</span><span class="special">(</span><span class="identifier">mutexX</span><span class="special">);</span>
 </pre>
-<a name="toward_boost_stm.overview.intro.understanding_concurrency_hazards"></a><h5>
-<a name="id4804185"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.understanding_concurrency_hazards">Understanding
+<a name="toward_boost_stm.overview.intro.understanding_concurrency_hazards"></a><h4>
+<a name="id4758679"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.understanding_concurrency_hazards">Understanding
         Concurrency Hazards</a>
-      </h5>
+      </h4>
 <p>
         Informally, a concurrency hazard is a condition existing in a set of operations
         that, if executed with a specific concurrent interleaving, results in one
@@ -269,11 +269,11 @@
         implementations are hidden inside of software libraries, extending these
         modules can range from difficult to impossible.
       </p>
-<a name="toward_boost_stm.overview.intro.testing__race_conditions_and_interleavings"></a><h5>
-<a name="id4804299"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.testing__race_conditions_and_interleavings">Testing:
+<a name="toward_boost_stm.overview.intro.testing__race_conditions_and_interleavings"></a><h4>
+<a name="id4758793"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.testing__race_conditions_and_interleavings">Testing:
         Race Conditions and Interleavings</a>
-      </h5>
+      </h4>
 <p>
         A race condition is a common concurrency hazard that exists in parallel or
         distributed software. As with all concurrency hazards, race conditions rely
@@ -345,11 +345,11 @@
         required as the TM system is required to behave in a consistent manner for
         all serial orders.
       </p>
-<a name="toward_boost_stm.overview.intro.development__mutual_exclusion_and_tm"></a><h5>
-<a name="id4804665"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.development__mutual_exclusion_and_tm">Development:
+<a name="toward_boost_stm.overview.intro.development__mutual_exclusion_and_tm"></a><h4>
+<a name="id4759159"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.development__mutual_exclusion_and_tm">Development:
         Mutual Exclusion and TM</a>
-      </h5>
+      </h4>
 <p>
         The development of fine-grained locking is notoriously difficult. Designing
         such software is equally as hard. The difficulty in developing and designing
@@ -371,10 +371,10 @@
         shown in this section and are never complicated in order to achieve improved
         performance, as is commonly found in fine-grained mutual exclusion implementations.
       </p>
-<a name="toward_boost_stm.overview.intro.scalability"></a><h5>
-<a name="id4804718"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.scalability">Scalability</a>
-      </h5>
+<a name="toward_boost_stm.overview.intro.scalability"></a><h4>
+<a name="id4759212"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.scalability">Scalability</a>
+      </h4>
 <p>
         In this section we analyze the scalability of TM compared to mutual exclusion.
         We measure scalability by two metrics: consistency and performance. A concurrency
@@ -383,11 +383,11 @@
         scalability is measured by the maximum number of consistent processes supported
         by a concurrency control type while executing concurrently.
       </p>
-<a name="toward_boost_stm.overview.intro.pessimistic_and_optimistic_critical_sections"></a><h5>
-<a name="id4804741"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.pessimistic_and_optimistic_critical_sections">Pessimistic
+<a name="toward_boost_stm.overview.intro.pessimistic_and_optimistic_critical_sections"></a><h4>
+<a name="id4759236"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.pessimistic_and_optimistic_critical_sections">Pessimistic
         and Optimistic Critical Sections</a>
-      </h5>
+      </h4>
 <p>
         Critical sections can be pessimistic or optimistic. Pessimistic critical
         sections limit their critical section execution to a single thread. Locks
@@ -396,11 +396,11 @@
         execution. Transactions are an example of a synchronization mechanism that
         use optimistic critical sections.
       </p>
-<a name="toward_boost_stm.overview.intro.truly_optimistic_critical_sections"></a><h5>
-<a name="id4804773"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.truly_optimistic_critical_sections">Truly
+<a name="toward_boost_stm.overview.intro.truly_optimistic_critical_sections"></a><h4>
+<a name="id4759268"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.truly_optimistic_critical_sections">Truly
         Optimistic Critical Sections</a>
-      </h5>
+      </h4>
 <p>
         Truly optimistic critical sections are those critical sections which allow
         multiple conflicting threads to simultaneously execute the same critical
@@ -453,11 +453,11 @@
         the state of g1=0,g2=0 while T1 sets the state of g1=1,g2=1. As the example
         addresses, both g1=0,g2=0 and g1=1,g2=1 are legal states.
       </p>
-<a name="toward_boost_stm.overview.intro.direct_and_deferred_update"></a><h5>
-<a name="id4805268"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.direct_and_deferred_update">Direct
+<a name="toward_boost_stm.overview.intro.direct_and_deferred_update"></a><h4>
+<a name="id4759763"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.direct_and_deferred_update">Direct
         and Deferred Update</a>
-      </h5>
+      </h4>
 <p>
         Updating is the process of committing transactional writes to global memory
         and is performed in either a direct or deferred manner. Figure 6 presents
@@ -502,11 +502,11 @@
         or the earlier arriving writer. This scenario is not possible with direct
         update without special effort.
       </p>
-<a name="toward_boost_stm.overview.intro.scalability__mutual_exclusion_and_transactional_memory"></a><h5>
-<a name="id4805358"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.scalability__mutual_exclusion_and_transactional_memory">Scalability:
+<a name="toward_boost_stm.overview.intro.scalability__mutual_exclusion_and_transactional_memory"></a><h4>
+<a name="id4759852"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.scalability__mutual_exclusion_and_transactional_memory">Scalability:
         Mutual Exclusion and Transactional Memory</a>
-      </h5>
+      </h4>
 <p>
         The scalability of mutual exclusion is limited to pessimistic concurrency.
         By definition, mutual exclusion's critical sections must be pessimistic,
@@ -583,10 +583,10 @@
         throughput via contention management, the above equations capture the indisputable
         mathematical limitations in mutual exclusion's performance scalability.
       </p>
-<a name="toward_boost_stm.overview.intro.modularity"></a><h5>
-<a name="id4858700"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.modularity">Modularity</a>
-      </h5>
+<a name="toward_boost_stm.overview.intro.modularity"></a><h4>
+<a name="id4813029"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.modularity">Modularity</a>
+      </h4>
 <p>
         Software modularity is an important aspect of software that is necessary
         for its reuse. Formally, software is modular if it can be composed in a new
@@ -604,11 +604,11 @@
         is vital for any software paradigm to be practical. Software paradigms that
         do not support software modularity are, in short, impractical.
       </p>
-<a name="toward_boost_stm.overview.intro.mutual_exclusion_and_software_modularity"></a><h5>
-<a name="id4858744"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.mutual_exclusion_and_software_modularity">Mutual
+<a name="toward_boost_stm.overview.intro.mutual_exclusion_and_software_modularity"></a><h4>
+<a name="id4813073"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.mutual_exclusion_and_software_modularity">Mutual
         Exclusion and Software Modularity</a>
-      </h5>
+      </h4>
 <p>
         In this section, we show that mutual exclusion, regardless of its implementation,
         fails to deliver software modularity. We demonstrate this through a running
@@ -689,11 +689,11 @@
 
 <span class="identifier">Figure</span> <span class="number">9.</span> <span class="identifier">TM</span> <span class="identifier">of</span> <span class="identifier">Increment</span><span class="special">,</span> <span class="identifier">Multiply</span> <span class="keyword">and</span> <span class="identifier">Get</span> <span class="identifier">of</span> <span class="identifier">Shared</span> <span class="identifier">Variable</span><span class="special">.</span>
 </pre>
-<a name="toward_boost_stm.overview.intro.summary_of_mutual_exclusion_modularity"></a><h5>
-<a name="id4859757"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.summary_of_mutual_exclusion_modularity">Summary
+<a name="toward_boost_stm.overview.intro.summary_of_mutual_exclusion_modularity"></a><h4>
+<a name="id4814086"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.summary_of_mutual_exclusion_modularity">Summary
         of Mutual Exclusion Modularity</a>
-      </h5>
+      </h4>
 <p>
         As we presented at the beginning of this section, software modularity can
         be informally understood as a component's ability to be used entirely from
@@ -702,11 +702,11 @@
         extended, are not modular. As such, the paradigm of mutual exclusion does
         not support software modularity.
       </p>
-<a name="toward_boost_stm.overview.intro.transactional_memory_and_software_modularity"></a><h5>
-<a name="id4859797"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.transactional_memory_and_software_modularity">Transactional
+<a name="toward_boost_stm.overview.intro.transactional_memory_and_software_modularity"></a><h4>
+<a name="id4814127"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.transactional_memory_and_software_modularity">Transactional
         Memory and Software Modularity</a>
-      </h5>
+      </h4>
 <p>
         Transactional memory works in a fundamentally different manner than mutual
         exclusion, with regard to its interface and implementation. To begin, as
@@ -720,11 +720,11 @@
         performance of concurrent programs using various consistency checking methods,
         conflict detection times, updating policies, and contention management schemes.
       </p>
-<a name="toward_boost_stm.overview.intro.achieving_tm_software_modularity"></a><h5>
-<a name="id4859838"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.achieving_tm_software_modularity">Achieving
+<a name="toward_boost_stm.overview.intro.achieving_tm_software_modularity"></a><h4>
+<a name="id4814167"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.achieving_tm_software_modularity">Achieving
         TM Software Modularity</a>
-      </h5>
+      </h4>
 <p>
         TM achieves software modularity by allowing transactions to nest. With transactional
         nesting, individual transactions can be wrapped inside of other transactions
@@ -798,11 +798,11 @@
         implementation. Due to this, mutual exclusion fails to deliver a practical
         level of software modularity.
       </p>
-<a name="toward_boost_stm.overview.intro.summary_of_transactional_memory_modularity"></a><h5>
-<a name="id4860198"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.summary_of_transactional_memory_modularity">Summary
+<a name="toward_boost_stm.overview.intro.summary_of_transactional_memory_modularity"></a><h4>
+<a name="id4814528"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.summary_of_transactional_memory_modularity">Summary
         of Transactional Memory Modularity</a>
-      </h5>
+      </h4>
 <p>
         TM supports software modularity by allowing transactions to nest, to any
         depth, while logically grouping the shared data accesses within the transactions
@@ -812,11 +812,11 @@
         behave in a correct manner regardless of if the transaction is used by itself
         or subsumed into a larger transaction.
       </p>
-<a name="toward_boost_stm.overview.intro.c___library_language_like_solution"></a><h5>
-<a name="id4860232"></a>
-        <a class="link" href="intro.html#toward_boost_stm.overview.intro.c___library_language_like_solution">C++
+<a name="toward_boost_stm.overview.intro.c___library_language_like_solution"></a><h4>
+<a name="id4814561"></a>
+        <a href="intro.html#toward_boost_stm.overview.intro.c___library_language_like_solution">C++
         library language-like solution</a>
-      </h5>
+      </h4>
 <p>
         Research in parallel programming has recently seen a flurry of attention.
         Among the active research is a push for high-level languages to offer native
