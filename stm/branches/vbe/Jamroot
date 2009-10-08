@@ -1,5 +1,2 @@
-project boost
-    : requirements 
-    : usage-requirements 
-    : build-dir bin.v2
-    ;
+use-project /boost : "/boost_1_39_0"
+;
