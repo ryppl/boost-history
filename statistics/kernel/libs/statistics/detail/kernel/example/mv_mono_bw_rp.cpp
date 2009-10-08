@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::detail::kernel::example::mono_bw_kernel_rp.cpp                //
+// kernel::example::mono_bw_kernel_rp.cpp                                    //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
