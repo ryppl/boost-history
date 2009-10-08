@@ -15,30 +15,30 @@ namespace boost{namespace itl
 
 /** Performes an addition using a container's memberfunction add, when operator= is called. */
 template<class ContainerT> class add_iterator
-	: public std::iterator<std::output_iterator_tag, void, void, void, void>
+    : public std::iterator<std::output_iterator_tag, void, void, void, void>
 {
 public:
-	/// The container's type.
-	typedef ContainerT container_type;
+    /// The container's type.
+    typedef ContainerT container_type;
 
-	/** An add_iterator is constructed with a container and a position 
-	    that has to be maintained. */
-	add_iterator(ContainerT& cont, typename ContainerT::iterator iter)
-	: _cont(&cont), _iter(iter) {}
+    /** An add_iterator is constructed with a container and a position 
+        that has to be maintained. */
+    add_iterator(ContainerT& cont, typename ContainerT::iterator iter)
+    : _cont(&cont), _iter(iter) {}
 
-	/** This assignment operator adds the \c value before the current position.
-	    It maintains it's position by incrementing after addition.	*/
-	add_iterator& operator=(typename ContainerT::const_reference value)
-	{
-		_iter = _cont->add(_iter, value);
-		if(_iter != _cont->end())
-			++_iter;
-		return *this;
-	}
+    /** This assignment operator adds the \c value before the current position.
+        It maintains it's position by incrementing after addition.    */
+    add_iterator& operator=(typename ContainerT::const_reference value)
+    {
+        _iter = _cont->add(_iter, value);
+        if(_iter != _cont->end())
+            ++_iter;
+        return *this;
+    }
 
-	add_iterator& operator*()    { return *this; }
-	add_iterator& operator++()   { return *this; }
-	add_iterator& operator++(int){ return *this; }
+    add_iterator& operator*()    { return *this; }
+    add_iterator& operator++()   { return *this; }
+    add_iterator& operator++(int){ return *this; }
 
 private:
     ContainerT*                   _cont;
@@ -55,30 +55,30 @@ inline add_iterator<ContainerT> adder(ContainerT& cont, IteratorT iter_)
 
 /** Performes an insertion using a container's memberfunction add, when operator= is called. */
 template<class ContainerT> class insert_iterator
-	: public std::iterator<std::output_iterator_tag, void, void, void, void>
+    : public std::iterator<std::output_iterator_tag, void, void, void, void>
 {
 public:
-	/// The container's type.
-	typedef ContainerT container_type;
+    /// The container's type.
+    typedef ContainerT container_type;
 
-	/** An insert_iterator is constructed with a container and a position 
-	    that has to be maintained. */
-	insert_iterator(ContainerT& cont, typename ContainerT::iterator iter)
-	: _cont(&cont), _iter(iter) {}
+    /** An insert_iterator is constructed with a container and a position 
+        that has to be maintained. */
+    insert_iterator(ContainerT& cont, typename ContainerT::iterator iter)
+    : _cont(&cont), _iter(iter) {}
 
-	/** This assignment operator adds the \c value before the current position.
-	    It maintains it's position by incrementing after addition.	*/
-	insert_iterator& operator=(typename ContainerT::const_reference value)
-	{
-		_iter = _cont->insert(_iter, value);
-		if(_iter != _cont->end())
-			++_iter;
-		return *this;
-	}
+    /** This assignment operator adds the \c value before the current position.
+        It maintains it's position by incrementing after addition.    */
+    insert_iterator& operator=(typename ContainerT::const_reference value)
+    {
+        _iter = _cont->insert(_iter, value);
+        if(_iter != _cont->end())
+            ++_iter;
+        return *this;
+    }
 
-	insert_iterator& operator*()    { return *this; }
-	insert_iterator& operator++()   { return *this; }
-	insert_iterator& operator++(int){ return *this; }
+    insert_iterator& operator*()    { return *this; }
+    insert_iterator& operator++()   { return *this; }
+    insert_iterator& operator++(int){ return *this; }
 
 private:
     ContainerT*                   _cont;

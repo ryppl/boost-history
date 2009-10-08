@@ -26,7 +26,7 @@ struct base_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
+        collected.clear();
         ITL_const_FORALL(typename SourceT, item_, items)
             collected.insert(*item_);
     }
@@ -40,8 +40,8 @@ struct hint_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
-		typename TargetT::iterator prior_ = collected.end();
+        collected.clear();
+        typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
             prior_ = collected.insert(prior_, *item_);
     }
@@ -55,8 +55,8 @@ struct copy_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
-		std::copy(items.begin(), items.end(), itl::inserter(collected, collected.end()));
+        collected.clear();
+        std::copy(items.begin(), items.end(), itl::inserter(collected, collected.end()));
     }
 };
 
@@ -69,9 +69,9 @@ struct trans_insertion
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
-		std::transform(items.begin(), items.end(), 
-		               itl::inserter(collected, collected.end()), itl::to_pair);
+        collected.clear();
+        std::transform(items.begin(), items.end(), 
+                       itl::inserter(collected, collected.end()), itl::to_pair);
     }
 };
 
@@ -87,7 +87,7 @@ struct base_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
+        collected.clear();
         ITL_const_FORALL(typename SourceT, item_, items)
             collected.add(*item_);
     }
@@ -101,8 +101,8 @@ struct hint_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
-		typename TargetT::iterator prior_ = collected.end();
+        collected.clear();
+        typename TargetT::iterator prior_ = collected.end();
         ITL_const_FORALL(typename SourceT, item_, items)
             prior_ = collected.add(prior_, *item_);
     }
@@ -116,8 +116,8 @@ struct copy_addition
 {
     void operator()(TargetT& collected, const SourceT& items)
     {
-		collected.clear();
-		std::copy(items.begin(), items.end(), itl::adder(collected, collected.end()));
+        collected.clear();
+        std::copy(items.begin(), items.end(), itl::adder(collected, collected.end()));
     }
 };
 

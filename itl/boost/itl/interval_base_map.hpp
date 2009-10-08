@@ -763,7 +763,7 @@ protected:
     template <class Combiner>
     std::pair<iterator,bool> map_insert(const interval_type& inter_val, const codomain_type& co_val)
     {
-		if(Traits::is_total && has_inverse<codomain_type>::value && is_negative<Combiner>::value)
+        if(Traits::is_total && has_inverse<codomain_type>::value && is_negative<Combiner>::value)
             return this->_map.insert(value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(value_type(inter_val, co_val));
@@ -775,12 +775,12 @@ protected:
         map_insert(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
         iterator inserted_
-			= this->_map.insert(prior_, value_type(inter_val, co_val));
+            = this->_map.insert(prior_, value_type(inter_val, co_val));
 
         if(inserted_ == prior_)
             return std::pair<iterator,bool>(inserted_, false);
-		else if(inserted_->first == inter_val)
-			return std::pair<iterator,bool>(inserted_, true);
+        else if(inserted_->first == inter_val)
+            return std::pair<iterator,bool>(inserted_, true);
         else
             return std::pair<iterator,bool>(inserted_, false);
     }
@@ -789,8 +789,8 @@ protected:
     std::pair<iterator, bool> 
         map_add(iterator prior_, const interval_type& inter_val, const codomain_type& co_val)
     {
-		// Never try to insert a neutron into a neutron absorber here:
-		BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
+        // Never try to insert a neutron into a neutron absorber here:
+        BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
         iterator inserted_ 
             = this->_map.base_insert(prior_, value_type(inter_val, Combiner::neutron()));
@@ -812,7 +812,7 @@ protected:
         BOOST_ASSERT(this->_map.find(inter_val) == this->_map.end());
         BOOST_ASSERT(!(Traits::absorbs_neutrons && co_val==Combiner::neutron()));
 
-		if(has_inverse<codomain_type>::value && is_negative<Combiner>::value)
+        if(has_inverse<codomain_type>::value && is_negative<Combiner>::value)
             return this->_map.insert(prior_, value_type(inter_val, version<Combiner>()(co_val)));
         else
             return this->_map.insert(prior_, value_type(inter_val, co_val));
@@ -929,7 +929,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
     typedef IntervalMap<DomainT,CodomainT,
                         Traits,Compare,Combine,Section,Interval,Alloc> sectant_type;
 
-	if(Traits::is_total)
+    if(Traits::is_total)
     {
         intersection = *this;
         intersection += sectant;
@@ -958,7 +958,7 @@ void interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,
                     const typename interval_base_map<SubType,DomainT,CodomainT,Traits,Compare,Combine,Section,Interval,Alloc>
                     ::segment_type& sectant)const
 {
-	if(Traits::is_total)
+    if(Traits::is_total)
     {
         section = *this;
         section.add(sectant);

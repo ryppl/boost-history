@@ -69,7 +69,7 @@ namespace boost{namespace itl
         public map_segment_gentor<DomainT,CodomainT> {};
 
     template <class DomainT, class CodomainT> 
-	class RandomGentor<itl::list<std::pair<itl::interval<DomainT>, CodomainT> > > :
+    class RandomGentor<itl::list<std::pair<itl::interval<DomainT>, CodomainT> > > :
         public SeqGentorT<itl::list<std::pair<itl::interval<DomainT>, CodomainT> > > {};
 
     // ----- sets --------------------------------------------------------------
@@ -255,13 +255,13 @@ namespace boost{namespace itl
     //--------------------------------------------------------------------------
     // lists
     //--------------------------------------------------------------------------
-	template <> 
+    template <> 
     struct Calibrater<std::pair<itl::interval<int>, int>, RandomGentor>
     {
         static void apply(RandomGentor< std::pair<itl::interval<int>, int> >& gentor){}
     };
 
-	template <> 
+    template <> 
     struct Calibrater<std::pair<itl::interval<double>, int>, RandomGentor>
     {
         static void apply(RandomGentor< std::pair<itl::interval<double>, int> >& gentor){}
@@ -276,7 +276,7 @@ namespace boost{namespace itl
             map_segment_gentor<double,int>* segment_gentor  = new map_segment_gentor<double,int>;
             NumberGentorT<int>* int_gentor = new NumberGentorT<int>;
             int_gentor->setRange(GentorProfileSgl::it()->range_int());
-			segment_gentor->setCodomainGentor(int_gentor);
+            segment_gentor->setCodomainGentor(int_gentor);
             segment_gentor->set_range(GentorProfileSgl::it()->range_interval_double());
             segment_gentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             segment_gentor->set_corange(GentorProfileSgl::it()->range_int()); // sets range of codomain_values
@@ -293,7 +293,7 @@ namespace boost{namespace itl
             map_segment_gentor<int,int>* segment_gentor  = new map_segment_gentor<int,int>;
             NumberGentorT<int>* int_gentor = new NumberGentorT<int>;
             int_gentor->setRange(GentorProfileSgl::it()->range_int());
-			segment_gentor->setCodomainGentor(int_gentor);
+            segment_gentor->setCodomainGentor(int_gentor);
             segment_gentor->set_range(GentorProfileSgl::it()->range_interval_int());
             segment_gentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
             segment_gentor->set_corange(GentorProfileSgl::it()->range_int()); // sets range of codomain_values

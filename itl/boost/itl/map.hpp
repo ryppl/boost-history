@@ -281,7 +281,7 @@ public:
         return base_type::insert(prior, value_pair);
     }
 
-	std::pair<iterator,bool> base_insert(const value_type& value_pair)
+    std::pair<iterator,bool> base_insert(const value_type& value_pair)
     {
         return base_type::insert(value_pair);
     }
@@ -477,7 +477,7 @@ std::pair<typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::
     ::add(iterator prior_, const domain_type& val, const codomain_type& co_val)
 {
     if(Traits::absorbs_neutrons && co_val == Combiner::neutron())
-		return std::pair<iterator,bool>(prior_, false);
+        return std::pair<iterator,bool>(prior_, false);
 
     iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
     if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
@@ -486,10 +486,10 @@ std::pair<typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::
         return prior_;
     }
     else
-	{
+    {
         Combiner()(inserted_->second, val.second);
         return inserted_;
-	}
+    }
 }
 */
 
@@ -544,7 +544,7 @@ template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL
 void map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
     ::add_intersection(map& section, const value_type& sectant)const
 {
-	if(Traits::is_total)
+    if(Traits::is_total)
     {
         section = *this;
         section.add(sectant);

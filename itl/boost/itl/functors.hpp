@@ -64,7 +64,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object += operand; }
 
-		static void version(Type& object){}
+        static void version(Type& object){}
     };
 
     template<>
@@ -91,7 +91,7 @@ namespace boost{namespace itl
         void operator()(Type& object, const Type& operand)const
         { object |= operand; }
 
-		static void version(Type& object){}
+        static void version(Type& object){}
     };
 
     template<>
@@ -300,33 +300,33 @@ namespace boost{namespace itl
     { typedef itl::inplace_max<Type> type; };
 
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Positive or negative functor trait
     //--------------------------------------------------------------------------
     template<class Functor> struct is_negative;
 
     template<class Functor> 
     struct is_negative
-	{
-		typedef is_negative<Functor> type;
-		BOOST_STATIC_CONSTANT(bool, value = false);
-	};
+    {
+        typedef is_negative<Functor> type;
+        BOOST_STATIC_CONSTANT(bool, value = false);
+    };
 
     template<class Type> 
-	struct is_negative<itl::inplace_minus<Type> >
-	{
-		typedef is_negative type;
-		BOOST_STATIC_CONSTANT(bool, value = true);
-	};
+    struct is_negative<itl::inplace_minus<Type> >
+    {
+        typedef is_negative type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
 
     template<class Type> 
-	struct is_negative<itl::inplace_bit_subtract<Type> >
-	{
-		typedef is_negative type;
-		BOOST_STATIC_CONSTANT(bool, value = true);
-	};
+    struct is_negative<itl::inplace_bit_subtract<Type> >
+    {
+        typedef is_negative type;
+        BOOST_STATIC_CONSTANT(bool, value = true);
+    };
 
-	//--------------------------------------------------------------------------
+    //--------------------------------------------------------------------------
     // Pro- or in-version functor
     //--------------------------------------------------------------------------
     template<class Combiner> struct version;
@@ -334,46 +334,46 @@ namespace boost{namespace itl
     template<class Combiner> 
     struct version
     { 
-		typedef version<Combiner> type;
-		typedef typename
-			remove_const<
-				typename remove_reference<typename Combiner::first_argument_type
-				>::type
-			>::type
-			argument_type;
-		// The pro-version of an contruction functor lets the value unchanged
-		// 0 o= x == x;
-		argument_type operator()(const argument_type& value){ return value; } 
-	};
+        typedef version<Combiner> type;
+        typedef typename
+            remove_const<
+                typename remove_reference<typename Combiner::first_argument_type
+                >::type
+            >::type
+            argument_type;
+        // The pro-version of an contruction functor lets the value unchanged
+        // 0 o= x == x;
+        argument_type operator()(const argument_type& value){ return value; } 
+    };
 
     template<class Type> 
     struct version<itl::inplace_minus<Type> >
     { 
-		typedef version type;
-		typedef itl::inplace_minus<Type> Combiner;
+        typedef version type;
+        typedef itl::inplace_minus<Type> Combiner;
 
-		Type operator()(const Type& value)
-		{
-			Type inverse = Combiner::neutron();
-			Combiner()(inverse, value);
-			return inverse;
-		}
-	};
+        Type operator()(const Type& value)
+        {
+            Type inverse = Combiner::neutron();
+            Combiner()(inverse, value);
+            return inverse;
+        }
+    };
 
     template<class Type> 
     struct version<itl::inplace_bit_subtract<Type> >
     { 
-		typedef version type;
-		typedef itl::inplace_bit_subtract<Type> Combiner;
+        typedef version type;
+        typedef itl::inplace_bit_subtract<Type> Combiner;
 
-		Type operator()(const Type& value)
-		{
-			Type inverse = Combiner::neutron();
-			Combiner()(inverse, value);
-			return inverse;
-		}
-	};
-	
+        Type operator()(const Type& value)
+        {
+            Type inverse = Combiner::neutron();
+            Combiner()(inverse, value);
+            return inverse;
+        }
+    };
+    
 
 }} // namespace itl boost
 

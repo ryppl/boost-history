@@ -34,14 +34,14 @@ class FunctionEquality :
     public Law<FunctionEquality<SourceT,TargetT,Function_f,Function_g,Equality>, 
                LOKI_TYPELIST_1(SourceT), LOKI_TYPELIST_2(TargetT,TargetT)>
 {
-	/** S: SourceT, T: TargetT
+    /** S: SourceT, T: TargetT
     For all S a: f(a) == g(a) : Equality of functions f and g. 
     Input  = (a := inVal1)
     Output = (lhs_result, rhs_result)
     */
 public:
     std::string name()const { return "FunctionEquality"; }
-	std::string formula()const { return "S a: f(a) == g(a)"; }
+    std::string formula()const { return "S a: f(a) == g(a)"; }
 
     std::string typeString()const
     {
@@ -60,12 +60,12 @@ public:
         // For all S a: f(a) == g(a) : f == g. 
         // --- left hand side --------------------------------------------------
         SourceT value_a = this->template getInputValue<operand_a>();
-		TargetT lhs;
-		Function_f<SourceT,TargetT>()(lhs, value_a); // lhs = f(a);
+        TargetT lhs;
+        Function_f<SourceT,TargetT>()(lhs, value_a); // lhs = f(a);
 
         // --- right hand side -------------------------------------------------
-		TargetT rhs;
-		Function_g<SourceT,TargetT>()(rhs, value_a); // rhs = g(a);
+        TargetT rhs;
+        Function_g<SourceT,TargetT>()(rhs, value_a); // rhs = g(a);
 
         this->template setOutputValue<lhs_result>(lhs);
         this->template setOutputValue<rhs_result>(rhs);
@@ -73,26 +73,26 @@ public:
         return Equality<TargetT>()(lhs, rhs);
     }
 
-	bool debug_holds()
-	{ 
+    bool debug_holds()
+    { 
         // For all S a: f(a) == g(a) : f == g. 
         // --- left hand side --------------------------------------------------
         SourceT value_a = this->template getInputValue<operand_a>();
-		std::cout << "a= " << value_a << std::endl;
-		TargetT lhs;
-		Function_f<SourceT,TargetT>()(lhs, value_a); // lhs = f(a);
-		std::cout << "l= " << lhs << std::endl;
+        std::cout << "a= " << value_a << std::endl;
+        TargetT lhs;
+        Function_f<SourceT,TargetT>()(lhs, value_a); // lhs = f(a);
+        std::cout << "l= " << lhs << std::endl;
 
         // --- right hand side -------------------------------------------------
-		TargetT rhs;
-		Function_g<SourceT,TargetT>()(rhs, value_a); // rhs = g(a);
-		std::cout << "r= " << rhs << std::endl;
+        TargetT rhs;
+        Function_g<SourceT,TargetT>()(rhs, value_a); // rhs = g(a);
+        std::cout << "r= " << rhs << std::endl;
 
         this->template setOutputValue<lhs_result>(lhs);
         this->template setOutputValue<rhs_result>(rhs);
 
         return Equality<TargetT>()(lhs, rhs);
-	}
+    }
 
     size_t size()const 
     { 

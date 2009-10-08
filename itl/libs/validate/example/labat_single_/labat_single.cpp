@@ -96,20 +96,20 @@ void test_LawValidater()
     //    <interval_set<int>, itl::interval<int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-	typedef FunctionEquality
-	<
-		itl::list<std::pair<itl::interval<int>,int> >, 
-		interval_map<int,int,total_absorber>,
-		base_addition, 
-		hint_addition
-	> TestLawT;
-	LawValidater<TestLawT, RandomGentor> test_law;
+    typedef FunctionEquality
+    <
+        itl::list<std::pair<itl::interval<int>,int> >, 
+        interval_map<int,int,total_absorber>,
+        base_addition, 
+        hint_addition
+    > TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
     int test_count = 50000;
     ptime start, stop;
 
-	GentorProfileSgl::it()->set_std_profile(4,1);
+    GentorProfileSgl::it()->set_std_profile(4,1);
     test_law.set_trials_count(test_count);
 
     std::cout << "Start\n";

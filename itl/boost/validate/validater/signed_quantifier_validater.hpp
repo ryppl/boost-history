@@ -62,7 +62,7 @@ public:
             et_assoc_share = 0;
         //NOTE: An Inverse exists only for a total signed quantifier
         //CL if(!is_total<Type>::value)
-		if(!is_total<Type>::value || !has_inverse<typename Type::codomain_type>::value)
+        if(!is_total<Type>::value || !has_inverse<typename Type::codomain_type>::value)
             inv_ex_share = 0;
 
         int rest_shares = sum_of_shares, item_index = 0;

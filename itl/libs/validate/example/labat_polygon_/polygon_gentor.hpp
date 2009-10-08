@@ -32,9 +32,9 @@ public:
 
     void setDomainGentor(RandomGentorAT<DomainTD>* gentor)
     {
-		delete p_domainGentor;
-		p_domainGentor = gentor; 
-	}
+        delete p_domainGentor;
+        p_domainGentor = gentor; 
+    }
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = interval<int>::rightopen(lwb,upb); }
@@ -132,9 +132,9 @@ public:
 
     void setDomainGentor(RandomGentorAT<DomainTD>* gentor)
     {
-		delete p_domainGentor;
-		p_domainGentor = gentor; 
-	}
+        delete p_domainGentor;
+        p_domainGentor = gentor; 
+    }
 
     void setRangeOfSampleSize(int lwb, int upb)
     { m_sampleSizeRange = interval<int>::rightopen(lwb,upb); }

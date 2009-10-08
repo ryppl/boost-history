@@ -23,10 +23,10 @@ template <class DomainT, class CodomainT>
 class map_segment_gentor: public RandomGentorAT<std::pair<itl::interval<DomainT>, CodomainT> >
 {
 public:
-	typedef DomainT   domain_type;
-	typedef CodomainT codomain_type;
-	typedef itl::interval<DomainT> interval_type;
-	typedef std::pair<itl::interval<DomainT>, CodomainT> segment_type;
+    typedef DomainT   domain_type;
+    typedef CodomainT codomain_type;
+    typedef itl::interval<DomainT> interval_type;
+    typedef std::pair<itl::interval<DomainT>, CodomainT> segment_type;
 
 public:
     map_segment_gentor(): _codomain_gentor(NULL){}
@@ -34,13 +34,13 @@ public:
 
     virtual void some(segment_type& x);
 
-	void set_range(const itl::interval<domain_type>& range)
+    void set_range(const itl::interval<domain_type>& range)
     { _interval_gentor.setRange(range); }
 
-	void set_corange(const itl::interval<codomain_type>& range)
+    void set_corange(const itl::interval<codomain_type>& range)
     { _covalue_range = range; }
-	
-	void setMaxIntervalLength(domain_type max_itv_length)
+    
+    void setMaxIntervalLength(domain_type max_itv_length)
     { _interval_gentor.setMaxIntervalLength(max_itv_length); }
 
     void setCodomainGentor(RandomGentorAT<codomain_type>* gentor)
@@ -52,18 +52,18 @@ public:
 private:
     ItvGentorT<domain_type>        _interval_gentor;
     RandomGentorAT<codomain_type>* _codomain_gentor;
-	itl::interval<codomain_type>   _covalue_range;
+    itl::interval<codomain_type>   _covalue_range;
 };
 
 
 template <class DomainT, class CodomainT>
 void map_segment_gentor<DomainT,CodomainT>::some(segment_type& value)
 {
-	interval_type inter_val;
-	codomain_type co_val;
-	_interval_gentor.some(inter_val);
-	_codomain_gentor->some(co_val);
-	value = segment_type(inter_val, co_val);
+    interval_type inter_val;
+    codomain_type co_val;
+    _interval_gentor.some(inter_val);
+    _codomain_gentor->some(co_val);
+    value = segment_type(inter_val, co_val);
 };
 
 }} // BOOST_ITL_XT_MAP_SEGMENT_GENTOR_HPP_JOFA_091004
