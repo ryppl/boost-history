@@ -111,7 +111,7 @@ int test_counter() {
     th4.join();
     
     int fails=0;
-    fails += check(1);
+    fails += check(2);
     fails += !assign();
     //fails += !test_const(counter);
     return fails;

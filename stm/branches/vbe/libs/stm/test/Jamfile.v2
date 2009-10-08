@@ -17,10 +17,8 @@ if ! $(BOOST_ROOT)
 project
     : requirements
 #       <library>/boost/test//boost_unit_test_framework/<link>static
-#       <library>/boost/thread//boost_thread/<link>static
-#       <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
         <library>../build//boost_STM/<link>static
-        <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+        <library>/boost/thread//boost_thread/<link>static
 
         <include>.
         <include>../../..
@@ -48,6 +46,7 @@ project
           [ run ../example/bank.cpp ]
           #[ run ../example/list.cpp ]
           [ run ../example/counter.cpp ]
+          [ run ../example/numeric.cpp ]
           [ run ../example/counter_ptr.cpp ]
-          [ run ../example/non_tx_counter.cpp ]
+          #[ run ../example/non_tx_counter.cpp ]
     ;

@@ -13,7 +13,7 @@
 
 
 #include <boost/stm/transaction.hpp>
-#include <boost/stm/except_and_back_off_on_abort_notice_cm.hpp>
+#include <boost/stm/contention_managers/except_and_back_off_on_abort_notice_cm.hpp>
 
 namespace boost { namespace stm {
 

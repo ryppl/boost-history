@@ -18,6 +18,7 @@
 #include <vector>
 #include <list>
 #include <stdlib.h>
+
 #define foreach BOOST_FOREACH
 
 using namespace std;

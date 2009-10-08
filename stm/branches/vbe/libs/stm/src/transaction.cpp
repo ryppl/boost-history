@@ -12,7 +12,7 @@
 //////////////////////////////////////////////////////////////////////////////
 
 #include <boost/stm/transaction.hpp>
-#include <boost/stm/non_tx_smart_ptr.hpp>
+#include <boost/stm/non_tx/smart_ptr.hpp>
 #include <boost/stm/contention_manager.hpp>
 #include <iostream>
 
@@ -69,7 +69,7 @@ bool transaction::initialized_ = false;
 // third param = # of increases before resetting
 ///////////////////////////////////////////////////////////////////////////////
 #if defined(BOOST_STM_CM_STATIC_CONF)
-#if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)
+#if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
    //boost::stm::contention_manager_type boost::stm::transaction::cm_(0, 0, 0);
    int boost::stm::except_and_back_off_on_abort_notice_cm::sleepTime_=0;
    int const boost::stm::except_and_back_off_on_abort_notice_cm::kSleepFactorIncrease_=0;
@@ -158,7 +158,7 @@ void transaction::initialize()
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::initialize_thread()
 {
-   lock_general_access();
+   lock(general_lock());
 
    //--------------------------------------------------------------------------
    // WARNING: before you think lock_all_mutexes() does not make sense, make
@@ -419,14 +419,14 @@ void transaction::initialize_thread()
 
    //--------------------------------------------------------------------------
 
-   unlock_general_access();
+   unlock(general_lock());
 }
 
 ///////////////////////////////////////////////////////////////////////////////
 void transaction::terminate_thread()
 {
-   lock_general_access();
-   lock_inflight_access();
+   lock(general_lock());
+   lock(inflight_lock());
 
    size_t threadId = THREAD_ID;
 
@@ -525,8 +525,8 @@ void transaction::terminate_thread()
 #endif
 
 
-   unlock_inflight_access();
-   unlock_general_access();
+   unlock(inflight_lock());
+   unlock(general_lock());
 }
 
 }}
