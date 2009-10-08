@@ -21,12 +21,15 @@ namespace data{
     //
     // Note: the library does not require a specific data-type; this one is
     // provided as a convenience
+    //
+    // private inheritance of F was abandonned after compilor error with 
+    // F = function<R(A)>
     template<
         typename X,typename F,
         typename Kx = mpl::int_<1>,
         typename Ky = mpl::int_<2>
     >
-    class input_output_generator {// : protected F{
+    class input_output_generator {
         typedef meta_input_output<X,F,Kx,Ky> meta_;
 
         public:
@@ -36,17 +39,6 @@ namespace data{
         typedef typename meta_::type result_type;
 
         input_output_generator(){}
-//        input_output_generator(const F& f):F(f){}
-//        input_output_generator(const input_output_generator& that)
-//            :F(static_cast<const F&>(that)){}
-//        input_output_generator& 
-//        operator=(const input_output_generator& that)
-//        {
-//            if(&that!=this){
-//                static_cast<F&>(*this) = static_cast<const F&>(that);
-//            }
-//            return (*this);
-//        }
 
         input_output_generator(const F& f):f_(f){}
         input_output_generator(const input_output_generator& that)
@@ -62,7 +54,6 @@ namespace data{
         
         template<typename X1>
         result_type operator()(const X1& x)const{
-//            return meta_::make(x,static_cast<const F&>(*this));
             return meta_::make(x,this->f_);
         }
 
