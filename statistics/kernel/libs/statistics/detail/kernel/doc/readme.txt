@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////
-// statistics::detail::kernel::doc::readme                                  //
+// kernel::doc::readme                                                      //
 //                                                                          //
 //  (C) Copyright 2009 Erwann Rogard                                        //
 //  Use, modification and distribution are subject to the                   //
@@ -52,8 +52,8 @@ October 3rd 2009    :
     - Replaced namespace statistics by statistics::detail
     - Finer directory structure
     - nw_visitor_tuple replaced by nw_visitor_unary which no longer constrains
-    the training data to be a tuple (our preference is a fusion::map).
-    - added cross_validation 
+    the training data to be a tuple.
+    - Added cross_validation 
 
 July 2009           : Creation
 March 2009:         : improved_fast_gauss_transform (now deprecated)
@@ -127,26 +127,17 @@ Multivariate:
     K[d,h](x)   :       exp(-||x/h||^2)/(c * h)^d       
                         = Ku(||x||/h) / (c * h)^d
 
-[Output]
+[ main.cpp output ]
 
-Here's a copy of the output from libs/src/main.cpp:
-
--> example_scalar_rp : 0.256009 0.390986 0.229151 0.261866 0.232843 0.228334 
-0.185519 0.382394 0.388576 0.383203 <-
+-> example_scalar_rp : <-
 -> example_scalar_nw : <-
 -> example_mono_bw_kernel_rp : <-
--> example_benchmark_scalar : m = 10000
-rp : (n, avg_t,e)nw : (n, avg_t,e_p,e_y)
-rp : (2, 4.0672e-06, 0.173297) nw : (2, 8.3822e-06, 0.173297, 1.2265)
-rp : (4, 2.859e-06, 0.138165) nw : (4, 5.86085e-06, 0.138165, 1.06847)
-rp : (8, 3.01747e-06, 0.104602) nw : (8, 6.289e-06, 0.104602, 0.831601)
-rp : (16, 3.96233e-06, 0.0978568) nw : (16, 8.16075e-06, 0.0978568, 0.702637)
-rp : (32, 5.94066e-06, 0.0818718) nw : (32, 1.20646e-05, 0.0818718, 0.595622)
-rp : (64, 9.40283e-06, 0.0719671) nw : (64, 1.95258e-05, 0.0719671, 0.531848)
-rp : (128, 1.57752e-05, 0.0634377) nw : (128, 3.26977e-05, 0.0634377, 0.477009)
-rp : (256, 2.72618e-05, 0.0565864) nw : (256, 5.64065e-05, 0.0565864, 0.432414)
-rp : (512, 4.81542e-05, 0.0511678) nw : (512, 0.00010056, 0.0511678, 0.398781)
-rp : (1024, 8.67954e-05, 0.0469132) nw : (1024, 0.000179972, 0.0469132, 0.371483)
+-> test_scalar_nw : 
+((n_test,index,n_folds),bandwidth,sqrt_mse)
+(partition(10,10,10),0.668325,0.268464)
+(partition(100,10,10),0.421685,0.19132)
+(partition(1000,10,10),0.266065,0.0698525)
+(partition(10000,10,10),0.167876,0.0282646)
+(partition(100000,10,10),0.105922,0.0112862)
 <-
-
 

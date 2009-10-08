@@ -1,5 +1,5 @@
 ////////////////////////////////////////////////////////////////////////////////
-// boost::statistics::detail::kernel::bandwidth_selection::meta_k_fold_nw.hpp //
+// kernel::bandwidth_selection::meta_k_fold_nw.hpp                            //
 //                                                                            //
 //  (C) Copyright 2009 Erwann Rogard                                          //
 //  Use, modification and distribution are subject to the                     //

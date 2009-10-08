@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////////////////////////
-// boost::statistics::detail::kernel::bandwidth_selection::detail::cross_validate.hpp   //
+// kernel::bandwidth_selection::detail::cross_validate.hpp                              //
 //                                                                                      //
 //  (C) Copyright 2009 Erwann Rogard                                                    //
 //  Use, modification and distribution are subject to the                               //
@@ -34,12 +34,14 @@ namespace detail{
     class k_fold : 
         public cross_validation::k_fold::partition<U,Ft,Fi,Fo>
     {
+        
         typedef cross_validation::k_fold::partition<U,Ft,Fi,Fo>     kfp_;
         typedef typename kfp_::meta_training_range::type            tr_;
         typedef estimator<tr_,V,K,A>                                est_t;
         typedef kfp_& rkfp_;
         
         public:
+        typedef kfp_ super_;
         typedef est_t estimator_type;
 
         // Constructor
@@ -61,14 +63,11 @@ namespace detail{
 
         // Access
 
-        const estimator_type& estimator()const{ 
-            return this->est_;
-        }
-
         // Cross validation
         
         template<typename T,typename It>
         It train_predict(
+            K k,
             It  it_p // predicted values
         )
         {
@@ -76,7 +75,7 @@ namespace detail{
         
             return cross_validation::k_fold::train_predict(
                 rkfp,
-                this->est_,
+                est_t(k),
                 it_p
             );
         }
@@ -89,20 +88,16 @@ namespace detail{
         ){
             rkfp_ rkfp = static_cast<rkfp_>(*this);
             
-            this->k_ = k;
-            
             return cross_validation::k_fold::cross_validate(
                 rkfp,
-                this->est_,
+                est_t(k),
                 i_p,
                 i_o
             );
         }
     
-        private:
-        est_t est_;
-    
     };
+
     
 }// detail
 }// bandwidth_selection

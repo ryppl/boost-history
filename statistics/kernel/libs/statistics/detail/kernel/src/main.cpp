@@ -1,5 +1,5 @@
 ///////////////////////////////////////////////////////////////////////////////
-// statistics::detail::kernel::src::main.cpp                                 //
+// kernel::src::main.cpp                                                     //
 //                                                                           //
 //  Copyright 2009 Erwann Rogard. Distributed under the Boost                //
 //  Software License, Version 1.0. (See accompanying file                    //
@@ -9,7 +9,7 @@
 #include <libs/statistics/detail/kernel/example/scalar_rp.h>
 #include <libs/statistics/detail/kernel/example/scalar_nw.h>
 #include <libs/statistics/detail/kernel/example/mv_mono_bw_rp.h>
-#include <libs/statistics/detail/kernel/example/benchmark_scalar.h>
+#include <libs/statistics/detail/kernel/test/scalar_nw.h>
 
 
 int main(){
@@ -17,7 +17,8 @@ int main(){
     example_scalar_rp(std::cout);
     example_scalar_nw(std::cout);
     example_mv_mono_bw_rp(std::cout);
-    //example_benchmark_scalar(std::cout);
+    
+    test_scalar_nw(std::cout);
     
     return 0;
 }
