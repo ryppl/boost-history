@@ -117,7 +117,7 @@ inline bool is_generic_tag_false(...)
 Most processors support three different floating point precisions:
 single precision (32 bits), double precision (64 bits)
 and extended double precision (80 - 128 bits, depending on the processor)
-€
+
 Note that the C++ type long double can be implemented
 both as double precision and extended double precision.
 */
@@ -551,7 +551,7 @@ struct select_native<long double>
 
 template<class T> struct fp_traits
 {
-#ifdef BOOST_MATH_USE_STD_FPCLASSIFY
+#if defined(BOOST_MATH_USE_STD_FPCLASSIFY) && !defined(BOOST_MATH_DISABLE_STD_FPCLASSIFY)
     typedef typename select_native<T>::type type;
 #else
     typedef BOOST_DEDUCED_TYPENAME size_to_precision<sizeof(T), ::boost::is_floating_point<T>::value>::type precision;

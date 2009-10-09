@@ -6,7 +6,7 @@
 #include <pch.hpp>
 
 #include <boost/math/concepts/real_concept.hpp>
-#include <boost/test/included/test_exec_monitor.hpp>
+#include <boost/test/test_exec_monitor.hpp>
 #include <boost/test/floating_point_comparison.hpp>
 #include <boost/math/special_functions/beta.hpp>
 #include <boost/math/tools/stats.hpp>
@@ -230,7 +230,7 @@ void expected_results()
       "[^|]*",                          // platform
       largest_type,                     // test type(s)
       "(?i).*small.*",                  // test data group
-      ".*", 60, 10);  // test function
+      ".*", 90, 25);  // test function
    add_expected_result(
       "[^|]*",                          // compiler
       "[^|]*",                          // stdlib
@@ -252,7 +252,7 @@ void expected_results()
       "[^|]*",                          // platform
       "real_concept",                   // test type(s)
       "(?i).*small.*",                      // test data group
-      ".*", 60, 15);  // test function
+      ".*", 90, 25);  // test function
    add_expected_result(
       "[^|]*",                          // compiler
       "[^|]*",                          // stdlib

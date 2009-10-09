@@ -27,7 +27,7 @@ Test 3: test_hazard_pdf_cdf_symmetry()
          Checks the relation between hazard, pdf and cdf.
          hazard = pdf/(1-cdf)
 
-		
+
 Test 4: test_location_scale_symmetry()
          Checks the pdf, cdf invariant for translation and scaling invariant
                  cdf(x,location,scale) = cdf( (x-location)/scale, 0, 1)
