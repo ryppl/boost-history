@@ -10,6 +10,8 @@
 #include <boost/iterator/iterator_adaptor.hpp>
 #include <iterator>
 
+// See http://www.nabble.com/cycle-iterators-td25215321.html
+
 namespace boost {
 
   //! This is a cycle iterator that does NOT keep track of wraparound.
@@ -45,23 +47,6 @@ namespace boost {
       size (other.size),
       position (other.position)
     {}
-
-    // ER_2009_07
-    template <typename OtherBase, typename OtherOffset>
-    enable_if<
-        is_convertible<OtherBase,BaseIterator>,
-        cycle_iterator2_ext&
-    >
-    operator= (cycle_iterator2_ext<OtherBase,OtherOffset> const& other)
-    {
-        if(&other!=this){
-            super_t& super = static_cast<super_t&>(this);
-            super = other;
-            size = (other.size);
-            position = (other.position);
-        }
-        return *this;
-    }
 
   private:
     friend class boost::iterator_core_access;
