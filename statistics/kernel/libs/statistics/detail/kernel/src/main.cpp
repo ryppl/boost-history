@@ -17,7 +17,6 @@ int main(){
     example_scalar_rp(std::cout);
     example_scalar_nw(std::cout);
     example_mv_mono_bw_rp(std::cout);
-    
     test_scalar_nw(std::cout);
     
     return 0;

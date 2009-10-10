@@ -22,12 +22,12 @@ gcc version i686-apple-darwin9-gcc-4.0.1 (GCC) 4.0.1
 
 [ Dependencies ]
 
-boost_1_39_0
-/sandbox/statistics/vector_space/ 
-/sandbox/statistics/arithmetic/ 
-/sandbox/statistics/mpl/ 
-...TODO
-
+/usr/local/boost_1_40_0/ 
+/Users/erwann/sandbox/statistics/detail/fusion/ 
+/Users/erwann/sandbox/statistics/detail/tuple/
+/Users/erwann/sandbox/statistics/cross_validation/ 
+/Users/erwann/sandbox/statistics/vector_space/ 
+/Users/erwann/sandbox/statistics/mpl/ 
 
 [ Sources ]
 
