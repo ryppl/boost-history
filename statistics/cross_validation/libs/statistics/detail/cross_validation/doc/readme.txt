@@ -21,22 +21,22 @@ partitions. Parameterized functors take care of extracting the training, input
 and output data.
 
 The function train_predict automates the task of producing estimates for each
-element of the test sample of a client supplied estimator. 
+element of the current test sample. 
 
 [ Compiler ]
 
-Mac OS Leopard 10.5         gcc version 4.0.1
+Mac OS Leopard 10.6         gcc version 4.0.1
                             Intel C++ compiler 11.1
 
 [ Dependencies ]
 
-/usr/local/boost_1_39_0/
+/usr/local/boost_1_40_0/
 /sandbox/statistics/vector_space/ 
 /sandbox/statistics/mpl/ 
 
 [ History ]
 
-October 6 2009  Added a convenient data-type representing (x,y) and a generator
+October 6 2009  Added an optional, but convenient data-type for (x,y) 
 September 2009  - Two packages below merged into cross_validation with a better
                 interface.
 August 2009     - Creation of goodness_of_fit
