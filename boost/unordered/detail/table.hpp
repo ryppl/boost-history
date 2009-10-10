@@ -13,7 +13,7 @@
 #include <boost/config/no_tr1/cmath.hpp>
 #include <boost/iterator/iterator_categories.hpp>
 
-#include <boost/unordered/detail/manager.hpp>
+#include <boost/unordered/detail/buckets.hpp>
 #include <boost/unordered/detail/util.hpp>
 
 namespace boost { namespace unordered_detail {
@@ -23,20 +23,22 @@ namespace boost { namespace unordered_detail {
 
     // strong exception safety, no side effects
     template <class H, class P, class A, class G, class K>
-    inline bool hash_table<H, P, A, G, K>
-        ::equal(key_type const& k, value_type const& v) const
+    inline bool hash_table<H, P, A, G, K>::equal(
+        key_type const& k, value_type const& v) const
     {
-        return this->key_eq()(k, extractor::extract(v));
+        return this->key_eq()(k, get_key(v));
     }
 
     // strong exception safety, no side effects
     template <class H, class P, class A, class G, class K>
     inline BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::node_ptr
-        hash_table<H, P, A, G, K>
-            ::find_iterator(bucket_ptr bucket, key_type const& k) const
+        hash_table<H, P, A, G, K>::find_iterator(
+            bucket_ptr bucket, key_type const& k) const
     {
         node_ptr it = bucket->next_;
-        while (BOOST_UNORDERED_BORLAND_BOOL(it) && !equal(k, node::get_value(it))) {
+        while (BOOST_UNORDERED_BORLAND_BOOL(it) &&
+            !equal(k, node::get_value(it)))
+        {
             it = node::next_group(it);
         }
 
@@ -44,23 +46,26 @@ namespace boost { namespace unordered_detail {
     }
 
     // strong exception safety, no side effects
+    // pre: this->buckets_
     template <class H, class P, class A, class G, class K>
     inline BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::node_ptr
-        hash_table<H, P, A, G, K>
-            ::find_iterator(key_type const& k) const
+        hash_table<H, P, A, G, K>::find_iterator(key_type const& k) const
     {
         return find_iterator(this->get_bucket(this->bucket_index(k)), k);
     }
 
     // strong exception safety, no side effects
     template <class H, class P, class A, class G, class K>
-    BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::node_ptr*
-        hash_table<H, P, A, G, K>
-            ::find_for_erase(bucket_ptr bucket, key_type const& k) const
+    inline BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::node_ptr*
+        hash_table<H, P, A, G, K>::find_for_erase(
+            bucket_ptr bucket, key_type const& k) const
     {
         node_ptr* it = &bucket->next_;
-        while(BOOST_UNORDERED_BORLAND_BOOL(*it) && !equal(k, node::get_value(*it)))
+        while(BOOST_UNORDERED_BORLAND_BOOL(*it) &&
+            !equal(k, node::get_value(*it)))
+        {
             it = &node::next_group(*it);
+        }
 
         return it;
     }
@@ -70,8 +75,7 @@ namespace boost { namespace unordered_detail {
 
     // no throw
     template <class H, class P, class A, class G, class K>
-    std::size_t hash_table<H, P, A, G, K>
-        ::max_size() const
+    std::size_t hash_table<H, P, A, G, K>::max_size() const
     {
         using namespace std;
 
@@ -82,27 +86,37 @@ namespace boost { namespace unordered_detail {
 
     // strong safety
     template <class H, class P, class A, class G, class K>
-    std::size_t hash_table<H, P, A, G, K>
-        ::bucket_index(key_type const& k) const
+    inline std::size_t hash_table<H, P, A, G, K>::bucket_index(
+        key_type const& k) const
     {
         // hash_function can throw:
-        return this->bucket_from_hash(this->hash_function()(k));
+        return this->hash_function()(k) % this->bucket_count_;
     }
 
 
+    // no throw
     template <class H, class P, class A, class G, class K>
-    void hash_table<H, P, A, G, K>
-        ::max_load_factor(float z)
+    inline std::size_t hash_table<H, P, A, G, K>::calculate_max_load()
+    {
+        using namespace std;
+
+        // From 6.3.1/13:
+        // Only resize when size >= mlf_ * count
+        return double_to_size_t(ceil((double) mlf_ * this->bucket_count_));
+    }
+
+    template <class H, class P, class A, class G, class K>
+    void hash_table<H, P, A, G, K>::max_load_factor(float z)
     {
         BOOST_ASSERT(z > 0);
         mlf_ = (std::max)(z, minimum_max_load_factor);
-        this->calculate_max_load();
+        this->max_load_ = this->calculate_max_load();
     }
 
     // no throw
     template <class H, class P, class A, class G, class K>
-    std::size_t hash_table<H, P, A, G, K>
-        ::min_buckets_for_size(std::size_t n) const
+    inline std::size_t hash_table<H, P, A, G, K>::min_buckets_for_size(
+        std::size_t size) const
     {
         BOOST_ASSERT(this->mlf_ != 0);
 
@@ -114,111 +128,146 @@ namespace boost { namespace unordered_detail {
         //
         // Or from rehash post-condition:
         // count > size / mlf_
-        return double_to_size_t(floor(n / (double) mlf_)) + 1;
+        return next_prime(double_to_size_t(floor(size / (double) mlf_)) + 1);
+    }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // recompute_begin_bucket
+
+    // init_buckets
+
+    template <class H, class P, class A, class G, class K>
+    inline void hash_table<H, P, A, G, K>::init_buckets()
+    {
+        if (this->size_) {
+            this->cached_begin_bucket_ = this->buckets_;
+            while (!this->cached_begin_bucket_->next_)
+                ++this->cached_begin_bucket_;
+        } else {
+            this->cached_begin_bucket_ = this->get_bucket(this->bucket_count_);
+        }
+        this->max_load_ = calculate_max_load();
+    }
+
+    // After an erase cached_begin_bucket_ might be left pointing to
+    // an empty bucket, so this is called to update it
+    //
+    // no throw
+
+    template <class H, class P, class A, class G, class K>
+    inline void hash_table<H, P, A, G, K>::recompute_begin_bucket(bucket_ptr b)
+    {
+        BOOST_ASSERT(!(b < this->cached_begin_bucket_));
+
+        if(b == this->cached_begin_bucket_)
+        {
+            if (this->size_ != 0) {
+                while (!this->cached_begin_bucket_->next_)
+                    ++this->cached_begin_bucket_;
+            } else {
+                this->cached_begin_bucket_ =
+                    this->get_bucket(this->bucket_count_);
+            }
+        }
+    }
+
+    // This is called when a range has been erased
+    //
+    // no throw
+
+    template <class H, class P, class A, class G, class K>
+    inline void hash_table<H, P, A, G, K>::recompute_begin_bucket(
+        bucket_ptr b1, bucket_ptr b2)
+    {
+        BOOST_ASSERT(!(b1 < this->cached_begin_bucket_) && !(b2 < b1));
+        BOOST_ASSERT(BOOST_UNORDERED_BORLAND_BOOL(b2->next_));
+
+        if(b1 == this->cached_begin_bucket_ && !b1->next_)
+            this->cached_begin_bucket_ = b2;
     }
 
     // no throw
     template <class H, class P, class A, class G, class K>
-    void hash_table<H, P, A, G, K>
-        ::calculate_max_load()
+    inline float hash_table<H, P, A, G, K>::load_factor() const
     {
-        using namespace std;
-
-        // From 6.3.1/13:
-        // Only resize when size >= mlf_ * count
-        max_load_ = double_to_size_t(ceil((double) mlf_ * this->bucket_count()));
+        BOOST_ASSERT(this->bucket_count_ != 0);
+        return static_cast<float>(this->size_)
+            / static_cast<float>(this->bucket_count_);
     }
 
     ////////////////////////////////////////////////////////////////////////////
     // Constructors
 
     template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>
-        ::hash_table(std::size_t n, hasher const& hf, key_equal const& eq, value_allocator const& a) :
-            manager(a), func_(false), mlf_(1.0f), max_load_(0)
+    hash_table<H, P, A, G, K>::hash_table(std::size_t num_buckets,
+        hasher const& hf, key_equal const& eq, node_allocator const& a)
+      : buckets(a, next_prime(num_buckets)),
+        base(hf, eq),
+        size_(),
+        mlf_(1.0f),
+        cached_begin_bucket_(),
+        max_load_(0)
     {
-        std::uninitialized_fill((functions*)this->funcs_, (functions*)this->funcs_+2,
-            functions(hf, eq));
-        this->create_buckets(next_prime(n));
-        this->calculate_max_load();
-    }
-
-    template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>
-        ::hash_table(hash_table const& x) :
-            manager(x), func_(false), mlf_(x.mlf_), max_load_(0)
-    {
-        std::uninitialized_fill((functions*)this->funcs_, (functions*)this->funcs_+2,
-            x.current());
-        this->create_buckets(next_prime(x.min_buckets_for_size(x.size_)));
-        this->calculate_max_load();
-        x.copy_buckets_to(*this);
     }
 
     // Copy Construct with allocator
 
     template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>
-        ::hash_table(hash_table const& x, value_allocator const& a) :
-            manager(a), func_(false), mlf_(x.mlf_), max_load_(0)
+    hash_table<H, P, A, G, K>::hash_table(hash_table const& x,
+        node_allocator const& a)
+      : buckets(a, x.min_buckets_for_size(x.size_)),
+        base(x),
+        size_(x.size_),
+        mlf_(x.mlf_),
+        cached_begin_bucket_(),
+        max_load_(0)
     {
-        std::uninitialized_fill((functions*)this->funcs_, (functions*)this->funcs_+2,
-            x.current());
-        this->create_buckets(next_prime(x.min_buckets_for_size(x.size_)));
-        this->calculate_max_load();
-        x.copy_buckets_to(*this);
+        if(x.size_) {
+            x.copy_buckets_to(*this);
+            this->init_buckets();
+        }
     }
 
     // Move Construct
 
     template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>
-        ::hash_table(hash_table& x, move_tag m) :
-            manager(x, m), func_(false), mlf_(x.mlf_), max_load_(0)
+    hash_table<H, P, A, G, K>::hash_table(hash_table& x, move_tag)
+      : buckets(x.node_alloc(), x.bucket_count_),
+        base(x),
+        size_(0),
+        mlf_(1.0f),
+        cached_begin_bucket_(),
+        max_load_(0)
     {
-        // TODO: Shouldn't I move the functions if poss.
-        std::uninitialized_fill((functions*)this->funcs_, (functions*)this->funcs_+2,
-            x.current());
+        this->partial_swap(x);
     }
 
     template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>
-        ::hash_table(hash_table& x, value_allocator const& a, move_tag m) :
-            manager(x, a, m), func_(false), mlf_(x.mlf_), max_load_(0)
+    hash_table<H, P, A, G, K>::hash_table(hash_table& x,
+        node_allocator const& a, move_tag)
+      : buckets(a, x.bucket_count_),
+        base(x),
+        size_(0),
+        mlf_(x.mlf_),
+        cached_begin_bucket_(),
+        max_load_(0)
     {
-        std::uninitialized_fill((functions*)this->funcs_, (functions*)this->funcs_+2,
-            x.current());
-
-        this->calculate_max_load(); // no throw
-
-        if(!this->buckets_) {
-            this->create_buckets(next_prime(x.min_buckets_for_size(x.size_)));
-            // This can throw, but hash_table_manager's destructor will clean
-            // up.
+        if(a == x.node_alloc()) {
+            this->partial_swap(x);
+        }
+        else if(x.size_) {
             x.copy_buckets_to(*this);
+            this->size_ = x.size_;
+            this->init_buckets();
         }
     }
 
     template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>::~hash_table()
+    hash_table<H, P, A, G, K>& hash_table<H, P, A, G, K>::operator=(
+        hash_table const& x)
     {
-        BOOST_UNORDERED_DESTRUCT(this->get_functions(false), functions);
-        BOOST_UNORDERED_DESTRUCT(this->get_functions(true), functions);
-    }
-     
-    template <class H, class P, class A, class G, class K>
-    hash_table<H, P, A, G, K>& hash_table<H, P, A, G, K>::operator=(hash_table const& x)
-    {
-        if(this != &x) {
-            this->clear();                        // no throw
-            this->set_functions(
-                this->buffer_functions(x));       // throws, strong
-            this->mlf_ = x.mlf_;                  // no throw
-            this->calculate_max_load();           // no throw
-            this->reserve(x.size_);               // throws
-            x.copy_buckets_to(*this);             // throws
-        }
-        
+        hash_table tmp(x, this->node_alloc());
+        this->fast_swap(tmp);
         return *this;
     }
 
@@ -233,55 +282,81 @@ namespace boost { namespace unordered_detail {
     // or if allocators are unequal.
 
     template <class H, class P, class A, class G, class K>
-    void hash_table<H, P, A, G, K>
-        ::swap(hash_table& x)
+    inline void hash_table<H, P, A, G, K>::partial_swap(hash_table& x)
     {
-        // The swap code can work when swapping a container with itself
-        // but it triggers an assertion in buffered_functions.
-        // At the moment, I'd rather leave that assertion in and add a
-        // check here, rather than remove the assertion. I might change
-        // this at a later date.
-        if(this == &x) return;
+        this->buckets::swap(x); // No throw
+        std::swap(this->size_, x.size_);
+        std::swap(this->mlf_, x.mlf_);
+        std::swap(this->cached_begin_bucket_, x.cached_begin_bucket_);
+        std::swap(this->max_load_, x.max_load_);
+    }
 
+    template <class H, class P, class A, class G, class K>
+    inline void hash_table<H, P, A, G, K>::fast_swap(hash_table& x)
+    {
         // These can throw, but they only affect the function objects
         // that aren't in use so it is strongly exception safe, via.
         // double buffering.
-        functions_ptr new_func_this = this->buffer_functions(x);
-        functions_ptr new_func_that = x.buffer_functions(*this);
-
-        if(this->node_alloc() == x.node_alloc()) {
-            this->manager::swap(x); // No throw
+        {
+            set_hash_functions<H, P> op1(*this, x);
+            set_hash_functions<H, P> op2(x, *this);
+            op1.commit();
+            op2.commit();
         }
-        else {
-            // Create new buckets in separate hash_table_manager objects
+        this->buckets::swap(x); // No throw
+        std::swap(this->size_, x.size_);
+        std::swap(this->mlf_, x.mlf_);
+        std::swap(this->cached_begin_bucket_, x.cached_begin_bucket_);
+        std::swap(this->max_load_, x.max_load_);
+    }
+
+    template <class H, class P, class A, class G, class K>
+    inline void hash_table<H, P, A, G, K>::slow_swap(hash_table& x)
+    {
+        if(this == &x) return;
+
+        {
+            // These can throw, but they only affect the function objects
+            // that aren't in use so it is strongly exception safe, via.
+            // double buffering.
+            set_hash_functions<H, P> op1(*this, x);
+            set_hash_functions<H, P> op2(x, *this);
+        
+            // Create new buckets in separate hash_buckets objects
             // which will clean up if anything throws an exception.
             // (all can throw, but with no effect as these are new objects).
-
-            manager new_this(*this);
-            new_this.create_buckets(x.min_buckets_for_size(x.size_));
-            x.copy_buckets_to(new_this);
-
-            manager new_that(x);
-            new_that.create_buckets(this->min_buckets_for_size(this->size_));
-            copy_buckets_to(new_that);
-
+        
+            buckets b1(this->node_alloc(), x.min_buckets_for_size(x.size_));
+            if(x.size_) x.copy_buckets_to(b1);
+        
+            buckets b2(x.node_alloc(), this->min_buckets_for_size(this->size_));
+            if(this->size_) copy_buckets_to(b2);
+        
             // Modifying the data, so no throw from now on.
-            
-            this->manager::swap(new_this);
-            x.manager::swap(new_that);
+        
+            b1.swap(*this);
+            b2.swap(x);
+            op1.commit();
+            op2.commit();
         }
+        
+        std::swap(this->size_, x.size_);
 
-        // The rest is no throw.
-
-        std::swap(this->mlf_, x.mlf_);
-
-        this->set_functions(new_func_this);
-        x.set_functions(new_func_that);
-
-        //TODO: Test that this works:
-        this->calculate_max_load();
-        x.calculate_max_load();
+        if(this->buckets_) this->init_buckets();
+        if(x.buckets_) x.init_buckets();
     }
+
+    template <class H, class P, class A, class G, class K>
+    void hash_table<H, P, A, G, K>::swap(hash_table& x)
+    {
+        if(this->node_alloc() == x.node_alloc()) {
+            if(this != &x) this->fast_swap(x);
+        }
+        else {
+            this->slow_swap(x);
+        }
+    }
+
     
     // Move
     //
@@ -291,35 +366,37 @@ namespace boost { namespace unordered_detail {
     // or if allocators are unequal.
 
     template <class H, class P, class A, class G, class K>
-    void hash_table<H, P, A, G, K>
-        ::move(hash_table& x)
+    void hash_table<H, P, A, G, K>::move(hash_table& x)
     {
         // This can throw, but it only affects the function objects
         // that aren't in use so it is strongly exception safe, via.
         // double buffering.
-        functions_ptr new_func_this = this->buffer_functions(x);
+        set_hash_functions<H, P> new_func_this(*this, x);
 
         if(this->node_alloc() == x.node_alloc()) {
-            this->manager::move(x); // no throw
+            this->buckets::move(x); // no throw
+            this->size_ = x.size_;
+            this->cached_begin_bucket_ = x.cached_begin_bucket_;
+            this->max_load_ = x.max_load_;
+            x.size_ = 0;
         }
         else {
             // Create new buckets in separate HASH_TABLE_DATA objects
             // which will clean up if anything throws an exception.
             // (all can throw, but with no effect as these are new objects).
             
-            manager new_this(*this);
-            new_this.create_buckets(next_prime(x.min_buckets_for_size(x.size_)));
-            x.copy_buckets_to(new_this);
+            buckets b(this->node_alloc(), x.min_buckets_for_size(x.size_));
+            if(x.size_) x.copy_buckets_to(b);
 
             // Start updating the data here, no throw from now on.
-            this->manager::move(new_this);
+            this->size_ = x.size_;
+            b.swap(*this);
+            this->init_buckets();
         }
 
         // We've made it, the rest is no throw.
         this->mlf_ = x.mlf_;
-        this->set_functions(new_func_this);
-
-        this->calculate_max_load();
+        new_func_this.commit();
     }
     
     ////////////////////////////////////////////////////////////////////////////
@@ -327,48 +404,49 @@ namespace boost { namespace unordered_detail {
 
     // basic exception safety
     template <class H, class P, class A, class G, class K>
-    bool hash_table<H, P, A, G, K>
-        ::reserve(std::size_t n)
+    inline void hash_table<H, P, A, G, K>::create_for_insert(std::size_t size)
     {
-        bool need_to_reserve = n >= this->max_load_;
-        // throws - basic:
-        if (need_to_reserve) rehash_impl(this->min_buckets_for_size(n));
-        BOOST_ASSERT(n < this->max_load_ || n > max_size());
-        return need_to_reserve;
+        this->bucket_count_ = (std::max)(this->bucket_count_,
+            this->min_buckets_for_size(size));
+        this->create_buckets();
+        this->init_buckets();
     }
 
     // basic exception safety
     template <class H, class P, class A, class G, class K>
-    bool hash_table<H, P, A, G, K>
-        ::reserve_for_insert(std::size_t n)
+    inline bool hash_table<H, P, A, G, K>::reserve_for_insert(std::size_t size)
     {
-        bool need_to_reserve = n >= this->max_load_;
-        // throws - basic:
-        if (need_to_reserve) {
-            std::size_t s = this->size_;
-            s = s + (s >> 1);
-            s = s > n ? s : n;
-            rehash_impl(this->min_buckets_for_size(s));
+        if(size >= max_load_) {
+            std::size_t num_buckets
+                = this->min_buckets_for_size((std::max)(size,
+                    this->size_ + (this->size_ >> 1)));
+            if(num_buckets != this->bucket_count_) {
+                rehash_impl(num_buckets);
+                return true;
+            }
         }
-        BOOST_ASSERT(n < this->max_load_ || n > max_size());
-        return need_to_reserve;
+        
+        return false;
     }
 
     // if hash function throws, basic exception safety
     // strong otherwise.
+
     template <class H, class P, class A, class G, class K>
-    void hash_table<H, P, A, G, K>
-        ::rehash(std::size_t n)
+    inline void hash_table<H, P, A, G, K>::rehash(std::size_t min_buckets)
     {
         using namespace std;
 
-        // no throw:
-        std::size_t min_size = this->min_buckets_for_size(this->size_);
-        // basic/strong:
-        rehash_impl(min_size > n ? min_size : n);
-
-        BOOST_ASSERT((float) this->bucket_count() > (float) this->size_ / this->mlf_
-                && this->bucket_count() >= n);
+        if(!this->size_) {
+            if(this->buckets_) this->delete_buckets();
+            this->bucket_count_ = next_prime(min_buckets);
+        }
+        else {
+            // no throw:
+            min_buckets = next_prime((std::max)(min_buckets,
+                    double_to_size_t(floor(this->size_ / (double) mlf_)) + 1));
+            if(min_buckets != this->bucket_count_) rehash_impl(min_buckets);
+        }
     }
 
     // if hash function throws, basic exception safety
@@ -376,54 +454,47 @@ namespace boost { namespace unordered_detail {
 
     template <class H, class P, class A, class G, class K>
     void hash_table<H, P, A, G, K>
-        ::rehash_impl(std::size_t n)
-    {
-        n = next_prime(n); // no throw
-
-        if (n == this->bucket_count())  // no throw
-            return;
-
-        manager new_buckets(*this);             // throws, seperate
-        new_buckets.create_buckets(n);          // throws, seperate
-        move_buckets_to(new_buckets);           // basic/no throw
-        new_buckets.swap(*this);                // no throw
-        this->calculate_max_load();             // no throw
-    }
-
-    ////////////////////////////////////////////////////////////////////////////
-    // move_buckets_to & copy_buckets_to
-
-    // move_buckets_to
-    //
-    // if the hash function throws, basic excpetion safety
-    // no throw otherwise
-
-    template <class H, class P, class A, class G, class K>
-    void hash_table<H, P, A, G, K>
-        ::move_buckets_to(manager& dst)
-    {
-        BOOST_ASSERT(this->node_alloc() == dst.node_alloc());
-        BOOST_ASSERT(this->buckets_ && dst.buckets_);
-
+        ::rehash_impl(std::size_t num_buckets)
+    {    
         hasher const& hf = this->hash_function();
-        bucket_ptr end = this->buckets_end();
+        std::size_t size = this->size_;
+        bucket_ptr end = this->get_bucket(this->bucket_count_);
 
-        for(; this->cached_begin_bucket_ != end; ++this->cached_begin_bucket_) {
-            bucket_ptr src_bucket = this->cached_begin_bucket_;
-            while(src_bucket->next_) {
-                // Move the first group of equivalent nodes in
-                // src_bucket to dst.
+        buckets dst(this->node_alloc(), num_buckets);
+        dst.create_buckets();
+
+        buckets src(this->node_alloc(), this->bucket_count_);
+        src.swap(*this);
+        this->size_ = 0;
+
+        for(bucket_ptr bucket = this->cached_begin_bucket_;
+            bucket != end; ++bucket)
+        {
+            node_ptr group = bucket->next_;
+            while(group) {
+                // Move the first group of equivalent nodes in bucket to dst.
 
                 // This next line throws iff the hash function throws.
                 bucket_ptr dst_bucket = dst.bucket_ptr_from_hash(
-                        hf(extractor::extract(node::get_value(src_bucket->next_))));
+                    hf(get_key_from_ptr(group)));
 
-                node_ptr n = src_bucket->next_;
-                std::size_t count = this->unlink_group(&src_bucket->next_);
-                dst.link_group(n, dst_bucket, count);
+                node_ptr& next_group = node::next_group(group);
+                bucket->next_ = next_group;
+                next_group = dst_bucket->next_;
+                dst_bucket->next_ = group;
+                group = bucket->next_;
             }
         }
+
+        // Swap the new nodes back into the container and setup the local
+        // variables.
+        this->size_ = size;
+        dst.swap(*this);                        // no throw
+        this->init_buckets();
     }
+
+    ////////////////////////////////////////////////////////////////////////////
+    // copy_buckets_to
 
     // copy_buckets_to
     //
@@ -432,14 +503,15 @@ namespace boost { namespace unordered_detail {
 
     template <class H, class P, class A, class G, class K>
     void hash_table<H, P, A, G, K>
-        ::copy_buckets_to(manager& dst) const
+        ::copy_buckets_to(buckets& dst) const
     {
-        BOOST_ASSERT(this->buckets_ && dst.buckets_);
+        BOOST_ASSERT(this->buckets_ && !dst.buckets_);
 
         hasher const& hf = this->hash_function();
-        bucket_ptr end = this->buckets_end();
+        bucket_ptr end = this->get_bucket(this->bucket_count_);
 
         hash_node_constructor<A, G> a(dst);
+        dst.create_buckets();
 
         // no throw:
         for(bucket_ptr i = this->cached_begin_bucket_; i != end; ++i) {
@@ -447,18 +519,18 @@ namespace boost { namespace unordered_detail {
             for(node_ptr it = i->next_; it;) {
                 // hash function can throw.
                 bucket_ptr dst_bucket = dst.bucket_ptr_from_hash(
-                        hf(extractor::extract(node::get_value(it))));
+                    hf(get_key_from_ptr(it)));
                 // throws, strong
 
                 node_ptr group_end = node::next_group(it);
 
                 a.construct(node::get_value(it));
                 node_ptr n = a.release();
-                dst.link_node_in_bucket(n, dst_bucket);
+                node::add_to_bucket(n, *dst_bucket);
         
-                for(it = next_node(it); it != group_end; it = next_node(it)) {
+                for(it = it->next_; it != group_end; it = it->next_) {
                     a.construct(node::get_value(it));
-                    dst.link_node(a.release(), n);
+                    node::add_after_node(a.release(), n);
                 }
             }
         }
@@ -469,25 +541,12 @@ namespace boost { namespace unordered_detail {
 
     // strong exception safety
 
-    template <class H, class P, class A, class G, class K>
-    std::size_t hash_table<H, P, A, G, K>
-        ::erase_key(key_type const& k)
-    {
-        // No side effects in initial section
-        bucket_ptr bucket = this->get_bucket(this->bucket_index(k));
-        node_ptr* it = find_for_erase(bucket, k);
-
-        // No throw.
-        return *it ? this->erase_group(it, bucket) : 0;
-    }
-
     // count
     //
     // strong exception safety, no side effects
 
     template <class H, class P, class A, class G, class K>
-    std::size_t hash_table<H, P, A, G, K>
-        ::count(key_type const& k) const
+    std::size_t hash_table<H, P, A, G, K>::count(key_type const& k) const
     {
         if(!this->size_) return 0;
         node_ptr it = find_iterator(k); // throws, strong
@@ -499,8 +558,7 @@ namespace boost { namespace unordered_detail {
     // strong exception safety, no side effects
     template <class H, class P, class A, class G, class K>
     BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_base
-        hash_table<H, P, A, G, K>
-            ::find(key_type const& k) const
+        hash_table<H, P, A, G, K>::find(key_type const& k) const
     {
         if(!this->size_) return this->end();
 
@@ -515,8 +573,7 @@ namespace boost { namespace unordered_detail {
 
     template <class H, class P, class A, class G, class K>
     BOOST_DEDUCED_TYPENAME A::value_type&
-        hash_table<H, P, A, G, K>
-            ::at(key_type const& k) const
+        hash_table<H, P, A, G, K>::at(key_type const& k) const
     {
         if(!this->size_)
             throw std::out_of_range("Unable to find key in unordered_map.");
@@ -534,27 +591,144 @@ namespace boost { namespace unordered_detail {
     //
     // strong exception safety, no side effects
     template <class H, class P, class A, class G, class K>
-    std::pair<
-        BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_base,
-        BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_base
-    >
-    hash_table<H, P, A, G, K>
-        ::equal_range(key_type const& k) const
+    BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_pair
+        hash_table<H, P, A, G, K>::equal_range(key_type const& k) const
     {
         if(!this->size_)
-            return std::pair<iterator_base, iterator_base>(this->end(), this->end());
+            return iterator_pair(this->end(), this->end());
 
         bucket_ptr bucket = this->get_bucket(this->bucket_index(k));
         node_ptr it = find_iterator(bucket, k);
         if (BOOST_UNORDERED_BORLAND_BOOL(it)) {
             iterator_base first(iterator_base(bucket, it));
             iterator_base second(first);
-            second.increment(node::next_group(second.node_));
-            return std::pair<iterator_base, iterator_base>(first, second);
+            second.increment_bucket(node::next_group(second.node_));
+            return iterator_pair(first, second);
         }
         else {
-            return std::pair<iterator_base, iterator_base>(this->end(), this->end());
+            return iterator_pair(this->end(), this->end());
         }
+    }
+    
+    ////////////////////////////////////////////////////////////////////////////
+    // Erase methods    
+    
+    template <class H, class P, class A, class G, class K>
+    void hash_table<H, P, A, G, K>::clear()
+    {
+        if(!this->size_) return;
+
+        bucket_ptr end = this->get_bucket(this->bucket_count_);
+        for(bucket_ptr begin = this->buckets_; begin != end; ++begin) {
+            this->clear_bucket(begin);
+        }
+
+        this->size_ = 0;
+        this->cached_begin_bucket_ = end;
+    }
+
+    template <class H, class P, class A, class G, class K>
+    inline std::size_t hash_table<H, P, A, G, K>::erase_group(
+        node_ptr* it, bucket_ptr bucket)
+    {
+        node_ptr pos = *it;
+        node_ptr end = node::next_group(pos);
+        *it = end;
+        std::size_t count = this->delete_nodes(pos, end);
+        this->size_ -= count;
+        this->recompute_begin_bucket(bucket);
+        return count;
+    }
+    
+    template <class H, class P, class A, class G, class K>
+    std::size_t hash_table<H, P, A, G, K>::erase_key(key_type const& k)
+    {
+        if(!this->size_) return 0;
+    
+        // No side effects in initial section
+        bucket_ptr bucket = this->get_bucket(this->bucket_index(k));
+        node_ptr* it = this->find_for_erase(bucket, k);
+
+        // No throw.
+        return *it ? this->erase_group(it, bucket) : 0;
+    }
+
+
+    template <class H, class P, class A, class G, class K>
+    BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_base
+        hash_table<H, P, A, G, K>::erase(iterator_base r)
+    {
+        BOOST_ASSERT(r.node_);
+        iterator_base next = r;
+        next.increment();
+        --this->size_;
+        node::unlink_node(*r.bucket_, r.node_);
+        this->delete_node(r.node_);
+        // r has been invalidated but its bucket is still valid
+        this->recompute_begin_bucket(r.bucket_, next.bucket_);
+        return next;
+    }
+
+    template <class H, class P, class A, class G, class K>
+    BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_base
+        hash_table<H, P, A, G, K>::erase_range(
+            iterator_base r1, iterator_base r2)
+    {
+        if(r1 != r2)
+        {
+            BOOST_ASSERT(r1.node_);
+            if (r1.bucket_ == r2.bucket_) {
+                node::unlink_nodes(*r1.bucket_, r1.node_, r2.node_);
+                this->size_ -= this->delete_nodes(r1.node_, r2.node_);
+
+                // No need to call recompute_begin_bucket because
+                // the nodes are only deleted from one bucket, which
+                // still contains r2 after the erase.
+                 BOOST_ASSERT(r1.bucket_->next_);
+            }
+            else {
+                bucket_ptr end_bucket = r2.node_ ?
+                    r2.bucket_ : this->get_bucket(this->bucket_count_);
+                BOOST_ASSERT(r1.bucket_ < end_bucket);
+                node::unlink_nodes(*r1.bucket_, r1.node_, node_ptr());
+                this->size_ -= this->delete_nodes(r1.node_, node_ptr());
+
+                bucket_ptr i = r1.bucket_;
+                for(++i; i != end_bucket; ++i) {
+                    this->size_ -= this->delete_nodes(i->next_, node_ptr());
+                    i->next_ = node_ptr();
+                }
+
+                if(r2.node_) {
+                    node_ptr first = r2.bucket_->next_;
+                    node::unlink_nodes(*r2.bucket_, r2.node_);
+                    this->size_ -= this->delete_nodes(first, r2.node_);
+                }
+
+                // r1 has been invalidated but its bucket is still
+                // valid.
+                this->recompute_begin_bucket(r1.bucket_, end_bucket);
+            }
+        }
+
+        return r2;
+    }
+
+    template <class H, class P, class A, class G, class K>
+    BOOST_DEDUCED_TYPENAME hash_table<H, P, A, G, K>::iterator_base
+        hash_table<H, P, A, G, K>::emplace_empty_impl_with_node(
+            node_constructor& a, std::size_t size)
+    {
+        key_type const& k = get_key(a.value());
+        std::size_t hash_value = this->hash_function()(k);
+        if(this->buckets_) this->reserve_for_insert(size);
+        else this->create_for_insert(size);
+        bucket_ptr bucket = this->bucket_ptr_from_hash(hash_value);
+        node_ptr n = a.release();
+        node::add_to_bucket(n, *bucket);
+        ++this->size_;
+        this->cached_begin_bucket_ = bucket;
+        return iterator_base(bucket, n);
     }
 }}
 
