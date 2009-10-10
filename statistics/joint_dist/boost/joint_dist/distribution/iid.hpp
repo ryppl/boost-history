@@ -19,7 +19,7 @@
 #include <boost/lambda/bind.hpp>
 #include <boost/format.hpp>
 #include <boost/scalar_dist/fun_wrap/log_unnormalized_pdf.hpp>
-#include <boost/scalar_dist/algorithm/accumulate.hpp>
+#include <boost/scalar_dist/iterator/distribution_function.hpp>
 #include <boost/joint_dist/distribution/detail/dim.hpp>
 #include <boost/joint_dist/meta/is_joint_dist.hpp>
 
@@ -107,12 +107,16 @@ namespace joint_dist{
         typedef typename iid_::value_type val_;
         val_ init = static_cast<val_>(0);
         val_ log_pdf 
-            = math::accumulate<std::plus,math::fun_wrap::log_unnormalized_pdf_>(
-            dist.element(),
-            boost::begin(x),
-            boost::end(x),
-            init
-        );
+            = std::accumulate(
+                math::make_distribution_function_iterator<
+                    math::fun_wrap::log_unnormalized_pdf_
+                >(dist.element(),boost::begin(x)),
+                math::make_distribution_function_iterator<
+                    math::fun_wrap::log_unnormalized_pdf_
+                >(dist.element(),boost::end(x)),
+                init
+            );
+
         return log_pdf;
     };
 
