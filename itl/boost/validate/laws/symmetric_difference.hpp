@@ -18,7 +18,11 @@ namespace boost{namespace itl
 {
 
     // ---------------------------------------------------------------------------
-    template <typename Type, template<class>class Equality = itl::std_equal>
+    template <typename Type,
+		      template<class>class Addition     = itl::inplace_plus,
+		      template<class>class Subtraction  = itl::inplace_minus,
+		      template<class>class Intersection = itl::inplace_et,
+	          template<class>class Equality     = itl::std_equal>
     class InplaceSymmetricDifference 
         : public Law<InplaceSymmetricDifference<Type>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>
@@ -44,23 +48,23 @@ namespace boost{namespace itl
         {
             // --- left hand side ------------------------
             Type a_plus_b = this->template getInputValue<operand_a>();
-            a_plus_b += this->template getInputValue<operand_b>();
+            Addition<Type>()(a_plus_b, this->template getInputValue<operand_b>());
 
             Type a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b &= this->template getInputValue<operand_b>();
+            Intersection<Type>()(a_sec_b, this->template getInputValue<operand_b>());
 
             Type lhs = a_plus_b;
-            lhs -= a_sec_b;
+            Subtraction<Type>()(lhs, a_sec_b);
 
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
-            a_minus_b -= this->template getInputValue<operand_b>();
+            Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
 
             Type b_minus_a = this->template getInputValue<operand_b>();
-            b_minus_a -= this->template getInputValue<operand_a>();
+            Subtraction<Type>()(b_minus_a, this->template getInputValue<operand_a>());
 
             Type rhs = a_minus_b;
-            rhs += b_minus_a;
+            Addition<Type>()(rhs, b_minus_a);
 
             this->template setOutputValue<lhs_result>(lhs);
             this->template setOutputValue<rhs_result>(rhs);
@@ -73,31 +77,31 @@ namespace boost{namespace itl
         {
             // --- left hand side ------------------------
             Type a_plus_b = this->template getInputValue<operand_a>();
-            a_plus_b += this->template getInputValue<operand_b>();
+            Addition<Type>()(a_plus_b, this->template getInputValue<operand_b>());
 
             std::cout << "a_plus_b=" << a_plus_b.as_string() << std::endl;
 
             Type a_sec_b = this->template getInputValue<operand_a>();
-            a_sec_b &= this->template getInputValue<operand_b>();
+            Intersection<Type>()(a_sec_b, this->template getInputValue<operand_b>());
 
             std::cout << "a_sec_b=" << a_sec_b.as_string() << std::endl;
 
             Type lhs = a_plus_b;
-            lhs -= a_sec_b;
+            Subtraction<Type>()(lhs, a_sec_b);
 
             std::cout << "lhs=" << lhs.as_string() << std::endl;
 
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
-            a_minus_b -= this->template getInputValue<operand_b>();
+            Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
             std::cout << "a_minus_b=" << a_minus_b.as_string() << std::endl;
 
             Type b_minus_a = this->template getInputValue<operand_b>();
-            b_minus_a -= this->template getInputValue<operand_a>();
+            Subtraction<Type>()(b_minus_a, this->template getInputValue<operand_a>());
             std::cout << "b_minus_a=" << b_minus_a.as_string() << std::endl;
 
             Type rhs = a_minus_b;
-            rhs += b_minus_a;
+            Addition<Type>()(rhs, b_minus_a);
             std::cout << "rhs=" << rhs.as_string() << std::endl;
 
             this->template setOutputValue<lhs_result>(lhs);

@@ -37,8 +37,6 @@ class IntevalGentor
 
 namespace boost{namespace itl
 {
-    //JODO: RangeGentor is similat to ItvGentorT. RangeGentor might be replaced by ItvGentorT
-    // with some modifications applied to ItvGentorT.
 
     template <class Type> 
     class RangeGentor: public RandomGentorAT<interval<Type> >

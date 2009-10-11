@@ -159,9 +159,6 @@ namespace boost{namespace itl
     // ---------------------------------------------------------------------------
     // Inplace variant of laws for operator o=
     // ---------------------------------------------------------------------------
-    //JODO MEMO USENET: Kein Patternmatching auf templateparameter-level! Beispiel
-    // TypeAsString!
-    //template <typename Type, template<class>class Accumulator = inplace_plus, int aux=0>
     template <typename Type, template<class>class Accumulator = inplace_plus, template<class>class NeutronT = neutron>
     class InplaceNeutrality 
         : public Law<InplaceNeutrality<Type,Accumulator,NeutronT>, 

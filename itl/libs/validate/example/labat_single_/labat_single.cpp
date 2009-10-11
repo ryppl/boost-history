@@ -76,9 +76,11 @@ void test_LawValidater()
     //typedef Balance<itl::tree<int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    //typedef InplaceDeMorgan
-    //    <itl::interval_map<int, int> >  TestLawT;
-    //LawValidater<TestLawT, RandomGentor> test_law;
+    typedef InplaceDeMorgan
+    <itl::split_interval_map<int, itl::bits16, partial_enricher, 
+	                         std::less, inplace_bit_add, inplace_bit_and>, 
+	inplace_bit_add, inplace_bit_and>  TestLawT;
+    LawValidater<TestLawT, RandomGentor> test_law;
 
     //typedef IntersectsDefined
     //    <itl::interval_map<int, int, total_absorber> >  TestLawT;
@@ -96,17 +98,17 @@ void test_LawValidater()
     //    <interval_set<int>, itl::interval<int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-    typedef FunctionEquality
-    <
-        itl::list<std::pair<itl::interval<int>,int> >, 
-        interval_map<int,int,total_absorber>,
-        base_addition, 
-        hint_addition
-    > TestLawT;
-    LawValidater<TestLawT, RandomGentor> test_law;
+	//typedef FunctionEquality
+	//<
+	//	itl::list<std::pair<int,int> >, 
+	//	itl::map<int,int,partial_absorber>,
+	//	base_insertion, 
+	//	hint_insertion
+	//> TestLawT;
+	//LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
-    int test_count = 50000;
+    int test_count = 10000;
     ptime start, stop;
 
     GentorProfileSgl::it()->set_std_profile(4,1);

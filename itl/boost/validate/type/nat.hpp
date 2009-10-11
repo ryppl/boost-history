@@ -53,7 +53,6 @@ public:
         return *this; 
     }
 
-    //CL 
     operator int()const{ return (_value); }
 
     std::string as_string()const { return to_string<int>::apply(_value); }

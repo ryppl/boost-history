@@ -7,7 +7,8 @@ Copyright (c) 2007-2009: Joachim Faulhaber
       (See accompanying file LICENCE.txt or copy at
            http://www.boost.org/LICENSE_1_0.txt)
 +-----------------------------------------------------------------------------*/
-#pragma once
+#ifndef BOOST_VALIDATE_DRIVER_COLLECTOR_DRIVER_HPP_JOFA_091009
+#define BOOST_VALIDATE_DRIVER_COLLECTOR_DRIVER_HPP_JOFA_091009
 
 #include <iostream>
 #include <stdio.h>
@@ -23,7 +24,6 @@ namespace boost{namespace itl
     {
     public:
         collector_driver() { setProfile(); }
-
 
         void setProfile()
         {
@@ -140,3 +140,4 @@ namespace boost{namespace itl
 
 }} // namespace itl boost
 
+#endif // BOOST_VALIDATE_DRIVER_COLLECTOR_DRIVER_HPP_JOFA_091009

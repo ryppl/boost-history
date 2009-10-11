@@ -28,14 +28,21 @@ namespace boost{ namespace itl
 
 
     //--------------------------------------------------------------------------
-    template<>
-    inline std::string type_to_string<int>::apply() { return "int"; }
-    template<>
-    inline std::string type_to_string<unsigned int>::apply() { return "int+"; }
-    template<>
-    inline std::string type_to_string<double>::apply() { return "dbl"; }
-    template<>
-    inline std::string type_to_string<std::string>::apply() { return "string"; }
+    template<>inline std::string type_to_string<char>::apply() { return "char"; }
+    template<>inline std::string type_to_string<short>::apply(){ return "short"; }
+    template<>inline std::string type_to_string<int>::apply()  { return "int"; }
+    template<>inline std::string type_to_string<long>::apply() { return "long"; }
+    template<>inline std::string type_to_string<long long>::apply(){ return "Long"; }
+
+    template<>inline std::string type_to_string<unsigned char>::apply(){ return "char+"; }
+    template<>inline std::string type_to_string<unsigned short>::apply(){ return "short+"; }
+    template<>inline std::string type_to_string<unsigned int>::apply()  { return "int+"; }
+    template<>inline std::string type_to_string<unsigned long>::apply() { return "long+"; }
+    template<>inline std::string type_to_string<unsigned long long>::apply(){ return "Long+"; }
+
+    template<>inline std::string type_to_string<float>::apply() { return "flt"; }
+    template<>inline std::string type_to_string<double>::apply() { return "dbl"; }
+    template<>inline std::string type_to_string<std::string>::apply() { return "string"; }
 
     //-------------------------------------------------------------------------
     template<template<class> class Templ>

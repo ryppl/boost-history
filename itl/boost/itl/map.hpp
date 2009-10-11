@@ -271,7 +271,7 @@ public:
     iterator insert(iterator prior, const value_type& value_pair)
     {
         if(Traits::absorbs_neutrons && value_pair.second == codomain_combine::neutron()) 
-            return prior;
+            return end();
         else
             return base_type::insert(prior, value_pair);
     }
@@ -459,39 +459,17 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
         return prior_;
 
     iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
-    Combiner()(inserted_->second, val.second);
+	Combiner()(inserted_->second, val.second);
+
     if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
     {
         erase(inserted_);
-        return prior_;
+        return end();
     }
     else
         return inserted_;
 }
 
-/*JODO CONT
-template <class DomainT, class CodomainT, class Traits, ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section, ITL_ALLOC Alloc>
-    template <class Combiner>
-std::pair<typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator, bool>
-    map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>
-    ::add(iterator prior_, const domain_type& val, const codomain_type& co_val)
-{
-    if(Traits::absorbs_neutrons && co_val == Combiner::neutron())
-        return std::pair<iterator,bool>(prior_, false);
-
-    iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
-    if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
-    {
-        erase(inserted_);
-        return prior_;
-    }
-    else
-    {
-        Combiner()(inserted_->second, val.second);
-        return inserted_;
-    }
-}
-*/
 
 //==============================================================================
 //= Subtraction

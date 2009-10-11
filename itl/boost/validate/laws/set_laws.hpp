@@ -118,11 +118,12 @@ namespace boost{namespace itl
     };
 
     // ---------------------------------------------------------------------------
-    template <typename Type, template<class>class Operator1 = inplace_plus, 
-                             template<class>class Operator2 = inplace_et, 
-                             template<class>class Equality = itl::std_equal>
+    template <typename Type, template<class>class Operator1   = inplace_plus, 
+                             template<class>class Operator2   = inplace_et, 
+                             template<class>class Subtraction = inplace_minus, 
+                             template<class>class Equality    = itl::std_equal>
     class InplaceDeMorgan 
-        : public Law<InplaceDeMorgan<Type,Operator1,Operator2,Equality>, 
+        : public Law<InplaceDeMorgan<Type,Operator1,Operator2,Subtraction,Equality>, 
                      LOKI_TYPELIST_3(Type,Type,Type), LOKI_TYPELIST_2(Type,Type)>
     {
         /** a - (b + c) == (a - b) & (a - c)
@@ -154,14 +155,14 @@ namespace boost{namespace itl
 
             // lhs := a - (b + c)
             Type lhs = this->template getInputValue<operand_a>();
-            lhs -= b_plus_c;
+            Subtraction<Type>()(lhs, b_plus_c);
 
             // --- right hand side -----------------------
             Type a_minus_b = this->template getInputValue<operand_a>();
-            a_minus_b -= this->template getInputValue<operand_b>();
+            Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
 
             Type a_minus_c = this->template getInputValue<operand_a>();
-            a_minus_c -= this->template getInputValue<operand_c>();
+            Subtraction<Type>()(a_minus_c, this->template getInputValue<operand_c>());
 
             // rhs := (a - b) & (a - c)
             Type rhs = a_minus_b;
@@ -173,7 +174,41 @@ namespace boost{namespace itl
             return Equality<Type>()(lhs, rhs);
         }
 
-        bool debug_holds(){ return holds(); }
+        bool debug_holds()
+		{ 
+            // a - (b + c) == (a - b) & (a - c)
+			Type val_a = this->template getInputValue<operand_a>();
+			Type val_b = this->template getInputValue<operand_b>();
+			Type val_c = this->template getInputValue<operand_c>();
+			cout << "a = " << val_a << endl;
+			cout << "b = " << val_b << endl;
+			cout << "c = " << val_c << endl;
+            // --- left hand side ------------------------
+            Type b_plus_c = val_b;
+            Operator1<Type>()(b_plus_c, val_c);
+
+            // lhs := a - (b + c)
+            Type lhs = this->template getInputValue<operand_a>();
+            Subtraction<Type>()(lhs, b_plus_c);
+
+            // --- right hand side -----------------------
+            Type a_minus_b = this->template getInputValue<operand_a>();
+            Subtraction<Type>()(a_minus_b, this->template getInputValue<operand_b>());
+			cout << "a-b = " << a_minus_b << endl;
+
+            Type a_minus_c = this->template getInputValue<operand_a>();
+            Subtraction<Type>()(a_minus_c, this->template getInputValue<operand_c>());
+			cout << "a-c = " << a_minus_c << endl;
+
+            // rhs := (a - b) & (a - c)
+            Type rhs = a_minus_b;
+            Operator2<Type>()(rhs, a_minus_c);
+
+            this->template setOutputValue<lhs_result>(lhs);
+            this->template setOutputValue<rhs_result>(rhs);
+
+            return Equality<Type>()(lhs, rhs);
+		}
 
         size_t size()const 
         { 

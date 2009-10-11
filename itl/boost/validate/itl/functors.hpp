@@ -63,7 +63,7 @@ struct copy_insertion
 template<> 
 inline std::string binary_template_to_string<copy_insertion>::apply() { return "ci"; }
 
-/*JODO URG
+/*JODO
 template <typename SourceT, typename TargetT>
 struct trans_insertion
 {

@@ -40,7 +40,7 @@ namespace boost{namespace itl
     public:
         PolyLawViolations(): p_violations(NULL){}
         PolyLawViolations(LawViolationsI* vios): p_violations(vios) {}
-        ~PolyLawViolations() {} //JODO delete p_violations; }
+        ~PolyLawViolations() {} 
 
         void destroy() { delete p_violations; p_violations = NULL; }
 
@@ -169,6 +169,15 @@ namespace boost{namespace itl
         int          _maxSize;
         size_t       _violationsCount;
     };
+
+
+template<class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>& operator <<
+  (std::basic_ostream<CharType, CharTraits>& stream, const PolyLawViolations& object)
+{
+	return stream << "operator<<: not implemented for itl::PolyLawViolations!";
+}
+
 
 }} // namespace itl boost
 

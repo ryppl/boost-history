@@ -74,7 +74,7 @@ namespace boost{namespace itl
         void addFrequencies(ValidationCounterT& summary) { summary += _frequencies; }
         void addViolations(ViolationCounterT& summary, ViolationMapT& collector)
         { 
-            summary += _violationsCount; 
+            summary   += _violationsCount; 
             collector += _violations;  
         }
 

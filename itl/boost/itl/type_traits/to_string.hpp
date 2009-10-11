@@ -28,7 +28,7 @@ template <class Type>
 struct to_string
 {
     /** Converts all values of types to std::string that implement an operator << */
-    static const std::string apply(const Type& value)
+    static std::string apply(const Type& value)
     {
         std::stringstream repr;
         repr << value;

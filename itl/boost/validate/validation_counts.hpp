@@ -39,6 +39,14 @@ private:
 bool operator == (const validation_counts& left, const validation_counts& right)
 { return left.time()==right.time() && left.count()==right.count(); } 
 
+template<class CharType, class CharTraits>
+std::basic_ostream<CharType, CharTraits>& operator <<
+  (std::basic_ostream<CharType, CharTraits>& stream, const validation_counts& object)
+{
+    return stream << "(time=" << object.time() << "count=" << object.count() << ")";
+}
+
+
 
 }} // namespace itl boost
 

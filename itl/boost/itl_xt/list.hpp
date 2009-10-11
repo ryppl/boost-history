@@ -322,7 +322,6 @@ namespace boost{namespace itl
             else
             {
                 iterator fromThis_ = cur_; fromThis_++;
-                DataT dbg_from = *fromThis_;
                 iterator perm_ = first_common_element(fromThis_, end(), perm.begin(), perm.end());
                 if(perm_ == perm.end())
                     perm.push_front(cand);

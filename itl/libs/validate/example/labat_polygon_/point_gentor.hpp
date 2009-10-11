@@ -23,8 +23,6 @@ namespace boost{namespace itl
 template<class DomainT>
 struct point
 {
-    //CL typedef DomainT coordinate_type;
-
     std::string as_string()const
     {
         return std::string(

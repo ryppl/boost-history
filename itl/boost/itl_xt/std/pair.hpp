@@ -22,7 +22,6 @@ template<class CharType, class CharTraits, class FirstT, class SecondT>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, const std::pair<FirstT,SecondT>& object)
 {
-    typedef std::pair<FirstT,SecondT> ObjectT;
     return stream << "(" << object.first << "," << object.second << ")";
 }
 
