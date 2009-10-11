@@ -20,24 +20,21 @@ namespace task {
 class spin_condition : private noncopyable
 {
 private:
-	enum command
+	enum command_t
 	{
 		SLEEPING = 0,
 		NOTIFY_ONE,
 		NOTIFY_ALL
 	};
 
-	volatile uint32_t	cmd_;
+	volatile command_t	cmd_;
 	volatile uint32_t	waiters_;
 	spin_mutex			enter_mtx_;
 	spin_mutex			check_mtx_;
 
-	spin_condition( spin_condition const&);
-	spin_condition & operator=( spin_condition const&);
-
 	void wait_( spin_mutex &);
 	bool wait_( spin_mutex &, system_time const&);
-	void notify_( command);
+	void notify_( command_t);
 
 public:
 	spin_condition();

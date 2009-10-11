@@ -41,6 +41,7 @@ alias task_sources
 	poolsize.cpp
 	scanns.cpp
 	semaphore_windows.cpp
+	spin_auto_reset_event.cpp
 	spin_condition.cpp
 	spin_mutex.cpp
 	stacksize.cpp
@@ -60,6 +61,7 @@ alias task_sources
 	poolsize.cpp
 	scanns.cpp
 	semaphore_posix.cpp
+	spin_auto_reset_event.cpp
 	spin_condition.cpp
 	spin_mutex.cpp
 	stacksize.cpp

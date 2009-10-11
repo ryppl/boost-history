@@ -21,10 +21,9 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
 
 struct joiner
 {

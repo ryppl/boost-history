@@ -9,6 +9,7 @@
 
 #include <boost/task/as_sub_task.hpp>
 #include <boost/task/async.hpp>
+#include <boost/task/bounded_buffer.hpp>
 #include <boost/task/bounded_twolock_fifo.hpp>
 #include <boost/task/bounded_onelock_fifo.hpp>
 #include <boost/task/bounded_onelock_prio_queue.hpp>
@@ -25,6 +26,7 @@
 #include <boost/task/poolsize.hpp>
 #include <boost/task/scanns.hpp>
 #include <boost/task/semaphore.hpp>
+#include <boost/task/spin_auto_reset_event.hpp>
 #include <boost/task/spin_condition.hpp>
 #include <boost/task/spin_lock.hpp>
 #include <boost/task/spin_mutex.hpp>

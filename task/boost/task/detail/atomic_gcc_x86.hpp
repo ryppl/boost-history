@@ -12,10 +12,14 @@
 
 #include <boost/config/abi_prefix.hpp>
 
-namespace boost { namespace task
-{
-namespace detail
-{
+namespace boost {
+namespace task {
+namespace detail {
+
+inline
+uint32_t atomic_load( uint32_t const volatile * object)
+{ return * object; }
+
 inline
 void atomic_exchange( uint32_t volatile * object, uint32_t desired)
 {
@@ -78,7 +82,8 @@ long atomic_fetch_sub( uint32_t volatile * object, uint32_t operand)
 
 	return r;
 }
-} } }
+
+}}}
 
 #include <boost/config/abi_suffix.hpp>
 

@@ -189,11 +189,11 @@ private:
 				}
 				else if ( ! ums_.has_blocked() )
 				{
-					try
-					{ this_thread::sleep( asleep_); }
-					catch ( thread_interrupted const&)
-					{ return; }
+					if ( take_global_callable_( ca) )
+						execute_( ca);
 				}
+				else
+					this_thread::yield();
 				scns_ = 0;
 			}
 			else
