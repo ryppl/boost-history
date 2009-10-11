@@ -74,7 +74,7 @@ public:
     }
 
 
-	//JODO DEL complete: spezielle instanzen werden nicht benoetigt! 
+    //JODO DEL complete: spezielle instanzen werden nicht benoetigt! 
     LawValidaterI* chooseValidater()
     {
         switch(_lawChoice.some())

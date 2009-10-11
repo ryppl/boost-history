@@ -20,19 +20,19 @@ namespace boost{namespace itl
 template<class NaturalT> class bits
 {
 public:
-	bits():_bits(){}
-	explicit bits(NaturalT value):_bits(value){}
+    bits():_bits(){}
+    explicit bits(NaturalT value):_bits(value){}
 
-	NaturalT number()const{ return _bits; }
-	bits& operator |= (const bits& value){_bits |= value._bits; return *this;}
-	bits& operator &= (const bits& value){_bits &= value._bits; return *this;}
-	bits& operator ^= (const bits& value){_bits ^= value._bits; return *this;}
-	bits  operator ~  ()const { return bits(~_bits); }
-	bool operator  <  (const bits& value)const{return _bits < value._bits;}
-	bool operator  == (const bits& value)const{return _bits == value._bits;}
+    NaturalT number()const{ return _bits; }
+    bits& operator |= (const bits& value){_bits |= value._bits; return *this;}
+    bits& operator &= (const bits& value){_bits &= value._bits; return *this;}
+    bits& operator ^= (const bits& value){_bits ^= value._bits; return *this;}
+    bits  operator ~  ()const { return bits(~_bits); }
+    bool operator  <  (const bits& value)const{return _bits < value._bits;}
+    bool operator  == (const bits& value)const{return _bits == value._bits;}
 
 private:
-	NaturalT _bits;
+    NaturalT _bits;
 };
 
 typedef bits<unsigned char>       bits8;
@@ -43,10 +43,10 @@ typedef bits<unsigned long long>  bits64;
 template<class NaturalT>
 int inclusion_compare(itl::bits<NaturalT> left, itl::bits<NaturalT> right)
 {
-	if(0 ==(left.number() & right.number())) return inclusion::unrelated;
-	else if(left.number() < right.number() ) return inclusion::subset;
-	else if(left.number() > right.number() ) return inclusion::superset;
-	else                                     return inclusion::equal;
+    if(0 ==(left.number() & right.number())) return inclusion::unrelated;
+    else if(left.number() < right.number() ) return inclusion::subset;
+    else if(left.number() > right.number() ) return inclusion::superset;
+    else                                     return inclusion::equal;
 }
 
 

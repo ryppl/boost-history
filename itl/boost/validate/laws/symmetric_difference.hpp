@@ -19,10 +19,10 @@ namespace boost{namespace itl
 
     // ---------------------------------------------------------------------------
     template <typename Type,
-		      template<class>class Addition     = itl::inplace_plus,
-		      template<class>class Subtraction  = itl::inplace_minus,
-		      template<class>class Intersection = itl::inplace_et,
-	          template<class>class Equality     = itl::std_equal>
+              template<class>class Addition     = itl::inplace_plus,
+              template<class>class Subtraction  = itl::inplace_minus,
+              template<class>class Intersection = itl::inplace_et,
+              template<class>class Equality     = itl::std_equal>
     class InplaceSymmetricDifference 
         : public Law<InplaceSymmetricDifference<Type>, 
                      LOKI_TYPELIST_2(Type,Type), LOKI_TYPELIST_2(Type,Type)>

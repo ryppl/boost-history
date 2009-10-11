@@ -28,13 +28,13 @@ namespace boost{namespace itl
             setValid(true);
             _rootChoice.setSize(RootType::Types_size);
             _rootChoice.setMaxWeights(100);
-            _rootChoice[RootType::itl_set]               = 0;
-            _rootChoice[RootType::interval_set]          = 0;
-            _rootChoice[RootType::separate_interval_set] = 0;
-            _rootChoice[RootType::split_interval_set]    = 0;
-            _rootChoice[RootType::itl_map]               = 33;
-            _rootChoice[RootType::interval_map]          = 33;
-            _rootChoice[RootType::split_interval_map]    = 34;
+            _rootChoice[RootType::itl_set]               = 14;
+            _rootChoice[RootType::interval_set]          = 14;
+            _rootChoice[RootType::separate_interval_set] = 14;
+            _rootChoice[RootType::split_interval_set]    = 14;
+            _rootChoice[RootType::itl_map]               = 14;
+            _rootChoice[RootType::interval_map]          = 15;
+            _rootChoice[RootType::split_interval_map]    = 15;
             setRootTypeNames();
             _rootChoice.init();
 

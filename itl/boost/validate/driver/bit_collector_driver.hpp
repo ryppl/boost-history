@@ -103,9 +103,9 @@ namespace boost{namespace itl
             case RootType::itl_map: {
                 switch(neutronizerChoice) {
                 case NeutronHandlerType::partial_absorber: 
-					return new collector_validater< itl::map<int, itl::bits8, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater< itl::map<int, itl::bits8, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
                 case NeutronHandlerType::partial_enricher: 
-					return new collector_validater< itl::map<int, itl::bits32, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater< itl::map<int, itl::bits32, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
                 default: return choiceError(ITL_LOCATION("\nRootType::itl_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case itl_map 
@@ -113,19 +113,19 @@ namespace boost{namespace itl
             case RootType::interval_map: {
                 switch(neutronizerChoice) {
                 case NeutronHandlerType::partial_absorber: 
-					return new collector_validater<interval_map<int, itl::bits64, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<interval_map<int, itl::bits64, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
                 case NeutronHandlerType::partial_enricher: 
-					return new collector_validater<interval_map<int, itl::bits16, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<interval_map<int, itl::bits16, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
                 default: return choiceError(ITL_LOCATION("\nRootType::interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case interval_map 
             ////-----------------------------------------------------------------
             case RootType::split_interval_map: {
                 switch(neutronizerChoice) {
-				case NeutronHandlerType::partial_absorber: 
-					return new collector_validater<split_interval_map<int, itl::bits32, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
+                case NeutronHandlerType::partial_absorber: 
+                    return new collector_validater<split_interval_map<int, itl::bits32, partial_absorber, std::less, inplace_bit_add, inplace_bit_and> >;
                 case NeutronHandlerType::partial_enricher: 
-					return new collector_validater<split_interval_map<double, itl::bits8, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
+                    return new collector_validater<split_interval_map<double, itl::bits8, partial_enricher, std::less, inplace_bit_add, inplace_bit_and> >;
                 default: return choiceError(ITL_LOCATION("\nRootType::split_interval_map: neutronizerChoice:\n"), neutronizerChoice, _neutronizerChoice);
                 }//switch neutronizerChoice
             }//case split_interval_map 

@@ -21,7 +21,7 @@ class std_pair_gentor: public RandomGentorAT<std::pair<FirstT,SecondT> >
 {
 public:
 
-	typedef std::pair<FirstT,SecondT> pair_type;
+    typedef std::pair<FirstT,SecondT> pair_type;
 
     std_pair_gentor(): _first_gentor(NULL), _second_gentor(NULL) {}
     ~std_pair_gentor() { delete _first_gentor; delete _second_gentor; }
@@ -38,11 +38,11 @@ public:
         _second_gentor = gentor; 
     }
 
-	void some(pair_type& value)
-	{
-		_first_gentor->some(value.first);
-		_second_gentor->some(value.second);
-	};
+    void some(pair_type& value)
+    {
+        _first_gentor->some(value.first);
+        _second_gentor->some(value.second);
+    };
 
 private:
     RandomGentorAT<FirstT>*  _first_gentor;

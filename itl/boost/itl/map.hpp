@@ -459,7 +459,7 @@ typename map<DomainT,CodomainT,Traits,Compare,Combine,Section,Alloc>::iterator
         return prior_;
 
     iterator inserted_ = base_insert(prior_, value_type(val.first, Combiner::neutron()));
-	Combiner()(inserted_->second, val.second);
+    Combiner()(inserted_->second, val.second);
 
     if(Traits::absorbs_neutrons && inserted_->second == Combiner::neutron())
     {

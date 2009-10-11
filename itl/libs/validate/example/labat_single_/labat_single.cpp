@@ -78,8 +78,8 @@ void test_LawValidater()
 
     typedef InplaceDeMorgan
     <itl::split_interval_map<int, itl::bits16, partial_enricher, 
-	                         std::less, inplace_bit_add, inplace_bit_and>, 
-	inplace_bit_add, inplace_bit_and>  TestLawT;
+                             std::less, inplace_bit_add, inplace_bit_and>, 
+    inplace_bit_add, inplace_bit_and>  TestLawT;
     LawValidater<TestLawT, RandomGentor> test_law;
 
     //typedef IntersectsDefined
@@ -98,14 +98,14 @@ void test_LawValidater()
     //    <interval_set<int>, itl::interval<int> >  TestLawT;
     //LawValidater<TestLawT, RandomGentor> test_law;
 
-	//typedef FunctionEquality
-	//<
-	//	itl::list<std::pair<int,int> >, 
-	//	itl::map<int,int,partial_absorber>,
-	//	base_insertion, 
-	//	hint_insertion
-	//> TestLawT;
-	//LawValidater<TestLawT, RandomGentor> test_law;
+    //typedef FunctionEquality
+    //<
+    //    itl::list<std::pair<int,int> >, 
+    //    itl::map<int,int,partial_absorber>,
+    //    base_insertion, 
+    //    hint_insertion
+    //> TestLawT;
+    //LawValidater<TestLawT, RandomGentor> test_law;
 
     //-----------------------------------------------------------------------------
     int test_count = 10000;

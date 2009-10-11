@@ -175,7 +175,7 @@ template<class CharType, class CharTraits>
 std::basic_ostream<CharType, CharTraits>& operator <<
   (std::basic_ostream<CharType, CharTraits>& stream, const PolyLawViolations& object)
 {
-	return stream << "operator<<: not implemented for itl::PolyLawViolations!";
+    return stream << "operator<<: not implemented for itl::PolyLawViolations!";
 }
 
 

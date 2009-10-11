@@ -48,8 +48,8 @@ namespace boost{namespace itl
 
     // -------------------------------------------------------------------------
     template <class NaturalT> 
-	class RandomGentor<itl::bits<NaturalT> > : 
-		public bits_gentor<itl::bits<NaturalT> > {};
+    class RandomGentor<itl::bits<NaturalT> > : 
+        public bits_gentor<itl::bits<NaturalT> > {};
 
     // -------------------------------------------------------------------------
     template <class DomainT>
@@ -58,7 +58,7 @@ namespace boost{namespace itl
 
     // -------------------------------------------------------------------------
     template <class DomainT, class CodomainT>
-	class RandomGentor< std::pair<DomainT,CodomainT> > :
+    class RandomGentor< std::pair<DomainT,CodomainT> > :
         public std_pair_gentor<DomainT,CodomainT> {};
 
 #ifdef LAW_BASED_TEST_BOOST_POLYGON
@@ -123,7 +123,7 @@ namespace boost{namespace itl
         public MapGentorT<itl::map<DomainT,itl::set<int>,Neutronizer> > {};
 
     template <class DomainT, class BitsT, class Neutronizer,
-			  ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
     class RandomGentor<itl::map<DomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > : 
         public MapGentorT<itl::map<DomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > {};
 
@@ -153,20 +153,20 @@ namespace boost{namespace itl
     // ------------------------------------------------------------------------
     // ------------------------------------------------------------------------
     template <class NumericDomainT, class BitsT, class Neutronizer,
-	          ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
-	class RandomGentor<split_interval_map<NumericDomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > : 
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+    class RandomGentor<split_interval_map<NumericDomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > : 
         public MapGentorT<split_interval_map<NumericDomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > {};
 
     template <class NumericDomainT, class BitsT, class Neutronizer,
-	          ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
     class RandomGentor<interval_map<NumericDomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > : 
         public MapGentorT<interval_map<NumericDomainT,itl::bits<BitsT>,Neutronizer,Compare,Combine,Section> > {};
 
-	//NOTE: All trials to reduce code replication for RandomGentor
-	// and Calibrater by introducing a fancy 
-	// template template IntervalMap shipwrecked due to compilers 
-	// disability to resolve the resulting instantiations. Compilers
-	// always see ambiguities where there seems to be a resolution.
+    //NOTE: All trials to reduce code replication for RandomGentor
+    // and Calibrater by introducing a fancy 
+    // template template IntervalMap shipwrecked due to compilers 
+    // disability to resolve the resulting instantiations. Compilers
+    // always see ambiguities where there seems to be a resolution.
 
 
     // ------------------------------------------------------------------------
@@ -230,12 +230,12 @@ namespace boost{namespace itl
     };
 
     template <class BitsT> 
-	struct Calibrater<itl::bits<BitsT>, RandomGentor>
+    struct Calibrater<itl::bits<BitsT>, RandomGentor>
     {
         static void apply(RandomGentor<itl::bits<BitsT> >& gentor) 
         {
             // Set the range within which the sizes of the generated object varies.
-			gentor.set_range(itl::interval<BitsT>::rightopen(0, sizeof BitsT));
+            gentor.set_range(itl::interval<BitsT>::rightopen(0, sizeof BitsT));
         }
     };
 
@@ -563,12 +563,12 @@ namespace boost{namespace itl
     };
 
     template <typename NumericDomainT, typename BitsT, class Neutronizer,
-			  ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
-	struct Calibrater<itl::map<NumericDomainT,itl::bits<BitsT>,Neutronizer,
-		                       Compare,Combine,Section>, RandomGentor>
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+    struct Calibrater<itl::map<NumericDomainT,itl::bits<BitsT>,Neutronizer,
+                               Compare,Combine,Section>, RandomGentor>
     {
         static void apply(RandomGentor<itl::map<NumericDomainT,itl::bits<BitsT>,Neutronizer,
-		                                        Compare,Combine,Section> >& gentor) 
+                                                Compare,Combine,Section> >& gentor) 
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
 
@@ -667,7 +667,7 @@ namespace boost{namespace itl
     };
 
     template <typename NumericDomainT, typename NumericCodomainT, class Neutronizer,
-			  ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
     struct Calibrater<split_interval_map<NumericDomainT,NumericCodomainT,Neutronizer,Compare,Combine,Section>, RandomGentor>
     {
         static void apply(RandomGentor<split_interval_map<NumericDomainT,NumericCodomainT,Neutronizer,Compare,Combine,Section> >& gentor) 
@@ -692,12 +692,12 @@ namespace boost{namespace itl
 
 
     template <typename NumericDomainT, typename BitsT, class Neutronizer,
-			  ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
-	struct Calibrater<interval_map<NumericDomainT,itl::bits<BitsT>,
-		                           Neutronizer,Compare,Combine,Section>, RandomGentor>
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+    struct Calibrater<interval_map<NumericDomainT,itl::bits<BitsT>,
+                                   Neutronizer,Compare,Combine,Section>, RandomGentor>
     {
-		static void apply(RandomGentor<interval_map<NumericDomainT,itl::bits<BitsT>,
-			                                              Neutronizer,Compare,Combine,Section> >& gentor) 
+        static void apply(RandomGentor<interval_map<NumericDomainT,itl::bits<BitsT>,
+                                                          Neutronizer,Compare,Combine,Section> >& gentor) 
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
 
@@ -709,7 +709,7 @@ namespace boost{namespace itl
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-			codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);
@@ -717,12 +717,12 @@ namespace boost{namespace itl
     };
 
     template <typename NumericDomainT, typename BitsT, class Neutronizer,
-			  ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
-	struct Calibrater<split_interval_map<NumericDomainT,itl::bits<BitsT>,
-		                                 Neutronizer,Compare,Combine,Section>, RandomGentor>
+              ITL_COMPARE Compare, ITL_COMBINE Combine, ITL_SECTION Section> 
+    struct Calibrater<split_interval_map<NumericDomainT,itl::bits<BitsT>,
+                                         Neutronizer,Compare,Combine,Section>, RandomGentor>
     {
-		static void apply(RandomGentor<split_interval_map<NumericDomainT,itl::bits<BitsT>,
-			                                              Neutronizer,Compare,Combine,Section> >& gentor) 
+        static void apply(RandomGentor<split_interval_map<NumericDomainT,itl::bits<BitsT>,
+                                                          Neutronizer,Compare,Combine,Section> >& gentor) 
         {
             gentor.setRangeOfSampleSize(GentorProfileSgl::it()->range_ContainerSize());
 
@@ -734,7 +734,7 @@ namespace boost{namespace itl
             itvGentor->setMaxIntervalLength(GentorProfileSgl::it()->maxIntervalLength());
 
             bits_gentor<BitsT>* codomainGentor = new bits_gentor<BitsT>;
-			codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
+            codomainGentor->set_range(interval<BitsT>::closed(0, (numeric_limits<BitsT>::max)()));
 
             gentor.setDomainGentor(itvGentor);
             gentor.setCodomainGentor(codomainGentor);

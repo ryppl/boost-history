@@ -22,19 +22,19 @@ class bits_gentor: public RandomGentorAT<itl::bits<NaturalT> >
 {
 public:
 
-	typedef itl::bits<NaturalT> bits_type;
+    typedef itl::bits<NaturalT> bits_type;
 
-	void some(bits_type& value)
-	{
-		value = bits_type(_natural_gentor(_value_range));
-	};
+    void some(bits_type& value)
+    {
+        value = bits_type(_natural_gentor(_value_range));
+    };
 
-	void set_range(const itl::interval<NaturalT>& range)
-	{ _value_range = range; }
+    void set_range(const itl::interval<NaturalT>& range)
+    { _value_range = range; }
 
 private:
     NumberGentorT<NaturalT> _natural_gentor;
-	itl::interval<NaturalT> _value_range;
+    itl::interval<NaturalT> _value_range;
 };
 
 

@@ -304,16 +304,16 @@ namespace boost{namespace itl
     // Positive or negative functor trait
     //--------------------------------------------------------------------------
 
-	// A binary operation - is negative (or inverting) with respect to the
-	// neutral element iff it yields the inverse element if it is applied to the 
-	// neutron element:
-	// 0 - x = -x
-	// For a functor that wraps the inpleace of op-assign verision this is 
-	// equivalent to
-	//
-	// T x = ..., y;
-	// y = Functor::neutron();
-	// Functor()(y, x); // y == inverse_of(x) 
+    // A binary operation - is negative (or inverting) with respect to the
+    // neutral element iff it yields the inverse element if it is applied to the 
+    // neutron element:
+    // 0 - x = -x
+    // For a functor that wraps the inpleace of op-assign verision this is 
+    // equivalent to
+    //
+    // T x = ..., y;
+    // y = Functor::neutron();
+    // Functor()(y, x); // y == inverse_of(x) 
 
     template<class Functor> struct is_negative;
 
@@ -346,42 +346,42 @@ namespace boost{namespace itl
     template<class Combiner> 
     struct conversion
     { 
-		typedef conversion<Combiner> type;
-		typedef typename
-			remove_const<
-				typename remove_reference<typename Combiner::first_argument_type
-				>::type
-			>::type
-			argument_type;
-		// The proversion of an op-assign functor o= lets the value unchanged
-		// (0 o= x) == x;
-		// Example += :  (0 += x) == x
-		static argument_type proversion(const argument_type& value)
-		{ 
-			return value; 
-		} 
+        typedef conversion<Combiner> type;
+        typedef typename
+            remove_const<
+                typename remove_reference<typename Combiner::first_argument_type
+                >::type
+            >::type
+            argument_type;
+        // The proversion of an op-assign functor o= lets the value unchanged
+        // (0 o= x) == x;
+        // Example += :  (0 += x) == x
+        static argument_type proversion(const argument_type& value)
+        { 
+            return value; 
+        } 
 
-		// The inversion of an op-assign functor o= inverts the value x
-		// to it's inverse element -x
-		// (0 o= x) == -x;
-		// Example -= :  (0 -= x) == -x
-		static argument_type inversion(const argument_type& value)
-		{
-			argument_type inverse = Combiner::neutron();
-			Combiner()(inverse, value);
-			return inverse;
-		}
-	};
+        // The inversion of an op-assign functor o= inverts the value x
+        // to it's inverse element -x
+        // (0 o= x) == -x;
+        // Example -= :  (0 -= x) == -x
+        static argument_type inversion(const argument_type& value)
+        {
+            argument_type inverse = Combiner::neutron();
+            Combiner()(inverse, value);
+            return inverse;
+        }
+    };
 
-	template<class Combiner> struct version : public conversion<Combiner>
-	{
-		typedef    version<Combiner> type;
+    template<class Combiner> struct version : public conversion<Combiner>
+    {
+        typedef    version<Combiner> type;
         typedef conversion<Combiner> base_type;
-		typedef typename base_type::argument_type argument_type;
+        typedef typename base_type::argument_type argument_type;
 
-		argument_type operator()(const argument_type& value)
-		{ return base_type::proversion(value); } 
-	};
+        argument_type operator()(const argument_type& value)
+        { return base_type::proversion(value); } 
+    };
 
     template<>struct version<itl::inplace_minus<short      > >{short       operator()(short       val){return -val;}};
     template<>struct version<itl::inplace_minus<int        > >{int         operator()(int         val){return -val;}};
@@ -392,17 +392,17 @@ namespace boost{namespace itl
     template<>struct version<itl::inplace_minus<long double> >{long double operator()(long double val){return -val;}};
 
     template<class Type> 
-	struct version<itl::inplace_minus<Type> > : public conversion<itl::inplace_minus<Type> >
+    struct version<itl::inplace_minus<Type> > : public conversion<itl::inplace_minus<Type> >
     { 
-		typedef    version<itl::inplace_minus<Type> > type;
+        typedef    version<itl::inplace_minus<Type> > type;
         typedef conversion<itl::inplace_minus<Type> > base_type;
-		typedef typename base_type::argument_type argument_type;
+        typedef typename base_type::argument_type argument_type;
 
-		Type operator()(const Type& value)
-		{
-			return base_type::inversion(value);
-		} 
-	};
+        Type operator()(const Type& value)
+        {
+            return base_type::inversion(value);
+        } 
+    };
 
 
 }} // namespace itl boost
