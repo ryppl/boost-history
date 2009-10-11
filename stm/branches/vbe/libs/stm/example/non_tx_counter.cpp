@@ -96,7 +96,8 @@ int test_counter() {
     th3.join();
     th4.join();
 
-    bool fails=!check(2);
+    bool fails=false;
+    fails = fails || !check(2);
     fails = fails || !assign();
     fails = fails || !test_const(counter);
     return fails;
@@ -107,10 +108,7 @@ int main() {
     transaction::do_deferred_updating();
     transaction::initialize();
     thread_initializer thi;
-    srand(time(0));
 
-    test_counter();
-
-    return 0;
+    return test_counter();
 
 }

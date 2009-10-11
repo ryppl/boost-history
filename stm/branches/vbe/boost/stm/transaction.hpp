@@ -198,7 +198,7 @@ public:
     {
         inline tss_context()
         : tx_()
-        , transactions()
+        , transactions_()
         #ifndef BOOST_STM_USE_BOOST_MUTEX
         #if WIN32
         , mutex_(PTHREAD_MUTEX_INITIALIZER)
@@ -212,7 +212,8 @@ public:
         #endif
         {
             // the current transaction is 0
-            transactions.push(0);
+            //transactions_.push(static_cast<transaction*>(0));
+            transactions_.push(0);
             #ifndef BOOST_STM_USE_BOOST_MUTEX
             pthread_mutex_init(&mutex_, 0);
             #endif
@@ -222,7 +223,7 @@ public:
         }
 
         tx_context tx_;
-        TransactionStack transactions;
+        TransactionsStack transactions_;
         Mutex mutex_;
         #if PERFORMING_LATM
         int blocked_;
@@ -1632,8 +1633,7 @@ private:
     inline static TransactionsStack &transactions(thread_id_t id) {
         return *threadTransactionsStack_.find(id)->second;
     }
-    private:
-
+   private:
 
 ////////////////////////////////////////
 #else //BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
@@ -1791,11 +1791,16 @@ private:
         return i->second->currentlyLockedLocks_;
     }
 #endif
-    inline TransactionsStack &transactions() {return context_.transactions_;}
+    
+    TransactionsStack& transactionsRef_;
+   public:
+    inline TransactionsStack& transactions() {return transactionsRef_;}
     inline static TransactionsStack &transactions(thread_id_t id) {
         tss_context_map_type::iterator i = tss_context_map_.find(id);
         return i->second->transactions_;
     }
+   private:
+   
 #endif
 
 
@@ -1936,7 +1941,7 @@ private:
    inline static MutexSet &currentlyLockedLocksRef(thread_id_t id) {return *threadCurrentlyLockedLocks_.find(id)->second;}
 #endif
 
-    static ThreadTransactionsStack threadTransactionsStack_;
+    //static ThreadTransactionsStack threadTransactionsStack_;
     TransactionsStack& transactionsRef_;
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
@@ -2189,7 +2194,7 @@ inline int transaction::unlock<Mutex*> (Mutex *lock) { return transaction::pthre
 #include <boost/stm/detail/transaction_impl.hpp>
 #include <boost/stm/detail/latm_general_impl.hpp>
 #include <boost/stm/detail/auto_lock.hpp>
-#include <boost/stm/detail/tx_ptr.hpp>
+#include <boost/stm/tx_ptr.hpp>
 
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_ExceptAndBackOffOnAbortNoticeCM)

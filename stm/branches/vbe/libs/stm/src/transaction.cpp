@@ -33,7 +33,9 @@ transaction::MutexThreadSetMap transaction::latmLockedLocksAndThreadIdsMap_;
 transaction::MutexThreadMap transaction::latmLockedLocksOfThreadMap_;
 transaction::MutexSet transaction::tmConflictingLocks_;
 transaction::DeletionBuffer transaction::deletionBuffer_;
+#ifndef BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP
 transaction::ThreadTransactionsStack transaction::threadTransactionsStack_;
+#endif
 
 size_t transaction::global_clock_ = 0;
 size_t transaction::stalls_ = 0;

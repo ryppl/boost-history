@@ -17,7 +17,7 @@
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <boost/stm/transaction.hpp>
-#include <boost/stm/non_tx/detail/cache_map.hpp>
+//#include <boost/stm/non_tx/detail/cache_map.hpp>
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -39,8 +39,15 @@ public:
     // contructor from a implicitly convertible to T
     template <typename U>
     numeric(U v) : val_(v) {}
-    //
+    //numeric(T v) : val_(v) {}
     ~numeric() {}
+
+    #if 0
+    template<class U>
+    numeric& operator=(numeric<U> const& r) {
+        val_=r.value(); 
+    }
+    #endif
 
     operator T() const { return value(); }
     operator T&() { return ref(); }

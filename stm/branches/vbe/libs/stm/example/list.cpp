@@ -39,6 +39,12 @@ public:
    tx_ptr<list_node<T> > next_;
 };
 
+template <typename OSTREAM, typename T>
+OSTREAM& operator<<(OSTREAM& os, list_node<T>& v) {
+    os << v.value_;
+    return os;
+}
+
 //--------------------------------------------------------------------------
 template <typename T>
 class list
@@ -51,14 +57,18 @@ public:
     list()
     : head_(BOOST_STM_NEW_1(transactional_object<list_node<T> >()))
     , size_(BOOST_STM_NEW_1(transactional_object<std::size_t>(0)))
-    { }
+    { 
+            std::cout << "list().head_" << *head_.get() << std::endl;
+            std::cout << "list().size_" << *size_.get() << std::endl;
+    }
 
     ~list() { }
 
     std::size_t size() const {
         std::size_t res=0;
         use_atomic(_) {
-            rd_ptr<std::size_t> s(_, size_);
+            upgrd_ptr<std::size_t> s(_, size_);
+            std::cout << "size_.get()" << s.get() << std::endl;
             res=*s;
         }
         return res;
@@ -68,24 +78,33 @@ public:
     // find the location to insert the node. if the value already exists, fail
     //--------------------------------------------------------------------------
     void insert(const T& val) {
-        use_atomic(_) {
-            cerr << "try" << endl;
+        cerr << __LINE__ << " insert" << endl;
+     //   use_atomic(_) {
+        for (boost::stm::transaction _; !_.committed() && _.restart(); _.end()) {
+        cerr << __LINE__ << " insert" << endl;
             upgrd_ptr<list_node<T> > prev(_, head_);
             upgrd_ptr<list_node<T> > curr(_, head_->next_);
-            while (curr) {
-                cerr << "curr" << curr << endl;
+            while (curr.get()!=0) {
+                cerr << __LINE__ << " curr" << curr.get() << endl;
                 if (curr->value_ == val) return;
                 else if (curr->value_ > val) break;
                 prev = curr;
                 curr = curr->next_;
             }
-            if (!curr || (curr->value_ > val)) {
+            cerr << __LINE__ << " insert" << endl;
+            if (curr.get()==0 || (curr->value_ > val)) {
+                cerr << __LINE__ << " inserting" << endl;
                 wr_ptr<list_node<T> > insert_point(_,prev);
+                cerr << __LINE__ << " inserting" << endl;
                 insert_point->next_=BOOST_STM_NEW(_,transactional_object<list_node<T> >(val, curr));
-                ++(*size_);
+                cerr << __LINE__ << " inserting" << endl;
+                //wr_ptr<std::size_t > size_tx(_,size_);
+                //cerr << __LINE__ << " inserting" << endl;
+                //++(*size_tx);
 
             }
         }
+        cerr << __LINE__ << " insert" << endl;
    }
 
     // search function
@@ -118,7 +137,8 @@ public:
                     mod_point->next_=curr->next_;
                     // delete curr...
                     delete_ptr(_,curr);
-                    --(*size_);
+                    wr_ptr<std::size_t > size_tx(_,size_);
+                    //--(*size_tx);
                     break;
                 } else if (curr->value_ > val) {
                     // this means the search failed
@@ -142,7 +162,9 @@ void create() {
         cerr << __LINE__ << " create" << endl;
         l=BOOST_STM_NEW(_,transactional_object<test::list<int> >());
         cerr << __LINE__ << " create" << endl;
-        cerr << l->size() << endl;
+        cerr << " create size " << l->size() << endl;
+        //cerr << " insert " << l.get() << endl;
+        //l->insert(1);
     } catch (...) {
         cerr << "aborted" << endl;
     }
@@ -152,7 +174,9 @@ void insert1() {
     //thread_initializer thi;
     atomic(_) {
         cerr << __LINE__ << " try" << endl;
+        cerr << __LINE__ << " insert1 size " << l->size() << endl;
         make_wr_ptr(_,l)->insert(1);
+        cerr << __LINE__ << " insert1 size " << l->size() << endl;
     } catch(...) {
         cerr << __LINE__ << " aborted" << endl;
     }
@@ -171,7 +195,7 @@ void insert3() {
     }
 }
 bool check_size(std::size_t val) {
-    int res;
+    int res=true;
     use_atomic(_) {
         //cerr << "size" <<make_rd_ptr(_,l)->size()<< endl;
         res = make_rd_ptr(_,l)->size()==val;
@@ -181,8 +205,8 @@ bool check_size(std::size_t val) {
 int test1() {
     create();
     insert1();
-    bool fails=true;
-    fails= !check_size(1);
+    bool fails=false;
+    //fails= fails || !check_size(0);
     #if 0
     thread  th1(insert1);
     //thread  th2(insert2);
@@ -198,7 +222,7 @@ int test1() {
     //boost::stm::delete_ptr(l);
     return 0;
     #else
-    return true;
+    return 0;
     #endif
 }
 
@@ -207,7 +231,6 @@ int main() {
     transaction::do_deferred_updating();
     transaction::initialize();
     thread_initializer thi;
-    //srand(time(0));
 
     int res=0;
     res+=test1();

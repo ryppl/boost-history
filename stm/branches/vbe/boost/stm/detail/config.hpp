@@ -28,13 +28,13 @@
 //#define LOGGING_BLOCKS 1
 
 ///////////////////////////////////////////////////////////////////////////////
-// The cache an be structured in different ways. Define ony one of
+// The cache can be structured in different ways. Define ony one of
 //      USE_SINGLE_THREAD_CONTEXT_MAP: use of a common tx_context as TSS
 //      BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP: use of common tss_context as TSS
 //      OTHER: each TSS data has its specific TSS
 
 #define USE_SINGLE_THREAD_CONTEXT_MAP 1
-//#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
+#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
 
 ///////////////////////////////////////////////////////////////////////////////
 // When USE_SINGLE_THREAD_CONTEXT_MAP or BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP are defined you can want to store references to the TSS or not
@@ -63,6 +63,7 @@
 //// BOOST_STM_CACHE_USE_MALLOC: uses malloc/free
 //// BOOST_STM_CACHE_USE_MEMORY_MANAGER: uses the class specific memory manager
 //// BOOST_STM_CACHE_USE_TSS_MONOTONIC_MEMORY_MANAGER: uses the monotonic storage memory manager
+
 
 #define BOOST_STM_CACHE_USE_MALLOC  1
 //#define BOOST_STM_CACHE_USE_MEMORY_MANAGER 1

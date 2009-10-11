@@ -59,12 +59,20 @@ public:
         return ptr_;
     }
     virtual base_transaction_object* clone() const {
-        cache* tmp = cache_clone(*this);
+        cache* tmp = new cache<T>(*this);
         if (tmp->value_!=0) {
             tmp->ptr_ = new T(*value_);
         }
         return tmp;
     }
+
+#ifdef BOOST_STM_USE_MEMCOPY
+    virtual void cache_deallocate() {
+        delete ptr_;
+        ptr_=0;
+        delete this;
+    }
+#endif
 
     virtual void copy_state(base_transaction_object const * const rhs) {
         if (value_==0) return;
@@ -72,14 +80,6 @@ public:
         delete ptr_;
         ptr_=0;
     }
-
-#ifdef BOOST_STM_USE_MEMCOPY
-    virtual void cache_deallocate() {
-        delete ptr_;
-        ptr_=0;
-        boost::stm::cache_deallocate(this);
-    }
-#endif
 
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
@@ -89,7 +89,7 @@ public:
 
    void operator delete(void* mem)
    {
-      return_mem(mem, sizeof(transactional_object<T>));
+      return_mem(mem, sizeof(cache<T>));
    }
 #endif
 

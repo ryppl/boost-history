@@ -72,20 +72,20 @@ public:
     }
 
     virtual base_transaction_object* clone() const {
-        return cache_clone(*this);
-    }
-
-    virtual void copy_state(base_transaction_object const * const rhs) {
-        cache_copy(static_cast<transactional_object<T> const * const>(rhs),
-                      //static_cast<transactional_object<T> *>(this));
-                      this);
+        return new transactional_object<T>(*this);
     }
 
 #ifdef BOOST_STM_USE_MEMCOPY
     virtual void cache_deallocate() {
-        boost::stm::cache_deallocate(this);
+        //boost::stm::cache_deallocate(this);
+        delete this;
     }
 #endif
+
+    virtual void copy_state(base_transaction_object const * const rhs) {
+        //cache_copy(static_cast<transactional_object<T> const * const>(rhs),                      this);
+         *this=*static_cast<transactional_object<T> const * const>(rhs);
+    }
 
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
