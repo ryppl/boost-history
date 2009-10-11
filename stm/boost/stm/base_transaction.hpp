@@ -168,6 +168,53 @@ typedef aborted_transaction_exception aborted_tx;
    inline void unlock(PLOCK &lock) { lock.unlock(); }
    inline void unlock(PLOCK *lock) { lock->unlock(); }
 #endif
+
+
+//-----------------------------------------------------------------------------
+//-----------------------------------------------------------------------------
+class light_auto_lock
+{
+public:
+
+   light_auto_lock(Mutex &mutex) : lock_(NULL)
+   {
+      do_auto_lock(&mutex);
+   }
+
+   light_auto_lock(Mutex *mutex) : lock_(NULL)
+   {
+      do_auto_lock(mutex);
+   }
+
+   ~light_auto_lock() { do_auto_unlock(); }
+
+   bool has_lock() { return hasLock_; }
+
+   void release_lock() { do_auto_unlock(); }
+
+private:
+
+   void do_auto_lock(Mutex *mutex)
+   {
+      lock_ = mutex;
+      pthread_mutex_lock(mutex);
+      hasLock_ = true;
+   }
+
+   void do_auto_unlock()
+   {
+      if (hasLock_)
+      {
+         hasLock_ = false;
+         pthread_mutex_unlock(lock_);
+      }
+   }
+
+   bool hasLock_;
+   Mutex *lock_;
+};
+
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 class base_transaction_object

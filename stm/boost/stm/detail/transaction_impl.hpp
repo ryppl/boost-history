@@ -421,7 +421,16 @@ inline void boost::stm::transaction::unlock_all_mutexes()
 //
 //--------------------------------------------------------------------------
 inline boost::stm::transaction::transaction() :
+
+   //-----------------------------------------------------------------------
+   // These two lines are vitally important ... make sure they are always
+   // the first two members of the class so the member initialization order
+   // always initializes them first.
+   //-----------------------------------------------------------------------
+
    threadId_(THREAD_ID),
+   auto_general_lock_(general_lock()),
+
 #if USE_SINGLE_THREAD_CONTEXT_MAP
 ////////////////////////////////////////   
    context_(*tss_context_map_.find(threadId_)->second),
@@ -491,12 +500,13 @@ inline boost::stm::transaction::transaction() :
 ////////////////////////////////////////   
 #endif
 
-
    hasMutex_(0), priority_(0),
    state_(e_no_state),
    reads_(0),
    startTime_(time(NULL))
 {
+   auto_general_lock_.release_lock();
+
    if (direct_updating()) doIntervalDeletions();
 #if PERFORMING_LATM
    while (blocked()) { SLEEP(10) ; }
@@ -2115,13 +2125,7 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
                   ("aborting committing transaction due to contention manager priority inversion");
                }
 #else
-               if (cm_->permission_to_abort(*this, *t)) aborted.push_front(t);
-               else
-               {
-                  force_to_abort();
-                  throw aborted_transaction_exception
-                  ("aborting committing transaction due to contention manager priority inversion");
-               }
+               aborted.push_front(t);
 #endif
             }
          }
@@ -2151,13 +2155,7 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
             ("aborting committing transaction due to contention manager priority inversion");
          }
 #else
-         if (cm_->permission_to_abort(*this, *t)) aborted.push_front(t);
-         else
-         {
-            force_to_abort();
-            throw aborted_transaction_exception
-            ("aborting committing transaction due to contention manager priority inversion");
-         }
+         aborted.push_front(t);
 #endif
       }
 #endif
@@ -2165,13 +2163,23 @@ inline bool boost::stm::transaction::forceOtherInFlightTransactionsAccessingThis
 
    if (!aborted.empty())
    {
-      // ok, forced to aborts are allowed, do them
-      for (std::list<transaction*>::iterator k = aborted.begin(); k != aborted.end(); ++k)
+      if (cm_->permission_to_abort(*this, aborted))
       {
-         (*k)->force_to_abort();
-      }
+         // ok, forced to aborts are allowed, do them
+         for (std::list<transaction*>::iterator k = aborted.begin(); 
+              k != aborted.end(); ++k)
+         {
+            (*k)->force_to_abort();
+         }
 
-      aborted.clear();
+         aborted.clear();
+      }
+      else
+      {
+         force_to_abort();
+         throw aborted_transaction_exception
+         ("aborting committing transaction by contention manager");
+      }
    }
 
    return true;

@@ -118,13 +118,6 @@ public:
 
    typedef std::multimap<size_t, MemoryContainerList > DeletionBuffer;
 
-#if 0
-#ifndef BOOST_STM_USE_BOOST_MUTEX
-   typedef pthread_mutex_t Mutex;
-#else
-   typedef boost::mutex Mutex;
-#endif
-#endif
     typedef std::set<Mutex*> MutexSet;
 
    typedef std::set<size_t> ThreadIdSet;
@@ -1334,6 +1327,8 @@ private:
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION
    //--------------------------------------------------------------------------
    size_t threadId_;
+
+   light_auto_lock auto_general_lock_;
 
    //--------------------------------------------------------------------------
    // ******** WARNING ******** MOVING threadId_ WILL BREAK TRANSACTION.
