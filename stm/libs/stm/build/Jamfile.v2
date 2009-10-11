@@ -205,7 +205,8 @@ explicit interthreads_sources ;
 
 
 static-lib boost_STM
-    : bloom_filter.cpp  contention_manager.cpp transaction.cpp interthreads_sources
+    #: bloom_filter.cpp  contention_manager.cpp transaction.cpp interthreads_sources
+    : bloom_filter.cpp  contention_manager.cpp transaction.cpp
 #    ../../../../libs/thread/build//boost_thread
     : <conditional>@requirements
     :
