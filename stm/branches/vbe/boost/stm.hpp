@@ -11,27 +11,6 @@
 //
 //////////////////////////////////////////////////////////////////////////////
 
-/* The DRACO Research Group (rogue.colorado.edu/draco) */ 
-/*****************************************************************************\
- *
- * Copyright Notices/Identification of Licensor(s) of
- * Original Software in the File
- *
- * Copyright 2000-2006 The Board of Trustees of the University of Colorado
- * Contact: Technology Transfer Office,
- * University of Colorado at Boulder;
- * https://www.cu.edu/techtransfer/
- *
- * All rights reserved by the foregoing, respectively.
- *
- * This is licensed software.  The software license agreement with
- * the University of Colorado specifies the terms and conditions
- * for use and redistribution.
- *
-\*****************************************************************************/
-
-
-
 #ifndef BOOST_STM__HPP
 #define BOOST_STM__HPP
 
@@ -43,6 +22,7 @@
 #include <boost/stm/contention_manager.hpp>
 #include <boost/stm/datatypes.hpp>
 #include <boost/stm/exceptions.hpp>
+#include <boost/stm/language_like.hpp>
 #include <boost/stm/move.hpp>
 #include <boost/stm/non_tx/numeric.hpp>
 #include <boost/stm/non_tx/smart_ptr.hpp>

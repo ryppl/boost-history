@@ -72,7 +72,7 @@ bool const kDracoMoveSemanticsCompiled = false;
 // immediately).
 //-----------------------------------------------------------------------------
 bool const begin_transaction = true;
-    
+
 #if defined(BOOST_STM_CM_STATIC_CONF)
 #if defined(BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm)
 typedef except_and_back_off_on_abort_notice_cm contention_manager_type;
@@ -269,13 +269,13 @@ public:
    static bool cm_abort_before_commit(transaction const &t) {return contention_manager_type::abort_before_commit(t); }
 
    static bool cm_permission_to_abort
-      (transaction const &lhs, transaction const &rhs) 
+      (transaction const &lhs, transaction const &rhs)
    {return contention_manager_type::permission_to_abort(lhs,rhs); }
 
    static bool cm_permission_to_abort
       (transaction const &lhs, std::list<transaction*> &rhs)
    {return contention_manager_type::permission_to_abort(lhs,rhs); }
-      
+
    static bool cm_allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
       bool txIsIrrevocable, transaction const &rhs) {
           return contention_manager_type::allow_lock_to_abort_tx(lockWaitTime,lockAborted,txIsIrrevocable,rhs); }
@@ -746,7 +746,7 @@ public:
       make_irrevocable();
       return as_new(new T());
    }
-   
+
    //--------------------------------------------------------------------------
    template <typename T>
    T* new_memory(T*)
@@ -774,7 +774,7 @@ public:
    }
 
    void end();
-   void commit() {end();}
+   bool commit() {end(); return true;}
    void no_throw_end();
 
    void force_to_abort()
@@ -1750,7 +1750,7 @@ private:
         return i->second->currentlyLockedLocks_;
     }
 #endif
-    
+
     TransactionsStack& transactionsRef_;
    public:
     inline TransactionsStack& transactions() {return transactionsRef_;}
@@ -1759,7 +1759,7 @@ private:
         return i->second->transactions_;
     }
    private:
-       
+
 #endif
 
 

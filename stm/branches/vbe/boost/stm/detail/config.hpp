@@ -35,8 +35,8 @@
 
 #define USE_SINGLE_THREAD_CONTEXT_MAP 1
 //#define BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP 1
- 
- 
+
+
 ///////////////////////////////////////////////////////////////////////////////
 // When USE_SINGLE_THREAD_CONTEXT_MAP or BOOST_STM_HAVE_SINGLE_TSS_CONTEXT_MAP are defined you can want to store references to the TSS or not
 //      BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS if you want to add these references
@@ -44,14 +44,14 @@
 #define BOOST_STM_TX_CONTAINS_REFERENCES_TO_TSS_FIELDS 1
 
 ///////////////////////////////////////////////////////////////////////////////
-// Define only one of 
+// Define only one of
 //      BOOST_STM_CM_STATIC_CONF when you want a staticacly configured CM
 //      BOOST_STM_CM_DYNAMIC_CONF when you want a polymorphic CM configured at run time
 
 #define BOOST_STM_CM_STATIC_CONF 1
 //#define BOOST_STM_CM_DYNAMIC_CONF 1
 
-// Define only one of 
+// Define only one of
 //      BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm when configuration manager is except_and_back_off_on_abort_notice_cm
 
 #define BOOST_STM_CM_STATIC_CONF_except_and_back_off_on_abort_notice_cm 1

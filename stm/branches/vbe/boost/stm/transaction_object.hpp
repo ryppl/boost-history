@@ -37,7 +37,7 @@ namespace boost { namespace stm {
 // forward declarations
 //-----------------------------------------------------------------------------
 class transaction;
-    
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
@@ -71,7 +71,7 @@ public:
         Derived* tmp = new Derived(*static_cast<Derived const*>(this));
         return tmp;
     }
-#endif        
+#endif
 
    //--------------------------------------------------------------------------
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
@@ -84,7 +84,7 @@ public:
         delete this;
     }
 #endif
-    
+
    //--------------------------------------------------------------------------
    virtual void copy_state(base_transaction_object const * const rhs)
    {
@@ -100,10 +100,10 @@ public:
 #endif
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-   void* operator new(size_t size, transaction* t) 
+   void* operator new(size_t size, transaction* t)
    {
       return boost::stm::cache_allocate<Derived>(t);
-   }   
+   }
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
    {
@@ -122,7 +122,7 @@ public:
       return ::operator new(size);
    }
 #endif
-#else  
+#else
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
    {

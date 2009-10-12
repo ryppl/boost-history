@@ -30,7 +30,7 @@ public:
     transaction_object_ptr(transaction_object_ptr & rhs) :  base_type(rhs), ptr_(rhs.rhs) {}
     transaction_object_ptr(TO* ptr) :  base_type(), ptr_(ptr) {}
     ~transaction_object_ptr() {}
-        
+
     this_type& operator=(TO* rhs) {
         ptr_=rhs;
         return *this;

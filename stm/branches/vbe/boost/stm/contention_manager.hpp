@@ -18,7 +18,7 @@
 
 namespace boost { namespace stm {
 
-    
+
     //-----------------------------------------------------------------------------
 class DefaultContentionManager : public base_contention_manager
 {

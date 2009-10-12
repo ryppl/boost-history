@@ -883,7 +883,7 @@ inline void transaction::invalidating_deferred_end_transaction()
       return;
    }
 
-   while (0 != trylock(&transactionMutex_)) { 
+   while (0 != trylock(&transactionMutex_)) {
     //std::cout << __LINE__ << " invalidating_deferred_end_transaction" << std::endl;
     }
 
@@ -2171,7 +2171,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
       if (cm_permission_to_abort(*this, aborted))
       {
          // ok, forced to aborts are allowed, do them
-         for (std::list<transaction*>::iterator k = aborted.begin(); 
+         for (std::list<transaction*>::iterator k = aborted.begin();
               k != aborted.end(); ++k)
          {
             (*k)->force_to_abort();

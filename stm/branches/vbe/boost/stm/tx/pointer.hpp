@@ -81,14 +81,14 @@ public:
     T const & operator*() const {
         return *this->get();
     }
-    
+
     T * operator->() {
         return this->get();
     }
     T & operator*() {
         return *this->get();
     }
-    
+
 };
 
 template <typename C, typename R>
@@ -134,7 +134,7 @@ public:
         }
         return val_;
     }
-    
+
 };
 
 #if 0

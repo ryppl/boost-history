@@ -45,7 +45,7 @@ public:
     #if 0
     template<class U>
     numeric& operator=(numeric<U> const& r) {
-        val_=r.value(); 
+        val_=r.value();
     }
     #endif
 

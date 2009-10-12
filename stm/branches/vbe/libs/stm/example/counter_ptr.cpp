@@ -109,7 +109,7 @@ int test_counter() {
     th2.join();
     th3.join();
     th4.join();
-    
+
     int fails=0;
     fails += check(2);
     fails += !assign();

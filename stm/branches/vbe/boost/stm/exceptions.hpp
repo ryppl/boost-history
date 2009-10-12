@@ -24,7 +24,7 @@
 namespace boost { namespace stm {
 
 class aborted_transaction_exception_no_unlocks {};
-    
+
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 class aborted_transaction_exception : public std::exception

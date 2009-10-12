@@ -25,7 +25,7 @@
 namespace boost { namespace stm {
 
 namespace non_tx { namespace detail {
-  
+
 //-----------------------------------------------------------------------------
 // This class defines the transactional cache of a non transactional variable.
 // There is a map from the address of the variable of type T to an instance of this class
@@ -49,7 +49,7 @@ public:
     inline ~cache() {
         delete ptr_;
     }
-    
+
     inline T const * get() const {
         if(ptr_!=0) return ptr_;
         else return value_;
@@ -85,7 +85,7 @@ public:
         ptr_=0;
         delete this;
     }
-#endif    
+#endif
     virtual void copy_state(base_transaction_object const * const rhs) {
         if (value_==0) return;
         *value_= *(static_cast<cache<T> const * const>(rhs)->ptr_);
@@ -94,10 +94,10 @@ public:
     }
 
 #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-   void* operator new(size_t size, transaction* t) 
+   void* operator new(size_t size, transaction* t)
    {
       return boost::stm::cache_allocate<cache<T> >(t);
-   }   
+   }
 #if USE_STM_MEMORY_MANAGER
    void* operator new(size_t size) throw ()
    {
@@ -108,7 +108,7 @@ public:
    {
       return_mem(mem, sizeof(cache<T>));
    }
-#else   
+#else
     void* operator new(size_t size) throw ()
     {
         return ::operator new(size);

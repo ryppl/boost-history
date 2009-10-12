@@ -57,7 +57,7 @@ public:
     list()
     : head_(BOOST_STM_NEW_1(transactional_object<list_node<T> >()))
     , size_(BOOST_STM_NEW_1(transactional_object<std::size_t>(0)))
-    { 
+    {
             std::cout << "list().head_" << *head_.get() << std::endl;
             std::cout << "list().size_" << *size_.get() << std::endl;
     }

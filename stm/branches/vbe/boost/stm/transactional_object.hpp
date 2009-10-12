@@ -82,7 +82,7 @@ public:
         return new transactional_object<T>(*this);
     }
 #endif
-    
+
     virtual void cache_deallocate() {
         //boost::stm::cache_deallocate(this);
         delete this;
@@ -94,10 +94,10 @@ public:
     }
 
     #if BOOST_STM_USE_SPECIFIC_TRANSACTION_MEMORY_MANAGER
-    void* operator new(size_t size, transaction* t) 
+    void* operator new(size_t size, transaction* t)
     {
         return cache_allocate<transactional_object<T> >(t);
-    }   
+    }
     #if USE_STM_MEMORY_MANAGER
     void* operator new(size_t size) throw ()
     {

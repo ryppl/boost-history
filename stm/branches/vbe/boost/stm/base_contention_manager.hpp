@@ -32,7 +32,7 @@ namespace boost { namespace stm {
 //-----------------------------------------------------------------------------
 class transaction;
 class base_transaction_object;
-    
+
 //-----------------------------------------------------------------------------
 class base_contention_manager
 {

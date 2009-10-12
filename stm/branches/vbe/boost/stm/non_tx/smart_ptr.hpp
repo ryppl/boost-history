@@ -33,7 +33,7 @@ template <typename T>
 class wr_ptr;
 template <typename T>
 class upgrd_ptr;
-    
+
 //-----------------------------------------------------------------------------
 // A rd_ptr<T> ("read pointer") points to an object that the current
 // transaction has opened for read only access.
@@ -68,7 +68,7 @@ public:
         ptr_=tx_.insert_and_return_read_memory(*detail::cache_map::get(ptr));
         return *this;
     }
-        
+
     template<class Y>
     inline rd_ptr & operator=(Y const& ref) { // never throws
         ptr_=tx_.insert_and_return_read_memory(*detail::cache_map::get(&ref));
@@ -155,13 +155,13 @@ public:
         ptr_(const_cast<detail::cache<T>*>(t.read_ptr(detail::cache_map::get(&ref)))), written_(false)    {}
 
     template<class Y>
-    inline upgrd_ptr & operator=(Y* ptr) { 
+    inline upgrd_ptr & operator=(Y* ptr) {
         ptr_=const_cast<detail::cache<T>*>(tx_->read_ptr(detail::cache_map::get(ptr)));
         return *this;
     }
 
     template<class Y>
-    inline upgrd_ptr & operator=(Y& ref) { 
+    inline upgrd_ptr & operator=(Y& ref) {
         ptr_=const_cast<detail::cache<T>*>(tx_->read_ptr(detail::cache_map::get(&ref)));
         return *this;
     }

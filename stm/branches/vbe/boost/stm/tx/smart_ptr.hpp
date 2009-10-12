@@ -47,7 +47,7 @@ public:
 
     //
     template<class Y>
-    tx_obj(tx_obj<Y> const& r) : obj_(r.ref()) {} 
+    tx_obj(tx_obj<Y> const& r) : obj_(r.ref()) {}
 
     template <typename T1>
     tx_obj(T1 p1) : obj_(p1) {}
@@ -246,7 +246,7 @@ inline bool operator!=(const tx_ptr<T>& lhs, const tx_ptr<U>& rhs) {
     return lhs.ptr_!=rhs.ptr_ && lhs.get()!=rhs.ptr_ && lhs.ptr_!=rhs.get();
 }
 
-template<class T> 
+template<class T>
 inline void swap(tx_ptr<T> & a, tx_ptr<T> & b) {
     a.swap(b);
 }
@@ -465,7 +465,7 @@ public:
     inline operator unspecified_bool_type() const {
         return ptr_ == 0? 0: &this_type::ptr_;
     }
-    
+
     inline void write_ptr(transactional_object<T>* ptr) {
         ptr_ = ptr;
         written_ = true;

@@ -103,7 +103,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
       return true;
    }
 
-   bool except_and_back_off_on_abort_notice_cm::permission_to_abort(transaction const &lhs, std::list<transaction*> &rhs) 
+   bool except_and_back_off_on_abort_notice_cm::permission_to_abort(transaction const &lhs, std::list<transaction*> &rhs)
    {
 #ifdef JUST_PRIORITY
       int setSize = (lhs.writes() * lhs.priority()) +
@@ -119,7 +119,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
       for (std::list<core::transaction*>::iterator iter = rhs.begin();
            iter != rhs.end(); ++iter)
       {
-         if ((*iter)->priority() > highestPriority) 
+         if ((*iter)->priority() > highestPriority)
          {
             highestPriority = (*iter)->priority();
          }
@@ -146,7 +146,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
       }
 
 #else
-      double setSize = (lhs.writes() * lhs.priority()) + 
+      double setSize = (lhs.writes() * lhs.priority()) +
          (lhs.reads() * lhs.priority());
       double abortSetSize = 0;
       double abortPriority = 0;
@@ -155,7 +155,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
       int mem = lhs.reads() + (lhs.writes() * 10);
 
       double decrementing = 1.0;
-      for (std::list<boost::stm::transaction*>::iterator iter = rhs.begin(); 
+      for (std::list<boost::stm::transaction*>::iterator iter = rhs.begin();
            iter != rhs.end(); ++iter)
       {
          if ((*iter)->reads() > mem) hasLargestReadSet = false;
@@ -172,7 +172,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
 
       if (hasLargestReadSet) return true;
 
-      if (setSize >= 
+      if (setSize >=
          (abortPriority / setSize) + (abortSetSize / setSize))
       {
          return true;
@@ -183,7 +183,7 @@ void except_and_back_off_on_abort_notice_cm::abort_on_new(transaction const &con
       }
 #endif
    }
-   
+
    bool except_and_back_off_on_abort_notice_cm::allow_lock_to_abort_tx
    (int const & lockWaitTime, int const &lockAborted, bool txTryingToAbortIsIrrevocable, transaction const &rhs)
    {

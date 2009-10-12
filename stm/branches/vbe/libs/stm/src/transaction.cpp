@@ -21,7 +21,7 @@ using namespace std;
 namespace boost { namespace stm {
 namespace non_tx {
     std::map<void*, base_transaction_object*> detail::cache_map::map_;
-    
+
 }
 
 ///////////////////////////////////////////////////////////////////////////////
