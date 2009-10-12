@@ -5,7 +5,7 @@
  / file LICENSE_1_0.txt or copy at http://www.boost.org/LICENSE_1_0.txt)
  /]
 
-[library Toward Boost.LUID
+[article Toward Boost.LUID
     [quickbook 1.4]
     [authors [Botet Escriba, Vicente J.]]
     [copyright 2008-2009 Vicente J. Botet Escriba]
@@ -335,68 +335,68 @@ As the number of parameters is quite big the parameter should be given by name. 
 As the number of constructor parameters is variable I think that the Boost.Parameters is more adapted.
 
 [heading DSL Grammar]
-[pre
-luidg [
-    numeric_type([uint_type] + lower_bound + upper_bound) ?
-+   on_overflow [
-        throw_on_error
-    |   errno_on_error
-    |   invalid_on_error
-    |   user_error(user_function)
-    |   on_overflow_layer(layer)
+
+    luidg [
+        numeric_type([uint_type] + lower_bound + upper_bound) ?
+    +   on_overflow [
+            throw_on_error
+        |   errno_on_error
+        |   invalid_on_error
+        |   user_error(user_function)
+        |   on_overflow_layer(layer)
+        ]
+    +   on_release [
+            discard
+        |   recover [recover_when + recover_how ]
+        |   on_release_layer (layer)
+        ]
+    +   scope [
+            mono_threaded
+        |   multi_threaded [locking]
+        |   multi_process [locking]
+        |   locking_layer (layer[locking])
+        ]
+    +   lifetime [
+            process [void_pointer_type + allocator_type ]
+        |   kernel [ void_pointer_type + allocator_type ]
+        |   filesystem [void_pointer_type + allocator_type ]
+        |   storage_layer ( layer [void_pointer_type + allocator_type] )
+        ]
+    +   count_complexity [ contant_time | linear_time ]
+    +   optimization [ speed | space]
+    +   coherency [ ensure | ignore | coherency_layer (layer) ]
     ]
-+   on_release [
-        discard
-    |   recover [recover_when + recover_how ]
-    |   on_release_layer (layer)
+
+    lower_bound [static_lower_bound [uint_value] | cons_lower_bound ]
+
+    upper_bound [static_upper_bound [uint_value] | dynamic_upper_bound | cons_upper_bound ]
+
+    recover_when [
+        immediate
+    |   freeze
+    |   delay [time_traits]
     ]
-+   scope [
-        mono_threaded
-    |   multi_threaded [locking]
-    |   multi_process [locking]
-    |   locking_layer (layer[locking])
+
+    recover_how [
+        fifo
+    |   undefined
     ]
-+   lifetime [
-        process [void_pointer_type + allocator_type ]
-    |   kernel [ void_pointer_type + allocator_type ]
-    |   filesystem [void_pointer_type + allocator_type ]
-    |   storage_layer ( layer [void_pointer_type + allocator_type] )
+
+    locking [
+        internally [locking_traits]
+    |   externally [locking_traits]
     ]
-+   count_complexity [ contant_time | linear_time ]
-+   optimization [ speed | space]
-+   coherency [ ensure | ignore | coherency_layer (layer) ]
-]
 
-lower_bound [static_lower_bound [uint_value] | cons_lower_bound ]
+    locking_traits [
+        thread_locking_traits
+    |   process_locking_traits
+    |   ...
+    ]
 
-upper_bound [static_upper_bound [uint_value] | dynamic_upper_bound | cons_upper_bound ]
+    time_traits [
+        posix_time_traits
+    |   ...
 
-recover_when [
-    immediate
-|   freeze
-|   delay [time_traits]
-]
-
-recover_how [
-    fifo
-|   undefined
-]
-
-locking [
-    internally [locking_traits]
-|   externally [locking_traits]
-]
-
-locking_traits [
-    thread_locking_traits
-|   process_locking_traits
-|   ...
-]
-
-time_traits [
-    posix_time_traits
-|   ...
-]
 
 [section DSL features]
 [variablelist

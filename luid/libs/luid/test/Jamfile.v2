@@ -19,7 +19,6 @@ project :
       <include>../../..
       <include>../../../../mpl_ext
       <include>../../../../parameter_ext
-      <include>/boost_1_39_0
       
       <threading>multi
 #      <target-os>cygwin
@@ -27,10 +26,8 @@ project :
 #      <variant>debug
 
       #<define>BOOST_TEST_BUILD_INFO
-      #<library>/boost/thread//boost_thread/<link>static
-      #<library>/boost/test//boost_unit_test_framework/<link>static
-      <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
-      <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+      <library>/boost/thread//boost_thread/<link>static
+      <library>/boost/test//boost_unit_test_framework/<link>static
 ;
 
 test-suite luid_inclusion :
