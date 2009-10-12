@@ -269,8 +269,13 @@ public:
    static bool cm_abort_before_commit(transaction const &t) {return contention_manager_type::abort_before_commit(t); }
 
    static bool cm_permission_to_abort
-      (transaction const &lhs, transaction const &rhs) {return contention_manager_type::permission_to_abort(lhs,rhs); }
+      (transaction const &lhs, transaction const &rhs) 
+   {return contention_manager_type::permission_to_abort(lhs,rhs); }
 
+   static bool cm_permission_to_abort
+      (transaction const &lhs, std::list<transaction*> &rhs)
+   {return contention_manager_type::permission_to_abort(lhs,rhs); }
+      
    static bool cm_allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
       bool txIsIrrevocable, transaction const &rhs) {
           return contention_manager_type::allow_lock_to_abort_tx(lockWaitTime,lockAborted,txIsIrrevocable,rhs); }

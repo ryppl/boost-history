@@ -61,6 +61,7 @@ public:
    static bool abort_before_commit(transaction const &t);
 
    static bool permission_to_abort(transaction const &lhs, transaction const &rhs);
+   static bool permission_to_abort(transaction const &lhs, std::list<transaction*> &rhs);
 
    static bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
                                 bool txTryingToAbortIsIrrevocable, transaction const &rhs);

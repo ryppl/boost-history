@@ -16,6 +16,7 @@
 
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
+#include <list>
 //-----------------------------------------------------------------------------
 //-----------------------------------------------------------------------------
 #include <boost/stm/detail/config.hpp>
@@ -49,6 +50,10 @@ public:
 
    virtual bool permission_to_abort
       (transaction const &lhs, transaction const &rhs) = 0;
+
+   virtual bool permission_to_abort
+      (transaction const &lhs, std::list<transaction*> &rhs)
+   { return true; }
 
    virtual bool allow_lock_to_abort_tx(int const & lockWaitTime, int const &lockAborted,
       bool txIsIrrevocable, transaction const &rhs) = 0;

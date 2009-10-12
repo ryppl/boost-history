@@ -2130,13 +2130,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
                   ("aborting committing transaction due to contention manager priority inversion");
                }
 #else
-               if (cm_permission_to_abort(*this, *t)) aborted.push_front(t);
-               else
-               {
-                  force_to_abort();
-                  throw aborted_transaction_exception
-                  ("aborting committing transaction due to contention manager priority inversion");
-               }
+               aborted.push_front(t);
 #endif
             }
          }
@@ -2166,13 +2160,7 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
             ("aborting committing transaction due to contention manager priority inversion");
          }
 #else
-         if (cm_permission_to_abort(*this, *t)) aborted.push_front(t);
-         else
-         {
-            force_to_abort();
-            throw aborted_transaction_exception
-            ("aborting committing transaction due to contention manager priority inversion");
-         }
+         aborted.push_front(t);
 #endif
       }
 #endif
@@ -2180,13 +2168,23 @@ inline bool transaction::forceOtherInFlightTransactionsAccessingThisWriteMemoryT
 
    if (!aborted.empty())
    {
-      // ok, forced to aborts are allowed, do them
-      for (std::list<transaction*>::iterator k = aborted.begin(); k != aborted.end(); ++k)
+      if (cm_permission_to_abort(*this, aborted))
       {
-         (*k)->force_to_abort();
-      }
+         // ok, forced to aborts are allowed, do them
+         for (std::list<transaction*>::iterator k = aborted.begin(); 
+              k != aborted.end(); ++k)
+         {
+            (*k)->force_to_abort();
+         }
 
-      aborted.clear();
+         aborted.clear();
+      }
+      else
+      {
+         force_to_abort();
+         throw aborted_transaction_exception
+         ("aborting committing transaction by contention manager");
+      }
    }
 
    return true;
