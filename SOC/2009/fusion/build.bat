@@ -32,7 +32,7 @@ if "%1" == "gcc4" (
 )
 
 rem compile...
-%BOOST_ROOT%\bjam -sHOME="z:\projekte\cl_link_frontend\util\boost" --toolset=%TOOLSET% %2 %3 %4 %5 %6 %7 %8 %9
+%BOOST_ROOT%\bjam -sHOME="Z:\projekte\infrastructure\util\boost" --toolset=%TOOLSET% %2 %3 %4 %5 %6 %7 %8 %9
 goto :eof
 
 :gcc3

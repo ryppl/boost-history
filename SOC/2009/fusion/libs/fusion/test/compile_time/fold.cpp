@@ -23,8 +23,8 @@ namespace
     template<typename Sig>
     struct result;
 
-    template<typename Self, typename D, typename State>
-    struct result<Self(D,State)>
+    template<typename Self, typename State, typename D>
+    struct result<Self(State, D)>
     {
         typedef int type;
     };
@@ -33,7 +33,7 @@ namespace
 #endif
 
     template<int n, int batch>
-    int operator()(distinct<n, batch> const& d, int state) const
+    int operator()(int state, distinct<n, batch> const& d) const
     {
       return state + n;
     }

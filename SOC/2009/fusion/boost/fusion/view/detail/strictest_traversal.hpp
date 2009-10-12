@@ -25,8 +25,8 @@ namespace boost { namespace fusion
             template<typename Sig>
             struct result;
 
-            template<typename Self, typename NextSeq, typename StrictestSoFar>
-            struct result<Self(NextSeq, StrictestSoFar)>
+            template<typename Self, typename StrictestSoFar, typename NextSeq>
+            struct result<Self(StrictestSoFar, NextSeq)>
             {
                 typedef typename traits::category_of<NextSeq>::type next_tag;
                 typedef typename

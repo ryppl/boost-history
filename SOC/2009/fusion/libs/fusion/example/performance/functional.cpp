@@ -49,13 +49,13 @@ namespace
         struct sum_op
         {
             template <typename T>
-            int operator()(T const& elem, int value) const
+            int operator()(int value, T const& elem) const
             {
               return value + sizeof(T) * elem;
             }
 
             template <typename T>
-            int operator()(T & elem, int value) const
+            int operator()(int value, T & elem) const
             {
               elem += sizeof(T);
               return value;

@@ -29,7 +29,6 @@ namespace boost { namespace fusion
         struct fold
           : detail::fold_impl<
                 size<Seq>::value
-              , typename begin<Seq>::type
               , typename detail::add_lref<
 #ifdef BOOST_NO_RVALUE_REFERENCES
                     typename add_const<
@@ -39,6 +38,7 @@ namespace boost { namespace fusion
                     >::type
 #endif
                 >::type
+              , typename begin<Seq>::type
               , typename detail::add_lref<F>::type
             >
         {

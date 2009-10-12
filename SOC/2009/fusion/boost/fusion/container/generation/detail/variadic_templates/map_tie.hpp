@@ -15,7 +15,6 @@
 
 #include <boost/mpl/int.hpp>
 #include <boost/mpl/divides.hpp>
-#include <boost/mpl/fold.hpp>
 #include <boost/mpl/begin.hpp>
 #include <boost/mpl/advance.hpp>
 #include <boost/mpl/end.hpp>

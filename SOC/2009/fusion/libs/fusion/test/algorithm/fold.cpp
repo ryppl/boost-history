@@ -34,25 +34,25 @@ struct add_ints_only
     template<typename T>
     struct result;
 
-    template <typename Self,typename T, typename State>
-    struct result<Self(T,State)>
+    template <typename Self,typename State,typename T>
+    struct result<Self(State,T)>
     {
         //TODO cschmidt: remove_reference does not support rvalue refs yet,
         //therefore we use the internal function of fusion!
-        typedef typename boost::fusion::detail::identity<State>::type type;
+        typedef typename boost::fusion::detail::identity<T>::type type;
         //typedef typename boost::remove_const<
         //    typename boost::remove_reference<State>::type>::type type;
     };
 
-    template <typename T, typename State>
+    template <typename State, typename T>
     State const&
-    operator()(T const& x, State const& state) const
+    operator()(State const& state, T const& x) const
     {
         return state;
     }
 
     int
-    operator()(int x, int state) const
+    operator()(int state, int x) const
     {
         return x + state;
     }
@@ -63,8 +63,8 @@ struct count_ints
     template<typename T>
     struct result;
 
-    template <typename Self,typename T, typename CountT>
-    struct result<Self(T,CountT)>
+    template <typename Self,typename CountT,typename T>
+    struct result<Self(CountT, T)>
     {
         typedef typename boost::fusion::detail::identity<T>::type elem;
         typedef typename boost::fusion::detail::identity<CountT>::type state;
@@ -82,11 +82,11 @@ struct count_ints
         type;
     };
 
-    template <typename T, typename CountT>
-    typename result<count_ints(T, CountT)>::type
-    operator()(T const&, CountT const&) const
+    template <typename CountT, typename T>
+    typename result<count_ints(CountT, T)>::type
+    operator()(CountT const&, T const&) const
     {
-        typedef typename result<count_ints(T, CountT)>::type result;
+        typedef typename result<count_ints(CountT, T)>::type result;
         return result();
     }
 };
@@ -95,7 +95,7 @@ struct appender
 {
     typedef std::string result_type;
 
-    std::string operator()(char c, std::string const& str) const
+    std::string operator()(std::string const& str, char c) const
     {
         return str + c;
     }
@@ -107,13 +107,13 @@ struct lvalue_adder
     struct result;
 
     template<typename Self,typename T0, typename T1>
-    struct result<Self(T0&, T1)>
+    struct result<Self(T0, T1&)>
     {
-        typedef T0 type;
+        typedef T1& type;
     };
 
     template<typename T0, typename T1>
-    T0 operator()(T0& lhs, T1 const& rhs) const
+    T0 operator()(T0 const& lhs, T1& rhs) const
     {
         return lhs + rhs;
     }

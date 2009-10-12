@@ -62,7 +62,7 @@ a sequence repeatedly applying an operation to its elements.
 [section fold]
 
 [heading Description]
-For a sequence `Seq`, initial state, and binary function object or function pointer `f`, fold repeatedly applies binary `f` to each element of `Seq` and the previous state.
+For a sequence `Seq`, initial state, and binary function object or function pointer `f`, fold repeatedly applies binary `f` to the previous state and each element of `Seq`.
 
 [heading Synopsis]
     template<
@@ -75,9 +75,9 @@ For a sequence `Seq`, initial state, and binary function object or function poin
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`seq`][A model of __forward_sequence__,`f(e,s)` must be a valid expression for each element `e` in `seq`, and current state `s`][Operation's argument]]
+    [[`seq`][A model of __forward_sequence__,`f(s,e)` must be a valid expression for current state `s`, and each element `e` in `seq`][Operation's argument]]
     [[`initial_state`][Any type][Initial state]]
-    [[`f`][`__boost_result_of_call__<F(E,S)>::type` is the return type of `f(e,s)` for each element `e` of type `E` in `seq`, and current state `s` of type `S`][Operation's argument]]
+    [[`f`][`__boost_result_of_call__<F(S,E)>::type` is the return type of `f(s,e)` current state `s` of type `S`, and for each element `e` of type `E` in `seq`][Operation's argument]]
 ]
 
 [heading Expression Semantics]
@@ -85,7 +85,7 @@ For a sequence `Seq`, initial state, and binary function object or function poin
 
 [*Return type]: Any type
 
-[*Semantics]: Equivalent to `f(eN ....f(e2,f(e1,initial_state)))` where `e1 ...eN` are the elements of `seq`.
+[*Semantics]: Equivalent to `f(f(f(initial_state,e1),e2) ....eN)` where `e1 ...eN` are the elements of `seq`.
 
 [heading Complexity]
 Linear, exactly `__result_of_size__<Sequence>::value` applications of `f`.
@@ -101,7 +101,7 @@ Linear, exactly `__result_of_size__<Sequence>::value` applications of `f`.
         typedef std::string result_type;
 
         template<typename T>
-        std::string operator()(const T& t, const std::string& str) const
+        std::string operator()(const std::string& str, const T& t) const
         {
             return str + boost::lexical_cast<std::string>(t);
         }
@@ -115,7 +115,7 @@ Linear, exactly `__result_of_size__<Sequence>::value` applications of `f`.
 [section accumulate]
 
 [heading Description]
-For a sequence `Seq`, initial state, and binary function object or function pointer `f`, accumulate repeatedly applies binary `f` to each element of `Seq` and the previous state.
+For a sequence `Seq`, initial state, and binary function object or function pointer `f`, accumulate repeatedly applies binary `f` the previous state and to each element of `Seq`.
 
 [heading Synopsis]
     template<
@@ -128,9 +128,9 @@ For a sequence `Seq`, initial state, and binary function object or function poin
 
 [table Parameters
     [[Parameter][Requirement][Description]]
-    [[`seq`][A model of __forward_sequence__, `f(eN ....f(e2,f(e1,initial_state)))` must be a valid expression for each element `e1` to `eN` in `seq`][Operation's argument]]
+    [[`seq`][A model of __forward_sequence__, `f(f(f(initial_state,e1),e2) ....eN)` must be a valid expression for each element `e1` to `eN` in `seq`][Operation's argument]]
     [[`initial_state`][Any type][Initial state]]
-    [[`f`][`__boost_result_of_call__<F(E,S)>::type` is the return type of `f(e,s)` for each element `e` of type `E` in `seq`, and current state `s` of type `S`][Operation's argument]]
+    [[`f`][`__boost_result_of_call__<F(S,E)>::type` is the return type of `f(s,e)` current state `s` of type `S` and for each element `e` of type `E` in `seq`][Operation's argument]]
 ]
 
 [heading Expression Semantics]
@@ -138,7 +138,7 @@ For a sequence `Seq`, initial state, and binary function object or function poin
 
 [*Return type]: Any type
 
-[*Semantics]: Equivalent to `f(eN ....f(e2,f(e1,initial_state)))` where `e1 ...eN` are the elements of `seq`.
+[*Semantics]: Equivalent to `f(f(f(initial_state,e1),e2) ....eN)` where `e1 ...eN` are the elements of `seq`.
 
 [heading Complexity]
 Linear, exactly `__result_of_size__<Sequence>::value` applications of `f`.
@@ -154,7 +154,7 @@ Linear, exactly `__result_of_size__<Sequence>::value` applications of `f`.
         typedef std::string result_type;
 
         template<typename T>
-        std::string operator()(const T& t, const std::string& str) const
+        std::string operator()(const std::string& str, const T& t) const
         {
             return str + boost::lexical_cast<std::string>(t);
         }
