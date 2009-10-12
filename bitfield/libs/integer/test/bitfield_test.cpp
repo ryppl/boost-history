@@ -180,8 +180,11 @@ void test_flags()
 
    
    typedef uint16_t T;
+   ASSERT_EQUALS((boost::integer::bitfield<T, 8, 15>::static_value_to_storage<0x12>::value), 0x12);
    ASSERT_EQUALS((boost::integer::bitfield<T, 8, 15>::get_flags(0x12)), 0x12);
+   ASSERT_EQUALS((boost::integer::bitfield<T, 4, 11>::static_value_to_storage<0x34>::value), 0x0340);
    ASSERT_EQUALS((boost::integer::bitfield<T, 4, 11>::get_flags(0x34)), 0x0340);
+   ASSERT_EQUALS((boost::integer::bitfield<T, 0, 7>::static_value_to_storage<0x56>::value), 0x5600);
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 7>::get_flags(0x56)), 0x5600);
    ASSERT_EQUALS((boost::integer::bitfield<T, 0, 15>::get_flags(0xabcd)), 0xabcd);
    ASSERT_EQUALS((boost::integer::bitfield<T, 4, 4>::get_flags(0)), 0);

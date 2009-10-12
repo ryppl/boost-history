@@ -6,7 +6,7 @@
 // (See accompanying file LICENSE_1_0.txt or 
 // copy at http://www.boost.org/LICENSE_1_0.txt)
 //
-// See http://www.boost.org/libs/synchro for documentation.
+// See http://www.boost.org/libs/integer for documentation.
 //
 //////////////////////////////////////////////////////////////////////////////
 
@@ -221,12 +221,16 @@ namespace boost { namespace integer {
         static const std::size_t STS        = 8*sizeof(storage_type);
         static const std::size_t LASTD      = STS-LAST-1;
         static const std::size_t WIDTH      = LAST - FIRST + 1;     //!< Width in bits of the bitfield
-        static const std::size_t VAL_MASK   = (1 << WIDTH) - 1;    //!< Mask applied against assigned values
-        static const std::size_t FIELD_MASK = (VAL_MASK << LASTD); //!< Mask of the field's bit positions
-        static const std::size_t SIGN_MASK  = ~VAL_MASK;            //!< Sign mask applied against assigned values
+        static const storage_type VAL_MASK   = (1 << WIDTH) - 1;    //!< Mask applied against assigned values
+        static const storage_type FIELD_MASK = (VAL_MASK << LASTD); //!< Mask of the field's bit positions
+        static const storage_type SIGN_MASK  = ~VAL_MASK;            //!< Sign mask applied against assigned values
         static const value_type  MIN_VAL    = std::numeric_limits<value_type>::is_signed?value_type((1<<(WIDTH-1))-1):0;  //!< min value that can be represented with the bitfield
         static const value_type  MAX_VAL    = std::numeric_limits<value_type>::is_signed?value_type(1<<(WIDTH-1)):(1<<(WIDTH))-1;  //!< max value that can be represented with the bitfield
 
+        template <VALUE_TYPE V>
+        struct static_value_to_storage {
+            static const storage_type value = ((storage_type(V) & VAL_MASK) << LASTD);
+        };            
         //! explicit constructor from a reference
         explicit bitfield(storage_type& field) : field_(field) {
         }

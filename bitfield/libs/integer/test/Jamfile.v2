@@ -18,8 +18,7 @@ if ! $(BOOST_ROOT)
 project :
     : requirements
         <include>../../..
-#       <include>/cvs/wss100/build_temp/botet/boost/boost_1_38_0/
-        <include>/boost_1_39_0/
+        <include>$(BOOST_ROOT)
         <include>/sandbox/endian
         
 #       <threading>multi
@@ -29,7 +28,7 @@ project :
         
         #<library>/boost/test//boost_unit_test_framework/<link>static
         
-#        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
+#        <library>/boost/test///boost_unit_test_framework/<link>static
 #        <library>/sandbox/libs/endia/build//boost_endian/<link>static
       
 ;
@@ -39,5 +38,6 @@ project :
      
 test-suite "bitfield" :
      [ run bitfield_test.cpp ]
+     #[ run pointer_plus_small_int_test.cpp ]
     ; 
 

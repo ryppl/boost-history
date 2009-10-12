@@ -1,0 +1,115 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix
+      C: Implementation Notes</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.Bitfield">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="rationale.html" title=" Appendix
+      B: Rationale">
+<link rel="next" href="acknowledgements.html" title=" Appendix
+      D: Acknowledgements">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.appendices.implementation"></a><a href="implementation.html" title=" Appendix
+      C: Implementation Notes"> Appendix
+      C: Implementation Notes</a>
+</h3></div></div></div>
+<a name="toward_boost_bitfield.appendices.implementation.faq"></a><h4>
+<a name="id4817293"></a>
+        <a href="implementation.html#toward_boost_bitfield.appendices.implementation.faq">FAQ</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc"><li>
+          Why bother with endian bitfields ?
+        </li></ul></div>
+<p>
+        External data portability and both speed and space efficiency. Availability
+        of bit order representations is important in some applications.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          Why not just use Boost.Serialization?
+        </li></ul></div>
+<p>
+        Serialization involves a conversion for every object involved in I/O. Endian
+        objects require no conversion or copying. They are already in the desired
+        format for binary I/O. Thus they can be read or written in bulk.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          Do this type have any uses outside of I/O?
+        </li></ul></div>
+<p>
+        Probably not.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          Is there is a performance hit when doing arithmetic using these types?
+        </li></ul></div>
+<p>
+        Yes, for sure, compared to arithmetic operations on native bitfields integer
+        types. However, these types are usually faster, and sometimes much faster,
+        for I/O compared to stream inserters and extractors, or to serialization.
+      </p>
+<div class="itemizedlist"><ul type="disc"><li>
+          These types are really just byte-holders. Why provide the arithmetic operations
+          at all?
+        </li></ul></div>
+<p>
+        The first goal of the library is to be as close as possible of the usage
+        of bitfields on C/C++. Providing a full set of operations reduces program
+        clutter and makes code both easier to write and to read. Consider incrementing
+        a variable in a record. It is very convenient to write:
+      </p>
+<pre class="programlisting"><span class="special">++</span><span class="identifier">record</span><span class="special">.</span><span class="identifier">bf</span><span class="special">();</span>
+</pre>
+<p>
+        Rather than:
+      </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">temp</span><span class="special">(</span> <span class="identifier">record</span><span class="special">.</span><span class="identifier">bf</span><span class="special">());</span>
+<span class="special">++</span><span class="identifier">temp</span><span class="special">;</span>
+<span class="identifier">record</span><span class="special">.</span><span class="identifier">vf</span><span class="special">()</span> <span class="special">=</span> <span class="identifier">temp</span><span class="special">;</span>
+</pre>
+<a name="toward_boost_bitfield.appendices.implementation.design_considerations_for_boost_bitfield"></a><h4>
+<a name="id4817498"></a>
+        <a href="implementation.html#toward_boost_bitfield.appendices.implementation.design_considerations_for_boost_bitfield">Design
+        considerations for Boost.Bitfield</a>
+      </h4>
+<div class="itemizedlist"><ul type="disc">
+<li>
+          Must provide exactly the size and internal bit ordering specified.
+        </li>
+<li>
+          It is better software engineering if the same implementation works regardless
+          of the CPU endianness. In other words, #ifdefs should be avoided where
+          possible.
+        </li>
+</ul></div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

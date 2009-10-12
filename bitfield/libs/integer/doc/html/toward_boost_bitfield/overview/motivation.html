@@ -1,0 +1,220 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Motivation</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.Bitfield">
+<link rel="up" href="../overview.html" title="Overview">
+<link rel="prev" href="../overview.html" title="Overview">
+<link rel="next" href="../users_guide.html" title=" Users'Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_bitfield.overview.motivation"></a><a href="motivation.html" title="Motivation">Motivation</a>
+</h3></div></div></div>
+<p>
+        In order for an application or a device driver to use the same source code
+        base on both platforms, it must either be endian neutral, or use conditional
+        compilation to select appropriate code modules. A program module is considered
+        endian neutral if it retains its functionality while being ported across
+        platforms of different endianness. In other words, there is no relation between
+        its functionality and the endianness of the platform it is running on. Endianness
+        issues become important when porting the pieces of the application that relate
+        to client communication over a heterogeneous network, persistent data storage
+        on the disk, product tracing (it is important that trace generated on SPARC
+        gets formatted correctly on x86) and other related areas.
+      </p>
+<p>
+        Boost.Endian handles with most of the issues related to the byte ordering,
+        but do not manage the bit ordering. E.g. the following structure has a different
+        layout in big and little endian machines.
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">7</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d02</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d03</span><span class="special">:</span><span class="number">6</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d04</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d05</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d06</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d07</span><span class="special">:</span><span class="number">3</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d08</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        In order to make this structure endian neutral, we need to use conditional
+        compilation, and swap on byte level of the fields
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+<span class="preprocessor">#if</span> <span class="identifier">__BYTE_ORDER</span> <span class="special">==</span> <span class="identifier">__BIG_ENDIAN</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">1</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">7</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d02</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d03</span><span class="special">:</span><span class="number">6</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d04</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d05</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d06</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d07</span><span class="special">:</span><span class="number">3</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d08</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+<span class="preprocessor">#else</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">7</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d03</span><span class="special">:</span><span class="number">6</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d02</span><span class="special">:</span><span class="number">2</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d05</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d04</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d08</span><span class="special">:</span><span class="number">4</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d07</span><span class="special">:</span><span class="number">3</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d06</span><span class="special">:</span><span class="number">1</span><span class="special">;</span>
+<span class="preprocessor">#endif</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The preceding technique can be applied as far as the bitfield is contained
+        on a byte boundary. But for bitfields using several bytes as in
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">11</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">21</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        there is no way using conditional compilation to adapt the structure and
+        preserve the fields.
+      </p>
+<p>
+        Two approaches can be considered:
+      </p>
+<a name="toward_boost_bitfield.overview.motivation.decompose_the_fields_not_defined_on_a_byte_boundary_on_several_bitfield_defined_on_a_byte_boundary"></a><h4>
+<a name="id4758336"></a>
+        <a href="motivation.html#toward_boost_bitfield.overview.motivation.decompose_the_fields_not_defined_on_a_byte_boundary_on_several_bitfield_defined_on_a_byte_boundary">Decompose
+        the fields not defined on a byte boundary on several bitfield defined on
+        a byte boundary</a>
+      </h4>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+<span class="preprocessor">#if</span> <span class="identifier">__BYTE_ORDER</span> <span class="special">==</span> <span class="identifier">__BIG_ENDIAN</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b0</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b1</span><span class="special">:</span><span class="number">3</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b0</span><span class="special">:</span><span class="number">5</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b1</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b2</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+<span class="preprocessor">#else</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b2</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b1</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01_b0</span><span class="special">:</span><span class="number">5</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b1</span><span class="special">:</span><span class="number">3</span><span class="special">;</span> 
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00_b0</span><span class="special">:</span><span class="number">8</span><span class="special">;</span> 
+<span class="preprocessor">#endif</span>
+<span class="special">};</span>
+</pre>
+<p>
+        and define a way to access the bitfield information of the ENDIAN_UNSAFE
+        structure. This library do not use this apprach.
+      </p>
+<a name="toward_boost_bitfield.overview.motivation.replace_the_bitfields_by_the_integer_type"></a><h4>
+<a name="id4758728"></a>
+        <a href="motivation.html#toward_boost_bitfield.overview.motivation.replace_the_bitfields_by_the_integer_type">Replace
+        the bitfields by the integer type</a>
+      </h4>
+<p>
+        When it is possible, a suggestion would be to transform the bitfields into
+        integers, as follows:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+<span class="preprocessor">#ifdef</span> <span class="identifier">ATRIUM_PORTABLE</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d0</span><span class="special">;</span>
+<span class="preprocessor">#else</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d00</span><span class="special">:</span><span class="number">11</span><span class="special">;</span> <span class="comment">/* ENDIAN_UNSAFE */</span>
+    <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">d01</span><span class="special">:</span><span class="number">21</span><span class="special">;</span> <span class="comment">/* ENDIAN_UNSAFE */</span>
+<span class="preprocessor">#endif</span>
+<span class="special">};</span>
+</pre>
+<p>
+        and define a way to access the bitfield information.
+      </p>
+<p>
+        When the structure is used by a C++ program, all the uses of the bit fields
+        (d00 and d01) could be replaced by an inline function, so
+      </p>
+<pre class="programlisting"><span class="identifier">y</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">d00</span><span class="special">;</span>	
+</pre>
+<p>
+        could be replaced by
+      </p>
+<pre class="programlisting"><span class="identifier">y</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">d00</span><span class="special">();</span> 
+</pre>
+<p>
+        or
+      </p>
+<pre class="programlisting"><span class="identifier">y</span> <span class="special">=</span> <span class="identifier">x</span><span class="special">.</span><span class="identifier">get_d00</span><span class="special">();</span>
+</pre>
+<p>
+        and x.d00= y;
+      </p>
+<p>
+        could be replaced by
+      </p>
+<pre class="programlisting"><span class="identifier">x</span><span class="special">.</span><span class="identifier">d00</span><span class="special">()=</span> <span class="identifier">y</span><span class="special">;</span> 
+</pre>
+<p>
+        or
+      </p>
+<pre class="programlisting"><span class="identifier">x</span><span class="special">.</span><span class="identifier">set_d00</span><span class="special">(</span><span class="identifier">y</span><span class="special">)</span>
+</pre>
+<p>
+        where
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">uint_32</span> <span class="identifier">storage_type</span><span class="special">;</span>
+    <span class="identifier">storage_type</span> <span class="identifier">d0</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d00</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d01</span><span class="special">,</span> <span class="number">11</span><span class="special">,</span> <span class="number">31</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The goal of Boost.Bitfield is to make possible this simple portable translation.
+      </p>
+<p>
+        If we want to write the storage type to a binary archive we need to precise
+        which will be the endian format of the storage type. For this end, you can
+        use any of the endian types provided by the Boost.Endian library. If the
+        storage is big you can declare
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">X</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ubig_32</span> <span class="identifier">storage_type</span><span class="special">;</span>
+    <span class="identifier">storage_type</span> <span class="identifier">d0</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">unsigned</span> <span class="keyword">int</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d00</span><span class="special">,</span> <span class="number">0</span><span class="special">,</span> <span class="number">10</span><span class="special">);</span>
+    <span class="identifier">BOOST_BITFIELD_DCL</span><span class="special">(</span><span class="identifier">storage_type</span><span class="special">,</span> <span class="identifier">d0</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="keyword">int</span><span class="special">,</span> <span class="identifier">d01</span><span class="special">,</span> <span class="number">11</span><span class="special">,</span> <span class="number">31</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
