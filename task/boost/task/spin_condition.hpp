@@ -27,14 +27,14 @@ private:
 		NOTIFY_ALL
 	};
 
-	volatile command_t	cmd_;
+	volatile uint32_t	cmd_;
 	volatile uint32_t	waiters_;
 	spin_mutex			enter_mtx_;
 	spin_mutex			check_mtx_;
 
 	void wait_( spin_mutex &);
 	bool wait_( spin_mutex &, system_time const&);
-	void notify_( command_t);
+	void notify_( uint32_t);
 
 public:
 	spin_condition();

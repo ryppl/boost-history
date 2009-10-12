@@ -20,64 +20,13 @@ namespace tsk = boost::task;
 
 typedef tsk::static_pool< tsk::unbounded_twolock_fifo > pool_type;
 
-class event
-{
-private:
-	class base : private boost::noncopyable
-	{
-	private:
-		tsk::semaphore	sem_;
-
-	public:
-		base()
-		: sem_( 0)
-		{}
-
-		void set()
-		{ sem_.post(); }
-
-		void wait()
-		{
-			if ( boost::this_task::runs_in_pool() )
-			{
-				while ( sem_.value() == 0)
-					boost::this_task::block();
-			}
-			else
-			{
-				sem_.wait();
-				sem_.post();
-			}
-		}
-	};
-
-	boost::shared_ptr< base >	impl_;
-
-public:
-	event()
-	: impl_( new base)
-	{}
-
-	void set()
-	{ impl_->set(); }
-
-	void wait()
-	{ impl_->wait(); }
-};
-
-void sub_task(
-		int i,
-		int n,
-		event inner_ev)
+void sub_task( int i, int n, tsk::spin_count_down_event & ev)
 {
 	BOOST_ASSERT( boost::this_task::runs_in_pool() );
 
 	fprintf( stderr, "t%d running ...\n", i);
 
-	if ( i == n - 1)
-			inner_ev.set();
-	else
-			inner_ev.wait();
+	ev.set();
 
 	fprintf( stderr, "t%d finished ...\n", i);
 }
@@ -85,13 +34,13 @@ void sub_task(
 void main_task(
 		pool_type & pool,
 		int n,
-		event outer_ev)
+		tsk::spin_count_down_event & outer_ev)
 {
 	BOOST_ASSERT( boost::this_task::runs_in_pool() );
 
 	fprintf( stderr, "main-task running %d sub-tasks\n", n);
 
-	event inner_ev;
+	tsk::spin_count_down_event inner_ev( n);
 
 	for ( int i = 0; i < n; ++i)
 		tsk::async(
@@ -99,7 +48,7 @@ void main_task(
 					& sub_task,
 					i,
 					n,
-					inner_ev),
+					boost::ref( inner_ev) ),
 				tsk::as_sub_task() );
 
 	inner_ev.wait();
@@ -114,17 +63,17 @@ int main( int argc, char *argv[])
 		pool_type pool( psize);
 
 		int n = 32;	
-		event outer_ev;
+		tsk::spin_count_down_event ev( 1);
 		tsk::async(
 			tsk::make_task(
 				& main_task,
 				boost::ref( pool),
 				n,
-				outer_ev),
+				boost::ref( ev) ),
 			pool);
 
 		fprintf( stderr, "main thread: waiting for t0 to finish\n");
-		outer_ev.wait();
+		ev.wait();
 		fprintf( stderr, "main thread: t0 finished\n");
 
 		return EXIT_SUCCESS;

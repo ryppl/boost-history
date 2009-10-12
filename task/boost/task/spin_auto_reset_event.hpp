@@ -23,10 +23,10 @@ private:
 		SET
 	};
 
-	volatile state_t	state_;
+	volatile uint32_t	state_;
 
 public:
-	spin_auto_reset_event();
+	spin_auto_reset_event( bool = false);
 
 	void set();
 

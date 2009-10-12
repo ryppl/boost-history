@@ -43,6 +43,8 @@ alias task_sources
 	semaphore_windows.cpp
 	spin_auto_reset_event.cpp
 	spin_condition.cpp
+	spin_count_down_event.cpp
+	spin_manual_reset_event.cpp
 	spin_mutex.cpp
 	stacksize.cpp
 	watermark.cpp
@@ -63,6 +65,8 @@ alias task_sources
 	semaphore_posix.cpp
 	spin_auto_reset_event.cpp
 	spin_condition.cpp
+	spin_count_down_event.cpp
+	spin_manual_reset_event.cpp
 	spin_mutex.cpp
 	stacksize.cpp
 	watermark.cpp

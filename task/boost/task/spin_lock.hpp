@@ -20,6 +20,7 @@ template< typename Mutex >
 class spin_lock
 {
 private:
+	typedef spin_lock< Mutex >		lock_t;
 	typedef bool spin_lock::*unspecified_bool_type;
 
 	Mutex	*	mtx_; 
@@ -92,7 +93,7 @@ public:
 	{ return locked_ && mtx_; }
 
 	operator unspecified_bool_type() const
-	{ return locked_ ? & locked_ : 0; }
+	{ return locked_ ? & lock_t::locked_ : 0; }
 
 	bool operator!() const
 	{ return ! locked_; }

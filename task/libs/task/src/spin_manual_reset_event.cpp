@@ -18,7 +18,10 @@ namespace task {
 
 spin_manual_reset_event::spin_manual_reset_event( bool isset)
 :
-state_( isset ? SET : RESET),
+state_(
+	isset ?
+		static_cast< uint32_t >( SET) :
+		static_cast< uint32_t >( RESET) ),
 waiters_( 0),
 enter_mtx_()
 {}
@@ -28,12 +31,11 @@ spin_manual_reset_event::set()
 {
 	enter_mtx_.lock();
 
-	state_t expected = RESET;
+	uint32_t expected = static_cast< uint32_t >( RESET);
 	if ( ! detail::atomic_compare_exchange_strong(
-			static_cast< uint32_t volatile* >( & state_),
-			static_cast< uint32_t * >( & expected),
+			& state_, & expected,
 			static_cast< uint32_t >( SET) ) ||
-		! detail::atomic_load( static_cast< uint32_t volatile* >( & waiters_) ) )
+		! detail::atomic_load( & waiters_ ) )
 		enter_mtx_.unlock();
 }
 
@@ -43,8 +45,7 @@ spin_manual_reset_event::reset()
 	spin_lock< spin_mutex >	lk( enter_mtx_);
 	BOOST_ASSERT( lk);
 
-	detail::atomic_exchange(
-		static_cast< uint32_t volatile* >( & state_),
+	detail::atomic_exchange( & state_,
 		static_cast< uint32_t >( RESET) );
 }
 
@@ -57,7 +58,7 @@ spin_manual_reset_event::wait()
 		detail::atomic_fetch_add( & waiters_, 1);
 	}
 
-	while ( RESET == detail::atomic_load( static_cast< uint32_t volatile* >( & state_) ) )
+	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
 	{
 		if ( this_task::runs_in_pool() )
 			this_task::block();
@@ -74,7 +75,7 @@ spin_manual_reset_event::wait( system_time const& abs_time)
 {
 	if ( get_system_time() >= abs_time) return false;
 
-	while ( RESET == detail::atomic_load( & state_) )
+	while ( static_cast< uint32_t >( RESET) == detail::atomic_load( & state_) )
 	{
 		if ( this_task::runs_in_pool() )
 			this_task::block();

@@ -18,7 +18,7 @@ namespace boost {
 namespace task {
 
 void
-spin_condition::notify_( command_t cmd)
+spin_condition::notify_( uint32_t cmd)
 {
 	enter_mtx_.lock();
 
@@ -28,11 +28,9 @@ spin_condition::notify_( command_t cmd)
 		return;
 	}
 
-	command_t expected = SLEEPING;
+	uint32_t expected = static_cast< uint32_t >( SLEEPING);
 	while ( ! detail::atomic_compare_exchange_strong(
-				static_cast< uint32_t volatile* >( & cmd_),
-				static_cast< uint32_t * >( & expected),
-				cmd) )
+				& cmd_, & expected, cmd) )
 	{
 		if ( this_task::runs_in_pool() )
 			this_task::block();
@@ -54,7 +52,7 @@ spin_condition::wait_( spin_mutex & mtx)
 	bool unlock_enter_mtx = false;
 	for (;;)
 	{
-		while ( SLEEPING == detail::atomic_load( static_cast< uint32_t volatile* >( & cmd_) ) )
+		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
 		{
 			if ( this_task::runs_in_pool() )
 				this_task::block();
@@ -65,14 +63,13 @@ spin_condition::wait_( spin_mutex & mtx)
 		spin_lock< spin_mutex > lk( check_mtx_);
 		BOOST_ASSERT( lk);
 
-		command_t expected = NOTIFY_ONE;
+		uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
 		detail::atomic_compare_exchange_strong(
-				static_cast< uint32_t volatile* >( & cmd_),
-				static_cast< uint32_t * >( & expected),
+				& cmd_, & expected,
 				static_cast< uint32_t >( SLEEPING) );
-		if ( SLEEPING == expected)
+		if ( static_cast< uint32_t >( SLEEPING) == expected)
 			continue;
-		else if ( NOTIFY_ONE == expected)
+		else if ( static_cast< uint32_t >( NOTIFY_ONE) == expected)
 		{
 			unlock_enter_mtx = true;
 			detail::atomic_fetch_sub( & waiters_, 1);
@@ -83,10 +80,9 @@ spin_condition::wait_( spin_mutex & mtx)
 			unlock_enter_mtx = 1 == detail::atomic_fetch_sub( & waiters_, 1);
 			if ( unlock_enter_mtx)
 			{
-				expected = NOTIFY_ALL;
+				expected = static_cast< uint32_t >( NOTIFY_ALL);
 				detail::atomic_compare_exchange_strong(
-						static_cast< uint32_t volatile* >( & cmd_),
-						static_cast< uint32_t * >( & expected),
+						& cmd_, & expected,
 						static_cast< uint32_t >( SLEEPING) );
 			}
 			break;
@@ -114,7 +110,7 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 	bool timed_out = false, unlock_enter_mtx = false;
 	for (;;)
 	{
-		while ( SLEEPING == detail::atomic_load( static_cast< uint32_t volatile* >( & cmd_) ) )
+		while ( static_cast< uint32_t >( SLEEPING) == detail::atomic_load( & cmd_) )
 		{
 			if ( this_task::runs_in_pool() )
 				this_task::block();
@@ -141,14 +137,13 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 			spin_lock< spin_mutex > lk( check_mtx_);
 			BOOST_ASSERT( lk);
 
-			command_t expected = NOTIFY_ONE;
+			uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
 			detail::atomic_compare_exchange_strong(
-					static_cast< uint32_t volatile* >( & cmd_),
-					static_cast< uint32_t * >( & expected),
+					& cmd_, & expected,
 					static_cast< uint32_t >( SLEEPING) );
-			if ( SLEEPING == expected)
+			if ( static_cast< uint32_t >( SLEEPING) == expected)
 				continue;
-			else if ( NOTIFY_ONE == expected)
+			else if ( static_cast< uint32_t >( NOTIFY_ONE) == expected)
 			{
 				unlock_enter_mtx = true;
 				detail::atomic_fetch_sub( & waiters_, 1);
@@ -159,10 +154,9 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 				unlock_enter_mtx = 1 == detail::atomic_fetch_sub( & waiters_, 1);
 				if ( unlock_enter_mtx)
 				{
-					expected = NOTIFY_ALL;
+					expected = static_cast< uint32_t >( NOTIFY_ALL);
 					detail::atomic_compare_exchange_strong(
-							static_cast< uint32_t volatile* >( & cmd_),
-							static_cast< uint32_t * >( & expected),
+							& cmd_, & expected,
 							static_cast< uint32_t >( SLEEPING) );
 				}
 				break;
@@ -180,7 +174,7 @@ spin_condition::wait_( spin_mutex & mtx, system_time const& abs_time)
 
 spin_condition::spin_condition()
 :
-cmd_( SLEEPING),
+cmd_( static_cast< uint32_t >( SLEEPING) ),
 waiters_( 0),
 enter_mtx_(),
 check_mtx_()
@@ -188,10 +182,10 @@ check_mtx_()
 
 void
 spin_condition::notify_one()
-{ notify_( NOTIFY_ONE); }
+{ notify_( static_cast< uint32_t >( NOTIFY_ONE) ); }
 
 void
 spin_condition::notify_all()
-{ notify_( NOTIFY_ALL); }
+{ notify_( static_cast< uint32_t >( NOTIFY_ALL) ); }
 
 }}

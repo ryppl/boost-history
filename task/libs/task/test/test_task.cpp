@@ -45,10 +45,15 @@ public:
 	void test_case_2()
 	{
 		tsk::task< void > t1;
+		BOOST_CHECK( ! t1);
 		t1 = tsk::make_task( zero_args_fn);
+		BOOST_CHECK( t1);
 		tsk::task< int > t2 = tsk::make_task( one_arg_fn, 1);
+		BOOST_CHECK( t2);
 		tsk::task< int > t3;
+		BOOST_CHECK( ! t3);
 		t3 = tsk::make_task( two_args_fn, 1, "abc");
+		BOOST_CHECK( t3);
 	}
 
 	// check moved task

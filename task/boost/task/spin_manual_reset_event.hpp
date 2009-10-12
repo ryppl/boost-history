@@ -25,7 +25,7 @@ private:
 		SET
 	};
 
-	volatile state_t	state_;
+	volatile uint32_t	state_;
 	volatile uint32_t	waiters_;
 	spin_mutex			enter_mtx_;
 

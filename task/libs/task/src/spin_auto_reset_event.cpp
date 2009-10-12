@@ -15,24 +15,22 @@ namespace boost {
 namespace task {
 
 spin_auto_reset_event::spin_auto_reset_event( bool isset)
-: state_( isset ? SET : RESET)
+: state_(
+		isset ?
+		static_cast< uint32_t >( SET) :
+		static_cast< uint32_t >( RESET) )
 {}
 
 void
 spin_auto_reset_event::set()
-{
-	detail::atomic_exchange(
-			static_cast< uint32_t volatile* >( & state_),
-			static_cast< uint32_t >( SET) );
-}
+{ detail::atomic_exchange( & state_, static_cast< uint32_t >( SET) ); }
 
 void
 spin_auto_reset_event::wait()
 {
-	state_t expected = SET;
+	uint32_t expected = static_cast< uint32_t >( SET);
 	while ( ! detail::atomic_compare_exchange_strong(
-			static_cast< uint32_t volatile* >( & state_),
-			static_cast< uint32_t * >( & expected),
+			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
 		if ( this_task::runs_in_pool() )
@@ -47,10 +45,9 @@ spin_auto_reset_event::wait( system_time const& abs_time)
 {
 	if ( get_system_time() >= abs_time) return false;
 
-	state_t expected = SET;
+	uint32_t expected = static_cast< uint32_t >( SET);
 	while ( ! detail::atomic_compare_exchange_strong(
-			static_cast< uint32_t volatile* >( & state_),
-			static_cast< uint32_t * >( & expected),
+			& state_, & expected,
 			static_cast< uint32_t >( RESET) ) )
 	{
 		if ( this_task::runs_in_pool() )

@@ -16,10 +16,10 @@
 namespace boost {
 namespace task {
 
-spin_count_down_event::spin_count_down_event( uint32_t intial)
+spin_count_down_event::spin_count_down_event( uint32_t initial)
 :
-intial_( intial),
-current_( intial_)
+initial_( initial),
+current_( initial_)
 {}
 
 uint32_t
@@ -37,64 +37,26 @@ spin_count_down_event::is_set() const
 void
 spin_count_down_event::set()
 {
-	enter_mtx_.lock();
-
-	detail::atomic_fetch_sub( & current_, 1);
+	for (;;)
+	{
+		if ( 0 == detail::atomic_load( & current_) )
+			return;
+		uint32_t expected = current_;
+		if ( detail::atomic_compare_exchange_strong( & current_, & expected, expected - 1) )
+			return;
+	}
 }
 
 void
 spin_count_down_event::wait()
 {
+	while ( 0 != detail::atomic_load( & current_) )
 	{
-		spin_lock< spin_mutex > lk( enter_mtx_);
-		if ( ! lk) return;
-		detail::atomic_fetch_add( & waiters_, 1);
-	}
-
-	bool unlock_enter_mtx = false;
-	for (;;)
-	{
-		while ( SLEEPING == detail::atomic_load( & cmd_) )
-		{
-			if ( this_task::runs_in_pool() )
-				this_task::block();
-			else
-				this_thread::yield();	
-		}
-
-		spin_lock< spin_mutex > lk( check_mtx_);
-		if ( ! lk)
-		{
-			unlock_enter_mtx = true;
-			break;
-		}
-
-		uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
-		detail::atomic_compare_exchange_strong(
-				static_cast< uint32_t volatile* >( & cmd_), & expected, SLEEPING);
-		if ( SLEEPING == expected)
-			continue;
-		else if ( NOTIFY_ONE == expected)
-		{
-			unlock_enter_mtx = true;
-			detail::atomic_fetch_sub( & waiters_, 1);
-			break;
-		}
+		if ( this_task::runs_in_pool() )
+			this_task::block();
 		else
-		{
-			unlock_enter_mtx = 1 == detail::atomic_fetch_sub( & waiters_, 1);
-			if ( unlock_enter_mtx)
-			{
-				expected = static_cast< uint32_t >( NOTIFY_ALL);
-				detail::atomic_compare_exchange_strong(
-						static_cast< uint32_t volatile* >( & cmd_), & expected, SLEEPING);
-			}
-			break;
-		}
+			this_thread::yield();	
 	}
-
-	if ( unlock_enter_mtx)
-		enter_mtx_.unlock();
 }
 
 bool
@@ -102,76 +64,17 @@ spin_count_down_event::wait( system_time const& abs_time)
 {
 	if ( get_system_time() >= abs_time) return false;
 
+	while ( 0 < detail::atomic_load( & current_) )
 	{
-		spin_lock< spin_mutex > lk( enter_mtx_, abs_time);
-		if ( ! lk) return false;
-		detail::atomic_fetch_add( & waiters_, 1);
-	}
-
-	bool timed_out = false, unlock_enter_mtx = false;
-	for (;;)
-	{
-		while ( SLEEPING == detail::atomic_load( & cmd_) )
-		{
-			if ( this_task::runs_in_pool() )
-				this_task::block();
-			else
-				this_thread::yield();	
-
-			if ( get_system_time() >= abs_time)
-			{
-				timed_out = enter_mtx_.try_lock();
-				if ( ! timed_out)
-					continue;
-				break;
-			}
-		}
-
-		if ( timed_out)
-		{
-			detail::atomic_fetch_sub( & waiters_, 1);
-			unlock_enter_mtx = true;
-			break;
-		}
+		if ( this_task::runs_in_pool() )
+			this_task::block();
 		else
-		{
-			spin_lock< spin_mutex > lk( check_mtx_);
-			if ( ! lk)
-			{
-				timed_out = true;
-				unlock_enter_mtx = true;
-				break;
-			}
+			this_thread::yield();
 
-			uint32_t expected = static_cast< uint32_t >( NOTIFY_ONE);
-			detail::atomic_compare_exchange_strong(
-					static_cast< uint32_t volatile* >( & cmd_), & expected, SLEEPING);
-			if ( SLEEPING == expected)
-				continue;
-			else if ( NOTIFY_ONE == expected)
-			{
-				unlock_enter_mtx = true;
-				detail::atomic_fetch_sub( & waiters_, 1);
-				break;
-			}
-			else
-			{
-				unlock_enter_mtx = 1 == detail::atomic_fetch_sub( & waiters_, 1);
-				if ( unlock_enter_mtx)
-				{
-					expected = static_cast< uint32_t >( NOTIFY_ALL);
-					detail::atomic_compare_exchange_strong(
-							static_cast< uint32_t volatile* >( & cmd_), & expected, SLEEPING);
-				}
-				break;
-			}
-		}
+		if ( get_system_time() >= abs_time) return false;
 	}
 
-	if ( unlock_enter_mtx)
-		enter_mtx_.unlock();
-
-	return ! timed_out;
+	return true;
 }
 
 }}
