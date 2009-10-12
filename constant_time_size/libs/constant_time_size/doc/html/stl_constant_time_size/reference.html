@@ -1,0 +1,322 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Reference</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="up" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="prev" href="design.html" title="Design">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../..//boost.png"></td>
+<td align="center"><a href="../../../../..//index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../..//more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="design.html"><img src="../../../../..//doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../..//doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../..//doc/html/images/home.png" alt="Home"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="stl_constant_time_size.reference"></a><a href="reference.html" title="Reference">Reference</a>
+</h2></div></div></div>
+<a name="stl_constant_time_size.reference.class_list"></a><h3>
+<a name="id4759616"></a>
+      <a href="reference.html#stl_constant_time_size.reference.class_list">class list</a>
+    </h3>
+<p>
+      The class boost::constant_time_size::list wraps a std::list. It is a standard
+      container with configurable time complexity for the size function, and as the
+      std::list with linear access to elements, and fixed time insertion/deletion
+      at any point in the sequence.
+    </p>
+<p>
+      In addition to the std::list template parameters
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        T
+      </li>
+<li>
+        Allocator
+      </li>
+</ul></div>
+<p>
+      there is a third parameter
+    </p>
+<div class="itemizedlist"><ul type="disc"><li>
+        SizeTime stating a requirement (quess) for the complexity of the size function
+        (and as consequence for the splice function). The default value is constant_time.
+      </li></ul></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> 
+<span class="keyword">namespace</span> <span class="identifier">constant_time_size</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">linear_time</span> <span class="special">{};</span>
+    <span class="keyword">struct</span> <span class="identifier">constant_time</span> <span class="special">{};</span>
+    <span class="keyword">struct</span> <span class="identifier">quasy_constant_time</span> <span class="special">{};</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span> 
+        <span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span>
+        <span class="keyword">class</span> <span class="identifier">Allocator</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;,</span>
+        <span class="keyword">class</span> <span class="identifier">SizeTime</span> <span class="special">=</span> <span class="identifier">constant_time</span>
+        <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">list</span><span class="special">;</span>
+<span class="special">}</span> 
+<span class="special">}</span>
+</pre>
+<p>
+      The class provides the same interface than the std::list, and in addition provides
+      functions that allows to see the wrapper as a std::list, and function constant
+      time prototypes for functions like splice by adding a parameter distance.
+    </p>
+<a name="stl_constant_time_size.reference.global_variable_audit"></a><h3>
+<a name="id4759884"></a>
+      <a href="reference.html#stl_constant_time_size.reference.global_variable_audit">global
+      variable audit</a>
+    </h3>
+<p>
+      When audit is enabled, every call to the size function will check that the
+      size of the container and the counter are equals. The audit is enabled in debug
+      mode (NDEBUG must be defined) and the boost::constant_time_size::audit variable
+      is true. The initial value of this variable is true if the ATRIUM_CONSTANT_TIME_SIZE_AUDIT
+      is defined.
+    </p>
+<a name="stl_constant_time_size.reference.linear_size_amp_"></a><h3>
+<a name="id4759908"></a>
+      <a href="reference.html#stl_constant_time_size.reference.linear_size_amp_">linear_size&amp;</a>
+    </h3>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">linear_size</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Returns the number of elements in
+      the underlying list
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: could be linear on size().
+    </p>
+<a name="stl_constant_time_size.reference.set_coherent"></a><h3>
+<a name="id4759995"></a>
+      <a href="reference.html#stl_constant_time_size.reference.set_coherent">set_coherent</a>
+    </h3>
+<p>
+      Ensure a coherency between the counter and the number of elements in the list.
+    </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_coherent</span><span class="special">();</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Set the current counter with the
+      size of the underlying list
+    </p>
+<p>
+      <span class="bold"><strong>Postcondition</strong></span>: size()==linear_size()
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: could be linear on size().
+    </p>
+<a name="stl_constant_time_size.reference.copy_constructor_from_a_list"></a><h3>
+<a name="id4758294"></a>
+      <a href="reference.html#stl_constant_time_size.reference.copy_constructor_from_a_list">copy
+      constructor from a list</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">list</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">);</span>
+<span class="identifier">list</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">s</span><span class="special">);</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Copy constructs a wraper with the
+      list contents
+    </p>
+<p>
+      <span class="bold"><strong>Postcondition</strong></span>: x == *this.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: If allocator_type's default constructor
+      or copy constructor throws.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Linear to the elements l contains.
+    </p>
+<p>
+      <span class="bold"><strong>Example</strong></span>:
+    </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;</span> <span class="identifier">w</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+</pre>
+<a name="stl_constant_time_size.reference.copy_constructor_from_another_wrapper_list"></a><h3>
+<a name="id4813151"></a>
+      <a href="reference.html#stl_constant_time_size.reference.copy_constructor_from_another_wrapper_list">copy
+      constructor from another wrapper list</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">OtherSizeTime</span><span class="special">&gt;</span>
+<span class="keyword">explicit</span> <span class="identifier">list</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">,</span> <span class="identifier">OtherSizeTime</span><span class="special">&gt;&amp;</span> <span class="identifier">l</span><span class="special">)</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Copy constructs a wraper with the
+      list contents
+    </p>
+<p>
+      <span class="bold"><strong>Postcondition</strong></span>: x == *this.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: If allocator_type's default constructor
+      or copy constructor throws.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Linear to the elements l contains.
+    </p>
+<a name="stl_constant_time_size.reference.assign_a_list"></a><h3>
+<a name="id4813302"></a>
+      <a href="reference.html#stl_constant_time_size.reference.assign_a_list">assign a list</a>
+    </h3>
+<pre class="programlisting"><span class="identifier">list</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">);</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: makes *this a copy of l.
+    </p>
+<p>
+      <span class="bold"><strong>Postcondition</strong></span>: x == *this.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: If allocator_type's default constructor
+      or copy constructor throws.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Linear to the elements l contains.
+    </p>
+<a name="stl_constant_time_size.reference.assign_another_wrapper_list"></a><h3>
+<a name="id4813412"></a>
+      <a href="reference.html#stl_constant_time_size.reference.assign_another_wrapper_list">assign
+      another wrapper list</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">OtherSizeTime</span><span class="special">&gt;</span>
+<span class="identifier">list</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">,</span> <span class="identifier">OtherSizeTime</span><span class="special">&gt;&amp;</span> <span class="identifier">l</span><span class="special">)</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: makes *this a copy of l.
+    </p>
+<p>
+      <span class="bold"><strong>Postcondition</strong></span>: x == *this.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: If allocator_type's default constructor
+      or copy constructor throws.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Linear to the elements l contains.
+    </p>
+<a name="stl_constant_time_size.reference.swap_with_a_list"></a><h3>
+<a name="id4813566"></a>
+      <a href="reference.html#stl_constant_time_size.reference.swap_with_a_list">swap with
+      a list</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">);</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Swaps the contents of *this and l.
+      If this-&gt;allocator_type() != l.allocator_type() allocators are also swapped.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Constant.
+    </p>
+<a name="stl_constant_time_size.reference.swap_with_another_wrapper_list"></a><h3>
+<a name="id4813660"></a>
+      <a href="reference.html#stl_constant_time_size.reference.swap_with_another_wrapper_list">swap
+      with another wrapper list</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">OtherSizeTime</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">list</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">,</span> <span class="identifier">Allocator</span><span class="special">,</span> <span class="identifier">OtherSizeTime</span><span class="special">&gt;&amp;</span> <span class="identifier">l</span><span class="special">)</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Swaps the contents of *this and l.
+      If this-&gt;allocator_type() != l.allocator_type() allocators are also swapped.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Constant.
+    </p>
+<a name="stl_constant_time_size.reference.conversions_to_a_const_list_amp_"></a><h3>
+<a name="id4813800"></a>
+      <a href="reference.html#stl_constant_time_size.reference.conversions_to_a_const_list_amp_">conversions
+      to a const list&amp;</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="keyword">const</span> <span class="identifier">list</span><span class="special">&amp;()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Returns a const reference to the
+      underlying list.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Constant.
+    </p>
+<a name="stl_constant_time_size.reference.conversions_to_a_const_list_"></a><h3>
+<a name="id4813881"></a>
+      <a href="reference.html#stl_constant_time_size.reference.conversions_to_a_const_list_">conversions
+      to a const list*</a>
+    </h3>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="keyword">const</span> <span class="identifier">list</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Returns a const pointer to the underlying
+      list.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Constant.
+    </p>
+<a name="stl_constant_time_size.reference.conversions_to_a_list_amp_"></a><h3>
+<a name="id4813961"></a>
+      <a href="reference.html#stl_constant_time_size.reference.conversions_to_a_list_amp_">conversions
+      to a list&amp;</a>
+    </h3>
+<p>
+      There is not really a conversion to a list&amp; because it is not safe. Instead
+      the user need to explicitly create a non_const which have an implicit conversion
+      to a list&amp;.
+    </p>
+<pre class="programlisting"><span class="keyword">operator</span> <span class="keyword">const</span> <span class="identifier">non_const</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span> 
+</pre>
+<p>
+      <span class="bold"><strong>Effects</strong></span>: Returns an object convertible to
+      std::list&amp; which will on destruction ensure the coherency between the counter
+      and the underying list.
+    </p>
+<p>
+      <span class="bold"><strong>Throws</strong></span>: Nothing.
+    </p>
+<p>
+      <span class="bold"><strong>Complexity</strong></span>: Constant.
+    </p>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente Botet<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="design.html"><img src="../../../../..//doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../..//doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../..//doc/html/images/home.png" alt="Home"></a>
+</div>
+</body>
+</html>

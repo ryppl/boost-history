@@ -1,0 +1,371 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Design</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="up" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="prev" href="introduction.html" title="Introduction">
+<link rel="next" href="reference.html" title="Reference">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../..//boost.png"></td>
+<td align="center"><a href="../../../../..//index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../..//more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="introduction.html"><img src="../../../../..//doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../..//doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../..//doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../..//doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="stl_constant_time_size.design"></a><a href="design.html" title="Design">Design</a>
+</h2></div></div></div>
+<p>
+      Why not to take the best of each approach depending of the user context.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        linear_time: size has linear time complexity -&gt; splice shall be implemented
+        in constant time in the worst case
+      </li>
+<li>
+        constant_time: size in constant time in the worst case -&gt; splice has linear
+        time complexity
+      </li>
+<li>
+        quasy_constant_time: size in constant time in most of the cases -&gt; splice
+        can have constant time in most of the cases
+      </li>
+</ul></div>
+<div class="table">
+<a name="id4758448"></a><p class="title"><b>Table 1. size spice complexity</b></p>
+<table class="table" summary="size spice complexity">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+          <p>
+            function
+          </p>
+          </th>
+<th>
+          <p>
+            size_constant_time
+          </p>
+          </th>
+<th>
+          <p>
+            size_linear_time
+          </p>
+          </th>
+<th>
+          <p>
+            size_quasy_constant_time
+          </p>
+          </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+          <p>
+            size
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(N)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)-O(N)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            splice one
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            splice all
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            splice some
+          </p>
+          </td>
+<td>
+          <p>
+            O(SOME)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            splice some distance
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+<td>
+          <p>
+            O(1)
+          </p>
+          </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+      This wrapper will inherit from the std::list when the underlying std::list
+      implements list::size() in constant time. In this case the wrapper can not
+      ensure the complexity for splice some or splice some + distance.
+    </p>
+<p>
+      <span class="bold"><strong>Stack</strong></span>
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        list: common interface for all the configurable size time complexity lists
+      </li>
+<li>
+        make_list: metafunction providing the list type depending on SizeTimeComplexity
+        parameter and the complexity of the std::list::size() function
+      </li>
+<li>
+        wrapper: wrapper used on std::ist implentations with linear time complexity
+        for the size function. It contains a std::list. This layer inherits from
+        the coherency size layer.
+      </li>
+<li>
+        extension: extends the std::list with the news functions in order to be compatible.
+        This extension is used either when the std::list implentation has already
+        constant time complexity for the size function, or when the user requires
+        a linear_time and std::list has linear time complexity for the size function.
+      </li>
+<li>
+        coherency size policy: This layer manage the size counter variable and its
+        implementation depends on whether this variable must be coherent every time
+        or only when the size function is called. This library provides two implementations
+        for thispolicy:
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            coherent: store the counter variable and ensure that this variable is
+            modified coherently every time the size of the list change.
+          </li>
+<li>
+            lazy: in addition to the counter variable it has also a coherent state.
+            ensure that this variable is modified coherently every time the size
+            of the list change except when the function complexity will be decreased,
+            as for example the splice function. In this case the coherent state will
+            be set to false. It is only when the size function is called that this
+            flag is checked and when incoherent the real size will be required making
+            the size function O-N) in this case.
+          </li>
+<li>
+            lazy_compact: There is also a compact policy that could be used instead
+            of lazy which will compact the size and coherent variables in one variable.
+            This will reduce the number of elements in the list because it uses one
+            bit of the size_type to store the coherent state. Some overflow control
+            is needed.
+          </li>
+</ul></div>
+</li>
+</ul></div>
+<div class="table">
+<a name="id4758987"></a><p class="title"><b>Table 2. make_list metafunction</b></p>
+<table class="table" summary="make_list metafunction">
+<colgroup>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+          <p>
+            required/implementation
+          </p>
+          </th>
+<th>
+          <p>
+            size_constant_time
+          </p>
+          </th>
+<th>
+          <p>
+            size_linear_time
+          </p>
+          </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+          <p>
+            size_constant_time
+          </p>
+          </td>
+<td>
+          <p>
+            extension&lt;std::list&gt;
+          </p>
+          </td>
+<td>
+          <p>
+            wrapper&lt;coherent&lt;std::list&gt;&gt;
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            size_linear_time
+          </p>
+          </td>
+<td>
+          <p>
+            extension&lt;std::list&gt;
+          </p>
+          </td>
+<td>
+          <p>
+            extension&lt;std::list&gt;
+          </p>
+          </td>
+</tr>
+<tr>
+<td>
+          <p>
+            size_quasy_constant_time
+          </p>
+          </td>
+<td>
+          <p>
+            extension&lt;std::list&gt;
+          </p>
+          </td>
+<td>
+          <p>
+            wrapper&lt;lazy&lt;std::list&gt;&gt;
+          </p>
+          </td>
+</tr>
+</tbody>
+</table>
+</div>
+<p>
+      <span class="bold"><strong>Conversion to non const std::list&amp;</strong></span>
+    </p>
+<p>
+      When the wrapper is used the direct conversion to std::list is not safe, because
+      the modifications in the list could change the size, making it incoherent.
+      A non_const class has been added to this purpose. It is conversible to a std::list&amp;
+      and the coherency is ensured in the destructor. As the C++0x do not looks for
+      a chain of user supplied conversion the user needs to state explicitly that
+      a conversion to a non const std::list is required.
+    </p>
+<pre class="programlisting"><span class="comment">// 3pp functions that can not be modified
+</span><span class="keyword">extern</span> <span class="keyword">void</span> <span class="identifier">mod_list</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;);</span>
+<span class="keyword">extern</span> <span class="keyword">void</span> <span class="identifier">mod2_list</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;&amp;);</span>
+
+<span class="keyword">typedef</span> <span class="identifier">constant_time_size</span><span class="special">::</span><span class="identifier">list</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="keyword">int</span><span class="special">&gt;,</span> <span class="identifier">constant_time</span><span class="special">&gt;</span> <span class="identifier">my_list</span><span class="special">;</span>
+<span class="identifier">my_list</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="identifier">mod_list</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span> <span class="comment">// do not compile
+</span><span class="identifier">mod_list</span><span class="special">(</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">get_non_const</span><span class="special">());</span> <span class="comment">// OK
+</span><span class="identifier">mod_list</span><span class="special">(</span><span class="identifier">my_list</span><span class="special">::</span><span class="identifier">non_const</span><span class="special">(</span><span class="identifier">l</span><span class="special">));</span>  <span class="comment">//OK
+</span>
+<span class="special">{</span>
+    <span class="comment">// non_const behaves like a coherency guard
+</span>    <span class="identifier">my_list</span><span class="special">::</span><span class="identifier">non_const</span> <span class="identifier">nc</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span> 
+    <span class="identifier">mod_list</span><span class="special">(</span><span class="identifier">nc</span><span class="special">);</span> <span class="comment">// OK
+</span>    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="identifier">l</span><span class="special">.</span><span class="identifier">size</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span> <span class="comment">// NOK this call to size is not coherent
+</span>    <span class="identifier">mod2_list</span><span class="special">(</span><span class="identifier">nc</span><span class="special">);</span> <span class="comment">// OK
+</span>    <span class="comment">// on destructor the size of l will be coherent
+</span><span class="special">}</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente Botet<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="introduction.html"><img src="../../../../..//doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../..//doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../..//doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="reference.html"><img src="../../../../..//doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

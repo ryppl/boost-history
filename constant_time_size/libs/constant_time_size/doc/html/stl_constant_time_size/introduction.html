@@ -1,0 +1,444 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Introduction</title>
+<link rel="stylesheet" href="../boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="up" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="prev" href="../index.html" title="Boost.StlConstantTimeSize">
+<link rel="next" href="design.html" title="Design">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../..//boost.png"></td>
+<td align="center"><a href="../../../../..//index.html">Home</a></td>
+<td align="center"><a href="../libraries.html">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../..//more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../..//doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../..//doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../..//doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="design.html"><img src="../../../../..//doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="stl_constant_time_size.introduction"></a><a href="introduction.html" title="Introduction">Introduction</a>
+</h2></div></div></div>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../..//doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        StlConstantTimeSize is not a part of the Boost libraries.
+      </p></td></tr>
+</table></div>
+<a name="stl_constant_time_size.introduction.description"></a><h3>
+<a name="id4803150"></a>
+      <a href="introduction.html#stl_constant_time_size.introduction.description">Description</a>
+    </h3>
+<p>
+      <span class="bold"><strong>Boost.StlConstantTimeSize</strong></span> Defines a wrapper
+      to the stl containers list and slist providing a constant time size function.
+    </p>
+<a name="stl_constant_time_size.introduction.motivation"></a><h3>
+<a name="id4762354"></a>
+      <a href="introduction.html#stl_constant_time_size.introduction.motivation">Motivation</a>
+    </h3>
+<p>
+      There is a discussion that comes up about once a year. Which member function
+      must be linear time: size() or splice().
+    </p>
+<p>
+      list::size is implemented usualy like
+    </p>
+<pre class="programlisting"><span class="comment">/**  Returns the number of elements in the %list.  */</span>
+<span class="identifier">size_type</span>
+<span class="identifier">size</span><span class="special">()</span> <span class="keyword">const</span>
+<span class="special">{</span> <span class="keyword">return</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">distance</span><span class="special">(</span><span class="identifier">begin</span><span class="special">(),</span> <span class="identifier">end</span><span class="special">());</span> <span class="special">}</span>
+</pre>
+<p>
+      The prototype of spice that interest us is
+    </p>
+<pre class="programlisting"><span class="comment">/**
+ *  @brief  Insert range from another %list.
+ *  @param  position  Iterator referencing the element to insert before.
+ *  @param  x  Source list.
+ *  @param  first  Iterator referencing the start of range in x.
+ *  @param  last  Iterator referencing the end of range in x.
+ *
+ *  Removes elements in the range [first,last) and inserts them
+ *  before @a position in constant time.
+ *
+ *  Undefined if @a position is in [first,last).
+ */</span>
+<span class="keyword">void</span>
+<span class="identifier">splice</span><span class="special">(</span><span class="identifier">iterator</span> <span class="identifier">__position</span><span class="special">,</span> <span class="identifier">list</span><span class="special">&amp;,</span> <span class="identifier">iterator</span> <span class="identifier">__first</span><span class="special">,</span> <span class="identifier">iterator</span> <span class="identifier">__last</span><span class="special">);</span>
+</pre>
+<p>
+      First of all it is not possible to do both in constant time, and second the
+      C++ standard requires linear time for boths. In addition the standard says
+      that size() "should" be constant time, and "should" does
+      not mean the same thing as "shall". This is the officially recommended
+      ISO wording for saying that an implementation is supposed to do something unless
+      there is a good reason not to.
+    </p>
+<p>
+      There are advantages and liabilities to both approaches. Here follow an extract
+      of the arguments I have found on the web.
+    </p>
+<p>
+      <span class="bold"><strong>linear time</strong></span>
+    </p>
+<p>
+      The implementers that chose to make <span class="bold"><strong>size() linear time</strong></span>
+      rather than constant, appeal the following reasons.
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        They believe it's more important for splice() to be fast than for size(),
+        since the whole point of using a list rather than a vector is so that you
+        can perform operations like splicing.
+        <div class="itemizedlist"><ul type="disc"><li>
+            This is not completlly true, there are other features in lists taht vector
+            do not provide at least with same complexity.
+          </li></ul></div>
+</li>
+<li>
+        Making size() constant time would require one extra word, to store the list's
+        size.They don't want to use that extra word, since lists are things that
+        people often have a lot of.
+        <div class="itemizedlist"><ul type="disc"><li>
+            But this extra word in in only on the list and not on the stored data.
+          </li></ul></div>
+</li>
+<li>
+        The only way to make size() constant time is to have an extra variable hanging
+        around, and to increment/decrement it for every insert/erase operation. This
+        requires taking extra time to update that variable.
+        <div class="itemizedlist"><ul type="disc"><li>
+            This is right, but the updating of this variable do not suppose a lot
+            of cycles.
+          </li></ul></div>
+</li>
+<li>
+        There are people who're already using lists who wouldn't want them to slow
+        down, or grow their data member size - even a little bit - to maintain this
+        extra state.
+        <div class="itemizedlist"><ul type="disc"><li>
+            This is a major requirement.
+          </li></ul></div>
+</li>
+<li>
+        You can easily provide this in a wrapper class around the STL. If we put
+        in that extra variable, though, there's no way that users would be able to
+        get back the lost performance (in splice, insert, erase, etc.) that it would
+        cost.
+        <div class="itemizedlist"><ul type="disc"><li>
+            I don't think that the wrapper class will be an easy task that every
+            developper will do.
+          </li></ul></div>
+</li>
+<li>
+        The fact that nobody has already purposes such a wrapper let think that this
+        is perhaps because nobody needs it.
+        <div class="itemizedlist"><ul type="disc"><li>
+            I needs it, or atleast I think so. I'm porting a whole product from solaris
+            to linux. The solaris stdlib has a size list implementation in constant-time.
+            It seam to me less risky to use a size constant-time implementation than
+            repare every non portable use of the list size function (non portable
+            respect to performances)
+          </li></ul></div>
+</li>
+<li>
+        From a design point of view, you rarely need to know the size of a list.
+        <div class="itemizedlist"><ul type="disc"><li>
+            Maybe, but I have thousans of uses of such a size function on the product
+            to port.
+          </li></ul></div>
+</li>
+</ol></div>
+<p>
+      <span class="bold"><strong>constant time</strong></span>
+    </p>
+<p>
+      The implementers that chose to make <span class="bold"><strong>size() constant time</strong></span>
+      rather than linear, appeal for following reasons.
+    </p>
+<p>
+      O(N) size() is more surprising than O(N) splice, especially in light of:
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        The standard says that size() <span class="emphasis"><em>should</em></span> be O(1).
+        <div class="itemizedlist"><ul type="disc"><li>
+            Surely, but if I don't use it ... what matters
+          </li></ul></div>
+</li>
+<li>
+        The standard says that the splice signature in question <span class="emphasis"><em>is</em></span>
+        linear time if &amp;x != this.
+        <div class="itemizedlist"><ul type="disc"><li>
+            Surely, but if I can have it in constant time this even indispensable
+            for a given application, because the concurrence wcan do better.
+          </li></ul></div>
+</li>
+<li>
+        In practice every other container has an O(1) size.
+        <div class="itemizedlist"><ul type="disc"><li>
+            In practice, but not on the standard
+          </li></ul></div>
+</li>
+<li>
+        In practice size is more commonly used than splice.
+        <div class="itemizedlist"><ul type="disc"><li>
+            More common do not means that in my own application I msut use a plice
+            in linear time because size is more commonly used. All this depends on
+            the application nedds and context.
+          </li></ul></div>
+</li>
+<li>
+        The size of the list elements would not change at all. Only the size of the
+        std::list class would grow by one flag and one size variable. Hardly catastrophical
+        (especially taking into account how much it speeds up size()).
+        <div class="itemizedlist"><ul type="disc"><li>
+            even in this case an application ussing a lot of lists could refuse to
+            use std::list if there is yet another word. It is the opposit that these
+            applications are asking for, i.e. standard slist (that has been accepted
+            recently for the TR2)
+          </li></ul></div>
+</li>
+</ol></div>
+<p>
+      It would have been better if the committee had either:
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        Required size() to be O(1) for all containers. or:
+        <div class="itemizedlist"><ul type="disc"><li>
+            I thik that this is not good, because this will force the removal of
+            the splice functions and so all the applications that use list because
+            it provides splice will redefine its own list.
+          </li></ul></div>
+</li>
+<li>
+        Omitted size() from std::list.
+        <div class="itemizedlist"><ul type="disc"><li>
+            I thik this will have a worst consequence than the more
+          </li></ul></div>
+</li>
+</ol></div>
+<p>
+      So what can we do today to improve the situation?
+    </p>
+<div class="orderedlist"><ol type="1">
+<li>
+        Change the requirements on size(). This would involve debates and blood letting
+        of biblical proportions.
+      </li>
+<li>
+        Omit size() from std::list, breaking untold amounts of existing C++ code.
+        But the fix is easy: s = distance(l.begin(), l.end())
+      </li>
+<li>
+        Do nothing.
+      </li>
+<li>
+        Add a new splice signature:
+      </li>
+</ol></div>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">splice</span><span class="special">(</span><span class="identifier">iterator</span> <span class="identifier">position</span><span class="special">,</span> <span class="identifier">list</span><span class="special">&amp;</span> <span class="identifier">x</span><span class="special">,</span>
+        <span class="identifier">iterator</span> <span class="identifier">first</span><span class="special">,</span> <span class="identifier">iterator</span> <span class="identifier">last</span><span class="special">,</span> <span class="identifier">size_type</span> <span class="identifier">n</span><span class="special">);</span>
+
+<span class="identifier">Precondition</span><span class="special">:</span> <span class="identifier">n</span> <span class="special">==</span> <span class="identifier">distance</span><span class="special">(</span><span class="identifier">first</span><span class="special">,</span> <span class="identifier">last</span><span class="special">).</span>
+<span class="identifier">Complexity</span><span class="special">:</span> <span class="identifier">Constant</span> <span class="identifier">time</span><span class="special">.</span>
+</pre>
+<p>
+      The user can know distance(first,last) or could compute it without changing
+      the time complexity of the algorithm. * This is a good compromise, between
+      the library designers and the user.
+    </p>
+<p>
+      <span class="bold"><strong>An hybrid approach</strong></span>
+    </p>
+<p>
+      In a http://www.thescripts.com/forum/thread720757.html "A solution for
+      a fast std::list::size() <span class="bold"><strong>and</strong></span> a fast std::list::splice()"
+      - Juha Nieminen present an hybrid solution. " ... I was thinking: What
+      if size() was an O(n) operation only <span class="bold"><strong>after</strong></span>
+      a splice() operation has been performed (and only the first time size() is
+      called after that), but O(1) otherwise?
+    </p>
+<p>
+      In other words, keep a size variable in the list class and update it as necessary,
+      and additionally keep a flag which tells if this size variable is valid. As
+      long as the flag tells that it's valid, list::size() can return the value of
+      the variable. Only if the flag says it's invalid, then the O(n) counting will
+      be performed, updating the variable, after which the flag can be set to valid.
+    </p>
+<p>
+      A splice() operation would set the flag to invalid in both lists.
+    </p>
+<p>
+      This way splice() will always be O(1), and size() will be O(n) only once after
+      a splice(), but O(1) otherwise. You will get speed benefits in all cases except
+      if you alternatively call splice() and size() repeatedly (in which case you
+      just get the same behavior as in most current list implementations, so it's
+      not like the result would be worse). "
+    </p>
+<p>
+      This discusion will continue forever if we don't want a take in account all
+      the requirements. There is not a best solution, there are bests solution each
+      one on a different context. The question is, do we require only one solution
+      that can not satisfy every body or should allow the user to ask for the better
+      respect to its context.
+    </p>
+<p>
+      I think that it is better to have the freedom to choose the implementation
+      more adapted to each context.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        linear_time: size has linear time complexity -&gt; splice shall be implemented
+        in constant time in the worst case
+      </li>
+<li>
+        constant_time: size in constant time in the worst case -&gt; splice has linear
+        time complexity
+      </li>
+<li>
+        quasy_constant_time: size in constant time in most of the cases -&gt; splice
+        can have constant time in most of the cases
+      </li>
+</ul></div>
+<p>
+      In addition this complexity parameter educate the user respect to this complexity
+      problem.
+    </p>
+<p>
+      It would have been better if the committee had added a size_splice complexity
+      parameter.
+    </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">linear_time</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">constant_time</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">quasy_constant_time</span> <span class="special">{};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span> <span class="keyword">typename</span> <span class="identifier">T</span>
+        <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Allocator</span> <span class="special">=</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">allocator</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span>
+        <span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SizeTimeComplexity</span> <span class="special">=</span> <span class="identifier">linear_time</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">list</span><span class="special">;</span>
+</pre>
+<p>
+      The advantage to doing a wrapper are:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Possible to interface with the current stl containers (list, slist oon).
+        Even if the wrapper would not inherit from the container, the wrapper will
+        have a container member.
+      </li>
+<li>
+        Reduced complexity by the use of the already implemented functions.
+      </li>
+</ul></div>
+<p>
+      There is a major liability:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        There is no way to implement a constant time splice function if the underlying
+        implementation has a constant time size function. But this is not worst than
+        using directly the container.
+      </li>
+<li>
+        There are some functions in the stl that change the number of elements of
+        the container, that could be counted easyly.
+      </li>
+</ul></div>
+<p>
+      The advantages to coding the class directly are:
+    </p>
+<div class="itemizedlist"><ul type="disc"><li>
+        Mastering every thing
+      </li></ul></div>
+<p>
+      There is a major liability:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        I don't see an easy way to interface with the current stl containers other
+        than replacing them, and even in this case, we will be unable to interface
+        with libraries linked with the standard STL lists.
+      </li>
+<li>
+        More complex
+      </li>
+</ul></div>
+<a name="stl_constant_time_size.introduction.requirements"></a><h3>
+<a name="id4765816"></a>
+      <a href="introduction.html#stl_constant_time_size.introduction.requirements">Requirements</a>
+    </h3>
+<div class="orderedlist"><ol type="1">
+<li>
+        The user must be able to choose the complexity of these antonomic functions.
+      </li>
+<li>
+        The container wrapper class should not be a container, because otherwise
+        this will not be safe.
+        <div class="itemizedlist"><ul type="disc">
+<li>
+            A container wrapper instance can be used where the container was used
+            when it is constants
+          </li>
+<li>
+            A container wrapper instance can be seen as a non constant container
+            explicitly using a kind os cast. This cast will have the responsability
+            to preserve the <span class="emphasis"><em>coherency</em></span> of the instance
+          </li>
+</ul></div>
+</li>
+<li>
+        A container must be convertible implicitly to a wrapper container
+      </li>
+<li>
+        The wrapper class must provided the same funcions the corresponding container
+        provides.
+      </li>
+<li>
+        No extra cost is added when linear complexity is choosen by the user
+      </li>
+<li>
+        An audit must possible on debug mode (NDEBUG defined).
+      </li>
+<li>
+        Some extra functions that improve the performances could be added.
+      </li>
+</ol></div>
+<p>
+      This concerns mainly the functions such
+    </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">splice</span><span class="special">(</span><span class="identifier">iterator</span> <span class="identifier">__position</span><span class="special">,</span> <span class="identifier">list</span><span class="special">&amp;,</span> <span class="identifier">iterator</span> <span class="identifier">__first</span><span class="special">,</span> <span class="identifier">iterator</span> <span class="identifier">__last</span><span class="special">);</span>
+</pre>
+<p>
+      that will take an extra distance argument
+    </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">splice</span><span class="special">(</span><span class="identifier">iterator</span> <span class="identifier">__position</span><span class="special">,</span> <span class="identifier">list</span><span class="special">&amp;,</span> <span class="identifier">iterator</span> <span class="identifier">__first</span><span class="special">,</span> <span class="identifier">iterator</span> <span class="identifier">__last</span>
+            <span class="special">,</span> <span class="identifier">distance_type</span> <span class="identifier">__d</span><span class="special">);</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente Botet<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../..//doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../..//doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../..//doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="design.html"><img src="../../../../..//doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
