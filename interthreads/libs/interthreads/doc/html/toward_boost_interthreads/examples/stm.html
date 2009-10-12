@@ -1,0 +1,357 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> STM</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../examples.html" title="Examples">
+<link rel="prev" href="thread_safe_deferred_traces.html" title="Thread
+      safe deferred traces">
+<link rel="next" href="../appendices.html" title="Appendices">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="thread_safe_deferred_traces.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../appendices.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.examples.stm"></a><a href="stm.html" title=" STM"> STM</a>
+</h3></div></div></div>
+<p>
+        This section does not include a complete example using the library, but only
+        a case study that could use the library in some way. I'm curently working
+        on this.
+      </p>
+<p>
+        Transactional memory (TM) is a recent parallel programming concept which
+        reduces challenges found in parallel programming. TM offers numerous advantages
+        over other synchronization mechanisms.
+      </p>
+<p>
+        This case study contains some thoughts on how I see a "boostified"
+        version of DracoSTM, a software transactional memory (STM) system. DracoSTM
+        is a high performance lock-based C++ STM research library. DracoSTM uses
+        only native object-oriented language semantics, increasing its intuitiveness
+        for developers while maintaining high programmability via automatic handling
+        of composition, locks and transaction termination.
+      </p>
+<p>
+        The example will show only the part concerning how the different contexts
+        are stored.
+      </p>
+<p>
+        Let me start of with a typical use of this library with the Hello World!
+        of transactional concurrent programming, Bank accounts and transfers. Let
+        BankAccount be a simple account.
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">BankAccount</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">Deposit</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">amount</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">Withdraw</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">amount</span><span class="special">);</span>
+    <span class="keyword">int</span> <span class="identifier">GetBalance</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">void</span> <span class="identifier">Transfer</span><span class="special">(</span><span class="identifier">BankAccount</span><span class="special">*</span> <span class="identifier">inA</span><span class="special">,</span> <span class="identifier">BankAccount</span><span class="special">*</span> <span class="identifier">outA</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">amount</span><span class="special">);</span>
+<span class="keyword">class</span> <span class="identifier">AccountManager</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">BankAccount</span><span class="special">*</span> <span class="identifier">checkingAcct_</span><span class="special">;</span>
+    <span class="identifier">BankAccount</span><span class="special">*</span> <span class="identifier">savingsAcct_</span><span class="special">;</span>
+    <span class="identifier">AccountManager</span><span class="special">(</span><span class="identifier">BankAccount</span><span class="special">&amp;</span> <span class="identifier">checking</span><span class="special">,</span> <span class="identifier">BankAccount</span><span class="special">&amp;</span> <span class="identifier">savings</span><span class="special">)</span>
+        <span class="special">:</span> <span class="identifier">checkingAcct_</span><span class="special">(&amp;</span><span class="identifier">checking</span><span class="special">)</span>
+        <span class="special">,</span> <span class="identifier">savingsAcct_</span><span class="special">(&amp;</span><span class="identifier">savings</span><span class="special">)</span>
+        <span class="special">{}</span>
+    <span class="keyword">void</span> <span class="identifier">Checking2Savings</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">amount</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Transfer</span><span class="special">(</span><span class="identifier">checkingAcct_</span><span class="special">,</span> <span class="identifier">savingsAcct_</span><span class="special">,</span> <span class="identifier">amount</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        And here a little programm that emulates an employer and two employees behaviors.
+        The employees have requested the employer to transfer their salaries to their
+        checking accounts every month. The employer does the transfer on the 28th
+        of each month. The employees perform withdrawals and queries from their accounts
+        using an ATM. Some people have requested the Bank for automatic periodic
+        transfers from their checking accounts to their saving accounts. The transfer
+        is done on the 3rd of each month.
+      </p>
+<pre class="programlisting"><span class="identifier">BankAccount</span> <span class="special">*</span><span class="identifier">emp</span><span class="special">;</span>
+<span class="identifier">BankAccount</span> <span class="special">*</span><span class="identifier">c1</span><span class="special">;</span>
+<span class="identifier">BankAccount</span> <span class="special">*</span><span class="identifier">c2</span><span class="special">;</span>
+<span class="identifier">BankAccount</span> <span class="special">*</span><span class="identifier">s1</span><span class="special">;</span>
+<span class="identifier">AccountManager</span> <span class="special">*</span><span class="identifier">am1</span><span class="special">;</span>
+
+<span class="keyword">int</span> <span class="identifier">employer_th</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">day</span><span class="special">(</span><span class="number">28</span><span class="special">));</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">i</span><span class="special">&lt;</span><span class="number">2</span><span class="special">;++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Transfer</span><span class="special">(</span><span class="identifier">emp</span><span class="special">,</span> <span class="identifier">c1</span><span class="special">,</span> <span class="number">3000</span><span class="special">);</span>
+        <span class="identifier">Transfer</span><span class="special">(</span><span class="identifier">emp</span><span class="special">,</span> <span class="identifier">c2</span><span class="special">,</span> <span class="number">3200</span><span class="special">);</span>
+        <span class="identifier">sleep</span><span class="special">(</span><span class="identifier">month</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">people_1_th</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">day</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+    <span class="identifier">c1</span><span class="special">-&gt;</span><span class="identifier">Withdraw</span><span class="special">(</span><span class="number">100</span><span class="special">);</span>
+    <span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">day</span><span class="special">(</span><span class="number">5</span><span class="special">));</span>
+    <span class="identifier">c1</span><span class="special">-&gt;</span><span class="identifier">Withdraw</span><span class="special">(</span><span class="number">500</span><span class="special">);</span>
+    <span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">day</span><span class="special">(</span><span class="number">4</span><span class="special">));</span>
+    <span class="identifier">c1</span><span class="special">-&gt;</span><span class="identifier">Withdraw</span><span class="special">(</span><span class="number">200</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">automatic_transfer_th</span><span class="special">(</span><span class="identifier">AccountManager</span> <span class="special">*</span><span class="identifier">am</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">debit</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">day</span><span class="special">(</span><span class="number">3</span><span class="special">));</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span><span class="identifier">i</span><span class="special">&lt;</span><span class="number">2</span><span class="special">;++</span><span class="identifier">i</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">am</span><span class="special">.</span><span class="identifier">Checking2Savings</span><span class="special">(</span><span class="identifier">debit</span><span class="special">);</span>
+        <span class="identifier">sleep_for</span><span class="special">(</span><span class="identifier">month</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Evidently every operation must be atomic. We use the STM_ATOMIC and STM_END_ATOMIC
+        macors to hide all the transaction complexity
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">BankAccount</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">balance_</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">Deposit</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">amount</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">STM_ATOMIC</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">)-&gt;</span><span class="identifier">balance_</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">STM_END_ATOMIC</span>
+    <span class="special">}</span>
+    <span class="comment">// ...
+</span>
+<span class="special">};</span>
+</pre>
+<p>
+        How all this works? Let me write what what is begind these macros. These
+        macros use a trick to that ensure that when the statement between both macros
+        succeed the transaction is committed. As the transaction can fail (exception
+        transaction_aborted thrown) we need to reiterate the execution of the statement.
+        So what a user needs to write is something like
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">Deposit</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">amount</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span> <span class="identifier">t</span><span class="special">;</span> <span class="special">!</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">commited</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">restart</span><span class="special">();</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">no_throw_commit</span><span class="special">())</span> <span class="special">{</span>
+        <span class="keyword">try</span> <span class="special">{</span>
+            <span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">)-&gt;</span><span class="identifier">balance_</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+        <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction_aborted</span><span class="special">&amp;)</span> <span class="special">{}</span>
+    <span class="special">}</span> 
+<span class="special">}</span>
+</pre>
+<p>
+        1. creation of a new transaction 2.a if not commited restart the transaction
+        and enter the body of the for (3) 2.b if commited exit the for. 3. execute
+        the statement 4 catch stm::transaction_aborted - if a stm::transaction_aborted
+        is thrown the next commit will fail 5. do a no_throw commit (2)
+      </p>
+<p>
+        Next follows the definition of the STM_ATOMIC and STM_END_ATOMIC macros.
+      </p>
+<p>
+        To access this in the current transaction we use <code class="computeroutput"><span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">)</span></code>
+        which return a smart pointer.
+      </p>
+<p>
+        If there is a large use of t.wr_ptr(this) it is better to use a variable
+      </p>
+<pre class="programlisting"><span class="special">{</span>
+    <span class="identifier">STM_ATOMIC</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">stm</span><span class="special">::</span><span class="identifier">tx_wr_ptr</span><span class="special">&lt;</span><span class="identifier">BankAccount</span><span class="special">&gt;</span> <span class="identifier">this_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">,</span><span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">this_ptr</span><span class="special">-&gt;</span><span class="identifier">balance_</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+    <span class="special">}</span> <span class="identifier">STM_END_ATOMIC</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The other <code class="computeroutput"><span class="identifier">BankAccount</span></code> functions
+        are coded as expected. Here is the comple code:
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">BankAccount</span> <span class="special">{</span>
+    <span class="keyword">int</span> <span class="identifier">balance_</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="identifier">stm</span><span class="special">:;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">void</span> <span class="identifier">Deposit</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">amount</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">STM_ATOMIC</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">)-&gt;</span><span class="identifier">balance_</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">STM_END_ATOMIC</span>
+    <span class="special">}</span>
+    <span class="keyword">void</span> <span class="identifier">Withdraw</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">amount</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">STM_ATOMIC</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">)-&gt;</span><span class="identifier">balance_</span> <span class="special">-=</span> <span class="identifier">amount</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+    <span class="keyword">int</span> <span class="identifier">GetBalance</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="identifier">STM_ATOMIC</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">make_tx_rd_ptr</span><span class="special">(</span><span class="keyword">this</span><span class="special">,</span><span class="identifier">t</span><span class="special">)-&gt;</span><span class="identifier">balance_</span><span class="special">;</span>
+        <span class="special">}</span> <span class="identifier">STM_END_ATOMIC</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The transfer from accounts is done like:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">Transfer</span><span class="special">(</span><span class="identifier">BankAccount</span><span class="special">*</span> <span class="identifier">inA</span><span class="special">,</span> <span class="identifier">BankAccount</span><span class="special">*</span> <span class="identifier">outA</span><span class="special">,</span> <span class="keyword">int</span> <span class="identifier">amount</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">stm</span><span class="special">;</span>
+    <span class="identifier">STM_ATOMIC</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">inA</span><span class="special">)-&gt;</span><span class="identifier">Withdraw</span><span class="special">(</span><span class="identifier">amount</span><span class="special">);</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">outA</span><span class="special">)-&gt;</span><span class="identifier">Deposit</span><span class="special">(</span><span class="identifier">amount</span><span class="special">);</span>
+    <span class="special">}</span> <span class="identifier">STM_END_ATOMIC</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The core of all this stuff is <code class="computeroutput"><span class="identifier">stm</span><span class="special">::</span><span class="identifier">transaction</span></code>,
+        <code class="computeroutput"><span class="identifier">stm</span><span class="special">::</span><span class="identifier">tx_wr_ptr</span><span class="special">&lt;&gt;</span></code>
+        and <code class="computeroutput"><span class="identifier">stm</span><span class="special">::</span><span class="identifier">tx_rd_ptr</span><span class="special">&lt;&gt;</span></code>.
+      </p>
+<p>
+        The interface of the transaction class is quite simple:
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">transaction</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">bool</span> <span class="identifier">commit</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">no_throw_commit</span><span class="special">()</span> <span class="keyword">throw</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">abort</span><span class="special">();</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">rd_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">wr_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">delete_memory</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">insert_in_new_cache</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="identifier">transaction_state</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">state</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+        The smart pointer interfaces follows:
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">tx_rd_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">element_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="special">*</span> <span class="identifier">pointer</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">reference</span><span class="special">;</span>
+
+    <span class="identifier">tx_rd_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">scope</span><span class="special">);</span>
+
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">const</span> <span class="identifier">T</span> <span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">tx_wr_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">element_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="special">*</span> <span class="identifier">pointer</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">reference</span><span class="special">;</span>
+
+    <span class="identifier">tx_wr_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">transaction</span><span class="special">&amp;</span> <span class="identifier">scope</span><span class="special">);</span>
+
+    <span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">T</span> <span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">void</span> <span class="identifier">delete_ptr</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Let me start with the simple constructor:
+      </p>
+<pre class="programlisting"><span class="identifier">tx_wr_ptr</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
+</pre>
+<p>
+        This creates a smart pointer pointing to a specific transaction memory of
+        the current transaction.
+      </p>
+<p>
+        It contains the classic functions of a smart pointer overloaded with <code class="computeroutput"><span class="keyword">const</span></code> or non <code class="computeroutput"><span class="keyword">const</span></code>.
+      </p>
+<pre class="programlisting"><span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">T</span> <span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+        <code class="computeroutput"><span class="identifier">tx_wr_ptr</span></code> points to a writable
+        cache. When we use one of the smart pointer operators, the pointers points
+        to a upgraded write cache specific to the transaction. In the example
+      </p>
+<pre class="programlisting"><span class="identifier">this_ptr</span><span class="special">-&gt;</span><span class="identifier">balance_</span> <span class="special">+=</span> <span class="identifier">amount</span><span class="special">;</span>
+</pre>
+<p>
+        the use of <code class="computeroutput"><span class="identifier">this_ptr</span><span class="special">-&gt;</span><span class="identifier">balance_</span></code> on the left hand side of the assignement
+        operator requires a non const access, so the upgrade to writable is done.
+      </p>
+<p>
+        Every <code class="computeroutput"><span class="keyword">new</span></code>/<code class="computeroutput"><span class="keyword">delete</span></code>
+        operation on a transaction must be in some way signaled to the transaction
+        service. The new created objects would be wrapped by a <code class="computeroutput"><span class="identifier">tx_wr_ptr</span><span class="special">&lt;&gt;</span></code> initialized like that;
+      </p>
+<pre class="programlisting"><span class="identifier">tx_wr_ptr</span><span class="special">&lt;</span><span class="identifier">BankAccount</span><span class="special">&gt;</span> <span class="identifier">this_ptr</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">BackAccount</span><span class="special">(),</span> <span class="identifier">is_new</span><span class="special">);</span>
+</pre>
+<p>
+        When we want to delete a pointer in a transaction we use <code class="computeroutput"><span class="identifier">tx_wr_ptr</span><span class="special">::</span><span class="identifier">delete_ptr</span></code>
+      </p>
+<pre class="programlisting"><span class="identifier">tx_wr_ptr</span><span class="special">&lt;</span><span class="identifier">BankAccount</span><span class="special">&gt;</span> <span class="identifier">p_ptr</span><span class="special">(</span><span class="identifier">p</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+<span class="comment">// ...
+</span><span class="identifier">p_ptr</span><span class="special">.</span><span class="identifier">delete_ptr</span><span class="special">();</span>
+</pre>
+<p>
+        or the short-cut
+      </p>
+<pre class="programlisting"><span class="identifier">t</span><span class="special">.</span><span class="identifier">delete_ptr</span><span class="special">(</span><span class="identifier">p</span><span class="special">);</span>
+</pre>
+<p>
+        Before finishing with the <code class="computeroutput"><span class="identifier">transaction</span></code>
+        class let me show you the <code class="computeroutput"><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span></code>
+        and its base class <code class="computeroutput"><span class="identifier">transactional_object_cache_base</span></code>.
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">transaction</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">bool</span> <span class="identifier">commit</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">no_throw_commit</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">abort</span><span class="special">();</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">read</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">write</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">delete_memory</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">transactional_object_cache</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">insert_in_new_cache</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">ptr</span><span class="special">);</span>
+
+    <span class="identifier">transaction_state</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">state</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="thread_safe_deferred_traces.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../appendices.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

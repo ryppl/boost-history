@@ -1,0 +1,1019 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Tutorial</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../users_guide.html" title=" Users'Guide">
+<link rel="prev" href="getting_started.html" title="
+      Getting Started">
+<link rel="next" href="bibliography.html" title="
+      References">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial"></a><a href="tutorial.html" title=" Tutorial"> Tutorial</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions">Thread
+        Extensions</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator">Thread
+          Decorator</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer">Thread
+          Specific Shared Pointer</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive">Keep
+          alive</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple">Thread
+          Tuple</a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions" title="Thread
+        Extensions">Thread
+        Extensions</a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator">Thread
+          Decorator</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer">Thread
+          Specific Shared Pointer</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive">Keep
+          alive</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple">Thread
+          Tuple</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator" title="Thread
+          Decorator">Thread
+          Decorator</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.declaring_a_decoration">Declaring
+            a decoration</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.creating_threads_with_decorators">Creating
+            threads with decorators</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.decorator_explicit_call">
+            Calling explictly the decoration on a thread</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.declaring_a_decoration"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.declaring_a_decoration" title="Declaring
+            a decoration">Declaring
+            a decoration</a>
+</h6></div></div></div>
+<p>
+              Objects of type <code class="computeroutput"><span class="identifier">thread_decoration</span></code>
+              are usualy static and initialized with a <code class="computeroutput"><span class="identifier">Callable</span></code>
+              object:
+            </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">d</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">setup</span><span class="special">();</span>
+
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">d</span><span class="special">(</span><span class="identifier">setup</span><span class="special">);</span>
+</pre>
+<p>
+              These decorations will be called either when we request this explicitly
+              at the initialization of the thread (this is needed on the main thread)
+              or when we create a thread using specific decorator wrapper. This is
+              explained in more detail in the next sections.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.creating_threads_with_decorators"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.creating_threads_with_decorators" title="Creating
+            threads with decorators">Creating
+            threads with decorators</a>
+</h6></div></div></div>
+<p>
+              When we want the decorations to decorate one thread of execution we
+              can create the thread using the decorator wrapper.
+            </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decorator</span><span class="special">(</span><span class="identifier">fct</span><span class="special">));</span>
+</pre>
+<p>
+              or using one of the <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+              decorators, as
+            </p>
+<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">basic_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">th</span><span class="special">,</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">fct</span><span class="special">));</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.decorator_explicit_call"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_decorator.decorator_explicit_call" title="
+            Calling explictly the decoration on a thread">
+            Calling explictly the decoration on a thread</a>
+</h6></div></div></div>
+<p>
+              For threads that are not created using the boost::thread class, as
+              it is the case of the main thread, we need to call explicitly the function
+              <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span></code> at the begining of the thread.
+            </p>
+<pre class="programlisting"><span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span><span class="special">();</span>
+    <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer" title="Thread
+          Specific Shared Pointer">Thread
+          Specific Shared Pointer</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.key_initialization">Key
+            initialization</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.context_initialization">Context
+            initialization</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.obtain_the_pointer_to_the_thread_specific_object_on_the_current_thread">Obtain
+            the pointer to the thread-specific object on the current thread</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.obtain_the_pointer_to_the_thread_specific_object_of_another_thread">Obtain
+            the pointer to the thread-specific object of another thread</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.iterating_through_all_the_thread_specific_context">Iterating
+            through all the thread specific context</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.deleting_the_context">Deleting
+            the context</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.cleanup_at_thread_exit">Cleanup
+            at thread exit</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.key_initialization"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.key_initialization" title="Key
+            initialization">Key
+            initialization</a>
+</h6></div></div></div>
+<p>
+              As the curent implementation uses the address of the thread_specific_shared_ptr&lt;&gt;
+              object, there is no need to do anything to get the key.
+            </p>
+<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.context_initialization"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.context_initialization" title="Context
+            initialization">Context
+            initialization</a>
+</h6></div></div></div>
+<p>
+              Initially the pointer has a value of <code class="computeroutput"><span class="number">0</span></code>
+              in each thread, but the value for the current thread can be set using
+              the <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code>
+              member functions.
+            </p>
+<p>
+              If the value of the pointer for the current thread is changed using
+              <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code>,
+              then the previous value is destroyed by calling the deleter routine.
+              Alternatively, the stored value can be reset to <code class="computeroutput"><span class="number">0</span></code>
+              and the prior value returned by calling the <code class="computeroutput"><span class="identifier">release</span><span class="special">()</span></code> member function, allowing the application
+              to take back responsibility for destroying the object.
+            </p>
+<p>
+              Initialization can be done
+            </p>
+<div class="itemizedlist"><ul type="disc"><li>
+                explicitly on the curret thread. Basically it works like a thread
+                local storage from inside the thread.
+              </li></ul></div>
+<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">func</span><span class="special">()</span> <span class="special">{</span> <span class="comment">// current thread
+</span>    <span class="comment">// ...
+</span>    <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="identifier">p</span><span class="special">);</span>
+    <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+                When we associate a thread decoration to the thread_specific_shared_ptr&lt;&gt;
+                we initialize implicitly every thread created with a thread_decorator.
+              </li></ul></div>
+<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">ptr</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">myclass_setup</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">myclass</span><span class="special">(</span><span class="identifier">any</span> <span class="identifier">specific</span> <span class="identifier">parameters</span><span class="special">));</span>
+<span class="special">}</span>
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">myclass_decoration</span><span class="special">(</span><span class="identifier">myclass_setup</span><span class="special">);</span>
+
+<span class="keyword">void</span> <span class="identifier">func</span><span class="special">()</span> <span class="special">{</span> <span class="comment">// ptr.reset(p); done implicitly
+</span>
+<span class="special">}</span>
+
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">=</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorated_thread</span><span class="special">(</span><span class="identifier">func</span><span class="special">);</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.obtain_the_pointer_to_the_thread_specific_object_on_the_current_thread"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.obtain_the_pointer_to_the_thread_specific_object_on_the_current_thread" title="Obtain
+            the pointer to the thread-specific object on the current thread">Obtain
+            the pointer to the thread-specific object on the current thread</a>
+</h6></div></div></div>
+<p>
+              All functions known from boost::thread_specific_ptr are available except
+              the release function. The value for the current thread can be obtained
+              using the <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code>
+              member function, or by using the <code class="computeroutput"><span class="special">*</span></code>
+              and <code class="computeroutput"><span class="special">-&gt;</span></code> pointer deference
+              operators.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">func</span><span class="special">()</span> <span class="special">{</span>
+<span class="special">{</span> <span class="comment">// current thread
+</span>    <span class="comment">// ...
+</span>    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">ptr</span><span class="special">.</span><span class="identifier">get</span><span class="special">()==</span><span class="number">0</span><span class="special">)</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">myclass</span><span class="special">);</span>
+    <span class="comment">// ...
+</span>    <span class="identifier">ptr</span><span class="special">-&gt;</span><span class="identifier">someFct</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.obtain_the_pointer_to_the_thread_specific_object_of_another_thread"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.obtain_the_pointer_to_the_thread_specific_object_of_another_thread" title="Obtain
+            the pointer to the thread-specific object of another thread">Obtain
+            the pointer to the thread-specific object of another thread</a>
+</h6></div></div></div>
+<p>
+              Besides, other threads can get access to the data provided a thread::id
+              by:
+            </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">=</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorated_thread</span><span class="special">(</span><span class="identifier">func</span><span class="special">);</span>
+
+<span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+</pre>
+<p>
+              where <code class="computeroutput"><span class="identifier">foo</span><span class="special">()</span></code>
+              is a function of <code class="computeroutput"><span class="identifier">myclass</span></code>.
+            </p>
+<p>
+              This could work or not. The issue appears as we can get a reference
+              to a thread before the thread has started, so the setting of the thread
+              specific context could be not yet done. One way to manage with this
+              error is to get the shared pointer and check if it contains something
+              or not.
+            </p>
+<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+<span class="keyword">if</span> <span class="special">(</span><span class="identifier">shp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">!=</span> <span class="number">0</span><span class="special">)</span> <span class="identifier">shp</span><span class="special">-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+<span class="keyword">else</span> <span class="special">...</span>
+</pre>
+<p>
+              When we need this we can pool:
+            </p>
+<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span><span class="special">;</span>
+<span class="keyword">do</span> <span class="special">{</span>
+    <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">[</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()]-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+<span class="special">}</span> <span class="keyword">while</span><span class="special">(</span><span class="identifier">shp</span><span class="special">.</span><span class="identifier">get</span><span class="special">()</span> <span class="special">==</span> <span class="number">0</span><span class="special">);</span>
+<span class="identifier">shp</span><span class="special">-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+</pre>
+<p>
+              The library provides a synchonization mechanism to solve this issue.
+              The wait_and_get() function allows a thread to synchronize with the
+              setting from another thread.
+            </p>
+<pre class="programlisting"><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;</span> <span class="identifier">shp</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">());</span>
+<span class="identifier">shp</span><span class="special">-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+</pre>
+<p>
+              shared_ptr&lt;myclass&gt; shp = ptr.wait_and_get(th-&gt;get_id());
+              shp-&gt;foo(); or
+            </p>
+<pre class="programlisting"><span class="identifier">ptr</span><span class="special">.</span><span class="identifier">wait_and_get</span><span class="special">(</span><span class="identifier">th</span><span class="special">-&gt;</span><span class="identifier">get_id</span><span class="special">()-&gt;</span><span class="identifier">foo</span><span class="special">();</span>
+</pre>
+<p>
+              In order to ensure that the decorations have been called, a cleaner
+              and safer option is not to return the thread until it has been started.
+              This behavior is obtained each time the thread is created with an
+              <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code>
+              decorator, as
+            </p>
+<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">basic_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
+<span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">th</span><span class="special">,</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">func</span><span class="special">));</span>
+<span class="comment">// here you are sure all the decorations have been called
+</span><span class="comment">// so we can access any thread_specific_shared_ptr of the created thread.
+</span></pre>
+<p>
+              The lifetime of the myclass instance is managed by a shared_ptr. One
+              reference is held by the thread (by means of a tss), a second is held
+              by the thread::id to shared_ptr&lt;T&gt; map and additional references
+              might be held by other threads, obtained by <code class="computeroutput"><span class="special">*</span><span class="identifier">pmyclass</span><span class="special">[</span><span class="identifier">th</span><span class="special">]</span></code>.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.iterating_through_all_the_thread_specific_context"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.iterating_through_all_the_thread_specific_context" title="Iterating
+            through all the thread specific context">Iterating
+            through all the thread specific context</a>
+</h6></div></div></div>
+<p>
+              Another use case appears when some global controller needs to access
+              the thread specific data of all the threads. Several approaches are
+              here possible; the library has choosen to provide a map getter using
+              a external locking mechanism that 'ensure' that the map access is locked
+              during the map query.
+            </p>
+<pre class="programlisting"><span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;::</span><span class="identifier">lock_type</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">ptr</span><span class="special">.</span><span class="identifier">get_mutex</span><span class="special">());</span>
+    <span class="keyword">const</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">myclass</span><span class="special">&gt;::</span><span class="identifier">map_type</span> <span class="identifier">amap</span> <span class="special">=</span> <span class="identifier">ptr</span><span class="special">.</span><span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock</span><span class="special">);</span>
+    <span class="comment">// use the map
+</span><span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.deleting_the_context"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.deleting_the_context" title="Deleting
+            the context">Deleting
+            the context</a>
+</h6></div></div></div>
+<p>
+              When a thread exits, the objects associated with each <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code>
+              instance is not inmediately destroyed due to its shared nature. It
+              is detached from the current thread and removed from the map. Only
+              when there are no more references to the shared pointer it will be
+              destroyed. By default, the object pointed to by a pointer <code class="computeroutput"><span class="identifier">p</span></code> is destroyed by invoking <code class="computeroutput"><span class="keyword">delete</span> <span class="identifier">p</span></code>,
+              but this can be overridden for a specific instance of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code>
+              by providing a deleter routine to the constructor. In this case, the
+              object is destroyed by invoking <code class="computeroutput"><span class="identifier">deleter</span><span class="special">(</span><span class="identifier">p</span><span class="special">)</span></code> where <code class="computeroutput"><span class="identifier">deleter</span></code>
+              is the deleter routine supplied to the constructor. The deleter function
+              is called only when there are no more references to the shared pointer.
+            </p>
+<pre class="programlisting"><span class="comment">// Add use of deleter !!!
+</span></pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.cleanup_at_thread_exit"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_specific_shared_pointer.cleanup_at_thread_exit" title="Cleanup
+            at thread exit">Cleanup
+            at thread exit</a>
+</h6></div></div></div>
+<p>
+              When a thread exits, the objects associated with each thread_specific_shared_ptr&lt;&gt;
+              instance is not inmediately destroyed due to its shared nature. Only
+              when there are no more references to the shared pointer it will be
+              destroyed. By default, the object pointed to by a pointer p is destroyed
+              by invoking delete p, but this can be overridden for a specific instance
+              of boost::thread_specific_shared_ptr&lt;&gt; by providing a cleanup
+              routine to the constructor. In this case, the object is destroyed by
+              invoking func(p) where func is the cleanup routine supplied to the
+              constructor. The cleanup functions are called in an unspecified order.
+              If a cleanup routine sets the value of associated with an instance
+              of boost::thread_specific_shared_ptr&lt;&gt; that has already been
+              cleaned up, that value is added to the cleanup list. Cleanup finishes
+              when there are no outstanding instances of boost::thread_specific_shared_ptr&lt;&gt;
+              with values. If a cleanup routine sets the value associated with an
+              instance of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code>
+              that has already been cleaned up, that value is added to the cleanup
+              list. Cleanup finishes when there are no outstanding instances of
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code>
+              with values.
+            </p>
+<pre class="programlisting"><span class="comment">// Add use of at thread_exit!!!
+</span></pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive" title="Keep
+          alive">Keep
+          alive</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.interface">Interface</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_mechanism_initialization">Keep
+            alive mechanism initialization</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_threads">
+            Which threads can be controlled?</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_enabling">
+            Enabling the keep alive mechanism</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_disabling">
+            Disabling the keep alive mechanism</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_persistent">
+            Configuring the dead persistency</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.access_from_the_current_thread">Access
+            from the current thread</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.access_from__the_controller_thread">Access
+            from the controller thread</a></span></dt>
+</dl></div>
+<p>
+            We will use the implementation of the keep alive mechanism as tutorial
+            for the thread decorators, thread specific shared pointers and the keep
+            alive mechanism itself.
+          </p>
+<p>
+            We want to detect situations on which a thread is looping or blocked
+            on some component. The user needs to state when this mechanism is enabled
+            or disabled.
+          </p>
+<p>
+            Since the only purpose is to find threads that don't work, the thread
+            needs to say if it is alive to a controller. The controler requests at
+            predefined intervals if the thread is dead, and in this case it will
+            call a user specific function which by default aborts the program.
+          </p>
+<p>
+            A thread is considered dead if during a given period the number of checkins
+            is inferior to a given threshold. These two parameters are given when
+            the keep alive mechanislm is enabled. At the begining of a thread the
+            keep alive mechanism is disabled.
+          </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.interface"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.interface" title="Interface">Interface</a>
+</h6></div></div></div>
+<p>
+              Next follows the keep alive interface.
+            </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>
+<span class="keyword">namespace</span> <span class="identifier">interthreads</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">this_thread</span> 	<span class="special">{</span>
+        <span class="keyword">class</span> <span class="identifier">enable_keep_alive</span> <span class="special">{</span>
+        <span class="keyword">public</span><span class="special">:</span>
+            <span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">periods</span><span class="special">=</span><span class="number">2</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">checkins</span><span class="special">=</span><span class="number">1</span><span class="special">);</span>
+            <span class="special">~</span><span class="identifier">enable_keep_alive</span><span class="special">();</span>
+        <span class="special">};</span>
+
+        <span class="keyword">class</span> <span class="identifier">disable_keep_alive</span> <span class="special">{</span>
+        <span class="keyword">public</span><span class="special">:</span>
+            <span class="identifier">disable_keep_alive</span><span class="special">();</span>
+            <span class="special">~</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+        <span class="special">};</span>
+
+        <span class="keyword">void</span> <span class="identifier">keep_alive_point</span><span class="special">();</span>
+        <span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">();</span>
+
+        <span class="keyword">typedef</span> <span class="keyword">void</span> <span class="special">(*</span><span class="identifier">on_dead_thread_type</span><span class="special">)(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*);</span>
+        <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*</span> <span class="identifier">th</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+
+    <span class="special">}</span>
+    <span class="keyword">bool</span> <span class="identifier">keep_alive_enabled</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span><span class="special">,</span> <span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*</span> <span class="identifier">th</span><span class="special">=</span><span class="number">0</span><span class="special">);</span>
+<span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_mechanism_initialization"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_mechanism_initialization" title="Keep
+            alive mechanism initialization">Keep
+            alive mechanism initialization</a>
+</h6></div></div></div>
+<p>
+              There is a single controller <code class="computeroutput"><span class="identifier">keep_alive_mgr</span></code>.
+              The controler needs to access some thread specific shared context
+              <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span></code>
+              to be able to control a thread.
+            </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">thread_keep_alive_ctx</span> <span class="special">{</span>
+        <span class="comment">// ...
+</span>        <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">init</span><span class="special">();</span>
+
+        <span class="keyword">typedef</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">&gt;</span> <span class="identifier">tssp</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">tssp</span> <span class="identifier">instance_</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">thread_decoration</span> <span class="identifier">initializer_</span><span class="special">;</span>
+        <span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">data_</span><span class="special">;</span>
+    <span class="special">};</span>
+    <span class="keyword">struct</span> <span class="identifier">keep_alive_mgr</span> <span class="special">{</span>
+        <span class="comment">// ...
+</span>        <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">initialize</span><span class="special">()</span> <span class="special">{</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_once</span><span class="special">(</span><span class="identifier">flag</span><span class="special">,</span> <span class="identifier">init</span><span class="special">);</span>
+        <span class="special">}</span>
+        <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
+            <span class="identifier">instance_</span><span class="special">=</span><span class="keyword">new</span> <span class="identifier">keep_alive_mgr</span><span class="special">();</span>
+        <span class="special">}</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">thread_</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">once_flag</span> <span class="identifier">flag_</span><span class="special">;</span>
+        <span class="keyword">static</span> <span class="identifier">keep_alive_mgr</span><span class="special">*</span> <span class="identifier">instance_</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+              The initialization of the controller itself and the setting the thread
+              specific context is done using an internal thread decoration <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">initializer_</span></code> with <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span></code>
+              as setup function.
+            </p>
+<pre class="programlisting"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">&gt;</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance_</span><span class="special">;</span>
+<span class="identifier">thread_decoration</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">initializer_</span><span class="special">(</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span><span class="special">);</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">once_flag</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">flag</span><span class="special">;</span>
+</pre>
+<p>
+              This setup function will initialize the <code class="computeroutput"><span class="identifier">keep_alive_mgr</span></code>
+              and then set the <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;&gt;</span></code> with a new <code class="computeroutput"><span class="identifier">thread_keep_alive_ctx</span></code>.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">initialize</span><span class="special">();</span>
+    <span class="identifier">instance_</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">());</span>
+<span class="special">}</span>
+</pre>
+<p>
+              The <code class="computeroutput"><span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">initialize</span></code>
+              function ensures just that the init function is called once using the
+              <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_once</span></code>. This <code class="computeroutput"><span class="identifier">init</span></code>
+              function creates the instance of the <code class="computeroutput"><span class="identifier">keep_alive_mgr</span></code>
+              singleton.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">initialize</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_once</span><span class="special">(</span><span class="identifier">flag_</span><span class="special">,</span> <span class="identifier">init</span><span class="special">);</span>
+<span class="special">}</span>
+<span class="keyword">void</span> <span class="identifier">keep_alive_mgr</span><span class="special">::</span><span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">instance_</span><span class="special">=</span><span class="keyword">new</span> <span class="identifier">keep_alive_mgr</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_threads"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_threads" title="
+            Which threads can be controlled?">
+            Which threads can be controlled?</a>
+</h6></div></div></div>
+<p>
+              As the keep alive mechanism uses a thread decoration, the user needs
+              to explicitly call the <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span></code>
+              function at the begining of the thread function or by wrapping the
+              thread function. Instead of having a specific function to call or use
+              a thread function wrapper, the keep alive uses the functions provided
+              by the thread decorator (<code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span></code>
+              and <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decorator</span></code>). So we must either
+              call <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span></code> explicitly on the thread
+              function
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">decorate</span><span class="special">();</span>
+    <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+<p>
+              or create the thread with the <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorator</span></code>
+              wrapper
+            </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorator</span><span class="special">(</span><span class="identifier">fct</span><span class="special">));</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_enabling"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_enabling" title="
+            Enabling the keep alive mechanism">
+            Enabling the keep alive mechanism</a>
+</h6></div></div></div>
+<p>
+              To be controled by the keep alive manager we need to enable the mechanism
+              using the enable_keep_alive. By default this enabler requires the application
+              to do at least one check point every 2 seconds using the <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">keep_alive_point</span><span class="special">()</span></code>
+              function.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
+
+    <span class="comment">// ...
+</span>    <span class="identifier">enable_keep_alive</span> <span class="identifier">ena</span><span class="special">;</span>
+    <span class="comment">// states that the thread will be declared dead if threre are
+</span>    <span class="comment">// less that 1 check_points in 2 seconds.
+</span>    <span class="keyword">for</span><span class="special">(;;)</span> <span class="special">{</span>
+        <span class="comment">// do a check point
+</span>        <span class="identifier">keep_alive_point</span><span class="special">();</span>
+        <span class="comment">// ...
+</span>    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_disabling"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_disabling" title="
+            Disabling the keep alive mechanism">
+            Disabling the keep alive mechanism</a>
+</h6></div></div></div>
+<p>
+              Some times we need to do an external task that could take an undefined
+              time. We can then disable the keep alive mechanisme by using a disabler
+              <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">disable_keep_alive</span></code>.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
+
+    <span class="comment">// ...
+</span>    <span class="comment">// states that the thread will be declared dead if threre are
+</span>    <span class="comment">// less that 1 check_points in 2 seconds.
+</span>    <span class="identifier">enable_keep_alive</span> <span class="identifier">enabler</span><span class="special">;</span>
+    <span class="keyword">for</span><span class="special">(;;)</span> <span class="special">{</span>
+        <span class="comment">// do a check point
+</span>        <span class="identifier">keep_alive_point</span><span class="special">();</span>
+
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">cnd</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// when a blocking task spending an undefined time
+</span>            <span class="comment">// you can disable the keep alive mechanism
+</span>            <span class="identifier">disable_keep_alive</span> <span class="identifier">disabler</span><span class="special">;</span>
+
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+              If on the contrary we don't want to disable the keep alive mechanism,
+              it should be interesting to do a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interruption_check_point</span><span class="special">()</span></code> just after the blocking task. In
+              this way if the task takes too much time and the thread is declared
+              dead, the possibility to manage the keep alive error by interrupting
+              the dead thread remains, once the task is finished.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
+    <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
+
+    <span class="comment">// ...
+</span>    <span class="comment">// states that the thread will be declared dead if threre are
+</span>    <span class="comment">// less that 1 check_points in 2 seconds.
+</span>    <span class="identifier">enable_keep_alive</span> <span class="identifier">enabler</span><span class="special">;</span>
+    <span class="keyword">for</span><span class="special">(;;)</span> <span class="special">{</span>
+        <span class="comment">// do a check point
+</span>        <span class="identifier">keep_alive_point</span><span class="special">();</span>
+
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">cnd</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// when a blocking task spending an undefined time
+</span>            <span class="comment">// you can disable the keep alive mechanism
+</span>            <span class="identifier">unknow_time_task</span><span class="special">();</span>
+            <span class="identifier">interruption_check_point</span><span class="special">();</span>
+
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_persistent"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.keep_alive_persistent" title="
+            Configuring the dead persistency">
+            Configuring the dead persistency</a>
+</h6></div></div></div>
+<p>
+              The default enabling parameters could be too restrictive in some cases.
+              But the <code class="computeroutput"><span class="identifier">enable_keep_alive</span></code>
+              configures it with the two parameters. We can declare a thread dead
+              when the thread has not done a number of checkins in a given period.
+              This can be useful when one knows the time a given task should take.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">fct</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">using</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">;</span>
+
+    <span class="comment">// ...
+</span>    <span class="comment">// states that the thread will be declared dead if threre are
+</span>    <span class="comment">// less that 4 check_points in 30 seconds.
+</span>    <span class="identifier">enable_keep_alive</span> <span class="identifier">enabler</span><span class="special">(</span><span class="number">15</span><span class="special">,</span> <span class="number">1</span><span class="special">);</span>
+    <span class="keyword">for</span><span class="special">(;;)</span> <span class="special">{</span>
+
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">cnd</span><span class="special">)</span> <span class="special">{</span>
+            <span class="comment">// it is know that this task will take no more than 15 seconds
+</span>            <span class="identifier">enable_keep_alive</span> <span class="identifier">control</span><span class="special">(</span><span class="number">15</span><span class="special">,</span> <span class="number">1</span><span class="special">);</span>
+            <span class="identifier">know_time_task</span><span class="special">();</span>
+            <span class="identifier">keep_alive_point</span><span class="special">();</span>
+            <span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">interruprion_check_point</span><span class="special">();</span>
+        <span class="special">}</span>
+
+
+    <span class="special">}</span>
+    <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.access_from_the_current_thread"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.access_from_the_current_thread" title="Access
+            from the current thread">Access
+            from the current thread</a>
+</h6></div></div></div>
+<p>
+              But how all this works. We start with enablers/disablers. Enablers/disablers
+              use RAII, so they can be nested and the context be restored on the
+              destructor. At the construction they store the current state of the
+              keep alive of this thread using the backup function and then they enable/disable
+              the KA mechanism. On destruction they restore the backed up context.
+            </p>
+<pre class="programlisting"><span class="identifier">enable_keep_alive</span><span class="special">::</span><span class="identifier">enable_keep_alive</span><span class="special">(</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">periods</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">checkins</span><span class="special">)</span>
+<span class="special">{</span>
+    <span class="identifier">backup_</span><span class="special">=</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">backup</span><span class="special">(</span><span class="identifier">data_</span><span class="special">);</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">enable_keep_alive</span><span class="special">(</span><span class="identifier">periods</span><span class="special">,</span> <span class="identifier">checkins</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="identifier">enable_keep_alive</span><span class="special">::~</span><span class="identifier">enable_keep_alive</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">restore</span><span class="special">(</span><span class="identifier">backup_</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="identifier">disable_keep_alive</span><span class="special">::</span><span class="identifier">disable_keep_alive</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">backup_</span><span class="special">=</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">backup</span><span class="special">(</span><span class="identifier">data_</span><span class="special">);</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">disable_keep_alive</span><span class="special">();</span>
+<span class="special">}</span>
+
+<span class="identifier">disable_keep_alive</span><span class="special">::~</span><span class="identifier">disable_keep_alive</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">restore</span><span class="special">(</span><span class="identifier">backup_</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+              These functions are quite simple
+            </p>
+<pre class="programlisting"><span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">backup</span><span class="special">(</span><span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">new_data</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">the_backup</span><span class="special">=</span><span class="identifier">data_</span><span class="special">;</span>
+    <span class="identifier">data_</span><span class="special">=</span><span class="identifier">new_data</span>
+    <span class="keyword">return</span> <span class="identifier">the_backup</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">restore</span><span class="special">(</span><span class="identifier">thread_keep_alive_internal</span><span class="special">*</span> <span class="identifier">backup</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">data_</span><span class="special">=</span><span class="identifier">backup</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">enable_keep_alive</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">enabled_</span><span class="special">=</span><span class="keyword">true</span><span class="special">;</span>
+<span class="special">}</span>
+<span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">disable_keep_alive</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">enabled_</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+              Note that there is no need to check if the <code class="computeroutput"><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance_</span></code>
+              contains a pointer because we have ensured that at initialization time.
+            </p>
+<p>
+              Next there is the central function <code class="computeroutput"><span class="identifier">keep_alive_point</span><span class="special">()</span></code>. This function does nothing more
+              than relaying the request to the specific context of this thread. This
+              function just increases the number of <code class="computeroutput"><span class="identifier">checkins_</span></code>.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">keep_alive_point</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">check_point</span><span class="special">();</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">check_point</span><span class="special">()</span> <span class="special">{</span>
+    <span class="special">++</span><span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">checkins_</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+              The <code class="computeroutput"><span class="identifier">set_on_dead_thread</span><span class="special">()</span></code> does the same. This function just
+              stores the on-dead action.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*</span> <span class="identifier">th</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">()-&gt;</span><span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">fct</span><span class="special">,</span> <span class="identifier">th</span><span class="special">);</span>
+<span class="special">}</span>
+
+    <span class="keyword">void</span> <span class="identifier">set_on_dead_thread</span><span class="special">(</span><span class="identifier">on_dead_thread_type</span> <span class="identifier">fct</span><span class="special">,</span> <span class="identifier">thread</span><span class="special">*</span> <span class="identifier">th</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">on_dead_</span><span class="special">=</span><span class="identifier">fct</span><span class="special">;</span>
+        <span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">thread_ptr_</span><span class="special">=</span><span class="identifier">th</span><span class="special">;</span>
+    <span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.access_from__the_controller_thread"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.keep_alive.access_from__the_controller_thread" title="Access
+            from the controller thread">Access
+            from the controller thread</a>
+</h6></div></div></div>
+<p>
+              Up to now we have seen the use of <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span></code>
+              as a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_ptr</span></code>, i.e. it is used
+              from the current thread.
+            </p>
+<p>
+              We will see now how the controler behaves. The single instance of the
+              keep_alive_mgr has been created on the init function.
+            </p>
+<p>
+              The constructor just constructs a thread with the loop function.
+            </p>
+<pre class="programlisting"><span class="identifier">keep_alive_mgr</span><span class="special">()</span> <span class="special">:</span> <span class="identifier">end_</span><span class="special">(</span><span class="keyword">false</span><span class="special">),</span> <span class="identifier">thread_</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">loop</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">end_</span><span class="special">)))</span>  <span class="special">{}</span>
+</pre>
+<p>
+              The loop function will iterate, every second, over all the thread_keep_alive_ctx
+              threads specific contexts asking them to control themselves. Note that
+              as the map can be modified when threads are created or finished, we
+              need to protect the iteration externally with a lock on the protecting
+              mutex.
+            </p>
+<pre class="programlisting"><span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">loop</span><span class="special">(</span><span class="keyword">bool</span><span class="special">&amp;</span> <span class="identifier">end</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">xtime</span> <span class="identifier">t</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">xtime_get</span><span class="special">(&amp;</span><span class="identifier">t</span><span class="special">,</span><span class="number">1</span><span class="special">);</span>
+    <span class="keyword">while</span><span class="special">(!</span><span class="identifier">end</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">.</span><span class="identifier">sec</span> <span class="special">+=</span> <span class="number">1</span><span class="special">;</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">lock_type</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">().</span><span class="identifier">get_mutex</span><span class="special">());</span>
+        <span class="keyword">const</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">tssp</span><span class="special">::</span><span class="identifier">map_type</span><span class="special">&amp;</span> <span class="identifier">tmap</span><span class="special">(</span>
+            <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">instance</span><span class="special">().</span><span class="identifier">get_map</span><span class="special">());</span>
+        <span class="identifier">thread_keep_alive_ctx</span><span class="special">::</span><span class="identifier">tssp</span><span class="special">::</span><span class="identifier">map_type</span><span class="special">::</span><span class="identifier">const_iterator</span> <span class="identifier">it</span> <span class="special">=</span> <span class="identifier">tmap</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span>
+        <span class="keyword">for</span> <span class="special">(;</span><span class="identifier">it</span> <span class="special">!=</span> <span class="identifier">tmap</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">it</span><span class="special">)</span> <span class="special">{</span>
+            <span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">.</span><span class="identifier">control</span><span class="special">(</span><span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">first</span><span class="special">);</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+              The thread loops until the end variable is true. In order to stop proprely
+              this thread we will use the destructor of singleton instance. This
+              end variable is a reference to a variable stored on the keep_alive_mgr
+              context which has been initialized staticly. So its destrcutor will
+              be called when the program finishes. So it is up to the destructor
+              to set this variable and wait for the thread completion
+            </p>
+<pre class="programlisting"><span class="special">~</span><span class="identifier">keep_alive_mgr</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">end_</span><span class="special">=</span><span class="keyword">true</span><span class="special">;</span>
+    <span class="identifier">thread_</span><span class="special">.</span><span class="identifier">join</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+              The thread_keep_alive_ctx::control function behaves as follows: if
+              it is enabled, it decreases the number of remaining periods and if
+              the thread is declared dead it executes the on dead action and resets
+              the check-ins and periods.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">control</span><span class="special">(</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">enabled_</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">--</span><span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">periods_</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">dead</span><span class="special">())</span> <span class="special">{</span>
+            <span class="identifier">on_dead</span><span class="special">(</span><span class="identifier">id</span><span class="special">);</span>
+            <span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">checkins_</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+            <span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">periods_</span><span class="special">=</span><span class="identifier">data_</span><span class="special">-&gt;</span><span class="identifier">total_periods</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple" title="Thread
+          Tuple">Thread
+          Tuple</a>
+</h5></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_launching">
+            Launching thread tuple</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_exceptions">
+            Exceptions in thread functions</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_joining">
+            Joining and detaching</a></span></dt>
+<dt><span class="section"><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_interruption">
+            Interruption</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_launching"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_launching" title="
+            Launching thread tuple">
+            Launching thread tuple</a>
+</h6></div></div></div>
+<p>
+              A new thread tuple is launched by passing a collection of objects of
+              some callable type, that can be invoked with no parameters. These objects
+              are then copied into internal storage, and invoked on the newly-created
+              threads of execution. If the objects must not (or cannot) be copied,
+              then <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code> can be used to pass in a reference
+              to the function object. In this case, the user of <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> must ensure that the referred-to
+              object outlives the newly-created thread of execution.
+            </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">callable</span>
+<span class="special">{</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()();</span>
+<span class="special">};</span>
+
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">copies_are_safe</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">callable</span> <span class="identifier">x</span><span class="special">;</span>
+    <span class="identifier">callable</span> <span class="identifier">y</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span><span class="identifier">x</span><span class="special">,</span> <span class="identifier">y</span><span class="special">);</span>
+<span class="special">}</span> <span class="comment">// x and y are destroyed, but the newly-created threads have a copy, so this is OK
+</span>
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">oops</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">callable</span> <span class="identifier">x</span><span class="special">;</span>
+    <span class="identifier">callable</span> <span class="identifier">y</span><span class="special">;</span>
+    <span class="keyword">return</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">x</span><span class="special">),</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span><span class="special">(</span><span class="identifier">y</span><span class="special">));</span>
+<span class="special">}</span> <span class="comment">// x and y are destroyed, but the newly-created threads still have a reference
+</span>  <span class="comment">// this leads to undefined behaviour
+</span></pre>
+<p>
+              If you wish to construct an instance of <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> with a function or callable
+              object that requires arguments to be supplied, this can NOT be done
+              by passing additional arguments as is the case for threads to the
+              <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
+              constructor, and you will need to use bind explicitly.
+            </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">find_the_question</span><span class="special">(</span><span class="keyword">int</span> <span class="identifier">the_answer</span><span class="special">);</span>
+
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">deep_thought_2</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">find_the_question</span><span class="special">,</span><span class="number">42</span><span class="special">),</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">find_the_question</span><span class="special">,</span><span class="number">16</span><span class="special">));</span>
+</pre>
+<p>
+              The arguments are <span class="emphasis"><em>copied</em></span> into the internals of
+              Boost.Bind structure: if a reference is required, use <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">ref</span></code>, just as for references to callable
+              functions.
+            </p>
+<p>
+              The limit on the number of additional arguments that can be passed
+              are specified by the Boost.Bind.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_exceptions"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_exceptions" title="
+            Exceptions in thread functions">
+            Exceptions in thread functions</a>
+</h6></div></div></div>
+<p>
+              If the function or callable object passed to the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> constructor propagates an exception
+              that is not of type <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code>,
+              when invoked, <code class="computeroutput"><span class="identifier">std</span><span class="special">::</span><span class="identifier">terminate</span><span class="special">()</span></code>
+              is called.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_joining"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_joining" title="
+            Joining and detaching">
+            Joining and detaching</a>
+</h6></div></div></div>
+<p>
+              When the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> object that represents a collection
+              of threads of execution is destroyed, the threads become <span class="emphasis"><em>detached</em></span>.
+              Once threads are detached, they will continue executing until the invocation
+              of the functions or callable objects supplied on construction completes,
+              or the program is terminated. The threads of a <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> can also be detached by explicitly
+              invoking the detach member function on the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> object. In this case, all the
+              threads of the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> object cease to represent the
+              now-detached thread, and instead represents 'Not-a-Thread.
+            </p>
+<p>
+              In order to wait for a tuple of threads of execution to finish, the
+              <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code>
+              or <code class="computeroutput"><span class="identifier">timed_join</span><span class="special">()</span></code>
+              member functions of the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> object must be used. <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code>
+              will block the calling thread until the all the threads represented
+              by the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> object have completed. If the
+              threads of execution represented by the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> object have already completed,
+              or the <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> objects represents <span class="emphasis"><em>Not-a-Thread</em></span>,
+              then <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code>
+              returns immediately. <code class="computeroutput"><span class="identifier">timed_join</span><span class="special">()</span></code> is similar, except that a call to
+              <code class="computeroutput"><span class="identifier">timed_join</span><span class="special">()</span></code>
+              will also return if the threads being waited for do not complete when
+              the specified time has elapsed.
+            </p>
+<p>
+              There is also a possibility to wait until the first thread completes,
+              interrupting the rest of the threads.
+            </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h6 class="title">
+<a name="toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_interruption"></a><a href="tutorial.html#toward_boost_interthreads.users_guide.tutorial.thread_extensions.thread_tuple.thread_tuple_interruption" title="
+            Interruption">
+            Interruption</a>
+</h6></div></div></div>
+<p>
+              A tuple of running threads can be <span class="emphasis"><em>interrupted</em></span>
+              by invoking the <code class="computeroutput"><span class="identifier">interrupt_all</span><span class="special">()</span></code> member function of the corresponding
+              <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
+              object. When the interrupted threads next execute one of the specified
+              <span class="emphasis"><em>interruption points</em></span> (or if it is currently <span class="emphasis"><em>blocked</em></span>
+              whilst executing one) with interruption enabled, then a <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_interrupted</span></code> exception will
+              be thrown in the interrupted thread. If not caught, this will cause
+              the execution of the interrupted thread to terminate. As with any other
+              exception, the stack will be unwound, and destructors for objects of
+              automatic storage duration will be executed.
+            </p>
+<p>
+              See the <a href="http://www.boost.org/libs/thread" target="_top"><span class="bold"><strong>Boost.Threads</strong></span></a>
+              library on how to avoid a thread being interrupted.
+            </p>
+<p>
+              At any point, the interruption state for the current thread can be
+              queried by calling <code class="computeroutput"><span class="identifier">interruption_enabled</span></code>.
+            </p>
+<a name="interruption_points"></a><p>
+            </p>
+<p>
+              See the <a href="http://www.boost.org/libs/thread" target="_top"><span class="bold"><strong>Boost.Threads</strong></span></a>
+              library for the Predefined Interruption Points.
+            </p>
+</div>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="getting_started.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="bibliography.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

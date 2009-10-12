@@ -1,0 +1,271 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Motivation</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../overview.html" title=" Overview">
+<link rel="prev" href="../overview.html" title=" Overview">
+<link rel="next" href="../users_guide.html" title=" Users'Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.overview.motivation"></a><a href="motivation.html" title=" Motivation"> Motivation</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="motivation.html#toward_boost_interthreads.overview.motivation.decorators">Decorators</a></span></dt>
+<dt><span class="section"><a href="motivation.html#toward_boost_interthreads.overview.motivation.sharing_thread_local_storage">Sharing
+        Thread Local Storage</a></span></dt>
+<dt><span class="section"><a href="motivation.html#toward_boost_interthreads.overview.motivation.keep_alive_motivation">
+        Keep Alive</a></span></dt>
+<dt><span class="section"><a href="motivation.html#toward_boost_interthreads.overview.motivation.thread_tuple">Thread
+        Tuple</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.overview.motivation.decorators"></a><a href="motivation.html#toward_boost_interthreads.overview.motivation.decorators" title="Decorators">Decorators</a>
+</h4></div></div></div>
+<p>
+          <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">call_once</span></code> provides a mechanism for ensuring
+          that an initialization routine is run exactly once on a programm without
+          data races or deadlocks. <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">at_thread_exit</span></code>
+          allows to execute a cleanup function at thread exit.
+        </p>
+<p>
+          If we want a setup function to be executed once at the begining on the
+          threads and a cleanup at thread exit we need to do
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">thread_main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">setup</span><span class="special">();</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">at_thread_exit</span><span class="special">(</span><span class="identifier">cleanup</span><span class="special">);</span>
+    <span class="comment">// do whatever
+</span>    <span class="comment">// ...
+</span><span class="special">}</span>
+<span class="comment">// ...
+</span><span class="special">{</span>
+    <span class="identifier">launch</span><span class="special">(</span><span class="identifier">thread_main</span><span class="special">);</span>
+    <span class="comment">//...
+</span><span class="special">}</span>
+</pre>
+<p>
+          Of course we can define an init function that calls setup and do the registration.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">init</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">setup</span><span class="special">();</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">at_thread_exit</span><span class="special">(</span><span class="identifier">cleanup</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Different services could require these setup/cleanup functions to be called,
+          and so each thread function should do
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">thread_main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">serv1</span><span class="special">::</span><span class="identifier">init</span><span class="special">();</span>
+    <span class="comment">// ...
+</span>    <span class="identifier">servN</span><span class="special">::</span><span class="identifier">init</span><span class="special">();</span>
+    <span class="comment">// do whatever using serv1, ..., servN.
+</span>    <span class="comment">// ...
+</span><span class="special">}</span>
+</pre>
+<p>
+          This approach is valid for services that the user can configure for specifics
+          threads, but not for services that must be installed on every thread.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">thread_decoration</span></code> ensures
+          that a setup function is called only once by thread before the thread function
+          provided the thread is created with a decorator wrapper. This setup function
+          is usualy used to set thread specific pointers and call functions once.
+        </p>
+<p>
+          The conterpart of the setup is the cleanup. The <code class="computeroutput"><span class="identifier">thread_decoration</span></code>
+          takes an optional cleanup function which will be executed at thread exit.
+        </p>
+<pre class="programlisting"><span class="comment">// define in only the implementation file of each service
+</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">decoration</span> <span class="identifier">serv1</span><span class="special">:</span><span class="identifier">decoration</span><span class="special">(</span><span class="identifier">serv1</span><span class="special">:</span><span class="identifier">setup</span><span class="special">,</span> <span class="identifier">serv1</span><span class="special">:</span><span class="identifier">cleanup</span><span class="special">);</span>
+<span class="comment">// ...
+</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">decoration</span> <span class="identifier">servN</span><span class="special">:</span><span class="identifier">decoration</span><span class="special">(</span><span class="identifier">servN</span><span class="special">:</span><span class="identifier">setup</span><span class="special">,</span> <span class="identifier">servN</span><span class="special">:</span><span class="identifier">cleanup</span><span class="special">);</span>
+
+
+<span class="keyword">void</span> <span class="identifier">thread_main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="comment">// do whatever using serv1, ..., servN.
+</span>    <span class="comment">// ...
+</span><span class="special">}</span>
+
+<span class="comment">// ...
+</span><span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">make_decorator</span><span class="special">(</span><span class="identifier">thread_main</span><span class="special">));</span>
+    <span class="comment">//...
+</span><span class="special">}</span>
+</pre>
+<p>
+          We can use a basic_threader_decorator as asynchronous executor to fork
+          thread_main.
+        </p>
+<pre class="programlisting"><span class="comment">// ...
+</span><span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">=</span><span class="identifier">fork</span><span class="special">(</span><span class="identifier">basic_threader_decorator</span><span class="special">(),</span> <span class="identifier">thread_main</span><span class="special">);</span>
+    <span class="comment">//...
+</span><span class="special">}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.overview.motivation.sharing_thread_local_storage"></a><a href="motivation.html#toward_boost_interthreads.overview.motivation.sharing_thread_local_storage" title="Sharing
+        Thread Local Storage">Sharing
+        Thread Local Storage</a>
+</h4></div></div></div>
+<p>
+          Thread local storage allows multi-threaded applications to have a separate
+          instance of a given data item for each thread. But does not provide any
+          mechanism to access this data from other threads. Although this seems to
+          defeat the whole point of thread-specific storage, it is useful when these
+          contexts need some kind of communication between them, or some central
+          global object needs to control them.
+        </p>
+<p>
+          The intent of the <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span></code>
+          class is to allow two threads to establish a shared memory space, without
+          requiring the user code to pass any information. <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span></code>
+          provides a portable mechanism for shared thread-local storage that works
+          on all compilers supported by <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span></code>
+          and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span></code>. Each instance of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span></code> represents
+          a pointer to a shared object where each thread must have a distinct value.
+        </p>
+<p>
+          Only the current thread can modify the thread specific shared pointer using
+          the non const functions reset/release functions. Each time these functions
+          are used, a synchronization must be ensured to update the mapping. The
+          other threads have only read access to the shared_ptr&lt;T&gt;. It is worth
+          saying that the shared object T must be thread safe.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.overview.motivation.keep_alive_motivation"></a><a href="motivation.html#toward_boost_interthreads.overview.motivation.keep_alive_motivation" title="
+        Keep Alive">
+        Keep Alive</a>
+</h4></div></div></div>
+<p>
+          On fault tolerant systems we need to be able to detect threads that could
+          stay on a loop, or simply blocked.
+        </p>
+<p>
+          One way to detect this situations is to require the thread to signal it
+          is alive by calling a check point function. Of course it should be up to
+          the user to state when this mechanism is enabled or disabled. At the begining
+          of a thread the keep alive mechanism is disabled.
+        </p>
+<p>
+          A thread will be considered dead if during a given period the number of
+          checkins is inferior to a given threshold. These two parameters can be
+          given when the keep alive mechanislm is enabled.
+        </p>
+<p>
+          The controler checks at predefined intervals if the thread is dead, and
+          in this case it will call a user specific function which by default aborts
+          the program.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.overview.motivation.thread_tuple"></a><a href="motivation.html#toward_boost_interthreads.overview.motivation.thread_tuple" title="Thread
+        Tuple">Thread
+        Tuple</a>
+</h4></div></div></div>
+<p>
+          The <code class="computeroutput"><span class="identifier">boots</span><span class="special">::</span><span class="identifier">thread_group</span></code> class allows to group dynamically
+          threads. This means that the container must be dynamic.
+        </p>
+<pre class="programlisting"><span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_group</span> <span class="identifier">tg</span><span class="special">;</span>
+    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">create_thread</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">);</span>
+    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">create_thread</span><span class="special">(</span><span class="identifier">thread2</span><span class="special">);</span>
+    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">join_all</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code>
+          class is responsible for launching and managing a static collection of
+          threads that are related in some way. No new threads can be added to the
+          tuple once constructed. So we can write
+        </p>
+<pre class="programlisting"><span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">tt</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">,</span> <span class="identifier">thread2</span><span class="special">);</span>
+    <span class="identifier">tt</span><span class="special">.</span><span class="identifier">join_all</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          As this
+        </p>
+<pre class="programlisting"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">conc_join_all</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">,</span> <span class="identifier">thread2</span><span class="special">);</span>
+</pre>
+<p>
+          In addition the user can join the first finishing thread.
+        </p>
+<pre class="programlisting"><span class="keyword">unsigned</span> <span class="identifier">i</span> <span class="special">=</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">conc_join_any</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">,</span> <span class="identifier">thread2</span><span class="special">);</span>
+</pre>
+<p>
+          Evidently, thread_tuple can not be used when we need dynamic creation or
+          deletion. The <code class="computeroutput"><span class="identifier">boots</span><span class="special">::</span><span class="identifier">thread_group</span></code> class allows to group dynamically
+          threads.
+        </p>
+<pre class="programlisting"><span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread_group</span> <span class="identifier">tg</span><span class="special">;</span>
+    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">create_thread</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">);</span>
+
+    <span class="comment">// later on
+</span>    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">create_thread</span><span class="special">(</span><span class="identifier">thread2</span><span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th3</span><span class="special">(</span><span class="identifier">thread3</span><span class="special">)</span>
+    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">add_thread</span><span class="special">(</span><span class="identifier">th3</span><span class="special">);</span>
+
+    <span class="comment">// later on
+</span>    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">remove_thread</span><span class="special">(</span><span class="identifier">th3</span><span class="special">);</span>
+
+    <span class="identifier">tg</span><span class="special">.</span><span class="identifier">join_all</span><span class="special">(</span><span class="identifier">thread1</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Objects of type <code class="computeroutput"><span class="identifier">thread_tuple</span><span class="special">&lt;&gt;</span></code> are movable, so they can be stored
+          in move-aware containers, and returned from functions. This allows the
+          details of thread tuple creation to be wrapped in a function.
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">make_thread_tuple</span><span class="special">(...);</span>
+
+<span class="keyword">void</span> <span class="identifier">f</span><span class="special">()</span>
+<span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_tuple</span><span class="special">&lt;</span><span class="number">2</span><span class="special">&gt;</span> <span class="identifier">some_thread_tuple</span><span class="special">=</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_thread_tuple</span><span class="special">(</span><span class="identifier">f1</span><span class="special">,</span> <span class="identifier">g2</span><span class="special">);</span>
+    <span class="identifier">some_thread_tuple</span><span class="special">.</span><span class="identifier">join</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

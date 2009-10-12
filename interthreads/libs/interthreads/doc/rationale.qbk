@@ -49,9 +49,9 @@ template<class Y> void reset(Y * p);
 ```
 ]]
 
-[[Mimic shared_ptr] [From the point of the other threads thread_specific_shared_ptr behaves as a shared_ptr lockup.
+[[Mimic shared_ptr] [From the point of view of the other threads thread_specific_shared_ptr behaves as a shared_ptr lockup.
 From the point of view of the current thread the stored pointer is located in a shared_pointer, so we can use the shared_ptr deleter feature
-From it we takes:
+From shared_ptr takes:
 
 ```T* get() const;
 T* operator->() const;

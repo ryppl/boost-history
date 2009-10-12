@@ -150,7 +150,7 @@
 
 [def __apply__ `apply`]
 
-[warning InterThreads is not a part of the Boost libraries.]
+[warning Toward Boost.InterThreads is not a part of the Boost libraries.]
 
 
 [include overview.qbk]

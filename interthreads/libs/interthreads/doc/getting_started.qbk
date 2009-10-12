@@ -55,14 +55,6 @@ Hello World!
 Bye, Bye!
 ]
 
-[/
-
-    int main() {
-        bith::wait_for_all(basic_threader_decorator, my_thread);
-        return 0;
-    }
-
-]
 
 [endsect]
 
@@ -193,52 +185,6 @@ This results on the following output
 
 [endsect]
 
-[/==========================]
-[section Multiple algorithms]
-[/==========================]
-
-This example shows how to launch several algorithms and wait only for the more efficient.
-
-    #include <boost/interthreads/typeof/threader.hpp>
-    #include <boost/interthreads/wait_for_any.hpp>
-    #include <iostream>
-
-    namespace bith = boost::interthreads;
-
-    int my_thread1() {
-        sleep(3);
-        std::cout << "1 thread_id=" << boost::this_thread::get_id() << std::endl;
-    }
-
-    int my_thread2() {
-        sleep(1);
-        std::cout << "2 thread_id=" << boost::this_thread::get_id() << std::endl;
-    }
-
-    int my_thread3() {
-        sleep(2);
-        std::cout << "3 thread_id=" << boost::this_thread::get_id() << std::endl;
-    }
-
-    int main() {
-        bith::shared_threader ae;
-        BOOST_AUTO(res,bith::wait_for_any(ae, my_thread1, my_thread2, my_thread3));
-        std::cout << "Algotithm " << result.first+1 << " finished the first. result=" << result.second << std::endl;
-        return 0;
-    }
-
-This results on the following output
-
-[pre
-3 thread_id=0x9c03f8
-2 thread_id=0x9c0850
-1 thread_id=0x9d0c40
-Algotithm 2 finished the first. result=0
-
-]
-
-
-[endsect]
 
 [endsect]
 

@@ -1,0 +1,196 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>
+      Appendix C: Implementation Notes</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="rationale.html" title=" Appendix
+      B: Rationale">
+<link rel="next" href="acknowledgements.html" title="
+      Appendix D: Acknowledgments">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.appendices.implementation"></a><a href="implementation.html" title="
+      Appendix C: Implementation Notes">
+      Appendix C: Implementation Notes</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="implementation.html#toward_boost_interthreads.appendices.implementation.thread_decorator">Thread
+        Decorator</a></span></dt>
+<dt><span class="section"><a href="implementation.html#toward_boost_interthreads.appendices.implementation.thread_specific_storage">Thread
+        Specific Storage</a></span></dt>
+<dt><span class="section"><a href="implementation.html#toward_boost_interthreads.appendices.implementation.keep_alive">Keep
+        Alive</a></span></dt>
+<dt><span class="section"><a href="implementation.html#toward_boost_interthreads.appendices.implementation.thread_tuple">Thread
+        Tuple</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.implementation.thread_decorator"></a><a href="implementation.html#toward_boost_interthreads.appendices.implementation.thread_decorator" title="Thread
+        Decorator">Thread
+        Decorator</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Thread safe</span></dt>
+<dd><p>
+              The library is thread safe as far as the thread decorations are declared
+              staticaly, because these variables will be initialized sequentially.
+            </p></dd>
+<dt><span class="term">Chained thread decorations</span></dt>
+<dd><p>
+              All the thread decorations are chained between them.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.implementation.thread_specific_storage"></a><a href="implementation.html#toward_boost_interthreads.appendices.implementation.thread_specific_storage" title="Thread
+        Specific Storage">Thread
+        Specific Storage</a>
+</h4></div></div></div>
+<p>
+          The Thread-Specific Storage pattern can be implemented in various ways
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">External versus internal thread storage</span></dt>
+<dd><p>
+              The thread specific data collections can be stored either externally
+              to all threads or internally to each thread. The thread_specific_shared_ptr
+              use both ensuring efficiency when the context is requested by the current
+              thread and allowing threads to access thread specific pointer of other
+              threads
+            </p></dd>
+<dt><span class="term">Fixed- vs. variable-sized thread specific
+          key mapping</span></dt>
+<dd><p>
+              This library is based on the the Boost.Thread thread_specific_ptr implementation
+              which use a variable-size map indexed by the address of the object.
+              Future releases will provide fixed and mixed keys.
+            </p></dd>
+<dt><span class="term">Fixed- vs. variable-sized mapping of
+          thread IDs to thread specific pointers</span></dt>
+<dd><p>
+              It may be impractical to have a fixed-size array with an entry for
+              every possible thread ID value. Instead, it is more space efficient
+              to have threads use a dynamic data structure to map thread IDs to thread
+              specific pointers.
+            </p></dd>
+<dt><span class="term">One mapping of thread IDs to thread
+          specific pointers or to thread specific key mapping</span></dt>
+<dd><p>
+              This library maps thread IDs to thread specific pointers to avoid contention
+              on a single map.
+            </p></dd>
+<dt><span class="term">Default versus explicit specific context
+          setting</span></dt>
+<dd><p>
+              This library provides explicit setting. In future release will provide
+              explicit/eager and implicit/lazy specific context setting. Note that
+              implicit setting will need a factory or a default constructible type.
+            </p></dd>
+<dt><span class="term">Ordered or unordered map</span></dt>
+<dd><p>
+              While the thread::id type is ordered, there is no need to use it. The
+              current implementation use an ordered map. Future version will allow
+              the user to configure this.
+            </p></dd>
+<dt><span class="term">Intrusive or not maps</span></dt>
+<dd><p>
+              As the thread specific pointer is stored on only one map the implementation
+              could use an intrusive container. This will be provided in future releases
+            </p></dd>
+<dt><span class="term">Shared versus exclusive locking</span></dt>
+<dd><p>
+              Locating the right TS pointer requires the use of mutex to prevent
+              race conditions. The library use a a shared_mutex because most of the
+              access to the map will be readings by other threads. The problem is
+              that the native conditions can not be used directly with shared mutex.
+              Some benchmarks will be needed before decidinf which implementation
+              is the best.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.implementation.keep_alive"></a><a href="implementation.html#toward_boost_interthreads.appendices.implementation.keep_alive" title="Keep
+        Alive">Keep
+        Alive</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Ensuring keep alive manager singleton
+          is initialized and the thread specific shared storage is set before use</span></dt>
+<dd><p>
+              The use of the thread decoration ensures that the decoration are called
+              before the user thread function is called. The keep_alive decoration
+              use the call_once to ensure that the keep_alive manager is correctly
+              initialized.
+            </p></dd>
+<dt><span class="term">backup/restore context</span></dt>
+<dd><p>
+              The real thread specific data is stored directly on the stack of enablers/disablers
+              avoiding heap memory. On enablers/disablers construction they store
+              a backup pointer to the nesting context. This allows a quick restore.
+              The keep alive pointer contains just a pointer to this data.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.implementation.thread_tuple"></a><a href="implementation.html#toward_boost_interthreads.appendices.implementation.thread_tuple" title="Thread
+        Tuple">Thread
+        Tuple</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Joining the first finishing thread</span></dt>
+<dd><p>
+              In order to synchronize the end of all the threads the libarry use
+              a internal class which stores the index of the first thread notifying
+              that it is finished. As the user function has no idea of this index
+              we need to wrap the user thread functions.
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="rationale.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="acknowledgements.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

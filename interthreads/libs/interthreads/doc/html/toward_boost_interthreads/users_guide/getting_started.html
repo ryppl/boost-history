@@ -1,0 +1,389 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>
+      Getting Started</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../users_guide.html" title=" Users'Guide">
+<link rel="prev" href="../users_guide.html" title=" Users'Guide">
+<link rel="next" href="tutorial.html" title=" Tutorial">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../users_guide.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.users_guide.getting_started"></a><a href="getting_started.html" title="
+      Getting Started">
+      Getting Started</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install">
+        Installing InterThreads</a></span></dt>
+<dt><span class="section"><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.hello_world__decorator">Hello
+        World! decorator</a></span></dt>
+<dt><span class="section"><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.monotonic_thread_id">Monotonic
+        Thread Id</a></span></dt>
+<dt><span class="section"><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.basic_keep_alive">Basic
+        keep alive</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.users_guide.getting_started.install"></a><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install" title="
+        Installing InterThreads">
+        Installing InterThreads</a>
+</h4></div></div></div>
+<a name="toward_boost_interthreads.users_guide.getting_started.install.getting_boost_interthreads"></a><h5>
+<a name="id4759283"></a>
+          <a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install.getting_boost_interthreads">Getting
+          Boost.InterThreads</a>
+        </h5>
+<p>
+          You can get the last stable release of <span class="bold"><strong>Boost.InterThreads</strong></span>
+          by downloading <code class="literal">interthreads.zip</code> from the <a href="http://www.boost-consulting.com/vault/index.php?directory=Concurrent%20Programming" target="_top">Boost
+          Vault</a>
+        </p>
+<p>
+          You can also access the latest (unstable?) state from the <a href="https://svn.boost.org/svn/boost/sandbox/interthreads" target="_top">Boost
+          Sandbox</a>.
+        </p>
+<a name="toward_boost_interthreads.users_guide.getting_started.install.building_boost_interthreads"></a><h5>
+<a name="id4759339"></a>
+          <a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install.building_boost_interthreads">Building
+          Boost.InterThreads</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.InterThreads</strong></span> is not a header only
+          library. You need to compile it before use.
+        </p>
+<pre class="programlisting"><span class="identifier">cd</span> <span class="identifier">libs</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">build</span>
+<span class="identifier">bjam</span>
+</pre>
+<a name="toward_boost_interthreads.users_guide.getting_started.install.build_requirements"></a><h5>
+<a name="id4759412"></a>
+          <a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install.build_requirements">Build
+          Requirements</a>
+        </h5>
+<p>
+          <span class="bold"><strong>Boost.InterThreads</strong></span> depends on Boost. You
+          must use either Boost version 1.38.x or the version in SVN trunk. In particular,
+          <span class="bold"><strong>Boost.InterThreads</strong></span> depends on:
+        </p>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term"><a href="http://www.boost.org/libs/array" target="_top"><span class="bold"><strong>Boost.Array</strong></span></a></span></dt>
+<dd><p>
+              for array, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/bind" target="_top"><span class="bold"><strong>Boost.Bind</strong></span></a></span></dt>
+<dd><p>
+              for bind, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/config" target="_top"><span class="bold"><strong>Boost.Config</strong></span></a></span></dt>
+<dd><p>
+              for ??? and abi_prefic_sufix, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/function" target="_top"><span class="bold"><strong>Boost.Function</strong></span></a></span></dt>
+<dd><p>
+              for function, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/fusion" target="_top"><span class="bold"><strong>Boost.Fusion</strong></span></a></span></dt>
+<dd><p>
+              for tuples, and sequence algorithms ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/mpl" target="_top"><span class="bold"><strong>Boost.MPL</strong></span></a></span></dt>
+<dd><p>
+              for transform, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs" target="_top"><span class="bold"><strong>Boost.Preprocesor</strong></span></a></span></dt>
+<dd><p>
+              to simulate variadic templates , ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/smart_ptr" target="_top"><span class="bold"><strong>Boost.SmartPtr</strong></span></a></span></dt>
+<dd><p>
+              for shared_ptr, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/thread" target="_top"><span class="bold"><strong>Boost.Threads</strong></span></a></span></dt>
+<dd><p>
+              for thread, thread_specific_ptr, call_once, mutex, condition_variable,
+              ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/typeof" target="_top"><span class="bold"><strong>Boost.TypeOf</strong></span></a></span></dt>
+<dd><p>
+              to register the ACT types.
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs/type_traits" target="_top"><span class="bold"><strong>Boost.TypeTrais</strong></span></a></span></dt>
+<dd><p>
+              for is_void, remove_references, ...
+            </p></dd>
+<dt><span class="term"><a href="http://www.boost.org/libs" target="_top"><span class="bold"><strong>Boost.Utility</strong></span></a></span></dt>
+<dd><p>
+              for result_of, enable_if...
+            </p></dd>
+</dl>
+</div>
+<a name="toward_boost_interthreads.users_guide.getting_started.install.exceptions_safety"></a><h5>
+<a name="id4759694"></a>
+          <a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install.exceptions_safety">Exceptions
+          safety</a>
+        </h5>
+<p>
+          All functions in the library are exception-neutral and provide strong guarantee
+          of exception safety as long as the underlying parameters provide it.
+        </p>
+<a name="toward_boost_interthreads.users_guide.getting_started.install.thread_safety"></a><h5>
+<a name="id4759722"></a>
+          <a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install.thread_safety">Thread
+          safety</a>
+        </h5>
+<p>
+          All functions in the library are thread-unsafe except when noted explicitly.
+        </p>
+<a name="toward_boost_interthreads.users_guide.getting_started.install.tested_compilers"></a><h5>
+<a name="id4759749"></a>
+          <a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.install.tested_compilers">Tested
+          compilers</a>
+        </h5>
+<p>
+          Currently, <span class="bold"><strong>Boost.InterThreads</strong></span> has been
+          tested in the following compilers/platforms:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            GCC 3.4.4 Cygwin
+          </li>
+<li>
+            GCC 3.4.6 Linux
+          </li>
+<li>
+            GCC 4.1.2 Linux
+          </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+            Please send any questions, comments and bug reports to boost &lt;at&gt;
+            lists &lt;dot&gt; boost &lt;dot&gt; org.
+          </p></td></tr>
+</table></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.users_guide.getting_started.hello_world__decorator"></a><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.hello_world__decorator" title="Hello
+        World! decorator">Hello
+        World! decorator</a>
+</h4></div></div></div>
+<p>
+          This is a little bit more than a Hello World! example. It will also say
+          Bye, Bye!
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_decorator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">thread</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">bith</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">;</span>
+
+<span class="keyword">void</span> <span class="identifier">my_setup</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello World!"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">my_cleanup</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"Bye, Bye!"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">my_decoration</span><span class="special">(</span><span class="identifier">my_setup</span><span class="special">,</span> <span class="identifier">my_cleanup</span><span class="special">);</span>
+
+<span class="keyword">void</span> <span class="identifier">my_thread</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"..."</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">th</span><span class="special">(</span><span class="identifier">bith</span><span class="special">::</span><span class="identifier">make_decorator</span><span class="special">(</span><span class="identifier">my_thread</span><span class="special">));</span>
+    <span class="identifier">th</span><span class="special">.</span><span class="identifier">join</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          When <code class="computeroutput"><span class="identifier">th</span></code> is created with
+          the <code class="computeroutput"><span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decorator</span></code> wrapper, it will initialize
+          all the decorations before calling <code class="computeroutput"><span class="identifier">my_thread</span></code>.
+          This <code class="computeroutput"><span class="identifier">my_cleanup</span></code> will be
+          registered with the <code class="computeroutput"><span class="identifier">boost</span><span class="special">:</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">at_thread_exit</span></code>
+          if the <code class="computeroutput"><span class="identifier">my_setup</span></code> function
+          succeeds i.e. does not throw. Then the thread function <code class="computeroutput"><span class="identifier">my_thread</span></code>
+          is called. At the thread exit, the <code class="computeroutput"><span class="identifier">my_cleanup</span></code>
+          function is called. This results on the following output
+        </p>
+<pre class="programlisting">Hello World!
+...
+Bye, Bye!
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.users_guide.getting_started.monotonic_thread_id"></a><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.monotonic_thread_id" title="Monotonic
+        Thread Id">Monotonic
+        Thread Id</a>
+</h4></div></div></div>
+<p>
+          This example use thread decorator and thread specific pointers to implement
+          a monotonic thread identifier.
+        </p>
+<p>
+          The monotonic thread identifier is managed by the mono_thread_id class.
+          There is a mutex protecting the access to the monotonic counter. The main
+          difference between a thread_specific_shared_ptr and a thread_specific_ptr
+          is that we can get the specific pointer of another thread (*) With the
+          help of bith::thread_decoration, the setting of the thread specific shared
+          pointer is done transparently, as far as the thread is created using a
+          thread decorator. This setup function resets the specific pointer with
+          the value of the monotonic counter which will be self increased.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_decorator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">thread</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">bith</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">;</span>
+
+<span class="keyword">class</span> <span class="identifier">mono_thread_id</span> <span class="special">{</span>
+    <span class="keyword">static</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">decoration_</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="keyword">unsigned</span><span class="special">&gt;</span> <span class="identifier">tssp_type</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">tssp_type</span> <span class="identifier">current_</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="identifier">counter_</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span> <span class="identifier">sync_</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="identifier">create</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">sync_</span><span class="special">);</span>
+        <span class="keyword">unsigned</span> <span class="identifier">res</span> <span class="special">=</span> <span class="identifier">counter_</span><span class="special">;</span>
+        <span class="special">++</span><span class="identifier">counter</span><span class="special">;</span>
+        <span class="keyword">return</span> <span class="identifier">res</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">setup</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">current_</span><span class="special">.</span><span class="identifier">reset</span><span class="special">(</span><span class="keyword">new</span> <span class="keyword">unsigned</span><span class="special">(</span><span class="identifier">create</span><span class="special">());</span>
+    <span class="special">}</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="identifier">id</span><span class="special">()</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">*</span><span class="identifier">current_</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="keyword">static</span> <span class="keyword">unsigned</span> <span class="identifier">id</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span><span class="special">::</span><span class="identifier">id</span> <span class="identifier">id</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="special">*</span><span class="identifier">current_</span><span class="special">[</span><span class="identifier">id</span><span class="special">];</span>                       <span class="comment">// (*)
+</span>    <span class="special">}</span>
+
+<span class="special">};</span>
+
+<span class="identifier">bith</span><span class="special">::</span><span class="identifier">thread_decoration</span> <span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">decoration</span><span class="special">(</span><span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">setup</span><span class="special">);</span>
+<span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">tssp_type</span> <span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">current_</span><span class="special">;</span>
+<span class="keyword">unsigned</span> <span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">counter_</span><span class="special">=</span><span class="number">0</span><span class="special">;</span>
+<span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span> <span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">sync_</span><span class="special">;</span>
+</pre>
+<p>
+          In this way the applications using the thread_decorator can have access
+          to a monotonic thread id mono_thread_id::id() and this id is accesible
+          to other threads providing the boost::thread::id.
+        </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">my_thread</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"mono_thread_id="</span> <span class="special">&lt;&lt;</span> <span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">id</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="identifier">sleep</span><span class="special">(</span><span class="number">5</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">struct</span> <span class="identifier">mono_thread_id_out</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="keyword">operator</span><span class="special">()(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">)</span> <span class="keyword">const</span> <span class="special">{</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"thread::id="</span> <span class="special">&lt;&lt;</span> <span class="identifier">t</span><span class="special">.</span><span class="identifier">get_id</span><span class="special">()</span>
+              <span class="special">&lt;&lt;</span> <span class="string">" mono_thread_id="</span> <span class="special">&lt;&lt;</span> <span class="identifier">mono_thread_id</span><span class="special">::</span><span class="identifier">id</span><span class="special">(</span><span class="identifier">t</span><span class="special">.</span><span class="identifier">get_id</span><span class="special">())</span>
+              <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">shared_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
+    <span class="identifier">BOOST_AUTO</span><span class="special">(</span><span class="identifier">handles</span><span class="special">,</span> <span class="identifier">bith</span><span class="special">::</span><span class="identifier">fork_all</span><span class="special">(</span><span class="identifier">basic_threader_decorator</span><span class="special">,</span> <span class="identifier">my_thread</span><span class="special">,</span> <span class="identifier">my_thread</span><span class="special">));</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">fusion</span><span class="special">::</span><span class="identifier">for_each</span><span class="special">(</span><span class="identifier">handles</span><span class="special">,</span> <span class="identifier">mono_thread_id_out</span><span class="special">());</span>
+    <span class="identifier">bith</span><span class="special">.</span><span class="identifier">join_all</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          This results on the following output
+        </p>
+<pre class="programlisting">mono_thread_id=1
+mono_thread_id=2
+thread::id=xxxx mono_thread_id=1
+thread::id=xxxx mono_thread_id=2
+
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.users_guide.getting_started.basic_keep_alive"></a><a href="getting_started.html#toward_boost_interthreads.users_guide.getting_started.basic_keep_alive" title="Basic
+        keep alive">Basic
+        keep alive</a>
+</h4></div></div></div>
+<p>
+          This example shows the keep_alive basics.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">thread_decorator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">interthreads</span><span class="special">/</span><span class="identifier">keep_alive</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">thread</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+<span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">iostream</span><span class="special">&gt;</span>
+
+<span class="keyword">namespace</span> <span class="identifier">bith</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interthreads</span><span class="special">;</span>
+
+<span class="keyword">void</span> <span class="identifier">my_thread</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">enable_keep_alive</span> <span class="identifier">enabler</span><span class="special">;</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="keyword">int</span> <span class="identifier">i</span><span class="special">=</span><span class="number">0</span><span class="special">;</span> <span class="identifier">i</span><span class="special">&lt;</span><span class="number">5</span><span class="special">;</span> <span class="identifier">i</span><span class="special">++)</span> <span class="special">{</span>
+        <span class="identifier">bith</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">keep_alive_point</span><span class="special">();</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="string">"thread_id="</span> <span class="special">&lt;&lt;</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">get_id</span><span class="special">()</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span><span class="special">;</span>
+        <span class="identifier">sleep</span><span class="special">(</span><span class="number">1</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="keyword">int</span> <span class="identifier">main</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">shared_threader_decorator</span> <span class="identifier">ae</span><span class="special">;</span>
+    <span class="identifier">bith</span><span class="special">::</span><span class="identifier">wait_for_all</span><span class="special">(</span><span class="identifier">ae</span><span class="special">,</span> <span class="identifier">my_thread</span><span class="special">,</span> <span class="identifier">my_thread</span><span class="special">,</span> <span class="identifier">my_thread</span><span class="special">,</span> <span class="identifier">my_thread</span><span class="special">);</span>
+
+    <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          The user creates 4 threads using the shared_threader_decorator <code class="computeroutput"><span class="identifier">AsynchronousExecutor</span></code> to be able to use
+          the keep_alive mechanism. It uses the default enabler (one keep_alive_point
+          every 2 seconds).
+        </p>
+<p>
+          This results on the following output
+        </p>
+<pre class="programlisting"></pre>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../users_guide.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../users_guide.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="tutorial.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

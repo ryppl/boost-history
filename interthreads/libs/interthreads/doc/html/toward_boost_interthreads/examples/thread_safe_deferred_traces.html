@@ -1,0 +1,337 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Thread
+      safe deferred traces</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../examples.html" title="Examples">
+<link rel="prev" href="../examples.html" title="Examples">
+<link rel="next" href="stm.html" title=" STM">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../examples.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="stm.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.examples.thread_safe_deferred_traces"></a><a href="thread_safe_deferred_traces.html" title="Thread
+      safe deferred traces">Thread
+      safe deferred traces</a>
+</h3></div></div></div>
+<p>
+        When executing on a multi thread environment, the output lines on std::cout
+        could interleave. We can synchronize these outputs with a global mutex
+      </p>
+<pre class="programlisting"><span class="special">{</span>
+   <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">global_cout_mutex</span><span class="special">);</span>
+   <span class="identifier">std</span><span class="special">::</span><span class="identifier">cout</span> <span class="special">&lt;&lt;</span> <span class="special">...</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        This mutex could be the bottleneck of the system. Only one mutex resource
+        for all the user threads.
+      </p>
+<pre class="programlisting">U        U
+             /
+            /
+    U ----- R ----- U
+            |
+            |
+            U
+</pre>
+<p>
+        Another approach could be using a queue of output stream buffers for each
+        thread. Each buffer is timestamped with the creation date and there is a
+        concentrator that takes one by one the elements ordered by their timestamp.
+        Only the current thread can push on this queue because it is specific to
+        the thread. There is a single thread, the concentrator, that pops from these
+        queue. In this context we can ensure thread safety without locking as far
+        as the queue has at least two messages.
+      </p>
+<pre class="programlisting">U ----- R ------+
+                     \
+    U ----- R ------\
+                     \
+    U ----- R -------- C
+                     / /
+    U ----- R ------/ /
+                     /
+    U ----- R ------+
+</pre>
+<p>
+        This can be encapsulated in an async_ostream class
+      </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">async_ostream</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">iostreams</span><span class="special">::</span><span class="identifier">stream</span><span class="special">&lt;</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">async_ostream_sink</span><span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">char</span>                    <span class="identifier">char_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">iostreams</span><span class="special">::</span><span class="identifier">sink_tag</span>     <span class="identifier">category</span><span class="special">;</span>
+
+    <span class="identifier">async_ostream</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">flush</span><span class="special">();</span>
+<span class="special">};</span>
+
+<span class="keyword">extern</span> <span class="identifier">async_ostream</span> <span class="identifier">cout_</span><span class="special">;</span>
+</pre>
+<p>
+        With this interface the user can use cout_ as it used std::cout.
+      </p>
+<pre class="programlisting"><span class="identifier">cout_</span> <span class="special">&lt;&lt;</span> <span class="string">"Hello World!"</span> <span class="special">&lt;&lt;</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">endl</span> <span class="special">;</span>
+</pre>
+<p>
+        All the magic is in the <code class="computeroutput"><span class="keyword">template</span> <span class="keyword">class</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iostreams</span><span class="special">::</span><span class="identifier">stream</span><span class="special">&lt;&gt;</span></code>. The parameter must be a model of
+        a sink (See <a href="http://www.boost.org/libs/iostreams/doc/index.html" target="_top"><span class="bold"><strong>Boost.Iostreams</strong></span></a>). Here it is.
+      </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">detail</span> <span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">async_ostream_sink</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="keyword">char</span>                            <span class="identifier">char_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span>  <span class="identifier">boost</span><span class="special">::</span><span class="identifier">iostreams</span><span class="special">::</span><span class="identifier">sink_tag</span>     <span class="identifier">category</span><span class="special">;</span>
+        <span class="identifier">async_ostream_sink</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">);</span>
+        <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">n</span><span class="special">);</span>
+        <span class="keyword">void</span> <span class="identifier">flush</span><span class="special">();</span>
+    <span class="keyword">private</span><span class="special">:</span>
+        <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">async_ostream_concentrator</span><span class="special">;</span>
+        <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">async_ostream</span><span class="special">;</span>
+        <span class="keyword">struct</span> <span class="identifier">impl</span><span class="special">;</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">impl</span><span class="special">&gt;</span> <span class="identifier">impl_</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+        This class declares the just minimum in order to model a sink. In addition,
+        in order to mask the implementation, the Pimpl idiom is used. The implementation
+        of these functions is straigtforward:
+      </p>
+<pre class="programlisting"><span class="identifier">async_ostream</span><span class="special">::</span><span class="identifier">async_ostream</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">base_type</span><span class="special">(</span><span class="identifier">os</span><span class="special">)</span> <span class="special">{}</span>
+
+<span class="keyword">void</span> <span class="identifier">async_ostream</span><span class="special">::</span><span class="identifier">flush</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">this</span><span class="special">-&gt;</span><span class="identifier">base_type</span><span class="special">::</span><span class="identifier">flush</span><span class="special">();</span>
+    <span class="identifier">async_ostream</span><span class="special">&amp;</span> <span class="identifier">d</span> <span class="special">=</span> <span class="special">*</span><span class="keyword">this</span><span class="special">;</span>
+    <span class="identifier">d</span><span class="special">-&gt;</span><span class="identifier">flush</span><span class="special">();</span>
+<span class="special">}</span>
+
+<span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">async_ostream_sink</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">)</span>
+    <span class="special">:</span> <span class="identifier">impl_</span><span class="special">(</span><span class="keyword">new</span> <span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">impl</span><span class="special">(</span><span class="identifier">os</span><span class="special">))</span> <span class="special">{}</span>
+
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">n</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">impl_</span><span class="special">-&gt;</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">s</span><span class="special">,</span><span class="identifier">n</span><span class="special">);</span>
+<span class="special">}</span>
+
+<span class="keyword">void</span> <span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">flush</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">impl_</span><span class="special">-&gt;</span><span class="identifier">flush</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Let me continue with the handle of the Pimpl pattern:
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">impl</span> <span class="special">{</span>
+    <span class="identifier">impl</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">);</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os_</span><span class="special">;</span>
+    <span class="identifier">tsss_type</span> <span class="identifier">tsss_</span><span class="special">;</span>
+    <span class="identifier">priority_queue_type</span> <span class="identifier">queue_</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">thread</span> <span class="identifier">thread_</span><span class="special">;</span>
+
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">n</span><span class="special">);</span>
+
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">terminate</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">async_ostream_thread_ctx</span><span class="special">&gt;</span> <span class="identifier">that</span><span class="special">);</span>
+    <span class="keyword">static</span> <span class="keyword">void</span> <span class="identifier">loop</span><span class="special">(</span><span class="identifier">impl</span><span class="special">*</span> <span class="identifier">that</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Of course we need to store a reference to the final ostream.
+      </p>
+<p>
+        The <code class="computeroutput"><span class="identifier">thread_specific_shared_ptr</span>
+        <span class="identifier">tsss_</span></code> is used to encapsulate the
+        logic specific to each thread.
+      </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">&lt;</span><span class="identifier">async_ostream_thread_ctx</span><span class="special">&gt;</span> <span class="identifier">tsss_type</span><span class="special">;</span>
+</pre>
+<p>
+        A priority queue <code class="computeroutput"><span class="identifier">queue_</span></code> will
+        be used by the concentrator thread to order the stringstreams by date.
+      </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">timestamped</span> <span class="special">{</span>
+    <span class="identifier">system_time</span> <span class="identifier">date_</span><span class="special">;</span>
+    <span class="keyword">unsigned</span> <span class="identifier">seq_</span><span class="special">;</span>
+    <span class="identifier">T</span> <span class="identifier">value_</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">reset_date</span><span class="special">(</span><span class="keyword">unsigned</span> <span class="identifier">seq</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">date_</span> <span class="special">=</span> <span class="identifier">system_time</span><span class="special">();</span>
+        <span class="identifier">seq_</span> <span class="special">=</span> <span class="identifier">seq</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="keyword">struct</span> <span class="identifier">ptr_comparator_gt</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">timestamped</span><span class="special">*</span> <span class="identifier">value_type</span><span class="special">;</span>
+        <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">()(</span><span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span><span class="identifier">lhs</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span><span class="identifier">rhs</span><span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="special">(</span><span class="identifier">lhs</span><span class="special">-&gt;</span><span class="identifier">date_</span> <span class="special">&gt;</span> <span class="identifier">rhs</span><span class="special">-&gt;</span><span class="identifier">date_</span><span class="special">)</span> <span class="special">?</span> <span class="keyword">true</span> <span class="special">:</span>
+                    <span class="special">(</span><span class="identifier">lhs</span><span class="special">-&gt;</span><span class="identifier">date_</span> <span class="special">==</span> <span class="identifier">rhs</span><span class="special">-&gt;</span><span class="identifier">date_</span><span class="special">)</span> <span class="special">&amp;&amp;</span> <span class="special">(</span><span class="identifier">lhs</span><span class="special">-&gt;</span><span class="identifier">seq_</span> <span class="special">&gt;</span> <span class="identifier">rhs</span><span class="special">-&gt;</span><span class="identifier">seq_</span><span class="special">)?</span> <span class="keyword">true</span><span class="special">:</span><span class="keyword">false</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+<span class="special">};</span>
+
+<span class="keyword">typedef</span> <span class="identifier">timestamped</span><span class="special">&lt;</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&gt;</span> <span class="identifier">element_type</span><span class="special">;</span>
+<span class="keyword">typedef</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">priority_queue</span><span class="special">&lt;</span><span class="identifier">queue_type</span><span class="special">*,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">deque</span><span class="special">&lt;</span><span class="identifier">element_type</span><span class="special">*&gt;,</span> <span class="identifier">element_type</span><span class="special">::</span><span class="identifier">ptr_comparator_gt</span><span class="special">&gt;</span> <span class="identifier">priority_queue_type</span><span class="special">;</span>
+</pre>
+<p>
+        In addition to the timestamp <code class="computeroutput"><span class="identifier">date_</span></code>
+        we need a sequence number to order the stringstreams pushed without enough
+        time granularity, e.g. on the same microsecond.
+      </p>
+<p>
+        To finish the field declaration there is the concentrator thread implemented
+        by the loop function.
+      </p>
+<pre class="programlisting"><span class="special">,</span> <span class="identifier">thread_</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">loop</span><span class="special">,</span> <span class="keyword">this</span><span class="special">))</span>
+</pre>
+<p>
+        Comming back to the sink implementation,
+      </p>
+<pre class="programlisting"><span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">impl</span><span class="special">::</span><span class="identifier">impl</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os</span><span class="special">)</span>
+<span class="special">:</span> <span class="identifier">os_</span><span class="special">(</span><span class="identifier">os</span><span class="special">)</span>
+<span class="special">,</span> <span class="identifier">tsss_</span><span class="special">(</span><span class="identifier">terminate</span><span class="special">)</span>
+<span class="special">,</span> <span class="identifier">thread_</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">bind</span><span class="special">(</span><span class="identifier">loop</span><span class="special">,</span> <span class="keyword">this</span><span class="special">))</span>
+<span class="special">{}</span>
+</pre>
+<p>
+        The terminate cleanup function is used to ensure that the queue is empty
+        before the thread finishes. To avoid optimizations a non const call inc is
+        done while waiting the queue empties.
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">impl</span><span class="special">::</span><span class="identifier">terminate</span><span class="special">(</span><span class="identifier">shared_ptr</span><span class="special">&lt;</span><span class="identifier">async_ostream_thread_ctx</span><span class="special">&gt;</span> <span class="identifier">that</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">while</span> <span class="special">(!</span><span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">empty</span><span class="special">())</span> <span class="special">{</span>
+        <span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">inc</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The central sink function is write. Here instead to lock a mutex the function
+        forwards to the thread specific shared pointer. We will see below how <code class="computeroutput"><span class="identifier">async_ostream_thread_ctx</span></code> handles this call.
+      </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">n</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">tsss_</span><span class="special">-&gt;</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">n</span><span class="special">);</span>
+<span class="special">}</span>
+</pre>
+<p>
+        It is time to analyze the thread specific context before seeing how the concentrator
+        is implemented.
+      </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">async_ostream_thread_ctx</span> <span class="special">{</span>
+    <span class="identifier">async_ostream_thread_ctx</span><span class="special">();</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">n</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">flush</span><span class="special">();</span>
+    <span class="identifier">element_type</span><span class="special">*</span> <span class="identifier">get</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">empty</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">queue_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">();}</span>
+    <span class="keyword">void</span> <span class="identifier">inc</span><span class="special">()</span> <span class="special">{++</span><span class="identifier">inc_</span><span class="special">;}</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">unsigned</span> <span class="identifier">seq_</span><span class="special">;</span>
+    <span class="identifier">element_type</span> <span class="special">*</span><span class="identifier">current_</span><span class="special">;</span>
+    <span class="identifier">queue_type</span> <span class="identifier">queue_</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span> <span class="identifier">mutex_</span><span class="special">;</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">stringstream</span><span class="special">&amp;</span> <span class="identifier">buffer</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">current_</span><span class="special">-&gt;</span><span class="identifier">value_</span><span class="special">;}</span>
+<span class="special">};</span>
+</pre>
+<p>
+        Each thread has a pointer to the current timestamped stringstream wich is
+        used for the current output flow, i.e. by the write function.
+      </p>
+<pre class="programlisting"><span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">write</span><span class="special">(</span><span class="keyword">const</span> <span class="keyword">char</span><span class="special">*</span> <span class="identifier">s</span><span class="special">,</span> <span class="identifier">std</span><span class="special">::</span><span class="identifier">streamsize</span> <span class="identifier">n</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">buffer</span><span class="special">().</span><span class="identifier">write</span><span class="special">(</span><span class="identifier">s</span><span class="special">,</span> <span class="identifier">n</span><span class="special">);</span>
+    <span class="keyword">return</span> <span class="identifier">n</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        Once the user does a flush, the current element is pushed on the queue. The
+        <code class="computeroutput"><span class="identifier">sec_</span></code> integer is used as monotonic
+        sequence in conjuntion with the timestamp.
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">flush</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">current_</span><span class="special">-&gt;</span><span class="identifier">reset_date</span><span class="special">(</span><span class="identifier">seq_</span><span class="special">);</span>
+    <span class="special">++</span><span class="identifier">seq_</span><span class="special">;</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">size</span><span class="special">()&gt;</span><span class="number">2</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">queue_</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">current_</span><span class="special">);</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">mutex_</span><span class="special">);</span>
+        <span class="identifier">queue_</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">current_</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="identifier">current_</span> <span class="special">=</span> <span class="keyword">new</span> <span class="identifier">element_type</span><span class="special">();</span>
+<span class="special">}</span>
+</pre>
+<p>
+        As stated in the introduction, we don't need to lock the mutex if the number
+        of elements in the queue is enough.
+      </p>
+<p>
+        These queue elements will be read by the concentrator using the get function.
+      </p>
+<pre class="programlisting"><span class="identifier">element_type</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">size</span><span class="special">()&gt;</span><span class="number">1</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">get_i</span><span class="special">();</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">mutex_</span><span class="special">);</span>
+        <span class="keyword">return</span> <span class="identifier">get_i</span><span class="special">();</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+
+<span class="identifier">element_type</span><span class="special">*</span> <span class="identifier">get_i</span><span class="special">()</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">())</span> <span class="keyword">return</span> <span class="number">0</span><span class="special">;</span>
+    <span class="identifier">element_type</span><span class="special">*</span> <span class="identifier">e</span><span class="special">=</span> <span class="identifier">queue_</span><span class="special">.</span><span class="identifier">front</span><span class="special">();</span>
+    <span class="identifier">queue_</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+    <span class="keyword">return</span>  <span class="identifier">e</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+        The concentrator loop looks like:
+      </p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">async_ostream_sink_impl</span><span class="special">::</span><span class="identifier">loop</span><span class="special">(</span><span class="identifier">async_ostream_sink</span><span class="special">::</span><span class="identifier">impl</span><span class="special">*</span> <span class="identifier">that</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">std</span><span class="special">::</span><span class="identifier">ostream</span><span class="special">&amp;</span> <span class="identifier">os_</span> <span class="special">=</span> <span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">os_</span><span class="special">;</span>
+    <span class="keyword">for</span><span class="special">(;;)</span> <span class="special">{</span>
+        <span class="comment">// sleeps a little bit
+</span>        <span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+        <span class="special">{</span> <span class="comment">// scope needed don't remove
+</span>            <span class="comment">// lock the map access
+</span>            <span class="identifier">tsss_type</span><span class="special">::</span><span class="identifier">lock_type</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">tsss_</span><span class="special">.</span><span class="identifier">get_mutex</span><span class="special">());</span>
+            <span class="keyword">const</span> <span class="identifier">tsss_type</span><span class="special">::</span><span class="identifier">map_type</span><span class="special">&amp;</span> <span class="identifier">tmap</span><span class="special">(</span><span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">tsss_</span><span class="special">.</span><span class="identifier">get_map</span><span class="special">(</span><span class="identifier">lock</span><span class="special">));</span>
+            <span class="keyword">for</span> <span class="special">(</span><span class="identifier">tsss_type</span><span class="special">::</span><span class="identifier">map_type</span><span class="special">::</span><span class="identifier">const_iterator</span> <span class="identifier">it</span> <span class="special">=</span> <span class="identifier">tmap</span><span class="special">.</span><span class="identifier">begin</span><span class="special">();</span> <span class="identifier">it</span> <span class="special">!=</span> <span class="identifier">tmap</span><span class="special">.</span><span class="identifier">end</span><span class="special">();</span> <span class="special">++</span><span class="identifier">it</span><span class="special">)</span> <span class="special">{</span>
+                <span class="comment">// takes the first element of each thread queue (if it exists) and push it on the ordered queue.
+</span>                <span class="identifier">element_type</span><span class="special">*</span> <span class="identifier">e</span><span class="special">=</span> <span class="identifier">it</span><span class="special">-&gt;</span><span class="identifier">second</span><span class="special">-&gt;</span><span class="identifier">get</span><span class="special">();</span>
+                <span class="keyword">if</span> <span class="special">(</span><span class="identifier">e</span> <span class="special">!=</span> <span class="number">0</span><span class="special">)</span> <span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">push</span><span class="special">(</span><span class="identifier">e</span><span class="special">);</span>
+            <span class="special">}</span>
+        <span class="special">}</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">empty</span><span class="special">())</span> <span class="special">{</span> <span class="comment">//when the queue is empty sleeps a little more
+</span>            <span class="identifier">this_thread</span><span class="special">::</span><span class="identifier">sleep</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">milliseconds</span><span class="special">(</span><span class="number">10</span><span class="special">));</span>
+        <span class="special">}</span> <span class="keyword">else</span> <span class="special">{</span>
+            <span class="comment">// takes the fist element of the ordered queue, write them on the output stream and delete it.
+</span>            <span class="identifier">element_type</span><span class="special">*</span> <span class="identifier">e</span> <span class="special">=</span> <span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">top</span><span class="special">();</span>
+            <span class="identifier">that</span><span class="special">-&gt;</span><span class="identifier">queue_</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+            <span class="identifier">os_</span> <span class="special">&lt;&lt;</span> <span class="string">"["</span><span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">-&gt;</span><span class="identifier">date_</span> <span class="special">&lt;&lt;</span><span class="string">"-"</span> <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">-&gt;</span><span class="identifier">seq_</span> <span class="special">&lt;&lt;</span> <span class="string">"] "</span> <span class="special">&lt;&lt;</span> <span class="identifier">e</span><span class="special">-&gt;</span><span class="identifier">value_</span><span class="special">.</span><span class="identifier">str</span><span class="special">();</span>
+            <span class="keyword">delete</span> <span class="identifier">e</span><span class="special">;</span>
+        <span class="special">}</span>
+    <span class="special">}</span>
+<span class="special">}</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../examples.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../examples.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="stm.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

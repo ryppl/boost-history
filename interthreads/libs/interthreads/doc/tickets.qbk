@@ -21,59 +21,7 @@
 ]
 [
     [bug]
-    [v0.2#1]
-    [ae::get_all do not work yet]
-    [get_all do not work because fusion transform sequence function can not take non const sequences.
-I have emulated it using set_all and a transformation for a tuple of ACT to a tuple of result_type.
-]
-    [Closed]
-    [do_test_get_all]
-    [v0.4]
-]
-[
-    [bug]
-    [v0.2#2]
-    [Some trouble with the use of tp::pool directly, use scheduler instead]
-    [Four issues.
-* The parameter to fork on tp:pool was a const F& instead of a F.
-* Direct use of fork_all resolved for the other AE by ADL, which could not be the case fro the tp::pool.
-* fork specialization for tp::pool incorrent.
-* use of the default handle instead of asynchronous_completion_token traits class]
-    [Closed]
-    [See tp_pool test suite]
-    [v0.3.1]
-]
-
-[
-    [bug]
-    [v0.3#1]
-    [scheduler::do_test_wait_for_any do not work yet]
-    [Not reproductible]
-    [Closed]
-    [scheduler::do_test_wait_for_any]
-    [v0.3.1]
-]
-[
-    [bug]
-    [v0.3#2]
-    [scheduler::do_test_fork_after_get do not work yet]
-    [To solve this issue it enough to define boost::move for tp::task]
-    [Closed]
-    [scheduler::do_test_fork_after_get]
-    [v0.3.1]
-]
-[
-    [bug]
-    [v0.3#3]
-    [scheduler::do_test_fork_after_wait do not work yet]
-    [To solve this issue it enough to define boost::move for tp::task]
-    [Closed]
-    [scheduler::do_test_fork_after_wait]
-    [v0.3.1]
-]
-[
-    [bug]
-    [v0.3.1#1]
+    [v0.1.1#1]
     [keep alive mechanism crash when setting set_on_dead_thread before enabling the mechanism]
     [This was due to the fact that there were no default data for the backup.]
     [Closed]
@@ -82,7 +30,7 @@ I have emulated it using set_all and a transformation for a tuple of ACT to a tu
 ]
 [
     [bug]
-    [v0.3.1#2]
+    [v0.1.1#2]
     [keep alive mechanism do not detect dead threads]
     [We need to reset the counters only when the period is 0.]
     [Closed]
@@ -91,7 +39,7 @@ I have emulated it using set_all and a transformation for a tuple of ACT to a tu
 ]
 [
     [bug]
-    [v0.3.1#3]
+    [v0.1.1#3]
     [The set_on_dead_thread setting is not recovered by embeeding enablers/disablers]
     [The problem is that the on_dead  and th thread pointer were stored on the backup. It is enough to store them on the ]
     [Closed]
@@ -100,7 +48,7 @@ I have emulated it using set_all and a transformation for a tuple of ACT to a tu
 ]
 [
     [bug]
-    [v0.4.0#1]
+    [v0.2.0#1]
     [xxx]
     [xx]
     [Open]

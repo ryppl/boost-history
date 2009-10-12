@@ -21,15 +21,13 @@ import testing ;
 
 project
     : requirements
-#       <library>/boost/test//boost_unit_test_framework/<link>static
-#       <library>/boost/thread//boost_thread/<link>static
-        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
-        <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+        <library>/boost/test//boost_unit_test_framework/<link>static
+        <library>/boost/thread//boost_thread/<link>static
         #<library>../build//boost_interthreads/<link>static
+        #<library>/sandbox/interthreads/libs/interthreads/build//boost_interthreads/<link>static
 
-        <include>.
         <include>../../..
-        <include>/boost_1_39_0
+        <include>$(BOOST_ROOT)
         <threading>multi
 #       <target-os>cygwin
 #       <interthreadapi>pthread
@@ -41,7 +39,8 @@ project
 rule interthreads-run ( sources * )
 {
     return
-    [ run $(sources)  ../build//boost_interthreads :  :  : <link>static ]
+    [ run $(sources)  ../build//boost_interthreads/<link>static :  :  :  ]
+    #[ run $(sources)  :  :  : ]
 #    [ run $(sources)  ../../../../libs/thread/build//boost_thread  :  :  :              : $(sources[1]:B)_lib ]
     ;
 }

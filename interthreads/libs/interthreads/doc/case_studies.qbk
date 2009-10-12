@@ -13,92 +13,6 @@ This section do includes complete examples using the library.
 
 
 [/==================================]
-[section Parallel sort]
-[/==================================]
-
-Next follows a generic algorithm based on partitioning od a given problem in smaler problems, and compose a solution from the solution of the smaller problems. 
-
-    template <
-        typename DirectSolver,
-        typename Composer,
-        typename AE,
-        typename Range
-    >
-      void inplace_solve( AE & ae, 
-            boost::iterator_range<typename boost::range_iterator<Range>::type> range, 
-            unsigned cutoff );
-            
-    template <
-        typename DirectSolver,
-        typename Composer,
-        typename AE,
-        typename Range
-    >
-      void inplace_solve( AE & ae, 
-            boost::iterator_range<typename boost::range_iterator<Range>::type> range, 
-            unsigned cutoff )
-      {
-        unsigned size = boost::size(range);
-        //std::cout << "<<par_ " << size;  
-        if ( size <= cutoff) DirectSolver()(range);
-        else {
-            partition<Range> parts(range, BOOST_PARTS);
-            
-            // wait_for_all_in_sequence(ae, &inplace_solve<DirectSolver,Composer,AE,Range>, parts);
-            std::list<task_type> tasks;
-            for (unsigned i=0;i < BOOST_PARTS-1; ++i) {
-                task_type tmp(ae.submit(
-                    boost::bind(
-                        &inplace_solve<DirectSolver,Composer,AE,Range>,
-                        boost::ref(ae),
-                        parts[i],
-                        cutoff
-                )));
-                tasks.push_back(tmp);
-            }
-            inplace_solve<DirectSolver,Composer,AE,Range>(ae, parts[BOOST_PARTS-1], cutoff);
-            boost::for_each(tasks, &boost::interthreads::wait_act<task_type>);
-            // wait_for_all_in_sequence
-            
-            Composer()(range);
-        }
-      }
-
-
-So parallel sort could be
-
-    struct sort_fct {
-        template<class RandomAccessRange>
-        RandomAccessRange& operator()(RandomAccessRange rng) {
-            return boost::sort(rng);
-        }
-    };
-
-    struct inplace_merge_fct {
-        template<class BidirectionalRange>
-        BidirectionalRange&
-        operator()( BidirectionalRange rng) {
-            return boost::inplace_merge(rng, boost::begin(rng)+(boost::size(rng)/2));
-        }
-    };
-    template <typename AE, typename Range>
-    void parallel_sort(AE& ae, Range& range, unsigned cutoff=10000) {
-        boost::iterator_range<typename boost::range_iterator<Range>::type> rng(range);
-        inplace_solve<sort_fct,inplace_merge_fct,pool_type,Range>( ae, rng, cutoff);
-    }
-
-
-[endsect]
-
-[/==================================]
-[section From a single to a multi threaded application]
-[/==================================]
-
-
-
-[endsect]
-
-[/==================================]
 [section Thread safe deferred traces]
 [/==================================]
 
@@ -403,7 +317,7 @@ Let BankAccount be a simple account.
         BankAccount* checkingAcct_;
         BankAccount* savingsAcct_;
         AccountManager(BankAccount& checking, BankAccount& savings)
-    	    : checkingAcct_(&checking)
+            : checkingAcct_(&checking)
             , savingsAcct_(&savings)
             {}
         void Checking2Savings(int amount) {
@@ -451,104 +365,113 @@ The transfer is done on the 3rd of each month.
         };
     }
 
-Evidently every operation must be atomic.
+Evidently every operation must be atomic. We use the STM_ATOMIC and STM_END_ATOMIC macors to hide all the transaction complexity
 
     class BankAccount {
         int balance_;
     public:
         void Deposit(unsigned amount) {
-            stm::this_tread::atomic _;
-            stm::this_tread::make_transactional_ptr(this)->balance_ += amount;
-            _.commit();
+            STM_ATOMIC(t) {
+                t.wr_ptr(this)->balance_ += amount;
+            } STM_END_ATOMIC
         }
         // ...
 
     };
 
-How all this works? `stm::this_tread::atomic _;` declares the scope of the variable `_` as an atomic transaction.
-To access this in the current transaction we use `stm::make_transactional_ptr(this)` which return a smart pointer.
-If nothing is said the transaction will be aborted at `_` destruction.
-When everything is ok we need to do a `_.commit()`.
+How all this works? Let me write what what is begind these macros. These macros use a trick to that ensure that when the statement between both macros succeed the transaction is committed. As the transaction can fail (exception transaction_aborted thrown) we need to reiterate the execution of the statement. So what a user needs to write is something like
 
-If there is a large use of make_transactional_ptr we can write instead
-
-        {
-            stm::this_tread::atomic _;
-            stm::this_tread::transactional_ptr<BankAccount> this_ptr(this);
-            this_ptr->balance_ += amount;
-            _.commit();
+        void Deposit(unsigned amount) {
+            for (stm::transaction t; !t.commited() && t.restart(); t.no_throw_commit()) {
+                try {
+                    t.wr_ptr(this)->balance_ += amount;
+                } catch (stm::transaction_aborted&) {}
+            } 
         }
 
-or even shorter with the suggar syntax
+1. creation of a new transaction
+2.a if not commited restart the transaction and enter the body of the for (3)
+2.b if commited exit the for.
+3. execute the statement
+4 catch stm::transaction_aborted - if a stm::transaction_aborted is thrown the next commit will fail
+5. do a no_throw commit (2)
+
+Next follows the definition of the STM_ATOMIC and STM_END_ATOMIC macros. 
+
+
+To access this in the current transaction we use `t.wr_ptr(this)` which return a smart pointer.
+
+If there is a large use of t.wr_ptr(this) it is better to use a variable
 
         {
-            stm::this_tread::atomic_transactional_ptr <BankAccount> this_ptr(this);
-            this_ptr->balance_ += amount;
-            // other uses of this
-            // ...
-            this_ptr.commit();
+            STM_ATOMIC(t) {
+                stm::tx_wr_ptr<BankAccount> this_ptr(this,t);
+                this_ptr->balance_ += amount;
+            } STM_END_ATOMIC
         }
 
-The other `BankAccount` functions are coded as expected. Here is the code introducing a `using stm::this_tread;`
-which makes it much more readable.
+The other `BankAccount` functions are coded as expected. Here is the comple code:
 
     class BankAccount {
         int balance_;
-        using stm::this_tread;
+        using stm:;
     public:
         void Deposit(unsigned amount) {
-            atomic_ptr<BankAccount> this_ptr(this);
-            this_ptr->balance_ += amount;
-            this_ptr.commit();
+            STM_ATOMIC(t) {
+                t.wr_ptr(this)->balance_ += amount;
+            } STM_END_ATOMIC
         }
         void Withdraw(unsigned amount) {
-            atomic_ptr<BankAccount> this_ptr(this);
-            this_ptr->balance_ -= amount;
-            this_ptr.commit();
+            STM_ATOMIC(t) {
+                t.wr_ptr(this)->balance_ -= amount;
+            }
         }
         int GetBalance() const {
-            atomic_ptr<BankAccount> this_ptr(this);
-            int res = this_ptr->balance_;
-            this_ptr.commit();
-            return res;
+            STM_ATOMIC(t) {
+                return make_tx_rd_ptr(this,t)->balance_;
+            } STM_END_ATOMIC
         }
     };
 
 The transfer from accounts is done like:
 
     void Transfer(BankAccount* inA, BankAccount* outA, int amount) {
-        using stm::this_tread;
-        atomic _;
-        make_transactional_ptr(inA)->Withdraw(amount);
-        make_transactional_ptr(outA)_>Deposit(amount);
-        _.commit();
+        using stm;
+        STM_ATOMIC(t) {
+            t.wr_ptr(inA)->Withdraw(amount);
+            t.wr_ptr(outA)->Deposit(amount);
+        } STM_END_ATOMIC
     }
 
-The core of all this stuff is `stm::this_tread::atomic` and `stm::transactional_ptr<>`.
-`stm::make_transactional_ptr()` and `stm::this_tread::atomic_ptr<>` are defined in terms of `stm::this_tread::atomic` and `stm::transactional_ptr<>`.
+The core of all this stuff is `stm::transaction`, `stm::tx_wr_ptr<>` and `stm::tx_rd_ptr<>`.
 
-Next follows the interface of the atomic class.
+The interface of the transaction class is quite simple:
 
-    namespace stm {
-    namespace this_thread {
-	    class atomic {
-	    public:
-    		atomic();
-		    ~atomic();
-	        void rollback();
-	    };
-    } // this_transaction
-    } // stm
+    class transaction {
+    public:
+        bool commit();
+        bool no_throw_commit() throw();
+        void abort();
 
-The atomic constructor will construct a
-transaction on the current thread and push it to the stack of nested transactions.
-The atomic destructor will rollback the transaction if not commited and pop the stack of nested transactions.
-We will see later the transaction class.
+        template <typename T>
+        shared_ptr<transactional_object_cache<T> > rd_ptr(T* ptr);
 
-The transactional_ptr<> smart pointer interface follows:
+        template <typename T>
+        shared_ptr<transactional_object_cache<T> > wr_ptr(T* ptr);
+
+        template <typename T> void delete_memory(T* ptr);
+        template <typename T>
+        shared_ptr<transactional_object_cache<T> > insert_in_new_cache(T* ptr);
+
+        transaction_state const & state() const;
+    };
+
+
+
+The smart pointer interfaces follows:
 
     template <typename T>
-    class transactional_ptr {
+    class tx_rd_ptr {
     public:
 
         typedef T element_type;
@@ -556,43 +479,45 @@ The transactional_ptr<> smart pointer interface follows:
         typedef T * pointer;
         typedef T& reference;
 
-	    transactional_ptr(T* p, transaction* tr=0);
-	    transactional_ptr(T* p, this_thread::atomic& scope);
+        tx_rd_ptr(T* p, transaction& scope);
 
-	    transactional_ptr(T* p, writable&tag, transaction* tr=0));
-	    transactional_ptr(T* p, writable&tag, this_thread::atomic& scope);
-
-	    transactional_ptr(T* p, is_new&tag, transaction* tr=0));
-	    transactional_ptr(T* p, is_new&tag, this_thread::atomic& scope);
-
-	    const T* operator->() const;
-	    const T& operator*() const;
+        const T* operator->() const;
+        const T& operator*() const;
         const T * get() const;
+    };
 
-        T* operator->();
-        T& operator*();
-        T * get();
 
-	    void delete_ptr();
+    template <typename T>
+    class tx_wr_ptr {
+    public:
+
+        typedef T element_type;
+        typedef T value_type;
+        typedef T * pointer;
+        typedef T& reference;
+
+        tx_wr_ptr(T* p, transaction& scope);
+
+        T* operator->() const;
+        T& operator*() const;
+        T * get() const;
+
+        void delete_ptr();
     };
 
 Let me start with the simple constructor:
 
-        transactional_ptr(T* p);
+        tx_wr_ptr(T* p);
 
 This creates a smart pointer pointing to a specific transaction memory of the current transaction.
 
 It contains the classic functions of a smart pointer overloaded with `const` or non `const`.
 
-	    const T* operator->() const;
-	    const T& operator*() const;
-        const T * get() const;
+        T* operator->() const;
+        T& operator*() const;
+        T * get() const;
 
-        T* operator->();
-        T& operator*();
-        T * get();
-
-By default the `transactional_ptr` points to a read only cache. When we use one of the non const operators,
+`tx_wr_ptr` points to a writable cache. When we use one of the smart pointer operators,
 the pointers points to a upgraded write cache specific to the transaction. In the example
 
             this_ptr->balance_ += amount;
@@ -600,47 +525,44 @@ the pointers points to a upgraded write cache specific to the transaction. In th
 the use of `this_ptr->balance_` on the left hand side of the assignement operator requires a non const access,
 so the upgrade to writable is done.
 
-When we know a priori that the pointer contents will be modified we can create it as follows:
-
-        void Deposit(unsigned amount) {
-            atomic _;
-            transactional_ptr<BankAccount> this_ptr(this, writable);
-            this_ptr->balance_ += amount;
-            _.commit();
-        }
-
 Every `new`/`delete` operation on a transaction must be in some way signaled to the transaction service.
-The new created objects would be wrapped by a `transactional_ptr<>` initialized like that;
+The new created objects would be wrapped by a `tx_wr_ptr<>` initialized like that;
 
-    transactional_ptr<BankAccount> this_ptr(new BackAccount(), is_new);
+    tx_wr_ptr<BankAccount> this_ptr(new BackAccount(), is_new);
 
-When we want to delete a pointer in a transaction we use `transactional_ptr::delete_ptr`
+When we want to delete a pointer in a transaction we use `tx_wr_ptr::delete_ptr`
 
-    transactional_ptr<BankAccount> p_ptr(p, writable);
+    tx_wr_ptr<BankAccount> p_ptr(p, t);
     // ...
     p_ptr.delete_ptr();
+    
+or the short-cut    
+    
+    t.delete_ptr(p);
 
 Before finishing with the `transaction` class let me show you the
 `transactional_object_cache<T>` and its base class `transactional_object_cache_base`.
 
     class transaction {
     public:
-	    bool commit();
-	    void rollback();
-	    void rollback_only();
-
-	    template <typename T>
-	    shared_ptr<transactional_object_cache<T> > read(T* ptr);
+        bool commit();
+        bool no_throw_commit();
+        void abort();
 
         template <typename T>
-        T* write(T* in);
+        shared_ptr<transactional_object_cache<T> > read(T* ptr);
 
-        template <typename T> void delete_memory(T* in);
-	    template <typename T>
-	    shared_ptr<transactional_object_cache<T> > insert_in_new_cache(T* ptr);
+        template <typename T>
+        shared_ptr<transactional_object_cache<T> > write(T* ptr);
 
-	    transaction_state const & state() const;
+        template <typename T> void delete_memory(T* ptr);
+        template <typename T>
+        shared_ptr<transactional_object_cache<T> > insert_in_new_cache(T* ptr);
+
+        transaction_state const & state() const;
     };
+
+
 
 [endsect]
 

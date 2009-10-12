@@ -1,0 +1,1136 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Appendix
+      B: Rationale</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Toward Boost.InterThreads">
+<link rel="up" href="../appendices.html" title="Appendices">
+<link rel="prev" href="changes.html" title=" Appendix
+      A: History">
+<link rel="next" href="implementation.html" title="
+      Appendix C: Implementation Notes">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="changes.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="toward_boost_interthreads.appendices.rationale"></a><a href="rationale.html" title=" Appendix
+      B: Rationale"> Appendix
+      B: Rationale</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_decorator">Thread
+        Decorator</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_specific_storage">Thread
+        Specific Storage</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_interthreads.appendices.rationale.keep_alive">Keep
+        Alive</a></span></dt>
+<dt><span class="section"><a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_tuple">Thread
+        Tuple</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.rationale.thread_decorator"></a><a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_decorator" title="Thread
+        Decorator">Thread
+        Decorator</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Function wrapper versus thread refinement</span></dt>
+<dd><p>
+              The threadalert on which this library was initialy based redefined
+              the boost:thread class which called implicitly the wrapper. As the
+              single varying features between both threads was this wrapping of the
+              thread function it has been isolated in the interthreads library.
+            </p></dd>
+<dt><span class="term">Static decoration variables</span></dt>
+<dd><p>
+              Thread decorations construction is not thread safe and must be done
+              before other threads have been created and the <code class="computeroutput"><span class="identifier">decorate</span><span class="special">()</span></code> function is called.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.rationale.thread_specific_storage"></a><a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_specific_storage" title="Thread
+        Specific Storage">Thread
+        Specific Storage</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Non copiable/Non movable</span></dt>
+<dd><p>
+              Specific pointers are singletons.
+            </p></dd>
+<dt><span class="term">External locking</span></dt>
+<dd><p>
+              In order to ensure thread safety while providing as much functionality
+              as possible the class allows to get the map of thread specific contexts
+              as soon as the application provides a <code class="computeroutput"><span class="identifier">unique_lock</span></code>.
+            </p></dd>
+<dt><span class="term">Mimic thread_specific_ptr</span></dt>
+<dd>
+<p>
+              From the point of view of the current thread thread_specific_shared_ptr
+              behaves as a thread_specific_ptr. From it we takes:
+            </p>
+<p>
+              
+</p>
+<pre class="programlisting"><span class="identifier">thread_specific_shared_ptr</span><span class="special">();</span>
+<span class="keyword">explicit</span> <span class="identifier">thread_specific_shared_ptr</span><span class="special">(</span><span class="keyword">void</span> <span class="special">(*</span><span class="identifier">cleanup_</span><span class="special">)(</span><span class="identifier">shared_ptr_type</span><span class="special">));</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
+</pre>
+<p>
+            </p>
+</dd>
+<dt><span class="term">Mimic shared_ptr</span></dt>
+<dd>
+<p>
+              From the point of view of the other threads thread_specific_shared_ptr
+              behaves as a shared_ptr lockup. From the point of view of the current
+              thread the stored pointer is located in a shared_pointer, so we can
+              use the shared_ptr deleter feature From shared_ptr takes:
+            </p>
+<p>
+              
+</p>
+<pre class="programlisting"><span class="identifier">T</span><span class="special">*</span> <span class="identifier">get</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">T</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="identifier">T</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">reset</span><span class="special">();</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Y</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">D</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">A</span><span class="special">&gt;</span> <span class="keyword">void</span> <span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span> <span class="special">*</span> <span class="identifier">p</span><span class="special">,</span> <span class="identifier">D</span> <span class="identifier">d</span><span class="special">,</span> <span class="identifier">A</span> <span class="identifier">a</span><span class="special">);</span>
+</pre>
+<p>
+            </p>
+</dd>
+<dt><span class="term">Why doesn't thread_specific_shared_ptr
+          provide a release() function?</span></dt>
+<dd><p>
+              As it store a shared_ptr, it cannot give away ownership unless it's
+              unique() because the other copy will still destroy the object.
+            </p></dd>
+</dl>
+</div>
+<a name="toward_boost_interthreads.appendices.rationale.thread_specific_storage.comparaing_tsss_and_tss"></a><h5>
+<a name="id4855813"></a>
+          <a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_specific_storage.comparaing_tsss_and_tss">Comparaing
+          TSSS and TSS</a>
+        </h5>
+<div class="table">
+<a name="id4855829"></a><p class="title"><b>Table 1. Comparaing TSSS and TSS</b></p>
+<table class="table" summary="Comparaing TSSS and TSS">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Feature
+              </p>
+              </th>
+<th>
+              <p>
+                thread_specific_shared_ptr
+              </p>
+              </th>
+<th>
+              <p>
+                thread_specific_ptr
+              </p>
+              </th>
+<th>
+              <p>
+                Compatible
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                ownership
+              </p>
+              </td>
+<td>
+              <p>
+                shared
+              </p>
+              </td>
+<td>
+              <p>
+                exclusive
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                default constructor
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                cleanup constructor
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>: can not delete the pointer
+              </p>
+              </td>
+<td>
+              <p>
+                yes:must delete the pointer
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">get</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span><span class="special">*()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">reset</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">reset</span><span class="special">(</span><span class="identifier">T</span><span class="special">*)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span><span class="special">*)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span><span class="special">*,</span><span class="identifier">D</span><span class="special">)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">reset</span><span class="special">(</span><span class="identifier">Y</span><span class="special">*,</span><span class="identifier">D</span><span class="special">,</span><span class="identifier">A</span><span class="special">)</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">release</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">get_mutex</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">get_map</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">wait_and_get</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.rationale.keep_alive"></a><a href="rationale.html#toward_boost_interthreads.appendices.rationale.keep_alive" title="Keep
+        Alive">Keep
+        Alive</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Can a thread that has just do a check
+          point be considered as dead less than one second after?</span></dt>
+<dd><p>
+              Whell this depends on the enabling parameters. If the checking parameter
+              is greater than one it could be possible that the thread do a check_point
+              just before the keep alive manager do the check, seen that there are
+              not enough check_points and declaring the thread dead. If you want
+              to avoid this situation let the checkin to 1.
+            </p></dd>
+<dt><span class="term">Nesting enablers and disablers</span></dt>
+<dd><p>
+              Enablers/disablers use RAII, so they can be nested and the context
+              be restored on the destructor.
+            </p></dd>
+<dt><span class="term">Configurable on dead action</span></dt>
+<dd><p>
+              The default action is to abort the process because I don't see any
+              generic and cleaner way to manage this event. The library provides
+              this hook for user wanting to try something specific.
+            </p></dd>
+<dt><span class="term">Who control the controler?</span></dt>
+<dd><p>
+              There is no way to control this thread other than adding an external
+              process.
+            </p></dd>
+</dl>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="toward_boost_interthreads.appendices.rationale.thread_tuple"></a><a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_tuple" title="Thread
+        Tuple">Thread
+        Tuple</a>
+</h4></div></div></div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Why must be not copiable?</span></dt>
+<dd><p>
+              Thread tuples can not be copiable since boost::thread is not copiable.
+            </p></dd>
+<dt><span class="term">Why should be movable?</span></dt>
+<dd><p>
+              If we want functions to return Thread tuples it is necessary to make
+              them movable.
+            </p></dd>
+<dt><span class="term">Mimic boost::thread_group</span></dt>
+<dd>
+<p>
+              thread_tuple has in common some function found in thread_group. From
+              it we take
+            </p>
+<p>
+              
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">join_all</span><span class="special">();</span>
+<span class="keyword">void</span> <span class="identifier">interrupt_all</span><span class="special">();</span>
+<span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">size</span><span class="special">();</span>
+</pre>
+<p>
+            </p>
+<p>
+            </p>
+</dd>
+<dt><span class="term">Mimic boost::thread</span></dt>
+<dd>
+<p>
+              We can consider a thread tuple as a compound thread, and so we can
+              mimic the thread intyerface. From it we takes
+            </p>
+<p>
+              
+</p>
+<pre class="programlisting"><span class="keyword">void</span> <span class="identifier">join</span><span class="special">();</span>
+<span class="keyword">void</span> <span class="identifier">interrupt</span><span class="special">();</span>
+<span class="keyword">void</span> <span class="identifier">detach</span><span class="special">/</span><span class="identifier">detach_all</span><span class="special">();</span>
+<span class="keyword">bool</span> <span class="identifier">interruption_requested</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">void</span> <span class="identifier">timed_join</span><span class="special">/</span><span class="identifier">timed_join_all</span><span class="special">();</span>
+<span class="keyword">bool</span> <span class="identifier">joinable</span><span class="special">/</span><span class="identifier">all_joinable</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+            </p>
+<p>
+            </p>
+</dd>
+<dt><span class="term">Why the user can not modify directly
+          the embeeded threads?</span></dt>
+<dd>
+<p>
+            </p>
+<p>
+              The library provides a safe function to get a constant thread reference
+            </p>
+<p>
+              
+</p>
+<pre class="programlisting"><span class="keyword">const</span> <span class="identifier">thread</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span> <span class="identifier">i</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span></pre>
+<p>
+            </p>
+<p>
+              The problem if we provide the non constant variant is that the user
+              can detach them.
+            </p>
+<p>
+            </p>
+</dd>
+<dt><span class="term">Joining the first finishing thread
+          of a thread tuple</span></dt>
+<dd><p>
+              This functionallity has a price. We need to synchronize all the threads
+              transparently, so we need to wrap the user thread functions.
+            </p></dd>
+</dl>
+</div>
+<a name="toward_boost_interthreads.appendices.rationale.thread_tuple.comparaing_thread__thread_group_and_thread_tuple"></a><h5>
+<a name="id4857229"></a>
+          <a href="rationale.html#toward_boost_interthreads.appendices.rationale.thread_tuple.comparaing_thread__thread_group_and_thread_tuple">Comparaing
+          thread, thread_group and thread_tuple</a>
+        </h5>
+<div class="table">
+<a name="id4857246"></a><p class="title"><b>Table 2. Comparaing thread, thread_group and thread_tuple</b></p>
+<table class="table" summary="Comparaing thread, thread_group and thread_tuple">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+              <p>
+                Feature
+              </p>
+              </th>
+<th>
+              <p>
+                thread
+              </p>
+              </th>
+<th>
+              <p>
+                thread_group
+              </p>
+              </th>
+<th>
+              <p>
+                thread_tuple
+              </p>
+              </th>
+<th>
+              <p>
+                Compatible
+              </p>
+              </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+              <p>
+                default constructor
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                copiable
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                movable
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">joinable</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no*
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">join</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no*
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">timed_join</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no*
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">interruption_requested</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no*
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">join_all</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">timed_join_all</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">interrupt_all</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">size</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no* *
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">join_first_then_interrupt</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no* * *
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">timed_join_first_then_interrupt</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no* * *
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="keyword">operator</span><span class="special">[]()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+</tr>
+<tr>
+<td>
+              <p>
+                <code class="computeroutput"><span class="identifier">swap</span><span class="special">()</span></code>
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no
+              </p>
+              </td>
+<td>
+              <p>
+                <span class="bold"><strong>yes</strong></span>
+              </p>
+              </td>
+<td>
+              <p>
+                no*
+              </p>
+              </td>
+</tr>
+</tbody>
+</table>
+</div>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">*</span></dt>
+<dd><p>
+              thread_group could add these synonym functions
+            </p></dd>
+<dt><span class="term">* *</span></dt>
+<dd><p>
+              thread could add the size function returning 1
+            </p></dd>
+<dt><span class="term">* * *</span></dt>
+<dd><p>
+              thread &amp; thread_group could add these functions
+            </p></dd>
+</dl>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 -2009 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="changes.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../appendices.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="implementation.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

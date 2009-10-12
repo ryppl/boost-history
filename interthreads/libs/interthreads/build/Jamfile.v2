@@ -46,7 +46,7 @@ project boost/interthreads
 #       <define>BOOST_THREAD_HAS_THREAD_ATTR
     
       <include>../../..
-      <include>/boost_1_39_0
+      <include>$BOOST_ROOT
       <link>static:<define>BOOST_INTERTHREADS_BUILD_LIB=1
       <link>shared:<define>BOOST_INTERTHREADS_BUILD_DLL=1 
 #      <link>shared:<library>/boost/thread//boost_thread/<link>shared

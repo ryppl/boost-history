@@ -75,29 +75,7 @@ or the version in SVN trunk. In particular, __Boost_InterThreads__ depends on:
 ]
 ]
 
-In addition it depends on the following libraries that are not yet accepted on Boost
-[variablelist
-[
-    [[@http://www.boost.org/libs/futures [*Boost.Futures]]] [for futures]
-]
-[
-    [[@http://www.boost.org/libs/tp [*Boost.ThreadPool]]] [Only when using the __AE_ boost::tp::pool and the __ACT__ boost::tp::task]
-]
-]
 
-And also could depend conditionaly on the following libraries that even not submited on Boost.
-[variablelist
-[
-    [[@http://www.boost.org/libs/chrono [*Boost.Chrono]]] [for time and duration]
-]
-[
-    [[@http://www.boost.org/libs/move [*Boost.Move]]] [to emulate the move semantic.]
-]
-[
-    [[@https://svn.boost.org/trac/boost/wiki/LibrariesUnderConstruction#Boost.SmartPtr.UniquePtr [*Boost.SmartPtr.UniquePtr]]] [for unique_ptr, ...]
-]
-
-]
 
 [/========================]
 [heading Exceptions safety]

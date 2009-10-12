@@ -22,7 +22,7 @@
 [/==========================================================================================]
 
 `bith::thread_specific_shared_ptr<>` is an extension of the thread_specific_ptr providing access 
-to this thread specific context from other threads.
+to the thread specific context from other threads.
 
     template <typename T>
     class thread_specific_shared_ptr : private noncopyable
@@ -121,7 +121,7 @@ supplied `cleanup_function` will be called at thread exit.]]
 
 [variablelist
 
-[[Effects:] [Remove from the map the current thread::id and destroys `*this`.]]
+[[Effects:] [Remove from the static map the current thread::id and destroys `*this`.]]
 
 [[Throws:] [Nothing.]]
 
@@ -150,7 +150,7 @@ destroyed do not call any member functions on that instance. Is for this raison 
 
 ]
 
-[note The initial value associated with an instance of `boost::thread_specific_shared_ptr<>` is `NULL` for each thread.]
+[note The initial value associated with an instance of `boost::thread_specific_shared_ptr<>` is `0` for each thread.]
 
 [endsect]
 
@@ -161,7 +161,7 @@ destroyed do not call any member functions on that instance. Is for this raison 
 
 [variablelist
 
-[[Requires:] [`this->get()` is not `NULL`.]]
+[[Requires:] [`this->get()` is not `0`.]]
 
 [[Returns:] [`this->get()`]]
 
@@ -180,7 +180,7 @@ destroyed do not call any member functions on that instance. Is for this raison 
 
 [variablelist
 
-[[Requires:] [`this->get()` is not `NULL`.]]
+[[Requires:] [`this->get()` is not `0`.]]
 
 [[Returns:] [`*(this->get())`]]
 
@@ -237,7 +237,6 @@ destroyed do not call any member functions on that instance. Is for this raison 
 [[Effects:] [If `this->get()!=new_value` and `this->get()` is non-`NULL`, invoke `delete this->get()` or
 `deleter(this->get())` as appropriate. Store `new_value` as the pointer associated with the current thread.]]
 
-[[Throws:] [`std::bad_alloc` when resources unavailable.]]
 
 ]
 

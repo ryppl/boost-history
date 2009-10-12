@@ -8,46 +8,8 @@
 [section:tests  Appendix E: Tests]
 
 
-[section AE/ACT]
+[section thread_specific_shared_pointer]
 [table
-    [[Name]                                             [Description]                                           [Pool] [BaTh][ShLa][ShTh][UnLa][UnLa] [Ticket]]
-    [[do_test_member_fork]                              [Forks and get]                                         [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_member_fork_m]                            [Forks and get]                                         [????] [Pass][Pass][????][????][????] [#]]
-    [[do_test_member_fork_bind]                         [Forks and get]                                         [Pass] [Pass][Pass][Pass][????][????] [#]]
-    [[do_test_member_fork_bind_m]                       [Forks and get]                                         [????] [????][Pass][????][????][????] [#]]
-    [[do_test_fork]                                     [Forks a nullary function and get]                      [Pass] [Pass][Pass][Pass][????][????] [#]]
-    [[do_test_fork_1]                                   [Forks a unary function and get]                        [Pass] [Pass][Pass][Pass][????][????] [#]]
-    [[do_test_fork_1_m]                                 [Forks a unary function and get]                        [????] [????][Pass][????][????][????] [#]]
-    [[do_test_creation_through_functor]                 [Forks a functor]                                       [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_creation_through_reference_wrapper]       [Forks a reference wrapper]                             [Pass] [????][Pass][Pass][????][????] [#]]
-
-
-    [[do_test_wait]                                     [Forks and waits]                                       [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_wait_until]                               [Forks and waits until a given time]                    [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_wait_for]                                 [Forks and waits for a given time]                      [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_get]                                      [Forks and get ]                                        [????] [----][Pass][????][????][????] [#]]
-    [[do_test_wait_all]                                 [Forks several and waits all]                           [Pass] [----][Pass][Pass][????][????] [#]]
-    [[do_test_wait_all_until]                           [Forks several and waits all until a given time]        [????] [----][Pass][Pass][????][????] [#]]
-    [[do_test_wait_all_for]                             [Forks several and waits all for a given time]          [????] [----][????][????][????][????] [#]]
-    [[do_test_set_all]                                  [Forks several and get all using set_all]               [Pass] [----][Pass][Pass][????][????] [#]]
-    [[do_test_get_all]                                  [Forks several and get all]                             [Pass] [----][Fail][Pass][????][????] [#]]
-    [[do_test_wait_for_all]                             [wait for all]                                          [Pass] [----][Pass][Pass][????][????] [#]]
-    [[do_test_wait_for_any]                             [waits for any]                                         [Fail] [----][Pass][Pass][????][????] [#]]
-    [[do_test_wait_for_any_fusion_sequence]             [Wait for any in a fusion sequence]                     [Fail] [????][????][Pass][????][????] [#]]
-
-    [[do_test_member_fork_detach]                       [Forks and detach]                                      [Fail] [????][----][Pass][????][????] [#]]
-    [[do_test_thread_interrupts_at_interruption_point]  [Interrupt]                                             [Pass] [????][----][Pass][????][????] [#]]
-    [[do_test_join]                                     [Forks and join]                                        [Pass] [Pass][Pass][Pass][????][????] [#]]
-    [[do_test_join_until]                               [Forks and joins until a given time]                    [Pass] [Pass][Pass][Pass][????][????] [#]]
-    [[do_test_join_for]                                 [Forks and joins for a given time]                      [Pass] [Pass][Pass][Pass][????][????] [#]]
-    [[do_test_join_all]                                 [Forks several and join all]                            [Pass] [----][Pass][Pass][????][????] [#]]
-    [[do_test_join_all_until]                           [Forks several and join all until a given time]         [????] [----][????][????][????][????] [#]]
-    [[do_test_join_all_for]                             [Forks several and join all for a given time]           [????] [----][????][????][????][????] [#]]
-
-    [[do_test_fork_after_join]                          [Fork after some dependent ACT and then join]           [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_fork_after_wait]                          [Fork after some dependent ACT and then wait]           [Pass] [????][Pass][Pass][????][????] [#]]
-    [[do_test_fork_after_get]                           [Fork after some dependent ACT and then get the value]  [Pass] [????][Pass][Pass][????][????] [#]]
-    [[XXXXXXXXXXXXXXXXXXXXXX]                           [XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX]  [XXXX] [????][????][????][????][????] [#]]
 
 ]
 

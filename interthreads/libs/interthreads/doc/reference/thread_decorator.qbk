@@ -55,15 +55,15 @@ Functor wrapping the user function thread to ensure that all the decorations are
 Objects of type `thread_decorator` are movable, so they can be stored in move-aware containers, and returned from functions. 
 This allows the details of thread decoration to be wrapped in a function.
 
-thread_decorator make_decorator();
+    thread_decorator make_decorator();
 
-void f()
-{
-    boot::thread some_thread(make_decorator());
-    some_thread.join();
-}
+    void f()
+    {
+        boot::thread some_thread(make_decorator());
+        some_thread.join();
+    }
 
-[note On compilers that support rvalue references, `thread_decorator` provides a proper move constructor and move-assignment operator, 
+[note On compilers that support rvalue references, `thread_decorator` will provides a proper move constructor and move-assignment operator, 
 and therefore meets the C++0x `MoveConstructible` and `MoveAssignable` concepts. With such compilers, `thread_decorator` can therefore 
 be used with containers that support those concepts.
 
@@ -110,7 +110,11 @@ thread of execution.]]
 
 [[Thread safety:][safe]]
 
+[[Limitations:][The current implementation defines overloads up to four parameters.]]
+
 ]
+
+
 
 [endsect]
 
@@ -232,7 +236,7 @@ thread of execution.]]
 
 [[Throws:] [Any exception thrown by the decorations or the user function.]]
 
-[[Thread safety:][unsafe - depends on the decorations constructio/destruction.]]
+[[Thread safety:][unsafe - depends on the decorations construction/destruction.]]
 
 ]
 
@@ -257,7 +261,7 @@ be equivalent to calling the original. ]]
 
 [[Throws:] [Any exception thrown by the decorations.]]
 
-[[Thread safety:][unsafe - depends on the decorations constructio/destruction.]]
+[[Thread safety:][unsafe - depends on the decorations construction/destruction.]]
 
 ]
 
