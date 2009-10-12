@@ -1,0 +1,1129 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Lockers</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="condition_lockables.html" title="Condition
+      Lockables">
+<link rel="next" href="single_threaded.html" title="Single-threaded">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="condition_lockables.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="single_threaded.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.lockers"></a><a href="lockers.html" title="Lockers">Lockers</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__basiclockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">BasicLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__lockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">LockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__timedlockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">TimedLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__uniquelockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">UniqueLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__sharedlockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">SharedLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__upgradelockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">UpgradeLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__movablelockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">MovableLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.is_strict_locker_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">is_strict_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.is_strict_locker_hpp.metafunction__is_strict_locker_">Metafunction
+          <code class="computeroutput"><span class="identifier">is_strict_locker</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">strict_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.class__strict_locker_">Class
+          <code class="computeroutput"><span class="identifier">strict_locker</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.class__nested_strict_locker_">Class
+          <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.template_class__nested_strict_locker_">Template
+          Class <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.reverse_locker_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">reverse_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.reverse_locker_hpp.class__reverse_lock_">Class
+          <code class="computeroutput"><span class="identifier">reverse_lock</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.nested_reverse_locker_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">nested_reverse_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.nested_reverse_locker_hpp.class__nested_reverse_locker_">Class
+          <code class="computeroutput"><span class="identifier">nested_reverse_locker</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">condition_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_backdoor_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_backdoor</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_safe_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_safe</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_unique_locker_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_unique_locker</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.externally_locked_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">externally_locked</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.externally_locked_hpp.template_class__externally_locked_">Template
+          Class <code class="computeroutput"><span class="identifier">externally_locked</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">locking_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp.class__locking_ptr_">Class
+          <code class="computeroutput"><span class="identifier">locking_ptr</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp.class__sharable_locking_ptr_">Class
+          <code class="computeroutput"><span class="identifier">sharable_locking_ptr</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">on_derreference_locking_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp.class__on_derreference_locking_ptr_">Class
+          <code class="computeroutput"><span class="identifier">on_derreference_locking_ptr</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">array_unique_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__unique_array_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">unique_array_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__try_unique_array_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">try_unique_array_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp" title="
+        Header &lt;boost/synchro/locker_concepts.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__basiclockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">BasicLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__lockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">LockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__timedlockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">TimedLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__uniquelockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">UniqueLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__sharedlockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">SharedLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__upgradelockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">UpgradeLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__movablelockerconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">MovableLockerConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<p>
+          Locker concepts.
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>  <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">BasicLockerConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">LockerConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">TimedLockerConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">UniqueLockerConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">SharedLockerConcept</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">UpgradeLockerConcept</span><span class="special">;</span>       
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">MovableLockerConcept</span><span class="special">;</span>
+
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__basiclockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__basiclockerconcept___" title="Template
+          Class BasicLockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">BasicLockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">BasicLockerConcept</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">BasicLockerConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">const</span> <span class="identifier">Locker</span> <span class="identifier">l1</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">);</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l1</span><span class="special">.</span><span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">))</span> <span class="keyword">return</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l1</span><span class="special">.</span><span class="identifier">owns_lock</span><span class="special">())</span> <span class="keyword">return</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l1</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(!</span><span class="identifier">l1</span><span class="special">)</span> <span class="keyword">return</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="identifier">lockable_type</span> <span class="identifier">mtx_</span><span class="special">;</span>
+    <span class="identifier">system_time</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__lockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__lockerconcept___" title="Template
+          Class LockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">LockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">LockerConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">BasicLockerConcept</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;));</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">LockerConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Locker</span> <span class="identifier">l2</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">,</span> <span class="identifier">defer_lock</span><span class="special">);</span>
+        <span class="identifier">Locker</span> <span class="identifier">l3</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">,</span> <span class="identifier">adopt_lock</span><span class="special">);</span>
+        <span class="identifier">Locker</span> <span class="identifier">l4</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">,</span> <span class="identifier">try_to_lock</span><span class="special">);</span>
+        <span class="identifier">l2</span><span class="special">.</span><span class="identifier">lock</span><span class="special">();</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l2</span><span class="special">.</span><span class="identifier">try_lock</span><span class="special">())</span> <span class="keyword">return</span><span class="special">;</span>
+        <span class="identifier">l2</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();</span>
+        <span class="identifier">l2</span><span class="special">.</span><span class="identifier">release</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">lockable_type</span> <span class="identifier">mtx_</span><span class="special">;</span>
+    <span class="identifier">system_time</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__timedlockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__timedlockerconcept___" title="Template
+          Class TimedLockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">TimedLockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">TimedLockerConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockerConcept</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;));</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">TimedLockerConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="keyword">const</span> <span class="identifier">Locker</span> <span class="identifier">l1</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">);</span>
+        <span class="identifier">Locker</span> <span class="identifier">l5</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">Locker</span> <span class="identifier">l6</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+        <span class="identifier">Locker</span> <span class="identifier">l7</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">mtx_</span><span class="special">);</span>
+        <span class="identifier">Locker</span> <span class="identifier">l8</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">),</span> <span class="identifier">mtx_</span><span class="special">);</span>
+        <span class="identifier">l5</span><span class="special">.</span><span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">l5</span><span class="special">.</span><span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l5</span><span class="special">.</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">))</span> <span class="keyword">return</span><span class="special">;</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l5</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">)))</span> <span class="keyword">return</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="identifier">lockable_type</span> <span class="identifier">mtx_</span><span class="special">;</span>
+    <span class="identifier">system_time</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__uniquelockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__uniquelockerconcept___" title="Template
+          Class UniqueLockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">UniqueLockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">UniqueLockerConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">TimedLockerConcept</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;));</span>
+    
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">UniqueLockerConcept</span><span class="special">)</span> <span class="special">{</span>                
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__sharedlockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__sharedlockerconcept___" title="Template
+          Class SharedLockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">SharedLockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">SharedLockerConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">TimedLockerConcept</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">SharedLockerConcept</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__upgradelockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__upgradelockerconcept___" title="Template
+          Class UpgradeLockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">UpgradeLockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">UpgradeLockerConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">TimedLockerConcept</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">UpgradeLockerConcept</span><span class="special">)</span> <span class="special">{</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locker_concepts_hpp.template_class__movablelockerconcept___"></a><a href="lockers.html#boost_synchro.reference.lockers.locker_concepts_hpp.template_class__movablelockerconcept___" title="Template
+          Class MovableLockerConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">MovableLockerConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">MovableLockerConcept</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockerConcept</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">MovableLockerConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">Locker</span> <span class="identifier">l1</span><span class="special">(</span><span class="identifier">mtx_</span><span class="special">);</span>
+        <span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">l2</span><span class="special">(</span><span class="identifier">l1</span><span class="special">);</span>
+        <span class="identifier">Locker</span> <span class="identifier">l3</span><span class="special">(</span><span class="identifier">l1</span><span class="special">.</span><span class="identifier">move</span><span class="special">());</span>
+        <span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">l2</span><span class="special">.</span><span class="identifier">mutex</span><span class="special">()!=&amp;</span><span class="identifier">mtx_</span><span class="special">));</span>
+        <span class="identifier">l3</span><span class="special">.</span><span class="identifier">lock</span><span class="special">();</span>
+        <span class="identifier">l2</span> <span class="special">=</span> <span class="identifier">l3</span><span class="special">.</span><span class="identifier">move</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="identifier">lockable_type</span> <span class="identifier">mtx_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.is_strict_locker_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.is_strict_locker_hpp" title="
+        Header &lt;boost/synchro/locker/is_strict_locker.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">is_strict_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.is_strict_locker_hpp.metafunction__is_strict_locker_">Metafunction
+          <code class="computeroutput"><span class="identifier">is_strict_locker</span></code></a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.is_strict_locker_hpp.metafunction__is_strict_locker_"></a><a href="lockers.html#boost_synchro.reference.lockers.is_strict_locker_hpp.metafunction__is_strict_locker_" title="Metafunction
+          is_strict_locker">Metafunction
+          <code class="computeroutput"><span class="identifier">is_strict_locker</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_strict_locker</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span> <span class="identifier">value</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.strict_locker_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp" title="
+        Header &lt;boost/synchro/locker/strict_locker.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">strict_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.class__strict_locker_">Class
+          <code class="computeroutput"><span class="identifier">strict_locker</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.class__nested_strict_locker_">Class
+          <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.template_class__nested_strict_locker_">Template
+          Class <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.strict_locker_hpp.class__strict_locker_"></a><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.class__strict_locker_" title="Class
+          strict_locker">Class
+          <code class="computeroutput"><span class="identifier">strict_locker</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<p>
+            namespace boost { namespace synchro {
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">StrictLockerConcept</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_STATIC_ASSERT</span><span class="special">((</span><span class="identifier">is_strict_locker</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">value</span><span class="special">));</span>
+
+    <span class="keyword">void</span> <span class="identifier">f</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">l</span> <span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">BOOST_ASSERT</span><span class="special">((</span><span class="identifier">l</span><span class="special">.</span><span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lock</span><span class="special">)));</span>
+    <span class="special">}</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">StrictLockerConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="special">{</span>
+<span class="comment">//            Locker l(lock);
+</span><span class="comment">//            BOOST_ASSERT((l));
+</span>        <span class="special">}</span>
+    <span class="special">}</span>
+    <span class="identifier">lockable_type</span> <span class="identifier">lock</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">strict_locker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span> <span class="identifier">bool_type</span><span class="special">;</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">strict_locker</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">strict_locker</span><span class="special">();</span>
+
+    <span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">owns_lock</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_ADRESS_OF_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span>
+    <span class="identifier">BOOST_HEAP_ALLOCATION_DELETE</span><span class="special">()</span>
+    <span class="identifier">BOOST_DEFAULT_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable default construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_strict_locker</span><span class="special">&lt;</span><span class="identifier">strict_locker</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span> <span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">nested_strict_locker</span> <span class="special">{</span>
+      <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">MovableLockerConcept</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;));</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">syntactic_lock_traits</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;::</span><span class="identifier">lock_error</span> <span class="identifier">lock_error</span><span class="special">;</span>
+
+    <span class="identifier">nested_strict_locker</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">locker</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">nested_strict_locker</span><span class="special">();</span>
+    <span class="keyword">typedef</span> <span class="keyword">bool</span> <span class="special">(</span><span class="identifier">nested_strict_locker</span><span class="special">::*</span><span class="identifier">bool_type</span><span class="special">)()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">owns_lock</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">const</span> <span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_ADRESS_OF_DELETE</span><span class="special">(</span><span class="identifier">nested_strict_locker</span><span class="special">)</span>
+    <span class="identifier">BOOST_HEAP_ALLOCATEION_DELETE</span><span class="special">(</span><span class="identifier">nested_strict_locker</span><span class="special">)</span>
+    <span class="identifier">BOOST_DEFAULT_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable default construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">is_strict_locker</span><span class="special">&lt;</span><span class="identifier">nested_strict_locker</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">mpl</span><span class="special">::</span><span class="identifier">true_</span> <span class="special">{}</span> <span class="special">;</span>
+</pre>
+<p>
+            }}
+          </p>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            [Note strict_locker is not a model of Lockable concept.]
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">strict_locker</span></code>
+            template parameters</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc"><li>
+<code class="computeroutput"><span class="identifier">Lockable</span></code> : The exclusive
+              lockable type used to synchronize exclusive access
+            </li></ul></div>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">strict_locker</span></code>
+            public types</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">lockable_type</span></code> : The
+              exclusive lockable type used to synchronize exclusive access
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">lock_error</span></code> : The exception
+              type throw incase of errors
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">bool_type</span></code> : The bool_type
+              of the safe_bool idiom
+            </li>
+</ul></div>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">nested_strict_locker</span></code>
+            public member functions</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="keyword">explicit</span> <span class="identifier">strict_locker</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">);</span></code></li>
+<li><code class="computeroutput"><span class="special">~</span><span class="identifier">strict_locker</span><span class="special">();</span></code></li>
+<li><code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span></code></li>
+<li><code class="computeroutput"><span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">const</span><span class="special">;</span></code></li>
+<li><code class="computeroutput"><span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span></code></li>
+<li><code class="computeroutput"><span class="identifier">lockable_type</span><span class="special">*</span>
+              <span class="identifier">mutex</span><span class="special">()</span>
+              <span class="keyword">const</span><span class="special">;</span></code></li>
+<li><code class="computeroutput"><span class="identifier">lockable_type</span><span class="special">*</span>
+              <span class="identifier">get_lockable</span><span class="special">()</span>
+              <span class="keyword">const</span><span class="special">;</span></code></li>
+</ul></div>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">nested_strict_locker</span></code>
+            private and not defined member functions</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">strict_locker</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">strict_locker</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">&amp;);</span></code></li>
+<li><code class="computeroutput"><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">strict_locker</span><span class="special">&amp;);</span></code></li>
+<li><code class="computeroutput"><span class="keyword">operator</span><span class="special">&amp;();</span></code></li>
+<li><code class="computeroutput"><span class="keyword">void</span><span class="special">*</span>
+              <span class="keyword">operator</span> <span class="keyword">new</span><span class="special">(</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span></code></li>
+<li><code class="computeroutput"><span class="keyword">void</span><span class="special">*</span>
+              <span class="keyword">operator</span> <span class="keyword">new</span><span class="special">[](</span><span class="identifier">std</span><span class="special">::</span><span class="identifier">size_t</span><span class="special">)</span></code></li>
+<li><code class="computeroutput"><span class="keyword">void</span> <span class="keyword">operator</span>
+              <span class="keyword">delete</span><span class="special">(</span><span class="keyword">void</span><span class="special">*)</span></code></li>
+<li><code class="computeroutput"><span class="keyword">void</span> <span class="keyword">operator</span>
+              <span class="keyword">delete</span><span class="special">[](</span><span class="keyword">void</span><span class="special">*)</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.strict_locker_hpp.class__nested_strict_locker_"></a><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.class__nested_strict_locker_" title="Class
+          nested_strict_locker">Class
+          <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">nested_strict_locker</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">locker_traits</span><span class="special">&lt;</span><span class="identifier">Locker</span><span class="special">&gt;::</span><span class="identifier">bad_lock</span> <span class="identifier">bad_lock</span><span class="special">;</span>
+
+    <span class="identifier">nested_strict_locker</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">nested_strict_locker</span><span class="special">();</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span> <span class="identifier">bool_type</span><span class="special">;</span>
+    <span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">const</span>
+    <span class="keyword">bool</span> <span class="identifier">owns_lock</span><span class="special">()</span> <span class="keyword">const</span>
+    <span class="identifier">Mutex</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span>
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="identifier">strict_locker</span><span class="special">();</span>
+    <span class="identifier">BOOST_NON_ALIAS</span><span class="special">(</span><span class="identifier">strict_locker</span><span class="special">);</span>
+    <span class="identifier">BOOST_NON_HEAP_ALLOCATED</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.strict_locker_hpp.template_class__nested_strict_locker_"></a><a href="lockers.html#boost_synchro.reference.lockers.strict_locker_hpp.template_class__nested_strict_locker_" title="Template
+          Class nested_strict_locker">Template
+          Class <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code></a>
+</h5></div></div></div>
+<p>
+            A reverse (or anti) locker.
+          </p>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.reverse_locker_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.reverse_locker_hpp" title="
+        Header &lt;boost/synchro/locker/reverse_locker.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">reverse_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.reverse_locker_hpp.class__reverse_lock_">Class
+          <code class="computeroutput"><span class="identifier">reverse_lock</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">reverse_locker</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.reverse_locker_hpp.class__reverse_lock_"></a><a href="lockers.html#boost_synchro.reference.lockers.reverse_locker_hpp.class__reverse_lock_" title="Class
+          reverse_lock">Class
+          <code class="computeroutput"><span class="identifier">reverse_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            This is an interesting adapter class that changes a Lockable into a reverse
+            lockable, i.e.,<code class="computeroutput"><span class="identifier">lock</span></code> on
+            this class calls <code class="computeroutput"><span class="identifier">unlock</span></code>
+            on the lockable, and <code class="computeroutput"><span class="identifier">unlock</span></code>
+            on this class calls <code class="computeroutput"><span class="identifier">lock</span></code>
+            on the lock. One motivation for this class is when we temporarily want
+            to unlock a lock (which we have already locked) but then re-lock it soon
+            after.
+          </p>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">reverse_locker</span>
+<span class="special">{</span>
+    <span class="identifier">reverse_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">mtx</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">reverse_locker</span><span class="special">();</span>
+
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">mtx_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.nested_reverse_locker_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.nested_reverse_locker_hpp" title="
+        Header &lt;boost/synchro/locker/nested_reverse_locker.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">nested_reverse_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.nested_reverse_locker_hpp.class__nested_reverse_locker_">Class
+          <code class="computeroutput"><span class="identifier">nested_reverse_locker</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">nested_reverse_locker</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.nested_reverse_locker_hpp.class__nested_reverse_locker_"></a><a href="lockers.html#boost_synchro.reference.lockers.nested_reverse_locker_hpp.class__nested_reverse_locker_" title="Class
+          nested_reverse_locker">Class
+          <code class="computeroutput"><span class="identifier">nested_reverse_locker</span></code></a>
+</h5></div></div></div>
+<p>
+            This is an interesting adapter class that changes a locker into a reverse
+            locker, i.e., <code class="computeroutput"><span class="identifier">unlock</span></code>
+            on construction and <code class="computeroutput"><span class="identifier">lock</span></code>
+            on destruction. One motivation for this class is when we temporarily
+            want to unlock a lock (locked by another locker) but then re-lock it
+            soon after.
+          </p>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<p>
+            template &lt;typename Locker&gt; class nested_reverse_locker : boost::noncopyable
+            { BOOST_CONCEPT_ASSERT((MovableLockerConcept&lt;Locker&gt;)); public:
+            explicit nested_reverse_locker(Locker&amp; locker); ~nested_reverse_locker();
+            };
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.condition_locker_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp" title="
+        Header &lt;boost/synchro/locker/condition_locker.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">condition_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_backdoor_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_backdoor</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_safe_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_safe</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_unique_locker_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_unique_locker</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">condition_backdoor</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">condition_safe</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_unique_locker</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_shared_locker</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_unique_lockable</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_shared_lockable</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_backdoor_"></a><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_backdoor_" title="Template
+          Class condition_backdoor">Template
+          Class <code class="computeroutput"><span class="identifier">condition_backdoor</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">condition_backdoor</span> <span class="special">{</span>
+ <span class="identifier">condition_backdoor</span><span class="special">(</span><span class="identifier">condition_safe</span><span class="special">&lt;</span><span class="identifier">Condition</span><span class="special">&gt;&amp;</span><span class="identifier">cnd</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">wait</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span>  <span class="keyword">const</span><span class="special">&amp;</span>  <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">wait_when</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">predicate_type</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_when_until</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">predicate_type</span> <span class="identifier">pred</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">predicate_type</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_when_for</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">predicate_type</span> <span class="identifier">pred</span><span class="special">,</span> <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">notify_one</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">notify_all</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_safe_"></a><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_safe_" title="Template
+          Class condition_safe">Template
+          Class <code class="computeroutput"><span class="identifier">condition_safe</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_safe</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+ <span class="keyword">typedef</span> <span class="identifier">Condition</span> <span class="identifier">condition</span><span class="special">;</span>
+ <span class="keyword">typedef</span> <span class="identifier">condition_backdoor</span><span class="special">&lt;</span><span class="identifier">Condition</span><span class="special">&gt;</span> <span class="identifier">backdoor</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">notify_one</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">notify_all</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_unique_locker_"></a><a href="lockers.html#boost_synchro.reference.lockers.condition_locker_hpp.template_class__condition_unique_locker_" title="Template
+          Class condition_unique_locker">Template
+          Class <code class="computeroutput"><span class="identifier">condition_unique_locker</span></code></a>
+</h5></div></div></div>
+<p>
+            template &lt; typename Lockable, class Condition=condition_safe&lt;typename
+            best_condition&lt;Lockable&gt;::type &gt; &gt; class condition_unique_locker
+            : protected unique_lock&lt;Lockable&gt; { BOOST_CONCEPT_ASSERT((LockableConcept&lt;Lockable&gt;));
+            public: typedef Lockable lockable_type; typedef Condition condition;
+          </p>
+<pre class="programlisting"><span class="keyword">explicit</span> <span class="identifier">condition_unique_locker</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">);</span>
+<span class="identifier">condition_unique_locker</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span> <span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">);</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+<span class="identifier">condition_unique_locker</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span> <span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">);</span>
+<span class="special">~</span><span class="identifier">condition_unique_locker</span><span class="special">();</span>
+
+<span class="keyword">typedef</span> <span class="keyword">bool</span> <span class="special">(</span><span class="identifier">condition_unique_locker</span><span class="special">::*</span><span class="identifier">bool_type</span><span class="special">)()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">bool</span> <span class="identifier">owns_lock</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+<span class="keyword">void</span> <span class="identifier">relock_on</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span> <span class="identifier">cond</span><span class="special">);</span>
+<span class="keyword">void</span> <span class="identifier">relock_until</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span> <span class="identifier">cond</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">relock_on_for</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span> <span class="identifier">cond</span><span class="special">,</span> <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">relock_when</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">relock_when_until</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">,</span>
+		<span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+<span class="keyword">void</span> <span class="identifier">relock_when_for</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">,</span>
+		<span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+<span class="comment">/*&lt; no possibility to unlock without blocking on wait... &gt;*/</span>
+</pre>
+<p>
+            };
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.externally_locked_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.externally_locked_hpp" title="
+        Header &lt;boost/synchro/locker/externally_locked.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">externally_locked</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.externally_locked_hpp.template_class__externally_locked_">Template
+          Class <code class="computeroutput"><span class="identifier">externally_locked</span></code></a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.externally_locked_hpp.template_class__externally_locked_"></a><a href="lockers.html#boost_synchro.reference.lockers.externally_locked_hpp.template_class__externally_locked_" title="Template
+          Class externally_locked">Template
+          Class <code class="computeroutput"><span class="identifier">externally_locked</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">externally_locked</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">externally_locked</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">owner</span><span class="special">);</span>
+    <span class="identifier">externally_locked</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">own</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">locker</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">set</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">owner</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span> <code class="computeroutput"><span class="identifier">externally_locked</span></code>
+            cloaks an object of type T, and actually provides full access to that
+            object through the get and set member functions, provided you pass a
+            reference to a strict_locker&lt;Lockable&gt; object.
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">externally_locked</span></code>
+            template parameters</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">T</span></code> : the type locked
+              externally
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">Lockable</span></code> : The lockable
+              type used to synchronize the access to a T instance
+            </li>
+</ul></div>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">externally_locked</span></code>
+            public member functions</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">get</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">locker</span><span class="special">);</span></code></li></ul></div>
+<p>
+            <span class="bold"><strong>Requires:</strong></span> mpl:and_&lt;is_strict_locker&lt;Locker&gt;,
+            is_same&lt;lockable_type_trait&lt;Locker&gt;, Lockable&gt;.
+          </p>
+<p>
+            <span class="bold"><strong>Returns:</strong></span> a reference to the type locked
+            externally.
+          </p>
+<p>
+            <span class="bold"><strong>Throws:</strong></span> lock_error when the locker do
+            not owns the lockable instance
+          </p>
+<div class="itemizedlist"><ul type="disc"><li><code class="computeroutput"><span class="keyword">void</span> <span class="identifier">set</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">&amp;</span>
+              <span class="identifier">obj</span><span class="special">,</span>
+              <span class="identifier">Lockable</span><span class="special">&amp;</span>
+              <span class="identifier">owner</span><span class="special">);</span></code></li></ul></div>
+<p>
+            <span class="bold"><strong>Effect:</strong></span> reinit the type and lockable
+            references with the given values.
+          </p>
+<p>
+            <span class="bold"><strong>Example:</strong></span> See
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.locking_ptr_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp" title=" Header
+        &lt;boost/synchro/locker/locking_ptr.hpp&gt;"> Header
+        <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">locking_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp.class__locking_ptr_">Class
+          <code class="computeroutput"><span class="identifier">locking_ptr</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp.class__sharable_locking_ptr_">Class
+          <code class="computeroutput"><span class="identifier">sharable_locking_ptr</span></code></a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locking_ptr_hpp.class__locking_ptr_"></a><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp.class__locking_ptr_" title="Class
+          locking_ptr">Class
+          <code class="computeroutput"><span class="identifier">locking_ptr</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">locking_ptr</span> <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span> <span class="identifier">mutex_type</span><span class="special">;</span>
+
+    <span class="identifier">locking_ptr</span><span class="special">(</span><span class="keyword">volatile</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span> <span class="identifier">mutex_type</span><span class="special">&amp;</span> <span class="identifier">mtx</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">locking_ptr</span><span class="special">();</span>
+
+    <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+    <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+    <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            The <code class="computeroutput"><span class="identifier">locking_ptr</span></code> overloads
+            <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;</span></code>
+            to return a temporary object that will perform the locking. This too
+            provides an <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;</span></code>.
+            Calls to <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;</span></code>
+            are automatically chained by the compiler until a raw pointer type is
+            returned. In pointer's <code class="computeroutput"><span class="keyword">operator</span><span class="special">-&gt;</span></code> the lock is applied and in its destructor,
+            called at the end of a full expression, it is released.
+          </p>
+<div class="warning"><table border="0" summary="Warning">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Warning]" src="../../../../../../doc/html/images/warning.png"></td>
+<th align="left">Warning</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+              Programmers should be careful about attempting to access the same object
+              twice in a statement using <code class="computeroutput"><span class="identifier">locking_ptr</span></code>:
+              this will cause deadlock if the synchronisation strategy is not re-entrant.
+            </p></td></tr>
+</table></div>
+<p>
+            <span class="bold"><strong>Example Code</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">locking_ptr</span></code>
+            constructors:destructors</strong></span> # <code class="computeroutput"><span class="identifier">locking_ptr</span><span class="special">(</span><span class="keyword">volatile</span> <span class="identifier">value_type</span><span class="special">&amp;</span>
+            <span class="identifier">obj</span><span class="special">,</span>
+            <span class="identifier">mutex_type</span><span class="special">&amp;</span>
+            <span class="identifier">mtx</span><span class="special">);</span></code>
+            # <code class="computeroutput"><span class="special">~</span><span class="identifier">locking_ptr</span><span class="special">();</span></code>
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">locking_ptr</span></code>
+            public member functions</strong></span>
+          </p>
+<div class="orderedlist"><ol type="1">
+<li><code class="computeroutput"><span class="identifier">value_type</span><span class="special">&amp;</span>
+              <span class="keyword">operator</span><span class="special">*();</span></code></li>
+<li><code class="computeroutput"><span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span></code></li>
+<li><code class="computeroutput"><span class="identifier">value_type</span><span class="special">*</span>
+              <span class="keyword">operator</span><span class="special">-&gt;();</span></code></li>
+<li><code class="computeroutput"><span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span></code></li>
+</ol></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.locking_ptr_hpp.class__sharable_locking_ptr_"></a><a href="lockers.html#boost_synchro.reference.lockers.locking_ptr_hpp.class__sharable_locking_ptr_" title="Class
+          sharable_locking_ptr">Class
+          <code class="computeroutput"><span class="identifier">sharable_locking_ptr</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SharableLockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">sharable_locking_ptr</span>
+    <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">SharableLockable</span> <span class="identifier">mutex_type</span><span class="special">;</span>
+
+    <span class="identifier">sharable_locking_ptr</span><span class="special">(</span><span class="keyword">volatile</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span> <span class="identifier">mutex_type</span><span class="special">&amp;</span> <span class="identifier">mtx</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">sharable_locking_ptr</span><span class="special">();</span>
+
+    <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+    <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+    <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">SharableLockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">sharable_locking_ptr</span><span class="special">&lt;</span><span class="keyword">const</span> <span class="identifier">T</span><span class="special">,</span> <span class="identifier">SharableLockable</span><span class="special">&gt;</span>
+    <span class="special">:</span> <span class="keyword">private</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">noncopyable</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">value_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">SharableLockable</span> <span class="identifier">mutex_type</span><span class="special">;</span>
+
+    <span class="identifier">sharable_locking_ptr</span><span class="special">(</span>
+        <span class="keyword">volatile</span> <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="identifier">obj</span><span class="special">,</span>
+        <span class="identifier">mutex_type</span><span class="special">&amp;</span> <span class="identifier">mtx</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">sharable_locking_ptr</span><span class="special">();</span>
+
+    <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*();</span>
+    <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">*()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;();</span>
+    <span class="keyword">const</span> <span class="identifier">value_type</span><span class="special">*</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">nested_strict_locker</span></code>
+            public member functions</strong></span>
+          </p>
+<div class="orderedlist"><ol type="1"><li><code class="computeroutput"><span class="special">;</span></code></li></ol></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp" title="
+        Header &lt;boost/synchro/locker/on_derreference_locking_ptr.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">on_derreference_locking_ptr</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp.class__on_derreference_locking_ptr_">Class
+          <code class="computeroutput"><span class="identifier">on_derreference_locking_ptr</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">on_derreference_locking_ptr</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp.class__on_derreference_locking_ptr_"></a><a href="lockers.html#boost_synchro.reference.lockers.on_derreference_locking_ptr_hpp.class__on_derreference_locking_ptr_" title="Class
+          on_derreference_locking_ptr">Class
+          <code class="computeroutput"><span class="identifier">on_derreference_locking_ptr</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">on_derreference_locking_ptr</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">class</span> <span class="identifier">pointer</span> <span class="special">{</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="keyword">explicit</span> <span class="identifier">pointer</span><span class="special">(</span><span class="identifier">T</span><span class="special">*</span> <span class="identifier">target</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">);</span>
+        <span class="special">~</span><span class="identifier">pointer</span><span class="special">();</span>
+        <span class="identifier">T</span> <span class="special">*</span><span class="keyword">operator</span><span class="special">-&gt;();</span>
+    <span class="special">};</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">on_derreference_locking_ptr</span><span class="special">(</span><span class="identifier">T</span> <span class="special">&amp;</span><span class="identifier">target</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">mutex</span><span class="special">);</span>
+    <span class="identifier">pointer</span> <span class="keyword">operator</span><span class="special">-&gt;()</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockers.array_unique_locker_hpp"></a><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp" title="
+        Header &lt;boost/synchro/locker/array_unique_locker.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">array_unique_locker</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__unique_array_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">unique_array_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__try_unique_array_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">try_unique_array_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span>  <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">N</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">unique_array_locker</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">N</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">try_unique_array_locker</span><span class="special">;</span>
+
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__unique_array_locker___"></a><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__unique_array_locker___" title="Template
+          Class unique_array_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">unique_array_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">unsigned</span> <span class="identifier">N</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">unique_array_locker</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">unique_array_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">unique_array_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">);</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">adopt_lock_t</span><span class="special">);</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">defer_lock</span><span class="special">);</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">try_to_lock_t</span><span class="special">);</span>
+    
+    <span class="comment">// try_lock_until constructor
+</span>    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">)</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">throw_timeout_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">throw_timeout_t</span><span class="special">)</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">,</span> <span class="special">)</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">nothrow_timeout_t</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m_n</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">nothrow_timeout_t</span><span class="special">,</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m0</span><span class="special">,</span> <span class="special">...,</span> <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">m2</span><span class="special">)</span>
+    
+    <span class="special">~</span><span class="identifier">unique_array_locker</span><span class="special">();</span>
+
+    <span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">owns_lock</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span><span class="special">-</span><span class="identifier">type</span> <span class="identifier">bool_type</span><span class="special">)()</span> <span class="keyword">const</span><span class="special">;</span> <span class="comment">/*&lt; safe bool idiom &gt;*/</span>
+    <span class="keyword">operator</span> <span class="identifier">bool_type</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="keyword">operator</span><span class="special">!()</span> <span class="keyword">const</span><span class="special">;</span> 
+    
+    <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">absolute_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">();</span>
+    
+    <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">();</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">absolute_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span>
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">unique_array_locker</span></code>
+            template parameters</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">Lockable</span></code> : The exclusive
+              lockable type used to synchronize exclusive access
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">N</span></code> : The number of lockables
+              in the array
+            </li>
+</ul></div>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">unique_array_locker</span></code>
+            public types</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">lockable_type</span></code> : The
+              exclusive lockable type used to synchronize exclusive access
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">lock_error</span></code> : The exception
+              type throw in case of errors
+            </li>
+<li>
+<code class="computeroutput"><span class="identifier">bool_type</span></code> : The bool_type
+              of the safe_bool idiom
+            </li>
+</ul></div>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">unique_array_locker</span></code>
+            private and not defined member functions</strong></span>
+          </p>
+<div class="itemizedlist"><ul type="disc">
+<li><code class="computeroutput"><span class="identifier">unique_array_locker</span><span class="special">()</span></code></li>
+<li><code class="computeroutput"><span class="identifier">unique_array_locker</span><span class="special">(</span><span class="identifier">unique_array_locker</span><span class="special">&amp;);</span></code></li>
+<li><code class="computeroutput"><span class="keyword">operator</span><span class="special">=(</span><span class="identifier">unique_array_locker</span><span class="special">&amp;);</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__try_unique_array_locker___"></a><a href="lockers.html#boost_synchro.reference.lockers.array_unique_locker_hpp.template_class__try_unique_array_locker___" title="Template
+          Class try_unique_array_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">try_unique_array_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="condition_lockables.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="single_threaded.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

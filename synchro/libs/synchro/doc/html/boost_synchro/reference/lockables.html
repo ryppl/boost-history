@@ -1,0 +1,1188 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Lockables</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="../reference.html" title="Reference">
+<link rel="next" href="generic_free_functions_on_lockable.html" title="Generic
+      Free Functions on Lockable">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="generic_free_functions_on_lockable.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.lockables"></a><a href="lockables.html" title="Lockables">Lockables</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.template_class__has_timed_interface_">Template
+          Class <code class="computeroutput"><span class="identifier">has_timed_interface</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_exclusive_">Class
+          <code class="computeroutput"><span class="identifier">is_exclusive</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_shared_">Class
+          <code class="computeroutput"><span class="identifier">is_shared</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_recursive_">Class
+          <code class="computeroutput"><span class="identifier">is_recursive</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_mono_threaded_">Class
+          <code class="computeroutput"><span class="identifier">is_mono_threaded</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_threaded_">Class
+          <code class="computeroutput"><span class="identifier">is_multi_threaded</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_process_">Class
+          <code class="computeroutput"><span class="identifier">is_multi_process</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__mutex_type_">Class
+          <code class="computeroutput"><span class="identifier">mutex_type</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__scoped_lock_">Class
+          <code class="computeroutput"><span class="identifier">scoped_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__unique_lock_">Class
+          <code class="computeroutput"><span class="identifier">unique_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__shared_lock_">Class
+          <code class="computeroutput"><span class="identifier">shared_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__upgrade_lock_">Class
+          <code class="computeroutput"><span class="identifier">upgrade_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error_">Class
+          <code class="computeroutput"><span class="identifier">lock_error</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__moved_object_">Class
+          <code class="computeroutput"><span class="identifier">moved_object</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error2_">Class
+          <code class="computeroutput"><span class="identifier">lock_error2</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error3_">Class
+          <code class="computeroutput"><span class="identifier">lock_error3</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error4_">Class
+          <code class="computeroutput"><span class="identifier">lock_error4</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_traits_">Class
+          <code class="computeroutput"><span class="identifier">lock_traits</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lockable_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__lockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">LockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__timedlockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">TimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__sharelockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">ShareLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__upgradelockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lock_generator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp.metafunction__default_lifetime___">Metafunction
+          <code class="computeroutput"><span class="identifier">default_lifetime</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp.metafunction__find_best_lock___">Metafunction
+          <code class="computeroutput"><span class="identifier">find_best_lock</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lockable_adapter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__exclusive_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">exclusive_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__timed_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">timed_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__shared_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">shared_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__upgrade_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp" title="
+        Header &lt;boost/synchro/lockable_traits.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lockable_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.template_class__has_timed_interface_">Template
+          Class <code class="computeroutput"><span class="identifier">has_timed_interface</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_exclusive_">Class
+          <code class="computeroutput"><span class="identifier">is_exclusive</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_shared_">Class
+          <code class="computeroutput"><span class="identifier">is_shared</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_recursive_">Class
+          <code class="computeroutput"><span class="identifier">is_recursive</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_mono_threaded_">Class
+          <code class="computeroutput"><span class="identifier">is_mono_threaded</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_threaded_">Class
+          <code class="computeroutput"><span class="identifier">is_multi_threaded</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_process_">Class
+          <code class="computeroutput"><span class="identifier">is_multi_process</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__mutex_type_">Class
+          <code class="computeroutput"><span class="identifier">mutex_type</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__scoped_lock_">Class
+          <code class="computeroutput"><span class="identifier">scoped_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__unique_lock_">Class
+          <code class="computeroutput"><span class="identifier">unique_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__shared_lock_">Class
+          <code class="computeroutput"><span class="identifier">shared_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__upgrade_lock_">Class
+          <code class="computeroutput"><span class="identifier">upgrade_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error_">Class
+          <code class="computeroutput"><span class="identifier">lock_error</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__moved_object_">Class
+          <code class="computeroutput"><span class="identifier">moved_object</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error2_">Class
+          <code class="computeroutput"><span class="identifier">lock_error2</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error3_">Class
+          <code class="computeroutput"><span class="identifier">lock_error3</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error4_">Class
+          <code class="computeroutput"><span class="identifier">lock_error4</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_traits_">Class
+          <code class="computeroutput"><span class="identifier">lock_traits</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+
+    <span class="keyword">struct</span> <span class="identifier">mono_threaded_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">multi_threaded_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">multi_process_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">scope_tag</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_mono_threaded</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_multi_threaded</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_multi_process</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">process_lifetime_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">kernel_lifetime_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">filesystem_lifetime_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lifetime_tag</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">anonymous_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">named_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">naming_tag</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">exclusive_lock_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">sharable_lock_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">upgradable_lock_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">category_tag</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_exclusive_lock</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_sharable_lock</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_upgradable_lock</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">non_recursive_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">recursive_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">reentrancy_tag</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">is_recursive_lock</span><span class="special">;</span>
+
+    <span class="keyword">struct</span> <span class="identifier">hasnt_timed_interface_tag</span><span class="special">;</span>
+    <span class="keyword">struct</span> <span class="identifier">has_timed_interface_tag</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">timed_interface_tag</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">has_timed_interface</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">best_condition</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">best_condition_any</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">scoped_lock_type</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">unique_lock_type</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">shared_lock_type</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">upgrade_lock_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lock_error_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">move_object_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">defer_lock_type</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">adopt_lock_type</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">try_to_lock_type</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">default_lifetime</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">=</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Cathegory</span><span class="special">=</span><span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Reentrancy</span><span class="special">=</span><span class="identifier">non_recursive_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">TimedInterface</span><span class="special">=</span><span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Lifetime</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;,</span>
+        <span class="keyword">typename</span> <span class="identifier">Naming</span><span class="special">=</span><span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Base</span><span class="special">=</span><span class="keyword">void</span>
+    <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lock_traits_base</span><span class="special">;</span>
+
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.template_class__has_timed_interface_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.template_class__has_timed_interface_" title="Template
+          Class has_timed_interface">Template
+          Class <code class="computeroutput"><span class="identifier">has_timed_interface</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">has_timed_interface</span>
+    <span class="special">:</span> <span class="identifier">is_same_or_is_base_and_derived</span><span class="special">&lt;</span>
+        <span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">timed_interface_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>
+    <span class="special">&gt;</span>
+<span class="special">{};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__is_exclusive_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_exclusive_" title="Class
+          is_exclusive">Class
+          <code class="computeroutput"><span class="identifier">is_exclusive</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__is_shared_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_shared_" title="Class
+          is_shared">Class
+          <code class="computeroutput"><span class="identifier">is_shared</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__is_recursive_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_recursive_" title="Class
+          is_recursive">Class
+          <code class="computeroutput"><span class="identifier">is_recursive</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__is_mono_threaded_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_mono_threaded_" title="Class
+          is_mono_threaded">Class
+          <code class="computeroutput"><span class="identifier">is_mono_threaded</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_threaded_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_threaded_" title="Class
+          is_multi_threaded">Class
+          <code class="computeroutput"><span class="identifier">is_multi_threaded</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_process_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__is_multi_process_" title="Class
+          is_multi_process">Class
+          <code class="computeroutput"><span class="identifier">is_multi_process</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__mutex_type_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__mutex_type_" title="Class
+          mutex_type">Class
+          <code class="computeroutput"><span class="identifier">mutex_type</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__scoped_lock_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__scoped_lock_" title="Class
+          scoped_lock">Class
+          <code class="computeroutput"><span class="identifier">scoped_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__unique_lock_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__unique_lock_" title="Class
+          unique_lock">Class
+          <code class="computeroutput"><span class="identifier">unique_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__shared_lock_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__shared_lock_" title="Class
+          shared_lock">Class
+          <code class="computeroutput"><span class="identifier">shared_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__upgrade_lock_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__upgrade_lock_" title="Class
+          upgrade_lock">Class
+          <code class="computeroutput"><span class="identifier">upgrade_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error_" title="Class
+          lock_error">Class
+          <code class="computeroutput"><span class="identifier">lock_error</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__moved_object_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__moved_object_" title="Class
+          moved_object">Class
+          <code class="computeroutput"><span class="identifier">moved_object</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error2_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error2_" title="Class
+          lock_error2">Class
+          <code class="computeroutput"><span class="identifier">lock_error2</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error3_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error3_" title="Class
+          lock_error3">Class
+          <code class="computeroutput"><span class="identifier">lock_error3</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error4_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_error4_" title="Class
+          lock_error4">Class
+          <code class="computeroutput"><span class="identifier">lock_error4</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span> <span class="bold"><strong>Description</strong></span>
+          </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_traits_"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_traits_hpp.class__lock_traits_" title="Class
+          lock_traits">Class
+          <code class="computeroutput"><span class="identifier">lock_traits</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lock_traits</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span>            <span class="identifier">mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span>            <span class="identifier">scoped_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span>            <span class="identifier">unique_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span>            <span class="identifier">shared_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span>            <span class="identifier">upgrade_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span>               <span class="identifier">lock_error</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unspecified</span>         <span class="identifier">moved_object</span><span class="special">;</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">unspecified</span>     <span class="identifier">defer_lock</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">unspecified</span>     <span class="identifier">adopt_lock</span><span class="special">();</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">unspecified</span>     <span class="identifier">try_to_lock</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+<p>
+            <span class="bold"><strong>Description</strong></span> Lock Traits characterise
+            lockable types.
+          </p>
+<p>
+            <span class="bold"><strong><code class="computeroutput"><span class="identifier">nested_strict_locker</span></code>
+            public member types</strong></span>
+          </p>
+<div class="orderedlist"><ol type="1"><li><code class="computeroutput"><span class="special">;</span></code></li></ol></div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockables.lockable_concept_hpp"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp" title="
+        Header &lt;boost/synchro/lockable_concepts.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lockable_concepts</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__lockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">LockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__timedlockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">TimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__sharelockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">ShareLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__upgradelockableconcept___">Template
+          Class <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<p>
+          Lockable concepts.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">LockableConcept</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">TimedLockableConcept</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">ShareLockableConcept</span><span class="special">;</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">UpgradeLockableConcept</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_concept_hpp.template_class__lockableconcept___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__lockableconcept___" title="Template
+          Class LockableConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">LockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            The boost::mutex and boost:interprocess mutex family classes are a non-polymorphic
+            classes that encapsulates a system primitive and portion of C API. Clearly,
+            many of the synchronisation primitives support common operations, and
+            hence a Concept. The ExclusiveLockable class can be used with the Boost.ConceptCheck
+            in templates that work with a exclusive synchronisation.
+          </p>
+<p>
+            LockableConcept object supports the basic features required to delimit
+            a critical region. Supports the basic lock, unlock and try_lock functions
+            and defines the lock traits
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">LockableConcept</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">category_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">category</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">timed_interface_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">timed_interface</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">reentrancy_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">reentrancy</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">scope_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">scope</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lifetime_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">lifetime</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">naming_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span>  <span class="identifier">naming</span><span class="special">;</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">LockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">unlock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_concept_hpp.template_class__timedlockableconcept___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__timedlockableconcept___" title="Template
+          Class TimedLockableConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">TimedLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            TimedLockableConcept object extends ExclusiveLockConcept with the timed_lock
+            function
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">TimedLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">TimedLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_concept_hpp.template_class__sharelockableconcept___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__sharelockableconcept___" title="Template
+          Class ShareLockableConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">ShareLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            ShareLockableConcept object extends ExclusiveTimedLockConcept with the
+            lock_shared, timed_lock_shared, try_lock_shared and unlock_shared functions
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">ShareLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">TimedLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">ShareLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock_shared</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock_shared_until</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock_shared_for</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock_shared</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">l</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">seconds</span><span class="special">(</span><span class="number">1</span><span class="special">));</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">unlock_shared</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_concept_hpp.template_class__upgradelockableconcept___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_concept_hpp.template_class__upgradelockableconcept___" title="Template
+          Class UpgradeLockableConcept&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">UpgradeLockableConcept</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            UpgradeLockableConcept object extends SharableLockableConcept with the
+            lock_upgrade, timed_lock_upgrade, unlock_upgrade_and_lock, unlock_and_lock_shared
+            and unlock_upgrade_and_lock_shared functions.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">UpgradeLockableConcept</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">ShareLockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+
+    <span class="identifier">BOOST_CONCEPT_USAGE</span><span class="special">(</span><span class="identifier">UpgradeLockableConcept</span><span class="special">)</span> <span class="special">{</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">lock_upgrade</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="comment">//lockable::lock_upgrade_until(l, t);
+</span>        <span class="comment">//lockable::lock_upgrade_for(l, boost::chrono::seconds(1));
+</span>        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">try_lock_upgrade</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="comment">//lockable::try_lock_upgrade_until(l, t);
+</span>        <span class="comment">//lockable::try_lock_upgrade_for(l,boost::chrono::seconds(1));
+</span>        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">unlock_upgrade_and_lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">unlock_and_lock_upgrade</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">unlock_and_lock_shared</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+        <span class="identifier">lockable</span><span class="special">::</span><span class="identifier">unlock_upgrade_and_lock_shared</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+    <span class="special">}</span>
+    <span class="identifier">Lockable</span><span class="special">&amp;</span> <span class="identifier">l</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">chrono</span><span class="special">::</span><span class="identifier">system_clock</span><span class="special">::</span><span class="identifier">time_point</span> <span class="identifier">t</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockables.lock_generator_hpp"></a><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp" title="
+        Header &lt;boost/synchro/lock_generator.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lock_generator</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp.metafunction__default_lifetime___">Metafunction
+          <code class="computeroutput"><span class="identifier">default_lifetime</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp.metafunction__find_best_lock___">Metafunction
+          <code class="computeroutput"><span class="identifier">find_best_lock</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">default_lifetime</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">see_below</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="keyword">template</span><span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">=</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Category</span><span class="special">=</span><span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Reentrancy</span><span class="special">=</span><span class="identifier">non_recursive_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">TimedInterface</span><span class="special">=</span><span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="keyword">typename</span> <span class="identifier">Lifetime</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;,</span>
+        <span class="keyword">typename</span> <span class="identifier">Naming</span><span class="special">=</span><span class="identifier">anonymous_tag</span>
+    <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">find_best_lock</span><span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">see_below</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lock_generator_hpp.metafunction__default_lifetime___"></a><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp.metafunction__default_lifetime___" title="Metafunction
+          default_lifetime&lt;&gt;">Metafunction
+          <code class="computeroutput"><span class="identifier">default_lifetime</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            Metafunction that returns the default lifetime depending on the Scope.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">default_lifetime</span><span class="special">;</span>
+<span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">process_lifetime_tag</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">kernel_lifetime_tag</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Expression:</span></dt>
+<dd><p>
+                default_lifetime&lt;Scope&gt;::type
+              </p></dd>
+<dt><span class="term">Return type:</span></dt>
+<dd><p>
+                A lifetime tag.
+              </p></dd>
+<dt><span class="term">Complexity:</span></dt>
+<dd><p>
+                constant.
+              </p></dd>
+</dl>
+</div>
+<div class="table">
+<a name="id4854904"></a><p class="title"><b>Table 1.1. default_lifetime relationship</b></p>
+<table class="table" summary="default_lifetime relationship">
+<colgroup>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">Scope</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;::</span><span class="identifier">type</span></code></strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_threaded_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">process_lifetime_tag</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_process_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">kernel_lifetime_tag</span></code>
+                </p>
+                </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lock_generator_hpp.metafunction__find_best_lock___"></a><a href="lockables.html#boost_synchro.reference.lockables.lock_generator_hpp.metafunction__find_best_lock___" title="Metafunction
+          find_best_lock&lt;&gt;">Metafunction
+          <code class="computeroutput"><span class="identifier">find_best_lock</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">Scope</span><span class="special">=</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Category</span><span class="special">=</span><span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Reentrancy</span><span class="special">=</span><span class="identifier">non_recursive_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">TimedInterface</span><span class="special">=</span><span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+    <span class="keyword">typename</span> <span class="identifier">Lifetime</span><span class="special">=</span><span class="keyword">typename</span> <span class="identifier">default_lifetime</span><span class="special">&lt;</span><span class="identifier">Scope</span><span class="special">&gt;,</span>
+    <span class="keyword">typename</span> <span class="identifier">Naming</span><span class="special">=</span><span class="identifier">anonymous_tag</span>
+<span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">find_best_lock</span><span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">see_below</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<div class="variablelist">
+<p class="title"><b></b></p>
+<dl>
+<dt><span class="term">Expression:</span></dt>
+<dd><p>
+                find_best_lock&lt;...&gt;::type
+              </p></dd>
+<dt><span class="term">Return type:</span></dt>
+<dd><p>
+                A model of <code class="computeroutput"><span class="identifier">Lockable</span></code>.
+              </p></dd>
+<dt><span class="term">Complexity:</span></dt>
+<dd><p>
+                constant.
+              </p></dd>
+</dl>
+</div>
+<p>
+            The library defines already the following matchings:
+          </p>
+<div class="table">
+<a name="id4855382"></a><p class="title"><b>Table 1.2. find_best_lock relationship</b></p>
+<table class="table" summary="find_best_lock relationship">
+<colgroup>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+<col>
+</colgroup>
+<thead><tr>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">Scope</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">Category</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">Reentrancy</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">TimedInterface</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">Lifetime</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">Naming</span></code></strong></span>
+                </p>
+                </th>
+<th>
+                <p>
+                  <span class="bold"><strong><code class="computeroutput"><span class="identifier">find_best_lock</span><span class="special">&lt;...&gt;::</span><span class="identifier">type</span></code></strong></span>
+                </p>
+                </th>
+</tr></thead>
+<tbody>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_threaded_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">exclusive_lock_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">non_recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">hasnt_timed_interface_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">process_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">thread_mutex</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_threaded_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">exclusive_lock_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">hasnt_timed_interface_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">process_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">thread_recursive_mutex</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_threaded_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">exclusive_lock_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">non_recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">has_timed_interface_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">process_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">thread_timed_mutex</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_threaded_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">non_recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">process_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">thread_shared_mutex</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_process_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">exclusive_lock_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">non_recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">kernel_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_mutex</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_process_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">exclusive_lock_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">kernel_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_recursive_mutex</span></code>
+                </p>
+                </td>
+</tr>
+<tr>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">multi_process_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">non_recursive_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="special">*</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">process_lifetime_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">anonymous_tag</span></code>
+                </p>
+                </td>
+<td>
+                <p>
+                  <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_upgradable_mutex</span></code>
+                </p>
+                </td>
+</tr>
+</tbody>
+</table>
+</div>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.lockables.lockable_adapter_hpp"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp" title="
+        Header &lt;boost/synchro/lockable_adapter.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">lockable_adapter</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__exclusive_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">exclusive_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__timed_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">timed_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__shared_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">shared_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__upgrade_lockable_adapter___">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">exclusive_lockable_adapter</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimedLock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">timed_lockable_adapter</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">SharableLock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">shared_lockable_adapter</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">UpgradableLock</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">upgrade_lockable_adapter</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span>
+        <span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> 
+        <span class="keyword">typename</span> <span class="identifier">category</span><span class="special">,</span> 
+        <span class="keyword">typename</span> <span class="identifier">timed_interface</span>
+    <span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">lockable_adapter</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__exclusive_lockable_adapter___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__exclusive_lockable_adapter___" title="Template
+          Class exclusive_lockable_adapter&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">exclusive_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">exclusive_lockable_adapter</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">exclusive_lockable_adapter</span><span class="special">)</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">exclusive_lockable_adapter</span><span class="special">)</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">scope_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">scope</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">category_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">category</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">reentrancy_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">reentrancy</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">timed_interface_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">timed_interface</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">lifetime_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">lifetime</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">naming_tag</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">naming</span><span class="special">;</span>
+
+    <span class="identifier">exclusive_lockable_adapter</span><span class="special">()</span> <span class="special">{}</span>
+    <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__timed_lockable_adapter___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__timed_lockable_adapter___" title="Template
+          Class timed_lockable_adapter&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">timed_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimedLock</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">timed_lockable_adapter</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">exclusive_lockable_adapter</span><span class="special">&lt;</span><span class="identifier">TimedLock</span><span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">timed_lockable_adapter</span><span class="special">()</span> <span class="special">{}</span>
+
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+    
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__shared_lockable_adapter___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__shared_lockable_adapter___" title="Template
+          Class shared_lockable_adapter&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">shared_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">SharableLock</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">shared_lockable_adapter</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">timed_lockable_adapter</span><span class="special">&lt;</span><span class="identifier">SharableLock</span><span class="special">&gt;</span>     <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">shared_lockable_adapter</span><span class="special">()</span> <span class="special">{}</span>
+    <span class="keyword">void</span> <span class="identifier">lock_shared</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock_shared</span><span class="special">();</span>
+
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>   
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+    
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>   
+    <span class="keyword">void</span> <span class="identifier">lock_shared_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">lock_shared_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">t</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__upgrade_lockable_adapter___"></a><a href="lockables.html#boost_synchro.reference.lockables.lockable_adapter_hpp.template_class__upgrade_lockable_adapter___" title="Template
+          Class upgrade_lockable_adapter&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_lockable_adapter</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">UpgradableLock</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">upgrade_lockable_adapter</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">shared_lockable_adapter</span><span class="special">&lt;</span><span class="identifier">UpgradableLock</span><span class="special">&gt;{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">upgrade_lockable_adapter</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">lock_upgrade</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_upgrade</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock_upgrade</span><span class="special">();</span>
+
+    <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock_and_lock_upgrade</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock_and_lock_shared</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock_shared</span><span class="special">();</span>
+    
+    <span class="keyword">bool</span> <span class="identifier">try_lock_upgrade_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span><span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>   
+    <span class="keyword">bool</span> <span class="identifier">try_lock_upgrade_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span><span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">lock_upgrade_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span><span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>   
+    <span class="keyword">void</span> <span class="identifier">lock_upgrade_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span><span class="identifier">t</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../reference.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="generic_free_functions_on_lockable.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

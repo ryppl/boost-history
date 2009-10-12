@@ -1,0 +1,283 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Polymorphic
+      Locks</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="multi_process.html" title="Multi-process">
+<link rel="next" href="other.html" title="Other">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="multi_process.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="other.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.polymorphic_locks"></a><a href="polymorphic_locks.html" title="Polymorphic
+      Locks">Polymorphic
+      Locks</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">poly</span><span class="special">/</span><span class="identifier">lock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__exclusive_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">exclusive_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__timed_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">timed_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__sharable_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">sharable_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__upgradable_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">upgradable_lock</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">poly</span><span class="special">/</span><span class="identifier">lock_adpater</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__exclusive_lock_adapter_">Template
+          Class <code class="computeroutput"><span class="identifier">exclusive_lock_adapter</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__timed_lock_adapter_">Template
+          Class <code class="computeroutput"><span class="identifier">timed_lock_adapter</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__sharable_lock_adapter_">Template
+          Class <code class="computeroutput"><span class="identifier">sharable_lock_adapter</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__upgradable_lock_">Template
+          Class <code class="computeroutput"><span class="identifier">upgradable_lock</span></code></a></span></dt>
+</dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_hpp"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp" title="
+        Header &lt;boost/synchro/poly/lock.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">poly</span><span class="special">/</span><span class="identifier">lock</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__exclusive_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">exclusive_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__timed_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">timed_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__sharable_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">sharable_lock</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__upgradable_lock_">Abstract
+          Class <code class="computeroutput"><span class="identifier">upgradable_lock</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">namespace</span> <span class="identifier">poly</span> <span class="special">{</span>
+        <span class="keyword">struct</span> <span class="identifier">exclusive_lock</span><span class="special">;</span>
+        <span class="keyword">struct</span> <span class="identifier">timed_lock</span><span class="special">;</span>
+        <span class="keyword">struct</span> <span class="identifier">sharable_lock</span><span class="special">;</span>
+        <span class="keyword">struct</span> <span class="identifier">upgradable_lock</span><span class="special">;</span>
+    <span class="special">}</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__exclusive_lock_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__exclusive_lock_" title="Abstract
+          Class exclusive_lock">Abstract
+          Class <code class="computeroutput"><span class="identifier">exclusive_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            Polymorphic exclusive lock interface.
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">exclusive_lock</span> <span class="special">{</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">exclusive_lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__timed_lock_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__timed_lock_" title="Abstract
+          Class timed_lock">Abstract
+          Class <code class="computeroutput"><span class="identifier">timed_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            Polymorphic timed lock interface.
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">timed_lock</span> <span class="special">:</span> <span class="identifier">exclusive_lock</span> <span class="special">{</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">timed_lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span>  <span class="keyword">const</span><span class="special">&amp;</span>  <span class="identifier">abs_time</span><span class="special">)=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">DurationType</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">DurationType</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">get_system_time</span><span class="special">()+</span><span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__sharable_lock_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__sharable_lock_" title="Abstract
+          Class sharable_lock">Abstract
+          Class <code class="computeroutput"><span class="identifier">sharable_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            Polymorphic sharable lock interface.
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">sharable_lock</span> <span class="special">:</span> <span class="identifier">timed_lock</span> <span class="special">{</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">sharable_lock</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">lock_shared</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">try_lock_shared</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span>  <span class="keyword">const</span><span class="special">&amp;</span>  <span class="identifier">abs_time</span><span class="special">)=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_shared</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">DurationType</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">DurationType</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">)</span>
+    <span class="special">{</span>
+        <span class="keyword">return</span> <span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">get_system_time</span><span class="special">()+</span><span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="special">}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__upgradable_lock_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_hpp.abstract_class__upgradable_lock_" title="Abstract
+          Class upgradable_lock">Abstract
+          Class <code class="computeroutput"><span class="identifier">upgradable_lock</span></code></a>
+</h5></div></div></div>
+<p>
+            Polymorphic upgradable lock interface.
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">upgradable_lock</span> <span class="special">:</span> <span class="identifier">sharable_lock</span> <span class="special">{</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">upgradable_lock</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">lock_upgrade</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_upgrade</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_and_lock_upgrade</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_and_lock_shared</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock_shared</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp" title="
+        Header &lt;boost/synchro/poly/lock_adpater.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">poly</span><span class="special">/</span><span class="identifier">lock_adpater</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__exclusive_lock_adapter_">Template
+          Class <code class="computeroutput"><span class="identifier">exclusive_lock_adapter</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__timed_lock_adapter_">Template
+          Class <code class="computeroutput"><span class="identifier">timed_lock_adapter</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__sharable_lock_adapter_">Template
+          Class <code class="computeroutput"><span class="identifier">sharable_lock_adapter</span></code></a></span></dt>
+<dt><span class="section"><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__upgradable_lock_">Template
+          Class <code class="computeroutput"><span class="identifier">upgradable_lock</span></code></a></span></dt>
+</dl></div>
+<p>
+          namespace boost { namespace synchro { namespace poly { template &lt;typename
+          Lockable&gt; class exclusive_lock_adapter; template &lt;typename TimeLockable&gt;
+          class timed_lock_adapter; template &lt;typename ShareLockable&gt; class
+          sharable_lock_adapter; template &lt;typename UpgradaLockable&gt; class
+          upgradable_lock_adapter; } }}
+        </p>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__exclusive_lock_adapter_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__exclusive_lock_adapter_" title="Template
+          Class exclusive_lock_adapter">Template
+          Class <code class="computeroutput"><span class="identifier">exclusive_lock_adapter</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">exclusive_lock_adapter</span>
+    <span class="special">:</span> <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="identifier">exclusive_lock</span>
+<span class="special">{</span>
+    <span class="identifier">exclusive_lock_adapter</span><span class="special">();</span>
+    <span class="special">~</span><span class="identifier">exclusive_lock_adapter</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">();</span>
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="identifier">Lockable</span> <span class="identifier">lock_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__timed_lock_adapter_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__timed_lock_adapter_" title="Template
+          Class timed_lock_adapter">Template
+          Class <code class="computeroutput"><span class="identifier">timed_lock_adapter</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeLockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">timed_lock_adapter</span>
+        <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">exclusive_lock_adapter</span><span class="special">&lt;</span><span class="identifier">TimeLockable</span><span class="special">&gt;</span>
+        <span class="special">,</span> <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="identifier">timed_lock</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="special">~</span><span class="identifier">timed_lock_adapter</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span>  <span class="keyword">const</span><span class="special">&amp;</span>  <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">DurationType</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">DurationType</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__sharable_lock_adapter_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__sharable_lock_adapter_" title="Template
+          Class sharable_lock_adapter">Template
+          Class <code class="computeroutput"><span class="identifier">sharable_lock_adapter</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">ShareLockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">sharable_lock_adapter</span>
+        <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">exclusive_lock_adapter</span><span class="special">&lt;</span><span class="identifier">ShareLockable</span><span class="special">&gt;</span>
+        <span class="special">,</span> <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="identifier">sharable_lock</span>    <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="special">~</span><span class="identifier">sharable_lock_adapter</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">lock_shared</span><span class="special">();</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">unlock_shared</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__upgradable_lock_"></a><a href="polymorphic_locks.html#boost_synchro.reference.polymorphic_locks.poly_lock_adpater_hpp.template_class__upgradable_lock_" title="Template
+          Class upgradable_lock">Template
+          Class <code class="computeroutput"><span class="identifier">upgradable_lock</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">UpgradaLockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">upgradable_lock_adapter</span>
+    <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">sharable_lock_adapter</span><span class="special">&lt;</span><span class="identifier">UpgradaLockable</span><span class="special">&gt;</span>
+    <span class="special">,</span> <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="identifier">upgradable_lock</span>
+<span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">upgradable_lock_adapter</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">lock_upgrade</span><span class="special">();</span>
+
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_upgrade</span><span class="special">();</span>
+
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_and_lock_upgrade</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_and_lock_shared</span><span class="special">();</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock_shared</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="multi_process.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="other.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

@@ -1,0 +1,196 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Single-threaded</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="lockers.html" title="Lockers">
+<link rel="next" href="multi_threaded.html" title="Multi-threaded">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="lockers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="multi_threaded.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.single_threaded"></a><a href="single_threaded.html" title="Single-threaded">Single-threaded</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_mutex_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">null_mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_condition_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">null_condition</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_synchronization_family_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">null_synchronization_family</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_synchronization_family_hpp.class__null_synchronization_policy_">Class
+          <code class="computeroutput"><span class="identifier">null_synchronization_policy</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.single_threaded.null_mutex_hpp"></a><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_mutex_hpp" title="
+        Header &lt;boost/synchro/null_mutex.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">null_mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">null_condition</span><span class="special">;</span>
+    <span class="keyword">class</span> <span class="identifier">null_mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lock_traits_base</span><span class="special">&lt;</span>
+        <span class="identifier">mono_threaded_tag</span><span class="special">,</span>
+        <span class="identifier">upgradable_lock_tag</span><span class="special">,</span>
+        <span class="identifier">recursive_tag</span><span class="special">,</span>
+        <span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="identifier">kernel_lifetime_tag</span><span class="special">,</span>
+        <span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="keyword">void</span>
+    <span class="special">&gt;</span>
+    <span class="special">{</span>
+       <span class="identifier">null_mutex</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">null_mutex</span><span class="special">&amp;);</span>
+       <span class="identifier">null_mutex</span> <span class="special">&amp;</span><span class="keyword">operator</span><span class="special">=</span> <span class="special">(</span><span class="keyword">const</span> <span class="identifier">null_mutex</span><span class="special">&amp;);</span>
+    <span class="keyword">public</span><span class="special">:</span>
+        <span class="keyword">typedef</span> <span class="identifier">null_condition</span> <span class="identifier">condition_type</span><span class="special">;</span>
+        <span class="keyword">typedef</span> <span class="identifier">null_condition</span> <span class="identifier">condition_any_type</span><span class="special">;</span>
+
+       <span class="identifier">null_mutex</span><span class="special">();</span>
+       <span class="special">~</span><span class="identifier">null_mutex</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">();</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">();</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="special">&amp;);</span>
+       <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+       <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">lock_shared</span><span class="special">(){};</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock_shared</span><span class="special">();</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="special">&amp;);</span>
+       <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">DurationType</span><span class="special">&gt;</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">DurationType</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">)</span>
+
+       <span class="keyword">void</span> <span class="identifier">unlock_shared</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">lock_upgrade</span><span class="special">();</span>
+       <span class="keyword">bool</span> <span class="identifier">try_lock_upgrade</span><span class="special">();</span>
+       <span class="keyword">bool</span> <span class="identifier">timed_lock_upgrade</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="keyword">const</span> <span class="special">&amp;);</span>
+
+        <span class="keyword">void</span> <span class="identifier">unlock_upgrade</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">unlock_and_lock_upgrade</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">unlock_and_lock_shared</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock_shared</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">unlock_upgrade_and_lock</span><span class="special">();</span>
+
+       <span class="keyword">bool</span> <span class="identifier">try_unlock_upgrade_and_lock</span><span class="special">();</span>
+
+       <span class="keyword">bool</span> <span class="identifier">timed_unlock_upgrade_and_lock</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="special">&amp;);</span>
+
+       <span class="keyword">bool</span> <span class="identifier">try_unlock_share_and_lock</span><span class="special">();</span>
+
+       <span class="keyword">bool</span> <span class="identifier">try_unlock_share_and_lock_upgrade</span><span class="special">();</span>
+    <span class="special">};</span>
+
+<span class="special">}}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.single_threaded.null_condition_hpp"></a><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_condition_hpp" title="
+        Header &lt;boost/synchro/null_condition.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">null_condition</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+
+    <span class="keyword">class</span> <span class="identifier">null_condition</span> <span class="special">{</span>
+    <span class="keyword">private</span><span class="special">:</span>
+       <span class="identifier">null_condition</span><span class="special">(</span><span class="keyword">const</span> <span class="identifier">null_condition</span> <span class="special">&amp;);</span>
+       <span class="identifier">null_condition</span> <span class="special">&amp;</span><span class="keyword">operator</span><span class="special">=(</span><span class="keyword">const</span> <span class="identifier">null_condition</span> <span class="special">&amp;);</span>
+    <span class="keyword">public</span><span class="special">:</span>
+       <span class="identifier">null_condition</span><span class="special">();</span>
+       <span class="special">~</span><span class="identifier">null_condition</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">notify_one</span><span class="special">();</span>
+
+       <span class="keyword">void</span> <span class="identifier">notify_all</span><span class="special">();</span>
+
+       <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">L</span><span class="special">&gt;</span>
+       <span class="keyword">void</span> <span class="identifier">wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+
+       <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">L</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Pr</span><span class="special">&gt;</span>
+       <span class="keyword">void</span> <span class="identifier">wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">Pr</span> <span class="identifier">pred</span><span class="special">);</span>
+
+       <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">L</span><span class="special">&gt;</span>
+       <span class="keyword">bool</span> <span class="identifier">timed_wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="special">&amp;</span><span class="identifier">abs_time</span><span class="special">);</span>
+
+       <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">L</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Pr</span><span class="special">&gt;</span>
+       <span class="keyword">bool</span> <span class="identifier">timed_wait</span><span class="special">(</span><span class="identifier">L</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span> <span class="special">&amp;</span><span class="identifier">abs_time</span><span class="special">,</span> <span class="identifier">Pr</span> <span class="identifier">pred</span><span class="special">);</span>
+
+    <span class="special">};</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">best_condition</span><span class="special">&lt;</span><span class="identifier">null_mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">typedef</span> <span class="identifier">null_condition</span> <span class="identifier">type</span><span class="special">;</span>
+    <span class="special">};</span>
+<span class="special">}}</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.single_threaded.null_synchronization_family_hpp"></a><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_synchronization_family_hpp" title="
+        Header &lt;boost/synchro/null_synchronization_family.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">null_synchronization_family</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_synchronization_family_hpp.class__null_synchronization_policy_">Class
+          <code class="computeroutput"><span class="identifier">null_synchronization_policy</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">null_synchronization_family</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.single_threaded.null_synchronization_family_hpp.class__null_synchronization_policy_"></a><a href="single_threaded.html#boost_synchro.reference.single_threaded.null_synchronization_family_hpp.class__null_synchronization_policy_" title="Class
+          null_synchronization_policy">Class
+          <code class="computeroutput"><span class="identifier">null_synchronization_policy</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">null_synchronization_family</span>
+<span class="special">{</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_mutex</span>  <span class="identifier">mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_mutex</span>  <span class="identifier">recursive_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_mutex</span>    <span class="identifier">timed_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_mutex</span>    <span class="identifier">recursive_timed_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_mutex</span>    <span class="identifier">shared_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_condition</span>   <span class="identifier">condition_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">null_condition</span>   <span class="identifier">condition_any_type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="lockers.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="multi_threaded.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

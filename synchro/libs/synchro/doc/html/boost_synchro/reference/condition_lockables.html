@@ -1,0 +1,205 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Condition
+      Lockables</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="generic_free_functions_on_multiple_lockables.html" title="Generic
+      Free Functions on Multiple Lockables">
+<link rel="next" href="lockers.html" title="Lockers">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generic_free_functions_on_multiple_lockables.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="lockers.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.condition_lockables"></a><a href="condition_lockables.html" title="Condition
+      Lockables">Condition
+      Lockables</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_safe_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">condition_safe</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_safe_hpp.template_class__condition_safe_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_safe</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_backdoor_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">condition_backdoor</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_backdoor_hpp.template_class__condition_backdoor_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_backdoor</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_lockable_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">condition_lockable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_lockable_hpp.template_class__condition_lockable_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_lockable</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.condition_lockables.condition_safe_hpp"></a><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_safe_hpp" title="
+        Header &lt;boost/synchro/locker/condition_safe.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">locker</span><span class="special">/</span><span class="identifier">condition_safe</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_safe_hpp.template_class__condition_safe_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_safe</span></code></a></span></dt></dl></div>
+<p>
+          Wraps a condition variable in order make public only the safe functions,
+          and let the others accesible via a backdoor.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span> <span class="keyword">class</span> <span class="identifier">condition_safe</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.condition_lockables.condition_safe_hpp.template_class__condition_safe_"></a><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_safe_hpp.template_class__condition_safe_" title="Template
+          Class condition_safe">Template
+          Class <code class="computeroutput"><span class="identifier">condition_safe</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_safe</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+ <span class="keyword">typedef</span> <span class="identifier">Condition</span> <span class="identifier">condition</span><span class="special">;</span>
+ <span class="keyword">typedef</span> <span class="identifier">condition_backdoor</span><span class="special">&lt;</span><span class="identifier">Condition</span><span class="special">&gt;</span> <span class="identifier">backdoor</span><span class="special">;</span>
+    <span class="keyword">void</span> <span class="identifier">notify_one</span><span class="special">();</span>
+    <span class="keyword">void</span> <span class="identifier">notify_all</span><span class="special">();</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.condition_lockables.condition_backdoor_hpp"></a><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_backdoor_hpp" title="
+        Header &lt;boost/synchro/condition_backdoor.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">condition_backdoor</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_backdoor_hpp.template_class__condition_backdoor_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_backdoor</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span> <span class="keyword">struct</span> <span class="identifier">condition_backdoor</span><span class="special">;</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.condition_lockables.condition_backdoor_hpp.template_class__condition_backdoor_"></a><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_backdoor_hpp.template_class__condition_backdoor_" title="Template
+          Class condition_backdoor">Template
+          Class <code class="computeroutput"><span class="identifier">condition_backdoor</span></code></a>
+</h5></div></div></div>
+<p>
+            Condition Backdoor template. Used by safe lockers as condition_locker.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">condition_backdoor</span> <span class="special">{</span>
+ <span class="identifier">condition_backdoor</span><span class="special">(</span><span class="identifier">condition_safe</span><span class="special">&lt;</span><span class="identifier">Condition</span><span class="special">&gt;&amp;</span><span class="identifier">cnd</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">wait</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_until</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span>  <span class="keyword">const</span><span class="special">&amp;</span>  <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_for</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">wait_when</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">predicate_type</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_when_until</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">predicate_type</span> <span class="identifier">pred</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">predicate_type</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">wait_when_for</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">,</span> <span class="identifier">predicate_type</span> <span class="identifier">pred</span><span class="special">,</span> <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">notify_one</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Locker</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">notify_all</span><span class="special">(</span><span class="identifier">Locker</span><span class="special">&amp;</span> <span class="identifier">lock</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.condition_lockables.condition_lockable_hpp"></a><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_lockable_hpp" title="
+        Header &lt;boost/synchro/condition_lockable.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">condition_lockable</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_lockable_hpp.template_class__condition_lockable_">Template
+          Class <code class="computeroutput"><span class="identifier">condition_lockable</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">Condition</span><span class="special">&gt;</span>
+    <span class="keyword">class</span> <span class="identifier">condition_lockable</span>
+    <span class="keyword">typedef</span> <span class="identifier">condition_lockable</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;</span> <span class="identifier">thread_condition_mutex</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">condition_lockable</span><span class="special">&lt;</span><span class="identifier">interprocess_mutex</span><span class="special">&gt;</span> <span class="identifier">interprocess_condition_mutex</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.condition_lockables.condition_lockable_hpp.template_class__condition_lockable_"></a><a href="condition_lockables.html#boost_synchro.reference.condition_lockables.condition_lockable_hpp.template_class__condition_lockable_" title="Template
+          Class condition_lockable">Template
+          Class <code class="computeroutput"><span class="identifier">condition_lockable</span></code></a>
+</h5></div></div></div>
+<p>
+            Allows a condition variable to be associated with a Lockable. Treating
+            condition locking as a property of Lockable rather than viceversa has
+            the benefit of making clear how something is locked and accessed, as
+            it were emphasising it in the first person.
+          </p>
+<p>
+            Requiring the user of a condition variable to implement a while loop
+            to verify a condition's predicate is potentially error prone. It can
+            be better encapsulated by passing the predicate as a function object
+            to the locking function.
+          </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span>
+    <span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">=</span><span class="identifier">thread_mutex</span><span class="special">,</span>
+    <span class="keyword">class</span> <span class="identifier">Condition</span><span class="special">=</span><span class="identifier">condition_safe</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">best_condition</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">&gt;</span>
+<span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">condition_lockable</span> <span class="special">{</span>
+    <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">Lockable</span> <span class="special">{</span>
+    <span class="identifier">BOOST_CONCEPT_ASSERT</span><span class="special">((</span><span class="identifier">LockableConcept</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;));</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">Condition</span> <span class="identifier">condition</span><span class="special">;</span>
+
+    <span class="identifier">condition_lockable</span><span class="special">();</span>
+    <span class="special">~</span><span class="identifier">condition_lockable</span><span class="special">();</span>
+  
+    <span class="keyword">void</span> <span class="identifier">relock_on</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span> <span class="identifier">cond</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">relock_on_until</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span> <span class="identifier">cond</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">relock_on_for</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span> <span class="identifier">cond</span><span class="special">,</span> <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">relock_when</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">relock_when_until</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">,</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Predicate</span><span class="special">,</span> <span class="keyword">typename</span> <span class="identifier">duration_type</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">relock_when_for</span><span class="special">(</span><span class="identifier">condition</span> <span class="special">&amp;</span><span class="identifier">cond</span><span class="special">,</span> <span class="identifier">Predicate</span> <span class="identifier">pred</span><span class="special">,</span>
+            <span class="identifier">duration_type</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+<span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span><span class="special">;</span>
+    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span><span class="special">;</span>
+    <span class="keyword">friend</span> <span class="keyword">class</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">condition</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="generic_free_functions_on_multiple_lockables.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="lockers.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

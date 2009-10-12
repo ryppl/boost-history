@@ -1,0 +1,901 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Introduction</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../overview.html" title=" Overview">
+<link rel="prev" href="../overview.html" title=" Overview">
+<link rel="next" href="../users_guide.html" title=" Users'Guide">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.overview.intro"></a><a href="intro.html" title=" Introduction"> Introduction</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.uniform"> Using Thread,
+        Interprocess and Null synchronization mechanisms uniformly</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts">Mapping
+        the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.condition_lockable">Condition
+        lockable</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.exception_based_timed_locks">Exception-based
+        Timed Locks</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.lockers"> Lockers</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.poly"> Polymorphic lockable</a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.language_like_synchronized_block_">Language-like
+        Synchronized Block </a></span></dt>
+<dt><span class="section"><a href="intro.html#boost_synchro.overview.intro.monitors"> Monitors</a></span></dt>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.uniform"></a><a href="intro.html#boost_synchro.overview.intro.uniform" title=" Using Thread,
+        Interprocess and Null synchronization mechanisms uniformly"> Using Thread,
+        Interprocess and Null synchronization mechanisms uniformly</a>
+</h4></div></div></div>
+<p>
+          One of the problems when doing multi threaded application with Boost.Thread
+          and Boost.Interprocess is that the synchronization mechanism of these two
+          libraries even if they are very close since the release 1.35, there are
+          some minor differences that make quite difficult to design a class that
+          can work independently with synchronization mechanisms of both libraries.
+        </p>
+<p>
+          This library proposes some classes that allows to write code that can be
+          used indistinguishably with thread or interprocess synchronization mechanisms.
+          This section is inspired on the work from <span class="bold"><strong>C++ Threading
+          - A Generic-Programming Approach</strong></span> - Kevlin Henney.
+        </p>
+<p>
+          <span class="bold"><strong>Lock substitutability</strong></span>
+        </p>
+<p>
+          The Boost (C++0x) mutexes have associated a category which form a sub-typing
+          hierarchy:
+        </p>
+<pre class="programlisting"><span class="identifier">ExclusiveLockable</span> <span class="special">&lt;-</span> <span class="identifier">SharedLockable</span> <span class="special">&lt;-</span> <span class="identifier">UpgradeLockable</span>
+</pre>
+<p>
+          </p>
+<p>
+            
+</p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">exclusive_lock_tag</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">sharable_lock_tag</span> <span class="special">:</span> <span class="identifier">exclusive_lock_tag</span> <span class="special">{};</span>
+<span class="keyword">struct</span> <span class="identifier">upgradable_lock_tag</span> <span class="special">:</span> <span class="identifier">sharable_lock_tag</span>  <span class="special">{};</span>
+</pre>
+<p>
+          </p>
+<p>
+        </p>
+<p>
+          Locking behavior can be further categorized as:
+        </p>
+<div class="itemizedlist"><ul type="disc"><li>
+            Re-entrancy: recursive or not
+          </li></ul></div>
+<pre class="programlisting"><span class="identifier">non_recursive</span> <span class="special">&lt;-</span> <span class="identifier">recursive</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            Scope: whether the lock is usable with a mono-threaded, multi-threaded
+            or multi-process context
+          </li></ul></div>
+<pre class="programlisting"><span class="identifier">mono_threaded</span> <span class="special">&lt;-</span> <span class="identifier">multi_threaded</span> <span class="special">&lt;-</span> <span class="identifier">multi_process</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            Lifetime: The lifetime of a lock could be associated to the process,
+            the kernel or the file-system
+          </li></ul></div>
+<pre class="programlisting"><span class="identifier">process_lifetime</span> <span class="special">&lt;-</span> <span class="identifier">kernel_lifetime</span> <span class="special">&lt;-</span> <span class="identifier">filesystem_lifetime</span>
+</pre>
+<div class="itemizedlist"><ul type="disc"><li>
+            Timed interface: has or not a timed interfaces
+          </li></ul></div>
+<pre class="programlisting"><span class="identifier">hasnt_timed_interface</span> <span class="special">&lt;-</span> <span class="identifier">has_timed_interface</span>
+</pre>
+<p>
+          Substitutability applies both to the degree of syntactic support and to
+          the locking semantics
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            A recursive mutex and binary semaphore are substitutable in code written
+            against a exclusive mutex
+          </li>
+<li>
+            A null mutex is substitutable for all others in a single-threaded environment
+          </li>
+</ul></div>
+<p>
+          We can see these axes of variation expressed against some Boost synchronization
+          mechanisms (from now bip stands for boost::interprocess):
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            boost::mutex: ExclusiveLock, non-recursive, has-not-timed-interface,
+            multi-threaded
+          </li>
+<li>
+            boost::shared_mutex: UpgradableLock, non-recursive, has-timed-interface,
+            multi-threaded
+          </li>
+<li>
+            bip::synchro::null_mutex: UpgradableLock, recursive, has-timed-interface,
+            mono-threaded
+          </li>
+<li>
+            bip::synchro::interprocess_recursive_mutex ExclusiveLock, recursive,
+            has-timed-interface, multi_process.
+          </li>
+</ul></div>
+<p>
+          <span class="bold"><strong>Lock traits</strong></span>
+        </p>
+<p>
+          The Boost.Synchro library contains a set of very specific traits classes,
+          some of them encapsulate a single trait for a Lockable type; for example,
+          is a lock recursive (is_recursive), is useful in a multi threaded context
+          (is_multi_threaded).
+        </p>
+<p>
+          The Boost.Synchro lock-traits classes share a unified design that mimic
+          the one of Boost.TypeTraits: each class inherits from a the type true_type
+          if the type has the specified property and inherits from false_type otherwise.
+        </p>
+<p>
+          Boost.Synchro also contains a set of classes that perform a specific transformation
+          on a type; for example, they can remove a top-level const or volatile qualifier
+          from a type. Each class that performs a transformation defines a single
+          typedef-member type that is the result of the transformation.
+        </p>
+<p>
+          <span class="bold"><strong>Finding the best lock</strong></span>
+        </p>
+<p>
+          Inverse traits can match a lockable type based on specific traits, for
+          a given family of lock types.
+        </p>
+<p>
+          It is also possible to specify characteristics to perform a reverse lookup
+          to find a primitive lock type, either by exact match or by substitutable
+          match.
+        </p>
+<p>
+          <span class="bold"><strong>Synchronization family</strong></span>
+        </p>
+<p>
+          A class that will do internal locking can be parameterized by the type
+          of synchronization family needed to achieve the desired level of concurrency
+          control. This depends of the usage scope of this class, and this can be
+          mono_threaded, multi_threaded, multi_process.
+        </p>
+<p>
+          For example the thread_synchronization_family can be used to instantiate
+          a message_queue class in a multi_threaded environment, all public methods
+          will be thread-safe, with the corresponding overhead that implies. In contrast,
+          if a null_synchronization_policy class is used to instantiate message_queue,
+          all public methods will not be thread-safe, and there will be no additional
+          overhead.
+        </p>
+<p>
+          <span class="bold"><strong>Syntactic lock traits</strong></span>
+        </p>
+<p>
+          The Boost.Synchro library also contains classes that try to remove the
+          syntactic differences between the synchronization mechanisms of the Boost.Thread
+          and Boost::Interprocess libraries. The differences identified up to now
+          are:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            The scoped locks live in a different namespace and some have different
+            names with the same semantic. IMO these should be shared.
+          </li>
+<li>
+            The exception thrown lives in a different name space and different names
+            with the same semantic.
+          </li>
+<li>
+            This exception should be common.
+          </li>
+<li>
+            The move semantics (&amp;&amp;) are expressed with a class named differently.
+            This class could be a good candidate of Boost library by itself.
+          </li>
+<li>
+            The scoped locks can be initialized with static const variables in order
+            to overload the constructor for lock adoption, lock deferral or try to
+            lock. Even if the name of these variables is the same, these variables
+            live in different namespace. It would be nice if these both libraries
+            use the same type and the same variables
+          </li>
+</ul></div>
+<p>
+          I hope that these two Boost libraries will merge their synchronization
+          mechanisms in a near future. Waiting for this merge this could serve as
+          a temporary solution.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts"></a><a href="intro.html#boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts" title="Mapping
+        the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts">Mapping
+        the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts</a>
+</h4></div></div></div>
+<p>
+          The mapping from the current mutexes and scoped guards (Boost.Thread and
+          Boost/Interprocess) to the common concepts has been done adding a indirection
+          level. Instead of requiring a given member function, the lockable concepts
+          reside in fre functions. Neither the Boost.Thread nor Boost/Interprocess
+          mutexes and locks are based on functions, but can see them as models of
+          the common lockable and loker concepts by specializing these generic free
+          functions. In order to make easier the mapping these functions call by
+          default to a member function with the equivalent signature.
+        </p>
+<p>
+          For example thread_timed_mutex is viwed as a lockable by specializing the
+          folloxing functions:
+        </p>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">partial_specialization_workaround</span> <span class="special">{</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">lock_until</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">,</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span>   <span class="special">{</span>
+        <span class="keyword">static</span> <span class="keyword">void</span> 
+        <span class="identifier">apply</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">&amp;</span> <span class="identifier">lockable</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">abs_time</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">if</span><span class="special">(!</span><span class="identifier">lockable</span><span class="special">.</span><span class="identifier">timed_lock</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;(</span><span class="identifier">abs_time</span><span class="special">)))</span> <span class="keyword">throw</span> <span class="identifier">timeout_exception</span><span class="special">();</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">lock_for</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">,</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">static</span> <span class="keyword">void</span> 
+        <span class="identifier">apply</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">&amp;</span> <span class="identifier">lockable</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">rel_time</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">if</span><span class="special">(!</span><span class="identifier">lockable</span><span class="special">.</span><span class="identifier">timed_lock</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span><span class="special">&gt;(</span><span class="identifier">rel_time</span><span class="special">)))</span> <span class="keyword">throw</span> <span class="identifier">timeout_exception</span><span class="special">();</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Clock</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Duration</span> <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">try_lock_until</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">,</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">static</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">try_lock_until</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">,</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;::</span><span class="identifier">type</span> 
+        <span class="identifier">apply</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">&amp;</span> <span class="identifier">lockable</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">time_point</span><span class="special">&lt;</span><span class="identifier">Clock</span><span class="special">,</span> <span class="identifier">Duration</span><span class="special">&gt;&amp;</span> <span class="identifier">abs_time</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">lockable</span><span class="special">.</span><span class="identifier">timed_lock</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">ptime</span><span class="special">&gt;(</span><span class="identifier">abs_time</span><span class="special">));</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">class</span> <span class="identifier">Rep</span><span class="special">,</span> <span class="keyword">class</span> <span class="identifier">Period</span> <span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">try_lock_for</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">,</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="keyword">static</span> <span class="keyword">typename</span> <span class="identifier">result_of</span><span class="special">::</span><span class="keyword">template</span> <span class="identifier">try_lock_for</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">,</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;::</span><span class="identifier">type</span> 
+        <span class="identifier">apply</span><span class="special">(</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">timed_mutex</span><span class="special">&amp;</span> <span class="identifier">lockable</span><span class="special">,</span> <span class="keyword">const</span> <span class="identifier">chrono</span><span class="special">::</span><span class="identifier">duration</span><span class="special">&lt;</span><span class="identifier">Rep</span><span class="special">,</span> <span class="identifier">Period</span><span class="special">&gt;&amp;</span> <span class="identifier">rel_time</span> <span class="special">)</span> <span class="special">{</span>
+            <span class="keyword">return</span> <span class="identifier">lockable</span><span class="special">.</span><span class="identifier">timed_lock</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">convert_to</span><span class="special">&lt;</span><span class="identifier">posix_time</span><span class="special">::</span><span class="identifier">time_duration</span><span class="special">&gt;(</span><span class="identifier">rel_time</span><span class="special">));</span>
+        <span class="special">}</span>
+    <span class="special">};</span>
+<span class="special">}</span>
+</pre>
+<p>
+          Note that only the functions for which the equivalent signature differ
+          are defined. For the others the default works as expected.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.condition_lockable"></a><a href="intro.html#boost_synchro.overview.intro.condition_lockable" title="Condition
+        lockable">Condition
+        lockable</a>
+</h4></div></div></div>
+<p>
+          Based on the idead of Kevlin Henney, the library provides condition lockable,
+          which allows a condition variable to be associated with a Lockable.
+        </p>
+<p>
+          Treating condition locking as a property of Lockable rather than viceversa
+          has the benefit of making clear how something is locked and accessed, as
+          it were emphasising it in the first person.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">product_queue</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="special">...</span>
+    <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pull</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">mtx</span><span class="special">.</span><span class="identifier">lock</span><span class="special">();</span>
+        <span class="keyword">while</span><span class="special">(</span><span class="identifier">queue</span><span class="special">.</span><span class="identifier">empty</span><span class="special">())</span>
+            <span class="identifier">guard</span><span class="special">.</span><span class="identifier">relock_on</span><span class="special">(</span><span class="identifier">not_empty</span><span class="special">);</span>
+        <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pulled</span> <span class="special">=</span> <span class="identifier">queue</span><span class="special">.</span><span class="identifier">front</span><span class="special">();</span>
+        <span class="identifier">queue</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+        <span class="identifier">mtx</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();</span>
+        <span class="keyword">return</span> <span class="identifier">pulled</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+          Requiring the user of a condition variable to implement a while loop to
+          verify a condition's predicate is potentially error prone. It can be better
+          encapsulated by passing the predicate as a function object to the locking
+          function.
+        </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">product_queue</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="special">...</span>
+    <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pull</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">mtx</span><span class="special">.</span><span class="identifier">lock_when</span><span class="special">(</span><span class="identifier">not_empty</span><span class="special">,</span> <span class="identifier">has_products</span><span class="special">(</span><span class="identifier">queue</span><span class="special">));</span>
+        <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pulled</span> <span class="special">=</span> <span class="identifier">queue</span><span class="special">.</span><span class="identifier">front</span><span class="special">();</span>
+        <span class="identifier">queue</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+        <span class="identifier">mtx</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();</span>
+        <span class="keyword">return</span> <span class="identifier">pulled</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.exception_based_timed_locks"></a><a href="intro.html#boost_synchro.overview.intro.exception_based_timed_locks" title="Exception-based
+        Timed Locks">Exception-based
+        Timed Locks</a>
+</h4></div></div></div>
+<p>
+          Based on the idead of Kevlin Henney, the library supports timeout exception
+          for all the locking functions having a time or duration parameter.
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            A lock with a timeout parameter, i.e. a time or a duration, throws a
+            <code class="computeroutput"><span class="identifier">timeout_exception</span></code> on
+            expiry
+          </li>
+<li>
+            A <code class="computeroutput"><span class="identifier">try_lock</span></code> with a timeout
+            simply returns false on expiry
+          </li>
+<li>
+            Any of the conditional locks throw a <code class="computeroutput"><span class="identifier">timeout_exception</span></code>
+            on expiry
+          </li>
+<li>
+            all the locker constructors with the first parameter a timeout.
+          </li>
+</ul></div>
+<p>
+          Use of timeouts can create more robust programs, by not blocking forever,
+          but at the same time one needs to avoid annoyingly arbitrary limits.
+        </p>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.lockers"></a><a href="intro.html#boost_synchro.overview.intro.lockers" title=" Lockers"> Lockers</a>
+</h4></div></div></div>
+<p>
+          Typically, object-oriented programs use object-level locking by associating
+          a synchronization object (mutex) with each object that is susceptible to
+          be shared between threads. Then, code that manipulates the state of the
+          object can synchronize by locking that object. Inside a synchronized section,
+          the mutex associated with the object is locked, and consequently that object's
+          fields can be accessed safely.
+        </p>
+<p>
+          In C++, this fundamental idiom is typically implemented with a helper Locker
+          object or lock guard.
+        </p>
+<p>
+          A locker is any object or function responsible for coordinating the use
+          of lockable objects.
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+            Lockers depend on lockable objects - which need not be locking primitives
+            - and not vice-versa. This avoids cycles in the dependency graph.
+          </li>
+<li>
+            Lockers are applications of lockable objects and, as such, form a potentially
+            unbounded family. Most common role of lockers is for exception safety
+            and programming convenience
+          </li>
+<li>
+            Lockers execute-around the lock-unlock pairing.
+          </li>
+</ul></div>
+<p>
+          A locker defines an execution strategy for locking and unlocking that is
+          automated by construction and destruction. It simplifies common use of
+          locking, and does so in an exception-safe fashion. As such, lockers depend
+          on the interface of lockables -e.g. lock and unlock - but lockables do
+          not depend on lockers. The relationship is strictly layered, open and extensible:
+          lockable types may be whole, externally locked objects against which existing
+          lockers can be used; new lockers can be defined that work against existing
+          lockable types.
+        </p>
+<p>
+          Substitutability between lockables and lockers does not make sense, so
+          the constructor is always explicit. Implicit copyability is also disabled.
+        </p>
+<p>
+          Boost.Thread and Boost.Interprocess defines already a good starting point
+          with these lockers:
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span></code>,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span></code>, <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">unique_lock</span></code>
+            and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">scoped_lock</span></code>
+</li>
+<li>
+<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">share_lock</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">sharable_lock</span></code>
+</li>
+<li>
+<code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_lock</span></code> and <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">upgradable_lock</span></code>.
+          </li>
+</ul></div>
+<p>
+          The problem is that even if these locker models the same model, there is
+          no a single syntax.
+        </p>
+<p>
+          The library defines some locker adapters which take care of naming differences
+          and that can be used like
+        </p>
+<pre class="programlisting"><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">scoped</span><span class="special">(</span><span class="identifier">guard</span><span class="special">);</span>
+</pre>
+<p>
+          or
+        </p>
+<pre class="programlisting"><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">interprocess_mutex</span><span class="special">&gt;</span> <span class="identifier">scoped</span><span class="special">(</span><span class="identifier">guard</span><span class="special">);</span>
+</pre>
+<p>
+          <span class="bold"><strong>Strict lockers</strong></span>
+        </p>
+<p>
+          Strict lockers were first introduced by Andrei Alexandrescu. A strict locker
+          is a scoped lock guard ensuring the mutex is locked on the scope of the
+          lock, by locking the mutex on construction and unlocking it on destruction.
+        </p>
+<p>
+          <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_guard</span></code> could be seen as a strict_locker
+          if the following constructor didn't exists
+        </p>
+<pre class="programlisting"><span class="identifier">lock_guard</span><span class="special">(</span><span class="identifier">Lockable</span> <span class="special">&amp;</span>  <span class="identifier">m</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span><span class="special">)</span>
+</pre>
+<p>
+          We can say that lock_guard is a strict locker "sur parolle".
+        </p>
+<p>
+          There is a const function that is very useful when working with strict
+          lockers and external locking which check is the strict locker is locking
+          an instace of a lockable.
+        </p>
+<pre class="programlisting"><span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+</pre>
+<p>
+          The library provides three strict lockers
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">strict_locker</span></code>: is the
+            basic strict locker, special use when doing external locking.
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">neested_strict_locker</span></code>:
+            is a strict_locker of another locker as a unique_lock.
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">conditional_unique_locker</span></code>
+            and <code class="computeroutput"><span class="identifier">conditional_shared_locker</span></code>
+            : are strict lockers with the condition_lockable interface. These are
+            the synchronizer of the monitor class.
+          </li>
+</ul></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">product_queue</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="special">...</span>
+    <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pull</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">conditional_unique_locker</span><span class="special">&lt;&gt;</span> <span class="identifier">_</span><span class="special">(</span><span class="identifier">mtx</span><span class="special">,</span> <span class="identifier">not_empty</span><span class="special">,</span> <span class="identifier">has_products</span><span class="special">(</span><span class="identifier">queue</span><span class="special">));</span>
+        <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pulled</span> <span class="special">=</span> <span class="identifier">queue</span><span class="special">.</span><span class="identifier">front</span><span class="special">();</span>
+        <span class="identifier">queue</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+        <span class="identifier">mtx</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();</span>
+        <span class="keyword">return</span> <span class="identifier">pulled</span><span class="special">;</span>
+    <span class="special">}</span>
+    <span class="special">...</span>
+<span class="special">};</span>
+</pre>
+<p>
+          and a meta function <code class="computeroutput"><span class="identifier">is_strict_locker</span></code>
+          which states if a locker is a strict locker.
+        </p>
+<p>
+          So as strict lockers do not provide lock/unlock functions they are not
+          models of Lockable.
+        </p>
+<p>
+          <span class="bold"><strong>Try lockers</strong></span>
+        </p>
+<p>
+          A Try Locker is a Locker that initialize it in a such way that instead
+          of locking on the constructor with <code class="computeroutput"><span class="identifier">lock</span><span class="special">()</span></code> they can try to lock with <code class="computeroutput"><span class="identifier">try_lock</span><span class="special">()</span></code>.
+          Most of the lockers defined in Boost.Thread and Boost.Interprocess could
+          be cosidered as <code class="computeroutput"><span class="identifier">TryLockers</span></code>,
+          i.e. them initialize in this way when <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">try_to_lock</span></code>
+          is given as parameter.
+        </p>
+<p>
+          The following code shows one way to use the TryLocker:
+        </p>
+<pre class="programlisting"><span class="identifier">product</span> <span class="special">*</span><span class="identifier">product_queue</span><span class="special">::</span><span class="identifier">try_pull</span><span class="special">()</span> <span class="special">{</span>
+    <span class="identifier">product</span> <span class="special">*</span><span class="identifier">pulled</span> <span class="special">=</span> <span class="number">0</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">locker</span><span class="special">(</span><span class="identifier">mtx</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">try_to_lock</span><span class="special">);</span>
+    <span class="keyword">if</span><span class="special">(</span><span class="identifier">locker</span> <span class="special">&amp;&amp;</span> <span class="special">!</span><span class="identifier">queue</span><span class="special">.</span><span class="identifier">empty</span><span class="special">())</span> <span class="special">{</span>
+        <span class="identifier">pulled</span> <span class="special">=</span> <span class="identifier">queue</span><span class="special">.</span><span class="identifier">front</span><span class="special">();</span>
+        <span class="identifier">queue</span><span class="special">.</span><span class="identifier">pop</span><span class="special">();</span>
+    <span class="special">}</span>
+    <span class="keyword">return</span> <span class="identifier">pulled</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          All of them use a safe strategy for a boolean conversion which use a member
+          pointer rather than a <code class="computeroutput"><span class="keyword">bool</span></code>,
+          which is typically too permissive:
+        </p>
+<pre class="programlisting"><span class="keyword">typedef</span> <span class="keyword">bool</span> <span class="identifier">try_locker</span><span class="special">::*</span><span class="identifier">is_locked</span><span class="special">;</span>
+<span class="keyword">operator</span> <span class="identifier">is_locked</span><span class="special">()</span> <span class="keyword">const</span> <span class="special">{</span>
+    <span class="keyword">return</span> <span class="identifier">locked</span> <span class="special">?</span> <span class="special">&amp;</span><span class="identifier">try_locker</span><span class="special">::</span><span class="identifier">locked</span> <span class="special">:</span> <span class="number">0</span><span class="special">;</span>
+<span class="special">}</span>
+</pre>
+<p>
+          If we use interprocess mutexes we need to replace the following line
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">scoped</span><span class="special">(</span><span class="identifier">guard</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">try_to_lock</span><span class="special">);</span>
+</pre>
+<p>
+          by
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">interprocess_mutex</span><span class="special">&gt;</span> <span class="identifier">scoped</span><span class="special">(</span><span class="identifier">guard</span><span class="special">,</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">try_to_lock</span><span class="special">);</span>
+</pre>
+<p>
+          There are other <code class="computeroutput"><span class="identifier">TryLockers</span></code>
+          in Boost.Thread defined as a member typedef <code class="computeroutput"><span class="identifier">scoped_try_lock</span></code>.
+          The semantics of each constructor and member function are identical to
+          those of <code class="computeroutput"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;</span></code>
+          for the same Lockable, except that the constructor that takes a single
+          reference to a mutex will call <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock</span><span class="special">()</span></code> rather than <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock</span><span class="special">()</span></code>.
+        </p>
+<pre class="programlisting"><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">::</span><span class="identifier">scoped_try_lock</span> <span class="identifier">locker</span><span class="special">(</span><span class="identifier">mtx</span><span class="special">);</span>
+</pre>
+<p>
+          The library defines in a generic way a try_unique_locker adapter which
+          takes care of naming differences and that can be used like
+        </p>
+<pre class="programlisting"><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">unique_try_locker</span><span class="special">&lt;</span><span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="identifier">locker</span><span class="special">(</span><span class="identifier">mtx</span><span class="special">);</span>
+</pre>
+<p>
+          for any model of Lockable.
+        </p>
+<p>
+          <span class="bold"><strong>Exception-based Timed Lockers</strong></span>
+        </p>
+<p>
+          In addition to supporting timeout exception for Lock, the library supports
+          them also for ExceptionBaseTimedLockers. The semantics of each constructor
+          and member function are identical to those of boost::unique_locker&lt;Lockable&gt;
+          for the same Lockable, except that the constructor that takes a time or
+          a duration as first parameter in a addition to the reference to a mutex
+          will call <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span></code> or
+          <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code> rather
+          than <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">t</span><span class="special">)</span></code> or
+          <code class="computeroutput"><span class="identifier">m</span><span class="special">.</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">d</span><span class="special">)</span></code> and
+          so a <code class="computeroutput"><span class="identifier">timeout_exception</span></code>
+          is possible on the constructor.
+        </p>
+<p>
+          Let me start with an example of an application needing to lock several
+          locks at the same time. Once all the locks are locked something must be
+          done. Otherwise the application do something else and reiterate the lock
+          requests. The natural and exception safe way to do that is
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">t</span><span class="special">=</span><span class="identifier">now</span><span class="special">()+</span><span class="number">100</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l1</span><span class="special">(</span><span class="identifier">m1</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l2</span><span class="special">(</span><span class="identifier">m2</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l3</span><span class="special">(</span><span class="identifier">m3</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l1</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">l2</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">&amp;&amp;</span> <span class="identifier">l3</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">foo</span><span class="special">();</span>
+        <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> 
+<span class="special">}</span>
+</pre>
+<p>
+          The problem with this code is that it locks <code class="computeroutput"><span class="identifier">m2</span></code>
+          even if <code class="computeroutput"><span class="identifier">l1</span></code> do not owns
+          the lock <code class="computeroutput"><span class="identifier">m1</span></code>. The advertised
+          reader could argument that if the lock m1 has not been locked by a timeout,
+          as all share the same time constraint the failing lock of m2 will not be
+          expensive. Well the problem is that the locking of m1 can fail because
+          m1 is already locked. When we try to optimize this
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">t</span><span class="special">=</span><span class="identifier">now</span><span class="special">()+</span><span class="number">100</span><span class="special">;</span>
+    <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l1</span><span class="special">(</span><span class="identifier">m1</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l1</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">{</span>
+        <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l2</span><span class="special">(</span><span class="identifier">m2</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+        <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l2</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">{</span>
+            <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l3</span><span class="special">(</span><span class="identifier">m3</span><span class="special">,</span> <span class="identifier">t</span><span class="special">);</span>
+            <span class="keyword">if</span> <span class="special">(</span><span class="identifier">l2</span><span class="special">.</span><span class="identifier">has_lock</span><span class="special">()</span> <span class="special">{</span>
+                <span class="identifier">foo</span><span class="special">();</span>
+                <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+            <span class="special">}</span> <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> 
+        <span class="special">}</span> <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> 
+    <span class="special">}</span> <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> 
+<span class="special">}</span>
+</pre>
+<p>
+          we found that this starts to be unmaintenable. What is event wrost is that
+          as the preceding one is subject to deadlock if another thread acquire the
+          locks in a different order.
+        </p>
+<p>
+          <span class="bold"><strong>try_lock_until and try_lock_for free functions</strong></span>
+        </p>
+<p>
+          To avoid this we can request the acquisition of all the locks toghether
+          (letting the function to try several orders), as it does the function try_lock
+          of Boost.Threads, but adding this time a expiration period parameter
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> <span class="special">{</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">try_lock_for</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">m1</span><span class="special">,</span> <span class="identifier">m2</span><span class="special">,</span> <span class="identifier">m3</span><span class="special">))</span> <span class="special">{</span>
+        <span class="identifier">foo</span><span class="special">();</span>
+        <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> 
+<span class="special">}</span>
+</pre>
+<p>
+          While this solve the deadlock problem, this code is not exception safe.
+          With exception based lockers we can do the following (note that the time
+          is given as first aregument to the locker constructor)
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span>
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">t</span><span class="special">=</span><span class="identifier">now</span><span class="special">()+</span><span class="number">100</span><span class="special">;</span>
+        <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l1</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">m1</span><span class="special">);</span>
+        <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l2</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">m2</span><span class="special">);</span>
+        <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">l3</span><span class="special">(</span><span class="identifier">t</span><span class="special">,</span> <span class="identifier">m3</span><span class="special">);</span>
+        <span class="identifier">foo</span><span class="special">();</span>
+        <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">timeout_exception</span><span class="special">&amp;</span> <span class="identifier">ex</span><span class="special">)</span> <span class="special">{</span><span class="identifier">execute_on_failed</span><span class="special">();</span> <span class="special">}</span>
+</pre>
+<p>
+          <span class="bold"><strong><code class="computeroutput"><span class="identifier">locker_tuples</span></code>
+          or <code class="computeroutput"><span class="identifier">locker_array</span></code> of Locker
+          containers</strong></span>
+        </p>
+<p>
+          While this code is exception safe and do not locks <code class="computeroutput"><span class="identifier">m2</span></code>
+          if <code class="computeroutput"><span class="identifier">m1</span></code> is not acquired,
+          it is subject to deadlock. We can go a step ahead and mix the advantage
+          of taking all the locks at once and making the acquisition block scoped.
+          In order to do that we need either a array_locker or a tuple_locker depending
+          on whether the locks are homogeneus or not. The library provides both of
+          them. These locker containers follows the same rules as the element wise
+          lockers. If the time comes after the locks no exception is thrown on timeout
+          and if given as the first parameter a exception will be thown when the
+          time will expire.
+        </p>
+<p>
+          So the preceding code becomes without timeout exceptions
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> <span class="special">{</span>
+    <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">array_unique_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">lk</span><span class="special">(</span><span class="identifier">m1</span><span class="special">,</span> <span class="identifier">m2</span><span class="special">,</span> <span class="identifier">m3</span><span class="special">,</span> <span class="number">100</span><span class="special">);</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="identifier">lk</span><span class="special">.</span><span class="identifier">owns_lock</span><span class="special">())</span> <span class="special">{</span>
+        <span class="identifier">foo</span><span class="special">();</span>
+        <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">else</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> 
+<span class="special">}</span>
+</pre>
+<p>
+          which is exception safe or with exception based timed locks (Note that
+          the time is given before the locks)
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> 
+<span class="keyword">try</span> <span class="special">{</span> <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">array_locker</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">,</span> <span class="number">3</span><span class="special">&gt;</span> <span class="identifier">lk</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">m1</span><span class="special">,</span> <span class="identifier">m2</span><span class="special">,</span> <span class="identifier">m3</span><span class="special">);</span>
+    <span class="identifier">foo</span><span class="special">();</span>
+    <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">timeout_exception</span><span class="special">&amp;</span> <span class="identifier">ex</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> <span class="special">}</span>
+</pre>
+<p>
+          When the Locks locked by an <code class="computeroutput"><span class="identifier">array_unique_locker</span></code>
+          are not homogeneus we need some kind of tuple.
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span> 
+<span class="keyword">try</span> <span class="special">{</span> <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">tuple_unique_locker</span><span class="special">&lt;</span><span class="identifier">T1</span><span class="special">,</span> <span class="identifier">T2</span><span class="special">,</span> <span class="identifier">T1</span><span class="special">&gt;</span> <span class="identifier">lk</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">m1</span><span class="special">,</span> <span class="identifier">m2</span><span class="special">,</span> <span class="identifier">m3</span><span class="special">);</span>
+    <span class="identifier">foo</span><span class="special">();</span>
+    <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+<span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">timed_exception</span><span class="special">&amp;</span> <span class="identifier">ex</span><span class="special">)</span> <span class="special">{</span> <span class="identifier">execute_on_failed</span><span class="special">();</span> <span class="special">}</span>
+</pre>
+<p>
+          <span class="bold"><strong><code class="computeroutput"><span class="identifier">lock_until</span></code>
+          and <code class="computeroutput"><span class="identifier">lock_for</span></code> free functions</strong></span>
+        </p>
+<p>
+          For completion the exception based timed multi lock functions <code class="computeroutput"><span class="identifier">unlock</span></code>, <code class="computeroutput"><span class="identifier">lock_until</span></code>
+          and <code class="computeroutput"><span class="identifier">lock_for</span></code> are also provided.
+        </p>
+<pre class="programlisting"><span class="keyword">while</span> <span class="special">(</span><span class="identifier">polling</span><span class="special">)</span>
+    <span class="keyword">try</span> <span class="special">{</span>
+        <span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">lock_for</span><span class="special">(</span><span class="number">100</span><span class="special">,</span> <span class="identifier">m1</span><span class="special">,</span> <span class="identifier">m2</span><span class="special">,</span> <span class="identifier">m3</span><span class="special">);</span>
+        <span class="identifier">foo</span><span class="special">();</span>
+        <span class="identifier">polling</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">;</span>
+    <span class="special">}</span> <span class="keyword">catch</span> <span class="special">(</span><span class="identifier">bsynchro</span><span class="special">::</span><span class="identifier">timeout_exception</span><span class="special">&amp;</span> <span class="identifier">ex</span><span class="special">)</span> <span class="special">{</span><span class="identifier">execute_on_failed</span><span class="special">();</span> <span class="special">}</span>
+</pre>
+<p>
+          <span class="bold"><strong>External lockers</strong></span>
+        </p>
+<p>
+          An alternative or complementary approach to internal locking is to support
+          external locking for an object - Multiple calls may be grouped within the
+          same externally defined critical region.
+        </p>
+<p>
+          External locking has some associated risks for high-level objects. Incorrect
+          usage can be too easy: a forgotten call to lock or unlock is more likely
+          than with synchronisation primitives because the focus of using the object
+          is on the rest of its non-Lockable interface, so it becomes easy to forget
+          that to use the interface correctly also requires participation in a locking
+          scheme.
+        </p>
+<p>
+          To some extent lockers can help, but such a co-operative scheme should
+          only be employed when internal locking is too restricted for a given use,
+          e.g. multiple operations must be performed together. Ideally, if such operations
+          are common they should be defined internally locked and defined in the
+          interface of the object as Combined Methods.
+        </p>
+<p>
+          Assuming that locks are re-entrant, external locking can be provided to
+          complement the more encapsulated internal locking, i.e. by default if you
+          want to call a single function you just call it and it automatically locks,
+          but if you want to call multiple functions together you first apply an
+          external lock.
+        </p>
+<p>
+          The library provides a <code class="computeroutput"><span class="identifier">externally_locked</span></code>
+          class that allows to access a externally locked class in a thread safe
+          mode through strict lockers.
+        </p>
+<p>
+          Where only external locking is used, a safe approach is needed for calling
+          single functions easily. The library provides two classes
+        </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+<code class="computeroutput"><span class="identifier">locking_ptr</span></code> and
+          </li>
+<li><code class="computeroutput"><span class="identifier">on_dereference_locking_ptr</span></code></li>
+<li><code class="computeroutput"><span class="identifier">externally_locked</span></code></li>
+</ul></div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.poly"></a><a href="intro.html#boost_synchro.overview.intro.poly" title=" Polymorphic lockable"> Polymorphic lockable</a>
+</h4></div></div></div>
+<p>
+          The locks classes introduced previously are a non-polymorphic classes.
+          Clearly, many of the synchronisation primitives support common operations,
+          and hence interfaces. In some cases a more general interface is useful.
+        </p>
+<p>
+          The synchronised interface class may be used explicitly as a base class
+          for a class supporting synchronisation.
+        </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">exclusive_lock</span> <span class="special">{</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">exclusive_lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">()=</span><span class="number">0</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+<p>
+          More usefully for primitives, which are best left as non-polymorphic, an
+          adaptor class is used to provide the interface -- run-time polymorphism
+          -- on behalf of anything supporting the correctly named functions - compile
+          time polymorphism. It easier to take a nonpolymorphic class and adapt it
+          to be polymorphic, than it is do it the other way around: the overhead
+          and semantics of polymorphism can only be introduced to a class, not removed.
+        </p>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">exclusive_lock_adapter</span> <span class="special">:</span> <span class="keyword">public</span> <span class="keyword">virtual</span> <span class="identifier">exclusive_lock</span>
+<span class="special">{</span>
+    <span class="identifier">exclusive_lock_adapter</span><span class="special">():</span> <span class="identifier">lock_</span><span class="special">()</span> <span class="special">{}</span>
+    <span class="keyword">virtual</span> <span class="special">~</span><span class="identifier">exclusive_lock_adapter</span><span class="special">()</span> <span class="special">{}</span>
+
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">lock</span><span class="special">()</span> <span class="special">{</span><span class="identifier">lock_</span><span class="special">.</span><span class="identifier">lock</span><span class="special">();}</span>
+    <span class="keyword">virtual</span> <span class="keyword">void</span> <span class="identifier">unlock</span><span class="special">()</span> <span class="special">{</span><span class="identifier">lock_</span><span class="special">.</span><span class="identifier">unlock</span><span class="special">();}</span>
+    <span class="keyword">virtual</span> <span class="keyword">bool</span> <span class="identifier">try_lock</span><span class="special">()</span> <span class="special">{</span> <span class="keyword">return</span> <span class="identifier">lock_</span><span class="special">.</span><span class="identifier">try_lock</span><span class="special">();}</span>
+<span class="keyword">protected</span><span class="special">:</span>
+    <span class="identifier">Lockable</span> <span class="identifier">lock_</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.language_like_synchronized_block_"></a><a href="intro.html#boost_synchro.overview.intro.language_like_synchronized_block_" title="Language-like
+        Synchronized Block ">Language-like
+        Synchronized Block </a>
+</h4></div></div></div>
+<p>
+          Nest follows an example of mutual exclusion with automatic objects.
+        </p>
+<pre class="programlisting"><span class="special">{</span>
+    <span class="identifier">scoped_guard</span><span class="special">&lt;</span><span class="identifier">boost_mutex</span><span class="special">&gt;</span> <span class="identifier">lock</span><span class="special">(</span><span class="identifier">l</span><span class="special">);</span>
+    <span class="identifier">foo</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="identifier">bar</span><span class="special">();</span> <span class="comment">// lock released
+</span><span class="special">}</span>
+</pre>
+<p>
+          With language-like mutual exclusion this results in:
+        </p>
+<pre class="programlisting"><span class="identifier">synchronize</span><span class="special">(</span><span class="identifier">l</span><span class="special">)</span> 
+<span class="special">{</span>
+    <span class="identifier">foo</span><span class="special">();</span>
+    <span class="keyword">return</span> <span class="identifier">bar</span><span class="special">();</span> 
+<span class="special">}</span> <span class="comment">// lock released
+</span></pre>
+<p>
+          This is achieved through macros. If the user wants to use synchronized
+          this way he needs to include a specific file which defines
+        </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">synchronized</span><span class="special">(</span><span class="identifier">MUTEX</span><span class="special">)</span> <span class="identifier">BOOST_SYNCHRONIZED</span><span class="special">(</span><span class="identifier">MUTEX</span><span class="special">)</span>
+</pre>
+<p>
+          The library do not provides this directly because this can broke some user
+          code. The library provideds other safer macros, using the BOOST prefix.
+        </p>
+<pre class="programlisting"><span class="preprocessor">#define</span> <span class="identifier">BOOST_SYNCHRONIZED_VAR</span><span class="special">(</span><span class="identifier">VARS_DECLARATION</span><span class="special">)</span> <span class="special">\</span>
+    <span class="keyword">if</span> <span class="special">(</span><span class="keyword">bool</span> <span class="identifier">stop_</span> <span class="special">=</span> <span class="keyword">false</span><span class="special">)</span> <span class="special">{}</span> <span class="keyword">else</span> <span class="special">\</span>
+    <span class="keyword">for</span> <span class="special">(</span><span class="identifier">VARS_DECLARATION</span><span class="special">;</span> <span class="special">!</span><span class="identifier">stop_</span><span class="special">;</span> <span class="identifier">stop_</span> <span class="special">=</span> <span class="keyword">true</span><span class="special">)</span>
+
+<span class="preprocessor">#define</span> <span class="identifier">BOOST_SYNCHRONIZED</span><span class="special">(</span><span class="identifier">MUTEX</span><span class="special">)</span> <span class="special">\</span>
+    <span class="identifier">BOOST_SYNCHRONIZED_VAR</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">scoped_guard</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">__lock</span><span class="special">(</span><span class="identifier">MUTEX</span><span class="special">))</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.overview.intro.monitors"></a><a href="intro.html#boost_synchro.overview.intro.monitors" title=" Monitors"> Monitors</a>
+</h4></div></div></div>
+<p>
+          Concurrent components may interact in different ways: they may access the
+          same objects by, for example, executing functions of these objects; or
+          they may communicate directly by executing functions of each other.
+        </p>
+<p>
+          Concurrent execution of objects requires a mechanism for synchronizing
+          the access to shared objects, just as direct communication between objects
+          may require synchronization. The basic mechanism for synchronization in
+          Boost.Threads and Boost.Interprocess are the well known mutex and condition_variables.
+          Mutexes and condition variables are, however, only useful for very simple
+          synchronization problems. The Synchro Library therefore introduce high-level
+          abstractions for handling more complicated synchronization problems, including
+          monitor for guaranteeing exclusive access to an object.
+        </p>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../overview.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../overview.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="../users_guide.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

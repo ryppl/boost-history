@@ -1,0 +1,250 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title> Overview</title>
+<link rel="stylesheet" href="../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="prev" href="../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="next" href="overview/intro.html" title=" Introduction">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="overview/intro.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h2 class="title" style="clear: both">
+<a name="boost_synchro.overview"></a><a href="overview.html" title=" Overview"> Overview</a>
+</h2></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="overview/intro.html"> Introduction</a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.uniform"> Using Thread,
+        Interprocess and Null synchronization mechanisms uniformly</a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.mapping_the_current_mutexes__boost_thread_and_boost_interprocess__to_the_common_concepts">Mapping
+        the current mutexes (Boost.Thread and Boost/Interprocess) to the common concepts</a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.condition_lockable">Condition
+        lockable</a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.exception_based_timed_locks">Exception-based
+        Timed Locks</a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.lockers"> Lockers</a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.poly"> Polymorphic lockable</a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.language_like_synchronized_block_">Language-like
+        Synchronized Block </a></span></dt>
+<dt><span class="section"><a href="overview/intro.html#boost_synchro.overview.intro.monitors"> Monitors</a></span></dt>
+</dl></dd>
+</dl></div>
+<a name="boost_synchro.overview.description"></a><h3>
+<a name="id4803123"></a>
+      <a href="overview.html#boost_synchro.overview.description">Description</a>
+    </h3>
+<p>
+      To date, C++ multi threaded programs that need to be efficient use the same
+      mutexes, semaphores, and events that Dijkstra described 40 years ago. This
+      unfortunate state of affairs makes multi threaded programs difficult to design,
+      debug, ensure correct, optimize, maintain, and analyze formally. Consequently,
+      building tools that automate detection of race conditions and deadlocks is
+      highly desirable.
+    </p>
+<p>
+      I believe that most of the synchronization mechanisms applied to multi-threaded
+      programs works as well for multi-process programs. This can not be done if
+      the basic facilities mutexes and condition variables are not based on common
+      concepts and take a different form depending of the library provider. We need
+      to states these bases through concepts.
+    </p>
+<p>
+      The main sources of inspiration of this library were
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        the papers of Kevlin Henney about asynchronous C++ <a href="http://www.two-sdg.demon.co.uk/curbralan/papers/accu/MoreC++Threading.pdf" target="_top">More
+        C++ Threading - From Procedural to Generic, by Example</a> and its C++0x
+        proposal [<a href="http://www.open-std.org/jtc1/sc22/wg21/docs/papers/2005/n1883.pdf" target="_top">N1833
+        - Preliminary Threading Library Proposal for TR2</a>].
+      </li>
+<li>
+        the papers of Andrei Alexandrescu on multi-threading programming <a href="http://www.ddj.com/cpp/184403766" target="_top">volatile
+        - Multithreaded Programmer's Best Friend</a>
+</li>
+<li>
+        the ACE framework of Douglas C. Schmidt <a href="http://www.cs.wustl.edu/~schmidt/PDF/ACE-concurrency.pdf" target="_top">An
+        OO Encapsulation of Lightweight OS Concurrency Mechanisms in the ACE Toolkit</a>.
+      </li>
+</ul></div>
+<p>
+      This library is a compilation of what I have found in the literature not yet
+      present in Boost. My main concen has been to boostify all these ideas in a
+      coherent way.
+    </p>
+<p>
+      <span class="bold"><strong>Boost.Synchro</strong></span> provides:
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        A uniform usage of Boost.Thread and Boost.Interprocess synchronization mechanisms
+        based on lockables(mutexes) concepts and locker(guards) concepts.
+        <div class="itemizedlist"><ul type="circle">
+<li>
+            lockables traits and lock generators,
+          </li>
+<li>
+            generic free functions on lockables as: <code class="computeroutput"><span class="identifier">lock</span></code>,
+            <code class="computeroutput"><span class="identifier">try_lock</span></code>, ...
+          </li>
+<li>
+            locker adapters of the Boost.Thread and Boost.Interprocess lockers models,
+          </li>
+<li>
+            complete them with the corresponding models for single-threaded programms:
+            <code class="computeroutput"><span class="identifier">null_mutex</span></code> and <code class="computeroutput"><span class="identifier">null_condition</span></code> classes,
+          </li>
+<li>
+            locking families,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">semaphore</span></code> and <code class="computeroutput"><span class="identifier">binary_semaphore</span></code>,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">condition_lockable</span></code> lock
+            which put toghether a lock and its associated conditions.
+          </li>
+</ul></div>
+</li>
+<li>
+        A coherent way exception based timed lock approach for functions and constructors,
+      </li>
+<li>
+        A rich palete of lockers as
+        <div class="itemizedlist"><ul type="circle">
+<li>
+<code class="computeroutput"><span class="identifier">strict_locker</span></code>, <code class="computeroutput"><span class="identifier">nested_strict_locker</span></code>,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">condition_locker</span></code>,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">reverse_locker</span></code>, <code class="computeroutput"><span class="identifier">nested_reverse_locker</span></code>,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">locking_ptr</span></code>, <code class="computeroutput"><span class="identifier">on_derreference_locking_ptr</span></code>,
+          </li>
+<li>
+<code class="computeroutput"><span class="identifier">externally_locked</span></code>,
+          </li>
+</ul></div>
+</li>
+<li>
+<code class="computeroutput"><span class="identifier">array_unique_locker</span></code> on multiple
+        lockables.
+      </li>
+<li>
+        Generic free functions on multiple lockables <code class="computeroutput"><span class="identifier">lock</span></code>,
+        <code class="computeroutput"><span class="identifier">try_lock</span></code>, <code class="computeroutput"><span class="identifier">lock_until</span></code>,
+        <code class="computeroutput"><span class="identifier">lock_for</span></code>, <code class="computeroutput"><span class="identifier">try_lock_until</span></code>,
+        <code class="computeroutput"><span class="identifier">try_lock_for</span></code>, <code class="computeroutput"><span class="identifier">unlock</span></code> * lock adapters of the Boost.Thread
+        and Boost.Interprocess lockable models,
+        <div class="itemizedlist"><ul type="circle"><li>
+<code class="computeroutput"><span class="identifier">lock_until</span></code>, <code class="computeroutput"><span class="identifier">lock_for</span></code>, <code class="computeroutput"><span class="identifier">try_lock_until</span></code>,
+            <code class="computeroutput"><span class="identifier">try_lock_for</span></code>
+</li></ul></div>
+</li>
+<li>
+        A polymorphic lockable hierarchy.
+      </li>
+<li>
+        High-level abstractions for handling more complicated synchronization problems,
+        including
+        <div class="itemizedlist"><ul type="circle"><li>
+<code class="computeroutput"><span class="identifier">monitor</span></code> for guaranteeing
+            exclusive access to an object.
+          </li></ul></div>
+</li>
+<li>
+        Language-like Synchronized Block Macros
+      </li>
+</ul></div>
+<a name="boost_synchro.overview.how_to_use_this_documentation"></a><h3>
+<a name="id4765093"></a>
+      <a href="overview.html#boost_synchro.overview.how_to_use_this_documentation">How to
+      Use This Documentation</a>
+    </h3>
+<p>
+      This documentation makes use of the following naming and formatting conventions.
+    </p>
+<div class="itemizedlist"><ul type="disc">
+<li>
+        Code is in <code class="computeroutput"><span class="identifier">fixed</span> <span class="identifier">width</span>
+        <span class="identifier">font</span></code> and is syntax-highlighted.
+      </li>
+<li>
+        Replaceable text that you will need to supply is in
+        <em class="replaceable"><code>
+          italics
+        </code></em>
+        .
+      </li>
+<li>
+        If a name refers to a free function, it is specified like this: <code class="computeroutput"><span class="identifier">free_function</span><span class="special">()</span></code>;
+        that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code>
+        to indicate that it is a free function.
+      </li>
+<li>
+        If a name refers to a class template, it is specified like this: <code class="computeroutput"><span class="identifier">class_template</span><span class="special">&lt;&gt;</span></code>;
+        that is, it is in code font and its name is followed by <code class="computeroutput"><span class="special">&lt;&gt;</span></code>
+        to indicate that it is a class template.
+      </li>
+<li>
+        If a name refers to a function-like macro, it is specified like this: <code class="computeroutput"><span class="identifier">MACRO</span><span class="special">()</span></code>;
+        that is, it is uppercase in code font and its name is followed by <code class="computeroutput"><span class="special">()</span></code> to indicate that it is a function-like
+        macro. Object-like macros appear without the trailing <code class="computeroutput"><span class="special">()</span></code>.
+      </li>
+<li>
+        Names that refer to <span class="emphasis"><em>concepts</em></span> in the generic programming
+        sense are specified in CamelCase.
+      </li>
+</ul></div>
+<div class="note"><table border="0" summary="Note">
+<tr>
+<td rowspan="2" align="center" valign="top" width="25"><img alt="[Note]" src="../../../../../doc/html/images/note.png"></td>
+<th align="left">Note</th>
+</tr>
+<tr><td align="left" valign="top"><p>
+        In addition, notes such as this one specify non-essential information that
+        provides additional background or rationale.
+      </p></td></tr>
+</table></div>
+<p>
+      Finally, you can mentally add the following to any code fragments in this document:
+    </p>
+<pre class="programlisting"><span class="comment">// Include all of Synchro files
+</span><span class="preprocessor">#include</span> <span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span>
+
+<span class="comment">// Create a namespace aliases
+</span><span class="keyword">namespace</span> <span class="identifier">bsynchro</span> <span class="special">=</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">;</span>
+</pre>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="../index.html"><img src="../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../index.html"><img src="../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../index.html"><img src="../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="overview/intro.html"><img src="../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

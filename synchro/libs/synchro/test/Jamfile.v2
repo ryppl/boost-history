@@ -31,10 +31,10 @@ project :
         #<library>/boost/test//boost_unit_test_framework/<link>static
         #<library>/boost/thread//boost_thread/<link>static
         
-        <library>/boost_1_39_0/libs/test/build//boost_unit_test_framework/<link>static
-        <library>/boost_1_39_0/libs/thread/build//boost_thread/<link>static
+        <library>/boost/test//boost_unit_test_framework/<link>static
+        <library>/boost/thread//boost_thread/<link>static
         <library>/sandbox/chrono/libs/chrono/build//boost_chrono/<link>static
-        <library>/boost_1_39_0/libs/system/build//boost_system/<link>static
+        <library>/boost/system//boost_system/<link>static
       
 ;
 

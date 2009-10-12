@@ -1,0 +1,152 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Multi-process</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="multi_threaded.html" title="Multi-threaded">
+<link rel="next" href="polymorphic_locks.html" title="Polymorphic
+      Locks">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="multi_threaded.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="polymorphic_locks.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.multi_process"></a><a href="multi_process.html" title="Multi-process">Multi-process</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">lockable_scope_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_process_tag__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_process_tag__lockable__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.process_synchronization_family_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">process_synchronization_family</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.process_synchronization_family_hpp.class__process_synchronization_family_">Class
+          <code class="computeroutput"><span class="identifier">process_synchronization_family</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp"></a><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp" title="
+        Header &lt;boost/synchro/thread/lockable_scope_traits.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">lockable_scope_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_process_tag__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_process_tag__lockable__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_process_tag__"></a><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_process_tag__" title="Template
+          Class Specialization scope_traits&lt;multi_process_tag&gt;">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">lock_exception</span> <span class="identifier">lock_error</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">moved_object</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">moved_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="identifier">moved_object</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">t_</span><span class="special">):</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">moved_object</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">t_</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="special">};</span>
+
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">defer_lock_type</span> <span class="identifier">defer_lock_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">accept_ownership_type</span> <span class="identifier">adopt_lock_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">try_to_lock_type</span> <span class="identifier">try_to_lock_t</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">defer_lock_t</span><span class="special">&amp;</span> <span class="identifier">defer_lock</span><span class="special">()</span>    <span class="special">{</span><span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">defer_lock</span><span class="special">;}</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">adopt_lock_t</span><span class="special">&amp;</span> <span class="identifier">adopt_lock</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">accept_ownership</span><span class="special">;}</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">try_to_lock_t</span><span class="special">&amp;</span> <span class="identifier">try_to_lock</span><span class="special">()</span>    <span class="special">{</span><span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">try_to_lock</span><span class="special">;}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_process_tag__lockable__"></a><a href="multi_process.html#boost_synchro.reference.multi_process.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_process_tag__lockable__" title="Template
+          Class Specialization lockable_scope_traits&lt;multi_process_tag, Lockable&gt;">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_process_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span>                                             <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>     <span class="identifier">scoped_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">scoped_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>     <span class="identifier">unique_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">sharable_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>   <span class="identifier">shared_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">upgradable_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span> <span class="identifier">upgrade_lock</span><span class="special">;</span>
+
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_process.process_synchronization_family_hpp"></a><a href="multi_process.html#boost_synchro.reference.multi_process.process_synchronization_family_hpp" title="
+        Header &lt;boost/synchro/process_synchronization_family.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">process_synchronization_family</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="multi_process.html#boost_synchro.reference.multi_process.process_synchronization_family_hpp.class__process_synchronization_family_">Class
+          <code class="computeroutput"><span class="identifier">process_synchronization_family</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">struct</span> <span class="identifier">process_synchronization_family</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_process.process_synchronization_family_hpp.class__process_synchronization_family_"></a><a href="multi_process.html#boost_synchro.reference.multi_process.process_synchronization_family_hpp.class__process_synchronization_family_" title="Class
+          process_synchronization_family">Class
+          <code class="computeroutput"><span class="identifier">process_synchronization_family</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">process_synchronization_family</span> <span class="special">{</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_mutex</span>              <span class="identifier">mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_recursive_mutex</span>    <span class="identifier">recursive_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_mutex</span>              <span class="identifier">timed_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_recursive_mutex</span>    <span class="identifier">recursive_timed_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">synchro</span><span class="special">::</span><span class="identifier">interprocess_upgradable_mutex</span>   <span class="identifier">shared_mutex_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">interprocess_condition</span>     <span class="identifier">condition_type</span><span class="special">;</span>
+   <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">interprocess</span><span class="special">::</span><span class="identifier">interprocess_condition</span>     <span class="identifier">condition_any_type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="multi_threaded.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="polymorphic_locks.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>

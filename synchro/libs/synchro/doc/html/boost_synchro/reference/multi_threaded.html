@@ -1,0 +1,745 @@
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1">
+<title>Multi-threaded</title>
+<link rel="stylesheet" href="../../../../../../doc/html/boostbook.css" type="text/css">
+<meta name="generator" content="DocBook XSL Stylesheets V1.69.1">
+<link rel="start" href="../../index.html" title="Chapter 1. Boost.Synchro">
+<link rel="up" href="../reference.html" title="Reference">
+<link rel="prev" href="single_threaded.html" title="Single-threaded">
+<link rel="next" href="multi_process.html" title="Multi-process">
+</head>
+<body bgcolor="white" text="black" link="#0000FF" vlink="#840084" alink="#0000FF">
+<table cellpadding="2" width="100%"><tr>
+<td valign="top"><img alt="Boost C++ Libraries" width="277" height="86" src="../../../../../../boost.png"></td>
+<td align="center"><a href="../../../../../../index.html">Home</a></td>
+<td align="center"><a href="../../../../../../libs/libraries.htm">Libraries</a></td>
+<td align="center"><a href="http://www.boost.org/users/people.html">People</a></td>
+<td align="center"><a href="http://www.boost.org/users/faq.html">FAQ</a></td>
+<td align="center"><a href="../../../../../../more/index.htm">More</a></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="single_threaded.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="multi_process.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h3 class="title">
+<a name="boost_synchro.reference.multi_threaded"></a><a href="multi_threaded.html" title="Multi-threaded">Multi-threaded</a>
+</h3></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">lockable_scope_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_threaded_tag__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_threaded_tag__lockable__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_mutex</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_timed_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_timed_mutex</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread_recursive_mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_recursive_mutex</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_timed_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_recursive_timed_mutex</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">shared_mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp.class__thread_shared_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_shared_mutex</span></code></a></span></dt></dl></dd>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">locks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__unique_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">unique_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__try_unique_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">try_unique_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__shared_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">shared_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_to_unique_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_to_unique_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></dd>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread_synchronization_family</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a></span></dt>
+<dd><dl><dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp.class__thread_synchronization_family_">Class
+          <code class="computeroutput"><span class="identifier">thread_synchronization_family</span></code></a></span></dt></dl></dd>
+</dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp" title="
+        Header &lt;boost/synchro/thread/lockable_scope_traits.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">lockable_scope_traits</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_threaded_tag__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_threaded_tag__lockable__">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;;</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_threaded_tag__"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__scope_traits_multi_threaded_tag__" title="Template
+          Class Specialization scope_traits&lt;multi_threaded_tag&gt;">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_error</span> <span class="identifier">lock_error</span><span class="special">;</span>
+    
+    <span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+    <span class="keyword">struct</span> <span class="identifier">moved_object</span> <span class="special">:</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">{</span>
+        <span class="identifier">moved_object</span><span class="special">(</span><span class="identifier">T</span><span class="special">&amp;</span> <span class="identifier">t_</span><span class="special">):</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;(</span><span class="identifier">t_</span><span class="special">)</span> <span class="special">{}</span>
+    <span class="special">};</span>
+    
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">defer_lock_t</span> <span class="identifier">defer_lock_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock_t</span> <span class="identifier">adopt_lock_t</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">try_to_lock_t</span> <span class="identifier">try_to_lock_t</span><span class="special">;</span>
+
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">defer_lock_t</span><span class="special">&amp;</span> <span class="identifier">defer_lock</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">defer_lock</span><span class="special">;}</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">adopt_lock_t</span><span class="special">&amp;</span> <span class="identifier">adopt_lock</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">adopt_lock</span><span class="special">;}</span>
+    <span class="keyword">static</span> <span class="keyword">const</span> <span class="identifier">try_to_lock_t</span><span class="special">&amp;</span> <span class="identifier">try_to_lock</span><span class="special">()</span> <span class="special">{</span><span class="keyword">return</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">try_to_lock</span><span class="special">;}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_threaded_tag__lockable__"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_lockable_scope_traits_hpp.template_class_specialization__lockable_scope_traits_multi_threaded_tag__lockable__" title="Template
+          Class Specialization lockable_scope_traits&lt;multi_threaded_tag, Lockable&gt;">Template
+          Class Specialization <code class="computeroutput"><span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Lockable</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lockable_scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">,</span> <span class="identifier">Lockable</span><span class="special">&gt;</span> <span class="special">:</span> <span class="identifier">scope_traits</span><span class="special">&lt;</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">Lockable</span>                            <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>   <span class="identifier">scoped_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>   <span class="identifier">unique_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>   <span class="identifier">shared_lock</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_lock</span><span class="special">&lt;</span><span class="identifier">lockable_type</span><span class="special">&gt;</span>  <span class="identifier">upgrade_lock</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_mutex_hpp"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp" title="
+        Header &lt;boost/synchro/thread/mutex.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_mutex</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_timed_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_timed_mutex</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">thread_mutex</span><span class="special">;</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">unique_lock_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;;</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">shared_lock_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;;</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">upgrade_lock_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;;</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">upgrade_to_unique_locker_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;;</span>
+    <span class="keyword">template</span> <span class="special">&lt;&gt;</span> <span class="keyword">struct</span> <span class="identifier">lock_error_type</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;;</span>
+    
+    <span class="keyword">class</span> <span class="identifier">thread_timed_mutex</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_mutex_"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_mutex_" title="Class
+          thread_mutex">Class
+          <code class="computeroutput"><span class="identifier">thread_mutex</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">thread_mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lock_traits_base</span><span class="special">&lt;</span>
+        <span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+        <span class="identifier">non_recursive_tag</span><span class="special">,</span>
+        <span class="identifier">hasnt_timed_interface_tag</span><span class="special">,</span>
+        <span class="identifier">process_lifetime_tag</span><span class="special">,</span>
+        <span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="identifier">mutex</span>
+    <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="comment">// public types
+</span>    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span>  <span class="identifier">best_condition_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_any_type</span><span class="special">;</span>
+
+    <span class="comment">//Non-copyable
+</span>    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">thread_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">thread_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+
+    <span class="identifier">thread_mutex</span><span class="special">()</span> <span class="special">{}</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">unique_lock_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">shared_lock_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">upgrade_lock_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">upgrade_to_unique_locker_type</span><span class="special">&lt;</span><span class="identifier">thread_mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_to_unique_lock</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lock_error_type</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">mutex</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">lock_error</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_timed_mutex_"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_mutex_hpp.class__thread_timed_mutex_" title="Class
+          thread_timed_mutex">Class
+          <code class="computeroutput"><span class="identifier">thread_timed_mutex</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">thread_timed_mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lock_traits_base</span><span class="special">&lt;</span>
+        <span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+        <span class="identifier">non_recursive_tag</span><span class="special">,</span>
+        <span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="identifier">process_lifetime_tag</span><span class="special">,</span>
+        <span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="identifier">timed_mutex</span>
+    <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_any_type</span><span class="special">;</span>
+
+    <span class="comment">//Non-copyable
+</span>    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">thread_timed_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">thread_timed_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+    <span class="identifier">thread_timed_mutex</span> <span class="special">();</span>
+        
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+<span class="special">};</span>    
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp" title="
+        Header &lt;boost/synchro/thread_recursive_mutex.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread_recursive_mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_recursive_mutex</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_timed_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_recursive_timed_mutex</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">thread_recursive_mutex</span><span class="special">;</span>
+   
+    <span class="keyword">class</span> <span class="identifier">thread_timed_mutex</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_mutex_"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_mutex_" title="Class
+          thread_recursive_mutex">Class
+          <code class="computeroutput"><span class="identifier">thread_recursive_mutex</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">thread_recursive_mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lock_traits_base</span><span class="special">&lt;</span>
+        <span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+        <span class="identifier">recursive_tag</span><span class="special">,</span>
+        <span class="identifier">hasnt_timed_interface_tag</span><span class="special">,</span>
+        <span class="identifier">process_lifetime_tag</span><span class="special">,</span>
+        <span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="identifier">recursive_mutex</span>
+    <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_any_type</span><span class="special">;</span>
+
+    <span class="comment">//Non-copyable
+</span>    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">thread_recursive_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">thread_recursive_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+    <span class="identifier">thread_recursive_mutex</span><span class="special">()</span> <span class="special">{}</span>
+<span class="special">};</span>    
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_timed_mutex_"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_recursive_mutex_hpp.class__thread_recursive_timed_mutex_" title="Class
+          thread_recursive_timed_mutex">Class
+          <code class="computeroutput"><span class="identifier">thread_recursive_timed_mutex</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">thread_recursive_timed_mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lock_traits_base</span><span class="special">&lt;</span>
+        <span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="identifier">exclusive_lock_tag</span><span class="special">,</span>
+        <span class="identifier">recursive_tag</span><span class="special">,</span>
+        <span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="identifier">process_lifetime_tag</span><span class="special">,</span>
+        <span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="identifier">recursive_timed_mutex</span>
+    <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_any_type</span><span class="special">;</span>
+
+    <span class="comment">//Non-copyable
+</span>    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">thread_recursive_timed_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">thread_recursive_timed_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+    <span class="identifier">thread_recursive_timed_mutex</span><span class="special">();</span>
+
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+    
+<span class="special">};</span>    
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp" title="
+        Header &lt;boost/synchro/thread/shared_mutex.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">shared_mutex</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp.class__thread_shared_mutex_">Class
+          <code class="computeroutput"><span class="identifier">thread_shared_mutex</span></code></a></span></dt></dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">thread_recursive_mutex</span><span class="special">;</span>
+   
+    <span class="keyword">class</span> <span class="identifier">thread_timed_mutex</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp.class__thread_shared_mutex_"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_shared_mutex_hpp.class__thread_shared_mutex_" title="Class
+          thread_shared_mutex">Class
+          <code class="computeroutput"><span class="identifier">thread_shared_mutex</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">class</span> <span class="identifier">thread_shared_mutex</span> <span class="special">:</span> <span class="keyword">public</span> <span class="identifier">lock_traits_base</span><span class="special">&lt;</span>
+        <span class="identifier">multi_threaded_tag</span><span class="special">,</span>
+        <span class="identifier">upgradable_lock_tag</span><span class="special">,</span>
+        <span class="identifier">non_recursive_tag</span><span class="special">,</span>
+        <span class="identifier">has_timed_interface_tag</span><span class="special">,</span>
+        <span class="identifier">process_lifetime_tag</span><span class="special">,</span>
+        <span class="identifier">anonymous_tag</span><span class="special">,</span>
+        <span class="identifier">shared_mutex</span>
+    <span class="special">&gt;</span> <span class="special">{</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>  <span class="identifier">best_condition_any_type</span><span class="special">;</span>
+
+    <span class="comment">//Non-copyable
+</span>    <span class="identifier">BOOST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">thread_shared_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">thread_shared_mutex</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+    <span class="identifier">thread_shared_mutex</span><span class="special">();</span>
+
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span> <span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+    
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_shared_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">rel_time</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">lock_shared_until</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_shared_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">abs_time</span><span class="special">);</span>
+    
+<span class="special">};</span>    
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_locks_hpp"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp" title="
+        Header &lt;boost/synchro/thread/locks.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread</span><span class="special">/</span><span class="identifier">locks</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__unique_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">unique_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__try_unique_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">try_unique_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__shared_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">shared_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+<dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_to_unique_locker___">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_to_unique_locker</span><span class="special">&lt;&gt;</span></code></a></span></dt>
+</dl></div>
+<pre class="programlisting"><span class="keyword">namespace</span> <span class="identifier">boost</span> <span class="special">{</span> <span class="keyword">namespace</span> <span class="identifier">synchro</span> <span class="special">{</span>
+    <span class="keyword">class</span> <span class="identifier">thread_recursive_mutex</span><span class="special">;</span>
+   
+    <span class="keyword">class</span> <span class="identifier">thread_timed_mutex</span><span class="special">;</span>
+<span class="special">}}</span>
+</pre>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__unique_locker___"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__unique_locker___" title="Template
+          Class unique_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">unique_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">unique_lock</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">shared_lock</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_lock</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span> <span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">T</span><span class="special">&gt;</span>
+<span class="keyword">struct</span> <span class="identifier">lockable_type</span><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">upgrade_to_unique_lock</span><span class="special">&lt;</span><span class="identifier">T</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">T</span> <span class="identifier">type</span><span class="special">;</span>
+<span class="special">};</span>
+
+<span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mutex</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;:</span>  <span class="keyword">public</span> <span class="identifier">unique_lock_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">{</span>
+    <span class="comment">//typename scope_tag&lt;Mutex&gt;::type == multi_threaded_tag
+</span><span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Mutex</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">multi_threaded_tag</span> <span class="identifier">scope_tag_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">unique_lock_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">base_type</span><span class="special">;</span>
+
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">unique_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">unique_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+    <span class="identifier">unique_locker</span><span class="special">();</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">adopt_lock_t</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">defer_lock_t</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">try_to_lock_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_RVALUE_REFS</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">unique_locker</span><span class="special">&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">scope_tag_type</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">move</span><span class="special">();</span>
+
+
+    <span class="identifier">unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">multi_threaded_tag</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">unique_locker</span><span class="special">&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="preprocessor">#else</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">move</span><span class="special">();</span>
+
+    <span class="identifier">unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">unique_locker</span><span class="special">&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+
+    <span class="special">~</span><span class="identifier">unique_locker</span><span class="special">()</span> <span class="special">{}</span>
+
+    <span class="identifier">Mutex</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">absolute_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">absolute_time</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__try_unique_locker___"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__try_unique_locker___" title="Template
+          Class try_unique_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">try_unique_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mutex</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;:</span>  <span class="keyword">public</span> <span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span> <span class="special">{</span>
+    <span class="comment">//typename scope_tag&lt;Mutex&gt;::type == multi_threaded_tag
+</span><span class="keyword">private</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Mutex</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">multi_threaded_tag</span> <span class="identifier">scope_tag_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;</span> <span class="identifier">base_type</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">try_unique_locker</span><span class="special">();</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">force_lock_t</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">adopt_lock_t</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">defer_lock_t</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">try_to_lock_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_RVALUE_REFS</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">try_unique_locker</span><span class="special">&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">explicit</span> <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">scope_tag_type</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">move</span><span class="special">();</span>
+    <span class="identifier">try_unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">multi_threaded_tag</span><span class="special">&gt;&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">try_unique_locker</span><span class="special">&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="preprocessor">#else</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">move</span><span class="special">();</span>
+
+    <span class="identifier">try_unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">try_unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">try_unique_locker</span><span class="special">&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">try_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+
+    <span class="special">~</span><span class="identifier">try_unique_locker</span><span class="special">()</span> <span class="special">{}</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__shared_locker___"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__shared_locker___" title="Template
+          Class shared_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">shared_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mutex</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">shared_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;:</span>  <span class="keyword">public</span> <span class="identifier">shared_lock_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">{</span>
+    <span class="comment">//typename scope_tag&lt;Mutex&gt;::type == multi_threaded_tag
+</span><span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Mutex</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">multi_threaded_tag</span> <span class="identifier">scope_tag_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">shared_lock_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">base_type</span><span class="special">;</span>
+    
+    <span class="identifier">shared_locker</span><span class="special">();</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">shared_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">shared_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">)</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">adopt_lock_t</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">defer_lock_t</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">try_to_lock_t</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span><span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span><span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span><span class="identifier">throw_lock_t</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">target_time</span><span class="special">,</span> <span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">shared_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">shared_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">shared_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">move</span><span class="special">();</span>
+
+    <span class="identifier">shared_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">shared_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">shared_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+<span class="preprocessor">#ifdef</span> <span class="identifier">BOOST_HAS_RVALUE_REFS</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">shared_locker</span><span class="special">&amp;&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="preprocessor">#else</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">shared_locker</span><span class="special">&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">shared_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+<span class="preprocessor">#endif</span>
+
+    <span class="identifier">Mutex</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+    
+    <span class="keyword">bool</span> <span class="identifier">try_lock_until</span><span class="special">(</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">absolute_time</span><span class="special">);</span>
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Duration</span><span class="special">&gt;</span>
+    <span class="keyword">bool</span> <span class="identifier">try_lock_for</span><span class="special">(</span><span class="identifier">Duration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+
+    <span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">TimeDuration</span><span class="special">&gt;</span>
+    <span class="keyword">void</span> <span class="identifier">lock_for</span><span class="special">(</span><span class="identifier">TimeDuration</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">relative_time</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">lock_until</span><span class="special">(::</span><span class="identifier">boost</span><span class="special">::</span><span class="identifier">system_time</span> <span class="keyword">const</span><span class="special">&amp;</span> <span class="identifier">absolute_time</span><span class="special">);</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_locker___"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_locker___" title="Template
+          Class upgrade_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mutex</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;:</span>  <span class="keyword">public</span> <span class="identifier">upgrade_lock_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">{</span>
+    <span class="comment">//typename scope_tag&lt;Mutex&gt;::type == multi_threaded_tag
+</span><span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Mutex</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">multi_threaded_tag</span> <span class="identifier">scope_tag_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">upgrade_lock_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">base_type</span><span class="special">;</span>
+
+    <span class="identifier">upgrade_locker</span><span class="special">();</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+
+    <span class="keyword">explicit</span> <span class="identifier">upgrade_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="identifier">upgrade_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">adopt_lock_t</span><span class="special">);</span>
+    <span class="identifier">upgrade_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">defer_lock_t</span><span class="special">);</span>
+    <span class="identifier">upgrade_locker</span><span class="special">(</span><span class="identifier">Mutex</span><span class="special">&amp;</span> <span class="identifier">m_</span><span class="special">,</span><span class="identifier">try_to_lock_t</span><span class="special">);</span>
+
+    <span class="identifier">upgrade_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">upgrade_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="keyword">operator</span> <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;();</span>
+    <span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">move</span><span class="special">();</span>
+
+    <span class="identifier">upgrade_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="identifier">upgrade_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="special">~</span><span class="identifier">upgrade_locker</span><span class="special">();</span>
+    <span class="identifier">Mutex</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+
+    <span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_to_unique_locker___"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_locks_hpp.template_class__upgrade_to_unique_locker___" title="Template
+          Class upgrade_to_unique_locker&lt;&gt;">Template
+          Class <code class="computeroutput"><span class="identifier">upgrade_to_unique_locker</span><span class="special">&lt;&gt;</span></code></a>
+</h5></div></div></div>
+<pre class="programlisting"><span class="keyword">template</span><span class="special">&lt;</span><span class="keyword">typename</span> <span class="identifier">Mutex</span><span class="special">&gt;</span>
+<span class="keyword">class</span> <span class="identifier">upgrade_to_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;:</span>  <span class="keyword">public</span> <span class="identifier">upgrade_to_unique_locker_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="special">{</span>
+    <span class="comment">//typename scope_tag&lt;Mutex&gt;::type == multi_threaded_tag
+</span><span class="keyword">public</span><span class="special">:</span>
+    <span class="keyword">typedef</span> <span class="identifier">Mutex</span> <span class="identifier">lockable_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">multi_threaded_tag</span> <span class="identifier">scope_tag_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="keyword">typename</span> <span class="identifier">upgrade_to_unique_locker_type</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">&gt;::</span><span class="identifier">type</span> <span class="identifier">base_type</span><span class="special">;</span>
+<span class="keyword">public</span><span class="special">:</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_CONSTRUCTOR_DELETE</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy construction &gt;*/</span>
+    <span class="identifier">BOOST_NON_CONST_COPY_ASSIGNEMENT_DELETE</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">)</span> <span class="comment">/*&lt; disable copy asignement &gt;*/</span>
+    
+    <span class="keyword">explicit</span> <span class="identifier">upgrade_to_unique_locker</span><span class="special">(</span><span class="identifier">upgrade_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span><span class="identifier">multi_threaded_tag</span><span class="special">&gt;&amp;</span> <span class="identifier">m_</span><span class="special">);</span>
+    <span class="special">~</span><span class="identifier">upgrade_to_unique_locker</span><span class="special">();</span>
+
+    <span class="identifier">upgrade_to_unique_locker</span><span class="special">(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_to_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="identifier">upgrade_to_unique_locker</span><span class="special">&amp;</span> <span class="keyword">operator</span><span class="special">=(</span><span class="identifier">detail</span><span class="special">::</span><span class="identifier">thread_move_t</span><span class="special">&lt;</span><span class="identifier">upgrade_to_unique_locker</span><span class="special">&lt;</span><span class="identifier">Mutex</span><span class="special">,</span> <span class="identifier">scope_tag_type</span><span class="special">&gt;</span> <span class="special">&gt;</span> <span class="identifier">other</span><span class="special">);</span>
+    <span class="keyword">void</span> <span class="identifier">swap</span><span class="special">(</span><span class="identifier">upgrade_to_unique_locker</span><span class="special">&amp;</span> <span class="identifier">other</span><span class="special">);</span>
+
+    <span class="identifier">Mutex</span><span class="special">*</span> <span class="identifier">mutex</span><span class="special">()</span> <span class="keyword">const</span><span class="special">;</span>
+    <span class="keyword">bool</span> <span class="identifier">is_locking</span><span class="special">(</span><span class="identifier">lockable_type</span><span class="special">*</span> <span class="identifier">l</span><span class="special">)</span> <span class="keyword">const</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h4 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp" title="
+        Header &lt;boost/synchro/thread_synchronization_family.hpp&gt;">
+        Header <code class="computeroutput"><span class="special">&lt;</span><span class="identifier">boost</span><span class="special">/</span><span class="identifier">synchro</span><span class="special">/</span><span class="identifier">thread_synchronization_family</span><span class="special">.</span><span class="identifier">hpp</span><span class="special">&gt;</span></code></a>
+</h4></div></div></div>
+<div class="toc"><dl><dt><span class="section"><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp.class__thread_synchronization_family_">Class
+          <code class="computeroutput"><span class="identifier">thread_synchronization_family</span></code></a></span></dt></dl></div>
+<div class="section" lang="en">
+<div class="titlepage"><div><div><h5 class="title">
+<a name="boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp.class__thread_synchronization_family_"></a><a href="multi_threaded.html#boost_synchro.reference.multi_threaded.thread_synchronization_family_hpp.class__thread_synchronization_family_" title="Class
+          thread_synchronization_family">Class
+          <code class="computeroutput"><span class="identifier">thread_synchronization_family</span></code></a>
+</h5></div></div></div>
+<p>
+            <span class="bold"><strong>Synopsis</strong></span>
+          </p>
+<pre class="programlisting"><span class="keyword">struct</span> <span class="identifier">thread_synchronization_family</span>
+<span class="special">{</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_mutex</span>                     <span class="identifier">mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_recursive_mutex</span>           <span class="identifier">recursive_mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_timed_mutex</span>               <span class="identifier">timed_mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_recursive_timed_mutex</span>     <span class="identifier">recursive_timed_mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">thread_shared_mutex</span>              <span class="identifier">shared_mutex_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable</span>        <span class="identifier">condition_type</span><span class="special">;</span>
+    <span class="keyword">typedef</span> <span class="identifier">boost</span><span class="special">::</span><span class="identifier">condition_variable_any</span>    <span class="identifier">condition_type_any</span><span class="special">;</span>
+<span class="special">};</span>
+</pre>
+</div>
+</div>
+</div>
+<table xmlns:rev="http://www.cs.rpi.edu/~gregod/boost/tools/doc/revision" width="100%"><tr>
+<td align="left"></td>
+<td align="right"><div class="copyright-footer">Copyright © 2008 Vicente J. Botet Escriba<p>
+        Distributed under the Boost Software License, Version 1.0. (See accompanying
+        file LICENSE_1_0.txt or copy at <a href="http://www.boost.org/LICENSE_1_0.txt" target="_top">http://www.boost.org/LICENSE_1_0.txt</a>)
+      </p>
+</div></td>
+</tr></table>
+<hr>
+<div class="spirit-nav">
+<a accesskey="p" href="single_threaded.html"><img src="../../../../../../doc/html/images/prev.png" alt="Prev"></a><a accesskey="u" href="../reference.html"><img src="../../../../../../doc/html/images/up.png" alt="Up"></a><a accesskey="h" href="../../index.html"><img src="../../../../../../doc/html/images/home.png" alt="Home"></a><a accesskey="n" href="multi_process.html"><img src="../../../../../../doc/html/images/next.png" alt="Next"></a>
+</div>
+</body>
+</html>
