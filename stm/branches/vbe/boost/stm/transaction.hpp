@@ -710,33 +710,6 @@ public:
    //--------------------------------------------------------------------------
 
    //--------------------------------------------------------------------------
-   template <typename T>
-   T* new_shared_memory(T*)
-   {
-      if (forced_to_abort())
-      {
-         if (!direct_updating())
-         {
-            deferred_abort(true);
-            throw aborted_tx("");
-         }
-
-#ifndef DELAY_INVALIDATION_DOOMED_TXS_UNTIL_COMMIT
-         cm_abort_on_new(*this);
-#endif
-      }
-
-      make_irrevocable();
-
-      T *newNode = new T;
-      newNode->transaction_thread(threadId_);
-      newNode->new_memory(1);
-      newMemoryList().push_back(newNode);
-
-      return newNode;
-   }
-
-   //--------------------------------------------------------------------------
     void throw_if_forced_to_abort_on_new() {
         if (forced_to_abort()) {
             if (!direct_updating()) {
@@ -759,6 +732,16 @@ public:
 
       return newNode;
    }
+
+   //--------------------------------------------------------------------------
+   template <typename T>
+   T* new_shared_memory(T*)
+   {
+      throw_if_forced_to_abort_on_new();
+      make_irrevocable();
+      return as_new(new T());
+   }
+   
    //--------------------------------------------------------------------------
    template <typename T>
    T* new_memory(T*)
@@ -775,7 +758,7 @@ public:
       return as_new(new T(rhs));
    }
 
-
+   //--------------------------------------------------------------------------
    void begin();
    bool restart();
 
@@ -786,6 +769,7 @@ public:
    }
 
    void end();
+   void commit() {end();}
    void no_throw_end();
 
    void force_to_abort()
@@ -809,7 +793,6 @@ public:
 #endif
 #endif
    }
-
    inline void unforce_to_abort() { forced_to_abort_ref() = false; }
 
    //--------------------------------------------------------------------------

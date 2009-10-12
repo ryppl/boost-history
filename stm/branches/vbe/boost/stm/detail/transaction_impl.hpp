@@ -738,7 +738,8 @@ inline void transaction::lock_and_abort()
 {
    if (direct_updating())
    {
-      bool wasWriting = isWriting() ? true : false;
+      //bool wasWriting = isWriting() ? true : false;
+      bool wasWriting = isWriting();
 
       if (wasWriting) lock(general_lock());
       lock_tx();
